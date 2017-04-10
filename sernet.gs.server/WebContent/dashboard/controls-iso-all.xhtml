@@ -21,7 +21,7 @@
 				<h:form id="totalChartPanel">
 					<p:panel header="ISMS Controls all" toggleable="true">
 						<ui:fragment
-							rendered="#{not allIsmsCatalogsPerOrganization.totalCalculated}">
+							rendered="#{not controlsIsoAllChartView.totalCalculated}">
 							<div style="margin: 0 auto; text-align: center;">
 								<p>Crunching numbers</p>
 								<p:graphicImage name="images/ajax-loader.gif"
@@ -30,16 +30,16 @@
 						</ui:fragment>
 
 						<ui:fragment
-							rendered="#{allIsmsCatalogsPerOrganization.totalCalculated}">
+							rendered="#{controlsIsoAllChartView.totalCalculated}">
 							<div class="ui-g">
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
 									<p:chart id="verinicePieChart" type="pie"
-										model="#{allIsmsCatalogsPerOrganization.pieModel}"
+										model="#{controlsIsoAllChartView.pieModel}"
 										responsive="true" />
 								</div>
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
 									<p:chart id="verinicePieBar" type="bar"
-										model="#{allIsmsCatalogsPerOrganization.horizontalBarChartModel}"
+										model="#{controlsIsoAllChartView.horizontalBarChartModel}"
 										responsive="true" />
 								</div>
 							</div>
@@ -49,7 +49,7 @@
 
 				<h:form>
 					<p:remoteCommand id="loadDataCommand"
-						action="#{allIsmsCatalogsPerOrganization.loadTotalIsmsCatalogs()}"
+						action="#{controlsIsoAllChartView.loadTotalIsmsCatalogs()}"
 						update=":totalChartPanel" autoRun="true" delay="2" />
 				</h:form>
 			</div>
@@ -58,7 +58,7 @@
 				<h:form id="charts">
 					<p:panel header="Alle Kataloge" toggleable="true">
 						<ui:fragment
-							rendered="#{not allIsmsCatalogsPerOrganization.allCatalogsCalculated}">
+							rendered="#{not controlsIsoAllChartView.allCatalogsCalculated}">
 							<div style="margin: 0 auto; text-align: center;">
 								<p>Crunching numbers</p>
 								<p:graphicImage name="images/ajax-loader.gif"
@@ -67,8 +67,8 @@
 						</ui:fragment>
 
 						<ui:fragment
-							rendered="#{allIsmsCatalogsPerOrganization.allCatalogsCalculated}">
-							<ui:repeat value="#{allIsmsCatalogsPerOrganization.charts}"
+							rendered="#{controlsIsoAllChartView.allCatalogsCalculated}">
+							<ui:repeat value="#{controlsIsoAllChartView.charts}"
 								var="chart">
 								<div class="ui-g">
 									<div class="ui-g-12 ui-lg-12">
@@ -97,7 +97,7 @@
 
 			<h:form>
 				<p:remoteCommand id="loadData"
-					action="#{allIsmsCatalogsPerOrganization.loadAllIsmsCatalogs()}"
+					action="#{controlsIsoAllChartView.loadAllIsmsCatalogs()}"
 					update=":charts" autoRun="true" delay="2" />
 			</h:form>
 		</div>

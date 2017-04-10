@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Benjamin Weißenfels.
+ * Copyright (c) 2016 Benjamin Weißenfels.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -19,13 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view.charts;
 
-import java.util.Map;
+import java.io.Serializable;
+import java.util.SortedMap;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.PieChartModel;
@@ -34,18 +32,18 @@ import sernet.verinice.web.poseidon.services.ChartService;
 
 /**
  *
- *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-@ManagedBean(name = "ismsCatalogsPerOrganizationTotal")
-@ViewScoped
-public class IsmsCatalogsPerOrganizationTotal {
+@ManagedBean(name = "controlsChartTotalView")
+public class ControlsChartTotalView implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @ManagedProperty("#{chartService}")
     private ChartService chartService;
 
-    private Map<String, Number> states;
+    private SortedMap<String, Number> states;
 
     private PieChartModel pieModel;
 
@@ -53,32 +51,16 @@ public class IsmsCatalogsPerOrganizationTotal {
 
     private boolean calculated = false;
 
-    private Integer scopeId;
-
-    @PostConstruct
     public void init() {
-        readParameter();
-    }
-
-    private void readParameter() {
-        Map<String, String> parameterMap = getParameterMap();
-        this.scopeId = Integer.valueOf(parameterMap.get("scopeId"));
-    }
-
-    private Map<String, String> getParameterMap() {
-        return (Map<String, String>) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-    }
-
-    public void loadStates() {
         ControlChartsFactory chartModelFactory = new ControlChartsFactory(getStates());
         this.pieModel = chartModelFactory.getPieChartModel();
         this.barModel = chartModelFactory.getBarChart();
         this.calculated = true;
     }
 
-    private Map<String, Number> getStates() {
-        if (states == null) {
-            states = getChartService().getIsoControlsData(scopeId);
+    private SortedMap<String, Number> getStates() {
+        if (states == null){
+            states = getChartService().aggregateMassnahmenUmsetzungStatus();
         }
         return states;
     }

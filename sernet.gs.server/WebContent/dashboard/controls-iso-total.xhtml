@@ -21,7 +21,7 @@
 					<p:panel header="Massnahmenumsetzung gesamt">
 
 						<ui:fragment
-							rendered="#{not ismsCatalogsPerOrganizationTotal.calculated}">
+							rendered="#{not controlsIsoTotalChartView.calculated}">
 							<div style="margin: 0 auto; text-align: center;">
 								<p>Crunching numbers</p>
 								<p:graphicImage name="images/ajax-loader.gif"
@@ -30,16 +30,16 @@
 						</ui:fragment>
 
 						<ui:fragment id="charts"
-							rendered="#{ismsCatalogsPerOrganizationTotal.calculated}">
+							rendered="#{controlsIsoTotalChartView.calculated}">
 							<div class="ui-g ui-fluid">
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
 									<p:chart id="verinicePieChart" type="pie"
-										model="#{ismsCatalogsPerOrganizationTotal.pieModel}"
+										model="#{controlsIsoTotalChartView.pieModel}"
 										responsive="true" />
 								</div>
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
 									<p:chart id="verinicePieBar" type="bar"
-										model="#{ismsCatalogsPerOrganizationTotal.barModel}"
+										model="#{controlsIsoTotalChartView.barModel}"
 										responsive="true" />
 								</div>
 							</div>
@@ -51,7 +51,7 @@
 
 				<h:form>
 					<p:remoteCommand id="loadDataCommand"
-						action="#{ismsCatalogsPerOrganizationTotal.loadStates()}"
+						action="#{controlsIsoTotalChartView.loadStates()}"
 						update=":chartPanel" autoRun="true" delay="2" />
 				</h:form>
 			</div>

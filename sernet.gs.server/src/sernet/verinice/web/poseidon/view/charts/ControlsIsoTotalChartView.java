@@ -19,43 +19,33 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view.charts;
 
-import java.io.Serializable;
 import java.util.Map;
-import java.util.SortedMap;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AbortProcessingException;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.ActionListener;
 
-import org.primefaces.component.remotecommand.RemoteCommand;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
 import sernet.verinice.web.poseidon.services.ChartService;
 
 /**
+ * Provide backing beands for charts of ISO
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-@ManagedBean(name = "itNetworkView")
+@ManagedBean(name = "controlsIsoTotalChartView")
 @ViewScoped
-public class ItNetworkView implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    private Integer scopeId;
-
-    private String itNetwork;
+public class ControlsIsoTotalChartView {
 
     @ManagedProperty("#{chartService}")
     private ChartService chartService;
 
-    private SortedMap<String, Number> states;
+    private Map<String, Number> states;
 
     private PieChartModel pieModel;
 
@@ -63,71 +53,42 @@ public class ItNetworkView implements Serializable {
 
     private boolean calculated = false;
 
-    private RemoteCommand remoteCommand;
+    private Integer scopeId;
 
     @PostConstruct
     public void init() {
         readParameter();
-        initRemoteCall();
     }
 
     private void readParameter() {
         Map<String, String> parameterMap = getParameterMap();
         this.scopeId = Integer.valueOf(parameterMap.get("scopeId"));
-        this.itNetwork = parameterMap.get("itNetwork");
     }
 
     private Map<String, String> getParameterMap() {
         return (Map<String, String>) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
     }
 
-    private void initRemoteCall() {
-        remoteCommand = new RemoteCommand();
-        remoteCommand.addActionListener(new DataLoader(getScopeId()));
-        remoteCommand.setAutoRun(true);
-        remoteCommand.setUpdate("chartPanel");
-        remoteCommand.setName("onload");
-        remoteCommand.setDelay("2");
-    }
-
-    public void loadData(Integer scopeId) {
-        setScopeId(scopeId);
+    public void loadStates() {
         ControlChartsFactory chartModelFactory = new ControlChartsFactory(getStates());
-        this.setPieModel(chartModelFactory.getPieChartModel());
-        this.setBarModel(chartModelFactory.getBarChart());
-        calculated = true;
+        this.pieModel = chartModelFactory.getPieChartModel();
+        this.barModel = chartModelFactory.getBarChart();
+        this.calculated = true;
     }
 
-    private SortedMap<String, Number> getStates() {
+    private Map<String, Number> getStates() {
         if (states == null) {
-            states = chartService.aggregateMassnahmenUmsetzung(scopeId);
+            states = getChartService().getIsoControlsData(scopeId);
         }
-
         return states;
-    }
-
-    public Integer getScopeId() {
-        return scopeId;
-    }
-
-    public void setScopeId(Integer scopeId) {
-        this.scopeId = scopeId;
-    }
-
-    public String getItNetwork() {
-        return itNetwork;
-    }
-
-    public void setItNetwork(String itNetwork) {
-        this.itNetwork = itNetwork;
-    }
-
-    public PieChartModel getPieModel() {
-        return pieModel;
     }
 
     public void setPieModel(PieChartModel pieModel) {
         this.pieModel = pieModel;
+    }
+
+    public PieChartModel getPieModel() {
+        return pieModel;
     }
 
     public BarChartModel getBarModel() {
@@ -146,32 +107,11 @@ public class ItNetworkView implements Serializable {
         this.calculated = calculated;
     }
 
-    public RemoteCommand getRemoteCommand() {
-        return remoteCommand;
-    }
-
-    public void setRemoteCommand(RemoteCommand remoteCommand) {
-        this.remoteCommand = remoteCommand;
-    }
-
     public ChartService getChartService() {
         return chartService;
     }
 
     public void setChartService(ChartService chartService) {
         this.chartService = chartService;
-    }
-
-    private final class DataLoader implements ActionListener {
-        private Integer scopeId;
-
-        public DataLoader(Integer scopeId) {
-            this.scopeId = scopeId;
-        }
-
-        @Override
-        public void processAction(ActionEvent event) throws AbortProcessingException {
-            loadData(scopeId);
-        }
     }
 }

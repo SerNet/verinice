@@ -18,7 +18,7 @@
 				<h:form id="chartPanel">
 					<p:panel header="Massnahmenumsetzung gesamt">
 
-						<ui:fragment rendered="#{not totalBsiChartView.calculated}">
+						<ui:fragment rendered="#{not controlsChartTotalView.calculated}">
 							<div style="margin: 0 auto; text-align: center;">
 								<p>Crunching numbers</p>
 								<p:graphicImage name="images/ajax-loader.gif"
@@ -27,15 +27,15 @@
 						</ui:fragment>
 
 						<ui:fragment id="charts"
-							rendered="#{totalBsiChartView.calculated}">
+							rendered="#{controlsChartTotalView.calculated}">
 							<div class="ui-g ui-fluid">
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
 									<p:chart id="verinicePieChart" type="pie"
-										model="#{totalBsiChartView.pieModel}" responsive="true" />
+										model="#{controlsChartTotalView.pieModel}" responsive="true" />
 								</div>
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
 									<p:chart id="verinicePieBar" type="bar"
-										model="#{totalBsiChartView.barModel}" responsive="true" />
+										model="#{controlsChartTotalView.barModel}" responsive="true" />
 								</div>
 							</div>
 						</ui:fragment>
@@ -46,7 +46,7 @@
 
 				<h:form>
 					<p:remoteCommand id="loadDataCommand"
-						action="#{totalBsiChartView.init()}" update=":chartPanel"
+						action="#{controlsChartTotalView.init()}" update=":chartPanel"
 						autoRun="true" delay="2" />
 				</h:form>
 			</div>

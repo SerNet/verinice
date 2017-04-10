@@ -44,9 +44,9 @@ import sernet.verinice.web.poseidon.services.MenuService;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-@ManagedBean(name = "allIsmsCatalogsPerOrganization")
+@ManagedBean(name = "controlsIsoAllChartView")
 @ViewScoped
-public class AllIsmsCatalogsPerOrganization {
+public class ControlsIsoAllChartView {
 
     @ManagedProperty("#{chartService}")
     private ChartService chartService;

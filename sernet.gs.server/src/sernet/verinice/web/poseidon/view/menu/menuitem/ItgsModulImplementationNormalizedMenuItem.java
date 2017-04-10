@@ -37,7 +37,7 @@ public class ItgsModulImplementationNormalizedMenuItem extends AbstractItgsContr
 
     @Override
     String getTemplateFile() {
-        return "controls.xhtml";
+        return "controls-bstums.xhtml";
     }
 
     @Override

@@ -36,9 +36,9 @@ import sernet.verinice.web.poseidon.services.strategy.GroupedByChapterStrategy;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-@ManagedBean(name = "bstUmsetzungItNetworkView")
+@ManagedBean(name = "controlsBstUmsChartView")
 @ViewScoped
-public class BstUmsetzungItNetworkView {
+public class ControlsBstUmsChartView {
 
     private BarChartModel horizontalChartModel;
 

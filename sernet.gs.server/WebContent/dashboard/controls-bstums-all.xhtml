@@ -19,7 +19,7 @@
 				<p:panel header="Bausteinumsetzung gesamt" toggleable="true">
 					<h:form id="chartPanel">
 						<ui:fragment
-							rendered="#{not bausteinUmsetzungAllView.totalCalculated}">
+							rendered="#{not controlsBstUmsAllChartView.totalCalculated}">
 							<div style="margin: 0 auto; text-align: center;">
 								<p>Crunching numbers</p>
 								<p:graphicImage name="images/ajax-loader.gif"
@@ -27,30 +27,30 @@
 							</div>
 						</ui:fragment>
 						<ui:fragment
-							rendered="#{bausteinUmsetzungAllView.totalCalculated and (not empty bausteinUmsetzungAllView.allStates)}">
+							rendered="#{controlsBstUmsAllChartView.totalCalculated and (not empty controlsBstUmsAllChartView.allStates)}">
 							<div class="ui-g ui-fluid">
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
 									<p:chart id="veriniceHorizontalBar" type="bar"
-										model="#{bausteinUmsetzungAllView.verticalBarChart}"
+										model="#{controlsBstUmsAllChartView.verticalBarChart}"
 										responsive="true" />
 								</div>
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
 									<p:chart id="veriniceVerticalBar" type="bar"
-										model="#{bausteinUmsetzungAllView.horizontalBarChartModel}"
+										model="#{controlsBstUmsAllChartView.horizontalBarChartModel}"
 										responsive="true" />
 								</div>
 							</div>
 						</ui:fragment>
 
 						<ui:fragment
-							rendered="#{bausteinUmsetzungAllView.totalCalculated and (empty bausteinUmsetzungAllView.allStates)}">
+							rendered="#{controlsBstUmsAllChartView.totalCalculated and (empty controlsBstUmsAllChartView.allStates)}">
 							<p class="no-data">#{msgWeb['no-data']}</p>
 						</ui:fragment>
 					</h:form>
 
 					<h:form>
 						<p:remoteCommand
-							action="#{bausteinUmsetzungAllView.loadTotalData()}"
+							action="#{controlsBstUmsAllChartView.loadTotalData()}"
 							autoRun="true" delay="2" update=":chartPanel" />
 					</h:form>
 				</p:panel>
@@ -61,7 +61,7 @@
 				<h:form id="all-chapter">
 					<p:panel header="Alle IT-Verbünde" toggleable="true">
 						<ui:fragment
-							rendered="#{not bausteinUmsetzungAllView.allItNetworksCalculated}">
+							rendered="#{not controlsBstUmsAllChartView.allItNetworksCalculated}">
 							<div style="margin: 0 auto; text-align: center;">
 								<p>Crunching numbers</p>
 								<p:graphicImage name="images/ajax-loader.gif"
@@ -70,8 +70,8 @@
 						</ui:fragment>
 
 						<ui:fragment id="charts"
-							rendered="#{bausteinUmsetzungAllView.allItNetworksCalculated and (not empty bausteinUmsetzungAllView.charts)}">
-							<ui:repeat value="#{bausteinUmsetzungAllView.charts}" var="chart"
+							rendered="#{controlsBstUmsAllChartView.allItNetworksCalculated and (not empty controlsBstUmsAllChartView.charts)}">
+							<ui:repeat value="#{controlsBstUmsAllChartView.charts}" var="chart"
 								toggleable="true">
 								<div class="ui-g">
 									<div class="ui-g-12 ui-lg-12">
@@ -90,7 +90,7 @@
 							</ui:repeat>
 						</ui:fragment>
 						<ui:fragment
-							rendered="#{bausteinUmsetzungAllView.totalCalculated and (empty bausteinUmsetzungAllView.charts)}">
+							rendered="#{controlsBstUmsAllChartView.totalCalculated and (empty controlsBstUmsAllChartView.charts)}">
 							<p class="no-data">#{msgWeb['no-data']}</p>
 						</ui:fragment>
 					</p:panel>
@@ -99,13 +99,13 @@
 
 			<h:form>
 				<p:remoteCommand
-					action="#{bausteinUmsetzungAllView.loadDataForAllItNetworks()}"
+					action="#{controlsBstUmsAllChartView.loadDataForAllItNetworks()}"
 					update=":all-chapter" autoRun="true" delay="2">
 				</p:remoteCommand>
 			</h:form>
 
 
-			<ui:repeat value="#{bausteinUmsetzungAllView.charts}" var="chart"
+			<ui:repeat value="#{controlsBstUmsAllChartView.charts}" var="chart"
 				toggleable="true">
 				<div class="ui-g-12" toggleable="true">
 					<p:panel header="#{chart.title}">

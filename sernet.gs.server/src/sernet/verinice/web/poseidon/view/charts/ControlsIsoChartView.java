@@ -37,9 +37,9 @@ import sernet.verinice.web.poseidon.services.ChartService;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-@ManagedBean(name = "ismsControlsChartView")
+@ManagedBean(name = "controlsIsoChartView")
 @ViewScoped
-public class IsmsControlsChartView {
+public class ControlsIsoChartView {
 
     @ManagedProperty("#{chartService}")
     private ChartService chartService;

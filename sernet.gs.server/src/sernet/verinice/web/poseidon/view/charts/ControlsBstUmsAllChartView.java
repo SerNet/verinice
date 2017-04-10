@@ -24,16 +24,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.SortedMap;
+import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.HorizontalBarChartModel;
-import org.primefaces.model.chart.PieChartModel;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.service.RetrieveInfo;
@@ -42,78 +44,111 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.service.DAOFactory;
 import sernet.verinice.web.poseidon.services.ChartService;
+import sernet.verinice.web.poseidon.services.strategy.GroupedByChapterStrategy;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-@ManagedBean(name = "allBsiChartsView")
+@ManagedBean(name = "controlsBstUmsAllChartView")
 @ViewScoped
-public class AllBsiChartsView {
+public class ControlsBstUmsAllChartView {
 
     @ManagedProperty("#{chartService}")
     private ChartService chartService;
 
     private List<VeriniceChartRow> charts;
 
-    private HorizontalBarChartModel horizontalBarChartModel;
+    private HorizontalBarChartModel horizontalBarChart;
 
-    private PieChartModel pieModel;
+    private BarChartModel verticalBarChart;
 
-    private boolean totalCalculated;
+    private boolean totalCalculated = false;
 
-    private boolean allItNetworksCalculated;
+    private boolean allItNetworksCalculated = false;
 
-    private SortedMap<String, Number> allStates;
+    private GroupedByChapterStrategy strategy;
 
+    private Map<String, Map<String, Number>> allStates;
+
+    @PostConstruct
+    public void init() {
+        readParameter();
+    }
+
+    private void readParameter() {
+        Map<String, String> parameterMap = getParameterMap();
+        this.strategy = new GroupedByChapterStrategy(parameterMap.get("crunchStrategy"));
+    }
+
+    private Map<String, String> getParameterMap() {
+        return (Map<String, String>) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+    }
+
+    /**
+     * Loads data, does number crunching and sets the
+     * {@link #isTotalCalculated()} to true, so the result can be fetched via
+     * ajax.
+     */
     public void loadTotalData() {
-        allStates = calculateTotal();
-        ControlChartsFactory allChartModelFactory = new ControlChartsFactory(allStates);
-        pieModel = allChartModelFactory.getPieChartModel();
-        horizontalBarChartModel = allChartModelFactory.getHorizontalBarModel();
+        initTotalCharts();
         totalCalculated = true;
     }
 
-    public void loadDataForAllItNetworks(){
+    private void initTotalCharts() {
+        allStates = chartService.groupByMassnahmenStates("", strategy.getStrategy());
+        ModulChartsFactory allChartModelFactory = new ModulChartsFactory(allStates);
 
-        charts = new ArrayList<>();
+        verticalBarChart = allChartModelFactory.getVerticalBarChartModel();
+        horizontalBarChart = allChartModelFactory.getHorizontalBarChartModel();
+    }
 
+    public void loadDataForAllItNetworks() {
+        initChartsForAllItNetworks();
+        allItNetworksCalculated = true;
+    }
+
+    private void initChartsForAllItNetworks() {
+        List<ITVerbund> itNetworks = loadItNetworks();
+        itNetworks = sortItNetworks(itNetworks);
+        this.charts = createCharts(itNetworks);
+    }
+
+    private List<ITVerbund> loadItNetworks() {
         DAOFactory daoFactory = (DAOFactory) VeriniceContext.get(VeriniceContext.DAO_FACTORY);
         IBaseDao<ITVerbund, Serializable> itNetworkDao = daoFactory.getDAO(ITVerbund.class);
         @SuppressWarnings("unchecked")
         List<ITVerbund> itNetworks = itNetworkDao.findAll(RetrieveInfo.getPropertyInstance());
-        itNetworks = sortItNetworks(itNetworks);
+        return itNetworks;
+    }
+
+    private ArrayList<VeriniceChartRow> createCharts(List<ITVerbund> itNetworks) {
+
+        ArrayList<VeriniceChartRow> charts = new ArrayList<>();
 
         for (ITVerbund itNetwork : itNetworks) {
 
-            SortedMap<String, Number> states = getChartService().aggregateMassnahmenUmsetzung(itNetwork);
+            Map<String, Map<String, Number>> states = chartService.groupByMassnahmenStates(itNetwork, strategy.getStrategy());
 
-            if (states.isEmpty())
+            if (states.isEmpty()) {
                 continue;
+            }
 
             VeriniceChartRow item = new VeriniceChartRow();
-            ControlChartsFactory chartModelFactory = new ControlChartsFactory(states);
+            ModulChartsFactory chartModelFactory = new ModulChartsFactory(states);
 
             item.setTitle(itNetwork.getTitle());
-            item.setFirstChartModel(chartModelFactory.getPieChartModel());
-            HorizontalBarChartModel horizontalBarModel = chartModelFactory.getHorizontalBarModel();
-            item.setSecondChartModel(horizontalBarModel);
-            Axis axis = horizontalBarModel.getAxis(AxisType.X);
-            axis.setMax(horizontalBarChartModel.getAxis(AxisType.X).getMax());
+            item.setFirstChartModel(chartModelFactory.getVerticalBarChartModel());
+            HorizontalBarChartModel horizontalBarChartModel = chartModelFactory.getHorizontalBarChartModel();
+            item.setSecondChartModel(horizontalBarChartModel);
+            Axis axis = horizontalBarChartModel.getAxis(AxisType.X);
+
+            axis.setMax(horizontalBarChart.getAxis(AxisType.X).getMax());
             charts.add(item);
         }
 
-        allItNetworksCalculated = true;
+        return charts;
     }
-
-
-
-    private SortedMap<String, Number> calculateTotal() {
-        SortedMap<String, Number> allStates = chartService.aggregateMassnahmenUmsetzungStatus();
-        return allStates;
-    }
-
-
 
     private List<ITVerbund> sortItNetworks(List<ITVerbund> itNetworks) {
         Collections.sort(itNetworks, new Comparator<ITVerbund>() {
@@ -126,24 +161,6 @@ public class AllBsiChartsView {
         return itNetworks;
     }
 
-
-    /**
-     * Checks if the total diagram contains data.
-     *
-     */
-    public boolean dataAvailable(){
-       if(allStates != null){
-           for(Number number  : allStates.values()){
-               if(number.intValue() > 0){
-                   return true;
-               }
-           }
-           return false;
-       } else {
-           return false;
-       }
-    }
-
     public List<VeriniceChartRow> getCharts() {
         return charts;
     }
@@ -153,34 +170,32 @@ public class AllBsiChartsView {
     }
 
     public HorizontalBarChartModel getHorizontalBarChartModel() {
-        return horizontalBarChartModel;
+        return horizontalBarChart;
     }
-
-
 
     public void setHorizontalBarChartModel(HorizontalBarChartModel horizontalBarChartModel) {
-        this.horizontalBarChartModel = horizontalBarChartModel;
+        this.horizontalBarChart = horizontalBarChartModel;
     }
 
-
-
-    public PieChartModel getPieModel() {
-        return pieModel;
+    public BarChartModel getVerticalBarChart() {
+        return verticalBarChart;
     }
 
-
-
-    public void setPieModel(PieChartModel pieModel) {
-        this.pieModel = pieModel;
+    public void setVerticalBarChart(BarChartModel verticalBarChart) {
+        this.verticalBarChart = verticalBarChart;
     }
 
+    public GroupedByChapterStrategy getStrategyBean() {
+        return strategy;
+    }
 
+    public void setStrategyBean(GroupedByChapterStrategy strategyBean) {
+        this.strategy = strategyBean;
+    }
 
     public boolean isTotalCalculated() {
         return totalCalculated;
     }
-
-
 
     public void setTotalCalculated(boolean totalCalculated) {
         this.totalCalculated = totalCalculated;
@@ -202,12 +217,11 @@ public class AllBsiChartsView {
         this.chartService = chartService;
     }
 
-    public SortedMap<String, Number> getAllStates() {
+    public Map<String, Map<String, Number>> getAllStates() {
         return allStates;
     }
 
-    public void setAllStates(SortedMap<String, Number> allStates) {
+    public void setAllStates(Map<String, Map<String, Number>> allStates) {
         this.allStates = allStates;
     }
-
 }
