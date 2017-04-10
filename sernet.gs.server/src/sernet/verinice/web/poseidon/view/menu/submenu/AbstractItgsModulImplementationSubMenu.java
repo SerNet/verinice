@@ -49,12 +49,12 @@ public abstract class AbstractItgsModulImplementationSubMenu extends AbstractMai
     protected void loadChildren() {
 
         DefaultMenuItem bausteinUmsAll = new DefaultMenuItem("Alle");
-        bausteinUmsAll.setUrl("/dashboard/implementation-bstums-all.xhtml?crunchStrategy=" + getStrategy());
+        bausteinUmsAll.setUrl("/dashboard/controls-all.xhtml?crunchStrategy=" + getStrategy());
         bausteinUmsAll.setIcon("fa fa-fw fa-area-chart");
         addElement(bausteinUmsAll);
 
         DefaultMenuItem bausteinUmsTotal = new DefaultMenuItem("Gesamt");
-        bausteinUmsTotal.setUrl("/dashboard/implementation-bstums-total.xhtml?crunchStrategy=" + getStrategy());
+        bausteinUmsTotal.setUrl("/dashboard/controls-total.xhtml?crunchStrategy=" + getStrategy());
         bausteinUmsTotal.setIcon("fa fa-fw fa-area-chart");
         addElement(bausteinUmsTotal);
 

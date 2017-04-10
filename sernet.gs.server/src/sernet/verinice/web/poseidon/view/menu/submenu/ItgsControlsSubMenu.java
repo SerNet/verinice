@@ -44,11 +44,11 @@ public class ItgsControlsSubMenu extends AbstractMainSubMenu {
     protected void loadChildren() {
 
         DefaultMenuItem all = new DefaultMenuItem("Alle");
-        all.setUrl("/dashboard/implementation-all.xhtml");
+        all.setUrl("/dashboard/controls-all.xhtml");
         all.setIcon("fa fa-fw fa-area-chart");
 
         DefaultMenuItem total = new DefaultMenuItem("Gesamt");
-        total.setUrl("/dashboard/implementation-total.xhtml");
+        total.setUrl("/dashboard/controls-total.xhtml");
         total.setIcon("fa fa-fw fa-area-chart");
 
         addElement(all);

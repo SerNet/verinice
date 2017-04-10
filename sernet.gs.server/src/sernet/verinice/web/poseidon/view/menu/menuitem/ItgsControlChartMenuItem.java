@@ -36,7 +36,7 @@ public class ItgsControlChartMenuItem extends AbstractItgsControlMenuItem {
 
     @Override
     String getTemplateFile() {
-        return "implementation-itnetwork.xhtml";
+        return "controls.xhtml";
     }
 
     @Override

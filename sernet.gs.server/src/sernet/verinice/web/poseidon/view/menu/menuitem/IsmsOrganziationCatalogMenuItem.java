@@ -34,7 +34,7 @@ public class IsmsOrganziationCatalogMenuItem extends DefaultMenuItem {
     private static final long serialVersionUID = 1L;
     private Organization organization;
     private ControlGroup controlGroup;
-    private String templateFile = "/dashboard/isms-control-charts.xhtml";
+    private String templateFile = "/dashboard/controls-iso.xhtml";
 
     public IsmsOrganziationCatalogMenuItem(Organization organization, ControlGroup controlGroup) {
         super(controlGroup.getTitle());

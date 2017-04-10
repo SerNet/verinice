@@ -37,7 +37,7 @@ public class ItgsModulImplementationCumulatedMenuItem extends AbstractItgsContro
 
     @Override
     String getTemplateFile() {
-        return "implementation-bstums-itnetwork.xhtml";
+        return "controls-bstums.xhtml";
     }
 
     @Override

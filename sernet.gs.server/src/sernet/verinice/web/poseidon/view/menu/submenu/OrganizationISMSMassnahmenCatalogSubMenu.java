@@ -73,12 +73,12 @@ class OrganizationISMSMassnahmenCatalogSubMenu extends AbstractMainSubMenu {
 
     private void addStaticMenuItems() {
         DefaultMenuItem allIsmsChartsMenuItem = new DefaultMenuItem("Alle");
-        allIsmsChartsMenuItem.setUrl("/dashboard/all-isms-control-charts.xhtml?scopeId=" + organization.getDbId());
+        allIsmsChartsMenuItem.setUrl("/dashboard/controls-iso-all.xhtml?scopeId=" + organization.getDbId());
         allIsmsChartsMenuItem.setIcon("fa fa-fw fa-area-chart");
         addElement(allIsmsChartsMenuItem);
 
         DefaultMenuItem totalIsmsChartsMenuItem = new DefaultMenuItem("Gesamt");
-        totalIsmsChartsMenuItem.setUrl("/dashboard/total-isms-control-charts.xhtml?scopeId=" + organization.getDbId());
+        totalIsmsChartsMenuItem.setUrl("/dashboard/controls-iso-total.xhtml?scopeId=" + organization.getDbId());
         totalIsmsChartsMenuItem.setIcon("fa fa-fw fa-area-chart");
         addElement(totalIsmsChartsMenuItem);
     }
