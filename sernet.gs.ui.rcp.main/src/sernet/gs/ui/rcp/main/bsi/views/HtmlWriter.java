@@ -190,11 +190,16 @@ public abstract class HtmlWriter {
                     });
         }
         else if (infos.isInvalidSoon()){
+            LocalDate dateNow = LocalDate.now();
+            LocalDate validUntil = infos.getValidUntil();
+            long daysValid = 
+                    java.time.temporal.ChronoUnit.DAYS.
+                    between(dateNow, validUntil);
             String msg = NLS.bind(Messages.
                     BrowserView_License_Ends_Soon,
                     new Object[]{
                             infos.getAccountWizardLabel(),
-                            infos.getValidUntil()});
+                            daysValid});
             sb.append(msg);
         }
 
