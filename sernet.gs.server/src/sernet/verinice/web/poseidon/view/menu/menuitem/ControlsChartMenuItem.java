@@ -20,29 +20,27 @@
 package sernet.verinice.web.poseidon.view.menu.menuitem;
 
 import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.web.poseidon.services.strategy.GroupByStrategyNormalized;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ItgsModulImplementationNormalizedMenuItem extends AbstractItgsControlMenuItem {
+public class ControlsChartMenuItem extends AbstractItgsControlMenuItem {
 
-    public ItgsModulImplementationNormalizedMenuItem(ITVerbund itVerbund) {
+    private static final long serialVersionUID = 1L;
+
+    public ControlsChartMenuItem(ITVerbund itVerbund) {
         super(itVerbund);
         super.setIcon("fa fa-fw fa-industry");
     }
 
-    private static final long serialVersionUID = 1L;
-
     @Override
     String getTemplateFile() {
-        return "controls-bstums.xhtml";
+        return "controls.xhtml";
     }
 
     @Override
     String getStrategy() {
-       return GroupByStrategyNormalized.GET_PARAM_IDENTIFIER;
+        return null;
     }
-
 }

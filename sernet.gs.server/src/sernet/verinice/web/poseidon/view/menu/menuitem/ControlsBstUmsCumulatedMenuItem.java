@@ -26,9 +26,9 @@ import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ItgsModulImplementationCumulatedMenuItem extends AbstractItgsControlMenuItem {
+public class ControlsBstUmsCumulatedMenuItem extends AbstractItgsControlMenuItem {
 
-    public ItgsModulImplementationCumulatedMenuItem(ITVerbund itVerbund) {
+    public ControlsBstUmsCumulatedMenuItem(ITVerbund itVerbund) {
         super(itVerbund);
         super.setIcon("fa fa-fw fa-industry");
     }

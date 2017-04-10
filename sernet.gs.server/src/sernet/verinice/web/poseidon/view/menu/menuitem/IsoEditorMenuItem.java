@@ -19,28 +19,26 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view.menu.menuitem;
 
-import sernet.verinice.model.bsi.ITVerbund;
+import org.primefaces.model.menu.DefaultMenuItem;
 
 /**
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ItgsControlChartMenuItem extends AbstractItgsControlMenuItem {
+public class IsoEditorMenuItem extends DefaultMenuItem {
+
+    private static final String TITLE = "ISO Objects";
+
+    private static final String URL = "/edit/iso-editor.xhtml";
+
+    private static final String ICON = "fa fa-fw fa-file";
 
     private static final long serialVersionUID = 1L;
 
-    public ItgsControlChartMenuItem(ITVerbund itVerbund) {
-        super(itVerbund);
-        super.setIcon("fa fa-fw fa-industry");
-    }
-
-    @Override
-    String getTemplateFile() {
-        return "controls.xhtml";
-    }
-
-    @Override
-    String getStrategy() {
-        return null;
+    public IsoEditorMenuItem() {
+        super(TITLE);
+        super.setIcon(ICON);
+        super.setUrl(URL);
     }
 }

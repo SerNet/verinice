@@ -24,7 +24,7 @@ import org.primefaces.model.menu.MenuItem;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.web.poseidon.services.MenuService;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
-import sernet.verinice.web.poseidon.view.menu.menuitem.ItgsModulImplementationCumulatedMenuItem;
+import sernet.verinice.web.poseidon.view.menu.menuitem.ControlsBstUmsCumulatedMenuItem;
 
 /**
  *
@@ -42,7 +42,7 @@ public class ItgsModulImplementationCumulatedSubMenu extends AbstractItgsModulIm
 
     @Override
     protected MenuItem getMenuItem(ITVerbund itNetwork) {
-        return new ItgsModulImplementationCumulatedMenuItem(itNetwork);
+        return new ControlsBstUmsCumulatedMenuItem(itNetwork);
     }
 
     @Override

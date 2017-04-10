@@ -29,7 +29,7 @@ public class ItgsControlsMenuItem extends DefaultMenuItem{
 
     private static final String TITLE = "ITGS Controls";
 
-    private static final String URL = "/edit/bsi-controls.xhtml";
+    private static final String URL = "/edit/itgs-controls.xhtml";
 
     private static final String ICON = "fa fa-fw fa-industry";
 

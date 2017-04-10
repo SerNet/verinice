@@ -29,14 +29,14 @@ import sernet.verinice.model.iso27k.Organization;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class IsmsOrganziationCatalogMenuItem extends DefaultMenuItem {
+public class ControlsIsoMenuItem extends DefaultMenuItem {
 
     private static final long serialVersionUID = 1L;
     private Organization organization;
     private ControlGroup controlGroup;
     private String templateFile = "/dashboard/controls-iso.xhtml";
 
-    public IsmsOrganziationCatalogMenuItem(Organization organization, ControlGroup controlGroup) {
+    public ControlsIsoMenuItem(Organization organization, ControlGroup controlGroup) {
         super(controlGroup.getTitle());
         this.organization = organization;
         this.controlGroup = controlGroup;

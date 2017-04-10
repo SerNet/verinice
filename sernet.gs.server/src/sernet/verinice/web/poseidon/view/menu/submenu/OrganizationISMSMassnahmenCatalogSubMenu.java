@@ -27,7 +27,7 @@ import org.primefaces.model.menu.DefaultMenuItem;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.web.poseidon.services.MenuService;
-import sernet.verinice.web.poseidon.view.menu.menuitem.IsmsOrganziationCatalogMenuItem;
+import sernet.verinice.web.poseidon.view.menu.menuitem.ControlsIsoMenuItem;
 
 class OrganizationISMSMassnahmenCatalogSubMenu extends AbstractMainSubMenu {
 
@@ -58,7 +58,7 @@ class OrganizationISMSMassnahmenCatalogSubMenu extends AbstractMainSubMenu {
 
     private void addCatalogs() {
         for(ControlGroup catalog : catalogs){
-            addElement(new IsmsOrganziationCatalogMenuItem(organization, catalog));
+            addElement(new ControlsIsoMenuItem(organization, catalog));
         }
     }
 

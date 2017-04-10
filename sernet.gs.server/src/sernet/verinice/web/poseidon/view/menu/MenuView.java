@@ -28,7 +28,7 @@ import org.primefaces.model.menu.MenuModel;
 
 import sernet.verinice.web.poseidon.services.MenuService;
 import sernet.verinice.web.poseidon.view.menu.menuitem.HomeMenuItem;
-import sernet.verinice.web.poseidon.view.menu.menuitem.IsoObjectsMenuItem;
+import sernet.verinice.web.poseidon.view.menu.menuitem.IsoEditorMenuItem;
 import sernet.verinice.web.poseidon.view.menu.menuitem.ItgsControlsMenuItem;
 import sernet.verinice.web.poseidon.view.menu.menuitem.TasksMenuItem;
 import sernet.verinice.web.poseidon.view.menu.submenu.IsmsCatalogGroupedByOrganizationSubMenu;
@@ -53,7 +53,7 @@ public class MenuView {
     public void initMenu() {
         model = new DefaultMenuModel();
         model.addElement(new HomeMenuItem());
-        model.addElement(new IsoObjectsMenuItem());
+        model.addElement(new IsoEditorMenuItem());
         model.addElement(new ItgsControlsMenuItem());
         model.addElement(new TasksMenuItem());
         model.addElement(new ItgsControlsSubMenu(menuService));

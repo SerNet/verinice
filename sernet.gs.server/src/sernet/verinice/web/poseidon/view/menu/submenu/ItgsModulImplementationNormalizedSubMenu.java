@@ -24,7 +24,7 @@ import org.primefaces.model.menu.MenuItem;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.web.poseidon.services.MenuService;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategyNormalized;
-import sernet.verinice.web.poseidon.view.menu.menuitem.ItgsModulImplementationNormalizedMenuItem;
+import sernet.verinice.web.poseidon.view.menu.menuitem.ControlsBstUmsNormalizedMenuItem;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -45,7 +45,7 @@ public class ItgsModulImplementationNormalizedSubMenu extends AbstractItgsModulI
 
     @Override
     protected MenuItem getMenuItem(ITVerbund itNetwork) {
-        return new ItgsModulImplementationNormalizedMenuItem(itNetwork);
+        return new ControlsBstUmsNormalizedMenuItem(itNetwork);
     }
 
 }

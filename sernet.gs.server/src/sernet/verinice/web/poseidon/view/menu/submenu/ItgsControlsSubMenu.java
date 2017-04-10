@@ -23,7 +23,7 @@ import org.primefaces.model.menu.DefaultMenuItem;
 
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.web.poseidon.services.MenuService;
-import sernet.verinice.web.poseidon.view.menu.menuitem.ItgsControlChartMenuItem;
+import sernet.verinice.web.poseidon.view.menu.menuitem.ControlsChartMenuItem;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -55,7 +55,7 @@ public class ItgsControlsSubMenu extends AbstractMainSubMenu {
         addElement(total);
 
         for (ITVerbund itNetwork : menuService.getVisibleItNetworks()) {
-            super.addElement(new ItgsControlChartMenuItem(itNetwork));
+            super.addElement(new ControlsChartMenuItem(itNetwork));
         }
     }
 
