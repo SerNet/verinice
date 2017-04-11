@@ -54,7 +54,6 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IAuthService;
@@ -121,7 +120,7 @@ public class ProfileDialog extends TitleAreaDialog {
     }
 
     private void loadAllActions() {
-        boolean isLocalAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
         if (isLocalAdmin) {
             loadAllLocalAdminActions();
         } else {

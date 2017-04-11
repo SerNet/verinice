@@ -64,10 +64,10 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadPermissions;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.rcp.ImageColumnProvider;
@@ -477,7 +477,7 @@ public class AccessControlEditDialog extends TitleAreaDialog {
         if (roleArray == null) {
             List<String> accountsAndGroups = new ArrayList<String>();
 
-            boolean isLocalAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+            boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
             if (isLocalAdmin) {
                 accountsAndGroups = AccountLoader.loadAccountsAndGroupNamesForLocalAdmin();
             } else {
@@ -650,4 +650,7 @@ public class AccessControlEditDialog extends TitleAreaDialog {
         }
     };
 
+    private IAuthService getAuthService() {
+        return ServiceFactory.lookupAuthService();
+    }
 }

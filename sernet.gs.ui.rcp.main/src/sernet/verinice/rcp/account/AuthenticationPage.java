@@ -24,7 +24,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-import sernet.hui.common.VeriniceContext;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.rcp.TextEventAdapter;
 
@@ -196,7 +196,7 @@ public class AuthenticationPage extends BaseWizardPage {
     }
     
     private IAuthService getAuthService() {
-        return (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
+        return ServiceFactory.lookupAuthService();
     }
 
 }

@@ -35,7 +35,6 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateBaustein;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelForTreeView;
@@ -48,6 +47,7 @@ import sernet.gs.ui.rcp.main.service.taskcommands.FindAllTags;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.validation.IValidationService;
 import sernet.verinice.iso27k.service.Retriever;
@@ -441,7 +441,7 @@ public final class CnAElementHome {
     
             // Short cut 2: If we are the admin, then everything is writable as
             // well.
-            if (AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
+            if (getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
                 return true;
             }
     
@@ -690,4 +690,7 @@ public final class CnAElementHome {
         }
     }
 
+    private IAuthService getAuthService() {
+        return ServiceFactory.lookupAuthService();
+    }
 }

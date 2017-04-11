@@ -29,10 +29,10 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
-import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAccountService;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.auth.OriginType;
 import sernet.verinice.model.auth.Profile;
@@ -151,8 +151,12 @@ public final class AccountLoader {
     }
 
     public static boolean isEditAllowed(Configuration account) {
-        final boolean isAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
-        final boolean isLocalAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        final boolean isAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
+        final boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
         return isAdmin || (isLocalAdmin && !account.isAdminUser());
+    }
+
+    private static IAuthService getAuthService() {
+        return ServiceFactory.lookupAuthService();
     }
 }

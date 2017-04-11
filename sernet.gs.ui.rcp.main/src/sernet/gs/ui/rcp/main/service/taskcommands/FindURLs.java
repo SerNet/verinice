@@ -37,12 +37,12 @@ import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentLink;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentLinkRoot;
 import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
-import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.URLUtil;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BSIModel;
@@ -69,7 +69,8 @@ public class FindURLs extends GenericCommand {
 		hcb = new FindURLsCallbackWithCnATreeElement(allIDs);
 	}
 
-	@SuppressWarnings("unchecked")
+	@Override
+    @SuppressWarnings("unchecked")
 	public void execute() {
 		IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
 		
@@ -79,7 +80,7 @@ public class FindURLs extends GenericCommand {
 		 * The result is a list of Object arrays where: The URL is at index 0 and
 		 * the dbid of an CnATreeElement is at index 1.
 		 */
-		List<Object[]> resultList = (List<Object[]>) dao.findByCallback(hcb);
+		List<Object[]> resultList = dao.findByCallback(hcb);
 		
 		// Creates a list of Integers from the second argument. This is needed in the
 		// FindCnATreeElementsCallback.
@@ -91,8 +92,7 @@ public class FindURLs extends GenericCommand {
 		
 		// Retrieves all the CnATreeElement instances which have a document link
 		// according to the query contained in FindURLsCallbackWithCnATreeElement.
-		List<Object[]> treeElements = (List<Object[]>)
-			dao.findByCallback(new FindCnATreeElementsCallback(treeElementIds));
+		List<Object[]> treeElements = dao.findByCallback(new FindCnATreeElementsCallback(treeElementIds));
 		
 		// Fills the DocumentRoot structure by iterating the URLs and preparing the
 		// individual DocumentReference instances.
@@ -173,7 +173,8 @@ public class FindURLs extends GenericCommand {
 			this.types = types;
 		}
 
-		public Object doInHibernate(Session session) throws HibernateException,
+		@Override
+        public Object doInHibernate(Session session) throws HibernateException,
 				SQLException {
 			
 			/**
@@ -205,7 +206,8 @@ public class FindURLs extends GenericCommand {
 			this.treeElementIds = treeElementIds;
 		}
 
-		public Object doInHibernate(Session session) throws HibernateException,
+		@Override
+        public Object doInHibernate(Session session) throws HibernateException,
 				SQLException {
 			
 			/*
@@ -235,7 +237,7 @@ public class FindURLs extends GenericCommand {
             return true;
         }
         
-        if (AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
+        if (getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
             return true;
         }
 	    
@@ -263,5 +265,7 @@ public class FindURLs extends GenericCommand {
 	    return false;
 	}
 	
-
+    private IAuthService getAuthService() {
+        return ServiceFactory.lookupAuthService();
+    }
 }

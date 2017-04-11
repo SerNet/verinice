@@ -31,9 +31,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.apache.log4j.Logger;
 
 import sernet.gs.common.ApplicationRoles;
+
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
@@ -287,18 +286,19 @@ public class ConfigurationService implements IConfigurationService {
         return result;
     }
 
+    @Override
     public boolean isWriteAllowed(CnATreeElement cte) {
         // Server implementation of CnAElementHome.isWriteAllowed
         try {
             // Short cut: If no permission handling is needed than all objects
             // are
             // writable.
-            if (!ServiceFactory.isPermissionHandlingNeeded()) {
+            if (!authService.isPermissionHandlingNeeded()) {
                 return true;
             }
             // Short cut 2: If we are the admin, then everything is writable as
             // well.
-            if (AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
+            if (getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
                 return true;
             }
             Set<String> userRoles = loadRoles();

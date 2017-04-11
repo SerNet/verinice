@@ -41,10 +41,10 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.AccessControlEditDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.common.CnATreeElement;
@@ -180,7 +180,7 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
             return;
         }
 
-        boolean isLocalAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
         if (isLocalAdmin) {
             boolean isWriteAllowed = isWriteAllowed(selection);
             setEnabled(isLocalAdmin && isWriteAllowed);
@@ -206,4 +206,7 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
         return isWriteAllowed;
     }
 
+    private IAuthService getAuthService() {
+        return ServiceFactory.lookupAuthService();
+    }
 }

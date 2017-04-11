@@ -561,7 +561,7 @@ public class AccountDialog extends TitleAreaDialog {
      * @return the authService
      */
     public IAuthService getAuthService() {
-        return (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
+        return ServiceFactory.lookupAuthService();
     }
 	
 }

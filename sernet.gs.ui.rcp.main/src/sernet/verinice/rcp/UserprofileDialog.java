@@ -52,7 +52,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IRightsServiceClient;
@@ -262,7 +262,7 @@ public class UserprofileDialog extends TitleAreaDialog {
         }
 
         try {
-            boolean isLocalAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+            boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
 
             if (isLocalAdmin) {
                 nameSet.addAll(AccountLoader.loadGroupNamesForLocalAdmin());
@@ -285,7 +285,7 @@ public class UserprofileDialog extends TitleAreaDialog {
 
     private void setUnselected() {
         unselectedProfiles.clear();
-        boolean isLocalAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
         for (Profile profile : allProfiles) {
             if ((!isLocalAdmin || (isLocalAdmin && AccountLoader.isLocalAdminCreator(profile))) && !containsProfileRef(selectedProfiles, profile.getName())) {
                 // create a reference to the profile
@@ -334,7 +334,7 @@ public class UserprofileDialog extends TitleAreaDialog {
             selectedProfiles = internalUserprofile.getProfileRef();
         }
         setUnselected();
-        boolean isLocalAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
         if (isLocalAdmin) {
             List<ProfileRef> selectedLocalAdminProfileRefs = new ArrayList<ProfileRef>(selectedProfiles.size());
             for (ProfileRef profileRef : selectedProfiles) {
@@ -696,5 +696,9 @@ public class UserprofileDialog extends TitleAreaDialog {
             rightsService = (IRightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         }
         return rightsService;
+    }
+
+    private IAuthService getAuthService() {
+        return ServiceFactory.lookupAuthService();
     }
 }

@@ -77,10 +77,10 @@ import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
-import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IAccountService;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.configuration.Configuration;
@@ -564,9 +564,8 @@ public class AccountGroupView extends RightsEnabledView
     }
 
     private void applyFilterToAccountGroups(String text) {
-
         String[] allAccountGroups;
-        boolean isLocalAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
         if (isLocalAdmin) {
             List<String> groupNamesForLocalAdmin = AccountLoader.loadGroupNamesForLocalAdmin();
             allAccountGroups = groupNamesForLocalAdmin.toArray(new String[groupNamesForLocalAdmin.size()]);
@@ -852,5 +851,9 @@ public class AccountGroupView extends RightsEnabledView
         newGroup.setEnabled(enabled);
         deleteGroup.setEnabled(enabled);
         editGroup.setEnabled(enabled);
+    }
+
+    private IAuthService getAuthService() {
+        return ServiceFactory.lookupAuthService();
     }
 }

@@ -30,7 +30,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 import sernet.gs.common.ApplicationRoles;
-import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.rcp.SelectionAdapter;
@@ -71,7 +72,7 @@ public class LimitationPage extends BaseWizardPage {
         setTitle(Messages.LimitationPage_1);
         setMessage(Messages.LimitationPage_2);
         
-        final boolean currentUserIsLocalAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        final boolean currentUserIsLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
 
         cbAdmin = createCheckbox(composite, Messages.LimitationPage_3, isAdmin);
         cbAdmin.setEnabled(!currentUserIsLocalAdmin && !isLocalAdmin);
@@ -249,4 +250,7 @@ public class LimitationPage extends BaseWizardPage {
         this.isWeb = isWeb;
     }
 
+    private IAuthService getAuthService() {
+        return ServiceFactory.lookupAuthService();
+    }
 }

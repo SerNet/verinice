@@ -39,28 +39,32 @@ public final class NoAuthenticationService implements IAuthService {
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.service.IAuthService#getRoles()
 	 */
-	public String[] getRoles() {
+	@Override
+    public String[] getRoles() {
 		return NO_ROLES;
 	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.service.IAuthService#getUsername()
 	 */
-	public String getUsername() {
+	@Override
+    public String getUsername() {
 		return "internalAdmin";
 	}
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.service.IAuthService#hashPassword(java.lang.String, java.lang.String)
 	 */
-	public String hashPassword(String username, String clearText) {
+	@Override
+    public String hashPassword(String username, String clearText) {
 		return null;
 	}
 
 	/**
 	 * {@link Permission} instance handling not needed.
 	 */
-	public boolean isPermissionHandlingNeeded()
+	@Override
+    public boolean isPermissionHandlingNeeded()
 	{
 		return false;
 	}
@@ -107,6 +111,18 @@ public final class NoAuthenticationService implements IAuthService {
      */
     @Override
     public boolean isDeactivated() {
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.IAuthService#currentUserHasRole(java.lang.
+     * String[])
+     */
+    @Override
+    public boolean currentUserHasRole(String[] allowedRoles) {
         return false;
     }
 }
