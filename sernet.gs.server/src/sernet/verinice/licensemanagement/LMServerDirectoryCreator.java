@@ -42,6 +42,13 @@ public class LMServerDirectoryCreator implements IDirectoryCreator {
      * location of ES-working directory, injected by spring, different in Tier2 and Tier3
      */
     private Resource vnlLocation;
+    
+    /**
+     * create the configured directory on server startup if not already existant
+     */
+    public void init(){
+        getRootDirectoryPath();
+    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IDirectoryCreator#create()

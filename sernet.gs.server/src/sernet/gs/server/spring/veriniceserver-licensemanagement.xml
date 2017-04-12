@@ -20,7 +20,8 @@
     <property name="authService" ref="authService" />
   </bean>
   
-  <bean id="lmDirectoryCreator" class="sernet.verinice.licensemanagement.LMServerDirectoryCreator">
+  <!-- init-method creates vnl-storage directory on server-startup, if not existant yet -->
+  <bean id="lmDirectoryCreator" class="sernet.verinice.licensemanagement.LMServerDirectoryCreator" init-method="init">
     <property name="vnlLocation" value="${veriniceserver.vnl.repository}" />
   </bean>
   
