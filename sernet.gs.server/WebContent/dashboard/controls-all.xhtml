@@ -6,8 +6,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/poseidon/template.xhtml">
 
-	<ui:define name="viewname">Massnahmenumsetzung :: Alle :: Charts</ui:define>
-	<ui:define name="title">Massnahmenumsetzung :: Alle :: Charts</ui:define>
+	<ui:define name="viewname">#{msgWeb['controls-all.title']}</ui:define>
+	<ui:define name="title">#{msgWeb['controls-all.title']}</ui:define>
 
 	<ui:define name="head">
 		<ui:include src="/WEB-INF/poseidon/chart-extender.xhtml" />
@@ -19,10 +19,10 @@
 			<div class="ui-g-12 ui-lg-12">
 
 				<h:form id="totalChartPanel">
-					<p:panel header="Massnahmenumsetzung gesamt" toggleable="true">
+					<p:panel header="#{msgWeb['controls-all.header']}" toggleable="true">
 						<ui:fragment rendered="#{not controlsAllChartView.totalCalculated}">
 							<div style="margin: 0 auto; text-align: center;">
-								<p>Crunching numbers</p>
+								<p>#{msgWeb['loading']}</p>
 								<p:graphicImage name="images/ajax-loader.gif"
 									library="poseidon-layout" />
 							</div>
@@ -58,11 +58,11 @@
 
 			<div class="ui-g-12 ui-lg-12">
 				<h:form id="all-itnetworks">
-					<p:panel header="Alle IT-Verbünde" toggleable="true">
+					<p:panel header="#{msgWeb['all-it-networks']}" toggleable="true">
 						<ui:fragment
 							rendered="#{not controlsAllChartView.allItNetworksCalculated}">
 							<div style="margin: 0 auto; text-align: center;">
-								<p>Crunching numbers</p>
+								<p>#{msgWeb['loading']}</p>
 								<p:graphicImage name="images/ajax-loader.gif"
 									library="poseidon-layout" />
 							</div>

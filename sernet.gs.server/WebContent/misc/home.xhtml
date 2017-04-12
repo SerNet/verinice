@@ -5,9 +5,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/poseidon/template.xhtml">
 
-	<ui:define name="title">Home</ui:define>
+	<ui:define name="title">#{msgWeb['home.title']}</ui:define>
 
-	<ui:define name="viewname">Home</ui:define>
+	<ui:define name="viewname">#{msgWeb['home.title']}</ui:define>
 
 	<ui:define name="content">
 		<div class="ui-g ui-fluid dashboard">
@@ -74,26 +74,26 @@
 				</p:panel>
 			</div>
 			<div class="ui-g-4 ui-sm-12">
-				<p:panel header="Support" style="min-height: 200px">
+				<p:panel header="#{msgWeb['home.header.support']}" style="min-height: 200px">
 					<p:menu>
 						<p:menuitem
 							url="http://www.sernet.de/#{message.currentLanguageTag}/services/support/"
-							value="Technical support" icon="fa fa-fw fa-external-link" />
+							value="#{msgWeb['home.link.technical-support']}" icon="fa fa-fw fa-external-link" />
 						<p:menuitem
 							url="https://www.sernet.de/#{message.currentLanguageTag}/services/consulting/"
-							value="Consulting/Audits" icon="fa fa-fw fa-external-link" />
+							value="#{msgWeb['home.link.consulting']}" icon="fa fa-fw fa-external-link" />
 						<p:menuitem
 							url="https://www.sernet.de/#{message.currentLanguageTag}/services/consulting/"
-							value="Forum" icon="fa fa-fw fa-external-link" />
+							value="#{msgWeb['home.link.forum']}" icon="fa fa-fw fa-external-link" />
 					</p:menu>
 				</p:panel>
 			</div>
 			<div class="ui-g-4 ui-sm-12">
 				<p:panel header="#{msgWeb['manual_head']}" style="min-height: 200px">
 					<p:menu>
-						<p:menuitem icon="fa fa-fw fa-file-pdf-o" value="User Guide (PDF)"
+						<p:menuitem icon="fa fa-fw fa-file-pdf-o" value="#{msgWeb['user-guide']} (PDF)"
 							url="/files/verinice-user-guide-en.pdf" />
-						<p:menuitem icon="fa fa-fw fa-code" value="User Guide (HTML)"
+						<p:menuitem icon="fa fa-fw fa-code" value="#{msgWeb['user-guide']} (HTML)"
 							url="/doc/verinice-user-guide" />
 						<p:menuitem
 							url="https://www.youtube.com/channel/UCtBIMOtfziqFgI0pyAPHNww"

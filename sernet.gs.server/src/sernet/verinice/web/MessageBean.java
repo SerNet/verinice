@@ -1,12 +1,13 @@
 package sernet.verinice.web;
 
+import sernet.gs.web.Util;
+
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-
-import sernet.gs.web.Util;
 
 /**
  * ManagedBean to show error and info messages.
@@ -14,6 +15,7 @@ import sernet.gs.web.Util;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @ManagedBean(name = "message")
+@SessionScoped
 public class MessageBean {
 
     private String info;
@@ -98,6 +100,4 @@ public class MessageBean {
     public String getcurrentLanguageTag() {
         return Util.getcurrentLanguageTag();
     }
-
-
 }

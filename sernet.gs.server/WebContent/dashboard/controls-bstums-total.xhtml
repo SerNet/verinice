@@ -6,9 +6,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/poseidon/template.xhtml">
 
-	<ui:define name="title">Bausteinumsetzung :: Gesamt :: Charts</ui:define>
-	<ui:define name="viewname">Bausteinumsetzung :: Gesamt :: Charts</ui:define>
-
+	<ui:define name="title">#{msgWeb['controls-bstums-total.title']}</ui:define>
+	<ui:define name="viewname">#{msgWeb['controls-bstums-total.title']}</ui:define>
 
 	<ui:define name="head">
 		<ui:include src="/WEB-INF/poseidon/chart-extender.xhtml" />
@@ -18,11 +17,11 @@
 		<div class="ui-g ui-fluid">
 			<div class="ui-g-12">
 				<h:form id="chartPanel">
-					<p:panel header="Bausteinumsetzung gesamt">
+					<p:panel header="#{msgWeb['controls-bstums-total.header']}">
 						<ui:fragment
 							rendered="#{not controlsBstUmsAllChartView.totalCalculated}">
 							<div style="margin: 0 auto; text-align: center;">
-								<p>Crunching numbers</p>
+								<p>#{msgWeb['loading']}</p>
 								<p:graphicImage name="images/ajax-loader.gif"
 									library="poseidon-layout" />
 							</div>

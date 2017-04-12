@@ -9,18 +9,18 @@
 		<ui:include src="/WEB-INF/poseidon/chart-extender.xhtml" />
 	</ui:define>
 
-	<ui:define name="title">Bausteinumsetzung :: Charts</ui:define>
-	<ui:define name="viewname">Bausteinumsetzung :: Charts</ui:define>
+	<ui:define name="title">#{msgWeb['controls-total.title']}</ui:define>
+	<ui:define name="viewname">#{msgWeb['controls-total.title']}</ui:define>
 
 	<ui:define name="content">
 		<div class="ui-g ui-fluid">
 			<div class="ui-g-12">
 				<h:form id="chartPanel">
-					<p:panel header="Massnahmenumsetzung gesamt">
+					<p:panel header="#{msgWeb['controls-total.header']}">
 
 						<ui:fragment rendered="#{not controlsChartTotalView.calculated}">
 							<div style="margin: 0 auto; text-align: center;">
-								<p>Crunching numbers</p>
+								<p>#{msgWeb['loading']}</p>
 								<p:graphicImage name="images/ajax-loader.gif"
 									library="poseidon-layout" />
 							</div>

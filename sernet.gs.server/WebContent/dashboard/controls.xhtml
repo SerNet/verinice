@@ -5,8 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/poseidon/template.xhtml">
 
-	<ui:define name="title">#{controlsChartView.itNetwork} - MassnahmenUmsetzung</ui:define>
-	<ui:define name="viewname">#{controlsChartView.itNetwork} - MassnahmenUmsetzung</ui:define>
+	<ui:define name="title">#{controlsChartView.itNetwork} - #{msgWeb['controls.title']}</ui:define>
+	<ui:define name="viewname">#{controlsChartView.itNetwork} - #{msgWeb['controls.title']}</ui:define>
 
 	<ui:define name="head">
 		<ui:include src="/WEB-INF/poseidon/chart-extender.xhtml" />
@@ -23,7 +23,7 @@
 					<p:panel header="#{controlsChartView.itNetwork}">
 						<ui:fragment rendered="#{not controlsChartView.calculated}">
 							<div style="margin: 0 auto; text-align: center;">
-								<p>Crunching numbers</p>
+								<p>#{msgWeb['loading']}</p>
 								<p:graphicImage name="images/ajax-loader.gif"
 									library="poseidon-layout" />
 							</div>
