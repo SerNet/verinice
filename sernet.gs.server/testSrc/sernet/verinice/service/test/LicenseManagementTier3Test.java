@@ -50,7 +50,6 @@ import org.junit.Test;
 
 import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.service.crudcommands.PrepareObjectWithAccountDataForDeletion;
-import sernet.verinice.hibernate.LicenseManagementEntryDao;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
@@ -62,10 +61,10 @@ import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.model.licensemanagement.LicenseManagementEntry;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
 import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
 import sernet.verinice.model.licensemanagement.VNLMapper;
-import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 import sernet.verinice.model.licensemanagement.propertyconverter.PropertyConverter;
 import sernet.verinice.service.account.AccountSearchParameter;
 import sernet.verinice.service.commands.CreateConfiguration;
@@ -87,9 +86,6 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
     private static final Logger LOG = Logger.getLogger(LicenseManagementTier3Test.class);
     
     private static final String VNA_FILENAME = "LicenseMgmt.vna";
-    
-    @Resource(name = "licenseManagementDao")
-    protected LicenseManagementEntryDao elementDao;
     
     @Resource(name = "licenseManagementService")
     ILicenseManagementService licenseManagementService;
@@ -621,7 +617,6 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
     public void testUserMgmtInService(){
         
         LicenseManagementEntry entry = getSingleCryptedEntry();
-        entry = elementDao.merge(entry);
         
         String localLicenseId  = entry.getLicenseID();
         
@@ -636,7 +631,6 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
         
         Assert.assertTrue(idsFromDb.contains(localLicenseId));
         
-        elementDao.delete(entry);
         } catch (CommandException e){
             LOG.error("Error granting license to user", e);
         } catch (LicenseManagementException e){

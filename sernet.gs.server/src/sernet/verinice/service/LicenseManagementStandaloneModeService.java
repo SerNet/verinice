@@ -25,6 +25,8 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -34,19 +36,30 @@ import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
-import sernet.verinice.hibernate.LicenseManagementEntryDao;
-import sernet.verinice.interfaces.IDirectoryCreator;
 import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
+import sernet.verinice.model.licensemanagement.LicenseManagementEntry;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
 import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
 import sernet.verinice.model.licensemanagement.NoLicenseAssignedException;
 import sernet.verinice.model.licensemanagement.VNLMapper;
-import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 
 /**
+ * 
+ * This services re-defines the methods that are dealing with 
+ * the user-management regarding the license-management. 
+ * This is necessary because of only 1 existing "user" in standalone-
+ * mode. This user does not need to get assignment of licenses,
+ * he is allowed to use every license that exists within the workspace
+ * 
+ * 
+ * All methods
+ * not connected to user-specific details are defined in 
+ * {@link LicenseManagementServerModeService} which this
+ * class is inheriting from
+ * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
@@ -54,12 +67,8 @@ public class LicenseManagementStandaloneModeService
     extends LicenseManagementServerModeService
     implements ILicenseManagementService {
     
-    LicenseManagementEntryDao licenseManagementDao;
     IEncryptionService cryptoService;
     
-    IDirectoryCreator lmDirectoryCreator;
-
-
     /**
      * checks if the {@link LicenseManagementEntry} is valid at the current date
      * and ignores the username, since in standalone mode username 
@@ -229,7 +238,7 @@ public class LicenseManagementStandaloneModeService
     private void createVNLLocation(File location) 
             throws LicenseManagementException {
         try {
-            FileUtils.touch(location);
+            Files.createDirectory(Paths.get(location.toURI()));
         } catch (IOException e) {
             StringBuilder sb = new StringBuilder();
             sb.append("Error creating ")
@@ -315,13 +324,8 @@ public class LicenseManagementStandaloneModeService
         if (entry != null){
             // decrypt
             try {
-                if (entry != null){
-                    return getCryptoService().decryptLicenseRestrictedProperty(
-                            entry.getUserPassword(), cypherText);
-                } else {
-                    throw new NoLicenseAssignedException("License " 
-                            + encryptedContentId + " is not assigned to user: " 
-                            + username);                }
+                return getCryptoService().decryptLicenseRestrictedProperty(
+                        entry.getUserPassword(), cypherText);
             } catch (EncryptionException e) {
                 throw new LicenseManagementException(
                         "Problem while decrypting license restricted property",
@@ -357,6 +361,8 @@ public class LicenseManagementStandaloneModeService
                     return existingEntry;
                 }
             } catch (EncryptionException e){
+                // encryption failed, so try the next licenseEntry
+                // no error handling needed (try&error(/next))
                 continue;
             }
         }
@@ -367,20 +373,6 @@ public class LicenseManagementStandaloneModeService
     public Set<LicenseManagementEntry> getLicenseEntriesForUserByContentId(
             String user, String contentId) throws LicenseManagementException{
         return getLicenseEntriesForContentId(contentId, true);
-    }
-
-    /**
-     * @return the directoryCreator
-     */
-    public IDirectoryCreator getLmDirectoryCreator() {
-        return lmDirectoryCreator;
-    }
-
-    /**
-     * @param directoryCreator the directoryCreator to set
-     */
-    public void setLmDirectoryCreator(IDirectoryCreator directoryCreator) {
-        this.lmDirectoryCreator = directoryCreator;
     }
 
     /**

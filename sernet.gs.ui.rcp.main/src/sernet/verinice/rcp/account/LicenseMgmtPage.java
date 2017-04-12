@@ -48,8 +48,8 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.model.licensemanagement.LicenseManagementEntry;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
-import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 import sernet.verinice.service.commands.SaveConfiguration;
 
 /**

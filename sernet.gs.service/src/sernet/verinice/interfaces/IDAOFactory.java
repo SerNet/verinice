@@ -24,7 +24,6 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
-import sernet.verinice.interfaces.licensemanagement.ILicenseManagementEntryDao;
 import sernet.verinice.model.bsi.Addition;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
@@ -480,10 +479,6 @@ public interface IDAOFactory {
     IFinishedRiskAnalysisListsDao getFinishedRiskAnalysisListsDao();
     
     void setFinishedRiskAnalysisListsDao(IFinishedRiskAnalysisListsDao dao);
-    
-    void setLicenseManagementDao(ILicenseManagementEntryDao dao);
-    
-    ILicenseManagementEntryDao getLicenseManagementEntryDao();
     
 	@SuppressWarnings("unchecked")
 	/**

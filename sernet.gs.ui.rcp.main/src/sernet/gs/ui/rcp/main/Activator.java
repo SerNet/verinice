@@ -23,6 +23,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
@@ -73,6 +74,7 @@ import sernet.verinice.interfaces.IMain;
 import sernet.verinice.interfaces.IReportLocalTemplateDirectoryService;
 import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.IVersionConstants;
+import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -205,6 +207,9 @@ public class Activator extends AbstractUIPlugin implements IMain {
         CnAWorkspace.getInstance().prepareWorkDir();
         if (!prepareReportDirs()) {
             LOG.warn("ReportDirs are not created correclty");
+        }
+        if(!prepareVNLDir()){
+            LOG.warn("VNL-Dir was not created correctly");
         }
         setProxy();
 
@@ -906,6 +911,16 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     private boolean prepareReportDirs() {
         return CnAWorkspace.getInstance().createLocalReportTemplateDir(IReportService.VERINICE_REPORTS_LOCAL) && CnAWorkspace.getInstance().createReportTemplateDir(IReportService.VERINICE_REPORTS_REMOTE);
+    }
+    
+    private boolean prepareVNLDir(){
+        String workspace = System.getProperty("osgi.instance.area");
+        String vnlPath = FilenameUtils.concat(workspace, 
+                ILicenseManagementService.VNL_FILE_EXTENSION);
+        if (vnlPath.startsWith("file:")) {
+            vnlPath = vnlPath.substring(5);
+        }
+        return CnAWorkspace.getInstance().createLocalReportTemplateDir(vnlPath);
     }
 
     public IReportLocalTemplateDirectoryService getIReportTemplateDirectoryService() {

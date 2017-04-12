@@ -26,7 +26,6 @@ import java.io.OutputStream;
 
 import javax.xml.bind.JAXB;
 
-import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 import sernet.verinice.service.commands.ExportFactory;
 
 /**
@@ -64,7 +63,7 @@ public class VNLMapper {
         de.sernet.model.licensemanagement.LicenseManagementEntry xmlObject =
                 JAXB.unmarshal(inputStream, de.sernet.model.licensemanagement.
                 LicenseManagementEntry.class);
-        return xmlToHibernate(xmlObject);
+        return xmlToPojo(xmlObject);
     }
     
     /**
@@ -74,7 +73,7 @@ public class VNLMapper {
      **/
     public byte[] marshalLicenseManagementEntry(LicenseManagementEntry entry){
         de.sernet.model.licensemanagement.LicenseManagementEntry xmlObject =
-                hibernateToXml(entry);
+                pojoToXml(entry);
         OutputStream outputStream = new ByteArrayOutputStream();
         ExportFactory.marshal(xmlObject, outputStream);
         return ((ByteArrayOutputStream)outputStream).toByteArray();
@@ -83,10 +82,11 @@ public class VNLMapper {
     /**
      * maps the xml representation 
      * {@link de.sernet.model.licensemanagement.LicenseManagementEntry}
-     * to the hibernate representation {@link LicenseManagementEntry}
+     * to the POJO representation {@link LicenseManagementEntry}
      * of license management informations 
      */
-    public LicenseManagementEntry xmlToHibernate(de.sernet.model.licensemanagement.LicenseManagementEntry xmlObject){
+    public LicenseManagementEntry xmlToPojo(de.sernet.model.
+            licensemanagement.LicenseManagementEntry xmlObject){
         LicenseManagementEntry entry = new LicenseManagementEntry();
         entry.setContentIdentifier(xmlObject.getContentIdentifier());
         entry.setLicenseID(xmlObject.getLicenseID());
@@ -105,8 +105,10 @@ public class VNLMapper {
      * @param entry
      * @return
      */
-    public de.sernet.model.licensemanagement.LicenseManagementEntry hibernateToXml(LicenseManagementEntry entry){
-        de.sernet.model.licensemanagement.LicenseManagementEntry xmlObject = new de.sernet.model.licensemanagement.LicenseManagementEntry();
+    public de.sernet.model.licensemanagement.LicenseManagementEntry pojoToXml(
+            LicenseManagementEntry entry){
+        de.sernet.model.licensemanagement.LicenseManagementEntry xmlObject = 
+                new de.sernet.model.licensemanagement.LicenseManagementEntry();
         xmlObject.setContentIdentifier(entry.getContentIdentifier());
         xmlObject.setLicenseID(entry.getLicenseID());
         xmlObject.setSalt(entry.getSalt());

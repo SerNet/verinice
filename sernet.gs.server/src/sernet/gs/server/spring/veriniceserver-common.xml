@@ -242,7 +242,6 @@ This variant:
         
         
         <property name="finishedRiskAnalysisListsDao" ref="finishedRiskAnalysisListsDao" />
-        <property name="licenseManagementDao" ref="licenseManagementDao" /> 
 	</bean>
 
 	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">

@@ -26,8 +26,6 @@ import java.time.format.DateTimeFormatter;
 
 import org.apache.commons.beanutils.ConvertUtils;
 
-import sernet.verinice.interfaces.licensemanagement.IPropertyConverter;
-
 /**
  * This class tries to convert Objects to an expected type
  * use-case for this is the cast of properties that are 
@@ -42,19 +40,16 @@ import sernet.verinice.interfaces.licensemanagement.IPropertyConverter;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class PropertyConverter implements IPropertyConverter {
+public class PropertyConverter {
 
-    @Override
     public String convertToString(Object property) {
         return (String)ConvertUtils.convert(property, String.class);
     }
 
-    @Override
     public Integer convertToInteger(Object property){
         return (Integer) ConvertUtils.lookup(Integer.class).convert(Integer.class, property);
     }
 
-    @Override
     public LocalDate convertToDate(Object property){
         // ensure property is of type long
         if(property instanceof Long){
@@ -69,7 +64,6 @@ public class PropertyConverter implements IPropertyConverter {
         return null;
     }
 
-    @Override
     public Long convertToLong(Object property) {
         return (Long) ConvertUtils.lookup(Long.class).convert(Long.class, property);
     }

@@ -50,7 +50,7 @@ public class ClientCryptoService implements IEncryptionService {
      */
     @Override
     public byte[] encrypt(byte[] unencryptedByteData, char[] password) throws EncryptionException {
-        // TODO Auto-generated method stub
+        // not used in this implementation
         return null;
     }
 
@@ -59,7 +59,7 @@ public class ClientCryptoService implements IEncryptionService {
      */
     @Override
     public String encrypt(String plainText, char[] password, String salt) throws EncryptionException {
-        // TODO Auto-generated method stub
+        // not used in this implementation
         return null;
     }
 
@@ -116,7 +116,7 @@ public class ClientCryptoService implements IEncryptionService {
      */
     @Override
     public OutputStream encrypt(OutputStream unencryptedDataStream, String keyAlias) throws EncryptionException, IOException, CertificateException {
-        // TODO Auto-generated method stub
+        // not used in this implementation
         return null;
     }
 
@@ -133,7 +133,7 @@ public class ClientCryptoService implements IEncryptionService {
      */
     @Override
     public InputStream decrypt(InputStream encryptedInputStream, char[] password) throws EncryptionException, IOException {
-        // TODO Auto-generated method stub
+        // not used in this implementation
         return null;
     }
 
@@ -150,7 +150,7 @@ public class ClientCryptoService implements IEncryptionService {
      */
     @Override
     public byte[] decrypt(byte[] encryptedByteData, File x509CertificateFile, File privateKeyPemFile) throws IOException, CertificateException, EncryptionException {
-        // TODO Auto-generated method stub
+        // not used in this implementation
         return null;
     }
 
@@ -176,7 +176,7 @@ public class ClientCryptoService implements IEncryptionService {
      */
     @Override
     public InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, File privateKeyFile) throws IOException, CertificateException, EncryptionException {
-        // TODO Auto-generated method stub
+        // not used in this implementation
         return null;
     }
 
@@ -185,7 +185,7 @@ public class ClientCryptoService implements IEncryptionService {
      */
     @Override
     public InputStream decrypt(InputStream encryptedDataStream, File x509CertificateFile, File privateKeyFile, String privateKeyPassword) throws IOException, CertificateException, EncryptionException {
-        // TODO Auto-generated method stub
+        // not used in this implementation
         return null;
     }
 
@@ -194,7 +194,7 @@ public class ClientCryptoService implements IEncryptionService {
      */
     @Override
     public byte[] decrypt(byte[] encryptedByteData, String keyAlias) throws IOException, CertificateException, EncryptionException {
-        // TODO Auto-generated method stub
+        // not used in this implementation
         return null;
     }
 
@@ -203,7 +203,7 @@ public class ClientCryptoService implements IEncryptionService {
      */
     @Override
     public InputStream decrypt(InputStream encryptedDataStream, String keyAlias) throws IOException, CertificateException, EncryptionException {
-        // TODO Auto-generated method stub
+        // not used in this implementation
         return null;
     }
 

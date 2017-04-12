@@ -630,10 +630,6 @@
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
     
-    <bean id="licenseManagementDao" class="sernet.verinice.hibernate.LicenseManagementEntryDao">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
-    
 	<!-- END dao definitions ============================================================================ -->
 
 </beans>

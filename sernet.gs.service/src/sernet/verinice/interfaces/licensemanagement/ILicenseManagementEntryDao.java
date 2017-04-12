@@ -21,7 +21,7 @@ package sernet.verinice.interfaces.licensemanagement;
 
 import java.util.Set;
 
-import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
+import sernet.verinice.model.licensemanagement.LicenseManagementEntry;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de

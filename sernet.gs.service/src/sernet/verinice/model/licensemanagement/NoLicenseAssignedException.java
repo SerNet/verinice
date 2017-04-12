@@ -20,6 +20,10 @@
 package sernet.verinice.model.licensemanagement;
 
 /**
+ * This exception will be thrown when a user tries
+ * to access license restricted content that he does not 
+ * have the permission (license assigment) to read for
+ * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */

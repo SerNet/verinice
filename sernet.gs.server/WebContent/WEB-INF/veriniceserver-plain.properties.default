@@ -105,3 +105,7 @@ veriniceserver.gsmGenerator.enabled=false
 # 3:00 AM, 6:00 AM, 9:00 AM, 12:00 AM, 3:00 PM, 6:00 PM, 9:00 PM: "0 0 0,3,6,9,12,15,18,21 * * ?"
 # 15 minutes past each hour but only during the 9-to-5 "business hours" on weekdays: "* 15 9-17 * * MON-FRI"
 veriniceserver.gsmGenerator.cron=0 5 3 * * ?
+
+# location to store the vnl-files representing the licenses 
+# needed to access license-restricted content                                  
+veriniceserver.vnl.repository=/WEB-INF/vnl

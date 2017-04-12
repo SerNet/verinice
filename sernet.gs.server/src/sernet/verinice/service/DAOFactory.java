@@ -33,7 +33,6 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.interfaces.IElementEntityDao;
 import sernet.verinice.interfaces.IFinishedRiskAnalysisListsDao;
-import sernet.verinice.interfaces.licensemanagement.ILicenseManagementEntryDao;
 import sernet.verinice.model.bsi.Addition;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
@@ -139,8 +138,6 @@ public class DAOFactory implements IDAOFactory {
 	private IAttachmentDao attachmentDao;
 
 	private IFinishedRiskAnalysisListsDao finishedRiskAnalysisListsDao;
-	
-	private ILicenseManagementEntryDao licenseManagementDao;
 	
 	// injected by spring
 	@SuppressWarnings("unchecked")
@@ -822,16 +819,6 @@ public class DAOFactory implements IDAOFactory {
         
     }
     
-    @Override
-    public void setLicenseManagementDao(ILicenseManagementEntryDao dao){
-        this.licenseManagementDao = dao;
-    }
-    
-    @Override 
-    public ILicenseManagementEntryDao getLicenseManagementEntryDao(){
-        return this.licenseManagementDao;
-    }
-
     @Override
     @SuppressWarnings("unchecked")
 	/**

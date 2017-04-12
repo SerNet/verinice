@@ -20,6 +20,11 @@
 package sernet.verinice.model.licensemanagement;
 
 /**
+ * 
+ * This exception will be thrown, if a user clicks an element that contain
+ * license restricted content that is configured to be shown in the 
+ * BrowserView and the user does not have a valid exception for that
+ * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */

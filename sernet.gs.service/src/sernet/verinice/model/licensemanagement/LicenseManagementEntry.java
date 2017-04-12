@@ -17,7 +17,7 @@
  * Contributors:
  *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.model.licensemanagement.hibernate;
+package sernet.verinice.model.licensemanagement;
 
 import java.io.Serializable;
 

@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- verinice Spring configuration file  -->
-<!-- This file is referenced  in class sernet.gs.server.InternalServer --> 
-<!-- This is a configuration for the search backend. -->
+<!--                                                                                  -->
+<!-- Spring Framework configuration file                                              -->
+<!--                                                                                  -->
+<!-- This file contains the configuration of management of licenses for viewing       -->
+<!-- license-restricted content. It is used if the verinice server is running         --> 
+<!-- in Tomcat. See file veriniceserver-licensemanagement-osgi.xml                    -->
+<!--  for the configuration of the service                                            -->
+<!-- in the standalone version of verinice.                                           -->
+<!-- This file is referenced in web application configuration file web.xml.           -->
+<!--                                                                                  -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
   <bean id="licenseManagementService" class="sernet.verinice.service.LicenseManagementServerModeService">
-    <property name="licenseManagementDao" ref="licenseManagementDao" />
     <property name="configurationDao" ref="configurationDao" />
     <property name="cryptoService" ref="encryptionService" />
     <property name="commandService" ref="hibernateCommandService" />

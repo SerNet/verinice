@@ -20,6 +20,11 @@
 package sernet.verinice.model.licensemanagement;
 
 /**
+ * 
+ * This exception will be thrown if an admin tries to assign a license
+ * to a user that has no more free users to assign available (only
+ * in tier 3-mode, because in standalone there is always just one user)
+ * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */

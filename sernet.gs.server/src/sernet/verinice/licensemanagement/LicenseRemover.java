@@ -51,8 +51,8 @@ import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.model.licensemanagement.LicenseManagementEntry;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
-import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 
 /**
  * Removes invalid licenses for users in tier3 mode and sends email
@@ -79,9 +79,6 @@ public class LicenseRemover {
     private String emailCc;
     private String emailBcc;  
     
-    private static final String EMAIL_CC_PROPERTY = "${veriniceserver.notification.email.cc}";
-    private static final String EMAIL_BCC_PROPERTY = "${veriniceserver.notification.email.bcc}";
-    
     // template path without lang code "_en" and file extension ".vm"
     public static final String TEMPLATE_BASE_PATH = "sernet/verinice/licensemanagement/LicenseInvalid"; //$NON-NLS-1$
     public static final String TEMPLATE_EXTENSION = ".vm"; //$NON-NLS-1$
@@ -99,12 +96,166 @@ public class LicenseRemover {
         @Override
         public void doRun() {
             try {
-                checkLicensesValid();
+                removeLicenses();
             } catch (Exception e) {
                 LOG.error("Error while indexing elements.", e);
             }
         }
+        
+        /**
+         * loads all configurations in the database and perfoms validation-
+         * check for all of them
+         */
+        private void removeLicenses(){
+            List<Configuration> confs = (List)configurationDao.findByQuery(HQL, new Object[]{});
+            for (Configuration configuration : confs){
+                checkConfigurationForLicenseRemoval(configuration);
+            }
+        }
+        
+        /**
+         * checks all licenses for a given configuration if still valid,
+         * if not trigger removal of licenses and send email if needed
+         * 
+         * @param configuration
+         */
+        private void checkConfigurationForLicenseRemoval(Configuration configuration) {
+            for (String licenseId : configuration.getAssignedLicenseIds()){
+                checkLicenseIdForRemoval(configuration, licenseId);
+            }
+        }
+        
+        /**
+         * 
+         * triggers removal check for a single pair of a given licenseId 
+         * and configuration
+         * 
+         * @param configuration
+         * @param licenseId
+         */
+        private void checkLicenseIdForRemoval(Configuration configuration, String licenseId) {
+            LicenseManagementEntry entry = null;
+            try {
+                entry = licenseService.getLicenseEntryForLicenseId(licenseId, true);
+            } catch (LicenseManagementException e) {
+                LOG.error("Error getting LicenseManagementEntry for"
+                        + " licneseId:\t" + licenseId, e);
+            }
+            if (entry != null){
+                validateByDate(configuration, licenseId, entry);
+            }
+        }
+        
+        /**
+         * 
+         * checks if a {@link LicenseManagementEntry} is invalid by time and 
+         * triggers removal of license and sending of email, if needed
+         * 
+         * @param configuration
+         * @param licenseId
+         * @param entry
+         */
+        private void validateByDate(Configuration configuration, String licenseId, LicenseManagementEntry entry) {
+            LocalDate validUntil =
+                    licenseService.decrypt(entry, 
+                            LicenseManagementEntry.COLUMN_VALIDUNTIL);
+            LocalDate currentDate = LocalDate.now();
+            if (currentDate.isAfter(validUntil)){
+                removeLicenseFromConfigurationAndSendEmail(configuration, licenseId, entry, validUntil);
+
+            }
+        }
+        
+        /**
+         * 
+         * removes given licenseId from given Configuration and
+         * sends email to user, if configured
+         * 
+         * @param configuration
+         * @param licenseId
+         * @param entry
+         * @param validUntil
+         */
+        private void removeLicenseFromConfigurationAndSendEmail(Configuration configuration, String licenseId, LicenseManagementEntry entry, LocalDate validUntil) {
+            configuration.removeLicensedContentId(licenseId);
+            configurationDao.saveOrUpdate(configuration);
+
+            if (configuration.getNotificationLicense()){
+                MimeMessagePreparator preparator 
+                = prepareEmail(configuration, 
+                        licenseId, 
+                        entry, 
+                        validUntil);
+
+                getMailSender().send(preparator);
+            }
+        }
+        
+        /**
+         * @param configuration
+         * @param licenseId
+         * @param entry
+         * @param validUntil
+         * @return
+         */
+        private MimeMessagePreparator prepareEmail(Configuration configuration,
+                String licenseId, LicenseManagementEntry entry,
+                LocalDate validUntil) {
+            loadPerson(configuration.getDbId());
+            emailParam.put(NotificationJob.TEMPLATE_EMAIL, configuration.getNotificationEmail());
+            emailParam.put(NotificationJob.TEMPLATE_EMAIL_FROM, getEmailFrom());
+            emailParam.put(NotificationJob.TEMPLATE_REPLY_TO, getReplyTo());
+            emailParam.put(NotificationJob.TEMPLATE_URL, getTemplatePath());
+            String contentId = licenseService.decrypt(entry, LicenseManagementEntry.COLUMN_CONTENTID);
+            
+            emailParam.put("license", licenseId);
+            emailParam.put("contentId", contentId);
+            emailParam.put("expirationdate", validUntil.format(DateTimeFormatter.ISO_LOCAL_DATE));
+
+            final String subject = Messages.getString("LicenseRemover_Subject");
+            
+            return new MimeMessagePreparator() {
+                
+                @Override
+                public void prepare(MimeMessage mimeMessage) throws MessagingException {
+                    MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+                    setMessageProperties(subject, message);
+                }
+
+
+            };
+        }
+
+        /**
+         * 
+         * sets the properties for sending an email on basis of a 
+         * {@link MimeMessageHelper}
+         * 
+         * @param subject
+         * @param message
+         * @throws MessagingException
+         */
+        private void setMessageProperties(final String subject, MimeMessageHelper message) throws MessagingException {
+            message.setTo(getEmail());
+            message.setFrom(getEmailFrom());
+            if (getReplyTo() != null && !getReplyTo().isEmpty()) {
+                message.setReplyTo(getReplyTo());
+            }
+            message.setSubject(subject); //$NON-NLS-1$
+            String text = VelocityEngineUtils.mergeTemplateIntoString(
+                    getVelocityEngine(), getTemplatePath(), 
+                    VeriniceCharset.CHARSET_UTF_8.name(), emailParam);
+            message.setText(text, false);
+            if (getEmailCc() != null) {
+                message.setCc(getEmailCc());
+            }
+            if (getEmailBcc() != null) {
+                message.setBcc(getEmailBcc());
+            }
+        }
     }
+    
+
     
     public void runNonBlocking(){
         runRemoverThread();
@@ -119,91 +270,15 @@ public class LicenseRemover {
         exeService.shutdown();
     }
     
-    
-    private void checkLicensesValid(){
-        List<Configuration> confs = (List)configurationDao.findByQuery(HQL, new Object[]{});
-        for (Configuration configuration : confs){
-            for (String licenseId : configuration.getAssignedLicenseIds()){
-                LicenseManagementEntry entry = null;
-                try {
-                    entry = licenseService.getLicenseEntryForLicenseId(licenseId, true);
-                } catch (LicenseManagementException e) {
-                    LOG.error("Error getting LicenseManagementEntry for"
-                            + " licneseId:\t" + licenseId);
-                }
-                if (entry != null){
-                    LocalDate validUntil =
-                            licenseService.decrypt(entry, 
-                                    LicenseManagementEntry.COLUMN_VALIDUNTIL);
-                    LocalDate currentDate = LocalDate.now();
-                    if (currentDate.isAfter(validUntil)){
-                        configuration.removeLicensedContentId(licenseId);
-                        configurationDao.saveOrUpdate(configuration);
 
-                        if (configuration.getNotificationLicense()){
-                            MimeMessagePreparator preparator 
-                            = prepareEmail(configuration, 
-                                    licenseId, 
-                                    entry, 
-                                    validUntil);
 
-                            getMailSender().send(preparator);
-                        }
 
-                    }
-                }
-            }
-        }
-    }
 
-    /**
-     * @param configuration
-     * @param licenseId
-     * @param entry
-     * @param validUntil
-     * @return
-     */
-    private MimeMessagePreparator prepareEmail(Configuration configuration,
-            String licenseId, LicenseManagementEntry entry,
-            LocalDate validUntil) {
-        loadPerson(configuration.getDbId());
-        emailParam.put(NotificationJob.TEMPLATE_EMAIL, configuration.getNotificationEmail());
-        emailParam.put(NotificationJob.TEMPLATE_EMAIL_FROM, getEmailFrom());
-        emailParam.put(NotificationJob.TEMPLATE_REPLY_TO, getReplyTo());
-        emailParam.put(NotificationJob.TEMPLATE_URL, getTemplatePath());
-        String contentId = licenseService.decrypt(entry, LicenseManagementEntry.COLUMN_CONTENTID);
-        
-        emailParam.put("license", licenseId);
-        emailParam.put("contentId", contentId);
-        emailParam.put("expirationdate", validUntil.format(DateTimeFormatter.ISO_LOCAL_DATE));
 
-        final String subject = Messages.getString("LicenseRemover_Subject");
-        
-        MimeMessagePreparator preparator = new MimeMessagePreparator() {
-            
-            @Override
-            public void prepare(MimeMessage mimeMessage) throws MessagingException {
-                MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
-                message.setTo(getEmail());
-                message.setFrom(getEmailFrom());
-                if (getReplyTo() != null && !getReplyTo().isEmpty()) {
-                    message.setReplyTo(getReplyTo());
-                }
-                message.setSubject(subject); //$NON-NLS-1$
-                String text = VelocityEngineUtils.mergeTemplateIntoString(
-                        getVelocityEngine(), getTemplatePath(), 
-                        VeriniceCharset.CHARSET_UTF_8.name(), emailParam);
-                message.setText(text, false);
-                if (getEmailCc() != null) {
-                    message.setCc(getEmailCc());
-                }
-                if (getEmailBcc() != null) {
-                    message.setBcc(getEmailBcc());
-                }
-            }
-        };
-        return preparator;
-    }
+
+
+
+
     
     public String getEmail() {
         return (emailParam != null) ? emailParam.get(
@@ -246,35 +321,66 @@ public class LicenseRemover {
             Object[] params = new Object[]{dbId};        
             List<Configuration> configurationList = getConfigurationDao().findByQuery(hql,params);
             for (Configuration configuration : configurationList) {
-                CnATreeElement element = configuration.getPerson();
-                if (element instanceof PersonIso) {
-                    PersonIso person = (PersonIso) element;
-                    emailParam.put(NotificationJob.TEMPLATE_NAME, person.getSurname());
-                    String anrede = person.getAnrede();
-                    if (anrede != null && !anrede.isEmpty()) {
-                        emailParam.put(NotificationJob.TEMPLATE_ADDRESS, person.getAnrede());
-                    } else {
-                        emailParam.put(NotificationJob.TEMPLATE_ADDRESS, DEFAULT_ADDRESS);
-                    }
-                // handling for bsi persons
-                } else if (element instanceof Person){
-                    Person person = (Person) element;
-                    String nachname = (person.getEntity() != null ? 
-                            (person.getEntity().getSimpleValue("nachname") != null
-                            ? person.getEntity().getSimpleValue("nachname") 
-                                    : "Kein Name") : "Kein Name");
-                    emailParam.put(NotificationJob.TEMPLATE_NAME, nachname);
-                    String anrede = (person.getEntity() != null 
-                            ? (person.getEntity().getSimpleValue(
-                                    "person_anrede") != null 
-                                    ? person.getEntity().getSimpleValue(
-                                            "person_anrede") : DEFAULT_ADDRESS) 
-                            : DEFAULT_ADDRESS);
-                    emailParam.put(NotificationJob.TEMPLATE_ADDRESS, anrede);
-                }
+                prepareEmailViaConfiguration(configuration);
             }
         }   
         
+    }
+
+    /**
+     * 
+     * retrieves person-Object of configuration and extracts
+     * values needed for sending mail out of person object
+     * to set it to global attribute emailParam
+     * 
+     * @param configuration
+     */
+    private void prepareEmailViaConfiguration(Configuration configuration) {
+        CnATreeElement element = configuration.getPerson();
+        if (element instanceof PersonIso) {
+            preparePersonIso(element);
+        // handling for bsi persons
+        } else if (element instanceof Person){
+            prepareGSPerson(element);
+        }
+    }
+
+    /**
+     * extracts properties for sending email from a ITGS-Person 
+     * {@link Person}
+     * 
+     * @param element
+     */
+    private void prepareGSPerson(CnATreeElement element) {
+        Person person = (Person) element;
+        String nachname = person.getEntity() != null ? 
+                (person.getEntity().getSimpleValue("nachname") != null
+                ? person.getEntity().getSimpleValue("nachname") 
+                        : "Kein Name") : "Kein Name";
+        emailParam.put(NotificationJob.TEMPLATE_NAME, nachname);
+        String anrede = person.getEntity() != null 
+                ? (person.getEntity().getSimpleValue(
+                        "person_anrede") != null 
+                        ? person.getEntity().getSimpleValue(
+                                "person_anrede") : DEFAULT_ADDRESS) 
+                : DEFAULT_ADDRESS;
+        emailParam.put(NotificationJob.TEMPLATE_ADDRESS, anrede);
+    }
+
+    /**
+     * extracts properties for sending email from a {@link PersonIso} 
+     * {@link CnATreeElement}
+     * @param element
+     */
+    private void preparePersonIso(CnATreeElement element) {
+        PersonIso person = (PersonIso) element;
+        emailParam.put(NotificationJob.TEMPLATE_NAME, person.getSurname());
+        String anrede = person.getAnrede();
+        if (anrede != null && !anrede.isEmpty()) {
+            emailParam.put(NotificationJob.TEMPLATE_ADDRESS, person.getAnrede());
+        } else {
+            emailParam.put(NotificationJob.TEMPLATE_ADDRESS, DEFAULT_ADDRESS);
+        }
     }
 
     /**

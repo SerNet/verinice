@@ -37,7 +37,7 @@ import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
+import sernet.verinice.model.licensemanagement.LicenseManagementEntry;
 
 /**
  * Configuration item. Actual configuration values are saved in Entity.
