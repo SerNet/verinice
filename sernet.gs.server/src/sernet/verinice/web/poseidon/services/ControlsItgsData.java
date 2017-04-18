@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Benjamin Weißenfels.
+ * Copyright (c) 2017 Benjamin Weißenfels.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -19,31 +19,40 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.services;
 
-import java.io.Serializable;
-
-import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.IDAOFactory;
-import sernet.verinice.interfaces.graph.IGraphService;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.service.model.IObjectModelService;
+import java.util.SortedMap;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public abstract class GenericChartService {
+public class ControlsItgsData {
 
-    IObjectModelService getObjectService(){
-       return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
+    private String itNetworkName;
+
+    private SortedMap<String, Number> states;
+
+    public ControlsItgsData(String itNetworkName, SortedMap<String, Number> states) {
+        this.itNetworkName = itNetworkName;
+        this.states = states;
     }
 
-    IGraphService getGraphService() {
-        return (IGraphService) VeriniceContext.get(VeriniceContext.GRAPH_SERVICE);
+    public String getItNetworkName() {
+        return itNetworkName;
     }
 
+    public void setItNetworkName(String itNetworkName) {
+        this.itNetworkName = itNetworkName;
+    }
 
-    IBaseDao<MassnahmenUmsetzung, Serializable> getMassnahmenDao(IDAOFactory iDaoFactory) {
-        return (IBaseDao<MassnahmenUmsetzung, Serializable>) iDaoFactory.getDAO(MassnahmenUmsetzung.class);
+    public SortedMap<String, Number> getStates() {
+        return states;
+    }
+
+    public void setStates(SortedMap<String, Number> states) {
+        this.states = states;
+    }
+
+    public boolean noData() {
+        return states == null || states.isEmpty();
     }
 }

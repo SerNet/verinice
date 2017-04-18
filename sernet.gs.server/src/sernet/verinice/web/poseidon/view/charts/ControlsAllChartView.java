@@ -19,10 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view.charts;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.SortedMap;
 
@@ -35,13 +32,8 @@ import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
-import sernet.gs.service.NumericStringComparator;
-import sernet.gs.service.RetrieveInfo;
-import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.service.DAOFactory;
 import sernet.verinice.web.poseidon.services.ChartService;
+import sernet.verinice.web.poseidon.services.ControlsItgsData;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -77,24 +69,18 @@ public class ControlsAllChartView {
     public void loadDataForAllItNetworks(){
 
         charts = new ArrayList<>();
+        List<ControlsItgsData> itNetworks = chartService.aggregateMassnahmenUmsetzung();
 
-        DAOFactory daoFactory = (DAOFactory) VeriniceContext.get(VeriniceContext.DAO_FACTORY);
-        IBaseDao<ITVerbund, Serializable> itNetworkDao = daoFactory.getDAO(ITVerbund.class);
-        @SuppressWarnings("unchecked")
-        List<ITVerbund> itNetworks = itNetworkDao.findAll(RetrieveInfo.getPropertyInstance());
-        itNetworks = sortItNetworks(itNetworks);
+        for (ControlsItgsData controlsItgsData : itNetworks) {
 
-        for (ITVerbund itNetwork : itNetworks) {
-
-            SortedMap<String, Number> states = getChartService().aggregateMassnahmenUmsetzung(itNetwork);
-
-            if (states.isEmpty())
+            if (controlsItgsData.noData()){
                 continue;
+            }
 
             VeriniceChartRow item = new VeriniceChartRow();
-            ControlChartsFactory chartModelFactory = new ControlChartsFactory(states);
+            ControlChartsFactory chartModelFactory = new ControlChartsFactory(controlsItgsData.getStates());
 
-            item.setTitle(itNetwork.getTitle());
+            item.setTitle(controlsItgsData.getItNetworkName());
             item.setFirstChartModel(chartModelFactory.getPieChartModel());
             HorizontalBarChartModel horizontalBarModel = chartModelFactory.getHorizontalBarModel();
             item.setSecondChartModel(horizontalBarModel);
@@ -111,19 +97,6 @@ public class ControlsAllChartView {
     private SortedMap<String, Number> calculateTotal() {
         SortedMap<String, Number> allStates = chartService.aggregateMassnahmenUmsetzungStatus();
         return allStates;
-    }
-
-
-
-    private List<ITVerbund> sortItNetworks(List<ITVerbund> itNetworks) {
-        Collections.sort(itNetworks, new Comparator<ITVerbund>() {
-            @Override
-            public int compare(ITVerbund o1, ITVerbund o2) {
-                return new NumericStringComparator().compare(o1.getTitle(), o2.getTitle());
-            }
-        });
-
-        return itNetworks;
     }
 
 

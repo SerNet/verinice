@@ -19,10 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view.charts;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -37,13 +34,8 @@ import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.HorizontalBarChartModel;
 
-import sernet.gs.service.NumericStringComparator;
-import sernet.gs.service.RetrieveInfo;
-import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.service.DAOFactory;
 import sernet.verinice.web.poseidon.services.ChartService;
+import sernet.verinice.web.poseidon.services.ControlsBstUmsData;
 import sernet.verinice.web.poseidon.services.strategy.GroupedByChapterStrategy;
 
 /**
@@ -109,35 +101,24 @@ public class ControlsBstUmsAllChartView {
     }
 
     private void initChartsForAllItNetworks() {
-        List<ITVerbund> itNetworks = loadItNetworks();
-        itNetworks = sortItNetworks(itNetworks);
-        this.charts = createCharts(itNetworks);
+        this.charts = createCharts();
     }
 
-    private List<ITVerbund> loadItNetworks() {
-        DAOFactory daoFactory = (DAOFactory) VeriniceContext.get(VeriniceContext.DAO_FACTORY);
-        IBaseDao<ITVerbund, Serializable> itNetworkDao = daoFactory.getDAO(ITVerbund.class);
-        @SuppressWarnings("unchecked")
-        List<ITVerbund> itNetworks = itNetworkDao.findAll(RetrieveInfo.getPropertyInstance());
-        return itNetworks;
-    }
 
-    private ArrayList<VeriniceChartRow> createCharts(List<ITVerbund> itNetworks) {
+    private ArrayList<VeriniceChartRow> createCharts() {
 
         ArrayList<VeriniceChartRow> charts = new ArrayList<>();
 
-        for (ITVerbund itNetwork : itNetworks) {
+        for (ControlsBstUmsData controlsBstUmsData : chartService.groupByMassnahmenStates(strategy.getStrategy())) {
 
-            Map<String, Map<String, Number>> states = chartService.groupByMassnahmenStates(itNetwork, strategy.getStrategy());
-
-            if (states.isEmpty()) {
-                continue;
+            if (controlsBstUmsData.noData()) {
+               continue;
             }
 
             VeriniceChartRow item = new VeriniceChartRow();
-            ModulChartsFactory chartModelFactory = new ModulChartsFactory(states);
+            ModulChartsFactory chartModelFactory = new ModulChartsFactory(controlsBstUmsData.getData());
 
-            item.setTitle(itNetwork.getTitle());
+            item.setTitle(controlsBstUmsData.getItNetworkName());
             item.setFirstChartModel(chartModelFactory.getVerticalBarChartModel());
             HorizontalBarChartModel horizontalBarChartModel = chartModelFactory.getHorizontalBarChartModel();
             item.setSecondChartModel(horizontalBarChartModel);
@@ -150,16 +131,6 @@ public class ControlsBstUmsAllChartView {
         return charts;
     }
 
-    private List<ITVerbund> sortItNetworks(List<ITVerbund> itNetworks) {
-        Collections.sort(itNetworks, new Comparator<ITVerbund>() {
-            @Override
-            public int compare(ITVerbund o1, ITVerbund o2) {
-                return new NumericStringComparator().compare(o1.getTitle(), o2.getTitle());
-            }
-        });
-
-        return itNetworks;
-    }
 
     public List<VeriniceChartRow> getCharts() {
         return charts;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Benjamin Weißenfels.
+ * Copyright (c) 2017 Benjamin Weißenfels.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -19,31 +19,41 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.services;
 
-import java.io.Serializable;
-
-import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.IDAOFactory;
-import sernet.verinice.interfaces.graph.IGraphService;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.service.model.IObjectModelService;
+import java.util.Map;
+import java.util.SortedMap;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public abstract class GenericChartService {
+public class ControlsBstUmsData {
 
-    IObjectModelService getObjectService(){
-       return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
+    private String itNetworkName;
+
+    private Map<String, Map<String, Number>> data;
+
+    public ControlsBstUmsData(String itNetworkName, Map<String, Map<String, Number>> data) {
+        this.setItNetworkName(itNetworkName);
+        this.data = data;
     }
 
-    IGraphService getGraphService() {
-        return (IGraphService) VeriniceContext.get(VeriniceContext.GRAPH_SERVICE);
+    public String getItNetworkName() {
+        return itNetworkName;
     }
 
+    public void setItNetworkName(String itNetworkName) {
+        this.itNetworkName = itNetworkName;
+    }
 
-    IBaseDao<MassnahmenUmsetzung, Serializable> getMassnahmenDao(IDAOFactory iDaoFactory) {
-        return (IBaseDao<MassnahmenUmsetzung, Serializable>) iDaoFactory.getDAO(MassnahmenUmsetzung.class);
+    public Map<String, Map<String, Number>> getData() {
+        return data;
+    }
+
+    public void setData(SortedMap<String, Map<String, Number>> data) {
+        this.data = data;
+    }
+
+    public boolean noData() {
+        return data == null || data.isEmpty();
     }
 }

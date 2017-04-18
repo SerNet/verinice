@@ -20,6 +20,8 @@
 package sernet.verinice.web.poseidon.services;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -30,6 +32,7 @@ import javax.faces.bean.ViewScoped;
 
 import org.apache.commons.lang.StringUtils;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.graph.GraphElementLoader;
 import sernet.verinice.interfaces.graph.IGraphElementLoader;
 import sernet.verinice.interfaces.graph.IGraphService;
@@ -112,6 +115,30 @@ public class ChartService extends GenericChartService {
     }
 
     /**
+     * Returns aggregated status of all {@link MassnahmenUmsetzung} of a it
+     * network. All {@link ITVerbund} which are readable by the user are taken
+     * into account.
+     *
+     * @return If no {@link MassnahmenUmsetzung} is defined for the IT network.
+     *         it could be empty.
+     */
+    public List<ControlsItgsData> aggregateMassnahmenUmsetzung() {
+        List<ControlsItgsData> controlsItgsDatas = new ArrayList<>();
+        for (ITVerbund itVerbund : menuService.getVisibleItNetworks()) {
+            controlsItgsDatas.add(new ControlsItgsData(itVerbund.getTitle(), aggregateMassnahmenUmsetzung(itVerbund.getScopeId())));
+        }
+
+        Collections.sort(controlsItgsDatas, new Comparator<ControlsItgsData>() {
+            @Override
+            public int compare(ControlsItgsData o1, ControlsItgsData o2) {
+                return new NumericStringComparator().compare(o1.getItNetworkName(), o2.getItNetworkName());
+            }
+        });
+
+        return controlsItgsDatas;
+    }
+
+    /**
      * Aggregate over all {@link BausteinUmsetzung} objects and aggregate the
      * {@link MassnahmenUmsetzung} states.
      *
@@ -134,6 +161,36 @@ public class ChartService extends GenericChartService {
      */
     public Map<String, Map<String, Number>> groupByMassnahmenStates(ITVerbund itNetwork, GroupByStrategy g) {
         return groupByMassnahmenStates(String.valueOf(itNetwork.getScopeId()), g);
+    }
+
+    /**
+     * Aggregate over all {@link BausteinUmsetzung} objects and aggregate the
+     * {@link MassnahmenUmsetzung} states. All {@link ITVerbund} which are
+     * readable by the user are taken into account.
+     *
+     * This method normalizes the data in a way, that the number of a specific
+     * state is divided through the number of instances of a specific
+     * {@link BausteinUmsetzung}. With instances is meant several
+     * {@link BausteinUmsetzung} object with the same chapter value.
+     *
+     *
+     * @param groupByStrategie
+     *            Decides which algorithm is used for the number crunching.
+     *
+     * @return Key is the chapter of a
+     *         {@link MassnahmenUmsetzung#getUmsetzung()}. The value is a map
+     *         with the key {@link BausteinUmsetzung#getKapitel()}. This allows
+     *         the result to be displayed as a stacked chart.
+     */
+    public List<ControlsBstUmsData> groupByMassnahmenStates(GroupByStrategy groupByStrategie) {
+
+        List<ControlsBstUmsData> controlsBstUmsData = new ArrayList<>();
+        for (ITVerbund itVerbund : menuService.getVisibleItNetworks()) {
+            Map<String, Map<String, Number>> states = groupByMassnahmenStates(itVerbund, groupByStrategie);
+            controlsBstUmsData.add(new ControlsBstUmsData(itVerbund.getTitle(), states));
+        }
+
+        return controlsBstUmsData;
     }
 
     /**
