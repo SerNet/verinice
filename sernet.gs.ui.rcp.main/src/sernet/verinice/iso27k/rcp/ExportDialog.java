@@ -176,7 +176,7 @@ public class ExportDialog extends TitleAreaDialog {
             }
         };
         
-        organizationWidget.addSelectionLiustener(organizationListener);
+        organizationWidget.addSelectionListener(organizationListener);
         
         
         if(!serverConnectionMode) {    

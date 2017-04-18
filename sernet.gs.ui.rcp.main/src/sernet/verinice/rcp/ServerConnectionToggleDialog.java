@@ -131,7 +131,7 @@ public class ServerConnectionToggleDialog extends TitleAreaDialog {
             }
         };
         
-        organizationWidget.addSelectionLiustener(organizationListener);
+        organizationWidget.addSelectionListener(organizationListener);
         
         composite.pack();     
         return composite;

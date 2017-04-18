@@ -193,7 +193,7 @@ public class CsvExportDialog extends TitleAreaDialog {
             }   
         };
 
-        organizationWidget.addSelectionLiustener(organizationListener);
+        organizationWidget.addSelectionListener(organizationListener);
     }
     
     private void changeFilePathToCurrentSelection() {

@@ -106,7 +106,7 @@ public class OrganizationPage extends BaseWizardPage {
             } 
         };
 
-        organizationWidget.addSelectionLiustener(organizationListener);
+        organizationWidget.addSelectionListener(organizationListener);
         
         syncSelectedOrganizations();
         composite.pack();
@@ -120,16 +120,6 @@ public class OrganizationPage extends BaseWizardPage {
         // nothing to do, organizations are loaded in class ScopeMultiselectWidget
     }
     
-    private void syncSelectedOrganizations() {
-        organizationIds.clear();
-        if (organizationWidget.getSelectedElementSet() != null) {
-            Set<CnATreeElement> selectedOrganizations  = organizationWidget.getSelectedElementSet();
-            for (CnATreeElement organization : selectedOrganizations) {
-                organizationIds.add(organization.getDbId());
-            }
-        }
-        setPageComplete(isPageComplete());
-    }
     
     /* (non-Javadoc)
      * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
@@ -141,6 +131,17 @@ public class OrganizationPage extends BaseWizardPage {
             LOG.debug("page complete: " + complete); //$NON-NLS-1$
         }
         return complete;
+    }
+    
+    private void syncSelectedOrganizations() {
+        organizationIds.clear();
+        if (organizationWidget.getSelectedElementSet() != null) {
+            Set<CnATreeElement> selectedOrganizations  = organizationWidget.getSelectedElementSet();
+            for (CnATreeElement organization : selectedOrganizations) {
+                organizationIds.add(organization.getDbId());
+            }
+        }
+        setPageComplete(isPageComplete());
     }
 
     public Set<CnATreeElement> getSelectedElementSet() {
