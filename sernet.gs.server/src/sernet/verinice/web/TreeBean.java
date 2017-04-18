@@ -215,7 +215,6 @@ public class TreeBean implements IElementListener {
         // Add home item
         DefaultMenuItem home = new DefaultMenuItem();
         home.setCommand("#{tree.init}");
-        home.setAjax(true);
         home.setUpdate(":tableForm,:navForm");
         menuModel.addElement(home);
         
@@ -230,7 +229,6 @@ public class TreeBean implements IElementListener {
             item.setValue(pathElement.getTitle());
             item.setCommand("#{tree.selectPath(" + i + ")}");
             item.setUpdate(":tableForm,:navForm");
-            item.setAjax(true);
             menuModel.addElement(item);
         }
     }

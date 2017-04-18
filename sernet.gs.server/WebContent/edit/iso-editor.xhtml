@@ -28,16 +28,17 @@
 			<div class="ui-g-6 ui-lg-6 ui-xl-6 ui-md-6 ui-sm-12">
 				<h:form id="tableForm" rendered="#{auth.isoElements}">
 
-					<p:growl id="msg" autoUpdate="true" showDetail="true" sticky="true" severity="info" />
+					<p:growl id="msg" autoUpdate="true" showDetail="true" sticky="true"
+						severity="info" />
 
 					<p:panel header="#{msgTree['iso-elements-panel-title']}">
 						<div class="ui-g ui-fluid">
 							<div class="ui-g-4">
 								<p:commandButton id="newButton"
+									onclick="PF('newDialog').show();"
 									disabled="#{empty tree.handlers or (not auth.addElement and not auth.addGroup)}"
 									icon="fa fa-fw fa-file-o" value="New" title="New" />
-								<p:overlayPanel id="newPanel" for="newButton" hideEffect="fade"
-									dynamic="true">
+								<p:dialog id="newDialog" widgetVar="newDialog">
 									<p:dataTable id="newElementTable" var="h"
 										value="#{tree.handlers}" styleClass="new-iso-object-panel">
 										<p:column style="width:16px">
@@ -48,8 +49,18 @@
 												actionListener="#{h.execute}" styleClass="#{h.icon}"
 												update=":tableForm:elementTable,:navForm" />
 										</p:column>
+
+										<p:column>
+											<p:commandButton value="#{msgTree['new-dialog.add']}"
+												icon="fa fa-fw fa-plus" actionListener="#{h.execute}"
+												update=":tableForm:elementTable,:navForm" />
+										</p:column>
 									</p:dataTable>
-								</p:overlayPanel>
+									<p:commandButton value="#{msgTree['new-dialog.close']}"
+										icon="fa fa-fw fa-remove"
+										update=":tableForm:elementTable,:navForm"
+										onclick="PF('newDialog').hide();" />
+								</p:dialog>
 							</div>
 							<div class="ui-g-4">
 								<p:dialog id="confirmDialog" modal="true"
@@ -79,8 +90,8 @@
 									</p:panelGrid>
 								</p:dialog>
 								<p:commandButton onclick="submitEditForm();"
-									disabled="#{edit.element==null}"
-									icon="fa fa-fw fa-save" value="Save" title="Save" />
+									disabled="#{edit.element==null}" icon="fa fa-fw fa-save"
+									value="Save" title="Save" />
 
 							</div>
 							<div class="ui-g-4">
