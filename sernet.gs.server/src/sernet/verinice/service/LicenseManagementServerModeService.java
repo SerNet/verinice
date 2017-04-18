@@ -119,9 +119,10 @@ public class LicenseManagementServerModeService
     }
 
     /**
-     * finds the instance of {@link LicenseManagementEntry}
-     * which matches to @param encryptedLicenseId,
-     * search for entry possible in en- or decrypted mode (@param decrypt)
+     * Finds the instance of {@link LicenseManagementEntry}
+     * which matches to @param encryptedLicenseId
+     * 
+     * Search for entry is possible in en- or decrypted mode (@param decrypt)
      * 
      * @param encryptedLicenseId
      * @param decrypt
@@ -262,7 +263,7 @@ public class LicenseManagementServerModeService
 
     /**
      * 
-     * iterates over all {@link LicenseManagementEntry} and decrypts 
+     * Iterates over all {@link LicenseManagementEntry} and decrypts 
      * their contentId. Tries to decrypt the given @param encryptedContentId
      * with the password of the {@link LicenseManagementEntry} and after
      * that compares both contentIds. If they are equal, the entry will
@@ -464,7 +465,7 @@ public class LicenseManagementServerModeService
     
     
     /**
-     * load all instances of {@link Configuration} via hql
+     * Load all instances of {@link Configuration} via hql
      * including their properties via join to avoid 
      * {@link LazyInitializationException} when iterating them 
      * 
@@ -488,7 +489,7 @@ public class LicenseManagementServerModeService
     }
 
     /**
-     * load a Configuration referenced by a username
+     * Load a {@link Configuration} referenced by a username
      * 
      * @param username - username that identifies a {@link Configuration}
      * @return a {@link Configuration} that is identified by username
@@ -625,7 +626,7 @@ public class LicenseManagementServerModeService
     }
     
     /**
-     * get configured location of vnl-repository
+     * Get configured location of vnl-repository
      */
     @Override
     public File getVNLRepository() throws LicenseManagementException{
@@ -688,12 +689,12 @@ public class LicenseManagementServerModeService
     }
 
     /**
-     * decrypts a license restricted property value
+     * Decrypts a license restricted property value
      *
-     * throws {@link NoLicenseAssignedException} if user has no 
+     * Throws {@link NoLicenseAssignedException} if user has no 
      * permission to see the restricted content
      * 
-     * throws {@link LicenseManagementException} if something went
+     * Throws {@link LicenseManagementException} if something went
      * wrong with the decryption of the property value
      * 
      * 
@@ -740,7 +741,7 @@ public class LicenseManagementServerModeService
     }
 
     /**
-     * returns a licenseId for a given contentId and a given user,
+     * Returns a licenseId for a given contentId and a given user,
      * if the user has the permission to see content of that contentId
      * 
      * 
@@ -811,8 +812,9 @@ public class LicenseManagementServerModeService
     }
 
     /**
-     * checks if the given license will be invalid within the next 
+     * Checks if the given license will be invalid within the next 
      * 31 days
+     * 
      * @param entry
      * @return
      */
@@ -844,7 +846,7 @@ public class LicenseManagementServerModeService
     }
 
     /**
-     * create a {@link LicenseMessageInfos} for a given {@link LicenseManagementEntry}
+     * Create a {@link LicenseMessageInfos} for a given {@link LicenseManagementEntry}
      * @param entry
      * @return
      */
@@ -878,11 +880,11 @@ public class LicenseManagementServerModeService
     
     
     /**
-     * iterates over all existing licences and returns the 
+     * Iterates over all existing licences and returns the 
      * {@link LicenseManagementEntry} that matches the given contentId,
      * licenseId and is assigned to the given user
      *
-     * note that licenseId can be empty ("" or null), usecase for
+     * Note that licenseId can be empty ("" or null), usecase for
      * calling this from {@link HTMLWriter}, that does not know about
      * an entry. In the case of more than one assigned license
      * for the given contentId, the one that is valid the longest will
@@ -912,8 +914,9 @@ public class LicenseManagementServerModeService
     }
 
     /**
-     * finds the entry of a set of {@link LicenseManagementEntry} instances
+     * Finds the entry of a set of {@link LicenseManagementEntry} instances
      * that is valid the longest
+     * 
      * @param entries
      * @return
      */
@@ -942,7 +945,7 @@ public class LicenseManagementServerModeService
     
     /**
      * 
-     * checks if a given @param existingEntry (instance of 
+     * Checks if a given @param existingEntry (instance of 
      * {@link LicenseManagementEntry} matches to a given
      * encrypted ContentId and optionally a given
      * encrypted licenseId. Also possible to pass the license-/content-Id

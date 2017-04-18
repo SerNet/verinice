@@ -35,7 +35,7 @@ import sernet.verinice.service.crypto.PasswordBasedEncryption;
 import sernet.verinice.service.crypto.SMIMEBasedEncryption;
 
 /**
- * this is a implementation of {@link IEncryptionService} which should be 
+ * This is a implementation of {@link IEncryptionService} which should be 
  * used by {@link XMLImportDialog} because there is no need to transfer the
  * data that is going to be im-/exported to the server before de-/encrypting 
  * it.

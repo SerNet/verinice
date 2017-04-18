@@ -22,12 +22,11 @@ package sernet.verinice.model.licensemanagement;
 import java.io.Serializable;
 
 /**
- * 
- * class maps content of a single vnl-file, which contains 
+ * Class maps content of a single vnl-file, which contains 
  * license-information for one content-catalogue and is purchased
  * via the verinice.SHOP
  * 
- * since ALL (but hibernate primary key "id", "salt" and "userPassword") attributes of this
+ * Since ALL (but hibernate primary key "id", "salt" and "userPassword") attributes of this
  * class are stored encrypted in the database, the datatype of all
  * attributes is String 
  * 

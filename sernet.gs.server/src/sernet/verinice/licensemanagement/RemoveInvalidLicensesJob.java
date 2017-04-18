@@ -26,9 +26,9 @@ import org.quartz.StatefulJob;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 /**
- * this should run once a day, at 00:01 (not configurable)
- *  to remove license assignments of users of licenses that are not valid 
- *  anymore (to prevent users havin invalid licenses assigned)
+ * This should run once a day, at 00:02 (not configurable)
+ * to remove license assignments of users of licenses that are not valid 
+ * anymore (to prevent users havin invalid licenses assigned)
  *  
  * @author Sebastian Hagedorn sh[at]sernet.de
  *

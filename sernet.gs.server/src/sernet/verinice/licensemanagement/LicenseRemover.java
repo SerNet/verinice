@@ -103,7 +103,7 @@ public class LicenseRemover {
         }
         
         /**
-         * loads all configurations in the database and perfoms validation-
+         * Loads all configurations in the database and perfoms validation-
          * check for all of them
          */
         private void removeLicenses(){
@@ -114,7 +114,7 @@ public class LicenseRemover {
         }
         
         /**
-         * checks all licenses for a given configuration if still valid,
+         * Checks all licenses for a given {@link Configuration} if still valid,
          * if not trigger removal of licenses and send email if needed
          * 
          * @param configuration
@@ -126,9 +126,8 @@ public class LicenseRemover {
         }
         
         /**
-         * 
-         * triggers removal check for a single pair of a given licenseId 
-         * and configuration
+         * Triggers removal check for a single pair of a given licenseId 
+         * and {@link Configuration}
          * 
          * @param configuration
          * @param licenseId
@@ -147,8 +146,7 @@ public class LicenseRemover {
         }
         
         /**
-         * 
-         * checks if a {@link LicenseManagementEntry} is invalid by time and 
+         * Checks if a {@link LicenseManagementEntry} is invalid by time and 
          * triggers removal of license and sending of email, if needed
          * 
          * @param configuration
@@ -167,8 +165,7 @@ public class LicenseRemover {
         }
         
         /**
-         * 
-         * removes given licenseId from given Configuration and
+         * Removes given licenseId from given Configuration and
          * sends email to user, if configured
          * 
          * @param configuration
@@ -227,8 +224,7 @@ public class LicenseRemover {
         }
 
         /**
-         * 
-         * sets the properties for sending an email on basis of a 
+         * Sets the properties for sending an email on basis of a 
          * {@link MimeMessageHelper}
          * 
          * @param subject
@@ -328,8 +324,7 @@ public class LicenseRemover {
     }
 
     /**
-     * 
-     * retrieves person-Object of configuration and extracts
+     * Retrieves person-Object of {@link Configuration} and extracts
      * values needed for sending mail out of person object
      * to set it to global attribute emailParam
      * 
@@ -346,7 +341,7 @@ public class LicenseRemover {
     }
 
     /**
-     * extracts properties for sending email from a ITGS-Person 
+     * Extracts properties for sending email from a ITGS-Person 
      * {@link Person}
      * 
      * @param element
@@ -368,7 +363,7 @@ public class LicenseRemover {
     }
 
     /**
-     * extracts properties for sending email from a {@link PersonIso} 
+     * Extracts properties for sending email from a {@link PersonIso} 
      * {@link CnATreeElement}
      * @param element
      */

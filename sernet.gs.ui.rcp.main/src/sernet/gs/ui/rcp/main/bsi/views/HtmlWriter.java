@@ -82,7 +82,7 @@ public abstract class HtmlWriter {
     }
 
     /**
-     * gets the html content to display considering a given object
+     * Gets the HTML-Content to display considering a given object
      * which used to be an instanceof {@link CnATreeElement}
      * @param element
      * @return
@@ -102,7 +102,7 @@ public abstract class HtmlWriter {
   
     }
     /**
-     * tries to determine get html-text for browser-view
+     * Tries to determine get HTML-text for {@link BrowserView}
      *  via dynamic SNCA-approach 
      * ( xml-Attribute showInObjectBrowser equals true on huiproperty)
      * 
@@ -131,7 +131,7 @@ public abstract class HtmlWriter {
     }
 
     /**
-     * builds the content of the {@link BrowserView} considering the 
+     * Builds the content of the {@link BrowserView} considering the 
      * selected {@link CnATreeElement} in the object-tree and the 
      * {@link PropertyType} (optionally) configured in the SNCA.xml 
      * (if not configured by xml-Attribute, it is hard-coded in this class) 
@@ -160,10 +160,10 @@ public abstract class HtmlWriter {
     }
 
     /**
-     * prepares the 
+     * Prepares the 
      * decryption of the value of a license restricted property 
      * 
-     * throws a {@link LicenseManagementException} if the 
+     * Throws a {@link LicenseManagementException} if the 
      * propertyvalue could not be decrypted
      * 
      * @param sb
@@ -208,7 +208,7 @@ public abstract class HtmlWriter {
     }
 
     /**
-     * hands over the license restricted property value to the 
+     * Hands over the license restricted property value to the 
      * {@link LicenseManagementService) to decrypt it
      * 
      * @param sb
@@ -233,7 +233,7 @@ public abstract class HtmlWriter {
     }
 
     /**
-     * get html-text for browser-view the hardcoded (old-style) way
+     * Get HTML-text for {@link BrowserView} the hardcoded (old-style) way
      * should only be used, if DynamicRequest does return empty result
      * 
      * @param element to recieve html-text for

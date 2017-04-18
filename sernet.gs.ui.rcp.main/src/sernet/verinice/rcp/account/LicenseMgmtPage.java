@@ -53,6 +53,12 @@ import sernet.verinice.model.licensemanagement.LicenseManagementException;
 import sernet.verinice.service.commands.SaveConfiguration;
 
 /**
+ * Page for {@link AccountWizard} that enables to configure
+ * license-management-properties (assigned license-Ids and 
+ * automatic e-mail notification) for a single instance of 
+ * {@link Configuration}
+ * 
+ * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */

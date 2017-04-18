@@ -70,7 +70,7 @@ public class LicenseManagementStandaloneModeService
     IEncryptionService cryptoService;
     
     /**
-     * checks if the {@link LicenseManagementEntry} is valid at the current date
+     * Checks if the {@link LicenseManagementEntry} is valid at the current date
      * and ignores the username, since in standalone mode username 
      * does not bother
      * 
@@ -93,7 +93,7 @@ public class LicenseManagementStandaloneModeService
     }
 
     /**
-     * checks if there are any free slots for assigning another user to allow
+     * Checks if there are any free slots for assigning another user to allow
      * him the usage of the content referenced by (encrypted )licenseId
      * in standalone, the existance of an {@link LicenseManagementEntry}
      * (and a validUser count > 0) allows the (singlemode) user to use
@@ -118,12 +118,12 @@ public class LicenseManagementStandaloneModeService
     }
 
     /**
-     * removes all user assignments to a given {@link LicenseManagementEntry} 
+     * Removes all user assignments to a given {@link LicenseManagementEntry} 
      * (referenced by licenseId) in server-mode. In standalone mode, 
      * the existance of a {@link LicenseManagementEntry} for a contentId
      * allows the user to use a license, no need for assignments here
      * 
-     * so the method should to nothing in this mode
+     * So, the method should to nothing in this mode
      * 
      */
     @Override
@@ -133,7 +133,7 @@ public class LicenseManagementStandaloneModeService
     }
 
     /**
-     * get location of vnl-repository, in tier2 it is 
+     * Get location of vnl-repository, in tier2 it is 
      * <$workspace>/vnl 
      * (not configurable)
      */
@@ -153,7 +153,7 @@ public class LicenseManagementStandaloneModeService
     }
     
     /**
-     * in standalone mode, read vnl-files from repository
+     * In standalone mode, read vnl-files from repository
      */
     @Override
     public Set<LicenseManagementEntry> readVNLFiles() 
@@ -180,7 +180,7 @@ public class LicenseManagementStandaloneModeService
     }
 
     /**
-     * maps a set of Strings (paths to vnl-files) to instances of
+     * Maps a set of Strings (paths to vnl-files) to instances of
      * {@link LicenseManagementEntry}
      * 
      * @param vnlFiles
@@ -206,7 +206,7 @@ public class LicenseManagementStandaloneModeService
     }
 
     /**
-     * returns a set of file-paths that are having the extension
+     * Returns a set of file-paths that are having the extension
      * ".vnl" and are contained in the given directory
      * 
      * @param location

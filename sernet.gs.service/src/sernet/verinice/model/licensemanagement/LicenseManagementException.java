@@ -20,7 +20,7 @@
 package sernet.verinice.model.licensemanagement;
 
 /**
- * class to wrap exceptions appearing during dealing 
+ * Class to wrap exceptions appearing during dealing 
  * with vnl-Files / -Informations
  * 
  * @author Sebastian Hagedorn sh[at]sernet.de

@@ -33,7 +33,7 @@ import sernet.verinice.service.commands.ExportFactory;
  * vnl-files)from hibernate representation to xml representation 
  * and the other way round
  * 
- * please note: all data stored to a file or to database is encrypted data
+ * Please note: all data stored to a file or to database is encrypted data
  * that could not be used / changed manually 
  *  
  * @author Sebastian Hagedorn sh[at]sernet.de
