@@ -22,6 +22,7 @@ package sernet.verinice.web.poseidon.view.menu.submenu;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.MenuItem;
 
+import sernet.gs.web.Util;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.web.poseidon.services.MenuService;
 
@@ -32,6 +33,8 @@ import sernet.verinice.web.poseidon.services.MenuService;
 public abstract class AbstractItgsModulImplementationSubMenu extends AbstractMainSubMenu {
 
     private static final long serialVersionUID = 1L;
+
+    private static final String MESSAGES = "sernet.verinice.web.WebMessages";
 
     private MenuService menuService;
 
@@ -48,12 +51,12 @@ public abstract class AbstractItgsModulImplementationSubMenu extends AbstractMai
     @Override
     protected void loadChildren() {
 
-        DefaultMenuItem bausteinUmsAll = new DefaultMenuItem("Alle");
+        DefaultMenuItem bausteinUmsAll = new DefaultMenuItem(Util.getMessage(MESSAGES, "menu.all"));
         bausteinUmsAll.setUrl("/dashboard/controls-bstums-all.xhtml?crunchStrategy=" + getStrategy());
         bausteinUmsAll.setIcon("fa fa-fw fa-area-chart");
         addElement(bausteinUmsAll);
 
-        DefaultMenuItem bausteinUmsTotal = new DefaultMenuItem("Gesamt");
+        DefaultMenuItem bausteinUmsTotal = new DefaultMenuItem(Util.getMessage(MESSAGES, "menu.total"));
         bausteinUmsTotal.setUrl("/dashboard/controls-bstums-total.xhtml?crunchStrategy=" + getStrategy());
         bausteinUmsTotal.setIcon("fa fa-fw fa-area-chart");
         addElement(bausteinUmsTotal);

@@ -21,6 +21,7 @@ package sernet.verinice.web.poseidon.view.menu.submenu;
 
 import org.primefaces.model.menu.DefaultMenuItem;
 
+import sernet.gs.web.Util;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.web.poseidon.services.MenuService;
 import sernet.verinice.web.poseidon.view.menu.menuitem.ControlsChartMenuItem;
@@ -33,21 +34,23 @@ public class ItgsControlsSubMenu extends AbstractMainSubMenu {
 
     private static final long serialVersionUID = 1L;
 
+    private static final String MESSAGES = "sernet.verinice.web.WebMessages";
+
     private MenuService menuService;
 
     public ItgsControlsSubMenu(MenuService menuService) {
-        super("Massnahmen GS");
+        super(Util.getMessage(MESSAGES, "menu.itgs-controls"));
         this.menuService = menuService;
     }
 
     @Override
     protected void loadChildren() {
 
-        DefaultMenuItem all = new DefaultMenuItem("Alle");
+        DefaultMenuItem all = new DefaultMenuItem(Util.getMessage(MESSAGES, "menu.all"));
         all.setUrl("/dashboard/controls-all.xhtml");
         all.setIcon("fa fa-fw fa-area-chart");
 
-        DefaultMenuItem total = new DefaultMenuItem("Gesamt");
+        DefaultMenuItem total = new DefaultMenuItem(Util.getMessage(MESSAGES, "menu.total"));
         total.setUrl("/dashboard/controls-total.xhtml");
         total.setIcon("fa fa-fw fa-area-chart");
 

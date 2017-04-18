@@ -21,6 +21,8 @@ package sernet.verinice.web.poseidon.view.menu.menuitem;
 
 import org.primefaces.model.menu.DefaultMenuItem;
 
+import sernet.gs.web.Util;
+
 /**
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -28,7 +30,7 @@ import org.primefaces.model.menu.DefaultMenuItem;
  */
 public class IsoEditorMenuItem extends DefaultMenuItem {
 
-    private static final String TITLE = "ISO Objects";
+    private static final String MESSAGES = "sernet.verinice.web.WebMessages";
 
     private static final String URL = "/edit/iso-editor.xhtml";
 
@@ -37,7 +39,7 @@ public class IsoEditorMenuItem extends DefaultMenuItem {
     private static final long serialVersionUID = 1L;
 
     public IsoEditorMenuItem() {
-        super(TITLE);
+        super(Util.getMessage(MESSAGES, "menu.iso-objects"));
         super.setIcon(ICON);
         super.setUrl(URL);
     }

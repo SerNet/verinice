@@ -21,13 +21,15 @@ package sernet.verinice.web.poseidon.view.menu.menuitem;
 
 import org.primefaces.model.menu.DefaultMenuItem;
 
+import sernet.gs.web.Util;
+
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
 public class TasksMenuItem extends DefaultMenuItem {
 
-    private static final String TITLE = "Tasks";
+    private static final String MESSAGES = "sernet.verinice.web.WebMessages";
 
     private static final String URL = "/edit/tasks.xhtml";
 
@@ -36,7 +38,7 @@ public class TasksMenuItem extends DefaultMenuItem {
     private static final long serialVersionUID = 1L;
 
     public TasksMenuItem()  {
-        super(TITLE);
+        super(Util.getMessage(MESSAGES, "menu.tasks"));
         super.setIcon(ICON);
         super.setUrl(URL);
     }

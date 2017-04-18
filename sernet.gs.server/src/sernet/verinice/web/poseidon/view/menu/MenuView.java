@@ -19,13 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view.menu;
 
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.MenuModel;
 
+import sernet.gs.web.Util;
 import sernet.verinice.web.poseidon.services.MenuService;
 import sernet.verinice.web.poseidon.view.menu.menuitem.HomeMenuItem;
 import sernet.verinice.web.poseidon.view.menu.menuitem.IsoEditorMenuItem;
@@ -36,6 +33,10 @@ import sernet.verinice.web.poseidon.view.menu.submenu.ItgsControlsSubMenu;
 import sernet.verinice.web.poseidon.view.menu.submenu.ItgsModulImplementationCumulatedSubMenu;
 import sernet.verinice.web.poseidon.view.menu.submenu.ItgsModulImplementationNormalizedSubMenu;
 
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
@@ -45,9 +46,10 @@ public class MenuView {
 
     private MenuModel model;
 
+    private static final String MESSAGES = "sernet.verinice.web.WebMessages";
+
     @ManagedProperty("#{menuService}")
     private MenuService menuService;
-
 
     @PostConstruct()
     public void initMenu() {
@@ -57,11 +59,10 @@ public class MenuView {
         model.addElement(new ItgsControlsMenuItem());
         model.addElement(new TasksMenuItem());
         model.addElement(new ItgsControlsSubMenu(menuService));
-        model.addElement(new ItgsModulImplementationCumulatedSubMenu("BausteinUms. Kum.", menuService));
-        model.addElement(new ItgsModulImplementationNormalizedSubMenu("BausteinUms. Norm", menuService));
-        model.addElement(new IsmsCatalogGroupedByOrganizationSubMenu("MassnahmenUms. ISMS", menuService));
+        model.addElement(new ItgsModulImplementationCumulatedSubMenu(msg("menu.module-impl-cum"), menuService));
+        model.addElement(new ItgsModulImplementationNormalizedSubMenu(msg("menu.module-impl-norm"), menuService));
+        model.addElement(new IsmsCatalogGroupedByOrganizationSubMenu(msg("menu.control-impl-isms"), menuService));
     }
-
 
     public MenuModel getModel() {
         return model;
@@ -71,13 +72,15 @@ public class MenuView {
         this.model = menuModel;
     }
 
-
     public MenuService getMenuService() {
         return menuService;
     }
 
-
     public void setMenuService(MenuService menuService) {
         this.menuService = menuService;
+    }
+
+    private String msg(String key) {
+        return Util.getMessage(MESSAGES, key);
     }
 }

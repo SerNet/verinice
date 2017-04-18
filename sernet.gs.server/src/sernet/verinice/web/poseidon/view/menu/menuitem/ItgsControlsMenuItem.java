@@ -21,13 +21,15 @@ package sernet.verinice.web.poseidon.view.menu.menuitem;
 
 import org.primefaces.model.menu.DefaultMenuItem;
 
+import sernet.gs.web.Util;
+
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ItgsControlsMenuItem extends DefaultMenuItem{
+public class ItgsControlsMenuItem extends DefaultMenuItem {
 
-    private static final String TITLE = "ITGS Controls";
+    private static final String MESSAGES = "sernet.verinice.web.WebMessages";
 
     private static final String URL = "/edit/itgs-controls.xhtml";
 
@@ -36,7 +38,7 @@ public class ItgsControlsMenuItem extends DefaultMenuItem{
     private static final long serialVersionUID = 1L;
 
     public ItgsControlsMenuItem() {
-        super(TITLE);
+        super(Util.getMessage(MESSAGES, "menu.itgs-controls"));
         super.setIcon(ICON);
         super.setUrl(URL);
     }

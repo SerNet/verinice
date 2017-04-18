@@ -19,19 +19,22 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view.menu.submenu;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.primefaces.model.menu.DefaultMenuItem;
 
+import sernet.gs.web.Util;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.web.poseidon.services.MenuService;
 import sernet.verinice.web.poseidon.view.menu.menuitem.ControlsIsoMenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 class OrganizationISMSMassnahmenCatalogSubMenu extends AbstractMainSubMenu {
 
     private static final long serialVersionUID = 1L;
+
+    private static final String MESSAGES = "sernet.verinice.web.WebMessages";
 
     private Organization organization;
 
@@ -72,12 +75,12 @@ class OrganizationISMSMassnahmenCatalogSubMenu extends AbstractMainSubMenu {
     }
 
     private void addStaticMenuItems() {
-        DefaultMenuItem allIsmsChartsMenuItem = new DefaultMenuItem("Alle");
+        DefaultMenuItem allIsmsChartsMenuItem = new DefaultMenuItem(Util.getMessage(MESSAGES, "menu.all"));
         allIsmsChartsMenuItem.setUrl("/dashboard/controls-iso-all.xhtml?scopeId=" + organization.getDbId());
         allIsmsChartsMenuItem.setIcon("fa fa-fw fa-area-chart");
         addElement(allIsmsChartsMenuItem);
 
-        DefaultMenuItem totalIsmsChartsMenuItem = new DefaultMenuItem("Gesamt");
+        DefaultMenuItem totalIsmsChartsMenuItem = new DefaultMenuItem(Util.getMessage(MESSAGES, "menu.total"));
         totalIsmsChartsMenuItem.setUrl("/dashboard/controls-iso-total.xhtml?scopeId=" + organization.getDbId());
         totalIsmsChartsMenuItem.setIcon("fa fa-fw fa-area-chart");
         addElement(totalIsmsChartsMenuItem);
