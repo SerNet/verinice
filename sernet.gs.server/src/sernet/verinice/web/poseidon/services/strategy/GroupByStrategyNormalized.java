@@ -35,8 +35,6 @@ public class GroupByStrategyNormalized implements GroupByStrategy{
 
     public static final String GET_PARAM_IDENTIFIER = "normalized";
 
-
-    private GroupByStrategySum groupByStrategySum;
     private Map<String, Map<String, Number>> aggregateMassnahmen;
     private VeriniceGraph graph;
     private Map<String,Integer> modul2Occurences;
@@ -44,7 +42,7 @@ public class GroupByStrategyNormalized implements GroupByStrategy{
     @Override
     public Map<String, Map<String, Number>> aggregateMassnahmen(VeriniceGraph g) {
         graph = g;
-        groupByStrategySum = new GroupByStrategySum();
+        GroupByStrategy groupByStrategySum = new GroupByStrategySum();
         aggregateMassnahmen = groupByStrategySum.aggregateMassnahmen(g);
         counterOccurenceOfChapter();
         normalize();

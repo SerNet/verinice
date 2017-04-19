@@ -72,28 +72,7 @@ public class ChartService extends GenericChartService {
      *
      */
     public SortedMap<String, Number> aggregateMassnahmenUmsetzungStatus() {
-        return aggregateMassnahmenUmsetzung(-1);
-    }
-
-    /**
-     * Returns aggregated status of all {@link MassnahmenUmsetzung} of a it
-     * network.
-     *
-     * @param itNetwork
-     *            The IT-Network for which the {@link MassnahmenUmsetzung} are
-     *            aggregated.
-     * @return If no {@link MassnahmenUmsetzung} is defined for the IT network.
-     *         it could be empty.
-     * @exception IllegalArgumentException
-     *                If no it network is given.
-     */
-    public SortedMap<String, Number> aggregateMassnahmenUmsetzung(ITVerbund itNetwork) {
-
-        if (itNetwork == null) {
-            throw new IllegalArgumentException("param itNetwork may not be null");
-        }
-
-        return aggregateMassnahmenUmsetzung(itNetwork.getScopeId());
+        return aggregateMassnahmenUmsetzung(null);
     }
 
     /**
@@ -140,31 +119,6 @@ public class ChartService extends GenericChartService {
 
     /**
      * Aggregate over all {@link BausteinUmsetzung} objects and aggregate the
-     * {@link MassnahmenUmsetzung} states.
-     *
-     * This method normalizes the data in a way, that the number of a specific
-     * state is divided through the number of instances of a specific
-     * {@link BausteinUmsetzung}. With instances is meant several
-     * {@link BausteinUmsetzung} object with the same chapter value.
-     *
-     * @param itNetwork
-     *            Only {@link BausteinUmsetzung} under this it network are taken
-     *            into account.
-     *
-     * @param groupByStrategie
-     *            Decides which algorithm is used for the number crunshing.
-     *
-     * @return Key is the chapter of a
-     *         {@link MassnahmenUmsetzung#getUmsetzung()}. The value is a map
-     *         with the key {@link BausteinUmsetzung#getKapitel()}. This allows
-     *         the result to be displayed as a stacked chart.
-     */
-    public Map<String, Map<String, Number>> groupByMassnahmenStates(ITVerbund itNetwork, GroupByStrategy g) {
-        return groupByMassnahmenStates(String.valueOf(itNetwork.getScopeId()), g);
-    }
-
-    /**
-     * Aggregate over all {@link BausteinUmsetzung} objects and aggregate the
      * {@link MassnahmenUmsetzung} states. All {@link ITVerbund} which are
      * readable by the user are taken into account.
      *
@@ -174,7 +128,7 @@ public class ChartService extends GenericChartService {
      * {@link BausteinUmsetzung} object with the same chapter value.
      *
      *
-     * @param groupByStrategie
+     * @param groupByStrategy
      *            Decides which algorithm is used for the number crunching.
      *
      * @return Key is the chapter of a
@@ -182,11 +136,12 @@ public class ChartService extends GenericChartService {
      *         with the key {@link BausteinUmsetzung#getKapitel()}. This allows
      *         the result to be displayed as a stacked chart.
      */
-    public List<ControlsBstUmsData> groupByMassnahmenStates(GroupByStrategy groupByStrategie) {
+    public List<ControlsBstUmsData> groupByMassnahmenStates(GroupByStrategy groupByStrategy) {
 
         List<ControlsBstUmsData> controlsBstUmsData = new ArrayList<>();
         for (ITVerbund itVerbund : menuService.getVisibleItNetworks()) {
-            Map<String, Map<String, Number>> states = groupByMassnahmenStates(itVerbund, groupByStrategie);
+            String scopeId = String.valueOf(itVerbund.getScopeId());
+            Map<String, Map<String, Number>> states = groupByMassnahmenStates(scopeId, groupByStrategy);
             controlsBstUmsData.add(new ControlsBstUmsData(itVerbund.getTitle(), states));
         }
 
@@ -289,11 +244,11 @@ public class ChartService extends GenericChartService {
         return graphService.create();
     }
 
-    private VeriniceGraph loadAllBsiControls(int scopeId) {
+    private VeriniceGraph loadAllBsiControls(Integer scopeId) {
         IGraphService graphService = getGraphService();
         IGraphElementLoader graphElementLoader = new GraphElementLoader();
         graphElementLoader.setTypeIds(new String[] { MassnahmenUmsetzung.HIBERNATE_TYPE_ID });
-        if (scopeId != -1) {
+        if (scopeId != null) {
             graphElementLoader.setScopeId(scopeId);
         }
         graphService.setLoader(graphElementLoader);

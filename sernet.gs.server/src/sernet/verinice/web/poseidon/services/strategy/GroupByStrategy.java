@@ -22,13 +22,30 @@ package sernet.verinice.web.poseidon.services.strategy;
 import java.util.Map;
 
 import sernet.verinice.interfaces.graph.VeriniceGraph;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 /**
+ * Calculates the sum of every {@link MassnahmenUmsetzung} under one
+ * {@link BausteinUmsetzung}.
+ *
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
 public interface GroupByStrategy {
 
+    /**
+     * Returns a map which contains the sum of the states of all
+     * {@link MassnahmenUmsetzung} grouped by the {@link BausteinUmsetzung}.
+     *
+     * @param g
+     *            Verinice graph data model.
+     * @return The key of the map is the status which is the value returned by
+     *         {@link MassnahmenUmsetzung#getUmsetzung()}. The Value is map of
+     *         chapter names to the sum of all states of the key of the wrapping
+     *         map.
+     */
     Map<String, Map<String, Number>> aggregateMassnahmen(VeriniceGraph g);
 
 }

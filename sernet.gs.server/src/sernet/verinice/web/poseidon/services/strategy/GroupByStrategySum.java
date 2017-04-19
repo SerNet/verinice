@@ -36,6 +36,9 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.web.poseidon.services.CompareByTitle;
 
 /**
+ * Counts the states of all {@link MassnahmenUmsetzung} states and group them by
+ * the {@link BausteinUmsetzung#getKapitel()} value.
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
@@ -55,17 +58,17 @@ public class GroupByStrategySum implements GroupByStrategy {
             dataPoints.add(new DataPoint((BausteinUmsetzung) g.getParent(maU), maU));
         }
 
-        Map<String, List<DataPoint>> massnahmenUmsetzung2DataPoint = new HashMap<>();
+        Map<String, List<DataPoint>> state2DataPoint = new HashMap<>();
         for (DataPoint p : dataPoints) {
-            if (!massnahmenUmsetzung2DataPoint.containsKey(p.getState())) {
-                massnahmenUmsetzung2DataPoint.put(p.getState(), new ArrayList<DataPoint>());
+            if (!state2DataPoint.containsKey(p.getState())) {
+                state2DataPoint.put(p.getState(), new ArrayList<DataPoint>());
             }
 
-            massnahmenUmsetzung2DataPoint.get(p.getState()).add(p);
+            state2DataPoint.get(p.getState()).add(p);
         }
 
         Map<String, Map<String, Number>> data = new TreeMap<>(new CompareByTitle());
-        for (Entry<String, List<DataPoint>> e : massnahmenUmsetzung2DataPoint.entrySet()) {
+        for (Entry<String, List<DataPoint>> e : state2DataPoint.entrySet()) {
             data.put(e.getKey(), new HashMap<String, Number>());
             for (DataPoint p : e.getValue()) {
                 Number number = data.get(e.getKey()).get(p.getChapter());
@@ -90,6 +93,26 @@ public class GroupByStrategySum implements GroupByStrategy {
         }
 
         return data;
+    }
+
+    private static class DataPoint {
+
+        private BausteinUmsetzung bst;
+
+        private MassnahmenUmsetzung massnahmenUmsetzung;
+
+        public DataPoint(BausteinUmsetzung bst, MassnahmenUmsetzung massUms) {
+            this.bst = bst;
+            this.massnahmenUmsetzung = massUms;
+        }
+
+        public String getState() {
+            return massnahmenUmsetzung.getUmsetzung();
+        }
+
+        public String getChapter() {
+            return bst.getKapitel();
+        }
     }
 
 }
