@@ -6,8 +6,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/poseidon/template.xhtml">
 
-	<ui:define name="viewname">Massnahmenumsetzung :: Alle :: Charts</ui:define>
-	<ui:define name="title">Massnahmenumsetzung :: Alle :: Charts</ui:define>
+	<ui:define name="viewname">#{msgWeb['controls-iso-all.title']}</ui:define>
+	<ui:define name="title">#{msgWeb['controls-iso-all.title']}</ui:define>
 
 	<ui:define name="head">
 		<ui:include src="/WEB-INF/poseidon/chart-extender.xhtml" />
@@ -19,11 +19,11 @@
 			<div class="ui-g-12 ui-lg-12">
 
 				<h:form id="totalChartPanel">
-					<p:panel header="ISMS Controls all" toggleable="true">
+					<p:panel header="#{msgWeb['controls-iso-all.header1']}" toggleable="true">
 						<ui:fragment
 							rendered="#{not controlsIsoAllChartView.totalCalculated}">
 							<div style="margin: 0 auto; text-align: center;">
-								<p>Crunching numbers</p>
+								<p>#{msgWeb['loading']}</p>
 								<p:graphicImage name="images/ajax-loader.gif"
 									library="poseidon-layout" />
 							</div>
@@ -56,11 +56,11 @@
 
 			<div class="ui-g-12 ui-lg-12">
 				<h:form id="charts">
-					<p:panel header="Alle Kataloge" toggleable="true">
+					<p:panel header="#{msgWeb['controls-iso-all.header2']}" toggleable="true">
 						<ui:fragment
 							rendered="#{not controlsIsoAllChartView.allCatalogsCalculated}">
 							<div style="margin: 0 auto; text-align: center;">
-								<p>Crunching numbers</p>
+								<p>#{msgWeb['loading']}</p>
 								<p:graphicImage name="images/ajax-loader.gif"
 									library="poseidon-layout" />
 							</div>

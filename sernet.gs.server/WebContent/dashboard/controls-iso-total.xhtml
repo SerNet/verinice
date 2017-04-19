@@ -6,8 +6,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/poseidon/template.xhtml">
 
-	<ui:define name="title">Massnahmenumsetzung (ISMS) :: Gesamt :: Charts</ui:define>
-	<ui:define name="viewname">Massnahmenumsetzung (ISMS) :: Gesamt :: Charts</ui:define>
+	<ui:define name="title">#{msgWeb['controls-iso-total.title']}</ui:define>
+	<ui:define name="viewname">#{msgWeb['controls-iso-total.title']}</ui:define>
 
 
 	<ui:define name="head">
@@ -18,12 +18,12 @@
 		<div class="ui-g ui-fluid">
 			<div class="ui-g-12">
 				<h:form id="chartPanel">
-					<p:panel header="Massnahmenumsetzung gesamt">
+					<p:panel header="#{msgWeb['controls-iso-total.header']}">
 
 						<ui:fragment
 							rendered="#{not controlsIsoTotalChartView.calculated}">
 							<div style="margin: 0 auto; text-align: center;">
-								<p>Crunching numbers</p>
+								<p>#{msgWeb['loading']}</p>
 								<p:graphicImage name="images/ajax-loader.gif"
 									library="poseidon-layout" />
 							</div>
