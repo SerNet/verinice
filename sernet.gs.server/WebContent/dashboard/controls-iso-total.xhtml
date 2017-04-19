@@ -30,7 +30,7 @@
 						</ui:fragment>
 
 						<ui:fragment id="charts"
-							rendered="#{controlsIsoTotalChartView.calculated}">
+							rendered="#{controlsIsoTotalChartView.calculated and controlsIsoTotalChartView.dataAvailable()}">
 							<div class="ui-g ui-fluid">
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
 									<p:chart id="verinicePieChart" type="pie"
@@ -43,6 +43,10 @@
 										responsive="true" />
 								</div>
 							</div>
+						</ui:fragment>
+
+						<ui:fragment id="no-data" rendered="#{controlsIsoTotalChartView.calculated and (not controlsIsoTotalChartView.dataAvailable())}">
+							<p class="no-data">#{msgWeb['no-data']}</p>
 						</ui:fragment>
 					</p:panel>
 				</h:form>

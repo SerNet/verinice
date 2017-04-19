@@ -56,6 +56,8 @@ public class ControlsIsoChartView {
 
     private Integer scopeId;
 
+    private Map<String, Number> states;
+
     @PostConstruct
     public void init() {
         readParameter();
@@ -75,18 +77,18 @@ public class ControlsIsoChartView {
 
     public void loadData() {
 
-        Map<String, Number> isoControlsData = chartService.getIsoControlsData(scopeId, catalogId);
-        String colors = ChartUtils.getColors(isoControlsData.keySet());
-        isoControlsData = ChartUtils.translateMapKeyLabel(isoControlsData);
+        states = chartService.getIsoControlsData(scopeId, catalogId);
+        String colors = ChartUtils.getColors(states.keySet());
+        states = ChartUtils.translateMapKeyLabel(states);
 
         pieChart = new PieChartModel();
-        pieChart.setData(isoControlsData);
+        pieChart.setData(states);
         pieChart.setSeriesColors(colors);
         pieChart.setExtender("verinicePie");
 
         horizontalBarChartModel = new HorizontalBarChartModel();
         ChartSeries series = new ChartSeries();
-        for (Map.Entry<String, Number> entry : isoControlsData.entrySet()) {
+        for (Map.Entry<String, Number> entry : states.entrySet()) {
             series.set(entry.getKey(), entry.getValue());
         }
 
@@ -109,6 +111,19 @@ public class ControlsIsoChartView {
 
     public HorizontalBarChartModel getHorizontalBarChartModel() {
         return horizontalBarChartModel;
+    }
+
+    public boolean dataAvailable() {
+        return states != null && checkValue();
+    }
+
+    private boolean checkValue(){
+        for(Number number : states.values()){
+            if(number.intValue() > 0){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setHorizontalBarChartModel(HorizontalBarChartModel horizontalBarChartModel) {

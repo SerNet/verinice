@@ -28,7 +28,7 @@
 						</ui:fragment>
 
 						<ui:fragment id="charts"
-							rendered="#{controlsIsoChartView.dataCalculated}">
+							rendered="#{controlsIsoChartView.dataCalculated and controlsIsoChartView.dataAvailable()}">
 							<div class="ui-g ui-fluid">
 								<p:graphicImage
 									name="#{resource['poseidon-layout:images/avatar.png']}" />
@@ -42,6 +42,10 @@
 										responsive="true" />
 								</div>
 							</div>
+						</ui:fragment>
+
+						<ui:fragment id="no-data" rendered="#{controlsIsoChartView.dataCalculated and (not controlsIsoChartView.dataAvailable())}">
+							<p class="no-data">#{msgWeb['no-data']}</p>
 						</ui:fragment>
 
 					</p:panel>

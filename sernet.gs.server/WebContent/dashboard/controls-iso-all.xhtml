@@ -30,7 +30,7 @@
 						</ui:fragment>
 
 						<ui:fragment
-							rendered="#{controlsIsoAllChartView.totalCalculated}">
+							rendered="#{controlsIsoAllChartView.totalCalculated and controlsIsoAllChartView.dataAvailable()}">
 							<div class="ui-g">
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
 									<p:chart id="verinicePieChart" type="pie"
@@ -43,6 +43,10 @@
 										responsive="true" />
 								</div>
 							</div>
+						</ui:fragment>
+
+						<ui:fragment id="no-data" rendered="#{controlsIsoAllChartView.totalCalculated and (not controlsIsoAllChartView.dataAvailable())}">
+							<p class="no-data">#{msgWeb['no-data']}</p>
 						</ui:fragment>
 					</p:panel>
 				</h:form>
@@ -67,7 +71,7 @@
 						</ui:fragment>
 
 						<ui:fragment
-							rendered="#{controlsIsoAllChartView.allCatalogsCalculated}">
+							rendered="#{controlsIsoAllChartView.allCatalogsCalculated and controlsIsoAllChartView.dataAvailable()}">
 							<ui:repeat value="#{controlsIsoAllChartView.charts}"
 								var="chart">
 								<div class="ui-g">
@@ -90,6 +94,10 @@
 								</div>
 
 							</ui:repeat>
+						</ui:fragment>
+
+						<ui:fragment id="no-data" rendered="#{controlsIsoAllChartView.allCatalogsCalculated and (not controlsIsoAllChartView.dataAvailable())}">
+							<p class="no-data">#{msgWeb['no-data']}</p>
 						</ui:fragment>
 					</p:panel>
 				</h:form>

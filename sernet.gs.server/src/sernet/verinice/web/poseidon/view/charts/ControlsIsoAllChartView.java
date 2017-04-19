@@ -64,7 +64,7 @@ public class ControlsIsoAllChartView {
 
     private boolean allCatalogsCalculated;
 
-    private Map<String, Number> allStates;
+    private Map<String, Number> states;
 
     private Integer scopeId;
 
@@ -82,8 +82,21 @@ public class ControlsIsoAllChartView {
         return (Map<String, String>) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
     }
 
+    public boolean dataAvailable() {
+        return states != null && checkValue();
+    }
+
+    private boolean checkValue(){
+        for(Number number : states.values()){
+            if(number.intValue() > 0){
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void createTotalIsmsCatalogsChartModels() {
-        ControlChartsFactory allChartModelFactory = new ControlChartsFactory(allStates);
+        ControlChartsFactory allChartModelFactory = new ControlChartsFactory(states);
         pieModel = allChartModelFactory.getPieChartModel();
         horizontalBarChartModel = allChartModelFactory.getHorizontalBarModel();
         totalCalculated = true;
@@ -91,7 +104,7 @@ public class ControlsIsoAllChartView {
 
     public void loadTotalIsmsCatalogs() {
         charts = new ArrayList<>();
-        allStates = chartService.getIsoControlsData(scopeId);
+        states = chartService.getIsoControlsData(scopeId);
         createTotalIsmsCatalogsChartModels();
     }
 
@@ -104,13 +117,13 @@ public class ControlsIsoAllChartView {
 
             if (catalog.getScopeId().equals(scopeId)) {
 
-                Map<String, Number> states = getChartService().getIsoControlsData(scopeId, catalog.getDbId());
+                Map<String, Number> catalogStates = getChartService().getIsoControlsData(scopeId, catalog.getDbId());
 
-                if (states.isEmpty())
+                if (catalogStates.isEmpty())
                     continue;
 
                 VeriniceChartRow item = new VeriniceChartRow();
-                ControlChartsFactory chartModelFactory = new ControlChartsFactory(states);
+                ControlChartsFactory chartModelFactory = new ControlChartsFactory(catalogStates);
 
                 item.setTitle(catalog.getTitle());
                 item.setFirstChartModel(chartModelFactory.getPieChartModel());

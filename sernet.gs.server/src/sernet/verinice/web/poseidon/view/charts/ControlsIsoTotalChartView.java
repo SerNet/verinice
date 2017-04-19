@@ -83,6 +83,19 @@ public class ControlsIsoTotalChartView {
         return states;
     }
 
+    public boolean dataAvailable() {
+        return states != null && checkValue();
+    }
+
+    private boolean checkValue(){
+        for(Number number : states.values()){
+            if(number.intValue() > 0){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void setPieModel(PieChartModel pieModel) {
         this.pieModel = pieModel;
     }
