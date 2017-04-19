@@ -19,8 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.model.licensemanagement;
 
-import sernet.verinice.interfaces.licensemanagement.IPropertyConverter;
-
 /**
  * Exception should be thrown if an implementation
  * of {@link IPropertyConverter} is not able to cast 
