@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 
 import sernet.verinice.interfaces.CommandException;
@@ -36,6 +37,7 @@ import sernet.verinice.model.iso27k.Organization;
  */
 public class OrganizationMultiselectWidget extends ScopeMultiselectWidget {
 
+    SelectionListener organizationSelectionListener;
    
     public OrganizationMultiselectWidget(Composite composite, ITreeSelection selection,
             CnATreeElement selectedElement) throws CommandException {
@@ -50,6 +52,33 @@ public class OrganizationMultiselectWidget extends ScopeMultiselectWidget {
         Set<Class<?>> elementClasses = new HashSet<>();
         elementClasses.add(Organization.class);
         return elementClasses;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.MultiselectWidget#addSelectionListener(org.eclipse.swt.events.SelectionListener)
+     */
+    @Override
+    public void addSelectionListener(SelectionListener listener) {
+        super.addSelectionListener(listener);
+        organizationSelectionListener = listener;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.MultiselectWidget#removeCheckboxes()
+     */
+    @Override
+    protected void removeCheckboxes() {
+        removeListenerFromCheckboxes(organizationSelectionListener);
+        super.removeCheckboxes();
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.MultiselectWidget#addCheckboxes()
+     */
+    @Override
+    protected void addCheckboxes() {
+        super.addCheckboxes();
+        addSelectionListener(organizationSelectionListener);
     }
     
     public boolean isShowOnlySelected() {

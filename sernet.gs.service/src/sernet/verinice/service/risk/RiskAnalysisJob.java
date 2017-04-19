@@ -75,8 +75,8 @@ public class RiskAnalysisJob {
     public void runRiskAnalysis() {
         resetRiskValuesOfAssets();
         setProbabilityOfScenarios();
-        analyseRiskOfAssets();
         reduceRiskOfScenarios();
+        analyseRiskOfAssets();
     }
     
     /**

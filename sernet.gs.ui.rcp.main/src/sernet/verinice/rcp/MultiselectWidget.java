@@ -252,6 +252,7 @@ public abstract class MultiselectWidget<T> {
                     checkbox.setSelection(true);
                     selectedElement = item; 
                     selectedElementSet.add(item);
+                    preSelectedElements.add(item);
                 }
             }            
             @Override
@@ -272,6 +273,7 @@ public abstract class MultiselectWidget<T> {
                 }
                 selectedElement = null; 
                 selectedElementSet.clear();
+                preSelectedElements.clear();
             }            
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
@@ -326,11 +328,17 @@ public abstract class MultiselectWidget<T> {
     }
 
     protected void removeCheckboxes() {
+        removeListenerFromCheckboxes(organizationListener);
         for (Button checkbox : checkboxMap.values()) {
-            checkbox.removeSelectionListener(organizationListener);
             checkbox.dispose();
         }
         checkboxMap.clear();
+    }
+
+    protected void removeListenerFromCheckboxes(SelectionListener listener) {
+        for (Button checkbox : checkboxMap.values()) {
+            checkbox.removeSelectionListener(listener);
+        }
     }
 
     public String getTitle() {
@@ -393,7 +401,10 @@ public abstract class MultiselectWidget<T> {
         this.showDeselectAllCheckbox = showDeselectAllCheckbox;
     }
 
-    public void addSelectionLiustener(SelectionListener listener) {
+    public void addSelectionListener(SelectionListener listener) {
+        if(listener==null) {
+            return;
+        }
         if(checkboxMap!=null) {
             for (Button checkbox : checkboxMap.values()) {
                 checkbox.addSelectionListener(listener);
@@ -404,6 +415,23 @@ public abstract class MultiselectWidget<T> {
         }
         if(buttonDeselectAll!=null) {
             buttonDeselectAll.addSelectionListener(listener);
+        }
+    }
+    
+    public void removeSelectionListener(SelectionListener listener) {
+        if(listener==null) {
+            return;
+        }
+        if(checkboxMap!=null) {
+            for (Button checkbox : checkboxMap.values()) {
+                checkbox.removeSelectionListener(listener);
+            }
+        }
+        if(buttonSelectAll!=null) {
+            buttonSelectAll.removeSelectionListener(listener);
+        }
+        if(buttonDeselectAll!=null) {
+            buttonDeselectAll.removeSelectionListener(listener);
         }
     }
     
