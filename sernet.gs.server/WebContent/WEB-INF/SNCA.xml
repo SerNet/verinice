@@ -5654,7 +5654,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
 <!-- PCI Elements - SAQ -->
 
 
-        <huipropertygroup id="pci_group" name="PCI DSS - Merchant Organization Information" tags="PCI DSS">
+        <huipropertygroup id="pci_group" name="PCI DSS - Merchant Organization Information" tags="PCI_DSS">
 		<huiproperty
             name="Company Name"
             id="pci_company" />
@@ -5695,7 +5695,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
 		</huipropertygroup>
 
 
-       <huipropertygroup id="org_pci_group" name="PCI DSS - Merchant Business" tags="PCI DSS">
+       <huipropertygroup id="org_pci_group" name="PCI DSS - Merchant Business" tags="PCI_DSS">
         <huiproperty
             id="org_pci_1"
             name="Storage cardholder data"
@@ -5712,7 +5712,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             <option id="org_pci_httgk_6" name="Mail order/telephone order (MOTO)" />
             <option id="org_pci_httgk_7" name="Others"  />
         </huiproperty>
-        <huiproperty tags="PCI DSS" id="org_pci_other" name="Others" tooltip="please specify">
+        <huiproperty tags="PCI_DSS" id="org_pci_other" name="Others" tooltip="please specify">
          </huiproperty>
 
          <huiproperty id="org_pci_serve"
@@ -5737,21 +5737,21 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
 
 <!-- PCI Elements - SAQ - End -->
 
-     	<huipropertygroup id="audit_isr_group" name="Information Security Reporting" tags="Information Security Reporting" >
+     <huipropertygroup id="audit_isr_group" name="Information Security Reporting" tags="Information_Security_Reporting">
 	 <huiproperty
             id="audit_isr_approval"
             name="Approval"
-            tags="Information Security Reporting" 
+            tags="Information_Security_Reporting"
            />
 	 <huiproperty
             id="audit_isr_year"
             name="Year of Report"
-            tags="Information Security Reporting" 
+            tags="Information_Security_Reporting"
             />
 	 <huiproperty
             id="audit_isr_version"
             name="Version of Catalog"
-            tags="Information Security Reporting" 
+            tags="Information_Security_Reporting"
            />
 	  <huiproperty 
        		id="audit_isr_classfc" 
@@ -5761,7 +5761,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
 		max="3" 
 		defaultValue="2"
 		focus="true"
-	        tags="Information Security Reporting" >
+          tags="Information_Security_Reporting">
 	       <option name="Strictly Confidential" id="audit_isr_classfc_strictly_confidential" value="3"/>
 	       <option name="Confidential" id="audit_isr_classfc_confidential" value="2"/>
 	       <option name="Internal Use" id="audit_isr_classfc_internal" value="1"/>
@@ -6146,7 +6146,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                 </huiproperty>
         </huipropertygroup>
 
-     	<huipropertygroup id="control_isr_information_security_reporting" name="Information Security Reporting" tags="Information Security Reporting" >
+      <huipropertygroup id="control_isr_information_security_reporting" name="Information Security Reporting" tags="Information_Security_Reporting">
 			 
           <huiproperty 
             id="control_isr_maturity"      
@@ -6154,7 +6154,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             min="-2" 
             max="5" 
             defaultValue="-2" 
-            tags="Information Security Reporting" 
+            tags="Information_Security_Reporting"
             focus="true"> 
                 <option id="control_isr_maturity_null"  value="-2" />
                 <option id="control_isr_maturity_na"  value="-1" />
@@ -6170,7 +6170,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             inputtype="numericoption" 
             min="0" 
             max="4" 
-            tags="Information Security Reporting"
+            tags="Information_Security_Reporting"
             focus="true"> 
                 <option id="control_isr_quantity_of_maturity_0"  value="0" />
                 <option id="control_isr_quantity_of_maturity_25"  value="1" />
@@ -6181,12 +6181,12 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             
           <huiproperty 
             id="control_isr_note_external" 
-            tags="Information Security Reporting"
+            tags="Information_Security_Reporting"
             inputtype="text"/>
 
 	  <huiproperty 
             id="control_isr_note_internal" 
-            tags="Information Security Reporting"
+            tags="Information_Security_Reporting"
             inputtype="text"
 	    report="false" />
                
