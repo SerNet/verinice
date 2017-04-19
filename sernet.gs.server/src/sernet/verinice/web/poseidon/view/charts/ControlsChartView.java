@@ -98,12 +98,25 @@ public class ControlsChartView implements Serializable {
         calculated = true;
     }
 
-    private SortedMap<String, Number> getStates() {
+    public SortedMap<String, Number> getStates() {
         if (states == null) {
             states = chartService.aggregateMassnahmenUmsetzung(scopeId);
         }
 
         return states;
+    }
+
+    public boolean dataAvailable() {
+        return states != null && checkValue();
+    }
+
+    private boolean checkValue(){
+        for(Number number : states.values()){
+            if(number.intValue() > 0){
+                return true;
+            }
+        }
+        return false;
     }
 
     public Integer getScopeId() {
@@ -160,6 +173,10 @@ public class ControlsChartView implements Serializable {
 
     public void setChartService(ChartService chartService) {
         this.chartService = chartService;
+    }
+
+    public void setStates(SortedMap<String, Number> states) {
+        this.states = states;
     }
 
     private final class DataLoader implements ActionListener {
