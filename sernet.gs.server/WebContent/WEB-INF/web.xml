@@ -188,10 +188,6 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>contextInitializer</filter-name>
-		<url-pattern>/edit/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>contextInitializer</filter-name>
 		<url-pattern>/auth/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
@@ -217,15 +213,7 @@
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/poseidon/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>springSecurityFilterChain</filter-name>
 		<url-pattern>/service/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/todo/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>

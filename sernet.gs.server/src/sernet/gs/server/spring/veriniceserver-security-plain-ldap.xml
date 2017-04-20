@@ -64,7 +64,6 @@
 		<security:filter-chain-map path-type="ant">
 			<security:filter-chain pattern="/auth/**" filters="httpSessionContextIntegrationFilter,anonymousAuthFilter,authenticationProcessingFilter,logoutFilter,timeoutFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
             <security:filter-chain pattern="/edit/**" filters="httpSessionContextIntegrationFilter,authenticationProcessingFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
-            <security:filter-chain pattern="/todo/**" filters="httpSessionContextIntegrationFilter,authenticationProcessingFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />       
             <security:filter-chain pattern="/sync/**" filters="httpSessionContextIntegrationFilter,basicProcessingFilter,exceptionTranslationFilter,securityInterceptorFilter" /> 
 			<security:filter-chain pattern="/service/**" filters="httpSessionContextIntegrationFilter,basicProcessingFilter,exceptionTranslationFilter,securityInterceptorFilter" />
 		</security:filter-chain-map>
@@ -150,7 +149,6 @@
 		<property name="objectDefinitionSource">
 			<security:filter-invocation-definition-source>
 				<security:intercept-url pattern="/edit/**" access="ROLE_WEB" />
-				<security:intercept-url pattern="/todo/**" access="ROLE_WEB" />
                 <security:intercept-url pattern="/service/**" access="ROLE_USER" />
 				<security:intercept-url pattern="/sync/**" access="ROLE_USER" />
 			</security:filter-invocation-definition-source>

@@ -64,16 +64,10 @@
         pattern="/edit/**"
         filters="httpSessionContextIntegrationFilter,authenticationProcessingFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
       <security:filter-chain
-        pattern="/todo/**"
-        filters="httpSessionContextIntegrationFilter,authenticationProcessingFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
-      <security:filter-chain
         pattern="/sync/**"
         filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,securityInterceptorFilter" />
       <security:filter-chain
         pattern="/service/**"
-        filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,securityInterceptorFilter" />
-       <security:filter-chain
-        pattern="/poseidon/**"
         filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,securityInterceptorFilter" />
     </security:filter-chain-map>
   </bean>
@@ -184,8 +178,6 @@
 				<security:intercept-url pattern="/auth/login.xhtml"
 					access="ROLE_ANONYMOUS" />
 				<security:intercept-url pattern="/edit/**"
-					access="ROLE_WEB" />
-				<security:intercept-url pattern="/todo/**"
 					access="ROLE_WEB" />
 				<security:intercept-url pattern="/service/**"
 					access="ROLE_USER" />
