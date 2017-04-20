@@ -27,6 +27,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.PieChartModel;
@@ -48,7 +49,7 @@ public class ControlsIsoChartView {
 
     private PieChartModel pieChart;
 
-    private HorizontalBarChartModel horizontalBarChartModel;
+    private BarChartModel horizontalBarChartModel;
 
     private boolean dataCalculated = false;
 
@@ -86,7 +87,7 @@ public class ControlsIsoChartView {
         pieChart.setSeriesColors(colors);
         pieChart.setExtender("verinicePie");
 
-        horizontalBarChartModel = new HorizontalBarChartModel();
+        horizontalBarChartModel = new BarChartModel();
         ChartSeries series = new ChartSeries();
         for (Map.Entry<String, Number> entry : states.entrySet()) {
             series.set(entry.getKey(), entry.getValue());
@@ -94,7 +95,7 @@ public class ControlsIsoChartView {
 
         horizontalBarChartModel.addSeries(series);
         horizontalBarChartModel.setSeriesColors(colors);
-        horizontalBarChartModel.setExtender("veriniceHorizontalBar");
+        horizontalBarChartModel.setExtender("veriniceVerticalBar");
 
         dataCalculated = true;
     }
@@ -109,7 +110,7 @@ public class ControlsIsoChartView {
         this.pieChart = pieChart;
     }
 
-    public HorizontalBarChartModel getHorizontalBarChartModel() {
+    public BarChartModel getHorizontalBarChartModel() {
         return horizontalBarChartModel;
     }
 
