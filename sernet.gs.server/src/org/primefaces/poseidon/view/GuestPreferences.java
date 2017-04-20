@@ -15,10 +15,8 @@
  */
 package org.primefaces.poseidon.view;
 
-import javax.annotation.PostConstruct;
-import java.util.Map;
-import java.util.HashMap;
 import java.io.Serializable;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -26,28 +24,9 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class GuestPreferences implements Serializable {
 
-    private Map<String,String> themeColors;
-
-    private String theme = "turquoise";
+    private static final long serialVersionUID = 1L;
 
     private String menuLayout = "static";
-
-    @PostConstruct
-    public void init() {
-        themeColors = new HashMap<String,String>();
-        themeColors.put("turquoise", "#00acac");
-        themeColors.put("blue", "#2f8ee5");
-        themeColors.put("orange", "#efa64c");
-        themeColors.put("purple", "#6c76af");
-        themeColors.put("pink", "#f16383");
-        themeColors.put("light-blue", "#63c9f1");
-        themeColors.put("green", "#57c279");
-        themeColors.put("deep-purple", "#7e57c2");
-    }
-
-	public String getTheme() {
-		return theme;
-	}
 
     public String getMenuLayout() {
         if(this.menuLayout.equals("static"))
@@ -60,15 +39,9 @@ public class GuestPreferences implements Serializable {
             return "menu-layout-static";
     }
 
-	public void setTheme(String theme) {
-		this.theme = theme;
-	}
 
     public void setMenuLayout(String menuLayout) {
         this.menuLayout = menuLayout;
     }
 
-    public Map getThemeColors() {
-        return this.themeColors;
-    }
 }
