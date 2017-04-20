@@ -1,0 +1,19 @@
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:pp="http://primefaces.org/poseidon">
+
+  <h:form>
+    <!--
+      Timeout in milliseconds (1800000 ms = 30 min)
+    -->
+    <p:idleMonitor timeout="1800000">
+      <p:ajax
+        event="idle"
+        listener="#{idleMonitorRedirectorView.onIdle}" />
+    </p:idleMonitor>
+  </h:form>
+</ui:composition>
