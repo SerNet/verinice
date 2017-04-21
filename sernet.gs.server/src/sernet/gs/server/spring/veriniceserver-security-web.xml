@@ -155,7 +155,7 @@
 		<property name="filterProcessesUrl" value="/auth/j_verinice_logout" />
 	</bean>
 
-	<bean id="timeoutFilter" class="org.primefaces.poseidon.filter.TimeoutFilter">
+	<bean id="timeoutFilter" class="org.primefaces.poseidon.filter.HandleXhrTimeoutFilter">
 		<property name="invalidSessionUserName" value="anonymousUser" />
 	</bean>
 
