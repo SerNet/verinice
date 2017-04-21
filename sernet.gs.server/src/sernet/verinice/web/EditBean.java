@@ -40,7 +40,7 @@ import javax.faces.event.ValueChangeEvent;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.event.DateSelectEvent;
+import org.primefaces.event.SelectEvent;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.GSServiceException;
@@ -518,10 +518,10 @@ public class EditBean {
         return newValue;
     }
 
-    public void onDateSelect(DateSelectEvent event) {
+    public void onDateSelect(SelectEvent event) {
         try {
             String key = (String) ((UIInput) event.getComponent()).getAttributes().get("key");
-            String newValue = FormInputParser.dateToString(new java.sql.Date(event.getDate().getTime()));
+            String newValue = FormInputParser.dateToString(new java.sql.Date((Long) event.getObject()));
 
             if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(newValue)) {
                 changedElementProperties.put(key, newValue);
