@@ -59,180 +59,187 @@ import sernet.verinice.interfaces.InternalServerEvent;
  */
 public class InternalServer implements IInternalServer {
 
-	private final Logger log = Logger.getLogger(InternalServer.class);
-	
-	private boolean running = false;
+    private final Logger log = Logger.getLogger(InternalServer.class);
 
-	private ContextLoaderServlet contextLoaderServlet;
+    private boolean running = false;
 
-	private DispatcherServlet dispatcherServlet;
+    private ContextLoaderServlet contextLoaderServlet;
 
-	private WebContainer wc;
+    private DispatcherServlet dispatcherServlet;
 
-	private HttpContext ctx;
-	
-	private List<IInternalServerStartListener> listeners = new LinkedList<IInternalServerStartListener>();
-	
-	private static final String INTERNAL_SERVER_CONFIGURE_FAILURE = "InternalServer.configure.failed";
-	
-	private static final String SERVLET_NAME = "servlet-name";
-	
-	private boolean searchDisabled = false;
+    private WebContainer wc;
 
-	/**
-	 * Applies the given database credentials to the verinice server and checks
-	 * their validity.
-	 * 
-	 * <p>
-	 * If the credentials are invalid an {@link IllegalStateException} is
-	 * thrown.
-	 * </p>
-	 * 
-	 * <p>
-	 * The credentials will be used when the server is started next time.
-	 * </p>
-	 */
-	public void configureDatabase(String url, String user, String pass, String driver, String dialect) {
+    private HttpContext ctx;
 
-		boolean fail = false;
-		Connection c = null;
-		try {
-			Class.forName(driver);
+    private List<IInternalServerStartListener> listeners = new LinkedList<IInternalServerStartListener>();
 
-			c = DriverManager.getConnection(url, user, pass);
+    private static final String INTERNAL_SERVER_CONFIGURE_FAILURE = "InternalServer.configure.failed";
 
-		} catch (ClassNotFoundException cnfe) {
-			throw new IllegalStateException(Messages.InternalServer_0 + driver);
-		} catch (SQLException sqle) {
-			log.error("Could not connect to Database", sqle);
-			fail = true;
-		} finally {
-		    try {
-		        if(c != null){
-		            c.close();
-		        }
+    private static final String SERVLET_NAME = "servlet-name";
+
+    private boolean searchDisabled = false;
+
+    /**
+     * Applies the given database credentials to the verinice server and checks
+     * their validity.
+     * 
+     * <p>
+     * If the credentials are invalid an {@link IllegalStateException} is
+     * thrown.
+     * </p>
+     * 
+     * <p>
+     * The credentials will be used when the server is started next time.
+     * </p>
+     */
+    @Override
+    public void configureDatabase(String url, String user, String pass, String driver, String dialect) {
+
+        boolean fail = false;
+        Connection c = null;
+        try {
+            Class.forName(driver);
+
+            c = DriverManager.getConnection(url, user, pass);
+
+        } catch (ClassNotFoundException cnfe) {
+            throw new IllegalStateException(Messages.InternalServer_0 + driver);
+        } catch (SQLException sqle) {
+            log.error("Could not connect to Database", sqle);
+            fail = true;
+        } finally {
+            try {
+                if(c != null){
+                    c.close();
+                }
             } catch (SQLException e) {
                 log.error("Error closing Database connection", e);
             }
-		}
+        }
 
-		if (fail) {
-		    ServerPropertyPlaceholderConfigurer.setDatabaseProperties(INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE);	            
-		} else {
-			ServerPropertyPlaceholderConfigurer.setDatabaseProperties(url, user, pass, driver, dialect);   
-		}
-	}
-	
-	public void configureSearch(boolean disable, boolean indexOnStartup) {
-	    ServerPropertyPlaceholderConfigurer.setSearchProperties(indexOnStartup); 
-	    searchDisabled = disable;
-	}
+        if (fail) {
+            ServerPropertyPlaceholderConfigurer.setDatabaseProperties(INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE);	            
+        } else {
+            ServerPropertyPlaceholderConfigurer.setDatabaseProperties(url, user, pass, driver, dialect);   
+        }
+    }
+
+    @Override
+    public void configureSearch(boolean disable, boolean indexOnStartup) {
+        ServerPropertyPlaceholderConfigurer.setSearchProperties(indexOnStartup); 
+        searchDisabled = disable;
+    }
 
 
-	public void setGSCatalogURL(URL url) {
-		ServerPropertyPlaceholderConfigurer.setGSCatalogURL(url);
-	}
+    @Override
+    public void setGSCatalogURL(URL url) {
+        ServerPropertyPlaceholderConfigurer.setGSCatalogURL(url);
+    }
 
-	public void setDSCatalogURL(URL url) {
-		ServerPropertyPlaceholderConfigurer.setDSCatalogURL(url);
-	}
-	
-	/**
-	 * Starts the verinice server.
-	 * 
-	 * <p>
-	 * Before each start the server must be stopped.
-	 * </p>
-	 * 
-	 * <p>
-	 * The first start will also initialize the underlying servlet container and
-	 * as such will take longer.
-	 * </p>
-	 * 
-	 * <p>
-	 * In case the server could not be started an @{link IllegalStateException}
-	 * is thrown.
-	 * </p>
-	 */
-	public synchronized void start() {
-		if (log.isDebugEnabled()) {
-			log.debug("start(), starting internal server...");
-		}
-		if (running) {
-			throw new IllegalStateException(Messages.InternalServer_2);
-		}
-		try {
-			if (wc == null) {
-				initialSetup();
-			}
-			setupSpringServlets();
-		} catch (ServletException se) {
-			log.error("Error while starting internal server.",se);
-			throw new IllegalStateException(Messages.InternalServer_3, se);
-		} catch (NamespaceException nse) {
-			log.error("Error while starting internal server.",nse);
-			throw new IllegalStateException(Messages.InternalServer_3, nse);
-		} catch (Exception e) {
-			log.error("Error while starting internal server.",e);
-			throw new IllegalStateException(Messages.InternalServer_3, e);
-		}
-		running = true;
-		if (log.isInfoEnabled()) {
-			log.info("Internal server is running now");
-		}
-		notifyStatusChange(new InternalServerEvent(this, true));
-	}
+    @Override
+    public void setDSCatalogURL(URL url) {
+        ServerPropertyPlaceholderConfigurer.setDSCatalogURL(url);
+    }
 
-	/**
-	 * Stops the verinice server.
-	 * 
-	 * <p>
-	 * By purpose this does (yet) shutdown the servlet container.
-	 * </p>
-	 * 
-	 * <p>
-	 * When the server is already stopped this method has no effect.
-	 * </p>
-	 */
-	public void stop() {
-		if (!running){
-			return;
-		}
-		teardownSpringServlets();
+    /**
+     * Starts the verinice server.
+     * 
+     * <p>
+     * Before each start the server must be stopped.
+     * </p>
+     * 
+     * <p>
+     * The first start will also initialize the underlying servlet container and
+     * as such will take longer.
+     * </p>
+     * 
+     * <p>
+     * In case the server could not be started an @{link IllegalStateException}
+     * is thrown.
+     * </p>
+     */
+    @Override
+    public synchronized void start() {
+        if (log.isDebugEnabled()) {
+            log.debug("start(), starting internal server...");
+        }
+        if (running) {
+            throw new IllegalStateException(Messages.InternalServer_2);
+        }
+        try {
+            if (wc == null) {
+                initialSetup();
+            }
+            setupSpringServlets();
+        } catch (ServletException se) {
+            log.error("Error while starting internal server.",se);
+            throw new IllegalStateException(Messages.InternalServer_3, se);
+        } catch (NamespaceException nse) {
+            log.error("Error while starting internal server.",nse);
+            throw new IllegalStateException(Messages.InternalServer_3, nse);
+        } catch (Exception e) {
+            log.error("Error while starting internal server.",e);
+            throw new IllegalStateException(Messages.InternalServer_3, e);
+        }
+        running = true;
+        if (log.isInfoEnabled()) {
+            log.info("Internal server is running now");
+        }
+        notifyStatusChange(new InternalServerEvent(this, true));
+    }
 
-		running = false;
-	}
+    /**
+     * Stops the verinice server.
+     * 
+     * <p>
+     * By purpose this does (yet) shutdown the servlet container.
+     * </p>
+     * 
+     * <p>
+     * When the server is already stopped this method has no effect.
+     * </p>
+     */
+    @Override
+    public void stop() {
+        if (!running){
+            return;
+        }
+        teardownSpringServlets();
 
-	/**
-	 * Returns whether the server is currently active.
-	 */
-	public boolean isRunning() {
-		return running;
-	}
+        running = false;
+    }
 
-	/**
-	 * Performs the initial setup of the server which means configuring things
-	 * that cannot be changed afterwards or are not dependent upon the Spring
-	 * configuration.</p>
-	 * 
-	 * @throws ServletException
-	 * @throws NamespaceException
-	 */
-	private void initialSetup() throws ServletException {
-	    wc = Activator.getDefault().getWebContainer();
+    /**
+     * Returns whether the server is currently active.
+     */
+    @Override
+    public boolean isRunning() {
+        return running;
+    }
 
-		ctx = wc.createDefaultHttpContext();	
-		
-		Dictionary<String, String> dict = new Hashtable<String, String>();
-		dict.put("contextConfigLocation", "\n" //$NON-NLS-1$ //$NON-NLS-2$	        
-				+ "classpath:/sernet/gs/server/spring/veriniceserver-common.xml \n" //$NON-NLS-1$
-				+ "classpath:/sernet/gs/server/spring/veriniceserver-osgi.xml \n" //$NON-NLS-1$
-				+ "classpath:/sernet/gs/server/spring/veriniceserver-daos-common.xml \n" //$NON-NLS-1$
-				+ "classpath:/sernet/gs/server/spring/veriniceserver-daos-osgi.xml \n" //$NON-NLS-1$
-				+ "classpath:/sernet/gs/server/spring/veriniceserver-security-osgi.xml \n" //$NON-NLS-1$
-				+ "classpath:/sernet/gs/server/spring/veriniceserver-ldap.xml \n" //$NON-NLS-1$
-				+ "classpath:/sernet/gs/server/spring/veriniceserver-jbpm-dummy.xml \n" //$NON-NLS-1$
-		        + "classpath:/sernet/gs/server/spring/veriniceserver-rightmanagement-dummy.xml \n" //NON-NLS-1$
+    /**
+     * Performs the initial setup of the server which means configuring things
+     * that cannot be changed afterwards or are not dependent upon the Spring
+     * configuration.</p>
+     * 
+     * @throws ServletException
+     * @throws NamespaceException
+     */
+    private void initialSetup() throws ServletException {
+        wc = Activator.getDefault().getWebContainer();
+
+        ctx = wc.createDefaultHttpContext();	
+
+        Dictionary<String, String> dict = new Hashtable<String, String>();
+        dict.put("contextConfigLocation", "\n" //$NON-NLS-1$ //$NON-NLS-2$	        
+                + "classpath:/sernet/gs/server/spring/veriniceserver-common.xml \n" //$NON-NLS-1$
+                + "classpath:/sernet/gs/server/spring/veriniceserver-osgi.xml \n" //$NON-NLS-1$
+                + "classpath:/sernet/gs/server/spring/veriniceserver-daos-common.xml \n" //$NON-NLS-1$
+                + "classpath:/sernet/gs/server/spring/veriniceserver-daos-osgi.xml \n" //$NON-NLS-1$
+                + "classpath:/sernet/gs/server/spring/veriniceserver-security-osgi.xml \n" //$NON-NLS-1$
+                + "classpath:/sernet/gs/server/spring/veriniceserver-ldap.xml \n" //$NON-NLS-1$
+                + "classpath:/sernet/gs/server/spring/veriniceserver-jbpm-dummy.xml \n" //$NON-NLS-1$
+                + "classpath:/sernet/gs/server/spring/veriniceserver-rightmanagement-dummy.xml \n" //NON-NLS-1$
                 + getSearchConfigFiles()
 		        + "classpath:/sernet/gs/server/spring/veriniceserver-reportdeposit-dummy.xml \n" //NON-NLS-1$
 		        + "classpath:/sernet/gs/server/spring/veriniceserver-account-dummy.xml \n" //NON-NLS-1$
@@ -240,19 +247,19 @@ public class InternalServer implements IInternalServer {
 		        + "classpath:/sernet/gs/server/spring/veriniceserver-risk-analysis-standalone.xml \n" //NON-NLS-1$
 		        + "classpath:/sernet/gs/server/spring/veriniceserver-licensemanagement-osgi.xml \n" //NON-NLS-1$
 				+ "classpath:/sernet/gs/server/spring/veriniceserver-templates.xml"); // NON-NLS-1$
-		
-		dict.put(ContextLoader.CONTEXT_CLASS_PARAM, OsgiBundleXmlWebApplicationContext.class.getName());
-		wc.setContextParam(dict, ctx);
 
-		dict = new Hashtable<String, String>();
-		dict.put(SERVLET_NAME, "GetHitroConfig"); //$NON-NLS-1$ //$NON-NLS-2$
-		dict.put("snca.xml.path", "/WebContent/WEB-INF/"); //$NON-NLS-1$ //$NON-NLS-2$
-		wc.registerServlet(new GetHitroConfig(), new String[] { "/GetHitroConfig" }, dict, ctx); //$NON-NLS-1$
+        dict.put(ContextLoader.CONTEXT_CLASS_PARAM, OsgiBundleXmlWebApplicationContext.class.getName());
+        wc.setContextParam(dict, ctx);
 
-		dict = new Hashtable<String, String>();
-		dict.put(SERVLET_NAME, "serverTest"); //$NON-NLS-1$ //$NON-NLS-2$
-		wc.registerServlet(new ServerTestServlet(), new String[] { "/servertest" }, dict, ctx); //$NON-NLS-1$
-	}
+        dict = new Hashtable<String, String>();
+        dict.put(SERVLET_NAME, "GetHitroConfig"); //$NON-NLS-1$ //$NON-NLS-2$
+        dict.put("snca.xml.path", "/WebContent/WEB-INF/"); //$NON-NLS-1$ //$NON-NLS-2$
+        wc.registerServlet(new GetHitroConfig(), new String[] { "/GetHitroConfig" }, dict, ctx); //$NON-NLS-1$
+
+        dict = new Hashtable<String, String>();
+        dict.put(SERVLET_NAME, "serverTest"); //$NON-NLS-1$ //$NON-NLS-2$
+        wc.registerServlet(new ServerTestServlet(), new String[] { "/servertest" }, dict, ctx); //$NON-NLS-1$
+    }
 
     private String getSearchConfigFiles() {
         StringBuilder sb = new StringBuilder();  
@@ -265,85 +272,87 @@ public class InternalServer implements IInternalServer {
         return sb.toString();
     }
 
-	/**
-	 * Registers the Spring servlets which effectively starts the verinice
-	 * server.
-	 * 
-	 * @throws ServletException
-	 * @throws NamespaceException
-	 */
-	private void setupSpringServlets() throws ServletException, NamespaceException {
-	    if (log.isDebugEnabled()) {
-	        log.debug("setupSpringServlets...");
+    /**
+     * Registers the Spring servlets which effectively starts the verinice
+     * server.
+     * 
+     * @throws ServletException
+     * @throws NamespaceException
+     */
+    private void setupSpringServlets() throws ServletException, NamespaceException {
+        if (log.isDebugEnabled()) {
+            log.debug("setupSpringServlets...");
         }
-	    Dictionary<String, String> dict = new Hashtable<String, String>();
-		dict.put(SERVLET_NAME, "context"); //$NON-NLS-1$ //$NON-NLS-2$
-		dict.put(ContextLoader.CONTEXT_CLASS_PARAM, OsgiBundleXmlWebApplicationContext.class.getName());
-		contextLoaderServlet = new ContextLoaderServlet();
-		wc.registerServlet("/context", contextLoaderServlet, dict, ctx); //$NON-NLS-1$
+        Dictionary<String, String> dict = new Hashtable<String, String>();
+        dict.put(SERVLET_NAME, "context"); //$NON-NLS-1$ //$NON-NLS-2$
+        dict.put(ContextLoader.CONTEXT_CLASS_PARAM, OsgiBundleXmlWebApplicationContext.class.getName());
+        contextLoaderServlet = new ContextLoaderServlet();
+        wc.registerServlet("/context", contextLoaderServlet, dict, ctx); //$NON-NLS-1$
 
-		dict = new Hashtable<String, String>();
-		dict.put(SERVLET_NAME, "springDispatcher"); //$NON-NLS-1$ //$NON-NLS-2$
-		dict.put("contextConfigLocation", "classpath:/sernet/gs/server/spring/springDispatcher-servlet.xml"); //$NON-NLS-1$ //$NON-NLS-2$      
-		dispatcherServlet = new DispatcherServlet();
-		wc.registerServlet(dispatcherServlet, new String[] { "/service/*" }, dict, ctx); //$NON-NLS-1$
-		if (log.isDebugEnabled()) {
+        dict = new Hashtable<String, String>();
+        dict.put(SERVLET_NAME, "springDispatcher"); //$NON-NLS-1$ //$NON-NLS-2$
+        dict.put("contextConfigLocation", "classpath:/sernet/gs/server/spring/springDispatcher-servlet.xml"); //$NON-NLS-1$ //$NON-NLS-2$      
+        dispatcherServlet = new DispatcherServlet();
+        wc.registerServlet(dispatcherServlet, new String[] { "/service/*" }, dict, ctx); //$NON-NLS-1$
+        if (log.isDebugEnabled()) {
             log.debug("setupSpringServlets finished");
         }		
-	}
+    }
 
-	/**
-	 * Unregisters the Spring servlets which effectively stops the verinice
-	 * server.
-	 * 
-	 * @throws ServletException
-	 * @throws NamespaceException
-	 */
-	private void teardownSpringServlets() {
-		wc.unregisterServlet(dispatcherServlet);
-		wc.unregisterServlet(contextLoaderServlet);
-	}
+    /**
+     * Unregisters the Spring servlets which effectively stops the verinice
+     * server.
+     * 
+     * @throws ServletException
+     * @throws NamespaceException
+     */
+    private void teardownSpringServlets() {
+        wc.unregisterServlet(dispatcherServlet);
+        wc.unregisterServlet(contextLoaderServlet);
+    }
 
-	/**
-	 * Helper servlet which tells the state of the internal server.
-	 * 
-	 * <p>
-	 * The servlet's output can be seen with a web browser at <a
-	 * href="localhost:8800/servertest">localhost:8800/servertest</a> .
-	 * </p>
-	 */
-	private class ServerTestServlet extends HttpServlet {
+    /**
+     * Helper servlet which tells the state of the internal server.
+     * 
+     * <p>
+     * The servlet's output can be seen with a web browser at <a
+     * href="localhost:8800/servertest">localhost:8800/servertest</a> .
+     * </p>
+     */
+    private class ServerTestServlet extends HttpServlet {
 
-		private static final long serialVersionUID = 131427514191056452L;
+        private static final long serialVersionUID = 131427514191056452L;
 
-		@Override
-		protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-			log.error("doGet"); //$NON-NLS-1$
+        @Override
+        protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            log.error("doGet"); //$NON-NLS-1$
 
-			resp.setContentType("text/html"); //$NON-NLS-1$
+            resp.setContentType("text/html"); //$NON-NLS-1$
 
-			PrintWriter w = resp.getWriter();
+            PrintWriter w = resp.getWriter();
 
-			if (running){
-				w.println(Messages.InternalServer_4);
-			} else {
-				w.println(Messages.InternalServer_5);
-			}
-			w.flush();
-		}
-	}
-	
-	protected synchronized void notifyStatusChange(InternalServerEvent event){
-	    for(IInternalServerStartListener l : listeners){
-	        l.statusChanged(event);
-	    }
-	}
-	
-	public void addInternalServerStatusListener(IInternalServerStartListener listener){
-	    listeners.add(listener);
-	}
-	
-	public void removeInternalServerStatusListener(IInternalServerStartListener listener){
-	        listeners.remove(listener);
-	}
+            if (running){
+                w.println(Messages.InternalServer_4);
+            } else {
+                w.println(Messages.InternalServer_5);
+            }
+            w.flush();
+        }
+    }
+
+    protected synchronized void notifyStatusChange(InternalServerEvent event){
+        for(IInternalServerStartListener l : listeners){
+            l.statusChanged(event);
+        }
+    }
+
+    @Override
+    public void addInternalServerStatusListener(IInternalServerStartListener listener){
+        listeners.add(listener);
+    }
+
+    @Override
+    public void removeInternalServerStatusListener(IInternalServerStartListener listener){
+        listeners.remove(listener);
+    }
 }
