@@ -140,7 +140,7 @@
 	</bean>
 
 	<bean id="accessDeniedHandler" class="org.springframework.security.ui.AccessDeniedHandlerImpl">
-		<property name="errorPage" value="/auth/login-error.jsf" />
+		<property name="errorPage" value="/auth/login.xhtml" />
 	</bean>
 
 
@@ -155,15 +155,8 @@
 		<property name="filterProcessesUrl" value="/auth/j_verinice_logout" />
 	</bean>
 
-	<bean id="timeoutFilter" class="org.springframework.security.ui.logout.LogoutFilter">
-		<constructor-arg value="/auth/login-timeout.jsf" />
-		<constructor-arg>
-			<list>
-				<bean
-					class="org.springframework.security.ui.logout.SecurityContextLogoutHandler" />
-			</list>
-		</constructor-arg>
-		<property name="filterProcessesUrl" value="/auth/j_verinice_timeout" />
+	<bean id="timeoutFilter" class="org.primefaces.poseidon.filter.TimeoutFilter">
+		<property name="invalidSessionUserName" value="anonymousUser" />
 	</bean>
 
 	<!-- Protect HTTP access to these paths: -->
