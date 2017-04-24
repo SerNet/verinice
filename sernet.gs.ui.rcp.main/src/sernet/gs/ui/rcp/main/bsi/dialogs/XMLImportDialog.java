@@ -637,7 +637,7 @@ public class XMLImportDialog extends Dialog {
                 "*" + ExportAction.EXTENSION_XML, //$NON-NLS-1$
                 "*" + ExportAction.EXTENSION_PASSWORD_ENCRPTION, //$NON-NLS-1$
                 "*" + ExportAction.EXTENSION_CERTIFICATE_ENCRPTION}); //$NON-NLS-1$ 
-        dialog.setFilterNames(new String[] { Messages.XMLImportDialog_30, Messages.XMLImportDialog_33, Messages.XMLImportDialog_39, Messages.XMLImportDialog_34, Messages.XMLImportDialog_35 });
+        dialog.setFilterNames(new String[] { Messages.XMLImportDialog_30, Messages.XMLImportDialog_33, Messages.XMLImportDialog_34, Messages.XMLImportDialog_35 });
 
         if (isFilePath()) {
             dialog.setFilterPath(getOldFolderPath());
@@ -706,6 +706,7 @@ public class XMLImportDialog extends Dialog {
         byte[] fileData = null;
 
         IEncryptionService service = ServiceFactory.lookupEncryptionService();
+
         try {
             if (selectedEncryptionMethod != null) {
                 fileData = FileUtils.readFileToByteArray(dataFile);

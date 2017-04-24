@@ -159,14 +159,8 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	</bean>
     
     <bean id="encryptionService" 
-                  class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
-        <property name="serviceUrl">
-            <value>${verinice.serverURL}/service/cryptoServiceHttpInvoker</value>
-        </property>
-        <property name="serviceInterface">
-            <value>sernet.verinice.interfaces.encryption.IEncryptionService</value>
-        </property>
-        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
+                  class="sernet.verinice.service.crypto.EncryptionService">
+        
     </bean>
     
     <bean id="accountService"

@@ -312,7 +312,7 @@ This variant:
     	<property name="huiTypeFactory" ref="huiTypeFactory" />
     </bean>
     
-    <bean id="encryptionService" class="sernet.verinice.service.EncryptionService" />
+    <bean id="encryptionService" class="sernet.verinice.service.crypto.EncryptionService" />
     
     <!-- A service to load and analyse the element network of verinice with JGraphT. -->
     <!-- JGraphT is a free Java graph library that provides mathematical graph-theory objects and algorithms. -->
