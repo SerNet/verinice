@@ -818,7 +818,7 @@ public class DAOFactory implements IDAOFactory {
         this.finishedRiskAnalysisListsDao = dao;
         
     }
-
+    
     @Override
     @SuppressWarnings("unchecked")
 	/**

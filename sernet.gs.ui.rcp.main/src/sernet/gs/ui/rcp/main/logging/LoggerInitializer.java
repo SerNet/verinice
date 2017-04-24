@@ -41,6 +41,7 @@ import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
 
 import sernet.verinice.interfaces.ILogPathService;
+import sernet.verinice.interfaces.IVeriniceConstants;
 
 /**
  * Provides additional logging configuration.
@@ -134,13 +135,15 @@ public class LoggerInitializer implements ILogPathService {
             return;
         }
 
-        currentLogFilePath = concat(concat(System.getProperty("user.home"), "verinice"), DEFAULT_VERINICE_LOG);
+        currentLogFilePath = concat(concat(System.getProperty(
+                IVeriniceConstants.USER_HOME), "verinice"), DEFAULT_VERINICE_LOG);
         if (validatePath(currentLogFilePath)) {
             System.out.println(String.format("use fallback path %s", currentLogFilePath));
             return;
         }
 
-        currentLogFilePath = concat(concat(System.getProperty("java.io.tmpdir"), "verinice"), DEFAULT_VERINICE_LOG);
+        currentLogFilePath = concat(concat(System.getProperty(
+                IVeriniceConstants.JAVA_IO_TMPDIR), "verinice"), DEFAULT_VERINICE_LOG);
         if (validatePath(currentLogFilePath)) {
             System.out.println(String.format("use fallback path %s", currentLogFilePath));
             return;

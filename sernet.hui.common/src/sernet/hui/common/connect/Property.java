@@ -33,6 +33,9 @@ public class Property implements Serializable, ITypedElement {
 	private String propertyValue;
 	private Entity parent;
 	
+	private String licenseContentId;
+	private Boolean limitedLicense = false;
+	
     public static final String TYPE_ID = "huiproperty";
     public static final int UNDEF = 0;
 
@@ -116,7 +119,35 @@ public class Property implements Serializable, ITypedElement {
 		return propertyType;
 	}
 
-	public Integer getDbId() {
+	/**
+     * @return the licensedContentId
+     */
+    public String getLicenseContentId() {
+        return licenseContentId;
+    }
+
+    /**
+     * @param licenseContentId the contentId to set
+     */
+    public void setLicenseContentId(String licenseContentId) {
+        this.licenseContentId = licenseContentId;
+    }
+
+    /**
+     * @return the limitedLicense
+     */
+    public Boolean isLimitedLicense() {
+        return limitedLicense;
+    }
+
+    /**
+     * @param limitedLicense the limitedLicense to set
+     */
+    public void setLimitedLicense(Boolean limitedLicense) {
+        this.limitedLicense = limitedLicense;
+    }
+
+    public Integer getDbId() {
 		return dbId;
 	}
 

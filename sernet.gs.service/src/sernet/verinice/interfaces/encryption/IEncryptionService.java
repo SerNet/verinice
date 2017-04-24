@@ -51,11 +51,12 @@ public interface IEncryptionService {
 	 *             if a problem occured during the encryption process
 	 */
 	byte[] encrypt(byte[] unencryptedByteData, char[] password) throws EncryptionException;
+	
+	String encrypt(String plainText, char[] password, String salt) throws EncryptionException;
+	
+	String decrypt(String cypherText, char[] password, String salt) throws EncryptionException;
 
     byte[] encrypt(byte[] unencryptedByteData, char[] password, byte[] salt) throws EncryptionException;
-
-    // byte[] encrypt(byte[] unencryptedByteData, char[] password, byte[] salt)
-    // throws EncryptionException;
 
 	/**
 	 * Decrypts the given byte data with the given password using the AES algorithm.
@@ -304,4 +305,6 @@ public interface IEncryptionService {
 	InputStream decrypt(InputStream encryptedDataStream, String keyAlias)
 			throws IOException, CertificateException,
 			EncryptionException;
+	
+	String decryptLicenseRestrictedProperty(String password, String value) throws EncryptionException;
 }

@@ -37,6 +37,7 @@ import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.licensemanagement.LicenseManagementEntry;
 
 /**
  * Configuration item. Actual configuration values are saved in Entity.
@@ -62,9 +63,11 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	public static final String PROP_USERNAME = "configuration_benutzername"; //$NON-NLS-1$
 	public static final String PROP_PASSWORD = "configuration_passwort"; //$NON-NLS-1$
 	public static final String PROP_ROLES = "configuration_rolle"; //$NON-NLS-1$
+	public static final String PROP_LICENSED_CONTENT_IDS = "configuration_licensedcontent_ids"; //$NON-NLS-1$
 	
 	public static final String PROP_NOTIFICATION = "configuration_mailing_yesno"; //$NON-NLS-1$
 	public static final String PROP_NOTIFICATION_EMAIL = "configuration_mailing_email"; //$NON-NLS-1$
+	public static final String PROP_NOTIFICATION_LICENSE = "configuration_mailing_license"; //$NON-NLS-1$
 	
 	public static final String PROP_NOTIFICATION_GLOBAL = "configuration_mailing_owner"; //$NON-NLS-1$
 	public static final String PROP_NOTIFICATION_GLOBAL_ALL = "configuration_mailing_owner_all"; //$NON-NLS-1$
@@ -134,7 +137,7 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	}
 
 	private void setEntity(Entity entity) {
-		this.entity = entity;		
+		this.entity = entity;
 	}
 
 	public Entity getEntity() {
@@ -199,6 +202,65 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
             LOG.debug("Role " + name + " deleted from account.");
 		}
 		return true;
+	}
+	
+	/**
+	 * adds licenseId assignment to this user. this allows the user to work with
+	 * the content covered by a license represented by a {@link LicenseManagementEntry}
+	 * that is referenced via the paramater licenseId.
+	 * 
+	 * To prevent confusion with duplicate database entries, (which could 
+	 * result in unauthorized content access) in this special case,
+	 * the property list is checked for property existance before adding 
+	 * a new property
+	 * 
+	 * 
+	 * @param licenseId - the licenseId that should be assigned to this user
+	 */
+	public void addLicensedContentId(String licenseId){
+	    PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_LICENSED_CONTENT_IDS);
+	    List<Property> propertyList = getEntity().getProperties(type.getId()).getProperties();
+
+	    for (Property p : propertyList){
+	        if (licenseId.equals(p.getPropertyValue())){
+	            return;
+	        }
+	    }
+	    propertyList.add(entity.createNewProperty(type, licenseId));
+	    getEntity().getProperties(type.getId()).setProperties(propertyList);
+	    
+	    
+	    if (LOG.isDebugEnabled()) {
+	        LOG.debug("LicenseId " + licenseId + " added to account.");
+	    }
+	}
+	
+	/**
+	 * get all Ids of licenses that are assigned to this user
+	 * @return
+	 */
+	public Set<String> getAllLicenseIds(){
+	    Set<String> allIds = new HashSet<>();
+	       PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_LICENSED_CONTENT_IDS);
+	        List<Property> propertyList = getEntity().getProperties(type.getId()).getProperties();
+	        for(Property p : propertyList){
+	            allIds.add(p.getPropertyValue());
+	        }
+	            
+	    return allIds;        
+	}
+	
+	/**
+	 * removes one licenseId assignment from this user, given by paramater 
+	 * licenseId
+	 * @param licenseId - the id to remove
+	 */
+	public void removeLicensedContentId(String licenseId) {
+	    PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_LICENSED_CONTENT_IDS);
+	    entity.remove(type, licenseId);
+	    if (LOG.isDebugEnabled()) {
+	        LOG.debug("LicenseId " + licenseId + " deleted from account.");
+	    }
 	}
 	
 	public void setNotificationEnabled(boolean b) {
@@ -312,6 +374,15 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 		entity.setSimpleValue(type, email);
 	}
 	
+	public boolean getNotificationLicense(){
+	    return "1".equals(entity.getSimpleValue(PROP_NOTIFICATION_LICENSE));
+	}
+	
+	public void setNotificationLicense(boolean enabled){
+	    PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_NOTIFICATION_LICENSE);
+	    entity.setSimpleValue(type, (enabled) ? "1" : "0");
+	}
+	
 	public void setNotificationGlobal(boolean b) {
 		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_NOTIFICATION_GLOBAL);
 		entity.setSimpleValue(type, (b ? PROP_NOTIFICATION_GLOBAL_ALL : PROP_NOTIFICATION_GLOBAL_SELF));
@@ -410,6 +481,41 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 			roles.add(getUser());
 		}
 		return roles;
+	}
+	
+	/**
+	 * gets all licenseIds the user is allowed to use
+	 * one licenseId references a {@link LicenseManagementEntry} that
+	 * defines the access to content that is covered by special license
+	 * @return set of strings representing the ids assigned to this user
+	 */
+	public Set<String> getAssignedLicenseIds(){
+	    List<Property> properties = entity.getProperties(Configuration.PROP_LICENSED_CONTENT_IDS).getProperties();
+	    
+	    Set<String> licenseIds;
+	    
+	    if (properties != null){
+	        licenseIds = new HashSet<>(properties.size());
+	        for (Property p : properties){
+	            licenseIds.add(p.getPropertyValue());
+	        }
+	    } else {
+	        licenseIds = new HashSet<>();
+	    }
+	    
+	    return licenseIds;
+	            
+	}
+	
+	
+	/**
+	 * removes all licenseId assignments from this user
+	 */
+	public void removeAllLicenseIds(){
+	    Set<String> allLicenseIds = getAssignedLicenseIds();
+	    for (String licenseId : allLicenseIds){
+	        removeLicensedContentId(licenseId);
+	    }
 	}
 	
 	public Set<String> getRoles() {

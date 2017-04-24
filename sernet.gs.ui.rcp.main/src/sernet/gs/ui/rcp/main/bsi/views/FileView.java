@@ -90,6 +90,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.DeleteNote;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
@@ -625,7 +626,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
                 LoadAttachmentFile command = new LoadAttachmentFile(attachment.getDbId());
                 command = getCommandService().executeCommand(command);
                 AttachmentFile attachmentFile = command.getAttachmentFile();
-                String tempDir = System.getProperty("java.io.tmpdir"); //$NON-NLS-1$
+                String tempDir = System.getProperty(IVeriniceConstants.JAVA_IO_TMPDIR); //$NON-NLS-1$
                 if (attachmentFile != null && tempDir != null) {
                    if (!tempDir.endsWith(String.valueOf(File.separatorChar))) {
                         tempDir = tempDir + File.separatorChar;

@@ -52,12 +52,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.ServiceComponent;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.encryption.PasswordException;
@@ -71,7 +71,6 @@ import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.sync.VeriniceArchive;
 import sernet.verinice.service.sync.VnaSchemaException;
-import sernet.verinice.service.sync.VnaSchemaVersion;
 
 /**
  * Dialog to import VNA or XML files.
@@ -123,7 +122,7 @@ public class XMLImportDialog extends Dialog {
     private static final int NOCRYPT_INDEX = 0;
 
     private SyncCommand syncCommand;
-
+    
     public XMLImportDialog(Shell shell) {
         super(shell);
     }
@@ -222,7 +221,9 @@ public class XMLImportDialog extends Dialog {
         String currentPath = ""; //$NON-NLS-1$
         try {
             if (dataPath != null && !dataPath.isEmpty()) {
-                int lastSlash = dataPath.lastIndexOf(System.getProperty("file.separator")); //$NON-NLS-1$
+                int lastSlash = dataPath.lastIndexOf(
+                        System.getProperty(
+                                IVeriniceConstants.FILE_SEPARATOR)); //$NON-NLS-1$
                 if (lastSlash != -1) {
                     currentPath = dataPath.substring(0, lastSlash + 1);
                 } else {
@@ -635,8 +636,8 @@ public class XMLImportDialog extends Dialog {
         dialog.setFilterExtensions(new String[] { "*" + VeriniceArchive.EXTENSION_VERINICE_ARCHIVE, //$NON-NLS-1$
                 "*" + ExportAction.EXTENSION_XML, //$NON-NLS-1$
                 "*" + ExportAction.EXTENSION_PASSWORD_ENCRPTION, //$NON-NLS-1$
-                "*" + ExportAction.EXTENSION_CERTIFICATE_ENCRPTION }); //$NON-NLS-1$
-        dialog.setFilterNames(new String[] { Messages.XMLImportDialog_30, Messages.XMLImportDialog_33, Messages.XMLImportDialog_34, Messages.XMLImportDialog_35 });
+                "*" + ExportAction.EXTENSION_CERTIFICATE_ENCRPTION}); //$NON-NLS-1$ 
+        dialog.setFilterNames(new String[] { Messages.XMLImportDialog_30, Messages.XMLImportDialog_33, Messages.XMLImportDialog_39, Messages.XMLImportDialog_34, Messages.XMLImportDialog_35 });
 
         if (isFilePath()) {
             dialog.setFilterPath(getOldFolderPath());
@@ -649,7 +650,7 @@ public class XMLImportDialog extends Dialog {
         String path = dialog.open();
         if (path != null) {
             f = new File(path);
-            if (dialog.getFilterIndex() < 2) {
+            if (dialog.getFilterIndex() < 3) {
                 // set the format if an uncrypted file was selected
                 format = dialog.getFilterIndex();
             }
@@ -704,7 +705,7 @@ public class XMLImportDialog extends Dialog {
         Activator.inheritVeriniceContextState();
         byte[] fileData = null;
 
-        IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
+        IEncryptionService service = ServiceFactory.lookupEncryptionService();
         try {
             if (selectedEncryptionMethod != null) {
                 fileData = FileUtils.readFileToByteArray(dataFile);
@@ -748,6 +749,8 @@ public class XMLImportDialog extends Dialog {
         updateModelAndValidate(syncCommand);
         return syncCommand.getStatus();
     }
+    
+   
 
     private byte[] decryptWithGenericSalt(byte[] fileData, IEncryptionService service) throws PasswordException {
         byte[] saltBytes = new byte[IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
@@ -878,10 +881,12 @@ public class XMLImportDialog extends Dialog {
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
         defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_IMPORT);
         if (defaultFolder == null || defaultFolder.isEmpty()) {
-            defaultFolder = System.getProperty("user.home"); //$NON-NLS-1$
+            defaultFolder = System.getProperty(
+                    IVeriniceConstants.USER_HOME); //$NON-NLS-1$
         }
-        if (!defaultFolder.endsWith(System.getProperty("file.separator"))) { //$NON-NLS-1$
-            defaultFolder = defaultFolder + System.getProperty("file.separator"); //$NON-NLS-1$
+        if (!defaultFolder.endsWith(System.getProperty(IVeriniceConstants.FILE_SEPARATOR))) { //$NON-NLS-1$
+            defaultFolder = defaultFolder + 
+                    System.getProperty(IVeriniceConstants.FILE_SEPARATOR); //$NON-NLS-1$
         }
         return defaultFolder;
     }

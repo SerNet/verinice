@@ -20,6 +20,7 @@ package sernet.hui.common.connect;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -215,29 +216,17 @@ public class EntityType {
 		return null;
 	}
 
-	public PropertyType getObjectBrowserPropertyType(){
+	public LinkedList<PropertyType> getObjectBrowserPropertyTypes(){
+	    LinkedList<PropertyType> linkedList = new LinkedList<>();
 	    PropertyType htmlType = null;
 	    boolean foundHtmlProperty = false;
 	    for (IEntityElement entityElement : elements){
-	        if (entityElement instanceof PropertyType && !foundHtmlProperty){
-	            Object[] values = isShowHtml(entityElement, foundHtmlProperty);
-	            htmlType = (PropertyType)values[0];
-	            foundHtmlProperty = (values[1] == null) ? false : (boolean)values[1];
+	        if (entityElement instanceof PropertyType && 
+	                ((PropertyType)entityElement).isShowInObjectBrowser()){
+	            linkedList.add((PropertyType)entityElement);
 	        }
 	    }
-	    return htmlType;
-	}
-	
-	private Object[] isShowHtml(IEntityElement entityElement, boolean foundHtmlProperty){
-        Object[] returnValues = new Object[2];
-	    PropertyType propertyType = (PropertyType)entityElement;
-        if (propertyType.isShow_html()){
-            if (!foundHtmlProperty){
-                returnValues[0] = propertyType;
-                returnValues[1] = true;
-            }
-        }
-        return returnValues;
+	    return linkedList;
 	}
 	
 	

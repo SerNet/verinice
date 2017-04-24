@@ -24,6 +24,15 @@ package sernet.verinice.rcp.accountgroup;
 
 import static sernet.verinice.interfaces.IRightsService.STANDARD_GROUPS;
 
+import java.lang.reflect.InvocationTargetException;
+import java.text.Collator;
+import java.util.Arrays;
+import java.util.EventObject;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -76,15 +85,6 @@ import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.account.AccountWizard;
-
-import java.lang.reflect.InvocationTargetException;
-import java.text.Collator;
-import java.util.Arrays;
-import java.util.EventObject;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -705,7 +705,6 @@ public class AccountGroupView extends RightsEnabledView
             if (accountDialog.open() != Window.OK) {
                 return;
             }
-
             try {
                 PlatformUI.getWorkbench().getProgressService()
                         .busyCursorWhile(new UpdateConfigurationCallbackHelper(configuration));

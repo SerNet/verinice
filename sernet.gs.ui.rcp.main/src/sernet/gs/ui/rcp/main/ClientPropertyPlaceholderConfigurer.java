@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.io.File;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -29,6 +30,8 @@ import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRCPLocal;
 import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRemoteSource;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import static sernet.gs.ui.rcp.main.preferences.PreferenceConstants.*;
+import sernet.verinice.interfaces.IVeriniceConstants;
+import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 
 /**
  * This class provides keyword replacement in a Spring configuration when it
@@ -94,6 +97,17 @@ public class ClientPropertyPlaceholderConfigurer extends
 			LOG.debug("using configuration class: " + configurationClass);
 			
 			return configurationClass;
+		} else if(placeholder.equals(ILicenseManagementService.VNL_STORAGE_FOLDER)){
+		    
+		    // in standalone mode, vnl-files are stored in workspace
+		    
+		    StringBuilder sb = new StringBuilder(); 
+		    sb.append(System.getProperty(IVeriniceConstants.OSGI_INSTANCE_AREA));
+		    if(!sb.toString().endsWith(File.pathSeparator)){
+		        sb.append(File.pathSeparator);
+		    }
+		    sb.append("licenseFiles").append(File.pathSeparator);
+		    return sb.toString();
 		}
 		
 		return props.getProperty(placeholder);

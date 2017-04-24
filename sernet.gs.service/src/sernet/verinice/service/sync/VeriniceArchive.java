@@ -36,6 +36,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import de.sernet.sync.risk.Risk;
+import sernet.verinice.interfaces.IVeriniceConstants;
 
 /**
  * Class to read the content of a verinice archive.
@@ -242,7 +243,7 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
     }
 
     private static String createTempFileName(String uuid) {
-        String tempDir = System.getProperty("java.io.tmpdir");
+        String tempDir = System.getProperty(IVeriniceConstants.JAVA_IO_TMPDIR);
         StringBuilder sb = new StringBuilder().append(tempDir);
         if(!tempDir.endsWith(String.valueOf(File.separatorChar))) {
             sb.append(File.separatorChar);

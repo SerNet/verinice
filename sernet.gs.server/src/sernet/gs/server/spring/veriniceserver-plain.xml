@@ -92,6 +92,14 @@
      <property name="cronExpression" value="0 ${veriniceserver.notification.minute} ${veriniceserver.notification.hour} * * ?" />
 </bean>
 
+<bean id="licenseRemoverTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+	<property name="jobDetail" ref="licenseRemoverJob"/>
+    <!-- for debug only, execute every 2 minutes -->
+    <!-- <property name="cronExpression" value="0 */2 * * * ?" /> -->
+    <!-- execute every new day in the night at 0:02  -->
+    <property name="cronExpression" value="0 2 0 1/1 * ? *" />
+</bean>
+
 <bean id="quartzSchedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
     <property name="triggers">
         <list>
@@ -100,7 +108,8 @@
               <!-- GSM task generation -->
               <ref bean="gsmProcessJobTrigger" />            
               <ref bean="indexTrigger" />
-              <ref bean="taskNotificationTrigger" />  
+              <ref bean="taskNotificationTrigger" /> 
+              <ref bean="licenseRemoverTrigger" /> 
               
             <!--  for debugging purposes, fires the mail scheduler after 2 seconds and then every 60
 			<bean class="org.springframework.scheduling.quartz.SimpleTriggerBean">

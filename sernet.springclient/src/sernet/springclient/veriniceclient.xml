@@ -159,6 +159,10 @@
             </bean>
         </property>
     </bean>
+    
+    <bean id="encryptionService" 
+        class="sernet.gs.ui.rcp.main.security.ClientCryptoService">
+    </bean>
 
     <bean id="accountService"
         class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
@@ -207,9 +211,9 @@
             <value>sernet.verinice.interfaces.search.ISearchService
             </value>
         </property>
-        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
-    </bean>
-  
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>    	
+    </bean> 
+
     <bean id="riskAnalysisService"
         class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
@@ -233,6 +237,19 @@
             <value>sernet.verinice.interfaces.updatenews.IUpdateNewsService
             </value>
         </property>
+    </bean>
+
+   <bean id="licenseManagementService"
+    	class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+    	<property name="serviceUrl">
+    		<value>
+    			${verinice.serverURL}/service/licenseManagementServiceHttpInvoker
+    		</value>
+    	</property>
+    	<property name="serviceInterface">
+    		<value>sernet.verinice.interfaces.licensemanagement.ILicenseManagementService</value>
+    	</property>
+    	<property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>	
     </bean>
     
     <!-- HttpInvokerProxyFactoryBeans end -->
@@ -322,8 +339,19 @@
         <property name="defaultUri"
             value="http://localhost:8080/veriniceserver/sync/syncService" />
     </bean>
-
+	
     <bean id="webServiceClient" class="sernet.springclient.WebServiceClient">
+    </bean>
+
+    <bean id="loadBcProvider"
+          class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod"
+                  value="java.security.Security.addProvider"/>
+        <property name="arguments">
+            <list>
+                <bean class="org.bouncycastle.jce.provider.BouncyCastleProvider"/>
+            </list>
+        </property>
     </bean>
 
     <bean id="workObjects" class="sernet.hui.common.VeriniceContext$State">
@@ -352,6 +380,8 @@
                 <entry key="objectModelService" value-ref="objectModelService" />
                 <entry key="updateNewsService" value-ref="updateNewsService" />               
                 <entry key="riskAnalysisService" value-ref="riskAnalysisService" />
+                <entry key="licenseManagementService" value-ref="licenseManagementService" />
+                <entry key="encryptionService" value-ref="encryptionService" />
             </map>
         </property>
     </bean>

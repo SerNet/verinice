@@ -28,6 +28,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.verinice.interfaces.IVeriniceConstants;
 
 /**
  * Preference page for the cryptographic options.
@@ -110,8 +111,8 @@ public class CryptoPreferencePage extends FieldEditorPreferencePage implements I
 	private boolean isPKCS11Supported(){
 	    
         try {
-            String osName = System.getProperty("os.name");
-            String osArch = System.getProperty("os.arch");
+            String osName = System.getProperty(IVeriniceConstants.OS_NAME);
+            String osArch = System.getProperty(IVeriniceConstants.OS_ARCH);
             if((osName.toLowerCase().contains("win") && osArch.contains("64"))
                     || osName.toLowerCase().contains("macos")){
                 LOG.debug("Currently no PKCS#11 implementation for " + osName + "/" + osArch + " bit available");

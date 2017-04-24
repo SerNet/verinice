@@ -16,6 +16,8 @@
 
 package org.springframework.core;
 
+import sernet.verinice.interfaces.IVeriniceConstants;
+
 /**
  * Internal helper class used to find the Java/JDK version
  * that Spring is operating on, to allow for automatically
@@ -65,7 +67,7 @@ public abstract class JdkVersion {
 	private static final int majorJavaVersion;
 
 	static {
-		javaVersion = System.getProperty("java.version");
+		javaVersion = System.getProperty(IVeriniceConstants.JAVA_VERSION);
 		// version String should look like "1.4.2_10"
 		if (javaVersion.indexOf("1.8.") != -1) {
             majorJavaVersion = JAVA_18;

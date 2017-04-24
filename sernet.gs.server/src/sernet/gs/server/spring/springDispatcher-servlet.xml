@@ -137,6 +137,17 @@
 		</property>
 	</bean>
 	
+	<bean name="/encryptionServiceHttpInvoker"
+		class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+		lazy-init="false">
+		<property name="service">
+			<ref bean="encryptionService" />
+		</property>
+		<property name="serviceInterface">
+			<value>sernet.verinice.interfaces.encryption.IEncryptionService</value>
+		</property>
+	</bean>
+	
 	<bean name="/reportdepositServiceHttpInvoker"
     	class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
 		lazy-init="false">		
@@ -170,6 +181,17 @@
 		</property>
 	</bean>
 	
+	<bean name="/licenseManagementServiceHttpInvoker"
+		class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+		lazy-init="false">
+		<property name="service">
+			<ref bean="licenseManagementService"/>
+		</property>
+		<property name="serviceInterface">
+			<value>sernet.verinice.interfaces.licensemanagement.ILicenseManagementService</value>
+		</property>	
+	</bean>
+
 	<bean name="/updateNewsServiceHttpInvoker"
 		class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
 		lazy-init="false">
@@ -181,16 +203,16 @@
 		</property>
 	</bean>
   
-  <bean name="/riskAnalysisServiceHttpInvoker"
-    class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
-    lazy-init="false">
-    <property name="service">
-      <ref bean="riskAnalysisService"/>
-    </property>
-    <property name="serviceInterface">
-      <value>sernet.verinice.service.risk.RiskAnalysisService</value>
-    </property>
-  </bean>
+    <bean name="/riskAnalysisServiceHttpInvoker"
+	    class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+	    lazy-init="false">
+	    <property name="service">
+	        <ref bean="riskAnalysisService"/>
+	    </property>
+        <property name="serviceInterface">
+	        <value>sernet.verinice.service.risk.RiskAnalysisService</value>
+	    </property>
+	</bean>
 	
 </beans>
 

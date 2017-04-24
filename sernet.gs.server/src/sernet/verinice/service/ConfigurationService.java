@@ -49,7 +49,7 @@ public class ConfigurationService implements IConfigurationService {
     
     private Map<String, String[]> roleMap = new HashMap<String, String[]>();   
     private Map<String, Boolean> scopeMap = new HashMap<String, Boolean>(); 
-    private Map<String, Integer> scopeIdMap = new HashMap<String, Integer>();    
+    private Map<String, Integer> scopeIdMap = new HashMap<String, Integer>();
     private Map<String, String> nameMap = new HashMap<String, String>();
     
     private IBaseDao<Configuration, Serializable> configurationDao;
@@ -299,7 +299,4 @@ public class ConfigurationService implements IConfigurationService {
         this.authService = authService;
     }
 
-
-
-    
 }

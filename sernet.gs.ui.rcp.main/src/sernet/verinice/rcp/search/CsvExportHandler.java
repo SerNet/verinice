@@ -37,6 +37,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.preferences.SearchPreferencePage;
+import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.rcp.search.column.ColumnStoreFactory;
 import sernet.verinice.rcp.search.column.IColumnStore;
@@ -152,10 +153,10 @@ public class CsvExportHandler {
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
         String dir = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_CSV_EXPORT);      
         if(dir==null || dir.isEmpty()) {
-            dir = System.getProperty("user.home");
+            dir = System.getProperty(IVeriniceConstants.USER_HOME);
         }       
-        if (!dir.endsWith(System.getProperty("file.separator"))) {
-            dir = dir + System.getProperty("file.separator");
+        if (!dir.endsWith(System.getProperty(IVeriniceConstants.FILE_SEPARATOR))) {
+            dir = dir + System.getProperty(IVeriniceConstants.FILE_SEPARATOR);
         }
         return dir;
     }
