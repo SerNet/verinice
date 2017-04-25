@@ -17,9 +17,11 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
+
 package sernet.verinice.bpm.rcp;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -117,29 +119,31 @@ public class TaskViewDataLoader {
     public void loadTasks() {
         TaskParameter param = new TaskParameter();        
         param.setUsername(taskView.selectedAssignee);
-        if(taskView.selectedAssignee!=null) {           
+        if (taskView.selectedAssignee != null) {           
             param.setAllUser(false);
         } else {
             param.setAllUser(true);
         }       
-        if(taskView.selectedScope!=null) {
+        if (taskView.selectedScope != null) {
             param.setAuditUuid(taskView.selectedScope.getUuid());
         }  
-        if(taskView.selectedAudit!=null) {
+        if (taskView.selectedAudit != null) {
             param.setAuditUuid(taskView.selectedAudit.getUuid());
-        } else if(taskView.selectedScope!=null && filteredAuditList!=null && !filteredAuditList.isEmpty()) {
+        } else if (taskView.selectedScope != null 
+                && filteredAuditList != null 
+                && !filteredAuditList.isEmpty()) {
             param.setGroupIdList(getUuidList(filteredAuditList));
         }
-        if(taskView.selectedProcessType!=null) {
+        if (taskView.selectedProcessType != null) {
             param.setProcessKey(taskView.selectedProcessType.getKey());
         }      
-        if(taskView.selectedTaskType!=null) {
+        if (taskView.selectedTaskType != null) {
             param.setTaskId(taskView.selectedTaskType.getKey());
         }
-        if(taskView.dueDateFrom!=null) {
+        if (taskView.dueDateFrom != null) {
             param.setDueDateFrom(taskView.dueDateFrom);
         }
-        if(taskView.dueDateTo!=null) {
+        if (taskView.dueDateTo != null) {
             param.setDueDateTo(taskView.dueDateTo);
         }
         job.setParam(param);
@@ -171,7 +175,8 @@ public class TaskViewDataLoader {
     public void loadGroups()  {
         try {
             taskView.comboModelScope.clear();
-            LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(Organization.TYPE_ID);
+            LoadCnAElementByEntityTypeId command = 
+                    new LoadCnAElementByEntityTypeId(Organization.TYPE_ID);
             command = taskView.getCommandService().executeCommand(command);
             taskView.comboModelScope.addAll(command.getElements());
             command = new LoadCnAElementByEntityTypeId(ITVerbund.TYPE_ID_HIBERNATE);      
@@ -189,20 +194,22 @@ public class TaskViewDataLoader {
             loadAudits();
         } catch (CommandException e) {
             // exception is not logged here, but in createPartControl
-            throw new RuntimeCommandException("Error while loading organizations, it-verbunds or audits", e); //$NON-NLS-1$
+            throw new RuntimeCommandException("Error while loading "
+                    + "organizations, it-verbunds or audits", e); //$NON-NLS-1$
         }
     }
     
     public void loadAudits() {
         try {
             taskView.comboModelAudit.clear();
-            LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(Audit.TYPE_ID);      
+            LoadCnAElementByEntityTypeId command = 
+                    new LoadCnAElementByEntityTypeId(Audit.TYPE_ID);      
             command = taskView.getCommandService().executeCommand(command); 
             auditList = command.getElements();    
             filteredAuditList = filterAudits();
             taskView.comboModelAudit.addAll(filteredAuditList);
             taskView.comboModelAudit.sort(TaskView.COMPARATOR_CNA_TREE_ELEMENT);
-            if(filteredAuditList!=null && !filteredAuditList.isEmpty()) {
+            if (filteredAuditList != null && !filteredAuditList.isEmpty()) {
                 taskView.comboModelAudit.addNoSelectionObject(Messages.TaskView_21);
             } else {
                 taskView.comboModelAudit.addNoSelectionObject(Messages.TaskViewDataLoader_0);
@@ -210,17 +217,18 @@ public class TaskViewDataLoader {
             refreshAudits();
         } catch (CommandException e) {
             // exception is not logged here, but in createPartControl
-            throw new RuntimeCommandException("Error while loading organizations, it-verbunds or audits", e); //$NON-NLS-1$
+            throw new RuntimeCommandException("Error while loading organizations,"
+                    + " it-verbunds or audits", e); //$NON-NLS-1$
         }
     }
 
   
     private List<CnATreeElement> filterAudits() {
         List<CnATreeElement> filteredList = auditList;
-        if(taskView.selectedScope!=null) {
+        if (taskView.selectedScope != null) {
             filteredList = new LinkedList<CnATreeElement>();
             for (CnATreeElement audit : auditList) {
-                if(taskView.selectedScope.getDbId().equals(audit.getScopeId())) {
+                if (taskView.selectedScope.getDbId().equals(audit.getScopeId())) {
                     filteredList.add(audit);
                 }
             }
@@ -270,7 +278,8 @@ public class TaskViewDataLoader {
         TaskView.getDisplay().syncExec(new Runnable(){
             @Override
             public void run() {
-                taskView.comboAccount.setItems(taskView.comboModelAccount.getLabelArray());
+                taskView.comboAccount.setItems(taskView.comboModelAccount.
+                        getLabelArray());
                 selectDefaultAssignee(); 
             }
         });
@@ -279,9 +288,18 @@ public class TaskViewDataLoader {
 
     private Collection<Configuration> loadAccounts() {
         try {
-            LoadVisibleAccounts command = new LoadVisibleAccounts();     
-            command = getCommandService().executeCommand(command);     
-            return command.getAccountList();
+            if (taskView.isTaskShowAllEnabled()){
+                LoadVisibleAccounts command = new LoadVisibleAccounts();     
+                command = getCommandService().executeCommand(command);     
+                return command.getAccountList();
+            } else {
+                String currentUserName = ServiceFactory.lookupAuthService().
+                        getUsername();
+                Configuration currentUserConfiguration =
+                        ServiceFactory.lookupAccountService().
+                        getAccountByName(currentUserName);
+                return Arrays.asList(new Configuration[]{currentUserConfiguration});
+            }
         } catch (CommandException e) {
             LOG.error("Error while loading accounts.", e); //$NON-NLS-1$
             throw new RuntimeException(e);
@@ -292,27 +310,27 @@ public class TaskViewDataLoader {
         String logedInUserName = ServiceFactory.lookupAuthService().getUsername();
         List<Configuration> allAccounts = taskView.comboModelAccount.getObjectList();
         for (Configuration account : allAccounts) {
-            if(account!=null) {
-                if(logedInUserName.equals(account.getUser())) {             
-                    taskView.comboModelAccount.setSelectedObject(account);
-                    taskView.comboAccount.select(taskView.comboModelAccount.getSelectedIndex());
-                    taskView.selectedAssignee = account.getUser();
-                }  
-            }
+            if (account != null && logedInUserName.equals(account.getUser())) {             
+                taskView.comboModelAccount.setSelectedObject(account);
+                taskView.comboAccount.select(taskView.comboModelAccount.getSelectedIndex());
+                taskView.selectedAssignee = account.getUser();
+            }  
         }       
     }
     
     void loadProcessTypes() {
         taskView.comboModelProcessType.clear();
         // you can use an arbitrary process service here
-        Set<KeyMessage> processDefinitionSet =  ServiceFactory.lookupIndividualService().findAllProcessDefinitions();
+        Set<KeyMessage> processDefinitionSet =  ServiceFactory.
+                lookupIndividualService().findAllProcessDefinitions();
         taskView.comboModelProcessType.addAll(processDefinitionSet);
         taskView.comboModelProcessType.sort(TaskView.COMPARATOR_KEY_MESSAGE);
         taskView.comboModelProcessType.addNoSelectionObject(Messages.TaskView_23);
         TaskView.getDisplay().syncExec(new Runnable(){
             @Override
             public void run() {
-                taskView.comboProcessType.setItems(taskView.comboModelProcessType.getLabelArray());    
+                taskView.comboProcessType.setItems(
+                        taskView.comboModelProcessType.getLabelArray());    
                 selectDefaultProcessType();
             }  
         });
@@ -320,7 +338,8 @@ public class TaskViewDataLoader {
     
     private void selectDefaultProcessType() {
         taskView.comboProcessType.select(0);
-        taskView.comboModelProcessType.setSelectedIndex(taskView.comboProcessType.getSelectionIndex());
+        taskView.comboModelProcessType.setSelectedIndex(
+                taskView.comboProcessType.getSelectionIndex());
         taskView.selectedProcessType = taskView.comboModelProcessType.getSelectedObject();
     }
     
@@ -381,7 +400,8 @@ public class TaskViewDataLoader {
 
         @Override
         public void notifyOfThreadComplete(Thread thread) {
-            final RefreshTaskView refresh = new RefreshTaskView(job.getTaskList(), taskView.getViewer());
+            final RefreshTaskView refresh = new RefreshTaskView(
+                    job.getTaskList(), taskView.getViewer());
             Display.getDefault().asyncExec(new Runnable() {
                 @Override
                 public void run() {
