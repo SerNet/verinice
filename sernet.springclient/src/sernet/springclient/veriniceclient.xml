@@ -161,18 +161,18 @@
     </bean>
     
     <bean id="encryptionService" 
-        class="sernet.gs.ui.rcp.main.security.ClientCryptoService">
+        class="sernet.verinice.service.crypto.EncryptionService">       
     </bean>
-
-    <bean id="accountService"
-        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
-        <property name="serviceUrl">
-            <value>${verinice.serverURL}/service/accountServiceHttpInvoker
-            </value>
-        </property>
-        <property name="serviceInterface">
-            <value>sernet.verinice.interfaces.IAccountService</value>
-        </property>
+    
+    <bean id="accountService" 
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean"> 
+        <property name="serviceUrl"> 
+            <value>${verinice.serverURL}/service/accountServiceHttpInvoker 
+            </value> 
+        </property> 
+        <property name="serviceInterface"> 
+            <value>sernet.verinice.interfaces.IAccountService</value> 
+        </property> 
         <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
     </bean>
 

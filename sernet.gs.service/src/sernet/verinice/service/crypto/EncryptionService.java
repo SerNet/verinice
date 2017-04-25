@@ -1,4 +1,4 @@
-package sernet.verinice.service;
+package sernet.verinice.service.crypto;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,8 +12,6 @@ import java.util.Base64;
 import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
-import sernet.verinice.service.crypto.PasswordBasedEncryption;
-import sernet.verinice.service.crypto.SMIMEBasedEncryption;
 
 /**
  * <p>
