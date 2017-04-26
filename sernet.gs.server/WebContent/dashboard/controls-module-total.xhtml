@@ -6,8 +6,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/poseidon/template.xhtml">
 
-	<ui:define name="title">#{bstUmsetzungItNetworkView.itNetwork} :: #{msgWeb['controls-bstums.title']}</ui:define>
-	<ui:define name="viewname">#{bstUmsetzungItNetworkView.itNetwork} :: #{msgWeb['controls-bstums.title']}</ui:define>
+	<ui:define name="title">#{msgWeb['controls-bstums-total.title']}</ui:define>
+	<ui:define name="viewname">#{msgWeb['controls-bstums-total.title']}</ui:define>
 
 	<ui:define name="head">
 		<ui:include src="/WEB-INF/poseidon/chart-extender.xhtml" />
@@ -16,11 +16,10 @@
 	<ui:define name="content">
 		<div class="ui-g ui-fluid">
 			<div class="ui-g-12">
-
 				<h:form id="chartPanel">
-					<p:panel header="#{controlsBstUmsChartView.itNetwork}">
+					<p:panel header="#{msgWeb['controls-bstums-total.header']}">
 						<ui:fragment
-							rendered="#{not controlsBstUmsChartView.calculated}">
+							rendered="#{not moduleAllChartView.totalCalculated}">
 							<div style="margin: 0 auto; text-align: center;">
 								<p>#{msgWeb['loading']}</p>
 								<p:graphicImage name="images/ajax-loader.gif"
@@ -28,25 +27,32 @@
 							</div>
 						</ui:fragment>
 						<ui:fragment id="charts"
-							rendered="#{controlsBstUmsChartView.calculated}">
+							rendered="#{moduleAllChartView.totalCalculated and (not empty moduleAllChartView.allStates)}">
+
 							<div class="ui-g ui-fluid">
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
-									<p:chart id="veriniceVerticalBarChart" type="bar"
-										model="#{controlsBstUmsChartView.verticalChartModel}"
+									<p:chart id="veriniceHorizontalBar" type="bar"
+										model="#{moduleAllChartView.verticalBarChart}"
 										responsive="true" />
 								</div>
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
-									<p:chart id="veriniceHorizontalBarChart" type="bar"
-										model="#{controlsBstUmsChartView.horizontalChartModel}"
+									<p:chart id="veriniceVerticalBar" type="bar"
+										model="#{moduleAllChartView.horizontalBarChartModel}"
 										responsive="true" />
 								</div>
 							</div>
 						</ui:fragment>
+
+						<ui:fragment rendered="#{moduleAllChartView.totalCalculated and (empty moduleAllChartView.allStates)}">
+							<p class="no-data" >#{msgWeb['no-data']}</p>
+						</ui:fragment>
+
 					</p:panel>
 				</h:form>
 
 				<h:form>
-					<p:remoteCommand action="#{controlsBstUmsChartView.loadData()}"
+					<p:remoteCommand
+						action="#{moduleAllChartView.loadTotalData()}"
 						autoRun="true" delay="2" update=":chartPanel" />
 				</h:form>
 			</div>

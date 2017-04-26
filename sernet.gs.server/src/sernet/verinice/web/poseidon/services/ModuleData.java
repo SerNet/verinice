@@ -17,32 +17,45 @@
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.web.poseidon.view.menu.menuitem;
+package sernet.verinice.web.poseidon.services;
 
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.web.poseidon.services.strategy.GroupByStrategyNormalized;
+import java.util.Map;
+import java.util.SortedMap;
 
 /**
+ * Wraps a result of a strategy calculation.
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ControlsBstUmsNormalizedMenuItem extends AbstractItgsControlMenuItem {
+public class ModuleData {
 
-    public ControlsBstUmsNormalizedMenuItem(ITVerbund itVerbund) {
-        super(itVerbund);
-        super.setIcon("fa fa-fw fa-industry");
+    private String itNetworkName;
+
+    private Map<String, Map<String, Number>> data;
+
+    public ModuleData(String itNetworkName, Map<String, Map<String, Number>> data) {
+        this.setItNetworkName(itNetworkName);
+        this.data = data;
     }
 
-    private static final long serialVersionUID = 1L;
-
-    @Override
-    String getTemplateFile() {
-        return "controls-bstums.xhtml";
+    public String getItNetworkName() {
+        return itNetworkName;
     }
 
-    @Override
-    String getStrategy() {
-       return GroupByStrategyNormalized.GET_PARAM_IDENTIFIER;
+    public void setItNetworkName(String itNetworkName) {
+        this.itNetworkName = itNetworkName;
     }
 
+    public Map<String, Map<String, Number>> getData() {
+        return data;
+    }
+
+    public void setData(SortedMap<String, Map<String, Number>> data) {
+        this.data = data;
+    }
+
+    public boolean noData() {
+        return data == null || data.isEmpty();
+    }
 }

@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view.charts;
 
+import static sernet.gs.web.Util.getMessage;
+
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -32,11 +34,13 @@ import org.primefaces.model.chart.HorizontalBarChartModel;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ModulChartsFactory {
+public class ModuleChartsFactory {
+
+    private static final String MESSAGES = "sernet.verinice.web.WebMessages";
 
     private Map<String, Map<String, Number>> data;
 
-    public ModulChartsFactory(Map<String, Map<String, Number>> data) {
+    public ModuleChartsFactory(Map<String, Map<String, Number>> data) {
         this.data = data;
     }
 
@@ -44,22 +48,20 @@ public class ModulChartsFactory {
 
         HorizontalBarChartModel horizontalBarModel = new HorizontalBarChartModel();
 
-
         setData(horizontalBarModel);
 
-        horizontalBarModel.setTitle("Horizontal and Stacked");
         horizontalBarModel.setLegendPosition("e");
 
         Axis xAxis = horizontalBarModel.getAxis(AxisType.X);
         Axis yAxis = horizontalBarModel.getAxis(AxisType.Y);
 
-        xAxis.setLabel("Status");
+        xAxis.setLabel(getMessage(MESSAGES, "chart.legend.safeguard"));
         xAxis.setMin(0);
         xAxis.setMax(getMax());
 
-        yAxis.setLabel("Bausteinkapitel");
+        yAxis.setLabel(getMessage(MESSAGES, "chart.legend.modul.chapter"));
 
-        horizontalBarModel.setExtender("bausteinUmsetzungHorizontalBar");
+        horizontalBarModel.setExtender("moduleHorizontalBarChart");
         horizontalBarModel.setSeriesColors(ChartUtils.getColors(data.keySet()));
         horizontalBarModel.setStacked(true);
         horizontalBarModel.setShadow(false);
@@ -78,17 +80,17 @@ public class ModulChartsFactory {
         Axis xAxis = horizontalBarModel.getAxis(AxisType.X);
         Axis yAxis = horizontalBarModel.getAxis(AxisType.Y);
 
-        xAxis.setLabel("Bausteinkapitel");
+        xAxis.setLabel(getMessage(MESSAGES, "chart.legend.modul.chapter"));
         xAxis.setMin(0);
         xAxis.setMax(getMax());
         xAxis.setTickAngle(90);
 
-        yAxis.setLabel("Massnahmen");
+        yAxis.setLabel(getMessage(MESSAGES, "chart.legend.safeguard"));
 
         horizontalBarModel.setSeriesColors(ChartUtils.getColors(data.keySet()));
         horizontalBarModel.setShadow(false);
         horizontalBarModel.setStacked(true);
-        horizontalBarModel.setExtender("bausteinUmsetzungVerticalBar");
+        horizontalBarModel.setExtender("moduleVerticalBarChart");
 
         return horizontalBarModel;
     }

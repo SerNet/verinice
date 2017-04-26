@@ -33,7 +33,7 @@ import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
 import sernet.verinice.web.poseidon.services.ChartService;
-import sernet.verinice.web.poseidon.services.ControlsItgsData;
+import sernet.verinice.web.poseidon.services.SafeguardData;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -69,9 +69,9 @@ public class ControlsAllChartView {
     public void loadDataForAllItNetworks(){
 
         charts = new ArrayList<>();
-        List<ControlsItgsData> itNetworks = chartService.aggregateMassnahmenUmsetzung();
+        List<SafeguardData> itNetworks = chartService.aggregateMassnahmenUmsetzung();
 
-        for (ControlsItgsData controlsItgsData : itNetworks) {
+        for (SafeguardData controlsItgsData : itNetworks) {
 
             if (controlsItgsData.noData()){
                 continue;

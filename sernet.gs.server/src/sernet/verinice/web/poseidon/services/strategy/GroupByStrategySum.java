@@ -51,22 +51,50 @@ public class GroupByStrategySum implements GroupByStrategy {
     @Override
     public final Map<String, Map<String, Number>> aggregateMassnahmen(VeriniceGraph g) {
 
-        List<DataPoint> dataPoints = new ArrayList<>();
+        List<DataPoint> dataPoints = createDataPoints(g);
+        Map<String, List<DataPoint>> state2DataPoint = mapStatesToDataPoints(dataPoints);
+        Map<String, Map<String, Number>> data = aggregateDataPoints(state2DataPoint);
+        Set<String> moduleChapterNames = getStates(dataPoints);
+        fillUpStates(data, moduleChapterNames);
 
-        for (MassnahmenUmsetzung maU : g.getElements(MassnahmenUmsetzung.class)) {
+        return data;
+    }
 
-            dataPoints.add(new DataPoint((BausteinUmsetzung) g.getParent(maU), maU));
-        }
-
-        Map<String, List<DataPoint>> state2DataPoint = new HashMap<>();
-        for (DataPoint p : dataPoints) {
-            if (!state2DataPoint.containsKey(p.getState())) {
-                state2DataPoint.put(p.getState(), new ArrayList<DataPoint>());
+    /**
+     * Some of the states contains no data for specific chapter. This method
+     * makes sure that every states contains the same set of chapter
+     * {@link BausteinUmsetzung#getKapitel()}.
+     *
+     * This have to be done for the stacked charts, which would not be rendered
+     * correct otherwise.
+     *
+     * @param data
+     *            A map of states which maps to module chapter to aggregate
+     *            safeguards implementation.
+     * @param moduleChapter
+     *            A set of all module chapter. This is a conjunction of all map
+     *            keys in data.
+     */
+    private void fillUpStates(Map<String, Map<String, Number>> data, Set<String> moduleChapter) {
+        for (Map<String, Number> series : data.values()) {
+            for (String tick : moduleChapter) {
+                if (!series.keySet().contains(tick)) {
+                    LOG.debug("fill up tick: " + tick);
+                    series.put(tick, 0);
+                }
             }
-
-            state2DataPoint.get(p.getState()).add(p);
         }
+    }
 
+    private Set<String> getStates(List<DataPoint> dataPoints) {
+        Set<String> ticks = new HashSet<>();
+        for (DataPoint d : dataPoints) {
+            ticks.add(d.getChapter());
+        }
+        return ticks;
+    }
+
+    private Map<String, Map<String, Number>> aggregateDataPoints(Map<String, List<DataPoint>> state2DataPoint) {
         Map<String, Map<String, Number>> data = new TreeMap<>(new CompareByTitle());
         for (Entry<String, List<DataPoint>> e : state2DataPoint.entrySet()) {
             data.put(e.getKey(), new HashMap<String, Number>());
@@ -76,23 +104,29 @@ public class GroupByStrategySum implements GroupByStrategy {
                 data.get(e.getKey()).put(p.getChapter(), number);
             }
         }
-
-        Set<String> ticks = new HashSet<>();
-        for (DataPoint d : dataPoints) {
-            ticks.add(d.getChapter());
-        }
-
-        // fill up empty ticks
-        for (Map<String, Number> series : data.values()) {
-            for (String tick : ticks) {
-                if (!series.keySet().contains(tick)) {
-                    LOG.debug("fill up tick: " + tick);
-                    series.put(tick, 0);
-                }
-            }
-        }
-
         return data;
+    }
+
+    private Map<String, List<DataPoint>> mapStatesToDataPoints(List<DataPoint> dataPoints) {
+        Map<String, List<DataPoint>> state2DataPoint = new HashMap<>();
+        for (DataPoint p : dataPoints) {
+            if (!state2DataPoint.containsKey(p.getState())) {
+                state2DataPoint.put(p.getState(), new ArrayList<DataPoint>());
+            }
+
+            state2DataPoint.get(p.getState()).add(p);
+        }
+        return state2DataPoint;
+    }
+
+    private List<DataPoint> createDataPoints(VeriniceGraph g) {
+        List<DataPoint> dataPoints = new ArrayList<>();
+
+        for (MassnahmenUmsetzung maU : g.getElements(MassnahmenUmsetzung.class)) {
+
+            dataPoints.add(new DataPoint((BausteinUmsetzung) g.getParent(maU), maU));
+        }
+        return dataPoints;
     }
 
     private static class DataPoint {

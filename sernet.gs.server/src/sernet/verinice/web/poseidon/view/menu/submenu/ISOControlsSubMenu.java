@@ -19,6 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view.menu.submenu;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.primefaces.model.menu.DefaultMenuItem;
 
 import sernet.gs.web.Util;
@@ -27,10 +30,13 @@ import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.web.poseidon.services.MenuService;
 import sernet.verinice.web.poseidon.view.menu.menuitem.ControlsIsoMenuItem;
 
-import java.util.ArrayList;
-import java.util.List;
-
-class OrganizationISMSMassnahmenCatalogSubMenu extends AbstractMainSubMenu {
+/**
+ * Provides a sub menu item for ISO control catalogs.
+ *
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+ *
+ */
+class ISOControlsSubMenu extends AbstractChartSubMenu {
 
     private static final long serialVersionUID = 1L;
 
@@ -42,7 +48,7 @@ class OrganizationISMSMassnahmenCatalogSubMenu extends AbstractMainSubMenu {
 
     private List<ControlGroup> catalogs;
 
-    public OrganizationISMSMassnahmenCatalogSubMenu(Organization organization, MenuService menuService) {
+    public ISOControlsSubMenu(Organization organization, MenuService menuService) {
         super(organization.getTitle());
         this.setIcon("fa fa-fw fa-building");
         this.organization = organization;
@@ -53,14 +59,14 @@ class OrganizationISMSMassnahmenCatalogSubMenu extends AbstractMainSubMenu {
 
         getCatalogs();
 
-        if(!catalogs.isEmpty()){
+        if (!catalogs.isEmpty()) {
             addStaticMenuItems();
             addCatalogs();
         }
     }
 
     private void addCatalogs() {
-        for(ControlGroup catalog : catalogs){
+        for (ControlGroup catalog : catalogs) {
             addElement(new ControlsIsoMenuItem(organization, catalog));
         }
     }
@@ -69,7 +75,7 @@ class OrganizationISMSMassnahmenCatalogSubMenu extends AbstractMainSubMenu {
         catalogs = new ArrayList<>();
         for (ControlGroup catalog : menuService.getCatalogs()) {
             if (catalog.getScopeId().equals(organization.getDbId())) {
-               catalogs.add(catalog);
+                catalogs.add(catalog);
             }
         }
     }
@@ -85,8 +91,5 @@ class OrganizationISMSMassnahmenCatalogSubMenu extends AbstractMainSubMenu {
         totalIsmsChartsMenuItem.setIcon("fa fa-fw fa-area-chart");
         addElement(totalIsmsChartsMenuItem);
     }
-
-
-
 
 }

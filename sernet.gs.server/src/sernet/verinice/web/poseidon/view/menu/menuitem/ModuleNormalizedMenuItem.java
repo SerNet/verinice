@@ -17,43 +17,34 @@
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.web.poseidon.services;
+package sernet.verinice.web.poseidon.view.menu.menuitem;
 
-import java.util.Map;
-import java.util.SortedMap;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.web.poseidon.services.strategy.GroupByStrategyNormalized;
 
 /**
+ * Provides menu item for IT Baseline Protection Module for normalized charts.
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ControlsBstUmsData {
+public class ModuleNormalizedMenuItem extends AbstractItbpControlMenuItem {
 
-    private String itNetworkName;
-
-    private Map<String, Map<String, Number>> data;
-
-    public ControlsBstUmsData(String itNetworkName, Map<String, Map<String, Number>> data) {
-        this.setItNetworkName(itNetworkName);
-        this.data = data;
+    public ModuleNormalizedMenuItem(ITVerbund itVerbund) {
+        super(itVerbund);
+        super.setIcon("fa fa-fw fa-industry");
     }
 
-    public String getItNetworkName() {
-        return itNetworkName;
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    String getTemplateFile() {
+        return "controls-module.xhtml";
     }
 
-    public void setItNetworkName(String itNetworkName) {
-        this.itNetworkName = itNetworkName;
+    @Override
+    String getStrategy() {
+        return GroupByStrategyNormalized.GET_PARAM_IDENTIFIER;
     }
 
-    public Map<String, Map<String, Number>> getData() {
-        return data;
-    }
-
-    public void setData(SortedMap<String, Map<String, Number>> data) {
-        this.data = data;
-    }
-
-    public boolean noData() {
-        return data == null || data.isEmpty();
-    }
 }

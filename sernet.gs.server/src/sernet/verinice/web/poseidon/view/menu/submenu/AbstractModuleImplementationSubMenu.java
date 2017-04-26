@@ -25,12 +25,16 @@ import org.primefaces.model.menu.MenuItem;
 import sernet.gs.web.Util;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.web.poseidon.services.MenuService;
+import sernet.verinice.web.poseidon.services.strategy.GroupByStrategy;
 
 /**
+ *
+ * Provides menu item for chart submenu of it networks.
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public abstract class AbstractItgsModulImplementationSubMenu extends AbstractMainSubMenu {
+public abstract class AbstractModuleImplementationSubMenu extends AbstractChartSubMenu {
 
     private static final long serialVersionUID = 1L;
 
@@ -38,26 +42,34 @@ public abstract class AbstractItgsModulImplementationSubMenu extends AbstractMai
 
     private MenuService menuService;
 
-    public AbstractItgsModulImplementationSubMenu(String title, MenuService menuService) {
+    public AbstractModuleImplementationSubMenu(String title, MenuService menuService) {
         super(title);
         super.setIcon("fa fa-fw fa-line-chart");
         this.menuService = menuService;
     }
 
+
     abstract protected MenuItem getMenuItem(ITVerbund itNetwork);
 
+    /**
+     * Returns a strategy for calculating chart data.
+     *
+     * @see GroupByStrategy
+     *
+     * @return Identifier for the strategy.
+     */
     abstract protected String getStrategy();
 
     @Override
     protected void loadChildren() {
 
         DefaultMenuItem bausteinUmsAll = new DefaultMenuItem(Util.getMessage(MESSAGES, "menu.all"));
-        bausteinUmsAll.setUrl("/dashboard/controls-bstums-all.xhtml?crunchStrategy=" + getStrategy());
+        bausteinUmsAll.setUrl("/dashboard/controls-module-all.xhtml?crunchStrategy=" + getStrategy());
         bausteinUmsAll.setIcon("fa fa-fw fa-area-chart");
         addElement(bausteinUmsAll);
 
         DefaultMenuItem bausteinUmsTotal = new DefaultMenuItem(Util.getMessage(MESSAGES, "menu.total"));
-        bausteinUmsTotal.setUrl("/dashboard/controls-bstums-total.xhtml?crunchStrategy=" + getStrategy());
+        bausteinUmsTotal.setUrl("/dashboard/controls-module-total.xhtml?crunchStrategy=" + getStrategy());
         bausteinUmsTotal.setIcon("fa fa-fw fa-area-chart");
         addElement(bausteinUmsTotal);
 

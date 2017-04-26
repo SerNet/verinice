@@ -19,31 +19,24 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.services;
 
-import java.io.Serializable;
-
 import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.interfaces.graph.IGraphService;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.service.model.IObjectModelService;
 
 /**
+ * Provides Interface to Spring IoC in order to retrieve data for web
+ * visualizations.
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
 public abstract class GenericChartService {
 
-    IObjectModelService getObjectService(){
-       return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
+    IObjectModelService getObjectService() {
+        return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
     }
 
     IGraphService getGraphService() {
         return (IGraphService) VeriniceContext.get(VeriniceContext.GRAPH_SERVICE);
-    }
-
-
-    IBaseDao<MassnahmenUmsetzung, Serializable> getMassnahmenDao(IDAOFactory iDaoFactory) {
-        return (IBaseDao<MassnahmenUmsetzung, Serializable>) iDaoFactory.getDAO(MassnahmenUmsetzung.class);
     }
 }

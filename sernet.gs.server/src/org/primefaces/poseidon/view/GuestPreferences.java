@@ -20,6 +20,12 @@ import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+/**
+ * Switches main menu position/behaviour.
+ *
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+ *
+ */
 @ManagedBean
 @SessionScoped
 public class GuestPreferences implements Serializable {

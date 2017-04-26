@@ -19,6 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view.menu;
 
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.MenuModel;
 
@@ -26,16 +30,12 @@ import sernet.gs.web.Util;
 import sernet.verinice.web.poseidon.services.MenuService;
 import sernet.verinice.web.poseidon.view.menu.menuitem.HomeMenuItem;
 import sernet.verinice.web.poseidon.view.menu.menuitem.IsoEditorMenuItem;
-import sernet.verinice.web.poseidon.view.menu.menuitem.ItgsControlsMenuItem;
+import sernet.verinice.web.poseidon.view.menu.menuitem.ItbpSafeguardsMenuItem;
 import sernet.verinice.web.poseidon.view.menu.menuitem.TasksMenuItem;
 import sernet.verinice.web.poseidon.view.menu.submenu.IsmsCatalogGroupedByOrganizationSubMenu;
-import sernet.verinice.web.poseidon.view.menu.submenu.ItgsControlsSubMenu;
-import sernet.verinice.web.poseidon.view.menu.submenu.ItgsModulImplementationCumulatedSubMenu;
-import sernet.verinice.web.poseidon.view.menu.submenu.ItgsModulImplementationNormalizedSubMenu;
-
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
+import sernet.verinice.web.poseidon.view.menu.submenu.ItbpControlsSubMenu;
+import sernet.verinice.web.poseidon.view.menu.submenu.ModuleImplementationCumulatedSubMenu;
+import sernet.verinice.web.poseidon.view.menu.submenu.ModuleImplementationNormalizedSubMenu;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -56,11 +56,11 @@ public class MenuView {
         model = new DefaultMenuModel();
         model.addElement(new HomeMenuItem());
         model.addElement(new IsoEditorMenuItem());
-        model.addElement(new ItgsControlsMenuItem());
+        model.addElement(new ItbpSafeguardsMenuItem());
         model.addElement(new TasksMenuItem());
-        model.addElement(new ItgsControlsSubMenu(menuService));
-        model.addElement(new ItgsModulImplementationCumulatedSubMenu(msg("menu.module-impl-cum"), menuService));
-        model.addElement(new ItgsModulImplementationNormalizedSubMenu(msg("menu.module-impl-norm"), menuService));
+        model.addElement(new ItbpControlsSubMenu(menuService));
+        model.addElement(new ModuleImplementationCumulatedSubMenu(msg("menu.module-impl-cum"), menuService));
+        model.addElement(new ModuleImplementationNormalizedSubMenu(msg("menu.module-impl-norm"), menuService));
         model.addElement(new IsmsCatalogGroupedByOrganizationSubMenu(msg("menu.control-impl-isms"), menuService));
     }
 

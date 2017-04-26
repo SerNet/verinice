@@ -25,7 +25,7 @@ import sernet.verinice.model.bsi.ITVerbund;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ControlsChartMenuItem extends AbstractItgsControlMenuItem {
+public class ControlsChartMenuItem extends AbstractItbpControlMenuItem {
 
     private static final long serialVersionUID = 1L;
 

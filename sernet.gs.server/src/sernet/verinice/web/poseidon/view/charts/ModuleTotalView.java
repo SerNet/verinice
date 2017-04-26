@@ -31,11 +31,13 @@ import sernet.verinice.web.poseidon.services.ChartService;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
 
 /**
+ *
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
 @ManagedBean(name = "bstUmsetzungTotalView")
-public class BstUmsetzungTotalView {
+public class ModuleTotalView {
 
     private BarChartModel horizontalChartModel;
 
@@ -47,7 +49,7 @@ public class BstUmsetzungTotalView {
     @PostConstruct
     public void init(){
         Map<String, Map<String, Number>> data = getChartService().groupByMassnahmenStates("", new GroupByStrategySum());
-        ModulChartsFactory chartModelFactory = new ModulChartsFactory(data);
+        ModuleChartsFactory chartModelFactory = new ModuleChartsFactory(data);
         horizontalChartModel = chartModelFactory.getHorizontalBarChartModel();
         verticalChartModel = chartModelFactory.getVerticalBarChartModel();
     }

@@ -24,25 +24,26 @@ import org.primefaces.model.menu.MenuItem;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.web.poseidon.services.MenuService;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
-import sernet.verinice.web.poseidon.view.menu.menuitem.ControlsBstUmsCumulatedMenuItem;
+import sernet.verinice.web.poseidon.view.menu.menuitem.ModuleCumulatedMenuItem;
 
 /**
+ * Provides sub menu item for cumulated, grouped by module chart menu items.
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ItgsModulImplementationCumulatedSubMenu extends AbstractItgsModulImplementationSubMenu {
+public class ModuleImplementationCumulatedSubMenu extends AbstractModuleImplementationSubMenu {
 
     private static final long serialVersionUID = 1L;
 
 
-    public ItgsModulImplementationCumulatedSubMenu(String title, MenuService menuService) {
+    public ModuleImplementationCumulatedSubMenu(String title, MenuService menuService) {
        super(title, menuService);
     }
 
     @Override
     protected MenuItem getMenuItem(ITVerbund itNetwork) {
-        return new ControlsBstUmsCumulatedMenuItem(itNetwork);
+        return new ModuleCumulatedMenuItem(itNetwork);
     }
 
     @Override

@@ -17,23 +17,26 @@
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.web;
+package sernet.verinice.web.poseidon.services.strategy;
 
-import javax.faces.convert.EnumConverter;
-import javax.faces.convert.FacesConverter;
+import java.util.SortedMap;
 
-import sernet.gs.web.ToDoBean.GrundSchutzExecution;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 /**
- * Maps String from the frontend grundschutz filter back to enums.
+ * Provides strategy for calculating the implementation state of safeguards
+ * ({@link MassnahmenUmsetzung}).
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-@FacesConverter(value = "grundSchutzExecutionConverter")
-public class GrundSchutzExecutionConverter extends EnumConverter {
+public interface CalculateSafeguardImplementationStrategy {
 
-    public GrundSchutzExecutionConverter() {
-        super(GrundSchutzExecution.class);
-    }
+    /**
+     *
+     * @param safeguards
+     * @return
+     */
+    SortedMap<String, Number> aggregateData(Iterable<MassnahmenUmsetzung> safeguards);
+
 }

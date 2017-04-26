@@ -35,16 +35,16 @@ import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.HorizontalBarChartModel;
 
 import sernet.verinice.web.poseidon.services.ChartService;
-import sernet.verinice.web.poseidon.services.ControlsBstUmsData;
+import sernet.verinice.web.poseidon.services.ModuleData;
 import sernet.verinice.web.poseidon.services.strategy.GroupedByChapterStrategy;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-@ManagedBean(name = "controlsBstUmsAllChartView")
+@ManagedBean(name = "moduleAllChartView")
 @ViewScoped
-public class ControlsBstUmsAllChartView {
+public class ModuleAllChartView {
 
     @ManagedProperty("#{chartService}")
     private ChartService chartService;
@@ -89,7 +89,7 @@ public class ControlsBstUmsAllChartView {
 
     private void initTotalCharts() {
         allStates = chartService.groupByMassnahmenStates("", strategy.getStrategy());
-        ModulChartsFactory allChartModelFactory = new ModulChartsFactory(allStates);
+        ModuleChartsFactory allChartModelFactory = new ModuleChartsFactory(allStates);
 
         verticalBarChart = allChartModelFactory.getVerticalBarChartModel();
         horizontalBarChart = allChartModelFactory.getHorizontalBarChartModel();
@@ -109,14 +109,14 @@ public class ControlsBstUmsAllChartView {
 
         ArrayList<VeriniceChartRow> charts = new ArrayList<>();
 
-        for (ControlsBstUmsData controlsBstUmsData : chartService.groupByMassnahmenStates(strategy.getStrategy())) {
+        for (ModuleData controlsBstUmsData : chartService.groupSafeguardStatesByModulChapterNames(strategy.getStrategy())) {
 
             if (controlsBstUmsData.noData()) {
                continue;
             }
 
             VeriniceChartRow item = new VeriniceChartRow();
-            ModulChartsFactory chartModelFactory = new ModulChartsFactory(controlsBstUmsData.getData());
+            ModuleChartsFactory chartModelFactory = new ModuleChartsFactory(controlsBstUmsData.getData());
 
             item.setTitle(controlsBstUmsData.getItNetworkName());
             item.setFirstChartModel(chartModelFactory.getVerticalBarChartModel());

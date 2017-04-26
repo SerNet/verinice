@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view.charts;
 
+import static sernet.gs.web.Util.getMessage;
+
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -39,9 +41,9 @@ import sernet.verinice.web.poseidon.services.CompareByTitle;
  */
 public class ControlChartsFactory {
 
+    private static final String MESSAGES = "sernet.verinice.web.WebMessages";
 
     private Map<String, Number> data;
-
 
     public ControlChartsFactory(Map<String, Number> data){
         this.data = sortDataKeys(data);
@@ -75,7 +77,11 @@ public class ControlChartsFactory {
 
         Axis yAxis = barChartModel.getAxis(AxisType.Y);
         yAxis.setMax(ChartUtils.getMax(data.values()));
+        yAxis.setLabel(getMessage(MESSAGES, "chart.legend.safeguard"));
         yAxis.setTickCount(5);
+
+        Axis xAxis = barChartModel.getAxis(AxisType.X);
+        xAxis.setLabel(getMessage(MESSAGES, "chart.legend.states"));
 
         barChartModel.setExtender("veriniceVerticalBar");
         barChartModel.setSeriesColors(ChartUtils.getColors(data.keySet()));
@@ -98,10 +104,11 @@ public class ControlChartsFactory {
 
         Axis xAxis = horizontalBarModel.getAxis(AxisType.X);
         xAxis.setMax(ChartUtils.getMax(data.values()));
+        xAxis.setLabel(getMessage(MESSAGES, "chart.legend.safeguard"));
         xAxis.setTickCount(5);
 
         Axis yAxis = horizontalBarModel.getAxis(AxisType.Y);
-        yAxis.setLabel("Status");
+        yAxis.setLabel(getMessage(MESSAGES, "chart.legend.states"));
 
         horizontalBarModel.setExtender("veriniceHorizontalBar");
         horizontalBarModel.setSeriesColors(ChartUtils.getColors(data.keySet()));

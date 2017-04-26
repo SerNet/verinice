@@ -31,6 +31,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import org.apache.commons.lang.StringUtils;
+import org.primefaces.model.chart.ChartModel;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.graph.GraphElementLoader;
@@ -44,7 +45,7 @@ import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.web.poseidon.services.strategy.AggregateIsmsControlsStrategy;
 import sernet.verinice.web.poseidon.services.strategy.AggregateIsmsControlsStrategyImpl;
-import sernet.verinice.web.poseidon.services.strategy.AggregateMassnahmenUmsetzungStrategy;
+import sernet.verinice.web.poseidon.services.strategy.CalculateSafeguardImplementationStrategy;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategy;
 import sernet.verinice.web.poseidon.services.strategy.SimpleSumOfStates;
 
@@ -89,7 +90,7 @@ public class ChartService extends GenericChartService {
      */
     public SortedMap<String, Number> aggregateMassnahmenUmsetzung(Integer scopeId) {
         VeriniceGraph g = loadAllBsiControls(scopeId);
-        AggregateMassnahmenUmsetzungStrategy strategy = new SimpleSumOfStates();
+        CalculateSafeguardImplementationStrategy strategy = new SimpleSumOfStates();
         return strategy.aggregateData(g.getElements(MassnahmenUmsetzung.class));
     }
 
@@ -101,15 +102,15 @@ public class ChartService extends GenericChartService {
      * @return If no {@link MassnahmenUmsetzung} is defined for the IT network.
      *         it could be empty.
      */
-    public List<ControlsItgsData> aggregateMassnahmenUmsetzung() {
-        List<ControlsItgsData> controlsItgsDatas = new ArrayList<>();
+    public List<SafeguardData> aggregateMassnahmenUmsetzung() {
+        List<SafeguardData> controlsItgsDatas = new ArrayList<>();
         for (ITVerbund itVerbund : menuService.getVisibleItNetworks()) {
-            controlsItgsDatas.add(new ControlsItgsData(itVerbund.getTitle(), aggregateMassnahmenUmsetzung(itVerbund.getScopeId())));
+            controlsItgsDatas.add(new SafeguardData(itVerbund.getTitle(), aggregateMassnahmenUmsetzung(itVerbund.getScopeId())));
         }
 
-        Collections.sort(controlsItgsDatas, new Comparator<ControlsItgsData>() {
+        Collections.sort(controlsItgsDatas, new Comparator<SafeguardData>() {
             @Override
-            public int compare(ControlsItgsData o1, ControlsItgsData o2) {
+            public int compare(SafeguardData o1, SafeguardData o2) {
                 return new NumericStringComparator().compare(o1.getItNetworkName(), o2.getItNetworkName());
             }
         });
@@ -118,8 +119,8 @@ public class ChartService extends GenericChartService {
     }
 
     /**
-     * Aggregate over all {@link BausteinUmsetzung} objects and aggregate the
-     * {@link MassnahmenUmsetzung} states. All {@link ITVerbund} which are
+     * Aggregate over all module objects {@link BausteinUmsetzung} and aggregate
+     * the {@link MassnahmenUmsetzung} states. All {@link ITVerbund} which are
      * readable by the user are taken into account.
      *
      * This method normalizes the data in a way, that the number of a specific
@@ -131,21 +132,19 @@ public class ChartService extends GenericChartService {
      * @param groupByStrategy
      *            Decides which algorithm is used for the number crunching.
      *
-     * @return Key is the chapter of a
-     *         {@link MassnahmenUmsetzung#getUmsetzung()}. The value is a map
-     *         with the key {@link BausteinUmsetzung#getKapitel()}. This allows
-     *         the result to be displayed as a stacked chart.
+     * @return List of module data, which contains meta inforamtion and a result
+     *         set for being able processed by {@link ChartModel}.
      */
-    public List<ControlsBstUmsData> groupByMassnahmenStates(GroupByStrategy groupByStrategy) {
+    public List<ModuleData> groupSafeguardStatesByModulChapterNames(GroupByStrategy groupByStrategy) {
 
-        List<ControlsBstUmsData> controlsBstUmsData = new ArrayList<>();
+        List<ModuleData> modulDataResult = new ArrayList<>();
         for (ITVerbund itVerbund : menuService.getVisibleItNetworks()) {
             String scopeId = String.valueOf(itVerbund.getScopeId());
             Map<String, Map<String, Number>> states = groupByMassnahmenStates(scopeId, groupByStrategy);
-            controlsBstUmsData.add(new ControlsBstUmsData(itVerbund.getTitle(), states));
+            modulDataResult.add(new ModuleData(itVerbund.getTitle(), states));
         }
 
-        return controlsBstUmsData;
+        return modulDataResult;
     }
 
     /**
@@ -221,8 +220,8 @@ public class ChartService extends GenericChartService {
 
         List<ControlGroup> catalogs = menuService.getCatalogs();
         List<ControlGroup> catalogsOfScopeId = new ArrayList<>();
-        for(ControlGroup catalog : catalogs){
-            if(catalog.getScopeId().equals(scopeId)){
+        for (ControlGroup catalog : catalogs) {
+            if (catalog.getScopeId().equals(scopeId)) {
                 catalogsOfScopeId.add(catalog);
             }
         }

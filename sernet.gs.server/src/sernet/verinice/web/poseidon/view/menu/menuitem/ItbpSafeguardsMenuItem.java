@@ -17,14 +17,29 @@
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.web.poseidon.services.strategy;
+package sernet.verinice.web.poseidon.view.menu.menuitem;
 
-import java.util.SortedMap;
+import org.primefaces.model.menu.DefaultMenuItem;
 
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.gs.web.Util;
 
-public interface AggregateMassnahmenUmsetzungStrategy {
+/**
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+ *
+ */
+public class ItbpSafeguardsMenuItem extends DefaultMenuItem {
 
-    SortedMap<String, Number> aggregateData(Iterable<MassnahmenUmsetzung> bsiControls);
+    private static final String MESSAGES = "sernet.verinice.web.WebMessages";
 
+    private static final String URL = "/edit/itgs-safeguards.xhtml";
+
+    private static final String ICON = "fa fa-fw fa-industry";
+
+    private static final long serialVersionUID = 1L;
+
+    public ItbpSafeguardsMenuItem() {
+        super(Util.getMessage(MESSAGES, "menu.itgs-controls"));
+        super.setIcon(ICON);
+        super.setUrl(URL);
+    }
 }

@@ -17,42 +17,37 @@
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.web.poseidon.services;
+package sernet.verinice.web.poseidon.view.menu.submenu;
 
-import java.util.SortedMap;
+import org.primefaces.model.menu.MenuItem;
+
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.web.poseidon.services.MenuService;
+import sernet.verinice.web.poseidon.services.strategy.GroupByStrategyNormalized;
+import sernet.verinice.web.poseidon.view.menu.menuitem.ModuleNormalizedMenuItem;
 
 /**
+ * Provides sub menu item for cumulated, grouped by module chart menu items.
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ControlsItgsData {
+public class ModuleImplementationNormalizedSubMenu extends AbstractModuleImplementationSubMenu {
 
-    private String itNetworkName;
+    private static final long serialVersionUID = 1L;
 
-    private SortedMap<String, Number> states;
-
-    public ControlsItgsData(String itNetworkName, SortedMap<String, Number> states) {
-        this.itNetworkName = itNetworkName;
-        this.states = states;
+    public ModuleImplementationNormalizedSubMenu(String title, MenuService menuService) {
+        super(title, menuService);
     }
 
-    public String getItNetworkName() {
-        return itNetworkName;
+    @Override
+    protected String getStrategy() {
+        return GroupByStrategyNormalized.GET_PARAM_IDENTIFIER;
     }
 
-    public void setItNetworkName(String itNetworkName) {
-        this.itNetworkName = itNetworkName;
+    @Override
+    protected MenuItem getMenuItem(ITVerbund itNetwork) {
+        return new ModuleNormalizedMenuItem(itNetwork);
     }
 
-    public SortedMap<String, Number> getStates() {
-        return states;
-    }
-
-    public void setStates(SortedMap<String, Number> states) {
-        this.states = states;
-    }
-
-    public boolean noData() {
-        return states == null || states.isEmpty();
-    }
 }

@@ -28,14 +28,16 @@ import org.primefaces.model.menu.DefaultMenuItem;
 import sernet.verinice.model.bsi.ITVerbund;
 
 /**
+ * Provides menu item for IT baseline protection charts.
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-abstract class AbstractItgsControlMenuItem extends DefaultMenuItem {
+abstract class AbstractItbpControlMenuItem extends DefaultMenuItem {
 
     private static final long serialVersionUID = 1L;
 
-    private static final Logger log = Logger.getLogger(AbstractItgsControlMenuItem.class);
+    private static final Logger log = Logger.getLogger(AbstractItbpControlMenuItem.class);
 
     private ITVerbund itNetwork;
 
@@ -43,7 +45,7 @@ abstract class AbstractItgsControlMenuItem extends DefaultMenuItem {
 
     abstract String getStrategy();
 
-    AbstractItgsControlMenuItem(ITVerbund itVerbund) {
+    AbstractItbpControlMenuItem(ITVerbund itVerbund) {
         super(itVerbund.getTitle());
         this.itNetwork = itVerbund;
         this.setUrl(createUrl());
@@ -53,8 +55,7 @@ abstract class AbstractItgsControlMenuItem extends DefaultMenuItem {
         try {
             String scopeIdParam = "scopeId=" + itNetwork.getScopeId();
             String titleParam = "itNetwork=" + URLEncoder.encode(itNetwork.getTitle(), "UTF-8");
-            String url = "/dashboard/" + getTemplateFile() + "?" + scopeIdParam + "&" + titleParam + getStrategyParam();
-            return url;
+            return "/dashboard/" + getTemplateFile() + "?" + scopeIdParam + "&" + titleParam + getStrategyParam();
         } catch (UnsupportedEncodingException e) {
             log.error("cannot create url", e);
         }

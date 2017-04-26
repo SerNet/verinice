@@ -17,31 +17,23 @@
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.web.poseidon.view.menu.menuitem;
+package sernet.gs.web;
 
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
+import javax.faces.convert.EnumConverter;
+import javax.faces.convert.FacesConverter;
+
+import sernet.gs.web.ToDoBean.GrundSchutzExecution;
 
 /**
+ * Maps String from the frontend it baseline protection filter back to enums.
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ControlsBstUmsCumulatedMenuItem extends AbstractItgsControlMenuItem {
+@FacesConverter(value = "itbpExecutionConverter")
+public class ItbpExecutionConverter extends EnumConverter {
 
-    public ControlsBstUmsCumulatedMenuItem(ITVerbund itVerbund) {
-        super(itVerbund);
-        super.setIcon("fa fa-fw fa-industry");
-    }
-
-    private static final long serialVersionUID = 1L;
-
-    @Override
-    String getTemplateFile() {
-        return "controls-bstums.xhtml";
-    }
-
-    @Override
-    String getStrategy() {
-        return GroupByStrategySum.GET_PARAM_IDENTIFIER;
+    public ItbpExecutionConverter() {
+        super(GrundSchutzExecution.class);
     }
 }

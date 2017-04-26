@@ -36,9 +36,9 @@ import sernet.verinice.web.poseidon.services.strategy.GroupedByChapterStrategy;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-@ManagedBean(name = "controlsBstUmsChartView")
+@ManagedBean(name = "moduleChartView")
 @ViewScoped
-public class ControlsBstUmsChartView {
+public class ModuleChartView {
 
     private BarChartModel horizontalChartModel;
 
@@ -82,7 +82,7 @@ public class ControlsBstUmsChartView {
 
     private void createCharts() {
         Map<String, Map<String, Number>> data = chartService.groupByMassnahmenStates(scopeId, strategyBean.getStrategy());
-        ModulChartsFactory chartModelFactory = new ModulChartsFactory(data);
+        ModuleChartsFactory chartModelFactory = new ModuleChartsFactory(data);
         horizontalChartModel = chartModelFactory.getHorizontalBarChartModel();
         verticalChartModel = chartModelFactory.getVerticalBarChartModel();
     }

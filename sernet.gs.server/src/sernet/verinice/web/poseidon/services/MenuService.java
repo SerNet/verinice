@@ -40,6 +40,9 @@ import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
+ * Provides several {@link CnATreeElement} objects which are necessary for
+ * rendering the main menu of verinice web.
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */

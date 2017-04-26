@@ -19,7 +19,7 @@
 				<p:panel header="#{msgWeb['controls-bstums-all.header']}" toggleable="true">
 					<h:form id="chartPanel">
 						<ui:fragment
-							rendered="#{not controlsBstUmsAllChartView.totalCalculated}">
+							rendered="#{not moduleAllChartView.totalCalculated}">
 							<div style="margin: 0 auto; text-align: center;">
 								<p>#{msgWeb['loading']}</p>
 								<p:graphicImage name="images/ajax-loader.gif"
@@ -27,30 +27,30 @@
 							</div>
 						</ui:fragment>
 						<ui:fragment
-							rendered="#{controlsBstUmsAllChartView.totalCalculated and (not empty controlsBstUmsAllChartView.allStates)}">
+							rendered="#{moduleAllChartView.totalCalculated and (not empty moduleAllChartView.allStates)}">
 							<div class="ui-g ui-fluid">
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
 									<p:chart id="veriniceHorizontalBar" type="bar"
-										model="#{controlsBstUmsAllChartView.verticalBarChart}"
+										model="#{moduleAllChartView.verticalBarChart}"
 										responsive="true" />
 								</div>
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
 									<p:chart id="veriniceVerticalBar" type="bar"
-										model="#{controlsBstUmsAllChartView.horizontalBarChartModel}"
+										model="#{moduleAllChartView.horizontalBarChartModel}"
 										responsive="true" />
 								</div>
 							</div>
 						</ui:fragment>
 
 						<ui:fragment
-							rendered="#{controlsBstUmsAllChartView.totalCalculated and (empty controlsBstUmsAllChartView.allStates)}">
+							rendered="#{moduleAllChartView.totalCalculated and (empty moduleAllChartView.allStates)}">
 							<p class="no-data">#{msgWeb['no-data']}</p>
 						</ui:fragment>
 					</h:form>
 
 					<h:form>
 						<p:remoteCommand
-							action="#{controlsBstUmsAllChartView.loadTotalData()}"
+							action="#{moduleAllChartView.loadTotalData()}"
 							autoRun="true" delay="2" update=":chartPanel" />
 					</h:form>
 				</p:panel>
@@ -61,7 +61,7 @@
 				<h:form id="all-chapter">
 					<p:panel header="#{msgWeb['all-it-networks']}" toggleable="true">
 						<ui:fragment
-							rendered="#{not controlsBstUmsAllChartView.allItNetworksCalculated}">
+							rendered="#{not moduleAllChartView.allItNetworksCalculated}">
 							<div style="margin: 0 auto; text-align: center;">
 								<p>#{msgWeb['loading']}</p>
 								<p:graphicImage name="images/ajax-loader.gif"
@@ -70,8 +70,8 @@
 						</ui:fragment>
 
 						<ui:fragment id="charts"
-							rendered="#{controlsBstUmsAllChartView.allItNetworksCalculated and (not empty controlsBstUmsAllChartView.charts)}">
-							<ui:repeat value="#{controlsBstUmsAllChartView.charts}" var="chart"
+							rendered="#{moduleAllChartView.allItNetworksCalculated and (not empty moduleAllChartView.charts)}">
+							<ui:repeat value="#{moduleAllChartView.charts}" var="chart"
 								toggleable="true">
 								<div class="ui-g">
 									<div class="ui-g-12 ui-lg-12">
@@ -90,7 +90,7 @@
 							</ui:repeat>
 						</ui:fragment>
 						<ui:fragment
-							rendered="#{controlsBstUmsAllChartView.totalCalculated and (empty controlsBstUmsAllChartView.charts)}">
+							rendered="#{moduleAllChartView.totalCalculated and (empty moduleAllChartView.charts)}">
 							<p class="no-data">#{msgWeb['no-data']}</p>
 						</ui:fragment>
 					</p:panel>
@@ -99,13 +99,13 @@
 
 			<h:form>
 				<p:remoteCommand
-					action="#{controlsBstUmsAllChartView.loadDataForAllItNetworks()}"
+					action="#{moduleAllChartView.loadDataForAllItNetworks()}"
 					update=":all-chapter" autoRun="true" delay="2">
 				</p:remoteCommand>
 			</h:form>
 
 
-			<ui:repeat value="#{controlsBstUmsAllChartView.charts}" var="chart"
+			<ui:repeat value="#{moduleAllChartView.charts}" var="chart"
 				toggleable="true">
 				<div class="ui-g-12" toggleable="true">
 					<p:panel header="#{chart.title}">

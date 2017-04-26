@@ -6,8 +6,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/poseidon/template.xhtml">
 
-	<ui:define name="title">#{msgWeb['controls-bstums-total.title']}</ui:define>
-	<ui:define name="viewname">#{msgWeb['controls-bstums-total.title']}</ui:define>
+	<ui:define name="title">#{bstUmsetzungItNetworkView.itNetwork} :: #{msgWeb['controls-bstums.title']}</ui:define>
+	<ui:define name="viewname">#{bstUmsetzungItNetworkView.itNetwork} :: #{msgWeb['controls-bstums.title']}</ui:define>
 
 	<ui:define name="head">
 		<ui:include src="/WEB-INF/poseidon/chart-extender.xhtml" />
@@ -16,10 +16,11 @@
 	<ui:define name="content">
 		<div class="ui-g ui-fluid">
 			<div class="ui-g-12">
+
 				<h:form id="chartPanel">
-					<p:panel header="#{msgWeb['controls-bstums-total.header']}">
+					<p:panel header="#{moduleChartView.itNetwork}">
 						<ui:fragment
-							rendered="#{not controlsBstUmsAllChartView.totalCalculated}">
+							rendered="#{not moduleChartView.calculated}">
 							<div style="margin: 0 auto; text-align: center;">
 								<p>#{msgWeb['loading']}</p>
 								<p:graphicImage name="images/ajax-loader.gif"
@@ -27,32 +28,25 @@
 							</div>
 						</ui:fragment>
 						<ui:fragment id="charts"
-							rendered="#{controlsBstUmsAllChartView.totalCalculated and (not empty controlsBstUmsAllChartView.allStates)}">
-
+							rendered="#{moduleChartView.calculated}">
 							<div class="ui-g ui-fluid">
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
-									<p:chart id="veriniceHorizontalBar" type="bar"
-										model="#{controlsBstUmsAllChartView.verticalBarChart}"
+									<p:chart id="veriniceVerticalBarChart" type="bar"
+										model="#{moduleChartView.verticalChartModel}"
 										responsive="true" />
 								</div>
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
-									<p:chart id="veriniceVerticalBar" type="bar"
-										model="#{controlsBstUmsAllChartView.horizontalBarChartModel}"
+									<p:chart id="veriniceHorizontalBarChart" type="bar"
+										model="#{moduleChartView.horizontalChartModel}"
 										responsive="true" />
 								</div>
 							</div>
 						</ui:fragment>
-
-						<ui:fragment rendered="#{controlsBstUmsAllChartView.totalCalculated and (empty controlsBstUmsAllChartView.allStates)}">
-							<p class="no-data" >#{msgWeb['no-data']}</p>
-						</ui:fragment>
-
 					</p:panel>
 				</h:form>
 
 				<h:form>
-					<p:remoteCommand
-						action="#{controlsBstUmsAllChartView.loadTotalData()}"
+					<p:remoteCommand action="#{moduleChartView.loadData()}"
 						autoRun="true" delay="2" update=":chartPanel" />
 				</h:form>
 			</div>

@@ -30,17 +30,21 @@ import org.primefaces.model.menu.MenuElement;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-abstract class AbstractMainSubMenu extends DefaultSubMenu {
+abstract class AbstractChartSubMenu extends DefaultSubMenu {
 
     private static final long serialVersionUID = 1L;
 
     private boolean isLoaded = false;
 
-    protected abstract void loadChildren();
-
-    public AbstractMainSubMenu(String title) {
+    public AbstractChartSubMenu(String title) {
         super(title);
     }
+
+    /**
+     * Adds MenuItem or {@link DefaultSubMenu} to an implementation of this
+     * class.
+     */
+    protected abstract void loadChildren();
 
     @Override
     public List<MenuElement> getElements() {
@@ -53,8 +57,6 @@ abstract class AbstractMainSubMenu extends DefaultSubMenu {
         loadData();
         return super.getElementsCount();
     }
-
-
 
     private void loadData() {
         if (!isLoaded) {

@@ -26,7 +26,7 @@ import org.primefaces.model.menu.DefaultSubMenu;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.web.poseidon.services.MenuService;
 
-public class IsmsCatalogGroupedByOrganizationSubMenu extends AbstractMainSubMenu {
+public class IsmsCatalogGroupedByOrganizationSubMenu extends AbstractChartSubMenu {
 
     private static final long serialVersionUID = 1L;
 
@@ -41,7 +41,7 @@ public class IsmsCatalogGroupedByOrganizationSubMenu extends AbstractMainSubMenu
     protected void loadChildren() {
         List<Organization> visibleOrganisations = menuService.getVisibleOrganisations();
         for (Organization organization : visibleOrganisations) {
-            DefaultSubMenu menuControlIsms = new OrganizationISMSMassnahmenCatalogSubMenu(organization, menuService);
+            DefaultSubMenu menuControlIsms = new ISOControlsSubMenu(organization, menuService);
             if (menuControlIsms.getElementsCount() > 0) {
                 super.addElement(menuControlIsms);
             }

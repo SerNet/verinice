@@ -24,6 +24,8 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 /**
+ * Handles user interaction with its session.
+ *
  * @author Moritz Reiter
  */
 @SessionScoped

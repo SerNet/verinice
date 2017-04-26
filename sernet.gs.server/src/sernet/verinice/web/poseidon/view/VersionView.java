@@ -26,6 +26,8 @@ import javax.faces.bean.SessionScoped;
 import org.primefaces.context.RequestContext;
 
 /**
+ * Provides the current primeface version.
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */

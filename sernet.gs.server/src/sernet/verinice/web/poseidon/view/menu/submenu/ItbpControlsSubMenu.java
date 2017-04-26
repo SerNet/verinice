@@ -30,7 +30,7 @@ import sernet.verinice.web.poseidon.view.menu.menuitem.ControlsChartMenuItem;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ItgsControlsSubMenu extends AbstractMainSubMenu {
+public class ItbpControlsSubMenu extends AbstractChartSubMenu {
 
     private static final long serialVersionUID = 1L;
 
@@ -38,7 +38,7 @@ public class ItgsControlsSubMenu extends AbstractMainSubMenu {
 
     private MenuService menuService;
 
-    public ItgsControlsSubMenu(MenuService menuService) {
+    public ItbpControlsSubMenu(MenuService menuService) {
         super(Util.getMessage(MESSAGES, "menu.itgs-controls"));
         this.menuService = menuService;
     }

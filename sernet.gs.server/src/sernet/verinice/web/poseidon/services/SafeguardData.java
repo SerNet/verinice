@@ -17,29 +17,42 @@
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.web.poseidon.view.menu.menuitem;
+package sernet.verinice.web.poseidon.services;
 
-import org.primefaces.model.menu.DefaultMenuItem;
-
-import sernet.gs.web.Util;
+import java.util.SortedMap;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ItgsControlsMenuItem extends DefaultMenuItem {
+public class SafeguardData {
 
-    private static final String MESSAGES = "sernet.verinice.web.WebMessages";
+    private String itNetworkName;
 
-    private static final String URL = "/edit/itgs-controls.xhtml";
+    private SortedMap<String, Number> states;
 
-    private static final String ICON = "fa fa-fw fa-industry";
+    public SafeguardData(String itNetworkName, SortedMap<String, Number> states) {
+        this.itNetworkName = itNetworkName;
+        this.states = states;
+    }
 
-    private static final long serialVersionUID = 1L;
+    public String getItNetworkName() {
+        return itNetworkName;
+    }
 
-    public ItgsControlsMenuItem() {
-        super(Util.getMessage(MESSAGES, "menu.itgs-controls"));
-        super.setIcon(ICON);
-        super.setUrl(URL);
+    public void setItNetworkName(String itNetworkName) {
+        this.itNetworkName = itNetworkName;
+    }
+
+    public SortedMap<String, Number> getStates() {
+        return states;
+    }
+
+    public void setStates(SortedMap<String, Number> states) {
+        this.states = states;
+    }
+
+    public boolean noData() {
+        return states == null || states.isEmpty();
     }
 }
