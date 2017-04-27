@@ -133,13 +133,13 @@ public class ChartService extends GenericChartService {
      * @return List of module data, which contains meta inforamtion and a result
      *         set for being able processed by {@link ChartModel}.
      */
-    public List<ModuleData> groupByModuleChapterSafeguardStates(GroupByStrategy groupByStrategy) {
+    public List<SafeguardDataGroupedByModule> groupByModuleChapterSafeguardStates(GroupByStrategy groupByStrategy) {
 
-        List<ModuleData> modulDataResult = new ArrayList<>();
+        List<SafeguardDataGroupedByModule> modulDataResult = new ArrayList<>();
         for (ITVerbund itVerbund : menuService.getVisibleItNetworks()) {
             String scopeId = String.valueOf(itVerbund.getScopeId());
             Map<String, Map<String, Number>> states = groupByModuleChapterSafeguardStates(scopeId, groupByStrategy);
-            modulDataResult.add(new ModuleData(itVerbund.getTitle(), states));
+            modulDataResult.add(new SafeguardDataGroupedByModule(itVerbund.getTitle(), states));
         }
 
         return modulDataResult;

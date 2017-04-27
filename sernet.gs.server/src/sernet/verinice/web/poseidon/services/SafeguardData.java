@@ -21,7 +21,11 @@ package sernet.verinice.web.poseidon.services;
 
 import java.util.SortedMap;
 
+import sernet.verinice.model.bsi.ITVerbund;
+
 /**
+ * Wraps implementation states of safeguards for a {@link ITVerbund}.
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */

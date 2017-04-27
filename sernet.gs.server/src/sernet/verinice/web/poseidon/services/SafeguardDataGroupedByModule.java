@@ -22,19 +22,22 @@ package sernet.verinice.web.poseidon.services;
 import java.util.Map;
 import java.util.SortedMap;
 
+import sernet.verinice.model.bsi.ITVerbund;
+
 /**
- * Wraps a result of a strategy calculation.
+ * Wraps a result of a strategy calculation for an {@link ITVerbund} grouped by
+ * module chapter names.
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ModuleData {
+public class SafeguardDataGroupedByModule {
 
     private String itNetworkName;
 
     private Map<String, Map<String, Number>> data;
 
-    public ModuleData(String itNetworkName, Map<String, Map<String, Number>> data) {
+    public SafeguardDataGroupedByModule(String itNetworkName, Map<String, Map<String, Number>> data) {
         this.setItNetworkName(itNetworkName);
         this.data = data;
     }

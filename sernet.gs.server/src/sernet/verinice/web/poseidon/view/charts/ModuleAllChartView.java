@@ -35,7 +35,7 @@ import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.HorizontalBarChartModel;
 
 import sernet.verinice.web.poseidon.services.ChartService;
-import sernet.verinice.web.poseidon.services.ModuleData;
+import sernet.verinice.web.poseidon.services.SafeguardDataGroupedByModule;
 import sernet.verinice.web.poseidon.services.strategy.GroupedByChapterStrategy;
 
 /**
@@ -109,7 +109,7 @@ public class ModuleAllChartView {
 
         ArrayList<VeriniceChartRow> charts = new ArrayList<>();
 
-        for (ModuleData controlsBstUmsData : chartService.groupByModuleChapterSafeguardStates(strategy.getStrategy())) {
+        for (SafeguardDataGroupedByModule controlsBstUmsData : chartService.groupByModuleChapterSafeguardStates(strategy.getStrategy())) {
 
             if (controlsBstUmsData.noData()) {
                continue;
