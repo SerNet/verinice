@@ -33,7 +33,7 @@
     <security:intercept-methods>
       <security:protect
         method="sernet.verinice.service.AccountService.findAccounts"
-        access="ACTION_ID_ACCOUNTSETTINGS" />
+        access="ACTION_ID_ACCOUNTSETTINGS,ACTION_ID_TASKSHOWALL" />
       <security:protect
         method="sernet.verinice.service.AccountService.delete"
         access="ACTION_ID_ACCOUNTSETTINGS" />
@@ -42,7 +42,7 @@
         access="ACTION_ID_ACCOUNTSETTINGS" />
       <security:protect
         method="sernet.verinice.service.AccountService.getAccountByName"
-        access="ACTION_ID_ACCOUNTSETTINGS" />
+        access="ACTION_ID_ACCOUNTSETTINGS,ACTION_ID_TASKVIEW" />
       <security:protect
         method="sernet.verinice.service.AccountService.getAccountById"
         access="ACTION_ID_ACCOUNTSETTINGS" />
