@@ -160,7 +160,6 @@ public class TaskService implements ITaskService {
         return doGetTaskList(parameter);
     }
 
-
     /**
      * Returns tasks created after a date for user with name username.
      * If no tasks exists an empty list is returned. If date is null

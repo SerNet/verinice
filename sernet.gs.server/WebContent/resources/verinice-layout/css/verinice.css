@@ -157,3 +157,8 @@ body .topbar-menubar {
 p.no-data {
 	text-align: center;
 }
+
+/* mark task read or unread in task view */
+#tableForm:taskTable .unread {
+	font-weight: bold;
+}
