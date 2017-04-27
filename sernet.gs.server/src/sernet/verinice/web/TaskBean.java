@@ -385,7 +385,7 @@ public class TaskBean {
     
         @Override
         public String getLabel() {
-            return Messages.getString("TaskBean.8"); //$NON-NLS-1$
+            return sernet.gs.web.Util.getMessage(BOUNDLE_NAME, "TaskBean.8"); //$NON-NLS-1$
         }
     
         @Override
@@ -407,7 +407,7 @@ public class TaskBean {
     
         @Override
         public String getLabel() {
-            return Messages.getString("TaskBean.9"); //$NON-NLS-1$
+            return sernet.gs.web.Util.getMessage(BOUNDLE_NAME, "TaskBean.9"); //$NON-NLS-1$
         }
     
         @Override
