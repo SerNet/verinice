@@ -60,7 +60,7 @@ public class ControlsChartTotalView implements Serializable {
 
     private SortedMap<String, Number> getStates() {
         if (states == null){
-            states = getChartService().aggregateMassnahmenUmsetzungStatus();
+            states = getChartService().aggregateAllSafeguardStates();
         }
         return states;
     }

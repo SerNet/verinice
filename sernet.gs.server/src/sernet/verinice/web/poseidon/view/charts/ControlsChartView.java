@@ -100,7 +100,7 @@ public class ControlsChartView implements Serializable {
 
     public SortedMap<String, Number> getStates() {
         if (states == null) {
-            states = chartService.aggregateMassnahmenUmsetzung(scopeId);
+            states = chartService.aggregateSafeguardStates(scopeId);
         }
 
         return states;

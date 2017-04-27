@@ -81,7 +81,7 @@ public class ModuleChartView {
     }
 
     private void createCharts() {
-        Map<String, Map<String, Number>> data = chartService.groupByMassnahmenStates(scopeId, strategyBean.getStrategy());
+        Map<String, Map<String, Number>> data = chartService.groupByModuleChapterSafeguardStates(scopeId, strategyBean.getStrategy());
         ModuleChartsFactory chartModelFactory = new ModuleChartsFactory(data);
         horizontalChartModel = chartModelFactory.getHorizontalBarChartModel();
         verticalChartModel = chartModelFactory.getVerticalBarChartModel();

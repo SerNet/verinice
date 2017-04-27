@@ -88,7 +88,7 @@ public class ModuleAllChartView {
     }
 
     private void initTotalCharts() {
-        allStates = chartService.groupByMassnahmenStates("", strategy.getStrategy());
+        allStates = chartService.groupByModuleChapterSafeguardStates("", strategy.getStrategy());
         ModuleChartsFactory allChartModelFactory = new ModuleChartsFactory(allStates);
 
         verticalBarChart = allChartModelFactory.getVerticalBarChartModel();
@@ -109,7 +109,7 @@ public class ModuleAllChartView {
 
         ArrayList<VeriniceChartRow> charts = new ArrayList<>();
 
-        for (ModuleData controlsBstUmsData : chartService.groupSafeguardStatesByModulChapterNames(strategy.getStrategy())) {
+        for (ModuleData controlsBstUmsData : chartService.groupByModuleChapterSafeguardStates(strategy.getStrategy())) {
 
             if (controlsBstUmsData.noData()) {
                continue;

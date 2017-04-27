@@ -69,7 +69,7 @@ public class ControlsAllChartView {
     public void loadDataForAllItNetworks(){
 
         charts = new ArrayList<>();
-        List<SafeguardData> itNetworks = chartService.aggregateMassnahmenUmsetzung();
+        List<SafeguardData> itNetworks = chartService.aggregateSafeguardStates();
 
         for (SafeguardData controlsItgsData : itNetworks) {
 
@@ -95,7 +95,7 @@ public class ControlsAllChartView {
 
 
     private SortedMap<String, Number> calculateTotal() {
-        SortedMap<String, Number> allStates = chartService.aggregateMassnahmenUmsetzungStatus();
+        SortedMap<String, Number> allStates = chartService.aggregateAllSafeguardStates();
         return allStates;
     }
 

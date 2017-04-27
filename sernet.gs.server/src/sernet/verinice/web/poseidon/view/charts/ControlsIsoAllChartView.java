@@ -104,7 +104,7 @@ public class ControlsIsoAllChartView {
 
     public void loadTotalIsmsCatalogs() {
         charts = new ArrayList<>();
-        states = chartService.getIsoControlsData(scopeId);
+        states = chartService.aggregateControlStates(scopeId);
         createTotalIsmsCatalogsChartModels();
     }
 
@@ -117,7 +117,7 @@ public class ControlsIsoAllChartView {
 
             if (catalog.getScopeId().equals(scopeId)) {
 
-                Map<String, Number> catalogStates = getChartService().getIsoControlsData(scopeId, catalog.getDbId());
+                Map<String, Number> catalogStates = getChartService().aggregateControlStates(scopeId, catalog.getDbId());
 
                 if (catalogStates.isEmpty())
                     continue;

@@ -78,7 +78,7 @@ public class ControlsIsoTotalChartView {
 
     private Map<String, Number> getStates() {
         if (states == null) {
-            states = getChartService().getIsoControlsData(scopeId);
+            states = getChartService().aggregateControlStates(scopeId);
         }
         return states;
     }

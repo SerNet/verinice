@@ -78,7 +78,7 @@ public class ControlsIsoChartView {
 
     public void loadData() {
 
-        states = chartService.getIsoControlsData(scopeId, catalogId);
+        states = chartService.aggregateControlStates(scopeId, catalogId);
         String colors = ChartUtils.getColors(states.keySet());
         states = ChartUtils.translateMapKeyLabel(states);
 

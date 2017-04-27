@@ -48,7 +48,7 @@ public class ModuleTotalView {
 
     @PostConstruct
     public void init(){
-        Map<String, Map<String, Number>> data = getChartService().groupByMassnahmenStates("", new GroupByStrategySum());
+        Map<String, Map<String, Number>> data = getChartService().groupByModuleChapterSafeguardStates("", new GroupByStrategySum());
         ModuleChartsFactory chartModelFactory = new ModuleChartsFactory(data);
         horizontalChartModel = chartModelFactory.getHorizontalBarChartModel();
         verticalChartModel = chartModelFactory.getVerticalBarChartModel();
