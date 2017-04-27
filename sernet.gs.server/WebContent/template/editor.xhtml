@@ -21,8 +21,7 @@
 				<ui:repeat value="#{edit.actionHandler}" var="actionHandler">
 					<div class="ui-g-4">
 						<p:commandButton action="#{actionHandler.execute}"
-							value="#{actionHandler.label}" oncomplete="loadLinks();"
-							update=":editForm :tableForm" />
+							value="#{actionHandler.label}" update=":editForm :tableForm" />
 					</div>
 				</ui:repeat>
 			</p:outputPanel>
