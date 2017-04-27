@@ -31,6 +31,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.primefaces.model.chart.ChartModel;
 
 import sernet.gs.service.NumericStringComparator;
@@ -63,6 +64,8 @@ import sernet.verinice.web.poseidon.services.strategy.SimpleSumOfStates;
 @ViewScoped
 public class ChartService extends GenericChartService {
 
+    private static final Logger log = Logger.getLogger(ChartService.class);
+
     @ManagedProperty("#{menuService}")
     private MenuService menuService = new MenuService();
 
@@ -88,7 +91,7 @@ public class ChartService extends GenericChartService {
      *                If no it network is given.
      */
     public SortedMap<String, Number> aggregateSafeguardStates(Integer scopeId) {
-        VeriniceGraph g = loadSafeguards(scopeId);
+        VeriniceGraph g = loadSafeguards(scopeId, new String[] { MassnahmenUmsetzung.TYPE_ID });
         CalculateSafeguardImplementationStrategy strategy = new SimpleSumOfStates();
         return strategy.aggregateData(g.getElements(MassnahmenUmsetzung.class));
     }
@@ -165,9 +168,11 @@ public class ChartService extends GenericChartService {
      *         with the key {@link BausteinUmsetzung#getKapitel()}. This allows
      *         the result to be displayed as a stacked chart.
      */
+    @SuppressWarnings("unchecked")
     public Map<String, Map<String, Number>> groupByModuleChapterSafeguardStates(String scopeId, GroupByStrategy groupByStrategie) {
-        VeriniceGraph g = loadControls(scopeId);
-        return groupByStrategie.aggregateMassnahmen(g);
+        Integer scope = checkScopeId(scopeId);
+        VeriniceGraph g = loadSafeguards(scope, new String[] { BausteinUmsetzung.HIBERNATE_TYPE_ID, MassnahmenUmsetzung.HIBERNATE_TYPE_ID });
+        return g.getElements(MassnahmenUmsetzung.class).isEmpty() ? (Map<String, Map<String, Number>>) Collections.EMPTY_MAP : groupByStrategie.aggregateMassnahmen(g);
     }
 
     /**
@@ -228,29 +233,36 @@ public class ChartService extends GenericChartService {
         return strategy.getData();
     }
 
-    private VeriniceGraph loadControls(String scopeId) {
+    private VeriniceGraph loadSafeguards(Integer scopeId, String... typeIds) {
         IGraphService graphService = getGraphService();
         IGraphElementLoader graphElementLoader = new GraphElementLoader();
-        graphElementLoader.setTypeIds(new String[] { BausteinUmsetzung.HIBERNATE_TYPE_ID, MassnahmenUmsetzung.HIBERNATE_TYPE_ID });
-
-        if (scopeId != null && !StringUtils.EMPTY.equals(scopeId)) {
-            graphElementLoader.setScopeId(Integer.valueOf(scopeId));
-        }
-
-        graphService.setLoader(graphElementLoader);
-        return graphService.create();
-    }
-
-    private VeriniceGraph loadSafeguards(Integer scopeId) {
-        IGraphService graphService = getGraphService();
-        IGraphElementLoader graphElementLoader = new GraphElementLoader();
-        graphElementLoader.setTypeIds(new String[] { MassnahmenUmsetzung.HIBERNATE_TYPE_ID });
+        graphElementLoader.setTypeIds(typeIds);
         if (scopeId != null) {
             graphElementLoader.setScopeId(scopeId);
         }
         graphService.setLoader(graphElementLoader);
         return graphService.create();
     }
+
+    private Integer checkScopeId(String scopeId) {
+
+        Integer scope = null;
+
+        if (scopeId == null || StringUtils.EMPTY.equals(scopeId)) {
+            return scope;
+        }
+
+        try {
+
+            scope = Integer.parseInt(scopeId);
+        } catch (NumberFormatException ex) {
+            log.warn("scope id not valid", ex);
+
+        }
+
+        return scope;
+    }
+
 
     public MenuService getMenuService() {
         return menuService;
@@ -259,5 +271,7 @@ public class ChartService extends GenericChartService {
     public void setMenuService(MenuService menuService) {
         this.menuService = menuService;
     }
+
+
 
 }

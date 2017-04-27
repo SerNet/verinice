@@ -55,6 +55,8 @@ public class ModuleChartView {
     @ManagedProperty("#{chartService}")
     private ChartService chartService;
 
+    private Map<String, Map<String, Number>> states;
+
     @PostConstruct
     public void init() {
         readParameter();
@@ -81,10 +83,14 @@ public class ModuleChartView {
     }
 
     private void createCharts() {
-        Map<String, Map<String, Number>> data = chartService.groupByModuleChapterSafeguardStates(scopeId, strategyBean.getStrategy());
-        ModuleChartsFactory chartModelFactory = new ModuleChartsFactory(data);
+        states = chartService.groupByModuleChapterSafeguardStates(scopeId, strategyBean.getStrategy());
+        ModuleChartsFactory chartModelFactory = new ModuleChartsFactory(states);
         horizontalChartModel = chartModelFactory.getHorizontalBarChartModel();
         verticalChartModel = chartModelFactory.getVerticalBarChartModel();
+    }
+
+    public boolean dataAvailable() {
+        return !states.isEmpty();
     }
 
     public BarChartModel getVerticalChartModel() {

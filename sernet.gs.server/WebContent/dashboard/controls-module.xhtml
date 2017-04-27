@@ -28,7 +28,7 @@
 							</div>
 						</ui:fragment>
 						<ui:fragment id="charts"
-							rendered="#{moduleChartView.calculated}">
+							rendered="#{moduleChartView.calculated and moduleChartView.dataAvailable()}">
 							<div class="ui-g ui-fluid">
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
 									<p:chart id="veriniceVerticalBarChart" type="bar"
@@ -41,6 +41,10 @@
 										responsive="true" />
 								</div>
 							</div>
+						</ui:fragment>
+
+						<ui:fragment rendered="#{moduleChartView.calculated and (not moduleChartView.dataAvailable())}">
+							<p class="no-data" >#{msgWeb['no-data']}</p>
 						</ui:fragment>
 					</p:panel>
 				</h:form>
