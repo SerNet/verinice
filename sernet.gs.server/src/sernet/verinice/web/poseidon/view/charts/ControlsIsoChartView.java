@@ -33,6 +33,7 @@ import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
 import sernet.verinice.web.poseidon.services.ChartService;
+import sernet.verinice.web.poseidon.services.StateData;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -57,7 +58,7 @@ public class ControlsIsoChartView {
 
     private Integer scopeId;
 
-    private Map<String, Number> states;
+    private StateData states;
 
     @PostConstruct
     public void init() {
@@ -79,22 +80,20 @@ public class ControlsIsoChartView {
     public void loadData() {
 
         states = chartService.aggregateControlStates(scopeId, catalogId);
-        String colors = ChartUtils.getColors(states.keySet());
-        states = ChartUtils.translateMapKeyLabel(states);
 
         pieChart = new PieChartModel();
-        pieChart.setData(states);
-        pieChart.setSeriesColors(colors);
+        pieChart.setData(states.getStates());
+        pieChart.setSeriesColors(states.getColors());
         pieChart.setExtender("verinicePie");
 
         horizontalBarChartModel = new BarChartModel();
         ChartSeries series = new ChartSeries();
-        for (Map.Entry<String, Number> entry : states.entrySet()) {
+        for (Map.Entry<String, Number> entry : states.getStates().entrySet()) {
             series.set(entry.getKey(), entry.getValue());
         }
 
         horizontalBarChartModel.addSeries(series);
-        horizontalBarChartModel.setSeriesColors(colors);
+        horizontalBarChartModel.setSeriesColors(states.getColors()  );
         horizontalBarChartModel.setExtender("veriniceVerticalBar");
 
         dataCalculated = true;
@@ -115,16 +114,7 @@ public class ControlsIsoChartView {
     }
 
     public boolean dataAvailable() {
-        return states != null && checkValue();
-    }
-
-    private boolean checkValue(){
-        for(Number number : states.values()){
-            if(number.intValue() > 0){
-                return true;
-            }
-        }
-        return false;
+        return states.dataAvailable();
     }
 
     public void setHorizontalBarChartModel(HorizontalBarChartModel horizontalBarChartModel) {

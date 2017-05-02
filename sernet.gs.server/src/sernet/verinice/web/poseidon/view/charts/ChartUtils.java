@@ -44,7 +44,7 @@ import sernet.verinice.web.Messages;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-abstract class ChartUtils {
+public abstract class ChartUtils {
 
     protected static final String IMPLEMENTATION_STATUS_UNEDITED = "SingleSelectDummyValue";
 
@@ -95,7 +95,7 @@ abstract class ChartUtils {
      * @return A comma seperated list of hex values, which can used to configure
      *         {@link ChartModel}.
      */
-    static String getColors(Iterable<String> controlStates) {
+    public static String getColors(Iterable<String> controlStates) {
 
         java.util.List<String> colors = new ArrayList<>();
         for (String state : controlStates) {
@@ -138,7 +138,7 @@ abstract class ChartUtils {
      *            Map which maps properties id to numbers.
      * @return A map with new human readable labels.
      */
-    static <T extends Object> SortedMap<String, T> translateMapKeyLabel(Map<String, T> states) {
+    public static <T extends Object> SortedMap<String, T> translateMapKeyLabel(Map<String, T> states) {
         SortedMap<String, T> humanReadableLabels = new TreeMap<>(new NumericStringComparator());
         for (Entry<String, T> e : states.entrySet()) {
             humanReadableLabels.put(getLabel(e.getKey()), e.getValue());

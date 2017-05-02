@@ -20,7 +20,6 @@
 package sernet.verinice.web.poseidon.view.charts;
 
 import java.io.Serializable;
-import java.util.SortedMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -29,6 +28,7 @@ import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
 import sernet.verinice.web.poseidon.services.ChartService;
+import sernet.verinice.web.poseidon.services.StateData;
 
 /**
  *
@@ -43,7 +43,7 @@ public class ControlsChartTotalView implements Serializable {
     @ManagedProperty("#{chartService}")
     private ChartService chartService;
 
-    private SortedMap<String, Number> states;
+    private StateData safeguardData;
 
     private PieChartModel pieModel;
 
@@ -52,30 +52,21 @@ public class ControlsChartTotalView implements Serializable {
     private boolean calculated = false;
 
     public void init() {
-        ControlChartsFactory chartModelFactory = new ControlChartsFactory(getStates());
+        ControlChartsFactory chartModelFactory = new ControlChartsFactory(getSafeguardData());
         this.pieModel = chartModelFactory.getPieChartModel();
         this.barModel = chartModelFactory.getBarChart();
         this.calculated = true;
     }
 
-    private SortedMap<String, Number> getStates() {
-        if (states == null){
-            states = getChartService().aggregateAllSafeguardStates();
+    private StateData getSafeguardData() {
+        if (safeguardData == null){
+            safeguardData = getChartService().aggregateAllSafeguardStates();
         }
-        return states;
+        return safeguardData;
     }
 
     public boolean dataAvailable() {
-        return states != null && checkValue();
-    }
-
-    private boolean checkValue(){
-        for(Number number : states.values()){
-            if(number.intValue() > 0){
-                return true;
-            }
-        }
-        return false;
+       return safeguardData.dataAvailable();
     }
 
     public void setPieModel(PieChartModel pieModel) {

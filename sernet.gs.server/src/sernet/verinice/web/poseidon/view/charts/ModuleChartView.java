@@ -30,6 +30,7 @@ import javax.faces.context.FacesContext;
 import org.primefaces.model.chart.BarChartModel;
 
 import sernet.verinice.web.poseidon.services.ChartService;
+import sernet.verinice.web.poseidon.services.ModuleStateData;
 import sernet.verinice.web.poseidon.services.strategy.GroupedByChapterStrategy;
 
 /**
@@ -55,7 +56,7 @@ public class ModuleChartView {
     @ManagedProperty("#{chartService}")
     private ChartService chartService;
 
-    private Map<String, Map<String, Number>> states;
+    private ModuleStateData moduleStateData;
 
     @PostConstruct
     public void init() {
@@ -65,7 +66,6 @@ public class ModuleChartView {
     private void readParameter() {
         Map<String, String> parameterMap = getParameterMap();
         this.scopeId = parameterMap.get("scopeId");
-        this.itNetwork = parameterMap.get("itNetwork");
         this.strategyBean = new GroupedByChapterStrategy(parameterMap.get("strategy"));
     }
 
@@ -83,14 +83,14 @@ public class ModuleChartView {
     }
 
     private void createCharts() {
-        states = chartService.groupByModuleChapterSafeguardStates(scopeId, strategyBean.getStrategy());
-        ModuleChartsFactory chartModelFactory = new ModuleChartsFactory(states);
+        moduleStateData = chartService.groupByModuleChapterSafeguardStates(scopeId, strategyBean.getStrategy());
+        ModuleChartsFactory chartModelFactory = new ModuleChartsFactory(moduleStateData.getData());
         horizontalChartModel = chartModelFactory.getHorizontalBarChartModel();
         verticalChartModel = chartModelFactory.getVerticalBarChartModel();
     }
 
     public boolean dataAvailable() {
-        return !states.isEmpty();
+        return moduleStateData.dataAvailable();
     }
 
     public BarChartModel getVerticalChartModel() {

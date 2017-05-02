@@ -21,7 +21,6 @@ package sernet.verinice.web.poseidon.view.charts;
 
 import java.io.Serializable;
 import java.util.Map;
-import java.util.SortedMap;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -37,6 +36,7 @@ import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
 import sernet.verinice.web.poseidon.services.ChartService;
+import sernet.verinice.web.poseidon.services.StateData;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -55,7 +55,7 @@ public class ControlsChartView implements Serializable {
     @ManagedProperty("#{chartService}")
     private ChartService chartService;
 
-    private SortedMap<String, Number> states;
+    private StateData safeguardData;
 
     private PieChartModel pieModel;
 
@@ -74,7 +74,6 @@ public class ControlsChartView implements Serializable {
     private void readParameter() {
         Map<String, String> parameterMap = getParameterMap();
         this.scopeId = Integer.valueOf(parameterMap.get("scopeId"));
-        this.itNetwork = parameterMap.get("itNetwork");
     }
 
     private Map<String, String> getParameterMap() {
@@ -92,31 +91,21 @@ public class ControlsChartView implements Serializable {
 
     public void loadData(Integer scopeId) {
         setScopeId(scopeId);
-        ControlChartsFactory chartModelFactory = new ControlChartsFactory(getStates());
+        ControlChartsFactory chartModelFactory = new ControlChartsFactory(getSafeguardData());
         this.setPieModel(chartModelFactory.getPieChartModel());
         this.setBarModel(chartModelFactory.getBarChart());
+        this.itNetwork = safeguardData.getScopeName();
         calculated = true;
     }
 
-    public SortedMap<String, Number> getStates() {
-        if (states == null) {
-            states = chartService.aggregateSafeguardStates(scopeId);
+    private StateData getSafeguardData() {
+        if (safeguardData == null){
+            safeguardData = getChartService().aggregateSafeguardStates(scopeId);
         }
-
-        return states;
+        return safeguardData;
     }
-
     public boolean dataAvailable() {
-        return states != null && checkValue();
-    }
-
-    private boolean checkValue(){
-        for(Number number : states.values()){
-            if(number.intValue() > 0){
-                return true;
-            }
-        }
-        return false;
+        return safeguardData.dataAvailable();
     }
 
     public Integer getScopeId() {
@@ -173,10 +162,6 @@ public class ControlsChartView implements Serializable {
 
     public void setChartService(ChartService chartService) {
         this.chartService = chartService;
-    }
-
-    public void setStates(SortedMap<String, Number> states) {
-        this.states = states;
     }
 
     private final class DataLoader implements ActionListener {

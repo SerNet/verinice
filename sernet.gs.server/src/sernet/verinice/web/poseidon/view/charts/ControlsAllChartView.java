@@ -21,7 +21,6 @@ package sernet.verinice.web.poseidon.view.charts;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.SortedMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -33,7 +32,7 @@ import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
 import sernet.verinice.web.poseidon.services.ChartService;
-import sernet.verinice.web.poseidon.services.SafeguardData;
+import sernet.verinice.web.poseidon.services.StateData;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -56,65 +55,43 @@ public class ControlsAllChartView {
 
     private boolean allItNetworksCalculated;
 
-    private SortedMap<String, Number> allStates;
+    private StateData totalSafeguardData;
 
     public void loadTotalData() {
-        allStates = calculateTotal();
-        ControlChartsFactory allChartModelFactory = new ControlChartsFactory(allStates);
+        calculateTotal();
+        ControlChartsFactory allChartModelFactory = new ControlChartsFactory(totalSafeguardData);
         pieModel = allChartModelFactory.getPieChartModel();
         horizontalBarChartModel = allChartModelFactory.getHorizontalBarModel();
         totalCalculated = true;
     }
 
-    public void loadDataForAllItNetworks(){
+    public void loadDataForAllItNetworks() {
 
         charts = new ArrayList<>();
-        List<SafeguardData> itNetworks = chartService.aggregateSafeguardStates();
+        List<StateData> itNetworks = chartService.aggregateSafeguardStates();
 
-        for (SafeguardData controlsItgsData : itNetworks) {
+        for (StateData chartData : itNetworks) {
 
-            if (controlsItgsData.noData()){
-                continue;
+            if (chartData.dataAvailable()) {
+                VeriniceChartRow item = new VeriniceChartRow();
+                ControlChartsFactory chartModelFactory = new ControlChartsFactory(chartData);
+
+                item.setTitle(chartData.getScopeName());
+                item.setFirstChartModel(chartModelFactory.getPieChartModel());
+                HorizontalBarChartModel horizontalBarModel = chartModelFactory.getHorizontalBarModel();
+                item.setSecondChartModel(horizontalBarModel);
+                Axis axis = horizontalBarModel.getAxis(AxisType.X);
+                axis.setMax(horizontalBarChartModel.getAxis(AxisType.X).getMax());
+                charts.add(item);
             }
-
-            VeriniceChartRow item = new VeriniceChartRow();
-            ControlChartsFactory chartModelFactory = new ControlChartsFactory(controlsItgsData.getStates());
-
-            item.setTitle(controlsItgsData.getItNetworkName());
-            item.setFirstChartModel(chartModelFactory.getPieChartModel());
-            HorizontalBarChartModel horizontalBarModel = chartModelFactory.getHorizontalBarModel();
-            item.setSecondChartModel(horizontalBarModel);
-            Axis axis = horizontalBarModel.getAxis(AxisType.X);
-            axis.setMax(horizontalBarChartModel.getAxis(AxisType.X).getMax());
-            charts.add(item);
         }
 
         allItNetworksCalculated = true;
     }
 
-
-
-    private SortedMap<String, Number> calculateTotal() {
-        SortedMap<String, Number> allStates = chartService.aggregateAllSafeguardStates();
-        return allStates;
-    }
-
-
-    /**
-     * Checks if the total diagram contains data.
-     *
-     */
-    public boolean dataAvailable(){
-       if(allStates != null){
-           for(Number number  : allStates.values()){
-               if(number.intValue() > 0){
-                   return true;
-               }
-           }
-           return false;
-       } else {
-           return false;
-       }
+    private StateData calculateTotal() {
+        totalSafeguardData = chartService.aggregateAllSafeguardStates();
+        return totalSafeguardData;
     }
 
     public List<VeriniceChartRow> getCharts() {
@@ -129,31 +106,21 @@ public class ControlsAllChartView {
         return horizontalBarChartModel;
     }
 
-
-
     public void setHorizontalBarChartModel(HorizontalBarChartModel horizontalBarChartModel) {
         this.horizontalBarChartModel = horizontalBarChartModel;
     }
-
-
 
     public PieChartModel getPieModel() {
         return pieModel;
     }
 
-
-
     public void setPieModel(PieChartModel pieModel) {
         this.pieModel = pieModel;
     }
 
-
-
     public boolean isTotalCalculated() {
         return totalCalculated;
     }
-
-
 
     public void setTotalCalculated(boolean totalCalculated) {
         this.totalCalculated = totalCalculated;
@@ -175,12 +142,7 @@ public class ControlsAllChartView {
         this.chartService = chartService;
     }
 
-    public SortedMap<String, Number> getAllStates() {
-        return allStates;
+    public boolean dataAvailable() {
+        return this.totalSafeguardData.dataAvailable();
     }
-
-    public void setAllStates(SortedMap<String, Number> allStates) {
-        this.allStates = allStates;
-    }
-
 }

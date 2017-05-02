@@ -35,7 +35,7 @@ import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.HorizontalBarChartModel;
 
 import sernet.verinice.web.poseidon.services.ChartService;
-import sernet.verinice.web.poseidon.services.SafeguardDataGroupedByModule;
+import sernet.verinice.web.poseidon.services.ModuleStateData;
 import sernet.verinice.web.poseidon.services.strategy.GroupedByChapterStrategy;
 
 /**
@@ -61,7 +61,7 @@ public class ModuleAllChartView {
 
     private GroupedByChapterStrategy strategy;
 
-    private Map<String, Map<String, Number>> allStates;
+    private ModuleStateData moduleStateData;
 
     @PostConstruct
     public void init() {
@@ -88,8 +88,8 @@ public class ModuleAllChartView {
     }
 
     private void initTotalCharts() {
-        allStates = chartService.groupByModuleChapterSafeguardStates("", strategy.getStrategy());
-        ModuleChartsFactory allChartModelFactory = new ModuleChartsFactory(allStates);
+        moduleStateData = chartService.groupByModuleChapterSafeguardStates("", strategy.getStrategy());
+        ModuleChartsFactory allChartModelFactory = new ModuleChartsFactory(moduleStateData.getData());
 
         verticalBarChart = allChartModelFactory.getVerticalBarChartModel();
         horizontalBarChart = allChartModelFactory.getHorizontalBarChartModel();
@@ -104,21 +104,24 @@ public class ModuleAllChartView {
         this.charts = createCharts();
     }
 
+    public boolean dataAvailable(){
+        return moduleStateData.dataAvailable();
+    }
 
     private ArrayList<VeriniceChartRow> createCharts() {
 
         ArrayList<VeriniceChartRow> charts = new ArrayList<>();
 
-        for (SafeguardDataGroupedByModule controlsBstUmsData : chartService.groupByModuleChapterSafeguardStates(strategy.getStrategy())) {
+        for (ModuleStateData mData : chartService.groupByModuleChapterSafeguardStates(strategy.getStrategy())) {
 
-            if (controlsBstUmsData.noData()) {
+            if (!mData.dataAvailable()) {
                continue;
             }
 
             VeriniceChartRow item = new VeriniceChartRow();
-            ModuleChartsFactory chartModelFactory = new ModuleChartsFactory(controlsBstUmsData.getData());
+            ModuleChartsFactory chartModelFactory = new ModuleChartsFactory(mData.getData());
 
-            item.setTitle(controlsBstUmsData.getItNetworkName());
+            item.setTitle(mData.getScopeName());
             item.setFirstChartModel(chartModelFactory.getVerticalBarChartModel());
             HorizontalBarChartModel horizontalBarChartModel = chartModelFactory.getHorizontalBarChartModel();
             item.setSecondChartModel(horizontalBarChartModel);
@@ -186,13 +189,5 @@ public class ModuleAllChartView {
 
     public void setChartService(ChartService chartService) {
         this.chartService = chartService;
-    }
-
-    public Map<String, Map<String, Number>> getAllStates() {
-        return allStates;
-    }
-
-    public void setAllStates(Map<String, Map<String, Number>> allStates) {
-        this.allStates = allStates;
     }
 }

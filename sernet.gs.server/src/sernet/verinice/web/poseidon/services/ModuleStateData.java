@@ -19,8 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.services;
 
+import java.util.Collections;
 import java.util.Map;
-import java.util.SortedMap;
 
 import sernet.verinice.model.bsi.ITVerbund;
 
@@ -31,34 +31,39 @@ import sernet.verinice.model.bsi.ITVerbund;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class SafeguardDataGroupedByModule {
+public class ModuleStateData {
 
-    private String itNetworkName;
+    private final String scopeName;
 
-    private Map<String, Map<String, Number>> data;
+    private final Map<String, Map<String, Number>> data;
 
-    public SafeguardDataGroupedByModule(String itNetworkName, Map<String, Map<String, Number>> data) {
-        this.setItNetworkName(itNetworkName);
+    private final boolean dataAvailable;
+
+    public ModuleStateData(String scopeName) {
+        this(scopeName, Collections.<String, Map<String, Number>> emptyMap(), false);
+    }
+
+    public ModuleStateData(String scopeName, Map<String, Map<String, Number>> data) {
+       this(scopeName, data, true);
+    }
+
+    private ModuleStateData(String scopeName, Map<String, Map<String, Number>> data, boolean dataAvailable) {
+        this.scopeName = scopeName;
         this.data = data;
+        this.dataAvailable = dataAvailable;
     }
 
-    public String getItNetworkName() {
-        return itNetworkName;
+
+    public String getScopeName() {
+        return scopeName;
     }
 
-    public void setItNetworkName(String itNetworkName) {
-        this.itNetworkName = itNetworkName;
-    }
 
     public Map<String, Map<String, Number>> getData() {
         return data;
     }
 
-    public void setData(SortedMap<String, Map<String, Number>> data) {
-        this.data = data;
-    }
-
-    public boolean noData() {
-        return data == null || data.isEmpty();
+    public boolean dataAvailable() {
+        return dataAvailable;
     }
 }

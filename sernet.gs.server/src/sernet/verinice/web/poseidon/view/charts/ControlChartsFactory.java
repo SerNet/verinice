@@ -22,8 +22,6 @@ package sernet.verinice.web.poseidon.view.charts;
 import static sernet.gs.web.Util.getMessage;
 
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
@@ -33,7 +31,7 @@ import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.LegendPlacement;
 import org.primefaces.model.chart.PieChartModel;
 
-import sernet.verinice.web.poseidon.services.CompareByTitle;
+import sernet.verinice.web.poseidon.services.StateData;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -43,23 +41,17 @@ public class ControlChartsFactory {
 
     private static final String MESSAGES = "sernet.verinice.web.WebMessages";
 
-    private Map<String, Number> data;
+    private StateData safeguardData;
 
-    public ControlChartsFactory(Map<String, Number> data){
-        this.data = sortDataKeys(data);
-    }
-
-    private Map<String, Number> sortDataKeys(Map<String, Number> unsorted) {
-        SortedMap<String, Number> sortedData = new TreeMap<>(new CompareByTitle());
-        sortedData.putAll(unsorted);
-        return sortedData;
+    public ControlChartsFactory(StateData safeguardData){
+        this.safeguardData = safeguardData;
     }
 
     public PieChartModel getPieChartModel(){
         PieChartModel model = new PieChartModel();
-        model.setData(ChartUtils.translateMapKeyLabel(data));
+        model.setData(safeguardData.getStates());
         model.setExtender("verinicePie");
-        model.setSeriesColors(ChartUtils.getColors(data.keySet()));
+        model.setSeriesColors(safeguardData.getColors());
         return model;
     }
 
@@ -68,7 +60,7 @@ public class ControlChartsFactory {
         BarChartModel barChartModel = new BarChartModel();
 
         ChartSeries series = new ChartSeries();
-        for (Map.Entry<String, Number> entry : ChartUtils.translateMapKeyLabel(data).entrySet()) {
+        for (Map.Entry<String, Number> entry : safeguardData.getStates().entrySet()) {
             series.set(entry.getKey(), entry.getValue());
         }
 
@@ -76,7 +68,7 @@ public class ControlChartsFactory {
         barChartModel.setLegendPlacement(LegendPlacement.OUTSIDE);
 
         Axis yAxis = barChartModel.getAxis(AxisType.Y);
-        yAxis.setMax(ChartUtils.getMax(data.values()));
+        yAxis.setMax(ChartUtils.getMax(safeguardData.getStates().values()));
         yAxis.setLabel(getMessage(MESSAGES, "chart.legend.safeguard"));
         yAxis.setTickCount(5);
 
@@ -84,7 +76,7 @@ public class ControlChartsFactory {
         xAxis.setLabel(getMessage(MESSAGES, "chart.legend.states"));
 
         barChartModel.setExtender("veriniceVerticalBar");
-        barChartModel.setSeriesColors(ChartUtils.getColors(data.keySet()));
+        barChartModel.setSeriesColors(safeguardData.getColors());
 
         return barChartModel;
     }
@@ -95,7 +87,7 @@ public class ControlChartsFactory {
         HorizontalBarChartModel horizontalBarModel = new HorizontalBarChartModel();
 
         ChartSeries series = new ChartSeries();
-        for (Map.Entry<String, Number> entry : ChartUtils.translateMapKeyLabel(data).entrySet()) {
+        for (Map.Entry<String, Number> entry : safeguardData.getStates().entrySet()) {
             series.set(entry.getKey(), entry.getValue());
         }
 
@@ -103,7 +95,7 @@ public class ControlChartsFactory {
         horizontalBarModel.setLegendPlacement(LegendPlacement.OUTSIDE);
 
         Axis xAxis = horizontalBarModel.getAxis(AxisType.X);
-        xAxis.setMax(ChartUtils.getMax(data.values()));
+        xAxis.setMax(ChartUtils.getMax(safeguardData.getStates().values()));
         xAxis.setLabel(getMessage(MESSAGES, "chart.legend.safeguard"));
         xAxis.setTickCount(5);
 
@@ -111,7 +103,7 @@ public class ControlChartsFactory {
         yAxis.setLabel(getMessage(MESSAGES, "chart.legend.states"));
 
         horizontalBarModel.setExtender("veriniceHorizontalBar");
-        horizontalBarModel.setSeriesColors(ChartUtils.getColors(data.keySet()));
+        horizontalBarModel.setSeriesColors(safeguardData.getColors());
         horizontalBarModel.setShadow(false);
 
         return horizontalBarModel;

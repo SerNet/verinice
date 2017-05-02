@@ -19,8 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view.charts;
 
-import java.util.Map;
-
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -28,6 +26,7 @@ import javax.faces.bean.ManagedProperty;
 import org.primefaces.model.chart.BarChartModel;
 
 import sernet.verinice.web.poseidon.services.ChartService;
+import sernet.verinice.web.poseidon.services.ModuleStateData;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
 
 /**
@@ -48,8 +47,8 @@ public class ModuleTotalView {
 
     @PostConstruct
     public void init(){
-        Map<String, Map<String, Number>> data = getChartService().groupByModuleChapterSafeguardStates("", new GroupByStrategySum());
-        ModuleChartsFactory chartModelFactory = new ModuleChartsFactory(data);
+        ModuleStateData moduleStatedata = getChartService().groupByModuleChapterSafeguardStates("", new GroupByStrategySum());
+        ModuleChartsFactory chartModelFactory = new ModuleChartsFactory(moduleStatedata.getData());
         horizontalChartModel = chartModelFactory.getHorizontalBarChartModel();
         verticalChartModel = chartModelFactory.getVerticalBarChartModel();
     }

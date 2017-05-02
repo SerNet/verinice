@@ -31,6 +31,7 @@ import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
 import sernet.verinice.web.poseidon.services.ChartService;
+import sernet.verinice.web.poseidon.services.StateData;
 
 /**
  * Provide backing beands for charts of ISO
@@ -45,7 +46,7 @@ public class ControlsIsoTotalChartView {
     @ManagedProperty("#{chartService}")
     private ChartService chartService;
 
-    private Map<String, Number> states;
+    private StateData states;
 
     private PieChartModel pieModel;
 
@@ -76,7 +77,7 @@ public class ControlsIsoTotalChartView {
         this.calculated = true;
     }
 
-    private Map<String, Number> getStates() {
+    private StateData getStates() {
         if (states == null) {
             states = getChartService().aggregateControlStates(scopeId);
         }
@@ -84,16 +85,7 @@ public class ControlsIsoTotalChartView {
     }
 
     public boolean dataAvailable() {
-        return states != null && checkValue();
-    }
-
-    private boolean checkValue(){
-        for(Number number : states.values()){
-            if(number.intValue() > 0){
-                return true;
-            }
-        }
-        return false;
+        return states.dataAvailable();
     }
 
     public void setPieModel(PieChartModel pieModel) {

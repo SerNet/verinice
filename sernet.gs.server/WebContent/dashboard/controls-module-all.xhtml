@@ -27,7 +27,7 @@
 							</div>
 						</ui:fragment>
 						<ui:fragment
-							rendered="#{moduleAllChartView.totalCalculated and (not empty moduleAllChartView.allStates)}">
+							rendered="#{moduleAllChartView.totalCalculated and moduleAllChartView.dataAvailable()}">
 							<div class="ui-g ui-fluid">
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
 									<p:chart id="veriniceHorizontalBar" type="bar"
@@ -43,7 +43,7 @@
 						</ui:fragment>
 
 						<ui:fragment
-							rendered="#{moduleAllChartView.totalCalculated and (empty moduleAllChartView.allStates)}">
+							rendered="#{moduleAllChartView.totalCalculated and (not moduleAllChartView.dataAvailable())}">
 							<p class="no-data">#{msgWeb['no-data']}</p>
 						</ui:fragment>
 					</h:form>
@@ -70,7 +70,7 @@
 						</ui:fragment>
 
 						<ui:fragment id="charts"
-							rendered="#{moduleAllChartView.allItNetworksCalculated and (not empty moduleAllChartView.charts)}">
+							rendered="#{moduleAllChartView.allItNetworksCalculated and moduleAllChartView.dataAvailable()}">
 							<ui:repeat value="#{moduleAllChartView.charts}" var="chart"
 								toggleable="true">
 								<div class="ui-g">
@@ -90,7 +90,7 @@
 							</ui:repeat>
 						</ui:fragment>
 						<ui:fragment
-							rendered="#{moduleAllChartView.totalCalculated and (empty moduleAllChartView.charts)}">
+							rendered="#{moduleAllChartView.totalCalculated and (not moduleAllChartView.dataAvailable())}">
 							<p class="no-data">#{msgWeb['no-data']}</p>
 						</ui:fragment>
 					</p:panel>
@@ -103,25 +103,6 @@
 					update=":all-chapter" autoRun="true" delay="2">
 				</p:remoteCommand>
 			</h:form>
-
-
-			<ui:repeat value="#{moduleAllChartView.charts}" var="chart"
-				toggleable="true">
-				<div class="ui-g-12" toggleable="true">
-					<p:panel header="#{chart.title}">
-						<div class="ui-g ui-fluid">
-							<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
-								<p:chart id="verticalBar" type="bar"
-									model="#{chart.firstChartModel}" responsive="true" />
-							</div>
-							<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
-								<p:chart id="horizontalBar" type="bar"
-									model="#{chart.secondChartModel}" responsive="true" />
-							</div>
-						</div>
-					</p:panel>
-				</div>
-			</ui:repeat>
 		</div>
 	</ui:define>
 

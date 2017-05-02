@@ -37,6 +37,7 @@ import org.primefaces.model.chart.PieChartModel;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.web.poseidon.services.ChartService;
 import sernet.verinice.web.poseidon.services.MenuService;
+import sernet.verinice.web.poseidon.services.StateData;
 
 /**
  *
@@ -64,7 +65,7 @@ public class ControlsIsoAllChartView {
 
     private boolean allCatalogsCalculated;
 
-    private Map<String, Number> states;
+    private StateData safeguardData;
 
     private Integer scopeId;
 
@@ -83,20 +84,11 @@ public class ControlsIsoAllChartView {
     }
 
     public boolean dataAvailable() {
-        return states != null && checkValue();
-    }
-
-    private boolean checkValue(){
-        for(Number number : states.values()){
-            if(number.intValue() > 0){
-                return true;
-            }
-        }
-        return false;
+        return safeguardData.dataAvailable();
     }
 
     private void createTotalIsmsCatalogsChartModels() {
-        ControlChartsFactory allChartModelFactory = new ControlChartsFactory(states);
+        ControlChartsFactory allChartModelFactory = new ControlChartsFactory(safeguardData);
         pieModel = allChartModelFactory.getPieChartModel();
         horizontalBarChartModel = allChartModelFactory.getHorizontalBarModel();
         totalCalculated = true;
@@ -104,7 +96,7 @@ public class ControlsIsoAllChartView {
 
     public void loadTotalIsmsCatalogs() {
         charts = new ArrayList<>();
-        states = chartService.aggregateControlStates(scopeId);
+        safeguardData = chartService.aggregateControlStates(scopeId);
         createTotalIsmsCatalogsChartModels();
     }
 
@@ -117,21 +109,21 @@ public class ControlsIsoAllChartView {
 
             if (catalog.getScopeId().equals(scopeId)) {
 
-                Map<String, Number> catalogStates = getChartService().aggregateControlStates(scopeId, catalog.getDbId());
+                StateData catalogStates = getChartService().aggregateControlStates(scopeId, catalog.getDbId());
 
-                if (catalogStates.isEmpty())
-                    continue;
+                if (catalogStates.dataAvailable()) {
 
-                VeriniceChartRow item = new VeriniceChartRow();
-                ControlChartsFactory chartModelFactory = new ControlChartsFactory(catalogStates);
+                    VeriniceChartRow item = new VeriniceChartRow();
+                    ControlChartsFactory chartModelFactory = new ControlChartsFactory(catalogStates);
 
-                item.setTitle(catalog.getTitle());
-                item.setFirstChartModel(chartModelFactory.getPieChartModel());
-                HorizontalBarChartModel horizontalBarModel = chartModelFactory.getHorizontalBarModel();
-                item.setSecondChartModel(horizontalBarModel);
-                Axis axis = horizontalBarModel.getAxis(AxisType.X);
-                axis.setMax(horizontalBarChartModel.getAxis(AxisType.X).getMax());
-                charts.add(item);
+                    item.setTitle(catalog.getTitle());
+                    item.setFirstChartModel(chartModelFactory.getPieChartModel());
+                    HorizontalBarChartModel horizontalBarModel = chartModelFactory.getHorizontalBarModel();
+                    item.setSecondChartModel(horizontalBarModel);
+                    Axis axis = horizontalBarModel.getAxis(AxisType.X);
+                    axis.setMax(horizontalBarChartModel.getAxis(AxisType.X).getMax());
+                    charts.add(item);
+                }
             }
         }
 
