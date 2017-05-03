@@ -156,6 +156,17 @@ public class TaskService implements ITaskService {
         return doGetTaskList(new TaskParameter(getAuthService().getUsername()));
     }
     
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskService#getTaskList()
+     */
+    @Override
+    public List<ITask> getCurrentUserTaskList(ITaskParameter parameter) {
+        parameter.setUsername(getAuthService().getUsername());
+        parameter.setAllUser(false);
+        return doGetTaskList(parameter);
+    }
+
+
     /**
      * Returns tasks created after a date for user with name username.
      * If no tasks exists an empty list is returned. If date is null
