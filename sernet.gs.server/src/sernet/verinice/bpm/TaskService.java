@@ -148,17 +148,11 @@ public class TaskService implements ITaskService {
     
     private Set<String> taskReminderBlacklist;
     
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.ITaskService#getTaskList()
-     */
     @Override
     public List<ITask> getCurrentUserTaskList() {
         return doGetTaskList(new TaskParameter(getAuthService().getUsername()));
     }
     
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.ITaskService#getTaskList()
-     */
     @Override
     public List<ITask> getCurrentUserTaskList(ITaskParameter parameter) {
         parameter.setUsername(getAuthService().getUsername());
