@@ -9,6 +9,7 @@ import java.util.Set;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.model.bpm.TaskParameter;
 
 /**
  * Empty dummy implementation of {@link ITaskService}
@@ -42,6 +43,11 @@ public class TaskServiceDummy implements ITaskService {
 
     @Override
     public List<ITask> getCurrentUserTaskList() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<ITask> getCurrentUserTaskList(ITaskParameter parameter) {
         return Collections.emptyList();
     }
 
@@ -142,6 +148,5 @@ public class TaskServiceDummy implements ITaskService {
     @Override
     public void saveChangedElementPropertiesToCnATreeElement(String taskId, String uuid) {
     }
-    
-    
+
 }

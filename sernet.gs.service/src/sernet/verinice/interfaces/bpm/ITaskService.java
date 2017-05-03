@@ -55,6 +55,18 @@ public interface ITaskService {
     List<ITask> getCurrentUserTaskList();
     
     /**
+     * Returns the task list for currently logged in user. If no tasks exists or
+     * current user cannot be determined an empty list is returned.
+     *
+     * @param parameter
+     *            If the parameter contains a user information it is overwritten
+     *            by this method with the current user name.
+     *
+     * @return the task list of the currently logged in user.
+     */
+    List<ITask> getCurrentUserTaskList(ITaskParameter parameter);
+
+    /**
      * Returns tasks created after a date for user with name username.
      * If no tasks exists an empty list is returned.
      * 
