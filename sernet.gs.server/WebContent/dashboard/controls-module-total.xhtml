@@ -27,7 +27,7 @@
 							</div>
 						</ui:fragment>
 						<ui:fragment id="charts"
-							rendered="#{moduleAllChartView.totalCalculated and (not empty moduleAllChartView.allStates)}">
+							rendered="#{moduleAllChartView.totalCalculated and moduleAllChartView.dataAvailable()}">
 
 							<div class="ui-g ui-fluid">
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
@@ -43,7 +43,7 @@
 							</div>
 						</ui:fragment>
 
-						<ui:fragment rendered="#{moduleAllChartView.totalCalculated and (empty moduleAllChartView.allStates)}">
+						<ui:fragment rendered="#{moduleAllChartView.totalCalculated and (not moduleAllChartView.dataAvailable())}">
 							<p class="no-data" >#{msgWeb['no-data']}</p>
 						</ui:fragment>
 
