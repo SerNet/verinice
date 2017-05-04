@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.graph;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -59,7 +60,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @see http://jgrapht.org/
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class GraphService implements IGraphService {
+public class GraphService implements IGraphService, Serializable {
     
     private static final Logger LOG = Logger.getLogger(GraphService.class);
     private static final Logger LOG_RUNTIME = Logger.getLogger(GraphService.class.getName() + ".runtime");

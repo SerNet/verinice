@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view.charts;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,7 @@ import sernet.verinice.web.poseidon.services.StateData;
  */
 @ManagedBean(name = "controlsAllChartView")
 @ViewScoped
-public class ControlsAllChartView {
+public class ControlsAllChartView implements Serializable {
 
     @ManagedProperty("#{chartService}")
     private ChartService chartService;

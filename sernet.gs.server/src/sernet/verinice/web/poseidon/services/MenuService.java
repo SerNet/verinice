@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.services;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -48,7 +49,7 @@ import sernet.verinice.model.iso27k.Organization;
  */
 @ManagedBean(name = "menuService")
 @ViewScoped
-public class MenuService {
+public class MenuService implements Serializable {
 
     private List<ITVerbund> itNetworks;
 
@@ -103,6 +104,7 @@ public class MenuService {
     public void loadMenuData() {
 
         IGraphService graphService = getGraphService();
+        graphService.setLoadLinks(false);
         GraphElementLoader graphElementLoader = new GraphElementLoader();
         graphElementLoader.setTypeIds(new String[] { ITVerbund.TYPE_ID, Organization.TYPE_ID, ControlGroup.TYPE_ID });
         graphElementLoader.setElementFilter(new IElementFilter() {

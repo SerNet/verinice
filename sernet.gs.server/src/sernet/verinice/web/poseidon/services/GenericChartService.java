@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.services;
 
+import java.io.Serializable;
+
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.graph.IGraphService;
 import sernet.verinice.service.model.IObjectModelService;
@@ -30,7 +32,7 @@ import sernet.verinice.service.model.IObjectModelService;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public abstract class GenericChartService {
+public abstract class GenericChartService implements Serializable {
 
     IObjectModelService getObjectService() {
         return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
