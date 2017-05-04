@@ -40,6 +40,16 @@ package sernet.verinice.interfaces.graph;
  */
 public interface IGraphService {
     
+    /**
+     * Disables the loading of links if param loadLinks
+     * is false regardless of the relation ids.
+     *
+     * By default the loading of links is enabled.
+     *
+     * @param loadLinks If false no links are loaded at all
+     */
+    void setLoadLinks(boolean loadLinks);
+
     void setRelationIds(String[] relationIds);
     
     /**

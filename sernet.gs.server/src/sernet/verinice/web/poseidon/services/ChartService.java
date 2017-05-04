@@ -247,6 +247,7 @@ public class ChartService extends GenericChartService {
 
     private VeriniceGraph loadSafeguards(Integer scopeId, String... typeIds) {
         IGraphService graphService = getGraphService();
+        graphService.setLoadLinks(false);
         IGraphElementLoader graphElementLoader = new GraphElementLoader();
         graphElementLoader.setTypeIds(typeIds);
         if (scopeId != null) {

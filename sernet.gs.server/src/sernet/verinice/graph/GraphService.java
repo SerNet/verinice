@@ -66,6 +66,8 @@ public class GraphService implements IGraphService {
     
     private VeriniceGraph graph;
     
+    private boolean loadLinks = true;
+
     private String[] relationIds;
     
     private List<IGraphElementLoader> loaderList;
@@ -95,8 +97,12 @@ public class GraphService implements IGraphService {
     private void doCreate(){
         long time = initRuntime();
         uuidMap.clear();
-        loadVerticesAndRelatives();     
-        loadLinks();
+        loadVerticesAndRelatives();
+        if(isLoadLinks()) {
+            loadLinks();
+        } else {
+            LOG.info("Loading of links is disabled.");
+        }
         log();
         logRuntime("Graph generation runtime: ", time);
     }
@@ -190,6 +196,15 @@ public class GraphService implements IGraphService {
     @Override
     public VeriniceGraph getGraph() {
         return graph;
+    }
+
+    public boolean isLoadLinks() {
+        return loadLinks;
+    }
+
+    @Override
+    public void setLoadLinks(boolean loadLinks) {
+        this.loadLinks = loadLinks;
     }
 
     public String[] getRelationIds() {
