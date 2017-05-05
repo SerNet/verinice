@@ -490,7 +490,7 @@ public class EditBean {
     // TODO: impl multiselect
     public void onChange(ValueChangeEvent event) {
         String key = (String) ((UIInput) event.getComponent()).getAttributes().get("key");
-        String newValue = (String) event.getNewValue();
+        String newValue = handleBooleanValue(event.getNewValue());
 
         if (StringUtils.isNotEmpty(key)) {
             PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(getElement().getEntityType().getId(), key);
@@ -502,6 +502,22 @@ public class EditBean {
         if (key.contains(NAME_SUFFIX)) {
             setTitle(newValue + Util.getMessage(BOUNDLE_NAME, "change.request"));
         }
+    }
+
+    /**
+     * Returns a string representation of boolean, so we can store the value
+     * properly in our database.
+     */
+    private String handleBooleanValue(Object newValue) {
+        if (newValue instanceof Boolean) {
+            if ((Boolean) newValue) {
+                return "1";
+            } else {
+                return "0";
+            }
+        }
+
+        return (String) newValue;
     }
 
     private String getSingleSelectOptionId(String newValue, PropertyType propertyType) {

@@ -13,7 +13,7 @@
 		<p:panel id="title" header="#{edit.title}" rendered="#{edit.element!=null}">
 			<p:outputPanel styleClass="ui-g #{edit.getSaveButtonClass()}">
 				<p:remoteCommand name="submitEditForm" process="@form"
-					update=":editForm :tableForm :navForm" action="#{edit.save}" />
+					update=":editForm :tableForm :navForm" action="#{edit.save()}" />
 				<div class="ui-g-4">
 					<p:commandButton id="submit" value="#{msgEdit['save']}"
 						action="#{edit.save}" update=":editForm :tableForm msg" />
