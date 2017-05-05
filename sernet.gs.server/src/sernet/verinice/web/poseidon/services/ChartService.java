@@ -198,6 +198,7 @@ public class ChartService extends GenericChartService {
     public StateData aggregateControlStates(int scopeId, int catalogId) {
 
         IGraphService graphService = getGraphService();
+        graphService.setLoadLinks(false);
         IGraphElementLoader graphElementLoader = new GraphElementLoader();
         graphElementLoader.setTypeIds(new String[] {Organization.TYPE_ID, ControlGroup.TYPE_ID, Control.TYPE_ID });
         graphElementLoader.setScopeId(scopeId);
@@ -223,6 +224,7 @@ public class ChartService extends GenericChartService {
     public StateData aggregateControlStates(int scopeId) {
 
         IGraphService graphService = getGraphService();
+        graphService.setLoadLinks(false);
         IGraphElementLoader graphElementLoader = new GraphElementLoader();
         graphElementLoader.setTypeIds(new String[] { Organization.TYPE_ID, ControlGroup.TYPE_ID, Control.TYPE_ID });
         graphService.setLoader(graphElementLoader);
