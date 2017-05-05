@@ -47,7 +47,6 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
-import java.util.Base64;
 import java.util.Calendar;
 
 import javax.annotation.Resource;
@@ -68,6 +67,7 @@ import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.X509Extensions;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.Arrays;
+import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.junit.Test;
 
@@ -332,8 +332,8 @@ public class CryptoTest extends ContextConfiguration {
         password.getChars(0, password.length(), keyChar, 0);
         PBEKeySpec pbeKeySpec = new PBEKeySpec(keyChar);
 
-        final byte[] bytes = Base64.getDecoder().decode(
-                cypherText.getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING));
+        final byte[] bytes = Base64
+                .decode(cypherText.getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING));
         final byte[] salt = java.util.Arrays.copyOf(bytes, CRYPTO_SALT_DEFAULT_LENGTH);
         final byte[] cipherText = java.util.Arrays.copyOfRange(bytes,
                                                      CRYPTO_SALT_DEFAULT_LENGTH,
@@ -385,7 +385,7 @@ public class CryptoTest extends ContextConfiguration {
         System.arraycopy(saltBytes, 0, saltAndEncrypted, 0, saltBytes.length);
         System.arraycopy(encrypted, 0, saltAndEncrypted, saltBytes.length, encrypted.length);
 
-        byte[] encoded = Base64.getEncoder().encode(saltAndEncrypted);
+        byte[] encoded = Base64.encode(saltAndEncrypted);
         final String encodedString = new String(encoded, CRYPTO_DEFAULT_ENCODING);
         return encodedString;
     }

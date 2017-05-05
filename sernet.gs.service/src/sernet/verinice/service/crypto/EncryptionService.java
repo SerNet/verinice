@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
-import java.util.Base64;
+
+import org.bouncycastle.util.encoders.Base64;
 
 import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.encryption.EncryptionException;
@@ -30,10 +30,6 @@ import sernet.verinice.interfaces.encryption.IEncryptionService;
  * 
  */
 public class EncryptionService implements IEncryptionService {
-    
-    private final static String ENCODING_UTF8 = "UTF-8";
-    
-    private final static Charset CHARSET_UTF8 = Charset.forName(ENCODING_UTF8);
     
     public EncryptionService(){}
     
@@ -156,7 +152,7 @@ public class EncryptionService implements IEncryptionService {
     public String decrypt(String cypherText, char[] password, String salt) throws EncryptionException {
         byte[] cypherTextBytes = new byte[0];
         try{
-            cypherTextBytes = Base64.getDecoder().decode(cypherText.getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING));
+            cypherTextBytes = Base64.decode(cypherText.getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING));
         } catch (UnsupportedEncodingException e){
             throw new EncryptionException("Unsupported encoding", e);
         }
