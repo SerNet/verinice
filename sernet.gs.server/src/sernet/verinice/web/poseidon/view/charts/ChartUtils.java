@@ -52,7 +52,9 @@ public abstract class ChartUtils {
 
     private enum DiagramColors {
 
-        NO("FF4747"), NOT_APPLICABLE("BFBFBF"), PARTIALLY("FFE47A"), UNEDITED("4a93de"), YES("5fcd79");
+        // available colors from poseidon template: '#00acac', '#2f8ee5',
+        // '#efa64c', '#6c76af', '#f16383', '#63c9f1', '#2d353c'
+        NO("f16383"), NOT_APPLICABLE("2d353c"), PARTIALLY("EFA64C"), UNEDITED("2f8ee5"), YES("00acac");
 
         private String color;
 
