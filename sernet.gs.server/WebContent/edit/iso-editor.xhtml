@@ -37,7 +37,8 @@
 								<p:commandButton id="newButton"
 									onclick="PF('newDialog').show();"
 									disabled="#{empty tree.handlers or (not auth.addElement and not auth.addGroup)}"
-									icon="fa fa-fw fa-file-o" value="New" title="New" />
+									icon="fa fa-fw fa-file-o" value="#{msgTree['new']}"
+									title="#{msgTree['new']}" />
 								<p:dialog id="newDialog" widgetVar="newDialog">
 									<p:dataTable id="newElementTable" var="h"
 										value="#{tree.handlers}" styleClass="new-iso-object-panel">
@@ -63,9 +64,18 @@
 								</p:dialog>
 							</div>
 							<div class="ui-g-4">
+								<p:commandButton onclick="submitEditForm();"
+									disabled="#{edit.element==null}" icon="fa fa-fw fa-save"
+									value="#{msgTree['save']}" title="#{msgTree['save']}" />
+
+							</div>
+							<div class="ui-g-4">
+								<p:commandButton onclick="PF('confirmDialog').show()"
+									disabled="#{edit.element==null}" icon="fa fa-fw fa-remove"
+									value="#{msgTree['delete']}" title="#{msgTree['delete']}" />
 								<p:dialog id="confirmDialog" modal="true"
 									message="#{msgTree['confirm-deletion']} #{edit.element.title} ?"
-									header="Delete" severity="alert" widgetVar="confirmDialog">
+									header="#{msgTree['delete']}" severity="alert" widgetVar="confirmDialog">
 									<p:panelGrid>
 										<p:row>
 											<p:column colspan="2">
@@ -89,15 +99,6 @@
 										</p:row>
 									</p:panelGrid>
 								</p:dialog>
-								<p:commandButton onclick="submitEditForm();"
-									disabled="#{edit.element==null}" icon="fa fa-fw fa-save"
-									value="Save" title="Save" />
-
-							</div>
-							<div class="ui-g-4">
-								<p:commandButton onclick="PF('confirmDialog').show()"
-									disabled="#{edit.element==null}" icon="fa fa-fw fa-remove"
-									value="Delete" title="Delete" />
 							</div>
 
 							<!-- Tree Elements -->
