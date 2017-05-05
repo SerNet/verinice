@@ -41,6 +41,7 @@ import sernet.verinice.service.model.IObjectModelService;
 import sernet.verinice.web.Messages;
 
 /**
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
@@ -54,7 +55,7 @@ public abstract class ChartUtils {
 
         // available colors from poseidon template: '#00acac', '#2f8ee5',
         // '#efa64c', '#6c76af', '#f16383', '#63c9f1', '#2d353c'
-        NO("f16383"), NOT_APPLICABLE("2d353c"), PARTIALLY("EFA64C"), UNEDITED("2f8ee5"), YES("00acac");
+        NO("f16383"), NOT_APPLICABLE("63c9f1"), PARTIALLY("EFA64C"), UNEDITED("2f8ee5"), YES("00acac");
 
         private String color;
 
