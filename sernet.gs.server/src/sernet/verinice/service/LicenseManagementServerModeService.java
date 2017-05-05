@@ -922,7 +922,7 @@ public class LicenseManagementServerModeService
     protected LicenseManagementEntry getValidLongestEntry(
             Set<LicenseManagementEntry> entries){
         if (entries.size() == 1){
-            return entries.stream().findFirst().get();
+            return entries.iterator().next();
         } else {
             LicenseManagementEntry oldestEntry = null;
             for (LicenseManagementEntry possibleEntry : entries) {

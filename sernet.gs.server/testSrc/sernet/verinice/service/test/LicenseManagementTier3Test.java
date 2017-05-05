@@ -455,7 +455,7 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
             Assert.assertNotNull(entries);
             Assert.assertTrue(entries.size() > 0);
         String plainContentId = 
-                licenseManagementService.decrypt(entries.stream().findFirst().get(), 
+                licenseManagementService.decrypt(entries.iterator().next(), 
                         LicenseManagementEntry.COLUMN_CONTENTID);
         Assert.assertEquals(CONTENT_ID, plainContentId);
         
