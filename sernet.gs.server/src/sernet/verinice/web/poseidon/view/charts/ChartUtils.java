@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view.charts;
 
+import static sernet.gs.web.Util.getMessage;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -27,18 +29,18 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.model.chart.ChartModel;
 
 import sernet.gs.service.NumericStringComparator;
-import sernet.hui.common.VeriniceContext;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.service.model.IObjectModelService;
-import sernet.verinice.web.Messages;
+import sernet.verinice.web.poseidon.services.CompareByTitle;
 
 /**
  *
@@ -46,6 +48,8 @@ import sernet.verinice.web.Messages;
  *
  */
 public abstract class ChartUtils {
+
+    private static final String BOUNDLE_NAME = "sernet.verinice.web.WebMessages";
 
     protected static final String IMPLEMENTATION_STATUS_UNEDITED = "SingleSelectDummyValue";
 
@@ -101,8 +105,13 @@ public abstract class ChartUtils {
     public static String getColors(Iterable<String> controlStates) {
 
         java.util.List<String> colors = new ArrayList<>();
-        for (String state : controlStates) {
 
+        SortedSet<String> sortedByLabels = new TreeSet<>(new CompareByTitle());
+        for(String state : controlStates){
+            sortedByLabels.add(state);
+        }
+
+        for (String state : sortedByLabels) {
             if (states2Colors.containsKey(state)) {
                 colors.add(states2Colors.get(state).toString());
             } else {
@@ -150,21 +159,18 @@ public abstract class ChartUtils {
         return humanReadableLabels;
     }
 
-    private static String getLabel(String propertyId) {
+    public static String getLabel(String propertyId) {
 
-        if (MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET.equals(propertyId)) {
-            return Messages.getString(IMPLEMENTATION_STATUS_UNEDITED);
+        if (isUnedited(propertyId)) {
+            return getMessage(BOUNDLE_NAME, IMPLEMENTATION_STATUS_UNEDITED);
         }
 
-        if (Control.IMPLEMENTED_NOTEDITED.equals(propertyId)) {
-            return Messages.getString(IMPLEMENTATION_STATUS_UNEDITED);
-        }
-
-        return getObjectModelService().getLabel(propertyId);
+        return getMessage(BOUNDLE_NAME, propertyId);
     }
 
-    private static IObjectModelService getObjectModelService() {
-        return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
+    public static boolean isUnedited(String propertyId) {
+        return MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET.equals(propertyId) || Control.IMPLEMENTED_NOTEDITED.equals(propertyId);
     }
+
 
 }

@@ -29,12 +29,10 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.log4j.Logger;
 
 public final class Util {
 
 	private static final String DEFAULT_COMPONENT_ID = "massagePanel";
-    private static final Logger LOG = Logger.getLogger(Util.class);
 
 	private static String lastComponentId;
 	

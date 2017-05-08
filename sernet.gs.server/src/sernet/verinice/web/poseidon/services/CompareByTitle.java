@@ -19,13 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.services;
 
+import static sernet.verinice.web.poseidon.view.charts.ChartUtils.getLabel;
+
 import java.util.Comparator;
 
 import sernet.gs.service.NumericStringComparator;
-import sernet.hui.common.VeriniceContext;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.service.model.IObjectModelService;
-import sernet.verinice.web.Messages;
 
 /**
  * Sorts with the {@link NumericStringComparator} by the messages of a property
@@ -36,23 +34,10 @@ import sernet.verinice.web.Messages;
  */
 public final class CompareByTitle implements Comparator<String> {
 
-    static final String IMPLEMENTATION_STATUS_UNEDITED = "SingleSelectDummyValue";
+    private static final NumericStringComparator numericStringComparator = new NumericStringComparator();
 
     @Override
     public int compare(String o1, String o2) {
-        return new NumericStringComparator().compare(getLabel(o1), getLabel(o2));
-    }
-
-    private String getLabel(String value) {
-
-        if (MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET.equals(value)) {
-            return Messages.getString(IMPLEMENTATION_STATUS_UNEDITED);
-        }
-
-        return getObjectService().getLabel(value);
-    }
-
-    private IObjectModelService getObjectService() {
-        return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
+        return numericStringComparator.compare(getLabel(o1), getLabel(o2));
     }
 }

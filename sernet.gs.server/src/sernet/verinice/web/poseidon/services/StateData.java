@@ -40,10 +40,13 @@ public class StateData {
 
     private SortedMap<String, Number> translatedMessageKeysMap;
 
+    private String colors;
+
     public StateData(String scopeName, Map<String, Number> states) {
         this.scopeName = scopeName;
         this.states = new TreeMap<>(new CompareByTitle());
         this.states.putAll(states);
+        this.colors = ChartUtils.getColors(this.states.keySet());
     }
 
     public String getScopeName() {
@@ -87,7 +90,7 @@ public class StateData {
      * charts.
      */
     public String getColors() {
-        return ChartUtils.getColors(states.keySet());
+        return colors;
     }
 
 }
