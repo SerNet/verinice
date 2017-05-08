@@ -38,7 +38,7 @@
 								</p:commandButton>
 							</div>
 							<ui:fragment rendered="#{not empty task.selectedTask.outcomes}">
-								<div class="ui-g-12">
+								<div id="task-action-handler" class="ui-g-12">
 									<p:selectOneButton value="#{task.outcomeId}" label="default">
 										<f:selectItems value="#{task.selectedTask.outcomes}"
 											var="outcome" itemLabel="#{outcome.value}"

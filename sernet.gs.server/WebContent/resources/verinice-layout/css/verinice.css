@@ -162,3 +162,9 @@ p.no-data {
 #tableForm:taskTable .unread {
 	font-weight: bold;
 }
+
+/* use color of normal buttons for the selectOneButton menu in task view */
+body #task-action-handler .ui-buttonset .ui-button {
+	color: #FFFFFF;
+	background: #666666;
+}
