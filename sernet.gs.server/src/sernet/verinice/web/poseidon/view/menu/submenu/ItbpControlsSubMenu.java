@@ -23,6 +23,7 @@ import org.primefaces.model.menu.DefaultMenuItem;
 
 import sernet.gs.web.Util;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.web.poseidon.services.MenuService;
 import sernet.verinice.web.poseidon.view.menu.menuitem.ControlsChartMenuItem;
 
@@ -45,7 +46,15 @@ public class ItbpControlsSubMenu extends AbstractChartSubMenu {
 
     @Override
     protected void loadChildren() {
+        if(menuService.isAllMenuVisible(MassnahmenUmsetzung.HIBERNATE_TYPE_ID)) {
+            addAllAndTotalMenu();
+        }
+        for (ITVerbund itNetwork : menuService.getVisibleItNetworks()) {
+            super.addElement(new ControlsChartMenuItem(itNetwork));
+        }
+    }
 
+    protected void addAllAndTotalMenu() {
         DefaultMenuItem all = new DefaultMenuItem(Util.getMessage(MESSAGES, "menu.all"));
         all.setUrl("/dashboard/controls-all.xhtml");
         all.setIcon("fa fa-fw fa-area-chart");
@@ -56,10 +65,6 @@ public class ItbpControlsSubMenu extends AbstractChartSubMenu {
 
         addElement(all);
         addElement(total);
-
-        for (ITVerbund itNetwork : menuService.getVisibleItNetworks()) {
-            super.addElement(new ControlsChartMenuItem(itNetwork));
-        }
     }
 
     @Override

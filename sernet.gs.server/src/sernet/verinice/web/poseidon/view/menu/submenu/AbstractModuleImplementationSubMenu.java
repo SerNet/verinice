@@ -24,6 +24,7 @@ import org.primefaces.model.menu.MenuItem;
 
 import sernet.gs.web.Util;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.web.poseidon.services.MenuService;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategy;
 
@@ -48,7 +49,6 @@ public abstract class AbstractModuleImplementationSubMenu extends AbstractChartS
         this.menuService = menuService;
     }
 
-
     abstract protected MenuItem getMenuItem(ITVerbund itNetwork);
 
     /**
@@ -62,7 +62,15 @@ public abstract class AbstractModuleImplementationSubMenu extends AbstractChartS
 
     @Override
     protected void loadChildren() {
+        if(menuService.isAllMenuVisible(MassnahmenUmsetzung.HIBERNATE_TYPE_ID)) {
+            addAllAndTotalMenu();
+        }
+        for (ITVerbund itNetwork : menuService.getVisibleItNetworks()) {
+            addElement(getMenuItem(itNetwork));
+        }
+    }
 
+    protected void addAllAndTotalMenu() {
         DefaultMenuItem bausteinUmsAll = new DefaultMenuItem(Util.getMessage(MESSAGES, "menu.all"));
         bausteinUmsAll.setUrl("/dashboard/controls-module-all.xhtml?crunchStrategy=" + getStrategy());
         bausteinUmsAll.setIcon("fa fa-fw fa-area-chart");
@@ -72,10 +80,5 @@ public abstract class AbstractModuleImplementationSubMenu extends AbstractChartS
         bausteinUmsTotal.setUrl("/dashboard/controls-module-total.xhtml?crunchStrategy=" + getStrategy());
         bausteinUmsTotal.setIcon("fa fa-fw fa-area-chart");
         addElement(bausteinUmsTotal);
-
-        for (ITVerbund itNetwork : menuService.getVisibleItNetworks()) {
-            addElement(getMenuItem(itNetwork));
-        }
     }
-
 }

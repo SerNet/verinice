@@ -23,11 +23,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
+
+import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.hui.common.VeriniceContext;
@@ -39,6 +43,7 @@ import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.service.model.ICountElementService;
 
 /**
  * Provides several {@link CnATreeElement} objects which are necessary for
@@ -48,14 +53,18 @@ import sernet.verinice.model.iso27k.Organization;
  *
  */
 @ManagedBean(name = "menuService")
-@ViewScoped
+@SessionScoped
 public class MenuService implements Serializable {
+
+    private static final Logger log = Logger.getLogger(MenuService.class);
 
     private List<ITVerbund> itNetworks;
 
     private List<Organization> organizations;
 
     private List<ControlGroup> catalogs;
+
+    private Map<String, Boolean> typeIsAllMenuVisibleMap = new HashMap<>();
 
     /**
      * Returns a Set of all IT-Networks which the current logged in user is
@@ -95,6 +104,44 @@ public class MenuService implements Serializable {
 
         loadMenuData();
         return catalogs;
+    }
+
+    /**
+     * Returns true if a menu entry with data of all objects of a
+     * given type is visible.
+     *
+     * The return values is cached in a map.
+     *
+     * @param typeID
+     *            An object type id
+     * @return true if an a "All" menu entry is visible false if not
+     */
+    public boolean isAllMenuVisible(String typeID) {
+        Boolean isAllMenuVisible = typeIsAllMenuVisibleMap.get(typeID);
+        if (isAllMenuVisible == null) {
+            isAllMenuVisible = loadAllMenuState(typeID);
+            typeIsAllMenuVisibleMap.put(typeID, isAllMenuVisible);
+        }
+        return isAllMenuVisible;
+    }
+
+    /**
+     * Loads the number of elements and a limit for a given type ID. If the
+     * number is smaller or equal than the limit an "All" menu entry is visible.
+     *
+     * @param typeID
+     *            An object type id
+     * @return true if an a "All" menu entry is visible false if not
+     */
+    protected boolean loadAllMenuState(String typeID) {
+        Map<String, Long> idNumberMap = getCountElementService().getNumberOfAllTypes();
+        Integer typeLimit = getCountElementService().getLimit(typeID);
+        boolean isAllMenuVisible = idNumberMap.get(typeID) <= typeLimit || typeLimit < 0;
+        if (log.isDebugEnabled()) {
+            log.debug("All menu visible: " + isAllMenuVisible + " (number of " + typeID + ": "
+                    + idNumberMap.get(typeID) + ", limit: " + typeLimit + ")");
+        }
+        return isAllMenuVisible;
     }
 
     /**
@@ -150,6 +197,10 @@ public class MenuService implements Serializable {
 
     IGraphService getGraphService() {
         return (IGraphService) VeriniceContext.get(VeriniceContext.GRAPH_SERVICE);
+    }
+
+    ICountElementService getCountElementService() {
+        return (ICountElementService) VeriniceContext.get(VeriniceContext.COUNT_SERVICE);
     }
 
 }

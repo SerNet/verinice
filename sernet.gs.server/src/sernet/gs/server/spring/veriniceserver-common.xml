@@ -4,7 +4,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="
-	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" >
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+  http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd" >
 
 	<!--
 	All configuration options for the verinice server are available in the
@@ -91,6 +92,7 @@ This variant:
                 <entry key="licenseManagementService" value-ref="licenseManagementService"/>
                 <entry key="encryptionService" value-ref="encryptionService" />
 				<entry key="graphService" value-ref="graphService" />
+        		<entry key="countService" value-ref="countService" />
 			</map>
 		</property>
 	</bean>
@@ -324,6 +326,7 @@ This variant:
         <property name="cnaLinkDao" ref="cnaLinkDao" />
     </bean>
     
+<<<<<<< HEAD
      <bean id="reportHQLService" class="sernet.verinice.service.ReportHQLService" />
      
 	<bean id="objectModelService" class="sernet.verinice.service.model.HUIObjectModelService">
@@ -331,8 +334,40 @@ This variant:
 	</bean>
     
      <bean id="titleCache" class="sernet.verinice.service.ElementTitleCache">
+||||||| merged common ancestors
+     <bean id="reportHQLService" class="sernet.verinice.service.ReportHQLService" />
+     
+	<bean id="objectModelService" class="sernet.verinice.service.model.HUIObjectModelService">
+		<property name="huiTypeFactory" ref="huiTypeFactory" />
+	</bean>
+     
+     <bean id="titleCache" class="sernet.verinice.service.ElementTitleCache">
+=======
+    <bean id="reportHQLService" class="sernet.verinice.service.ReportHQLService" />
+
+    <bean id="objectModelService" class="sernet.verinice.service.model.HUIObjectModelService">
+        <property name="huiTypeFactory" ref="huiTypeFactory" />
+    </bean>
+
+    <!-- Count service provides methods to get the number of elements in the database. -->
+    <bean id="countService" class="sernet.verinice.service.model.CountElementService">
+        <!-- Limit on how many elements can be loaded at once -->
+        <property name="limit" value="${veriniceserver.object.limit}" />
+        <property name="typeLimitMap" ref="typeLimitMap" />
+        <property name="cnaTreeElementDao" ref="cnaTreeElementDao" />
+    </bean>
+
+    <!-- Limit on how many elements of a given id can be loaded at once -->
+    <!-- The values is this map overrides the default value of property limit in bean countService -->
+    <util:map id="typeLimitMap" value-type="java.lang.Integer">
+        <!-- The key is the element ID from SNCA.xml, e.g.: -->
+        <!--<entry key="asset" value="30000" />-->
+    </util:map>
+
+    <bean id="titleCache" class="sernet.verinice.service.ElementTitleCache">
+>>>>>>> Only show the all charts when amount of data is below a limit
         <property name="loadScopeTitlesCommand" ref="loadScopeTitlesCommand" />
-     </bean>
+    </bean>
      
      <bean name="loadScopeTitlesCommand" class="sernet.verinice.service.commands.LoadElementTitles">
         <property name="typeIds" value="it-verbund,org"/>

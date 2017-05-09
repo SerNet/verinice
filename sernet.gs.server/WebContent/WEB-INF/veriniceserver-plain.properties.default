@@ -112,6 +112,6 @@ veriniceserver.gsmGenerator.cron=0 5 3 * * ?
 # Default: ADDITION
 veriniceserver.risk.calculation.method=ADDITION
 
-# Location to store the vnl-files representing the licenses 
-# needed to access license-restricted content                                  
-veriniceserver.vnl.repository=/WEB-INF/vnl
+# A limit on how many elements can be loaded at once
+# Set -1 to disable the limit
+veriniceserver.object.limit=15000
