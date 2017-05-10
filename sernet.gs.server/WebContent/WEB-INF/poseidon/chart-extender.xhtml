@@ -81,6 +81,8 @@
 
 		function moduleVerticalBarChart() {
 
+			var cfg = this.cfg
+
 			this.cfg.shadow = false;
 			this.cfg.title = '';
 			this.cfg.grid = {
@@ -89,6 +91,7 @@
 				gridLineColor : '#F5F5F5',
 				shadow : false
 			};
+
 			this.cfg.axesDefaults = {
 				borderWidth : 0.1,
 				borderColor : 'bdbdbd',
@@ -96,11 +99,23 @@
 					textColor : '#666F77'
 				},
 
-				tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
+				tickRenderer : $.jqplot.CanvasAxisTickRenderer,
 			};
+
+			this.cfg.highlighter = {
+				    show: true,
+				    tooltipContentEditor: function(str, seriesIndex, pointIndex, jqPlot) {
+				        return cfg.ticks[pointIndex];
+				    }
+				};
+
+			hideTicks(this.cfg.axes.xaxis, this.cfg.ticks.length);
 		}
 
 		function moduleHorizontalBarChart() {
+
+			var cfg = this.cfg
+
 			this.cfg.shadow = false;
 			this.cfg.title = '';
 			this.cfg.grid = {
@@ -116,10 +131,33 @@
 				rendererOptions : {
 					textColor : '#666F77'
 				},
-				tickOptions:{
-	               formatString:"%'d "
-	            }
+				tickOptions : {
+					formatString : "%'d "
+				}
 			};
+
+			this.cfg.highlighter = {
+			    show: true,
+			    tooltipContentEditor: function(str, seriesIndex, pointIndex, jqPlot) {
+			        return cfg.ticks[pointIndex];
+			    },
+			    showTooltip: true,
+			    tooltipFade: true,
+			    sizeAdjust: 10,
+			    formatString: '%s',
+			    tooltipLocation: 'n',
+			    useAxesFormatters: false,
+			};
+
+
+			hideTicks(this.cfg.axes.yaxis, this.cfg.ticks.length);
+		}
+
+		function hideTicks(axis, ticks) {
+			var ticksThreshold = 30;
+			if(ticks > ticksThreshold){
+				axis.showTicks = false;
+			}
 		}
 	</script>
 
