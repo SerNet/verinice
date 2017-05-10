@@ -246,20 +246,38 @@ public class IsaDecoratorUtil {
     }
 
     /**
-     * Returns {@code true}, if the given {@code audit} has a ISA Control ({@code SamtTopic})
-     * grandchild.
+     * Returns {@code true}, if the given {@code audit} has an ISA Control ({@code SamtTopic})
+     * in the subtree.
      * 
      * @param  audit the Audit object to be tested
-     * @return {@code} true, if the given Audit object has a ISA Control child, {@code false} if
+     * @return {@code true}, if the given Audit object has a ISA Control child, {@code false} if
      *         not.
      */
     static boolean hasIsaControlChild(Audit audit) {
-
         ControlGroup topLevelControlGroup = audit.getControlGroup();
-        topLevelControlGroup = (ControlGroup) Retriever.checkRetrieveChildren(topLevelControlGroup);
+        return hasIsaControl(topLevelControlGroup);
+    }
 
-        for (CnATreeElement child : topLevelControlGroup.getChildren()) {
+    /**
+     * Checks all children for an ISA control, and then their children for an ISA Control.
+     * 
+     * @param element the element to check
+     * @return {@code true}, if the given Audit object has a ISA Control child, {@code false} if
+     *         not.
+     */
+    private static boolean hasIsaControl(CnATreeElement element) {
+        if (element instanceof SamtTopic) {
+            return true;
+        }
+
+        CnATreeElement whithChilds = Retriever.checkRetrieveChildren(element);
+        for (CnATreeElement child : whithChilds.getChildren()) {
             if (child instanceof SamtTopic) {
+                return true;
+            }
+        }
+        for (CnATreeElement child : whithChilds.getChildren()) {
+            if (hasIsaControl(child)) {
                 return true;
             }
         }
