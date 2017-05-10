@@ -259,17 +259,17 @@ public class IsaDecoratorUtil {
     }
 
     /**
-     * Checks all children for an ISA control, and then their children for an ISA Control.
+     * Checks all children for an ISA control, and then their children for an
+     * ISA Control. As retrieving of the children is expensive (db call) we
+     * check all of them first for being an instance of ISA Control and check their
+     * children after.
      * 
-     * @param element the element to check
-     * @return {@code true}, if the given Audit object has a ISA Control child, {@code false} if
-     *         not.
+     * @param element
+     *            the element to check
+     * @return {@code true}, if the given Audit object has a ISA Control child,
+     *         {@code false} if not.
      */
     private static boolean hasIsaControl(CnATreeElement element) {
-        if (element instanceof SamtTopic) {
-            return true;
-        }
-
         CnATreeElement whithChilds = Retriever.checkRetrieveChildren(element);
         for (CnATreeElement child : whithChilds.getChildren()) {
             if (child instanceof SamtTopic) {
