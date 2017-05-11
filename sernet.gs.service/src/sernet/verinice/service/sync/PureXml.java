@@ -238,4 +238,14 @@ public class PureXml implements IVeriniceArchive {
     public Exception getErrorCause() {
         return error;
     }
+
+    /**
+     * Setter for the syncrequest when the request is already deserialized.
+     * 
+     * @param syncRequest
+     */
+    public void setSyncRequest(SyncRequest syncRequest) {
+        this.syncRequest = syncRequest;
+    }
+
 }
