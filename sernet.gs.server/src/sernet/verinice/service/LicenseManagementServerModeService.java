@@ -23,7 +23,6 @@ package sernet.verinice.service;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +35,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.LazyInitializationException;
+import org.threeten.bp.LocalDate;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
@@ -52,7 +52,6 @@ import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
 import sernet.verinice.model.licensemanagement.NoLicenseAssignedException;
 import sernet.verinice.model.licensemanagement.VNLMapper;
 import sernet.verinice.model.licensemanagement.propertyconverter.PropertyConverter;
-import sernet.verinice.rcp.account.AccountView;
 
 /**
  * 
@@ -923,7 +922,7 @@ public class LicenseManagementServerModeService
     protected LicenseManagementEntry getValidLongestEntry(
             Set<LicenseManagementEntry> entries){
         if (entries.size() == 1){
-            return entries.stream().findFirst().get();
+            return entries.iterator().next();
         } else {
             LicenseManagementEntry oldestEntry = null;
             for (LicenseManagementEntry possibleEntry : entries) {

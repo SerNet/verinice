@@ -28,46 +28,52 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
+ * This command finds a configuration (account) by a given person which is linked
+ * to the configuration. If no configuration is found which is linked to the
+ * person configuration is null.
  * 
+ * Use method getConfiguration() to return the configuration.
  */
 public class LoadConfigurationByUser extends GenericCommand {
 
+    private static final long serialVersionUID = -8792664615062443804L;
     private transient Logger log = Logger.getLogger(LoadConfigurationByUser.class);
-    
-    private Configuration configuration;
-    
-    private CnATreeElement pIso;
 
-    public LoadConfigurationByUser(CnATreeElement pIso){
-        this.pIso = pIso;
+    private Configuration configuration;
+    private CnATreeElement person;
+
+    public LoadConfigurationByUser(CnATreeElement person) {
+        this.person = person;
     }
-    
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
-    @SuppressWarnings("restriction")
     @Override
     public void execute() {
-        
         IBaseDao<Configuration, Serializable> confDao = getDaoFactory().getDAO(Configuration.class);
-        List<Configuration> confs = confDao.findAll();
-        
-        for (Configuration c : confs)
-        {
-
-            try{
-                CnATreeElement elmt = (CnATreeElement)c.getPerson();
-                if(elmt.getUuid().equals(pIso.getUuid())){
-                    configuration = c;
+        List<Configuration> configurationList = confDao.findAll();
+        for (Configuration configurationCurrent : configurationList) {
+            try {
+                CnATreeElement personConfiguration = (CnATreeElement) configurationCurrent.getPerson();
+                if (personConfiguration!=null && personConfiguration.getUuid().equals(person.getUuid())) {
+                    configuration = configurationCurrent;
                     break;
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
                 log.error("Error", e);
             }
         }
     }
-    
+
+    /**
+     * Returns the configuration (account) which is linked to the person.
+     * If no configuration is found which is linked to the
+     * person configuration is null.
+     * 
+     * @return The configuration (account) which is linked to the person or null
+     */
     public Configuration getConfiguration() {
         return configuration;
     }

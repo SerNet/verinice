@@ -77,7 +77,7 @@ public class LMServerDirectoryCreator implements IDirectoryCreator {
             };
             location = getVnlLocation().getFile().getAbsoluteFile().getAbsolutePath();
         } catch (Exception e){
-            LOG.error("Error getting file path", e);
+            LOG.error("Error getting root directory path. Vnl location is: " + getVnlLocation(), e);
         }    
         if (LOG.isDebugEnabled()){
             LOG.debug("vnl root directory: " + location);

@@ -11,7 +11,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
-import java.util.Base64;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -25,6 +24,7 @@ import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.encoders.Base64;
 
 import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.encryption.EncryptionException;
@@ -318,8 +318,8 @@ public abstract class PasswordBasedEncryption {
             password.getChars(0, password.length(), keyChar, 0);
             PBEKeySpec pbeKeySpec = new PBEKeySpec(keyChar);
 
-            final byte[] bytes = Base64.getDecoder().decode(
-                    cypherText.getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING));
+            final byte[] bytes = Base64
+                    .decode(cypherText.getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING));
             final byte[] salt = Arrays.copyOf(bytes, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
             final byte[] cipherTextBytes = Arrays.copyOfRange(bytes,
                     IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH,
