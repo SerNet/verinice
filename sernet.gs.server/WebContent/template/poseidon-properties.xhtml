@@ -11,11 +11,11 @@
 		<div class="ui-g ui-fluid">
 			<c:forEach var="p" items="#{list}">
 
-				<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-2 ui-xl-2">
+				<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-4 ui-xl-4">
 					<p:outputLabel rendered="#{p.isShowLabel()}" value="#{p.name}" />
 				</div>
 
-				<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-10 ui-xl-10">
+				<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-8 ui-xl-8">
 
 					<p:selectBooleanCheckbox value="#{p['boolean']}"
 						rendered="#{p.isBooleanSelect}"
