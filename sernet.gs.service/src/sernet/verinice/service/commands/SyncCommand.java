@@ -145,7 +145,9 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
      * @throws SyncParameterException 
      */
     public SyncCommand(SyncRequest sr) throws SyncParameterException {
-        veriniceArchive = new PureXml();
+        PureXml pureXml = new PureXml();
+        pureXml.setSyncRequest(sr);
+        veriniceArchive = pureXml;
         this.veriniceArchive.setSourceId(sr.getSourceId());
         this.veriniceArchive.setSyncData(sr.getSyncData());
         this.veriniceArchive.setSyncMapping(sr.getSyncMapping());
