@@ -1773,6 +1773,13 @@ Library.
          unpack="false"/>
 
    <plugin
+         id="jfreechart-1.0.11-experimental"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="jfreechart-1.0.11-swt"
          download-size="0"
          install-size="0"
@@ -1977,6 +1984,23 @@ Library.
          version="0.0.0"
          fragment="true"
          unpack="false"/>
+
+   <!--
+   
+   This fragment depends on the host bundle org.eclipse.equinox.p2.director.app. This
+   bundle is located in the Indigo repo but it is not found by Maven Tycho. Inside the
+   org.eclipse.equinox.p2.extras.feature.feature.group feature.
+   
+   As a workaround I have disabled this fragment.
+   
+   <plugin
+         id="org.eclipse.equinox.p2.director.app.nl_de"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+   -->
 
    <plugin
          id="org.eclipse.equinox.p2.director.nl_de"
@@ -2829,17 +2853,10 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="org.threeten.bp"
+         id="threeten.backport"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-
-   <plugin
-         id="org.apache.commons.beanutils"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
 
    <plugin
          id="org.apache.servicemix.bundles.commons-beanutils"
