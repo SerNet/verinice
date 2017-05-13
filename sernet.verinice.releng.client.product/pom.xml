@@ -3,9 +3,8 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>eclipse-repository</packaging>
-	<name>verinice Report Designer Product</name>
-	
-	<artifactId>report.designer.tycho</artifactId>
+
+	<artifactId>sernet.verinice.releng.client.product</artifactId>
 
 	<parent>
 		<groupId>sernet.verinice</groupId>

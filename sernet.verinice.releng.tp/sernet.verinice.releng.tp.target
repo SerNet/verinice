@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?>
+<target name="sernet.verinice.releng.tp">
+
+	<locations>
+
+		<!--
+			third party plugins and features located in verinice git repo:
+
+			verinice-1.1-reportdesign
+			verinice-tp-report-eclipse-3.7
+			verinice-tp-eclipse-3.7
+		-->
+
+        <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="file:/home/dm/temp/29/tycho-tp/repository"/>
+            <unit id="threeten.backport" version="1.3.3"/>
+            <unit id="org.apache.servicemix.bundles.commons-beanutils" version="1.8.3.2"/>
+        </location>
+
+
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="http://filedump.nllk.net/verinice/p2/verinice-third-party"/>
+
+				<unit id="bouncycastle" version="0.0.0"/>
+				<unit id="com.google.gson" version="0.0.0"/>
+				<unit id="inetlib" version="0.0.0"/>
+				<unit id="jbpm" version="0.0.0"/>
+				<unit id="jgrapht" version="0.0.0"/>
+				<unit id="jsf-api_2" version="0.0.0"/>
+				<unit id="opencsv" version="0.0.0"/> <!-- report client specific -->
+				<unit id="opencsv-3.3" version="0.0.0"/>
+				<unit id="org.apache.servicemix.bundles.elasticsearch" version="0.0.0"/>
+				<unit id="org.eclipse.birt.report.designer.ui.rcp" version="0.0.0"/> <!-- report client specific -->
+				<unit id="org.ops4j.pax.web.pax-web-bundle" version="0.0.0"/>
+				<unit id="org.threeten.bp" version="0.0.0"/>
+				<unit id="waffle" version="0.0.0"/>
+
+				<unit id="jfreechart" version="0.0.0"/>
+				<unit id="jfreechart-1.0.11-experimental" version="0.0.0"/> <!-- report client specific -->
+				<unit id="jfreechart-1.0.11-swt" version="0.0.0"/>
+				<unit id="jcommon-1.0.14" version="0.0.0"/>
+
+				<unit id="org.springframework.context.support" version="0.0.0"/>
+				<unit id="org.springframework.core" version="0.0.0"/>
+				<unit id="org.springframework.jdbc" version="0.0.0"/>
+				<unit id="org.springframework.osgi.core" version="0.0.0"/>
+				<unit id="org.springframework.osgi.extender" version="0.0.0"/>
+				<unit id="org.springframework.osgi.web" version="0.0.0"/>
+				<unit id="org.springframework.security.core" version="0.0.0"/>
+				<unit id="org.springframework.web" version="0.0.0"/>
+				<unit id="org.springframework.ws" version="0.0.0"/>
+
+				<unit id="com.springsource.com.mchange.v2.c3p0" version="0.0.0"/>
+				<unit id="com.springsource.com.sun.xml.messaging.saaj" version="0.0.0"/>
+				<unit id="com.springsource.javax.activation" version="0.0.0"/>
+				<unit id="com.springsource.javax.xml.rpc" version="0.0.0"/>
+				<unit id="com.springsource.javax.xml.soap" version="0.0.0"/>
+				<unit id="com.springsource.javax.xml.stream" version="0.0.0"/>
+				<unit id="com.springsource.net.sf.ehcache" version="0.0.0"/>
+				<unit id="com.springsource.org.aopalliance" version="0.0.0"/>
+				<unit id="com.springsource.org.apache.axis" version="0.0.0"/>
+				<unit id="com.springsource.org.apache.commons.io" version="0.0.0"/>
+				<unit id="com.springsource.org.apache.commons.lang" version="0.0.0"/>
+				<unit id="com.springsource.org.apache.commons.logging" version="0.0.0"/>
+				<unit id="com.springsource.org.apache.ws.commons.schema" version="0.0.0"/>
+				<unit id="com.springsource.org.apache.log4j" version="0.0.0"/>
+				<unit id="com.springsource.org.aspectj.runtime" version="0.0.0"/>
+				<unit id="com.springsource.org.aspectj.weaver" version="0.0.0"/>
+				<unit id="com.springsource.org.jaxen" version="0.0.0"/>
+				<unit id="com.springsource.org.jdom" version="0.0.0"/>
+				<unit id="com.springsource.org.junit" version="0.0.0"/>
+				<unit id="com.springsource.org.mortbay.jetty.server" version="0.0.0"/>
+				<unit id="com.springsource.org.mortbay.util" version="0.0.0"/>
+				<unit id="com.springsource.org.quartz" version="0.0.0"/>
+		</location>
+
+		 <!-- **********************************************
+		 * Eclipse                                                                  *
+		 *********************************************** -->
+
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="http://download.eclipse.org/releases/indigo/"/>
+
+			<unit id="org.eclipse.platform.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.equinox.p2.rcp.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.equinox.p2.extras.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.jubula.feature.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.equinox.executable.feature.group" version="0.0.0"/>
+
+			<unit id="org.apache.commons.collections" version="0.0.0"/>
+
+			<!--  Eclipse BIRT stuff (report client specific) -->
+			<unit id="org.eclipse.birt.chart.cshelp" version="0.0.0"/>
+			<unit id="org.eclipse.birt.cshelp" version="0.0.0"/>
+			<unit id="org.eclipse.birt.doc" version="0.0.0"/>
+
+		</location>
+
+		 <!-- **********************************************
+		 * Eclipse ORBIT repo                                                *
+		 *********************************************** -->
+
+		<!-- See  http://download.eclipse.org/tools/orbit/downloads/ for links to the
+		available Eclipse Orbit P2 repos. -->
+
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/"/>
+
+			<unit id="org.apache.commons.beanutils" version="0.0.0"/>
+		</location>
+
+		 <!-- **********************************************
+		 * Eclipse BABEL                                                       *
+		 *********************************************** -->
+
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="http://archive.eclipse.org/technology/babel/update-site/R0.11.1/indigo"/>
+			<unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.babel.nls_rt.equinox.p2_de.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.babel.nls_birt_de.feature.group" version="0.0.0"/>
+		</location>
+
+		 <!-- **********************************************
+		 * Eclipse BIRT begin                                                 *
+		 *********************************************** -->
+
+		<!--
+			Site documenting the Eclipse Release Train with it's included projects and
+			the version of the projects: http://projects.eclipse.org/releases/indigo
+		-->
+
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="http://filedump.nllk.net/verinice/p2/birt-updatesite-3_7_0/"/>
+			<unit id="org.eclipse.birt.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.birt.chart.feature.group" version="0.0.0"/>
+			<unit id="org.eclipse.birt.example.feature.group" version="0.0.0"/>
+		</location>
+
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="http://filedump.nllk.net/verinice/p2/emf-xsd-SDK-2.7.1/"/>
+			<unit id="org.eclipse.emf.common.feature.group" version="0.0.0"/>
+		</location>
+
+		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="http://filedump.nllk.net/verinice/p2/dtp-sdk_1.9.2"/>
+			<unit id="org.eclipse.datatools.enablement.feature.feature.group" version="0.0.0"/>
+		</location>
+
+	</locations>
+
+</target>

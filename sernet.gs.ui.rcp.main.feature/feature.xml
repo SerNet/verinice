@@ -1773,13 +1773,6 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="jfreechart-1.0.11-experimental"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="jfreechart-1.0.11-swt"
          download-size="0"
          install-size="0"
@@ -1979,14 +1972,6 @@ Library.
 
    <plugin
          id="org.eclipse.equinox.p2.core.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
-         id="org.eclipse.equinox.p2.director.app.nl_de"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -2237,7 +2222,7 @@ Library.
          id="org.eclipse.ui.net"
          download-size="0"
          install-size="0"
-         version="1.2.1.r35x_20090812-1200_FIX_FOR_VERINICE"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
@@ -2844,10 +2829,17 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="threeten.backport"
+         id="org.threeten.bp"
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="org.apache.commons.beanutils"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
    <plugin
          id="org.apache.servicemix.bundles.commons-beanutils"

@@ -1,0 +1,26 @@
+<assembly>
+	<id>org.eclipsescout.demo.minicrm.server.war</id>
+	<formats>
+		<format>war</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+
+		<fileSet>
+			<directory>${project.build.directory}/../../sernet.gs.server/WebContent/</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>**</include>
+			</includes>
+		</fileSet>
+
+		<fileSet>
+			<directory>${project.build.directory}/products/sernet.verinice.releng.server.product/linux/gtk/x86_64/plugins/</directory>
+			<outputDirectory>/WEB-INF/lib</outputDirectory>
+			<includes>
+				<include>**</include>
+			</includes>
+		</fileSet>
+		
+	</fileSets>
+</assembly>

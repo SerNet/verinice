@@ -1,0 +1,8 @@
+language: java
+jdk:
+      - oraclejdk8
+
+before_script:
+      - cd sernet.verinice.releng.parent
+
+script: "mvn -B -Dtycho.disableP2Mirrors=true clean verify"

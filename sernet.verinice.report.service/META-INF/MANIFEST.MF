@@ -21,7 +21,7 @@ Require-Bundle: com.ibm.icu;bundle-version="4.4.2",
  sernet.verinice.oda.driver;bundle-version="1.0.0",
  sernet.verinice.samt.service;bundle-version="0.1.0",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
- sernet.gs.service;bundle-version="1.12.0",
+ sernet.gs.service,
  org.eclipse.birt.report.engine.dataextraction.csv,
  org.eclipse.birt.chart.engine.extension,
  org.eclipse.birt.chart.reportitem,
@@ -34,7 +34,7 @@ Require-Bundle: com.ibm.icu;bundle-version="4.4.2",
  com.springsource.org.apache.commons.lang;bundle-version="2.4.0",
  com.springsource.org.junit;bundle-version="4.4.0",
  sernet.hui.common;bundle-version="1.1.1",
- sernet.gs.ui.rcp.main;bundle-version="1.3.0"
+ sernet.gs.ui.rcp.main
 Bundle-Vendor: SerNet
 Export-Package: sernet.verinice.report.service.commands
 Service-Component: OSGI-INF/component.xml
