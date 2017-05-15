@@ -17,10 +17,6 @@
 						<h:outputText escape="false"
 							value="#{msgWeb['index_welcome_head']}" />
 					</h1>
-					<p>
-						<h:outputText escape="false"
-							value="#{msgWeb['index_welcome_content']}" />
-					</p>
 				</div>
 			</div>
 
@@ -60,7 +56,7 @@
 
 
 			<div class="ui-g-4 ui-sm-12">
-				<p:panel header="Downloads" style="min-height: 200px">
+				<p:panel header="#{msgWeb['client_head']}" style="min-height: 200px">
 					<p:menu>
 						<p:menuitem url="/files/verinice-win-64.zip"
 							icon="fa fa-fw fa-windows" value="verinice (Windows, 64 bit)" />
@@ -73,34 +69,44 @@
 					</p:menu>
 				</p:panel>
 			</div>
-			<div class="ui-g-4 ui-sm-12">
-				<p:panel header="#{msgWeb['home.header.support']}" style="min-height: 200px">
-					<p:menu>
-						<p:menuitem
-							url="http://www.sernet.de/#{message.currentLanguageTag}/services/support/"
-							value="#{msgWeb['home.link.technical-support']}" icon="fa fa-fw fa-external-link" />
-						<p:menuitem
-							url="https://www.sernet.de/#{message.currentLanguageTag}/services/consulting/"
-							value="#{msgWeb['home.link.consulting']}" icon="fa fa-fw fa-external-link" />
-						<p:menuitem
-							url="https://www.sernet.de/#{message.currentLanguageTag}/services/consulting/"
-							value="#{msgWeb['home.link.forum']}" icon="fa fa-fw fa-external-link" />
-					</p:menu>
-				</p:panel>
-			</div>
+
 			<div class="ui-g-4 ui-sm-12">
 				<p:panel header="#{msgWeb['manual_head']}" style="min-height: 200px">
 					<p:menu>
-						<p:menuitem icon="fa fa-fw fa-file-pdf-o" value="#{msgWeb['user-guide']} (PDF)"
+						<p:menuitem icon="fa fa-fw fa-file-pdf-o"
+							value="#{msgWeb['user-guide']} (PDF)"
 							url="/files/verinice-user-guide-en.pdf" />
-						<p:menuitem icon="fa fa-fw fa-code" value="#{msgWeb['user-guide']} (HTML)"
+						<p:menuitem icon="fa fa-fw fa-code"
+							value="#{msgWeb['user-guide']} (HTML)"
 							url="/doc/verinice-user-guide" />
-						<p:menuitem
-							url="https://www.youtube.com/channel/UCtBIMOtfziqFgI0pyAPHNww"
-							value="verinice." icon="fa fa-fw fa-youtube" />
+
 					</p:menu>
 				</p:panel>
 			</div>
+
+			<div class="ui-g-4 ui-sm-12">
+				<p:panel header="#{msgWeb['home.header.support']}"
+					style="min-height: 200px">
+					<p:menu>
+						<p:menuitem
+							url="#{msgWeb['home.link.technical-support.url']}"
+							value="#{msgWeb['home.link.technical-support.text']}"
+							icon="fa fa-fw fa-external-link" />
+						<p:menuitem
+							url="#{msgWeb['home.link.consulting.url']}"
+							value="#{msgWeb['home.link.consulting.text']}"
+							icon="fa fa-fw fa-external-link" />
+						<p:menuitem
+							url="#{msgWeb['home.link.forum.url']}"
+							value="#{msgWeb['home.link.forum.text']}"
+							icon="fa fa-fw fa-external-link" />
+						<p:menuitem
+							url="https://www.youtube.com/channel/UCtBIMOtfziqFgI0pyAPHNww"
+							value="#{msgWeb['home.link.youtube']}" icon="fa fa-fw fa-youtube" />
+					</p:menu>
+				</p:panel>
+			</div>
+
 
 		</div>
 	</ui:define>
