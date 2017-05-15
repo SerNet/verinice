@@ -159,6 +159,8 @@ public class Property implements Serializable, ITypedElement {
 	    Property property = new Property(parent);
         property.setPropertyType(getPropertyType());
         property.setPropertyValue(getPropertyValue(), false);
+        property.setLimitedLicense(isLimitedLicense());
+        property.setLicenseContentId(getLicenseContentId());
         return property;
 	}
 	
