@@ -113,5 +113,5 @@ veriniceserver.gsmGenerator.cron=0 5 3 * * ?
 veriniceserver.risk.calculation.method=ADDITION
 
 # A limit on how many elements can be loaded at once
-# Set -1 to disable the limit
-veriniceserver.object.limit=15000
+# Set -1 to disable the limit 
+veriniceserver.object.limit=10000
