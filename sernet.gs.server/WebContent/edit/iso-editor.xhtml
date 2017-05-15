@@ -39,7 +39,7 @@
 									disabled="#{empty tree.handlers or (not auth.addElement and not auth.addGroup)}"
 									icon="fa fa-fw fa-file-o" value="#{msgTree['new']}"
 									title="#{msgTree['new']}" />
-								<p:dialog id="newDialog" widgetVar="newDialog">
+								<p:dialog id="newDialog" widgetVar="newDialog" modal="true">
 									<p:dataTable id="newElementTable" var="h"
 										value="#{tree.handlers}" styleClass="new-iso-object-panel">
 										<p:column style="width:16px">

@@ -27,7 +27,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.menu.DefaultMenuItem;
@@ -59,7 +59,7 @@ import sernet.verinice.service.iso27k.LoadModel;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @ManagedBean(name = "tree")
-@SessionScoped
+@ViewScoped
 public class TreeBean implements IElementListener {
 
     private static final Logger LOG = Logger.getLogger(TreeBean.class);
@@ -240,6 +240,7 @@ public class TreeBean implements IElementListener {
             setElement(loadIsoModel());
         }
 
+        setElementInformation(null);
         openElement();
     }
 
