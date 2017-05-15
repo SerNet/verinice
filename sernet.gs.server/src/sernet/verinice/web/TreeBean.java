@@ -25,11 +25,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.menu.DefaultMenuItem;
@@ -202,12 +200,14 @@ public class TreeBean implements IElementListener {
     }
 
     public void showParent() {
+
         if(this.element!=null) {
             setElement(this.element.getParent());
-            openElement();
         } else {
             init();
         }
+
+        openElement();
     }
     
     private void createMenuModel() {
@@ -215,7 +215,7 @@ public class TreeBean implements IElementListener {
         // Add home item
         DefaultMenuItem home = new DefaultMenuItem();
         home.setCommand("#{tree.init}");
-        home.setUpdate(":tableForm,:navForm");
+        home.setUpdate(":tableForm,:navForm,:editForm");
         menuModel.addElement(home);
         
         path.clear();
@@ -228,7 +228,7 @@ public class TreeBean implements IElementListener {
             DefaultMenuItem item = new DefaultMenuItem();
             item.setValue(pathElement.getTitle());
             item.setCommand("#{tree.selectPath(" + i + ")}");
-            item.setUpdate(":tableForm,:navForm");
+            item.setUpdate(":tableForm,:navForm,:editForm");
             menuModel.addElement(item);
         }
     }
@@ -239,6 +239,8 @@ public class TreeBean implements IElementListener {
         } else {
             setElement(loadIsoModel());
         }
+
+        openElement();
     }
 
     private Integer calculateBreadcrumbSize() {
@@ -314,7 +316,7 @@ public class TreeBean implements IElementListener {
         }
     }
 
-    private boolean isEditable() {
+    public boolean isEditable() {
         return getElement() != null && !(getElement() instanceof ISO27KModel) && !(getElement() instanceof ImportIsoGroup);
     }
 
