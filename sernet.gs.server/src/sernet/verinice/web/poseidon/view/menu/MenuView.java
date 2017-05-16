@@ -34,8 +34,6 @@ import sernet.verinice.web.poseidon.view.menu.menuitem.ItbpSafeguardsMenuItem;
 import sernet.verinice.web.poseidon.view.menu.menuitem.TasksMenuItem;
 import sernet.verinice.web.poseidon.view.menu.submenu.IsmsCatalogGroupedByOrganizationSubMenu;
 import sernet.verinice.web.poseidon.view.menu.submenu.ItbpControlsSubMenu;
-import sernet.verinice.web.poseidon.view.menu.submenu.ModuleImplementationCumulatedSubMenu;
-import sernet.verinice.web.poseidon.view.menu.submenu.ModuleImplementationNormalizedSubMenu;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -59,8 +57,6 @@ public class MenuView {
         model.addElement(new ItbpSafeguardsMenuItem());
         model.addElement(new TasksMenuItem());
         model.addElement(new ItbpControlsSubMenu(menuService));
-        model.addElement(new ModuleImplementationCumulatedSubMenu(msg("menu.module-impl-cum"), menuService));
-        model.addElement(new ModuleImplementationNormalizedSubMenu(msg("menu.module-impl-norm"), menuService));
         model.addElement(new IsmsCatalogGroupedByOrganizationSubMenu(msg("menu.control-impl-isms"), menuService));
     }
 
