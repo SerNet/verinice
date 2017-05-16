@@ -22,6 +22,7 @@ package sernet.verinice.web;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -59,8 +60,6 @@ import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
-import sernet.snutils.AssertException;
-import sernet.snutils.FormInputParser;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITask;
@@ -535,15 +534,11 @@ public class EditBean {
     }
 
     public void onDateSelect(SelectEvent event) {
-        try {
-            String key = (String) ((UIInput) event.getComponent()).getAttributes().get("key");
-            String newValue = FormInputParser.dateToString(new java.sql.Date((Long) event.getObject()));
+        String key = (String) ((UIInput) event.getComponent()).getAttributes().get("key");
+        String newValue = String.valueOf(((Date) event.getObject()).getTime());
 
-            if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(newValue)) {
-                changedElementProperties.put(key, newValue);
-            }
-        } catch (AssertException e) {
-            LOG.error("Exception while getting the value of a date property", e);
+        if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(newValue)) {
+            changedElementProperties.put(key, newValue);
         }
     }
 
