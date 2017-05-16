@@ -136,12 +136,31 @@ public class MenuService implements Serializable {
     protected boolean loadAllMenuState(String typeID) {
         Map<String, Long> idNumberMap = getCountElementService().getNumberOfAllTypes();
         Integer typeLimit = getCountElementService().getLimit(typeID);
-        boolean isAllMenuVisible = idNumberMap.get(typeID) <= typeLimit || typeLimit < 0;
+        boolean isAllMenuVisible = isAllMenuVisible(typeID, idNumberMap, typeLimit);
         if (log.isDebugEnabled()) {
             log.debug("All menu visible: " + isAllMenuVisible + " (number of " + typeID + ": "
                     + idNumberMap.get(typeID) + ", limit: " + typeLimit + ")");
         }
         return isAllMenuVisible;
+    }
+
+    /**
+     * Check if the "All" menu should be visible in the webfrontend.
+     *
+     * @param typeID
+     *            An object type id
+     * @param idNumberMap
+     *            the numberMap from the count service
+     * @param typeLimit
+     *            the limit of entries
+     * @return true if the map not contains the type or when the number of
+     *         entries is less than the given typeLimit or the typeLimit is less then zero
+     */
+    private boolean isAllMenuVisible(String typeID, Map<String, Long> idNumberMap, Integer typeLimit) {
+        if (!idNumberMap.containsKey(typeID)) {
+            return true;
+        }
+        return idNumberMap.get(typeID) <= typeLimit || typeLimit < 0;
     }
 
     /**
