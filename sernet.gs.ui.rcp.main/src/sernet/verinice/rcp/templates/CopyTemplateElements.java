@@ -17,7 +17,7 @@
  * Contributors:  
  *     Viktor Schmidt <vschmidt[at]ckc[dot]de> - initial API and implementation  
  ******************************************************************************/
-package sernet.verinice.iso27k.rcp;
+package sernet.verinice.rcp.templates;
 
 import java.util.HashSet;
 import java.util.List;
@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.iso27k.rcp.CopyTreeElements;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.SaveElement;
 

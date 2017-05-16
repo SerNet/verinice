@@ -56,8 +56,8 @@
             name="%view.name.19"
             icon="icons/copy.png"
             category="sernet.gs.ui.rcp.main.views"
-            class="sernet.gs.ui.rcp.main.bsi.views.TemplateView"
-            id="sernet.gs.ui.rcp.main.bsi.views.TemplateView">
+            class="sernet.verinice.rcp.templates.TemplateView"
+            id="sernet.verinice.rcp.templates.TemplateView">
       </view>
      
       <view
@@ -650,7 +650,7 @@
             id="sernet.gs.ui.rcp.main.bsi.TemplateBSIStrukturElement"
             objectClass="sernet.verinice.model.bsi.IBSIStrukturElement">
             <action
-               class="sernet.gs.ui.rcp.main.bsi.actions.MarkTemplateBSIStrukturElementActionDelegate"
+               class="sernet.verinice.rcp.templates.MarkTemplateBSIStrukturElementActionDelegate"
                enablesFor="+"
                icon="icons/blue-document-block.png"
                id="sernet.gs.ui.rcp.main.markTemplateBSIStrukturElement"
@@ -665,7 +665,7 @@
             id="sernet.gs.ui.rcp.main.bsi.TemplateModule"
             objectClass="sernet.verinice.model.bsi.BausteinUmsetzung">
             <action
-               class="sernet.gs.ui.rcp.main.bsi.actions.MarkTemplateModuleActionDelegate"
+               class="sernet.verinice.rcp.templates.MarkTemplateModuleActionDelegate"
                enablesFor="+"
                icon="icons/blue-document-block.png"
                id="sernet.gs.ui.rcp.main.markTemplateModule"
@@ -680,7 +680,7 @@
             id="sernet.gs.ui.rcp.main.bsi.TemplateSafeguard"
             objectClass="sernet.verinice.model.bsi.MassnahmenUmsetzung">
          <action
-               class="sernet.gs.ui.rcp.main.bsi.actions.MarkTemplateSafeguardActionDelegate"
+               class="sernet.verinice.rcp.templates.MarkTemplateSafeguardActionDelegate"
                enablesFor="+"
                icon="icons/blue-document-bookmark.png"
                id="sernet.gs.ui.rcp.main.markTemplateSafeguard"
@@ -2087,7 +2087,7 @@
 	      </decorator>
           <decorator
                 adaptable="true"
-                class="sernet.verinice.rcp.TemplateDecorator"
+                class="sernet.verinice.rcp.templates.TemplateDecorator"
                 id="sernet.verinice.rcp.TDecorator"
                 label="TemplateDecorator"
                 lightweight="true"
@@ -2099,7 +2099,7 @@
           </decorator>
           <decorator
                 adaptable="true"
-                class="sernet.verinice.rcp.TemplateImplementationDecorator"
+                class="sernet.verinice.rcp.templates.TemplateImplementationDecorator"
                 id="sernet.verinice.rcp.TIDecorator"
                 label="TemplateImplementationDecorator"
                 lightweight="true"

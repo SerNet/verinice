@@ -17,13 +17,14 @@
  * Contributors: 
  *     Viktor Schmidt <vschmidt[at]ckc[dot]de> - initial API and implementation 
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.bsi.actions;
+package sernet.verinice.rcp.templates;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.bsi.actions.Messages;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.verinice.interfaces.CommandException;

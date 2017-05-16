@@ -17,7 +17,7 @@
  * Contributors: 
  *     Viktor Schmidt <vschmidt[at]ckc[dot]de> - initial API and implementation 
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.bsi.actions;
+package sernet.verinice.rcp.templates;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;

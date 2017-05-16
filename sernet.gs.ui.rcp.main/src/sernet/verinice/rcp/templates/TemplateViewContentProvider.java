@@ -17,7 +17,7 @@
  * Contributors:  
  *     Viktor Schmidt <vschmidt[at]ckc[dot]de> - initial API and implementation  
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.bsi.views;
+package sernet.verinice.rcp.templates;
 
 import java.util.Set;
 

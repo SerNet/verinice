@@ -17,7 +17,7 @@
  * Contributors:  
  *     Viktor Schmidt <vschmidt[at]ckc[dot]de> - initial API and implementation  
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.bsi.views;
+package sernet.verinice.rcp.templates;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.bsi.views.TemplateTableViewer.PathCellLabelProvider;
+import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
@@ -65,7 +65,6 @@ import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.iso27k.rcp.CopyTemplateElements;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
@@ -74,7 +73,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IProgressRunnable;
 import sernet.verinice.rcp.RightsEnabledView;
-import sernet.verinice.rcp.TemplateSelectionDialog;
+import sernet.verinice.rcp.templates.TemplateTableViewer.PathCellLabelProvider;
 import sernet.verinice.service.commands.LoadTemplatesOrImplementations;
 
 /**

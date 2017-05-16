@@ -48,6 +48,7 @@ import sernet.verinice.rcp.ServerConnectionToggleAction;
 import sernet.verinice.rcp.account.AccountView;
 import sernet.verinice.rcp.accountgroup.AccountGroupView;
 import sernet.verinice.rcp.risk.RiskAnalysisAction;
+import sernet.verinice.rcp.templates.TemplateView;
 import sernet.verinice.report.rcp.ReportDepositView;
 import sernet.verinice.validation.CnAValidationView;
 

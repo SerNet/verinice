@@ -17,7 +17,7 @@
  * Contributors:  
  *     Viktor Schmidt <vschmidt[at]ckc[dot]de> - initial API and implementation  
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.bsi.views;
+package sernet.verinice.rcp.templates;
 
 import java.util.HashMap;
 
@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;

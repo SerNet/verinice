@@ -17,7 +17,7 @@
  * Contributors:  
  *     Viktor Schmidt <vschmidt[at]ckc[dot]de> - initial API and implementation  
  ******************************************************************************/
-package sernet.verinice.rcp;
+package sernet.verinice.rcp.templates;
 
 import java.util.ArrayList;
 
@@ -33,6 +33,7 @@ import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.rcp.ElementSelectionComponent;
 import sernet.verinice.service.commands.LoadTemplateCandidates;
 
 /**

@@ -17,7 +17,7 @@
  * Contributors: 
  *     Viktor Schmidt <vschmidt[at]ckc[dot]de> - initial API and implementation 
  ******************************************************************************/ 
-package sernet.verinice.rcp;
+package sernet.verinice.rcp.templates;
 
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
@@ -32,15 +32,15 @@ import sernet.verinice.model.common.CnATreeElement;
  * 
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de> 
  */ 
-public class TemplateImplementationDecorator extends LabelProvider implements ILightweightLabelDecorator {
+public class TemplateDecorator extends LabelProvider implements ILightweightLabelDecorator {
 
-    public static final String IMAGE_PATH = "overlays/folder_decorator.png";
+    public static final String IMAGE_PATH = "overlays/sample_decorator.gif";
 
     public void decorate(Object o, IDecoration decoration) {
         Activator.inheritVeriniceContextState();
         if (o instanceof CnATreeElement) {
             CnATreeElement element = (CnATreeElement) o;
-            if (element.isImplementation()) {
+            if (element.isTemplate()) {
                 decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(IMAGE_PATH));
             }
         }
