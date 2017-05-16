@@ -177,7 +177,6 @@ public class EditBean {
         getAttachmentBean().setElement(getElement());
         getAttachmentBean().init();
 
-
         doInitPropertyGroups(entity);
         doInitProperties(entity);
     }
@@ -200,7 +199,7 @@ public class EditBean {
     }
 
     protected void doInitProperties(Entity entity) {
-        List<PropertyType> typeList = entityType.getPropertyTypes();
+        List<PropertyType> typeList = entityType.getPropertyTypesSorted();
         propertyList = createPropertyList(entity, typeList);
     }
 
