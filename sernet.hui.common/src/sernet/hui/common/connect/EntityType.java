@@ -26,44 +26,52 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+/**
+ * This class represents an entity type in the dynamic object model (Hitro UI, HUI).
+ * Use this class to get information about a verinice element (CnATreeElement).
+ * Instances of this class are defined in configuration file SNCA.xml. Content
+ * of SNCA.xml is defined in schema hitro.xsd.
+ *
+ * @author Alexander Koderman
+ * @author Daniel Murygin <dm{a}sernet{dot}de>
+ */
 public class EntityType {
+
 	private String id;
 	private String name;
 	
-	private List<IEntityElement> elements = new ArrayList<IEntityElement>();
-	private Map<String, PropertyType> propertyTypes = new HashMap<String, PropertyType>();
-	private List<PropertyGroup> propertyGroups = new ArrayList<PropertyGroup>();
+	private List<IEntityElement> elements = new ArrayList<>();
+	private List<PropertyGroup> propertyGroups = new ArrayList<>();
 	
-	// map of target EntityType ID : set of relation descriptions 
-	private Map<String, Set<HuiRelation>> relations = new HashMap<String, Set<HuiRelation>>();
+	// All properties of an entity type, Map of property ID : PropertyType
+    private Map<String, PropertyType> propertyTypes = new HashMap<>();
 	
-	public void addPropertyType(PropertyType prop) {
-		propertyTypes.put(prop.getId(), prop);
-		elements.add(prop);
-	}
+	// map of target EntityType ID : set of HuiRelations (links to EntityTypes)
+	private Map<String, Set<HuiRelation>> relations = new HashMap<>();
 	
-	public void addPropertyGroup(PropertyGroup group) {
-		propertyGroups.add(group);
-		elements.add(group);
-	}
-	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
+	/**
+	 * A list with all property types of this entity type.
+	 *
+	 * This method does not return the property types from the
+	 * property groups.
+	 *
+	 * @return A list with the property types of this entity type
+	 */
 	public List<PropertyType> getPropertyTypes() {
-		ArrayList<PropertyType> types = new ArrayList<PropertyType>(propertyTypes.values().size());
+		ArrayList<PropertyType> types = new ArrayList<>(propertyTypes.values().size());
 		types.addAll(propertyTypes.values());
 		return types;
 	}
+
+	/**
+	 * Returns a list with the property types of this entity type.
+	 * The properties in the list are sorted the same way as in SNCA.xml.
+	 *
+	 * This method does not return the property types from the
+     * property groups.
+	 *
+     * @return A SNCA sorted list with the property types of this entity type
+     */
 	public List<PropertyType> getPropertyTypesSorted() {
 	    List<PropertyType> propertyTypesSorted = new ArrayList<>();
         for (IEntityElement entity : getElements()) {
@@ -74,10 +82,11 @@ public class EntityType {
         return propertyTypesSorted;
     }
 	
-	/** Retrieves this {@link EntityType}'s property types and those
-	 * of all its {@link PropertyGroup}s.
+	/**
+	 * Returns a list with all property types of this entity type
+	 * including the types which are contained in property groups.
 	 * 
-	 * @return
+	 * @return A list with all property types of this entity type and property groups.
 	 */
 	public List<PropertyType> getAllPropertyTypes() {
 		List<PropertyType> types = getPropertyTypes();
@@ -89,141 +98,160 @@ public class EntityType {
 		return types;
 	}
 	
-	/** Retrieves sorted this {@link EntityType}'s property types and those
-     * of all its {@link PropertyGroup}s.
+    /**
+     * Returns a list with all property types of this entity type including the
+     * types which are contained in property groups.
      * 
-     * @return
+     * The properties in the list are sorted the same way as in SNCA.xml.
+     *
+     * @return A SNCA sorted list with all property types of this entity type
+     *         and property groups.
      */
     public List<PropertyType> getAllPropertyTypesSorted() {
-        List<PropertyType> propertyTypes = new ArrayList<>();
+        List<PropertyType> propertyTypeList = new ArrayList<>();
         for (IEntityElement entity : getElements()) {
             if (entity instanceof PropertyType) {
-                propertyTypes.add((PropertyType) entity);
+                propertyTypeList.add((PropertyType) entity);
             } else if (entity instanceof PropertyGroup) {
-                propertyTypes.addAll(((PropertyGroup) entity).getPropertyTypes());
+                propertyTypeList.addAll(((PropertyGroup) entity).getPropertyTypes());
             }
         }
-        return propertyTypes;
+        return propertyTypeList;
+    }
+
+    /**
+     * Returns the property type of this entity type with the given ID.
+     * Id no property type with the given ID exists null is returned.
+     *
+     * @param id The ID of a property type.
+     * @return The property type with the given ID or null
+     */
+    public PropertyType getPropertyType(String id) {
+        PropertyType type = this.propertyTypes.get(id);
+        if (type != null){
+            return type;
+        }
+        // search in groups:
+        for (PropertyGroup group : this.propertyGroups) {
+            if ((type = group.getPropertyType(id)) != null){
+                return type;
+            }
+        }
+        // none found:
+        return null;
+    }
+	
+    /**
+     * @return An array with all property type ID of this entity type including
+     *         the types which are contained in property groups.
+     */
+    public String[] getAllPropertyTypeIds() {
+        List<PropertyType> types = getAllPropertyTypes();
+        List<String> ids = new ArrayList<>();
+        for (PropertyType type : types) {
+            ids.add(type.getId());
+        }
+        return ids.toArray(new String[ids.size()]);
     }
 	
 	/**
-	 * Retrieves all propertytype IDs. CAUTION: Does not return types that are contained in groups!
-	 * Use <code>getAllPropertyTypeIDsIncludingGroups()</code> instead.
-	 * 
-	 * @return
+     * @return An array with all property type ID of this entity type including
+     *         the types which are contained in property groups.
+	 * @deprecated Replaced by {@link #getAllPropertyTypeIds()}
 	 */
-	public String[] getAllPropertyTypeIds() {
-	    List<PropertyType> types = getAllPropertyTypes();
-	    List<String> ids = new ArrayList<String>();
-	    for (PropertyType type : types) {
-            ids.add(type.getId());
-        }
-	    return (String[]) ids.toArray(new String[ids.size()]);
+	@Deprecated
+	public String[] getAllPropertyTypeIDsIncludingGroups() {
+	    return getAllPropertyTypeIds();
 	}
 	
 	/**
-	 * 
-	 * @return
-	 */
-	public String[] getAllPropertyTypeIDsIncludingGroups() {
-	    ArrayList<String> result = new ArrayList<String>();
-	    List<PropertyType> types = getAllPropertyTypes();
-	    for (PropertyType type : types) {
-            result.add(type.getId());
-        }
-	    return (String[]) result.toArray(new String[result.size()]);
-	}
-	
-	public String[] getAllPropertyTypeTitlesIncludingGroups() {
-        ArrayList<String> result = new ArrayList<String>();
-        String[] typeIDs = getAllPropertyTypeIDsIncludingGroups();
+     * @return An array with all property type titles of this entity type including
+     *         the types which are contained in property groups.
+     */
+	public String[] getAllPropertyTypeTitles() {
+        ArrayList<String> result = new ArrayList<>();
+        String[] typeIDs = getAllPropertyTypeIds();
         for (String typeId : typeIDs) {
             result.add(getPropertyType(typeId).getName());
         }
-        return (String[]) result.toArray(new String[result.size()]);
+        return result.toArray(new String[result.size()]);
+    }
+	
+	/**
+     * @return An array with all property type titles of this entity type including
+     *         the types which are contained in property groups.
+     * @deprecated Replaced by {@link #getAllPropertyTypeTitles()}
+     */
+	@Deprecated
+	public String[] getAllPropertyTypeTitlesIncludingGroups() {
+	    return getAllPropertyTypeTitles();
+	}
+
+    /**
+     * Returns all links (relations) from this entity type to another entity
+     * type with the given ID.
+     *
+     * @param entityTypeId
+     *            The ID of an entity type
+     * @return All links from this entity type to another entity type with the
+     *         given ID.
+     */
+    public Set<HuiRelation> getPossibleRelations(String entityTypeId) {
+        return relations.get(entityTypeId) != null ? relations.get(entityTypeId)
+                : new HashSet<HuiRelation>(0);
+    }
+	
+    /**
+     * Adds a HuiRelation to this entity type. A HuiRelation is a link (relation)
+     * from this entity type to another entity type.
+     *
+     * @param relation
+     *            A HuiRelation, link from this entity type to another entity
+     *            type
+     */
+    public void addRelation(HuiRelation relation) {
+        if (relations.get(relation.getTo()) == null) {
+            this.relations.put(relation.getTo(), new HashSet<HuiRelation>());
+        }
+        this.relations.get(relation.getTo()).add(relation);
     }
 
-	public List<IEntityElement> getElements() {
-		return elements;
-	}
+    /**
+     * Returns a set with all HuiRelations of this entity type. A HuiRelation is
+     * a link (relation) from this entity type to another entity type.
+     *
+     * @return A set with all HuiRelations of this entity type
+     */
+    public Set<HuiRelation> getPossibleRelations() {
+        HashSet<HuiRelation> allRelations = new HashSet<>();
+        Set<Entry<String, Set<HuiRelation>>> entrySet = relations.entrySet();
+        for (Entry<String, Set<HuiRelation>> entry : entrySet) {
+            Set<HuiRelation> relationsToOneOtherType = entry.getValue();
+            allRelations.addAll(relationsToOneOtherType);
+        }
+        return allRelations;
+    }
 
-	public List<PropertyGroup> getPropertyGroups() {
-		return propertyGroups;
-	}
-
-	public PropertyType getPropertyType(String id) {
-		PropertyType type = this.propertyTypes.get(id);
-		if (type != null){
-			return type;
-		}
-		// search in groups:
-		for (PropertyGroup group : this.propertyGroups) {
-			if ((type = group.getPropertyType(id)) != null){
-				return type;
-			}
-		}
-		// none found:
-		return null;
-	}
-
-	/**
-	 * Add definition for a relation from the XML file to this EntityType.
-	 * 
-	 * 
-	 * @param relation
-	 */
-	public void addRelation(HuiRelation relation) { 
-		if (relations.get(relation.getTo()) == null) {
-			this.relations.put(relation.getTo(), new HashSet<HuiRelation>());
-		}
-		this.relations.get(relation.getTo()).add(relation);
-	}
-	
-	/**
-	 * Returns all possible relation from this EntityType to the specified EntityType. I.e. from "product" to "person" the following 
-	 * relations could be defined: "bought by", "sold by", "manufactured by" etc.
-	 * 
-	 * Links (i.e. CnALinks) should only be created for allowed relations.
-	 * 
-	 * @param toEntityType
-	 * @return
-	 */
-	public Set<HuiRelation> getPossibleRelations(String toEntityType) {
-		return relations.get(toEntityType) != null 
-			? relations.get(toEntityType)
-			: new HashSet<HuiRelation>(0);
-	}
-
-	/**
-	 * Returns all possible (meaning "defined in SNCA.xml") relations as a flat list.
-	 * @return all possible relations from this element to other elements.
-	 */
-	public Set<HuiRelation> getPossibleRelations() {
-		HashSet<HuiRelation> allRelations = new HashSet<HuiRelation>();
-		Set<Entry<String, Set<HuiRelation>>> entrySet = relations.entrySet();
-		for (Entry<String, Set<HuiRelation>> entry : entrySet) {
-			Set<HuiRelation> relationsToOneOtherType = entry.getValue();
-			allRelations.addAll(relationsToOneOtherType);
-		}
-		return allRelations;
-	}
-	
-	/**
-	 * @param typeId
-	 * @return
-	 */
-	public HuiRelation getPossibleRelation(String typeId) {
-		Set<Entry<String, Set<HuiRelation>>> entrySet = relations.entrySet();
-		for (Entry<String, Set<HuiRelation>> entry : entrySet) {
-			Set<HuiRelation> value = entry.getValue();
-			for (HuiRelation huiRelation : value) {
-				if (huiRelation.getId().equals(typeId)){
-					return huiRelation;
-				}
-			}
-		}
-		return null;
-	}
+    /**
+     * Returns the HuiRelation from this entity type with the given ID. If no
+     * relation with the given ID exists null is returned.
+     *
+     * @param relationTypeId
+     *            The ID of a relation / link
+     * @return The HuiRelation with the given ID or null
+     */
+    public HuiRelation getPossibleRelation(String relationTypeId) {
+        Set<Entry<String, Set<HuiRelation>>> entrySet = relations.entrySet();
+        for (Entry<String, Set<HuiRelation>> entry : entrySet) {
+            Set<HuiRelation> value = entry.getValue();
+            for (HuiRelation huiRelation : value) {
+                if (huiRelation.getId().equals(relationTypeId)) {
+                    return huiRelation;
+                }
+            }
+        }
+        return null;
+    }
 
 	public LinkedList<PropertyType> getObjectBrowserPropertyTypes(){
 	    LinkedList<PropertyType> linkedList = new LinkedList<>();
@@ -235,9 +263,49 @@ public class EntityType {
 	            linkedList.add((PropertyType)entityElement);
 	        }
 	    }
-	    return linkedList;
+	    return htmlType;
 	}
 	
+	private Object[] isShowHtml(IEntityElement entityElement, boolean foundHtmlProperty){
+        Object[] returnValues = new Object[2];
+	    PropertyType propertyType = (PropertyType)entityElement;
+        if (propertyType.isShow_html() && !foundHtmlProperty){
+
+            returnValues[0] = propertyType;
+            returnValues[1] = true;
+        }
+        return returnValues;
+	}
 	
+	public void addPropertyType(PropertyType prop) {
+        propertyTypes.put(prop.getId(), prop);
+        elements.add(prop);
+    }
+
+    public void addPropertyGroup(PropertyGroup group) {
+        propertyGroups.add(group);
+        elements.add(group);
+    }
+
+    public List<IEntityElement> getElements() {
+        return elements;
+    }
+
+    public List<PropertyGroup> getPropertyGroups() {
+        return propertyGroups;
+    }
+	
+	public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
 	
 }
