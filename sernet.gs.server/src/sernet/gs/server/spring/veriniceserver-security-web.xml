@@ -56,13 +56,13 @@
         filters="httpSessionContextIntegrationFilter,anonymousAuthFilter,authenticationProcessingFilter,logoutFilter,timeoutFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
       <security:filter-chain
         pattern="/dashboard/**"
-        filters="httpSessionContextIntegrationFilter,anonymousAuthFilter,authenticationProcessingFilter,logoutFilter,timeoutFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
+        filters="httpSessionContextIntegrationFilter,authenticationProcessingFilter,logoutFilter,timeoutFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
       <security:filter-chain
         pattern="/misc/**"
-        filters="httpSessionContextIntegrationFilter,anonymousAuthFilter,authenticationProcessingFilter,logoutFilter,timeoutFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
+        filters="httpSessionContextIntegrationFilter,authenticationProcessingFilter,logoutFilter,timeoutFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
       <security:filter-chain
         pattern="/edit/**"
-        filters="httpSessionContextIntegrationFilter,authenticationProcessingFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
+        filters="httpSessionContextIntegrationFilter,authenticationProcessingFilter,logoutFilter,timeoutFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
       <security:filter-chain
         pattern="/sync/**"
         filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,securityInterceptorFilter" />
@@ -178,6 +178,8 @@
 					access="ROLE_USER" />
 				<security:intercept-url pattern="/dashboard/**"
 					access="ROLE_USER" />
+        <security:intercept-url pattern="/misc/**"
+          access="ROLE_USER" />
 			</security:filter-invocation-definition-source>
 		</property>
 	</bean>
