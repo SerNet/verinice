@@ -92,6 +92,10 @@ public class AuthBean {
         return isEnabled(ActionRightIDs.ADDISMORG);
     }
     
+    public boolean getDeleteItem() {
+        return isEnabled(ActionRightIDs.DELETEITEM);
+    }
+    
     public boolean isEnabled( String rightId) {
         return getRightsService().isEnabled(getAuthService().getUsername(), rightId);
     }

@@ -428,6 +428,19 @@ public class EditBean {
         return enabled;
     }
 
+    /**
+     * Check if write is allowed by using the saved element as context and
+     * delegating to {@link #isWriteAllowed(CnATreeElement)}.
+     * 
+     * @return true if write is allowed for the element.
+     */
+    public boolean isWriteAllowed() {
+        if (element == null)
+            return false;
+
+        return isWriteAllowed(element);
+    }
+    
     public boolean isWriteAllowed(CnATreeElement cte) {
         // Server implementation of CnAElementHome.isWriteAllowed
         try {

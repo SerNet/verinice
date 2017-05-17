@@ -36,7 +36,7 @@
 							<div class="ui-g-4">
 								<p:commandButton id="newButton"
 									onclick="PF('newDialog').show();"
-									disabled="#{empty tree.handlers or (not auth.addElement and not auth.addGroup)}"
+									disabled="#{empty tree.handlers or (not auth.addElement and not auth.addGroup) or (not edit.writeAllowed)}"
 									icon="fa fa-fw fa-file-o" value="#{msgTree['new']}"
 									title="#{msgTree['new']}" />
 								<p:dialog id="newDialog" widgetVar="newDialog" modal="true">
@@ -65,13 +65,13 @@
 							</div>
 							<div class="ui-g-4">
 								<p:commandButton onclick="submitEditForm();"
-									disabled="#{edit.element==null}" icon="fa fa-fw fa-save"
+									disabled="#{edit.element==null or (not edit.writeAllowed)}" icon="fa fa-fw fa-save"
 									value="#{msgTree['save']}" title="#{msgTree['save']}" />
 
 							</div>
 							<div class="ui-g-4">
 								<p:commandButton onclick="PF('confirmDialog').show()"
-									disabled="#{edit.element==null}" icon="fa fa-fw fa-remove"
+									disabled="#{edit.element==null or (not edit.writeAllowed) or not auth.deleteItem}" icon="fa fa-fw fa-remove"
 									value="#{msgTree['delete']}" title="#{msgTree['delete']}" />
 								<p:dialog id="confirmDialog" modal="true"
 									message="#{msgTree['confirm-deletion']} #{edit.element.title} ?"
