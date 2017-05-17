@@ -19,11 +19,14 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view.charts;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import org.primefaces.model.chart.ChartModel;
 
-public class VeriniceChartRow {
+public class VeriniceChartRow implements Serializable {
+
+    private static final long serialVersionUID = -4099634714286782260L;
 
     private String id;
 

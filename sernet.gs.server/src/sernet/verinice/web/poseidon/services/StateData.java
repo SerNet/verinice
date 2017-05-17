@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.services;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -32,7 +33,9 @@ import sernet.verinice.web.poseidon.view.charts.ChartUtils;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class StateData {
+public class StateData implements Serializable {
+
+    private static final long serialVersionUID = -865803370582004650L;
 
     private String scopeName;
 
