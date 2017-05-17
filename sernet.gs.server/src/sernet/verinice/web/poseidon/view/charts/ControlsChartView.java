@@ -63,7 +63,7 @@ public class ControlsChartView implements Serializable {
 
     private boolean calculated = false;
 
-    private RemoteCommand remoteCommand;
+    private transient RemoteCommand remoteCommand;
 
     @PostConstruct
     public void init() {
@@ -149,6 +149,9 @@ public class ControlsChartView implements Serializable {
     }
 
     public RemoteCommand getRemoteCommand() {
+        if(remoteCommand==null) {
+            initRemoteCall();
+        }
         return remoteCommand;
     }
 

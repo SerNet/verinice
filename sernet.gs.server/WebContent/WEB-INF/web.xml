@@ -28,12 +28,9 @@
       classpath:sernet/gs/server/spring/veriniceserver-daos-common.xml
       classpath:sernet/gs/server/spring/veriniceserver-daos-plain.xml
 
-      <!-- Use this for HTTP digest authentication for rich and web client: -->
-      <!-- classpath:sernet/gs/server/spring/veriniceserver-security-plain-internal.xml -->
-
       <!-- Use this for HTTP digest authentication for rich client -->
       <!-- and form based authentication for web client: -->
-      classpath:sernet/gs/server/spring/veriniceserver-security-web.xml
+      classpath:sernet/gs/server/spring/veriniceserver-security-plain-internal.xml
 
       <!-- Use this for LDAP / Active Directory authentication: -->
       <!-- classpath:sernet/gs/server/spring/veriniceserver-security-plain-ldap.xml -->
