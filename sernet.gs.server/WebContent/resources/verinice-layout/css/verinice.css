@@ -168,3 +168,8 @@ body #task-action-handler .ui-buttonset .ui-button {
 	color: #FFFFFF;
 	background: #666666;
 }
+
+div#exceptionDialog {
+	color: #FFFFFF;
+	background-color: #ce5051;
+}

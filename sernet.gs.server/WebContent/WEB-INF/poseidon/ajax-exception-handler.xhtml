@@ -15,30 +15,34 @@
 		update="exceptionDialog" onexception="PF('exceptionDialog').show();" />
 
 
-	<p:dialog id="exceptionDialog"
-		header="Exception: #{pfExceptionHandler.type} occured!"
-		widgetVar="exceptionDialog" height="500px">
-		<p:panelGrid column="2">
-			<p:row>
-				<p:column>Message:</p:column>
-				<p:column>#{pfExceptionHandler.message}</p:column>
-			</p:row>
+	<p:dialog id="exceptionDialog" modal="true" header="Exception Occured"
+		widgetVar="exceptionDialog" class="exception-body">
+		<p:outputPanel>
+			<h1 class="exception-summary">Exception Occured</h1>
+			<p class="exception-detail">Please Contact System Admin</p>
+		</p:outputPanel>
 
-			<p:row>
-				<p:column>StackTrace:</p:column>
-				<p:column>
-					<h:outputText value="#{pfExceptionHandler.formattedStackTrace}"
-						escape="false" />
-				</p:column>
-			</p:row>
-			<p:row
-				rendered="#{pfExceptionHandler.type == 'javax.faces.application.ViewExpiredException'}">
-				<p:column colspan="2">
-					<p:button style="width: 100%;"
-						onclick="document.location.href = document.location.href;"
-						value="Reload!" icon="fa fa-refresh" />
-				</p:column>
-			</p:row>
-		</p:panelGrid>
+		<!-- 		<p:panelGrid column="2"> -->
+		<!-- 			<p:row> -->
+		<!-- 				<p:column>Message:</p:column> -->
+		<!-- 				<p:column>#{pfExceptionHandler.message}</p:column> -->
+		<!-- 			</p:row> -->
+
+		<!-- 			<p:row> -->
+		<!-- 				<p:column>StackTrace:</p:column> -->
+		<!-- 				<p:column> -->
+		<!-- 					<h:outputText value="#{pfExceptionHandler.formattedStackTrace}" -->
+		<!-- 						escape="false" /> -->
+		<!-- 				</p:column> -->
+		<!-- 			</p:row> -->
+		<!-- 			<p:row -->
+		<!-- 				rendered="#{pfExceptionHandler.type == 'javax.faces.application.ViewExpiredException'}"> -->
+		<!-- 				<p:column colspan="2"> -->
+		<!-- 					<p:button style="width: 100%;" -->
+		<!-- 						onclick="document.location.href = document.location.href;" -->
+		<!-- 						value="Reload!" icon="fa fa-refresh" /> -->
+		<!-- 				</p:column> -->
+		<!-- 			</p:row> -->
+		<!-- 		</p:panelGrid> -->
 	</p:dialog>
 </ui:composition>

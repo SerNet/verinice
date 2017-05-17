@@ -15,29 +15,17 @@
 	</f:facet>
 
 	<link rel="icon" type="image/png"
-			href="#{resource['verinice-layout:images/favicon.png']}" />
+		href="#{resource['verinice-layout:images/favicon.png']}" />
 
 	<title>verinice - Error</title>
 </h:head>
 
 <h:body styleClass="exception-body error-page">
 
-	<div class="exception-top">
-		<p:graphicImage name="images/icon-error.png" library="poseidon-layout" />
-	</div>
-
 	<div class="exception-bottom">
 		<div class="exception-wrapper">
-
-			<div class="exception-summary">
-				<h:outputText value="Message: #{pfExceptionHandler.message}" />
-			</div>
-			<div class="exception-detail">
-				<pre>
-							<h:outputText value="#{pfExceptionHandler.formattedStackTrace}"
-						escape="false" />
-						</pre>
-			</div>
+			<span class="exception-summary">Exception Occured</span> <span
+				class="exception-detail">Please Contact System Admin</span>
 			<p:button outcome="/misc/home" value="Home" icon="fa fa-home"
 				styleClass="black-btn" />
 		</div>
