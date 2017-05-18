@@ -218,23 +218,28 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
     }
     
     @Test
-    public void entryByLicenseId() throws IOException{
-        LicenseManagementEntry entry = getSingleCryptedEntry();
-        File vnlFile = writeLMEntryToTempFile(entry, TEMP_FILE_NAME,
-                TEMP_FILE_NAME_EXT);
+    public void entryByLicenseId() throws IOException, LicenseManagementException{
         File repoFile = null;
         try {
-            repoFile = licenseManagementService.addVNLToRepository(vnlFile);
+            LicenseManagementEntry entry = getSingleCryptedEntry();  
+            repoFile = addLicenseToRepository(entry);
             LicenseManagementEntry entryFromRepo = 
                     licenseManagementService.getLicenseEntryForLicenseId(
                             entry.getLicenseID(), false);
             Assert.assertTrue(entry.equals(entryFromRepo));
-        } catch (LicenseManagementException e) {
-            LOG.error("Something with testing the "
-                    + "licensemanagementservice went wrong", e);
+        } finally {
+            FileUtils.forceDelete(repoFile);
+        }
+    }
+    
+    private File addLicenseToRepository(LicenseManagementEntry entry) throws LicenseManagementException, IOException {
+        File vnlFile = null;
+        try {
+            vnlFile = writeLMEntryToTempFile(entry, TEMP_FILE_NAME,
+                    TEMP_FILE_NAME_EXT);
+            return licenseManagementService.addVNLToRepository(vnlFile);
         } finally {
             FileUtils.forceDelete(vnlFile);
-            FileUtils.forceDelete(repoFile);
         }
     }
     
@@ -433,8 +438,11 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
     }
     
     @Test
-    public void getEntryFromRepository(){
-        try{
+    public void getEntryFromRepository() throws IOException{
+        File repoFile = null;
+        try{ 
+            repoFile = addLicenseToRepository(getSingleCryptedEntry());                   
+            
             String encryptedContentId = cryptoService.encrypt(CONTENT_ID, 
                     cryptoPassword.toCharArray(), cryptoSalt);
             Set<LicenseManagementEntry> entries =
@@ -450,6 +458,8 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
         
         } catch (LicenseManagementException e){
             LOG.error("Error while getting entry for licenseId:\t" + CONTENT_ID);
+        } finally {
+            FileUtils.forceDelete(repoFile);
         }
     }
     

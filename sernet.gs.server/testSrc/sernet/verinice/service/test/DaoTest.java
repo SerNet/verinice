@@ -176,7 +176,7 @@ public class DaoTest extends UuidLoader {
         for (Property property : propertyList) {
             String value = property.getPropertyValue();
             LOG.debug("checking property: " + property.getPropertyType() + " = " + value);
-            if(value!=null && value.contains(searchTerm)) {
+            if(value!=null && value.toLowerCase().contains(searchTerm.toLowerCase())) {
                 if(value.length()>30) {
                     value = value.substring(0, 30) + "...";
                 }
