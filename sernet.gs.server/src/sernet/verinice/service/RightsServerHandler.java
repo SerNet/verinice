@@ -71,7 +71,6 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
      */
     @Override
     public boolean isEnabled(String username, String actionId) {      
-        registerIRightsService();
         boolean returnValue = isBlacklist(); 
         Map<String, Action> actionMap = getUserActionMap().get(username);
         if(actionMap!=null) {
@@ -204,8 +203,10 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
     }
 
     private void registerIRightsService() {
-        iRightsService = (IRightsService) appCtx.getBean("rightsService");
-        iRightsService.addChangeListener(this);
+        if (iRightsService == null) {
+            iRightsService = (IRightsService) appCtx.getBean("rightsService");
+            iRightsService.addChangeListener(this);
+        }
     }
 
     public ApplicationContext getAppContext() {

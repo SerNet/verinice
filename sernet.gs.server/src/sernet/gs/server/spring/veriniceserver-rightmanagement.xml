@@ -28,7 +28,7 @@
 	</bean>
 
 
-	<bean id="rightsServerHandler" class="sernet.verinice.service.RightsServerHandler">
+	<bean id="rightsServerHandler" class="sernet.verinice.service.RightsServerHandler" init-method="init">
 		<!-- <property name="rightsService" ref="rightsService" /> -->
 	</bean>
 
