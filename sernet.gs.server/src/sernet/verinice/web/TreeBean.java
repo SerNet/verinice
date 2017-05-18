@@ -73,7 +73,7 @@ public class TreeBean implements IElementListener {
         }
     });
     
-    private static final int MAX_BREADCRUMB_SIZE = 4;
+    private static final int MAX_BREADCRUMB_SIZE = Integer.MAX_VALUE;
     
     @ManagedProperty("#{edit}")
     private EditBean editBean;
