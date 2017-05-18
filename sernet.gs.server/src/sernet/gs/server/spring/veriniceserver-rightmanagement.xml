@@ -27,9 +27,12 @@
 
 	</bean>
 
-
+	<!-- 
+		 We need to use an init method to register as listener and get the instance of the right server 
+	     because the security intercepter (sernet.gs.server.security.VeriniceActionIdVoter) is not fully configured
+		 in this phase of the spring lifecycle.
+	 -->
 	<bean id="rightsServerHandler" class="sernet.verinice.service.RightsServerHandler" init-method="init">
-		<!-- <property name="rightsService" ref="rightsService" /> -->
 	</bean>
 
 </beans>

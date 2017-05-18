@@ -25,7 +25,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -41,7 +40,7 @@ import sernet.verinice.model.auth.Profiles;
 import sernet.verinice.model.auth.Userprofile;
 
 /**
- *
+ * @see IRightsServerHandler
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -54,13 +53,10 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
     private Map<String, List<Userprofile>> userprofileMap;
     
     private Map<String, Profile> profileMap;
-    
-    @Autowired
-    private ApplicationContext appContext;
 
     private IRightsService iRightsService;
 
-    private ApplicationContext appCtx;
+    private ApplicationContext appContext;
     
     public RightsServerHandler() {
         super();
@@ -197,28 +193,26 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
         iRightsService.removeChangeListener(this);
         super.finalize();
     }
-
+    
+    /**
+     * The init method is called by the spring framework after the application context is completely bootstraped.
+     */
     public void init(){
         registerIRightsService();
     }
-
+    
+    /**
+     * Initialize the rightservice and register as change listener.
+     */
     private void registerIRightsService() {
         if (iRightsService == null) {
-            iRightsService = (IRightsService) appCtx.getBean("rightsService");
+            iRightsService = (IRightsService) appContext.getBean("rightsService");
             iRightsService.addChangeListener(this);
         }
     }
 
-    public ApplicationContext getAppContext() {
-        return appContext;
-    }
-
-    public void setAppContext(ApplicationContext appContext) {
-        this.appContext = appContext;
-    }
-
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        appCtx = applicationContext;
+        appContext = applicationContext;
     }
 }
