@@ -28,8 +28,17 @@ import org.eclipse.swt.widgets.Shell;
 import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
 import sernet.gs.ui.rcp.main.bsi.dialogs.Messages;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnATreeElement.TemplateType;
 
 /**
+ * In this dialog it is possible to add additional modeling templates to the
+ * given input ({@link CnATreeElement}).
+ * 
+ * @see TemplateView
+ * @see CnATreeElement#implementedTemplateUuids
+ * @see TemplateType
+ * @see sernet.gs.server.DeleteOrphanTemplateRelationsJob
+ * 
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
  */
 public class TemplateSelectionDialog extends CnATreeElementSelectionDialog {

@@ -30,9 +30,18 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.CopyTreeElements;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnATreeElement.TemplateType;
 import sernet.verinice.service.commands.SaveElement;
 
 /**
+ * Add for given ({@link CnATreeElement}) selected modeling templates
+ * ({@link TemplateType#TEMPLATE}) and apply (implement) these to this element.
+ * 
+ * @see TemplateView#addTemplates()
+ * @see CnATreeElement#implementedTemplateUuids
+ * @see TemplateType
+ * @see TemplateSelectionDialog
+ * 
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
  */
 public class CopyTemplateElements extends CopyTreeElements {

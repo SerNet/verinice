@@ -29,9 +29,14 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnATreeElement.TemplateType;
 
 /**
+ * This action mark the selected {@link IBSIStrukturElement} as modeling
+ * template ({@link TemplateType#TEMPLATE}).
+ * 
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
+ * @see MarkTemplateActionDelegate
  */
 public class MarkTemplateBSIStrukturElementActionDelegate extends MarkTemplateActionDelegate {
     private IWorkbenchPart targetPart;

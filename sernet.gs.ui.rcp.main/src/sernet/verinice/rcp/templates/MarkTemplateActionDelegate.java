@@ -30,8 +30,43 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnATreeElement.TemplateType;
 
 /**
+ * <p>
+ * Modeling templates in the BSI IT baseline security allow to create and
+ * maintain the modules, safeguards and objects at freely definable, ideally at
+ * central location, and to use them in other points of application.
+ * </p>
+ * <p>
+ * Each {@link CnATreeElement}, representing a Object or Module, can be marked
+ * as modeling template or each Safeguard as central
+ * ({@link TemplateType#TEMPLATE}).
+ * </p>
+ * <p>
+ * Example:
+ * </p>
+ * <p>
+ * A Modeling template in the BSI IT baseline:
+ * </p>
+ * <p>
+ * <b>IT Network 1</b> <ui>
+ * <li>Object (marked as modeling template, {@link TemplateType#TEMPLATE})</li>
+ * <ui>
+ * <li>Module 1 (marked as modeling template,
+ * {@link TemplateType#TEMPLATE})</li> <ui>
+ * <li>Safeguard 1 (marked as central, {@link TemplateType#TEMPLATE})</li>
+ * <li>Safeguard 2</li> </ui>
+ * <li>Module 2</li> <ui>
+ * <li>Safeguard 1</li>
+ * <li>Safeguard 2 (marked as central, {@link TemplateType#TEMPLATE})</li> </ui>
+ * <li>Module 3...</li> </ui> </ui>
+ * </p>
+ * 
+ * @see CnATreeElement#implementedTemplateUuids
+ * @see TemplateType
+ * @see sernet.gs.server.DeleteOrphanTemplateRelationsJob
+ * 
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
  */
 public abstract class MarkTemplateActionDelegate implements IObjectActionDelegate, RightEnabledUserInteraction {

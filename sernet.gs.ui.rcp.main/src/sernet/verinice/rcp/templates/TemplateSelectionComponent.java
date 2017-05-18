@@ -38,6 +38,7 @@ import sernet.verinice.service.commands.LoadTemplateCandidates;
 
 /**
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
+ * @see TemplateSelectionDialog
  */
 public class TemplateSelectionComponent extends ElementSelectionComponent {
 
@@ -45,11 +46,6 @@ public class TemplateSelectionComponent extends ElementSelectionComponent {
 
     private CnATreeElement inputElement;
 
-    /**
-     * @param container
-     * @param type
-     * @param scopeId
-     */
     public TemplateSelectionComponent(Composite container, CnATreeElement inputElement) {
         super(container, inputElement.getTypeId(), inputElement.getScopeId());
         this.inputElement = inputElement;

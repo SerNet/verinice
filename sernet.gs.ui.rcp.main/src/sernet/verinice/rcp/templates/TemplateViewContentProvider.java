@@ -34,7 +34,8 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.validation.CnAValidation;
 
 /**
- * @author Viktor Schmidt <vschmidt[at]ckc[dot]de> 
+ * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
+ * @see TemplateView#elements
  */
 public class TemplateViewContentProvider implements IStructuredContentProvider, IBSIModelListener {
 
@@ -47,12 +48,12 @@ public class TemplateViewContentProvider implements IStructuredContentProvider, 
     }
 
     @Override
-    public void inputChanged(Viewer v, Object oldInput, Object newTemplates) {
-        if (newTemplates instanceof PlaceHolder) {
+    public void inputChanged(Viewer v, Object oldInput, Object newElements) {
+        if (newElements instanceof PlaceHolder) {
             return;
         }
-        Set<CnATreeElement> inputElement = (Set<CnATreeElement>) newTemplates;
-        templateView.setTemplates(inputElement);
+        Set<CnATreeElement> inputElements = (Set<CnATreeElement>) newElements;
+        templateView.setElements(inputElements);
         tableViewer.refresh();
     }
 
@@ -65,7 +66,7 @@ public class TemplateViewContentProvider implements IStructuredContentProvider, 
             return new Object[] {};
         }
 
-        return templateView.getTemplates().toArray();
+        return templateView.getElements().toArray();
     }
 
     @Override

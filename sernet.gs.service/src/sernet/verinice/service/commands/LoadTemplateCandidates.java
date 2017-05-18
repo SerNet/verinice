@@ -35,8 +35,16 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnATreeElement.TemplateType;
 
 /**
+ * This command loads for given UUId ({@link CnATreeElement}) all modeling
+ * templates ({@link TemplateType#TEMPLATE}) of the same
+ * {@link CnATreeElement#objectType}.
+ * 
+ * @see TemplateType
+ * @see sernet.gs.server.DeleteOrphanTemplateRelationsJob
+ * 
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
  */
 public class LoadTemplateCandidates extends GenericCommand {

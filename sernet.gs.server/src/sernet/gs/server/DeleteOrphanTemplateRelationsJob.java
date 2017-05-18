@@ -34,6 +34,21 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
+ * A {@link DeleteOrphanTemplateRelationsJob} instance is a job that is to run
+ * once every three months.
+ * <p>
+ * To adjust the iteration of this job, please modify the cron expression in the
+ * Spring configuration.
+ * </p>
+ * <p>
+ * An instance of this class is created in the Spring configuration.
+ * </p>
+ * <p>
+ * The class runs a Hibernate callback that deletes all orphan modeling template
+ * relations. See hibernate mapping for CnATreeElement.implementedTemplateUuids
+ * in {@link CnATreeElement.hbm.xml}).
+ * </p>
+ * 
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
  */
 public class DeleteOrphanTemplateRelationsJob extends QuartzJobBean implements StatefulJob {

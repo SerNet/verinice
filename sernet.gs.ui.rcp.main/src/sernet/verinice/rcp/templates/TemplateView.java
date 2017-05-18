@@ -70,6 +70,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnATreeElement.TemplateType;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IProgressRunnable;
 import sernet.verinice.rcp.RightsEnabledView;
@@ -77,6 +78,20 @@ import sernet.verinice.rcp.templates.TemplateTableViewer.PathCellLabelProvider;
 import sernet.verinice.service.commands.LoadTemplatesOrImplementations;
 
 /**
+ * This view shows for given ({@link CnATreeElement}) all modeling templates
+ * ({@link TemplateType#TEMPLATE}) applied (implemented) in this element, if the
+ * element is an implementation or all implementations
+ * ({@link TemplateType#IMPLEMENTATION}) that belong to this modeling template,
+ * if the element is a modeling template.
+ * 
+ * Father, in this view it is possible to add an additional modeling template to
+ * the given ({@link CnATreeElement}).
+ * 
+ * @see TemplateSelectionDialog
+ * @see CnATreeElement#implementedTemplateUuids
+ * @see TemplateType
+ * @see sernet.gs.server.DeleteOrphanTemplateRelationsJob
+ * 
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
  */
 public class TemplateView extends RightsEnabledView {
@@ -87,7 +102,13 @@ public class TemplateView extends RightsEnabledView {
 
     private TableViewer tableViewer;
     private CnATreeElement inputElement;
-    private Set<CnATreeElement> templates = new HashSet<CnATreeElement>();
+    /**
+     * A Set of modeling templates ({@link TemplateType#TEMPLATE}) applied
+     * (implemented) in given element, if the element is an implementation or
+     * all implementations ({@link TemplateType#IMPLEMENTATION}) that belong to
+     * this modeling template, if the element is a modeling template.
+     */
+    private Set<CnATreeElement> elements = new HashSet<CnATreeElement>();
     private TemplateViewContentProvider contentProvider;
 
     private Action doubleClickAction;
@@ -102,6 +123,17 @@ public class TemplateView extends RightsEnabledView {
     public TemplateView() {
     }
 
+    /**
+     * Loads for given ({@link CnATreeElement}) all modeling templates
+     * ({@link TemplateType#TEMPLATE}) applied (implemented) in this element, if
+     * the element is an implementation or all implementations
+     * ({@link TemplateType#IMPLEMENTATION}) that belong to this modeling
+     * template, if the element is a modeling template.
+     * 
+     * @see CnATreeElement#implementedTemplateUuids
+     * @see TemplateType
+     * @see LoadTemplatesOrImplementations
+     */
     public void loadTemplates() {
         if (!CnAElementHome.getInstance().isOpen() || inputElement == null) {
             return;
@@ -358,12 +390,12 @@ public class TemplateView extends RightsEnabledView {
         }
     }
 
-    public Set<CnATreeElement> getTemplates() {
-        return this.templates;
+    public Set<CnATreeElement> getElements() {
+        return this.elements;
     }
 
-    public void setTemplates(Set<CnATreeElement> templates) {
-        this.templates = templates;
+    public void setElements(Set<CnATreeElement> elements) {
+        this.elements = elements;
     }
 
     public void reloadAll() {
@@ -375,6 +407,19 @@ public class TemplateView extends RightsEnabledView {
         bars.getToolBarManager().add(this.addTemplateAction);
     }
 
+    /**
+     * Add for given ({@link CnATreeElement}) selected modeling templates
+     * ({@link TemplateType#TEMPLATE}) and apply (implement) these to this
+     * element.
+     * 
+     * @see CnATreeElement#implementedTemplateUuids
+     * @see TemplateType
+     * @see TemplateSelectionDialog
+     * 
+     * @throws InvocationTargetException
+     * @throws InterruptedException
+     * @throws CommandException
+     */
     private void addTemplates() throws InvocationTargetException, InterruptedException, CommandException {
         CnATreeElementSelectionDialog dialog = new TemplateSelectionDialog(getShell(), inputElement);
         if (dialog.open() != Window.OK) {

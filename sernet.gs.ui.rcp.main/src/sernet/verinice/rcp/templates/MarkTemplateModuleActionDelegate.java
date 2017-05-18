@@ -29,17 +29,24 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnATreeElement.TemplateType;
 
 /**
+ * This action mark the selected module {@link BausteinUmsetzung}s as modeling
+ * template ({@link TemplateType#TEMPLATE}).
+ * 
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
+ * @see MarkTemplateActionDelegate
  */
 public class MarkTemplateModuleActionDelegate extends MarkTemplateActionDelegate {
     private IWorkbenchPart targetPart;
 
+    @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
         this.targetPart = targetPart;
     }
 
+    @Override
     public void run(IAction action) {
         try {
             Object selection = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();

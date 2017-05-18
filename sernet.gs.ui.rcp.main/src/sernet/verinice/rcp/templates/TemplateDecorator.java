@@ -27,15 +27,18 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.verinice.model.common.CnATreeElement;
 
-/** 
- * Decorator for a new template module and safeguard
+/**
+ * Decorator for a new BSIStrukturElement, module and safeguard modeling
+ * template.
  * 
- * @author Viktor Schmidt <vschmidt[at]ckc[dot]de> 
+ * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
+ * @see MarkTemplateActionDelegate
  */ 
 public class TemplateDecorator extends LabelProvider implements ILightweightLabelDecorator {
 
     public static final String IMAGE_PATH = "overlays/sample_decorator.gif";
 
+    @Override
     public void decorate(Object o, IDecoration decoration) {
         Activator.inheritVeriniceContextState();
         if (o instanceof CnATreeElement) {

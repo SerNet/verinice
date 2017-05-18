@@ -30,7 +30,15 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnATreeElement.TemplateType;
 
+/**
+ * This action mark the selected safequard {@link MassnahmenUmsetzung} as
+ * central ({@link TemplateType#TEMPLATE}).
+ * 
+ * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
+ * @see MarkTemplateActionDelegate
+ */
 public class MarkTemplateSafeguardActionDelegate extends MarkTemplateActionDelegate {
     private IWorkbenchPart targetPart;
 

@@ -32,8 +32,19 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnATreeElement.TemplateType;
 
 /**
+ * This command loads for given ({@link CnATreeElement}) all modeling templates
+ * ({@link TemplateType#TEMPLATE}) applied (implemented) in this element, if the
+ * element is an implementation or all implementations
+ * ({@link TemplateType#IMPLEMENTATION}) that belong to this modeling template,
+ * if the element is a modeling template.
+ * 
+ * @see CnATreeElement#implementedTemplateUuids
+ * @see TemplateType
+ * @see sernet.gs.server.DeleteOrphanTemplateRelationsJob
+ * 
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
  */
 public class LoadTemplatesOrImplementations extends GenericCommand {
