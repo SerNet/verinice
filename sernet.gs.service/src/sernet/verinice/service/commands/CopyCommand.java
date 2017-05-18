@@ -22,10 +22,7 @@ package sernet.verinice.service.commands;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
@@ -36,16 +33,11 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.service.ServerInitializer;
-import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IPostProcessor;
-import sernet.verinice.interfaces.bpm.IIndividualService;
-import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -101,9 +93,6 @@ public class CopyCommand extends GenericCommand {
     
     private boolean copyAttachments = false;
 
-    private HashMap<Integer, String> titleMap = new HashMap<>();
-      
-
     /**
      * @param uuidGroup Uuid of an group
      * @param uuidList Uuids of the elements to copy
@@ -156,7 +145,7 @@ public class CopyCommand extends GenericCommand {
                 final CnATreeElement newElement = copy(selectedGroup, copyElement, sourceDestMap);
                 if(newElement != null && newElement.getUuid() != null){
                     newElements.add(newElement.getUuid());
-                    createTaskWhenUsingTemplate(copyElement, newElement);
+                    createTaskWhileApplyingTemplateCommand(copyElement, newElement);
                 }
             }
             if(getPostProcessorList()!=null && !getPostProcessorList().isEmpty()) {
@@ -450,71 +439,15 @@ public class CopyCommand extends GenericCommand {
         return Messages.getString("CopyCommand.0", title, n); //$NON-NLS-1$
     }
 
-    private void createTaskWhenUsingTemplate(final CnATreeElement copyElement, final CnATreeElement newElement) {
-        if (copyElement.isTemplate() && !MassnahmenUmsetzung.TYPE_ID.equals(copyElement.getTypeId())) {
-            ServerInitializer.inheritVeriniceContextState();
-            String modelingTemplateMaster = modelingTemplateMaster();
-            String username = ((IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE)).getUsername();
-
-            if (!modelingTemplateMaster.equals(username)) {
-                IIndividualService individualService = (IIndividualService) VeriniceContext.get(VeriniceContext.INDIVIDUAL_SERVICE);
-                IndividualServiceParameter parameter = getIndividualServiceParameter(copyElement, newElement, modelingTemplateMaster);
-                individualService.startProcess(parameter);
+    private void createTaskWhileApplyingTemplateCommand(final CnATreeElement selectedModelingTemplate, final CnATreeElement applyToElement) {
+        if (selectedModelingTemplate.isTemplate() && !MassnahmenUmsetzung.TYPE_ID.equals(selectedModelingTemplate.getTypeId())) {
+            try {
+                CreateTaskWhileApplyingTemplateCommand command = new CreateTaskWhileApplyingTemplateCommand(selectedModelingTemplate, applyToElement);
+                getCommandService().executeCommand(command);
+            } catch (Exception e) {
+                getLog().warn("Could not create task while applying template.", e); // $NON-NLS-1$
             }
         }
-    }
-
-    private String modelingTemplateMaster() {
-        String defaultTemplateMaster = PropertyLoader.getModelingTemplateMaster();
-        if (defaultTemplateMaster == null) {
-            getLog().error("Error while parsing property " + PropertyLoader.MODELING_TEMPLATE_MASTER);
-            defaultTemplateMaster = ((IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE)).getAdminUsername();
-        }
-        return defaultTemplateMaster;
-    }
-
-    private IndividualServiceParameter getIndividualServiceParameter(final CnATreeElement copyElement, final CnATreeElement newElement, String modelingTemplateMaster) {
-        IndividualServiceParameter parameter = new IndividualServiceParameter();
-        parameter.setUuid(newElement.getUuid());
-        parameter.setTypeId(newElement.getTypeId());
-        parameter.setAssignee(modelingTemplateMaster);
-        parameter.setTitle(Messages.getString("CopyCommand.TaskTitleWhenUsingTemplate"));
-        String newElementScopeTitle = getScopeTitle(newElement);
-        parameter.setDescription(Messages.getString("CopyCommand.TaskDescriptionWhenUsingTemplate", copyElement.getTitle(), newElement.getParent().getTitle(), newElementScopeTitle));
-
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, 14);
-        parameter.setDueDate(cal.getTime());
-        parameter.setReminderPeriodDays(7);
-        parameter.setProperties(new HashSet<>(Arrays.asList(newElement.getEntityType().getAllPropertyTypeIds())));
-        parameter.setWithAReleaseProcess(false);
-        return parameter;
-    }
-
-    /**
-     * @param copyElement
-     * @return
-     */
-    private String getScopeTitle(final CnATreeElement copyElement) {
-        String scopeTitle = "";
-        try {
-            if (!titleMap.containsKey(copyElement.getScopeId())) {
-                scopeTitle = loadElementsTitles(copyElement);
-            } else {
-                scopeTitle = titleMap.get(copyElement.getScopeId());
-            }
-        } catch (CommandException e) {
-            log.error("Error while getting element properties", e);
-        }
-        return scopeTitle;
-    }
-
-    private String loadElementsTitles(CnATreeElement element) throws CommandException {
-        LoadElementTitles scopeCommand;
-        scopeCommand = new LoadElementTitles();
-        scopeCommand = getCommandService().executeCommand(scopeCommand);
-        titleMap = scopeCommand.getElements();
-        return titleMap.get(element.getScopeId());
     }
 
     public String getUuidGroup() {
