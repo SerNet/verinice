@@ -318,11 +318,6 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
         }
     }
     
-    /**
-     * @param expiredEntry
-     * @param plainValue
-     * @return
-     */
     private String getDynamicEncryptedString(String plainValue, 
             char[] password, String salt) {
         byte[] plainTextBytes = plainValue.getBytes(VeriniceCharset.CHARSET_UTF_8);
@@ -390,16 +385,13 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
     
     @Test
     public void testResetLicenseAssignments(){
-
         try {
             for(String encryptedContentId : licenseManagementService.getAllContentIds(false)){
-
                 for (String licenseId : licenseManagementService.
                         getLicenseIdsForContentId(encryptedContentId, false)){
                     licenseManagementService.
                     addLicenseIdAuthorisation(getConfiguration(TEST_USERNAME), licenseId);
                 }
-
                 Assert.assertTrue(licenseManagementService.
                         getContentIdAllocationCount(encryptedContentId) > 0);
 
@@ -416,8 +408,7 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
     }
 
     @Test
-    public void testResetUserAssignmentsByContentId(){
-        
+    public void testResetUserAssignmentsByContentId(){       
         try {
             for (String licenseId : licenseManagementService.
                     getLicenseIdsForContentId(CONTENT_ID, false)){
@@ -427,9 +418,7 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
                     LOG.error("Error granting license to user", e);
                 }
             }
-
             licenseManagementService.removeContentIdUserAssignment(getConfiguration(TEST_USERNAME), CONTENT_ID);
-
             Assert.assertFalse(licenseManagementService.
                     getAuthorisedContentIdsByUser(TEST_USERNAME).contains(CONTENT_ID));
         } catch (LicenseManagementException e){
@@ -447,8 +436,7 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
                     cryptoPassword.toCharArray(), cryptoSalt);
             Set<LicenseManagementEntry> entries =
                     licenseManagementService.getLicenseEntriesForContentId(
-                            encryptedContentId, false);
-            
+                            encryptedContentId, false);         
             Assert.assertNotNull(entries);
             Assert.assertTrue(entries.size() > 0);
         String plainContentId = 
@@ -465,15 +453,12 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
     
     @Test
     public void testRemovingUsersFromLicenseId() throws IOException{
-        
-        
         LicenseManagementEntry firstEntry = getSingleCryptedEntry();
         LicenseManagementEntry secondEntry = new LicenseManagementEntry();
         
         String plainLicenseId2 = LICENSE_ID + "2";
         String encryptedLicenseId1 = cryptoService.encrypt(LICENSE_ID, cryptoPassword.toCharArray(), cryptoSalt);
-        String encryptedLicenseId2 = cryptoService.encrypt(plainLicenseId2, cryptoPassword.toCharArray(), cryptoSalt);
-        
+        String encryptedLicenseId2 = cryptoService.encrypt(plainLicenseId2, cryptoPassword.toCharArray(), cryptoSalt);   
         
         firstEntry.setLicenseID(encryptedLicenseId1);
         
@@ -485,8 +470,6 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
         secondEntry.setValidUntil(firstEntry.getValidUntil());
         secondEntry.setValidUsers(firstEntry.getValidUsers());
         
-
-
         File vnlFile1 = writeLMEntryToTempFile(firstEntry, TEMP_FILE_NAME + "ZWEI", 
                 TEMP_FILE_NAME_EXT);
         File vnlFile2 = writeLMEntryToTempFile(secondEntry, TEMP_FILE_NAME +"DREI", 
@@ -535,15 +518,19 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
             FileUtils.forceDelete(repoFile2);
         }
     }
-    
-    
+     
     @Test
-    public void serviceTest(){
-        try {
+    public void serviceTest() throws IOException{
+        File repoFile = null;
+        try{ 
+            repoFile = addLicenseToRepository(getSingleCryptedEntry());                   
+            
             Set<String> allIds = licenseManagementService.getAllContentIds(true);
             Assert.assertTrue(allIds.contains(CONTENT_ID));
         } catch (LicenseManagementException e){
             LOG.error("Error getting license Data contentId", e);
+        } finally {
+            FileUtils.forceDelete(repoFile);
         }
     }
     
