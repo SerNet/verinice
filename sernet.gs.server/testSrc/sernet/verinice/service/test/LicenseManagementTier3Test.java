@@ -26,11 +26,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.net.URISyntaxException;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -38,7 +36,6 @@ import javax.annotation.Resource;
 import javax.xml.bind.JAXB;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.log4j.Logger;
@@ -106,11 +103,11 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
     private final static int VALID_USERS = 5;
     private final static String TEMP_FILE_NAME = "vnlTest";
     private final static String TEMP_FILE_NAME_EXT = ".vnl";
+    private final static String VNL_FILE_1 = "vnl/Test-Content-Id_10_2020-05-31_134729.vnl";
+    private final static String VNL_FILE_2 = "vnl/Test-Content-Id-2_2_2025-05-31_134831.vnl";
     
     private Organization accountOrg = null;
-    
-    
-    
+      
     private boolean removeAccountOrg() throws CommandException{
         if(accountOrg != null){
             PrepareObjectWithAccountDataForDeletion removeAccount = new PrepareObjectWithAccountDataForDeletion(accountOrg);
@@ -122,15 +119,9 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
         return false;
     }
     
-    private static final String ABSOLUTE_SNCA_PATH = new File("").getAbsolutePath()
-            + "/testSrc/";
-
-    private static URL url;
-    
     @BeforeClass
     public static void setUpBeforeClass() throws MalformedURLException {
-        String vnlLocation = FilenameUtils.concat(ABSOLUTE_SNCA_PATH, "vnl");
-        url = Paths.get(vnlLocation).toUri().toURL();
+        // nothing to do
     }
     
     @Override
@@ -164,7 +155,7 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
     }
     
     @Test
-    public void testGetLicenses(){
+    public void testGetLicenses() throws URISyntaxException{
         try {
             for (File vnlFile : getTestVNLFiles()){
                 licenseManagementService.addVNLToRepository(vnlFile);
@@ -177,13 +168,11 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
         }
     }
     
-    private List<File> getTestVNLFiles(){
-        List<File> list = new ArrayList<>();
-        Collection<File> vnlFiles = FileUtils.listFiles(new File(url.getFile()), 
-                new String[]{ILicenseManagementService.
-                        VNL_FILE_EXTENSION}, false);
-        list.addAll(vnlFiles);
-        return list;
+    private List<File> getTestVNLFiles() throws URISyntaxException{
+        List<File> vnlFiles = new LinkedList<>();
+        vnlFiles.add(new File(this.getClass().getClassLoader().getResource(VNL_FILE_1).toURI()));
+        vnlFiles.add(new File(this.getClass().getClassLoader().getResource(VNL_FILE_2).toURI()));
+        return vnlFiles;
     }
     
     @Test
@@ -701,7 +690,6 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
 //    @Test
     public void cryptoServiceTest(){
         testPlainCryptoFunctionality();
-        LicenseManagementEntry cryptedEntry = getSingleCryptedEntry();
     }
     
     private Configuration getConfiguration(String username){
@@ -711,10 +699,6 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
     }
     
     
-
-    /**
-     * 
-     */
     private void testPlainCryptoFunctionality() {
         final String plainText = "Sometimes you are the dog, sometimes you are the tree";
         int passwordAndSaltLength = 8;
@@ -761,7 +745,6 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
     private void saveAccount(Configuration configuration) throws CommandException {
         SaveConfiguration<Configuration> command = new SaveConfiguration<Configuration>(configuration, false);
         command = commandService.executeCommand(command);
-//        configurationNames.add(command.getElement().getUser());
     }
     
     private Configuration createAccount(PersonIso person) throws CommandException {
@@ -809,20 +792,12 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
         return accountOrg;
     }
 
-    /**
-     * @return the authService
-     */
     public IAccountService getAccountService() {
         return accountService;
     }
 
-    /**
-     * @param authService the authService to set
-     */
     public void setAccountService(IAccountService accountService) {
         this.accountService = accountService;
     }
-
-
 
 }
