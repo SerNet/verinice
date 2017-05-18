@@ -110,4 +110,9 @@ public interface IRightsService {
     String getMessage(String key);
 
     Properties getAllMessages();
+
+    void addChangeListener(IRightsChangeListener rightsChangeListener);
+
+    void removeChangeListener(IRightsChangeListener rightsChangeListener);
+
 }

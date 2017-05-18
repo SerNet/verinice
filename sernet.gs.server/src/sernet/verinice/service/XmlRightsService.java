@@ -51,7 +51,6 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.core.io.Resource;
 
-import sernet.gs.service.SecurityException;
 import sernet.hui.common.connect.Property;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IAuthService;
@@ -116,8 +115,6 @@ public class XmlRightsService implements IRightsService {
      */
     private volatile Map<String,List<String>> groupnameMap = new Hashtable<String, List<String>>();
     
-    private RightsServerHandler rightsServerHandler;
-    
     private Resource authConfigurationDefault;
     
     private Resource authConfiguration;
@@ -140,7 +137,7 @@ public class XmlRightsService implements IRightsService {
     
     private Map<String, Profile> profileMap;
     
-    private static List<IRightsChangeListener> changeListener = new LinkedList<IRightsChangeListener>();
+    private List<IRightsChangeListener> changeListener = new LinkedList<IRightsChangeListener>();
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsService#getConfiguration()
@@ -232,19 +229,7 @@ public class XmlRightsService implements IRightsService {
         }
     }
     
-    /**
-     * Updates the configuration defined in <code>auth</code>.
-     * 
-     * Content of <code>authNew</code> is saved in file: verinice-auth.xml
-     * if origin of profiles and userprofiles is "modification".
-     * 
-     * Before writing the content the implementation checks
-     * if user is allowed to change the configuration.
-     * 
-     * @see sernet.verinice.interfaces.IRightsService#updateConfiguration(sernet.verinice.model.auth.Auth)
-     */
-    @Override
-    public void updateConfiguration(Auth authNew) {
+    public void udateConfigurationUnsecured(Auth authNew){
         try {     
             if(!isReferenced(ActionRightIDs.EDITPROFILE, authNew)){
                 log.warn("Right id: " + ActionRightIDs.EDITPROFILE + " is not referenced in the auth configuration. No user is able to change the configuration anymore.");
@@ -271,7 +256,6 @@ public class XmlRightsService implements IRightsService {
             // Block all other threads before writing the file
             writeLock.lock();
             try {
-                checkWritePermission(); //throws sernet.gs.service.SecurityException
                 // create a backup of the old configuration
                 backupConfigurationFile();
                 // write the new configuration
@@ -310,24 +294,28 @@ public class XmlRightsService implements IRightsService {
         }
     }
 
+    /**
+     * Updates the configuration defined in <code>auth</code>.
+     *
+     * Content of <code>authNew</code> is saved in file: verinice-auth.xml
+     * if origin of profiles and userprofiles is "modification".
+     *
+     * Before writing the content the implementation checks
+     * if user is allowed to change the configuration.
+     *
+     * @see sernet.verinice.interfaces.IRightsService#updateConfiguration(sernet.verinice.model.auth.Auth)
+     */
+    @Override
+    public void updateConfiguration(Auth authNew) {
+        udateConfigurationUnsecured(authNew);
+    }
+
     private void fireChangeEvent() {       
         for (IRightsChangeListener listener : getChangeListener()) {
             listener.configurationChanged(getConfiguration());
         }
     }
 
-    /**
-     * Throws a sernet.gs.service.SecurityException
-     * if current user has no permission to write the 
-     * authorization configuration.
-     */
-    private void checkWritePermission() throws sernet.gs.service.SecurityException {
-        boolean isWritePermission = getRightsServerHandler().isEnabled(getAuthService().getUsername(), ActionRightIDs.EDITPROFILE); 
-        if(!isWritePermission) {
-            throw new SecurityException("User " + getAuthService().getUsername() + " has no permission to write authorization configuration.");
-        }       
-    }
-    
     /**
      * Creates a copy of the configuration file with suffix ".bak".
      * If the copy file exists, then this method will overwrite it. 
@@ -498,13 +486,6 @@ public class XmlRightsService implements IRightsService {
         return getConfiguration().getProfiles();
     }
     
-    public RightsServerHandler getRightsServerHandler() {
-        if(rightsServerHandler==null) {
-            rightsServerHandler = new RightsServerHandler(this);
-        }
-        return rightsServerHandler;
-    }
-
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsService#getMessage(java.lang.String)
      */
@@ -728,15 +709,15 @@ public class XmlRightsService implements IRightsService {
         return actionMap;
     }
     
-    private static List<IRightsChangeListener> getChangeListener() {    
-        return XmlRightsService.changeListener;
+    private List<IRightsChangeListener> getChangeListener() {
+        return changeListener;
     }
     
-    public static void addChangeListener(IRightsChangeListener listener) {
+    public void addChangeListener(IRightsChangeListener listener) {
         getChangeListener().add(listener);
     }
     
-    public static void removeChangeListener(IRightsChangeListener listener) {
+    public void removeChangeListener(IRightsChangeListener listener) {
         getChangeListener().remove(listener);
     }
     

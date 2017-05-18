@@ -32,6 +32,7 @@ import org.springframework.core.io.Resource;
 
 import sernet.hui.common.connect.Property;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IRightsChangeListener;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.auth.Auth;
 import sernet.verinice.model.auth.Profiles;
@@ -269,6 +270,18 @@ public class DummyRightsService implements IRightsService{
                 "and roleprops.propertyType = ?"; //$NON-NLS-1$
         Object[] params = new Object[]{Configuration.PROP_USERNAME,username,Configuration.PROP_ROLES};        
         return getConfigurationDao().findByQuery(hql,params);
+    }
+
+    @Override
+    public void addChangeListener(IRightsChangeListener rightsChangeListener) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void removeChangeListener(IRightsChangeListener rightsChangeListener) {
+        // TODO Auto-generated method stub
+
     }
 
 }

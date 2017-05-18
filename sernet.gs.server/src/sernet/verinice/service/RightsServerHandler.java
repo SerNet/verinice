@@ -24,6 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import sernet.verinice.interfaces.IRightsChangeListener;
 import sernet.verinice.interfaces.IRightsServerHandler;
@@ -41,7 +45,7 @@ import sernet.verinice.model.auth.Userprofile;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class RightsServerHandler implements IRightsServerHandler, IRightsChangeListener {
+public class RightsServerHandler implements IRightsServerHandler, IRightsChangeListener,  ApplicationContextAware {
 
     private static final Logger LOG = Logger.getLogger(RightsServerHandler.class);
     
@@ -51,16 +55,15 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
     
     private Map<String, Profile> profileMap;
     
-    private IRightsService rightsService;
+    @Autowired
+    private ApplicationContext appContext;
+
+    private IRightsService iRightsService;
+
+    private ApplicationContext appCtx;
     
     public RightsServerHandler() {
         super();
-        XmlRightsService.addChangeListener(this);
-    }
-
-    public RightsServerHandler(IRightsService rightsService) {
-        this();
-        this.rightsService = rightsService;
     }
 
     /* (non-Javadoc)
@@ -68,6 +71,7 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
      */
     @Override
     public boolean isEnabled(String username, String actionId) {      
+        registerIRightsService();
         boolean returnValue = isBlacklist(); 
         Map<String, Action> actionMap = getUserActionMap().get(username);
         if(actionMap!=null) {
@@ -125,12 +129,12 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
     }
 
     private Map<String, List<Userprofile>> loadUserprofileMap() {
-        List<String> usernameList = getRightsService().getUsernames();
+        List<String> usernameList = iRightsService.getUsernames();
         if(usernameList!=null) {
             userprofileMap = new HashMap<String, List<Userprofile>>(usernameList.size());
             for (String name : usernameList) {
                 if(name!=null) {
-                    userprofileMap.put(name, getRightsService().getUserprofile(name));
+                    userprofileMap.put(name, iRightsService.getUserprofile(name));
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("User-profiles loaded for login-name: " + name);
                     }
@@ -150,7 +154,7 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
     }
     
     private Profiles loadProfileMap() {
-        Profiles profiles = getRightsService().getProfiles();   
+        Profiles profiles = iRightsService.getProfiles();
         profileMap = new HashMap<String, Profile>();
         for (Profile profile : profiles.getProfile()) {
             profileMap.put(profile.getName(), profile);
@@ -159,20 +163,13 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
     }
     
     public boolean isBlacklist() {
-        return ConfigurationType.BLACKLIST.equals(getRightsService().getConfiguration().getType());
+        return ConfigurationType.BLACKLIST.equals(iRightsService.getConfiguration().getType());
     }
     
     public boolean isWhitelist() {
-        return ConfigurationType.WHITELIST.equals(getRightsService().getConfiguration().getType());
+        return ConfigurationType.WHITELIST.equals(iRightsService.getConfiguration().getType());
     }
 
-    public IRightsService getRightsService() {
-        return rightsService;
-    }
-
-    public void setRightsService(IRightsService rightsService) {
-        this.rightsService = rightsService;
-    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsChangeListener#configurationChanged(sernet.verinice.model.auth.Auth)
@@ -198,8 +195,29 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
      */
     @Override
     protected void finalize() throws Throwable {
-        XmlRightsService.removeChangeListener(this);
+        iRightsService.removeChangeListener(this);
         super.finalize();
     }
 
+    public void init(){
+        registerIRightsService();
+    }
+
+    private void registerIRightsService() {
+        iRightsService = (IRightsService) appCtx.getBean("rightsService");
+        iRightsService.addChangeListener(this);
+    }
+
+    public ApplicationContext getAppContext() {
+        return appContext;
+    }
+
+    public void setAppContext(ApplicationContext appContext) {
+        this.appContext = appContext;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        appCtx = applicationContext;
+    }
 }

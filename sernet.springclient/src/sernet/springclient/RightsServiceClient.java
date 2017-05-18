@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.IAuthService;
+import sernet.verinice.interfaces.IRightsChangeListener;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.interfaces.IRightsServiceClient;
 import sernet.verinice.model.auth.Action;
@@ -305,6 +306,18 @@ public class RightsServiceClient implements IRightsServiceClient{
 
     public void setAccountService(IAccountService accountService) {
         this.accountService = accountService;
+    }
+
+    @Override
+    public void addChangeListener(IRightsChangeListener rightsChangeListener) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void removeChangeListener(IRightsChangeListener rightsChangeListener) {
+        // TODO Auto-generated method stub
+
     }
 
 }
