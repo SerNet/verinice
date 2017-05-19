@@ -325,24 +325,7 @@ This variant:
         <property name="cnaTreeElementDao" ref="cnaTreeElementDao" />
         <property name="cnaLinkDao" ref="cnaLinkDao" />
     </bean>
-    
-<<<<<<< HEAD
-     <bean id="reportHQLService" class="sernet.verinice.service.ReportHQLService" />
-     
-	<bean id="objectModelService" class="sernet.verinice.service.model.HUIObjectModelService">
-		<property name="huiTypeFactory" ref="huiTypeFactory" />
-	</bean>
-    
-     <bean id="titleCache" class="sernet.verinice.service.ElementTitleCache">
-||||||| merged common ancestors
-     <bean id="reportHQLService" class="sernet.verinice.service.ReportHQLService" />
-     
-	<bean id="objectModelService" class="sernet.verinice.service.model.HUIObjectModelService">
-		<property name="huiTypeFactory" ref="huiTypeFactory" />
-	</bean>
-     
-     <bean id="titleCache" class="sernet.verinice.service.ElementTitleCache">
-=======
+
     <bean id="reportHQLService" class="sernet.verinice.service.ReportHQLService" />
 
     <bean id="objectModelService" class="sernet.verinice.service.model.HUIObjectModelService">
@@ -365,7 +348,6 @@ This variant:
     </util:map>
 
     <bean id="titleCache" class="sernet.verinice.service.ElementTitleCache">
->>>>>>> Only show the all charts when amount of data is below a limit
         <property name="loadScopeTitlesCommand" ref="loadScopeTitlesCommand" />
     </bean>
      

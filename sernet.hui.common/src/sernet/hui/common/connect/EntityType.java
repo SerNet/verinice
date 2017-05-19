@@ -255,26 +255,13 @@ public class EntityType {
 
 	public LinkedList<PropertyType> getObjectBrowserPropertyTypes(){
 	    LinkedList<PropertyType> linkedList = new LinkedList<>();
-	    PropertyType htmlType = null;
-	    boolean foundHtmlProperty = false;
 	    for (IEntityElement entityElement : elements){
 	        if (entityElement instanceof PropertyType && 
 	                ((PropertyType)entityElement).isShowInObjectBrowser()){
 	            linkedList.add((PropertyType)entityElement);
 	        }
 	    }
-	    return htmlType;
-	}
-	
-	private Object[] isShowHtml(IEntityElement entityElement, boolean foundHtmlProperty){
-        Object[] returnValues = new Object[2];
-	    PropertyType propertyType = (PropertyType)entityElement;
-        if (propertyType.isShow_html() && !foundHtmlProperty){
-
-            returnValues[0] = propertyType;
-            returnValues[1] = true;
-        }
-        return returnValues;
+	    return linkedList;
 	}
 	
 	public void addPropertyType(PropertyType prop) {
