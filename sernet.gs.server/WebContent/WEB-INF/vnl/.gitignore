@@ -1,0 +1,3 @@
+# this file is needed as a simple way to track empty folders
+# the empty folders tracked with a .gitignore file are important for successful builds
+# please do not delete this file
