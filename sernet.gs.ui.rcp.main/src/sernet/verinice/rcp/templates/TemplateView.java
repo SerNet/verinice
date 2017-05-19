@@ -98,7 +98,7 @@ public class TemplateView extends RightsEnabledView {
 
     private static final Logger LOG = Logger.getLogger(TemplateView.class);
 
-    public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.TemplateView"; //$NON-NLS-1$
+    public static final String ID = "sernet.verinice.rcp.templates.TemplateView"; //$NON-NLS-1$
 
     private TableViewer tableViewer;
     private CnATreeElement inputElement;
