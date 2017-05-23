@@ -4,6 +4,7 @@ Bundle-Name: verinice ODA driver designer
 Bundle-SymbolicName: sernet.verinice.oda.driver.designer;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sernet.verinice.oda.driver.designer.Activator
+Eclipse-BuddyPolicy: global
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,

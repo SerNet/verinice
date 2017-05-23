@@ -889,6 +889,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
             // Make command service available as an OSGi service
             context.registerService(ICommandService.class.getName(), VeriniceContext.get(VeriniceContext.COMMAND_SERVICE), null);
+            context.registerService(IObjectModelService.class.getName(), VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE), null);
         }
     }
 

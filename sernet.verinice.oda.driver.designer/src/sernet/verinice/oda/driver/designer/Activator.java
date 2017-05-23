@@ -22,6 +22,12 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.util.tracker.ServiceTracker;
+
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.service.auth.KerberosStatusService;
+import sernet.verinice.service.model.IObjectModelService;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -29,12 +35,18 @@ import org.osgi.framework.BundleContext;
 public class Activator extends AbstractUIPlugin {
 
     private final Logger log = Logger.getLogger(Activator.class);
+
     
 	// The plug-in ID
 	public static final String PLUGIN_ID = "sernet.verinice.oda.driver.designer";
 
 	// The shared instance
 	private static Activator plugin;
+
+    private ServiceTracker<ICommandService, ICommandService> commandServiceTracker;
+
+
+    private ServiceTracker<IObjectModelService, IObjectModelService> objectModelServiceTracker;
 	
 	/**
 	 * The constructor
@@ -53,7 +65,20 @@ public class Activator extends AbstractUIPlugin {
             final Bundle bundle = context.getBundle();
             log.info("Starting bundle " + bundle.getSymbolicName() + " " + bundle.getVersion());
         }
-		ServiceFactory.getInstance().openBeanFactory(context);
+//		ServiceFactory.getInstance().openBeanFactory(context);
+		
+		
+		
+		  commandServiceTracker = new ServiceTracker<ICommandService,ICommandService>(context, ICommandService.class.getName(), null);
+		  if(commandServiceTracker != null){
+		      commandServiceTracker.open();
+		  }
+		  
+          objectModelServiceTracker = new ServiceTracker<IObjectModelService,IObjectModelService>(context, IObjectModelService.class.getName(), null);
+          if(objectModelServiceTracker != null){
+              objectModelServiceTracker.open();
+          }
+		  
 	}
 
 	/*
@@ -63,6 +88,14 @@ public class Activator extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
+
+        if(commandServiceTracker != null){
+            commandServiceTracker.close();
+        }
+        if(objectModelServiceTracker != null){
+            objectModelServiceTracker.close();
+        }
+
 	}
 
 	/**
@@ -84,4 +117,12 @@ public class Activator extends AbstractUIPlugin {
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
+
+    public ICommandService getCommandService() {
+        return commandServiceTracker.getService();
+    }
+
+    public IObjectModelService getObjectModelService() {
+        return objectModelServiceTracker.getService();
+    }
 }
