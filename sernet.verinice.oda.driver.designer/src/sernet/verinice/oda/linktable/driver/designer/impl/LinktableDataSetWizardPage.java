@@ -44,8 +44,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
-import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.oda.driver.designer.Activator;
 import sernet.verinice.oda.driver.impl.Driver;
 import sernet.verinice.oda.linktable.driver.impl.Query;
@@ -124,29 +122,17 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
         }
         IDriver customDriver = new Driver();
         IConnection customConn;
-        IObjectModelService objectModelService = null;//ServiceFactory.getInstance().getObjectModelService();
+        IObjectModelService objectModelService = null;
         try {
-            customConn = customDriver.getConnection(null);
             customConn = customDriver.getConnection(null);
             java.util.Properties connProps = DesignSessionUtil
                     .getEffectiveDataSourceProperties(getInitializationDesign()
                             .getDataSourceDesign());
             customConn.open(connProps);
-            
-            
-            //TODO: this method should be called initServicefactory
-//            sernet.gs.ui.rcp.main.service.ServiceFactory.openCommandService();
-            
-            
-//            ICommandService commandService = Activator.getDefault().getCommandService();
-            objectModelService = Activator.getDefault().getObjectModelService();
 
-            
-            //            sernet.gs.ui.rcp.main.service.ServiceFactory.lookupObjectModelService();
+            objectModelService = Activator.getDefault().getObjectModelService();
         } catch (OdaException e) {
-            
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            LOG.error("Error while opening the server connection.",e);
         } 
 
         linkTableComposite = new LinkTableComposite(linkTable, 

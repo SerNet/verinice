@@ -77,7 +77,6 @@ import sernet.verinice.interfaces.IVersionConstants;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportService;
-import sernet.verinice.interfaces.updatenews.IUpdateNewsService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
@@ -887,7 +886,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
             state = ServiceFactory.getClientWorkObjects();
             VeriniceContext.setState(state);
 
-            // Make command service available as an OSGi service
+            // Make command and model service available as an OSGi service
             context.registerService(ICommandService.class.getName(), VeriniceContext.get(VeriniceContext.COMMAND_SERVICE), null);
             context.registerService(IObjectModelService.class.getName(), VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE), null);
         }

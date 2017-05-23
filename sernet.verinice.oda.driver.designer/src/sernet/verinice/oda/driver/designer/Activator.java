@@ -22,11 +22,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 
 import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.service.auth.KerberosStatusService;
 import sernet.verinice.service.model.IObjectModelService;
 
 /**
@@ -35,17 +33,13 @@ import sernet.verinice.service.model.IObjectModelService;
 public class Activator extends AbstractUIPlugin {
 
     private final Logger log = Logger.getLogger(Activator.class);
-
     
 	// The plug-in ID
 	public static final String PLUGIN_ID = "sernet.verinice.oda.driver.designer";
 
 	// The shared instance
 	private static Activator plugin;
-
     private ServiceTracker<ICommandService, ICommandService> commandServiceTracker;
-
-
     private ServiceTracker<IObjectModelService, IObjectModelService> objectModelServiceTracker;
 	
 	/**
@@ -59,26 +53,22 @@ public class Activator extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-		if (log.isInfoEnabled()) {
+        super.start(context);
+        plugin = this;
+        if (log.isInfoEnabled()) {
             final Bundle bundle = context.getBundle();
             log.info("Starting bundle " + bundle.getSymbolicName() + " " + bundle.getVersion());
         }
-//		ServiceFactory.getInstance().openBeanFactory(context);
-		
-		
-		
-		  commandServiceTracker = new ServiceTracker<ICommandService,ICommandService>(context, ICommandService.class.getName(), null);
-		  if(commandServiceTracker != null){
-		      commandServiceTracker.open();
-		  }
-		  
-          objectModelServiceTracker = new ServiceTracker<IObjectModelService,IObjectModelService>(context, IObjectModelService.class.getName(), null);
-          if(objectModelServiceTracker != null){
-              objectModelServiceTracker.open();
-          }
-		  
+
+        commandServiceTracker = new ServiceTracker<ICommandService, ICommandService>(context, ICommandService.class.getName(), null);
+        if (commandServiceTracker != null) {
+            commandServiceTracker.open();
+        }
+
+        objectModelServiceTracker = new ServiceTracker<IObjectModelService, IObjectModelService>(context, IObjectModelService.class.getName(), null);
+        if (objectModelServiceTracker != null) {
+            objectModelServiceTracker.open();
+        }
 	}
 
 	/*
