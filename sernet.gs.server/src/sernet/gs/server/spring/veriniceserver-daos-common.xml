@@ -177,6 +177,13 @@
 		</constructor-arg>
 	</bean>
 
+
+	<bean id="secureItVerbundDAO" parent="secureDao">
+		<constructor-arg>
+			<value>sernet.verinice.model.bsi.ITVerbund</value>
+		</constructor-arg>
+	</bean>
+
 	<bean id="massnahmenUmsetzungDAO" parent="secureDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.MassnahmenUmsetzung</value>

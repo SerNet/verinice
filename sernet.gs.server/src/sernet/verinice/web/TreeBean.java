@@ -25,12 +25,14 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.faces.event.ActionEvent;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
 
 import org.apache.log4j.Logger;
-import org.primefaces.component.menuitem.MenuItem;
-import org.primefaces.model.DefaultMenuModel;
-import org.primefaces.model.MenuModel;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.DefaultMenuModel;
+import org.primefaces.model.menu.MenuModel;
 
 import sernet.gs.service.SecurityException;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -56,7 +58,8 @@ import sernet.verinice.service.iso27k.LoadModel;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings("restriction")
+@ManagedBean(name = "tree")
+@ViewScoped
 public class TreeBean implements IElementListener {
 
     private static final Logger LOG = Logger.getLogger(TreeBean.class);
@@ -70,10 +73,12 @@ public class TreeBean implements IElementListener {
         }
     });
     
-    private static final int MAX_BREADCRUMB_SIZE = 4;
+    private static final int MAX_BREADCRUMB_SIZE = Integer.MAX_VALUE;
     
+    @ManagedProperty("#{edit}")
     private EditBean editBean;
     
+    @ManagedProperty("#{auth}")
     private AuthBean authBean;
     
     private CnATreeElement element;
@@ -150,19 +155,21 @@ public class TreeBean implements IElementListener {
     }
 
     private boolean isGroup() {
-        return this.element!=null 
-                && (this.element instanceof IISO27kGroup || this.element instanceof IISO27kRoot)
-                && !(this.element instanceof Asset);
+        return this.element != null && (this.element instanceof IISO27kGroup || this.element instanceof IISO27kRoot) && !(this.element instanceof Asset);
     }
-    
+
     public ElementInformation getElementInformation() {
-        return this.elementInformation ;
+        return this.elementInformation;
     }
-    
-    
+
     public void setElementInformation(ElementInformation elementInformation) {
-        this.elementInformation = elementInformation;
-        setElement(elementInformation.getElement());
+
+        if (elementInformation == null) {
+            this.elementInformation = new ElementInformation(getElement());
+        } else {
+            this.elementInformation = elementInformation;
+            setElement(elementInformation.getElement());
+        }
     }
 
     public void init() {
@@ -178,6 +185,7 @@ public class TreeBean implements IElementListener {
         });
         createMenuModel();
         createHandlers();
+        setElementInformation(null);
     }
 
     protected void updatePath(CnATreeElement element) {
@@ -193,18 +201,23 @@ public class TreeBean implements IElementListener {
     }
 
     public void showParent() {
+
         if(this.element!=null) {
             setElement(this.element.getParent());
-            openElement();
         } else {
             init();
         }
+
+        openElement();
     }
     
     private void createMenuModel() {
         menuModel = new DefaultMenuModel();     
-        // Add home item     
-        menuModel.addMenuItem(MenuItemFactory.createNavigationMenuItem());
+        // Add home item
+        DefaultMenuItem home = new DefaultMenuItem();
+        home.setCommand("#{tree.init}");
+        home.setUpdate(":tableForm,:navForm,:editForm");
+        menuModel.addElement(home);
         
         path.clear();
         createPath(this.getElement());
@@ -213,35 +226,31 @@ public class TreeBean implements IElementListener {
         Integer breadcrumbSize = calculateBreadcrumbSize();
         for (int i = breadcrumbSize; i < path.size(); i++) {
             CnATreeElement pathElement = path.get(i);
-            MenuItem item = MenuItemFactory.createNavigationMenuItem();
+            DefaultMenuItem item = new DefaultMenuItem();
             item.setValue(pathElement.getTitle());
-            item.getAttributes().put("pathId", i );
-            menuModel.addMenuItem(item);
+            item.setCommand("#{tree.selectPath(" + i + ")}");
+            item.setUpdate(":tableForm,:navForm,:editForm");
+            menuModel.addElement(item);
         }
     }
 
-    /**
-     * @return
-     */
+    public void selectPath(String pathId) {
+        if (pathId != null) {
+            setElement(path.get(Integer.valueOf(pathId)));
+        } else {
+            setElement(loadIsoModel());
+        }
+
+        setElementInformation(null);
+        openElement();
+    }
+
     private Integer calculateBreadcrumbSize() {
         Integer n = 0;
         if(path.size()>MAX_BREADCRUMB_SIZE) {
             n = path.size() - MAX_BREADCRUMB_SIZE;
         }
         return n;
-    }
-    
-    public void selectPath(ActionEvent event) {
-        MenuItem selectedMenuItem = (MenuItem) event.getComponent();
-        String id = null;
-        if(selectedMenuItem.getAttributes().get("pathId")!=null) {
-            id = selectedMenuItem.getAttributes().get("pathId").toString();
-        }
-        if(id!=null) {
-            setElement( path.get(Integer.valueOf(id)));
-        } else {
-            setElement( loadIsoModel() );
-        }
     }
     
     public void openElement() {
@@ -271,40 +280,46 @@ public class TreeBean implements IElementListener {
         } catch (Exception t) {
             LOG.error("Error while opening element", t); //$NON-NLS-1$
             Util.addError("elementTable", Util.getMessage("tree.open.failed")); //$NON-NLS-1$
-        } 
+        }
     }
-    
+
     public void delete() {
-        final String componentElementtable = "elementTable";
+
+        String componentId = "elementTable";
+
         try {
-            RemoveElement<CnATreeElement> command = new RemoveElement(getElement());
+            RemoveElement<CnATreeElement> command = new RemoveElement<>(getElement());
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             manager.elementRemoved(getElement());
             getChildren().remove(getElementInformation());
             getEditBean().clear();
             getLinkBean().clear();
-            if(isGroup()) {
+            if (isGroup()) {
                 showParent();
             }
-            Util.addInfo(componentElementtable, Util.getMessage(TreeBean.BOUNDLE_NAME, "deleted", new Object[]{getElementInformation().getTitle()}));
-        } catch( SecurityException e) {
+
+            String message = Util.getMessage(TreeBean.BOUNDLE_NAME, "deleted", new Object[] { getElementInformation().getTitle() });
+            Util.addInfo(componentId, message);
+        } catch (SecurityException e) {
             LOG.error("SecurityException while deleting element.");
-            Util.addError(componentElementtable, Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security"));
-        } catch( Exception e) {
-            LOG.error("Error while deleting element.");
+            String message = Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security");
+            Util.addErrorDetailed(componentId, message, e.getLocalizedMessage());
+        } catch (Exception e) {
+            LOG.error("Error while deleting element.", e);
             Throwable t = e.getCause();
-            if(t instanceof SecurityException) {
-                Util.addError(componentElementtable, Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security"));
+
+            if (t instanceof SecurityException) {
+                String message = Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security");
+                Util.addErrorDetailed(componentId, message, t.getLocalizedMessage());
             } else {
-                Util.addError(componentElementtable, Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed"));
+                String message = Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed");
+                Util.addErrorDetailed(componentId, message, e.getLocalizedMessage());
             }
         }
     }
 
-    private boolean isEditable() {
-        return getElement()!=null 
-               && !(getElement() instanceof ISO27KModel)
-               && !(getElement() instanceof ImportIsoGroup);
+    public boolean isEditable() {
+        return getElement() != null && !(getElement() instanceof ISO27KModel) && !(getElement() instanceof ImportIsoGroup);
     }
 
     @Override
@@ -321,10 +336,6 @@ public class TreeBean implements IElementListener {
                 createPath(element.getParent());
             }
         }
-    }
-    
-    public void add() {
-        
     }
     
     private boolean isRoot(CnATreeElement element) {
@@ -426,5 +437,4 @@ public class TreeBean implements IElementListener {
         }
         return model;
     }
-    
 }

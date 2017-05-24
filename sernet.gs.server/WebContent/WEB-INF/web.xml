@@ -1,65 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+
+<web-app
+  version="2.5"
   xmlns="http://java.sun.com/xml/ns/javaee"
   xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-  version="2.5">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-	<!--
-		This file configures the plain veriniceserver. It is not used for the
-		internal verinice server. To find its equivalent have a look at the
-		sernet.gs.server.InternalServer class.
-	-->
+  <!--
+    This file configures the plain verinice server. It is not used for the internal verinice
+    server. To find its equivalent have a look at the sernet.gs.server.InternalServer class.
+  -->
 
-	<display-name>veriniceserver</display-name>
-	<welcome-file-list>
-		<welcome-file>index.jsp</welcome-file>
-		<welcome-file>index.jsf</welcome-file>
-		<welcome-file>index.html</welcome-file>
-		<welcome-file>index.htm</welcome-file>
-		<welcome-file>default.html</welcome-file>
-		<welcome-file>default.htm</welcome-file>
-		<welcome-file>default.jsp</welcome-file>
-	</welcome-file-list>
+  <display-name>verinice server</display-name>
 
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>
-			classpath:sernet/gs/server/spring/veriniceserver-security.xml
-        	classpath:sernet/gs/server/spring/veriniceserver-common.xml
-        	classpath:sernet/gs/server/spring/veriniceserver-plain.xml
-        	classpath:sernet/gs/server/spring/veriniceserver-daos-common.xml
-        	classpath:sernet/gs/server/spring/veriniceserver-daos-plain.xml 
+  <welcome-file-list>
+    <welcome-file>misc/home.xhtml</welcome-file>
+  </welcome-file-list>
 
-            
-            <!-- Use this for digest authentication for rich and web client: -->  
-            classpath:sernet/gs/server/spring/veriniceserver-security-plain-internal.xml
-            
-            <!-- Use this for digest authentication for rich client -->
-            <!-- and ordinary form based authentication for web client: -->  
-            <!-- classpath:sernet/gs/server/spring/veriniceserver-security-web.xml -->
-            
-            <!-- Use this for LDAP / Active Directory authentication: -->    
-            <!-- classpath:sernet/gs/server/spring/veriniceserver-security-plain-ldap.xml -->
-            
-            classpath:sernet/gs/server/spring/veriniceserver-webservice.xml
-            classpath:sernet/gs/server/spring/veriniceserver-ldap.xml
-            classpath:sernet/gs/server/spring/veriniceserver-jbpm.xml
-            classpath:sernet/gs/server/spring/veriniceserver-rightmanagement.xml
-            classpath:sernet/gs/server/spring/veriniceserver-reportdeposit.xml
-            classpath:sernet/gs/server/spring/veriniceserver-search-base.xml
-            classpath:sernet/gs/server/spring/veriniceserver-search.xml
-            classpath:sernet/gs/server/spring/veriniceserver-account.xml
-            classpath:sernet/gs/server/spring/veriniceserver-updatenews-dummy.xml
-            classpath:sernet/gs/server/spring/veriniceserver-risk-analysis.xml
-            classpath:sernet/gs/server/spring/veriniceserver-licensemanagement.xml
-        </param-value>
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+      classpath:sernet/gs/server/spring/veriniceserver-security.xml
+      classpath:sernet/gs/server/spring/veriniceserver-common.xml
+      classpath:sernet/gs/server/spring/veriniceserver-plain.xml
+      classpath:sernet/gs/server/spring/veriniceserver-daos-common.xml
+      classpath:sernet/gs/server/spring/veriniceserver-daos-plain.xml
+
+      <!-- Use this for HTTP digest authentication for rich client -->
+      <!-- and form based authentication for web client: -->
+      classpath:sernet/gs/server/spring/veriniceserver-security-plain-internal.xml
+
+      <!-- Use this for LDAP / Active Directory authentication: -->
+      <!-- classpath:sernet/gs/server/spring/veriniceserver-security-plain-ldap.xml -->
+
+      classpath:sernet/gs/server/spring/veriniceserver-webservice.xml
+      classpath:sernet/gs/server/spring/veriniceserver-ldap.xml
+      classpath:sernet/gs/server/spring/veriniceserver-jbpm.xml
+      classpath:sernet/gs/server/spring/veriniceserver-rightmanagement.xml
+      classpath:sernet/gs/server/spring/veriniceserver-reportdeposit.xml
+      classpath:sernet/gs/server/spring/veriniceserver-search-base.xml
+      classpath:sernet/gs/server/spring/veriniceserver-search.xml
+      classpath:sernet/gs/server/spring/veriniceserver-account.xml
+      classpath:sernet/gs/server/spring/veriniceserver-updatenews-dummy.xml
+      classpath:sernet/gs/server/spring/veriniceserver-risk-analysis.xml
+      classpath:sernet/gs/server/spring/veriniceserver-licensemanagement.xml
+    </param-value>
 	</context-param>
-	
-	<!-- Webclient conf -->
+
+	<!-- JSF and PrimeFaces config -->
 	<context-param>
 		<param-name>javax.faces.CONFIG_FILES</param-name>
-		<param-value>/WEB-INF/faces-config.xml</param-value>
+		<param-value>
+      /WEB-INF/verinice-faces-config.xml;
+      /WEB-INF/poseidon-faces-config.xml
+    </param-value>
 	</context-param>
 	<context-param>
 		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
@@ -69,67 +65,37 @@
 		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
 		<param-value>.xhtml</param-value>
 	</context-param>
-    <context-param>
-        <param-name>javax.faces.FACELETS_LIBRARIES</param-name>
-        <param-value>/WEB-INF/verinice-taglib.xml</param-value>
-    </context-param>
-    <context-param>  
-        <param-name>primefaces.THEME</param-name>  
-        <param-value>blitzer</param-value>  
-    </context-param>
-	<!-- Webclient conf end -->
+	<context-param>
+		<param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+		<param-value>
+      /WEB-INF/verinice-taglib.xml;
+      /WEB-INF/primefaces-poseidon.taglib.xml
+    </param-value>
+	</context-param>
+	<context-param>
+		<param-name>primefaces.THEME</param-name>
+		<param-value>poseidon-verinice</param-value>
+	</context-param>
+	<context-param>
+		<param-name>primefaces.FONT_AWESOME</param-name>
+		<param-value>true</param-value>
+	</context-param>
 
-	<filter>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-	</filter>
-	<filter>
-		<filter-name>contextInitializer</filter-name>
-		<filter-class>sernet.gs.web.ContextInitializer</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/service/*</url-pattern>
-	</filter-mapping> 
-    <filter-mapping>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>/todo/*</url-pattern>
-    </filter-mapping> 
-    <filter-mapping>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>/edit/*</url-pattern>
-    </filter-mapping>
-	<filter-mapping>
-		<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/sync/*</url-pattern>
-	</filter-mapping>
-    <filter-mapping>
-        <filter-name>springSecurityFilterChain</filter-name>
-        <url-pattern>/auth/*</url-pattern>
-    </filter-mapping>
-	<filter-mapping>
-		<filter-name>contextInitializer</filter-name>
-		<url-pattern>/todo/*</url-pattern>
-	</filter-mapping>
-    <filter-mapping>
-        <filter-name>contextInitializer</filter-name>
-        <url-pattern>/edit/*</url-pattern>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>contextInitializer</filter-name>
-        <url-pattern>/auth/*</url-pattern>
-    </filter-mapping>
-    
-    <!-- Primefaces fileupload -->
-    <filter> 
-        <filter-name>PrimeFaces FileUpload Filter</filter-name>   
-        <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>     
-    </filter>   
-    <filter-mapping>
-        <filter-name>PrimeFaces FileUpload Filter</filter-name>  
-        <servlet-name>Faces Servlet</servlet-name>
-    </filter-mapping>
-    
+<!-- 	<context-param> -->
+<!-- 		<param-name>javax.faces.FACELETS_BUFFER_SIZE</param-name> -->
+<!-- 		<param-value>1048576</param-value> -->
+<!-- 	</context-param> -->
+
+	<!-- Load EL 2.2 -->
+	<context-param>
+		<param-name>org.apache.myfaces.EXPRESSION_FACTORY</param-name>
+		<param-value>com.sun.el.ExpressionFactoryImpl</param-value>
+	</context-param>
+	<context-param>
+		<param-name>com.sun.faces.expressionFactory</param-name>
+		<param-value>com.sun.el.ExpressionFactoryImpl</param-value>
+	</context-param>
+
 	<!-- Spring context loader -->
 	<servlet>
 		<servlet-name>context</servlet-name>
@@ -146,13 +112,21 @@
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
-	
+	<servlet-mapping>
+		<servlet-name>springDispatcher</servlet-name>
+		<url-pattern>/service/*</url-pattern>
+	</servlet-mapping>
+
 	<!-- Apache CXF Servlet -->
 	<servlet>
 		<servlet-name>cxfServlet</servlet-name>
 		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
+	<servlet-mapping>
+		<servlet-name>cxfServlet</servlet-name>
+		<url-pattern>/sync/*</url-pattern>
+	</servlet-mapping>
 
 	<servlet>
 		<description>Output HuiConfig from classpath.</description>
@@ -165,50 +139,131 @@
 		</init-param>
 		<load-on-startup>3</load-on-startup>
 	</servlet>
-    
-    <error-page>
-        <error-code>403</error-code>
-        <location>/error/403.html</location>
-    </error-page>
-    <error-page>
-        <error-code>404</error-code>
-        <location>/error/404.html</location>
-    </error-page>
-    <error-page>
-        <error-code>500</error-code>
-        <location>/error/500.html</location>
-    </error-page>
-
-	<servlet-mapping>
-		<servlet-name>springDispatcher</servlet-name>
-		<url-pattern>/service/*</url-pattern>
-	</servlet-mapping>
-
 	<servlet-mapping>
 		<servlet-name>GetHitroConfig</servlet-name>
 		<url-pattern>/GetHitroConfig</url-pattern>
 	</servlet-mapping>
-	
-	<servlet-mapping>
-		<servlet-name>cxfServlet</servlet-name>
-		<url-pattern>/sync/*</url-pattern>
-	</servlet-mapping>
 
-	<!-- Webclient conf -->
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.jsf</url-pattern>
 	</servlet-mapping>
-	<!-- Webclient conf end -->
-    
-    <session-config>
-      <!-- Session idle timeout in min. -->
-      <session-timeout>30</session-timeout> 
-    </session-config>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.faces</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+
+	<listener>
+		<listener-class>com.sun.faces.config.ConfigureListener</listener-class>
+	</listener>
+
+	<filter>
+		<filter-name>Character Encoding Filter</filter-name>
+		<filter-class>org.primefaces.poseidon.filter.CharacterEncodingFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>Character Encoding Filter</filter-name>
+		<servlet-name>Faces Servlet</servlet-name>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>contextInitializer</filter-name>
+		<filter-class>sernet.gs.web.ContextInitializer</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>contextInitializer</filter-name>
+		<url-pattern>/todo/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>contextInitializer</filter-name>
+		<url-pattern>/auth/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>contextInitializer</filter-name>
+		<url-pattern>/dashboard/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>contextInitializer</filter-name>
+		<url-pattern>/misc/*</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/misc/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/dashboard/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/service/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/edit/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/sync/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/auth/*</url-pattern>
+	</filter-mapping>
+
+	<!-- PrimeFaces fileupload -->
+	<filter>
+		<filter-name>PrimeFaces FileUpload Filter</filter-name>
+		<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>PrimeFaces FileUpload Filter</filter-name>
+		<servlet-name>Faces Servlet</servlet-name>
+	</filter-mapping>
+
+
+	<error-page>
+		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
+		<location>/auth/login.xhtml</location>
+	</error-page>
+	<error-page>
+		<exception-type>org.springframework.security.AccessDeniedException</exception-type>
+		<location>/auth/login.xhtml</location>
+	</error-page>
+	<error-page>
+		<exception-type>java.lang.Throwable</exception-type>
+		<location>/error/500.xhtml</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error/500.xhtml</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/error/500.xhtml</location>
+	</error-page>
+
+  <mime-mapping>
+    <extension>woff2</extension>
+    <mime-type>application/x-font-woff2</mime-type>
+  </mime-mapping>
+
+	<session-config>
+		<!-- Session idle timeout in min. -->
+		<session-timeout>30</session-timeout>
+	</session-config>
 </web-app>

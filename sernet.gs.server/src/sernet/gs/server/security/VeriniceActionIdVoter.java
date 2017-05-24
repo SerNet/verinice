@@ -71,6 +71,11 @@ public class VeriniceActionIdVoter implements AccessDecisionVoter {
         while (iterator.hasNext()) {
 
             ConfigAttribute attribute = iterator.next();
+
+            if(!supports(attribute)){
+                continue;
+            }
+
             String actionId = extractActionId(attribute.getAttribute());
 
             if (getRightsServerHandler().isEnabled(name, actionId)) {

@@ -319,9 +319,9 @@ public class BSIMassnahmenModel {
                 line = line.replaceAll("<a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
                 line = line.replaceAll("</a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
                 line = line.replaceAll("<img.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
-                line = line.replace((char) utf8NoBreakSpace, ' '); // replace
-                                                                   // non-breaking
-                                                                   // spaces
+                line = line.replace((char) utf8NoBreakSpace, ' ');
+                line = line.replace("<hr.*?>", "");
+                line = line.replace("<hr class=\"linievorcopy\" style=\"width: 730px;\">", "");
 
                 if (!skip) {
                     b.append(line);

@@ -52,6 +52,7 @@ import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.AuditGroup;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.iso27k.Process;
 
 public class LoadReportElements extends GenericCommand implements ICachedCommand{
 

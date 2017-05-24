@@ -25,6 +25,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 
@@ -48,6 +50,8 @@ import sernet.verinice.service.commands.SaveNote;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * 
  */
+@ManagedBean(name = "attachment")
+@SessionScoped
 public class AttachmentBean {
 
     private static final Logger LOG = Logger.getLogger(AttachmentBean.class);
@@ -56,10 +60,6 @@ public class AttachmentBean {
     private List<Attachment> attachments;
     private boolean autoUpload = true;
     private boolean useFlash = false;
-
-    public AttachmentBean() {
-    }
-    
 
     public void init() {
         attachments = loadAttachments();  

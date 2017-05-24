@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.service.model;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,7 +31,7 @@ import java.util.Set;
  * @see HUIObjectModelService
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
-public interface IObjectModelService {
+public interface IObjectModelService extends Serializable {
 
 
     void init();

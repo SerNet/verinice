@@ -62,7 +62,7 @@ public class ElementInformation {
         if(path==null && element instanceof IISO27kGroup) {
             path = Icons.FOLDER;
         }
-        return path;
+        return "/resources/verinice-layout" + path;
     }
 
     @Override

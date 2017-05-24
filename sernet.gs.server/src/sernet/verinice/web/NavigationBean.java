@@ -19,12 +19,16 @@
  ******************************************************************************/
 package sernet.verinice.web;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
+@ManagedBean(name = "nav")
+@SessionScoped
 public class NavigationBean {
     
     public static final String VIEW_ID_TASK = "/todo/task.xhtml";
@@ -54,17 +58,17 @@ public class NavigationBean {
     }
 
     public String getIndexNavStyle() {
-        String fullId = "/portal.verinice.private/index.xhtml";
+        String fullId = "/portal/index.xhtml";
         return fullId.equals(getViewId()) ? CLASS_NAV_ACTIVE : CLASS_NAV_INACTIVE;
     }
 
     public String getDownloadNavStyle() {
-        String fullId = "/portal.verinice.private/download.xhtml";
+        String fullId = "/portal/download.xhtml";
         return fullId.equals(getViewId()) ? CLASS_NAV_ACTIVE : CLASS_NAV_INACTIVE;
     }
 
     public String getManualNavStyle() {
-        String fullId = "/portal.verinice.private/manual.xhtml";
+        String fullId = "/portal/manual.xhtml";
         return fullId.equals(getViewId()) ? CLASS_NAV_ACTIVE : CLASS_NAV_INACTIVE;
     }
 

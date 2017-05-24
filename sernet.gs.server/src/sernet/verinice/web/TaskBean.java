@@ -27,6 +27,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
@@ -50,6 +54,8 @@ import sernet.verinice.service.commands.LoadElementByUuid;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@ManagedBean(name = "task")
+@SessionScoped
 public class TaskBean {
 
     private static final Logger LOG = Logger.getLogger(TaskBean.class);
@@ -58,6 +64,7 @@ public class TaskBean {
     
     public static final int MAX_TITLE_LENGTH = 100;
 
+    @ManagedProperty("#{edit}")
     private EditBean editBean;
     
     private List<CnATreeElement> auditList;
@@ -378,7 +385,7 @@ public class TaskBean {
     
         @Override
         public String getLabel() {
-            return Messages.getString("TaskBean.8"); //$NON-NLS-1$
+            return sernet.gs.web.Util.getMessage(BOUNDLE_NAME, "TaskBean.8"); //$NON-NLS-1$
         }
     
         @Override
@@ -400,7 +407,7 @@ public class TaskBean {
     
         @Override
         public String getLabel() {
-            return Messages.getString("TaskBean.9"); //$NON-NLS-1$
+            return sernet.gs.web.Util.getMessage(BOUNDLE_NAME, "TaskBean.9"); //$NON-NLS-1$
         }
     
         @Override

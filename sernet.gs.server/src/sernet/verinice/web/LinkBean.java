@@ -26,7 +26,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+
 import org.apache.log4j.Logger;
+import org.primefaces.event.TabChangeEvent;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.TimeFormatter;
@@ -50,6 +54,8 @@ import sernet.verinice.service.commands.RemoveLink;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
+@ManagedBean(name = "link")
+@SessionScoped
 public class LinkBean {
     
     private static final Logger LOG = Logger.getLogger(LinkBean.class);
@@ -86,22 +92,27 @@ public class LinkBean {
         huiRelationMap = new Hashtable<String, HuiRelation>();
     }
     
-    public void init() {
-        long start = 0;
-        if (LOG.isDebugEnabled()) {
-            start = System.currentTimeMillis();
-            LOG.debug("init() called ..."); //$NON-NLS-1$
-        }
-        try {
-            if(loading) {
-                doInit();
+    public void init(TabChangeEvent tabChangeEvent) {
+
+        if ("linkTab".equals(tabChangeEvent.getTab().getId())) {
+
+            long start = 0;
+            if (LOG.isDebugEnabled()) {
+                start = System.currentTimeMillis();
+                LOG.debug("init() called ..."); //$NON-NLS-1$
             }
-        } catch (Exception e) {
-            LOG.error("Error while loading links.", e);
-        } 
-        if (LOG.isDebugEnabled()) {
-            long duration = System.currentTimeMillis() - start;
-            LOG.debug("init() finished in: " + TimeFormatter.getHumanRedableTime(duration)); //$NON-NLS-1$
+            try {
+                if (loading) {
+                    doInit();
+                }
+            } catch (Exception e) {
+                Util.addError("", e.getLocalizedMessage());
+                LOG.error("Error while loading links.", e);
+            }
+            if (LOG.isDebugEnabled()) {
+                long duration = System.currentTimeMillis() - start;
+                LOG.debug("init() finished in: " + TimeFormatter.getHumanRedableTime(duration)); //$NON-NLS-1$
+            }
         }
     }
     

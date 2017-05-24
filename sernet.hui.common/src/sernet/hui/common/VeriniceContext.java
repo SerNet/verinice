@@ -132,6 +132,10 @@ public final class VeriniceContext {
     
     public static final String ENCRYPTION_SERVICE = "encryptionService";
     
+    public static final String GRAPH_SERVICE = "graphService";
+
+    public static final String COUNT_SERVICE = "countService";
+
     private static String serverUrl = null;
 
 	private ThreadLocal<Map<String, Object>> threadLocal = new InheritableThreadLocal<Map<String, Object>>();

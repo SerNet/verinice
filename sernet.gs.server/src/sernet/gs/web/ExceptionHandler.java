@@ -26,9 +26,6 @@ public final class ExceptionHandler {
     
     private ExceptionHandler(){}
 
-	/**
-	 * @param e
-	 */
 	public static void handle(Throwable e) {
 		if(e instanceof sernet.gs.web.SecurityException) {
 			Util.addError("submit", Util.getMessage("todo.save.forbidden"));

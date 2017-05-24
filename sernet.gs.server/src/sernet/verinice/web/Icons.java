@@ -48,29 +48,29 @@ import sernet.verinice.model.samt.SamtTopic;
  */
 public abstract class Icons {
     
-    public static final String FOLDER                   = "/image/icon/elements/folder.png";
+    public static final String FOLDER                   = "/images/icon/elements/folder.png";
     
-    public static final String ISO27K_ASSET             = "/image/icon/elements/16-asset-grey.png";
-    public static final String ISO27K_THREAT            = "/image/icon/elements/16-lightening.png";
-    public static final String ISO27K_VULNERABILITY     = "/image/icon/elements/16-shield-blue-broken.png";
-    public static final String ISO27K_INCIDENT_SCENARIO = "/image/icon/elements/dialog-warning.png";
-    public static final String ISO27K_INCIDENT          = "/image/icon/elements/16-arrow-incident-red.png";
-    public static final String ISO27K_REQUIREMENT       = "/image/icon/elements/16-paper-gavel-alt.png";
-    public static final String ISO27K_EXCEPTION         = "/image/icon/elements/16-paper-excerpt-yellow.png";
-    public static final String ISO27K_AUDIT             = "/image/icon/elements/16-clipboard-audit.png";
-    public static final String ISO27K_INTERVIEW         = "/image/icon/elements/16-clipboard-comment.png";
-    public static final String ISO27K_IMRPOVEMENT_NOTE  = "/image/icon/elements/16-clipboard-report-bar.png";
-    public static final String ISO27K_EVIDENCE          = "/image/icon/elements/16-clipboard-eye.png";
-    public static final String ISO27K_RESPONSE          = "/image/icon/elements/16-paper-arrow-green.png";
-    public static final String ISO27K_DOCUMENT          = "/image/icon/elements/mime-document.png";
-    public static final String ISO27K_RECORD            = "/image/icon/elements/mime-text.png";
-    public static final String ISO27K_SCOPE             = "/image/icon/elements/tree_explorer.gif";
-    public static final String ISO27K_PERSON            = "/image/icon/elements/user_suit.png";
-    public static final String ISO27K_FOLDER            = "/image/icon/elements/folder.png";
-    public static final String ISO27K_PROCESS           = "/image/icon/elements/16-paper-workplan.png";
-    public static final String ISO27K_IMPORT            = "/image/icon/elements/import.gif";
-    public static final String ISO27K_CONTROL           = "/image/icon/elements/stufe_none.png";   
-    public static final String ISA_TOPIC                = "/image/icon/elements/isa-topic.png";
+    public static final String ISO27K_ASSET             = "/images/icon/elements/16-asset-grey.png";
+    public static final String ISO27K_THREAT            = "/images/icon/elements/16-lightening.png";
+    public static final String ISO27K_VULNERABILITY     = "/images/icon/elements/16-shield-blue-broken.png";
+    public static final String ISO27K_INCIDENT_SCENARIO = "/images/icon/elements/dialog-warning.png";
+    public static final String ISO27K_INCIDENT          = "/images/icon/elements/16-arrow-incident-red.png";
+    public static final String ISO27K_REQUIREMENT       = "/images/icon/elements/16-paper-gavel-alt.png";
+    public static final String ISO27K_EXCEPTION         = "/images/icon/elements/16-paper-excerpt-yellow.png";
+    public static final String ISO27K_AUDIT             = "/images/icon/elements/16-clipboard-audit.png";
+    public static final String ISO27K_INTERVIEW         = "/images/icon/elements/16-clipboard-comment.png";
+    public static final String ISO27K_IMRPOVEMENT_NOTE  = "/images/icon/elements/16-clipboard-report-bar.png";
+    public static final String ISO27K_EVIDENCE          = "/images/icon/elements/16-clipboard-eye.png";
+    public static final String ISO27K_RESPONSE          = "/images/icon/elements/16-paper-arrow-green.png";
+    public static final String ISO27K_DOCUMENT          = "/images/icon/elements/mime-document.png";
+    public static final String ISO27K_RECORD            = "/images/icon/elements/mime-text.png";
+    public static final String ISO27K_SCOPE             = "/images/icon/elements/tree_explorer.gif";
+    public static final String ISO27K_PERSON            = "/images/icon/elements/user_suit.png";
+    public static final String ISO27K_FOLDER            = "/images/icon/elements/folder.png";
+    public static final String ISO27K_PROCESS           = "/images/icon/elements/16-paper-workplan.png";
+    public static final String ISO27K_IMPORT            = "/images/icon/elements/import.gif";
+    public static final String ISO27K_CONTROL           = "/images/icon/elements/stufe_none.png";
+    public static final String ISA_TOPIC                = "/images/icon/elements/isa-topic.png";
     
     public static final Map<String, String> ICONS;
     

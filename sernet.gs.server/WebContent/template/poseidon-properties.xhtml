@@ -1,0 +1,135 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<ui:composition>
+	<p:outputPanel rendered="#{not empty list}">
+		<div class="ui-g ui-fluid">
+			<c:forEach var="p" items="#{list}">
+
+				<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-4 ui-xl-4">
+					<p:outputLabel rendered="#{p.isShowLabel()}" value="#{p.name}" />
+				</div>
+
+				<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-8 ui-xl-8">
+
+					<p:selectBooleanCheckbox value="#{p['boolean']}"
+						rendered="#{p.isBooleanSelect}"
+						valueChangeListener="#{edit.onChange}">
+						<p:ajax />
+						<f:attribute name="key" value="#{p.key}" />
+					</p:selectBooleanCheckbox>
+
+
+					<p:inputText value="#{p.value}"
+						rendered="#{p.isLine and p.isEditable and (not p.isURL)}"
+						styleClass="hui ui-corner-all"
+						valueChangeListener="#{edit.onChange}">
+						<p:ajax update=":editForm:title" />
+						<f:attribute name="key" value="#{p.key}" />
+					</p:inputText>
+
+					<h:outputText value="#{p.value}"
+						rendered="#{(not p.isText) and (not p.isEditable) and (not p.isURL)}" />
+
+					<p:inputTextarea rows="3" value="#{p.value}"
+						rendered="#{p.isText and p.isEditable and (not p.isURL)}"
+						valueChangeListener="#{edit.onChange}">
+						<p:ajax />
+						<f:attribute name="key" value="#{p.key}" />
+					</p:inputTextarea>
+
+					<h:outputText value="#{p.value}" escape="false"
+						rendered="#{p.isText and (not p.isEditable) and (not p.isURL)}" />
+
+					<p:calendar value="#{p.date}" pages="2" showWeek="true"
+						rendered="#{p.isDate}">
+						<p:ajax event="dateSelect" listener="#{edit.onDateSelect}" />
+						<f:attribute name="key" value="#{p.key}" />
+					</p:calendar>
+
+					<p:outputPanel
+						rendered="#{p.isSingleSelect and p.isEditable  and (not p.isURL)}">
+						<p:selectOneMenu value="#{p.selectedOption}" styleClass="hui"
+							effectDuration="40" valueChangeListener="#{edit.onChange}">
+							<f:selectItems value="#{p.optionList}" var="option"
+								itemLabel="#{option}" itemValue="#{option}" />
+							<p:ajax />
+							<f:attribute name="key" value="#{p.key}" />
+						</p:selectOneMenu>
+					</p:outputPanel>
+					<p:outputPanel
+						rendered="#{p.isNumericSelect and not empty p.optionList and p.isEditable  and (not p.isURL)}">
+						<p:selectOneMenu value="#{p.selectedOption}" styleClass="hui"
+							effectDuration="40" valueChangeListener="#{edit.onChange}">
+							<f:selectItems value="#{p.optionList}" var="option"
+								itemLabel="#{option}" itemValue="#{option}" />
+							<p:ajax />
+							<f:attribute name="key" value="#{p.key}" />
+						</p:selectOneMenu>
+					</p:outputPanel>
+
+					<p:outputPanel
+						rendered="#{p.isNumericSelect and empty p.optionList and p.isEditable  and (not p.isURL)}">
+						<p:spinner value="#{p.value}" min="#{p.min}" max="#{p.max}"
+							onkeydown="return false;" styleClass="hui"
+							valueChangeListener="#{edit.onChange}">
+							<p:ajax />
+							<f:attribute name="key" value="#{p.key}" />
+						</p:spinner>
+					</p:outputPanel>
+
+					<p:outputPanel rendered="#{p.isLine and p.isEditable and p.isURL}">
+
+						<p:outputPanel
+							rendered="#{not (p.URLValue eq null or p.URLValue eq '')}"
+							style="margin-bottom: 12px;">
+							<a href="#{p.URLValue}" target="_blank"> #{p.URLText} </a>
+						</p:outputPanel>
+
+						<p:panel rendered="#{p.isLine and p.isEditable and p.isURL}"
+							header="#{msgEdit['document.editURL']}" collapsed="true"
+							toggleable="true" toggleSpeed="50">
+
+							<div class="ui-g">
+								<div class="ui-g-12">
+									<p:inputText placeholder="#{msgEdit['document.URLValue']}"
+										value="#{p.URLValue}"
+										rendered="#{p.isLine and p.isEditable and p.isURL}"
+										valueChangeListener="#{edit.onURLValueChange}">
+										<p:ajax />
+										<f:attribute name="key" value="#{p.key}" />
+										<f:attribute name="label" value="#{p.URLText}" />
+									</p:inputText>
+								</div>
+
+								<div class="ui-g-12">
+									<p:inputText placeholder="#{msgEdit['document.URLText']}"
+										value="#{p.URLText}"
+										rendered="#{p.isLine and p.isEditable and p.isURL}"
+										valueChangeListener="#{edit.onURLTextChange}">
+										<p:ajax />
+										<f:attribute name="key" value="#{p.key}" />
+										<f:attribute name="url" value="#{p.URLValue}" />
+									</p:inputText>
+								</div>
+								<div class="ui-g-12">
+									<p:commandButton value="#{msgEdit['save']}"
+										action="#{edit.save}" styleClass="button"
+										update=":editForm :tableForm" />
+									<p:remoteCommand name="submitEditForm" process="@form"
+										update=":editForm :tableForm :navForm" action="#{edit.save}" />
+								</div>
+							</div>
+						</p:panel>
+					</p:outputPanel>
+				</div>
+			</c:forEach>
+		</div>
+	</p:outputPanel>
+</ui:composition>
+</html>

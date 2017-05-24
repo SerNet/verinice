@@ -55,8 +55,6 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung, Comparab
 	private Date naechsteRevision;
 	private String revisionDurch;
 
-	
-
 	public String getTitle() {
 		return titel;
 	}
@@ -68,7 +66,7 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung, Comparab
 	public String getUmsetzungIcon() {
 		// ISO 27001
 		// Grundschutz
-		return UMSETZUNG_IMAGE_MAP.get(getUmsetzung());
+		return "/resources/verinice-layout/images/icon/" + UMSETZUNG_IMAGE_MAP.get(getUmsetzung()) ;
 	}
 
 	public Date getUmsetzungBis() {

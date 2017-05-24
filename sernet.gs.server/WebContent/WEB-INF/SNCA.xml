@@ -5924,7 +5924,15 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <huiproperty
 			name="Description" 
 			id="controlgroup_desc" 
-			inputtype="text" />   
+			inputtype="text" />
+
+		<!-- Flag to define a root a catalog, which is used in dashboard -->
+		<huiproperty
+			tags="Catalog"
+			id="samt_topic_is_catalog"
+			defaultValue="0"
+			name="Is Catalog"
+			inputtype="booleanoption" />
 
     	<!-- Flag to decide if a controlgroup is a group which contains only the controls of ISO 27001 annex A or not -->
         <huiproperty
@@ -8576,7 +8584,7 @@ Wurden bereits weitere Stellen informiert?
           <huiproperty 
             id="samt_topic_version" 
             editable="false"
-            tags="VDA-ISA.VDA_ISA_Audit,Web" />
+            tags="VDA-ISA,VDA_ISA_Audit,Web" />
             
 			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->            
             <huiproperty id="samt_topic_audit_ra" name="Risk Assessment" tags="VDA_ISA_Audit"

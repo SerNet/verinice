@@ -22,3 +22,17 @@ B1.5-Datenschutz-2008-08-26.zip
 
 #ignore the locally created folder for the search-index
 sernet.gs.server/elasticsearch/
+
+# jrebel
+**/rebel.xml
+**/.rebel.xml.bak
+
+# launcher
+sernet.gs.ui.rcp.main.feature/verinice-x86_64-linux-gtk_arch_de.launch
+sernet.gs.ui.rcp.main.feature/verinice-x86_64-linux-gtk_arch_en.launch
+
+# data directory
+sernet.gs.server/WebContent/WEB-INF/elasticsearch/data/
+
+# log4j files
+**/log4j-debug.xml
