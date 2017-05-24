@@ -185,6 +185,7 @@ public class TreeBean implements IElementListener {
         });
         createMenuModel();
         createHandlers();
+        setElementInformation(null);
     }
 
     protected void updatePath(CnATreeElement element) {
