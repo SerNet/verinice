@@ -291,14 +291,18 @@ public class GenerateReportDialog extends TitleAreaDialog {
             public void widgetSelected(SelectionEvent e) {
                 getButton(IDialogConstants.OK_ID).setEnabled(true);
                 int s = scopeCombo.getSelectionIndex();
-                if(s==0 && chosenReportMetaData!=null && chosenReportMetaData.isMultipleRootObjects()){
-                    Integer[] roots = new Integer[scopes.size()];
-                    for (int i = 0; i < scopes.size(); i++) {
-                       roots[i] = scopes.get(i).getDbId();
-                   }
-                   rootElements = roots;
-                   rootElement = null;
-                }else{
+                if (chosenReportMetaData != null && chosenReportMetaData.isMultipleRootObjects()) {
+                    if (s == 0) {
+                        Integer[] roots = new Integer[scopes.size()];
+                        for (int i = 0; i < scopes.size(); i++) {
+                            roots[i] = scopes.get(i).getDbId();
+                        }
+                        rootElements = roots;
+                        rootElement = null;
+                    } else {
+                        rootElement = scopes.get(s - 1).getDbId();
+                    }
+                } else {
                     rootElement = scopes.get(s).getDbId();
                 }
             }
