@@ -172,7 +172,7 @@ public class ReportDepositTest extends CommandServiceProvider {
                 randomTemplate.getOutputname(), 
                 toTest, 
                 randomTemplate.isServer(), 
-                getCheckSums(randomTemplate.getFilename(), dir.getAbsolutePath()));
+                getCheckSums(randomTemplate.getFilename(), dir.getAbsolutePath()),false);//TODO: urs check the test
         
         
         depositService.update(updatedData, getLanguage());

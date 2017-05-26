@@ -28,6 +28,7 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
  */
 public interface IReportDepositService extends IReportTemplateService {
 
+
     void add(ReportTemplateMetaData metadata, byte[] file, String locale) throws ReportDepositException;
 
     void remove(ReportTemplateMetaData metadata, String locale) throws ReportDepositException;

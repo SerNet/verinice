@@ -86,6 +86,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
 
     private SelectionListener checkBoxSelectionListener;
 
+    private Button allowMultipleRootObjects;
+
     /**
      * @param parentShell
      */
@@ -135,7 +137,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportNameLabel.setText(Messages.ReportDepositView_1);
         GridData reportNameLabelGd = new GridData();
         reportNameLabelGd.horizontalAlignment = SWT.FILL;
-        reportNameLabelGd.verticalAlignment = SWT.TOP;
+        reportNameLabelGd.verticalAlignment = SWT.CENTER;
         reportNameLabelGd.grabExcessHorizontalSpace = false;
         reportNameLabelGd.horizontalSpan = 1;
         reportNameLabel.setLayoutData(reportNameLabelGd);
@@ -148,6 +150,14 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportNameTextGd.horizontalSpan = 2;
         reportName.setLayoutData(reportNameTextGd);
 
+        allowMultipleRootObjects = new Button(dialogContent, SWT.CHECK);
+        allowMultipleRootObjects.setText(Messages.ReportDepositView_25);
+        GridData allowMultipleRootObjectsGd = new GridData();
+        allowMultipleRootObjectsGd.horizontalAlignment = SWT.FILL;
+        allowMultipleRootObjectsGd.grabExcessHorizontalSpace = false;
+        allowMultipleRootObjectsGd.horizontalSpan = 3;
+        allowMultipleRootObjects.setLayoutData(allowMultipleRootObjectsGd);
+                
         Composite checkboxComposite = new Composite(dialogContent, SWT.NONE);
         GridLayout formatLayout = new GridLayout(3, false);
         checkboxComposite.setLayout(formatLayout);
@@ -202,7 +212,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportTemplateText = new Text(dialogContent, SWT.BORDER);
         GridData reportTemplateTextGd = new GridData();
         reportTemplateTextGd.horizontalAlignment = SWT.FILL;
-        reportTemplateTextGd.verticalAlignment = SWT.TOP;
+        reportTemplateTextGd.verticalAlignment = SWT.CENTER;
         reportTemplateTextGd.grabExcessHorizontalSpace = true;
         reportTemplateTextGd.horizontalSpan = 1;
         reportTemplateText.setLayoutData(reportTemplateTextGd);
@@ -253,7 +263,26 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportTemplateText.setText(editTemplate.getFilename());
         reportTemplateText.setEnabled(false);
         reportTemplateSelectButton.setEnabled(false);
-        reportTemplateSelectButton.setEnabled(false);        
+        reportTemplateSelectButton.setEnabled(false);  
+        allowMultipleRootObjects.setSelection(editTemplate.isMultipleRootObjects());
+        allowMultipleRootObjects.addSelectionListener(new SelectionListener() {
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    if (editTemplate.isMultipleRootObjects() != allowMultipleRootObjects.getSelection()) {
+                        e.doit = true;
+                        getButton(IDialogConstants.OK_ID).setEnabled(true);
+
+                    } else {
+                        e.doit = false;
+                        getButton(IDialogConstants.OK_ID).setEnabled(false);
+                    }
+                }
+
+                @Override
+                public void widgetDefaultSelected(SelectionEvent e) {
+                    widgetSelected(e);
+                }
+            });
     }
     
     private Button checkboxEditMode(Button checkbox, OutputFormat format){
@@ -285,8 +314,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     }
     
     private void updateTemplate() {
-        try {
-            ReportTemplateMetaData metaData = new ReportTemplateMetaData(FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(), getReportOutputFormats(), true, null);
+        try {//TODO: urs check if multiple
+            ReportTemplateMetaData metaData = new ReportTemplateMetaData(FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(), getReportOutputFormats(), true, null,allowMultipleRootObjects.getSelection());
             getReportService().update(metaData, getLanguage());
         } catch (ReportDepositException e) {
             LOG.error("Error while updating report template file", e); //$NON-NLS-1$
@@ -295,9 +324,9 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     }
 
     private void addTemplate() {
-        try {
+        try {//TODO: urs check if multiple
             byte[] rptDesignFile = FileUtils.readFileToByteArray(new File(getSelectedDesginFile()));     
-            ReportTemplateMetaData metaData = new ReportTemplateMetaData(FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(), getReportOutputFormats(), true, null);
+            ReportTemplateMetaData metaData = new ReportTemplateMetaData(FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(), getReportOutputFormats(), true, null,allowMultipleRootObjects.getSelection());
             getReportService().add(metaData, rptDesignFile, getLanguage());
         } catch (IOException e) {
             LOG.error("Error while adding new report template file", e); //$NON-NLS-1$

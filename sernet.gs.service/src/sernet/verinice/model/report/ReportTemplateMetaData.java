@@ -41,19 +41,25 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
     private String outputname;
 
     /**
-     * contains checksums from the rptdesign file and also from all propertie
+     * contains checksums from the rptdesign file and also from all property
      * files
      **/
     private Set<String> md5CheckSums;
 
     private boolean isServer;
+    
+    /**
+     * Can this report run with multiple root objects.
+     */
+    private boolean multipleRootObjects;
 
-    public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats, boolean isServer, String[] md5CheckSums) {
+    public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats, boolean isServer, String[] md5CheckSums, boolean multipleRootObjects) {
 
         this.filename = filename;
         this.outputname = outputname;
         setOutputFormats(outputFormats);
         this.isServer = isServer;
+        this.multipleRootObjects = multipleRootObjects;
 
         if (md5CheckSums != null) {
             this.md5CheckSums = new HashSet<String>(Arrays.asList(md5CheckSums));
@@ -70,7 +76,7 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
         result = prime * result + ((filename == null) ? 0 : filename.hashCode());
         result = prime * result + ((md5CheckSums == null) ? 0 : md5CheckSums.hashCode());
         result = prime * result + Arrays.hashCode(outputFormat);
-        result = prime * result + ((outputname == null) ? 0 : outputname.hashCode());
+        result = prime * result + ((outputname == null) ? 0 : outputname.hashCode());//TODO: urs hashcode and equals
         return result;
     }
 
@@ -157,5 +163,13 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
     @Override
     public int compareTo(ReportTemplateMetaData other) {
         return NSC.compare(getDecoratedOutputname(), other.getDecoratedOutputname());
+    }
+
+    public boolean isMultipleRootObjects() {
+        return multipleRootObjects;
+    }
+
+    public void setMultipleRootObject(boolean multipleRootObjects) {
+        this.multipleRootObjects = multipleRootObjects;
     }
 }
