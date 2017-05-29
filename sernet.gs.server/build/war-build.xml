@@ -31,10 +31,6 @@
         	</fileset>
         	<zipfileset file="WebContent/nav.xhtml" fullpath="nav.xhtml"/>
         	<zipfileset file="WebContent/subNav.xhtml" fullpath="subNav.xhtml"/>
-        	<zipfileset file="WebContent/portal.verinice.private/contact.html" fullpath="portal.verinice.private/contact.html"/>
-        	<zipfileset file="WebContent/portal.verinice.private/download.html" fullpath="portal.verinice.private/download.html"/>
-        	<zipfileset file="WebContent/portal.verinice.private/index.html" fullpath="portal.verinice.private/index.html"/>
-        	<zipfileset file="WebContent/portal.verinice.private/manual.html" fullpath="portal.verinice.private/manual.html"/>
         	<zipfileset file="WebContent/WEB-INF/faces-config.xml" fullpath="WEB-INF/faces-config.xml"/>      	
         	<zipfileset dir="bin" prefix="WEB-INF/classes">
         		<exclude name="log4j-dev.xml"/>
@@ -52,7 +48,7 @@
 	<target name="war-basic" depends="copy-jars" description="creates a war file">
 		<property name="destination" location="${sp:destination}"/>
 		<echo message="Creating ${destination}/${filename}..."/>
-        <war destfile="${destination}/${filename}" webxml="WebContent/WEB-INF/web-basic.xml">
+        <war destfile="${destination}/${filename}" webxml="WebContent/WEB-INF/web.xml">
         	<fileset dir="WebContent">
         		<exclude name="todo/task.xhtml"/>
         		<exclude name="template"/>
@@ -69,9 +65,6 @@
         	</fileset>
         	<zipfileset file="WebContent/nav-basic.xhtml" fullpath="nav.xhtml"/>
         	<zipfileset file="WebContent/subNav-basic.xhtml" fullpath="subNav.xhtml"/>
-        	<zipfileset file="WebContent/portal.verinice.private/contact-basic.html" fullpath="portal.verinice.private/contact.html"/>
-        	<zipfileset file="WebContent/portal.verinice.private/download-basic.html" fullpath="portal.verinice.private/download.html"/>
-        	<zipfileset file="WebContent/portal.verinice.private/index-basic.html" fullpath="portal.verinice.private/index.html"/>
         	<zipfileset file="WebContent/WEB-INF/faces-config-basic.xml" fullpath="WEB-INF/faces-config.xml"/>       	     
         	<zipfileset dir="bin" prefix="WEB-INF/classes">
         		<exclude name="log4j-dev.xml"/>
@@ -111,10 +104,6 @@
         	</fileset>
         	<zipfileset file="WebContent/nav.xhtml" fullpath="nav.xhtml"/>
         	<zipfileset file="WebContent/subNav.xhtml" fullpath="subNav.xhtml"/>
-        	<zipfileset file="WebContent/portal.verinice.private/contact.html" fullpath="portal.verinice.private/contact.html"/>
-        	<zipfileset file="WebContent/portal.verinice.private/download.html" fullpath="portal.verinice.private/download.html"/>
-        	<zipfileset file="WebContent/portal.verinice.private/index.html" fullpath="portal.verinice.private/index.html"/>
-        	<zipfileset file="WebContent/portal.verinice.private/index-basic.html" fullpath="portal.verinice.private/index.html"/>
         	<zipfileset file="WebContent/error/403.html" fullpath="error/403.html"/>
         	<zipfileset file="WebContent/error/404.html" fullpath="error/404.html"/>
         	<zipfileset file="WebContent/error/500.html" fullpath="error/500.html"/>
