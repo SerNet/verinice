@@ -117,3 +117,13 @@ veriniceserver.gsmGenerator.cron=0 5 3 1 6 ?
 # needed to access license-restricted content
 # When running JUnit-Tests "file:./vnl/" is created in directory sernet.gs.server 
 veriniceserver.vnl.repository=file:./vnl
+
+# ISO/IEC 27005 risk analysis
+# Method for risk calculation (case sensitive): ADDITION or MULTIPLICATION
+# Risk calculation method MULTIPLICATION is in beta stage
+# Default: ADDITION
+veriniceserver.risk.calculation.method=ADDITION
+
+# A limit on how many elements can be loaded at once
+# Set -1 to disable the limit
+veriniceserver.object.limit=10000
