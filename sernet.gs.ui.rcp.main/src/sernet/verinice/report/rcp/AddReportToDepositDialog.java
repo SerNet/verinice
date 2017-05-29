@@ -314,7 +314,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     }
     
     private void updateTemplate() {
-        try {//TODO: urs check if multiple
+        try {
             ReportTemplateMetaData metaData = new ReportTemplateMetaData(FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(), getReportOutputFormats(), true, null,allowMultipleRootObjects.getSelection());
             getReportService().update(metaData, getLanguage());
         } catch (ReportDepositException e) {
@@ -324,7 +324,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     }
 
     private void addTemplate() {
-        try {//TODO: urs check if multiple
+        try {
             byte[] rptDesignFile = FileUtils.readFileToByteArray(new File(getSelectedDesginFile()));     
             ReportTemplateMetaData metaData = new ReportTemplateMetaData(FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(), getReportOutputFormats(), true, null,allowMultipleRootObjects.getSelection());
             getReportService().add(metaData, rptDesignFile, getLanguage());

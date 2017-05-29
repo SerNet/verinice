@@ -76,7 +76,8 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
         result = prime * result + ((filename == null) ? 0 : filename.hashCode());
         result = prime * result + ((md5CheckSums == null) ? 0 : md5CheckSums.hashCode());
         result = prime * result + Arrays.hashCode(outputFormat);
-        result = prime * result + ((outputname == null) ? 0 : outputname.hashCode());//TODO: urs hashcode and equals
+        result = prime * result + ((outputname == null) ? 0 : outputname.hashCode());
+        result = prime * result + Boolean.valueOf(multipleRootObjects).hashCode();
         return result;
     }
 
@@ -119,6 +120,10 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
         } else if (!outputname.equals(other.outputname)) {
             return false;
         }
+        if(multipleRootObjects != other.multipleRootObjects) {
+            return false;
+        }
+            
         return true;
     }
 

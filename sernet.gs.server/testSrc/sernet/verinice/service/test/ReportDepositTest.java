@@ -172,13 +172,22 @@ public class ReportDepositTest extends CommandServiceProvider {
                 randomTemplate.getOutputname(), 
                 toTest, 
                 randomTemplate.isServer(), 
-                getCheckSums(randomTemplate.getFilename(), dir.getAbsolutePath()),false);//TODO: urs check the test
+                getCheckSums(randomTemplate.getFilename(), dir.getAbsolutePath()),false);
         
         
         depositService.update(updatedData, getLanguage());
         ReportTemplateMetaData storedData = getReportMetaDataFromDeposit(checkServerLocation(randomTemplate.getFilename()));
         assertArrayEquals(toTest, storedData.getOutputFormats());
+        assertFalse(storedData.isMultipleRootObjects());
         
+        updatedData = new ReportTemplateMetaData(checkServerLocation(randomTemplate.getFilename()), 
+                randomTemplate.getOutputname(), 
+                toTest, 
+                randomTemplate.isServer(), 
+                getCheckSums(randomTemplate.getFilename(), dir.getAbsolutePath()),true);
+        depositService.update(updatedData, getLanguage());
+        storedData = getReportMetaDataFromDeposit(checkServerLocation(randomTemplate.getFilename()));
+        assertTrue(storedData.isMultipleRootObjects());
     }
 
     private OutputFormat[] getOutputFormats() {

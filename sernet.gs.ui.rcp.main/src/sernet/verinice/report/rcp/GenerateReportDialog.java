@@ -615,7 +615,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
             }
         }
         if(chosenReportMetaData!=null && chosenReportMetaData.isMultipleRootObjects()){
-            scopeTitles.add(0,Messages.GenerateReportDialog_37);//TODO: urs externalize strings
+            scopeTitles.add(0,Messages.GenerateReportDialog_37);
         }
 
 
