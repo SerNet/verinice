@@ -139,7 +139,7 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
         try {
             linkTableComposite = new LinkTableComposite(linkTable, objectModelService, composite, false);
         } catch (RemoteConnectFailureException exception) {
-            setErrorMessage(Messages.LinktableDataSetWizardPage_Snca_Error);
+            setErrorMessage(Messages.linktableDataSetWizardPage_snca_error);
             log.error("no connection to verinice server available", exception);
             setPageComplete(false);
             return composite;
