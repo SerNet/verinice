@@ -1,7 +1,14 @@
+# Use http://lint.travis-ci.org/ to validate
+# the Travis config file before pushing it to the repo. See
+# https://docs.travis-ci.com/user/travis-lint for more info.
+
 language: java
+
+# See https://docs.travis-ci.com/user/languages/java/#Testing-Against-Multiple-JDKs
+# for supported JDKs.
 jdk:
       - openjdk7
-      - openjdk8
+      - oraclejdk8
 
 before_script:
       - cd sernet.verinice.releng.parent
