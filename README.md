@@ -90,7 +90,7 @@ read the following sections.
 The Travis CI server builds the project using the following JDKs:
 
 - OpenJDK 7
-- OpenJDK 8
+- OracleJDK 8
 
 ## Verinice client
 
