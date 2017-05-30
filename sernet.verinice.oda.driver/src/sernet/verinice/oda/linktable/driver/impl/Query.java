@@ -26,6 +26,7 @@ import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.datatools.connectivity.oda.IParameterMetaData;
 import org.eclipse.datatools.connectivity.oda.IQuery;
 import org.eclipse.datatools.connectivity.oda.IResultSet;
@@ -33,6 +34,7 @@ import org.eclipse.datatools.connectivity.oda.IResultSetMetaData;
 import org.eclipse.datatools.connectivity.oda.OdaException;
 import org.eclipse.datatools.connectivity.oda.SortSpec;
 import org.eclipse.datatools.connectivity.oda.spec.QuerySpecification;
+import org.springframework.remoting.RemoteConnectFailureException;
 
 import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.linktable.ILinkTableConfiguration;
@@ -47,20 +49,22 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
  */
 public class Query implements IQuery {
 
-    public static final String ODA_DATA_SET_ID = "verinice.oda.linktable.driver.dataSet.id";  //$NON-NLS-1$
+    private static final Logger log = Logger.getLogger(Query.class);
+
+    public static final String ODA_DATA_SET_ID = "verinice.oda.linktable.driver.dataSet.id"; //$NON-NLS-1$
 
     private static final int DEFAULT_MAX_ROWS = 1000;
-    
+
     private String vlt = null;
-    
+
     private List<String> columnList;
-    
+
     private IResultSetMetaData resultSetMetaData;
-    
+
     private Integer[] scopeIds;
-    
+
     private int maxRows = DEFAULT_MAX_ROWS;
-    
+
     /**
      * @param rootElementIds
      */
@@ -85,26 +89,36 @@ public class Query implements IQuery {
         // nothing to do
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see org.eclipse.datatools.connectivity.oda.IQuery#close()
      */
     @Override
     public void close() throws OdaException {
-        this.vlt = null;  
+        this.vlt = null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see org.eclipse.datatools.connectivity.oda.IQuery#executeQuery()
      */
     @Override
     public IResultSet executeQuery() throws OdaException {
-        return new LinkTableResultSet(createTable(), resultSetMetaData);
+        try {
+            return new LinkTableResultSet(createTable(), resultSetMetaData);
+        } catch (RemoteConnectFailureException remoteConnectFailureException) {
+            log.error(Messages.query_connection_error_title, remoteConnectFailureException);
+            throw new OdaException(Messages.query_connection_error_msg);
+        }
+
     }
-    
+
     private List<List<String>> createTable() {
         LinkTableService linkTableService = new LinkTableService();
         List<List<String>> table = linkTableService.createTable(createLinkTableConfiguration());
-        // Remove the heading line of the table 
+        // Remove the heading line of the table
         table.remove(0);
         return table;
     }
