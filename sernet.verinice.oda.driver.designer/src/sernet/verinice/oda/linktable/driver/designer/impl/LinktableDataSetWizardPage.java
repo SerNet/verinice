@@ -201,6 +201,10 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
     
     private void addButtonComposite(Composite composite) {
         
+        if(isSNCALoaded()) {
+            return;
+        }
+
         Composite buttonComposite = new Composite(composite, SWT.NONE);
         buttonComposite.setLayout(new GridLayout(2, false));
         GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | 
@@ -235,6 +239,10 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
                 widgetSelected(e);
             }    
         });
+    }
+
+    private boolean isSNCALoaded() {
+        return linkTableComposite == null;
     }
     
     public void loadVltFile() {
@@ -275,6 +283,12 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
      * blank text. Set page message accordingly.
      */
     private void validateData() {
+
+        if(isSNCALoaded()){
+            setPageComplete(false);
+            return;
+        }
+
         LinkTableValidationResult validationResult = LinkTableUtil.isValidVeriniceLinkTable(linkTableComposite.getVeriniceLinkTable());
         boolean isValid = validationResult.isValid();
         if (isValid) {
