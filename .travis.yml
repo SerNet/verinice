@@ -7,7 +7,6 @@ language: java
 # See https://docs.travis-ci.com/user/languages/java/#Testing-Against-Multiple-JDKs
 # for supported JDKs.
 jdk:
-      - openjdk7
       - oraclejdk8
 
 before_script:

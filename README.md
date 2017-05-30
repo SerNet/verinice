@@ -87,6 +87,11 @@ read the following sections.
 
 [![Build Status](https://travis-ci.com/zaunerc/verinice-mirror.svg?token=dYtmMcJy99yawPLtZTwD&branch=develop)](https://travis-ci.com/zaunerc/verinice-mirror)
 
+The Travis CI server builds the project using the following JDKs:
+
+- OpenJDK 7
+- OpenJDK 8
+
 ## Verinice client
 
 The built artifacts will be located in
