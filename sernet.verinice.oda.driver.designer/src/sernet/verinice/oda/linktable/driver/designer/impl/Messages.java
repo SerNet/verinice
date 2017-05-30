@@ -28,6 +28,7 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.oda.linktable.driver.designer.impl.messages"; //$NON-NLS-1$
+    public static String LinktableDataSetWizardPage_Snca_Error;
     public static String LinktableDataSetWizardPage_0;
     public static String LinktableDataSetWizardPage_2;
     public static String LinktableDataSetWizardPage_3;

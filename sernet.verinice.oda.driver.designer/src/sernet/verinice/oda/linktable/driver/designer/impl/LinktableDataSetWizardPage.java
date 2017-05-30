@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.springframework.remoting.RemoteConnectFailureException;
 
 import sernet.verinice.oda.driver.designer.Activator;
 import sernet.verinice.oda.driver.impl.Driver;
@@ -62,13 +63,13 @@ import sernet.verinice.service.model.IObjectModelService;
  */
 public class LinktableDataSetWizardPage extends DataSetWizardPage {
 
-    private static final Logger LOG = Logger.getLogger(LinktableDataSetWizardPage.class);
+    private static final Logger log = Logger.getLogger(LinktableDataSetWizardPage.class);
 
     private static final String DEFAULT_MESSAGE = Messages.LinktableDataSetWizardPage_0;
-    
-    Composite composite;
-    LinkTableComposite linkTableComposite;
 
+    Composite composite;
+
+    LinkTableComposite linkTableComposite;
 
     public LinktableDataSetWizardPage(String pageName) {
         super(pageName);
@@ -132,13 +133,17 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
 
             objectModelService = Activator.getDefault().getObjectModelService();
         } catch (OdaException e) {
-            LOG.error("Error while opening the server connection.",e);
+            log.error("Error while opening the server connection.",e);
         } 
 
-        linkTableComposite = new LinkTableComposite(linkTable, 
-                objectModelService, 
-                composite,
-                false);
+        try {
+            linkTableComposite = new LinkTableComposite(linkTable, objectModelService, composite, false);
+        } catch (RemoteConnectFailureException exception) {
+            setErrorMessage(Messages.LinktableDataSetWizardPage_Snca_Error);
+            log.error("no connection to verinice server available", exception);
+            setPageComplete(false);
+            return composite;
+        }
         GridLayoutFactory.fillDefaults().generateLayout(linkTableComposite); 
         return linkTableComposite;
     }
@@ -166,7 +171,7 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
         try {
             updateDesign(design);
         } catch (Exception e) {
-            LOG.error("Error while creating data set design.", e); //$NON-NLS-1$
+            log.error("Error while creating data set design.", e); //$NON-NLS-1$
         }
         return design;
     }
@@ -276,8 +281,8 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
             setMessage(DEFAULT_MESSAGE);
         } else {
             setMessage(Messages.LinktableDataSetWizardPage_8, ERROR);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("Query is invalid: " + validationResult.getMessage()); //$NON-NLS-1$
+            if (log.isInfoEnabled()) {
+                log.info("Query is invalid: " + validationResult.getMessage()); //$NON-NLS-1$
             }
         }
         setPageComplete(true);
