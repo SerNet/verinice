@@ -54,6 +54,7 @@
 				<unit id="com.springsource.com.mchange.v2.c3p0" version="0.0.0"/>
 				<unit id="com.springsource.com.sun.xml.messaging.saaj" version="0.0.0"/>
 				<unit id="com.springsource.javax.activation" version="0.0.0"/>
+				<unit id="com.springsource.javax.jms" version="0.0.0"/>
 				<unit id="com.springsource.javax.xml.rpc" version="0.0.0"/>
 				<unit id="com.springsource.javax.xml.soap" version="0.0.0"/>
 				<unit id="com.springsource.javax.xml.stream" version="0.0.0"/>
