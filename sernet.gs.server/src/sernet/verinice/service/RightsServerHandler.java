@@ -41,6 +41,11 @@ import sernet.verinice.model.auth.Userprofile;
 
 /**
  * @see IRightsServerHandler
+ * 
+ * This Class is {@ApplicationContextAware} so that it can access the bean context to get 
+ * the 'rightsService' and add it self as change listeners to be notified when some user rights
+ * are changed. This is done in the init method which is called by spring after the context is created 
+ * and fully populated.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -54,7 +59,7 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
     
     private Map<String, Profile> profileMap;
 
-    private IRightsService iRightsService;
+    private IRightsService rightsService;
 
     private ApplicationContext appContext;
     
@@ -124,12 +129,12 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
     }
 
     private Map<String, List<Userprofile>> loadUserprofileMap() {
-        List<String> usernameList = iRightsService.getUsernames();
+        List<String> usernameList = rightsService.getUsernames();
         if(usernameList!=null) {
             userprofileMap = new HashMap<String, List<Userprofile>>(usernameList.size());
             for (String name : usernameList) {
                 if(name!=null) {
-                    userprofileMap.put(name, iRightsService.getUserprofile(name));
+                    userprofileMap.put(name, rightsService.getUserprofile(name));
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("User-profiles loaded for login-name: " + name);
                     }
@@ -149,7 +154,7 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
     }
     
     private Profiles loadProfileMap() {
-        Profiles profiles = iRightsService.getProfiles();
+        Profiles profiles = rightsService.getProfiles();
         profileMap = new HashMap<String, Profile>();
         for (Profile profile : profiles.getProfile()) {
             profileMap.put(profile.getName(), profile);
@@ -158,11 +163,11 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
     }
     
     public boolean isBlacklist() {
-        return ConfigurationType.BLACKLIST.equals(iRightsService.getConfiguration().getType());
+        return ConfigurationType.BLACKLIST.equals(rightsService.getConfiguration().getType());
     }
     
     public boolean isWhitelist() {
-        return ConfigurationType.WHITELIST.equals(iRightsService.getConfiguration().getType());
+        return ConfigurationType.WHITELIST.equals(rightsService.getConfiguration().getType());
     }
 
 
@@ -190,7 +195,7 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
      */
     @Override
     protected void finalize() throws Throwable {
-        iRightsService.removeChangeListener(this);
+        rightsService.removeChangeListener(this);
         super.finalize();
     }
     
@@ -205,9 +210,9 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
      * Initialize the rightservice and register as change listener.
      */
     private void registerIRightsService() {
-        if (iRightsService == null) {
-            iRightsService = (IRightsService) appContext.getBean("rightsService");
-            iRightsService.addChangeListener(this);
+        if (rightsService == null) {
+            rightsService = (IRightsService) appContext.getBean("rightsService");
+            rightsService.addChangeListener(this);
         }
     }
 
