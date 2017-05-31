@@ -413,7 +413,7 @@ public class Query implements IQuery
 			if(e instanceof TargetError){
 			    TargetError targetError = (TargetError) e;
 			    if(targetError.getTarget() instanceof HuiTypeFactoryException){
-			        throw new IllegalStateException("verinice server is not available.", targetError.getTarget());
+			        throw new IllegalStateException(Messages.query_preview_error_msg, targetError.getTarget());
 			    }
 			}
 
