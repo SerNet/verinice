@@ -237,7 +237,7 @@ public class GSScraper {
             throw new GSServiceException(e);
         } catch (GSServiceException e) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug(e.getMessage());
+                LOG.debug("Error while loading modules.", e);
             }
             if (!kapitel.equals(CATALOG_MODULE_B00)) {
                 LOG.error("No module for chapter" + kapitel + " found.", e);
