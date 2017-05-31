@@ -121,23 +121,10 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
         } else {
             linkTable = new VeriniceLinkTable.Builder().build();
         }
-        IDriver customDriver = new Driver();
-        IConnection customConn;
-        IObjectModelService objectModelService = null;
         try {
-            customConn = customDriver.getConnection(null);
-            java.util.Properties connProps = DesignSessionUtil
-                    .getEffectiveDataSourceProperties(getInitializationDesign()
-                            .getDataSourceDesign());
-            customConn.open(connProps);
-
-            objectModelService = Activator.getDefault().getObjectModelService();
+            linkTableComposite = new LinkTableComposite(linkTable, getObjectModelService(), composite, false);
         } catch (OdaException e) {
-            log.error("Error while opening the server connection.",e);
-        } 
-
-        try {
-            linkTableComposite = new LinkTableComposite(linkTable, objectModelService, composite, false);
+            log.error("Error while opening the server connection.", e);
         } catch (RemoteConnectFailureException exception) {
             setErrorMessage(Messages.linktableDataSetWizardPage_snca_error);
             log.error("no connection to verinice server available", exception);
@@ -146,6 +133,21 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
         }
         GridLayoutFactory.fillDefaults().generateLayout(linkTableComposite); 
         return linkTableComposite;
+    }
+
+    private IObjectModelService getObjectModelService() throws OdaException {
+        createSpringContext();
+        return ((IObjectModelService) Activator.getDefault().getObjectModelService());
+    }
+
+    private void createSpringContext() throws OdaException {
+        IDriver customDriver = new Driver();
+        IConnection customConn;
+        customConn = customDriver.getConnection(null);
+        java.util.Properties connProps = DesignSessionUtil
+                .getEffectiveDataSourceProperties(getInitializationDesign()
+                        .getDataSourceDesign());
+        customConn.open(connProps);
     }
     
     private String getQueryFromDataSet() {
