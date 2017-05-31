@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<p:auth version="0" type="whitelist" xmlns:p="http://www.verinice.org/auth"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.verinice.org/auth verinice-auth.xsd">
+    
+    <!-- This is a backup copy of the configuration defined in -->
+    <!-- verinice-auth.xml -->
+    <!-- This file will be created automatically by the verinice server -->
+    <!-- when verinice-auth.xml is changed by the verinice client. -->
+    
+    <p:profiles>
+        <!-- Each profile in this document defines a collection -->
+        <!-- of application actions. All actions in verinice are -->
+        <!-- defined in property file verinice-action.properties. -->
+    </p:profiles>
+    <p:userprofiles>
+        <!-- A userprofile defines a n:m mapping between users and -->
+        <!-- profiles. Userprofiles are configured as whitelist or -->
+        <!-- blacklist. Whitelist means: all actions are disabled -->
+        <!-- except the actions in the userprofile. Blacklist: All -->
+        <!-- actions are nabled except the actions in the userprofile. -->
+        <!-- You can switch from blacklist to whitelist by attibute type -->
+        <!-- of root element auth. -->
+    </p:userprofiles>
+</p:auth>
