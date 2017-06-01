@@ -19,14 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.rcp.templates;
 
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
-import sernet.gs.ui.rcp.main.bsi.dialogs.Messages;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnATreeElement.TemplateType;
 
@@ -57,19 +53,7 @@ public class TemplateSelectionDialog extends CnATreeElementSelectionDialog {
         super.configureShell(newShell);
         final int shellWidth = 600;
         final int shellHeight = 500;
-        final int cursorLocationXSubtrahend = 1000;
-        final int cursorLocationYSubtrahend = 600;
-        newShell.setText(Messages.CnATreeElementSelectionDialog_2);
         newShell.setSize(shellWidth, shellHeight);
-
-        // open the window right under the mouse pointer:
-        Point cursorLocation = Display.getCurrent().getCursorLocation();
-        newShell.setLocation(new Point(cursorLocation.x - cursorLocationXSubtrahend, cursorLocation.y - cursorLocationYSubtrahend));
-    }
-
-    @Override
-    protected Control createDialogArea(Composite parent) {
-        return super.createDialogArea(parent);
     }
 
     /**
