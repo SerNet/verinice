@@ -95,7 +95,7 @@
           class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
           lazy-init="false">
         <property name="service">
-            <ref bean="rightsServiceClient"/>
+            <ref bean="rightsService"/>
         </property>
         <property name="serviceInterface">
             <value>sernet.verinice.interfaces.IRightsService</value>
