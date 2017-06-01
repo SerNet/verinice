@@ -84,8 +84,8 @@ import sernet.verinice.service.commands.LoadTemplatesOrImplementations;
  * ({@link TemplateType#IMPLEMENTATION}) that belong to this modeling template,
  * if the element is a modeling template.
  * 
- * Father, in this view it is possible to add an additional modeling template to
- * the given ({@link CnATreeElement}).
+ * Further, in this view it is possible to add an additional modeling template
+ * to the given ({@link CnATreeElement}).
  * 
  * @see TemplateSelectionDialog
  * @see CnATreeElement#implementedTemplateUuids
