@@ -315,7 +315,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     
     private void updateTemplate() {
         try {
-            ReportTemplateMetaData metaData = new ReportTemplateMetaData(FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(), getReportOutputFormats(), true, null,allowMultipleRootObjects.getSelection());
+            ReportTemplateMetaData metaData = new ReportTemplateMetaData(FilenameUtils.getName(getSelectedDesginFile()),
+                    getReportOutputName(), getReportOutputFormats(), true, null,allowMultipleRootObjects.getSelection());
             getReportService().update(metaData, getLanguage());
         } catch (ReportDepositException e) {
             LOG.error("Error while updating report template file", e); //$NON-NLS-1$
@@ -325,13 +326,14 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
 
     private void addTemplate() {
         try {
-            byte[] rptDesignFile = FileUtils.readFileToByteArray(new File(getSelectedDesginFile()));     
-            ReportTemplateMetaData metaData = new ReportTemplateMetaData(FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(), getReportOutputFormats(), true, null,allowMultipleRootObjects.getSelection());
+            byte[] rptDesignFile = FileUtils.readFileToByteArray(new File(getSelectedDesginFile()));
+            ReportTemplateMetaData metaData = new ReportTemplateMetaData(FilenameUtils.getName(getSelectedDesginFile()),
+                    getReportOutputName(), getReportOutputFormats(), true, null, allowMultipleRootObjects.getSelection());
             getReportService().add(metaData, rptDesignFile, getLanguage());
         } catch (IOException e) {
             LOG.error("Error while adding new report template file", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.AddReportToDepositDialog_3);
-        }catch (ReportDepositException e) {
+        } catch (ReportDepositException e) {
             LOG.error("Error while adding new report template file", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.AddReportToDepositDialog_3);
         }

@@ -53,7 +53,8 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
      */
     private boolean multipleRootObjects;
 
-    public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats, boolean isServer, String[] md5CheckSums, boolean multipleRootObjects) {
+    public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats,
+            boolean isServer, String[] md5CheckSums, boolean multipleRootObjects) {
 
         this.filename = filename;
         this.outputname = outputname;
@@ -120,7 +121,7 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
         } else if (!outputname.equals(other.outputname)) {
             return false;
         }
-        if(multipleRootObjects != other.multipleRootObjects) {
+        if (multipleRootObjects != other.multipleRootObjects) {
             return false;
         }
             

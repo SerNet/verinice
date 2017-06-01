@@ -614,10 +614,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 LOG.debug(Messages.GenerateReportDialog_16 + elmt.getDbId() + ": " + elmt.getTitle()); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
             }
         }
-        if(chosenReportMetaData!=null && chosenReportMetaData.isMultipleRootObjects()){
-            scopeTitles.add(0,Messages.GenerateReportDialog_37);
+        if (chosenReportMetaData != null && chosenReportMetaData.isMultipleRootObjects()) {
+            scopeTitles.add(0, Messages.GenerateReportDialog_37);
         }
-
 
         String[] titles = scopeTitles.toArray(new String[scopeTitles.size()]);
         scopeCombo.setItems(titles);

@@ -242,9 +242,10 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
         String outputName = props.getProperty(IReportDepositService.PROPERTIES_OUTPUTNAME);
         OutputFormat[] outputFormats = formats.toArray(new OutputFormat[formats.size()]);
         String[] md5CheckSums = getCheckSums(fileName);
-        boolean multipleRootObjects = Boolean.parseBoolean(props.getProperty(IReportDepositService.PROPERTIES_MULTIPLE_ROOT_OBJECTS, "false"));
-
-        return new ReportTemplateMetaData(fileName, outputName, outputFormats, isHandeledByReportDeposit(), md5CheckSums, multipleRootObjects);
+        boolean multipleRootObjects = Boolean.parseBoolean(props.getProperty(
+                IReportDepositService.PROPERTIES_MULTIPLE_ROOT_OBJECTS, "false"));
+        return new ReportTemplateMetaData(fileName, outputName, outputFormats, isHandeledByReportDeposit(),
+                md5CheckSums, multipleRootObjects);
     }
 
     protected Map<String, byte[]> getPropertiesFiles(String fileName) throws IOException {

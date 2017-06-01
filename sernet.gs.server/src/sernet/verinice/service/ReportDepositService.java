@@ -140,10 +140,12 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
             Properties props = parseAndExtendMetaData(propFile, locale);
             props.setProperty(PROPERTIES_OUTPUTFORMATS, StringUtils.join(metadata.getOutputFormats(), ','));
             props.setProperty(PROPERTIES_OUTPUTNAME, metadata.getOutputname());
-            props.setProperty(PROPERTIES_MULTIPLE_ROOT_OBJECTS, Boolean.toString(metadata.isMultipleRootObjects()));
+            props.setProperty(PROPERTIES_MULTIPLE_ROOT_OBJECTS, 
+                    Boolean.toString(metadata.isMultipleRootObjects()));
             writePropertiesFile(props, propFile, "");
         } else {
-            writePropertiesFile(convertToProperties(metadata), getPropertiesFile(metadata.getFilename(), locale), "Default Properties for verinice-" + "Report " + metadata.getOutputname() + "\nauto-generated content");
+            writePropertiesFile(convertToProperties(metadata), getPropertiesFile(metadata.getFilename(), locale),
+                    "Default Properties for verinice-" + "Report " + metadata.getOutputname() + "\nauto-generated content");
         }
     }
 
@@ -185,7 +187,8 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
         props.setProperty(PROPERTIES_OUTPUTFORMATS, StringUtils.join(metaData.getOutputFormats(), ','));
         props.setProperty(PROPERTIES_OUTPUTNAME, metaData.getOutputname());
         props.setProperty(PROPERTIES_FILENAME, metaData.getFilename());
-        props.setProperty(PROPERTIES_MULTIPLE_ROOT_OBJECTS, Boolean.toString(metaData.isMultipleRootObjects()));
+        props.setProperty(PROPERTIES_MULTIPLE_ROOT_OBJECTS, 
+                Boolean.toString(metaData.isMultipleRootObjects()));
         return props;
     }
 
