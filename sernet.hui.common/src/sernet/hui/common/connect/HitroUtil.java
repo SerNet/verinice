@@ -148,7 +148,88 @@ public class HitroUtil {
 	 */
 	static class DelegatingHUITypeFactory extends HUITypeFactory {
 		
-		private static final Logger LOG_0 = Logger.getLogger(DelegatingHUITypeFactory.class);
+        /**
+         * This type is used if {@link HUITypeFactory} is not initialized, because
+         * of for example. connection problems
+         *
+         * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+         * @author Urs Zeidler <uz[at]sernet[dot]de>
+         *
+         */
+        private final class HUITypeFactoryBroken extends HUITypeFactory {
+            @Override
+            public Set<String> getAllTypeIds() {
+              throw new HuiTypeFactoryException();
+            }
+
+            @Override
+            public EntityType getEntityType(String id) {
+                throw new HuiTypeFactoryException();
+
+            }
+
+            @Override
+            public Collection<EntityType> getAllEntityTypes() {
+                throw new HuiTypeFactoryException();
+            }
+
+            @Override
+            public List<PropertyType> getURLPropertyTypes() {
+                throw new HuiTypeFactoryException();
+            }
+
+            @Override
+            public Set<String> getAllTags() {
+                throw new HuiTypeFactoryException();
+            }
+
+            @Override
+            public PropertyType getPropertyType(String entityTypeID, String id) {
+                throw new HuiTypeFactoryException();
+            }
+
+            @Override
+            public Set<HuiRelation> getPossibleRelations(String fromEntityTypeID, String toEntityTypeID) {
+                throw new HuiTypeFactoryException();
+            }
+
+            @Override
+            public Set<HuiRelation> getPossibleRelationsFrom(String fromEntityTypeID) {
+                throw new HuiTypeFactoryException();
+            }
+
+            @Override
+            public Set<HuiRelation> getPossibleRelationsTo(String toEntityTypeID) {
+                throw new HuiTypeFactoryException();
+            }
+
+            @Override
+            public HuiRelation getRelation(String huiRelationId) {
+                throw new HuiTypeFactoryException();
+            }
+
+            @Override
+            public String getMessage(String key) {
+                throw new HuiTypeFactoryException();
+            }
+
+            @Override
+            public String getMessage(String key, String defaultMessage) {
+                throw new HuiTypeFactoryException();
+            }
+
+            @Override
+            public String getMessage(String key, String defaultMessage, boolean emptyIfNotFound) {
+                throw new HuiTypeFactoryException();
+            }
+
+            @Override
+            public PropertyGroup getPropertyGroup(String entityId, String propertyId) {
+                throw new HuiTypeFactoryException();
+            }
+        }
+
+        private static final Logger LOG_0 = Logger.getLogger(DelegatingHUITypeFactory.class);
 		
 		// dont't use typeFactory directly, use getTypeFactory() instead !
 		private HUITypeFactory typeFactory;
@@ -171,9 +252,9 @@ public class HitroUtil {
 				}
 				try {
 					typeFactory = HUITypeFactory.createInstance(url);
-					
 					resolverFactory.createResolvers(typeFactory);
 				} catch (DBException e) {
+				    typeFactory = new HUITypeFactoryBroken();
 					LOG_0.error("Unable to reach document: " + url, e);
 				}
 			}

@@ -22,6 +22,8 @@ package sernet.verinice.oda.linktable.driver.designer.impl;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.datatools.connectivity.oda.IConnection;
+import org.eclipse.datatools.connectivity.oda.IDriver;
 import org.eclipse.datatools.connectivity.oda.IResultSetMetaData;
 import org.eclipse.datatools.connectivity.oda.OdaException;
 import org.eclipse.datatools.connectivity.oda.design.DataSetDesign;
@@ -41,8 +43,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.springframework.remoting.RemoteConnectFailureException;
 
-import sernet.verinice.oda.driver.designer.ServiceFactory;
+import sernet.verinice.oda.driver.designer.Activator;
+import sernet.verinice.oda.driver.impl.Driver;
 import sernet.verinice.oda.linktable.driver.impl.Query;
 import sernet.verinice.oda.linktable.driver.impl.ResultSetMetaData;
 import sernet.verinice.rcp.linktable.LinkTableUtil;
@@ -50,6 +54,7 @@ import sernet.verinice.rcp.linktable.LinkTableValidationResult;
 import sernet.verinice.rcp.linktable.ui.LinkTableComposite;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
+import sernet.verinice.service.model.IObjectModelService;
 
 /**
  * Wizard page for vDesigner to edit a link table data set.
@@ -58,13 +63,13 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
  */
 public class LinktableDataSetWizardPage extends DataSetWizardPage {
 
-    private static final Logger LOG = Logger.getLogger(LinktableDataSetWizardPage.class);
+    private static final Logger log = Logger.getLogger(LinktableDataSetWizardPage.class);
 
     private static final String DEFAULT_MESSAGE = Messages.LinktableDataSetWizardPage_0;
-    
-    Composite composite;
-    LinkTableComposite linkTableComposite;
 
+    Composite composite;
+
+    LinkTableComposite linkTableComposite;
 
     public LinktableDataSetWizardPage(String pageName) {
         super(pageName);
@@ -116,13 +121,33 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
         } else {
             linkTable = new VeriniceLinkTable.Builder().build();
         }
-
-        linkTableComposite = new LinkTableComposite(linkTable, 
-                ServiceFactory.getInstance().getObjectModelService(), 
-                composite,
-                false);
+        try {
+            linkTableComposite = new LinkTableComposite(linkTable, getObjectModelService(), composite, false);
+        } catch (OdaException e) {
+            log.error("Error while opening the server connection.", e);
+        } catch (RemoteConnectFailureException exception) {
+            setErrorMessage(Messages.linktableDataSetWizardPage_snca_error);
+            log.error("no connection to verinice server available", exception);
+            setPageComplete(false);
+            return composite;
+        }
         GridLayoutFactory.fillDefaults().generateLayout(linkTableComposite); 
         return linkTableComposite;
+    }
+
+    private IObjectModelService getObjectModelService() throws OdaException {
+        createSpringContext();
+        return ((IObjectModelService) Activator.getDefault().getObjectModelService());
+    }
+
+    private void createSpringContext() throws OdaException {
+        IDriver customDriver = new Driver();
+        IConnection customConn;
+        customConn = customDriver.getConnection(null);
+        java.util.Properties connProps = DesignSessionUtil
+                .getEffectiveDataSourceProperties(getInitializationDesign()
+                        .getDataSourceDesign());
+        customConn.open(connProps);
     }
     
     private String getQueryFromDataSet() {
@@ -148,7 +173,7 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
         try {
             updateDesign(design);
         } catch (Exception e) {
-            LOG.error("Error while creating data set design.", e); //$NON-NLS-1$
+            log.error("Error while creating data set design.", e); //$NON-NLS-1$
         }
         return design;
     }
@@ -178,6 +203,10 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
     
     private void addButtonComposite(Composite composite) {
         
+        if(isSNCALoaded()) {
+            return;
+        }
+
         Composite buttonComposite = new Composite(composite, SWT.NONE);
         buttonComposite.setLayout(new GridLayout(2, false));
         GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | 
@@ -212,6 +241,10 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
                 widgetSelected(e);
             }    
         });
+    }
+
+    private boolean isSNCALoaded() {
+        return linkTableComposite == null;
     }
     
     public void loadVltFile() {
@@ -252,14 +285,20 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
      * blank text. Set page message accordingly.
      */
     private void validateData() {
+
+        if(isSNCALoaded()){
+            setPageComplete(false);
+            return;
+        }
+
         LinkTableValidationResult validationResult = LinkTableUtil.isValidVeriniceLinkTable(linkTableComposite.getVeriniceLinkTable());
         boolean isValid = validationResult.isValid();
         if (isValid) {
             setMessage(DEFAULT_MESSAGE);
         } else {
             setMessage(Messages.LinktableDataSetWizardPage_8, ERROR);
-            if (LOG.isInfoEnabled()) {
-                LOG.info("Query is invalid: " + validationResult.getMessage()); //$NON-NLS-1$
+            if (log.isInfoEnabled()) {
+                log.info("Query is invalid: " + validationResult.getMessage()); //$NON-NLS-1$
             }
         }
         setPageComplete(true);

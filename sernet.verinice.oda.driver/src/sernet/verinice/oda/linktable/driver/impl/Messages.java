@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Daniel Murygin <dm{a}sernet{dot}de>.
+ * Copyright (c) 2017 Benjamin Weißenfels.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -15,28 +15,20 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
+ *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.oda.linktable.driver.designer.impl;
+package sernet.verinice.oda.linktable.driver.impl;
 
 import org.eclipse.osgi.util.NLS;
 
 /**
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de> 
  *
- *
- * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
 public class Messages extends NLS {
-    private static final String BUNDLE_NAME = "sernet.verinice.oda.linktable.driver.designer.impl.messages"; //$NON-NLS-1$
-    public static String linktableDataSetWizardPage_snca_error;
-    public static String LinktableDataSetWizardPage_0;
-    public static String LinktableDataSetWizardPage_2;
-    public static String LinktableDataSetWizardPage_3;
-    public static String LinktableDataSetWizardPage_4;
-    public static String LinktableDataSetWizardPage_5;
-    public static String LinktableDataSetWizardPage_6;
-    public static String LinktableDataSetWizardPage_7;
-    public static String LinktableDataSetWizardPage_8;
+    private static final String BUNDLE_NAME = "sernet.verinice.oda.linktable.driver.impl.messages"; //$NON-NLS-1$
+    public static String query_connection_error_msg;
+    public static String query_connection_error_title;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
