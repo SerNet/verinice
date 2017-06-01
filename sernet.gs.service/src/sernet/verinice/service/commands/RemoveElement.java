@@ -162,14 +162,12 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
             for (int i = 0; i < children.length; i++) {
                 if (children[i] instanceof FinishedRiskAnalysis) {
                     removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
-                }
-
-                if (children[i].getEntity() != null && isOrphanEntity(dao, children[i].getEntity().getDbId())) {
+                } else if (children[i].getEntity() != null && isOrphanEntity(children[i].getEntity())) {
                     deleteOrphanEntity(children[i].getEntity());
                     children[i].setEntity(null);
                 }
             }
-            if (element.getEntity() != null && isOrphanEntity(dao, element.getEntity().getDbId())) {
+            if (element.getEntity() != null && isOrphanEntity(element.getEntity())) {
                 deleteOrphanEntity(element.getEntity());
                 element.setEntity(null);
             }
@@ -314,10 +312,12 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         }
     }
     
-    private boolean isOrphanEntity(IBaseDao dao, int entityDbId) {
+    private boolean isOrphanEntity(Entity entity) {
         DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
         crit.setFetchMode("entity", FetchMode.JOIN);
-        crit.add(Restrictions.eq("entity.dbId", entityDbId));
+        crit.add(Restrictions.eq("entity.dbId", entity.getDbId()));
+        
+        IBaseDao dao = getDaoFactory().getDAOforTypedElement(element);
         List<CnATreeElement> entities = dao.findByCriteria(crit);
         return entities.size() > 1 ? false : true;
     }
