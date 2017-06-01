@@ -268,6 +268,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 }
                 
                 setupComboOutputFormatContent();
+                setupComboScopes();
             }
         });
 
@@ -290,7 +291,20 @@ public class GenerateReportDialog extends TitleAreaDialog {
             public void widgetSelected(SelectionEvent e) {
                 getButton(IDialogConstants.OK_ID).setEnabled(true);
                 int s = scopeCombo.getSelectionIndex();
-                rootElement = scopes.get(s).getDbId();
+                if (chosenReportMetaData != null && chosenReportMetaData.isMultipleRootObjects()) {
+                    if (s == 0) {
+                        Integer[] roots = new Integer[scopes.size()];
+                        for (int i = 0; i < scopes.size(); i++) {
+                            roots[i] = scopes.get(i).getDbId();
+                        }
+                        rootElements = roots;
+                        rootElement = null;
+                    } else {
+                        rootElement = scopes.get(s - 1).getDbId();
+                    }
+                } else {
+                    rootElement = scopes.get(s).getDbId();
+                }
             }
         });
 
@@ -395,7 +409,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         comboReportType.select(0);
         if(reportTemplates.length > 0){
-        chosenReportType = reportTypes[0];
+            chosenReportType = reportTypes[0];
             chosenReportMetaData = reportTemplates[comboReportType.getSelectionIndex()];
         } else {
             showNoReportsExistant();
@@ -581,6 +595,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         }
         // call is initiated from applicationbar, so let user choose from all accessible scopes
+        
         scopes.addAll(loadScopes());
         scopes.addAll(loadITVerbuende());
 
@@ -599,12 +614,14 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 LOG.debug(Messages.GenerateReportDialog_16 + elmt.getDbId() + ": " + elmt.getTitle()); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
             }
         }
+        if (chosenReportMetaData != null && chosenReportMetaData.isMultipleRootObjects()) {
+            scopeTitles.add(0, Messages.GenerateReportDialog_37);
+        }
 
         String[] titles = scopeTitles.toArray(new String[scopeTitles.size()]);
         scopeCombo.setItems(titles);
 
     }
-
 
     private void setupComboOutputFormatContent() {
         comboOutputFormat.removeAll();
