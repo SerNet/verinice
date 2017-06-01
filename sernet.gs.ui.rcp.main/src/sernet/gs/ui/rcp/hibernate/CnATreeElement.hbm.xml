@@ -123,7 +123,7 @@
         <property name="iconPath" column="icon" type="string" length="256"/>
         
         <property name="templateTypeValue" type="string">
-            <column name="template_type" not-null="true" default="'none'" />
+            <column name="template_type" not-null="true" default="'NONE'" />
         </property>
         
 		<set name="implementedTemplateUuids" table="templaterelations" lazy="false">
