@@ -65,5 +65,40 @@
 			</includes>
 		</fileSet>
 		
+		<fileSet>
+			<directory>${project.build.directory}/../../sernet.gs.server/target/classes/</directory>
+			<outputDirectory>/WEB-INF/classes</outputDirectory>
+			<includes>
+				<include>**</include>
+			</includes>
+			<excludes>
+				<exclude>log4j-prod.xml</exclude>
+				<exclude>server_hibernate-basic.cfg.xml</exclude>
+				<exclude>server_hibernate_derby.cfg.xml</exclude>
+				<exclude>server_hibernate_oracle-basic.cfg.xml</exclude>
+			</excludes>
+		</fileSet>
+
+		<!-- The buckminster WAR artifacte additionally includes compiled Java test classes and 
+			resources under WEB-INF/classes/sernet/verinice/service/test (the sources of these classes
+			and resources can be found in ${project.build.directory}/../../sernet.gs.server/testSrc/).
+			At the moment we conclude that these test classes and resources are not required in the WAR.
+			Therefore the Tycho build omits them. -->
+		<fileSet>
+			<directory>${project.build.directory}/../../sernet.gs.server/testSrc/</directory>
+			<outputDirectory>/WEB-INF/classes</outputDirectory>
+			<includes>
+				<include>*.oracle</include>
+				<include>*.properties</include>
+				<include>*.test</include>
+				<include>*.vql</include>
+				<include>*.xml</include>
+				<include>*.xsd</include>
+				<include>reports/**</include>
+			</includes>
+			<excludes>
+			</excludes>
+		</fileSet>
+		
 	</fileSets>
 </assembly>
