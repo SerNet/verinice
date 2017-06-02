@@ -63,14 +63,14 @@ BUILD INSTRUCTIONS
         <module>../sernet.gs.server</module>
         <module>../sernet.gs.server.feature</module>
         
-<!--         <module>../sernet.verinice.releng.client.product</module> -->
-<!--         <module>../sernet.verinice.update_site</module> -->
+        <module>../sernet.verinice.releng.client.product</module>
+        <module>../sernet.verinice.update_site</module>
         <module>../sernet.verinice.releng.server.product</module>
         
         <!-- Report designer inclusive dependencies only needed by this module -->
         
-<!--         <module>../sernet.verinice.oda.driver.designer</module> -->
-<!--         <module>../sernet.verinice.report.designer.tycho</module> -->
+        <module>../sernet.verinice.oda.driver.designer</module>
+        <module>../sernet.verinice.report.designer.tycho</module>
         
     </modules>
 
