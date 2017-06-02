@@ -88,10 +88,6 @@
 
 	<!-- Load EL 2.2 -->
 	<context-param>
-		<param-name>org.apache.myfaces.EXPRESSION_FACTORY</param-name>
-		<param-value>com.sun.el.ExpressionFactoryImpl</param-value>
-	</context-param>
-	<context-param>
 		<param-name>com.sun.faces.expressionFactory</param-name>
 		<param-value>com.sun.el.ExpressionFactoryImpl</param-value>
 	</context-param>
