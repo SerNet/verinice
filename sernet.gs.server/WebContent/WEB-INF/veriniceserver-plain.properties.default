@@ -115,3 +115,7 @@ veriniceserver.risk.calculation.method=ADDITION
 # A limit on how many elements can be loaded at once
 # Set -1 to disable the limit 
 veriniceserver.object.limit=10000
+
+# location to store the vnl-files representing the licenses 
+# needed to access license-restricted content                                  
+veriniceserver.vnl.repository=/WEB-INF/vnl
