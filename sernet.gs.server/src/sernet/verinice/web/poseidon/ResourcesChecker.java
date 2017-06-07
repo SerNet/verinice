@@ -27,7 +27,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
-import org.apache.commons.io.FilenameUtils;
+import static org.apache.commons.io.FilenameUtils.concat;
 
 /**
  * Checks if resources are available.
@@ -39,7 +39,7 @@ import org.apache.commons.io.FilenameUtils;
 public class ResourcesChecker {
 
     private static final String MANUAL_DIR = "manual";
-    private static final String CLIENT_DIR = "files";
+    private static final String BASE_CLIENT_DIR = "clients";
     private static final String MESSAGES = "sernet.verinice.web.WebMessages";
 
 
@@ -60,37 +60,41 @@ public class ResourcesChecker {
 
     public boolean existsWindowsClient64Bit() {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        File file = new File(externalContext.getRealPath(FilenameUtils.concat(CLIENT_DIR, "verinice-win-64.zip")));
+        String fileName = concat(BASE_CLIENT_DIR, concat("windows-x86_64", "verinice-win-64.zip"));
+        File file = new File(externalContext.getRealPath(fileName));
         return file.exists();
     }
 
     public boolean existsWindowsClient32Bit() {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        File file = new File(externalContext.getRealPath(FilenameUtils.concat(CLIENT_DIR, "verinice-win-32.zip")));
+        String fileName = concat(BASE_CLIENT_DIR, concat("windows-x86", "verinice-win-32.zip"));
+        File file = new File(externalContext.getRealPath(fileName));
         return file.exists();
     }
 
     public boolean existsLinuxClient64Bit() {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        File file = new File(externalContext.getRealPath(FilenameUtils.concat(CLIENT_DIR, "verinice-linux-64.zip")));
+        String fileName = concat(BASE_CLIENT_DIR, concat("linux-x86_64", "verinice-linux-64.zip"));
+        File file = new File(externalContext.getRealPath(fileName));
         return file.exists();
     }
 
     public boolean existsLinuxClient32Bit() {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        File file = new File(externalContext.getRealPath(FilenameUtils.concat(CLIENT_DIR, "verinice-linux-32.zip")));
+        String fileName = concat(BASE_CLIENT_DIR, concat("linux-x86", "verinice-linux-32.zip"));
+        File file = new File(externalContext.getRealPath(fileName));
         return file.exists();
     }
 
     public boolean existsUserManualPdf() {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        File file = new File(externalContext.getRealPath(FilenameUtils.concat(MANUAL_DIR, getManualName() + ".pdf")));
+        File file = new File(externalContext.getRealPath(concat(MANUAL_DIR, getManualName() + ".pdf")));
         return file.exists();
     }
 
     public boolean existsUserManualHtml() {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        File file = new File(externalContext.getRealPath(FilenameUtils.concat(MANUAL_DIR, getManualName())));
+        File file = new File(externalContext.getRealPath(concat(MANUAL_DIR, getManualName())));
         return file.exists();
     }
 
