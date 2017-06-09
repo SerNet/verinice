@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.editors;
 
+import java.security.SecureRandom;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IPersistableElement;
@@ -28,15 +30,17 @@ import sernet.verinice.model.bsi.Note;
 public class NoteEditorInput implements IEditorInput {
 
 	private Note input;
-	
-	
 
 	public NoteEditorInput(Note selection) {
 		input = selection;
 	}
 	
 	public Integer getId() {
-		return (input!=null) ? input.getCnATreeElementId() : null;
+		if(isIsAvailable())
+		    return input.getDbId();
+		else {
+		    return new SecureRandom().nextInt(Integer.MAX_VALUE);
+		}
 	}
 
 	public boolean exists() {
@@ -71,5 +75,9 @@ public class NoteEditorInput implements IEditorInput {
 	public void setInput(Note input) {
 		this.input = input;
 	}
+
+	private boolean isIsAvailable() {
+        return input != null && input.getDbId() != null;
+    }
 
 }
