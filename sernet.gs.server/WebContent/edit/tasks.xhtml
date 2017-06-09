@@ -20,6 +20,10 @@
 			<div class="ui-g-6 ui-lg-6 ui-xl-6 ui-md-12 ui-sm-12">
 				<p:panel header="#{msgTask['tasks']}">
 					<h:form id="tableForm" rendered="#{auth.isoTasks}">
+
+						<p:growl id="msg" autoUpdate="true" showDetail="true" sticky="true"
+						severity="info" />
+
 						<div class="ui-g ui-fluid">
 							<div class="ui-g-2">
 								<p:commandButton id="complete" action="#{task.loadTasks}"
@@ -32,10 +36,7 @@
 								<p:commandButton id="completeAll"
 									action="#{task.completeAllTask}"
 									value="#{msgTask['completeAll']}" icon="fa fa-fw fa-check"
-									update=":tableForm:taskTable,:editForm">
-									<f:setPropertyActionListener target="#{message.info}"
-										value="Completing all tasks. Please wait..." />
-								</p:commandButton>
+									update=":tableForm:taskTable,:editForm, msg" />
 							</div>
 							<ui:fragment rendered="#{not empty task.selectedTask.outcomes}">
 								<div id="task-action-handler" class="ui-g-12">
