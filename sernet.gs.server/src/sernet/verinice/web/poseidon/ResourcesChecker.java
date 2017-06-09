@@ -60,28 +60,28 @@ public class ResourcesChecker {
 
     public boolean existsWindowsClient64Bit() {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        String fileName = concat(BASE_CLIENT_DIR, concat("windows-x86_64", "verinice-win-64.zip"));
+        String fileName = concat(BASE_CLIENT_DIR, "verinice-windows-x86_64.zip");
         File file = new File(externalContext.getRealPath(fileName));
         return file.exists();
     }
 
     public boolean existsWindowsClient32Bit() {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        String fileName = concat(BASE_CLIENT_DIR, concat("windows-x86", "verinice-win-32.zip"));
+        String fileName = concat(BASE_CLIENT_DIR, "verinice-windows-x86.zip");
         File file = new File(externalContext.getRealPath(fileName));
         return file.exists();
     }
 
     public boolean existsLinuxClient64Bit() {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        String fileName = concat(BASE_CLIENT_DIR, concat("linux-x86_64", "verinice-linux-64.zip"));
+        String fileName = concat(BASE_CLIENT_DIR, "verinice-linux-x86_64.zip");
         File file = new File(externalContext.getRealPath(fileName));
         return file.exists();
     }
 
     public boolean existsLinuxClient32Bit() {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        String fileName = concat(BASE_CLIENT_DIR, concat("linux-x86", "verinice-linux-32.zip"));
+        String fileName = concat(BASE_CLIENT_DIR, "verinice-linux-x86.zip");
         File file = new File(externalContext.getRealPath(fileName));
         return file.exists();
     }
