@@ -318,7 +318,7 @@ public class TreeBean implements IElementListener {
         }
     }
 
-    public boolean isEditable() {
+    private boolean isEditable() {
         return getElement() != null && !(getElement() instanceof ISO27KModel) && !(getElement() instanceof ImportIsoGroup);
     }
 

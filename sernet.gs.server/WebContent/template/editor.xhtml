@@ -10,7 +10,7 @@
 	xmlns:vn="http://www.verinice.org/taglib">
 <ui:composition>
 	<h:form id="editForm">
-		<p:panel id="title" header="#{edit.title}" rendered="#{edit.element!=null and tree.isEditable()}">
+		<p:panel id="title" header="#{edit.title}" rendered="#{edit.element!=null}">
 			<p:outputPanel styleClass="ui-g #{edit.getSaveButtonClass()}">
 				<p:remoteCommand name="submitEditForm" process="@form"
 					update=":editForm :tableForm :navForm" action="#{edit.save()}" />
