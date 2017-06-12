@@ -152,14 +152,39 @@ public abstract class HtmlWriter {
             for (Property property : propertyList.getProperties()) {
                 sb.append((property.isLimitedLicense()) 
                         ? getLicenseRestrictedContent(property)  
-                                : property.getPropertyValue());
+                                : getProperty(cnaTreeElement, propertyType));
             }
         } catch (LicenseManagementException e){
             LOG.error("Error while validating license", e);
         }
         return sb.toString();
     }
+    
+    private static String getProperty(CnATreeElement cnATreeElement, 
+            PropertyType propertyType){
+        String value = "";
+        if (RisikoMassnahmenUmsetzung.TYPE_ID.equals(
+                cnATreeElement.getTypeId())){
+            value = getOwnRiskSafeguardText(cnATreeElement);
+        }
+        if (StringUtils.isEmpty(value)){
+            value = cnATreeElement.getPropertyValue(propertyType.getId());
+        }
+        return value;
+    }
 
+    /**
+     * @param cnATreeElement
+     */
+    private static String getOwnRiskSafeguardText(CnATreeElement cnATreeElement) {
+        RisikoMassnahmenUmsetzung ums = (RisikoMassnahmenUmsetzung) cnATreeElement;
+        RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(ums);
+        if (ums.getRisikoMassnahme() != null) {
+            return toHtml(ums);
+        } 
+        return "";
+    }
+    
     /**
      * Prepares the 
      * decryption of the value of a license restricted property 
@@ -459,23 +484,7 @@ public abstract class HtmlWriter {
     
     private static String toHtml(RisikoMassnahmenUmsetzung ums) {
         StringBuilder buf = new StringBuilder();
-        RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(ums);
-        StringBuilder titleBuilder = new StringBuilder();
-        PropertyType propertyType = HUITypeFactory.getInstance().
-                getPropertyType(ums.getEntityType().getId(),
-                        RisikoMassnahmenUmsetzung.P_KAPITEL);
-        titleBuilder.append(buildObjectBrowserContent(ums, propertyType));
-        titleBuilder.append(" ");
-        propertyType = HUITypeFactory.getInstance().
-                getPropertyType(ums.getEntityType().getId(),
-                        RisikoMassnahmenUmsetzung.P_NAME);
-        titleBuilder.append(buildObjectBrowserContent(ums, propertyType));
-        propertyType = HUITypeFactory.getInstance().getPropertyType(
-                ums.getEntityType().getId(), 
-                RisikoMassnahmenUmsetzung.P_BESCHREIBUNG);
-        writeHtml(buf, titleBuilder.toString(), 
-                buildObjectBrowserContent(ums, propertyType),
-                ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$
+        writeHtml(buf, ums.getNumber() + " " + ums.getName(), ums.getDescription(), ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$
         return buf.toString();
     }
     

@@ -50,7 +50,6 @@ public class RisikoMassnahmenUmsetzungFactory {
 		umsetzung.setStand(draftMn.getStand());
 		umsetzung.setStufe(draftMn.getSiegelstufe());
 		umsetzung.setLebenszyklus(draftMn.getLZAsString(BSIKatalogInvisibleRoot.getInstance().getLanguage()));
-		umsetzung.setDescription(draftMn.getDescription());
 		
 		return umsetzung;
 	}
