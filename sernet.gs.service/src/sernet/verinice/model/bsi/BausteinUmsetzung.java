@@ -55,7 +55,7 @@ public class BausteinUmsetzung extends CnATreeElement {
     private static final String[] SCHICHTEN = new String[] { "0", "1", "2", "3", "4", "5" // $NON-NLS-0$ //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
     };
 
-    private static final String[] SCHICHTEN_BEZEICHNUNG = new String[] { Messages.BausteinUmsetzung_0, Messages.BausteinUmsetzung_1, Messages.BausteinUmsetzung_2, Messages.BausteinUmsetzung_3, Messages.BausteinUmsetzung_4, Messages.BausteinUmsetzung_5 };
+    private static final String[] SCHICHTEN_BEZEICHNUNG = new String[] { Messages.BausteinUmsetzung_5, Messages.BausteinUmsetzung_0, Messages.BausteinUmsetzung_1, Messages.BausteinUmsetzung_2, Messages.BausteinUmsetzung_3, Messages.BausteinUmsetzung_4 };
 
     public BausteinUmsetzung(CnATreeElement parent) {
         super(parent);
