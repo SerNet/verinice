@@ -88,12 +88,12 @@ public class DependsTextBehavior extends DependsBehavior implements IEditorBehav
     
 
     protected boolean isValueSet(Text control, String valueDependsOn) {
-        boolean result = valueDependsOn.equals(control.getText());
-        if(inverse) {
+        boolean result = control.getText() == null ? false : control.getText().indexOf(valueDependsOn) != -1;
+        if (inverse) {
             result = !result;
         }
-        if(result && getNext()!=null) {
-            DependsTextBehavior next = (DependsTextBehavior)getNext();
+        if (result && getNext() != null) {
+            DependsTextBehavior next = (DependsTextBehavior) getNext();
             result = next.isValueSet(control, next.valueDependsOn);
         }
         return result;
