@@ -264,6 +264,11 @@
     <mime-type>application/x-font-woff2</mime-type>
   </mime-mapping>
 
+	<listener>
+		<listener-class>sernet.verinice.listener.VeriniceContextListener</listener-class>
+		
+	</listener>
+
 	<session-config>
 		<!-- Session idle timeout in min. -->
 		<session-timeout>30</session-timeout>

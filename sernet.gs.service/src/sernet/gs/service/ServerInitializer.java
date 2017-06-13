@@ -31,8 +31,6 @@ import sernet.verinice.interfaces.IHibernateCommandService;
  */
 public class ServerInitializer {
 	
-	private final Logger log = Logger.getLogger(ServerInitializer.class);
-	
 	private static VeriniceContext.State state;
 	
 	private IHibernateCommandService hibernateCommandService;
@@ -45,6 +43,8 @@ public class ServerInitializer {
 	 * 
 	 * <p>Calling this method is needed when the Activator was run on a
 	 * different thread then the Application class.</p>
+	 *
+	 * @deprecated Find another way to reinitalize the verinice context.
 	 */
 	public static void inheritVeriniceContextState()
 	{
