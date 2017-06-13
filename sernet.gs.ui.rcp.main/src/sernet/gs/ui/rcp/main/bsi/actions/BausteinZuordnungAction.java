@@ -134,24 +134,25 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
 
     protected void addModule(Baustein nodule, CnATreeElement element) {
         CnATreeElement elementInitialized = element;
-        if(!element.getChildren().isEmpty()) {
+        if (!element.getChildren().isEmpty()) {
             RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance();
             ri.setChildrenProperties(true);
             elementInitialized = Retriever.retrieveElement(element, ri);
         }
         if (!elementInitialized.containsBausteinUmsetzung(nodule.getId())) {
-            try {                              
-        CnAElementFactory.getInstance().saveNew(elementInitialized, BausteinUmsetzung.TYPE_ID, new BuildInput<Baustein>(nodule), false);
-            }catch (Exception e) {
+            try {
+                CnAElementFactory.getInstance().saveNew(elementInitialized,
+                        BausteinUmsetzung.TYPE_ID, new BuildInput<Baustein>(nodule), false);
+            } catch (Exception e) {
                 LOG.error("Error by saving.", e);
                 throw new RuntimeException(e);
-            } 
+            }
         }
     }
     
     @SuppressWarnings("rawtypes")
     protected List<IBSIStrukturElement> getSelectedElements(IStructuredSelection selection) {
-        final List<IBSIStrukturElement> selectedElements = new ArrayList<>();
+        final List<IBSIStrukturElement> selectedElements = new ArrayList<>(selection.size());
         for (Iterator iter = selection.iterator(); iter.hasNext();) {
             Object o = iter.next();
             if (o instanceof IBSIStrukturElement) {
