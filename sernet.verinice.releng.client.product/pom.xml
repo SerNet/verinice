@@ -35,11 +35,11 @@
 						<!-- install the product using the p2 director -->
 						<id>create-product-distributions</id>
 						<goals>
-							<!-- Use create P2 repo and product definition metadata to create 
+							<!-- Use create P2 repo and product definition metadata to create
 								a product. -->
 							<goal>materialize-products</goal>
 							<!-- Create ZIP archive of product distribution. -->
-							<!-- <goal>archive-products</goal> -->
+							<goal>archive-products</goal>
 						</goals>
 					</execution>
 				</executions>
