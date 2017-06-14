@@ -266,7 +266,6 @@
 
 	<listener>
 		<listener-class>sernet.verinice.listener.VeriniceContextListener</listener-class>
-		
 	</listener>
 
 	<session-config>
