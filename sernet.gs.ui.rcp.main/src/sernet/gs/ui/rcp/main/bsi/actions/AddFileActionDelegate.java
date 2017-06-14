@@ -32,6 +32,7 @@ import org.eclipse.ui.PlatformUI;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.views.FileView;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -110,7 +111,7 @@ public class AddFileActionDelegate implements IObjectActionDelegate, RightEnable
      * .IAction, org.eclipse.jface.viewers.ISelection)
      */
     public void selectionChanged(IAction action, ISelection selection) {
-        action.setEnabled(checkRights());
+        action.setEnabled(checkRights() && isCnATreeElementEditable(selection));
     }
 
     /* (non-Javadoc)
@@ -137,6 +138,17 @@ public class AddFileActionDelegate implements IObjectActionDelegate, RightEnable
     public void setRightID(String rightID) {
         // Do nothing
         
+    }
+
+    private boolean isCnATreeElementEditable(ISelection selection) {
+        if (selection instanceof IStructuredSelection) {
+            IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+            Object element = structuredSelection.getFirstElement();
+            if (element instanceof CnATreeElement) {
+                return CnAElementHome.getInstance().isNewChildAllowed((CnATreeElement) element);
+            }
+        }
+        return false;
     }
 
 }
