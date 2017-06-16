@@ -1053,7 +1053,7 @@ public class LicenseManagementServerModeService
                         try {
                             handleWatchKeyEvents(watchService);
                         } catch (LicenseManagementException e) {
-                            log.error("Something went wrong handling file-Events");
+                            log.error("Something went wrong handling file-Events",e );
                         }
                     }
                 });
@@ -1127,6 +1127,7 @@ public class LicenseManagementServerModeService
                 // handle added vnl file
                 WatchEvent<Path> ev = (WatchEvent<Path>)event;
                 Path filename = ev.context();
+                
                 if (filename.toString().endsWith(VNL_FILE_EXTENSION)) {
                     readVNLFiles();
                     log.info("VNL-File:\t" + filename.toString() 
