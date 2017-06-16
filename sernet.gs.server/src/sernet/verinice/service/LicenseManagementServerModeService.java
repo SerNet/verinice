@@ -23,10 +23,18 @@ package sernet.verinice.service;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchEvent.Kind;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executors;
 
 import javax.swing.text.html.HTMLWriter;
 
@@ -79,6 +87,15 @@ public class LicenseManagementServerModeService
     private IAuthService authService;
     
     protected Set<LicenseManagementEntry> existingLicenses = null;
+    
+    public void init(){
+        try {
+            watchVNLDirectory();
+        } catch (LicenseManagementException e) {
+            log.error("Something went wrong, watching the File-Events in"
+                    + " the vnl-Directory", e);
+        }
+    }
 
     @Override
     public boolean isCurrentUserValidForLicense(String username, 
@@ -914,7 +931,7 @@ public class LicenseManagementServerModeService
 
     /**
      * Finds the entry of a set of {@link LicenseManagementEntry} instances
-     * that is valid the longest
+     * that is valid the longest.
      * 
      * @param entries
      * @return
@@ -999,6 +1016,129 @@ public class LicenseManagementServerModeService
             return existingEntry;
         }
         return null;
+    }
+
+    /**
+     * watch the vnl-repository directory for events that create
+     * or delete files with the extension ".vnl". 
+     * In both cases (creation/deletion of file) the map
+     * with the systemwide available licenses will be resetted and
+     * refilled by rereading the vnl-files from the configured
+     * repository. This ensures, that the objects represented by the 
+     * files in the repository are always in sync with the state of 
+     * the directory that is the repository.
+     * 
+     * @throws LicenseManagementException
+     */
+    private void watchVNLDirectory() throws LicenseManagementException{
+        File vnlDir = getVNLRepository();
+        if (vnlDir.isDirectory()) {
+            Path vnlDirPath = vnlDir.toPath();
+            Kind<?>[] eventKinds = new Kind<?>[]{
+                StandardWatchEventKinds.ENTRY_CREATE,
+                StandardWatchEventKinds.ENTRY_DELETE};
+                final WatchService watchService;
+                try {
+                    watchService = FileSystems.getDefault().newWatchService();
+                    vnlDirPath.register (watchService, eventKinds);
+                } catch (IOException e) {
+                    throw new LicenseManagementException(
+                            "Error while initialising file-Watch"
+                            + "-Service for vnl-Directory", e);
+                }
+                Executors.newSingleThreadExecutor().submit(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            handleWatchKeyEvents(watchService);
+                        } catch (LicenseManagementException e) {
+                            log.error("Something went wrong handling file-Events");
+                        }
+                    }
+                });
+        }
+    }
+
+    /**
+     * listening for watchKey-events. As soon as an event appears, 
+     * 
+     * watchService.take()
+     * 
+     * delievers it. Up to that moment the loop stops in that line.
+     * To ensure all events are covered during complete runtime,
+     * this peace of code has to run inside of an endless loop, in an own 
+     * non-blocking, thread.
+     * 
+     * 
+     * @param watchService
+     * @throws InterruptedException
+     * @throws LicenseManagementException
+     */
+    private void handleWatchKeyEvents(final WatchService watchService) 
+            throws LicenseManagementException {
+        while (true) {
+            try {
+                final WatchKey watchKey = watchService.take();
+                log.debug("WatchKey taken:\t" + watchKey.toString());
+                handleWatchKeyEvent(watchKey);
+                // reset the key
+                boolean valid = watchKey.reset();
+                if (!valid) {
+                    log.error("Overflow-Event appeared. Cancelling "
+                            + "watchService-loop for vnl-Directory");
+                    break;
+                }
+            } catch (InterruptedException e) {
+                log.error("Thread Interrupted");
+                Thread.currentThread().interrupt();
+                throw new LicenseManagementException("Watchservice for "
+                        + "vnl-Directory was terminated unexpectedly", e);
+            }
+        }
+    }
+
+    /**
+     * handles a single watchKey-Event and consideres its {@link StandardWatchEventKinds}
+     * -type to determine the process to deal with this event. Since 
+     * ENTRY_MODIFY needs not to be considered, it has been left out.
+     * OVERFLOW can always happen and has to be dealt with. It appears
+     * e.g. in case of a sudden shutdown / interruption of the watchService
+     * or its running thread.
+     * 
+     * @param watchKey
+     * @throws LicenseManagementException
+     */
+    private void handleWatchKeyEvent(final WatchKey watchKey) throws LicenseManagementException {
+        for (WatchEvent<?> event : watchKey.pollEvents()) {
+            log.debug("Event triggered of Kind:\t" + event.kind().name());
+            if (StandardWatchEventKinds.ENTRY_DELETE
+                    .equals(event.kind())) {
+                // handle deleted vnl file
+                final Path changed = (Path) event.context();
+                if (changed.toString().endsWith(VNL_FILE_EXTENSION)) {
+                    readVNLFiles();
+                    log.warn("VNL-File:\t" + changed.toString() 
+                        + " has been deleted");
+                }
+
+            } else if (StandardWatchEventKinds.ENTRY_CREATE
+                    .equals(event.kind())) {
+                // handle added vnl file
+                WatchEvent<Path> ev = (WatchEvent<Path>)event;
+                Path filename = ev.context();
+                if (filename.toString().endsWith(VNL_FILE_EXTENSION)) {
+                    readVNLFiles();
+                    log.info("VNL-File:\t" + filename.toString() 
+                        + " has been added");
+                }
+            } else if (StandardWatchEventKinds.OVERFLOW
+                    .equals(event.kind())) {
+                // handle overflow event
+                continue;
+            }
+
+        }
     }
 
     /**
