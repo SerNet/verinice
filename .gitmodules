@@ -1,0 +1,3 @@
+[submodule "third-party-plugins"]
+	path = third-party-plugins
+	url = /home/benjamin/apps/verinice-third-party-plugins/
