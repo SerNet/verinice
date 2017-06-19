@@ -314,12 +314,12 @@ public class LdapImportDialog extends TitleAreaDialog {
 	}
 
 	private void refreshTable() {
-		Object[] personArray = personSet.toArray();
-		Arrays.sort(personArray, new Comparator<Object>() {
+		PersonInfo[] personArray = personSet.toArray(new PersonInfo[personSet.size()]);
+		Arrays.sort(personArray, new Comparator<PersonInfo>() {
 		    NumericStringComparator comparator = new NumericStringComparator();
             @Override
-            public int compare(Object o1, Object o2) {
-                return comparator.compare(((PersonInfo)o1).getLoginName(), ((PersonInfo)o2).getLoginName());
+            public int compare(PersonInfo o1, PersonInfo o2) {
+                return comparator.compare(o1.getLoginName(), o2.getLoginName());
             }
         });	
 		viewer.setInput(personArray);
