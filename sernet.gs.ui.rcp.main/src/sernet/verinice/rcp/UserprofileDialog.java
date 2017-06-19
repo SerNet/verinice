@@ -285,15 +285,20 @@ public class UserprofileDialog extends TitleAreaDialog {
 
     private void setUnselected() {
         unselectedProfiles.clear();
-        boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+
         for (Profile profile : allProfiles) {
-            if ((!isLocalAdmin || (isLocalAdmin && AccountLoader.isLocalAdminCreator(profile))) && !containsProfileRef(selectedProfiles, profile.getName())) {
+            if (isLocalAdminCreator(profile) && !containsProfileRef(selectedProfiles, profile.getName())) {
                 // create a reference to the profile
                 ProfileRef profileRef = new ProfileRef();
                 profileRef.setName(profile.getName());
                 unselectedProfiles.add(profileRef);
             }
         }
+    }
+
+    private boolean isLocalAdminCreator(Profile profile) {
+        boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        return !isLocalAdmin || (isLocalAdmin && AccountLoader.isLocalAdminCreator(profile));
     }
     
     private boolean containsProfileRef(List<ProfileRef> profileRefs, String profileName) {
