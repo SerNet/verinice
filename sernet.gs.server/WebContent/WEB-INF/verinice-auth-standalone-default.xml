@@ -45,6 +45,7 @@
 	        <action id="addnote" />
 	        <action id="addsecurityassessment" />
 	        <action id="addownmodul"/>
+	        <action id="marktemplate"/>
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
 	        <action id="bausteinzuordnung" />
@@ -87,6 +88,7 @@
 	        <action id="showpreferences" />
 	        <action id="simpleauditview" />
 	        <action id="taskview" />
+	        <action id="templates"/>
 	        <action id="todo"/>
           <action id="unify" />
 	        <action id="xmlexport"/>

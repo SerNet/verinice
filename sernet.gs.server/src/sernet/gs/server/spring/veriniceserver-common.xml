@@ -93,6 +93,7 @@ This variant:
                 <entry key="encryptionService" value-ref="encryptionService" />
 				<entry key="graphService" value-ref="graphService" />
         		<entry key="countService" value-ref="countService" />
+				<entry key="individualService" value-ref="individualService" />
 			</map>
 		</property>
 	</bean>
