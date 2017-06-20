@@ -62,7 +62,7 @@
 							</p:dataTable>
 							<!-- 104857600 b = 100 mb -->
 							<p:fileUpload fileUploadListener="#{attachment.handleFileUpload}"
-								rendered="#{auth.addAttachments}" mode="advanced"
+								rendered="#{auth.addAttachments and edit.writeAllowed}" mode="advanced"
 								multiple="true" auto="true" sizeLimit="104857600"
 								update="attachmentTable" allowTypes="/(\.|\/).*$/" />
 						</p:tab>

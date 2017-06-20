@@ -19,8 +19,6 @@ package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Hashtable;
@@ -82,6 +80,7 @@ import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -364,6 +363,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
             public void selectionChanged(SelectionChangedEvent event) {
                 saveCopyAction.setEnabled(true);
                 openAction.setEnabled(true);
+                deleteFileAction.setEnabled(isCnATreeElementEditable());
             }
         });
     }
@@ -383,7 +383,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         if (part == this) {
             openAction.setEnabled(element != null);
             saveCopyAction.setEnabled(element != null);
-            deleteFileAction.setEnabled(element != null && deleteFileAction.checkRights());
+            deleteFileAction.setEnabled(element != null && deleteFileAction.checkRights() && isCnATreeElementEditable());
             return;
         }
 
@@ -402,8 +402,8 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
     protected void elementSelected(Object element) {
         try {
             if (element instanceof CnATreeElement) {
-                addFileAction.setEnabled(addFileAction.checkRights());
                 setCurrentCnaElement((CnATreeElement) element);
+                addFileAction.setEnabled(addFileAction.checkRights() && isCnATreeElementEditable());
                 loadFiles();
             } else {
                 addFileAction.setEnabled(false);
@@ -414,11 +414,15 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
                 Attachment att = (Attachment) selectedElement;
                 openAction.setEnabled(att != null);
                 saveCopyAction.setEnabled(att != null);
-                deleteFileAction.setEnabled(att != null && deleteFileAction.checkRights());
+                deleteFileAction.setEnabled(att != null && deleteFileAction.checkRights() && isCnATreeElementEditable());
             }
         } catch (Exception e) {
             LOG.error("Error while loading notes", e); //$NON-NLS-1$
         }
+    }
+
+    private boolean isCnATreeElementEditable() {
+        return currentCnaElement != null && CnAElementHome.getInstance().isNewChildAllowed(currentCnaElement);
     }
 
     protected void startInitDataJob() {
@@ -1027,11 +1031,6 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         }
     }
     
-    private static double round (double value){
-        BigDecimal bd = new BigDecimal(value);
-        return bd.setScale(3, RoundingMode.HALF_UP).doubleValue();
-    }
-        
     /**
      * @param bytes
      * @param si
