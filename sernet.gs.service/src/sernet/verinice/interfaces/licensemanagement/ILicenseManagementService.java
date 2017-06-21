@@ -58,6 +58,12 @@ public interface ILicenseManagementService {
      */
     public static final int WARNING_VALID_LESS_THAN_DAYS = 31;
     
+    
+    /**
+     * method used by spring-configuration to initialize the service
+     */
+    void init();
+    
     /**
      *  Adds licenseId (not contentId!) to an instance of {@link Configuration}
      *  that is referenced by a given username. User will get authorised 

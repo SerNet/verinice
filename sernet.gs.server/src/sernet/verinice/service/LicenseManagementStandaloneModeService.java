@@ -28,6 +28,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -156,12 +157,13 @@ public class LicenseManagementStandaloneModeService
      * In standalone mode, read vnl-files from repository
      */
     @Override
-    public Set<LicenseManagementEntry> readVNLFiles() 
+    public synchronized Set<LicenseManagementEntry> readVNLFiles() 
             throws LicenseManagementException{
         if (existingLicenses != null){
             existingLicenses.clear();
         } else {
-            existingLicenses = new HashSet<>();
+            existingLicenses = Collections.synchronizedSet(
+                    new HashSet<LicenseManagementEntry>());
         }
         
         File location = getVNLRepository();
