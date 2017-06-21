@@ -347,11 +347,12 @@ public class UserprofileDialog extends TitleAreaDialog {
                     selectedLocalAdminProfileRefs.add(profileRef);
                 }
             }
-            selectedProfiles = selectedLocalAdminProfileRefs;
+            tableSelected.setInput(selectedLocalAdminProfileRefs);
+        } else {
+            tableSelected.setInput(selectedProfiles);
         }
 
         table.setInput(unselectedProfiles);
-        tableSelected.setInput(selectedProfiles);
         table.refresh(true);
         tableSelected.refresh(true);
         removeAllButton.setEnabled(!selectedProfiles.isEmpty());
