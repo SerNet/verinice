@@ -36,3 +36,6 @@ sernet.gs.server/WebContent/WEB-INF/elasticsearch/data/
 
 # log4j files
 **/log4j-debug.xml
+
+# do not commit submodul configuration
+.gitmodules
