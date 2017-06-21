@@ -91,7 +91,6 @@ public class LicenseManagementServerModeService
     
     public void init(){
         try {
-//            existingLicenses = Collections.synchronizedSet(new HashSet<LicenseManagementEntry>());
             watchVNLDirectory();
         } catch (LicenseManagementException e) {
             log.error("Something went wrong, watching the File-Events in"
