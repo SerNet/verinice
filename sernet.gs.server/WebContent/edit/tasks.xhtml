@@ -44,7 +44,7 @@
 										<f:selectItems value="#{task.selectedTask.outcomes}"
 											var="outcome" itemLabel="#{outcome.value}"
 											itemValue="#{outcome.key}" />
-										<p:ajax event="change" listener="#{task.completeTask}"
+										<p:ajax event="change" listener="#{task.completeTask()}"
 											update=":tableForm,:editForm,:completeHandlerForm" />
 									</p:selectOneButton>
 								</div>

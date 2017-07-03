@@ -59,7 +59,7 @@
                <tr>
                   <td style="text-align: right;">
                      <div style="padding-top:15px;text-align: right;width:100%">
-                        <p:commandButton value="#{msgTask['cancel']}" type="button" onclick="indiExecuteExtensionBean.hide()" style="margin-right:5px;"/>
+                        <p:commandButton value="#{msgTask['cancel']}" type="button" onclick="PF('indiExecuteExtensionBean').hide()" style="margin-right:5px;"/>
                         <p:commandButton value="#{msgTask['ok']}" type="submit" action="#{indiExecuteExtensionBean.complete}" />
                      </div>
                   </td>
@@ -81,7 +81,7 @@
                <tr>
                   <td style="text-align: right;">
                      <div style="padding-top:15px;text-align: right;width:100%">
-                        <p:commandButton value="#{msgTask['cancel']}" type="button" onclick="indiRejectRealizationBean.hide()" style="margin-right:5px;"/>
+                        <p:commandButton value="#{msgTask['cancel']}" type="button" onclick="PF('indiRejectRealizationBean').hide()" style="margin-right:5px;"/>
                         <p:commandButton value="#{msgTask['ok']}" type="submit"
                             action="#{indiRejectRealizationBean.complete}"
                             update=":tableForm,:editForm,:completeHandlerForm"/>

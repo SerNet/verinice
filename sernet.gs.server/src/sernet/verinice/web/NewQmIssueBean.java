@@ -66,7 +66,7 @@ public class NewQmIssueBean implements ICompleteWebHandler {
        this.outcomeId = outcomeId;
        priority = ITask.PRIO_NORMAL;
        RequestContext context = RequestContext.getCurrentInstance(); 
-       context.execute("newQmBean.show();");  
+       context.execute("PF('newQmBean').show();");
     }
     
     public void complete() {
@@ -76,7 +76,7 @@ public class NewQmIssueBean implements ICompleteWebHandler {
         if(this.task !=null) {        
             getTaskService().completeTask(task.getId(),outcomeId,getParameter());
             RequestContext context = RequestContext.getCurrentInstance(); 
-            context.execute("newQmBean.hide();");
+            context.execute("PF('newQmBean').hide();");
             Util.addInfo("complete", Util.getMessage(TaskBean.BOUNDLE_NAME, "taskCompleted"));   //$NON-NLS-1$ //$NON-NLS-2$        
          }
     }
