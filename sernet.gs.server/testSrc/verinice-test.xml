@@ -26,7 +26,6 @@
     </bean>
     
     <bean id="rightsServerHandlerTest" parent="rightsServerHandler">
-        <property name="rightsService" ref="rightsServiceTest" />
     </bean>
     
     <bean id="roadDataObjectFactory" class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">

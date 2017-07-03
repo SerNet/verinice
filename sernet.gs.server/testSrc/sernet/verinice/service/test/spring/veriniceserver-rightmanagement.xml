@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Spring configuration for JBoss jBPM  (https://www.jboss.org/jbpm) -->
+<!-- Spring configuration for JBoss jBPM (https://www.jboss.org/jbpm) -->
 <!-- See jBPM developer guide - Chapter 17. Spring Integration -->
 <!-- http://docs.jboss.com/jbpm/v4/devguide/html_single/#springIntegration -->
 <beans
@@ -9,7 +9,7 @@
 	http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-	<bean id="rightsServiceClient" class="sernet.verinice.service.XmlRightsSecuredService">
+	<bean id="rightsService" class="sernet.verinice.service.XmlRightsSecuredService">
         <property name="authConfigurationDefault" value="/WEB-INF/verinice-auth-default.xml"/>
 		<property name="authConfiguration" value="/WEB-INF/verinice-auth.xml"/>
 		<property name="authConfigurationSchema" value="/WEB-INF/verinice-auth.xsd"/>
@@ -20,20 +20,12 @@
         <property name="authService" ref="authService" />
 	</bean>
 
-	<bean id="rightsService" class="sernet.verinice.service.XmlRightsService">
-        <property name="authConfigurationDefault" value="/WEB-INF/verinice-auth-default.xml"/>
-		<property name="authConfiguration" value="/WEB-INF/verinice-auth.xml"/>
-		<property name="authConfigurationSchema" value="/WEB-INF/verinice-auth.xsd"/>
-        <property name="configurationDao" ref="configurationDao" />
-        <property name="propertyDao" ref="propertyDao" />
-        <property name="messages" ref="rightsServiceMessages" />    
-        <property name="configurationService" ref="configurationService" />  
-        <property name="authService" ref="authService" />
+	<!-- 
+		 We need to use an init method to register as listener and get the instance of the right server 
+	     because the security intercepter (sernet.gs.server.security.VeriniceActionIdVoter) is not fully configured
+		 in this phase of the spring lifecycle.
+	 -->
+	<bean id="rightsServerHandler" class="sernet.verinice.service.RightsServerHandler" init-method="init">
 	</bean>
 
-    
-    <bean id="rightsServerHandler" class="sernet.verinice.service.RightsServerHandler">
-        <property name="rightsService" ref="rightsService" />
-    </bean>
-	
 </beans>
