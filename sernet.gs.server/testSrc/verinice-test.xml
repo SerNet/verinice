@@ -19,15 +19,6 @@
         </property>
     </bean>
     
-    <bean id="rightsServiceTest" parent="rightsService">
-        <property name="authConfigurationDefault" value="verinice-auth-default-test.xml"/>
-		<property name="authConfiguration" value="verinice-auth-test.xml"/>
-		<property name="authConfigurationSchema" value="verinice-auth.xsd"/>
-    </bean>
-    
-    <bean id="rightsServerHandlerTest" parent="rightsServerHandler">
-    </bean>
-    
     <bean id="roadDataObjectFactory" class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
 	<property name="targetBeanName">
 		<idref local="loadData" />

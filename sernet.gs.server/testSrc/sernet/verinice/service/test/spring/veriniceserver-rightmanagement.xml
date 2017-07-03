@@ -10,9 +10,9 @@
     http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
 	<bean id="rightsService" class="sernet.verinice.service.XmlRightsSecuredService">
-        <property name="authConfigurationDefault" value="/WEB-INF/verinice-auth-default.xml"/>
-		<property name="authConfiguration" value="/WEB-INF/verinice-auth.xml"/>
-		<property name="authConfigurationSchema" value="/WEB-INF/verinice-auth.xsd"/>
+        <property name="authConfigurationDefault" value="verinice-auth-default-test.xml"/>
+		    <property name="authConfiguration" value="verinice-auth-test.xml"/>
+		    <property name="authConfigurationSchema" value="verinice-auth.xsd"/>
         <property name="configurationDao" ref="configurationDao" />
         <property name="propertyDao" ref="propertyDao" />
         <property name="messages" ref="rightsServiceMessages" />
