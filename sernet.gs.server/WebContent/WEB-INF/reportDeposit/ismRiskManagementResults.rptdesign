@@ -6859,7 +6859,7 @@ columns(cols);</value>
             <xml-property name="queryText"><![CDATA[// DEPRECATED, VERY MEMORY INTENSIVE, USE scope_countrisks_aggregated_net_command INSTEAD OF THIS ONE (from verinice 1.6.3 on)
 import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-import sernet.verinice.iso27k.service.RiskAnalysisHelper;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
@@ -7187,7 +7187,7 @@ import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
-import sernet.verinice.iso27k.service.RiskAnalysisHelper;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.gs.ui.rcp.main.service.crudcommands.RiskMatrix;
@@ -8460,7 +8460,7 @@ columns(cols);</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-import sernet.verinice.iso27k.service.RiskAnalysisHelper;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -8607,7 +8607,7 @@ columns(cols);</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-import sernet.verinice.iso27k.service.RiskAnalysisHelper;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 groupID = new Integer(Integer.parseInt(inpv("scenGroupID")));
 yellowFields = new int[]{3,4,3};
@@ -9095,7 +9095,7 @@ columns(cols);</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-import sernet.verinice.iso27k.service.RiskAnalysisHelper;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -9229,7 +9229,7 @@ import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
-import sernet.verinice.iso27k.service.RiskAnalysisHelper;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.gs.ui.rcp.main.service.crudcommands.RiskMatrix;
@@ -10528,7 +10528,7 @@ columns(cols);</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-import sernet.verinice.iso27k.service.RiskAnalysisHelper;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -10726,7 +10726,7 @@ columns(cols);</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportHighRiskAssetScenarios;
-import sernet.verinice.iso27k.service.RiskAnalysisHelper;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 // set top level element for report:
 root = helper.getRoot();
