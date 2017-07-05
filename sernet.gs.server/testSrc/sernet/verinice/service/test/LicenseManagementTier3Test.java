@@ -61,7 +61,6 @@ import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.model.licensemanagement.LicenseManagementEntry;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
 import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
-import sernet.verinice.model.licensemanagement.VNLMapper;
 import sernet.verinice.model.licensemanagement.propertyconverter.PropertyConverter;
 import sernet.verinice.service.account.AccountSearchParameter;
 import sernet.verinice.service.commands.CreateConfiguration;
@@ -256,8 +255,8 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
             LocalDate validDate = LocalDate.now().plusDays(10);
             validEntry.setValidUntil(cryptoService.encrypt(String.valueOf(
                     validDate.toString()),
-                    validEntry.getUserPassword().toCharArray(),
-                    validEntry.getSalt()));
+                    getUserPassword(validEntry),
+                    decodeEntryProperty(validEntry.getSalt())));
             
             String licenseIdExpired = licenseManagementService.decrypt(expiredEntry, 
                     LicenseManagementEntry.COLUMN_LICENSEID);
@@ -271,12 +270,12 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
 
             String encryptedContentIdExpired = getDynamicEncryptedString(
                     plainContentIdExpired,
-                    expiredEntry.getUserPassword().toCharArray(), 
-                    expiredEntry.getSalt());            
+                    getUserPassword(expiredEntry), 
+                    decodeEntryProperty(expiredEntry.getSalt()));            
             String encryptedContentIdValid = getDynamicEncryptedString(
                     plainContentIdExpired,
-                    validEntry.getUserPassword().toCharArray(), 
-                    validEntry.getSalt());
+                    getUserPassword(validEntry), 
+                    decodeEntryProperty(validEntry.getSalt()));
             
             try {
                 licenseManagementService.addLicenseIdAuthorisation(
@@ -538,12 +537,12 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
         marshalEntryToXMLObject(LicenseManagementEntry entry){
         de.sernet.model.licensemanagement.LicenseManagementEntry xml = 
                 new de.sernet.model.licensemanagement.LicenseManagementEntry();
-        xml.setContentIdentifier(entry.getContentIdentifier());
-        xml.setLicenseID(entry.getLicenseID());
-        xml.setSalt(entry.getSalt());
-        xml.setUserPassword(entry.getUserPassword());
-        xml.setValidUntil(entry.getValidUntil());
-        xml.setValidUsers(entry.getValidUsers());
+        xml.setE1(entry.getContentIdentifier());
+        xml.setE2(entry.getLicenseID());
+        xml.setE3(entry.getSalt());
+        xml.setE4(entry.getUserPassword());
+        xml.setE5(entry.getValidUntil());
+        xml.setE6(entry.getValidUsers());
         return xml;
     }
     
@@ -582,13 +581,13 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
             objectFromHD = JAXB.unmarshal(is, de.sernet.model.licensemanagement.
                     LicenseManagementEntry.class);
             
-            Assert.assertTrue(objectFromHD.getContentIdentifier().equals(
+            Assert.assertTrue(objectFromHD.getE1().equals(
                     entry.getContentIdentifier()));
-            Assert.assertTrue(objectFromHD.getLicenseID().equals(entry.getLicenseID()));
-            Assert.assertTrue(objectFromHD.getSalt().equals(entry.getSalt()));
-            Assert.assertTrue(objectFromHD.getUserPassword().equals(entry.getUserPassword()));
-            Assert.assertTrue(objectFromHD.getValidUntil().equals(entry.getValidUntil()));
-            Assert.assertTrue(objectFromHD.getValidUsers().equals(entry.getValidUsers()));
+            Assert.assertTrue(objectFromHD.getE2().equals(entry.getLicenseID()));
+            Assert.assertTrue(objectFromHD.getE3().equals(entry.getSalt()));
+            Assert.assertTrue(objectFromHD.getE4().equals(entry.getUserPassword()));
+            Assert.assertTrue(objectFromHD.getE5().equals(entry.getValidUntil()));
+            Assert.assertTrue(objectFromHD.getE6().equals(entry.getValidUsers()));
             
         } catch (IOException e) {
             LOG.error("Error in Filehandling", e);
@@ -624,65 +623,6 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
         }
     }
     
-//    @Test
-    public void vnlMapperTest() throws IOException{
-        LicenseManagementEntry entry = getSingleCryptedEntry();
-        // dbid is not considered by marshaller and unmarshalling sets 0 
-        // as default for non-mapped property, so set it here also
-        entry.setDbId(0);
-        byte[] vnlData = VNLMapper.getInstance().marshalLicenseManagementEntry(entry);
-        
-        File file = null;
-        File file2 = null;
-        
-        try {
-            
-            file = File.createTempFile("veriniceTest", ".vnl");
-            file2 = new File(file.getAbsolutePath());
-      
-            FileUtils.writeByteArrayToFile(file, vnlData);
-            byte[] bytesFromDisk = FileUtils.readFileToByteArray(file2);
-            LicenseManagementEntry entryFromDisk = VNLMapper.getInstance().
-                    unmarshalXML(bytesFromDisk);
-            Assert.assertEquals(entry, entryFromDisk);
-        } catch (IOException e) {
-            LOG.error("Something went wrong dealing with files",e );
-        } finally {
-            if(file != null){
-                FileUtils.forceDelete(file);
-            }
-            if(file2 != null){
-                FileUtils.forceDelete(file2);
-            }
-        }
-        
-        LicenseManagementEntry serializedEntry = VNLMapper.getInstance().unmarshalXML(vnlData);
-        
-        Assert.assertEquals(entry, serializedEntry);
-        
-        Assert.assertEquals(CONTENT_ID, cryptoService.decrypt(
-                serializedEntry.getContentIdentifier(),
-                serializedEntry.getUserPassword().toCharArray(),
-                serializedEntry.getSalt()));
-        
-        Assert.assertEquals(LICENSE_ID, cryptoService.decrypt(
-                serializedEntry.getLicenseID(),
-                serializedEntry.getUserPassword().toCharArray(),
-                serializedEntry.getSalt()));
-
-        Assert.assertEquals(VALID_UNTIL, new Date(Long.parseLong(cryptoService.decrypt(
-                serializedEntry.getValidUntil(),
-                serializedEntry.getUserPassword().toCharArray(),
-                serializedEntry.getSalt()))));
-        
-        Assert.assertEquals(VALID_USERS, Integer.parseInt(cryptoService.decrypt(
-                serializedEntry.getValidUsers(),
-                serializedEntry.getUserPassword().toCharArray(),
-                serializedEntry.getSalt())));
-
-        Assert.assertTrue(entry.equals(serializedEntry));
-        
-    }
     
 //    @Test
     public void cryptoServiceTest(){
@@ -795,6 +735,19 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
 
     public void setAccountService(IAccountService accountService) {
         this.accountService = accountService;
+    }
+    
+    protected char[] getUserPassword(LicenseManagementEntry entry) {
+        String encodedPassword = entry.getUserPassword();
+        return decodeEntryProperty(encodedPassword).toCharArray();
+    }
+    
+    protected String decodeEntryProperty(String encodedProperty) {
+        byte[] encodedByteArray = encodedProperty.getBytes(VeriniceCharset.CHARSET_UTF_8);
+        String decodedProperty = new String(cryptoService.decodeBase64(encodedByteArray), 
+                VeriniceCharset.CHARSET_UTF_8);
+        return decodedProperty;
+        
     }
 
 }

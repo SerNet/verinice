@@ -195,8 +195,9 @@ public class LicenseManagementStandaloneModeService
             for (String filename : vnlFiles){
                 File file = new File(filename);
                 byte[] fileContent = FileUtils.readFileToByteArray(file);
+                byte[] decodedContent = getCryptoService().decodeBase64(fileContent);
                 LicenseManagementEntry entry = VNLMapper.getInstance().
-                        unmarshalXML(fileContent);
+                        unmarshalXML(decodedContent);
                 mappedVNLFiles.add(entry);
             }
         } catch (IOException e){
@@ -327,7 +328,7 @@ public class LicenseManagementStandaloneModeService
             // decrypt
             try {
                 return getCryptoService().decryptLicenseRestrictedProperty(
-                        entry.getUserPassword(), cypherText);
+                        String.valueOf(getUserPassword(entry)), cypherText);
             } catch (EncryptionException e) {
                 throw new LicenseManagementException(
                         "Problem while decrypting license restricted property",
@@ -357,8 +358,8 @@ public class LicenseManagementStandaloneModeService
                 String plainEntryContentId = decrypt(existingEntry, 
                         LicenseManagementEntry.COLUMN_CONTENTID);
                 String plainContentId = getCryptoService().
-                        decryptLicenseRestrictedProperty(existingEntry.
-                                getUserPassword(), encryptedContentId);
+                        decryptLicenseRestrictedProperty(
+                                String.valueOf(getUserPassword(existingEntry)), encryptedContentId);
                 if (plainContentId.equals(plainEntryContentId)){
                     return existingEntry;
                 }
