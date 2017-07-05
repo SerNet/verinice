@@ -328,7 +328,7 @@ public class LicenseManagementStandaloneModeService
             // decrypt
             try {
                 return getCryptoService().decryptLicenseRestrictedProperty(
-                        String.valueOf(getUserPassword(entry)), cypherText);
+                        getUserPasswordAsString(entry), cypherText);
             } catch (EncryptionException e) {
                 throw new LicenseManagementException(
                         "Problem while decrypting license restricted property",
@@ -359,7 +359,7 @@ public class LicenseManagementStandaloneModeService
                         LicenseManagementEntry.COLUMN_CONTENTID);
                 String plainContentId = getCryptoService().
                         decryptLicenseRestrictedProperty(
-                                String.valueOf(getUserPassword(existingEntry)), encryptedContentId);
+                                getUserPasswordAsString(existingEntry), encryptedContentId);
                 if (plainContentId.equals(plainEntryContentId)){
                     return existingEntry;
                 }
