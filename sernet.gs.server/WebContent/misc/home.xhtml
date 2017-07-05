@@ -92,10 +92,10 @@
 							<p:menuitem rendered="#{resourcesChecker.existsUserManualPdf()}"
 								icon="fa fa-fw fa-file-pdf-o"
 								value="#{msgWeb['user-guide']} (PDF)"
-								url="/manual/#{msgWeb['manual_name']}.pdf" />
+								url="/manual/#{msgWeb['manual_pdf_name']}" />
 							<p:menuitem rendered="#{resourcesChecker.existsUserManualHtml()}"
 								icon="fa fa-fw fa-code" value="#{msgWeb['user-guide']} (HTML)"
-								url="/manual/#{msgWeb['manual_name']}.pdf" />
+								url="/manual/#{msgWeb['manual_html_name']}/index.html" />
 						</p:menu>
 					</ui:fragment>
 					<ui:fragment rendered="#{not resourcesChecker.manualsAvailable()}">

@@ -88,17 +88,17 @@ public class ResourcesChecker {
 
     public boolean existsUserManualPdf() {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        File file = new File(externalContext.getRealPath(concat(MANUAL_DIR, getManualName() + ".pdf")));
+        File file = new File(externalContext.getRealPath(concat(MANUAL_DIR, getManualName("manual_pdf_name"))));
         return file.exists();
     }
 
     public boolean existsUserManualHtml() {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        File file = new File(externalContext.getRealPath(concat(MANUAL_DIR, getManualName())));
+        File file = new File(externalContext.getRealPath(concat(MANUAL_DIR, getManualName("manual_html_name"))));
         return file.exists();
     }
 
-    private String getManualName() {
-        return getMessage(MESSAGES, "manual_name");
+    private String getManualName(String key) {
+        return getMessage(MESSAGES, key);
     }
 }
