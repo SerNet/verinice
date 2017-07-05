@@ -46,6 +46,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.LazyInitializationException;
 import org.threeten.bp.LocalDate;
 
+import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
@@ -154,7 +155,8 @@ public class LicenseManagementServerModeService
         for (LicenseManagementEntry entry : getExistingLicenses()) {
             if (decrypt) {
                 String plainLicenseId = getCryptoService()
-                        .decryptLicenseRestrictedProperty(entry.getUserPassword(),
+                        .decryptLicenseRestrictedProperty(
+                                getUserPasswordAsString(entry),
                                 encryptedLicenseId);
                 String plainEntryLicenseId = 
                         decrypt(entry, LicenseManagementEntry.COLUMN_LICENSEID);
@@ -295,7 +297,8 @@ public class LicenseManagementServerModeService
         for (LicenseManagementEntry entry : getExistingLicenses()) {
             try {
                 String plainContentId = getCryptoService()
-                        .decryptLicenseRestrictedProperty(entry.getUserPassword(),
+                        .decryptLicenseRestrictedProperty(
+                                getUserPasswordAsString(entry),
                                 encryptedContentId);
                 String plainEntryContentId = decrypt(entry, 
                         LicenseManagementEntry.COLUMN_CONTENTID);
@@ -352,7 +355,8 @@ public class LicenseManagementServerModeService
                 String plainContentIdInput = "";
                 try {
                     plainContentIdInput = getCryptoService() .
-                            decryptLicenseRestrictedProperty(entry.getUserPassword(),
+                            decryptLicenseRestrictedProperty(
+                                    getUserPasswordAsString(entry),
                                     contentId);
                 } catch (EncryptionException e) {
                     // this is try & error, so fails are ok here
@@ -570,27 +574,45 @@ public class LicenseManagementServerModeService
         switch (propertyType) {
         case LicenseManagementEntry.COLUMN_CONTENTID:
             plainText = getCryptoService().decrypt(entry.getContentIdentifier(), 
-                    entry.getUserPassword().toCharArray(), entry.getSalt());
+                    getUserPassword(entry), decodeEntryProperty(entry.getSalt()));
             return convertPropery(plainText, propertyType);
         case LicenseManagementEntry.COLUMN_LICENSEID:
             plainText = getCryptoService().decrypt(entry.getLicenseID(), 
-                    entry.getUserPassword().toCharArray(), entry.getSalt());
+                    getUserPassword(entry), decodeEntryProperty(entry.getSalt()));
             return convertPropery(plainText, propertyType);
         case LicenseManagementEntry.COLUMN_VALIDUNTIL:
             plainText = getCryptoService().decrypt(entry.getValidUntil(), 
-                    entry.getUserPassword().toCharArray(), entry.getSalt());
+                    getUserPassword(entry), decodeEntryProperty(entry.getSalt()));
             return convertPropery(plainText, propertyType);
         case LicenseManagementEntry.COLUMN_VALIDUSERS:
             plainText = getCryptoService().decrypt(entry.getValidUsers(), 
-                    entry.getUserPassword().toCharArray(), entry.getSalt());
+                    getUserPassword(entry), decodeEntryProperty(entry.getSalt()));
             return convertPropery(plainText, propertyType);
         default:
             plainText = getCryptoService().decrypt(entry.
                     getPropertyByType(propertyType), 
-                    entry.getUserPassword().toCharArray(), entry.getSalt());
+                    getUserPassword(entry), decodeEntryProperty(entry.getSalt()));
             return (T)entry.getPropertyByType(plainText);
         }
     }
+    
+    protected char[] getUserPassword(LicenseManagementEntry entry) {
+        String encodedPassword = entry.getUserPassword();
+        return decodeEntryProperty(encodedPassword).toCharArray();
+    }
+    
+    protected String getUserPasswordAsString(LicenseManagementEntry entry) {
+        return String.valueOf(getUserPassword(entry));
+    }
+    
+    protected String decodeEntryProperty(String encodedProperty) {
+        byte[] encodedByteArray = encodedProperty.getBytes(VeriniceCharset.CHARSET_UTF_8);
+        String decodedProperty = new String(getCryptoService().decodeBase64(encodedByteArray), 
+                VeriniceCharset.CHARSET_UTF_8);
+        return decodedProperty;
+        
+    }
+    
     
     private <T extends Object> T convertPropery(Object property,
             String propertyType) {
@@ -633,8 +655,9 @@ public class LicenseManagementServerModeService
         try {
             for (File vnlFile : vnlFiles) {
                 byte[] fileContent = FileUtils.readFileToByteArray(vnlFile);
+                byte[] decodedContent = getCryptoService().decodeBase64(fileContent);
                 LicenseManagementEntry entry = VNLMapper.getInstance()
-                        .unmarshalXML(fileContent);
+                        .unmarshalXML(decodedContent);
                 existingLicenses.add(entry);
             }
         } catch (IOException e) {
@@ -743,7 +766,7 @@ public class LicenseManagementServerModeService
             try {
                 if (entry != null) {
                     return getCryptoService().decryptLicenseRestrictedProperty(
-                            entry.getUserPassword(), cypherText);
+                            getUserPasswordAsString(entry), cypherText);
                 } else {
                     throw new NoLicenseAssignedException("License " 
                             + encryptedContentId + " is not assigned to user: " 
@@ -986,7 +1009,8 @@ public class LicenseManagementServerModeService
             try {
                 plainContentId = getCryptoService() .
                         decryptLicenseRestrictedProperty(
-                                existingEntry.getUserPassword(), encryptedContentId);
+                                getUserPasswordAsString(existingEntry),
+                                encryptedContentId);
                 if (StringUtils.isNotEmpty(encryptedLicenseId)) {
                     plainLicenseId = getCryptoService()
                             .decryptLicenseRestrictedProperty(

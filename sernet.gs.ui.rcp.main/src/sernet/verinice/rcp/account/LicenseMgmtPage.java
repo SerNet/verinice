@@ -220,12 +220,6 @@ public class LicenseMgmtPage extends BaseWizardPage {
         validateCheckboxStatus();
     }
 
-    /**
-     * @param index
-     * @param plainLicenseId
-     * @param validUntil
-     * @return
-     */
     private String getCheckboxText(LicenseManagementEntry entry,
             int index, boolean update) {
         
