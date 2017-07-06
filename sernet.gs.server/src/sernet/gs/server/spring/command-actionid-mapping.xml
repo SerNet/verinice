@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd 
+	http://www.springframework.org/schema/util 
+	http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- This maps the command of the sernet.verinice.service.HibernateCommandService 
+		to actionids of sernet.verinice.interfaces.ActionRightIDs. Each entry in 
+		the set must be enabled in the rights service for the command to be executed. 
+		The key of the map is the class of the command. Note this is not polymorphic 
+		so descendant commands must be added to the map. -->
+	<util:map id="command-actionid-mapping" key-type="java.lang.Class">
+		<entry key="sernet.verinice.service.commands.RemoveElement">
+			<util:set>
+				<value>deleteitem</value>
+			</util:set>
+		</entry>
+	</util:map>
+
+</beans>
