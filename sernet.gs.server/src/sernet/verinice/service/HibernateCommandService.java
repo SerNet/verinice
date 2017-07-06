@@ -21,12 +21,15 @@ package sernet.verinice.service;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.security.AccessDeniedException;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.hui.common.VeriniceContext;
@@ -89,7 +92,10 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	
 	private Properties properties;
 	
-	/**
+	private Map<Class<?>,Set<String>> commandActionIds;
+	
+
+    /**
 	 * This method is encapsulated in a transaction by the Spring container.
 	 * Hibernate session will be opened before this method executes the given
 	 * command and closed afterwards.
@@ -109,12 +115,23 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 			throw new CommandException("DB connection closed.");
 
 		
+		String username = getAuthService().getUsername();
 		if (log.isDebugEnabled()) {
-			log.debug("Service executing command: " + command.getClass().getSimpleName() + " / user: " + getAuthService().getUsername()); 
+            log.debug("Service executing command: " + command.getClass().getSimpleName() + " / user: " + username); 
 		}
-		
-		
+		    
 		try {
+		    //check the configured actionIds
+            Set<String> set = commandActionIds.get(command.getClass());
+            if (set != null) {
+                for (String actionId : set) {
+                    if (!rightsServerHandler.isEnabled(username, actionId))
+                        // Should the message not be translateable also see
+                        // sernet.gs.server.ServerExceptionHandler
+                        throw new AccessDeniedException("Im Rechteprofil ist das ausführen dieser Aktion nicht erlaubt.");
+                }
+            }
+		    
 			// inject service and database access:
 			command.setDaoFactory(daoFactory);
 			command.setCommandService(this);
@@ -399,6 +416,10 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 
     public void setVnaSchemaVersion(VnaSchemaVersion vnaSchemaVersion) {
         this.vnaSchemaVersion = vnaSchemaVersion;
+    }
+
+    public void setCommandActionIds(Map<Class<?>, Set<String>> commandActionIds) {
+        this.commandActionIds = commandActionIds;
     }
 	
 }
