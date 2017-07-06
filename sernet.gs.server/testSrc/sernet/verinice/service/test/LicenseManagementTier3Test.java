@@ -27,14 +27,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.xml.bind.JAXB;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
@@ -46,6 +48,8 @@ import org.junit.Test;
 import org.threeten.bp.LocalDate;
 
 import sernet.gs.service.VeriniceCharset;
+import sernet.gs.ui.rcp.main.service.commands.UsernameExistsException;
+import sernet.gs.ui.rcp.main.service.crudcommands.PrepareObjectWithAccountDataForDeletion;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
@@ -102,8 +106,7 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
     private final static int VALID_USERS = 5;
     private final static String TEMP_FILE_NAME = "vnlTest";
     private final static String TEMP_FILE_NAME_EXT = ".vnl";
-    private final static String VNL_FILE_1 = "vnl/Test-Content-Id_10_2020-05-31_134729.vnl";
-    private final static String VNL_FILE_2 = "vnl/Test-Content-Id-2_2_2025-05-31_134831.vnl";
+    private final static String VNL_DIR = "./vnl/";
     
     private Organization accountOrg = null;
       
@@ -126,7 +129,19 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
     @Override
     public void tearDown() throws CommandException {
         super.tearDown();
+        Assert.assertTrue(emptyVNLRepo());
         Assert.assertTrue(removeAccountOrg());
+    }
+    
+    private boolean emptyVNLRepo() {
+        boolean deleteSuccessful = true;
+        Collection<File> vnlFiles = FileUtils.listFiles(new File(VNL_DIR), 
+                new String[]{ILicenseManagementService
+                        .VNL_FILE_EXTENSION}, false);
+        for (File vnlFile : vnlFiles) {
+            deleteSuccessful &= vnlFile.delete();
+        }
+        return deleteSuccessful;
     }
     
     @Before
@@ -143,8 +158,8 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
                 CONTENT_ID, cryptoPassword.toCharArray(), cryptoSalt));
         entry.setLicenseID(cryptoService.encrypt(
                 LICENSE_ID, cryptoPassword.toCharArray(), cryptoSalt));
-        entry.setSalt(cryptoSalt);
-        entry.setUserPassword(cryptoPassword);
+        entry.setSalt(new String(Base64.encodeBase64(cryptoSalt.getBytes(VeriniceCharset.CHARSET_UTF_8))));
+        entry.setUserPassword(new String(Base64.encodeBase64(cryptoPassword.getBytes(VeriniceCharset.CHARSET_UTF_8))));
         entry.setValidUntil(cryptoService.encrypt(String.valueOf(
                 VALID_UNTIL.toString()), cryptoPassword.toCharArray(), cryptoSalt));
         entry.setValidUsers(cryptoService.encrypt(String.valueOf(
@@ -154,23 +169,30 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
     }
     
     @Test
-    public void testGetLicenses() throws URISyntaxException{
+    public void testGetLicenses() throws URISyntaxException, LicenseManagementException{
+        int vnlFileCount = 0;
         try {
             for (File vnlFile : getTestVNLFiles()){
                 licenseManagementService.addVNLToRepository(vnlFile);
+                vnlFileCount++;
             }
             Set<LicenseManagementEntry> entries =
                     licenseManagementService.getExistingLicenses();
-            Assert.assertTrue(entries.size() == 2);
+            Assert.assertTrue(entries.size() == vnlFileCount);
         } catch (LicenseManagementException e) {
             LOG.error("Something went wrong", e);
         }
     }
     
-    private List<File> getTestVNLFiles() throws URISyntaxException{
-        List<File> vnlFiles = new LinkedList<>();
-        vnlFiles.add(new File(this.getClass().getClassLoader().getResource(VNL_FILE_1).toURI()));
-        vnlFiles.add(new File(this.getClass().getClassLoader().getResource(VNL_FILE_2).toURI()));
+    private List<File> getTestVNLFiles() throws URISyntaxException, LicenseManagementException{
+        List<File> vnlFiles = new ArrayList<>();
+        File vnlDir = licenseManagementService.getVNLRepository();
+        if(vnlDir.exists() && vnlDir.isDirectory()) {
+            Collection<File> vnlCollection = FileUtils.listFiles(vnlDir, 
+                    new String[]{ILicenseManagementService
+                            .VNL_FILE_EXTENSION}, false);
+            vnlFiles.addAll(vnlCollection);
+        }
         return vnlFiles;
     }
     
@@ -306,7 +328,7 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
     }
     
     @Test
-    public void isRepoExistiant(){
+    public void isRepoExistant(){
         File vnlRepo;
         try {
             vnlRepo = licenseManagementService.getVNLRepository();
@@ -406,24 +428,6 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
         }
     }
 
-    @Test
-    public void testResetUserAssignmentsByContentId(){       
-        try {
-            for (String licenseId : licenseManagementService.
-                    getLicenseIdsForContentId(CONTENT_ID, false)){
-                try {
-                    licenseManagementService.addLicenseIdAuthorisation(getConfiguration(TEST_USERNAME), licenseId);
-                } catch (CommandException e) {
-                    LOG.error("Error granting license to user", e);
-                }
-            }
-            licenseManagementService.removeContentIdUserAssignment(getConfiguration(TEST_USERNAME), CONTENT_ID);
-            Assert.assertFalse(licenseManagementService.
-                    getAuthorisedContentIdsByUser(TEST_USERNAME).contains(CONTENT_ID));
-        } catch (LicenseManagementException e){
-            LOG.error("Something went wrong with removing licenses", e);
-        }
-    }
     
     @Test
     public void getEntryFromRepository() throws IOException{
@@ -523,13 +527,14 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
         File repoFile = null;
         try{ 
             repoFile = addLicenseToRepository(getSingleCryptedEntry());                   
-            
             Set<String> allIds = licenseManagementService.getAllContentIds(true);
             Assert.assertTrue(allIds.contains(CONTENT_ID));
         } catch (LicenseManagementException e){
             LOG.error("Error getting license Data contentId", e);
         } finally {
-            FileUtils.forceDelete(repoFile);
+            if(repoFile != null) {
+                FileUtils.forceDelete(repoFile);
+            }
         }
     }
     
@@ -553,7 +558,7 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
         ExportFactory.marshal(marshalEntryToXMLObject(entry), stream);
         try {
             file = File.createTempFile(filename, extension);
-            FileUtils.writeByteArrayToFile(file, stream.toByteArray());
+            FileUtils.writeByteArrayToFile(file, Base64.encodeBase64(stream.toByteArray()));
             stream.close();
         } catch (Exception e){
             LOG.error("Error handling file",e );
@@ -566,8 +571,8 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
         LicenseManagementEntry entry = new LicenseManagementEntry();
         entry.setContentIdentifier(CONTENT_ID);
         entry.setLicenseID("licenseIdBLA");
-        entry.setSalt("saltBLA");
-        entry.setUserPassword("passwordBLA");
+        entry.setSalt(new String(Base64.encodeBase64("saltBLA".getBytes(VeriniceCharset.CHARSET_UTF_8))));
+        entry.setUserPassword(new String(Base64.encodeBase64("passwordBLA".getBytes(VeriniceCharset.CHARSET_UTF_8))));
         entry.setValidUntil("validUntilBLA");
         entry.setValidUsers("validUsersBLA");
         
@@ -576,7 +581,8 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
         
         try {
             byte [] bytesFromHD = FileUtils.readFileToByteArray(vnlFile1);
-            InputStream is = new ByteArrayInputStream(bytesFromHD);
+            byte[] decodedBytes = Base64.decodeBase64(bytesFromHD);
+            InputStream is = new ByteArrayInputStream(decodedBytes);
             de.sernet.model.licensemanagement.LicenseManagementEntry 
             objectFromHD = JAXB.unmarshal(is, de.sernet.model.licensemanagement.
                     LicenseManagementEntry.class);
@@ -680,8 +686,12 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
     }
     
     private void saveAccount(Configuration configuration) throws CommandException {
-        SaveConfiguration<Configuration> command = new SaveConfiguration<Configuration>(configuration, false);
-        command = commandService.executeCommand(command);
+        try {
+            SaveConfiguration<Configuration> command = new SaveConfiguration<Configuration>(configuration, false);
+            command = commandService.executeCommand(command);
+        } catch (UsernameExistsException e) {
+            LOG.warn("Account already exists, skipping creation of Configuration", e);
+        }
     }
     
     private Configuration createAccount(PersonIso person) throws CommandException {
