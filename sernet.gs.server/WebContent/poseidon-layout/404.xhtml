@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>PrimeFaces Poseidon - Error</title>
+    </h:head>
+
+    <h:body styleClass="exception-body notfound-page">
+
+        <div class="exception-top">
+            <p:graphicImage name="images/icon-404.png" library="poseidon-layout" />
+        </div>
+
+        <div class="exception-bottom">
+            <div class="exception-wrapper">
+                <span class="exception-summary">Access Denied</span>
+                <span class="exception-detail">You Don't Have Permissions To Access This Resource</span>
+                <p:button outcome="/dashboard" value="Dashboard" icon="fa fa-home" styleClass="turquoise-btn"/>
+                <p:graphicImage name="images/logo-icon-white.png" library="poseidon-layout" styleClass="logo-icon"/>
+                <span class="exception-footer">PrimeFaces Poseidon</span>
+            </div>
+        </div>
+        <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="poseidon-layout" />
+    </h:body>
+
+</html>

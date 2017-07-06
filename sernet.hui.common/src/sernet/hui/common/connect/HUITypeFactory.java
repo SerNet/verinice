@@ -326,7 +326,7 @@ public class HUITypeFactory {
         propObj.setInitialFocus(prop.getAttribute("focus").equals(BOOLEAN_TRUE));
         propObj.setEditable(prop.getAttribute("editable").equals(BOOLEAN_TRUE));
         propObj.setVisible(prop.getAttribute("visible").equals(BOOLEAN_TRUE));
-        propObj.setShow_html(prop.getAttribute("show_html").equals(BOOLEAN_TRUE));
+        propObj.setShowInObjectBrowser(prop.getAttribute("showInObjectBrowser").equals(BOOLEAN_TRUE));
         propObj.setURL(prop.getAttribute("isURL").equals(BOOLEAN_TRUE));
         propObj.setReportable(prop.getAttribute("report").equals(BOOLEAN_TRUE));
         propObj.setTextRows(prop.getAttribute("textrows"));

@@ -46,88 +46,46 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 	private final Logger log = Logger.getLogger(SecureTreeElementDao.class);
 
 	private IAuthService authService;
-
 	private IBaseDao<Configuration, Integer> configurationDao;
-
 	private IBaseDao<Permission, Integer> permissionDao;
-	
 	private IConfigurationService configurationService;
-
 	
+	public SecureTreeElementDao(Class<CnATreeElement> type) {
+        super(type);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.hibernate.HibernateDao#findByCriteria(org.hibernate.criterion.DetachedCriteria)
+     */
     @Override
     public List<CnATreeElement> findByCriteria(DetachedCriteria criteria) {
-	    String username = getAuthService().getUsername();
-	    if(isPermissionHandlingNeeded(username)) {
-	        enableFilter();
-	    }
+	    beforeExecution();
 	    List<CnATreeElement> result = super.findByCriteria(criteria);
-	    if(isPermissionHandlingNeeded(username)) {
-            disableFilter();
-        }
+	    afterExecution();
 	    return result;
 	}
-	
-	public void enableFilter() {
-        if(!hasAdminRole(authService.getRoles())) {
-            if(log.isDebugEnabled()) {
-                log.debug("Enabling security access filter for user: " + authService.getUsername());
-            }
-            setAccessFilterEnabled(true);
-        }
-        setScopeFilterEnabled(true);
-    }
-	
-	public void disableFilter() {
-        if(!hasAdminRole(authService.getRoles())) {
-            if(log.isDebugEnabled()) {
-                log.debug("Disabling security access filter.");
-            }
-            setAccessFilterEnabled(false);
-        }
-        setScopeFilterEnabled(false);
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IDao#findByQuery(java.lang.String, java.lang.Object[])
+     */
+    @Override
+    public List<CnATreeElement> findByQuery(String hqlQuery, Object[] params) {
+        beforeExecution();
+        List<CnATreeElement> result = super.findByQuery(hqlQuery,params);
+        afterExecution();
+        return result;
     }
 
-	private void setScopeFilterEnabled(boolean enable) {
-        if(getConfigurationService().isScopeOnly(authService.getUsername()) && enable) {
-            final Integer userScopeId = getConfigurationService().getScopeId(authService.getUsername());
-            getHibernateTemplate().enableFilter("scopeFilter").setParameter("scopeId", userScopeId);        
-        } else {
-            getHibernateTemplate().execute(new HibernateCallback() {
-                @Override
-                public Object doInHibernate(Session session) throws HibernateException, SQLException {
-                    session.disableFilter("scopeFilter");
-                    return null;
-                }
-            }); 
-        }
+    /* (non-Javadoc)
+     * @see sernet.verinice.hibernate.HibernateDao#findByQuery(java.lang.String, java.lang.String[], java.lang.Object[])
+     */
+    public List<CnATreeElement> findByQuery(String hqlQuery, String[] paramNames, Object[] paramValues) {
+        beforeExecution();
+        List<CnATreeElement> result = super.findByQuery(hqlQuery,paramNames,paramValues);
+        afterExecution();
+        return result;
     }
 	
-	private void setAccessFilterEnabled(boolean enable) {
-        if (enable) {
-            final Object[] roles = getConfigurationService().getRoles(authService.getUsername());
-            getHibernateTemplate().enableFilter("userAccessReadFilter").setParameterList("currentRoles", roles).setParameter("readAllowed", Boolean.TRUE);
-        } else {
-            getHibernateTemplate().execute(new HibernateCallback() {
-                @Override
-                public Object doInHibernate(Session session) throws HibernateException, SQLException {
-                    session.disableFilter("userAccessReadFilter");
-                    return null;
-                }
-            }); 
-        }
-    }
-	
-	
-	/**
-	 * @param type
-	 */
-	public SecureTreeElementDao(Class<CnATreeElement> type) {
-		super(type);
-	}
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.connect.HibernateBaseDao#delete(java.lang.Object)
-	 */
 	/* (non-Javadoc)
      * @see sernet.verinice.hibernate.ISecureDao#delete(sernet.verinice.model.common.CnATreeElement)
      */
@@ -138,27 +96,6 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 		indexDelete(entity);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * sernet.gs.ui.rcp.main.connect.HibernateBaseDao#merge(java.lang.Object)
-	 */
-	/* (non-Javadoc)
-     * @see sernet.verinice.hibernate.ISecureDao#merge(sernet.verinice.model.common.CnATreeElement)
-     */
-    @Override
-	public CnATreeElement merge(CnATreeElement entity) {
-		return super.merge(entity);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * sernet.gs.ui.rcp.main.connect.HibernateBaseDao#merge(java.lang.Object,
-	 * boolean)
-	 */
 	/* (non-Javadoc)
      * @see sernet.verinice.hibernate.ISecureDao#merge(sernet.verinice.model.common.CnATreeElement, boolean)
      */
@@ -171,59 +108,36 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 		return super.merge(entity, fireChange);
 	}
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.hibernate.TreeElementDao#checkRights(java.lang.Object)
+     */
+    @Override
+    public void checkRights(CnATreeElement entity) /*throws SecurityException*/ {
+        checkRights(entity, getAuthService().getUsername());
+    }
+
+	/* (non-Javadoc)
+	 * @see sernet.verinice.hibernate.TreeElementDao#checkRights(java.lang.Object, java.lang.String)
+	 */
 	@Override
     public void checkRights(CnATreeElement entity, String username) /*throws SecurityException*/ { 
 	    if (log.isDebugEnabled()) {
             log.debug("Checking rights for entity: " + entity + " and username: " + username);
         } 
-	    if (isPermissionHandlingNeeded(username)) {
-	        logPermissionInfo(entity, username);
+	    if (isPermissionHandlingNeeded()) {
+	        doCheckRights(entity, username);
 	    }
     }
 
-    private void logPermissionInfo(CnATreeElement entity, String username) {
+    private void doCheckRights(CnATreeElement entity, String username) {
         String[] roleArray = getDynamicRoles(username);
         if(roleArray==null) {
             log.error("Role array is null for user: " + username);
         }
         if(!hasAdminRole(roleArray)) {	    
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < roleArray.length; i++) {
-                String name = roleArray[i];
-                String escaped = name.replace("\\", "\\\\");
-                sb.append("'").append(escaped).append("'");
-                if(i<roleArray.length-1) {
-                    sb.append(",");
-                }           
-            }
-            String roleParam = sb.toString();
-            
-            sb = new StringBuilder();
-            sb.append("select p.dbId from Permission p where p.cnaTreeElement.dbId = ? and p.role in (");
-            // workaraound, because adding roles as ? param does not work
-            sb.append(roleParam);
-            sb.append(") and p.writeAllowed = ?");
-            String hql = sb.toString();
-            
-            Object[] params = new Object[]{entity.getDbId(),Boolean.TRUE};
-            if (log.isDebugEnabled()) {
-                log.debug("checkRights, hql: " + hql);
-                log.debug("checkRights, entity db-id: " + entity.getDbId() );
-            }
-            List<Integer> idList = getPermissionDao().findByQuery(hql, params);
-            if (log.isDebugEnabled()) {
-                log.debug("checkRights, permission ids: ");
-                for (Integer integer : idList) {
-                    log.debug(integer);
-                }
-            }
-            if(idList==null | idList.isEmpty()) {
-                final String message = "User: " + username + " has no right to write CnATreeElement with id: " + entity.getDbId();
-                log.warn(message);
-                throw new SecurityException(message);
-            }
+            checkRightsForNonAdmin(entity, username, roleArray);
         }
-        if(isScopeOnly(username)  
+        if(isScopeOnly()
            && !entity.getScopeId().equals(getConfigurationService().getScopeId(username))) {
                 final String message = "User: " + username + " has no right to write CnATreeElement with id: " + entity.getDbId();
                 log.warn(message);
@@ -231,30 +145,127 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
         }
     }
 
-    /**
-     * @param username 
-     * @return
-     */
-    private boolean isPermissionHandlingNeeded(String username) {
-        return getAuthService().isPermissionHandlingNeeded() 
-                && !(getAuthService().getAdminUsername().equals(username)) ;
-    }
-	
-	/**
-     * @param username
-     * @return
-     */
-    private boolean isScopeOnly(String username) {
-        return getConfigurationService().isScopeOnly(username);
+    @SuppressWarnings("unchecked")
+    protected void checkRightsForNonAdmin(CnATreeElement entity, String username,
+            String[] roleArray) {
+        String hql = createHql(roleArray);
+
+        Object[] params = new Object[]{entity.getDbId(),Boolean.TRUE};
+        if (log.isDebugEnabled()) {
+            log.debug("checkRights, hql: " + hql);
+            log.debug("checkRights, entity db-id: " + entity.getDbId() );
+        }
+        List<Integer> idList = getPermissionDao().findByQuery(hql, params);
+        if (log.isDebugEnabled()) {
+            log.debug("checkRights, permission ids: ");
+            for (Integer integer : idList) {
+                log.debug(integer);
+            }
+        }
+        if(idList==null || idList.isEmpty()) {
+            final String message = "User: " + username + " has no right to write CnATreeElement with id: " + entity.getDbId();
+            log.warn(message);
+            throw new SecurityException(message);
+        }
     }
 
-    /**
-	 * @param entity
-	 */
-	@Override
-    public void checkRights(CnATreeElement entity) /*throws SecurityException*/ { 
-	    checkRights(entity, getAuthService().getUsername());
-	}
+    protected String createHql(String[] roleArray) {
+        String roleParam = createRoleParam(roleArray);
+        StringBuilder sb = new StringBuilder();
+        sb.append("select p.dbId from Permission p where p.cnaTreeElement.dbId = ? and p.role in (");
+        // workaraound, because adding roles as ? param does not work
+        sb.append(roleParam);
+        sb.append(") and p.writeAllowed = ?");
+        return sb.toString();
+    }
+
+    protected String createRoleParam(String[] roleArray) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < roleArray.length; i++) {
+            String name = roleArray[i];
+            String escaped = name.replace("\\", "\\\\");
+            sb.append("'").append(escaped).append("'");
+            if(i<roleArray.length-1) {
+                sb.append(",");
+            }
+        }
+        return sb.toString();
+    }
+
+    private void beforeExecution() {
+        if(isPermissionHandlingNeeded()) {
+            enableFilter();
+        }
+    }
+
+    private void afterExecution() {
+        if(isPermissionHandlingNeeded()) {
+            disableFilter();
+        }
+    }
+
+    private void enableFilter() {
+        if(!hasAdminRole(authService.getRoles())) {
+            if(log.isDebugEnabled()) {
+                log.debug("Enabling security access filter for user: " + authService.getUsername());
+            }
+            setAccessFilterEnabled(true);
+        }
+        setScopeFilterEnabled(true);
+    }
+
+    public void disableFilter() {
+        if(!hasAdminRole(authService.getRoles())) {
+            if(log.isDebugEnabled()) {
+                log.debug("Disabling security access filter.");
+            }
+            setAccessFilterEnabled(false);
+        }
+        setScopeFilterEnabled(false);
+    }
+
+    private void setScopeFilterEnabled(boolean enable) {
+        if(getConfigurationService().isScopeOnly(authService.getUsername()) && enable) {
+            final Integer userScopeId = getConfigurationService().getScopeId(authService.getUsername());
+            getHibernateTemplate().enableFilter("scopeFilter").setParameter("scopeId", userScopeId);
+        } else {
+            getHibernateTemplate().execute(new HibernateCallback() {
+                @Override
+                public Object doInHibernate(Session session) throws HibernateException, SQLException {
+                    session.disableFilter("scopeFilter");
+                    return null;
+                }
+            });
+        }
+    }
+
+    private void setAccessFilterEnabled(boolean enable) {
+        if (enable) {
+            final Object[] roles = getConfigurationService().getRoles(authService.getUsername());
+            getHibernateTemplate().enableFilter("userAccessReadFilter")
+                    .setParameterList("currentRoles", roles)
+                    .setParameter("readAllowed", Boolean.TRUE);
+        } else {
+            getHibernateTemplate().execute(new HibernateCallback() {
+                @Override
+                public Object doInHibernate(Session session)
+                        throws HibernateException, SQLException {
+                    session.disableFilter("userAccessReadFilter");
+                    return null;
+                }
+            });
+        }
+    }
+
+    private boolean isPermissionHandlingNeeded() {
+        return getAuthService().isPermissionHandlingNeeded() 
+                && !(getAuthService().getAdminUsername().equals(getAuthService().getUsername())) ;
+    }
+	
+
+    private boolean isScopeOnly() {
+        return getConfigurationService().isScopeOnly(getAuthService().getUsername());
+    }
 
 	private boolean hasAdminRole(String[] roles) {
 	    if(roles!=null) {
@@ -295,16 +306,10 @@ public class SecureTreeElementDao extends TreeElementDao<CnATreeElement, Integer
 		return permissionDao;
 	}
 
-    /**
-     * @return the configurationService
-     */
     public IConfigurationService getConfigurationService() {
         return configurationService;
     }
 
-    /**
-     * @param configurationService the configurationService to set
-     */
     public void setConfigurationService(IConfigurationService configurationService) {
         this.configurationService = configurationService;
     }

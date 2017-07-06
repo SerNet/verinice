@@ -1,0 +1,114 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/poseidon/template.xhtml">
+
+	<ui:define name="viewname">#{msgWeb['controls-iso-all.title']}</ui:define>
+	<ui:define name="title">#{msgWeb['controls-iso-all.title']}</ui:define>
+
+	<ui:define name="head">
+		<ui:include src="/WEB-INF/poseidon/chart-extender.xhtml" />
+	</ui:define>
+
+	<ui:define name="content">
+
+		<div class="ui-g ui-fluid">
+			<div class="ui-g-12 ui-lg-12">
+
+				<h:form id="totalChartPanel">
+					<p:panel header="#{msgWeb['controls-iso-all.header1']}" toggleable="true">
+						<ui:fragment
+							rendered="#{not controlsIsoAllChartView.totalCalculated}">
+							<div style="margin: 0 auto; text-align: center;">
+								<p>#{msgWeb['loading']}</p>
+								<p:graphicImage name="images/ajax-loader.gif"
+									library="poseidon-layout" />
+							</div>
+						</ui:fragment>
+
+						<ui:fragment
+							rendered="#{controlsIsoAllChartView.totalCalculated and controlsIsoAllChartView.dataAvailable()}">
+							<div class="ui-g">
+								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+									<p:chart id="verinicePieChart" type="pie"
+										model="#{controlsIsoAllChartView.pieModel}"
+										responsive="true" />
+								</div>
+								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+									<p:chart id="verinicePieBar" type="bar"
+										model="#{controlsIsoAllChartView.horizontalBarChartModel}"
+										responsive="true" />
+								</div>
+							</div>
+						</ui:fragment>
+
+						<ui:fragment id="no-data" rendered="#{controlsIsoAllChartView.totalCalculated and (not controlsIsoAllChartView.dataAvailable())}">
+							<p class="no-data">#{msgWeb['no-data']}</p>
+						</ui:fragment>
+					</p:panel>
+				</h:form>
+
+				<h:form>
+					<p:remoteCommand id="loadDataCommand"
+						action="#{controlsIsoAllChartView.loadTotalIsmsCatalogs()}"
+						update=":totalChartPanel" autoRun="true" delay="2" />
+				</h:form>
+			</div>
+
+			<div class="ui-g-12 ui-lg-12">
+				<h:form id="charts">
+					<p:panel header="#{msgWeb['controls-iso-all.header2']}" toggleable="true">
+						<ui:fragment
+							rendered="#{not controlsIsoAllChartView.allCatalogsCalculated}">
+							<div style="margin: 0 auto; text-align: center;">
+								<p>#{msgWeb['loading']}</p>
+								<p:graphicImage name="images/ajax-loader.gif"
+									library="poseidon-layout" />
+							</div>
+						</ui:fragment>
+
+						<ui:fragment
+							rendered="#{controlsIsoAllChartView.allCatalogsCalculated and controlsIsoAllChartView.dataAvailable()}">
+							<ui:repeat value="#{controlsIsoAllChartView.charts}"
+								var="chart">
+								<div class="ui-g">
+									<div class="ui-g-12 ui-lg-12">
+										<h3>#{chart.title}</h3>
+									</div>
+
+									<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+										<div class="card">
+											<p:chart id="pie-#{count}" type="pie"
+												model="#{chart.firstChartModel}" responsive="true" />
+										</div>
+									</div>
+									<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+										<div class="card">
+											<p:chart id="bar-#{count}" type="bar"
+												model="#{chart.secondChartModel}" responsive="true" />
+										</div>
+									</div>
+								</div>
+
+							</ui:repeat>
+						</ui:fragment>
+
+						<ui:fragment id="no-data" rendered="#{controlsIsoAllChartView.allCatalogsCalculated and (not controlsIsoAllChartView.dataAvailable())}">
+							<p class="no-data">#{msgWeb['no-data']}</p>
+						</ui:fragment>
+					</p:panel>
+				</h:form>
+			</div>
+
+			<h:form>
+				<p:remoteCommand id="loadData"
+					action="#{controlsIsoAllChartView.loadAllIsmsCatalogs()}"
+					update=":charts" autoRun="true" delay="2" />
+			</h:form>
+		</div>
+	</ui:define>
+
+</ui:composition>

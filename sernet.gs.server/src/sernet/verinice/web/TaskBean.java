@@ -27,6 +27,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
@@ -35,11 +39,9 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
-import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
@@ -50,6 +52,8 @@ import sernet.verinice.service.commands.LoadElementByUuid;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@ManagedBean(name = "task")
+@SessionScoped
 public class TaskBean {
 
     private static final Logger LOG = Logger.getLogger(TaskBean.class);
@@ -58,6 +62,7 @@ public class TaskBean {
     
     public static final int MAX_TITLE_LENGTH = 100;
 
+    @ManagedProperty("#{edit}")
     private EditBean editBean;
     
     private List<CnATreeElement> auditList;
@@ -92,7 +97,7 @@ public class TaskBean {
         if(selectedAudit!=null) {
             parameter.setAuditUuid(selectedAudit.getUuid());
         }
-        taskList = getTaskService().getCurrentUserTaskList();
+        taskList = getTaskService().getCurrentUserTaskList(parameter);
         Collections.sort(taskList);
         for (ITask task : taskList) {
             String controlTitle = task.getElementTitle();
@@ -378,7 +383,7 @@ public class TaskBean {
     
         @Override
         public String getLabel() {
-            return Messages.getString("TaskBean.8"); //$NON-NLS-1$
+            return sernet.gs.web.Util.getMessage(BOUNDLE_NAME, "TaskBean.8"); //$NON-NLS-1$
         }
     
         @Override
@@ -400,7 +405,7 @@ public class TaskBean {
     
         @Override
         public String getLabel() {
-            return Messages.getString("TaskBean.9"); //$NON-NLS-1$
+            return sernet.gs.web.Util.getMessage(BOUNDLE_NAME, "TaskBean.9"); //$NON-NLS-1$
         }
     
         @Override

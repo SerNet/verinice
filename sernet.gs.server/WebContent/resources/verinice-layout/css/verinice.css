@@ -1,0 +1,175 @@
+/* Top bar customization */
+.layout-wrapper .topbar .logo {
+  display: inline-block;
+  vertical-align: middle;
+  width: 175px;
+  height: 49px;
+  background: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}") top left no-repeat;
+  background-size: 175px 49px;
+}
+
+.layout-wrapper.menu-layout-static.layout-menu-static-inactive .topbar .topbar-left .logo {
+  background: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}") top left no-repeat;
+  background-size: 175px 49px;
+}
+
+.layout-wrapper.menu-layout-overlay .topbar .topbar-left .logo {
+  background: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}") top left no-repeat;
+}
+
+.layout-wrapper.menu-layout-overlay.layout-menu-overlay-active .topbar .topbar-left .logo {
+  background: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}") top left no-repeat;
+}
+
+.layout-wrapper.menu-layout-horizontal .topbar .topbar-left .logo {
+  background: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}") top left no-repeat;
+}
+
+.layout-wrapper .topbar .topbar-left {
+  background-color: #F0F3F5;
+}
+
+.layout-wrapper.menu-layout-static .topbar .topbar-left {
+  background-color: #F0F3F5;
+}
+
+.layout-wrapper.menu-layout-static.layout-menu-static-inactive .topbar .topbar-left {
+  background-color: white;
+}
+
+.layout-wrapper.menu-layout-overlay .topbar .topbar-left {
+  background-color: white;
+}
+
+.layout-wrapper.menu-layout-overlay.layout-menu-overlay-active .topbar .topbar-left {
+  background-color: #F0F3F5;
+}
+
+.layout-wrapper.menu-layout-horizontal .topbar .topbar-left {
+  background-color: white;
+}
+
+.layout-wrapper .topbar .sign-out-button {
+  display: none;
+}
+
+.layout-wrapper .footer {
+	padding: 0 22px;
+}
+
+#exceptionDialog .ui-panelgrid-cell {
+	border: 1px solid #c9cdd2;
+}
+
+@media ( max-width : 1024px ) {
+  .layout-wrapper.menu-layout-static .topbar .topbar-left .logo {
+    background-image: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}");
+  }
+}
+
+@media ( max-width : 414px ) {
+  .layout-wrapper.menu-layout-static .topbar .topbar-left .logo {
+    background: url("#{resource['verinice-layout:images/logo_v_rgb.png']}") top left no-repeat;
+    width: 23px;
+    height: 49px;
+  }
+
+  .layout-wrapper.menu-layout-static .topbar .topbar-left {
+    background-color: white;
+  }
+
+  .layout-wrapper.menu-layout-overlay .topbar .topbar-left .logo {
+    background: url("#{resource['verinice-layout:images/logo_v_rgb.png']}") top left no-repeat;
+    width: 23px;
+    height: 49px;
+  }
+
+  .layout-wrapper.menu-layout-overlay.layout-menu-overlay-active .topbar .topbar-left {
+    background-color: white;
+  }
+
+  .layout-wrapper .topbar .sign-out-button {
+    display: inline;
+  }
+
+  .layout-wrapper .topbar .sign-out-button-with-username {
+    display: none;
+  }
+}
+
+/* Menu bar in top bar */
+.topbar-menubar {
+  display: inline-block;
+  float: right;
+}
+
+body .topbar-menubar {
+  border: 0px;
+}
+
+.layout-wrapper.menu-layout-static .topbar-menubar {
+  margin-top: -32px;
+}
+
+.layout-wrapper.menu-layout-overlay .topbar-menubar {
+  margin-top: -32px;
+}
+
+.layout-wrapper.menu-layout-horizontal .topbar-menubar {
+  margin-top: 5px;
+}
+
+@media ( max-width : 1024px) {
+    .layout-wrapper.menu-layout-horizontal .topbar-menubar {
+    margin-top: -32px;
+  }
+}
+
+
+/* Login panel customization */
+.login-panel .ui-g-12.logo-container img {
+  width: 90px;
+}
+
+/* Other stuff */
+.veriniceElementTable td:nth-child(1), .veriniceElmentTable th:nth-child(1) {
+  width: 20px;
+}
+
+.saveButtonHidden {
+  display: none;
+  visibility: hidden;
+}
+
+.ui-panelgrid>*>tr, .ui-panelgrid>*>tr>td.ui-panelgrid-cell {
+  border: none;
+}
+
+.new-iso-object-panel.ui-datatable table thead {
+  display: none;
+}
+
+.new-iso-object-panel.ui-datatable table {
+  width: auto;
+}
+
+/* No chart data available*/
+p.no-data {
+	text-align: center;
+}
+
+/* mark task read or unread in task view */
+#tableForm:taskTable .unread {
+	font-weight: bold;
+}
+
+/* use color of normal buttons for the selectOneButton menu in task view */
+body #task-action-handler .ui-buttonset .ui-button {
+	color: #FFFFFF;
+	background: #666666;
+}
+
+div#exceptionDialog {
+	color: #FFFFFF;
+	background-color: #ce5051;
+}

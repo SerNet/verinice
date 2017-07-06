@@ -4,6 +4,7 @@ Bundle-Name: verinice ODA driver designer
 Bundle-SymbolicName: sernet.verinice.oda.driver.designer;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: sernet.verinice.oda.driver.designer.Activator
+Eclipse-BuddyPolicy: global
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -19,11 +20,10 @@ Require-Bundle: org.eclipse.ui,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: SerNet
-Import-Package: org.apache.log4j, 
- sernet.gs.ui.rcp.main, 
- sernet.springclient, 
- sernet.verinice.service.auth, 
- sernet.verinice.iso27k.rcp,
+Import-Package: org.apache.log4j,
+ sernet.gs.ui.rcp.main,
+ sernet.springclient,
  sernet.verinice.rcp.linktable,
- sernet.verinice.rcp.linktable.ui
+ sernet.verinice.rcp.linktable.ui,
+ sernet.verinice.service.auth
 Bundle-ClassPath: .

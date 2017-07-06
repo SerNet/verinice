@@ -1,0 +1,109 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/poseidon/template.xhtml">
+
+	<ui:define name="title">#{msgWeb['controls-bstums-all.title']}</ui:define>
+	<ui:define name="viewname">#{msgWeb['controls-bstums-all.title']}</ui:define>
+
+	<ui:define name="head">
+		<ui:include src="/WEB-INF/poseidon/chart-extender.xhtml" />
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="ui-g ui-fluid">
+			<div class="ui-g-12">
+				<p:panel header="#{msgWeb['controls-bstums-all.header']}" toggleable="true">
+					<h:form id="chartPanel">
+						<ui:fragment
+							rendered="#{not moduleAllChartView.totalCalculated}">
+							<div style="margin: 0 auto; text-align: center;">
+								<p>#{msgWeb['loading']}</p>
+								<p:graphicImage name="images/ajax-loader.gif"
+									library="poseidon-layout" />
+							</div>
+						</ui:fragment>
+						<ui:fragment
+							rendered="#{moduleAllChartView.totalCalculated and moduleAllChartView.dataAvailable()}">
+							<div class="ui-g ui-fluid">
+								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+									<p:chart id="veriniceHorizontalBar" type="bar"
+										model="#{moduleAllChartView.verticalBarChart}"
+										responsive="true" />
+								</div>
+								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+									<p:chart id="veriniceVerticalBar" type="bar"
+										model="#{moduleAllChartView.horizontalBarChartModel}"
+										responsive="true" />
+								</div>
+							</div>
+						</ui:fragment>
+
+						<ui:fragment
+							rendered="#{moduleAllChartView.totalCalculated and (not moduleAllChartView.dataAvailable())}">
+							<p class="no-data">#{msgWeb['no-data']}</p>
+						</ui:fragment>
+					</h:form>
+
+					<h:form>
+						<p:remoteCommand
+							action="#{moduleAllChartView.loadTotalData()}"
+							autoRun="true" delay="2" update=":chartPanel" />
+					</h:form>
+				</p:panel>
+			</div>
+
+
+			<div class="ui-g-12 ui-lg-12">
+				<h:form id="all-chapter">
+					<p:panel header="#{msgWeb['all-it-networks']}" toggleable="true">
+						<ui:fragment
+							rendered="#{not moduleAllChartView.allItNetworksCalculated}">
+							<div style="margin: 0 auto; text-align: center;">
+								<p>#{msgWeb['loading']}</p>
+								<p:graphicImage name="images/ajax-loader.gif"
+									library="poseidon-layout" />
+							</div>
+						</ui:fragment>
+
+						<ui:fragment id="charts"
+							rendered="#{moduleAllChartView.allItNetworksCalculated and moduleAllChartView.dataAvailable()}">
+							<ui:repeat value="#{moduleAllChartView.charts}" var="chart"
+								toggleable="true">
+								<div class="ui-g">
+									<div class="ui-g-12 ui-lg-12">
+										<h3>#{chart.title}</h3>
+									</div>
+									<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+										<p:chart id="verticalBar" type="bar"
+											model="#{chart.firstChartModel}" responsive="true" />
+									</div>
+									<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+										<p:chart id="horizontalBar" type="bar"
+											model="#{chart.secondChartModel}" responsive="true" />
+									</div>
+								</div>
+
+							</ui:repeat>
+						</ui:fragment>
+						<ui:fragment
+							rendered="#{moduleAllChartView.totalCalculated and (not moduleAllChartView.dataAvailable())}">
+							<p class="no-data">#{msgWeb['no-data']}</p>
+						</ui:fragment>
+					</p:panel>
+				</h:form>
+			</div>
+
+			<h:form>
+				<p:remoteCommand
+					action="#{moduleAllChartView.loadDataForAllItNetworks()}"
+					update=":all-chapter" autoRun="true" delay="2">
+				</p:remoteCommand>
+			</h:form>
+		</div>
+	</ui:define>
+
+</ui:composition>

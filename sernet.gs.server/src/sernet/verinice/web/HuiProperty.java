@@ -39,6 +39,8 @@ import sernet.hui.common.multiselectionlist.IMLPropertyOption;
  */
 public class HuiProperty<K,V> implements Serializable{
     
+    private static final long serialVersionUID = 1L;
+
     private static final Logger LOG = Logger.getLogger(HuiProperty.class);
     
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat();
@@ -164,8 +166,8 @@ public class HuiProperty<K,V> implements Serializable{
         return type.isBooleanSelect();
     }
     
-    public boolean isShow_html(){
-        return type.isShow_html();
+    public boolean isShowInObjectBrowser(){
+        return type.isShowInObjectBrowser();
     }
     
     public Date getDate() {
@@ -241,23 +243,23 @@ public class HuiProperty<K,V> implements Serializable{
         if(!getIsSingleSelect() && !getIsNumericSelect()) {
             return;
         }
-        if(getIsSingleSelect() && item.equals(Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE))){
+        if(item==null) {
             value = null;
             return;
         }
-        if(item!=null) {
-            for (IMLPropertyOption option : type.getOptions()) {
-                if(item.equals(option.getName())) {
-                    value = getSelectionValue(option);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Set option value: "+ value + " for label: " + item);
-                    }
-                    break;
-                }          
-            }
-        } else {
+        if(getIsSingleSelect() && item.equals(Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE))){
             value = null;
-        }
+            return;
+        }      
+        for (IMLPropertyOption option : type.getOptions()) {
+            if(item.equals(option.getName())) {
+                value = getSelectionValue(option);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Set option value: "+ value + " for label: " + item);
+                }
+                break;
+            }          
+        }      
     }
 
     private V getSelectionValue(IMLPropertyOption option) {

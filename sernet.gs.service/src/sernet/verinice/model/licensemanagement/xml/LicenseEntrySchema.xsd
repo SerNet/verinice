@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:complexType name="licenseManagementEntry">
+    <xs:sequence>
+      <xs:element name="contentIdentifier" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="licenseID" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="salt" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="userPassword" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="validUntil" type="xs:string" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="validUsers" type="xs:string" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

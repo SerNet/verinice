@@ -126,6 +126,16 @@ public final class VeriniceContext {
     
     public static final String UPDATE_NEWS_SERVICE = "updateNewsService";
     
+    public static final String RISK_ANALYSIS_SERVICE = "riskAnalysisService";
+    
+    public static final String LICENSE_SERVICE = "licenseManagementService";
+    
+    public static final String ENCRYPTION_SERVICE = "encryptionService";
+    
+    public static final String GRAPH_SERVICE = "graphService";
+
+    public static final String COUNT_SERVICE = "countService";
+
     private static String serverUrl = null;
 
 	private ThreadLocal<Map<String, Object>> threadLocal = new InheritableThreadLocal<Map<String, Object>>();
@@ -264,10 +274,6 @@ public final class VeriniceContext {
 	 * @param s
 	 */
 	public static void setState(State s) {
-	    if(s==null) {
-	        LOG.error("Can not set state in thread local. State is null.");
-	        return;
-	    }
 		instance().threadLocal.set(s.getMap());
 	}
 	

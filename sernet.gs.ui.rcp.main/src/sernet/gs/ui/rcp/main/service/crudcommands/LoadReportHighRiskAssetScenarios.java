@@ -26,14 +26,14 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
-import sernet.verinice.iso27k.service.IRiskAnalysisService;
 import sernet.verinice.iso27k.service.Retriever;
-import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
+import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Process;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 /**
  *
@@ -88,7 +88,7 @@ public class LoadReportHighRiskAssetScenarios extends GenericCommand implements 
                         for(CnATreeElement se : scenarioLoader.getElements()){
                             IncidentScenario scenario = (IncidentScenario)Retriever.retrieveElement(se, new RetrieveInfo().setProperties(true));
                             AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
-                            RiskAnalysisServiceImpl raService = new RiskAnalysisServiceImpl();
+                            RiskAnalysisHelperImpl raService = new RiskAnalysisHelperImpl();
 
                             Integer impactC = valueAdapter.getVertraulichkeit();
                             Integer impactI = valueAdapter.getIntegritaet();
@@ -127,10 +127,10 @@ public class LoadReportHighRiskAssetScenarios extends GenericCommand implements 
                                     yellowFields = threeYellowFields;
                                 }
                                 int riskColor = raService.getRiskColor(asset, scenario, c, yellowFields, scenProbType);
-                                if(!isRedRisk && riskColor == IRiskAnalysisService.RISK_COLOR_RED){
+                                if(!isRedRisk && riskColor == RiskAnalysisHelper.RISK_COLOR_RED){
                                     isRedRisk = true;
                                     break;
-                                } else if(!isYellowRisk && riskColor == IRiskAnalysisService.RISK_COLOR_YELLOW){
+                                } else if(!isYellowRisk && riskColor == RiskAnalysisHelper.RISK_COLOR_YELLOW){
                                     isYellowRisk = true;
                                 }
 
@@ -168,17 +168,17 @@ public class LoadReportHighRiskAssetScenarios extends GenericCommand implements 
     private String getScenPropType() {
         String scenProbType;
         switch(riskType){
-        case IRiskAnalysisService.RISK_PRE_CONTROLS:
-            scenProbType = IRiskAnalysisService.PROP_SCENARIO_PROBABILITY;
+        case RiskAnalysisHelper.RISK_PRE_CONTROLS:
+            scenProbType = RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY;
             break;
-        case IRiskAnalysisService.RISK_WITH_ALL_CONTROLS:
-            scenProbType = IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS;
+        case RiskAnalysisHelper.RISK_WITH_ALL_CONTROLS:
+            scenProbType = RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS;
             break;
-        case IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS:
-            scenProbType = IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS;
+        case RiskAnalysisHelper.RISK_WITH_IMPLEMENTED_CONTROLS:
+            scenProbType = RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS;
             break;
         default:
-            scenProbType = IRiskAnalysisService.PROP_SCENARIO_PROBABILITY;
+            scenProbType = RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY;
             break;
         }
         return scenProbType;

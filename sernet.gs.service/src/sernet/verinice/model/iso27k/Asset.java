@@ -27,6 +27,9 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 
 /**
+ * An asset from the ISO/IEC 27000 standard.
+ * See https://en.wikipedia.org/wiki/ISO/IEC_27000-series for details
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
@@ -45,6 +48,20 @@ public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGrou
     public static final String ASSET_VALUE_METHOD_INTEGRITY = "asset_value_method_integrity"; //$NON-NLS-1$
     public static final String ASSET_VALUE_METHOD_AVAILABILITY = "asset_value_method_availability"; //$NON-NLS-1$
 	
+    public static final String ASSET_WITHOUT_NA_PLANCONTROLRISK_A = "asset_risk_without_na_plancontrolvalue_a";
+    public static final String ASSET_WITHOUT_NA_PLANCONTROLRISK_I = "asset_risk_without_na_plancontrolvalue_i";
+    public static final String ASSET_WITHOUT_NA_PLANCONTROLRISK_C = "asset_risk_without_na_plancontrolvalue_c";
+    public static final String ASSET_PLANCONTROLRISK_A = "asset_riskwplancontrolvalue_a";
+    public static final String ASSET_PLANCONTROLRISK_I = "asset_riskwplancontrolvalue_i";
+    public static final String ASSET_PLANCONTROLRISK_C = "asset_riskwplancontrolvalue_c";
+    public static final String ASSET_CONTROLRISK_A = "asset_riskwcontrolvalue_a";
+    public static final String ASSET_CONTROLRISK_I = "asset_riskwcontrolvalue_i";
+    public static final String ASSET_CONTROLRISK_C = "asset_riskwcontrolvalue_c";
+    public static final String ASSET_RISK_A = "asset_riskvalue_a";
+    public static final String ASSET_RISK_I = "asset_riskvalue_i";
+    public static final String ASSET_RISK_C = "asset_riskvalue_c";
+
+    
 	public static final String REL_ASSET_PERSON_RESPO = "rel_asset_person_respo"; //$NON-NLS-1$
 	
 	public static final String[] CHILD_TYPES = new String[] {
@@ -58,7 +75,8 @@ public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGrou
 	
     private final ISchutzbedarfProvider schutzbedarfProvider = new AssetValueAdapter(this);
     private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this);
-
+    
+    
     @Override
     public ILinkChangeListener getLinkChangeListener() {
         return linkChangeListener;
@@ -105,7 +123,7 @@ public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGrou
 	 */
 	@Override
 	public String getTitle() {
-		return getEntity().getSimpleValue(PROP_NAME);
+		return getEntity().getPropertyValue(PROP_NAME);
 	}
 	
 	@Override
@@ -115,7 +133,7 @@ public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGrou
 	
 	@Override
     public String getAbbreviation() {
-		return getEntity().getSimpleValue(PROP_ABBR);
+		return getEntity().getPropertyValue(PROP_ABBR);
 	}
 	
 	public void setAbbreviation(String abbreviation) {
@@ -124,7 +142,7 @@ public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGrou
 	
 	@Override
     public Collection<? extends String> getTags() {
-		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+		return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
 	}
 	
 	/* (non-Javadoc)

@@ -337,6 +337,17 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(ITVerbund.class, daoToSet);
         daosByTypeID.put(ITVerbund.TYPE_ID, daoToSet);
     }
+
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    @Override
+    public void setSecureItVerbundDAO(IBaseDao<ITVerbund, Integer> daoToSet) {
+        daosByClass.put(ITVerbund.class, daoToSet);
+        daosByTypeID.put(ITVerbund.SECURE_TYPE_ID, daoToSet);
+    }
+
+
     /** 
      * Setter method used by spring to inject DAO.
      */
@@ -818,7 +829,7 @@ public class DAOFactory implements IDAOFactory {
         this.finishedRiskAnalysisListsDao = dao;
         
     }
-
+    
     @Override
     @SuppressWarnings("unchecked")
 	/**

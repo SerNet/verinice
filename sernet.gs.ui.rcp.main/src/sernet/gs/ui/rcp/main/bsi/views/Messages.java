@@ -52,6 +52,12 @@ public final class Messages extends NLS {
     public static String BrowserView_4;
 
     public static String BrowserView_5;
+    
+    public static String BrowserView_License_Ends_Soon;
+    
+    public static String BrowserView_No_License_assigned;
+    
+    public static String BrowserView_License_Not_Valid_Anymore;
 
     public static String BSIKatalogInvisibleRoot_2;
 
@@ -132,6 +138,12 @@ public final class Messages extends NLS {
     public static String DSModelView_5;
 
     public static String DSModelView_6;
+
+    public static String DSModelView_7;
+
+    public static String DSModelView_8;
+
+    public static String DSModelView_9;
 
     public static String DSViewLabelProvider_0;
 

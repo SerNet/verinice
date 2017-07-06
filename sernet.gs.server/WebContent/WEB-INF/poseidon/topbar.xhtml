@@ -1,0 +1,72 @@
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:po="http://primefaces.org/poseidon">
+
+  <div class="topbar clearfix">
+    <div class="topbar-left">
+      <h:link outcome="/misc/home">
+        <div class="logo"></div>
+      </h:link>
+    </div>
+
+    <div class="topbar-right">
+      <a
+        id="menu-button"
+        href="#"> <i class="fa fa-angle-left"></i>
+      </a>
+
+      <h:form>
+        <p:menubar class="topbar-menubar">
+          <p:submenu
+            icon="fa fa-bars">
+
+            <p:menuitem
+              value="Static"
+              action="#{guestPreferences.setMenuLayout('static')}"
+              ajax="false"
+              icon="fa fa-bars" />
+            <p:menuitem
+              value="Overlay"
+              actionListener="#{guestPreferences.setMenuLayout('overlay')}"
+              ajax="false"
+              icon="fa fa-bars" />
+            <p:menuitem
+              value="Horizontal"
+              actionListener="#{guestPreferences.setMenuLayout('horizontal')}"
+              ajax="false"
+              icon="fa fa-bars" />
+          </p:submenu>
+
+          <p:submenu
+            icon="fa fa-globe">
+            <p:menuitem
+              value="English"
+              icon="#{message.getIcon('en')}"
+              action="#{message.english}"
+              ajax="false" />
+            <p:menuitem
+              value="German"
+              icon="#{message.getIcon('de')}"
+              action="#{message.german}"
+              ajax="false" />
+          </p:submenu>
+
+          <p:menuitem
+            class="sign-out-button"
+            action="#{userManager.logout}"
+            icon="fa fa-sign-out" />
+          <p:menuitem
+            class="sign-out-button-with-username"
+            action="#{userManager.logout}"
+            icon="fa fa-sign-out"
+            value="#{auth.userName}" />
+
+        </p:menubar>
+      </h:form>
+    </div>
+  </div>
+</ui:composition>

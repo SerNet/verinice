@@ -51,7 +51,7 @@ import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.iso27k.rcp.ElementMultiselectWidget;
+import sernet.verinice.iso27k.rcp.ScopeMultiselectWidget;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.linktable.LinkTableUtil;
 import sernet.verinice.service.csv.ICsvExport;
@@ -77,7 +77,7 @@ public class CsvExportDialog extends TitleAreaDialog {
     private CnATreeElement selectedElement;
     private String filePath;
 
-    private ElementMultiselectWidget organizationWidget = null;
+    private ScopeMultiselectWidget organizationWidget = null;
 
     private Text txtLocation;
     private String defaultFolder;
@@ -120,7 +120,7 @@ public class CsvExportDialog extends TitleAreaDialog {
         composite.setLayoutData(gd);
 
         try {
-            organizationWidget = new ElementMultiselectWidget(composite, selection, selectedElement);
+            organizationWidget = new ScopeMultiselectWidget(composite, selection, selectedElement);
             setOrgTitle();
 
         } catch (CommandException ex) {
@@ -193,7 +193,7 @@ public class CsvExportDialog extends TitleAreaDialog {
             }   
         };
 
-        organizationWidget.addSelectionLiustener(organizationListener);
+        organizationWidget.addSelectionListener(organizationListener);
     }
     
     private void changeFilePathToCurrentSelection() {

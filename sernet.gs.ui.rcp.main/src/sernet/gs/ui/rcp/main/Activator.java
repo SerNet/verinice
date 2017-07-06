@@ -23,6 +23,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
@@ -71,10 +72,11 @@ import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.ILogPathService;
 import sernet.verinice.interfaces.IMain;
 import sernet.verinice.interfaces.IReportLocalTemplateDirectoryService;
+import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.IVersionConstants;
+import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportService;
-import sernet.verinice.interfaces.updatenews.IUpdateNewsService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
@@ -103,7 +105,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     private static final String LOCAL_UPDATE_SITE_URL = "/Verinice-Update-Site-2010"; //$NON-NLS-1$
 
-    public static final String UPDATE_SITE_URL = "https://update.verinice.org/pub/verinice/update/1.13"; //$NON-NLS-1$
+    public static final String UPDATE_SITE_URL = "https://update.verinice.org/pub/verinice/update/1.14"; //$NON-NLS-1$
 
     public static final String DERBY_LOG_FILE_PROPERTY = "derby.stream.error.file"; //$NON-NLS-1$
 
@@ -206,6 +208,9 @@ public class Activator extends AbstractUIPlugin implements IMain {
         if (!prepareReportDirs()) {
             LOG.warn("ReportDirs are not created correclty");
         }
+        if(!prepareVNLDir()){
+            LOG.warn("VNL-Dir was not created correctly");
+        }
         setProxy();
 
         Preferences prefs = getPluginPreferences();
@@ -221,7 +226,10 @@ public class Activator extends AbstractUIPlugin implements IMain {
         setGSDSCatalog(prefs);
 
         // Set the derby log file path
-        System.setProperty(DERBY_LOG_FILE_PROPERTY, System.getProperty("user.home") + File.separatorChar + DERBY_LOG_FILE); //$NON-NLS-1$
+        System.setProperty(DERBY_LOG_FILE_PROPERTY, 
+                System.getProperty(IVeriniceConstants.USER_HOME) + 
+                File.separatorChar + 
+                DERBY_LOG_FILE); //$NON-NLS-1$
 
         // Provide initial DB connection details to server.
         internalServer.configureDatabase(prefs.getString(PreferenceConstants.DB_URL), prefs.getString(PreferenceConstants.DB_USER), prefs.getString(PreferenceConstants.DB_PASS), prefs.getString(PreferenceConstants.DB_DRIVER), prefs.getString(PreferenceConstants.DB_DIALECT));
@@ -347,7 +355,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
     }
 
     private boolean isAtLeastJava8() {
-        String javaVersion = System.getProperty("java.version");
+        String javaVersion = System.getProperty(IVeriniceConstants.JAVA_VERSION);
         boolean result = false;
         // version String should look like "1.4.2_10"
         if (javaVersion.indexOf("1.8.") != -1) { //$NON-NLS-1$ 
@@ -369,8 +377,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
     }
 
     private boolean isWin64() {
-        String osName = System.getProperty("os.name"); //$NON-NLS-1$
-        String osArch = System.getProperty("os.arch"); //$NON-NLS-1$
+        String osName = System.getProperty(IVeriniceConstants.OS_NAME); //$NON-NLS-1$
+        String osArch = System.getProperty(IVeriniceConstants.OS_ARCH); //$NON-NLS-1$
         return osName.toLowerCase().contains("win") && osArch.contains("64"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
@@ -878,8 +886,9 @@ public class Activator extends AbstractUIPlugin implements IMain {
             state = ServiceFactory.getClientWorkObjects();
             VeriniceContext.setState(state);
 
-            // Make command service available as an OSGi service
+            // Make command and model service available as an OSGi service
             context.registerService(ICommandService.class.getName(), VeriniceContext.get(VeriniceContext.COMMAND_SERVICE), null);
+            context.registerService(IObjectModelService.class.getName(), VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE), null);
         }
     }
 
@@ -904,6 +913,16 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     private boolean prepareReportDirs() {
         return CnAWorkspace.getInstance().createLocalReportTemplateDir(IReportService.VERINICE_REPORTS_LOCAL) && CnAWorkspace.getInstance().createReportTemplateDir(IReportService.VERINICE_REPORTS_REMOTE);
+    }
+    
+    private boolean prepareVNLDir(){
+        String workspace = System.getProperty("osgi.instance.area");
+        String vnlPath = FilenameUtils.concat(workspace, 
+                ILicenseManagementService.VNL_FILE_EXTENSION);
+        if (vnlPath.startsWith("file:")) {
+            vnlPath = vnlPath.substring(5);
+        }
+        return CnAWorkspace.getInstance().createLocalReportTemplateDir(vnlPath);
     }
 
     public IReportLocalTemplateDirectoryService getIReportTemplateDirectoryService() {

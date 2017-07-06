@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:vn="http://www.verinice.org/taglib">
+
+<ui:composition template="/WEB-INF/poseidon/template.xhtml">
+
+	<ui:define name="title">Tasks :: verinice</ui:define>
+	<ui:define name="viewname">Tasks :: verinice</ui:define>
+
+	<ui:define name="content">
+		<div class="ui-g ui-fluid">
+			<div class="ui-g-6 ui-lg-6 ui-xl-6 ui-md-12 ui-sm-12">
+				<p:panel header="#{msgTask['tasks']}">
+					<h:form id="tableForm" rendered="#{auth.isoTasks}">
+
+						<p:growl id="msg" autoUpdate="true" showDetail="true" sticky="true"
+						severity="info" />
+
+						<div class="ui-g ui-fluid">
+							<div class="ui-g-2">
+								<p:commandButton id="complete" action="#{task.loadTasks}"
+									alt="#{msgTask['reload']}"
+									update=":tableForm:taskTable,:editForm"
+									icon="fa fa-fw fa-refresh" />
+							</div>
+
+							<div class="ui-g-10">
+								<p:commandButton id="completeAll"
+									action="#{task.completeAllTask}"
+									value="#{msgTask['completeAll']}" icon="fa fa-fw fa-check"
+									update=":tableForm:taskTable,:editForm, msg" />
+							</div>
+							<ui:fragment rendered="#{not empty task.selectedTask.outcomes}">
+								<div id="task-action-handler" class="ui-g-12">
+									<p:selectOneButton value="#{task.outcomeId}" label="default">
+										<f:selectItems value="#{task.selectedTask.outcomes}"
+											var="outcome" itemLabel="#{outcome.value}"
+											itemValue="#{outcome.key}" />
+										<p:ajax event="change" listener="#{task.completeTask()}"
+											update=":tableForm,:editForm,:completeHandlerForm" />
+									</p:selectOneButton>
+								</div>
+							</ui:fragment>
+
+							<div class="ui-g-12">
+								<p:selectOneMenu id="audit" value="#{task.selectedAuditName}">
+									<f:selectItem itemLabel="#{msgTask['selectIsa']}" itemValue="" />
+									<f:selectItems value="#{task.auditNameList}" var="name"
+										itemLabel="#{name}" itemValue="#{name}" />
+									<p:ajax update=":tableForm:taskTable,:editForm" event="change"
+										listener="#{task.selectAudit}" process="audit" />
+								</p:selectOneMenu>
+							</div>
+
+							<div class="ui-g-12">
+
+								<p:panelGrid columns="4" id="taskFilter">
+									<h:outputText value="#{msgTask['read']}" />
+									<p:selectBooleanCheckbox value="#{task.showRead}">
+										<p:ajax update=":tableForm:taskTable,:editForm"
+											listener="#{task.loadTasks}" />
+									</p:selectBooleanCheckbox>
+
+									<h:outputText value="#{msgTask['unread']}" />
+									<p:selectBooleanCheckbox value="#{task.showUnread}">
+										<p:ajax update=":tableForm:taskTable,:editForm"
+											listener="#{task.loadTasks}" />
+									</p:selectBooleanCheckbox>
+								</p:panelGrid>
+							</div>
+							<div class="ui-g-12">
+								<ui:fragment id="descriptionPanel"
+									rendered="#{task.selectedTask!=null}">
+									<div class="task-description">
+										<p>
+											<h:outputText value="#{task.selectedTask.description}"
+												escape="false" />
+										</p>
+									</div>
+								</ui:fragment>
+
+								<p:dataTable id="taskTable" var="item" value="#{task.taskList}"
+									rowKey="#{item.id}" selection="#{task.selectedTask}"
+									selectionMode="single" scrollHeight="500" scrollable="true"
+									resizableColumns="true">
+									<p:ajax event="rowSelect" listener="#{task.openTask}"
+										update=":tableForm,:editForm " />
+									<p:column headerText="#{msgTask['title']}"
+										sortBy="#{item.name}" style="width:100px">
+										<h:outputText value="#{item.name}" styleClass="#{item.style}" />
+									</p:column>
+									<p:column headerText="#{msgTask['object']}"
+										sortBy="#{item.elementTitle}" style="width:325px">
+										<h:outputText value="#{item.elementTitle}"
+											styleClass="#{item.style}" />
+									</p:column>
+									<p:column headerText="#{msgTask['dueDate']}"
+										sortBy="#{item.dueDate}" style="width:75px">
+										<h:outputText value="#{item.dueDate}"
+											styleClass="#{item.style}">
+											<f:convertDateTime dateStyle="short" type="date"
+												timeZone="#{task.timeZone}" />
+										</h:outputText>
+									</p:column>
+								</p:dataTable>
+							</div>
+						</div>
+					</h:form>
+					<!-- Dont't remove navForm. It's referenced by editor.xhtml -->
+					<h:form id="navForm" />
+				</p:panel>
+			</div>
+
+			<div class="ui-g-6 ui-lg-6 ui-xl-6 ui-md-12 ui-sm-12">
+				<vn:editor rendered="#{auth.isoTasks}" />
+			</div>
+		</div>
+		<ui:insert name="extensions">
+			<ui:include src="/WEB-INF/poseidon/extensions.xhtml" />
+		</ui:insert>
+		<h:outputText value="" style="#{newQmBean.description}" />
+		<h:outputText value="" style="#{indiExecuteExtensionBean.description}" />
+	</ui:define>
+</ui:composition>
+</html>

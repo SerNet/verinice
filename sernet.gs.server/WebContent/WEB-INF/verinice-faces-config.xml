@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<faces-config
+  xmlns="http://java.sun.com/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+  version="2.0">
+
+  <converter>
+    <converter-id>relationConverter</converter-id>
+    <converter-class>sernet.verinice.web.HuiReleationConverter</converter-class>
+  </converter>
+
+
+  <application>
+    <locale-config>
+      <supported-locale>en</supported-locale>
+      <supported-locale>de</supported-locale>
+    </locale-config>
+    <message-bundle>sernet.gs.web.Messages</message-bundle>
+  </application>
+
+</faces-config>

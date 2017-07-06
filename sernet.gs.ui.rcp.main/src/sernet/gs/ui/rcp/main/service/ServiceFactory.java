@@ -35,6 +35,8 @@ import sernet.verinice.interfaces.bpm.IIsaControlFlowService;
 import sernet.verinice.interfaces.bpm.IIsaQmService;
 import sernet.verinice.interfaces.bpm.IProcessServiceIsa;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.interfaces.encryption.IEncryptionService;
+import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.interfaces.updatenews.IUpdateNewsService;
 import sernet.verinice.interfaces.validation.IValidationService;
@@ -174,6 +176,14 @@ public abstract class ServiceFactory {
 	    return (IUpdateNewsService) VeriniceContext.get(VeriniceContext.UPDATE_NEWS_SERVICE);
 	}
 
+	public static ILicenseManagementService lookupLicenseManagementService(){
+	    return (ILicenseManagementService)VeriniceContext.get(VeriniceContext.LICENSE_SERVICE);
+	}
+	
+	public static IEncryptionService lookupEncryptionService(){
+	    return (IEncryptionService)VeriniceContext.get(VeriniceContext.ENCRYPTION_SERVICE);
+	}
+	
 	/**
 	 * Retrieves the work objects that have been configured for the client.
 	 * 

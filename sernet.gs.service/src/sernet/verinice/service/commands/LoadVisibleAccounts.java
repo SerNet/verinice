@@ -48,7 +48,9 @@ import sernet.verinice.service.account.AccountSearchParameter;
 @SuppressWarnings("serial")
 public class LoadVisibleAccounts extends GenericCommand implements IAuthAwareCommand {
     
-    String hql = "select p.cnaTreeElement.dbId from Permission p where p.cnaTreeElement.objectType in ('person','person-iso') and p.role in (:roles)";
+    String hql = "select p.cnaTreeElement.dbId from Permission p where"
+            + " p.cnaTreeElement.objectType in "
+            + "('person','person-iso') and p.role in (:roles)";
    
     private transient IAuthService authService;
  
@@ -59,7 +61,7 @@ public class LoadVisibleAccounts extends GenericCommand implements IAuthAwareCom
      */
     @Override
     public void execute() { 
-        if(isAdmin()) {
+        if (isAdmin()) {
             accountList = getAllAccounts();
         } else {
             accountList = getVisibleAccounts();
@@ -67,12 +69,15 @@ public class LoadVisibleAccounts extends GenericCommand implements IAuthAwareCom
     }
 
     private List<Configuration> getVisibleAccounts() {
-        List<String> roles = Arrays.asList(getConfigurationService().getRoles(getAuthService().getUsername()));
-        List visibleElementIdList = getDao().findByQuery(hql, new String[]{"roles"}, new Object[]{roles});
+        List<String> roles = Arrays.asList(
+                getConfigurationService().getRoles(
+                        getAuthService().getUsername()));
+        List visibleElementIdList = getDao().findByQuery(
+                hql, new String[]{"roles"}, new Object[]{roles});
         List<Configuration> allAccounts = getAllAccounts();
-        List<Configuration> visibleAccounts = new LinkedList<Configuration>();
+        List<Configuration> visibleAccounts = new LinkedList<>();
         for (Configuration account : allAccounts) {
-            if(visibleElementIdList.contains(account.getPerson().getDbId())) {
+            if (visibleElementIdList.contains(account.getPerson().getDbId())) {
                 visibleAccounts.add(account); 
             }
         }
@@ -88,10 +93,11 @@ public class LoadVisibleAccounts extends GenericCommand implements IAuthAwareCom
     }
     
     private boolean containsAdminRole(String[] roles) {
-        if(roles!=null) {
+        if (roles != null) {
             for (String r : roles) {
-                if (ApplicationRoles.ROLE_ADMIN.equals(r))
+                if (ApplicationRoles.ROLE_ADMIN.equals(r)) {
                     return true;
+                }
             }   
         }
         return false;

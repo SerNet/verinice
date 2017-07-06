@@ -69,7 +69,7 @@ public class IndiRejectRealizationBean implements ICompleteWebHandler {
         String oldDescription = (String) getTaskService().getVariables(task.getId()).get(IIndividualProcess.VAR_DESCRIPTION);
         this.description = oldDescription;
         RequestContext context = RequestContext.getCurrentInstance();
-        context.execute("indiRejectRealizationBean.show();");
+        context.execute("PF('indiRejectRealizationBean').show();");
     }
 
     public void complete() {
@@ -79,7 +79,7 @@ public class IndiRejectRealizationBean implements ICompleteWebHandler {
         if (this.task != null) {
             getTaskService().completeTask(task.getId(), outcomeId, getParameter());
             RequestContext context = RequestContext.getCurrentInstance();
-            context.execute("indiRejectRealizationBean.hide();");
+            context.execute("PF('indiRejectRealizationBean').hide();");
             Util.addInfo("complete", Util.getMessage(TaskBean.BOUNDLE_NAME, "taskCompleted")); //$NON-NLS-1$ //$NON-NLS-2$
 
             if (taskBean != null) {

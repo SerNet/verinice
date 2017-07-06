@@ -51,6 +51,7 @@ import bsh.TargetError;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.HuiTypeFactoryException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
@@ -409,6 +410,13 @@ public class Query implements IQuery
 		} catch (EvalError e) {
 			log.error("Error evaluating the setup query: ", e);
 			
+			if(e instanceof TargetError){
+			    TargetError targetError = (TargetError) e;
+			    if(targetError.getTarget() instanceof HuiTypeFactoryException){
+			        throw new IllegalStateException(Messages.query_preview_error_msg, targetError.getTarget());
+			    }
+			}
+
 			throw new IllegalStateException("Unable to execute setup query: " + e.getErrorText());
 		}
 	}

@@ -50,7 +50,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.ServiceComponent;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -235,7 +234,7 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
     }
 	
     private byte[] encrypt(byte[] result, byte[] salt) throws CertificateException, EncryptionException, IOException {
-        IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
+        IEncryptionService service = ServiceFactory.lookupEncryptionService();
         byte[] cypherTextBytes;
         if (keyAlias != null) {
             cypherTextBytes = service.encrypt(result, keyAlias);
@@ -257,7 +256,7 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
         try {
             os = new FileOutputStream(path);     
             if (password!=null || x509CertificateFile!=null) {               
-                IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
+                IEncryptionService service = ServiceFactory.lookupEncryptionService();
                 if (password!=null) {
                     os = service.encrypt(os, password);
                 } else if (x509CertificateFile!=null) {

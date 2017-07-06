@@ -26,6 +26,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.IDirectoryCreator;
+import sernet.verinice.interfaces.IVeriniceConstants;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -64,7 +65,9 @@ public class ESOsgiDirectoryCreator implements IDirectoryCreator {
         String location = null;
         try{
             // should be the case for tier2 mode, store index in <userhome>/elasticsearch
-            location = FileUtils.toFile(new URL(FilenameUtils.concat(System.getProperty("osgi.instance.area"), getIndexLocation()))).getAbsolutePath();
+            location = FileUtils.toFile(new URL(FilenameUtils.concat(
+                    System.getProperty(IVeriniceConstants.OSGI_INSTANCE_AREA), 
+                    getIndexLocation()))).getAbsolutePath();
         } catch (Exception e){
             LOG.error("Error while getting directory path", e);
         }

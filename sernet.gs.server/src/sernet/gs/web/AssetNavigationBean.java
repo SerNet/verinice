@@ -20,7 +20,11 @@ package sernet.gs.web;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.convert.Converter;
+import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
 
@@ -41,6 +45,8 @@ import sernet.verinice.model.common.CnATreeElement;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@ManagedBean(name = "assetNavigation")
+@SessionScoped
 public class AssetNavigationBean {
 
 	private static final Logger LOG = Logger.getLogger(AssetNavigationBean.class);
@@ -51,6 +57,10 @@ public class AssetNavigationBean {
 	
 	private List<ItVerbundWrapper> itVerbundList;
 	
+	private String itVerbundItem;
+
+	private List<String> itVerbundItems;
+
 	private ITVerbund selectedItVerbund;
 	
 	private Converter itVerbundConverter = new ItVerbundConverter(this);
@@ -71,8 +81,8 @@ public class AssetNavigationBean {
     private List<CnATreeElement> tkKomponenteList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
     private List<CnATreeElement> sonstItList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
 	
-	public AssetNavigationBean() {
-		super();
+    @PostConstruct
+	public void init() {
 		loadItVerbundList();
 	}
 
@@ -82,6 +92,12 @@ public class AssetNavigationBean {
 		try {
 			service.executeCommand(command);
 			setItVerbundList(getWrapperList(command.getElements()));
+
+			itVerbundItems = new ArrayList<>();
+			for(ITVerbund itNetworks : command.getElements()){
+			    itVerbundItems.add(itNetworks.getTitle());
+			}
+
 		} catch (Exception e) {
 			LOG.error("Error while loading IT-Verbuende", e);
 			Util.addError("verbundForm", Util.getMessage("error"));
@@ -242,5 +258,21 @@ public class AssetNavigationBean {
 
     public void setSonstItList(List<CnATreeElement> sonstItList) {
         this.sonstItList = sonstItList;
+    }
+
+    public String getItVerbundItem() {
+        return itVerbundItem;
+    }
+
+    public void setItVerbundItem(String itVerbundItem) {
+        this.itVerbundItem = itVerbundItem;
+    }
+
+    public List<String> getItVerbundItems() {
+        return itVerbundItems;
+    }
+
+    public void setItVerbundItems(List<String> itVerbundItems) {
+        this.itVerbundItems = itVerbundItems;
     }
 }

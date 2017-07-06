@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 import sernet.verinice.interfaces.IRightsChangeListener;
 import sernet.verinice.interfaces.IRightsServerHandler;
@@ -37,11 +40,16 @@ import sernet.verinice.model.auth.Profiles;
 import sernet.verinice.model.auth.Userprofile;
 
 /**
- *
+ * @see IRightsServerHandler
+ * 
+ * This Class is {@ApplicationContextAware} so that it can access the bean context to get 
+ * the 'rightsService' and add it self as change listeners to be notified when some user rights
+ * are changed. This is done in the init method which is called by spring after the context is created 
+ * and fully populated.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class RightsServerHandler implements IRightsServerHandler, IRightsChangeListener {
+public class RightsServerHandler implements IRightsServerHandler, IRightsChangeListener,  ApplicationContextAware {
 
     private static final Logger LOG = Logger.getLogger(RightsServerHandler.class);
     
@@ -50,17 +58,13 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
     private Map<String, List<Userprofile>> userprofileMap;
     
     private Map<String, Profile> profileMap;
-    
+
     private IRightsService rightsService;
+
+    private ApplicationContext appContext;
     
     public RightsServerHandler() {
         super();
-        XmlRightsService.addChangeListener(this);
-    }
-
-    public RightsServerHandler(IRightsService rightsService) {
-        this();
-        this.rightsService = rightsService;
     }
 
     /* (non-Javadoc)
@@ -125,12 +129,12 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
     }
 
     private Map<String, List<Userprofile>> loadUserprofileMap() {
-        List<String> usernameList = getRightsService().getUsernames();
+        List<String> usernameList = rightsService.getUsernames();
         if(usernameList!=null) {
             userprofileMap = new HashMap<String, List<Userprofile>>(usernameList.size());
             for (String name : usernameList) {
                 if(name!=null) {
-                    userprofileMap.put(name, getRightsService().getUserprofile(name));
+                    userprofileMap.put(name, rightsService.getUserprofile(name));
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("User-profiles loaded for login-name: " + name);
                     }
@@ -150,7 +154,7 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
     }
     
     private Profiles loadProfileMap() {
-        Profiles profiles = getRightsService().getProfiles();   
+        Profiles profiles = rightsService.getProfiles();
         profileMap = new HashMap<String, Profile>();
         for (Profile profile : profiles.getProfile()) {
             profileMap.put(profile.getName(), profile);
@@ -159,20 +163,13 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
     }
     
     public boolean isBlacklist() {
-        return ConfigurationType.BLACKLIST.equals(getRightsService().getConfiguration().getType());
+        return ConfigurationType.BLACKLIST.equals(rightsService.getConfiguration().getType());
     }
     
     public boolean isWhitelist() {
-        return ConfigurationType.WHITELIST.equals(getRightsService().getConfiguration().getType());
+        return ConfigurationType.WHITELIST.equals(rightsService.getConfiguration().getType());
     }
 
-    public IRightsService getRightsService() {
-        return rightsService;
-    }
-
-    public void setRightsService(IRightsService rightsService) {
-        this.rightsService = rightsService;
-    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsChangeListener#configurationChanged(sernet.verinice.model.auth.Auth)
@@ -198,8 +195,29 @@ public class RightsServerHandler implements IRightsServerHandler, IRightsChangeL
      */
     @Override
     protected void finalize() throws Throwable {
-        XmlRightsService.removeChangeListener(this);
+        rightsService.removeChangeListener(this);
         super.finalize();
     }
+    
+    /**
+     * The init method is called by the spring framework after the application context is completely bootstraped.
+     */
+    public void init(){
+        registerIRightsService();
+    }
+    
+    /**
+     * Initialize the rightservice and register as change listener.
+     */
+    private void registerIRightsService() {
+        if (rightsService == null) {
+            rightsService = (IRightsService) appContext.getBean("rightsService");
+            rightsService.addChangeListener(this);
+        }
+    }
 
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        appContext = applicationContext;
+    }
 }

@@ -111,3 +111,17 @@
 # 3:00 PM, 6:00 PM, 9:00 PM: "0 0 15,18,21 * * ?"
 # 15 minutes past each hour but only during the 9-to-5 "business hours" on weekdays: "* 15 9-17 * * MON-FRI"
 # veriniceserver.gsmGenerator.cron=0 5 3 * * ?
+
+# ISO/IEC 27005 risk analysis
+# Method for risk calculation (case sensitive): ADDITION or MULTIPLICATION
+# Risk calculation method MULTIPLICATION is in beta stage
+# Default: ADDITION
+# veriniceserver.risk.calculation.method=ADDITION
+
+# A limit on how many elements can be loaded at once
+# Set -1 to disable the limit
+# veriniceserver.object.limit=10000
+
+# location to store the vnl-files representing the licenses 
+# needed to access license-restricted content                                  
+veriniceserver.vnl.repository=/WEB-INF/vnl

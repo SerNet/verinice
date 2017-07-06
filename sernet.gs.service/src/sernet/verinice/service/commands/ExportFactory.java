@@ -36,6 +36,8 @@ import javax.xml.bind.Marshaller;
 
 import org.apache.log4j.Logger;
 
+import de.sernet.sync.data.SyncAttribute;
+import de.sernet.sync.data.SyncLink;
 import sernet.gs.service.VeriniceCharset;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -45,8 +47,6 @@ import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.sync.VeriniceArchive;
-import de.sernet.sync.data.SyncAttribute;
-import de.sernet.sync.data.SyncLink;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -121,7 +121,7 @@ public final class ExportFactory {
                     exportReferenceTypes.mapEntityDatabaseId2ExtId(syncAttribute, propertyList);
 
                 } else {
-                    entity.exportProperties(propertyTypeId, syncAttribute.getValue());
+                    entity.exportProperties(propertyTypeId, syncAttribute.getValue(), syncAttribute.getLimitedLicense(), syncAttribute.getLicenseContentId());
                 }
 
                 if (!syncAttribute.getValue().isEmpty()) {

@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/poseidon/template.xhtml">
+
+	<ui:define name="title">ITGS Controls :: verinice</ui:define>
+	<ui:define name="viewname">ITGS Controls :: verinice</ui:define>
+
+	<ui:define name="content">
+		<div class="ui-g ui-fluid">
+			<div class="ui-g-12">
+				<p:panel header="Filter" toggleable="true">
+					<h:form id="verbundForm" rendered="#{auth.bsiTasks}">
+						<div class="ui-g">
+							<div class="ui-g-4 ui-lg-4 ui-xl-4 ui-md-12 ui-sm-12">
+								<p:selectOneMenu id="itnetwork"
+									value="#{assetNavigation.itVerbundItem}"
+									label="#{msg['todo.groups']}">
+									<p:ajax event="change"
+										update="verbundForm,:elementsForm,:tablePanel,:editPanel"
+										listener="#{toDo.loadToDosForItNetworkItem}" process="@this" />
+									<f:selectItem itemLabel="#{msg['todo.group']}" itemValue="" />
+									<f:selectItems value="#{assetNavigation.itVerbundItems}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-4 ui-lg-4 ui-xl-4 ui-md-12 ui-sm-12">
+								<p:selectCheckboxMenu id="realizationFilter"
+									value="#{toDo.grundSchutzExecutionFilter}"
+									label="#{msg['todo.realization']}"
+									converter="itbpExecutionConverter">
+									<f:selectItem itemLabel="#{msg['todo.no']}"
+										itemValue="#{toDo.grundSchutzExecutionNo}" />
+									<f:selectItem itemLabel="#{msg['todo.yes']}"
+										itemValue="#{toDo.grundSchutzExecutionYes}" />
+									<f:selectItem itemLabel="#{msg['todo.partly']}"
+										itemValue="#{toDo.grundSchutzExecutionPartly}" />
+									<f:selectItem itemLabel="#{msg['todo.superfluous']}"
+										itemValue="#{toDo.grundSchutzExecutionDispensable}" />
+									<f:selectItem itemLabel="#{msg['todo.untreated']}"
+										itemValue="#{toDo.grundSchutzExecutionUntreated}" />
+									<p:ajax event="change" listener="#{toDo.loadToDoList}"
+										update=":tablePanel,:editPanel" process="@this" />
+									<p:ajax event="toggleSelect" listener="#{toDo.loadToDoList}"
+										update=":tablePanel,:editPanel" process="@this" />
+								</p:selectCheckboxMenu>
+							</div>
+							<div class="ui-g-4 ui-lg-4 ui-xl-4 ui-md-12 ui-sm-12">
+								<p:selectCheckboxMenu id="sealFilter" value="#{toDo.sealFilter}"
+									converter="sealConverter" label="#{msg['todo.seal']}">
+									<f:selectItem itemLabel="A" itemValue="#{toDo.sealA}" />
+									<f:selectItem itemLabel="B" itemValue="#{toDo.sealB}" />
+									<f:selectItem itemLabel="C" itemValue="#{toDo.sealC}" />
+									<f:selectItem itemLabel="Z" itemValue="#{toDo.sealZ}" />
+									<p:ajax event="toggleSelect" listener="#{toDo.loadToDoList}"
+										update=":tablePanel,:editPanel" process="@this" />
+									<p:ajax event="change" listener="#{toDo.loadToDoList}"
+										update=":tablePanel,:editPanel" process="@this" />
+								</p:selectCheckboxMenu>
+							</div>
+						</div>
+					</h:form>
+				</p:panel>
+			</div>
+			<div class="ui-g-3 ui-lg-3 ui-xl-3 ui-md-12 ui-sm-12">
+				<p:panel header="#{msg['todo.assets']}" rendered="#{auth.bsiTasks}">
+					<h:form id="elementsForm" rendered="#{auth.bsiTasks}">
+
+						<p:outputPanel rendered="#{assetNavigation.selectedItVerbundTitel == null}">
+							<p>#{msg['todo.choose-it-network']}</p>
+						</p:outputPanel>
+
+						<p:accordionPanel id="elementPanel"
+							rendered="#{assetNavigation.selectedItVerbundTitel != null}"
+							style="background-color: #ffffff;">
+							<p:tab title="#{msg['todo.buildings']}"
+								rendered="#{not empty assetNavigation.gebaeudeList}">
+
+								 <p:selectOneListbox id="buildingBox" value="#{toDo.selectedChapterId}" style="border:0px none;">
+                                    <f:selectItems itemLabel="#{item.title}" itemValue="#{item.dbId}" var="item" value="#{assetNavigation.gebaeudeList}" />
+                                    <p:ajax update=":tablePanel,:editPanel" listener="#{toDo.loadToDoListForElement}" />
+                                </p:selectOneListbox>
+							</p:tab>
+							<p:tab title="#{msg['todo.rooms']}"
+								rendered="#{not empty assetNavigation.raumList}">
+
+								 <p:selectOneListbox id="raumListBox" value="#{toDo.selectedChapterId}" style="border:0px none;">
+                                    <f:selectItems itemLabel="#{item.title}" itemValue="#{item.dbId}" var="item" value="#{assetNavigation.raumList}" />
+                                    <p:ajax update=":tablePanel,:editPanel" listener="#{toDo.loadToDoListForElement}" />
+                                </p:selectOneListbox>
+
+							</p:tab>
+							<p:tab title="#{msg['todo.clients']}"
+								rendered="#{not empty assetNavigation.clienteList}">
+								 <p:selectOneListbox id="clientListBox" value="#{toDo.selectedChapterId}" style="border:0px none;">
+                                    <f:selectItems itemLabel="#{item.title}" itemValue="#{item.dbId}" var="item" value="#{assetNavigation.clienteList}" />
+                                    <p:ajax update=":tablePanel,:editPanel" listener="#{toDo.loadToDoListForElement}" />
+                                </p:selectOneListbox>
+							</p:tab>
+							<p:tab title="#{msg['todo.server']}"
+								rendered="#{not empty assetNavigation.serverList}">
+								 <p:selectOneListbox id="serverListBox" value="#{toDo.selectedChapterId}" style="border:0px none;">
+                                    <f:selectItems itemLabel="#{item.title}" itemValue="#{item.dbId}" var="item" value="#{assetNavigation.serverList}" />
+                                    <p:ajax update=":tablePanel,:editPanel" listener="#{toDo.loadToDoListForElement}" />
+                                </p:selectOneListbox>
+							</p:tab>
+							<p:tab title="#{msg['todo.applications']}"
+								rendered="#{not empty assetNavigation.anwendungList}">
+								<p:selectOneListbox id="anwendungListBox" value="#{toDo.selectedChapterId}" style="border:0px none;">
+                                    <f:selectItems itemLabel="#{item.title}" itemValue="#{item.dbId}" var="item" value="#{assetNavigation.anwendungList}" />
+                                    <p:ajax update=":tablePanel,:editPanel" listener="#{toDo.loadToDoListForElement}" />
+                                </p:selectOneListbox>
+							</p:tab>
+							<p:tab title="#{msg['todo.employees']}"
+								rendered="#{not empty assetNavigation.personList}">
+								<p:selectOneListbox id="personListBox" value="#{toDo.selectedChapterId}" style="border:0px none;">
+                                    <f:selectItems itemLabel="#{item.title}" itemValue="#{item.dbId}" var="item" value="#{assetNavigation.personList}" />
+                                    <p:ajax update=":tablePanel,:editPanel" listener="#{toDo.loadToDoListForElement}" />
+                                </p:selectOneListbox>
+							</p:tab>
+							<p:tab title="#{msg['todo.networks']}"
+								rendered="#{not empty assetNavigation.netzList}">
+								<p:selectOneListbox id="netzListBox" value="#{toDo.selectedChapterId}" style="border:0px none;">
+                                    <f:selectItems itemLabel="#{item.title}" itemValue="#{item.dbId}" var="item" value="#{assetNavigation.netzList}" />
+                                    <p:ajax update=":tablePanel,:editPanel" listener="#{toDo.loadToDoListForElement}" />
+                                </p:selectOneListbox>
+							</p:tab>
+							<p:tab title="#{msg['todo.netzkomponente']}"
+								rendered="#{not empty assetNavigation.sonstItList}">
+								<p:selectOneListbox id="netzkomponenteBox" value="#{toDo.selectedChapterId}" style="border:0px none;">
+                                    <f:selectItems itemLabel="#{item.title}" itemValue="#{item.dbId}" var="item" value="#{assetNavigation.sonstItList}" />
+                                    <p:ajax update=":tablePanel,:editPanel" listener="#{toDo.loadToDoListForElement}" />
+                                </p:selectOneListbox>
+							</p:tab>
+							<p:tab title="#{msg['todo.tkkomponente']}"
+								rendered="#{not empty assetNavigation.tkKomponenteList}">
+								<p:selectOneListbox id="tkkomponenteBox" value="#{toDo.selectedChapterId}" style="border:0px none;">
+                                    <f:selectItems itemLabel="#{item.title}" itemValue="#{item.dbId}" var="item" value="#{assetNavigation.tkKomponenteList}" />
+                                    <p:ajax update=":tablePanel,:editPanel" listener="#{toDo.loadToDoListForElement}" />
+                                </p:selectOneListbox>
+							</p:tab>
+						</p:accordionPanel>
+					</h:form>
+				</p:panel>
+			</div>
+			<div class="ui-g-9 ui-lg-9 ui-xl-9 ui-md-12 ui-sm-12">
+				<p:outputPanel id="editPanel">
+					<p:panel rendered="#{toDo.massnahmeUmsetzung!=null}"
+						header="#{msg['todo.measure']} #{toDo.massnahmeUmsetzung.title}"
+						toggleable="true" closable="true">
+						<h:form id="editForm"
+							rendered="#{toDo.massnahmeUmsetzung!=null and auth.bsiTasks}">
+
+							<p:growl id="msg" showDetail="false" />
+							<div class="ui-fluid ui-g">
+								<div class="ui-g-12">
+									<p:panelGrid columns="1"
+										styleClass="form-group ui-panelgrid-blank" layout="grid"
+										style="border:0px none;">
+										<p:outputLabel for="audit" value="#{msg['todo.realization']}" />
+										<p:selectOneMenu id="audit" value="#{toDo.umsetzung}">
+											<f:selectItems value="#{toDo.executionList}" var="option"
+												itemLabel="#{option.key}" itemValue="#{option.value}" />
+										</p:selectOneMenu>
+										<p:outputLabel for="erlaeuterung"
+											value="#{msg['todo.comment']}" />
+										<p:inputTextarea id="erlaeuterung"
+											value="#{toDo.massnahmeUmsetzung.erlaeuterung}" />
+
+										<p:outputLabel for="umsetzungBis" value="#{msg['todo.until']}" />
+
+										<p:calendar id="umsetzungBis"
+											value="#{toDo.massnahmeUmsetzung.umsetzungBis}"
+											showButtonPanel="true" showWeek="true" mode="popup"
+											showOn="button" />
+
+										<p:commandButton id="submit" value="#{msg['todo.save']}"
+											action="#{toDo.save}" update=":editPanel :tablePanel msg" />
+									</p:panelGrid>
+									<div class="ui-g-12 ui-fluid">
+
+										<div class="ui-g-1">
+											<h:outputText value="#{msg['todo.description']}" />
+										</div>
+										<div class="ui-g-1">
+											<p:inputSwitch value="msg['todo.show']">
+												<p:ajax listener="#{toDo.toggleDescription}"
+													update="msg :editForm:descriptionPanel" />
+											</p:inputSwitch>
+										</div>
+
+										<div class="ui-g-10">
+											<p:outputPanel id="descriptionPanel">
+												<p:panel
+													rendered="#{toDo.massnahmeUmsetzung!=null and toDo.showDescription}">
+													<h:outputText value="#{toDo.massnahmeHtml}" escape="false"
+														rendered="#{toDo.massnahmeUmsetzung!=null and toDo.showDescription}" />
+												</p:panel>
+											</p:outputPanel>
+										</div>
+									</div>
+
+								</div>
+							</div>
+						</h:form>
+					</p:panel>
+				</p:outputPanel>
+
+				<p:panel header="#{assetNavigation.selectedItVerbundTitel}"
+					id="tablePanel"
+					>
+					<h:form id="tableForm" rendered="#{auth.bsiTasks}">
+						<p:dataTable id="toDoTable" var="item" value="#{toDo.todoList}"
+							rowKey="#{item.dbId}" selection="#{toDo.selectedItem}"
+							selectionMode="single" scrollable="true" scrollHeight="500"
+							resizableColumns="true" >
+							<p:ajax event="rowSelect" listener="#{toDo.loadToDo}"
+								update="editPanel" />
+							<p:column width="16" sortBy="#{item.umsetzung}">
+								<h:graphicImage width="16" id="colUmsetzungImage"
+									url="#{item.umsetzungIcon}" />
+							</p:column>
+							<p:column headerText="#{msg['todo.until']}"
+								sortBy="#{item.umsetzungBis}" style="width:55px">
+								<h:outputText id="colUmsetzungBisText"
+									value="#{item.umsetzungBis}">
+									<f:convertDateTime dateStyle="short" type="date"
+										timeZone="#{toDo.timeZone}" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="#{msg['todo.responsible']}"
+								sortBy="#{item.umsetzungDurch}" style="width:105px">
+								<h:outputText value="#{item.umsetzungDurch}" />
+							</p:column>
+							<p:column headerText="#{msg['todo.level']}"
+								sortBy="#{item.stufe}" style="width:55px">
+								<h:outputText value="#{item.stufe}" />
+							</p:column>
+							<p:column headerText="#{msg['todo.asset']}"
+								sortBy="#{item.parentTitle}" style="width:120px">
+								<h:outputText value="#{item.parentTitle}" />
+							</p:column>
+							<p:column headerText="#{msg['todo.title']}"
+								sortBy="#{item.title}" style="width:260px">
+								<h:outputText value="#{item.title}" />
+							</p:column>
+						</p:dataTable>
+					</h:form>
+				</p:panel>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
+</html>

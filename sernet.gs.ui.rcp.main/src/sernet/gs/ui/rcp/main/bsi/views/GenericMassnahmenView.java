@@ -1058,7 +1058,11 @@ public abstract class GenericMassnahmenView extends RightsEnabledView implements
 
 		protected int sortByDate(Date date1, Date date2) {
 	        if (date1 == null){
-	            return 1;
+	            if(date2 == null) {
+	                return 0;
+	            } else {
+	                return 1;
+	            }              
 	        }
 	        if (date2 == null){
 	            return -1;

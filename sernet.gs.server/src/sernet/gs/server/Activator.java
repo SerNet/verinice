@@ -86,7 +86,8 @@ public class Activator extends Plugin {
 		return plugin;
 	}
 
-	WebContainer getWebContainer() {
+    @SuppressWarnings("unchecked")
+    WebContainer getWebContainer() {
 		if (webContainer != null){
 			return webContainer;
 		}
@@ -97,8 +98,7 @@ public class Activator extends Plugin {
 			}
 			BundleContext context = getBundle().getBundleContext();
 			
-			ServiceReference sr = context.getServiceReference(WebContainer.class
-					.getName());
+			ServiceReference<WebContainer> sr = (ServiceReference<WebContainer>) context.getServiceReference(WebContainer.class.getName());
 
 			// Starts the Pax Web Bundle. This makes the HTTP service available.
 			if (sr == null) {
@@ -120,7 +120,7 @@ public class Activator extends Plugin {
 						throw new IllegalStateException(
 								"pax-web bundle is not in a proper state to get started.");
 					}
-					sr = context.getServiceReference(WebContainer.class.getName());
+					sr = (ServiceReference<WebContainer>) context.getServiceReference(WebContainer.class.getName());
 					if (sr == null){
 						throw new IllegalStateException(
 								"pax-web bundle was started but there is still no http service available. Giving up.");
@@ -128,10 +128,8 @@ public class Activator extends Plugin {
 				}
 			}
 
-			if (sr == null){
-				throw new IllegalStateException("No http service. Giving up.");
-			}
-			webContainer = (WebContainer) context.getService(sr);
+
+			webContainer = context.getService(sr);
 		}
 		return webContainer;
 	}

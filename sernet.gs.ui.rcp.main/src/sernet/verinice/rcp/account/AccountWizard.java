@@ -19,12 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.rcp.account;
 
-import java.util.Set;
-
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 
-import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
@@ -43,6 +40,7 @@ public class AccountWizard extends Wizard {
     private NotificationPage notificationPage;
     private AuditorNotificationPage auditorNotificationPage;
     private ProfilePage profilePage;
+    private LicenseMgmtPage licenseMgmtPage;
     
     public AccountWizard(Configuration account) {
         super(); 
@@ -68,6 +66,8 @@ public class AccountWizard extends Wizard {
         addPage(limitationPage);
         groupPage = new GroupPage(account);
         addPage(groupPage);     
+        licenseMgmtPage = new LicenseMgmtPage(account);
+        addPage(licenseMgmtPage);
         notificationPage = new NotificationPage();
         addPage(notificationPage);
         auditorNotificationPage = new AuditorNotificationPage();
@@ -75,7 +75,7 @@ public class AccountWizard extends Wizard {
         profilePage = new ProfilePage();
         addPage(profilePage); 
 
-        if(this.account!=null) {
+        if (this.account != null) {
             personPage.setPerson(account.getPerson());
             personPage.setNewAccount(isNewAccount());
             authenticationPage.setLogin(account.getUser());
@@ -85,6 +85,10 @@ public class AccountWizard extends Wizard {
             limitationPage.setWeb(account.isWebUser());
             limitationPage.setDesktop(account.isRcpUser());
             limitationPage.setDeactivated(account.isDeactivatedUser());
+            licenseMgmtPage.setUser(account.getUser());
+            licenseMgmtPage.setAssignedLicenseIds(account.getAssignedLicenseIds());
+            
+            licenseMgmtPage.setSendEmail(account.getNotificationLicense());
             notificationPage.setNotification(getAccount().isNotificationEnabled());
             notificationPage.setGlobal(getAccount().isNotificationGlobal());
             notificationPage.setNewTasks(getAccount().isNotificationMeasureAssignment());
@@ -128,13 +132,17 @@ public class AccountWizard extends Wizard {
         
         getAccount().setAuditorNotificationExpirationDays(auditorNotificationPage.getDeadlineInDays());
         
+        getAccount().setNotificationLicense(licenseMgmtPage.isSendEmail());
+        
         return true;
     }
+
+
     
     @Override
     public IWizardPage getStartingPage() {
         IWizardPage startingPage = super.getStartingPage();
-        if(!isNewAccount()) {
+        if (!isNewAccount()) {
             startingPage = authenticationPage;
         }
         return startingPage;
@@ -142,8 +150,8 @@ public class AccountWizard extends Wizard {
     
     private boolean isNewAccount() {
         boolean isNew = true;
-        if(account!=null) {
-            isNew = (account.getDbId()==null);
+        if (account != null) {
+            isNew = (account.getDbId() == null);
         }
         return isNew;
     }

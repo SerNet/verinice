@@ -72,7 +72,7 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
     private RiskAnalysisWizard riskWizard;
 
     // SWT & JFace
-    protected static final Point ADD_EDIT_REMOVE_BUTTON_SIZE = new Point(90, 30);
+    protected static final Point ADD_EDIT_REMOVE_BUTTON_SIZE = new Point(110, 30);
     protected static final int BUTTONS_GRID_COLUMN_AMOUNT = 5;
     protected static final int NUM_COLS_BUTTONS = 3;
     protected static final int NUM_COLS_FILTERS = 1;

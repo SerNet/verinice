@@ -91,7 +91,7 @@
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-
+	
 	<!-- business object Dao definitions follow ================================================================== -->
 
 	<bean id="anwendungDAO" parent="secureDao">
@@ -172,6 +172,13 @@
 	</bean>
 
 	<bean id="ITVerbundDAO" parent="treeElementDao">
+		<constructor-arg>
+			<value>sernet.verinice.model.bsi.ITVerbund</value>
+		</constructor-arg>
+	</bean>
+
+
+	<bean id="secureItVerbundDAO" parent="secureDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.ITVerbund</value>
 		</constructor-arg>
@@ -618,13 +625,13 @@
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
     
-    
 	<bean id="accountGroupDao" class="sernet.verinice.hibernate.HibernateDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.common.accountgroup.AccountGroup</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+    
     
     <bean id="finishedRiskAnalysisListsDao" class="sernet.verinice.hibernate.FinishedRiskAnalysisListsDao">
         <property name="sessionFactory" ref="sessionFactory" />

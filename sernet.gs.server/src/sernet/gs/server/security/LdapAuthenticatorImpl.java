@@ -24,6 +24,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
+import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.security.Authentication;
 import org.springframework.security.BadCredentialsException;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
@@ -45,6 +46,9 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
     // injected by spring
     private DefaultSpringSecurityContextSource contextFactory;
     
+    // injected by spring
+    private LdapContextSource contextSourceLdapSearch;
+
     // injected by spring
     private String principalPrefix = "";
     
@@ -203,19 +207,10 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
     }
 
     private void authenticateByLdapSearch(String username, String password) {
-        ldapUserSearch = new FilterBasedLdapUserSearch(groupFilter, userFilter, contextFactory);
+        ldapUserSearch = new FilterBasedLdapUserSearch(groupFilter, userFilter, getContextSourceLdapSearch());
         DirContextOperations dnUser = ldapUserSearch.searchForUser(username);
-
-        // ldap is using the userPrincipalName as logon name
-        String userPrincipalName = dnUser.getStringAttribute("userPrincipalName");
-
-        // if the principal name is null try the DN which is used by open ldap
-        if(userPrincipalName != null){
-            contextFactory.getReadWriteContext(userPrincipalName, password);
-        } else {
-            String userDn = dnUser.getDn().toString();
-            contextFactory.getReadWriteContext(userDn, password);
-        }
+        String userPrincipalName = dnUser.getDn().toString();
+        contextFactory.getReadWriteContext(userPrincipalName, password);
     }
 
     private boolean isGroupFilterActive() {
@@ -377,5 +372,13 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
 
     public void setUserFilter(String userFilter) {
         this.userFilter = userFilter;
+    }
+
+    public LdapContextSource getContextSourceLdapSearch() {
+        return contextSourceLdapSearch;
+    }
+
+    public void setContextSourceLdapSearch(LdapContextSource contextSourceLdapSearch) {
+        this.contextSourceLdapSearch = contextSourceLdapSearch;
     }
 }

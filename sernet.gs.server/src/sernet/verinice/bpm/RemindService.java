@@ -86,6 +86,11 @@ public class RemindService implements IRemindService {
     @Override
     @SuppressWarnings("restriction")
     public void sendEmail(final Map<String,String> parameter, final boolean html) {
+        if(!isEnabled()){
+            LOG.info("Sending emails is disabled in the in the properties.(veriniceserver.notification.enabled in veriniceserver-plain.properties[.local])");
+            return;
+        }
+
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
             @Override
             public void prepare(MimeMessage mimeMessage) throws MessagingException {

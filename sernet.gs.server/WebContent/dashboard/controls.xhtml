@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/poseidon/template.xhtml">
+
+	<ui:define name="title">#{msgWeb['controls.title']}</ui:define>
+	<ui:define name="viewname">#{msgWeb['controls.title']}</ui:define>
+
+	<ui:define name="head">
+		<ui:include src="/WEB-INF/poseidon/chart-extender.xhtml" />
+	</ui:define>
+
+	<ui:define name="content">
+		<div class="ui-g ui-fluid">
+			<div class="ui-g-12">
+
+				<p:growl id="msg" globalOnly="true" showDetail="true"
+					autoUpdate="true" />
+
+				<h:form id="chartPanel">
+					<p:panel header="#{controlsChartView.itNetwork}">
+						<ui:fragment rendered="#{not controlsChartView.calculated}">
+							<div style="margin: 0 auto; text-align: center;">
+								<p>#{msgWeb['loading']}</p>
+								<p:graphicImage name="images/ajax-loader.gif"
+									library="poseidon-layout" />
+							</div>
+						</ui:fragment>
+						<ui:fragment id="charts" rendered="#{controlsChartView.calculated and controlsChartView.dataAvailable()}">
+							<div class="ui-g ui-fluid">
+								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+									<p:chart id="verinicePieChart" type="pie"
+										model="#{controlsChartView.pieModel}" responsive="true" />
+								</div>
+								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+									<p:chart id="verinicePieBar" type="bar"
+										model="#{controlsChartView.barModel}" responsive="true" />
+								</div>
+							</div>
+						</ui:fragment>
+
+						<ui:fragment id="no-data" rendered="#{controlsChartView.calculated and (not controlsChartView.dataAvailable())}">
+							<p class="no-data">#{msgWeb['no-data']}</p>
+						</ui:fragment>
+					</p:panel>
+				</h:form>
+
+				<h:form>
+					<p:remoteCommand binding="#{controlsChartView.remoteCommand}"
+						id="loadDataCommand" />
+				</h:form>
+			</div>
+		</div>
+
+	</ui:define>
+
+</ui:composition>

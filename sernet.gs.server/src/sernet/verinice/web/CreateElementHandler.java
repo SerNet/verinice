@@ -19,10 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.web;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -31,6 +27,10 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateElement;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 public class CreateElementHandler implements IActionHandler {
 
@@ -109,7 +109,7 @@ public class CreateElementHandler implements IActionHandler {
         if(path==null ) {
             path = Icons.FOLDER;
         }
-        return path;
+        return "/resources/verinice-layout" + path;
     }
 
     /* (non-Javadoc)

@@ -50,6 +50,7 @@
             <action id="bsimodelview" />
             <action id="bulkedit" />
             <action id="changeicon" />
+            <action id="changeownpassword" />
             <action id="cnavalidation" />
             <action id="creategreenbonetasks" />
             <action id="createindividualtasks" />
@@ -127,6 +128,7 @@
             <action id="bsimodelview" />
             <action id="bulkedit" />
             <action id="changeicon" />
+            <action id="changeownpassword" />
             <action id="cnavalidation" />
             <action id="creategreenbonetasks" />
             <action id="createindividualtasks" />
@@ -202,6 +204,7 @@
             <action id="bsimodelview" />
             <action id="bulkedit" />
             <action id="changeicon" />
+            <action id="changeownpassword" />
             <action id="cnavalidation" />
             <action id="creategreenbonetasks" />
             <action id="createindividualtasks" />
@@ -272,6 +275,7 @@
             <action id="bsimodelview" />
             <action id="bulkedit" />
             <action id="changeicon" />
+            <action id="changeownpassword" />
             <action id="cnavalidation" />
             <action id="creategreenbonetasks" />
             <action id="createindividualtasks" />

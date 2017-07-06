@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--                                                                                  -->
+<!-- Spring Framework configuration file                                              -->
+<!--                                                                                  -->
+<!-- This file contains the configuration of management of licenses for viewing       -->
+<!-- license-restricted content. It is used if the verinice server is running         --> 
+<!-- in Tomcat. See file veriniceserver-licensemanagement-osgi.xml                    -->
+<!--  for the configuration of the service                                            -->
+<!-- in the standalone version of verinice.                                           -->
+<!-- This file is referenced in web application configuration file web.xml.           -->
+<!--                                                                                  -->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <bean id="licenseManagementService" class="sernet.verinice.service.LicenseManagementServerModeService" init-method="init">
+    <property name="configurationDao" ref="configurationDao" />
+    <property name="cryptoService" ref="encryptionService" />
+    <property name="commandService" ref="hibernateCommandService" />
+    <property name="lmDirectoryCreator" ref="lmDirectoryCreator" />
+    <property name="authService" ref="authService" />
+  </bean>
+  
+  <!-- init-method creates vnl-storage directory on server-startup, if not existant yet -->
+  <bean id="lmDirectoryCreator" class="sernet.verinice.licensemanagement.LMServerDirectoryCreator" init-method="init">
+    <property name="vnlLocation" value="${veriniceserver.vnl.repository}" />
+  </bean>
+  
+  <bean id="licenseRemover" class="sernet.verinice.licensemanagement.LicenseRemover">
+  	<property name="configurationDao" ref="configurationDao"/>
+  	<property name="licenseService" ref="licenseManagementService"/>
+    <property name="mailSender" ref="mailSender" />
+    <property name="velocityEngine" ref="velocityEngine"/>
+    <property name="emailFrom" value="${veriniceserver.notification.email.from}"/>
+    <property name="replyTo" value="${veriniceserver.notification.email.from}"/>
+    <property name="emailCc" value="${veriniceserver.notification.email.cc}"/>
+    <property name="emailBcc" value="${veriniceserver.notification.email.bcc}"/>   	
+  </bean>
+  
+    <bean id="licenseRemoverJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+    <property name="jobClass" value="sernet.verinice.licensemanagement.RemoveInvalidLicensesJob" />
+    <property name="jobDataAsMap">
+      <map>
+        <entry key="remover" value-ref="licenseRemover" />
+      </map>
+    </property>
+  </bean>
+  
+  <bean id="simpleRemoverTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+  	<property name="jobDetail" ref="licenseRemoverJob"/>
+    <property name="repeatInterval" value="86400000"/> <!-- in milliseconds -->
+    <property name="startDelay" value="1000"/> <!-- in milliseconds -->
+ </bean> 
+
+</beans>

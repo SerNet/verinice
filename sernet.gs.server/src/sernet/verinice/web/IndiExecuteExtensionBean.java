@@ -38,7 +38,7 @@ import sernet.verinice.interfaces.bpm.ITaskService;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@ManagedBean(name=IndiExecuteExtensionBean.NAME)
+@ManagedBean(name ="indiExecuteExtensionBean")
 @SessionScoped
 public class IndiExecuteExtensionBean implements ICompleteWebHandler {
 
@@ -61,7 +61,7 @@ public class IndiExecuteExtensionBean implements ICompleteWebHandler {
        this.task = selectedTask;
        this.outcomeId = outcomeId;
        RequestContext context = RequestContext.getCurrentInstance(); 
-       context.execute("indiExecuteExtensionBean.show();");  
+       context.execute("PF('indiExecuteExtensionBean').show();");
     }
     
     public void complete() {
@@ -71,7 +71,7 @@ public class IndiExecuteExtensionBean implements ICompleteWebHandler {
         if(this.task !=null) {        
             getTaskService().completeTask(task.getId(),outcomeId,getParameter());
             RequestContext context = RequestContext.getCurrentInstance(); 
-            context.execute("indiExecuteExtensionBean.hide();");
+            context.execute("PF('indiExecuteExtensionBean').hide();");
             Util.addInfo("complete", Util.getMessage(TaskBean.BOUNDLE_NAME, "taskCompleted"));   //$NON-NLS-1$ //$NON-NLS-2$        
          }
     }

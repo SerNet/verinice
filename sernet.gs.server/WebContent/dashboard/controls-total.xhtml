@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/poseidon/template.xhtml">
+
+	<ui:define name="head">
+		<ui:include src="/WEB-INF/poseidon/chart-extender.xhtml" />
+	</ui:define>
+
+	<ui:define name="title">#{msgWeb['controls-total.title']}</ui:define>
+	<ui:define name="viewname">#{msgWeb['controls-total.title']}</ui:define>
+
+	<ui:define name="content">
+		<div class="ui-g ui-fluid">
+			<div class="ui-g-12">
+				<h:form id="chartPanel">
+					<p:panel header="#{msgWeb['controls-total.header']}">
+
+						<ui:fragment rendered="#{not controlsChartTotalView.calculated}">
+							<div style="margin: 0 auto; text-align: center;">
+								<p>#{msgWeb['loading']}</p>
+								<p:graphicImage name="images/ajax-loader.gif"
+									library="poseidon-layout" />
+							</div>
+						</ui:fragment>
+
+						<ui:fragment id="charts"
+							rendered="#{controlsChartTotalView.calculated and controlsChartTotalView.dataAvailable()}">
+							<div class="ui-g ui-fluid">
+								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+									<p:chart id="verinicePieChart" type="pie"
+										model="#{controlsChartTotalView.pieModel}" responsive="true" />
+								</div>
+								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+									<p:chart id="verinicePieBar" type="bar"
+										model="#{controlsChartTotalView.barModel}" responsive="true" />
+								</div>
+							</div>
+						</ui:fragment>
+
+						<ui:fragment id="no-data" rendered="#{controlsChartTotalView.calculated and (not controlsChartTotalView.dataAvailable())}">
+							<p class="no-data">#{msgWeb['no-data']}</p>
+						</ui:fragment>
+					</p:panel>
+				</h:form>
+
+				<p:messages id="msg" globalOnly="true" autoUpdate="true" />
+
+				<h:form>
+					<p:remoteCommand id="loadDataCommand"
+						action="#{controlsChartTotalView.init()}" update=":chartPanel"
+						autoRun="true" delay="2" />
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+
+</ui:composition>

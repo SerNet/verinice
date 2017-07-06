@@ -1,0 +1,109 @@
+<ui:composition
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
+
+    <a id="right-sidebar-button-open" href="#">
+        <i class="fa fa-angle-left"></i>
+    </a>
+
+    <div id="right-sidebar" class="right-sidebar">
+        <div class="nano">
+            <div class="right-sidebar-header ui-widget-header">
+                <i class="fa fa-star"></i>
+                <span>Favorites</span>
+                <a id="right-sidebar-button-close" href="#">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+
+            <div class="nano-content sidebar-scroll-content">
+                <p:accordionPanel activeIndex="0" multiple="true">
+                    <p:tab title="Contacts">
+                        <ul class="contact-list">
+                            <li>
+                                <a href="#">
+                                    <p:graphicImage name="images/avatar1.png" library="poseidon-layout" width="45"/>
+                                    <span class="name">Joshua Williams</span>
+                                    <span class="email">joshua@pf-poseidon.com</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <p:graphicImage name="images/avatar2.png" library="poseidon-layout" width="45"/>
+                                    <span class="name">Emily Clark</span>
+                                    <span class="email">emily@pf-poseidon.com</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <p:graphicImage name="images/avatar3.png" library="poseidon-layout" width="45"/>
+                                    <span class="name">Susan Johnson</span>
+                                    <span class="email">susan@pf-poseidon.com</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <p:graphicImage name="images/avatar4.png" library="poseidon-layout" width="45"/>
+                                    <span class="name">Kelly Stark</span>
+                                    <span class="email">kelly@pf-poseidon.com</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </p:tab>
+                    <p:tab title="Notes">
+                        <ul class="note-list">
+                            <li>
+                                <p:selectBooleanCheckbox />
+                                <span class="task-name">Sales Reports</span>
+                                <i class="fa fa-briefcase"></i>
+                            </li>
+                            <li>
+                                <p:selectBooleanCheckbox />
+                                <span class="task-name">Pay Invoices</span>
+                                <i class="fa fa-credit-card"></i>
+                            </li>
+                            <li>
+                                <p:selectBooleanCheckbox />
+                                <span class="task-name">Dinner with Tony</span>
+                                <i class="fa fa-cutlery"></i>
+                            </li>
+                            <li>
+                                <p:selectBooleanCheckbox />
+                                <span class="task-name">Client Meeting</span>
+                                <i class="fa fa-user"></i>
+                            </li>
+                            <li>
+                                <p:selectBooleanCheckbox />
+                                <span class="task-name">New Theme</span>
+                                <i class="fa fa-paint-brush"></i>
+                            </li>
+                            <li>
+                                <p:selectBooleanCheckbox />
+                                <span class="task-name">Flight Ticket</span>
+                                <i class="fa fa-fighter-jet"></i>
+                            </li>
+                        </ul>
+                    </p:tab>
+                    <p:tab title="Contact Form">
+                        <div class="ui-g ui-fluid contact-form">
+                            <div class="ui-g-12">
+                                <p:inputText placeholder="Name"/>
+                            </div>
+                            <div class="ui-g-12">
+                                <p:inputText placeholder="Message"/>
+                            </div>
+                            <div class="ui-g-12">
+                                <p:commandButton type="button" value="Send" icon="fa fa-paper-plane-o"></p:commandButton>
+                            </div>
+                        </div>
+
+                    </p:tab>
+                </p:accordionPanel>
+            </div>
+        </div>
+    </div>
+
+</ui:composition>

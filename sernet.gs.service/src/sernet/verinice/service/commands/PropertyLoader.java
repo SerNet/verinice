@@ -42,5 +42,6 @@ public class PropertyLoader {
 
     public void setFileSizeMax(String fileSizeMax) {
         PropertyLoader.fileSizeMax = fileSizeMax;
-    } 
+    }
+
 }

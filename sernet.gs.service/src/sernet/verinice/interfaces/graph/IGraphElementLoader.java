@@ -67,7 +67,7 @@ public interface IGraphElementLoader extends Serializable {
      */
     void setElementFilter(IElementFilter elementFilter);
     
-    void setCnaTreeElementDao(IBaseDao<CnATreeElement, Long> cnaTreeElementDao); 
+    void setCnaTreeElementDao(IBaseDao<CnATreeElement, ? extends Serializable> cnaTreeElementDao);
     
     /**
      * Loads and returns the elements specified by parameters

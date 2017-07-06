@@ -35,6 +35,7 @@ import sernet.gs.ui.rcp.main.bsi.views.FileView;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.common.CnATreeElement;
@@ -66,7 +67,7 @@ public class AddFileActionDelegate implements IObjectActionDelegate, RightEnable
                 CnATreeElement element = (CnATreeElement) sel;
                 FileDialog fd = new FileDialog(targetPart.getSite().getShell());
                 fd.setText(Messages.AddFileActionDelegate_0);
-                fd.setFilterPath(System.getProperty("user.home")); //$NON-NLS-1$
+                fd.setFilterPath(System.getProperty(IVeriniceConstants.USER_HOME)); //$NON-NLS-1$
                 String selected = fd.open();
                 if (selected != null && selected.length() > 0) {
                     File file = new File(selected);

@@ -39,7 +39,12 @@
 					class="Entity"
 					fetch="select"
 					 />
-				-->	 	 
+				-->	
+				<property name="licenseContentId" />
+        
+        		<property name="limitedLicense" type="boolean" >
+        			<column name="limitedlicense" not-null="false" default="false" />
+        		</property>
 			</composite-element>				
 		</list>
 	</class>

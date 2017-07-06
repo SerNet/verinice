@@ -8,6 +8,7 @@ import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.log4j.Logger;
 import org.springframework.remoting.httpinvoker.CommonsHttpInvokerRequestExecutor;
 
+import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.service.auth.KerberosStatusService;
 
 public abstract class AbstractExecuter extends CommonsHttpInvokerRequestExecutor {
@@ -65,10 +66,12 @@ public abstract class AbstractExecuter extends CommonsHttpInvokerRequestExecutor
     abstract void init();
 
     protected void configureProxy() {
-        String proxyHost = System.getProperty("http.proxyHost");
+        String proxyHost = System.getProperty(
+                IVeriniceConstants.HTTP_PROXY_HOST);
         Integer proxyPort = null;
-        if (System.getProperty("http.proxyPort") != null) {
-            proxyPort = Integer.parseInt(System.getProperty("http.proxyPort"));
+        if (System.getProperty(IVeriniceConstants.HTTP_PROXY_PORT) != null) {
+            proxyPort = Integer.parseInt(System.getProperty(
+                    IVeriniceConstants.HTTP_PROXY_PORT));
         }
 
         if (proxyHost != null && proxyPort != null && !proxyHost.isEmpty()) {
@@ -76,8 +79,10 @@ public abstract class AbstractExecuter extends CommonsHttpInvokerRequestExecutor
             if (LOG.isInfoEnabled()) {
                 LOG.info("Using proxy host: " + proxyHost + ", port: " + proxyPort);
             }
-            String proxyName = System.getProperty("http.proxyName");
-            String proxyPassword = System.getProperty("http.proxyPassword");
+            String proxyName = System.getProperty(
+                    IVeriniceConstants.HTTP_PROXY_NAME);
+            String proxyPassword = System.getProperty(
+                    IVeriniceConstants.HTTP_PROXY_PASSWORD);
 
             if (proxyName != null && proxyPassword != null) {
                 getHttpClient().getState().setProxyCredentials(AuthScope.ANY, new UsernamePasswordCredentials(proxyName, proxyPassword));

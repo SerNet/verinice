@@ -24,27 +24,23 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import junit.framework.Assert;
 import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.HitroUtil;
-import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.ExportCommand;
 import sernet.verinice.service.commands.RemoveElement;
-import sernet.verinice.service.commands.SaveElement;
-import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
@@ -138,7 +134,9 @@ public class ExportAndImportReferencesTest extends BeforeEachVNAImportHelper {
         List<CnATreeElement> toExport = new ArrayList<>();
         toExport.add(itVerbund1);
         ExportCommand exportCommand = new ExportCommand(toExport, SOURCE_ID, true);
-        String filePath = FilenameUtils.concat(System.getProperty("java.io.tmpdir"), "export-test.vna");
+        String filePath = FilenameUtils.concat(
+                System.getProperty(IVeriniceConstants.JAVA_IO_TMPDIR),
+                "export-test.vna");
         exportCommand.setFilePath(filePath);
 
         LOG.info(EXPORT_REFERENCES_PREFIX + " export vna file " + filePath);

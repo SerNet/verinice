@@ -6859,14 +6859,14 @@ columns(cols);</value>
             <xml-property name="queryText"><![CDATA[// DEPRECATED, VERY MEMORY INTENSIVE, USE scope_countrisks_aggregated_net_command INSTEAD OF THIS ONE (from verinice 1.6.3 on)
 import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-import sernet.verinice.iso27k.service.IRiskAnalysisService;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import java.util.*;
 import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
-import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
+import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
@@ -6882,7 +6882,7 @@ toleratedC = Integer.parseInt(_inpv.get("toleratedC"));
 toleratedI = Integer.parseInt(_inpv.get("toleratedI"));
 toleratedA = Integer.parseInt(_inpv.get("toleratedA"));
 
-riskType = IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS;
+riskType = RiskAnalysisHelper.RISK_WITH_IMPLEMENTED_CONTROLS;
 
 results = new ArrayList(0);
 
@@ -6908,8 +6908,7 @@ for (CnATreeElement process : processes) {
 		for (CnATreeElement asset : assets) {
 			// risk matrices
 			  valueAdapter = new AssetValueAdapter(asset);
-        		  raService = new RiskAnalysisServiceImpl();
-
+        		  raService = new RiskAnalysisHelperImpl();
 			// reload asset
 			assetReloader = new LoadElementByUuid(asset.getUuid(), new RetrieveInfo().setLinksDown(true).setLinksUp(true).setLinksDownProperties(true).setLinksUpProperties(true));
 			asset = helper.execute(assetReloader).getElement();
@@ -6930,7 +6929,7 @@ for (CnATreeElement process : processes) {
 			isRedRisk = false;
 			isYellowRisk = false;
 			for (CnATreeElement scenario : scenarios) {
-				probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+				probability = scenario.getNumericProperty(RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
 				isCRelevant = scenario.getEntity().getProperties("scenario_value_method_confidentiality").getProperty(0).getPropertyValue().equals("1");
        				isIRelevant = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue().equals("1");
        				isARelevant = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue().equals("1");
@@ -7188,9 +7187,9 @@ import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
-import sernet.verinice.iso27k.service.IRiskAnalysisService;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
-import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
+import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.gs.ui.rcp.main.service.crudcommands.RiskMatrix;
 import java.util.*;
 
@@ -7203,7 +7202,7 @@ if (myroot != null &amp;&amp; myroot != -1) {
 }
 
 results = new ArrayList(0);
-riskType = IRiskAnalysisService.RISK_PRE_CONTROLS;
+riskType = RiskAnalysisHelper.RISK_PRE_CONTROLS;
 
 //load root element (org)
 orgLoader = new LoadPolymorphicCnAElementById(new Integer[]{root});
@@ -7229,7 +7228,7 @@ for (CnATreeElement process : processes) {
 			amountYellowScens = 0;
 			// risk matrices
 			  valueAdapter = new AssetValueAdapter(asset);
-        		  raService = new RiskAnalysisServiceImpl();
+        		  raService = new RiskAnalysisHelperImpl();
 			
 			// load all scenarios for each asset
 			scenarioLoader = new LoadReportLinkedElements(IncidentScenario.TYPE_ID, asset.getDbId());
@@ -7237,7 +7236,7 @@ for (CnATreeElement process : processes) {
 			isRedRisk = false;
 			isYellowRisk = false;
 			for (CnATreeElement scenario : scenarios) {
-				probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY);
+				probability = scenario.getNumericProperty(RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY);
 				isCRelevant = scenario.getEntity().getProperties("scenario_value_method_confidentiality").getProperty(0).getPropertyValue().equals("1");
        				isIRelevant = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue().equals("1");
        				isARelevant = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue().equals("1");
@@ -8461,7 +8460,7 @@ columns(cols);</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-import sernet.verinice.iso27k.service.IRiskAnalysisService;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -8471,7 +8470,7 @@ if (myroot != null &amp;&amp; myroot != -1) {
 	root = myroot;
 }
 yellowFields = new int[]{3,4,3};
-c2 =new LoadReportRedYellowScenarioGroups(root, yellowFields, IRiskAnalysisService.PROP_SCENARIO_PROBABILITY);
+c2 =new LoadReportRedYellowScenarioGroups(root, yellowFields, RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY);
 return helper.execute(c2).getResults();
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -8608,11 +8607,11 @@ columns(cols);</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-import sernet.verinice.iso27k.service.IRiskAnalysisService;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 groupID = new Integer(Integer.parseInt(inpv("scenGroupID")));
 yellowFields = new int[]{3,4,3};
-c2 =new LoadReportNotGreenScenarios(groupID, yellowFields, IRiskAnalysisService.PROP_SCENARIO_PROBABILITY);
+c2 =new LoadReportNotGreenScenarios(groupID, yellowFields, RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY);
 return helper.execute(c2).getResult();
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -9096,7 +9095,7 @@ columns(cols);</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-import sernet.verinice.iso27k.service.IRiskAnalysisService;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -9106,7 +9105,7 @@ if (myroot != null &amp;&amp; myroot != -1) {
 	root = myroot;
 }
 yellowFields = new int[]{3,4,3};
-c2 =new LoadReportScenarioGroupColourCount(root, yellowFields, IRiskAnalysisService.PROP_SCENARIO_PROBABILITY);
+c2 =new LoadReportScenarioGroupColourCount(root, yellowFields, RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY);
 return helper.execute(c2).getResult();
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -9230,9 +9229,9 @@ import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
-import sernet.verinice.iso27k.service.IRiskAnalysisService;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
-import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
+import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.gs.ui.rcp.main.service.crudcommands.RiskMatrix;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.service.commands.LoadElementByUuid;
@@ -9247,7 +9246,7 @@ if (myroot != null &amp;&amp; myroot != -1) {
 }
 
 results = new ArrayList(0);
-riskType = IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS;
+riskType = RiskAnalysisHelper.RISK_WITH_IMPLEMENTED_CONTROLS;
 
 //load root element (org)
 orgLoader = new LoadPolymorphicCnAElementById(new Integer[]{root});
@@ -9272,7 +9271,7 @@ for (CnATreeElement process : processes) {
 			amountYellowScens = 0;
 			// risk matrices
 			  valueAdapter = new AssetValueAdapter(asset);
-        		  raService = new RiskAnalysisServiceImpl();
+        		  raService = new RiskAnalysisHelperImpl();
 			
 			// load all scenarios for each asset
 			scenarioLoader = new LoadReportLinkedElements(IncidentScenario.TYPE_ID, asset.getDbId());
@@ -9280,7 +9279,7 @@ for (CnATreeElement process : processes) {
 			isRedRisk = false;
 			isYellowRisk = false;
 			for (CnATreeElement scenario : scenarios) {
-				probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+				probability = scenario.getNumericProperty(RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
 				isCRelevant = scenario.getEntity().getProperties("scenario_value_method_confidentiality").getProperty(0).getPropertyValue().equals("1");
        				isIRelevant = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue().equals("1");
        				isARelevant = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue().equals("1");
@@ -10529,7 +10528,7 @@ columns(cols);</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-import sernet.verinice.iso27k.service.IRiskAnalysisService;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -10539,7 +10538,7 @@ if (myroot != null &amp;&amp; myroot != -1) {
 	root = myroot;
 }
 yellowFields = new int[]{3,4,3};
-c2 =new LoadReportScenarioGroupColourCount(root, yellowFields, IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+c2 =new LoadReportScenarioGroupColourCount(root, yellowFields, RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
 return helper.execute(c2).getResult();
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -10727,7 +10726,7 @@ columns(cols);</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportHighRiskAssetScenarios;
-import sernet.verinice.iso27k.service.IRiskAnalysisService;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -10737,7 +10736,7 @@ if (myroot != null &amp;&amp; myroot != -1) {
 	root = myroot;
 }
 
-command = new LoadReportHighRiskAssetScenarios(root, IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS);
+command = new LoadReportHighRiskAssetScenarios(root, RiskAnalysisHelper.RISK_WITH_IMPLEMENTED_CONTROLS);
 command = helper.execute(command);
 return command.getResults();]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>

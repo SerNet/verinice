@@ -56,7 +56,8 @@ public class RightsServiceTest extends ContextConfiguration {
         ActionRightIDs.SEARCHREINDEX,
         ActionRightIDs.SHOWALLFILES,
         ActionRightIDs.TASKCHANGEASSIGNEE,
-        ActionRightIDs.TASKCHANGEDUEDATE
+        ActionRightIDs.TASKCHANGEDUEDATE,
+        ActionRightIDs.TASKWITHRELEASEPROCESS
     };
     
     public static final String[] newProfileActionIds = {
@@ -76,10 +77,10 @@ public class RightsServiceTest extends ContextConfiguration {
     
     public static final String PROFILE_NAME = XmlRightsService.class.getSimpleName();
     
-    @Resource(name="rightsServiceTest")
+    @Resource(name="rightsService")
     private IRightsService rightsService;
     
-    @Resource(name="rightsServerHandlerTest")
+    @Resource(name="rightsServerHandler")
     private IRightsServerHandler rightsServerHandler;
     
     @Test
@@ -105,6 +106,7 @@ public class RightsServiceTest extends ContextConfiguration {
             }
         }
         rightsService.updateConfiguration(clone(conf));
+        rightsServerHandler.discardData();
         assertFalse( "Action: " + NEW_ACTION_ID + " is enabled after removal.", rightsServerHandler.isEnabled(USER_NAME, NEW_ACTION_ID));       
     }
     

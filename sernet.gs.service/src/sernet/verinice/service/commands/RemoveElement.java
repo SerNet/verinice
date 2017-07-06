@@ -131,7 +131,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
                         removeConfiguration(elmt);
                     }
                 }
-                removeAllGefaehrdungsUmsetzungen();
+                
             }
 
             if (element instanceof FinishedRiskAnalysis) {
@@ -159,6 +159,10 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
                 if (children[i] instanceof FinishedRiskAnalysis) {
                     removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
                 }
+            }
+            
+            if (element instanceof ITVerbund) {
+                removeAllGefaehrdungsUmsetzungen();
             }
 
             element.remove();

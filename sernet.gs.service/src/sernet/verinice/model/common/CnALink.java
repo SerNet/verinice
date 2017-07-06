@@ -409,7 +409,7 @@ public class CnALink implements Serializable, ITypedElement {
     }
     
     public void setRiskTreatment(RiskTreatment riskTreatment) {
-        if (riskTreatment == RiskTreatment.UNEDITED) {
+        if (riskTreatment==null || riskTreatment == RiskTreatment.UNEDITED) {
             setRiskTreatmentValue(null);
         } else {
             setRiskTreatmentValue(riskTreatment.name());

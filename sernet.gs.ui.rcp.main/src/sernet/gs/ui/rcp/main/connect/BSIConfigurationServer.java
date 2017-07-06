@@ -19,7 +19,6 @@
 package sernet.gs.ui.rcp.main.connect;
 
 import java.io.File;
-
 import java.io.IOException;
 import java.net.URL;
 
@@ -27,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 
 import sernet.gs.ui.rcp.main.bsi.model.IBSIConfig;
+import sernet.verinice.interfaces.IVeriniceConstants;
 
 @SuppressWarnings("restriction")
 public class BSIConfigurationServer implements IBSIConfig {
@@ -56,7 +56,8 @@ public class BSIConfigurationServer implements IBSIConfig {
     }
 
     public String getCacheDir() {
-        String property = System.getProperty("java.io.tmpdir") + File.separator + "gscache";
+        String property = System.getProperty(IVeriniceConstants.JAVA_IO_TMPDIR)
+                + File.separator + "gscache";
         if (LOG.isDebugEnabled()) {
             LOG.debug("Setting temp dir to " + property);
         }

@@ -74,11 +74,11 @@ final class LoadTaskJob extends NotifyingThread {
 
 
         if(listAllUserEnabled()){
-		taskList = ServiceFactory.lookupTaskService().getTaskList(param);
+            taskList = ServiceFactory.lookupTaskService().getTaskList(param);
         } else {
-		taskList = ServiceFactory.lookupTaskService().getCurrentUserTaskList();
-
+            taskList = ServiceFactory.lookupTaskService().getCurrentUserTaskList(param);
         }
+
         Collections.sort(taskList);  
         if (LOG.isDebugEnabled()) {
             LOG.debug("Tasks loading finished.");

@@ -48,6 +48,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnATreeElementTitles;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ICommandCacheClient;
 import sernet.verinice.interfaces.IReportDepositService;
+import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportType;
 import sernet.verinice.interfaces.validation.IValidationService;
@@ -267,6 +268,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 }
                 
                 setupComboOutputFormatContent();
+                setupComboScopes();
             }
         });
 
@@ -289,7 +291,20 @@ public class GenerateReportDialog extends TitleAreaDialog {
             public void widgetSelected(SelectionEvent e) {
                 getButton(IDialogConstants.OK_ID).setEnabled(true);
                 int s = scopeCombo.getSelectionIndex();
-                rootElement = scopes.get(s).getDbId();
+                if (chosenReportMetaData != null && chosenReportMetaData.isMultipleRootObjects()) {
+                    if (s == 0) {
+                        Integer[] roots = new Integer[scopes.size()];
+                        for (int i = 0; i < scopes.size(); i++) {
+                            roots[i] = scopes.get(i).getDbId();
+                        }
+                        rootElements = roots;
+                        rootElement = null;
+                    } else {
+                        rootElement = scopes.get(s - 1).getDbId();
+                    }
+                } else {
+                    rootElement = scopes.get(s).getDbId();
+                }
             }
         });
 
@@ -394,7 +409,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         comboReportType.select(0);
         if(reportTemplates.length > 0){
-        chosenReportType = reportTypes[0];
+            chosenReportType = reportTypes[0];
             chosenReportMetaData = reportTemplates[comboReportType.getSelectionIndex()];
         } else {
             showNoReportsExistant();
@@ -474,7 +489,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         } else if (isTemplateFilePath()) {
             path = getOldTemplateFolderPath();
         } else {
-            path = System.getProperty("user.home"); //$NON-NLS-1$
+            path = System.getProperty(IVeriniceConstants.USER_HOME); //$NON-NLS-1$
         }
         if (LOG.isDebugEnabled()) {
             LOG.debug("Template file dialog path set to: " + path); //$NON-NLS-1$
@@ -526,7 +541,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     @Deprecated
     private String getOldTemplateFolderPath() {
-        return System.getProperty("osgi.instance.area");
+        return System.getProperty(IVeriniceConstants.OSGI_INSTANCE_AREA);
     }
 
     private String getFolderFromPath(String path) {
@@ -580,6 +595,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         }
         // call is initiated from applicationbar, so let user choose from all accessible scopes
+        
         scopes.addAll(loadScopes());
         scopes.addAll(loadITVerbuende());
 
@@ -598,12 +614,14 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 LOG.debug(Messages.GenerateReportDialog_16 + elmt.getDbId() + ": " + elmt.getTitle()); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
             }
         }
+        if (chosenReportMetaData != null && chosenReportMetaData.isMultipleRootObjects()) {
+            scopeTitles.add(0, Messages.GenerateReportDialog_37);
+        }
 
         String[] titles = scopeTitles.toArray(new String[scopeTitles.size()]);
         scopeCombo.setItems(titles);
 
     }
-
 
     private void setupComboOutputFormatContent() {
         comboOutputFormat.removeAll();
@@ -625,7 +643,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
         String currentPath = textFile.getText();
         String path = currentPath;
         if (currentPath != null && !currentPath.isEmpty()) {
-            int lastSlash = currentPath.lastIndexOf(System.getProperty(FILE_SEPARATOR));
+            int lastSlash = currentPath.lastIndexOf(
+                    System.getProperty(IVeriniceConstants.FILE_SEPARATOR));
             if (lastSlash != -1) {
                 path = currentPath.substring(0, lastSlash + 1);
             } else {
@@ -880,16 +899,21 @@ public class GenerateReportDialog extends TitleAreaDialog {
         defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_REPORT);
         defaultTemplateFolder = prefs.getString(PreferenceConstants.DEFAULT_TEMPLATE_FOLDER_REPORT);
         if (defaultFolder == null || defaultFolder.isEmpty()) {
-            defaultFolder = System.getProperty("user.home");
+            defaultFolder = System.getProperty(IVeriniceConstants.USER_HOME);
         }
         if (defaultTemplateFolder == null || defaultTemplateFolder.isEmpty()) {
-            defaultTemplateFolder = System.getProperty("user.home");
+            defaultTemplateFolder = System.getProperty(
+                    IVeriniceConstants.USER_HOME);
         }
-        if (!defaultFolder.endsWith(System.getProperty(FILE_SEPARATOR))) {
-            defaultFolder = defaultFolder + System.getProperty(FILE_SEPARATOR);
+        if (!defaultFolder.endsWith(System.getProperty(
+                IVeriniceConstants.FILE_SEPARATOR))) {
+            defaultFolder = defaultFolder + 
+                    System.getProperty(IVeriniceConstants.FILE_SEPARATOR);
         }
-        if (!defaultTemplateFolder.endsWith(System.getProperty(FILE_SEPARATOR))) {
-            defaultTemplateFolder = defaultTemplateFolder + System.getProperty(FILE_SEPARATOR);
+        if (!defaultTemplateFolder.endsWith(
+                System.getProperty(IVeriniceConstants.FILE_SEPARATOR))) {
+            defaultTemplateFolder = defaultTemplateFolder + 
+                    System.getProperty(IVeriniceConstants.FILE_SEPARATOR);
         }
         return defaultFolder;
     }

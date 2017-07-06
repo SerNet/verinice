@@ -1,0 +1,26 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pp="http://primefaces.org/poseidon">
+
+	<h:form id="menuform">
+		<div class="layout-menu-container">
+			<div class="nano">
+				<div class="nano-content menu-scroll-content">
+
+					<!--
+						Do not use poseidon model without id attribute. Otherwise setting css class
+						for active menu items with javascript will not work properly.
+
+						The reason for this mess is, that
+						/sernet.gs.server/WebContent/resources/poseidon-layout/js/layout.js relies on
+						jsf id staying the same over several request.
+					  -->
+					<pp:menu id="main-menu" model="#{menu.model}" widgetVar="me" />
+				</div>
+			</div>
+		</div>
+	</h:form>
+</ui:composition>

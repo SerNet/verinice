@@ -1,0 +1,133 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/poseidon/template.xhtml">
+
+	<ui:define name="title">#{msgWeb['home.title']}</ui:define>
+
+	<ui:define name="viewname">#{msgWeb['home.title']}</ui:define>
+
+	<ui:define name="content">
+		<div class="ui-g ui-fluid dashboard">
+			<div class="ui-g-12 ui-sm-12">
+				<div class="card">
+					<h1>
+						<h:outputText escape="false"
+							value="#{msgWeb['index_welcome_head']}" />
+					</h1>
+				</div>
+			</div>
+
+			<!-- 			 <div class="ui-g-12 ui-md-4 ui-lg-4"> -->
+			<!--                 <div class="ui-g card overview-box overview-box-1"> -->
+			<!--                     <div class="ui-g-4"> -->
+			<!--                         <i class="fa fa-inbox"></i> -->
+			<!--                     </div> -->
+			<!--                     <div class="ui-g-8"> -->
+			<!--                         <span class="overview-box-count">253</span> -->
+			<!--                         <span class="overview-box-name">Unread Messages</span> -->
+			<!--                     </div> -->
+			<!--                 </div> -->
+			<!--             </div> -->
+			<!--             <div class="ui-g-12 ui-md-4 ui-lg-4"> -->
+			<!--                 <div class="ui-g card overview-box overview-box-2"> -->
+			<!--                     <div class="ui-g-4"> -->
+			<!--                         <i class="fa fa-map-marker"></i> -->
+			<!--                     </div> -->
+			<!--                     <div class="ui-g-8"> -->
+			<!--                         <span class="overview-box-count">3216</span> -->
+			<!--                         <span class="overview-box-name">Check-ins</span> -->
+			<!--                     </div> -->
+			<!--                 </div> -->
+			<!--             </div> -->
+			<!--             <div class="ui-g-12 ui-md-4 ui-lg-4"> -->
+			<!--                 <div class="ui-g card overview-box overview-box-3"> -->
+			<!--                     <div class="ui-g-4"> -->
+			<!--                         <i class="fa fa-cloud"></i> -->
+			<!--                     </div> -->
+			<!--                     <div class="ui-g-8"> -->
+			<!--                         <span class="overview-box-count">428</span> -->
+			<!--                         <span class="overview-box-name">Files Synced</span> -->
+			<!--                     </div> -->
+			<!--                 </div> -->
+			<!--             </div> -->
+
+
+			<div class="ui-g-4 ui-sm-12">
+				<p:panel header="#{msgWeb['client_head']}" style="min-height: 200px">
+					<ui:fragment rendered="#{resourcesChecker.clientsAvailable()}">
+						<p:menu>
+							<p:menuitem
+								rendered="#{resourcesChecker.existsWindowsClient64Bit()}"
+								url="/clients/verinice-windows-x86_64.zip" icon="fa fa-fw fa-windows"
+								value="verinice (Windows, 64 bit)" />
+							<p:menuitem
+								rendered="#{resourcesChecker.existsWindowsClient32Bit()}"
+								url="/clients/verinice-windows-x86.zip" icon="fa fa-fw fa-windows"
+								value="verinice (Windows, 32 bit)" />
+							<p:menuitem
+								rendered="#{resourcesChecker.existsLinuxClient64Bit()}"
+								url="/clients/verinice-linux-x86_64.zip" icon="fa fa-fw fa-linux"
+								value="verinice (Linux, 64 bit)" />
+							<p:menuitem
+								rendered="#{resourcesChecker.existsLinuxClient32Bit()}"
+								url="/clients/verinice-linux-x86.zip" icon="fa fa-fw fa-linux"
+								value="verinice (Linux, 32 bit)" />
+						</p:menu>
+					</ui:fragment>
+					<ui:fragment rendered="#{not resourcesChecker.clientsAvailable()}">
+						<p>
+							<i class="fa fa-info-circle"></i> #{msgWeb['home.clients.msg']}
+						</p>
+					</ui:fragment>
+				</p:panel>
+			</div>
+
+			<div class="ui-g-4 ui-sm-12">
+				<p:panel header="#{msgWeb['manual_head']}" style="min-height: 200px">
+					<ui:fragment rendered="#{resourcesChecker.manualsAvailable()}">
+						<p:menu>
+							<p:menuitem rendered="#{resourcesChecker.existsUserManualPdf()}"
+								icon="fa fa-fw fa-file-pdf-o"
+								value="#{msgWeb['user-guide']} (PDF)"
+								url="/manual/#{msgWeb['manual_pdf_name']}" />
+							<p:menuitem rendered="#{resourcesChecker.existsUserManualHtml()}"
+								icon="fa fa-fw fa-code" value="#{msgWeb['user-guide']} (HTML)"
+								url="/manual/#{msgWeb['manual_html_name']}/index.html" />
+						</p:menu>
+					</ui:fragment>
+					<ui:fragment rendered="#{not resourcesChecker.manualsAvailable()}">
+						<p>
+							<i class="fa fa-info-circle"></i> #{msgWeb['home.manuals.msg']}
+						</p>
+					</ui:fragment>
+				</p:panel>
+			</div>
+
+			<div class="ui-g-4 ui-sm-12">
+				<p:panel header="#{msgWeb['home.header.support']}"
+					style="min-height: 200px">
+					<p:menu>
+						<p:menuitem url="#{msgWeb['home.link.technical-support.url']}"
+							value="#{msgWeb['home.link.technical-support.text']}"
+							icon="fa fa-fw fa-external-link" />
+						<p:menuitem url="#{msgWeb['home.link.consulting.url']}"
+							value="#{msgWeb['home.link.consulting.text']}"
+							icon="fa fa-fw fa-external-link" />
+						<p:menuitem url="#{msgWeb['home.link.forum.url']}"
+							value="#{msgWeb['home.link.forum.text']}"
+							icon="fa fa-fw fa-external-link" />
+						<p:menuitem
+							url="https://www.youtube.com/channel/UCtBIMOtfziqFgI0pyAPHNww"
+							value="#{msgWeb['home.link.youtube']}" icon="fa fa-fw fa-youtube" />
+					</p:menu>
+				</p:panel>
+			</div>
+
+
+		</div>
+	</ui:define>
+
+</ui:composition>

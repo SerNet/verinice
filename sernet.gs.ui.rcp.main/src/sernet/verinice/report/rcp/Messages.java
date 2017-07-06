@@ -58,6 +58,7 @@ public class Messages extends NLS {
     public static String GenerateReportDialog_34;
     public static String GenerateReportDialog_35;
     public static String GenerateReportDialog_36;
+    public static String GenerateReportDialog_37;
     public static String GenerateReportDialog_4;
     public static String GenerateReportDialog_5;
     public static String GenerateReportDialog_6;
@@ -81,6 +82,7 @@ public class Messages extends NLS {
     public static String ReportDepositView_22;
     public static String ReportDepositView_23;
     public static String ReportDepositView_24;
+    public static String ReportDepositView_25;
     public static String ReportDepositView_3;
     public static String ReportDepositView_4;
     public static String ReportDepositView_5;

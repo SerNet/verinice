@@ -19,6 +19,7 @@ package sernet.verinice.oda.driver.designer.impl;
 
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.eclipse.datatools.connectivity.oda.IConnection;
 import org.eclipse.datatools.connectivity.oda.IDriver;
 import org.eclipse.datatools.connectivity.oda.IParameterMetaData;
@@ -44,11 +45,18 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.springframework.remoting.RemoteConnectFailureException;
 
+import sernet.hui.common.VeriniceContext;
 import sernet.verinice.oda.driver.impl.Driver;
 import sernet.verinice.oda.driver.impl.Query;
+import sernet.verinice.oda.linktable.driver.designer.impl.Messages;
+import sernet.verinice.service.model.IObjectModelService;
 
 public class CustomDataSetWizardPage extends DataSetWizardPage {
+
+
+    private static final Logger logger = Logger.getLogger(CustomDataSetWizardPage.class);
 
 	private static String DEFAULT_MESSAGE = "Define the BeanShell setup query and query text for the data set";
 
@@ -88,8 +96,12 @@ public class CustomDataSetWizardPage extends DataSetWizardPage {
 	 * #createPageCustomControl(org.eclipse.swt.widgets.Composite)
 	 */
 	public void createPageCustomControl(Composite parent) {
-		setControl(createPageControl(parent));
-		initializeControl();
+	    setControl(createPageControl(parent));
+        initializeControl();
+        if(!isSncaLoaded()){
+            setErrorMessage(Messages.linktableDataSetWizardPage_snca_error);
+            setPageComplete(false);
+        }
 	}
 
 	/**
@@ -117,6 +129,8 @@ public class CustomDataSetWizardPage extends DataSetWizardPage {
 			}
 		});
 
+		m_setupQueryTextField.setEnabled(isSncaLoaded());
+
 		fieldLabel = new Label(composite, SWT.NONE);
 		fieldLabel.setText("&BSH query Text:");
 
@@ -131,9 +145,41 @@ public class CustomDataSetWizardPage extends DataSetWizardPage {
 			}
 		});
 
+		m_queryTextField.setEnabled(isSncaLoaded());
+
 		setPageComplete(false);
 		return composite;
 	}
+
+	private boolean isSncaLoaded() {
+        try {
+            initServerConnection();
+            // The this call is used as ping to the server. If this failes no
+            // services are available and that is why no scna.xml is available.
+            ((IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE)).getAllTypeIDs();
+            return true;
+        } catch (RemoteConnectFailureException ex) {
+            logger.warn("no connection to server established.", ex);
+            return false;
+        } catch (OdaException ex) {
+            logger.warn("no connection to server established.", ex);
+            return false;
+        }
+    }
+
+    /**
+     * Instantiate your custom ODA runtime driver class.
+     *
+     * Note: You may need to manually update your ODA runtime extension's
+     * plug-in manifest to export its package for visibility here.
+     */
+	private IConnection initServerConnection() throws OdaException {
+        IDriver customDriver = new Driver();
+        IConnection customConn = customDriver.getConnection(null);
+        java.util.Properties connProps = DesignSessionUtil.getEffectiveDataSourceProperties(getInitializationDesign().getDataSourceDesign());
+        customConn.open(connProps);
+        return customConn;
+    }
 
 	/**
 	 * Initializes the page control with the last edited data set design.
@@ -269,20 +315,7 @@ public class CustomDataSetWizardPage extends DataSetWizardPage {
 		// dataSetDesign
 		IConnection customConn = null;
 		try {
-			// instantiate your custom ODA runtime driver class
-			/*
-			 * Note: You may need to manually update your ODA runtime
-			 * extension's plug-in manifest to export its package for visibility
-			 * here.
-			 */
-			IDriver customDriver = new Driver();
-
-			// obtain and open a live connection
-			customConn = customDriver.getConnection(null);
-			java.util.Properties connProps = DesignSessionUtil
-					.getEffectiveDataSourceProperties(getInitializationDesign()
-							.getDataSourceDesign());
-			customConn.open(connProps);
+			customConn = initServerConnection();
 
 			// update the data set design with the
 			// query's current runtime metadata

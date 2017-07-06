@@ -4,7 +4,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="
-	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" >
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+  http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd" >
 
 	<!--
 	All configuration options for the verinice server are available in the
@@ -88,6 +89,10 @@ This variant:
                 <entry key="configurationService" value-ref="configurationService"/>
 				<entry key="objectModelService" value-ref="objectModelService" />
                 <entry key="updateNewsService" value-ref="updateNewsService" />
+                <entry key="licenseManagementService" value-ref="licenseManagementService"/>
+                <entry key="encryptionService" value-ref="encryptionService" />
+				<entry key="graphService" value-ref="graphService" />
+        		<entry key="countService" value-ref="countService" />
 			</map>
 		</property>
 	</bean>
@@ -170,6 +175,7 @@ This variant:
 		<property name="gebaeudeKategorieDAO" ref="gebaeudeKategorieDAO" />
 		<property name="gefaehrdungsUmsetzungDAO" ref="gefaehrdungsUmsetzungDAO" />
 		<property name="ITVerbundDAO" ref="ITVerbundDAO" />
+		<property name="secureItVerbundDAO" ref="secureItVerbundDAO" />
 		<property name="massnahmenUmsetzungDAO" ref="massnahmenUmsetzungDAO" />
 		<property name="netzKomponenteDAO" ref="netzKomponenteDAO" />
 		<property name="NKKategorieDAO" ref="NKKategorieDAO" />
@@ -240,7 +246,7 @@ This variant:
         <property name="unsecureIncidentScenarioDAO" ref="unsecureIncidentScenarioDAO" />
         
         
-        <property name="finishedRiskAnalysisListsDao" ref="finishedRiskAnalysisListsDao" /> 
+        <property name="finishedRiskAnalysisListsDao" ref="finishedRiskAnalysisListsDao" />
 	</bean>
 
 	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
@@ -311,22 +317,39 @@ This variant:
     	<property name="huiTypeFactory" ref="huiTypeFactory" />
     </bean>
     
+    <bean id="encryptionService" class="sernet.verinice.service.crypto.EncryptionService" />
+    
     <!-- A service to load and analyse the element network of verinice with JGraphT. -->
     <!-- JGraphT is a free Java graph library that provides mathematical graph-theory objects and algorithms. -->
     <bean id="graphService" class="sernet.verinice.graph.GraphService" scope="prototype">  
         <property name="cnaTreeElementDao" ref="cnaTreeElementDao" />
         <property name="cnaLinkDao" ref="cnaLinkDao" />
     </bean>
-    
-     <bean id="reportHQLService" class="sernet.verinice.service.ReportHQLService" />
-     
-	<bean id="objectModelService" class="sernet.verinice.service.model.HUIObjectModelService">
-		<property name="huiTypeFactory" ref="huiTypeFactory" />
-	</bean>
-     
-     <bean id="titleCache" class="sernet.verinice.service.ElementTitleCache">
+
+    <bean id="reportHQLService" class="sernet.verinice.service.ReportHQLService" />
+
+    <bean id="objectModelService" class="sernet.verinice.service.model.HUIObjectModelService">
+        <property name="huiTypeFactory" ref="huiTypeFactory" />
+    </bean>
+
+    <!-- Count service provides methods to get the number of elements in the database. -->
+    <bean id="countService" class="sernet.verinice.service.model.CountElementService">
+        <!-- Limit on how many elements can be loaded at once -->
+        <property name="limit" value="${veriniceserver.object.limit}" />
+        <property name="typeLimitMap" ref="typeLimitMap" />
+        <property name="cnaTreeElementDao" ref="cnaTreeElementDao" />
+    </bean>
+
+    <!-- Limit on how many elements of a given id can be loaded at once -->
+    <!-- The values is this map overrides the default value of property limit in bean countService -->
+    <util:map id="typeLimitMap" value-type="java.lang.Integer">
+        <!-- The key is the element ID from SNCA.xml, e.g.: -->
+        <!--<entry key="asset" value="30000" />-->
+    </util:map>
+
+    <bean id="titleCache" class="sernet.verinice.service.ElementTitleCache">
         <property name="loadScopeTitlesCommand" ref="loadScopeTitlesCommand" />
-     </bean>
+    </bean>
      
      <bean name="loadScopeTitlesCommand" class="sernet.verinice.service.commands.LoadElementTitles">
         <property name="typeIds" value="it-verbund,org"/>
@@ -340,17 +363,28 @@ This variant:
 		factory-method="createVnaSchemaVersion">
 		<constructor-arg>
 			<!-- The current schema which is written into the xml date export -->
-			<value>vna-1.0</value>
+			<value>vna-1.2</value>
 		</constructor-arg>
 		<constructor-arg>
 			<!-- This list to which vna versions the current schema is compatible -->
 			<list>
+				<value>vna-1.1</value>
 				<value>vna-1.0</value>
 			</list>
 		</constructor-arg>
 	</bean>
-   
+	
 	<!-- uncomment to activate runtime logging of methods defined in veriniceserver-debug.xml -->
 	<!--<import resource="veriniceserver-debug.xml"/> -->
 
+    <bean id="loadBcProvider"
+          class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod"
+                  value="java.security.Security.addProvider"/>
+        <property name="arguments">
+            <list>
+                <bean class="org.bouncycastle.jce.provider.BouncyCastleProvider"/>
+            </list>
+        </property>
+    </bean> 
 </beans>

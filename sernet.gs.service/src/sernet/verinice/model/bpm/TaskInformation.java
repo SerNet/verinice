@@ -239,7 +239,7 @@ public class TaskInformation implements ITask, Serializable {
         if(this.style==null) {
             setStyle(style);
         } else {
-            this.style = this.style + "_" + style;
+            this.style = this.style + " " + style;
         }
     }
     

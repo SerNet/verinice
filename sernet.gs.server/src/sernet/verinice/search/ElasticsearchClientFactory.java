@@ -20,6 +20,7 @@ import org.elasticsearch.node.NodeBuilder;
 import org.springframework.beans.factory.DisposableBean;
 
 import sernet.verinice.interfaces.IDirectoryCreator;
+import sernet.verinice.interfaces.IVeriniceConstants;
 
 /*******************************************************************************
  * Copyright (c) 2015 Daniel Murygin.
@@ -210,7 +211,7 @@ public class ElasticsearchClientFactory implements DisposableBean {
     private ImmutableSettings.Builder setOSDependentFileSystem(ImmutableSettings.Builder builder){
         String fileSystem = "";
         if(SystemUtils.IS_OS_WINDOWS){
-          if(System.getProperty("os.arch").contains("64")){
+          if(System.getProperty(IVeriniceConstants.OS_ARCH).contains("64")){
               fileSystem = "mmapfs";
           } else {
               fileSystem = "simplefs";

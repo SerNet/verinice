@@ -39,5 +39,5 @@ public interface IConfigurationService {
     String getName(String user);
     
     void discardUserData();
-
+    
 }
