@@ -20,13 +20,9 @@
 package sernet.verinice.model.licensemanagement;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import javax.xml.bind.JAXB;
-
-import sernet.verinice.service.commands.ExportFactory;
 
 /**
  * Class provides methods to transform license-management-data (stored in 
@@ -66,18 +62,6 @@ public class VNLMapper {
         return xmlToPojo(xmlObject);
     }
     
-    /**
-     * transforms the hibernate representation 
-     * {@link LicenseManagementEntry} of license management information
-     * into an byte[] that can be used to store the information within a file 
-     **/
-    public byte[] marshalLicenseManagementEntry(LicenseManagementEntry entry){
-        de.sernet.model.licensemanagement.LicenseManagementEntry xmlObject =
-                pojoToXml(entry);
-        OutputStream outputStream = new ByteArrayOutputStream();
-        ExportFactory.marshal(xmlObject, outputStream);
-        return ((ByteArrayOutputStream)outputStream).toByteArray();
-    }
     
     /**
      * maps the xml representation 
@@ -88,35 +72,15 @@ public class VNLMapper {
     public LicenseManagementEntry xmlToPojo(de.sernet.model.
             licensemanagement.LicenseManagementEntry xmlObject){
         LicenseManagementEntry entry = new LicenseManagementEntry();
-        entry.setContentIdentifier(xmlObject.getContentIdentifier());
-        entry.setLicenseID(xmlObject.getLicenseID());
-        entry.setSalt(xmlObject.getSalt());
-        entry.setUserPassword(xmlObject.getUserPassword());
-        entry.setValidUntil(xmlObject.getValidUntil());
-        entry.setValidUsers(xmlObject.getValidUsers());
+        entry.setContentIdentifier(xmlObject.getE1());
+        entry.setLicenseID(xmlObject.getE2());
+        entry.setSalt(xmlObject.getE3());
+        entry.setUserPassword(xmlObject.getE4());
+        entry.setValidUntil(xmlObject.getE5());
+        entry.setValidUsers(xmlObject.getE6());
         return entry;
     }
     
-    /**
-     * maps the hibernate representation
-     * {@link LicenseManagementEntry} to the xml representation
-     * {@link de.sernet.model.licensemanagement.LicenseManagementEntry}
-     * of license management informations
-     * @param entry
-     * @return
-     */
-    public de.sernet.model.licensemanagement.LicenseManagementEntry pojoToXml(
-            LicenseManagementEntry entry){
-        de.sernet.model.licensemanagement.LicenseManagementEntry xmlObject = 
-                new de.sernet.model.licensemanagement.LicenseManagementEntry();
-        xmlObject.setContentIdentifier(entry.getContentIdentifier());
-        xmlObject.setLicenseID(entry.getLicenseID());
-        xmlObject.setSalt(entry.getSalt());
-        xmlObject.setUserPassword(entry.getUserPassword());
-        xmlObject.setValidUntil(entry.getValidUntil());
-        xmlObject.setValidUsers(entry.getValidUsers());
-        return xmlObject;
-    }
     
     
 

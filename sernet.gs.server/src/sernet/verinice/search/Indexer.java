@@ -178,9 +178,7 @@ public class Indexer {
     public void blockingIndexing() {
         try {
             doBlockingIndexing();
-        } catch (InterruptedException e) {
-            LOG.error("blocking indexing failed: " + e.getLocalizedMessage(), e);
-        } catch (ExecutionException e) {
+        } catch (Exception e) {
             LOG.error("blocking indexing failed: " + e.getLocalizedMessage(), e);
         }
     }
@@ -203,10 +201,8 @@ public class Indexer {
                 Future<CnATreeElement> future = completionService.take();
                 CnATreeElement element = future.get();           
                 LOG.debug("element was indexed " + element.getTitle() + " - uuid " + element.getUuid());
-            } catch (InterruptedException e) {
-                LOG.error("indexing tracking failed", e);
-            } catch (ExecutionException ex) {
-                LOG.error("future task execution failed: " + ex.getLocalizedMessage(), ex);
+            } catch (Exception e) {
+                LOG.error("Indexing failed for an element", e);
             }
         }
     }

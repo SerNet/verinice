@@ -30,6 +30,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 
 import sernet.gs.model.Baustein;
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -42,10 +43,16 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.common.CnATreeElement;
 
+/**
+ * Adds modules to a ITBP element base on the user selection in a dialog.
+ *
+ * @author Daniel Murygin <dm{a}sernet{dot}de>
+ */
 public class BausteinZuordnungAction extends RightsEnabledAction implements ISelectionListener {
 
     private static final Logger LOG = Logger.getLogger(BausteinZuordnungAction.class);
@@ -75,7 +82,6 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
                         setEnabled(checkRights());
                     }
                 }
-
             };
             Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
         } else {
@@ -93,60 +99,81 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
             return;
         }
 
-        final List<IBSIStrukturElement> selectedElements = new ArrayList<IBSIStrukturElement>();
-        for (Iterator iter = selection.iterator(); iter.hasNext();) {
-            Object o = iter.next();
-            if (o instanceof IBSIStrukturElement) {
-                selectedElements.add((IBSIStrukturElement) o);
-            }
-        }
+        final List<IBSIStrukturElement> selectedElements = getSelectedElements(selection);
 
         final AutoBausteinDialog dialog = new AutoBausteinDialog(window.getShell());
         if (dialog.open() != Window.OK || dialog.getSelectedSubtype() == null) {
             return;
         }
 
-        try {
-            String[] bausteine = dialog.getSelectedSubtype().getSplitBausteine();
-            for (String bst : bausteine) {
-                Baustein baustein = BSIKatalogInvisibleRoot.getInstance().getBausteinByKapitel(bst);
-                if (baustein == null) {
-                    LOG.debug("Kein Baustein gefunden fuer Nr.: " + bst); //$NON-NLS-1$
+        try {          
+            String[] modulesNumberArray = dialog.getSelectedSubtype().getSplitBausteine();
+            for (String moduleNumber : modulesNumberArray) {
+                Baustein module = BSIKatalogInvisibleRoot.getInstance().getBausteinByKapitel(moduleNumber);
+                if (module == null) {
+                    LOG.debug("No mudule found for nr.: " + moduleNumber); //$NON-NLS-1$
                 } else {
-                    // assign baustein to every selected target object:
-                    for (IBSIStrukturElement target : selectedElements) {
-                        if (target instanceof CnATreeElement) {
-                            CnATreeElement targetElement = (CnATreeElement) target;
-                            if (!targetElement.containsBausteinUmsetzung(baustein.getId())) {
-                                try {                              
-                            CnAElementFactory.getInstance().saveNew(targetElement, BausteinUmsetzung.TYPE_ID, new BuildInput<Baustein>(baustein), false);
-                                }catch (Exception e) {
-                                    LOG.error("Error by saving.", e);
-                                    throw new RuntimeException(e);
-                                } 
-                            }
-                    }
+                    processModule(module, selectedElements);
                 }
             }
-        }
-        }catch (Exception e) {
+        } catch (Exception e) {
+            LOG.error("Error while adding modules.", e);
             ExceptionUtil.log(e, Messages.BausteinZuordnungAction_4);
         }
     }
 
+    protected void processModule(Baustein module,
+            final List<IBSIStrukturElement> selectedElements) {
+        // assign baustein to every selected target object:
+        for (IBSIStrukturElement target : selectedElements) {
+            if (target instanceof CnATreeElement) {
+                addModule(module, (CnATreeElement) target);
+            }
+        }
+    }
+
+    protected void addModule(Baustein nodule, CnATreeElement element) {
+        CnATreeElement elementInitialized = element;
+        if (!element.getChildren().isEmpty()) {
+            RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance();
+            ri.setChildrenProperties(true);
+            elementInitialized = Retriever.retrieveElement(element, ri);
+        }
+        if (!elementInitialized.containsBausteinUmsetzung(nodule.getId())) {
+            try {
+                CnAElementFactory.getInstance().saveNew(elementInitialized,
+                        BausteinUmsetzung.TYPE_ID, new BuildInput<Baustein>(nodule), false);
+            } catch (Exception e) {
+                LOG.error("Error by saving.", e);
+                throw new RuntimeException(e);
+            }
+        }
+    }
+    
+    @SuppressWarnings("rawtypes")
+    protected List<IBSIStrukturElement> getSelectedElements(IStructuredSelection selection) {
+        final List<IBSIStrukturElement> selectedElements = new ArrayList<>(selection.size());
+        for (Iterator iter = selection.iterator(); iter.hasNext();) {
+            Object o = iter.next();
+            if (o instanceof IBSIStrukturElement) {
+                selectedElements.add((IBSIStrukturElement) o);
+            }
+        }
+        return selectedElements;
+    }
+
     @Override
+    @SuppressWarnings("rawtypes")
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
         if (serverIsRunning) {
             setEnabled(checkRights());
         }
         if (input instanceof IStructuredSelection) {
             IStructuredSelection selection = (IStructuredSelection) input;
-
             if (selection.size() < 1) {
                 setEnabled(false);
                 return;
             }
-
             for (Iterator iter = selection.iterator(); iter.hasNext();) {
                 Object o = iter.next();
                 if (!(o instanceof IBSIStrukturElement)) {

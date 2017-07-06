@@ -90,7 +90,7 @@ public class RemindService implements IRemindService {
             LOG.info("Sending emails is disabled in the in the properties.(veriniceserver.notification.enabled in veriniceserver-plain.properties[.local])");
             return;
         }
-        
+
         MimeMessagePreparator preparator = new MimeMessagePreparator() {
             @Override
             public void prepare(MimeMessage mimeMessage) throws MessagingException {

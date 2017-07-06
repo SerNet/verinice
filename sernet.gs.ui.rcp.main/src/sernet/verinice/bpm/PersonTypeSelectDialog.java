@@ -46,28 +46,11 @@ public class PersonTypeSelectDialog extends Dialog {
     
     public PersonTypeSelectDialog(Shell shell) {
         super(shell);
-        int style = SWT.MAX | SWT.CLOSE | SWT.TITLE;
-        style = style | SWT.BORDER | SWT.APPLICATION_MODAL;
-        setShellStyle(style | SWT.RESIZE);       
     }
-    
-    @Override
-    protected void configureShell(Shell newShell) {
-        super.configureShell(newShell);
-        final int shellWidth = 400;
-        final int shellHeight = 200;
-        final int cursorLocationXSubtrahend = 200;
-        final int cursorLocationYSubtrahend = 250;
-        newShell.setText(Messages.PersonTypeSelectDialog_0);
-        newShell.setSize(shellWidth, shellHeight);
         
-        // open the window right under the mouse pointer:
-        Point cursorLocation = Display.getCurrent().getCursorLocation();
-        newShell.setLocation(new Point(cursorLocation.x-cursorLocationXSubtrahend, cursorLocation.y-cursorLocationYSubtrahend));
-    }
-    
     @Override
     protected Control createDialogArea(Composite parent) {
+        getShell().setText(Messages.PersonTypeSelectDialog_0);
         Composite container = (Composite) super.createDialogArea(parent);
         SelectionAdapter ismSelectionAdapter = new SelectionAdapter(){
             @Override
@@ -89,10 +72,16 @@ public class PersonTypeSelectDialog extends Dialog {
         label.setText(Messages.PersonTypeSelectDialog_1);
         SWTElementFactory.generateRadioButton(container, Messages.PersonTypeSelectDialog_2, true, ismSelectionAdapter);
         SWTElementFactory.generateRadioButton(container, Messages.PersonTypeSelectDialog_3, false, bsiSelectionAdapter);
+        parent.pack();
         return container;
     }
 
     public String getElementType() {
         return elementType;
+    }
+    
+    @Override
+    protected boolean isResizable() {
+        return true;
     }
 }

@@ -246,8 +246,14 @@
 	</error-page>
 	<error-page>
 		<error-code>404</error-code>
-		<location>/error/500.xhtml</location>
+		<location>/error/404.xhtml</location>
 	</error-page>
+
+	<error-page>
+		<error-code>403</error-code>
+		<location>/error/403.xhtml</location>
+	</error-page>
+
 	<error-page>
 		<error-code>500</error-code>
 		<location>/error/500.xhtml</location>
@@ -257,6 +263,10 @@
     <extension>woff2</extension>
     <mime-type>application/x-font-woff2</mime-type>
   </mime-mapping>
+
+	<listener>
+		<listener-class>sernet.verinice.listener.VeriniceContextListener</listener-class>
+	</listener>
 
 	<session-config>
 		<!-- Session idle timeout in min. -->

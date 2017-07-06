@@ -131,8 +131,9 @@ public class XMLImportDialog extends Dialog {
     public void okPressed() {
 
         final SyncParameter syncParameter = tryCreateSyncParameter();
-
-        if (!dataPathFlag && syncParameter == null) {
+        if (!validateUserSelection()) {
+            return;
+        } else if (!dataPathFlag && syncParameter == null) {
             createErrorMessage(3);
         } else if (!dataPathFlag) {
             createErrorMessage(1);
@@ -205,6 +206,28 @@ public class XMLImportDialog extends Dialog {
             JobScheduler.scheduleJob(importJob, iSchedulingRule);
             close();
         }
+    }
+
+    
+    private boolean validateUserSelection() {
+        if (selectedEncryptionMethod == EncryptionMethod.X509_CERTIFICATE) {
+            StringBuilder stringBuilder = new StringBuilder();
+            if (x509CertificateFile == null) {
+                stringBuilder.append(Messages.XMLImportDialog_39+"\n");
+            } else if (!x509CertificateFile.exists()) {
+                stringBuilder.append(Messages.XMLImportDialog_40+"\n");
+            }
+            if (privateKeyPemFile == null) {
+                stringBuilder.append(Messages.XMLImportDialog_41+"\n");
+            } else if (!privateKeyPemFile.exists()) {
+                stringBuilder.append(Messages.XMLImportDialog_42+"\n");
+            }
+            if (stringBuilder.length() != 0) {
+                MessageDialog.openError(getParentShell(), Messages.XMLImportDialog_18, stringBuilder.toString());
+                return false;
+            }
+        }
+        return true;
     }
 
     private SyncParameter tryCreateSyncParameter() {

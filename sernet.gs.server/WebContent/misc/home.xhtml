@@ -61,19 +61,19 @@
 						<p:menu>
 							<p:menuitem
 								rendered="#{resourcesChecker.existsWindowsClient64Bit()}"
-								url="/files/verinice-win-64.zip" icon="fa fa-fw fa-windows"
+								url="/clients/verinice-windows-x86_64.zip" icon="fa fa-fw fa-windows"
 								value="verinice (Windows, 64 bit)" />
 							<p:menuitem
 								rendered="#{resourcesChecker.existsWindowsClient32Bit()}"
-								url="/files/verinice-win-32.zip" icon="fa fa-fw fa-windows"
+								url="/clients/verinice-windows-x86.zip" icon="fa fa-fw fa-windows"
 								value="verinice (Windows, 32 bit)" />
 							<p:menuitem
 								rendered="#{resourcesChecker.existsLinuxClient64Bit()}"
-								url="/files/verinice-linux-64.zip" icon="fa fa-fw fa-linux"
+								url="/clients/verinice-linux-x86_64.zip" icon="fa fa-fw fa-linux"
 								value="verinice (Linux, 64 bit)" />
 							<p:menuitem
 								rendered="#{resourcesChecker.existsLinuxClient32Bit()}"
-								url="/files/verinice-linux-32.zip" icon="fa fa-fw fa-linux	"
+								url="/clients/verinice-linux-x86.zip" icon="fa fa-fw fa-linux"
 								value="verinice (Linux, 32 bit)" />
 						</p:menu>
 					</ui:fragment>
@@ -92,10 +92,10 @@
 							<p:menuitem rendered="#{resourcesChecker.existsUserManualPdf()}"
 								icon="fa fa-fw fa-file-pdf-o"
 								value="#{msgWeb['user-guide']} (PDF)"
-								url="/manual/#{msgWeb['manual_name']}.pdf" />
+								url="/manual/#{msgWeb['manual_pdf_name']}" />
 							<p:menuitem rendered="#{resourcesChecker.existsUserManualHtml()}"
 								icon="fa fa-fw fa-code" value="#{msgWeb['user-guide']} (HTML)"
-								url="/manual/#{msgWeb['manual_name']}.pdf" />
+								url="/manual/#{msgWeb['manual_html_name']}/index.html" />
 						</p:menu>
 					</ui:fragment>
 					<ui:fragment rendered="#{not resourcesChecker.manualsAvailable()}">

@@ -779,7 +779,7 @@ import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.iso27k.service.RiskAnalysisHelper;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.gs.service.NumericStringComparator;

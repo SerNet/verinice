@@ -41,167 +41,167 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "licenseManagementEntry", propOrder = {
-    "contentIdentifier",
-    "licenseID",
-    "salt",
-    "userPassword",
-    "validUntil",
-    "validUsers"
-})
+        "e1",
+        "e2",
+        "e3",
+        "e4",
+        "e5",
+        "e6",
+    })
 @XmlRootElement
 public class LicenseManagementEntry {
 
     @XmlElement(required = true)
-    protected String contentIdentifier;
+    protected String e1;
     @XmlElement(required = true)
-    protected String licenseID;
-    protected String salt;
-    protected String userPassword;
-    protected String validUntil;
-    protected String validUsers;
+    protected String e2;
+    protected String e3;
+    protected String e4;
+    protected String e5;
+    protected String e6;
 
     /**
-     * Gets the value of the contentIdentifier property.
+     * Gets the value of the e1 property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getContentIdentifier() {
-        return contentIdentifier;
+    public String getE1() {
+        return e1;
     }
 
     /**
-     * Sets the value of the contentIdentifier property.
+     * Sets the value of the e1 property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setContentIdentifier(String value) {
-        this.contentIdentifier = value;
+    public void setE1(String value) {
+        this.e1 = value;
     }
 
     /**
-     * Gets the value of the licenseID property.
+     * Gets the value of the e2 property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getLicenseID() {
-        return licenseID;
+    public String getE2() {
+        return e2;
     }
 
     /**
-     * Sets the value of the licenseID property.
+     * Sets the value of the e2 property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setLicenseID(String value) {
-        this.licenseID = value;
+    public void setE2(String value) {
+        this.e2 = value;
     }
 
     /**
-     * Gets the value of the salt property.
+     * Gets the value of the e3 property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getSalt() {
-        return salt;
+    public String getE3() {
+        return e3;
     }
 
     /**
-     * Sets the value of the salt property.
+     * Sets the value of the e3 property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setSalt(String value) {
-        this.salt = value;
+    public void setE3(String value) {
+        this.e3 = value;
     }
 
     /**
-     * Gets the value of the userPassword property.
+     * Gets the value of the e4 property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getUserPassword() {
-        return userPassword;
+    public String getE4() {
+        return e4;
     }
 
     /**
-     * Sets the value of the userPassword property.
+     * Sets the value of the e4 property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setUserPassword(String value) {
-        this.userPassword = value;
+    public void setE4(String value) {
+        this.e4 = value;
     }
 
     /**
-     * Gets the value of the validUntil property.
+     * Gets the value of the e5 property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getValidUntil() {
-        return validUntil;
+    public String getE5() {
+        return e5;
     }
 
     /**
-     * Sets the value of the validUntil property.
+     * Sets the value of the e5 property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setValidUntil(String value) {
-        this.validUntil = value;
+    public void setE5(String value) {
+        this.e5 = value;
     }
 
     /**
-     * Gets the value of the validUsers property.
+     * Gets the value of the e6 property.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getValidUsers() {
-        return validUsers;
+    public String getE6() {
+        return e6;
     }
 
     /**
-     * Sets the value of the validUsers property.
+     * Sets the value of the e6 property.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setValidUsers(String value) {
-        this.validUsers = value;
+    public void setE6(String value) {
+        this.e6 = value;
     }
 
 }

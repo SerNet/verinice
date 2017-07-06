@@ -168,5 +168,15 @@ public class EncryptionService implements IEncryptionService {
 
 
     }
+
+    @Override
+    public byte[] encodeBase64(byte[] value) {
+        return Base64.encode(value);
+    }
+
+    @Override
+    public byte[] decodeBase64(byte[] value) {
+        return Base64.decode(value);
+    }
 	
 }
