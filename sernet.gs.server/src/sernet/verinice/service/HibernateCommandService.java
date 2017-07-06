@@ -92,7 +92,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	
 	private Properties properties;
 	
-	private Map<Class<?>,Set<String>> commandActionIds;
+	private Map<Class<? extends ICommand>,Set<String>> commandActionIds;
 	
 
     /**
@@ -418,7 +418,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
         this.vnaSchemaVersion = vnaSchemaVersion;
     }
 
-    public void setCommandActionIds(Map<Class<?>, Set<String>> commandActionIds) {
+    public void setCommandActionIds(Map<Class<? extends ICommand>, Set<String>> commandActionIds) {
         this.commandActionIds = commandActionIds;
     }
 	
