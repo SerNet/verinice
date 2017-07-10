@@ -155,17 +155,11 @@ public class GenericReportType implements IReportType {
             LOG.debug("Trying to open report from template at:\t" + rptURL.toString());
         }
 
-        try{
-            ReportSecurityContext reportSecurityContext = new ReportSecurityContext(options, rptURL, brs.getLogfile(), metadata);
-            ReportSecurityManager secureReportExecutionManager = new ReportSecurityManager(reportSecurityContext);
-            IRunAndRenderTask task = brs.createTask(reportSecurityContext.getRptDesignUrl());
-            task = brs.prepareTaskForRendering(task, options);
-            brs.performRenderTask(task, secureReportExecutionManager);
-        } catch (ReportSecurityException t){
-            throw t;
-        } catch (Exception e){
-            LOG.error("Something went wrong on executing Report", e);
-        }
+        ReportSecurityContext reportSecurityContext = new ReportSecurityContext(options, rptURL, brs.getLogfile(), metadata);
+        ReportSecurityManager secureReportExecutionManager = new ReportSecurityManager(reportSecurityContext);
+        IRunAndRenderTask task = brs.createTask(reportSecurityContext.getRptDesignUrl());
+        task = brs.prepareTaskForRendering(task, options);
+        brs.performRenderTask(task, secureReportExecutionManager);
         // could be enhancement in logging
         // List errors = task.getErrors(); // returns list of engineexceptions
     }
