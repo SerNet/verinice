@@ -160,8 +160,6 @@ public class GenericReportType implements IReportType {
         IRunAndRenderTask task = brs.createTask(reportSecurityContext.getRptDesignUrl());
         task = brs.prepareTaskForRendering(task, options);
         brs.performRenderTask(task, secureReportExecutionManager);
-        // could be enhancement in logging
-        // List errors = task.getErrors(); // returns list of engineexceptions
     }
     
     /**
