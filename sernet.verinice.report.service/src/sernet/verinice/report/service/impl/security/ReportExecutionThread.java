@@ -23,16 +23,20 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.EngineException;
 import org.eclipse.birt.report.engine.api.IEngineTask;
+import org.eclipse.birt.report.engine.api.IReportRunnable;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
+import org.eclipse.birt.report.engine.api.script.element.IReportDesign;
 import org.eclipse.osgi.util.NLS;
 
+import sernet.verinice.report.service.impl.IReportTypeException;
 import sernet.verinice.security.report.ReportSecurityException;
 
 /**
- * this thread passes a prepared {@link IRunAndRenderTask} (representing a verinice-report)
- * to the BIRT-Report-Engine and executes it from within a secured context. That
- * prevents executing unauthorized code via beanshell or javascript (executed via the rhino-engine)
- * code.
+ * This thread passes a prepared {@link IRunAndRenderTask} (representing a
+ * verinice-report) to the BIRT-Report-Engine and executes it from within a
+ * secured context. That prevents executing unauthorized code via beanshell or
+ * javascript (executed via the rhino-engine) code.
+ *
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
  */
 public class ReportExecutionThread extends Thread {
@@ -63,29 +67,34 @@ public class ReportExecutionThread extends Thread {
     }
     
     /**
-     * note that the so called "untrusted" code is not the line
-     * task.run()
-     * but the user-generated code, contained in datasets (via beanshell )
-     *  or javascript snippets within the template
+     * Note that the so called "untrusted" code is not the line task.run() but
+     * the user-generated code, contained in datasets (via beanshell ) or
+     * javascript snippets within the template.
+     *
+     * @throws IReportTypeException
      */
-    private void runUntrustedCode(){
+    private void runUntrustedCode() throws IReportTypeException{
       try {
           task.setErrorHandlingOption(IEngineTask.CANCEL_ON_ERROR);
           task.run();
           if(!task.getErrors().isEmpty()){
               handleExceptionsFromTask();
           }
-      } catch (EngineException t) {
-          LOG.error(NLS.bind(Messages.REPORT_RENDER_EXCEPTION_0, task.getReportRunnable().getDesignInstance().getReport().getQualifiedName()), t);
-          Throwable cause = t.getCause();
-          if(cause instanceof ReportSecurityException){
-              throw (ReportSecurityException)cause;
-          }
+      } catch (EngineException exception) {
+          logException(exception);
+          throw new IReportTypeException(exception);
       } finally {
           task.close();
       }
     }
-    
+
+    private void logException(EngineException exception) {
+        IReportRunnable reportRunnable = task.getReportRunnable();
+        IReportDesign designInstance = reportRunnable.getDesignInstance();
+        IReportDesign report = designInstance.getReport();
+        String qualifiedName = report.getQualifiedName();
+        LOG.error(NLS.bind(Messages.REPORT_RENDER_EXCEPTION_0, qualifiedName), exception);
+    }
 
 
     private void handleExceptionsFromTask() throws EngineException {
