@@ -103,26 +103,21 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
                 }
                 return;
             }
+            IBaseDao<T,Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
+            //first we check if the operation is allowed for the element and the children
+            dao.checkRights(element);
+            CnATreeElement[] children = element.getChildrenAsArray();
+            checkRightForSubElements(children);
             
             if (element instanceof Person || element instanceof PersonIso){
                 removeConfiguration(element);
             }
-            int listsDbId = -1;
-            if (element instanceof GefaehrdungsUmsetzung) {
-                if (element.getParent() != null) {
-                    listsDbId = element.getParent().getDbId();
-                }
-            }
-
-            IBaseDao dao = getDaoFactory().getDAOforTypedElement(element);
-            element = (T) dao.findById(element.getDbId());
             
             if (element instanceof IBSIStrukturElement || element instanceof IBSIStrukturKategorie){
                 removeAllRiskAnalyses();
             }
 
             if (element instanceof ITVerbund) {
-                
                 CnATreeElement cat = ((ITVerbund) element).getCategory(PersonenKategorie.TYPE_ID);
 
                 // A defect in the application allowed that ITVerbund instances
@@ -135,7 +130,6 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
                         removeConfiguration(elmt);
                     }
                 }
-                
             }
 
             if (element instanceof FinishedRiskAnalysis) {
@@ -143,9 +137,9 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
                 removeRiskAnalysis(analysis);
             }
 
-            if (element instanceof GefaehrdungsUmsetzung && listsDbId >= 0) {
+            if (element instanceof GefaehrdungsUmsetzung && element.getParent() != null) {
                 GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) element;
-                removeFromLists(listsDbId, gef);
+                removeFromLists(element.getParent().getDbId(), gef);
             }   
             
             /*
@@ -157,8 +151,6 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
              * Using the children as an array ensure that there won't be a
              * ConcurrentModificationException while deleting the elements.
              */
-            CnATreeElement[] children = element.getChildrenAsArray();
-
             for (int i = 0; i < children.length; i++) {
                 if (children[i] instanceof FinishedRiskAnalysis) {
                     removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
@@ -191,6 +183,22 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     }
 
     /**
+     * Check the rights for the given elements in the list, which is a recursive
+     * call, as children can have children.
+     * 
+     * @param children the elements to check in this method call
+     */
+    private void checkRightForSubElements(CnATreeElement[] children) {
+        for (CnATreeElement cnATreeElement : children) {
+            IBaseDao<? super CnATreeElement, Serializable> dao = getDaoFactory().getDAOforTypedElement(cnATreeElement);
+            dao.checkRights(cnATreeElement);
+            CnATreeElement[] childrenAsArray = cnATreeElement.getChildrenAsArray();
+            if (childrenAsArray.length > 0)
+                checkRightForSubElements(childrenAsArray);
+        }
+    }
+
+    /**
      * special handling for deletion of instances of
      * {@link GefaehrdungsUmsetzung} that does not belong to a
      * {@link FinishedRiskAnalysis} should only be called if @param element is
@@ -200,7 +208,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     private void removeAllGefaehrdungsUmsetzungen() {
         String hqlQuery = "from CnATreeElement element where element.objectType = ? AND element.scopeId = ?";
         Object[] params = new Object[] { GefaehrdungsUmsetzung.HIBERNATE_TYPE_ID, element.getDbId() };
-        List elementsToDelete = getDaoFactory().getDAO(GefaehrdungsUmsetzung.class).findByQuery(hqlQuery, params);
+        List<?> elementsToDelete = getDaoFactory().getDAO(GefaehrdungsUmsetzung.class).findByQuery(hqlQuery, params);
         for (Object o : elementsToDelete) {
             if (o instanceof GefaehrdungsUmsetzung) {
                 getDaoFactory().getDAO(GefaehrdungsUmsetzung.class).delete((GefaehrdungsUmsetzung) o);
@@ -227,7 +235,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         String hql = sb.toString();
 
         // since the values of the list will be ints, we can't parameterize the list 
-        List deleteList = getDaoFactory().getDAO(CnATreeElement.class)
+        List<CnATreeElement> deleteList = getDaoFactory().getDAO(CnATreeElement.class)
                 .findByQuery(hql, new String[]{"scopeId", "parentId"}, 
                         new Object[]{element.getScopeId(), element.getDbId()});
         for (Object o : deleteList) {
@@ -246,7 +254,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         String hql = "from CnATreeElement itv where itv.objectType = 'it-verbund' and itv.parentId = (" +
                 " select importbsigroup.dbId from CnATreeElement importbsigroup where "
                 + "importbsigroup.objectType = 'import-bsi' and importbsigroup.dbId = :dbId)";
-        List deleteList = getDaoFactory().getDAO(CnATreeElement.class).findByQuery(
+        List<CnATreeElement> deleteList = getDaoFactory().getDAO(CnATreeElement.class).findByQuery(
                 hql, new String[]{"dbId"}, new Object[]{groupDbId});
         for(Object o : deleteList){
             if(o instanceof ITVerbund){
