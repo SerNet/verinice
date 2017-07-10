@@ -383,9 +383,7 @@ public class BIRTReportService {
 			    log.debug("RunAndRenderTask lasts " + duration + " seconds");
 			}
 			// EngineException (thrown by task.run() ) is handled within the thread
-        } catch (ReportSecurityException r){
-            throw r;
-		} finally{
+        } finally{
 		    // ensure .log file is released again (.lck file will be removed)
 		    destroyEngine();
 		}
