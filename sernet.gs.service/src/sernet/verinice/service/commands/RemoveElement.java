@@ -175,7 +175,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
      * Check the rights for the given elements in the list, which is a recursive
      * call, as children can have children.
      * 
-     * @param children
+     * @param children the elements to check in this method call
      */
     private void checkRightForSubElements(CnATreeElement[] children) {
         for (CnATreeElement cnATreeElement : children) {
