@@ -28,7 +28,7 @@ import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import org.eclipse.birt.report.engine.api.script.element.IReportDesign;
 import org.eclipse.osgi.util.NLS;
 
-import sernet.verinice.report.service.impl.IReportTypeException;
+import sernet.verinice.interfaces.report.IReportTypeException;
 import sernet.verinice.security.report.ReportSecurityException;
 
 /**
@@ -72,8 +72,11 @@ public class ReportExecutionThread extends Thread {
      * javascript snippets within the template.
      *
      * @throws IReportTypeException
+     *             is thrown if the query is invalid, forbidden API is called or
+     *             the template is not valid xml.
+     *
      */
-    private void runUntrustedCode() throws IReportTypeException{
+    private void runUntrustedCode() {
       try {
           task.setErrorHandlingOption(IEngineTask.CANCEL_ON_ERROR);
           task.run();
@@ -97,15 +100,10 @@ public class ReportExecutionThread extends Thread {
     }
 
 
-    private void handleExceptionsFromTask() throws EngineException {
+    private void handleExceptionsFromTask() {
         for(Object error : task.getErrors()){
               if(error instanceof EngineException){
-                  EngineException ee = (EngineException)error;
-                  Throwable rootCause = ExceptionUtils.getRootCause(ee);
-                  if(rootCause instanceof ReportSecurityException){
-                      throw (ReportSecurityException)rootCause;
-                  }
-                  throw ee;
+                  throw new IReportTypeException((EngineException) error);
               }
           }
     }

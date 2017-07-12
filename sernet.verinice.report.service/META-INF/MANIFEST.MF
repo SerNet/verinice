@@ -35,8 +35,7 @@ Require-Bundle: com.ibm.icu;bundle-version="4.4.2",
  com.springsource.org.apache.commons.lang;bundle-version="2.4.0",
  com.springsource.org.junit;bundle-version="4.4.0"
 Bundle-Vendor: SerNet
-Export-Package: sernet.verinice.report.service.commands,
- sernet.verinice.report.service.impl
+Export-Package: sernet.verinice.report.service.commands
 Service-Component: OSGI-INF/component.xml
 Import-Package: net.sf.ehcache,
  org.jfree.chart

@@ -378,90 +378,79 @@ public class Query implements IQuery
         result = null;
 	}
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#getMetaData()
-	 */
-	@Override
-    public IResultSetMetaData getMetaData() throws OdaException
-	{
-		return new ResultSetMetaData(runQuery(), columns);
+    /*
+     * @see org.eclipse.datatools.connectivity.oda.IQuery#getMetaData()
+     */
+    @Override
+    public IResultSetMetaData getMetaData() throws OdaException {
+        runSetupQuery();
+        runQuery();
+        return new ResultSetMetaData(result, columns);
+    }
+	
+	private void runSetupQuery() throws OdaException{
+	    try {
+	        doRunSetupQuery();
+	    } catch(EvalError evalError){
+	        throw setTargetErrorAsCause(evalError);
+	    }
 	}
 	
-	private void runSetupQuery() throws OdaException
-	{
-		try {
-			String setupQueryText = properties.get(PROP_SETUP_QUERY_TEXT);
-			if (setupQueryText == null){
-				return;
-			}
-			setupInterpreter.eval(setupQueryText);
-			Object cols = setupInterpreter.get("__columns");
-			if (cols instanceof String[]){
-				columns = (String[]) cols;
-			} else {
-				columns = null;
-			}
-			Object inp = setupInterpreter.get("__inParameters");
-			if (inp instanceof String[]){
-				inParameters = (String[]) inp;
-			} else {
-				inParameters = null;
-			}
-		} catch (EvalError e) {
-			log.error("Error evaluating the setup query: ", e);
-			
-			if(e instanceof TargetError){
-			    TargetError targetError = (TargetError) e;
-			    if(targetError.getTarget() instanceof HuiTypeFactoryException){
-			        throw new IllegalStateException(Messages.query_preview_error_msg, targetError.getTarget());
-			    }
-			}
+    private void doRunSetupQuery() throws EvalError {
+        String setupQueryText = properties.get(PROP_SETUP_QUERY_TEXT);
+        if (setupQueryText == null) {
+            return;
+        }
+        setupInterpreter.eval(setupQueryText);
+        Object cols = setupInterpreter.get("__columns");
+        if (cols instanceof String[]) {
+            columns = (String[]) cols;
+        } else {
+            columns = null;
+        }
+        Object inp = setupInterpreter.get("__inParameters");
+        if (inp instanceof String[]) {
+            inParameters = (String[]) inp;
+        } else {
+            inParameters = null;
+        }
+    }
 
-			throw new IllegalStateException("Unable to execute setup query: " + e.getErrorText());
-		}
-	}
-	
-    private Object runQuery() throws OdaException
-	{
-	    
-		runSetupQuery();
-		
-		try {
-			result = interpreter.eval(queryText);
-			
-		} catch (EvalError e) {
-			result = "Exception while executing query: ";
-			if(e.getMessage() != null){
-			    result = result + e.getMessage();
-			} 
-			if(e.getScriptStackTrace() != null){
-			    result = result + "\n\n"+  e.getScriptStackTrace();
-			}
-			if(e.getCause()!=null) {
-				result = result + ", " + e.getCause().getMessage();
-			}
-			log.error("Error evaluating the query: " + queryText + "\n\n" + result, e);
+    private Object runQuery() throws OdaException {
+        try {
+            return doRunQuery();
+        } catch (EvalError evalError) {
+           throw setTargetErrorAsCause(evalError);
+        }
+    }
 
-			Throwable t = ((TargetError)e).getTarget();
-			if(t instanceof ReportSecurityException){
-			    throw (ReportSecurityException)t;
-			}
 
-		}
-		
-		return result;
-	}
 
-	/*
-	 * @see org.eclipse.datatools.connectivity.oda.IQuery#executeQuery()
-	 */
-	@Override
-    public IResultSet executeQuery() throws OdaException
-	{
-		ResultSet resultSet = new ResultSet(runQuery(), columns);
-		resultSet.setMaxRows( getMaxRows() );
-		return resultSet;
-	}
+    private Object doRunQuery() throws EvalError {
+        result = interpreter.eval(queryText);
+        return result;
+    }
+
+    private OdaException setTargetErrorAsCause(EvalError evalError) {
+        if(evalError instanceof TargetError){
+            Throwable target = ((TargetError) evalError).getTarget();
+            return new OdaException(target);
+        } else {
+            return new OdaException(evalError);
+        }
+    }
+
+    /*
+     * @see org.eclipse.datatools.connectivity.oda.IQuery#executeQuery()
+     */
+    @Override
+    public IResultSet executeQuery() throws OdaException {
+        runQuery();
+        ResultSet resultSet = new ResultSet(result, columns);
+        resultSet.setMaxRows(getMaxRows());
+        return resultSet;
+
+    }
 
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setProperty(java.lang.String, java.lang.String)
@@ -492,7 +481,12 @@ public class Query implements IQuery
 	
 	private void setValue(int parameterId, Object value) throws OdaException
 	{
-    	runSetupQuery();
+	try {
+            doRunSetupQuery();
+        } catch (EvalError evalError) {
+            throw new OdaException(evalError);
+          }
+
     	if (inParameters != null
     			&& inParameters.length >= parameterId)
     	{
@@ -645,12 +639,11 @@ public class Query implements IQuery
 		return -1;
 	}
 
-	@Override
-    public IParameterMetaData getParameterMetaData() throws OdaException
-	{
-		runSetupQuery();
-		return new ParameterMetaData(inParameters);
-	}
+    @Override
+    public IParameterMetaData getParameterMetaData() throws OdaException {
+        runSetupQuery();
+        return new ParameterMetaData(inParameters);
+    }
 
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IQuery#setSortSpec(org.eclipse.datatools.connectivity.oda.SortSpec)
