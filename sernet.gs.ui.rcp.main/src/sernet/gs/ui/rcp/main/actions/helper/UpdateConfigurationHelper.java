@@ -165,7 +165,7 @@ public class UpdateConfigurationHelper implements IRunnableWithProgress {
     }
 
     private IAuthService getAuthService() {
-        return (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
+        return ServiceFactory.lookupAuthService();
     }
 
 }

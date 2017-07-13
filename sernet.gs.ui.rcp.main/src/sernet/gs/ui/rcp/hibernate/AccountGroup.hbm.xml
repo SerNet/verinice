@@ -13,5 +13,7 @@
 		</id>
 
 		<property name="name" type="string" column="name" not-null="true" unique="true" />
+		
+		<property name="creator" type="string" column="creator" />
 	</class>
 </hibernate-mapping>

@@ -151,6 +151,14 @@ the value between <param></param> will be used directly if no string is found fo
 				<option id="configuration_isadmin_no" name="Nein"/>
 	</huiproperty>
      
+   	<huiproperty 
+				name="Local Administrator" 
+				id="configuration_islocaladmin"
+				inputtype="singleoption">
+				<option id="configuration_islocaladmin_yes" name="Ja"/>
+				<option id="configuration_islocaladmin_no" name="Nein"/>
+	</huiproperty>
+     
     <huiproperty 
                 name="Scope only" 
                 id="configuration_scope"

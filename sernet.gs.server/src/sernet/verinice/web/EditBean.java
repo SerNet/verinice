@@ -43,13 +43,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.GSServiceException;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.TimeFormatter;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
-import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.web.SecurityException;
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
@@ -62,11 +59,11 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
 import sernet.verinice.service.commands.LoadElementByUuid;
@@ -232,8 +229,8 @@ public class EditBean {
     }
 
     private void loadChangedElementPropertiesFromTask() {
-        Map<String, String> changedProperties = (Map<String, String>) getTaskService().loadChangedElementProperties(task.getId());
-        for (Entry<String, String> entry : changedProperties.entrySet()) {
+        Map<String, String> changedElementProperties = getTaskService().loadChangedElementProperties(task.getId());
+        for (Entry<String, String> entry : changedElementProperties.entrySet()) {
             element.setPropertyValue(entry.getKey(), entry.getValue());
         }
 
@@ -423,7 +420,10 @@ public class EditBean {
     public boolean writeEnabled() {
         boolean enabled = false;
         if (getElement() != null) {
-            enabled = isWriteAllowed(getElement());
+            // causes NoClassDefFoundError:
+            // org/eclipse/ui/plugin/AbstractUIPlugin
+            // FIXME: fix this dependency to eclipse related classes.
+            enabled = getConfigurationService().isWriteAllowed(getElement());
         }
         return enabled;
     }
@@ -435,54 +435,13 @@ public class EditBean {
      * @return true if write is allowed for the element.
      */
     public boolean isWriteAllowed() {
-        if (element == null)
+        if (element == null) {
             return false;
+        }
 
-        return isWriteAllowed(element);
+        return getConfigurationService().isWriteAllowed(element);
     }
     
-    public boolean isWriteAllowed(CnATreeElement cte) {
-        // Server implementation of CnAElementHome.isWriteAllowed
-        try {
-            // Short cut: If no permission handling is needed than all objects
-            // are
-            // writable.
-            if (!ServiceFactory.isPermissionHandlingNeeded()) {
-                return true;
-            }
-            // Short cut 2: If we are the admin, then everything is writable as
-            // well.
-            if (AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
-                return true;
-            }
-            if(isPermission(cte)) {
-                return true;
-            }
-        } catch (SecurityException | sernet.gs.service.SecurityException e) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Write is not allowed", e);
-            }
-            return false;
-        } catch (RuntimeException re) {
-            LOG.error("Error while checking write permissions", re);
-            throw re;
-        } catch (CommandException t) {
-            LOG.error("Error while checking write permissions", t);
-            throw new RuntimeException("Error while checking write permissions", t);
-        }
-        return false;
-    }
-
-    protected boolean isPermission(CnATreeElement cte) throws CommandException {
-        Set<String> userRoles = getRoles();
-        for (Permission p : cte.getPermissions()) {
-            if (p != null && p.isWriteAllowed() && userRoles.contains(p.getRole())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     // TODO: impl reference
     // TODO: impl multiselect
     public void onChange(ValueChangeEvent event) {
@@ -812,6 +771,10 @@ public class EditBean {
 
     private ITaskService getTaskService() {
         return (ITaskService) VeriniceContext.get(VeriniceContext.TASK_SERVICE);
+    }
+
+    private IConfigurationService getConfigurationService() {
+        return (IConfigurationService) VeriniceContext.get(VeriniceContext.CONFIGURATION_SERVICE);
     }
 
     public MassnahmenUmsetzung getMassnahmenUmsetzung() {

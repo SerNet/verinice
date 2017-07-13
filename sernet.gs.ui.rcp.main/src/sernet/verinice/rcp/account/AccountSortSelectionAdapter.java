@@ -47,16 +47,16 @@ class AccountSortSelectionAdapter extends SelectionAdapter {
      */
     @Override
     public void widgetSelected(SelectionEvent e) {
-        fileView.tableSorter.setColumn(index);
-        int dir = fileView.viewer.getTable().getSortDirection();
-        if (fileView.viewer.getTable().getSortColumn() == column) {
+        fileView.getTableSorter().setColumn(index);
+        int dir = fileView.getViewer().getTable().getSortDirection();
+        if (fileView.getViewer().getTable().getSortColumn() == column) {
             dir = dir == SWT.UP ? SWT.DOWN : SWT.UP;
         } else {
 
             dir = SWT.DOWN;
         }
-        fileView.viewer.getTable().setSortDirection(dir);
-        fileView.viewer.getTable().setSortColumn(column);
-        fileView.viewer.refresh();
+        fileView.getViewer().getTable().setSortDirection(dir);
+        fileView.getViewer().getTable().setSortColumn(column);
+        fileView.getViewer().refresh();
     }
 }

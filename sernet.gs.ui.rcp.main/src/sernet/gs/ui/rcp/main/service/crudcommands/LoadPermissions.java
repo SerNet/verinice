@@ -18,12 +18,19 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
+import sernet.gs.common.ApplicationRoles;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
+import sernet.verinice.rcp.account.AccountLoader;
 
 /**
  * Load permission items for cnatreeelement.
@@ -31,6 +38,8 @@ import sernet.verinice.model.common.Permission;
  */
 @SuppressWarnings("serial")
 public class LoadPermissions extends GenericCommand {
+
+    private transient Logger log = Logger.getLogger(LoadPermissions.class);
 
 	private CnATreeElement cte;
 	
@@ -40,25 +49,38 @@ public class LoadPermissions extends GenericCommand {
 		this.cte = cte;
 	}
 
-	public void execute() {
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(cte.getTypeId());
-		
-		cte = dao.findById(cte.getDbId());
-		
-		permissions = cte.getPermissions();
-		
-		// Hydrate the elements.
-		for (Permission p : permissions)
-		{
-			p.getRole();
-			p.isReadAllowed();
-			p.isWriteAllowed();
-		}
-	}
-	
-	public Set<Permission> getPermissions()
-	{
-		return permissions;
-	}
+    @Override
+    public void execute() {
+        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(cte.getTypeId());
 
+        cte = dao.findById(cte.getDbId());
+        permissions = cte.getPermissions();
+
+        boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        Set<Permission> filteredPermissions = new HashSet<Permission>(permissions.size());
+
+        // Hydrate and filter the permissions
+        for (Permission p : permissions) {
+            if (isLocalAdmin) {
+                if (AccountLoader.isLocalAdminOwnerOrCreator(p.getRole())) {
+                    filteredPermissions.add(p);
+                }
+            }
+            p.getRole();
+            p.isReadAllowed();
+            p.isWriteAllowed();
+        }
+
+        if (isLocalAdmin) {
+            permissions = filteredPermissions;
+        }
+    }
+
+    public Set<Permission> getPermissions() {
+        return permissions;
+    }
+
+    private IAuthService getAuthService() {
+        return ServiceFactory.lookupAuthService();
+    }
 }

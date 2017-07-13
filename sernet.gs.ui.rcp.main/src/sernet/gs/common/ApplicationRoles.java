@@ -44,6 +44,13 @@ public abstract class ApplicationRoles {
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 	
 	/**
+     * User is authenticated and can access more powerful and administrative
+     * functions, such as creating new users, setting other people's passwords
+     * etc.
+     */
+    public static final String ROLE_LOCAL_ADMIN = "ROLE_LOCAL_ADMIN";
+
+    /**
      * User is authenticated and can access verinice.WEB the web frontend
      */
     public static final String ROLE_WEB = "ROLE_WEB";

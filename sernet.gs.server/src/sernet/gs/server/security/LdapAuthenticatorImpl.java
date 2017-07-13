@@ -249,11 +249,18 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
         }
         
         // if set in the entity, the user may also have the admin role:
-        if (entity.isSelected(Configuration.PROP_ISADMIN, "configuration_isadmin_yes")){
+        if (entity.isSelected(Configuration.PROP_ISADMIN, Configuration.PROP_ISADMIN_YES)) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Administrator: yes");
             }
             roles.add(ApplicationRoles.ROLE_ADMIN);
+        }
+        // if set in the entity, the user may also have the local admin role:
+        if (entity.isSelected(Configuration.PROP_ISLOCALADMIN, Configuration.PROP_ISLOCALADMIN_YES)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Local Administrator: yes");
+            }
+            roles.add(ApplicationRoles.ROLE_LOCAL_ADMIN);
         }
         // add special roles:
         if (specialRoles != null && specialRoles.length>0) {

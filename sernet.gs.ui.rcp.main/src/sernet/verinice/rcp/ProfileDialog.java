@@ -52,9 +52,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IRightsServiceClient;
 import sernet.verinice.model.auth.Action;
 import sernet.verinice.model.auth.Auth;
@@ -92,12 +94,13 @@ public class ProfileDialog extends TitleAreaDialog {
     
 
     private IRightsServiceClient rightsService;
+    private IAuthService authService;
 
     public ProfileDialog(Shell parent) {
         super(parent);
         setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
         auth = getRightService().getConfiguration();
-        allActions = Arrays.asList(ActionRightIDs.getAllRightIDs());
+        loadAllActions();
         unselectedActions = new ArrayList<Action>(allActions.size());    
     }
 
@@ -112,8 +115,27 @@ public class ProfileDialog extends TitleAreaDialog {
         setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
         this.auth = auth;
         this.profileName = profileName;
-        allActions = Arrays.asList(ActionRightIDs.getAllRightIDs());
-        unselectedActions = new ArrayList<Action>(allActions.size());  
+        loadAllActions();
+        unselectedActions = new ArrayList<Action>(allActions.size());
+    }
+
+    private void loadAllActions() {
+        boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        if (isLocalAdmin) {
+            loadAllLocalAdminActions();
+        } else {
+            allActions = Arrays.asList(ActionRightIDs.getAllRightIDs());
+        }
+    }
+
+    private void loadAllLocalAdminActions() {
+        List<String> allRightIds = Arrays.asList(ActionRightIDs.getAllRightIDs());
+        allActions = new ArrayList<String>(allRightIds.size());
+        for (String rightId : allRightIds) {
+            if (getRightService().isEnabled(rightId)) {
+                allActions.add(rightId);
+            }
+        }
     }
 
     @Override
@@ -294,6 +316,7 @@ public class ProfileDialog extends TitleAreaDialog {
                 this.profile.setName(textName.getText());
             }
             if (isNewProfile()) {
+                profile.setCreator(getAuthService().getUsername());
                 auth.getProfiles().getProfile().add(this.profile);
             } else {
                 if (!this.profile.getName().equals(this.profileName)) {
@@ -409,6 +432,7 @@ public class ProfileDialog extends TitleAreaDialog {
                 });
 
         addButton.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 addSelection();
                 removeAllButton.setEnabled(true);
@@ -426,12 +450,14 @@ public class ProfileDialog extends TitleAreaDialog {
         });
 
         tableSelected.addSelectionChangedListener(new ISelectionChangedListener() {
+                    @Override
                     public void selectionChanged(SelectionChangedEvent event) {
                         removeButton.setEnabled(!event.getSelection().isEmpty());
                     }
                 });
 
         removeButton.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 removeSelection();
                 addAllButton.setEnabled(true);
@@ -440,6 +466,7 @@ public class ProfileDialog extends TitleAreaDialog {
         });
 
         tableSelected.addDoubleClickListener(new IDoubleClickListener() {
+            @Override
             public void doubleClick(DoubleClickEvent event) {
                 removeSelection();
                 addAllButton.setEnabled(true);
@@ -451,6 +478,7 @@ public class ProfileDialog extends TitleAreaDialog {
             /* (non-Javadoc)
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
+            @Override
             @SuppressWarnings({ "unchecked", "rawtypes" })
             public void widgetSelected(SelectionEvent e) { 
                 selectedActions.addAll(unselectedActions);
@@ -467,6 +495,7 @@ public class ProfileDialog extends TitleAreaDialog {
             /* (non-Javadoc)
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 unselectedActions.addAll(selectedActions);
                 selectedActions.clear();
@@ -520,12 +549,18 @@ public class ProfileDialog extends TitleAreaDialog {
         return auth;
     }
 
-
     IRightsServiceClient getRightService() {
         if (rightsService == null) {
             rightsService = (IRightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         }
         return rightsService;
+    }
+
+    IAuthService getAuthService() {
+        if (authService == null) {
+            authService = (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
+        }
+        return authService;
     }
 
     class ActionTableComparator extends ViewerComparator {

@@ -19,22 +19,16 @@ package sernet.gs.web;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.GSServiceException;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
-import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
 import sernet.gs.ui.rcp.main.service.taskcommands.LoadChildrenAndMassnahmen;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.bpm.KeyValue;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.Permission;
-import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
 import sernet.verinice.service.commands.SaveElement;
 
 import java.util.ArrayList;
@@ -84,8 +78,6 @@ public class ToDoBean {
     private List<KeyValue> executionList;
 
     private boolean showDescription = false;
-
-    private Set<String> roles = null;
 
     private ICommandService commandService;
 
@@ -326,54 +318,11 @@ public class ToDoBean {
 
     public boolean writeEnabled() {
         boolean enabled = false;
-        if (getMassnahmeUmsetzung() != null) {
-            // causes NoClassDefFoundError:
-            // org/eclipse/ui/plugin/AbstractUIPlugin
-            // FIXME: fix this dependency to eclipse related classes.
-            enabled = isWriteAllowed(getMassnahmeUmsetzung());
+        if(getMassnahmeUmsetzung()!=null) {
+            enabled = getConfigurationService().isWriteAllowed(getMassnahmeUmsetzung());
         }
 
         return enabled;
-    }
-
-    public boolean isWriteAllowed(CnATreeElement cte) {
-        // Server implementation of CnAElementHome.isWriteAllowed
-        try {
-            // Short cut: If no permission handling is needed than all objects
-            // are
-            // writable.
-            if (!ServiceFactory.isPermissionHandlingNeeded()) {
-                return true;
-            }
-            // Short cut 2: If we are the admin, then everything is writable as
-            // well.
-            if (AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
-                return true;
-            }
-
-            if (roles == null) {
-                LoadCurrentUserConfiguration lcuc = new LoadCurrentUserConfiguration();
-                lcuc = getCommandService().executeCommand(lcuc);
-
-                Configuration c = lcuc.getConfiguration();
-                // No configuration for the current user (anymore?). Then
-                // nothing is
-                // writable.
-                if (c == null) {
-                    return false;
-                }
-                roles = c.getRoles();
-            }
-
-            for (Permission p : cte.getPermissions()) {
-                if (p.isWriteAllowed() && roles.contains(p.getRole())) {
-                    return true;
-                }
-            }
-        } catch (Exception e) {
-            ExceptionHandler.handle(e);
-        }
-        return false;
     }
 
     public void save() {
@@ -600,4 +549,7 @@ public class ToDoBean {
         this.selectedChapterId = selectedChapterId;
     }
 
+	private IConfigurationService getConfigurationService() {
+        return (IConfigurationService) VeriniceContext.get(VeriniceContext.CONFIGURATION_SERVICE);
+    }
 }

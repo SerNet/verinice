@@ -19,16 +19,27 @@
  ******************************************************************************/
 package sernet.verinice.rcp.account;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAccountService;
+import sernet.verinice.interfaces.IAuthService;
+import sernet.verinice.interfaces.IRightsService;
+import sernet.verinice.model.auth.OriginType;
+import sernet.verinice.model.auth.Profile;
+import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.account.AccountSearchParameter;
+import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
 
 /**
  * Helper class to account data
@@ -36,12 +47,14 @@ import sernet.verinice.service.account.AccountSearchParameter;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public final class AccountLoader {
- 
+
+    private static final Logger LOG = Logger.getLogger(AccountLoader.class);
+
     private static final NumericStringComparator NSC = new NumericStringComparator();
-    
+
     private AccountLoader() {        
     }
-      
+
     @SuppressWarnings("unchecked")
     public static List<String> loadLoginAndGroupNames() {
         IAccountService accountService = ServiceFactory.lookupAccountService();
@@ -51,7 +64,7 @@ public final class AccountLoader {
         Collections.sort(accountGroups, NSC);
         return accountGroups;
     } 
-    
+
     @SuppressWarnings("unchecked")
     public static List<String> loadLoginNames() {
         IAccountService accountService = ServiceFactory.lookupAccountService();
@@ -59,9 +72,91 @@ public final class AccountLoader {
         Collections.sort(accounts, NSC);
         return accounts;
     } 
-    
+
+    @SuppressWarnings("unchecked")
+    public static List<String> loadGroupNames() {
+        IAccountService accountService = ServiceFactory.lookupAccountService();
+        List<String> accountGroups = accountService.listGroupNames();
+        Collections.sort(accountGroups, NSC);
+        return accountGroups;
+    }
+
     public static List<Configuration> loadAccounts() {
         IAccountService accountService = ServiceFactory.lookupAccountService();
         return accountService.findAccounts(AccountSearchParameter.newInstance());
     } 
+
+    public static Set<String> loadCurrentUserGroups() {
+        Set<String> userRoles = new HashSet<String>();
+        try {
+            LoadCurrentUserConfiguration lcuc = new LoadCurrentUserConfiguration();
+            lcuc = ServiceFactory.lookupCommandService().executeCommand(lcuc);
+
+            Configuration c = lcuc.getConfiguration();
+            if (c != null) {
+                userRoles = c.getRoles();
+            }
+        } catch (Exception e) {
+            LOG.error("Error while loading current user roles.", e);
+        }
+        return userRoles;
+    }
+
+    public static List<String> loadGroupNamesForLocalAdmin() {
+        List<String> groups = new ArrayList<String>();
+        List<String> groupNames = AccountLoader.loadGroupNames();
+
+        for (String groupName : groupNames) {
+            if (AccountLoader.isLocalAdminOwnerOrCreator(groupName)) {
+                groups.add(groupName);
+            }
+        }
+        return groups;
+    }
+
+    public static List<String> loadAccountsAndGroupNamesForLocalAdmin() {
+        List<String> accountsAndGroups = AccountLoader.loadLoginNames();
+        List<String> groupNames = AccountLoader.loadGroupNames();
+
+        for (String groupName : groupNames) {
+            if (AccountLoader.isLocalAdminOwnerOrCreator(groupName)) {
+                accountsAndGroups.add(groupName);
+            }
+        }
+        return accountsAndGroups;
+    }
+
+    public static boolean isLocalAdminOwnerOrCreator(String groupName) {
+        Set<String> userGroups = AccountLoader.loadCurrentUserGroups();
+        if (IRightsService.ADMINLOCALDEFAULTGROUPNAME.equals(groupName) || userGroups.contains(groupName)) {
+            return true;
+        }
+
+        List<AccountGroup> accountGroups = ServiceFactory.lookupAccountService().listGroups();
+        String username = ServiceFactory.lookupAuthService().getUsername();
+        for (AccountGroup accountGroup : accountGroups) {
+            if (accountGroup.getName().equals(groupName) && username.equals(accountGroup.getCreator())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isLocalAdminCreator(Profile profile) {
+        if (OriginType.DEFAULT.equals(profile.getOrigin())) {
+            return false;
+        }
+        String username = ServiceFactory.lookupAuthService().getUsername();
+        return username != null && username.equals(profile.getCreator());
+    }
+
+    public static boolean isEditAllowed(Configuration account) {
+        final boolean isAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
+        final boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        return isAdmin || (isLocalAdmin && !account.isAdminUser());
+    }
+
+    private static IAuthService getAuthService() {
+        return ServiceFactory.lookupAuthService();
+    }
 }

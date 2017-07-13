@@ -25,9 +25,11 @@ import java.util.List;
 import java.util.Set;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
+import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
@@ -97,11 +99,14 @@ public class UpdatePermissions extends ChangeLoggingCommand implements IChangeLo
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 
+    @Override
     public void execute() {
         CnATreeElement cte = loadElement();
-        updateElement(cte);
-        if (updateChildren) {
-            updateChildren(cte.getChildren());
+        if (getConfigurationService().isWriteAllowed(cte)) {
+            updateElement(cte);
+            if (updateChildren) {
+                updateChildren(cte.getChildren());
+            }
         }
 
         // Since the result of a change to permissions is that the model is
@@ -180,8 +185,10 @@ public class UpdatePermissions extends ChangeLoggingCommand implements IChangeLo
 
     private void updateChildren(Set<CnATreeElement> children) {
         for (CnATreeElement child : children) {
-            updateElement(child);
-            updateChildren(child.getChildren());
+            if (getConfigurationService().isWriteAllowed(child)) {
+                updateElement(child);
+                updateChildren(child.getChildren());
+            }
         }
     }
 
@@ -199,6 +206,7 @@ public class UpdatePermissions extends ChangeLoggingCommand implements IChangeLo
         return permissionDao;
     }
 
+    @Override
     public String getStationId() {
         return stationId;
     }
@@ -214,6 +222,7 @@ public class UpdatePermissions extends ChangeLoggingCommand implements IChangeLo
      * sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getChangeType
      * ()
      */
+    @Override
     public int getChangeType() {
         return ChangeLogEntry.TYPE_PERMISSION;
     }
@@ -224,8 +233,12 @@ public class UpdatePermissions extends ChangeLoggingCommand implements IChangeLo
      * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#
      * getChangedElements()
      */
+    @Override
     public List<CnATreeElement> getChangedElements() {
         return changedElements;
     }
 
+    protected IConfigurationService getConfigurationService() {
+        return (IConfigurationService) VeriniceContext.get(VeriniceContext.CONFIGURATION_SERVICE);
+    }
 }

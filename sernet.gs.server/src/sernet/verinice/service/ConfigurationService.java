@@ -20,6 +20,7 @@
 package sernet.verinice.service;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,14 +28,21 @@ import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.common.ApplicationRoles;
+
 import sernet.gs.service.RetrieveInfo;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.PersonAdapter;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
 
 /**
  * Thread save implementation of {@link IConfigurationService}.
@@ -42,21 +50,24 @@ import sernet.verinice.model.common.configuration.Configuration;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class ConfigurationService implements IConfigurationService {
-    
+
+    private static final Logger LOG = Logger.getLogger(ConfigurationService.class);
+
     private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final Lock readLock = readWriteLock.readLock();
     private final Lock writeLock = readWriteLock.writeLock();
-    
+
     private Map<String, String[]> roleMap = new HashMap<String, String[]>();   
     private Map<String, Boolean> scopeMap = new HashMap<String, Boolean>(); 
     private Map<String, Integer> scopeIdMap = new HashMap<String, Integer>();
     private Map<String, String> nameMap = new HashMap<String, String>();
-    
+
     private IBaseDao<Configuration, Serializable> configurationDao;
     private IBaseDao<CnATreeElement, Long> cnaTreeElementDao;
-    
+
     private IAuthService authService;
-    
+    private ICommandService commandService;
+
     private void loadUserData() {
         List<Configuration> configurations = getConfigurationDao().findAll(RetrieveInfo.getPropertyInstance());
         // Block all other threads before filling the maps
@@ -81,7 +92,7 @@ public class ConfigurationService implements IConfigurationService {
         }    
         getConfigurationDao().clear();
     }
-    
+
     private void loadUserNames() {
         List<Configuration> configurations = getConfigurationDao().findAll(RetrieveInfo.getPropertyInstance());
         // Block all other threads before filling the maps
@@ -104,7 +115,7 @@ public class ConfigurationService implements IConfigurationService {
         }    
         getConfigurationDao().clear();
     }
-    
+
     /* (non-Javadoc)
      * @see sernet.verinice.service.IConfigurationService#setRoles(java.lang.String, java.lang.String[])
      */
@@ -118,7 +129,7 @@ public class ConfigurationService implements IConfigurationService {
             writeLock.unlock();
         }   
     }
-    
+
     /* (non-Javadoc)
      * @see sernet.verinice.service.IConfigurationService#setScopeOnly(java.lang.String, boolean)
      */
@@ -148,7 +159,7 @@ public class ConfigurationService implements IConfigurationService {
         roleArray = roleSet.toArray(roleArray);
         return roleArray;
     }
-    
+
     /* (non-Javadoc)
      * @see sernet.verinice.service.IConfigurationService#discardUserData()
      */
@@ -165,7 +176,7 @@ public class ConfigurationService implements IConfigurationService {
             writeLock.unlock();
         }
     }
-    
+
     /* (non-Javadoc)
      * @see sernet.verinice.service.IConfigurationService#isScopeOnly(java.lang.String)
      */
@@ -202,7 +213,7 @@ public class ConfigurationService implements IConfigurationService {
         }
         return (result==null) ? false : result;
     }
-    
+
     /* (non-Javadoc)
      * @see sernet.verinice.service.IConfigurationService#getScopeId(java.lang.String)
      */
@@ -226,7 +237,7 @@ public class ConfigurationService implements IConfigurationService {
         }
         return result;
     }
-    
+
     /* (non-Javadoc)
      * @see sernet.verinice.service.IConfigurationService#getRoles(java.lang.String)
      */
@@ -250,7 +261,7 @@ public class ConfigurationService implements IConfigurationService {
         }
         return result;
     }
-      
+
     /* (non-Javadoc)
      * @see sernet.verinice.service.IConfigurationService#getName(java.lang.String)
      */
@@ -274,7 +285,60 @@ public class ConfigurationService implements IConfigurationService {
         }
         return result;
     }
-    
+
+    @Override
+    public boolean isWriteAllowed(CnATreeElement cte) {
+        // Server implementation of CnAElementHome.isWriteAllowed
+        try {
+            // Short cut: If no permission handling is needed than all objects
+            // are
+            // writable.
+            if (!authService.isPermissionHandlingNeeded()) {
+                return true;
+            }
+            // Short cut 2: If we are the admin, then everything is writable as
+            // well.
+            if (getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
+                return true;
+            }
+            Set<String> userRoles = loadRoles();
+            for (Permission p : cte.getPermissions()) {
+                if (p != null && p.isWriteAllowed() && userRoles.contains(p.getRole())) {
+                    return true;
+                }
+            }
+        } catch (SecurityException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Write is not allowed", e);
+            }
+            return false;
+        } catch (sernet.gs.service.SecurityException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Write is not allowed", e);
+            }
+            return false;
+        } catch (RuntimeException re) {
+            LOG.error("Error while checking write permissions", re);
+            throw re;
+        } catch (CommandException t) {
+            LOG.error("Error while checking write permissions", t);
+            throw new RuntimeException("Error while checking write permissions", t);
+        }
+        return false;
+    }
+
+    public Set<String> loadRoles() throws CommandException {
+        LoadCurrentUserConfiguration lcuc = new LoadCurrentUserConfiguration();
+        lcuc = getCommandService().executeCommand(lcuc);
+        Configuration c = lcuc.getConfiguration();
+        // No configuration for the current user (anymore?). Then nothing is
+        // writable.
+        if (c == null) {
+            return Collections.emptySet();
+        }
+        return c.getRoles();
+    }
+
     public IBaseDao<Configuration, Serializable> getConfigurationDao() {
         return configurationDao;
     }
@@ -282,11 +346,11 @@ public class ConfigurationService implements IConfigurationService {
     public void setConfigurationDao(IBaseDao<Configuration, Serializable> configurationDao) {
         this.configurationDao = configurationDao;
     }
-    
+
     public IBaseDao<CnATreeElement, Long> getCnaTreeElementDao() {
         return cnaTreeElementDao;
     }
-    
+
     public void setCnaTreeElementDao(IBaseDao<CnATreeElement, Long> cnaTreeElementDAO) {
         this.cnaTreeElementDao = cnaTreeElementDAO;
     }
@@ -299,4 +363,11 @@ public class ConfigurationService implements IConfigurationService {
         this.authService = authService;
     }
 
+    public ICommandService getCommandService() {
+        return commandService;
+    }
+
+    public void setCommandService(ICommandService commandService) {
+        this.commandService = commandService;
+    }
 }
