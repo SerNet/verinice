@@ -365,7 +365,7 @@ public class ImportTask extends AbstractGstoolImportTask {
                     LOG.debug("Saving Zuordnung from ZO" + nZielobjekt.getName() + "(GUID " + nZielobjekt.getGuid() + ") to ITVerbund " + zielobjekt.zielobjekt.getName());
                     itverbundZuordnung.put(nZielobjekt.getGuid(), zielobjekt.zielobjekt);
                 }
-            }      
+            }
         }
         return neueVerbuende;
     }
