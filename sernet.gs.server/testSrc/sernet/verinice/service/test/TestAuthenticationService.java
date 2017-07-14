@@ -99,4 +99,9 @@ public class TestAuthenticationService implements IAuthService {
     public void setRoles(String[] roles) {
         this.roles = roles;
     }
+
+    @Override
+    public boolean currentUserHasRole(String[] allowedRoles) {
+        return false;
+    }
 }
