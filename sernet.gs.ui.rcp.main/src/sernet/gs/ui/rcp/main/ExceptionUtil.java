@@ -58,7 +58,7 @@ public final class ExceptionUtil {
 			return;
 		}
 
-		if (e instanceof SecurityException) {
+		if (e instanceof SecurityException || e.getCause() instanceof SecurityException) {
 			Display.getDefault().syncExec(new Runnable() {
 				public void run() {
 					MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.ExceptionUtil_2, Messages.ExceptionUtil_3);

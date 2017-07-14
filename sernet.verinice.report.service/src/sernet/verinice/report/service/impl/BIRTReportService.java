@@ -366,26 +366,23 @@ public class BIRTReportService {
 		    // Load class DataTypeUtil before the secureClassLoader is set
 		    preloadClasses();
 		    
-		    // report generation is handled by a thread here
-		    // which is not for reasons of concurrency 
-		    // BUT for reasons of security (this enables setting
-		    // specific classloader for executing the report
-		    // since concurrency is explicitly not wanted here,
-		    // we are using thread.run() instead of thread.start()
-		    
+            // report generation is handled by a thread here which is not for
+            // reasons of concurrency BUT for reasons of security (this enables
+            // setting specific classloader for executing the report since
+            // concurrency is explicitly not wanted here, we are using
+            // thread.run() instead of thread.start()
             ReportExecutionThread reportExecutionThread = new ReportExecutionThread(task, secureReportExecutionManager, odaDriver.isSandboxEnabled());
             if(odaDriver.isSandboxEnabled()){
                 reportExecutionThread.setContextClassLoader(secureClassLoader);
             }
+
             reportExecutionThread.run();
+
 			if(log.isDebugEnabled()){
 			    long duration = (System.currentTimeMillis() - startTime) / MILLIS_PER_SECOND;
 			    log.debug("RunAndRenderTask lasts " + duration + " seconds");
 			}
-			// EngineException (thrown by task.run() ) is handled within the thread
-        } catch (ReportSecurityException r){
-            throw r;
-		} finally{
+        } finally {
 		    // ensure .log file is released again (.lck file will be removed)
 		    destroyEngine();
 		}
