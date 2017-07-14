@@ -34,7 +34,7 @@ import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
-import sernet.verinice.interfaces.report.IReportTypeException;
+import sernet.verinice.interfaces.report.ReportTypeException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.report.service.impl.security.ReportSecurityManager;
 import sernet.verinice.security.report.ReportSecurityContext;
@@ -145,10 +145,10 @@ public class GenericReportType implements IReportType {
             }
         } catch (MalformedURLException e) {
             LOG.error("Error reading" + " rptdesign", e);
-            throw new IReportTypeException(e);
+            throw new ReportTypeException(e);
         } catch (URISyntaxException e) {
             LOG.error("Unable to parse URL of template location", e);
-            throw new IReportTypeException(e);
+            throw new ReportTypeException(e);
         }
 
         if(LOG.isDebugEnabled()){

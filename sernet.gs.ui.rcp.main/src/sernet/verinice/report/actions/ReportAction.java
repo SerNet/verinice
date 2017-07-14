@@ -45,7 +45,7 @@ import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
-import sernet.verinice.interfaces.report.IReportTypeException;
+import sernet.verinice.interfaces.report.ReportTypeException;
 import sernet.verinice.rcp.RightsEnabledActionDelegate;
 import sernet.verinice.report.rcp.GenerateReportDialog;
 import sernet.verinice.report.rcp.Messages;
@@ -167,7 +167,7 @@ public abstract class ReportAction extends RightsEnabledActionDelegate implement
             dialog.getReportType().createReport(ro);
             dialog.getReportType().createReport(dialog.getReportMetaData());
             setGenerationSuccessful(true);
-        }catch (IReportTypeException exception){
+        }catch (ReportTypeException exception){
             if(exception.causedBySecurityException()) {
                 ExceptionUtil.log(exception, Messages.GenerateReportDialog_34);
             } else {

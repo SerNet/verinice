@@ -29,11 +29,11 @@ import java.util.Set;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class IReportTypeException extends RuntimeException {
+public class ReportTypeException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public IReportTypeException(Throwable throwable) {
+    public ReportTypeException(Throwable throwable) {
         super(throwable);
     }
 
@@ -53,10 +53,10 @@ public class IReportTypeException extends RuntimeException {
 
     private boolean causedBySecurityException(Throwable cause) {
 
-        Set<Throwable> dejaVu = Collections.newSetFromMap(new IdentityHashMap<Throwable, Boolean>());
+        Set<Throwable> visited = Collections.newSetFromMap(new IdentityHashMap<Throwable, Boolean>());
         Throwable current = cause;
-        while (!dejaVu.contains(current)) {
-            dejaVu.add(current);
+        while (!visited.contains(current)) {
+            visited.add(current);
             if (current instanceof SecurityException) {
                 return true;
             } else if (current.getCause() != null) {

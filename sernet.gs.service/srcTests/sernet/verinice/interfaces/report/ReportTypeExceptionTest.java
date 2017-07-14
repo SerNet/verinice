@@ -23,26 +23,26 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import sernet.verinice.interfaces.report.IReportTypeException;
+import sernet.verinice.interfaces.report.ReportTypeException;
 
 /**
- * Tests if this extended exceptions detects cycle when checking for
- * {@link SecurityException} in the cause chain.
+ * Tests if cycle are detected when checking for {@link SecurityException} in
+ * the cause chain.
  * 
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-public class IReportTypeExceptionTest {
+public class ReportTypeExceptionTest {
 
     @Test
     public void causeIsNull() {
-        IReportTypeException iReportTypeException = new IReportTypeException(null);
-        assertFalse(iReportTypeException.causedBySecurityException());
+        ReportTypeException reportTypeException = new ReportTypeException(null);
+        assertFalse(reportTypeException.causedBySecurityException());
     }
 
     @Test
     public void stackTraceContainsCycle() {
         Exception exceptionOne = new CycleException();
-        IReportTypeException exceptionTwo = new IReportTypeException(exceptionOne);
+        ReportTypeException exceptionTwo = new ReportTypeException(exceptionOne);
         assertFalse(exceptionTwo.causedBySecurityException());
     }
 
@@ -50,7 +50,7 @@ public class IReportTypeExceptionTest {
     public void containsSecurityException() {
         SecurityException securityException = new SecurityException("forbidde");
         Exception somethingInBetween = new Exception(securityException);
-        IReportTypeException exceptionTwo = new IReportTypeException(somethingInBetween);
+        ReportTypeException exceptionTwo = new ReportTypeException(somethingInBetween);
         assertTrue(exceptionTwo.causedBySecurityException());
     }
 

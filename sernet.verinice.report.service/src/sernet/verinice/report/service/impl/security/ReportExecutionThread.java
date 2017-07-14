@@ -28,7 +28,7 @@ import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import org.eclipse.birt.report.engine.api.script.element.IReportDesign;
 import org.eclipse.osgi.util.NLS;
 
-import sernet.verinice.interfaces.report.IReportTypeException;
+import sernet.verinice.interfaces.report.ReportTypeException;
 import sernet.verinice.security.report.ReportSecurityException;
 
 /**
@@ -71,7 +71,7 @@ public class ReportExecutionThread extends Thread {
      * the user-generated code, contained in datasets (via beanshell ) or
      * javascript snippets within the template.
      *
-     * @throws IReportTypeException
+     * @throws ReportTypeException
      *             is thrown if the query is invalid, forbidden API is called or
      *             the template is not valid xml.
      *
@@ -85,7 +85,7 @@ public class ReportExecutionThread extends Thread {
           }
       } catch (EngineException exception) {
           logException(exception);
-          throw new IReportTypeException(exception);
+          throw new ReportTypeException(exception);
       } finally {
           task.close();
       }
@@ -103,7 +103,7 @@ public class ReportExecutionThread extends Thread {
     private void handleExceptionsFromTask() {
         for(Object error : task.getErrors()){
               if(error instanceof EngineException){
-                  throw new IReportTypeException((EngineException) error);
+                  throw new ReportTypeException((EngineException) error);
               }
           }
     }
