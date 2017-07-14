@@ -272,7 +272,7 @@ public class RightManagementTest extends CommandServiceProvider {
      *            the login for the user
      * @param personIso
      *            the person object to create the configuration for
-     * @param deleteUserDefaultGroup
+     * @param deleteUserDefaultGroup should the default group removed from the configuration
      * @return the created configuration should the default-usergroup removed
      *         for the user
      */

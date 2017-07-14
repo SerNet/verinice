@@ -121,16 +121,7 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 		}
 		    
 		try {
-		    //check the configured actionIds
-            Set<String> set = commandActionIds.get(command.getClass());
-            if (set != null) {
-                for (String actionId : set) {
-                    if (!rightsServerHandler.isEnabled(username, actionId))
-                        // Should the message not be translateable also see
-                        // sernet.gs.server.ServerExceptionHandler
-                        throw new AccessDeniedException("Im Rechteprofil ist das ausführen dieser Aktion nicht erlaubt.");
-                }
-            }
+            checkRightsForAction(command, username);
 		    
 			// inject service and database access:
 			command.setDaoFactory(daoFactory);
@@ -191,6 +182,29 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 		}
 		return command;
 	}
+
+    /**
+     * Check if the given command is allowed to execute by the given user as
+     * defined in the authorization configuration see {@link XmlRightsService}
+     * for details. The command to actionid mapping is defined in
+     * command-actionid-mapping.xml.
+     * 
+     * @param command
+     *            the command to check
+     * @param username
+     *            the user to check
+     */
+    private <T extends ICommand> void checkRightsForAction(T command, String username) {
+        Set<String> set = commandActionIds.get(command.getClass());
+        if (set != null) {
+            for (String actionId : set) {
+                if (!rightsServerHandler.isEnabled(username, actionId))
+                    // Should the message not be translateable also see
+                    // sernet.gs.server.ServerExceptionHandler
+                    throw new AccessDeniedException("Im Rechteprofil ist das Ausführen dieser Aktion nicht erlaubt.");
+            }
+        }
+    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICommandService#configureFilter(sernet.verinice.interfaces.IBaseDao)
