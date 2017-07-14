@@ -21,12 +21,15 @@ package sernet.verinice.service;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.security.AccessDeniedException;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.hui.common.VeriniceContext;
@@ -89,7 +92,10 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	
 	private Properties properties;
 	
-	/**
+	private Map<Class<? extends ICommand>,Set<String>> commandActionIds;
+	
+
+    /**
 	 * This method is encapsulated in a transaction by the Spring container.
 	 * Hibernate session will be opened before this method executes the given
 	 * command and closed afterwards.
@@ -109,12 +115,14 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 			throw new CommandException("DB connection closed.");
 
 		
+		String username = getAuthService().getUsername();
 		if (log.isDebugEnabled()) {
-			log.debug("Service executing command: " + command.getClass().getSimpleName() + " / user: " + getAuthService().getUsername()); 
+            log.debug("Service executing command: " + command.getClass().getSimpleName() + " / user: " + username); 
 		}
-		
-		
+		    
 		try {
+            checkRightsForAction(command, username);
+		    
 			// inject service and database access:
 			command.setDaoFactory(daoFactory);
 			command.setCommandService(this);
@@ -174,6 +182,29 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 		}
 		return command;
 	}
+
+    /**
+     * Check if the given command is allowed to execute by the given user as
+     * defined in the authorization configuration see {@link XmlRightsService}
+     * for details. The command to actionid mapping is defined in
+     * command-actionid-mapping.xml.
+     * 
+     * @param command
+     *            the command to check
+     * @param username
+     *            the user to check
+     */
+    private <T extends ICommand> void checkRightsForAction(T command, String username) {
+        Set<String> set = commandActionIds.get(command.getClass());
+        if (set != null) {
+            for (String actionId : set) {
+                if (!rightsServerHandler.isEnabled(username, actionId))
+                    // Should the message not be translateable also see
+                    // sernet.gs.server.ServerExceptionHandler
+                    throw new AccessDeniedException("Im Rechteprofil ist das Ausführen dieser Aktion nicht erlaubt.");
+            }
+        }
+    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICommandService#configureFilter(sernet.verinice.interfaces.IBaseDao)
@@ -399,6 +430,10 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 
     public void setVnaSchemaVersion(VnaSchemaVersion vnaSchemaVersion) {
         this.vnaSchemaVersion = vnaSchemaVersion;
+    }
+
+    public void setCommandActionIds(Map<Class<? extends ICommand>, Set<String>> commandActionIds) {
+        this.commandActionIds = commandActionIds;
     }
 	
 }

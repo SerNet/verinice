@@ -277,6 +277,7 @@ This variant:
         <property name="rightsServerHandler" ref="rightsServerHandler" />
         <property name="graphService" ref="graphService" />
         <property name="vnaSchemaVersion" ref="vnaSchemaVersion" />
+        <property name="commandActionIds" ref="command-actionid-mapping"/>
 	</bean>
     
 	<bean id="commandService" parent="baseTxProxy">

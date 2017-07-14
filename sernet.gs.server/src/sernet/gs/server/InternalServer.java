@@ -233,6 +233,7 @@ public class InternalServer implements IInternalServer {
         Dictionary<String, String> dict = new Hashtable<String, String>();
         dict.put("contextConfigLocation", "\n" //$NON-NLS-1$ //$NON-NLS-2$	        
                 + "classpath:/sernet/gs/server/spring/veriniceserver-common.xml \n" //$NON-NLS-1$
+                + "classpath:/sernet/gs/server/spring/command-actionid-mapping.xml \n" //$NON-NLS-1$
                 + "classpath:/sernet/gs/server/spring/veriniceserver-osgi.xml \n" //$NON-NLS-1$
                 + "classpath:/sernet/gs/server/spring/veriniceserver-daos-common.xml \n" //$NON-NLS-1$
                 + "classpath:/sernet/gs/server/spring/veriniceserver-daos-osgi.xml \n" //$NON-NLS-1$

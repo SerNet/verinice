@@ -23,6 +23,7 @@
     <param-name>contextConfigLocation</param-name>
     <param-value>
       classpath:sernet/gs/server/spring/veriniceserver-security.xml
+      classpath:sernet/gs/server/spring/command-actionid-mapping.xml
       classpath:sernet/gs/server/spring/veriniceserver-common.xml
       classpath:sernet/gs/server/spring/veriniceserver-plain.xml
       classpath:sernet/gs/server/spring/veriniceserver-daos-common.xml
