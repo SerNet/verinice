@@ -31,7 +31,10 @@ import org.eclipse.jface.action.StatusLineContributionItem;
 import org.eclipse.jface.action.ToolBarContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
@@ -198,6 +201,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private OpenViewAction openTemplateViewAction;
 
     private TestAction testAction;
+    
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -207,7 +211,23 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     @SuppressWarnings(WARNING_RESTRICTION)
     @Override
     protected void makeActions(final IWorkbenchWindow window) {
-
+        window.addPerspectiveListener(new IPerspectiveListener() {
+            
+            @Override
+            public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String arg2) {
+            }
+            
+            @Override
+            public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
+                runRiskAnalysisAction.setEnabled(!"sernet.gs.ui.rcp.main.perspective".equals(perspective.getId()));
+                // here we could also hibe action but would to refactore this make action method and extract the create
+                // action part in an own method
+//                disposeActions();
+//                registerActions(actions);
+//                fillActionBars(FILL_COOL_BAR|FILL_PROXY);
+            }
+        });
+         
         BausteinZuordnungAction bausteinZuordnungAction;
         GSMBausteinZuordnungAction gsmbausteinZuordnungAction;
         GSMBasicSecurityCheckAction gsmbasicsecuritycheckAction;
@@ -462,7 +482,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         myToolbar.add(this.konsolidatorAction);
 
         myToolbar.add(this.reloadAction);
-        myToolbar.add(this.runRiskAnalysisAction);
+        if(this.runRiskAnalysisAction.isEnabled())
+            myToolbar.add(this.runRiskAnalysisAction);
 
         myToolbar.add(new Separator());
         // Grundschutz items
