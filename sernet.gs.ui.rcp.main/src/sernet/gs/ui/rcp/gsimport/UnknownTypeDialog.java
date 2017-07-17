@@ -19,17 +19,27 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.gsimport;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.apache.log4j.Logger;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Dialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import sernet.hui.common.connect.HUITypeFactory;
@@ -43,57 +53,159 @@ import sernet.hui.common.connect.HUITypeFactory;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class UnknownTypeDialog extends MessageDialog {
+public class UnknownTypeDialog extends Dialog {
+    
+    private final static Logger LOG = Logger.getLogger(UnknownTypeDialog.class);
+    
+    private boolean result = false;
 
     private Set<String> unknownTypes;
-
-    public static boolean open(Shell parent, Set<String> unknownTypes) {
-        MessageDialog dialog = new UnknownTypeDialog(parent, unknownTypes);
-        return dialog.open() == 0;
-    }
+    
+    private Shell dialogShell;
+    
+    private List<Control> controlsToResize = new ArrayList<>();
 
     public UnknownTypeDialog(Shell parentShell, Set<String> unknownTypes) {
-        super(parentShell,
-              Messages.GstoolTypeValidator_0,
-              null,
-              createMessage(unknownTypes),
-              CONFIRM,
-              new String[]{ Messages.UnknownTypeDialog_0, IDialogConstants.CANCEL_LABEL },
-              0);
+        super(parentShell);
         this.unknownTypes = unknownTypes;
+    }
+    public boolean open () {
+        Shell parent = getParent();
+        dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
+        dialogShell.setLayout(new GridLayout(1, false));
+        dialogShell.setText(Messages.GstoolTypeValidator_0);
+        controlsToResize.add(dialogShell);
+        dialogShell = (Shell)createDialogArea(dialogShell);
+        dialogShell.setSize(500,500);
+        Display display = parent.getDisplay();
+        dialogShell.open();
+        while (!dialogShell.isDisposed()) {
+                if (!display.readAndDispatch()) display.sleep();
+        }
+        return result;
+    }
+    
+   
+    public Control createDialogArea(Composite parent) {
+        parent.setLayout(new GridLayout(1, true));
+        
+        final Composite container = new Composite(parent, SWT.NONE);
+        controlsToResize.add(container);
+        container.setLayout(new GridLayout(1, true));
+        container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        
+        Composite introductionComposite = new Composite(container, SWT.NONE);
+        controlsToResize.add(introductionComposite);
+        introductionComposite.setLayout(new GridLayout(1, false));
+        introductionComposite.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false));
+        Label introTextLabel = new Label(introductionComposite, SWT.WRAP );
+        introTextLabel.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false));
+        introTextLabel.setText(getIntroductionString());
+        
+        final Composite scrolledContainer = new Composite(container, SWT.NONE);
+        scrolledContainer.setLayout(new GridLayout(1, true));
+        scrolledContainer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        
+        final ScrolledComposite scrolledComposite = 
+                new ScrolledComposite(scrolledContainer, SWT.V_SCROLL);
+        controlsToResize.add(scrolledComposite);
+        scrolledComposite.setExpandVertical(true);
+        scrolledComposite.setExpandHorizontal(true);
+        scrolledComposite.setLayout(new GridLayout(1, false));
+        scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        
+        
+//        scrolledComposite.setAlwaysShowScrollBars(true);
+        
+        
+        
+        final Composite unknownTypesComposite = new Composite(scrolledComposite, SWT.NONE);
+        controlsToResize.add(unknownTypesComposite);
+        unknownTypesComposite.setLayout(new GridLayout(1, false));
+        unknownTypesComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        
+        List<String> list = new ArrayList<>(unknownTypes.size());
+        list.addAll(unknownTypes);
+        
+        Collections.sort(list);
+        
+        for(int i = 0; i < list.size(); i++) {
+            final Label unknownTypesLabel = new Label(unknownTypesComposite, SWT.NONE);
+            unknownTypesLabel.setText(list.get(i));
+        }
+
+        scrolledComposite.setContent(unknownTypesComposite);
+        scrolledComposite.setMinSize(200,200);
+        scrolledComposite.setSize(250, 250);
+        
+        scrolledComposite.setVisible(true);
+        scrolledComposite.layout();
+        container.layout();
+        unknownTypesComposite.layout();
+        scrolledComposite.addControlListener(new ControlListener() {
+            
+            @Override
+            public void controlResized(ControlEvent e) {
+                scrolledComposite.setMinSize(scrolledContainer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+            }
+            
+            @Override
+            public void controlMoved(ControlEvent e) {
+                // do nothing
+            }
+        });
+        createButtonsForButtonBar(container);
+        return parent;
     }
 
     private void addUnknownTypes() {
         for (String type : unknownTypes) {
-            GstoolImportMappingElement mappingEntry = new GstoolImportMappingElement(type, GstoolImportMappingElement.UNKNOWN);
+            GstoolImportMappingElement mappingEntry = 
+                    new GstoolImportMappingElement(type, 
+                            GstoolImportMappingElement.UNKNOWN);
             GstoolTypeMapper.addGstoolSubtypeToPropertyFile(mappingEntry);
         }
+        result = true;
     }
 
 
     protected void createButtonsForButtonBar(Composite parent) {
-        Button button = new Button(parent, SWT.PUSH);
-        button.setText(Messages.UnknownTypeDialog_1);
-        button.addSelectionListener(new SelectionAdapter() {
+        Composite buttonComposite = new Composite(parent, SWT.BOTTOM | SWT.RIGHT);
+        buttonComposite.setLayout(new GridLayout(3, false));
+        buttonComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, true, false));
+        Button addTypeButton = new Button(buttonComposite, SWT.PUSH | SWT.RIGHT);
+        addTypeButton.setText(Messages.UnknownTypeDialog_1);
+        addTypeButton.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent event) {
                 addUnknownTypes();
                 cancelPressed();
             }
         });
-        ((GridLayout) parent.getLayout()).numColumns++;
-        setButtonLayoutData(button);
-        super.createButtonsForButtonBar(parent);
+        Button cancelButton = new Button(buttonComposite, SWT.PUSH | SWT.RIGHT);
+        cancelButton.setText(Messages.UnknownTypeDialog_3);
+        cancelButton.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent event) {
+                cancelPressed();
+            }
+        });
+        Button okButton = new Button(buttonComposite, SWT.PUSH | SWT.RIGHT);
+        okButton.setText(Messages.UnknownTypeDialog_0);
+        okButton.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent event) {
+                result = true;
+                dialogShell.close();
+            }
+        });
     }
-
-    private static String createMessage(Set<String> unknownTypes) {
-        StringBuilder sb = new StringBuilder();
+    
+    private void cancelPressed() {
+        result = false;
+        dialogShell.close();
+    }
+    
+    private static String getIntroductionString() {
         final String defaultTypeTitle = HUITypeFactory.getInstance().getMessage(GstoolTypeMapper.DEFAULT_TYPE_ID);
-        sb.append(NLS.bind(Messages.GstoolTypeValidator_1, defaultTypeTitle ));
-        sb.append("\n\n"); //$NON-NLS-1$
-        for (String typeLabel : unknownTypes) {
-            sb.append(typeLabel).append("\n"); //$NON-NLS-1$
-        }
-        return sb.toString();
+        return NLS.bind(Messages.GstoolTypeValidator_1, defaultTypeTitle );
     }
 
 }
