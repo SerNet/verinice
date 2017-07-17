@@ -280,7 +280,7 @@ This variant:
         <property name="commandActionIds" ref="command-actionid-mapping"/>
 	</bean>
     
-	<bean id="commandService" parent="baseTxProxy">
+	<bean id="commandService" parent="baseTxProxy" depends-on="hibernateCommandService">
 		<property name="target" ref="hibernateCommandService" />
 		<property name="transactionAttributes">
 			<props merge="true">
