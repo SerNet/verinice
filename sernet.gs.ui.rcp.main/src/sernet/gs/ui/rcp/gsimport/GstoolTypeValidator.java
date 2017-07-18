@@ -95,7 +95,8 @@ public class GstoolTypeValidator {
         Display.getDefault().syncExec(new Runnable() {
             @Override
             public void run() {
-                result = UnknownTypeDialog.open(getShell(), unknownTypes);
+                UnknownTypeDialog dialog = new UnknownTypeDialog(getShell(), unknownTypes);
+                result = dialog.open();
             }
         }); 
         return result;

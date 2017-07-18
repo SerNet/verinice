@@ -48,10 +48,11 @@ import sernet.hui.common.connect.HUITypeFactory;
  * Dialog is shown if unknown GSTOOL types are found during
  * GSTOOL-Import.
  *
- * Special confirm dialog with a button "Add types". Klick on this button
+ * Special confirm dialog with a button "Add types". Click on this button
  * add properties to {@link GstoolTypeMapper}.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
+ * @author Sebastian Hagedorn <sh[at]sernet[dot]de> - add scrolledComposite for labels of unknown types
  */
 public class UnknownTypeDialog extends Dialog {
     
@@ -63,8 +64,6 @@ public class UnknownTypeDialog extends Dialog {
     
     private Shell dialogShell;
     
-    private List<Control> controlsToResize = new ArrayList<>();
-
     public UnknownTypeDialog(Shell parentShell, Set<String> unknownTypes) {
         super(parentShell);
         this.unknownTypes = unknownTypes;
@@ -74,13 +73,14 @@ public class UnknownTypeDialog extends Dialog {
         dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
         dialogShell.setLayout(new GridLayout(1, false));
         dialogShell.setText(Messages.GstoolTypeValidator_0);
-        controlsToResize.add(dialogShell);
         dialogShell = (Shell)createDialogArea(dialogShell);
         dialogShell.setSize(500,500);
         Display display = parent.getDisplay();
         dialogShell.open();
         while (!dialogShell.isDisposed()) {
-                if (!display.readAndDispatch()) display.sleep();
+                if (!display.readAndDispatch()) {
+                    display.sleep();
+                }
         }
         return result;
     }
@@ -90,15 +90,14 @@ public class UnknownTypeDialog extends Dialog {
         parent.setLayout(new GridLayout(1, true));
         
         final Composite container = new Composite(parent, SWT.NONE);
-        controlsToResize.add(container);
         container.setLayout(new GridLayout(1, true));
         container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         
-        Composite introductionComposite = new Composite(container, SWT.NONE);
-        controlsToResize.add(introductionComposite);
+        final Composite introductionComposite = new Composite(container, SWT.NONE);
         introductionComposite.setLayout(new GridLayout(1, false));
         introductionComposite.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false));
-        Label introTextLabel = new Label(introductionComposite, SWT.WRAP );
+        
+        final Label introTextLabel = new Label(introductionComposite, SWT.WRAP);
         introTextLabel.setLayoutData(new GridData(SWT.HORIZONTAL, SWT.TOP, true, false));
         introTextLabel.setText(getIntroductionString());
         
@@ -108,19 +107,13 @@ public class UnknownTypeDialog extends Dialog {
         
         final ScrolledComposite scrolledComposite = 
                 new ScrolledComposite(scrolledContainer, SWT.V_SCROLL);
-        controlsToResize.add(scrolledComposite);
         scrolledComposite.setExpandVertical(true);
         scrolledComposite.setExpandHorizontal(true);
         scrolledComposite.setLayout(new GridLayout(1, false));
         scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         
         
-//        scrolledComposite.setAlwaysShowScrollBars(true);
-        
-        
-        
         final Composite unknownTypesComposite = new Composite(scrolledComposite, SWT.NONE);
-        controlsToResize.add(unknownTypesComposite);
         unknownTypesComposite.setLayout(new GridLayout(1, false));
         unknownTypesComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         
@@ -129,7 +122,7 @@ public class UnknownTypeDialog extends Dialog {
         
         Collections.sort(list);
         
-        for(int i = 0; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             final Label unknownTypesLabel = new Label(unknownTypesComposite, SWT.NONE);
             unknownTypesLabel.setText(list.get(i));
         }
@@ -146,7 +139,8 @@ public class UnknownTypeDialog extends Dialog {
             
             @Override
             public void controlResized(ControlEvent e) {
-                scrolledComposite.setMinSize(scrolledContainer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+                scrolledComposite.setMinSize(
+                        scrolledContainer.computeSize(SWT.DEFAULT, SWT.DEFAULT));
             }
             
             @Override
@@ -204,8 +198,9 @@ public class UnknownTypeDialog extends Dialog {
     }
     
     private static String getIntroductionString() {
-        final String defaultTypeTitle = HUITypeFactory.getInstance().getMessage(GstoolTypeMapper.DEFAULT_TYPE_ID);
-        return NLS.bind(Messages.GstoolTypeValidator_1, defaultTypeTitle );
+        final String defaultTypeTitle = HUITypeFactory.getInstance()
+                .getMessage(GstoolTypeMapper.DEFAULT_TYPE_ID);
+        return NLS.bind(Messages.GstoolTypeValidator_1, defaultTypeTitle);
     }
 
 }

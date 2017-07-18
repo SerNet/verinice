@@ -34,6 +34,7 @@ public class Messages extends NLS {
     public static String UnknownTypeDialog_0;
     public static String UnknownTypeDialog_1;
     public static String UnknownTypeDialog_2;
+    public static String UnknownTypeDialog_3;
 
     static {
         // initialize resource bundle
