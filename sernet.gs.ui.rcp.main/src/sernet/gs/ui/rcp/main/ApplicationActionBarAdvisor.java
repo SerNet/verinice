@@ -201,7 +201,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private OpenViewAction openTemplateViewAction;
 
     private TestAction testAction;
-    
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -475,9 +474,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         myToolbar.add(this.konsolidatorAction);
 
         myToolbar.add(this.reloadAction);
-        if(this.runRiskAnalysisAction.isEnabled())
-            myToolbar.add(this.runRiskAnalysisAction);
-
+        myToolbar.add(this.runRiskAnalysisAction);
         myToolbar.add(new Separator());
         // Grundschutz items
         myToolbar.add(this.openBSIViewAction);
