@@ -220,11 +220,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
             @Override
             public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
                 runRiskAnalysisAction.setEnabled(!"sernet.gs.ui.rcp.main.perspective".equals(perspective.getId()));
-                // here we could also hibe action but would to refactore this make action method and extract the create
-                // action part in an own method
-//                disposeActions();
-//                registerActions(actions);
-//                fillActionBars(FILL_COOL_BAR|FILL_PROXY);
             }
         });
          
@@ -238,8 +233,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         // file.
         // Registering also provides automatic disposal of the actions when
         // the window is closed.
-
-
 
         this.exitAction = ActionFactory.QUIT.create(window);
         this.copyAction = ActionFactory.COPY.create(window);
