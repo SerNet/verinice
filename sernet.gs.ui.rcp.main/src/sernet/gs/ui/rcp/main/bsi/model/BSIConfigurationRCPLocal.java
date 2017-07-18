@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.Preferences;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.verinice.interfaces.IBSIConfig;
 
 public class BSIConfigurationRCPLocal implements IBSIConfig, Serializable {
 	

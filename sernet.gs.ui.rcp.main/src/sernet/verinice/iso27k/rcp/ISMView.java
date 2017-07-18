@@ -131,10 +131,10 @@ import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.rcp.RightsEnabledView;
-import sernet.verinice.rcp.tree.ElementManager;
 import sernet.verinice.rcp.tree.TreeContentProvider;
 import sernet.verinice.rcp.tree.TreeLabelProvider;
 import sernet.verinice.rcp.tree.TreeUpdateListener;
+import sernet.verinice.service.tree.ElementManager;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

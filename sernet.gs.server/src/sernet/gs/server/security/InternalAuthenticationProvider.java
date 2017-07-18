@@ -24,13 +24,11 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.security.Authentication;
 import org.springframework.security.AuthenticationException;
 import org.springframework.security.GrantedAuthority;
-import org.springframework.security.GrantedAuthorityImpl;
 import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.providers.AuthenticationProvider;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.service.HibernateCommandService;
 

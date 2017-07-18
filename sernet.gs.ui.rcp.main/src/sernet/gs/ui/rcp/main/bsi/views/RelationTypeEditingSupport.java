@@ -33,7 +33,6 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.ChangeLinkType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
@@ -41,6 +40,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateLink;
+import sernet.verinice.service.commands.crud.ChangeLinkType;
 
 /**
  * This class provides the editing support for the relation type column in the relations table used

@@ -28,9 +28,9 @@ import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.Retriever;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.ServerInitializer;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadScopeElementsById;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -42,11 +42,11 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.validation.IValidationService;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.validation.CnAValidation;
 import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.commands.crud.LoadScopeElementsById;
 
 /**
  *

@@ -28,12 +28,12 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.bsi.views.chart.ChartView;
 import sernet.gs.ui.rcp.main.bsi.views.chart.IChartGenerator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.common.ChangeLogEntry;

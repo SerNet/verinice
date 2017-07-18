@@ -34,12 +34,12 @@ import sernet.gs.ui.rcp.main.actions.ConfigurationAction;
 import sernet.gs.ui.rcp.main.actions.Messages;
 import sernet.gs.ui.rcp.main.bsi.dialogs.AccountDialog;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.PasswordException;
-import sernet.gs.ui.rcp.main.service.commands.UsernameExistsException;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IRightsServiceClient;
+import sernet.verinice.interfaces.PasswordException;
+import sernet.verinice.interfaces.UsernameExistsException;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.commands.SaveConfiguration;
 

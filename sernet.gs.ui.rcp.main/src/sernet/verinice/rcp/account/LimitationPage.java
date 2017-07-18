@@ -29,8 +29,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.common.configuration.Configuration;

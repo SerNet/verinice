@@ -40,7 +40,6 @@ import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import sernet.gs.service.FileUtil;
-import sernet.gs.ui.rcp.main.service.crudcommands.DeleteNote;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.Addition;
@@ -51,6 +50,7 @@ import sernet.verinice.service.commands.AttachmentFileCreationFactory;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachments;
 import sernet.verinice.service.commands.SaveNote;
+import sernet.verinice.service.commands.crud.DeleteNote;
 
 /**
 * Test class creates <code>numberOfFiles</code> files with a ramdom size

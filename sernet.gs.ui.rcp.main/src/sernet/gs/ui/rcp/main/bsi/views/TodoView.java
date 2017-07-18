@@ -33,10 +33,10 @@ import org.eclipse.swt.widgets.TableColumn;
 
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
-import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.views.actions.TodoViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.model.bpm.TodoViewItem;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 /**

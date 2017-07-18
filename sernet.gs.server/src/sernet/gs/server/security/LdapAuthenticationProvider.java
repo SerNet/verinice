@@ -24,7 +24,7 @@ import org.springframework.security.providers.AuthenticationProvider;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 import org.springframework.security.providers.ldap.LdapAuthenticator;
 
-import sernet.gs.common.ApplicationRoles;
+import sernet.verinice.interfaces.ApplicationRoles;
 
 public class LdapAuthenticationProvider implements AuthenticationProvider {
 

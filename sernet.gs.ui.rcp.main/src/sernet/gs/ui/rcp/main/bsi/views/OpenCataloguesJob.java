@@ -30,12 +30,12 @@ import org.eclipse.core.runtime.Status;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
-import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIConfig;
 import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.ChangeItgsCatalogue;
+import sernet.verinice.interfaces.IBSIConfig;
+import sernet.verinice.service.commands.risk.ChangeItgsCatalogue;
+import sernet.verinice.service.parser.BSIMassnahmenModel;
+import sernet.verinice.service.parser.GSScraperUtil;
 
 /**
  * @author koderman[at]sernet[dot]de

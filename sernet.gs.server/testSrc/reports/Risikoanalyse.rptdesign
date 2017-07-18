@@ -475,7 +475,7 @@
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 
 // set top level element for report:
@@ -655,7 +655,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // get current elmt:
 elmtid = inpv("elmt_id");
@@ -694,7 +694,7 @@ return elements;
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 inParameters(new String[] { "elmt_id" });
 columns(LoadReportElementWithLinks.COLUMNS);</value>
@@ -805,7 +805,7 @@ columns(LoadReportElementWithLinks.COLUMNS);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 
 // get current elmt:
@@ -845,7 +845,7 @@ return c3.getZielObjekt();]]></xml-property>
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 
 inParameters(new String[] { "elmt_id" });
@@ -1100,7 +1100,7 @@ columns(LoadReportRiskAnalysis.ZIELOBJEKT_COLUMNS);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 
 // get current elmt:
@@ -1143,7 +1143,7 @@ return helper.map(
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 
 inParameters(new String[] { "elmt_id" });
@@ -1400,7 +1400,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 
 // get current elmt:
@@ -1444,7 +1444,7 @@ return helper.map(
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 
 inParameters(new String[] { "elmt_id" });
@@ -1701,7 +1701,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 
 // get current elmt:
@@ -1744,7 +1744,7 @@ return helper.map(
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 
 inParameters(new String[] { "elmt_id" });
@@ -2194,7 +2194,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // get current elmt:
 elmtid = inpv("elmt_id");
@@ -2238,7 +2238,7 @@ return helper.map(
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 inParameters(new String[] { "elmt_id" });
 
@@ -2288,7 +2288,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 import sernet.verinice.model.common.*;
 

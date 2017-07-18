@@ -252,7 +252,7 @@ public class HitroUtil {
 				}
 				try {
 					typeFactory = HUITypeFactory.createInstance(url);
-					resolverFactory.createResolvers(typeFactory);
+					getResolverFactory().createResolvers(typeFactory);
 				} catch (DBException e) {
 				    typeFactory = new HUITypeFactoryBroken();
 					LOG_0.error("Unable to reach document: " + url, e);
@@ -354,6 +354,13 @@ public class HitroUtil {
         @Override
         public PropertyGroup getPropertyGroup(String entityId, String propertyId) {
             return getTypeFactory().getPropertyGroup(entityId, propertyId);
+        }
+
+        public IEntityResolverFactory getResolverFactory() {
+            if(resolverFactory==null) {
+                resolverFactory = ResolverFactoryRegistry.getResolverFactory(); 
+            }
+            return resolverFactory;
         }
 	}
 

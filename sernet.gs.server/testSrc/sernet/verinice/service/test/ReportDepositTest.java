@@ -53,7 +53,6 @@ import org.junit.Test;
 
 import sernet.gs.service.AbstractReportTemplateService;
 import sernet.gs.service.FileUtil;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportTemplateService;
@@ -283,7 +282,7 @@ public class ReportDepositTest extends CommandServiceProvider {
         if(!path.contains(String.valueOf(File.separatorChar))){ // is path missing?
             String depositLocation;
             try {
-                depositLocation = ServiceFactory.lookupReportDepositService().getDepositLocation();
+                depositLocation = depositService.getDepositLocation();
             } catch (ReportDepositException e) {
                 return path;
             }

@@ -486,7 +486,7 @@
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
+import sernet.verinice.service.commands.crud.LoadReportElements;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -621,7 +621,7 @@ columns(cols);</value>
             </structure>
             <property name="dataSource">verinice</property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithLinks;
+import sernet.verinice.service.commands.crud.LoadReportElementWithLinks;
 
 // get current elmt:
 elmtid = inpv("dbid");
@@ -660,7 +660,7 @@ return elements;
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithLinks;
+import sernet.verinice.service.commands.crud.LoadReportElementWithLinks;
 
 inParameters(new String[] { "dbid" });
 columns(LoadReportElementWithLinks.COLUMNS);</value>
@@ -743,10 +743,10 @@ columns(LoadReportElementWithLinks.COLUMNS);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportNotGreenScenarios;
+import sernet.verinice.service.commands.crud.LoadReportNotGreenScenarios;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportParent;
+import sernet.verinice.service.commands.crud.LoadReportParent;
 
 // get current elmt:
 elmtid = inpv("elmt_id");
@@ -1037,17 +1037,17 @@ columns(new String[] {"kuerzel", "name", "dbid"});</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportLinkedElements;
+import sernet.verinice.service.commands.crud.LoadReportElements;
+import sernet.verinice.service.commands.crud.LoadReportLinkedElements;
 import java.lang.String;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnALink;
 import java.util.Map.Entry;
 import java.util.HashSet;
 import java.util.ArrayList;
-import sernet.verinice.iso27k.service.Retriever;
+import sernet.gs.service.Retriever;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
+import sernet.verinice.service.commands.crud.ExecuteHQLInReportCommand;
 import sernet.verinice.report.service.impl.TocHelper2;
 
 
@@ -1894,7 +1894,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithChildren;
+import sernet.verinice.service.commands.crud.LoadReportElementWithChildren;
 
 // get current elmt:
 elmtid = inpv("elmt_id");
@@ -1991,7 +1991,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
+import sernet.verinice.service.commands.crud.LoadReportElements;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 import sernet.verinice.model.common.*;
 
@@ -2316,7 +2316,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportRiskAnalysis;
+import sernet.verinice.service.commands.crud.LoadReportRiskAnalysis;
 
 // get current elmt:
 elmtid = inpv("elmt_id");
@@ -3103,7 +3103,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithChildren;
+import sernet.verinice.service.commands.crud.LoadReportElementWithChildren;
 
 // get current elmt:
 elmtid = inpv("elmt_id");
@@ -3278,7 +3278,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithLinks;
+import sernet.verinice.service.commands.crud.LoadReportElementWithLinks;
 
 // get current elmt:
 elmtid = inpv("elmt_id");
@@ -3317,7 +3317,7 @@ return elements;
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithLinks;
+import sernet.verinice.service.commands.crud.LoadReportElementWithLinks;
 
 inParameters(new String[] { "elmt_id" });
 columns(LoadReportElementWithLinks.COLUMNS);</value>
@@ -3571,7 +3571,7 @@ columns(LoadReportElementWithLinks.COLUMNS);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportRiskAnalysis;
+import sernet.verinice.service.commands.crud.LoadReportRiskAnalysis;
 
 // get current elmt:
 elmtid = inpv("elmt_id");
@@ -3749,7 +3749,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportRiskAnalysis;
+import sernet.verinice.service.commands.crud.LoadReportRiskAnalysis;
 
 // get current elmt:
 elmtid = inpv("elmt_id");
@@ -3792,7 +3792,7 @@ return c3.getZielObjekt();]]></xml-property>
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportRiskAnalysis;
+import sernet.verinice.service.commands.crud.LoadReportRiskAnalysis;
 
 inParameters(new String[] { "elmt_id" });
 cols = LoadReportRiskAnalysis.ZIELOBJEKT_COLUMNS;
@@ -4067,7 +4067,7 @@ columns(list.toArray(new String[list.size()]));</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportRiskAnalysis;
+import sernet.verinice.service.commands.crud.LoadReportRiskAnalysis;
 
 // get current elmt:
 elmtid = inpv("elmt_id");
@@ -4827,12 +4827,12 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithChildren;
+import sernet.verinice.service.commands.crud.LoadReportElementWithChildren;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
-import sernet.verinice.iso27k.service.Retriever;
+import sernet.verinice.service.commands.crud.ExecuteHQLInReportCommand;
+import sernet.gs.service.Retriever;
 import sernet.gs.service.NumericStringComparator;
 import java.util.Comparator;
 import java.lang.String;

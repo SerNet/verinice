@@ -26,16 +26,15 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 
+import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
-import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindMassnahmeById;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.iso27k.service.Retriever;
+import sernet.verinice.model.bpm.TodoViewItem;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -53,6 +52,7 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.validation.CnAValidation;
+import sernet.verinice.service.commands.task.FindMassnahmeById;
 
 /**
  * Gets Massnahmen from current BSIModel and reacts to model changes.

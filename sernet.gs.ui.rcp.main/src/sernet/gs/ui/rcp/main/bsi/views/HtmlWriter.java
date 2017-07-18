@@ -36,10 +36,9 @@ import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
 import sernet.gs.service.GSServiceException;
+import sernet.gs.service.Retriever;
 import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
-import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
-import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -49,7 +48,7 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
-import sernet.verinice.iso27k.service.Retriever;
+import sernet.verinice.model.bpm.TodoViewItem;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
@@ -64,6 +63,7 @@ import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
 import sernet.verinice.model.licensemanagement.NoLicenseAssignedException;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.rcp.account.LicenseMgmtPage;
+import sernet.verinice.service.parser.GSScraperUtil;
 
 /**
  * This class creates HTML code for verinice elements.

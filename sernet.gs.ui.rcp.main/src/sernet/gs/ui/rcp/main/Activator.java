@@ -55,6 +55,9 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 
+import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRCPLocal;
+import sernet.gs.ui.rcp.main.bsi.model.BSIEntityResolverFactory;
+import sernet.gs.ui.rcp.main.bsi.model.RcpLayoutConfig;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
@@ -63,8 +66,8 @@ import sernet.gs.ui.rcp.main.logging.LoggerInitializer;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.security.VeriniceSecurityProvider;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.connect.ResolverFactoryRegistry;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IInternalServer;
@@ -84,7 +87,9 @@ import sernet.verinice.rcp.ReportTemplateSync;
 import sernet.verinice.rcp.StartupImporter;
 import sernet.verinice.rcp.StatusResult;
 import sernet.verinice.rcp.jobs.VeriniceWorkspaceJob;
+import sernet.verinice.service.commands.migration.DbVersion;
 import sernet.verinice.service.model.IObjectModelService;
+import sernet.verinice.service.parser.GSScraperUtil;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -244,7 +249,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
             // if this fails, try rewriting config:
             LOG.error("Exception while connection to command service, forcing recreation of " + "service factory configuration from preferences.", e); //$NON-NLS-1$ //$NON-NLS-2$
             CnAWorkspace.getInstance().prepare(true);
-        }
+        }       
 
         // When the service factory is initialized the client's work objects can
         // be accessed.
@@ -254,6 +259,10 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         // Make command service available as an OSGi service
         context.registerService(ICommandService.class.getName(), VeriniceContext.get(VeriniceContext.COMMAND_SERVICE), null);
+        
+        GSScraperUtil.getInstance().getModel().setBSIConfig(new BSIConfigurationRCPLocal());
+        GSScraperUtil.getInstance().getModel().setLayoutConfig(new RcpLayoutConfig());
+        ResolverFactoryRegistry.setResolverFactory(new BSIEntityResolverFactory());
         
         Job repositoryJob = new Job("add-repository") { //$NON-NLS-1$
             /*

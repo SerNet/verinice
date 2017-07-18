@@ -62,16 +62,16 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadPermissions;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.rcp.ImageColumnProvider;
-import sernet.verinice.rcp.account.AccountLoader;
+import sernet.verinice.service.account.AccountLoader;
+import sernet.verinice.service.commands.crud.LoadPermissions;
 
 /**
  * Dialog that allows changing the access options for elements.

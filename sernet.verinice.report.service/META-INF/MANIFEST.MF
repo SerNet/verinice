@@ -26,14 +26,15 @@ Require-Bundle: com.ibm.icu;bundle-version="4.4.2",
  org.eclipse.birt.chart.engine.extension,
  org.eclipse.birt.chart.reportitem,
  org.eclipse.birt.core.script.function,
- sernet.gs.ui.rcp.main;bundle-version="1.2.0",
  org.eclipse.birt.report.engine.emitter.excel.config,
  org.eclipse.birt.report.engine.emitter.prototype.excel,
  org.eclipse.birt.report.engine.emitter.wpml,
  org.eclipse.birt.report.engine.emitter.wpml.config,
  com.springsource.org.apache.commons.io;bundle-version="1.4.0",
  com.springsource.org.apache.commons.lang;bundle-version="2.4.0",
- com.springsource.org.junit;bundle-version="4.4.0"
+ com.springsource.org.junit;bundle-version="4.4.0",
+ sernet.hui.common;bundle-version="1.1.1",
+ sernet.gs.ui.rcp.main;bundle-version="1.3.0"
 Bundle-Vendor: SerNet
 Export-Package: sernet.verinice.report.service.commands
 Service-Component: OSGI-INF/component.xml

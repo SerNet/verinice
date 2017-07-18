@@ -30,9 +30,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.common.ApplicationRoles;
-
 import sernet.gs.service.RetrieveInfo;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
@@ -370,4 +369,5 @@ public class ConfigurationService implements IConfigurationService {
     public void setCommandService(ICommandService commandService) {
         this.commandService = commandService;
     }
+
 }

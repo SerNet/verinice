@@ -20,11 +20,11 @@ package sernet.verinice.report.service.commands;
 import java.util.List;
 
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.service.commands.crud.LoadReportElements;
 
 /**
  * Loads and returns the report's title.

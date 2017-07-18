@@ -976,7 +976,7 @@
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.iso27k.Control;
 import java.lang.Integer;
 import sernet.gs.service.NumericStringComparator;
@@ -984,7 +984,7 @@ import java.util.Comparator;
 import java.util.Collections;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.iso27k.service.Retriever;
+import sernet.gs.service.Retriever;
 
 List sort(List list) {
         Collections.sort(list, new Comparator() {

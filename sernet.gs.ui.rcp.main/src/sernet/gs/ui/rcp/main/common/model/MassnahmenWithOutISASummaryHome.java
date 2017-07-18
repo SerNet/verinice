@@ -20,10 +20,11 @@ package sernet.gs.ui.rcp.main.common.model;
 import java.util.Map;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.statscommands.MaturitySummary;
-import sernet.gs.ui.rcp.main.service.statscommands.MaturitySummaryWithOutISA;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.service.commands.stats.MassnahmenSummaryHome;
+import sernet.verinice.service.commands.stats.MaturitySummary;
+import sernet.verinice.service.commands.stats.MaturitySummaryWithOutISA;
 
 public class MassnahmenWithOutISASummaryHome extends MassnahmenSummaryHome {
    

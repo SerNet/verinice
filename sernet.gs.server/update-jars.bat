@@ -4,7 +4,6 @@ call:jar_cmd sernet.gs.ehcache.fragment
 call:jar_cmd sernet.hui.common
 call:jar_cmd sernet.hui.swtclient
 call:jar_cmd sernet.hui.server
-call:jar_cmd sernet.gs.ui.rcp.main
 call:jar_cmd sernet.gs.service
 call:jar_cmd sernet.gs.reveng
 call:jar_cmd sernet.verinice.samt.service

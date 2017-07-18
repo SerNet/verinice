@@ -299,23 +299,15 @@
     <bean id="hitroUtil" class="sernet.hui.common.connect.HitroUtil"
         init-method="initForClient">
         <property name="url" value="${verinice.serverURL}/GetHitroConfig" />
-        <property name="entityResolverFactory">
-            <bean
-                class="sernet.gs.ui.rcp.main.bsi.model.BSIEntityResolverFactory" />
-        </property>
     </bean>
 
     <bean id="huiTypeFactory" class="sernet.hui.common.connect.HUITypeFactory"
         factory-bean="hitroUtil" factory-method="getTypeFactory">
     </bean>
 
-    <bean id="gsScraperUtil" class="sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil">
+    <bean id="gsScraperUtil" class="sernet.verinice.service.parser.GSScraperUtil">
         <property name="model">
-            <bean class="sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel">
-                <constructor-arg>
-                    <bean class="${verinice.model.configuration.class}" />
-                </constructor-arg>
-            </bean>
+            <bean class="sernet.verinice.service.parser.BSIMassnahmenModel" />
         </property>
     </bean>
     <bean id="messageFactory"

@@ -12,12 +12,12 @@ import org.eclipse.swt.widgets.Composite;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.rcp.MultiselectWidget;
+import sernet.verinice.service.commands.crud.LoadCnAElementByType;
 
 /**
  * A widget which provides scopes for multi selection. A scope is either a Organization or an

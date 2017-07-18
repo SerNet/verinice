@@ -22,15 +22,15 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.PasswordDialog;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.ChangeOwnPassword;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.IAuthService;
+import sernet.verinice.service.auth.AuthenticationHelper;
+import sernet.verinice.service.commands.crud.ChangeOwnPassword;
 
 /**
  * Action to allow users to change their own password if stored in the verinice DB.
@@ -73,7 +73,7 @@ public class ChangeOwnPasswordAction extends Action  {
         // this action works for normal users, admins are supposed to change their password differently, since admin acounts can also be defined in the config file
         // where they cannot be edited from within the application.
         // (admins can change the passwords for anybody, this action here only works for the currently logged in user)
-        boolean isAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN, ApplicationRoles.ROLE_LOCAL_ADMIN });
+        boolean isAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
         if (isAdmin) {
             MessageDialog.openInformation(window.getShell(), Messages.ChangeOwnPasswordAction_1, Messages.ChangeOwnPasswordAction_2);
             return;
@@ -91,7 +91,5 @@ public class ChangeOwnPasswordAction extends Action  {
         }
     }
 
-    private IAuthService getAuthService() {
-        return ServiceFactory.lookupAuthService();
-    }
+
 }

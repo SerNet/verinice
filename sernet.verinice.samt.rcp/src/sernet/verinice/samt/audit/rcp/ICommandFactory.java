@@ -19,9 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
-import sernet.verinice.iso27k.service.commands.LoadLinkedElements;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadElementByTypeId;
+import sernet.verinice.service.commands.crud.LoadLinkedElements;
 
 /**
  * Returns commands to load {@link CnATreeElement}s

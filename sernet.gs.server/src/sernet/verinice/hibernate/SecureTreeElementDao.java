@@ -26,8 +26,8 @@ import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.SecurityException;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IConfigurationService;

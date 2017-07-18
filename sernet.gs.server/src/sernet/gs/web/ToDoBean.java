@@ -17,20 +17,6 @@
  ******************************************************************************/
 package sernet.gs.web;
 
-import org.apache.log4j.Logger;
-
-import sernet.gs.service.GSServiceException;
-import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
-import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
-import sernet.gs.ui.rcp.main.service.taskcommands.LoadChildrenAndMassnahmen;
-import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.interfaces.IConfigurationService;
-import sernet.verinice.interfaces.bpm.KeyValue;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.service.commands.SaveElement;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -46,6 +32,20 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+
+import org.apache.log4j.Logger;
+
+import sernet.gs.service.GSServiceException;
+import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IConfigurationService;
+import sernet.verinice.interfaces.bpm.KeyValue;
+import sernet.verinice.model.bpm.TodoViewItem;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.service.commands.SaveElement;
+import sernet.verinice.service.commands.crud.LoadCnAElementById;
+import sernet.verinice.service.commands.task.LoadChildrenAndMassnahmen;
+import sernet.verinice.service.parser.GSScraperUtil;
 
 /**
  * JSF managed bean for view ToDoList, template: todo/todo.xhtml
@@ -78,6 +78,8 @@ public class ToDoBean {
     private List<KeyValue> executionList;
 
     private boolean showDescription = false;
+
+    private Set<String> roles = null;
 
     private ICommandService commandService;
 
@@ -520,6 +522,10 @@ public class ToDoBean {
     private ICommandService createCommandService() {
         return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
     }
+    
+    private IConfigurationService getConfigurationService() {
+        return (IConfigurationService) VeriniceContext.get(VeriniceContext.CONFIGURATION_SERVICE);
+    }
 
     public static String getcurrentLanguageTag() {
         return Util.getcurrentLanguageTag();
@@ -549,7 +555,4 @@ public class ToDoBean {
         this.selectedChapterId = selectedChapterId;
     }
 
-	private IConfigurationService getConfigurationService() {
-        return (IConfigurationService) VeriniceContext.get(VeriniceContext.CONFIGURATION_SERVICE);
-    }
 }

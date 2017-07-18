@@ -28,9 +28,10 @@ import sernet.gs.reveng.importData.ZielobjektTypeResult;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.taskcommands.ImportNotesForZielobjekt;
 import sernet.snutils.DBException;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.service.commands.task.ImportNotesForZielobjekt;
+import sernet.verinice.service.gstoolimport.TransferData;
 
 /**
  * @author koderman@sernet.de

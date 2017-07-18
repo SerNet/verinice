@@ -16,11 +16,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;

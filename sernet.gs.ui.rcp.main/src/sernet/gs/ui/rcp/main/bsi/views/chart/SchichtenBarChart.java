@@ -36,9 +36,9 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.RectangleEdge;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.common.model.MassnahmenSummaryHome;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.service.commands.stats.MassnahmenSummaryHome;
 
 public class SchichtenBarChart implements IChartGenerator {
 

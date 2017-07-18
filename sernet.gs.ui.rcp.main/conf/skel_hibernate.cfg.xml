@@ -77,7 +77,7 @@
         <!-- Workaround for Hibernate bug HHH-2146
         Will be fixed in hibernate release 3.3.2, until then we use this: -->
     	<event type="delete">
-      		<listener class="sernet.gs.ui.rcp.main.connect.HibernateBugFixDeleteEventListener"/>
+      		<listener class="sernet.verinice.persistence.HibernateBugFixDeleteEventListener"/>
     	</event>
 
     </session-factory>

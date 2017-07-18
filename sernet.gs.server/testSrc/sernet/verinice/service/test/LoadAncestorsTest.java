@@ -26,11 +26,8 @@ import static org.junit.Assert.fail;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import java.util.Stack;
 
 import javax.annotation.Resource;
@@ -38,7 +35,6 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Test;
-import org.primefaces.component.log.Log;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;

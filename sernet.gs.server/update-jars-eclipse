@@ -15,7 +15,6 @@ jar_cmd sernet.gs.ehcache.fragment
 jar_cmd sernet.hui.common
 jar_cmd sernet.hui.swtclient
 jar_cmd sernet.hui.server
-jar_cmd sernet.gs.ui.rcp.main
 jar_cmd sernet.gs.service
 jar_cmd sernet.gs.reveng
 jar_cmd sernet.verinice.samt.service

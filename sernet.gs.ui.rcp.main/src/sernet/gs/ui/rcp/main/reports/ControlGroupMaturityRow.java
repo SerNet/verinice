@@ -21,10 +21,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import sernet.gs.ui.rcp.office.IOOTableRow;
-import sernet.verinice.iso27k.service.ControlMaturityService;
+import sernet.verinice.interfaces.ICnaItemRow;
+import sernet.verinice.interfaces.IOOTableRow;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.service.iso27k.ControlMaturityService;
 
 /**
  * Returns the given properties as columns for OpenOffice export.

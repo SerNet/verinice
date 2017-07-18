@@ -22,16 +22,13 @@ package sernet.verinice.service.test;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.test.annotation.ExpectedException;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;

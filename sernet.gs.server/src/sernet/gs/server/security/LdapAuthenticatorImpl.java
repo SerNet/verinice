@@ -34,9 +34,9 @@ import org.springframework.security.providers.ldap.LdapAuthenticator;
 import org.springframework.security.ui.digestauth.DigestProcessingFilter;
 import org.springframework.security.userdetails.UsernameNotFoundException;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.Entity;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.model.common.configuration.Configuration;
 
 public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticator {

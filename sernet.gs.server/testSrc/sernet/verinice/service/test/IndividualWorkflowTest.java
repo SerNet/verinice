@@ -33,7 +33,6 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import sernet.gs.ui.rcp.main.service.crudcommands.PrepareObjectWithAccountDataForDeletion;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiRelation;
@@ -56,6 +55,7 @@ import sernet.verinice.service.commands.CreateConfiguration;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SaveConfiguration;
+import sernet.verinice.service.commands.crud.PrepareObjectWithAccountDataForDeletion;
 
 /**
  * Test the creation and execution of individual processes.

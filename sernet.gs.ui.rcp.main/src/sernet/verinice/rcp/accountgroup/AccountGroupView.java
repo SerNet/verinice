@@ -69,7 +69,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.PlatformUI;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.helper.UpdateConfigurationHelper;
@@ -79,6 +78,7 @@ import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -86,8 +86,8 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.RightsEnabledView;
-import sernet.verinice.rcp.account.AccountLoader;
 import sernet.verinice.rcp.account.AccountWizard;
+import sernet.verinice.service.account.AccountLoader;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>

@@ -36,9 +36,9 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.Retriever;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.Client;

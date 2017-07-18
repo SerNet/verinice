@@ -36,6 +36,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.validation.CnAValidation;
+import sernet.verinice.service.tree.ElementManager;
 
 /**
  * TreeUpdateListener updates a {@link TreeViewer} when a {@link CnATreeElement} was added, changed or removed.

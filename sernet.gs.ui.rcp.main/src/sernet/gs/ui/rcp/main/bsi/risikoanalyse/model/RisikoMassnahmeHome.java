@@ -21,14 +21,14 @@ import java.util.List;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.RemoveGenericElement;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindRisikomassnahmeByNumber;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.service.commands.LoadGenericElementByType;
 import sernet.verinice.service.commands.SaveElement;
+import sernet.verinice.service.commands.crud.RemoveGenericElement;
+import sernet.verinice.service.commands.task.FindRisikomassnahmeByNumber;
 
 public final class RisikoMassnahmeHome {
 	

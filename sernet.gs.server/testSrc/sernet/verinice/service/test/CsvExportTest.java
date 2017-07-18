@@ -36,7 +36,6 @@ import com.opencsv.CSVReader;
 
 import net._01001111.text.LoremIpsum;
 import sernet.gs.service.VeriniceCharset;
-import sernet.gs.ui.rcp.main.preferences.SearchPreferencePage;
 import sernet.verinice.service.csv.CsvExport;
 import sernet.verinice.service.csv.CsvExportException;
 import sernet.verinice.service.csv.ICsvExport;
@@ -82,7 +81,7 @@ public class CsvExportTest {
         assertTrue("Export file does not exists", exportFile.exists());
         CSVReader reader = null;
         try {
-            reader = new CSVReader(new FileReader(exportFile), SearchPreferencePage.SEMICOLON.charAt(0), '"');
+            reader = new CSVReader(new FileReader(exportFile), ';', '"');
             String[] nextLine;
             Iterator<String[]> rowIterator = table.iterator();
             while ((nextLine = reader.readNext()) != null) {

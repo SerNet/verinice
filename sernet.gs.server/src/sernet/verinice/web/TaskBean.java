@@ -35,10 +35,10 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.TimeFormatter;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
@@ -292,7 +292,7 @@ public class TaskBean {
         auditList = new ArrayList<CnATreeElement>(uuidAuditList.size());
         for (String uuid : uuidAuditList) {
             LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid, RetrieveInfo.getPropertyInstance());
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            command = getCommandService().executeCommand(command);
             auditList.add(command.getElement());              
         }
     }
@@ -362,6 +362,10 @@ public class TaskBean {
     
     private ITaskService getTaskService() {
         return (ITaskService) VeriniceContext.get(VeriniceContext.TASK_SERVICE);
+    }
+    
+    private ICommandService getCommandService() {
+        return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
     }
     
     public void english() {

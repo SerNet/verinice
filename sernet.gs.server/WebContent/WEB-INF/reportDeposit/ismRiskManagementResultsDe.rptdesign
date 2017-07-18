@@ -83,7 +83,7 @@
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 // set top level element for report:
 root = helper.getRoot();
 
@@ -1082,7 +1082,7 @@ columns(new String[] { "scopeName" });</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -2050,7 +2050,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // get current elmt:
 elmtid=-1;
@@ -2339,7 +2339,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 
 // set top level element for report:
@@ -2386,7 +2386,7 @@ return elements;]]></xml-property>
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 cols = LoadReportAllRisksForScope.COLUMNS;
 inParameters(new String[] { "root_object" });
@@ -2451,7 +2451,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -2493,7 +2493,7 @@ return elements;]]></xml-property>
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 cols = LoadReportCountRisksBySeverity.COLUMNS;
 inParameters(new String[] { "root_object" });
@@ -2560,7 +2560,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -2606,7 +2606,7 @@ return elements;]]></xml-property>
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 cols = LoadReportCountRisksBySeverity.COLUMNS;
 inParameters(new String[] { "root_object" });
@@ -2671,7 +2671,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -2713,7 +2713,7 @@ return elements;]]></xml-property>
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 cols = LoadReportCountRisksBySeverity.COLUMNS;
 inParameters(new String[] { "root_object" });
@@ -2823,7 +2823,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 
 // set top level element for report:
@@ -2866,7 +2866,7 @@ return elements;]]></xml-property>
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // how many columns should be generated?
 // should be max impact defined for assets 
@@ -2968,7 +2968,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 
 // set top level element for report:
@@ -3011,7 +3011,7 @@ return elements;]]></xml-property>
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // how many columns should be generated?
 // should be max impact defined for assets 
@@ -3145,7 +3145,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 
 // set top level element for report:
@@ -3188,7 +3188,7 @@ return elements;]]></xml-property>
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // how many columns should be generated?
 // should be max impact defined for assets 
@@ -3535,7 +3535,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -3922,7 +3922,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 elmtid=inpv("scenario_id");
 
@@ -4028,7 +4028,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -4073,7 +4073,7 @@ return elements;
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 inParameters(new String[] { "root_object" });
 columns(LoadReportElementList.COLUMNS);</value>
@@ -4324,7 +4324,7 @@ columns(LoadReportElementList.COLUMNS);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // get current elmt:
 elmtid = inpv("asset_id");
@@ -4363,7 +4363,7 @@ return elements;
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 inParameters(new String[] { "asset_id" });
 columns(LoadReportScenarioDetails.COLUMNS);</value>
@@ -5277,7 +5277,7 @@ columns(LoadReportScenarioDetails.COLUMNS);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -5770,7 +5770,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -6250,7 +6250,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -6456,7 +6456,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -6502,7 +6502,7 @@ return result;]]></xml-property>
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 cols = LoadReportProcessesWithRisk.COLUMNS;
 inParameters(new String[] { "root_object" });
@@ -6622,7 +6622,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -6705,7 +6705,7 @@ return results;]]></xml-property>
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 inParameters(new String[] { "root_object" });
 
@@ -6858,7 +6858,7 @@ columns(cols);</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[// DEPRECATED, VERY MEMORY INTENSIVE, USE scope_countrisks_aggregated_net_command INSTEAD OF THIS ONE (from verinice 1.6.3 on)
 import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.service.risk.RiskAnalysisHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
@@ -6866,7 +6866,7 @@ import sernet.verinice.model.iso27k.IncidentScenario;
 import java.util.*;
 import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
-import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
+import sernet.verinice.service.risk.RiskAnalysisHelperImpl;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
@@ -7091,7 +7091,7 @@ return results;]]></xml-property>
                     <name>setupQueryText</name>
                     <value>// DEPRECATED, VERY MEMORY INTENSIVE, USE scope_countrisks_aggregated_net_command INSTEAD OF THIS ONE (from verinice 1.6.3 on)
 import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 inParameters(new String[] { "root_object", "toleratedC", "toleratedI", "toleratedA"});
 
@@ -7183,15 +7183,15 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.service.risk.RiskAnalysisHelper;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
-import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
-import sernet.gs.ui.rcp.main.service.crudcommands.RiskMatrix;
+import sernet.verinice.service.risk.RiskAnalysisHelperImpl;
+import sernet.verinice.service.commands.crud.RiskMatrix;
 import java.util.*;
 
 // set top level element for report:
@@ -8460,7 +8460,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 // set top level element for report:
@@ -8506,7 +8506,7 @@ return helper.execute(c2).getResults();
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportRedYellowScenarioGroups;
+import sernet.verinice.service.commands.crud.LoadReportRedYellowScenarioGroups;
 
 cols = LoadReportRedYellowScenarioGroups.COLUMNS;
 inParameters(new String[] { "root_object" });
@@ -8607,7 +8607,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 groupID = new Integer(Integer.parseInt(inpv("scenGroupID")));
@@ -8647,9 +8647,9 @@ return helper.execute(c2).getResult();
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.sernet.gs.ui.rcp.main.service.crudcommands.LoadReportNotGreenScenarios;
+import sernet.verinice.service.commands.crud.LoadReportNotGreenScenarios;
 
-cols = sernet.gs.ui.rcp.main.service.crudcommands.LoadReportNotGreenScenarios.COLUMNS;
+cols = sernet.verinice.service.commands.crud.LoadReportNotGreenScenarios.COLUMNS;
 inParameters(new String[] { "scenGroupID" });
 columns(cols);</value>
                 </ex-property>
@@ -8802,7 +8802,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 
 // set top level element for report:
@@ -8986,7 +8986,7 @@ return results;]]></xml-property>
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 inParameters(new String[] { "root_object", "toleratedC", "toleratedI", "toleratedA"});
 
@@ -9095,7 +9095,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 // set top level element for report:
@@ -9141,7 +9141,7 @@ return helper.execute(c2).getResult();
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportScenarioGroupColourCount;
+import sernet.verinice.service.commands.crud.LoadReportScenarioGroupColourCount;
 
 cols = LoadReportScenarioGroupColourCount.COLUMNS;
 inParameters(new String[] { "root_object" });
@@ -9225,15 +9225,15 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.service.risk.RiskAnalysisHelper;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
-import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
-import sernet.gs.ui.rcp.main.service.crudcommands.RiskMatrix;
+import sernet.verinice.service.risk.RiskAnalysisHelperImpl;
+import sernet.verinice.service.commands.crud.RiskMatrix;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import java.util.*;
@@ -10528,7 +10528,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 // set top level element for report:
@@ -10574,7 +10574,7 @@ return helper.execute(c2).getResult();
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportScenarioGroupColourCount;
+import sernet.verinice.service.commands.crud.LoadReportScenarioGroupColourCount;
 
 cols = LoadReportScenarioGroupColourCount.COLUMNS;
 inParameters(new String[] { "root_object" });
@@ -10726,7 +10726,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportHighRiskAssetScenarios;
+import sernet.verinice.service.commands.crud.LoadReportHighRiskAssetScenarios;
 import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 // set top level element for report:
@@ -10772,7 +10772,7 @@ return command.getResults();]]></xml-property>
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportHighRiskAssetScenarios;
+import sernet.verinice.service.commands.crud.LoadReportHighRiskAssetScenarios;
 
 inParameters(new String[] { "root_object" });
 columns(LoadReportHighRiskAssetScenarios.COLUMNS);</value>
@@ -10920,7 +10920,7 @@ columns(LoadReportHighRiskAssetScenarios.COLUMNS);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportRemainingRiskWithImplControls;
+import sernet.verinice.service.commands.crud.LoadReportRemainingRiskWithImplControls;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -11014,7 +11014,7 @@ return helper.execute(command).getResults();
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportRemainingRiskWithImplControls;
+import sernet.verinice.service.commands.crud.LoadReportRemainingRiskWithImplControls;
 
 inParameters(new String[] { "root_object", "toleratedC", "toleratedI", "toleratedA" });
 

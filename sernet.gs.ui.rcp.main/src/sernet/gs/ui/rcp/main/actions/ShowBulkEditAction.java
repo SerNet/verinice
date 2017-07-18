@@ -43,14 +43,9 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.BulkEditDialog;
 import sernet.gs.ui.rcp.main.bsi.dialogs.PersonBulkEditDialog;
-import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
-import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.PasswordException;
-import sernet.gs.ui.rcp.main.service.taskcommands.BulkEditUpdate;
-import sernet.gs.ui.rcp.main.service.taskcommands.ConfigurationBulkEditUpdate;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -59,6 +54,9 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
+import sernet.verinice.interfaces.PasswordException;
+import sernet.verinice.model.bpm.TodoViewItem;
+import sernet.verinice.model.bsi.DocumentReference;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
@@ -69,6 +67,8 @@ import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.commands.CreateConfiguration;
 import sernet.verinice.service.commands.LoadConfiguration;
 import sernet.verinice.service.commands.UpdateMultipleElementEntities;
+import sernet.verinice.service.commands.task.BulkEditUpdate;
+import sernet.verinice.service.commands.task.ConfigurationBulkEditUpdate;
 
 /**
  * Erlaubt das gemeinsame Editieren der Eigenschaften von gleichen,

@@ -52,10 +52,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IRightsServiceClient;
 import sernet.verinice.model.auth.Action;

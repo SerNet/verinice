@@ -43,11 +43,11 @@ This variant:
  	available via the VeriniceContext class (look it up for further details).
     -->
 
-	<bean id="gsScraperUtil" class="sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil" >
+	<bean id="gsScraperUtil" class="sernet.verinice.service.parser.GSScraperUtil" >
 		<property name="model">
-			<bean class="sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel">
+			<bean class="sernet.verinice.service.parser.BSIMassnahmenModel">
 				<constructor-arg>
-					<bean class="sernet.gs.ui.rcp.main.connect.BSIConfigurationServer">
+					<bean class="sernet.verinice.service.gstoolimport.BSIConfigurationServer">
 						<property name="grundschutzKataloge" value="${veriniceserver.grundschutzKataloge}" />
 						<property name="datenschutzBaustein" value="${veriniceserver.datenschutzBaustein}" />
 					</bean>
@@ -59,43 +59,51 @@ This variant:
 	<bean id="huiTypeFactory" class="sernet.hui.common.connect.HUITypeFactory">
 		<constructor-arg value="${snca.resource}" />
 	</bean>
-
+    
+  <!-- 
 	<bean id="hitroUtil" class="sernet.hui.common.connect.HitroUtil"
 		init-method="initForServer">
+  -->
+  <bean id="hitroUtil" class="sernet.hui.common.connect.HitroUtil">
 		<property name="typeFactory" ref="huiTypeFactory" />
+    <!--
 		<property name="entityResolverFactory">
 			<bean class="sernet.gs.ui.rcp.main.bsi.model.BSIEntityResolverFactory"/>
 		</property>
+    -->
 	</bean>
+    
+  <bean id="layoutConfig" class="sernet.verinice.service.model.WebLayoutConfig"/>
 
 	<bean id="workObjects" class="sernet.hui.common.VeriniceContext$State">
-	<property name="map">
-			<map>
-				<entry key="gsScraperUtil" value-ref="gsScraperUtil" />
-				<entry key="hitroUtil" value-ref="hitroUtil" />
-				<entry key="huiTypeFactory" value-ref="huiTypeFactory" />
-				<entry key="commandService" value-ref="commandService" />
-				<entry key="authService" value-ref="authService" />
-                <entry key="taskService" value-ref="taskService" />
-                <entry key="rightsServerHandler" value-ref="rightsServerHandler" />
-                <entry key="remindService" value-ref="remindService" />
-                <entry key="isaQmService" value-ref="isaQmService" />
-                <entry key="gsmService" value-ref="gsmService" />
-                <entry key="processEngine" value-ref="processEngine" />
-                <entry key="validationService" value-ref="validationService" />
-                <entry key="accountService" value-ref="accountService" />
-                <entry key="reportdepositService" value-ref="reportdepositService" />
-                <entry key="reportHQLService" value-ref="reportHQLService"/>
-                <entry key="configurationService" value-ref="configurationService"/>
-				<entry key="objectModelService" value-ref="objectModelService" />
-                <entry key="updateNewsService" value-ref="updateNewsService" />
-                <entry key="licenseManagementService" value-ref="licenseManagementService"/>
-                <entry key="encryptionService" value-ref="encryptionService" />
-				<entry key="graphService" value-ref="graphService" />
-        		<entry key="countService" value-ref="countService" />
-				<entry key="individualService" value-ref="individualService" />
-			</map>
-		</property>
+    <property name="map">
+        <map>
+            <entry key="gsScraperUtil" value-ref="gsScraperUtil" />
+            <entry key="hitroUtil" value-ref="hitroUtil" />
+            <entry key="huiTypeFactory" value-ref="huiTypeFactory" />
+            <entry key="commandService" value-ref="commandService" />
+            <entry key="authService" value-ref="authService" />
+            <entry key="taskService" value-ref="taskService" />
+            <entry key="rightsServerHandler" value-ref="rightsServerHandler" />
+            <entry key="remindService" value-ref="remindService" />
+            <entry key="isaQmService" value-ref="isaQmService" />
+            <entry key="gsmService" value-ref="gsmService" />
+            <entry key="processEngine" value-ref="processEngine" />
+            <entry key="validationService" value-ref="validationService" />
+            <entry key="accountService" value-ref="accountService" />
+            <entry key="reportdepositService" value-ref="reportdepositService" />
+            <entry key="reportHQLService" value-ref="reportHQLService" />
+            <entry key="configurationService" value-ref="configurationService" />
+            <entry key="objectModelService" value-ref="objectModelService" />
+            <entry key="updateNewsService" value-ref="updateNewsService" />
+            <entry key="licenseManagementService" value-ref="licenseManagementService" />
+            <entry key="encryptionService" value-ref="encryptionService" />
+            <entry key="graphService" value-ref="graphService" />
+            <entry key="countService" value-ref="countService" />
+            <entry key="individualService" value-ref="individualService" />
+            <entry key="layoutConfig" value-ref="layoutConfig" />
+        </map>
+    </property>
 	</bean>
 
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
