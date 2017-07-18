@@ -457,7 +457,7 @@
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 objects="anwendung";
 
@@ -922,7 +922,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 objects="server";
 
@@ -1387,7 +1387,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 objects="client";
 
@@ -1715,7 +1715,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 objects="netzkomponente";
 
@@ -2196,7 +2196,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 objects="sonstit";
 
@@ -2559,7 +2559,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 objects="raum";
 
@@ -2922,7 +2922,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 objects="gebaeude";
 
@@ -3353,7 +3353,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 objects="tkkomponente";
 
@@ -3811,7 +3811,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -4099,7 +4099,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // get current elmt:
 elmtid=-1;
@@ -4394,9 +4394,9 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.iso27k.service.Retriever;
+import sernet.gs.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 
@@ -4977,7 +4977,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.ITVerbund;
 import java.lang.*;
 
@@ -5753,12 +5753,12 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
-import sernet.verinice.iso27k.service.Retriever;
+import sernet.verinice.service.commands.crud.ExecuteHQLInReportCommand;
+import sernet.gs.service.Retriever;
 import sernet.gs.service.NumericStringComparator;
 import java.util.Comparator;
 import java.lang.String;

@@ -42,7 +42,7 @@
    </bean>
 
 
-<bean name="pniCommand" class="sernet.gs.server.commands.PrepareNotificationInfo"/>
+<bean name="pniCommand" class="sernet.verinice.service.commands.PrepareNotificationInfo"/>
 
 <bean name="notificationJob" class="org.springframework.scheduling.quartz.JobDetailBean">
   <property name="jobClass" value="sernet.gs.server.MailJob" />

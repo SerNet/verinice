@@ -916,10 +916,10 @@ if ( match) {
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.report.service.commands.*;
 import java.util.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.iso27k.*;
 import sernet.gs.service.NumericStringComparator;
        
@@ -1545,10 +1545,10 @@ columns(newcols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.report.service.commands.*;
 import java.util.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.iso27k.*;
 
 import sernet.gs.ui.rcp.main.Activator;

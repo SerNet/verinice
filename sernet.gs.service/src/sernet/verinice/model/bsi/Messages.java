@@ -53,6 +53,7 @@ public final class Messages extends NLS {
     public static String SchutzbedarfAdapter_3;
     public static String SubtypenZielobjekte_1;
     public static String BausteinKategorie_0;
+    public static String CnAPlaceholder_CONNECTING;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

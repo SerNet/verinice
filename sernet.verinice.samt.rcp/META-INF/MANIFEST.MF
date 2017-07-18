@@ -4,8 +4,7 @@ Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: sernet.verinice.samt.rcp;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Bundle-Activator: sernet.verinice.samt.rcp.Activator
-Require-Bundle: sernet.gs.ui.rcp.main,
- sernet.gs.service,
+Require-Bundle: sernet.gs.service,
  sernet.verinice.samt.service,
  org.eclipse.equinox.ds;bundle-version="1.1.1",
  sernet.springclient;bundle-version="1.2.2",
@@ -13,7 +12,8 @@ Require-Bundle: sernet.gs.ui.rcp.main,
  org.eclipse.core.resources;bundle-version="3.5.2",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
  org.eclipse.ui.intro;bundle-version="3.3.2",
- org.eclipse.ui.cheatsheets
+ org.eclipse.ui.cheatsheets,
+ sernet.gs.ui.rcp.main
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Vendor: %Bundle-Vendor

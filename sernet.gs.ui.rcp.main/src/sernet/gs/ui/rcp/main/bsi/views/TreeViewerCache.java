@@ -30,7 +30,7 @@ import net.sf.ehcache.Status;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.rcp.tree.ElementCache;
+import sernet.verinice.service.tree.ElementCache;
 
 
 /**

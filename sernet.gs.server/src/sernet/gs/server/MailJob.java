@@ -40,14 +40,14 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
 
-import sernet.gs.server.commands.NotificationInfo;
-import sernet.gs.server.commands.PrepareNotificationInfo;
 import sernet.gs.server.security.DummyAuthentication;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.commands.NotificationInfo;
+import sernet.verinice.service.commands.PrepareNotificationInfo;
 
 /**
  * A {@link MailJob} instance is a job that is to run once per day.

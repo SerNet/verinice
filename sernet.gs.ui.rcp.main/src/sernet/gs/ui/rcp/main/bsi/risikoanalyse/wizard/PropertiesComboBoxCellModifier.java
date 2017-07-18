@@ -24,9 +24,9 @@ import org.eclipse.swt.widgets.TableItem;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.SelectRiskTreatment;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.service.commands.risk.SelectRiskTreatment;
 
 /**
  * Sets a Gefaehrdung's alternative to the chosen value.

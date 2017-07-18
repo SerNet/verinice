@@ -31,8 +31,8 @@ import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.security.AccessDeniedException;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ElementChange;
 import sernet.verinice.interfaces.IAuthAwareCommand;

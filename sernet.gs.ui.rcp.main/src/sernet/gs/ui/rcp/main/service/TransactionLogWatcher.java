@@ -28,11 +28,11 @@ import org.eclipse.core.runtime.Preferences;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.gs.ui.rcp.main.service.taskcommands.GetChangesSince;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.task.GetChangesSince;
 
 /**
  * Check transaction log on server for changes and notify listeners. Should be

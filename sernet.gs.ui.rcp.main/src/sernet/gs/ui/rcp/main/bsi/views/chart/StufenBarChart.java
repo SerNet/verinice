@@ -31,8 +31,8 @@ import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.common.model.MassnahmenSummaryHome;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.service.commands.stats.MassnahmenSummaryHome;
 
 public class StufenBarChart implements IChartGenerator {
 

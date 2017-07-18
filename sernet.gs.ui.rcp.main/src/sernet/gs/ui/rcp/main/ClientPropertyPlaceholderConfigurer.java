@@ -27,11 +27,11 @@ import org.eclipse.core.runtime.Preferences;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
 import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRCPLocal;
-import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRemoteSource;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import static sernet.gs.ui.rcp.main.preferences.PreferenceConstants.*;
 import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
+import sernet.verinice.service.parser.BSIConfigurationRemoteSource;
 
 /**
  * This class provides keyword replacement in a Spring configuration when it

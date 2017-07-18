@@ -36,7 +36,6 @@ import sernet.gs.reveng.importData.RAGefaehrdungsMassnahmenResult;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
 import sernet.gs.scraper.GSScraper;
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzungFactory;
@@ -44,11 +43,6 @@ import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.AddMassnahmeToGefaherdung;
-import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.AssociateGefaehrdungsUmsetzung;
-import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.NegativeEstimateGefaehrdung;
-import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.SelectRiskTreatment;
-import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.StartNewRiskAnalysis;
 import sernet.snutils.DBException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
@@ -60,6 +54,13 @@ import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadCnAElementByExternalID;
+import sernet.verinice.service.commands.risk.AddMassnahmeToGefaherdung;
+import sernet.verinice.service.commands.risk.AssociateGefaehrdungsUmsetzung;
+import sernet.verinice.service.commands.risk.NegativeEstimateGefaehrdung;
+import sernet.verinice.service.commands.risk.SelectRiskTreatment;
+import sernet.verinice.service.commands.risk.StartNewRiskAnalysis;
+import sernet.verinice.service.gstoolimport.TransferData;
+import sernet.verinice.service.parser.GSScraperUtil;
 
 /**
  * Import Risikoanalysen (RA) for existing zielobjekt elements. In GSTOOL a RA is called

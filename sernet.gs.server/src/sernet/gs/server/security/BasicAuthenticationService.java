@@ -27,8 +27,8 @@ import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.ui.basicauth.BasicProcessingFilterEntryPoint;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IConfigurationService;

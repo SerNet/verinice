@@ -29,10 +29,10 @@ import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bpm.TodoViewItem;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BausteinUmsetzung;

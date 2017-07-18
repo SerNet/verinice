@@ -19,6 +19,8 @@ package sernet.gs.ui.rcp.main.reports;
 
 import java.util.Properties;
 
+import sernet.verinice.interfaces.IBSIReport;
+
 /**
  * This report prints out the association of
  * protection levels with

@@ -5,7 +5,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -18,6 +17,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
 import sernet.verinice.rcp.ElementTitleCache;
+import sernet.verinice.service.account.AccountLoader;
 
 class AccountLabelProvider extends ColumnLabelProvider implements ITableLabelProvider {
 

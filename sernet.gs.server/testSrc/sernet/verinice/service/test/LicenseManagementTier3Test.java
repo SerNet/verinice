@@ -46,7 +46,6 @@ import org.junit.Test;
 import org.threeten.bp.LocalDate;
 
 import sernet.gs.service.VeriniceCharset;
-import sernet.gs.ui.rcp.main.service.crudcommands.PrepareObjectWithAccountDataForDeletion;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
@@ -70,6 +69,7 @@ import sernet.verinice.service.commands.SaveConfiguration;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.commands.UpdateElementEntity;
+import sernet.verinice.service.commands.crud.PrepareObjectWithAccountDataForDeletion;
 import sernet.verinice.service.crypto.PasswordBasedEncryption;
 import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
 

@@ -54,8 +54,6 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.DeleteNote;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadNotes;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
@@ -66,6 +64,8 @@ import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.Note;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.RightsEnabledView;
+import sernet.verinice.service.commands.crud.DeleteNote;
+import sernet.verinice.service.commands.crud.LoadNotes;
 
 @SuppressWarnings("restriction")
 public class NoteView extends RightsEnabledView implements ILinkedWithEditorView {

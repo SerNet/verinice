@@ -26,14 +26,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import junit.framework.Assert;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
+import junit.framework.Assert;
 import sernet.verinice.service.sync.VeriniceArchive;
 import sernet.verinice.service.sync.VnaSchemaChecker;
-import sernet.verinice.service.sync.VnaSchemaException;
 import sernet.verinice.service.sync.VnaSchemaVersion;
 
 /**

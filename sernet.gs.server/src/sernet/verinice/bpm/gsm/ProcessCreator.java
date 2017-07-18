@@ -28,11 +28,11 @@ import org.apache.log4j.Logger;
 import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.gs.server.security.DummyAuthentication;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
 import sernet.verinice.bpm.IProcessCreater;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICommandService;

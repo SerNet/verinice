@@ -19,29 +19,22 @@
  ******************************************************************************/
 package sernet.verinice.service.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
-import java.security.SecureRandom;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.Callable;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.util.Assert;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.service.TimeFormatter;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.search.IJsonBuilder;
 import sernet.verinice.interfaces.search.ISearchService;

@@ -35,8 +35,9 @@ import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.MenuModel;
 
 import sernet.gs.service.SecurityException;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.web.Util;
+import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
@@ -50,9 +51,9 @@ import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
-import sernet.verinice.rcp.tree.ElementManager;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.iso27k.LoadModel;
+import sernet.verinice.service.tree.ElementManager;
 
 /**
  * 
@@ -289,7 +290,7 @@ public class TreeBean implements IElementListener {
 
         try {
             RemoveElement<CnATreeElement> command = new RemoveElement<>(getElement());
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            command = getCommandService().executeCommand(command);
             manager.elementRemoved(getElement());
             getChildren().remove(getElementInformation());
             getEditBean().clear();
@@ -428,7 +429,7 @@ public class TreeBean implements IElementListener {
         ISO27KModel model = null;
         try {
             LoadModel loadModel = new LoadModel();
-            loadModel = ServiceFactory.lookupCommandService().executeCommand(loadModel);
+            loadModel = getCommandService().executeCommand(loadModel);
             model = loadModel.getModel();
             
         } catch(Exception e) {
@@ -436,5 +437,9 @@ public class TreeBean implements IElementListener {
             throw new RuntimeException("Error while loading model", e);
         }
         return model;
+    }
+    
+    private ICommandService getCommandService() {
+        return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
     }
 }

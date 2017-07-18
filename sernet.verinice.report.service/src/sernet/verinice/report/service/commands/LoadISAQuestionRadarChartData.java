@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
@@ -30,6 +29,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.service.commands.crud.LoadReportElements;
 
 /**
  *

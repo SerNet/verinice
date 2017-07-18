@@ -19,6 +19,8 @@ package sernet.gs.ui.rcp.main.common.model;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import sernet.verinice.interfaces.IProgress;
+
 public class ProgressAdapter implements IProgress {
 
 

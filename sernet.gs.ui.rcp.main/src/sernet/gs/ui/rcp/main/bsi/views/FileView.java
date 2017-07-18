@@ -85,7 +85,6 @@ import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.DeleteNote;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
@@ -103,6 +102,7 @@ import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachments;
 import sernet.verinice.service.commands.LoadAttachmentsUserFiltered;
 import sernet.verinice.service.commands.LoadFileSizeLimit;
+import sernet.verinice.service.commands.crud.DeleteNote;
 
 /**
  * Lists files {@link Attachment} attached to a CnATreeElement. User can view,

@@ -32,8 +32,8 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.views.RelationTableViewer;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindRelationsFor;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.task.FindRelationsFor;
 
 /**
  * @author Moritz Reiter

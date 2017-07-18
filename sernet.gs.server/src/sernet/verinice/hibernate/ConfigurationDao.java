@@ -19,12 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.hibernate;
 
-import static sernet.gs.ui.rcp.main.service.ServiceFactory.lookupAccountService;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
+import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
@@ -68,8 +67,12 @@ public class ConfigurationDao extends TreeElementDao<Configuration, Serializable
 
     public IAccountService getAccountService() {
         if (accountService == null) {
-            accountService = lookupAccountService();
+            accountService = createAccountService();
         }
         return accountService;
+    }
+    
+    public static IAccountService createAccountService() {
+        return (IAccountService) VeriniceContext.get(VeriniceContext.ACCOUNT_SERVICE);
     }
 }

@@ -21,7 +21,6 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.sql.Date;
 import java.util.Calendar;
 
 import org.junit.Test;

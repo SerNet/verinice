@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.common.model;
 
+import sernet.verinice.interfaces.IProgress;
 
 public class NullMonitor implements IProgress {
 

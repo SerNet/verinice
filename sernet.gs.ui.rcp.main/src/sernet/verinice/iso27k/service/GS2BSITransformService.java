@@ -28,7 +28,6 @@ import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
 import sernet.gs.service.GSServiceException;
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
@@ -45,6 +44,7 @@ import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.IncidentScenarioGroup;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.SaveElement;
+import sernet.verinice.service.parser.GSScraperUtil;
 
 public class GS2BSITransformService {
 	

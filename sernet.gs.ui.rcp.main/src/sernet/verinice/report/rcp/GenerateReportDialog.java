@@ -44,7 +44,6 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.reports.IReportSupplier;
 import sernet.gs.ui.rcp.main.reports.ReportSupplierImpl;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnATreeElementTitles;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ICommandCacheClient;
 import sernet.verinice.interfaces.IReportDepositService;
@@ -57,6 +56,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.report.ReportTemplateMetaData;
+import sernet.verinice.service.commands.crud.LoadCnATreeElementTitles;
 
 public class GenerateReportDialog extends TitleAreaDialog {
 

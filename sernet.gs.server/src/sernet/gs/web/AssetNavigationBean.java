@@ -24,17 +24,16 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.convert.Converter;
-import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
-import sernet.gs.ui.rcp.main.service.taskcommands.ILoadChildren;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.crud.LoadCnAElementByType;
+import sernet.verinice.service.commands.task.ILoadChildren;
 
 /**
  * JSF managed bean for asset-navigation data and methods.

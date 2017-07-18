@@ -124,7 +124,7 @@
             </list-property>
             <xml-property name="queryText"><![CDATA[import java.util.ArrayList;
 import sernet.verinice.samt.service.TotalSecurityFigureISA2Command;
-import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
+import sernet.verinice.service.commands.crud.ExecuteHQLInReportCommand;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.report.service.impl.TocHelper2;
@@ -729,7 +729,7 @@ inParameters(new String[] { "root_object" });</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.report.service.commands.*;
 import java.util.ArrayList;
 import sernet.verinice.model.common.CnATreeElement;
@@ -1311,7 +1311,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import java.lang.Integer;
 import sernet.verinice.model.common.CnATreeElement;
 import java.util.ArrayList;
@@ -2902,7 +2902,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
@@ -3540,7 +3540,7 @@ import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.gs.service.NumericStringComparator;
-import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
+import sernet.verinice.service.commands.crud.ExecuteHQLInReportCommand;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -3929,7 +3929,7 @@ return result;]]></xml-property>
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadSamtComplianceRadarChartData;
+import sernet.verinice.service.commands.crud.LoadSamtComplianceRadarChartData;
 
 cols = new String[] { 
         "CATEGORIES",

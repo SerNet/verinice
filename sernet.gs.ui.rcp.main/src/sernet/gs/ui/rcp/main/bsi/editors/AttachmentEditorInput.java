@@ -28,13 +28,13 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.bsi.views.FileView;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.crud.ExecuteHQLInReportCommand;
 
 public class AttachmentEditorInput implements IEditorInput {
 

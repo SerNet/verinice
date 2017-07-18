@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,12 +21,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
-import org.springframework.test.annotation.ExpectedException;
 
-import sernet.gs.service.RetrieveInfo;
-import sernet.gs.ui.rcp.main.service.crudcommands.PrepareObjectWithAccountDataForDeletion;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
@@ -48,6 +43,7 @@ import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SaveConfiguration;
 import sernet.verinice.service.commands.UpdateElementEntity;
+import sernet.verinice.service.commands.crud.PrepareObjectWithAccountDataForDeletion;
 import sernet.verinice.service.test.helper.util.BFSTravers;
 import sernet.verinice.service.test.helper.util.CnATreeTraverser;
 

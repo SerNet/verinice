@@ -26,13 +26,13 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.bsi.model.DocumentLink;
-import sernet.gs.ui.rcp.main.bsi.model.DocumentLinkRoot;
-import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.URLUtil;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.DocumentLink;
+import sernet.verinice.model.bsi.DocumentLinkRoot;
+import sernet.verinice.model.bsi.DocumentReference;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;

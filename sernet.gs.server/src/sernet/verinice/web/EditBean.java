@@ -46,7 +46,6 @@ import org.primefaces.event.SelectEvent;
 import sernet.gs.service.GSServiceException;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.TimeFormatter;
-import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.web.SecurityException;
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
@@ -57,17 +56,22 @@ import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.auth.AuthenticationHelper;
 import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.SaveElement;
+import sernet.verinice.service.parser.GSScraperUtil;
 
 /**
  * JSF managed bean which provides data for the element editor in the web application.
@@ -229,8 +233,8 @@ public class EditBean {
     }
 
     private void loadChangedElementPropertiesFromTask() {
-        Map<String, String> changedElementProperties = getTaskService().loadChangedElementProperties(task.getId());
-        for (Entry<String, String> entry : changedElementProperties.entrySet()) {
+        Map<String, String> changedProperties = (Map<String, String>) getTaskService().loadChangedElementProperties(task.getId());
+        for (Entry<String, String> entry : changedProperties.entrySet()) {
             element.setPropertyValue(entry.getKey(), entry.getValue());
         }
 
@@ -775,6 +779,10 @@ public class EditBean {
 
     private IConfigurationService getConfigurationService() {
         return (IConfigurationService) VeriniceContext.get(VeriniceContext.CONFIGURATION_SERVICE);
+    }
+
+    private IAuthService getAuthService() {
+        return (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
     }
 
     public MassnahmenUmsetzung getMassnahmenUmsetzung() {

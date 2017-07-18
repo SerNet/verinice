@@ -19,8 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.samt.audit.rcp;
 
+import sernet.gs.service.Retriever;
 import sernet.verinice.iso27k.rcp.IParentLoader;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**

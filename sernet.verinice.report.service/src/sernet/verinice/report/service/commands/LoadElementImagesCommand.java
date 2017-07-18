@@ -40,8 +40,6 @@ import net.sf.ehcache.Status;
 import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.Attachment;
@@ -49,6 +47,8 @@ import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.LoadAttachmentFile;
+import sernet.verinice.service.commands.crud.LoadChildrenForExpansion;
+import sernet.verinice.service.commands.crud.LoadCnAElementById;
 
 /**
  * Loads the images that have been stored along with a finding.

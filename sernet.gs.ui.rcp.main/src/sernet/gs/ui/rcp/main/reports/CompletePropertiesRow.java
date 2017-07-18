@@ -20,9 +20,10 @@ package sernet.gs.ui.rcp.main.reports;
 import java.util.ArrayList;
 import java.util.List;
 
-import sernet.gs.ui.rcp.office.IOOTableRow;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.ICnaItemRow;
+import sernet.verinice.interfaces.IOOTableRow;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**

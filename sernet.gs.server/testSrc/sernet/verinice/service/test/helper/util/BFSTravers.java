@@ -23,7 +23,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.verinice.iso27k.service.Retriever;
+import sernet.gs.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
