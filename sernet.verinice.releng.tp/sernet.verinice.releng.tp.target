@@ -13,7 +13,7 @@
 		-->
 
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="file:/home/dm/temp/29/tycho-tp/repository"/>
+			<repository location="http://bob.sernet.private/target-platform/"/>
             <unit id="threeten.backport" version="1.3.3"/>
             <unit id="org.apache.servicemix.bundles.commons-beanutils" version="1.8.3.2"/>
         </location>
