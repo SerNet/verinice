@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.13.1.full" useFeatures="true" includeLaunchers="true">
+<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.14.1.full" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/sernet.gs.ui.rcp.main/verinice_icons/about_img.png"/>
       <text>
-         SerNet verinice 1.13.1 - Codename &apos;Sylt&apos;
+         SerNet verinice 1.14.1 - Codename &apos;Sylt&apos;
 
 (c) SerNet Service Network GmbH and others
 1996-2016

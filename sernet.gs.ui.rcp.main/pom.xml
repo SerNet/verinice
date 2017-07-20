@@ -5,7 +5,7 @@
     <packaging>eclipse-plugin</packaging>
 
     <artifactId>sernet.gs.ui.rcp.main</artifactId>
-    <version>1.2.0-SNAPSHOT</version>
+    <version>1.3.0-SNAPSHOT</version>
 
     <parent>
         <groupId>sernet.verinice</groupId>
