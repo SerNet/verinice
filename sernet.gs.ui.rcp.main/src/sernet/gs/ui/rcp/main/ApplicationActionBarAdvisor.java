@@ -218,7 +218,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
             
             @Override
             public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
-                runRiskAnalysisAction.setEnabled(!"sernet.gs.ui.rcp.main.perspective".equals(perspective.getId()));
+                runRiskAnalysisAction.setEnabled(!Perspective.ID.equals(perspective.getId()));
             }
         });
          
