@@ -4656,6 +4656,10 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <huirelation to="auditgroup" id="rel_org_auditgroup" />
         <huirelation to="person-iso" id="rel_org_personiso_vv_bsig" name="VV BSIG Reporting Person" reversename="VV BSIG Reported Org"/>
         
+        <huirelation to="controlgroup" id="rel_org_controlgroup" 
+            name="impact reduced by" reversename="reduces impact of" tooltip=""/> 
+        
+        
         <huiproperty
             name="Title"
             id="org_name" 
@@ -4845,6 +4849,9 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         
         <huirelation to="asset" id="rel_asset_asset" 
         	name="depends on" reversename="necessary for" tooltip="One asset may depend on other assets, i.e. an application depending on its server."/>
+        <huirelation to="asset" id="rel_asset_asset_raum" 
+        	name="located in" reversename="includes" tooltip=""/>
+
 
         <huirelation to="person-iso" id="asset-person-owner" 
         	name="owner" reversename="is owner of" tooltip="Person is owner of this asset. He / she is affected by damage to this asset."/>
@@ -4856,6 +4863,9 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         	name="consulted" reversename="consulted for" tooltip="" />
         <huirelation to="person-iso" id="rel_asset_person_info"
         	name="informed" reversename="informed for" tooltip="" />
+        	
+        <huirelation to="person-iso" id="rel_asset_person_admin"
+        	name="administrated by" reversename="administrator" tooltip="" />	
             
         <huirelation to="control" id="rel_asset_control" 
             name="impact reduced by" reversename="reduces impact of" tooltip=""/>
@@ -4873,6 +4883,10 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             id="asset_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty
+            name="Number" 
+            id="asset_num" />
+            
 		<huiproperty
 			name="Description" id="asset_description" inputtype="text" />	
 		
@@ -4898,11 +4912,121 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
 			<option
 				name="Intangible"
 				id="asset_type_intangible" />
+			<option
+				name="Virtual system"
+				id="asset_type_virtual" />
+				
 		</huiproperty>
+		
+		<huiproperty
+            name="Platform" 
+            id="asset_platform" />
+		
+		<huiproperty
+            name="Status"
+            id="asset_status"
+            inputtype="singleoption">
+                <option
+                    id="asset_status_operation"
+                    name="Operation" />
+                <option
+                    id="asset_status_planning"
+                    name="Planning" />
+                <option
+                    id="asset_status_basicinstallation"
+                    name="Basic installation" />
+                <option
+                    id="asset_status_configuration"
+                    name="configuration" />
+                <option
+                    id="asset_status_test"
+                    name="Test" />
+                <option
+                    id="asset_status_delivery"
+                    name="Delivery" />
+                <option
+                    name="Repair"
+                    id="asset_status_repair" />
+                <option
+                    name="Standby"
+                    id="asset_status_standby" />
+                <option
+                    name="Reserve"
+                    id="asset_status_reserve" />
+        </huiproperty>
+		
 		<huiproperty
             name="Document"
             id="asset_document"
             isURL="true"/>
+            
+            
+            <huiproperty
+			name="User"
+			id="asset_user"
+			tooltip=""
+			required="false"
+			inputtype="multioption">
+			
+			<option
+				id="asset_user_1"
+				name="Administration" />
+			<option
+				id="asset_user_2"
+				name="Entwicklung" />
+			<option
+				id="asset_user_3"
+				name="IT-Betrieb" />
+			<option
+				id="asset_user_4"
+				name="Alle Mitarbeiter" />
+			<option
+				id="asset_user_5"
+				name="Behörden-/Unternehmensleitung" />
+			<option
+				id="asset_user_6"
+				name="Disposition" />
+			<option
+				id="asset_user_7"
+				name="Produktion" />
+			<option
+				id="asset_user_8"
+				name="Brandschutzbeauftragter" />
+			<option
+				id="asset_user_9"
+				name="Datenschutzbeauftragter" />
+			<option
+				id="asset_user_10"
+				name="Einkauf" />
+			<option
+				id="asset_user_11"
+				name="Verwaltung" />
+			<option
+				id="asset_user_12"
+				name="Fachabteilung" />
+			<option
+				id="asset_user_13"
+				name="Haustechnik" />
+			<option
+				id="asset_user_14"
+				name="Pförtner" />
+			<option
+				id="asset_user_15"
+				name="Human Resources" />
+			<option
+				id="asset_user_16"
+				name="IT-Sicherheitsbeauftragter" />
+			<option
+				id="asset_user_17"
+				name="Helpdesk" />	
+			<option
+				id="asset_user_18"
+				name="Vertrieb" />	
+			<option
+				id="asset_user_19"
+				name="Buchhaltung" />
+		</huiproperty>
+		
         
     <!-- TODO externalize strings -->
 		<huipropertygroup id="asset_bcm_group" name="Business Continuity" tags="BCM" >
@@ -5286,6 +5410,10 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         
         <huirelation to="process" id="rel_person_process_responsible"
         	name="responsible for" reversename="responsible" tooltip="" />
+        	
+        <huirelation to="process" id="rel_person_process_processresponsible"
+        	name="processresponsible for" reversename="processresponsible" tooltip="" />
+        	
         <huirelation to="process" id="rel_person_process_accountable"
         	name="accountable for" reversename="accountable" tooltip="" />
         <huirelation to="process" id="rel_person_process_consulted"
@@ -5952,8 +6080,9 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <huiproperty 
         	name="Object-Browser Description"
         	id="controlgroup_objectbrowser_description"
-        	visible="false"
-        	editable="false"
+        	inputtype="text"
+        	visible="true"
+        	editable="true"
         	showInObjectBrowser="true"/>
     </huientity>
 
@@ -6001,7 +6130,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Description"
             id="control_desc"
             inputtype="text"
-            visible="false"
+            visible="true"
             tags="Web,Basic"/>
 		<huiproperty
             name="Document"
@@ -7414,8 +7543,11 @@ Wurden bereits weitere Stellen informiert?
   	<huirelation to="asset" id="rel_process_asset"
         	name="depends on" reversename="necessary for" tooltip="This process needs this asset to function." />
         	
-        <huirelation to="process" id="rel_process_process"
+    <huirelation to="process" id="rel_process_process"
         	name="depends on" reversename="necessary for" tooltip="This process needs this process to function." />
+        	
+    <huirelation to="controlgroup" id="rel_process_controlgroup" 
+            name="impact reduced by" reversename="reduces impact of" tooltip=""/> 
 
         <huiproperty
             name="Title"
@@ -7433,10 +7565,89 @@ Wurden bereits weitere Stellen informiert?
             id="process_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+            
+        <huiproperty
+			name="Type of Process"
+			id="process_type"
+			inputtype="singleoption">
+			<option
+				name="Core business"
+				id="process_type_core" />
+			<option
+				name="Supporting process"
+				id="process_type_support" />
+		</huiproperty>    
+            
 		<huiproperty
             name="Document"
             id="process_document"
             isURL="true" />
+            
+           <huiproperty
+			name="User"
+			id="process_user"
+			tooltip=""
+			required="false"
+			inputtype="multioption">
+			
+			<option
+				id="process_user_1"
+				name="Administration" />
+			<option
+				id="process_user_2"
+				name="Entwicklung" />
+			<option
+				id="process_user_3"
+				name="IT-Betrieb" />
+			<option
+				id="process_user_4"
+				name="Alle Mitarbeiter" />
+			<option
+				id="process_user_5"
+				name="Behörden-/Unternehmensleitung" />
+			<option
+				id="process_user_6"
+				name="Disposition" />
+			<option
+				id="process_user_7"
+				name="Produktion" />
+			<option
+				id="process_user_8"
+				name="Brandschutzbeauftragter" />
+			<option
+				id="process_user_9"
+				name="Datenschutzbeauftragter" />
+			<option
+				id="process_user_10"
+				name="Einkauf" />
+			<option
+				id="process_user_11"
+				name="Verwaltung" />
+			<option
+				id="process_user_12"
+				name="Fachabteilung" />
+			<option
+				id="process_user_13"
+				name="Haustechnik" />
+			<option
+				id="process_user_14"
+				name="Pförtner" />
+			<option
+				id="process_user_15"
+				name="Human Resources" />
+			<option
+				id="process_user_16"
+				name="IT-Sicherheitsbeauftragter" />
+			<option
+				id="process_user_17"
+				name="Helpdesk" />	
+			<option
+				id="process_user_18"
+				name="Vertrieb" />	
+			<option
+				id="process_user_19"
+				name="Buchhaltung" />
+		</huiproperty> 
             
             
        <!-- TODO externalize strings -->
