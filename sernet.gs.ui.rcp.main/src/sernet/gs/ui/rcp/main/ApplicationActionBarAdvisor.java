@@ -31,7 +31,10 @@ import org.eclipse.jface.action.StatusLineContributionItem;
 import org.eclipse.jface.action.ToolBarContributionItem;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.ui.IPerspectiveDescriptor;
+import org.eclipse.ui.IPerspectiveListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
@@ -207,7 +210,18 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     @SuppressWarnings(WARNING_RESTRICTION)
     @Override
     protected void makeActions(final IWorkbenchWindow window) {
-
+        window.addPerspectiveListener(new IPerspectiveListener() {
+            
+            @Override
+            public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String arg2) {
+            }
+            
+            @Override
+            public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
+                runRiskAnalysisAction.setEnabled(!Perspective.ID.equals(perspective.getId()));
+            }
+        });
+         
         BausteinZuordnungAction bausteinZuordnungAction;
         GSMBausteinZuordnungAction gsmbausteinZuordnungAction;
         GSMBasicSecurityCheckAction gsmbasicsecuritycheckAction;
@@ -218,8 +232,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         // file.
         // Registering also provides automatic disposal of the actions when
         // the window is closed.
-
-
 
         this.exitAction = ActionFactory.QUIT.create(window);
         this.copyAction = ActionFactory.COPY.create(window);
@@ -463,7 +475,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         myToolbar.add(this.reloadAction);
         myToolbar.add(this.runRiskAnalysisAction);
-
         myToolbar.add(new Separator());
         // Grundschutz items
         myToolbar.add(this.openBSIViewAction);
