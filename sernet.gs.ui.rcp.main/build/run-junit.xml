@@ -25,7 +25,8 @@
 		<pathelement location="${basedir}/../sernet.hui.common/bin/" />
 		<pathelement location="${basedir}/bin" />
 		<!-- add the compiled classes -->
-		<pathelement location="${basedir}/target/classes" />
+		<pathelement location="../sernet.gs.ui.rcp.main/target/classes/" />
+		<pathelement location="../sernet.gs.ui.rcp.main/target/test-classes/" />
 	</path>
 
 	<target name="coverage" description="Creates coverage reports">
