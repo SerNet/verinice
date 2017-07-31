@@ -27,6 +27,9 @@
 		<!-- add the compiled classes -->
 		<pathelement location="../sernet.gs.ui.rcp.main/target/classes/" />
 		<pathelement location="../sernet.gs.ui.rcp.main/target/test-classes/" />
+		
+		<pathelement location="../sernet.gs.service/target/classes/" />
+		<pathelement location="../sernet.hui.common/target/classes/" />
 	</path>
 
 	<target name="coverage" description="Creates coverage reports">
