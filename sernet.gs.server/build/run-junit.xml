@@ -31,6 +31,7 @@
 		<pathelement location="${basedir}/bin" />
 		<!-- add the missing classes on the classpath -->
 		<pathelement location="../sernet.gs.service/target/classes" />
+		<pathelement location="${basedir}/target/classes" />
 	</path>
 	<path id="classpath.test">
 		<pathelement location="${basedir}/lib/com.springsource.org.junit-4.4.0.jar" />
