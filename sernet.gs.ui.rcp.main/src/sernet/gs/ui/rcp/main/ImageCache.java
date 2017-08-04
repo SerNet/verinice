@@ -24,14 +24,56 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
 
-import sernet.verinice.model.bsi.*;
-import sernet.verinice.model.iso27k.*;
+import sernet.verinice.model.bsi.Anwendung;
+import sernet.verinice.model.bsi.AnwendungenKategorie;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.Client;
+import sernet.verinice.model.bsi.ClientsKategorie;
+import sernet.verinice.model.bsi.Gebaeude;
+import sernet.verinice.model.bsi.GebaeudeKategorie;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.NKKategorie;
+import sernet.verinice.model.bsi.NetzKomponente;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.bsi.PersonenKategorie;
+import sernet.verinice.model.bsi.RaeumeKategorie;
+import sernet.verinice.model.bsi.Raum;
+import sernet.verinice.model.bsi.Server;
+import sernet.verinice.model.bsi.ServerKategorie;
+import sernet.verinice.model.bsi.SonstIT;
+import sernet.verinice.model.bsi.SonstigeITKategorie;
+import sernet.verinice.model.bsi.TKKategorie;
+import sernet.verinice.model.bsi.TelefonKomponente;
+import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.iso27k.AssetGroup;
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.AuditGroup;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.Document;
+import sernet.verinice.model.iso27k.Evidence;
 import sernet.verinice.model.iso27k.Exception;
+import sernet.verinice.model.iso27k.Finding;
+import sernet.verinice.model.iso27k.IControl;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
+import sernet.verinice.model.iso27k.Incident;
+import sernet.verinice.model.iso27k.IncidentScenario;
+import sernet.verinice.model.iso27k.Interview;
+import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.model.iso27k.Record;
+import sernet.verinice.model.iso27k.Requirement;
+import sernet.verinice.model.iso27k.Response;
+import sernet.verinice.model.iso27k.Threat;
+import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
@@ -142,6 +184,7 @@ public final class ImageCache {
     public static final String VIEW_TASK_COMPARE_CHANGES = "history_rep.gif";
     public static final String VIEW_VALIDATION = "quickfix_warning_obj.gif";
     public static final String VIEW_GSMAPPING = "plugin_depend.gif";
+    public static final String VIEW_MODITBPMODEL = "sweetie-verinice/png/16-dice-grey.png";
 
 	public static final String EXPANDALL   = "expandall.gif";
 	public static final String COLLAPSEALL = "collapseall.gif";

@@ -213,6 +213,15 @@
       		name="%view.name.18"
       		restorable="true">
       </view>
+      <view
+            allowMultiple="false"
+            category="sernet.verinice.moditbp.rcp"
+            class="sernet.verinice.moditbp.rcp.MotITBPView"
+            icon="icons/sweetie-verinice/png/16-dice-grey.png"
+            id="sernet.verinice.moditbp.rcp.MotITBPView"
+            name="%view.name.20"
+            restorable="true">
+      </view>      
       
    </extension>
    <extension point="org.eclipse.ui.commands">

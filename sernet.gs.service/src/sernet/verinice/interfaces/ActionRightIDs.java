@@ -17,10 +17,10 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
-import org.apache.log4j.Logger;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+
+import org.apache.log4j.Logger;
 
 /**
  * List of all possible actions that should be controlable by right-management
@@ -75,6 +75,7 @@ public final class ActionRightIDs {
     public static final String ISMVIEWWEB = "ismviewweb";
     public static final String KONSOLIDATOR = "konsolidator";
     public static final String MARKTEMPLATE = "marktemplate";
+    public static final String MODITBPMODELVIEW = "moditbpmodelview";
     public static final String NATURALIZE = "naturalize";
     public static final String NOTES = "notes";
     public static final String CHANGEOWNPASSWORD = "changeownpassword";
