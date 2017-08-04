@@ -471,6 +471,121 @@
 		name="sernet.verinice.model.samt.SamtTopic"
 		extends="CnATreeElement"
 		discriminator-value="samt_topic" />
+		
+	<!-- renewed / modernized ITBP -->
+	
+	<subclass
+		name="sernet.verinice.model.moditbp.elements.Module"
+		extends="CnATreeElement"
+		discriminator-value="moditbp_module" />
+		
+	<subclass
+		name="sernet.verinice.model.moditbp.elements.ModITBPRequirement"
+		extends="CnATreeElement"
+		discriminator-value="moditbp_requirement" />
+		
+	<subclass
+		name="sernet.verinice.model.moditbp.elements.ModITBPThreat"
+		extends="CnATreeElement"
+		discriminator-value="moditbp_threat" />		
+		
+	<subclass
+		name="sernet.verinice.model.moditbp.elements.ModITBPElement"
+		extends="CnATreeElement"
+		discriminator-value="itbp-element">
+		<subclass 
+			name="sernet.verinice.model.moditbp.elements.Application"
+			extends="ModITBPElement"
+			discriminator-value="moditbp_application"
+		/>
+		<subclass 
+			name="sernet.verinice.model.moditbp.elements.BusinessProcess"
+			extends="ModITBPElement"
+			discriminator-value="moditbp_businessprocess"
+		/>
+		<subclass 
+			name="sernet.verinice.model.moditbp.elements.ICSSystem"
+			extends="ModITBPElement"
+			discriminator-value="moditbp_icssystem"
+		/>
+		<subclass 
+			name="sernet.verinice.model.moditbp.elements.ITNetwork"
+			extends="ModITBPElement"
+			discriminator-value="moditbp_itnetwork"
+		/>
+		<subclass 
+			name="sernet.verinice.model.moditbp.elements.ITSystem"
+			extends="ModITBPElement"
+			discriminator-value="moditbp_itsystem"
+		/>
+		<subclass 
+			name="sernet.verinice.model.moditbp.elements.ModITBPPerson"
+			extends="ModITBPElement"
+			discriminator-value="moditbp_person"
+		/>
+		<subclass 
+			name="sernet.verinice.model.moditbp.elements.Network"
+			extends="ModITBPElement"
+			discriminator-value="moditbp_network"
+		/>
+		<subclass 
+			name="sernet.verinice.model.moditbp.elements.OtherSystem"
+			extends="ModITBPElement"
+			discriminator-value="moditbp_othersystem"
+		/>
+		<subclass 
+			name="sernet.verinice.model.moditbp.elements.Room"
+			extends="ModITBPElement"
+			discriminator-value="moditbp_room"
+		/>
+		<subclass 
+			name="sernet.verinice.model.moditbp.categories.ApplicationCategory"
+			extends="ModITBPElement"
+			discriminator-value="moditbp_applicationcategory"
+		/>
+		
+		<subclass 
+			name="sernet.verinice.model.moditbp.categories.BusinessProcessCategory"
+			extends="ModITBPElement"
+			discriminator-value="moditbp_businessprocesscategory"
+		/>
+		
+		<subclass 
+			name="sernet.verinice.model.moditbp.categories.ICSSystemCategory"
+			extends="ModITBPElement"
+			discriminator-value="moditbp_icssystemcategory"
+		/>
+		
+		<subclass 
+			name="sernet.verinice.model.moditbp.categories.ITSystemCategory"
+			extends="ModITBPElement"
+			discriminator-value="moditbp_itsystemcategory"
+		/>		
+		
+		<subclass 
+			name="sernet.verinice.model.moditbp.categories.NetworkCategory"
+			extends="ModITBPElement"
+			discriminator-value="moditbp_networkcategory"
+		/>
+		
+		<subclass 
+			name="sernet.verinice.model.moditbp.categories.OtherSystemCategory"
+			extends="ModITBPElement"
+			discriminator-value="moditbp_othersystemcategory"
+		/>		
+								
+		<subclass 
+			name="sernet.verinice.model.moditbp.categories.PersonCategory"
+			extends="ModITBPElement"
+			discriminator-value="moditbp_personcategory"
+		/>
+		<subclass 
+			name="sernet.verinice.model.moditbp.categories.RoomCategory"
+			extends="ModITBPElement"
+			discriminator-value="moditbp_roomcategory"
+		/>
+																	
+	</subclass>
 
 	<!-- This filter implements the access check (read access) for CnATreeElement instances (and subclasses).
 	

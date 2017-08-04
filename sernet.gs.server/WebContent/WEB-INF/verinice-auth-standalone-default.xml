@@ -76,6 +76,7 @@
 	        <action id="ismview" />
           <action id="ismviewweb" />
 	        <action id="konsolidator" />
+	        <action id="moditbpmodelview" />
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />
