@@ -18,7 +18,6 @@
 
 package sernet.gs.ui.rcp.gsimport;
 
-import java.io.IOException;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
@@ -55,6 +54,7 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.rcp.RightsEnabledView;
 
 /**
@@ -144,6 +144,11 @@ public class GstoolImportMappingView extends RightsEnabledView implements IGstoo
 
             @Override
             public void loaded(ISO27KModel model) {
+                // nothing to do
+            }
+
+            @Override
+            public void loaded(ModITBPModel model) {
                 // nothing to do
             }
         };

@@ -74,6 +74,7 @@ import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 
 /**
  * Abstract view with tree viewer to show {@link CnATreeElement}s of specific types
@@ -249,6 +250,11 @@ public abstract class ElementView extends ViewPart {
                     synchronized (modelLoadListener) {
                         startInitDataJob();
                     }
+                }
+                @Override
+                public void loaded(ModITBPModel model) {
+                    // nothing to do
+                    
                 }          
             };
             CnAElementFactory.getInstance().addLoadListener(modelLoadListener);

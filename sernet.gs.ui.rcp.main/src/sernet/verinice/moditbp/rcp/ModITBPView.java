@@ -24,13 +24,22 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.DrillDownAdapter;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -42,6 +51,7 @@ import sernet.verinice.iso27k.rcp.Messages;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.IModITBPModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.elements.ITNetwork;
 import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.tree.TreeContentProvider;
@@ -53,9 +63,9 @@ import sernet.verinice.service.tree.ElementManager;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class MotITBPView extends RightsEnabledView {
+public class ModITBPView extends RightsEnabledView {
     
-    private static final Logger LOG = Logger.getLogger(MotITBPView.class);
+    private static final Logger LOG = Logger.getLogger(ModITBPView.class);
     
     protected TreeViewer viewer;
     private TreeContentProvider contentProvider;
@@ -67,7 +77,13 @@ public class MotITBPView extends RightsEnabledView {
     private IModelLoadListener modelLoadListener;
     private IModITBPModelListener modelUpdateListener;
     
-    public static final String ID = "sernet.verinice.moditbp.rcp.MotITBPView"; //$NON-NLS-1$
+    public static final String ID = "sernet.verinice.moditbp.rcp.ModITBPView"; //$NON-NLS-1$
+    
+    public ModITBPView() {
+        super();
+        elementManager = new ElementManager();
+    }
+
     
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
@@ -89,8 +105,7 @@ public class MotITBPView extends RightsEnabledView {
      */
     @Override
     public String getRightID() {
-        // TODO replace this later with unique actionID
-        return ActionRightIDs.ISMVIEW;
+        return ActionRightIDs.MODITBPMODELVIEW;
     }
 
     /* (non-Javadoc)
@@ -120,13 +135,14 @@ public class MotITBPView extends RightsEnabledView {
 //        toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
         
         getSite().setSelectionProvider(viewer);
-//        hookContextMenu();
+        hookContextMenu();
 //        makeActions();
 //        addActions();
 //        fillToolBar();
 //        hookDNDListeners();
         
 //        getSite().getPage().addPartListener(linkWithEditorPartListener);
+        viewer.refresh(true);
     }
     
     protected void startInitDataJob() {
@@ -170,6 +186,7 @@ public class MotITBPView extends RightsEnabledView {
                         @Override
                         public void run() {
                             setInput(CnAElementFactory.getInstance().getModITBPModel());
+                            viewer.refresh();
                         }
                     });
                 }
@@ -192,6 +209,11 @@ public class MotITBPView extends RightsEnabledView {
                     
                     @Override
                     public void loaded(ISO27KModel model) {
+                        // nothing to do
+                    }
+
+                    @Override
+                    public void loaded(ModITBPModel model) {
                         startInitDataJob();
                     }
                     
@@ -204,6 +226,66 @@ public class MotITBPView extends RightsEnabledView {
     
     public void setInput(ModITBPModel model) {
         viewer.setInput(model);
+    }
+    
+    private void hookContextMenu() {
+        MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
+        menuMgr.setRemoveAllWhenShown(true);
+        menuMgr.addMenuListener(new IMenuListener() {
+            @Override
+            public void menuAboutToShow(IMenuManager manager) {
+                fillContextMenu(manager);
+            }           
+        });
+        Menu menu = menuMgr.createContextMenu(viewer.getControl());
+        
+        viewer.getControl().setMenu(menu);
+        getSite().registerContextMenu(menuMgr, viewer);
+    }
+    
+    
+    protected void fillContextMenu(IMenuManager manager) {
+        ISelection selection = viewer.getSelection();
+        if(selection instanceof IStructuredSelection && ((IStructuredSelection) selection).size()==1) {
+            Object sel = ((IStructuredSelection) selection).getFirstElement();
+            if(sel instanceof ITNetwork) {
+                ITNetwork element = (ITNetwork) sel;
+//                if(CnAElementHome.getInstance().isNewChildAllowed(element)) {
+//                    MenuManager submenuNew = new MenuManager("&New","content/new"); //$NON-NLS-1$ //$NON-NLS-2$
+//                    submenuNew.add(new AddGroup(element,AssetGroup.TYPE_ID,Asset.TYPE_ID));
+//                    submenuNew.add(new AddGroup(element,AuditGroup.TYPE_ID,Audit.TYPE_ID));
+//                    submenuNew.add(new AddGroup(element,ControlGroup.TYPE_ID,Control.TYPE_ID));
+//                    submenuNew.add(new AddGroup(element,DocumentGroup.TYPE_ID,Document.TYPE_ID));
+//                    submenuNew.add(new AddGroup(element,EvidenceGroup.TYPE_ID,Evidence.TYPE_ID));
+//                    submenuNew.add(new AddGroup(element,ExceptionGroup.TYPE_ID,sernet.verinice.model.iso27k.Exception.TYPE_ID));
+//                    submenuNew.add(new AddGroup(element,FindingGroup.TYPE_ID,Finding.TYPE_ID));
+//                    submenuNew.add(new AddGroup(element,IncidentGroup.TYPE_ID,Incident.TYPE_ID));
+//                    submenuNew.add(new AddGroup(element,IncidentScenarioGroup.TYPE_ID,IncidentScenario.TYPE_ID));
+//                    submenuNew.add(new AddGroup(element,InterviewGroup.TYPE_ID,Interview.TYPE_ID));
+//                    submenuNew.add(new AddGroup(element,PersonGroup.TYPE_ID,PersonIso.TYPE_ID));
+//                    submenuNew.add(new AddGroup(element,ProcessGroup.TYPE_ID,sernet.verinice.model.iso27k.Process.TYPE_ID));
+//                    submenuNew.add(new AddGroup(element,RecordGroup.TYPE_ID,Record.TYPE_ID));
+//                    submenuNew.add(new AddGroup(element,RequirementGroup.TYPE_ID,Requirement.TYPE_ID));
+//                    submenuNew.add(new AddGroup(element,ResponseGroup.TYPE_ID,Response.TYPE_ID));
+//                    submenuNew.add(new AddGroup(element,ThreatGroup.TYPE_ID,Threat.TYPE_ID));
+//                    submenuNew.add(new AddGroup(element,VulnerabilityGroup.TYPE_ID,Vulnerability.TYPE_ID));
+//                    manager.add(submenuNew);
+//                }
+            }
+        }
+        
+        manager.add(new GroupMarker("content")); //$NON-NLS-1$
+        manager.add(new Separator());
+        manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+        manager.add(new Separator());
+        manager.add(new GroupMarker("special")); //$NON-NLS-1$
+//        manager.add(bulkEditAction);
+//        manager.add(accessControlEditAction);
+//        manager.add(naturalizeAction);
+//        manager.add(new Separator());
+//        manager.add(expandAction);
+//        manager.add(collapseAction);
+        drillDownAdapter.addNavigationActions(manager); 
     }
     
 

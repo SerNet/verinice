@@ -125,11 +125,14 @@ import sernet.verinice.model.moditbp.elements.Room;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.CreateAnwendung;
 import sernet.verinice.service.commands.CreateElement;
+import sernet.verinice.service.commands.CreateITNetwork;
 import sernet.verinice.service.commands.CreateITVerbund;
 import sernet.verinice.service.commands.UpdateElement;
 import sernet.verinice.service.commands.crud.CreateIsoModel;
+import sernet.verinice.service.commands.crud.CreateModITBPModel;
 import sernet.verinice.service.commands.crud.UpdateMultipleElements;
 import sernet.verinice.service.iso27k.LoadModel;
+import sernet.verinice.service.moditbp.LoadModITBPModel;
 
 /**
  * Factory for all model elements. Contains typed factories for sub-elements.
@@ -912,23 +915,23 @@ public final class CnAElementFactory {
         elementbuilders.put(ITNetwork.TYPE_ID, new ElementBuilder() {
             public CnATreeElement build(CnATreeElement container,
                     BuildInput input) throws CommandException {
-                ITNetwork child = dbHome.save(container, ITNetwork.class,
-                        ITNetwork.TYPE_ID);
-                init(container, child);
-                return child;
+                log.debug("Creating new ITNetwork in " + container); //$NON-NLS-1$
+                boolean createChildren = true;
+                if (input != null) {
+                    createChildren = (Boolean) input.getInput();
+                }
+                CreateITNetwork saveCommand = new CreateITNetwork(container,
+                        ITNetwork.class, createChildren);
+                saveCommand = ServiceFactory.lookupCommandService()
+                        .executeCommand(saveCommand);
+                ITNetwork itnetwork = saveCommand.getNewElement();
+
+                itnetwork.setParent(modITBPModel);
+                return itnetwork;
             }
         });
         
-        elementbuilders.put(ITNetwork.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container,
-                    BuildInput input) throws CommandException {
-                ITNetwork child = dbHome.save(container, ITNetwork.class,
-                        ITNetwork.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        
+
         elementbuilders.put(Application.TYPE_ID, new ElementBuilder() {
             public CnATreeElement build(CnATreeElement container,
                     BuildInput input) throws CommandException {
@@ -1297,10 +1300,6 @@ public final class CnAElementFactory {
 	    return (modITBPModel != null);
 	}
 	
-	public ModITBPModel getModITBPModel() {
-	    return modITBPModel;
-	}
-
 	public void closeModel() {
 		dbHome.close();
 		fireClosed();
@@ -1341,6 +1340,12 @@ public final class CnAElementFactory {
 			listener.loaded(model);
 		}
 	}
+	
+	private void fireLoad(ModITBPModel model) {
+        for (IModelLoadListener listener : listeners) {
+            listener.loaded(model);
+        }	    
+	}
 
 	/**
 	 * Returns whether there is an active database connection.
@@ -1378,6 +1383,18 @@ public final class CnAElementFactory {
 			}
 			return isoModel;
 		}
+	}
+	
+	public ModITBPModel getModITBPModel() {
+	    synchronized(mutex) {
+	        if (modITBPModel == null) {
+	            modITBPModel = loadModITBPModel();
+	            if (modITBPModel == null) {
+	                createModITBPModel();
+	            }
+	        }
+	    }
+	    return modITBPModel;
 	}
 
 	/**
@@ -1419,7 +1436,39 @@ public final class CnAElementFactory {
 		}
 	}
 	
+	private ModITBPModel loadModITBPModel() {
+	    ModITBPModel model = null;
+	    try {
+	        LoadModITBPModel modelLoadCommand = new LoadModITBPModel();
+	        modelLoadCommand = getCommandService().executeCommand(modelLoadCommand);
+	        modITBPModel = modelLoadCommand.getModel();
+	        if (modITBPModel != null) {
+	            fireLoad(modITBPModel);
+	        }
+	    } catch (CommandException e) {
+	        // TODO internationalize
+	        log.error("Error loading model for modernized ITBP", e);
+	        throw new RuntimeException("Error loading model for modernized ITBP", e);
+	    }
+	    return modITBPModel;
+	}
+	
 	private void createModITBPModel() {
+	    try {
+	        CreateModITBPModel modelCreationCommand = new CreateModITBPModel();
+	        modelCreationCommand = getCommandService()
+	                .executeCommand(modelCreationCommand);
+	        modITBPModel = modelCreationCommand.getElement();
+            if (log.isInfoEnabled()) {
+                log.info("Model for modernized ITBP created"); //$NON-NLS-1$
+            }
+            if (isoModel != null) {
+                fireLoad(isoModel);
+            }	        
+	        
+	    } catch (CommandException e) {
+	        log.error(Messages.getString("CnAElementFactory.2"), e); //$NON-NLS-1$
+	    }
 	    
 	}
 

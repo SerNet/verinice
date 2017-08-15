@@ -31,13 +31,15 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
+import sernet.verinice.model.iso27k.IModITBPModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.model.validation.CnAValidation;
 
 /**
  *
  */
-public class CnAValidationContentProvider implements IStructuredContentProvider, IBSIModelListener, IISO27KModelListener {
+public class CnAValidationContentProvider implements IStructuredContentProvider, IBSIModelListener, IISO27KModelListener, IModITBPModelListener {
     
     CnAValidationView validationView;
     
@@ -221,5 +223,19 @@ public class CnAValidationContentProvider implements IStructuredContentProvider,
     @Override
     public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){
         validationView.reloadAll();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IModITBPModelListener#modelReload(sernet.verinice.model.moditbp.elements.ModITBPModel)
+     */
+    @Override
+    public void modelReload(ModITBPModel newModel) {
+        Display.getDefault().asyncExec(new Runnable() {
+            
+            @Override
+            public void run() {
+                viewer.refresh();
+            }
+        });
     };
 }

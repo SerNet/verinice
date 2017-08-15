@@ -49,7 +49,9 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
+import sernet.verinice.model.iso27k.IModITBPModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.model.validation.CnAValidation;
 
 /**
@@ -333,6 +335,15 @@ public class ChartView extends ViewPart {
                 });
                 
             }
+
+            @Override
+            public void loaded(ModITBPModel model) {
+                Display.getDefault().asyncExec(new Runnable() {
+                    public void run() {
+                        CnAElementFactory.getInstance().getModITBPModel().addModITBOModelListener(changeListener);
+                    }
+                });
+            }
 		};
 
 		changeListener = createChangeListener();
@@ -431,7 +442,7 @@ public class ChartView extends ViewPart {
         return null;
     }
 	
-	protected class ChangeListener implements IBSIModelListener,IISO27KModelListener {
+	protected class ChangeListener implements IBSIModelListener,IISO27KModelListener, IModITBPModelListener {
 	    public void childAdded(CnATreeElement category, CnATreeElement child) {
             // do nothing
         }
@@ -490,7 +501,16 @@ public class ChartView extends ViewPart {
         public void validationRemoved(Integer scopeId){};
         
         @Override
-        public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
+        public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){}
+
+        /* (non-Javadoc)
+         * @see sernet.verinice.model.iso27k.IModITBPModelListener#modelReload(sernet.verinice.model.moditbp.elements.ModITBPModel)
+         */
+        @Override
+        public void modelReload(ModITBPModel newModel) {
+            // TODO Auto-generated method stub
+            
+        };
 	}
 
 }

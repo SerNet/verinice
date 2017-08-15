@@ -72,6 +72,7 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnATreeElement.TemplateType;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.rcp.IProgressRunnable;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.templates.TemplateTableViewer.PathCellLabelProvider;
@@ -267,6 +268,11 @@ public class TemplateView extends RightsEnabledView {
 
             @Override
             public void loaded(ISO27KModel model) {
+                // only BSI view
+            }
+
+            @Override
+            public void loaded(ModITBPModel model) {
                 // only BSI view
             }
         };

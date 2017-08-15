@@ -85,6 +85,7 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.account.AccountWizard;
 import sernet.verinice.service.account.AccountLoader;
@@ -169,6 +170,11 @@ public class AccountGroupView extends RightsEnabledView
 
                 initDataService();
                 CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
+            }
+
+            @Override
+            public void loaded(ModITBPModel model) {
+                // nothing to do
             }
         };
         CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
@@ -821,6 +827,14 @@ public class AccountGroupView extends RightsEnabledView
         initDataService();
     }
 
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.common.model.IModelLoadListener#loaded(sernet.verinice.model.moditbp.elements.ModITBPModel)
+     */
+    @Override
+    public void loaded(ModITBPModel model) {
+        // do nothing
+    }
+
     @Override
     public void closed(BSIModel model) {
         // do nothing
@@ -856,4 +870,5 @@ public class AccountGroupView extends RightsEnabledView
     private IAuthService getAuthService() {
         return ServiceFactory.lookupAuthService();
     }
+
 }

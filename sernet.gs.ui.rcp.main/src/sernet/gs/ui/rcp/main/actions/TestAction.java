@@ -31,6 +31,7 @@ import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.service.commands.crud.LoadReportAllRisksForScope;
 
 public class TestAction extends Action {
@@ -58,6 +59,10 @@ public class TestAction extends Action {
             }
             public void loaded(ISO27KModel model) {
                 setEnabled(true);               
+            }
+            @Override
+            public void loaded(ModITBPModel model) {
+                setEnabled(true);
             }
         });
     }

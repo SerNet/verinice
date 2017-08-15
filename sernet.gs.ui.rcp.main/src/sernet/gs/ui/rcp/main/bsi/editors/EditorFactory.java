@@ -26,6 +26,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.elasticsearch.common.inject.Module;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -88,6 +89,17 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
+import sernet.verinice.model.moditbp.elements.Application;
+import sernet.verinice.model.moditbp.elements.BusinessProcess;
+import sernet.verinice.model.moditbp.elements.ICSSystem;
+import sernet.verinice.model.moditbp.elements.ITNetwork;
+import sernet.verinice.model.moditbp.elements.ITSystem;
+import sernet.verinice.model.moditbp.elements.ModITBPPerson;
+import sernet.verinice.model.moditbp.elements.ModITBPRequirement;
+import sernet.verinice.model.moditbp.elements.ModITBPThreat;
+import sernet.verinice.model.moditbp.elements.Network;
+import sernet.verinice.model.moditbp.elements.OtherSystem;
+import sernet.verinice.model.moditbp.elements.Room;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.rcp.linktable.LinkTableEditor;
 import sernet.verinice.rcp.linktable.LinkTableEditorInput;
@@ -294,6 +306,20 @@ public final class EditorFactory {
         typedFactories.put(ProcessGroup.class, bsiEditorFactory);
         typedFactories.put(Record.class, bsiEditorFactory);
         typedFactories.put(RecordGroup.class, bsiEditorFactory);
+        // Modernized ITBP elements
+        typedFactories.put(ITNetwork.class, bsiEditorFactory);
+        typedFactories.put(Application.class, bsiEditorFactory);
+        typedFactories.put(BusinessProcess.class, bsiEditorFactory);
+        typedFactories.put(ICSSystem.class, bsiEditorFactory);
+        typedFactories.put(ITSystem.class, bsiEditorFactory);
+        typedFactories.put(ModITBPPerson.class, bsiEditorFactory);
+        typedFactories.put(ModITBPRequirement.class, bsiEditorFactory);
+        typedFactories.put(ModITBPThreat.class, bsiEditorFactory);
+        typedFactories.put(Module.class, bsiEditorFactory);
+        typedFactories.put(Network.class, bsiEditorFactory);
+        typedFactories.put(OtherSystem.class, bsiEditorFactory);
+        typedFactories.put(Room.class, bsiEditorFactory);
+        
         // Self Assessment (SAMT) elements
         typedFactories.put(SamtTopic.class, bsiEditorFactory);
         // for task context

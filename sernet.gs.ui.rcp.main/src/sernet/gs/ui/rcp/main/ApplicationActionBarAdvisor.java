@@ -81,7 +81,7 @@ import sernet.verinice.iso27k.rcp.CatalogView;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap;
-import sernet.verinice.moditbp.rcp.MotITBPView;
+import sernet.verinice.moditbp.rcp.ModITBPView;
 import sernet.verinice.rcp.ProfileEditAction;
 import sernet.verinice.rcp.ServerConnectionToggleAction;
 import sernet.verinice.rcp.account.AccountView;
@@ -255,7 +255,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.openSearchViewAction = new OpenSearchViewAction(window, Messages.ApplicationActionBarAdvisor_42);
         this.openGSToolMappingViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_43, GstoolImportMappingView.ID, ImageCache.VIEW_GSMAPPING, ActionRightIDs.GSTOOLIMPORT);
         this.openTemplateViewAction = getRightsService().isEnabled(ActionRightIDs.TEMPLATES) ? new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_44, TemplateView.ID, ImageCache.TEMPLATES, ActionRightIDs.TEMPLATES) : null;
-        this.openModITBPViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_45, MotITBPView.ID, ImageCache.VIEW_MODITBPMODEL, ActionRightIDs.MODITBPMODELVIEW);
+        this.openModITBPViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_45, ModITBPView.ID, ImageCache.VIEW_MODITBPMODEL, ActionRightIDs.MODITBPMODELVIEW);
         this.reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         this.importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
         this.importCSVAction = new ImportCSVAction(window, Messages.ApplicationActionBarAdvisor_30);

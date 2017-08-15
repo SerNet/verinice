@@ -38,6 +38,7 @@ import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 
 
 public class ImportGstoolNotesAction extends RightsEnabledAction {
@@ -74,6 +75,11 @@ public class ImportGstoolNotesAction extends RightsEnabledAction {
         public void loaded(ISO27KModel model) {
             // nothing to do
             
+        }
+
+        @Override
+        public void loaded(ModITBPModel model) {
+            // nothing to do
         }
 	};
 	

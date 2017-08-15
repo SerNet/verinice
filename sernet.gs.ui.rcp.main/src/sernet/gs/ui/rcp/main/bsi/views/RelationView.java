@@ -56,6 +56,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.task.FindRelationsFor;
 
@@ -243,6 +244,13 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
                 }
             }
 
+            @Override
+            public void loaded(ModITBPModel model) {
+                synchronized (loadListener) {
+                    addModITBPModelListeners();
+                }                
+            }
+
         };
         CnAElementFactory.getInstance().addLoadListener(loadListener);
     }
@@ -272,6 +280,28 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         JobScheduler.scheduleInitJob(initDataJob);
     }
 
+    protected void addModITBPModelListeners() {
+        WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+            @Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                IStatus status = Status.OK_STATUS;
+                try {
+                    monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+                    if (CnAElementFactory.isModelLoaded()) {
+                        CnAElementFactory.getInstance().getModITBPModel().addModITBOModelListener(contentProvider);
+                    }
+                } catch (Exception e) {
+                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.RelationView_7, e); //$NON-NLS-1$
+                } finally {
+                    monitor.done();
+                }
+                return status;
+            }
+        };
+        JobScheduler.scheduleInitJob(initDataJob);
+    }
+    
     /**
 	 * 
 	 */

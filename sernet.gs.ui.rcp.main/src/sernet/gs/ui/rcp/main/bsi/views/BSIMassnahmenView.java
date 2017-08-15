@@ -65,6 +65,7 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
 
@@ -159,6 +160,11 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
                 @Override
                 public void loaded(ISO27KModel model) {
                     startInitDataJob();
+                }
+
+                @Override
+                public void loaded(ModITBPModel model) {
+                    // work is done in loaded(ISO27KModel model)
                 }
 
             };

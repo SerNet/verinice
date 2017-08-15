@@ -75,6 +75,7 @@ import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.model.validation.CnAValidation;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.crud.LoadPolymorphicCnAElementById;
@@ -356,6 +357,29 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
         JobScheduler.scheduleInitJob(initDataJob);      
     }
     
+    protected void addModITBPModelListener() {
+        WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+            @Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                IStatus status = Status.OK_STATUS;
+                try {
+                    monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+                    if (CnAElementFactory.isModelLoaded()) {
+                        CnAElementFactory.getInstance().getModITBPModel().
+                            addModITBOModelListener(contentProvider);
+                    }
+                } catch (Exception e) {
+                    LOG.error(STD_LOAD_ERRMSG, e); //$NON-NLS-1$
+                    status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.ValidationView_3,e); //$NON-NLS-1$
+                } finally {
+                    monitor.done();
+                }
+                return status;
+            }            
+        };
+        JobScheduler.scheduleInitJob(initDataJob);
+    }
+    
     private void hookModelLoadListener() {
         this.modelLoadListener = new IModelLoadListener() {
 
@@ -384,6 +408,15 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
                     startInitDataJob();
                     addISO27KModelListeners();   
                 }
+            }
+
+            @Override
+            public void loaded(ModITBPModel model) {
+                synchronized (modelLoadListener) {
+                    startInitDataJob();
+                    
+                }
+                
             }
             
         };

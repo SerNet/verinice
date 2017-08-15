@@ -216,9 +216,9 @@
       <view
             allowMultiple="false"
             category="sernet.verinice.moditbp.rcp"
-            class="sernet.verinice.moditbp.rcp.MotITBPView"
+            class="sernet.verinice.moditbp.rcp.ModITBPView"
             icon="icons/sweetie-verinice/png/16-dice-grey.png"
-            id="sernet.verinice.moditbp.rcp.MotITBPView"
+            id="sernet.verinice.moditbp.rcp.ModITBPView"
             name="%view.name.20"
             restorable="true">
       </view>      
@@ -1197,6 +1197,28 @@
                icon="icons/16-em-cross.png"
                label="%command.label.delete"/>
       </menuContribution>
+      <menuContribution locationURI="popup:sernet.verinice.moditbp.rcp.ModITBPView?after=additions">
+         <command
+               commandId="org.eclipse.ui.edit.cut"
+               disabledIcon="icons/cut.png"
+               icon="icons/cut.png"
+               label="%command.label.2"/>
+         <command
+               commandId="org.eclipse.ui.edit.copy"
+               disabledIcon="icons/copy.png"
+               icon="icons/copy.png"
+               label="%command.label.0"/>
+         <command
+               commandId="org.eclipse.ui.edit.paste"
+               disabledIcon="icons/copy.png"
+               icon="icons/paste.png"
+               label="%command.label.1"/>
+         <command
+               commandId="org.eclipse.ui.edit.delete"
+               disabledIcon="icons/16-em-cross.png"
+               icon="icons/16-em-cross.png"
+               label="%command.label.delete"/>      
+      </menuContribution>
       <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=special">
          <command
                commandId="sernet.verinice.rcp.unify"
@@ -1726,6 +1748,20 @@
                tooltip="%action.tooltip.24">
          </action>
       </viewContribution>
+       <viewContribution
+      		id="sernet.verinice.moditbp.rcp.action.AddITNetworkActionDelegate"
+      		targetID="sernet.verinice.moditbp.rcp.ModITBPView">
+             <action
+               class="sernet.verinice.moditbp.rcp.action.AddITNetworkActionDelegate"
+               icon="icons/note-new.png"
+               id="sernet.verinice.moditbp.rcp.action.AddITNetworkActionDelegate"
+               label="%action.label.11"
+               state="true"
+               style="push"
+               toolbarPath="additions"
+               tooltip="%action.tooltip.11">
+         </action>
+      </viewContribution>      
    </extension>
    <extension point="org.eclipse.ui.handlers">
       <handler class="sernet.verinice.iso27k.rcp.action.CopyHandler"
@@ -1736,6 +1772,7 @@
 	     			<or>
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+	       				<equals value="sernet.verinice.moditbp.rcp.ModITBPView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -1798,6 +1835,7 @@
 	     			<or>
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+	       				<equals value="sernet.verinice.moditbp.rcp.ModITBPView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -1827,6 +1865,7 @@
 	     			<or>
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+	       				<equals value="sernet.verinice.moditbp.rcp.ModITBPView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -1886,6 +1925,7 @@
      			<or>
        				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
        				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+       				<equals value="sernet.verinice.moditbp.rcp.ModITBPView" />
        			</or>
     		</with>
          </activeWhen> 
