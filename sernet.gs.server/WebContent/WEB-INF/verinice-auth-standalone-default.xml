@@ -41,6 +41,7 @@
 	        <action id="addismelement" />
 	        <action id="addismgroup" />
 	        <action id="addismorg" />
+	        <action id="additnetwork" />
 	        <action id="additverbund" />
 	        <action id="addnote" />
 	        <action id="addsecurityassessment" />

@@ -26,5 +26,7 @@ import sernet.verinice.model.bsi.IBSIStrukturKategorie;
  *
  */
 public interface ModITBPCategory extends IBSIStrukturKategorie {
+    
+    
 
 }

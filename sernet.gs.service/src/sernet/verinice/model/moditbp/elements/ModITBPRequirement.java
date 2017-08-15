@@ -28,6 +28,12 @@ import sernet.verinice.model.common.CnATreeElement;
 public class ModITBPRequirement extends CnATreeElement {
     
     public static final String TYPE_ID = "moditbp_requirement"; //$NON-NLS-1$
+    
+    public ModITBPRequirement(CnATreeElement parent) {
+        super(parent);
+    }
+    
+    protected ModITBPRequirement() {}
 
 
     /* (non-Javadoc)

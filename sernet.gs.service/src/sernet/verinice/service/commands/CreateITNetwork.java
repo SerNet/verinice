@@ -17,47 +17,45 @@
  * Contributors:
  *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.model.moditbp.elements;
+package sernet.verinice.service.commands;
+
+import java.util.Set;
 
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.moditbp.elements.ITNetwork;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class Room extends ModITBPElement {
-    
-    private static final long serialVersionUID = -871134613059149363L;
+public class CreateITNetwork extends CreateElement {
 
-
-    public Room(CnATreeElement parent) {
-        super(parent);
-    }
-    
-    protected Room() {}
-
-    public static final String TYPE_ID = "moditbp_room"; //$NON-NLS-1$
-
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTitle()
-     */
-    @Override
-    public String getTitle() {
-        return getTypeFactory().getMessage(TYPE_ID);
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTypeId()
-     */
-    @Override
-    public String getTypeId() {
-        return TYPE_ID;
+    public CreateITNetwork(CnATreeElement container, Class type, boolean createChildren) {
+        super(container, type, true, createChildren);
     }
     
     @Override
-    public boolean canContain(Object object) {
-        return object instanceof Module;
+    public void execute() {
+        super.execute();
+        if (super.element instanceof ITNetwork) {
+            ITNetwork network = (ITNetwork) element;
+            if(createChildren) {
+                network.createNewCategories();
+            }
+            Set<CnATreeElement> children = network.getChildren();
+            for (CnATreeElement child : children) {
+                addPermissionsForScope(child);
+            }
+            element.setScopeId(element.getDbId());
+            for (CnATreeElement group : element.getChildren()) {
+                group.setScopeId(element.getDbId());
+            }
+        }
+        
     }
-
+    
+    @Override
+    public ITNetwork getNewElement() {
+        return (ITNetwork) super.getNewElement();
+    }
 }

@@ -24,8 +24,8 @@ import org.apache.log4j.Logger;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.moditbp.elements.ModITBPModel;
-import sernet.verinice.service.ModITBP.LoadModel;
 import sernet.verinice.service.commands.SaveElement;
+import sernet.verinice.service.moditbp.LoadModITBPModel;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -46,14 +46,7 @@ public class CreateModITBPModel extends SaveElement<ModITBPModel> {
      * @param element
      */
     public CreateModITBPModel() {
-        this.element = new ModITBPModel() {
-            
-            @Override
-            public String getTitle() {
-                // TODO Auto-generated method stub
-                return null;
-            }
-        };
+        this.element = new ModITBPModel();
         this.stationId = ChangeLogEntry.STATION_ID;
     }
     
@@ -62,7 +55,7 @@ public class CreateModITBPModel extends SaveElement<ModITBPModel> {
      */
     @Override
     public void execute() {
-        LoadModel loadModel = new LoadModel();     
+        LoadModITBPModel loadModel = new LoadModITBPModel();     
         try {
             loadModel = getCommandService().executeCommand(loadModel);
         } catch (CommandException e) {

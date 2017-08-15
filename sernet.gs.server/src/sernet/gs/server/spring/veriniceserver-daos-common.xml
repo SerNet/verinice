@@ -593,6 +593,152 @@
         </constructor-arg>
     </bean>
     
+    <!-- Modernized ITBP Daos ==================================================================== -->
+
+    <bean id="applicationDAO" parent="secureDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.moditbp.elements.Application</value>
+        </constructor-arg>
+    </bean>    
+
+    <bean id="businessProcessDAO" parent="secureDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.moditbp.elements.BusinessProcess</value>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="icssystemDAO" parent="secureDao">
+    	<constructor-arg>
+            <value>sernet.verinice.model.moditbp.elements.ICSSystem</value>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="itnetworkDAO" parent="secureDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.moditbp.elements.ITNetwork</value>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="itsystemDAO" parent="secureDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.moditbp.elements.ITSystem</value>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="moditbpbelementDAO" parent="secureDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.moditbp.elements.ModITBPElement</value>
+        </constructor-arg>
+    </bean>            
+    
+    <bean id="moditbpPersonDAO" parent="secureDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.moditbp.elements.ModITBPPerson</value>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="moditbpRequirementDAO" parent="secureDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.moditbp.elements.ModITBPRequirement</value>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="moditbpThreatDAO" parent="secureDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.moditbp.elements.ModITBPThreat</value>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="moduleDAO" parent="secureDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.moditbp.elements.Module</value>
+        </constructor-arg>
+    </bean>
+    
+    <bean id="networkDAO" parent="secureDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.moditbp.elements.Network</value>
+        </constructor-arg>
+    </bean>                
+    
+    <bean id="othersystemDAO" parent="secureDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.moditbp.elements.OtherSystem</value>
+        </constructor-arg>
+    </bean>    
+    
+    <bean id="roomDAO" parent="secureDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.moditbp.elements.Room</value>
+        </constructor-arg>
+    </bean>    
+    
+	
+	<bean id="modITBPModelDAO" class="sernet.verinice.hibernate.TreeElementDao">
+		<constructor-arg>
+			<value>sernet.verinice.model.moditbp.elements.ModITBPModel</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="applicationCategoryDAO" class="sernet.verinice.hibernate.TreeElementDao">
+		<constructor-arg>
+			<value>sernet.verinice.model.moditbp.categories.ApplicationCategory</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="businessProcessCategoryDAO" class="sernet.verinice.hibernate.TreeElementDao">
+		<constructor-arg>
+			<value>sernet.verinice.model.moditbp.categories.BusinessProcessCategory</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="icsSystemCategoryDAO" class="sernet.verinice.hibernate.TreeElementDao">
+		<constructor-arg>
+			<value>sernet.verinice.model.moditbp.categories.ICSSystemCategory</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>	
+	
+	<bean id="itSystemCategoryDAO" class="sernet.verinice.hibernate.TreeElementDao">
+		<constructor-arg>
+			<value>sernet.verinice.model.moditbp.categories.ITSystemCategory</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>	
+
+	<bean id="networkCategoryDAO" class="sernet.verinice.hibernate.TreeElementDao">
+		<constructor-arg>
+			<value>sernet.verinice.model.moditbp.categories.NetworkCategory</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="otherSystemCategoryDAO" class="sernet.verinice.hibernate.TreeElementDao">
+		<constructor-arg>
+			<value>sernet.verinice.model.moditbp.categories.OtherSystemCategory</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>	
+
+	<bean id="personCategoryDAO" class="sernet.verinice.hibernate.TreeElementDao">
+		<constructor-arg>
+			<value>sernet.verinice.model.moditbp.categories.PersonCategory</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="roomCategoryDAO" class="sernet.verinice.hibernate.TreeElementDao">
+		<constructor-arg>
+			<value>sernet.verinice.model.moditbp.categories.RoomCategory</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+		
+			
     <!-- Miscellaneous Daos ==================================================================== -->
 
 	<bean id="importIsoDAO" class="sernet.verinice.hibernate.TreeElementDao">
@@ -605,6 +751,13 @@
     <bean id="importBsiDAO" class="sernet.verinice.hibernate.TreeElementDao">
         <constructor-arg>
             <value>sernet.verinice.model.bsi.ImportBsiGroup</value>
+        </constructor-arg>
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+    <bean id="importModITBPDAO" class="sernet.verinice.hibernate.TreeElementDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.moditbp.elements.ImportModITBPGroup</value>
         </constructor-arg>
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>

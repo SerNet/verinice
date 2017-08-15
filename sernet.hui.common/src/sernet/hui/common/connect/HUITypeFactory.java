@@ -50,6 +50,7 @@ import sernet.hui.common.rules.NotEmpty;
 import sernet.hui.common.rules.RuleFactory;
 import sernet.snutils.DBException;
 
+
 /**
  * Parses XML file with defined properties and creates appropriate
  * <code>PropertyType </code> objects.
@@ -189,6 +190,9 @@ public class HUITypeFactory {
             Element entityEl = (Element) entities.item(i);
             EntityType entityObj = new EntityType();
             String id = entityEl.getAttribute(ATTRIBUTE_ID);
+            if ( id.toLowerCase().startsWith("moditbp_")) {
+                LOG.debug("Found new itbp element type:\t" + id);
+            }
             entityObj.setId(id);
 
             // labels are loaded from SNCAMessages (resource bundles)
@@ -199,8 +203,12 @@ public class HUITypeFactory {
             this.allEntities.put(entityEl.getAttribute(ATTRIBUTE_ID), entityObj);
             readChildElements(entityObj, null);
         }
+        
+        
     }
-
+    
+   
+   
     public Set<String> getAllTypeIds() {
         return allEntities.keySet();
     }
@@ -547,6 +555,12 @@ public class HUITypeFactory {
      * @return
      */
     public Set<HuiRelation> getPossibleRelationsFrom(String fromEntityTypeID) {
+        
+        if (getEntityType(fromEntityTypeID) == null) {
+            LOG.error("cannot find entitytype for:\t" + fromEntityTypeID);
+            
+        }
+        
         return getEntityType(fromEntityTypeID).getPossibleRelations();
     }
     

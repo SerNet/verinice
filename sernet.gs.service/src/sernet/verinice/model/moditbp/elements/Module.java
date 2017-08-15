@@ -29,6 +29,12 @@ public class Module extends CnATreeElement {
     
     public static final String TYPE_ID = "moditbp_module"; //$NON-NLS-1$
 
+    
+    public Module(CnATreeElement parent) {
+        super(parent);
+    }
+    
+    protected Module() {}
 
     /* (non-Javadoc)
      * @see sernet.verinice.model.common.CnATreeElement#getTitle()
@@ -44,6 +50,12 @@ public class Module extends CnATreeElement {
     @Override
     public String getTypeId() {
         return TYPE_ID;
+    }
+    
+    @Override
+    public boolean canContain(Object object) {
+        return object instanceof ModITBPRequirement ||
+                object instanceof ModITBPThreat;
     }
 
 }

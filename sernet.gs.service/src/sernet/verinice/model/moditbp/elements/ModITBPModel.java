@@ -37,14 +37,16 @@ public class ModITBPModel extends CnATreeElement implements ModITBPRoot {
     
     private transient List<IModITBPModelListener> listeners;
     private transient Logger log;
-
+    
+    public static final String TYPE_ID = "moditbpmodel"; //$NON-NLS-1$
+    
+    public static final String TITLE = "Modernized ITBP Modeling"; //$NON-NLS-1$
     /* (non-Javadoc)
      * @see sernet.verinice.model.common.CnATreeElement#getTitle()
      */
     @Override
     public String getTitle() {
-        // TODO Auto-generated method stub
-        return null;
+        return TITLE;
     }
 
     /* (non-Javadoc)
@@ -52,8 +54,7 @@ public class ModITBPModel extends CnATreeElement implements ModITBPRoot {
      */
     @Override
     public String getTypeId() {
-        // TODO Auto-generated method stub
-        return null;
+        return TYPE_ID;
     }
     
     @Override

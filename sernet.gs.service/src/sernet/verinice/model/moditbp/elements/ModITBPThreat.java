@@ -28,7 +28,13 @@ import sernet.verinice.model.common.CnATreeElement;
 public class ModITBPThreat extends CnATreeElement {
     
     public static final String TYPE_ID = "moditbp_threat"; //$NON-NLS-1$
+    
+    public ModITBPThreat(CnATreeElement parent) {
+        super(parent);
+    }
 
+    protected ModITBPThreat() {}
+    
     /* (non-Javadoc)
      * @see sernet.verinice.model.common.CnATreeElement#getTitle()
      */

@@ -474,6 +474,11 @@
 		
 	<!-- renewed / modernized ITBP -->
 	
+	<subclass 
+		name="sernet.verinice.model.moditbp.elements.ModITBPModel"
+		extends="CnATreeElement"
+		discriminator-value="moditbpmodel" />
+	
 	<subclass
 		name="sernet.verinice.model.moditbp.elements.Module"
 		extends="CnATreeElement"

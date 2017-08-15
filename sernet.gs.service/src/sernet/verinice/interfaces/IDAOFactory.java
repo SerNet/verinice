@@ -37,6 +37,7 @@ import sernet.verinice.model.bsi.ClientsKategorie;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.GebaeudeKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.NKKategorie;
 import sernet.verinice.model.bsi.NetzKomponente;
@@ -80,6 +81,7 @@ import sernet.verinice.model.iso27k.ExceptionGroup;
 import sernet.verinice.model.iso27k.Finding;
 import sernet.verinice.model.iso27k.FindingGroup;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Incident;
 import sernet.verinice.model.iso27k.IncidentGroup;
 import sernet.verinice.model.iso27k.IncidentScenario;
@@ -100,6 +102,29 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
+import sernet.verinice.model.moditbp.categories.ApplicationCategory;
+import sernet.verinice.model.moditbp.categories.BusinessProcessCategory;
+import sernet.verinice.model.moditbp.categories.ICSSystemCategory;
+import sernet.verinice.model.moditbp.categories.ITSystemCategory;
+import sernet.verinice.model.moditbp.categories.NetworkCategory;
+import sernet.verinice.model.moditbp.categories.OtherSystemCategory;
+import sernet.verinice.model.moditbp.categories.PersonCategory;
+import sernet.verinice.model.moditbp.categories.RoomCategory;
+import sernet.verinice.model.moditbp.elements.Application;
+import sernet.verinice.model.moditbp.elements.BusinessProcess;
+import sernet.verinice.model.moditbp.elements.ICSSystem;
+import sernet.verinice.model.moditbp.elements.ITNetwork;
+import sernet.verinice.model.moditbp.elements.ITSystem;
+import sernet.verinice.model.moditbp.elements.ImportModITBPGroup;
+import sernet.verinice.model.moditbp.elements.ModITBPElement;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
+import sernet.verinice.model.moditbp.elements.ModITBPPerson;
+import sernet.verinice.model.moditbp.elements.ModITBPRequirement;
+import sernet.verinice.model.moditbp.elements.ModITBPThreat;
+import sernet.verinice.model.moditbp.elements.Module;
+import sernet.verinice.model.moditbp.elements.Network;
+import sernet.verinice.model.moditbp.elements.OtherSystem;
+import sernet.verinice.model.moditbp.elements.Room;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.UpdateElementEntity;
 
@@ -460,9 +485,55 @@ public interface IDAOFactory {
 
 	void setSamtTopicDAO(IBaseDao<SamtTopic, Integer> daoToSet);
 
-	void setImportIsoDAO(IBaseDao<SamtTopic, Integer> daoToSet);
+	void setImportIsoDAO(IBaseDao<ImportIsoGroup, Integer> daoToSet);
 	
-	void setImportBsiDAO(IBaseDao<SamtTopic, Integer> daoToSet);
+	void setImportBsiDAO(IBaseDao<ImportBsiGroup, Integer> daoToSet);
+	
+	void setImportModITBPDao(IBaseDao<ImportModITBPGroup, Integer> daoToSet);
+	
+	void setApplicationDAO(IBaseDao<Application, Integer> daoToSet);
+	
+	void setBusinessProcessDAO(IBaseDao<BusinessProcess, Integer> daoToSet);
+	
+	void setIcssystemDAO(IBaseDao<ICSSystem, Integer> daoToSet);
+	
+	void setItnetworkDAO(IBaseDao<ITNetwork, Integer> daoToSet);
+	
+	void setItsystemDAO(IBaseDao<ITSystem, Integer> daoToSet);
+	
+	void setModitbpbelementDAO(IBaseDao<ModITBPElement, Integer> daoToSet);
+	
+	void setModitbpPersonDAO(IBaseDao<ModITBPPerson, Integer> daoToSet);
+	
+	void setModitbpRequirementDAO(IBaseDao<ModITBPRequirement, Integer> daoToSet);
+	
+	void setModitbpThreatDAO(IBaseDao<ModITBPThreat, Integer> daoToSet);
+	
+	void setModuleDAO(IBaseDao<Module, Integer> daoToSet);
+	
+	void setNetworkDAO(IBaseDao<Network, Integer> daoToSet);
+	
+	void setOthersystemDAO(IBaseDao<OtherSystem, Integer> daoToSet);
+	
+	void setRoomDAO(IBaseDao<Room, Integer> daoToSet);
+	
+	void setModITBPModelDAO(IBaseDao<ModITBPModel, Integer> daoToSet);
+	
+	void setApplicationCategoryDAO(IBaseDao<ApplicationCategory, Integer> daoToSet);
+	
+	void setBusinessProcessCategoryDAO(IBaseDao<BusinessProcessCategory, Integer> daoToSet);
+	
+	void setIcsSystemCategoryDAO(IBaseDao<ICSSystemCategory, Integer> daoToSet);
+	
+	void setItSystemCategoryDAO(IBaseDao<ITSystemCategory, Integer> daoToSet);
+	
+	void setNetworkCategoryDAO(IBaseDao<NetworkCategory, Integer> daoToSet);
+	
+	void setOtherSystemCategoryDAO(IBaseDao<OtherSystemCategory, Integer> daoToSet);
+	
+	void setPersonCategoryDAO(IBaseDao<PersonCategory, Integer> daoToSet);
+	
+	void setRoomCategoryDAO(IBaseDao<RoomCategory, Integer> daoToSet);
 
 	/**
      * Returns a special Dao for use 

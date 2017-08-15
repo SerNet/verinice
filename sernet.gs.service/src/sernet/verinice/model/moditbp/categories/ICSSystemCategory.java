@@ -21,6 +21,7 @@ package sernet.verinice.model.moditbp.categories;
 
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.moditbp.ModITBPCategory;
+import sernet.verinice.model.moditbp.elements.ICSSystem;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -28,7 +29,15 @@ import sernet.verinice.model.moditbp.ModITBPCategory;
  */
 public class ICSSystemCategory extends CnATreeElement implements ModITBPCategory {
     
+    private static final long serialVersionUID = -5366579759422543907L;
+    
     public static final String TYPE_ID = "moditbp_icssystemcategory";
+    
+    public ICSSystemCategory(CnATreeElement parent) {
+        super(parent);
+    }
+    
+    protected ICSSystemCategory() {}
 
     /* (non-Javadoc)
      * @see sernet.verinice.model.common.CnATreeElement#getTitle()
@@ -44,6 +53,11 @@ public class ICSSystemCategory extends CnATreeElement implements ModITBPCategory
     @Override
     public String getTypeId() {
         return TYPE_ID;
+    }
+    
+    @Override
+    public boolean canContain(Object object) {
+        return object instanceof ICSSystem;
     }
 
 }

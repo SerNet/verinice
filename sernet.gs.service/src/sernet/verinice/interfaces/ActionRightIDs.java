@@ -35,6 +35,7 @@ public final class ActionRightIDs {
     public static final String ADDISMELEMENT = "addismelement";
     public static final String ADDISMGROUP = "addismgroup";
     public static final String ADDISMORG = "addismorg";
+    public static final String ADDITNETWORK = "additnetwork";
     public static final String ADDITVERBUND = "additverbund";
     public static final String ADDNOTE = "addnote";
     public static final String ADDSECURITYASSESSMENT = "addsecurityassessment";

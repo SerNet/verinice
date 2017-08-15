@@ -37,6 +37,7 @@
             <action id="addismelement" />
             <action id="addismgroup" />
             <action id="addismorg"/>
+            <action id="additnetwork" />
             <action id="additverbund" />
             <action id="addnote" />
             <action id="addsecurityassessment" />
@@ -102,6 +103,7 @@
             "accountsettings"
             "accesscontrol"
             "addismorg"
+            "additnetwork"
             "additverbund"
             "addsecurityassessment"
             "editprofile"
@@ -179,6 +181,7 @@
         <profile name="admin-scope-default-profile" origin="default">
         <!-- missing actions:
             "addismorg"
+            "additnetwork"
             "additverbund"
             "addsecurityassessment"
             "editprofile"
@@ -264,6 +267,7 @@
             <action id="addismelement" />
             <action id="addismgroup" />
             <action id="addismorg" />
+            <action id="additnetwork" />
             <action id="additverbund" />
             <action id="addnote" />
             <action id="addsecurityassessment" />

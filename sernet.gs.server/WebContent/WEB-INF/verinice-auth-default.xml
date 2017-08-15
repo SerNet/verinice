@@ -39,6 +39,7 @@
             <action id="addismelement" />
             <action id="addismgroup" />
             <action id="addismorg"/>
+            <action id="additnetwork" />
             <action id="additverbund" />
             <action id="addnote" />
             <action id="addsecurityassessment" />
@@ -106,6 +107,7 @@
             "accesscontrol"
             "addismorg"
             "additverbund"
+            "additnetwork"
             "addsecurityassessment"
             "editprofile"
             "marktemplate"
@@ -120,7 +122,6 @@
             "taskwithreleaseprocess"
             "templates"
             "addismorg"
-            "additverbund"
             "xmlimport" 
             "searchreindex
             "showallfiles"
@@ -241,6 +242,7 @@
         <!-- missing actions:
             "accountsettings" 
           	"addismorg" 
+          	"additnetwork"
           	"additverbund" 
           	"addsecurityassessment" 
           	"editprofile" 
@@ -321,6 +323,7 @@
         <profile name="admin-local-default-profile" origin="default" > 
          	<!-- missing actions:  
             "addismorg" 
+            "additnetwork"
             "additverbund" 
             "gsnotesimport" 
             "gstoolimport" 
@@ -407,6 +410,7 @@
 	        <action id="addismelement" />
 	        <action id="addismgroup" />
 	        <action id="addismorg" />
+	        <action id="additnetwork" />
 	        <action id="additverbund" />
 	        <action id="addnote" />
 	        <action id="addsecurityassessment" />

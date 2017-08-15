@@ -21,6 +21,7 @@ package sernet.verinice.model.moditbp.categories;
 
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.moditbp.ModITBPCategory;
+import sernet.verinice.model.moditbp.elements.Room;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -28,7 +29,14 @@ import sernet.verinice.model.moditbp.ModITBPCategory;
  */
 public class RoomCategory extends CnATreeElement implements ModITBPCategory {
     
+    private static final long serialVersionUID = -6689926582876183791L;
     public static final String TYPE_ID = "moditbp_roomcategory";
+    
+    public RoomCategory(CnATreeElement parent) {
+        super(parent);
+    }
+    
+    protected RoomCategory() {}
 
     /* (non-Javadoc)
      * @see sernet.verinice.model.common.CnATreeElement#getTitle()
@@ -44,6 +52,11 @@ public class RoomCategory extends CnATreeElement implements ModITBPCategory {
     @Override
     public String getTypeId() {
         return TYPE_ID;
+    }
+    
+    @Override
+    public boolean canContain(Object object) {
+        return object instanceof Room;
     }
 
 }

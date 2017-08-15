@@ -21,6 +21,7 @@ package sernet.verinice.model.moditbp.categories;
 
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.moditbp.ModITBPCategory;
+import sernet.verinice.model.moditbp.elements.Network;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -28,7 +29,15 @@ import sernet.verinice.model.moditbp.ModITBPCategory;
  */
 public class NetworkCategory extends CnATreeElement implements ModITBPCategory {
     
+    private static final long serialVersionUID = 6166611011332324047L;
+    
     public static final String TYPE_ID = "moditbp_networkcategory";
+    
+    public NetworkCategory(CnATreeElement parent) {
+        super(parent);
+    }
+    
+    protected NetworkCategory() {}
 
     /* (non-Javadoc)
      * @see sernet.verinice.model.common.CnATreeElement#getTitle()
@@ -44,6 +53,11 @@ public class NetworkCategory extends CnATreeElement implements ModITBPCategory {
     @Override
     public String getTypeId() {
         return TYPE_ID;
+    }
+    
+    @Override
+    public boolean canContain(Object object) {
+        return object instanceof Network;
     }
 
 }

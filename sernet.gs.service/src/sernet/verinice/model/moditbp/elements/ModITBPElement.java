@@ -29,6 +29,12 @@ public abstract class ModITBPElement extends CnATreeElement{
 
     public static final String TYPE_ID = "moditbp_abstractelement"; //$NON-NLS-1$
     
+    public ModITBPElement (CnATreeElement parent) {
+        super(parent);
+    }
+    
+    protected ModITBPElement() {}
+    
     public String getTitle() {
         return getTypeFactory().getMessage(TYPE_ID);
     };

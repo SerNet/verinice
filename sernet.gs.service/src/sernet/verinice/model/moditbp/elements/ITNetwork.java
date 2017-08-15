@@ -19,14 +19,50 @@
  ******************************************************************************/
 package sernet.verinice.model.moditbp.elements;
 
+import sernet.hui.common.connect.Entity;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.moditbp.categories.ApplicationCategory;
+import sernet.verinice.model.moditbp.categories.BusinessProcessCategory;
+import sernet.verinice.model.moditbp.categories.ICSSystemCategory;
+import sernet.verinice.model.moditbp.categories.ITSystemCategory;
+import sernet.verinice.model.moditbp.categories.NetworkCategory;
+import sernet.verinice.model.moditbp.categories.OtherSystemCategory;
+import sernet.verinice.model.moditbp.categories.PersonCategory;
+import sernet.verinice.model.moditbp.categories.RoomCategory;
+
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
 public class ITNetwork extends  ModITBPElement {
     
+    private static final long serialVersionUID = -542743048413632420L;
+    
+    
     public static final String TYPE_ID = "moditbp_itnetwork"; //$NON-NLS-1$
+    
+    public ITNetwork(CnATreeElement parent) {
+        super(parent);
+        setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
+        // sets the localized title via HUITypeFactory from message bundle
+        setTitel(getTypeFactory().getMessage(TYPE_ID));
+    }
 
+    
+    protected ITNetwork() {}
+    
+    public void createNewCategories() {
+        addChild(new ApplicationCategory(this));
+        addChild(new BusinessProcessCategory(this));
+        addChild(new ICSSystemCategory(this));
+        addChild(new ITSystemCategory(this));
+        addChild(new NetworkCategory(this));
+        addChild(new OtherSystemCategory(this));
+        addChild(new PersonCategory(this));
+        addChild(new RoomCategory(this));
+    }
+    
     /* (non-Javadoc)
      * @see sernet.verinice.model.common.CnATreeElement#getTitle()
      */
@@ -43,8 +79,18 @@ public class ITNetwork extends  ModITBPElement {
         return TYPE_ID;
     }
     
-    public void createNewCategories() {
-        
+    
+    @Override
+    public boolean canContain(Object object) {
+        return object instanceof Module ||
+                object instanceof ApplicationCategory ||
+                object instanceof BusinessProcessCategory ||
+                object instanceof ICSSystemCategory ||
+                object instanceof ITSystemCategory ||
+                object instanceof NetworkCategory ||
+                object instanceof OtherSystemCategory ||
+                object instanceof PersonCategory ||
+                object instanceof RoomCategory;
     }
 
 }

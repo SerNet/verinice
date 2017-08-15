@@ -21,6 +21,7 @@ package sernet.verinice.model.moditbp.categories;
 
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.moditbp.ModITBPCategory;
+import sernet.verinice.model.moditbp.elements.BusinessProcess;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -29,6 +30,12 @@ import sernet.verinice.model.moditbp.ModITBPCategory;
 public class BusinessProcessCategory extends CnATreeElement  implements ModITBPCategory {
     
     public static final String TYPE_ID = "moditbp_businessprocesscategory";
+    
+    public BusinessProcessCategory(CnATreeElement parent) {
+        super(parent);
+    }
+    
+    protected BusinessProcessCategory() {}
 
     /* (non-Javadoc)
      * @see sernet.verinice.model.bsi.IBSIStrukturKategorie#getTitle()
@@ -46,6 +53,9 @@ public class BusinessProcessCategory extends CnATreeElement  implements ModITBPC
         return TYPE_ID;
     }
 
-
+    @Override
+    public boolean canContain(Object object) {
+        return object instanceof BusinessProcess;
+    }
 
 }

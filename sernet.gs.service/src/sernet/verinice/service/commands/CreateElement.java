@@ -118,10 +118,19 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
                 clazz = CnATypeMapper.getClassFromTypeId(typeId);
             }
             
+            if( clazz == null) {
+                Logger.getLogger(this.getClass()).error("Class is null for :\t" + typeId);
+            }
+            
             if (!skipReload && !getContainerDAO().contains(container)) {
                 getContainerDAO().reload(container, container.getDbId());
             }
-            element = createInstance();         
+            element = createInstance();
+            
+            if (element == null) {
+                Logger.getLogger(this.getClass()).error("Element was not created for typeId:\t" + typeId);
+            }
+            
             if (authService.isPermissionHandlingNeeded()) {
                 element = addPermissions(element);
             }

@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.model.moditbp.elements;
 
+import sernet.verinice.model.common.CnATreeElement;
+
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
@@ -26,6 +28,12 @@ package sernet.verinice.model.moditbp.elements;
 public class Application extends ModITBPElement {
 
     public static final String TYPE_ID = "moditbp_application"; //$NON-NLS-1$
+    
+    public Application(CnATreeElement parent) {
+        super(parent);
+    }
+    
+    protected Application () {}
 
     
     /* (non-Javadoc)
@@ -44,4 +52,9 @@ public class Application extends ModITBPElement {
         return TYPE_ID;
     }
 
+    @Override
+    public boolean canContain(Object object) {
+        return object instanceof Module;
+    }
+    
 }

@@ -19,12 +19,22 @@
  ******************************************************************************/
 package sernet.verinice.model.moditbp.elements;
 
+import sernet.verinice.model.common.CnATreeElement;
+
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
 public class ModITBPPerson extends ModITBPElement {
     
+    private static final long serialVersionUID = -1764245620965365934L;
+
+    public ModITBPPerson(CnATreeElement parent) {
+        super(parent);
+    }
+    
+    protected ModITBPPerson() {}
+
     public static final String TYPE_ID = "moditbp_person"; //$NON-NLS-1$
 
 
@@ -42,6 +52,11 @@ public class ModITBPPerson extends ModITBPElement {
     @Override
     public String getTypeId() {
         return TYPE_ID;
+    }
+    
+    @Override
+    public boolean canContain(Object object) {
+        return object instanceof Module;
     }
 
 }

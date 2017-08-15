@@ -19,32 +19,35 @@
  ******************************************************************************/
 package sernet.verinice.model.moditbp.elements;
 
+import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class Room extends ModITBPElement {
+public class ImportModITBPGroup extends CnATreeElement {
     
-    private static final long serialVersionUID = -871134613059149363L;
+    private static final long serialVersionUID = -7286059698308443978L;
+    
+    public static final String TYPE_ID = "moditbp_importgroup";
 
-
-    public Room(CnATreeElement parent) {
-        super(parent);
+    public ImportModITBPGroup(CnATreeElement model) {
+        super(model);
+        setEntity(new Entity(TYPE_ID));
     }
     
-    protected Room() {}
-
-    public static final String TYPE_ID = "moditbp_room"; //$NON-NLS-1$
-
-
+    protected ImportModITBPGroup() {
+        
+    }
+    
+    
     /* (non-Javadoc)
      * @see sernet.verinice.model.common.CnATreeElement#getTitle()
      */
     @Override
     public String getTitle() {
-        return getTypeFactory().getMessage(TYPE_ID);
+        return "imported Objects"; // TODO internationalize
     }
 
     /* (non-Javadoc)
@@ -56,8 +59,11 @@ public class Room extends ModITBPElement {
     }
     
     @Override
-    public boolean canContain(Object object) {
-        return object instanceof Module;
+    public boolean canContain(Object obj) {
+        if (obj instanceof ITNetwork ){
+            return true;
+        }
+        return false;
     }
 
 }

@@ -15,7 +15,7 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.service.ModITBP;
+package sernet.verinice.service.moditbp;
 
 import java.util.List;
 
@@ -25,11 +25,11 @@ import sernet.verinice.interfaces.INoAccessControl;
 import sernet.verinice.model.moditbp.elements.ModITBPModel;
 
 @SuppressWarnings("serial")
-public class LoadModel extends GenericCommand implements INoAccessControl {
+public class LoadModITBPModel extends GenericCommand implements INoAccessControl {
 
 	private ModITBPModel model;
 
-	public LoadModel() {
+	public LoadModITBPModel() {
 	}
 	
 	public void execute() {
