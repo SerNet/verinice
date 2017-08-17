@@ -9312,7 +9312,8 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="gsm_mitbpElement_open_ports" name="Open Ports" inputtype="line" tags="Greenbone_GSM" editable="false" />
             <huiproperty id="gsm_mitbpElement_scan_started" name="Scan start" inputtype="line" tags="Greenbone_GSM" editable="false" />
             <huiproperty id="gsm_mitbpElement_scan_ended" name="Scan end" inputtype="line" tags="Greenbone_GSM" editable="false" />
-        </huipropertygroup>		
+        </huipropertygroup>
+        
 
         <huipropertygroup name="KIX" id="mitbpElement_kix_group" tags="kix" >
             <huiproperty name="KIX ticket 1" id="mitbpElement_kix_ticket1" isURL="true"/>
@@ -9392,6 +9393,61 @@ Wurden bereits weitere Stellen informiert?
              tags="Risk"
 				name="Explanation" id="mitbpElement_risktreatexpl" inputtype="text" />
 		</huipropertygroup>
+    </huientity>
+    
+    <huientity         name="IT-Verbund"
+        id="moditbp_itnetwork">
+    </huientity>
+    
+    <huientity         name="Anwendung"
+        id="moditbp_application">
+    </huientity>
+    
+    <huientity         name="Geschäftsprozees"
+        id="moditbp_businessprocess">
     </huientity>      
+    
+    <huientity         name="ICS-System"
+        id="moditbp_icssystem">
+    </huientity>          
+
+       
+    <huientity         name="IT-System"
+        id="moditbp_itsystem">
+    </huientity>       
+       
+    <huientity         name="Person"
+        id="moditbp_person">
+        <!-- kein erbendes element -->
+    </huientity>       
+
+    <huientity         name="Requirement"
+        id="moditbp_requirement">
+        <!-- kein erbendes element -->
+    </huientity>
+       
+    <huientity         name="Threat"
+        id="moditbp_threat">
+        <!-- kein erbendes element -->
+    </huientity>
+       
+    <huientity         name="Module"
+        id="moditbp_module">
+        <!-- kein erbendes element -->
+    </huientity>       
+
+    <huientity         name="Network"
+        id="moditbp_network">
+    </huientity>       
+
+    <huientity         name="Other System"
+        id="moditbp_othersystem">
+    </huientity> 
+    
+    <huientity         name="Room"
+        id="moditbp_room">
+    </huientity>    
+    
+          
        
 </huientities>
