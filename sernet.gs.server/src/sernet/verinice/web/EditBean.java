@@ -453,10 +453,16 @@ public class EditBean {
         String newValue = handleBooleanValue(event.getNewValue());
 
         if (StringUtils.isNotEmpty(key)) {
+
             PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(getElement().getEntityType().getId(), key);
+
             if (propertyType.isSingleSelect()) {
                 newValue = getSingleSelectOptionId(newValue, propertyType);
+            } else if (propertyType.isNumericSelect()) {
+                Entity entity = getElement().getEntity();
+                newValue = entity.getPropertyValue(key);
             }
+
             changedElementProperties.put(key, newValue);
         }
         if (key.contains(NAME_SUFFIX)) {
