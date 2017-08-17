@@ -24,12 +24,16 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -38,17 +42,27 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.DrillDownAdapter;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
+import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
+import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Messages;
+import sernet.verinice.iso27k.rcp.action.CollapseAction;
+import sernet.verinice.iso27k.rcp.action.ControlDropPerformer;
+import sernet.verinice.iso27k.rcp.action.ExpandAction;
+import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.IModITBPModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.moditbp.elements.ITNetwork;
@@ -76,6 +90,14 @@ public class ModITBPView extends RightsEnabledView {
     
     private IModelLoadListener modelLoadListener;
     private IModITBPModelListener modelUpdateListener;
+    
+    private Action doubleClickAction; 
+    
+    private ShowBulkEditAction bulkEditAction;
+    
+    private ExpandAction expandAction;
+    
+    private CollapseAction collapseAction;
     
     public static final String ID = "sernet.verinice.moditbp.rcp.ModITBPView"; //$NON-NLS-1$
     
@@ -136,9 +158,9 @@ public class ModITBPView extends RightsEnabledView {
         
         getSite().setSelectionProvider(viewer);
         hookContextMenu();
-//        makeActions();
-//        addActions();
-//        fillToolBar();
+        makeActions();
+        addActions();
+        fillToolBar();
 //        hookDNDListeners();
         
 //        getSite().getPage().addPartListener(linkWithEditorPartListener);
@@ -288,6 +310,129 @@ public class ModITBPView extends RightsEnabledView {
         drillDownAdapter.addNavigationActions(manager); 
     }
     
+    private void makeActions() {
+        ControlDropPerformer controlDropAdapter;
+        BSIModelViewDropListener bsiDropAdapter;
+        doubleClickAction = new Action() {
+            @Override
+            public void run() {
+                if(viewer.getSelection() instanceof IStructuredSelection) {
+                    Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();      
+                    EditorFactory.getInstance().updateAndOpenObject(sel);
+                }
+            }
+        };
+        
+        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_6);
+    
+        // TODO: remove comments
+        expandAction = new ExpandAction(viewer, contentProvider);
+        expandAction.setText(Messages.ISMView_7);
+        expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
+        collapseAction = new CollapseAction(viewer);
+        collapseAction.setText(Messages.ISMView_8);
+        collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
+    
+//        expandAllAction = new Action() {
+//            @Override
+//            public void run() {
+//                expandAll();
+//            }
+//        };
+//        expandAllAction.setText(Messages.ISMView_9);
+//        expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
+//
+//        collapseAllAction = new Action() {
+//            @Override
+//            public void run() {
+//                viewer.collapseAll();
+//            }
+//        };
+//        collapseAllAction.setText(Messages.ISMView_10);
+//        collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
+        
+//        HideEmptyFilter hideEmptyFilter = createHideEmptyFilter();
+//        TypeParameter typeParameter = createTypeParameter();
+//        TagParameter tagParameter = new TagParameter();
+//        filterAction = new ISMViewFilter(viewer,
+//                Messages.ISMView_12,
+//                tagParameter,
+//                hideEmptyFilter,
+//                typeParameter);    
+       
+//        elementManager.addParameter(tagParameter);
+//        if(typeParameter!=null) {
+//            elementManager.addParameter(typeParameter);
+//        }   
+        
+//        metaDropAdapter = new MetaDropAdapter(viewer);
+//        controlDropAdapter = new ControlDropPerformer(viewer);
+//        bsiDropAdapter = new BSIModelViewDropListener(viewer);
+//        BSIModelDropPerformer bsi2IsmDropAdapter = new BSIModelDropPerformer(viewer);
+//        FileDropPerformer fileDropPerformer = new FileDropPerformer(viewer);
+//        metaDropAdapter.addAdapter(controlDropAdapter);
+//        metaDropAdapter.addAdapter(bsiDropAdapter); 
+//        
+//        metaDropAdapter.addAdapter(bsi2IsmDropAdapter);
+//        metaDropAdapter.addAdapter(fileDropPerformer); 
+//        
+//        accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_11);
+//        
+//        naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
+//        
+//        linkWithEditorAction = new Action(Messages.ISMView_5, IAction.AS_CHECK_BOX) {
+//            @Override
+//            public void run() {
+//                toggleLinking(isChecked());
+//            }
+//        };
+//        linkWithEditorAction.setChecked(isLinkingActive());
+//        linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
+
+    }
+    
+    /**
+     * Override this in subclasses to hide empty groups
+     * on startup.
+     * 
+     * @return a HideEmptyFilter
+     */
+    protected HideEmptyFilter createHideEmptyFilter() {
+        return new HideEmptyFilter(viewer);
+    }
+
+    /**
+     * Override this in subclasses to hide empty groups
+     * on startup.
+     * 
+     * @return a {@link TypeParameter}
+     */
+    protected TypeParameter createTypeParameter() {
+        return new TypeParameter();
+    }
+    
+    private void addActions() {
+        viewer.addDoubleClickListener(new IDoubleClickListener() {
+            @Override
+            public void doubleClick(DoubleClickEvent event) {
+                doubleClickAction.run();
+            }
+        });
+        
+        viewer.addSelectionChangedListener(expandAction);
+        viewer.addSelectionChangedListener(collapseAction);
+    }
+    
+    protected void fillToolBar() {
+        IActionBars bars = getViewSite().getActionBars();
+        IToolBarManager manager = bars.getToolBarManager();
+//        manager.add(expandAllAction);
+//        manager.add(collapseAllAction);
+        drillDownAdapter.addNavigationActions(manager);
+//        manager.add(filterAction);
+//        manager.add(linkWithEditorAction);
+    }
+    
 
 }

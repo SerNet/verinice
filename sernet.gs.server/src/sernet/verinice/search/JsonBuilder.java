@@ -42,6 +42,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.moditbp.elements.ITNetwork;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -77,14 +78,14 @@ public class JsonBuilder implements IJsonBuilder {
         }
         if(title==null) {
             LOG.warn("Scope title not found in cache for element: " + element.getUuid() + ", type: " + element.getTypeId() + ". Loading all scope titles now...");
-            getTitleCache().load(new String[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID});
+            getTitleCache().load(new String[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID, ITNetwork.TYPE_ID});
             title = getTitleCache().get(element.getScopeId());
         }
         return title;
     }
 
     private boolean isScope(CnATreeElement element) {
-        return element instanceof ITVerbund || element instanceof Organization;
+        return element instanceof ITVerbund || element instanceof Organization || element instanceof ITNetwork;
     }
     
     public final String getJson(CnATreeElement element, String scopeTitle) {

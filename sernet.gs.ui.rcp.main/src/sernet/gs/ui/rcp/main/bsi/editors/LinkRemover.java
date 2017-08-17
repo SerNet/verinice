@@ -23,7 +23,9 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
+import sernet.verinice.model.iso27k.IModITBPModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.model.validation.CnAValidation;
 
 /**
@@ -32,7 +34,7 @@ import sernet.verinice.model.validation.CnAValidation;
  * $LastChangedBy$
  *
  */
-public class LinkRemover implements IBSIModelListener, IISO27KModelListener {
+public class LinkRemover implements IBSIModelListener, IISO27KModelListener, IModITBPModelListener {
 
     private LinkMaker linkMaker;
 
@@ -164,7 +166,15 @@ public class LinkRemover implements IBSIModelListener, IISO27KModelListener {
     public void validationRemoved(Integer scopeId){};
     
     @Override
-    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IModITBPModelListener#modelReload(sernet.verinice.model.moditbp.elements.ModITBPModel)
+     */
+    @Override
+    public void modelReload(ModITBPModel newModel) {
+        
+    };
 
 }
 

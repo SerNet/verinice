@@ -311,6 +311,7 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
     protected void removeModelListeners() {
         CnAElementFactory.getLoadedModel().removeBSIModelListener(contentProvider);
         CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
+        CnAElementFactory.getInstance().getModITBPModel().removeModITBPModelListener(contentProvider);
     }
     
     protected void addISO27KModelListeners() {

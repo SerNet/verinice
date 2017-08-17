@@ -337,6 +337,9 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         if (CnAElementFactory.isIsoModelLoaded()) {
             CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
         }
+        if(CnAElementFactory.isModITBPModelLoaded()) {
+            CnAElementFactory.getInstance().getModITBPModel().removeModITBPModelListener(contentProvider);
+        }
     }
 
     public CnATreeElement getInputElement() {
