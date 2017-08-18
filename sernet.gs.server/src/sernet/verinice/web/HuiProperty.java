@@ -240,26 +240,34 @@ public class HuiProperty<K,V> implements Serializable{
     }
   
     public void setSelectedOption(String item) {
+        getSelectionValue(item);
+    }
+
+    public V getSelectionValue(String item){
         if(!getIsSingleSelect() && !getIsNumericSelect()) {
-            return;
+            return null;
         }
         if(item==null) {
             value = null;
-            return;
+            return null;
         }
         if(getIsSingleSelect() && item.equals(Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE))){
             value = null;
-            return;
+            return null;
         }      
         for (IMLPropertyOption option : type.getOptions()) {
             if(item.equals(option.getName())) {
                 value = getSelectionValue(option);
+
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Set option value: "+ value + " for label: " + item);
                 }
-                break;
+
+                return value;
             }          
         }      
+
+        return null;
     }
 
     private V getSelectionValue(IMLPropertyOption option) {

@@ -37,6 +37,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIInput;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 
 import org.apache.commons.lang.StringUtils;
@@ -56,26 +57,22 @@ import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
-import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.service.auth.AuthenticationHelper;
 import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.SaveElement;
 import sernet.verinice.service.parser.GSScraperUtil;
 
 /**
- * JSF managed bean which provides data for the element editor in the web application.
- * Main purpose for this this bean is template editor.xhtml.
+ * JSF managed bean which provides data for the element editor in the web
+ * application. Main purpose for this this bean is template editor.xhtml.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -149,6 +146,7 @@ public class EditBean {
         setElement(command.getElement());
 
         this.task = task;
+        resetChangedElementProperties();
 
         checkMassnahmenUmsetzung();
 
@@ -160,6 +158,10 @@ public class EditBean {
             LOG.info("Element not found, type: " + getTypeId() + ", uuid: " + getUuid());
         }
 
+    }
+
+    private void resetChangedElementProperties() {
+        changedElementProperties = new HashMap<>();
     }
 
     protected void doInitElement() {
@@ -189,8 +191,7 @@ public class EditBean {
             if (isVisible(groupHui)) {
                 sernet.verinice.web.PropertyGroup group = new sernet.verinice.web.PropertyGroup(groupHui.getId(), groupHui.getName());
                 List<PropertyType> typeListHui = groupHui.getPropertyTypes();
-                List<HuiProperty<String, String>> listOfGroup = createPropertyList(entity,
-                        typeListHui);
+                List<HuiProperty<String, String>> listOfGroup = createPropertyList(entity, typeListHui);
                 group.setPropertyList(listOfGroup);
                 if (!listOfGroup.isEmpty()) {
                     groupList.add(group);
@@ -204,8 +205,7 @@ public class EditBean {
         propertyList = createPropertyList(entity, typeList);
     }
 
-    protected List<HuiProperty<String, String>> createPropertyList(Entity entity,
-            List<PropertyType> typeListHui) {
+    protected List<HuiProperty<String, String>> createPropertyList(Entity entity, List<PropertyType> typeListHui) {
         List<HuiProperty<String, String>> listOfGroup = new ArrayList<>();
         for (PropertyType huiType : typeListHui) {
             if (isVisible(huiType)) {
@@ -319,7 +319,8 @@ public class EditBean {
             if (getElement() != null) {
                 if (isTaskEditorContext()) {
                     updateTaskWithChangedElementProperties();
-                    LOG.info("Sciped save cnAElement."); //$NON-NLS-1$
+                    Util.addInfo(SUBMIT, Util.getMessage(TaskBean.BOUNDLE_NAME, "taskUpdate"));
+                    LOG.info("Skipped save cnAElement."); //$NON-NLS-1$
                 } else {
                     doSave();
                 }
@@ -445,10 +446,15 @@ public class EditBean {
 
         return getConfigurationService().isWriteAllowed(element);
     }
-    
+
     // TODO: impl reference
     // TODO: impl multiselect
     public void onChange(ValueChangeEvent event) {
+
+        if (isNotTaskEditorContext()) {
+            return;
+        }
+
         String key = (String) ((UIInput) event.getComponent()).getAttributes().get("key");
         String newValue = handleBooleanValue(event.getNewValue());
 
@@ -467,6 +473,20 @@ public class EditBean {
         }
         if (key.contains(NAME_SUFFIX)) {
             setTitle(newValue + Util.getMessage(BOUNDLE_NAME, "change.request"));
+        }
+    }
+
+    private boolean isNotTaskEditorContext() {
+        return !isTaskEditorContext();
+    }
+
+    public void onChangeNumericSelection(AjaxBehaviorEvent valueChangeEvent) {
+        if (task != null) {
+            String key = (String) ((UIInput) valueChangeEvent.getComponent()).getAttributes().get("key");
+            @SuppressWarnings("unchecked")
+            HuiProperty<String, String> huiProperty = (HuiProperty<String, String>) ((UIInput) valueChangeEvent.getComponent()).getAttributes().get("optionId");
+
+            changedElementProperties.put(key, huiProperty.getValue());
         }
     }
 
@@ -785,10 +805,6 @@ public class EditBean {
 
     private IConfigurationService getConfigurationService() {
         return (IConfigurationService) VeriniceContext.get(VeriniceContext.CONFIGURATION_SERVICE);
-    }
-
-    private IAuthService getAuthService() {
-        return (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
     }
 
     public MassnahmenUmsetzung getMassnahmenUmsetzung() {
