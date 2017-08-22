@@ -244,6 +244,29 @@ This variant:
 		<property name="recordDAO" ref="recordDAO" />
         <!-- Self Assessment (SAMT) Daos -->
         <property name="samtTopicDAO" ref="samtTopicDAO" />   
+		<!-- Modernized ITBP DAOs -->
+		<property name="applicationDAO" ref="applicationDAO" />
+		<property name="businessProcessDAO" ref="businessProcessDAO" />
+		<property name="icssystemDAO" ref="icssystemDAO" />
+		<property name="itnetworkDAO" ref="itnetworkDAO" />
+		<property name="itsystemDAO" ref="itsystemDAO" />
+		<property name="moditbpbelementDAO" ref="moditbpbelementDAO" />
+		<property name="moditbpPersonDAO" ref="moditbpPersonDAO" />
+		<property name="moditbpRequirementDAO" ref="moditbpRequirementDAO" />
+		<property name="moditbpThreatDAO" ref="moditbpThreatDAO" />
+		<property name="moduleDAO" ref="moduleDAO" />
+		<property name="networkDAO" ref="networkDAO" />
+		<property name="othersystemDAO" ref="othersystemDAO" />
+		<property name="roomDAO" ref="roomDAO" />
+		<property name="modITBPModelDAO" ref="modITBPModelDAO" />
+		<property name="applicationCategoryDAO" ref="applicationCategoryDAO" />
+		<property name="businessProcessCategoryDAO" ref="businessProcessCategoryDAO" />
+		<property name="icsSystemCategoryDAO" ref="icsSystemCategoryDAO" />
+		<property name="itSystemCategoryDAO" ref="itSystemCategoryDAO" />
+		<property name="networkCategoryDAO" ref="networkCategoryDAO" />
+		<property name="otherSystemCategoryDAO" ref="otherSystemCategoryDAO" />
+		<property name="personCategoryDAO" ref="personCategoryDAO" />
+		<property name="roomCategoryDAO" ref="roomCategoryDAO" />
 
         <!-- Miscellaneous DAOs -->
         <property name="importIsoDAO" ref="importIsoDAO" /> 

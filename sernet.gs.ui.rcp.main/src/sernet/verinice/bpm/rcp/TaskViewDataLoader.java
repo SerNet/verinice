@@ -49,6 +49,7 @@ import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
 import sernet.verinice.service.commands.LoadVisibleAccounts;
 
@@ -109,6 +110,11 @@ public class TaskViewDataLoader {
 
                 @Override
                 public void loaded(ISO27KModel model) {
+                    // work is done in loaded(BSIModel model)
+                }
+
+                @Override
+                public void loaded(ModITBPModel model) {
                     // work is done in loaded(BSIModel model)
                 }
             };

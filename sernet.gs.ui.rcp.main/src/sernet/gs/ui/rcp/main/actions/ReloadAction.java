@@ -33,6 +33,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 
 public class ReloadAction extends Action {
 
@@ -55,6 +56,10 @@ public class ReloadAction extends Action {
             }
             @Override
             public void loaded(ISO27KModel model) {
+                setEnabled(true);
+            }
+            @Override
+            public void loaded(ModITBPModel model) {
                 setEnabled(true);
             }
         });

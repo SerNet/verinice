@@ -34,11 +34,13 @@
             "searchreindex"
             "showallfiles" -->
             <action id="addbsielement" />
+            <action id="addmoditbpelement"/>
             <action id="addcatalog" />
             <action id="addfile" />
             <action id="addismelement" />
             <action id="addismgroup" />
             <action id="addismorg"/>
+            <action id="additnetwork" />
             <action id="additverbund" />
             <action id="addnote" />
             <action id="addsecurityassessment" />
@@ -79,6 +81,7 @@
             <action id="ismview" />
             <action id="ismviewweb" />
             <action id="konsolidator" />
+            <action id="moditbpmodelview" />
             <action id="naturalize" />
             <action id="notes" />
             <action id="relations" />
@@ -105,6 +108,7 @@
             "accesscontrol"
             "addismorg"
             "additverbund"
+            "additnetwork"
             "addsecurityassessment"
             "editprofile"
             "marktemplate"
@@ -119,12 +123,12 @@
             "taskwithreleaseprocess"
             "templates"
             "addismorg"
-            "additverbund"
             "xmlimport" 
             "searchreindex
             "showallfiles"
             "addsecurityassessment"-->
 	        <action id="addbsielement" />
+	        <action id="addmoditbpelement"/>
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
@@ -166,6 +170,7 @@
 	        <action id="ismview" />
           <action id="ismviewweb" />
 	        <action id="konsolidator" />
+	        <action id="moditbpmodelview" />
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />
@@ -213,6 +218,7 @@
             <action id="ismview" />
             <action id="ismviewweb" />
             <action id="konsolidator" />
+            <action id="moditbpmodelview" />
             <action id="naturalize" />
             <action id="notes" />
             <action id="relations" />
@@ -238,6 +244,7 @@
         <!-- missing actions:
             "accountsettings" 
           	"addismorg" 
+          	"additnetwork"
           	"additverbund" 
           	"addsecurityassessment" 
           	"editprofile" 
@@ -249,6 +256,7 @@
           	"xmlimport"  -->
            	<action id="accesscontrol" />
 	        <action id="addbsielement" />
+	        <action id="addmoditbpelement"/>
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
@@ -288,6 +296,7 @@
 	        <action id="ismview" />
           <action id="ismviewweb" />
 	        <action id="konsolidator" />
+	        <action id="moditbpmodelview" />
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />
@@ -317,6 +326,7 @@
         <profile name="admin-local-default-profile" origin="default" > 
          	<!-- missing actions:  
             "addismorg" 
+            "additnetwork"
             "additverbund" 
             "gsnotesimport" 
             "gstoolimport" 
@@ -326,6 +336,7 @@
           	<action id="accesscontrol" /> 
             <action id="accountsettings" /> 
             <action id="addbsielement" /> 
+            <action id="addmoditbpelement"/>
             <action id="addcatalog" /> 
             <action id="addfile" /> 
             <action id="addismelement" /> 
@@ -366,6 +377,7 @@
             <action id="ismview" /> 
           	<action id="ismviewweb" /> 
             <action id="konsolidator" /> 
+            <action id="moditbpmodelview" />
             <action id="naturalize" /> 
             <action id="notes" /> 
             <action id="relations" /> 
@@ -397,11 +409,13 @@
 	      <action id="accesscontrol" />
 	        <action id="accountsettings" />
 	        <action id="addbsielement" />
+	        <action id="addmoditbpelement"/>
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
 	        <action id="addismgroup" />
 	        <action id="addismorg" />
+	        <action id="additnetwork" />
 	        <action id="additverbund" />
 	        <action id="addnote" />
 	        <action id="addsecurityassessment" />
@@ -443,6 +457,7 @@
 	        <action id="ismview" />
           <action id="ismviewweb" />
 	        <action id="konsolidator" />
+	        <action id="moditbpmodelview" />
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />

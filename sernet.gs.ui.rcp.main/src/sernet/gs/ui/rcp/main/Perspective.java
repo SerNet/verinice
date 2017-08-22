@@ -26,6 +26,7 @@ import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.verinice.iso27k.rcp.CatalogView;
 import sernet.verinice.iso27k.rcp.ISMView;
+import sernet.verinice.moditbp.rcp.ModITBPView;
 
 /**
  * BSI GS-Perspektive
@@ -51,6 +52,7 @@ public class Perspective implements IPerspectiveFactory {
 		
 		IFolderLayout modelFolder = layout.createFolder("model", IPageLayout.LEFT, RATIO_MODEL_FOLDER, editorArea);
 		modelFolder.addView(BsiModelView.ID);
+		modelFolder.addView(ModITBPView.ID);
 		modelFolder.addPlaceholder(ISMView.ID + ":*");
 		layout.getViewLayout(BSIMassnahmenView.ID).setCloseable(true);
 		layout.getViewLayout(ISMView.ID).setCloseable(true);

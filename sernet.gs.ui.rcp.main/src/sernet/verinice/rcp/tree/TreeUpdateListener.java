@@ -35,6 +35,8 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.IModITBPModelListener;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.model.validation.CnAValidation;
 import sernet.verinice.service.tree.ElementManager;
 
@@ -44,7 +46,7 @@ import sernet.verinice.service.tree.ElementManager;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListener {
+public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListener, IModITBPModelListener {
 
     private static final String ERROR_MESSAGE = "Error while updating treeview";
 
@@ -361,5 +363,13 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
             });
             return Status.OK_STATUS;
         }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IModITBPModelListener#modelReload(sernet.verinice.model.moditbp.elements.ModITBPModel)
+     */
+    @Override
+    public void modelReload(ModITBPModel newModel) {
+        doModelReload(newModel);
     }
 }

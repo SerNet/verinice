@@ -103,14 +103,36 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
+import sernet.verinice.model.moditbp.categories.ApplicationCategory;
+import sernet.verinice.model.moditbp.categories.BusinessProcessCategory;
+import sernet.verinice.model.moditbp.categories.ICSSystemCategory;
+import sernet.verinice.model.moditbp.categories.ITSystemCategory;
+import sernet.verinice.model.moditbp.categories.NetworkCategory;
+import sernet.verinice.model.moditbp.categories.OtherSystemCategory;
+import sernet.verinice.model.moditbp.categories.PersonCategory;
+import sernet.verinice.model.moditbp.categories.RoomCategory;
+import sernet.verinice.model.moditbp.elements.Application;
+import sernet.verinice.model.moditbp.elements.BusinessProcess;
+import sernet.verinice.model.moditbp.elements.ICSSystem;
+import sernet.verinice.model.moditbp.elements.ITNetwork;
+import sernet.verinice.model.moditbp.elements.ITSystem;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
+import sernet.verinice.model.moditbp.elements.ModITBPPerson;
+import sernet.verinice.model.moditbp.elements.Module;
+import sernet.verinice.model.moditbp.elements.Network;
+import sernet.verinice.model.moditbp.elements.OtherSystem;
+import sernet.verinice.model.moditbp.elements.Room;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.CreateAnwendung;
 import sernet.verinice.service.commands.CreateElement;
+import sernet.verinice.service.commands.CreateITNetwork;
 import sernet.verinice.service.commands.CreateITVerbund;
 import sernet.verinice.service.commands.UpdateElement;
 import sernet.verinice.service.commands.crud.CreateIsoModel;
+import sernet.verinice.service.commands.crud.CreateModITBPModel;
 import sernet.verinice.service.commands.crud.UpdateMultipleElements;
 import sernet.verinice.service.iso27k.LoadModel;
+import sernet.verinice.service.moditbp.LoadModITBPModel;
 
 /**
  * Factory for all model elements. Contains typed factories for sub-elements.
@@ -149,6 +171,8 @@ public final class CnAElementFactory {
 	private static BSIModel loadedModel;
 
 	private static ISO27KModel isoModel;
+	
+	private static ModITBPModel modITBPModel;
 
 	private ICommandService commandService;
 	
@@ -885,7 +909,250 @@ public final class CnAElementFactory {
 				return child;
 			}
 		});
+		
+		// renewed / modernized ITBP
+		
+        elementbuilders.put(ITNetwork.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                log.debug("Creating new ITNetwork in " + container); //$NON-NLS-1$
+                boolean createChildren = true;
+                if (input != null) {
+                    createChildren = (Boolean) input.getInput();
+                }
+                CreateITNetwork saveCommand = new CreateITNetwork(container,
+                        ITNetwork.class, createChildren);
+                saveCommand = ServiceFactory.lookupCommandService()
+                        .executeCommand(saveCommand);
+                ITNetwork itnetwork = saveCommand.getNewElement();
 
+                itnetwork.setParent(modITBPModel);
+                return itnetwork;
+            }
+        });
+        
+
+        elementbuilders.put(Application.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                Application child = dbHome.save(container, Application.class,
+                        Application.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        }); 
+
+        elementbuilders.put(BusinessProcess.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                BusinessProcess child = dbHome.save(container, BusinessProcess.class,
+                        BusinessProcess.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(ICSSystem.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                ICSSystem child = dbHome.save(container, ICSSystem.class,
+                        ICSSystem.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+                
+        elementbuilders.put(ICSSystem.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                ICSSystem child = dbHome.save(container, ICSSystem.class,
+                        ICSSystem.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(ITSystem.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                ITSystem child = dbHome.save(container, ITSystem.class,
+                        ITSystem.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+		elementbuilders.put(ModITBPPerson.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                ModITBPPerson child = dbHome.save(container, ModITBPPerson.class,
+                        ModITBPPerson.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+		
+		elementbuilders.put(Module.TYPE_ID, new ElementBuilder() {
+		    public CnATreeElement build(CnATreeElement container,
+		            BuildInput input) throws CommandException {
+		        Module child = dbHome.save(container, Module.class,
+		                Module.TYPE_ID);
+		        init(container, child);
+		        return child;
+		    }
+		});
+		
+		elementbuilders.put(Network.TYPE_ID, new ElementBuilder() {
+		    public CnATreeElement build(CnATreeElement container,
+		            BuildInput input) throws CommandException {
+		        Network child = dbHome.save(container, Network.class,
+		                Network.TYPE_ID);
+		        init(container, child);
+		        return child;
+		    }
+		});
+
+        elementbuilders.put(OtherSystem.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                OtherSystem child = dbHome.save(container, OtherSystem.class,
+                        OtherSystem.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(
+                sernet.verinice.model.moditbp.elements.ModITBPRequirement.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                sernet.verinice.model.moditbp.elements.ModITBPRequirement child = 
+                        dbHome.save(container, sernet.verinice.model.moditbp.elements.ModITBPRequirement.class,
+                        sernet.verinice.model.moditbp.elements.ModITBPRequirement.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(Room.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                Room child = dbHome.save(container, Room.class,
+                        Room.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });        
+
+        elementbuilders.put(sernet.verinice.model.moditbp.elements.ModITBPThreat.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                sernet.verinice.model.moditbp.elements.ModITBPThreat child = dbHome.save(container,
+                        sernet.verinice.model.moditbp.elements.ModITBPThreat.class,
+                        sernet.verinice.model.moditbp.elements.ModITBPThreat.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+
+        elementbuilders.put(ApplicationCategory.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                ApplicationCategory child = dbHome.save(container,
+                        ApplicationCategory.class,
+                        ApplicationCategory.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+       
+        elementbuilders.put(BusinessProcessCategory.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                BusinessProcessCategory child = dbHome.save(container,
+                        BusinessProcessCategory.class,
+                        BusinessProcessCategory.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+
+        elementbuilders.put(ICSSystemCategory.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                ICSSystemCategory child = dbHome.save(container,
+                        ICSSystemCategory.class,
+                        ICSSystemCategory.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(ITSystemCategory.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                ITSystemCategory child = dbHome.save(container,
+                        ITSystemCategory.class,
+                        ITSystemCategory.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(NetworkCategory.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                NetworkCategory child = dbHome.save(container,
+                        NetworkCategory.class,
+                        NetworkCategory.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+
+        elementbuilders.put(NetworkCategory.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                NetworkCategory child = dbHome.save(container,
+                        NetworkCategory.class,
+                        NetworkCategory.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(OtherSystemCategory.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                OtherSystemCategory child = dbHome.save(container,
+                        OtherSystemCategory.class,
+                        OtherSystemCategory.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(PersonCategory.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                PersonCategory child = dbHome.save(container,
+                        PersonCategory.class,
+                        PersonCategory.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+
+        elementbuilders.put(RoomCategory.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                RoomCategory child = dbHome.save(container,
+                        RoomCategory.class,
+                        RoomCategory.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
 	}
 
 	public static CnAElementFactory getInstance() {
@@ -1028,7 +1295,11 @@ public final class CnAElementFactory {
 	public static boolean isIsoModelLoaded() {
 		return (isoModel != null);
 	}
-
+	
+	public static boolean isModITBPModelLoaded() {
+	    return (modITBPModel != null);
+	}
+	
 	public void closeModel() {
 		dbHome.close();
 		fireClosed();
@@ -1069,6 +1340,12 @@ public final class CnAElementFactory {
 			listener.loaded(model);
 		}
 	}
+	
+	private void fireLoad(ModITBPModel model) {
+        for (IModelLoadListener listener : listeners) {
+            listener.loaded(model);
+        }	    
+	}
 
 	/**
 	 * Returns whether there is an active database connection.
@@ -1106,6 +1383,18 @@ public final class CnAElementFactory {
 			}
 			return isoModel;
 		}
+	}
+	
+	public ModITBPModel getModITBPModel() {
+	    synchronized(mutex) {
+	        if (modITBPModel == null) {
+	            modITBPModel = loadModITBPModel();
+	            if (modITBPModel == null) {
+	                createModITBPModel();
+	            }
+	        }
+	    }
+	    return modITBPModel;
 	}
 
 	/**
@@ -1145,6 +1434,42 @@ public final class CnAElementFactory {
 		} catch (CommandException e) {
 			log.error(Messages.getString("CnAElementFactory.2"), e); //$NON-NLS-1$
 		}
+	}
+	
+	private ModITBPModel loadModITBPModel() {
+	    ModITBPModel model = null;
+	    try {
+	        LoadModITBPModel modelLoadCommand = new LoadModITBPModel();
+	        modelLoadCommand = getCommandService().executeCommand(modelLoadCommand);
+	        model = modelLoadCommand.getModel();
+	        if (model != null) {
+	            fireLoad(model);
+	        }
+	    } catch (CommandException e) {
+	        // TODO internationalize
+	        log.error("Error loading model for modernized ITBP", e);
+	        throw new RuntimeException("Error loading model for modernized ITBP", e);
+	    }
+	    return model;
+	}
+	
+	private void createModITBPModel() {
+	    try {
+	        CreateModITBPModel modelCreationCommand = new CreateModITBPModel();
+	        modelCreationCommand = getCommandService()
+	                .executeCommand(modelCreationCommand);
+	        modITBPModel = modelCreationCommand.getElement();
+            if (log.isInfoEnabled()) {
+                log.info("Model for modernized ITBP created"); //$NON-NLS-1$
+            }
+            if (modITBPModel != null) {
+                fireLoad(modITBPModel);
+            }	        
+	        
+	    } catch (CommandException e) {
+	        log.error(Messages.getString("CnAElementFactory.2"), e); //$NON-NLS-1$
+	    }
+	    
 	}
 
 	public BSIModel loadOrCreateModel(IProgress monitor) throws MalformedURLException, CommandException, CnATreeElementBuildException {
@@ -1209,6 +1534,16 @@ public final class CnAElementFactory {
 				isoModel.moveListener(newModel);
 				isoModel = newModel;
 				fireLoad(isoModel);
+			}
+			if (isModITBPModelLoaded()) {
+			    ModITBPModel newModel = loadModITBPModel();
+			    if (log.isDebugEnabled()) {
+			        log.debug("reloadModelFromDatabase, ModITBP-model loaded"); //$NON-NLS-1$
+			    }
+			    modITBPModel.modelReload(newModel);
+			    modITBPModel.moveListener(newModel);
+			    modITBPModel = newModel;
+			    fireLoad(modITBPModel);
 			}
 		} catch (Exception e) {
 			log.error(Messages.getString("CnAElementFactory.5"), e); //$NON-NLS-1$

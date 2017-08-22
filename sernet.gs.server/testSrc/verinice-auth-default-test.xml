@@ -32,11 +32,13 @@
             "searchreindex"
             "showallfiles" -->
             <action id="addbsielement" />
+            <action id="addmoditbpelement"/>
             <action id="addcatalog" />
             <action id="addfile" />
             <action id="addismelement" />
             <action id="addismgroup" />
             <action id="addismorg"/>
+            <action id="additnetwork" />
             <action id="additverbund" />
             <action id="addnote" />
             <action id="addsecurityassessment" />
@@ -102,6 +104,7 @@
             "accountsettings"
             "accesscontrol"
             "addismorg"
+            "additnetwork"
             "additverbund"
             "addsecurityassessment"
             "editprofile"
@@ -113,6 +116,7 @@
             "taskshowall"
             "xmlimport" -->
             <action id="addbsielement" />
+            <action id="addmoditbpelement"/>
             <action id="addcatalog" />
             <action id="addfile" />
             <action id="addismelement" />
@@ -179,6 +183,7 @@
         <profile name="admin-scope-default-profile" origin="default">
         <!-- missing actions:
             "addismorg"
+            "additnetwork"
             "additverbund"
             "addsecurityassessment"
             "editprofile"
@@ -189,6 +194,7 @@
             "xmlimport" -->
             <action id="accesscontrol" />
             <action id="addbsielement" />
+            <action id="addmoditbpelement"/>
             <action id="addcatalog" />
             <action id="addfile" />
             <action id="addismelement" />
@@ -259,11 +265,13 @@
             <action id="accesscontrol" />
             <action id="accountsettings" />
             <action id="addbsielement" />
+            <action id="addmoditbpelement"/>
             <action id="addcatalog" />
             <action id="addfile" />
             <action id="addismelement" />
             <action id="addismgroup" />
             <action id="addismorg" />
+            <action id="additnetwork" />
             <action id="additverbund" />
             <action id="addnote" />
             <action id="addsecurityassessment" />

@@ -50,6 +50,7 @@ import sernet.hui.common.rules.NotEmpty;
 import sernet.hui.common.rules.RuleFactory;
 import sernet.snutils.DBException;
 
+
 /**
  * Parses XML file with defined properties and creates appropriate
  * <code>PropertyType </code> objects.
@@ -72,6 +73,7 @@ public class HUITypeFactory {
     private static final String HUI_PROPERTY = "huiproperty";
     private static final String HUI_PROPERTY_GROUP = "huipropertygroup";
     private static final String HUI_RELATION = "huirelation";
+    private static final String ABSTRACT_MODITBP_ID = "moditbp_abstractelement";
 
     private static Document doc;
     
@@ -189,6 +191,9 @@ public class HUITypeFactory {
             Element entityEl = (Element) entities.item(i);
             EntityType entityObj = new EntityType();
             String id = entityEl.getAttribute(ATTRIBUTE_ID);
+            if ( id.toLowerCase().startsWith("moditbp_")) {
+                LOG.debug("Found new itbp element type:\t" + id);
+            }
             entityObj.setId(id);
 
             // labels are loaded from SNCAMessages (resource bundles)
@@ -197,10 +202,44 @@ public class HUITypeFactory {
             entityObj.setName(getMessage(id));
 
             this.allEntities.put(entityEl.getAttribute(ATTRIBUTE_ID), entityObj);
+            
+            
             readChildElements(entityObj, null);
+            handleModITBPElements(entityObj);
         }
+        
+        
     }
 
+    /**
+     * huientities that are part of the modernized ITBP data model, 
+     * needs to inherit properties from "moditbp_abstractelement"
+     * 
+     * @param entityObj
+     */
+    private void handleModITBPElements(EntityType entityObj) {
+        if( entityObj.getId().startsWith("moditbp_") && !(ABSTRACT_MODITBP_ID.equals(entityObj.getId()))) {
+            EntityType abstractModITBPType = getEntityType(ABSTRACT_MODITBP_ID);
+            for (HuiRelation relation : abstractModITBPType.getPossibleRelations()) {
+                if (!entityObj.getPossibleRelations().contains(relation)) {
+                    entityObj.addRelation(relation);
+                }
+            }
+            for (PropertyGroup group : abstractModITBPType.getPropertyGroups() ) {
+                if (!entityObj.getPropertyGroups().contains(group)) {
+                    entityObj.addPropertyGroup(group);
+                }
+            }
+            for (PropertyType type : abstractModITBPType.getAllPropertyTypes()) {
+                if(!entityObj.getAllPropertyTypes().contains(type)) {
+                    entityObj.addPropertyType(type);
+                }
+            }
+        }
+    }
+    
+   
+   
     public Set<String> getAllTypeIds() {
         return allEntities.keySet();
     }
@@ -547,6 +586,12 @@ public class HUITypeFactory {
      * @return
      */
     public Set<HuiRelation> getPossibleRelationsFrom(String fromEntityTypeID) {
+        
+        if (getEntityType(fromEntityTypeID) == null) {
+            LOG.error("cannot find entitytype for:\t" + fromEntityTypeID);
+            
+        }
+        
         return getEntityType(fromEntityTypeID).getPossibleRelations();
     }
     

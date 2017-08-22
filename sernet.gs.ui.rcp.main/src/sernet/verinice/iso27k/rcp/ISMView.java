@@ -130,6 +130,7 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.tree.TreeContentProvider;
 import sernet.verinice.rcp.tree.TreeLabelProvider;
@@ -317,6 +318,11 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 	                public void loaded(ISO27KModel model) {
 	                    startInitDataJob();
 	                }
+
+                    @Override
+                    public void loaded(ModITBPModel model) {
+                        // nothing to do
+                    }
 	                
 	            };
 	            CnAElementFactory.getInstance().addLoadListener(modelLoadListener);

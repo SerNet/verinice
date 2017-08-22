@@ -83,6 +83,7 @@ import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.rcp.ReportTemplateSync;
 import sernet.verinice.rcp.StartupImporter;
 import sernet.verinice.rcp.StatusResult;
@@ -316,6 +317,11 @@ public class Activator extends AbstractUIPlugin implements IMain {
                 public void closed(BSIModel model) {
                     // do nothing
 
+                }
+
+                @Override
+                public void loaded(ModITBPModel model) {
+                    // do nothing
                 }
             };
             CnAElementFactory.getInstance().addLoadListener(loadListener);
@@ -598,6 +604,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
                     monitor.setTaskName(Messages.Activator_LoadModel);
                     CnAElementFactory.getInstance().loadOrCreateModel(new ProgressAdapter(monitor));
                     CnAElementFactory.getInstance().getISO27kModel();
+                    CnAElementFactory.getInstance().getModITBPModel();
                 } catch (Exception e) {
                     LOG.error("Error while loading model.", e); //$NON-NLS-1$
                     if (e.getCause() != null && e.getCause().getLocalizedMessage() != null) {

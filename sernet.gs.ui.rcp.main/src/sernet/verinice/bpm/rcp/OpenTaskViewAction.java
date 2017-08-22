@@ -10,6 +10,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 
 public class OpenTaskViewAction extends OpenViewAction {
 
@@ -27,6 +28,11 @@ public class OpenTaskViewAction extends OpenViewAction {
                     setEnabled(isActive());
                 }
             }
+            @Override
+            public void loaded(ModITBPModel model) {
+                // nothing to do
+                
+            }
         });
         setRightID(ActionRightIDs.TASKVIEW);
         setEnabled(checkRights());
@@ -43,6 +49,10 @@ public class OpenTaskViewAction extends OpenViewAction {
                 if(checkRights()){
                     setEnabled(isActive());
                 }
+            }
+            @Override
+            public void loaded(ModITBPModel model) {
+                // nothing to do
             }
         });        
     }

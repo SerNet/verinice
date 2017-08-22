@@ -90,6 +90,7 @@ import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonGroup;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
 import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.rcp.ElementTitleCache;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.TextEventAdapter;
@@ -703,6 +704,10 @@ public class AccountView extends RightsEnabledView {
             public void loaded(ISO27KModel model) {
                 JobScheduler.scheduleInitJob(initDataJob); 
                 CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
+            }
+            @Override
+            public void loaded(ModITBPModel model) {
+                // nothing to do
             }             
         };
         CnAElementFactory.getInstance().addLoadListener(modelLoadListener);

@@ -23,7 +23,6 @@
       <perspective
             class="sernet.gs.ui.rcp.main.PerspectiveDS"
             icon="icons/shield.png"
-            id="sernet.gs.ui.rcp.main.dsperspective"
             name="%perspective.name.0"/>
       <perspective
             class="sernet.verinice.iso27k.rcp.Iso27kPerspective"
@@ -213,6 +212,15 @@
       		name="%view.name.18"
       		restorable="true">
       </view>
+      <view
+            allowMultiple="false"
+            category="sernet.verinice.moditbp.rcp"
+            class="sernet.verinice.moditbp.rcp.ModITBPView"
+            icon="icons/sweetie-verinice/png/16-dice-grey.png"
+            id="sernet.verinice.moditbp.rcp.ModITBPView"
+            name="%view.name.20"
+            restorable="true">
+      </view>      
       
    </extension>
    <extension point="org.eclipse.ui.commands">
@@ -1098,8 +1106,120 @@
                style="push"
                tooltip="%action.tooltip.36">
 			</action>
-		</objectContribution>  
-   </extension>
+		</objectContribution> 
+	<objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.moditbp.applicationContrib"
+            objectClass="sernet.verinice.model.moditbp.categories.ApplicationCategory">
+         <action
+               class="sernet.verinice.moditbp.rcp.action.AddApplicationActionDelegate"
+               enablesFor="+"
+               icon="icons/application_osx.png"
+               id="sernet.gs.ui.rcp.main.moditbp.application"
+               label="%action.label.addApplication"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addApplication"/>
+      </objectContribution>
+	<objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.moditbp.businessProcessContrib"
+            objectClass="sernet.verinice.model.moditbp.categories.BusinessProcessCategory">
+         <action
+               class="sernet.verinice.moditbp.rcp.action.AddBusinessProcessActionDelegate"
+               enablesFor="+"
+               icon="icons/application_osx.png"
+               id="sernet.gs.ui.rcp.main.moditbp.businessprocess"
+               label="%action.label.addBusinessProcess"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addBusinessProcess"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.moditbp.icsSystemContrib"
+            objectClass="sernet.verinice.model.moditbp.categories.ICSSystemCategory">
+         <action
+               class="sernet.verinice.moditbp.rcp.action.AddICSSystemActionDelegate"
+               enablesFor="+"
+               icon="icons/application_osx.png"
+               id="sernet.gs.ui.rcp.main.moditbp.icssystem"
+               label="%action.label.addICSSystem"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addICSSystem"/>
+      </objectContribution>
+	<objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.moditbp.itSystemContrib"
+            objectClass="sernet.verinice.model.moditbp.categories.ITSystemCategory">
+         <action
+               class="sernet.verinice.moditbp.rcp.action.AddITSystemActionDelegate"
+               enablesFor="+"
+               icon="icons/application_osx.png"
+               id="sernet.gs.ui.rcp.main.moditbp.itsystem"
+               label="%action.label.addITSystem"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addITSystem"/>
+      </objectContribution>               
+	<objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.moditbp.modITBPPersonContrib"
+            objectClass="sernet.verinice.model.moditbp.categories.PersonCategory">
+         <action
+               class="sernet.verinice.moditbp.rcp.action.AddModITBPPersonActionDelegate"
+               enablesFor="+"
+               icon="icons/application_osx.png"
+               id="sernet.gs.ui.rcp.main.moditbp.modITBPperson"
+               label="%action.label.addModITBPPerson"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addModITBPPerson"/>
+      </objectContribution>
+	<objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.moditbp.networkContrib"
+            objectClass="sernet.verinice.model.moditbp.categories.NetworkCategory">
+         <action
+               class="sernet.verinice.moditbp.rcp.action.AddNetworkActionDelegate"
+               enablesFor="+"
+               icon="icons/application_osx.png"
+               id="sernet.gs.ui.rcp.main.moditbp.network"
+               label="%action.label.addNetwork"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addNetwork"/>
+      </objectContribution>
+	<objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.moditbp.otherSystemContrib"
+            objectClass="sernet.verinice.model.moditbp.categories.OtherSystemCategory">
+         <action
+               class="sernet.verinice.moditbp.rcp.action.AddOtherSystemActionDelegate"
+               enablesFor="+"
+               icon="icons/application_osx.png"
+               id="sernet.gs.ui.rcp.main.moditbp.othersystem"
+               label="%action.label.addOtherSystem"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addOtherSystem"/>
+      </objectContribution>
+	<objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.moditbp.roomContrib"
+            objectClass="sernet.verinice.model.moditbp.categories.RoomCategory">
+         <action
+               class="sernet.verinice.moditbp.rcp.action.AddRoomActionDelegate"
+               enablesFor="+"
+               icon="icons/application_osx.png"
+               id="sernet.gs.ui.rcp.main.moditbp.room"
+               label="%action.label.addRoom"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addRoom"/>
+      </objectContribution>
+   </extension>                               
    <extension point="org.eclipse.ui.menus">
       <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=content">	  
    	  	 <command
@@ -1187,6 +1307,28 @@
                disabledIcon="icons/16-em-cross.png"
                icon="icons/16-em-cross.png"
                label="%command.label.delete"/>
+      </menuContribution>
+      <menuContribution locationURI="popup:sernet.verinice.moditbp.rcp.ModITBPView?after=additions">
+         <command
+               commandId="org.eclipse.ui.edit.cut"
+               disabledIcon="icons/cut.png"
+               icon="icons/cut.png"
+               label="%command.label.2"/>
+         <command
+               commandId="org.eclipse.ui.edit.copy"
+               disabledIcon="icons/copy.png"
+               icon="icons/copy.png"
+               label="%command.label.0"/>
+         <command
+               commandId="org.eclipse.ui.edit.paste"
+               disabledIcon="icons/copy.png"
+               icon="icons/paste.png"
+               label="%command.label.1"/>
+         <command
+               commandId="org.eclipse.ui.edit.delete"
+               disabledIcon="icons/16-em-cross.png"
+               icon="icons/16-em-cross.png"
+               label="%command.label.delete"/>      
       </menuContribution>
       <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=special">
          <command
@@ -1717,6 +1859,20 @@
                tooltip="%action.tooltip.24">
          </action>
       </viewContribution>
+       <viewContribution
+      		id="sernet.verinice.moditbp.rcp.action.AddITNetworkActionDelegate"
+      		targetID="sernet.verinice.moditbp.rcp.ModITBPView">
+             <action
+               class="sernet.verinice.moditbp.rcp.action.AddITNetworkActionDelegate"
+               icon="icons/note-new.png"
+               id="sernet.verinice.moditbp.rcp.action.AddITNetworkActionDelegate"
+               label="%action.label.11"
+               state="true"
+               style="push"
+               toolbarPath="additions"
+               tooltip="%action.tooltip.11">
+         </action>
+      </viewContribution>      
    </extension>
    <extension point="org.eclipse.ui.handlers">
       <handler class="sernet.verinice.iso27k.rcp.action.CopyHandler"
@@ -1727,6 +1883,7 @@
 	     			<or>
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+	       				<equals value="sernet.verinice.moditbp.rcp.ModITBPView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -1789,6 +1946,7 @@
 	     			<or>
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+	       				<equals value="sernet.verinice.moditbp.rcp.ModITBPView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -1818,6 +1976,7 @@
 	     			<or>
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+	       				<equals value="sernet.verinice.moditbp.rcp.ModITBPView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -1877,6 +2036,7 @@
      			<or>
        				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
        				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+       				<equals value="sernet.verinice.moditbp.rcp.ModITBPView" />
        			</or>
     		</with>
          </activeWhen> 

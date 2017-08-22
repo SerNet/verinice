@@ -108,6 +108,7 @@ import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.IDatenschutzElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.tree.TreeContentProvider;
@@ -328,6 +329,12 @@ public class BsiModelView extends RightsEnabledView
                 @Override
                 public void loaded(ISO27KModel model) {
                     // nothing to do            
+                }
+
+                @Override
+                public void loaded(ModITBPModel model) {
+                 // nothing to do
+                    
                 }
             };
             CnAElementFactory.getInstance().addLoadListener(modelLoadListener);

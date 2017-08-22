@@ -36,11 +36,13 @@
                 "reportdepositdelete"
                 "reportdepositedit" -->
 	        <action id="addbsielement" />
+	        <action id="addmoditbpelement"/>
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
 	        <action id="addismgroup" />
 	        <action id="addismorg" />
+	        <action id="additnetwork" />
 	        <action id="additverbund" />
 	        <action id="addnote" />
 	        <action id="addsecurityassessment" />
@@ -76,6 +78,7 @@
 	        <action id="ismview" />
           <action id="ismviewweb" />
 	        <action id="konsolidator" />
+	        <action id="moditbpmodelview" />
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />
