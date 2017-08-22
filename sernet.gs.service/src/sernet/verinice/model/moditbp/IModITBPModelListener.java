@@ -17,8 +17,9 @@
  * Contributors:
  *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.model.iso27k;
+package sernet.verinice.model.moditbp;
 
+import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.moditbp.elements.ModITBPModel;
 
 /**

@@ -43,18 +43,21 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.DrillDownAdapter;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.Perspective;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Messages;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
@@ -63,10 +66,11 @@ import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.TypeParameter;
-import sernet.verinice.model.iso27k.IModITBPModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.IModITBPModelListener;
 import sernet.verinice.model.moditbp.elements.ITNetwork;
 import sernet.verinice.model.moditbp.elements.ModITBPModel;
+import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.tree.TreeContentProvider;
 import sernet.verinice.rcp.tree.TreeLabelProvider;
@@ -77,7 +81,8 @@ import sernet.verinice.service.tree.ElementManager;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class ModITBPView extends RightsEnabledView {
+public class ModITBPView extends RightsEnabledView 
+    implements IAttachedToPerspective, ILinkedWithEditorView {
     
     private static final Logger LOG = Logger.getLogger(ModITBPView.class);
     
@@ -143,7 +148,7 @@ public class ModITBPView extends RightsEnabledView {
      */
     protected void initView(Composite parent) {
         IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
-        if(CnAElementFactory.getInstance().isIsoModelLoaded()) {
+        if(CnAElementFactory.getInstance().isModITBPModelLoaded()) {
             CnAElementFactory.getInstance().reloadModelFromDatabase();
         }
         
@@ -432,6 +437,34 @@ public class ModITBPView extends RightsEnabledView {
         drillDownAdapter.addNavigationActions(manager);
 //        manager.add(filterAction);
 //        manager.add(linkWithEditorAction);
+    }
+
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.eclipse.ui.IEditorPart)
+     */
+    @Override
+    public void editorActivated(IEditorPart activeEditor) {
+        // TODO Auto-generated method stub
+        // DO THIS when model is loading correctly
+    }
+
+
+    @Override
+    public String getPerspectiveId() {
+        // TODO: implement own moditbp-perspective
+        return Perspective.ID;
+    }
+    
+    @Override
+    public void dispose() {
+        elementManager.clearCache();
+        if(CnAElementFactory.isModITBPModelLoaded()) {
+            CnAElementFactory.getInstance().getModITBPModel().removeModITBPModelListener(modelUpdateListener);
+        }
+        CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
+//        getSite().getPage().removePartListener(linkWithEditorPartListener);
+        super.dispose();
     }
     
 

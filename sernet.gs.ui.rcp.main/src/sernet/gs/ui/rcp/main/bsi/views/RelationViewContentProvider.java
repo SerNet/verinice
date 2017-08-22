@@ -30,8 +30,8 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
-import sernet.verinice.model.iso27k.IModITBPModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.moditbp.IModITBPModelListener;
 import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.model.validation.CnAValidation;
 

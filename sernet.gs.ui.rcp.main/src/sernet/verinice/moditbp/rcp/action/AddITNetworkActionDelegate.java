@@ -64,7 +64,7 @@ public class AddITNetworkActionDelegate extends RightsEnabledActionDelegate impl
                 EditorFactory.getInstance().openEditor(newElement);
             }
         } catch (Exception e) {
-            ExceptionUtil.log(e, Messages.AddITNetworkActionDelegate_0);
+            ExceptionUtil.log(e, Messages.AddITNetworkDelegate_0);
         }
 
     }

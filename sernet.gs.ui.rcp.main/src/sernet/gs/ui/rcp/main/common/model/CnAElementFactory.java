@@ -1441,16 +1441,16 @@ public final class CnAElementFactory {
 	    try {
 	        LoadModITBPModel modelLoadCommand = new LoadModITBPModel();
 	        modelLoadCommand = getCommandService().executeCommand(modelLoadCommand);
-	        modITBPModel = modelLoadCommand.getModel();
-	        if (modITBPModel != null) {
-	            fireLoad(modITBPModel);
+	        model = modelLoadCommand.getModel();
+	        if (model != null) {
+	            fireLoad(model);
 	        }
 	    } catch (CommandException e) {
 	        // TODO internationalize
 	        log.error("Error loading model for modernized ITBP", e);
 	        throw new RuntimeException("Error loading model for modernized ITBP", e);
 	    }
-	    return modITBPModel;
+	    return model;
 	}
 	
 	private void createModITBPModel() {
@@ -1462,8 +1462,8 @@ public final class CnAElementFactory {
             if (log.isInfoEnabled()) {
                 log.info("Model for modernized ITBP created"); //$NON-NLS-1$
             }
-            if (isoModel != null) {
-                fireLoad(isoModel);
+            if (modITBPModel != null) {
+                fireLoad(modITBPModel);
             }	        
 	        
 	    } catch (CommandException e) {
@@ -1534,6 +1534,16 @@ public final class CnAElementFactory {
 				isoModel.moveListener(newModel);
 				isoModel = newModel;
 				fireLoad(isoModel);
+			}
+			if (isModITBPModelLoaded()) {
+			    ModITBPModel newModel = loadModITBPModel();
+			    if (log.isDebugEnabled()) {
+			        log.debug("reloadModelFromDatabase, ModITBP-model loaded"); //$NON-NLS-1$
+			    }
+			    modITBPModel.modelReload(newModel);
+			    modITBPModel.moveListener(newModel);
+			    modITBPModel = newModel;
+			    fireLoad(modITBPModel);
 			}
 		} catch (Exception e) {
 			log.error(Messages.getString("CnAElementFactory.5"), e); //$NON-NLS-1$

@@ -70,7 +70,6 @@ import sernet.snutils.AssertException;
 import sernet.snutils.FormInputParser;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
-import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;

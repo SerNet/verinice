@@ -27,7 +27,7 @@ import org.apache.log4j.Logger;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.IModITBPModelListener;
+import sernet.verinice.model.moditbp.IModITBPModelListener;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -182,6 +182,21 @@ public class ModITBPModel extends CnATreeElement implements ModITBPRoot {
             getListeners().remove(listener);
         }
     }
+    
+    /**
+     * Moves all {@link IModITBPModelListener} from this model
+     * to newModel.
+     * 
+     * @param newModel 
+     */
+    public void moveListener(ModITBPModel newModel) {
+        for (IModITBPModelListener listener : getListeners()) {
+            newModel.addModITBOModelListener(listener);
+        }
+        for (IModITBPModelListener listener : getListeners()) {
+            removeModITBPModelListener(listener);
+        }      
+    }    
     
     private Logger getLog() {
         if(log==null) {

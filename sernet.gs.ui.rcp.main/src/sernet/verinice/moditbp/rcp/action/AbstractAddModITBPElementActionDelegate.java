@@ -17,44 +17,20 @@
  * Contributors:
  *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.model.moditbp.elements;
+package sernet.verinice.moditbp.rcp.action;
 
-import sernet.hui.common.connect.Entity;
-import sernet.verinice.model.common.CnATreeElement;
+import sernet.gs.ui.rcp.main.bsi.actions.AbstractAddCnATreeElementActionDelegate;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class ModITBPRequirement extends CnATreeElement {
-    
-    public static final String TYPE_ID = "moditbp_requirement"; //$NON-NLS-1$
-    
-    public ModITBPRequirement(CnATreeElement parent) {
-        super(parent);
-        setEntity(new Entity(TYPE_ID));
-        getEntity().initDefaultValues(getTypeFactory());
-        // sets the localized title via HUITypeFactory from message bundle
-        setTitel(getTypeFactory().getMessage(TYPE_ID));
-    }
-    
-    protected ModITBPRequirement() {}
+public abstract class AbstractAddModITBPElementActionDelegate extends AbstractAddCnATreeElementActionDelegate {
 
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTitle()
-     */
     @Override
-    public String getTitle() {
-        return getTypeFactory().getMessage(TYPE_ID);
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTypeId()
-     */
-    @Override
-    public String getTypeId() {
-        return TYPE_ID;
+    public String getRightID(){
+        return ActionRightIDs.ADDMODITBPELEMENT;
     }
 
 }

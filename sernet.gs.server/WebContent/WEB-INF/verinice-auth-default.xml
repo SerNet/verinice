@@ -34,6 +34,7 @@
             "searchreindex"
             "showallfiles" -->
             <action id="addbsielement" />
+            <action id="addmoditbpelement"/>
             <action id="addcatalog" />
             <action id="addfile" />
             <action id="addismelement" />
@@ -127,6 +128,7 @@
             "showallfiles"
             "addsecurityassessment"-->
 	        <action id="addbsielement" />
+	        <action id="addmoditbpelement"/>
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
@@ -254,6 +256,7 @@
           	"xmlimport"  -->
            	<action id="accesscontrol" />
 	        <action id="addbsielement" />
+	        <action id="addmoditbpelement"/>
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
@@ -333,6 +336,7 @@
           	<action id="accesscontrol" /> 
             <action id="accountsettings" /> 
             <action id="addbsielement" /> 
+            <action id="addmoditbpelement"/>
             <action id="addcatalog" /> 
             <action id="addfile" /> 
             <action id="addismelement" /> 
@@ -405,6 +409,7 @@
 	      <action id="accesscontrol" />
 	        <action id="accountsettings" />
 	        <action id="addbsielement" />
+	        <action id="addmoditbpelement"/>
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />

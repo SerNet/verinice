@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.model.moditbp.elements;
 
+import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -31,20 +32,16 @@ public class ITSystem extends ModITBPElement {
 
     public ITSystem(CnATreeElement parent) {
         super(parent);
+        setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
+        // sets the localized title via HUITypeFactory from message bundle
+        setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
 
     protected ITSystem() {}
     
     public static final String TYPE_ID = "moditbp_itsystem"; //$NON-NLS-1$
 
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTitle()
-     */
-    @Override
-    public String getTitle() {
-        return getTypeFactory().getMessage(TYPE_ID);
-    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.model.common.CnATreeElement#getTypeId()

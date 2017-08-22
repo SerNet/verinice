@@ -42,7 +42,7 @@ import sernet.verinice.service.commands.LoadTreeItem;
  * 
  * One instance of this class is created for every view opened at runtime. This instance is
  * used by {@link TreeContentProvider} and {@link TreeUpdateListener}. It's used
- * by {@link ISMView} and {@link BsiModelView}.
+ * by {@link ISMView} and {@link BsiModelView} and {@link ModITBPView).
  * 
  * ElementManager caches objects to ensure that they are loaded only once. If an
  * element is not cached already it's loaded from the backend by command
