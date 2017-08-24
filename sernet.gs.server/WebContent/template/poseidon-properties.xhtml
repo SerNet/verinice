@@ -65,11 +65,12 @@
 					<p:outputPanel
 						rendered="#{p.isNumericSelect and not empty p.optionList and p.isEditable  and (not p.isURL)}">
 						<p:selectOneMenu value="#{p.selectedOption}" styleClass="hui"
-							effectDuration="40" valueChangeListener="#{edit.onChange}">
+							effectDuration="40">
 							<f:selectItems value="#{p.optionList}" var="option"
 								itemLabel="#{option}" itemValue="#{option}" />
-							<p:ajax />
+							<p:ajax event="change" listener="#{edit.onChangeNumericSelection}" />
 							<f:attribute name="key" value="#{p.key}" />
+							<f:attribute name="optionId" value="#{p}" />
 						</p:selectOneMenu>
 					</p:outputPanel>
 
