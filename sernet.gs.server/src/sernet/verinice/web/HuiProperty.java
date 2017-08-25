@@ -29,6 +29,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
@@ -37,7 +38,7 @@ import sernet.hui.common.multiselectionlist.IMLPropertyOption;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class HuiProperty<K,V> implements Serializable{
+public class HuiProperty implements Serializable{
     
     private static final long serialVersionUID = 1L;
 
@@ -45,16 +46,19 @@ public class HuiProperty<K,V> implements Serializable{
     
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat();
     
-    private K key;
+    private String key;
     
-    private V value;
+    private String value;
     
     private PropertyType type;
     
     private boolean showLabel = true;
+
+    private Entity entity;
     
-    public HuiProperty(PropertyType type, K key, V value) {
+    public HuiProperty(Entity entity, PropertyType type, String key, String value) {
         super();
+        this.entity = entity;
         this.type = type;
         this.key = key;
         this.value = value;
@@ -93,7 +97,7 @@ public class HuiProperty<K,V> implements Serializable{
     }
     
     public String getURLValue(){
-        if(getIsURL() && getValue() != null && !((String)getValue()).isEmpty()){
+        if(getIsURL() && getValue() != null && !getValue().isEmpty()){
             try{
                 int n = getIndexOf((String)getValue(), '"', 0);
                 String[] a = ((String)getValue()).substring(n).split(">");
@@ -123,7 +127,7 @@ public class HuiProperty<K,V> implements Serializable{
         if(getIsURL()){
             StringBuilder sb = new StringBuilder();
             sb.append("<a href=\"").append(getURLValue()).append("\">").append(urlText).append("</a>");
-            setValue((V)(sb.toString()));
+            setValue(sb.toString());
         }
     }
     
@@ -131,7 +135,7 @@ public class HuiProperty<K,V> implements Serializable{
         if(getIsURL()){
             StringBuilder sb = new StringBuilder();
             sb.append("<a href=\"").append(urlValue).append("\">").append(getURLText()).append("</a>");
-            setValue((V)(sb.toString()));
+            setValue(sb.toString());
         }
         
     }
@@ -186,7 +190,7 @@ public class HuiProperty<K,V> implements Serializable{
             return;
         }
         if(date!=null) {
-            value = (V) Long.valueOf(date.getTime()).toString();
+            value = Long.toString(date.getTime());
         } else {
             value = null;
         }
@@ -201,7 +205,7 @@ public class HuiProperty<K,V> implements Serializable{
     }
     
     public void setBoolean(boolean b) {
-        setValue((b) ? (V)"1" : (V)"0");
+        setValue(b ? "1" : "0");
     }
     
     public List<String> getOptionList() {
@@ -243,7 +247,7 @@ public class HuiProperty<K,V> implements Serializable{
         getSelectionValue(item);
     }
 
-    public V getSelectionValue(String item){
+    public String getSelectionValue(String item){
         if(!getIsSingleSelect() && !getIsNumericSelect()) {
             return null;
         }
@@ -270,14 +274,14 @@ public class HuiProperty<K,V> implements Serializable{
         return null;
     }
 
-    private V getSelectionValue(IMLPropertyOption option) {
+    private String getSelectionValue(IMLPropertyOption option) {
         if(getIsSingleSelect()) {
-            return (V) option.getId();                    
+            return option.getId();
         }
         if(getIsNumericSelect()) {
             PropertyOption propertyOption = (PropertyOption)option;
             if(propertyOption.getValue()!=null) {
-                return (V) propertyOption.getValue().toString(); 
+                return propertyOption.getValue().toString();
             } else {
                 return null;
             }
@@ -299,23 +303,23 @@ public class HuiProperty<K,V> implements Serializable{
         return type.getMinValue();
     }
     
-    public K getId() {
+    public String getId() {
         return getKey();
     }
 
-    public K getKey() {
+    public String getKey() {
         return key;
     }
 
-    public void setKey(K key) {
+    public void setKey(String key) {
         this.key = key;
     }
 
-    public V getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(V value) {
+    public void setValue(String value) {
         this.value = value;
     }
 
