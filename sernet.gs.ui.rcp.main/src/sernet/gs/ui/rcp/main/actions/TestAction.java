@@ -23,16 +23,15 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IWorkbenchWindow;
 
+import ITBP2VNA.NewITBPToVNA;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.moditbp.elements.ModITBPModel;
-import sernet.verinice.service.commands.crud.LoadReportAllRisksForScope;
 
 public class TestAction extends Action {
 
@@ -84,9 +83,9 @@ public class TestAction extends Action {
 //            cmd = ServiceFactory.lookupCommandService().executeCommand(cmd);
 //            List<List<String>> result2 = cmd.getResult();
 //            
-            LoadReportAllRisksForScope command = new LoadReportAllRisksForScope(152);
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            List<List<String>> result2 = command.getResult();
+//            LoadReportAllRisksForScope command = new LoadReportAllRisksForScope(152);
+//            command = ServiceFactory.lookupCommandService().executeCommand(command);
+//            List<List<String>> result2 = command.getResult();
             
             
 //            LoadReportCountRisksBySeverity command = new LoadReportCountRisksBySeverity(152, 'c', 3);
@@ -173,6 +172,8 @@ public class TestAction extends Action {
 //              }
 //              allsb.append("\n");
 //            }
+            
+            NewITBPToVNA.getInstance("/home/sh/Schreibtisch/issues/vn-1795/XML-2017-08-21/DE").run();
             
             if (LOG.isDebugEnabled()) {
                 LOG.debug(allsb.toString());

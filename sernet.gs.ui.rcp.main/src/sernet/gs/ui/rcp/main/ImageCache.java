@@ -74,6 +74,26 @@ import sernet.verinice.model.iso27k.Requirement;
 import sernet.verinice.model.iso27k.Response;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
+import sernet.verinice.model.moditbp.categories.ApplicationCategory;
+import sernet.verinice.model.moditbp.categories.BusinessProcessCategory;
+import sernet.verinice.model.moditbp.categories.ICSSystemCategory;
+import sernet.verinice.model.moditbp.categories.ITSystemCategory;
+import sernet.verinice.model.moditbp.categories.NetworkCategory;
+import sernet.verinice.model.moditbp.categories.OtherSystemCategory;
+import sernet.verinice.model.moditbp.categories.PersonCategory;
+import sernet.verinice.model.moditbp.categories.RoomCategory;
+import sernet.verinice.model.moditbp.elements.Application;
+import sernet.verinice.model.moditbp.elements.BusinessProcess;
+import sernet.verinice.model.moditbp.elements.ICSSystem;
+import sernet.verinice.model.moditbp.elements.ITNetwork;
+import sernet.verinice.model.moditbp.elements.ITSystem;
+import sernet.verinice.model.moditbp.elements.ModITBPPerson;
+import sernet.verinice.model.moditbp.elements.ModITBPRequirement;
+import sernet.verinice.model.moditbp.elements.ModITBPThreat;
+import sernet.verinice.model.moditbp.elements.Module;
+import sernet.verinice.model.moditbp.elements.Network;
+import sernet.verinice.model.moditbp.elements.OtherSystem;
+import sernet.verinice.model.moditbp.elements.Room;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
@@ -331,6 +351,9 @@ public final class ImageCache {
 	// for ISO27k elements: map of <element type> : <icon name> 
 	private static final Map<String, String> ISO27K_ICON_MAP;
 	
+	// for modernized ITBP elements: map of <element type> : <icon name>
+	private static final Map<String, String> MODITBP_ICON_MAP;
+	
 	private static Bundle bundle;
 
 	
@@ -386,6 +409,30 @@ public final class ImageCache {
 		BSI_ICON_MAP.put(RaeumeKategorie.TYPE_ID, ImageCache.RAUM);
 		BSI_ICON_MAP.put(BausteinUmsetzung.TYPE_ID, ImageCache.BAUSTEIN_UMSETZUNG);
 		BSI_ICON_MAP.put(MassnahmenUmsetzung.TYPE_ID, ImageCache.ISO27K_CONTROL);
+		
+		MODITBP_ICON_MAP = new HashMap<>();
+		
+		MODITBP_ICON_MAP.put(ITNetwork.TYPE_ID, ImageCache.EXPLORER);
+		MODITBP_ICON_MAP.put(Application.TYPE_ID, ImageCache.ANWENDUNG);
+		MODITBP_ICON_MAP.put(ApplicationCategory.TYPE_ID, ImageCache.ANWENDUNG);
+		MODITBP_ICON_MAP.put(BusinessProcess.TYPE_ID, ImageCache.ISO27K_PROCESS);
+		MODITBP_ICON_MAP.put(BusinessProcessCategory.TYPE_ID, ImageCache.ISO27K_PROCESS);
+		MODITBP_ICON_MAP.put(ICSSystem.TYPE_ID, ImageCache.CLIENT);
+		MODITBP_ICON_MAP.put(ICSSystemCategory.TYPE_ID, ImageCache.CLIENT);
+		MODITBP_ICON_MAP.put(ITSystemCategory.TYPE_ID, ImageCache.SERVER);
+		MODITBP_ICON_MAP.put(ITSystem.TYPE_ID, ImageCache.SERVER);
+		MODITBP_ICON_MAP.put(ModITBPPerson.TYPE_ID, ImageCache.PERSON);
+		MODITBP_ICON_MAP.put(PersonCategory.TYPE_ID, ImageCache.PERSON);
+		MODITBP_ICON_MAP.put(ModITBPThreat.TYPE_ID, ImageCache.GEFAEHRDUNG);
+		MODITBP_ICON_MAP.put(ModITBPRequirement.TYPE_ID, ImageCache.ISO27K_CONTROL);
+		MODITBP_ICON_MAP.put(Module.TYPE_ID, ImageCache.BAUSTEIN);
+		MODITBP_ICON_MAP.put(Network.TYPE_ID, ImageCache.NETWORK);
+		MODITBP_ICON_MAP.put(NetworkCategory.TYPE_ID, ImageCache.NETWORK);
+		MODITBP_ICON_MAP.put(OtherSystem.TYPE_ID, ImageCache.SONSTIT);
+		MODITBP_ICON_MAP.put(OtherSystemCategory.TYPE_ID, ImageCache.SONSTIT);
+		MODITBP_ICON_MAP.put(RoomCategory.TYPE_ID, ImageCache.RAUM);
+		MODITBP_ICON_MAP.put(Room.TYPE_ID, ImageCache.RAUM);
+		
 	}
 	
 	private ImageCache() {
@@ -424,12 +471,27 @@ public final class ImageCache {
         }
         return ImageCache.UNKNOWN;
     }
+    
+    public Image getModITBPTypeImage(String typeId) {
+        Image image = getImage(ImageCache.UNKNOWN);
+        if (typeId != null && MODITBP_ICON_MAP.get(typeId) != null) {
+            image = getImage(MODITBP_ICON_MAP.get(typeId));
+        }
+        return image;
+    }
 
     public String getISO27kTypeImageURL(String typeId) {
         if (typeId != null && ISO27K_ICON_MAP.get(typeId) != null) {
             return ISO27K_ICON_MAP.get(typeId);
         }
         return ImageCache.UNKNOWN;
+    }
+    
+    public String getModITBPImageURL(String typeId) {
+        if (typeId != null && MODITBP_ICON_MAP.get(typeId) != null) {
+            return MODITBP_ICON_MAP.get(typeId);
+        }
+        return ImageCache.UNKNOWN;        
     }
 
 	public Image getObjectTypeImage(String typeId) {

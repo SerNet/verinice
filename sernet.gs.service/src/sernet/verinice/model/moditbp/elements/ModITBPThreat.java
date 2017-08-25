@@ -28,7 +28,15 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class ModITBPThreat extends CnATreeElement {
     
+    private static final long serialVersionUID = -1398974189141772209L;
+
     public static final String TYPE_ID = "moditbp_threat"; //$NON-NLS-1$
+    
+    public static final String PROP_ABBR = "moditbp_threat_abbr";
+    public static final String PROP_TITLE = "moditbp_threat_title";
+    public static final String PROP_ID = "moditbp_threat_id";
+    public static final String PROP_DESCRIPTION = "moditbp_threat_desc";
+    
     
     public ModITBPThreat(CnATreeElement parent) {
         super(parent);
@@ -40,12 +48,14 @@ public class ModITBPThreat extends CnATreeElement {
 
     protected ModITBPThreat() {}
     
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTitle()
-     */
     @Override
     public String getTitle() {
-        return getTypeFactory().getMessage(TYPE_ID);
+        return getEntity().getSimpleValue(PROP_TITLE);
+    }
+    
+    @Override
+    public void setTitel(String title) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_TITLE), title);
     }
 
     /* (non-Javadoc)
@@ -54,6 +64,30 @@ public class ModITBPThreat extends CnATreeElement {
     @Override
     public String getTypeId() {
         return TYPE_ID;
+    }
+    
+    public void setAbbreviation(String abbr) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbr);
+    }
+    
+    public String getAbbreviation() {
+        return getEntity().getSimpleValue(PROP_ABBR);
+    }
+    
+    public void setIdentifier(String identifier) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), identifier);
+    }
+    
+    public String getIdentifier() {
+        return getEntity().getSimpleValue(PROP_ID);
+    }
+    
+    public void setDescription(String description) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESCRIPTION), description);
+    }
+    
+    public String getDescription() {
+        return getEntity().getSimpleValue(PROP_DESCRIPTION);
     }
 
 }

@@ -28,7 +28,14 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class Module extends CnATreeElement {
     
+    private static final long serialVersionUID = 5586577735021096446L;
+
     public static final String TYPE_ID = "moditbp_module"; //$NON-NLS-1$
+    
+    public static final String PROP_ABBR = "moditbp_module_abbr";
+    public static final String PROP_TITLE = "moditbp_module_title";
+    public static final String PROP_ID = "moditbp_module_id";
+    public static final String PROP_DESCRIPTION = "moditbp_module_desc";
 
     
     public Module(CnATreeElement parent) {
@@ -43,7 +50,12 @@ public class Module extends CnATreeElement {
 
     @Override
     public String getTitle() {
-        return getTypeFactory().getMessage(TYPE_ID);
+        return getEntity().getSimpleValue(PROP_TITLE);
+    }
+    
+    @Override
+    public void setTitel(String title) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_TITLE), title);
     }
 
     /* (non-Javadoc)
@@ -58,6 +70,30 @@ public class Module extends CnATreeElement {
     public boolean canContain(Object object) {
         return object instanceof ModITBPRequirement ||
                 object instanceof ModITBPThreat;
+    }
+    
+    public void setAbbreviation(String abbr) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbr);
+    }
+    
+    public String getAbbreviation() {
+        return getEntity().getSimpleValue(PROP_ABBR);
+    }
+    
+    public void setIdentifier(String identifier) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), identifier);
+    }
+    
+    public String getIdentifier() {
+        return getEntity().getSimpleValue(PROP_ID);
+    }
+    
+    public void setDescription(String description) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESCRIPTION), description);
+    }
+    
+    public String getDescription() {
+        return getEntity().getSimpleValue(PROP_DESCRIPTION);
     }
 
 }

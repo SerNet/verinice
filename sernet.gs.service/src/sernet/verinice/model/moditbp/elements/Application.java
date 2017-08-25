@@ -49,6 +49,16 @@ public class Application extends ModITBPElement {
     public String getTypeId() {
         return TYPE_ID;
     }
+    
+    @Override
+    public String getTitle() {
+        return getEntity().getSimpleValue(PROP_NAME);
+    }
+    
+    @Override
+    public void setTitel(String title) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
+    }
 
     @Override
     public boolean canContain(Object object) {

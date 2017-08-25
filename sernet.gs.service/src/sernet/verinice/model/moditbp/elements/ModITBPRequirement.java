@@ -28,7 +28,15 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class ModITBPRequirement extends CnATreeElement {
     
+    private static final long serialVersionUID = -2100983132718990376L;
+
     public static final String TYPE_ID = "moditbp_requirement"; //$NON-NLS-1$
+    
+    public static final String PROP_ABBR = "moditbp_requirement_abbr";
+    public static final String PROP_TITLE = "moditbp_requirement_title";
+    public static final String PROP_ID = "moditbp_requirement_id";
+    public static final String PROP_DESCRIPTION = "moditbp_requirement_desc";
+    public static final String PROP_QUALIFIER = "moditbp_requirement_qualifier";
     
     public ModITBPRequirement(CnATreeElement parent) {
         super(parent);
@@ -41,12 +49,18 @@ public class ModITBPRequirement extends CnATreeElement {
     protected ModITBPRequirement() {}
 
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTitle()
-     */
     @Override
     public String getTitle() {
-        return getTypeFactory().getMessage(TYPE_ID);
+        StringBuilder sb = new StringBuilder();
+        String title =  getEntity().getSimpleValue(PROP_TITLE);
+        sb.append("[").append(getQualifier()).append("] ");
+        sb.append(title);
+        return sb.toString();
+    }
+    
+    @Override
+    public void setTitel(String title) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_TITLE), title);
     }
 
     /* (non-Javadoc)
@@ -55,6 +69,38 @@ public class ModITBPRequirement extends CnATreeElement {
     @Override
     public String getTypeId() {
         return TYPE_ID;
+    }
+    
+    public void setAbbreviation(String abbr) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbr);
+    }
+    
+    public String getAbbreviation() {
+        return getEntity().getSimpleValue(PROP_ABBR);
+    }
+    
+    public void setIdentifier(String identifier) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), identifier);
+    }
+    
+    public String getIdentifier() {
+        return getEntity().getSimpleValue(PROP_ID);
+    }
+    
+    public void setDescription(String description) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESCRIPTION), description);
+    }
+    
+    public String getDescription() {
+        return getEntity().getSimpleValue(PROP_DESCRIPTION);
+    }
+    
+    public void setQualifier(String qualifier) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
+    }
+    
+    public String getQualifier() {
+        return getEntity().getSimpleValue(PROP_QUALIFIER);
     }
 
 }

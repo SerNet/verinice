@@ -276,7 +276,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         this.serverConnectionToggleAction = new ServerConnectionToggleAction();
 
-        this.testAction = new TestAction(window, "test command", "asset", 152); //$NON-NLS-1$ //$NON-NLS-2$
+        this.testAction = new TestAction(window, "Import BSI-Compendium", "asset", 152); //$NON-NLS-1$ //$NON-NLS-2$
         this.introAction = ActionFactory.INTRO.create(window);
 
         IAction actions[] = new IAction[]{this.exitAction, this.copyAction, this.pasteAction,
@@ -293,7 +293,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 gsmbasicsecuritycheckAction,bausteinZuordnungAction,
                 gsmbausteinZuordnungAction, this.openDocumentViewAction,
                 this.introAction, this.openGroupViewAction, this.openReportdepositViewAction,
-                this.openSearchViewAction, this.openGSToolMappingViewAction, this.openModITBPViewAction
+                this.openSearchViewAction, this.openGSToolMappingViewAction, this.openModITBPViewAction,
+                this.testAction
         };
         registerActions(actions);
 
@@ -384,6 +385,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         fileMenu.add(new Separator());
         fileMenu.add(this.importCSVAction);
         fileMenu.add(this.importPersonFromLdap);
+        fileMenu.add(this.testAction);
 
         fileMenu.add(new Separator());
         fileMenu.add(this.serverConnectionToggleAction);

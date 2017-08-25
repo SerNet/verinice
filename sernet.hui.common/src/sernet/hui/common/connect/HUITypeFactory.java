@@ -74,6 +74,11 @@ public class HUITypeFactory {
     private static final String HUI_PROPERTY_GROUP = "huipropertygroup";
     private static final String HUI_RELATION = "huirelation";
     private static final String ABSTRACT_MODITBP_ID = "moditbp_abstractelement";
+    private static final String MODITBP_MODULE_ID = "moditbp_module";
+    private static final String MODITBP_THREAT_ID = "moditbp_threat";
+    private static final String MODITBP_REQUIREMENT_ID = "moditbp_requirement";
+    private static final String MODITBP_ITNETWORK_ID = "moditbp_itnetwork";
+    private static final String MODITBP_PERSON_ID = "moditbp_person";
 
     private static Document doc;
     
@@ -191,7 +196,7 @@ public class HUITypeFactory {
             Element entityEl = (Element) entities.item(i);
             EntityType entityObj = new EntityType();
             String id = entityEl.getAttribute(ATTRIBUTE_ID);
-            if ( id.toLowerCase().startsWith("moditbp_")) {
+            if ( id.toLowerCase().startsWith("moditbp_module")) {
                 LOG.debug("Found new itbp element type:\t" + id);
             }
             entityObj.setId(id);
@@ -218,7 +223,10 @@ public class HUITypeFactory {
      * @param entityObj
      */
     private void handleModITBPElements(EntityType entityObj) {
-        if( entityObj.getId().startsWith("moditbp_") && !(ABSTRACT_MODITBP_ID.equals(entityObj.getId()))) {
+        boolean isModITBPElement = entityObj.getId().startsWith("moditbp_");
+        boolean isAbstractElement = ABSTRACT_MODITBP_ID.equals(entityObj.getId());
+        boolean isCatalogElement = isCatalogueElement(entityObj.getId()); 
+        if(isModITBPElement && ! isAbstractElement && ! isCatalogElement ) {
             EntityType abstractModITBPType = getEntityType(ABSTRACT_MODITBP_ID);
             for (HuiRelation relation : abstractModITBPType.getPossibleRelations()) {
                 if (!entityObj.getPossibleRelations().contains(relation)) {
@@ -236,6 +244,15 @@ public class HUITypeFactory {
                 }
             }
         }
+    }
+    
+    private boolean isCatalogueElement(String id) {
+        return (MODITBP_MODULE_ID.equals(id) ||
+                MODITBP_REQUIREMENT_ID.equals(id) ||
+                MODITBP_THREAT_ID.equals(id)) ||
+                MODITBP_ITNETWORK_ID.equals(id) ||
+                MODITBP_PERSON_ID.equals(id)
+                ;
     }
     
    
@@ -268,6 +285,9 @@ public class HUITypeFactory {
     }
 
     private void readChildElements(EntityType entityType, PropertyGroup propGroup) {
+        if("moditbp_itnetwork".equals(entityType.getId())) {
+            "".hashCode();
+        }
         NodeList nodes;
         if (propGroup != null) {
             Element groupEl = doc.getElementById(propGroup.getId());

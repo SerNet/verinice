@@ -77,6 +77,11 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.moditbp.elements.ITNetwork;
+import sernet.verinice.model.moditbp.elements.ModITBPElement;
+import sernet.verinice.model.moditbp.elements.ModITBPRequirement;
+import sernet.verinice.model.moditbp.elements.ModITBPThreat;
+import sernet.verinice.model.moditbp.elements.Module;
 import sernet.verinice.service.commands.crud.LoadElementForEditor;
 
 /**
@@ -399,10 +404,21 @@ public class BSIElementEditor extends EditorPart {
             icon = ImageCache.getInstance().getBSITypeImage(cnAElement.getTypeId());
         } else if (cnAElement instanceof BausteinUmsetzung) {
             icon = ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG);
+        } else if (isModITBPElement(cnAElement)) {
+            icon = ImageCache.getInstance().getModITBPTypeImage(cnAElement.getTypeId());
         } else {
             icon = CnAImageProvider.getImage(cnAElement);
         }
         return icon;
+    }
+
+    private boolean isModITBPElement(CnATreeElement element) {
+        return element instanceof ModITBPElement ||
+                element instanceof ITNetwork ||
+                element instanceof Module ||
+                element instanceof ModITBPRequirement ||
+                element instanceof ModITBPThreat;
+                
     }
 
     @Override

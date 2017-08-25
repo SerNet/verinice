@@ -37,6 +37,8 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -48,6 +50,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.DrillDownAdapter;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.Perspective;
@@ -56,6 +59,7 @@ import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
+import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -65,11 +69,15 @@ import sernet.verinice.iso27k.rcp.action.ControlDropPerformer;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.moditbp.IModITBPModelListener;
+import sernet.verinice.model.moditbp.ModITBPCategory;
+import sernet.verinice.model.moditbp.categories.NetworkCategory;
 import sernet.verinice.model.moditbp.elements.ITNetwork;
 import sernet.verinice.model.moditbp.elements.ModITBPModel;
+import sernet.verinice.model.moditbp.elements.Module;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.tree.TreeContentProvider;
@@ -155,6 +163,7 @@ public class ModITBPView extends RightsEnabledView
         
         contentProvider = new TreeContentProvider(elementManager);
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        viewer.setSorter(new ModITBViewerSorter());
         drillDownAdapter = new DrillDownAdapter(viewer);
         viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
         viewer.setContentProvider(contentProvider);
@@ -465,6 +474,50 @@ public class ModITBPView extends RightsEnabledView
         CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
 //        getSite().getPage().removePartListener(linkWithEditorPartListener);
         super.dispose();
+    }
+    
+    class ModITBViewerSorter extends ViewerSorter{
+        
+        NumericStringComparator comp = new NumericStringComparator();
+        
+        @Override
+        public int compare(Viewer viewer, Object e1, Object e2) {
+            
+            int result = 0;
+            
+            if (e1 instanceof CnATreeElement && e2 instanceof CnATreeElement) {
+                
+                CnATreeElement element1 = (CnATreeElement)e1;
+                CnATreeElement element2 = (CnATreeElement)e2;
+
+                if(element1.getTypeId().equals(NetworkCategory.TYPE_ID) ||
+                        element2.getTypeId().equals(NetworkCategory.TYPE_ID)) {
+                    "".hashCode();
+                    
+                }
+                
+                if(e1 instanceof Module && e2 instanceof ModITBPCategory) {
+                    result = -1;
+                } 
+                if(e2 instanceof Module && e1 instanceof ModITBPCategory) {
+                    result = 1;
+                }                
+                
+                if( result == 0) {
+                    String message1 = HUITypeFactory.getInstance().getMessage(element1.getTypeId());
+                    String message2 = HUITypeFactory.getInstance().getMessage(element2.getTypeId());
+                    result = comp.compare(message1, message2);
+                }
+                
+
+                if(result == 0) {
+                    result = comp.compare(element1.getTitle(), element2.getTitle());
+                }
+            }
+           
+            return result;
+            
+        }
     }
     
 

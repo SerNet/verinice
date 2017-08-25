@@ -41,6 +41,8 @@ public class ITNetwork extends  ModITBPElement {
     
     public static final String TYPE_ID = "moditbp_itnetwork"; //$NON-NLS-1$
     
+    public static final String PROP_NAME = "moditbp_itnetwork_title";
+    
     public ITNetwork(CnATreeElement parent) {
         super(parent);
         setEntity(new Entity(TYPE_ID));
@@ -63,12 +65,14 @@ public class ITNetwork extends  ModITBPElement {
         addChild(new RoomCategory(this));
     }
     
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTitle()
-     */
     @Override
     public String getTitle() {
-        return getTypeFactory().getMessage(TYPE_ID);
+        return getEntity().getSimpleValue(PROP_NAME);
+    }
+    
+    @Override
+    public void setTitel(String title) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
     }
 
     /* (non-Javadoc)

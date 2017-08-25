@@ -37,9 +37,6 @@ public abstract class ModITBPElement extends CnATreeElement{
     
     protected ModITBPElement() {}
     
-    public String getTitle() {
-        return getEntity().getProperties(PROP_NAME).getProperty(0).getPropertyValue();
-    };
     
     public String getTypeId() {
         return TYPE_ID;

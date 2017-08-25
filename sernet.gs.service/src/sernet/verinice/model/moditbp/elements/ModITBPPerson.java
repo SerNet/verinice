@@ -29,6 +29,8 @@ import sernet.verinice.model.common.CnATreeElement;
 public class ModITBPPerson extends ModITBPElement {
     
     private static final long serialVersionUID = -1764245620965365934L;
+    
+    private final static String PROP_NAME = "moditbp_person_title";
 
     public ModITBPPerson(CnATreeElement parent) {
         super(parent);
@@ -42,7 +44,15 @@ public class ModITBPPerson extends ModITBPElement {
 
     public static final String TYPE_ID = "moditbp_person"; //$NON-NLS-1$
 
-
+    @Override
+    public String getTitle() {
+        return getEntity().getSimpleValue(PROP_NAME);
+    }
+    
+    @Override
+    public void setTitel(String title) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
+    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.model.common.CnATreeElement#getTypeId()

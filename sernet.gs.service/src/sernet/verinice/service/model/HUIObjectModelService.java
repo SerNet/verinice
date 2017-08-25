@@ -117,6 +117,9 @@ public class HUIObjectModelService implements IObjectModelService {
             clazz = CnATypeMapper.getClassFromTypeId(typeId);
             if (clazz != null) {
                 try {
+                    if("moditbp_room".equals(typeId)) {
+                        "".hashCode();
+                    }
                     parentInstance = createInstance(clazz, typeId);
                 } catch (InstantiationException | IllegalAccessException
                         | InvocationTargetException | NoSuchMethodException e) {

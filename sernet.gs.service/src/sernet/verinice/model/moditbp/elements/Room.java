@@ -20,6 +20,7 @@
 package sernet.verinice.model.moditbp.elements;
 
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -43,7 +44,17 @@ public class Room extends ModITBPElement {
 
     public static final String TYPE_ID = "moditbp_room"; //$NON-NLS-1$
 
-
+    @Override
+    public String getTitle() {
+        return getEntity().getSimpleValue(PROP_NAME);
+    }
+    
+    @Override
+    public void setTitel(String title) {
+        PropertyType p = getEntityType().getPropertyType(PROP_NAME);
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
+    }
+    
     /* (non-Javadoc)
      * @see sernet.verinice.model.common.CnATreeElement#getTypeId()
      */

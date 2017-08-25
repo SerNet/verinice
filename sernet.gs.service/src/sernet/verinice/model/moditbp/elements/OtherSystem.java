@@ -43,7 +43,17 @@ public class OtherSystem extends ModITBPElement {
 
     public static final String TYPE_ID = "moditbp_othersystem"; //$NON-NLS-1$
 
-
+    @Override
+    public String getTitle() {
+        return getEntity().getSimpleValue(PROP_NAME);
+    }
+    
+    @Override
+    public void setTitel(String title) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
+    }
+    
+    
     /* (non-Javadoc)
      * @see sernet.verinice.model.common.CnATreeElement#getTypeId()
      */

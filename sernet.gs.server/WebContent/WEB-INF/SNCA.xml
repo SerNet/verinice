@@ -9397,10 +9397,16 @@ Wurden bereits weitere Stellen informiert?
     
     <huientity         name="IT-Verbund"
         id="moditbp_itnetwork">
+        <!-- kein erbendes element -->
+    	<huiproperty name="Title" 
+        	id="moditbp_itnetwork_title"
+        	inputtype="line"
+        /> 
     </huientity>
     
     <huientity         name="Anwendung"
         id="moditbp_application">
+        
     </huientity>
     
     <huientity         name="Geschäftsprozees"
@@ -9419,21 +9425,103 @@ Wurden bereits weitere Stellen informiert?
     <huientity         name="Person"
         id="moditbp_person">
         <!-- kein erbendes element -->
+        <huiproperty name="Title" 
+        	id="moditbp_person_title"
+        	inputtype="line"
+        />   
     </huientity>       
 
     <huientity         name="Requirement"
         id="moditbp_requirement">
         <!-- kein erbendes element -->
+       	<huiproperty name="Title" 
+        	id="moditbp_requirement_title"
+        	inputtype="line"
+        />        
+        
+        
+        <huiproperty name="Abbreviaton" 
+        	id="moditbp_requirement_abbr"
+        	inputtype="line"
+        />
+
+        <huiproperty name="Identifier" 
+        	id="moditbp_requirement_id"
+        	inputtype="line"
+        />
+
+        <huiproperty name="Identifier" 
+        	id="moditbp_requirement_qualifier"
+        	inputtype="line"
+        />        
+        
+        
+        <huiproperty name="Description" 
+        	id="moditbp_requirement_desc"
+        	inputtype="text"
+        	editable="false"
+        	visible="false"
+        	showInObjectBrowser="true"
+        />
+        
     </huientity>
        
     <huientity         name="Threat"
         id="moditbp_threat">
         <!-- kein erbendes element -->
+       	<huiproperty name="Title" 
+        	id="moditbp_threat_title"
+        	inputtype="line"
+        />        
+        
+        
+        <huiproperty name="Abbreviaton" 
+        	id="moditbp_threat_abbr"
+        	inputtype="line"
+        />
+
+        <huiproperty name="Identifier" 
+        	id="moditbp_threat_id"
+        	inputtype="line"
+        />
+        <huiproperty name="Description" 
+        	id="moditbp_threat_desc"
+        	inputtype="text"
+        	editable="false"
+        	visible="false"
+        	showInObjectBrowser="true"
+        />        
     </huientity>
        
     <huientity         name="Module"
         id="moditbp_module">
         <!-- kein erbendes element -->
+        
+        <huiproperty name="Description" 
+        	id="moditbp_module_desc"
+        	inputtype="text"
+        	editable="false"
+        	visible="false"
+        	showInObjectBrowser="true"
+        />        
+
+        <huiproperty name="Title" 
+        	id="moditbp_module_title"
+        	inputtype="line"
+        />        
+        
+        
+        <huiproperty name="Abbreviaton" 
+        	id="moditbp_module_abbr"
+        	inputtype="line"
+        />
+
+        <huiproperty name="Identifier" 
+        	id="moditbp_module_id"
+        	inputtype="line"
+        />        
+        
+        
     </huientity>       
 
     <huientity         name="Network"
