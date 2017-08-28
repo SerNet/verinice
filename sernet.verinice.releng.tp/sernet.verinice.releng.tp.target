@@ -109,6 +109,8 @@
 			<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository/"/>
 
 			<unit id="org.apache.commons.beanutils" version="0.0.0"/>
+			<unit id="javax.xml.soap" version="1.3.0.v201105210645"/>
+			
 		</location>
 
 		 <!-- **********************************************
