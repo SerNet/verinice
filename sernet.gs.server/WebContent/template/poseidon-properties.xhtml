@@ -9,125 +9,132 @@
 <ui:composition>
 	<p:outputPanel rendered="#{not empty list}">
 		<div class="ui-g ui-fluid">
-			<c:forEach var="p" items="#{list}">
+			<c:forEach var="huiProperty" items="#{list}">
 
 				<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-4 ui-xl-4">
-					<p:outputLabel rendered="#{p.isShowLabel()}" value="#{p.name}" />
+					<p:outputLabel rendered="#{huiProperty.isShowLabel()}" value="#{huiProperty.name}" />
 				</div>
 
 				<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-8 ui-xl-8">
 
-					<p:selectBooleanCheckbox value="#{p['boolean']}"
-						rendered="#{p.isBooleanSelect}"
-						valueChangeListener="#{edit.onChange}">
-						<p:ajax />
-						<f:attribute name="key" value="#{p.key}" />
-					</p:selectBooleanCheckbox>
+					<c:choose>
+						<!-- Field for PropertyType: booleanoption -->
+						<c:when test="#{huiProperty.isBooleanSelect}">
+							<p:selectBooleanCheckbox value="#{huiProperty.singleSelect}">
+								<p:ajax event="change" listener="#{edit.onChange}"
+									update="groupAccordion" />
+								<f:attribute name="huiProperty" value="#{huiProperty}" />
+							</p:selectBooleanCheckbox>
+						</c:when>
 
+						<!-- Field for PropertyType: line (field in most UIs) -->
+						<c:when test="#{huiProperty.isLine and (not huiProperty.isURL)}">
+							<p:inputText value="#{huiProperty.value}" disabled="#{huiProperty.isDisabled()}">
+								<p:ajax event="change" listener="#{edit.onChange}"
+									update="groupAccordion,:editForm:title" />
+								<f:attribute name="huiProperty" value="#{huiProperty}" />
+							</p:inputText>
+						</c:when>
 
-					<p:inputText value="#{p.value}"
-						rendered="#{p.isLine and p.isEditable and (not p.isURL)}"
-						styleClass="hui ui-corner-all"
-						valueChangeListener="#{edit.onChange}">
-						<p:ajax update=":editForm:title" />
-						<f:attribute name="key" value="#{p.key}" />
-					</p:inputText>
+						<!-- Field for PropertyType: text -->
+						<c:when test="#{huiProperty.isText and (not huiProperty.isURL)}">
+							<p:inputTextarea rows="3" value="#{huiProperty.value}"
+								disabled="#{huiProperty.isDisabled()}">
+								<p:ajax event="change" listener="#{edit.onChange}"
+									update="groupAccordion" />
+								<f:attribute name="huiProperty" value="#{huiProperty}" />
+							</p:inputTextarea>
+						</c:when>
 
-					<h:outputText value="#{p.value}"
-						rendered="#{(not p.isText) and (not p.isEditable) and (not p.isURL)}" />
+						<!-- Field for PropertyType: date -->
+						<c:when test="#{huiProperty.isDate}">
+							<p:calendar value="#{huiProperty.date}" pages="2" showWeek="true">
+								<p:ajax event="dateSelect" listener="#{edit.onDateSelect}" />
+								<f:attribute name="huiProperty" value="#{huiProperty}" />
+							</p:calendar>
+						</c:when>
 
-					<p:inputTextarea rows="3" value="#{p.value}"
-						rendered="#{p.isText and p.isEditable and (not p.isURL)}"
-						valueChangeListener="#{edit.onChange}">
-						<p:ajax />
-						<f:attribute name="key" value="#{p.key}" />
-					</p:inputTextarea>
+						<!-- Field for PropertyType: For the case that we have a combobox or
+						whatever we only want to display the text -->
+						<c:when
+							test="#{(not huiProperty.isText) and (not huiProperty.isEditable) and (not huiProperty.isURL)}">
+							<h:outputText value="#{huiProperty.value}" />
+						</c:when>
 
-					<h:outputText value="#{p.value}" escape="false"
-						rendered="#{p.isText and (not p.isEditable) and (not p.isURL)}" />
+						<!-- Field for PropertyType: singleoption -->
+						<c:when test="#{huiProperty.isSingleSelect  and (not huiProperty.isURL)}">
+							<p:selectOneMenu value="#{huiProperty.selectedOption}" effectDuration="40"
+								disabled="#{huiProperty.isDisabled()}">
+								<f:selectItems value="#{huiProperty.optionList}" var="option"
+									itemLabel="#{option}" itemValue="#{option}" />
+								<p:ajax event="change" listener="#{edit.onChange}"
+									update="groupAccordion" />
+								<f:attribute name="huiProperty" value="#{huiProperty}" />
+							</p:selectOneMenu>
+						</c:when>
 
-					<p:calendar value="#{p.date}" pages="2" showWeek="true"
-						rendered="#{p.isDate}">
-						<p:ajax event="dateSelect" listener="#{edit.onDateSelect}" />
-						<f:attribute name="key" value="#{p.key}" />
-					</p:calendar>
+						<!-- Field for PropertyType: numericoption -->
+						<c:when
+							test="#{huiProperty.isNumericSelect and huiProperty.isEditable  and (not huiProperty.isURL)}">
+							<!-- not empty options list -->
+							<p:selectOneMenu rendered="#{not empty huiProperty.optionList}"
+								value="#{huiProperty.selectedOption}" styleClass="hui" effectDuration="40"
+								disabled="#{huiProperty.isDisabled()}">
+								<f:selectItems value="#{huiProperty.optionList}" var="option"
+									itemLabel="#{option}" itemValue="#{option}" />
+								<p:ajax event="change"
+									listener="#{edit.onChangeNumericSelection}"
+									update="groupAccordion" />
+								<f:attribute name="huiProperty" value="#{huiProperty}" />
+							</p:selectOneMenu>
+							<!-- empty option list -->
+							<p:spinner rendered="#{empty huiProperty.optionList}" value="#{huiProperty.value}"
+								min="#{huiProperty.min}" max="#{huiProperty.max}" onkeydown="return false;"
+								styleClass="hui" disabled="{huiProperty.isDisabled()}">
+								<p:ajax event="change" listener="#{edit.onChange}"
+									update="groupAccordion" />
+								<f:attribute name="huiProperty" value="#{huiProperty}" />
+							</p:spinner>
+						</c:when>
 
-					<p:outputPanel
-						rendered="#{p.isSingleSelect and p.isEditable  and (not p.isURL)}">
-						<p:selectOneMenu value="#{p.selectedOption}" styleClass="hui"
-							effectDuration="40" valueChangeListener="#{edit.onChange}">
-							<f:selectItems value="#{p.optionList}" var="option"
-								itemLabel="#{option}" itemValue="#{option}" />
-							<p:ajax />
-							<f:attribute name="key" value="#{p.key}" />
-						</p:selectOneMenu>
-					</p:outputPanel>
-					<p:outputPanel
-						rendered="#{p.isNumericSelect and not empty p.optionList and p.isEditable  and (not p.isURL)}">
-						<p:selectOneMenu value="#{p.selectedOption}" styleClass="hui"
-							effectDuration="40">
-							<f:selectItems value="#{p.optionList}" var="option"
-								itemLabel="#{option}" itemValue="#{option}" />
-							<p:ajax event="change" listener="#{edit.onChangeNumericSelection}" />
-							<f:attribute name="key" value="#{p.key}" />
-							<f:attribute name="huiProperty" value="#{p}" />
-						</p:selectOneMenu>
-					</p:outputPanel>
+						<!-- Field for PropertyType: line (special case: urls) -->
+						<c:when test="#{huiProperty.isLine and huiProperty.isURL}">
+							<p:outputPanel style="margin-bottom: 12px;">
+								<a href="#{huiProperty.URLValue}" target="_blank">#{huiProperty.URLText}</a>
+							</p:outputPanel>
 
-					<p:outputPanel
-						rendered="#{p.isNumericSelect and empty p.optionList and p.isEditable  and (not p.isURL)}">
-						<p:spinner value="#{p.value}" min="#{p.min}" max="#{p.max}"
-							onkeydown="return false;" styleClass="hui"
-							valueChangeListener="#{edit.onChange}">
-							<p:ajax />
-							<f:attribute name="key" value="#{p.key}" />
-						</p:spinner>
-					</p:outputPanel>
+							<p:panel header="#{msgEdit['document.editURL']}" collapsed="true"
+								toggleable="true" toggleSpeed="50">
+								<div class="ui-g">
+									<div class="ui-g-12">
+										<p:inputText placeholder="#{msgEdit['document.URLValue']}"
+											value="#{huiProperty.URLValue}" disabled="#{huiProperty.isDisabled()}">
+											<p:ajax event="change" listener="#{edit.onUrlChange}"
+												update="groupAccordion" />
+											<f:attribute name="huiProperty" value="#{huiProperty}" />
+										</p:inputText>
+									</div>
 
-					<p:outputPanel rendered="#{p.isLine and p.isEditable and p.isURL}">
-
-						<p:outputPanel
-							rendered="#{not (p.URLValue eq null or p.URLValue eq '')}"
-							style="margin-bottom: 12px;">
-							<a href="#{p.URLValue}" target="_blank"> #{p.URLText} </a>
-						</p:outputPanel>
-
-						<p:panel rendered="#{p.isLine and p.isEditable and p.isURL}"
-							header="#{msgEdit['document.editURL']}" collapsed="true"
-							toggleable="true" toggleSpeed="50">
-
-							<div class="ui-g">
-								<div class="ui-g-12">
-									<p:inputText placeholder="#{msgEdit['document.URLValue']}"
-										value="#{p.URLValue}"
-										rendered="#{p.isLine and p.isEditable and p.isURL}"
-										valueChangeListener="#{edit.onURLValueChange}">
-										<p:ajax />
-										<f:attribute name="key" value="#{p.key}" />
-										<f:attribute name="label" value="#{p.URLText}" />
-									</p:inputText>
+									<div class="ui-g-12">
+										<p:inputText placeholder="#{msgEdit['document.URLText']}"
+											value="#{huiProperty.URLText}"
+											disabled="#{huiProperty.isDisabled()}">
+											<p:ajax event="change" listener="#{edit.onUrlChange}"
+												update="groupAccordion" />
+											<f:attribute name="huiProperty" value="#{huiProperty}" />
+										</p:inputText>
+									</div>
+									<div class="ui-g-12">
+										<p:commandButton value="#{msgEdit['save']}"
+											action="#{edit.save}" styleClass="button"
+											update=":editForm :tableForm" disabled="#{huiProperty.isDisabled()}" />
+										<p:remoteCommand name="submitEditForm" process="@form"
+											update=":editForm :tableForm :navForm" action="#{edit.save}" />
+									</div>
 								</div>
-
-								<div class="ui-g-12">
-									<p:inputText placeholder="#{msgEdit['document.URLText']}"
-										value="#{p.URLText}"
-										rendered="#{p.isLine and p.isEditable and p.isURL}"
-										valueChangeListener="#{edit.onURLTextChange}">
-										<p:ajax />
-										<f:attribute name="key" value="#{p.key}" />
-										<f:attribute name="url" value="#{p.URLValue}" />
-									</p:inputText>
-								</div>
-								<div class="ui-g-12">
-									<p:commandButton value="#{msgEdit['save']}"
-										action="#{edit.save}" styleClass="button"
-										update=":editForm :tableForm" />
-									<p:remoteCommand name="submitEditForm" process="@form"
-										update=":editForm :tableForm :navForm" action="#{edit.save}" />
-								</div>
-							</div>
-						</p:panel>
-					</p:outputPanel>
+							</p:panel>
+						</c:when>
+					</c:choose>
 				</div>
 			</c:forEach>
 		</div>

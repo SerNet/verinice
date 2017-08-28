@@ -603,6 +603,15 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 			}
 		}
 		return result;
-	}   
+	}
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "PropertyType [id=" + id + ", name=" + name + ", dependencies=" + dependencies + ", inputName=" + inputName + ", inputtype=" + inputtype + ", defaultRule=" + defaultRule + ", required=" + required + ", options=" + options + ", tooltiptext=" + tooltiptext + ", initialfocus=" + initialfocus + ", editable=" + editable + ", visible=" + visible + ", isURL=" + isURL + ", referencedEntityTypeId=" + referencedEntityTypeId + ", referencedCnaLinkType=" + referencedCnaLinkType
+                + ", referenceResolver=" + referenceResolver + ", urlResolver=" + urlResolver + ", crudButtons=" + crudButtons + ", minValue=" + minValue + ", maxValue=" + maxValue + ", reportable=" + reportable + ", numericDefault=" + numericDefault + ", tags=" + tags + ", textrows=" + textrows + ", showInObjectBrowser=" + showInObjectBrowser + "]";
+    }
 
 }

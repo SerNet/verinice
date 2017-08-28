@@ -123,7 +123,9 @@ public class DependsType implements Serializable {
         return true;
     }
     
-    
-    
+    @Override
+    public String toString() {
+        return "DependsType [propertyId=" + propertyId + ", propertyValue=" + propertyValue + ", inverse=" + inverse + "]";
+    }
     
 }
