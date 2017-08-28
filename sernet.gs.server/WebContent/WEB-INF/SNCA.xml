@@ -5353,7 +5353,19 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                 name="Availability risk without N.A controls" id="asset_risk_without_na_plancontrolvalue_a" editable="false"/>
 		</huipropertygroup>
             
-		
+		<huipropertygroup name="Risk Treatment" id="asset_risktreatgroup" tags="Risk">
+			<huiproperty
+             tags="Risk" 
+				name="Risk Treatment" id="asset_risktreat" inputtype="singleoption">
+				<option name="Reduction" id="asset_risktreat_reduct" />       	
+				<option name="Retention" id="asset_risktreat_retent" />       	
+				<option name="Avoidance" id="asset_risktreat_avoid" />       	
+				<option name="Transfer" id="asset_risktreat_transf" />       	
+			</huiproperty>
+			<huiproperty
+             tags="Risk"
+				name="Explanation" id="asset_risktreatexpl" inputtype="text" />
+		</huipropertygroup>
     </huientity>
     
     <huientity
@@ -8860,6 +8872,27 @@ Wurden bereits weitere Stellen informiert?
     <!-- Modernised base protection elements -->
 
     <huientity id="bp_itnetwork" name="IT Network">
+
+        <huirelation to="person-iso" id="mitbpElement-person-owner" 
+        	name="owner" reversename="is owner of" tooltip="Person is owner of this asset. He / she is affected by damage to this asset."/>
+        <huirelation to="person-iso" id="rel_mitbpElement_person_respo"
+        	name="responsible" reversename="responsible for" tooltip="Operational responsibility is delegated to this person. He / she has to ensure that controls are in place."/>
+        <huirelation to="person-iso" id="rel_mitbpElement_person_accou"
+        	name="accountable" reversename="accountable for" tooltip="" />
+        <huirelation to="person-iso" id="rel_mitbpElement_person_consu"
+        	name="consulted" reversename="consulted for" tooltip="" />
+        <huirelation to="person-iso" id="rel_mitbpElement_person_info"
+        	name="informed" reversename="informed for" tooltip="" />
+        	
+        <huirelation to="person-iso" id="rel_mitbpElement_person_admin"
+        	name="administrated by" reversename="administrator" tooltip="" />	
+            
+        <huirelation to="control" id="rel_mitbpElement_control" 
+            name="impact reduced by" reversename="reduces impact of" tooltip=""/>
+        <huirelation to="controlgroup" id="rel_mitbpElement_controlgroup" 
+            name="impact reduced by" reversename="reduces impact of" tooltip=""/> 
+        
+
         <huiproperty id="bp_itnetwork_name" name="Title" required="true" />
         <huiproperty id="bp_itnetwork_abbr" name="Abbreviation" />
         <huiproperty id="bp_itnetwork_tag" name="Tags"
@@ -9950,7 +9983,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_room_group_name" name="Title" required="true" />
         <huiproperty id="bp_room_group_desc" name="Description" inputtype="text" />
         <huiproperty id="bp_room_group_tag" name="Tags" />
-    </huientity>
+    </huientity>       
 
     <huientity id="bp_safeguard" name="Safeguard">
         <huiproperty id="bp_safeguard_name" name="Title" required="true" />

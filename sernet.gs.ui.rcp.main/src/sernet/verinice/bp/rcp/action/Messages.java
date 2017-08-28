@@ -26,7 +26,7 @@ import org.eclipse.osgi.util.NLS;
  *
  */
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.bsi.actions.messages"; //$NON-NLS-1$
+	private static final String BUNDLE_NAME = "sernet.verinice.moditbp.rcp.action.messages"; //$NON-NLS-1$
 	
 	public static String AddITNetworkDelegate_0;
 	public static String AddRoomDelegate_0;

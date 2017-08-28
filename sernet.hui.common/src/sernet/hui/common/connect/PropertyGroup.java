@@ -66,6 +66,10 @@ public class PropertyGroup implements IEntityElement {
 	public void setDependencies(Set<DependsType> set) {
 		this.dependencies = set;
 	}
+	
+	public Set<DependsType> getDependencies(){
+	    return dependencies;
+	}
 
     /**
      * @param attribute

@@ -234,9 +234,6 @@ public class HUITypeFactory {
     }
 
     private void readChildElements(EntityType entityType, PropertyGroup propGroup) {
-        if("moditbp_itnetwork".equals(entityType.getId())) {
-            "".hashCode();
-        }
         NodeList nodes;
         if (propGroup != null) {
             Element groupEl = doc.getElementById(propGroup.getId());
