@@ -38,7 +38,7 @@ public class Room extends CnATreeElement implements IBpElement {
         super(parent);
         init();
     }
-    
+
     @Override
     public String getTypeId() {
         return TYPE_ID;

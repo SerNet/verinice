@@ -39,6 +39,12 @@ public class Network extends CnATreeElement implements IBpElement {
         init();
     }
 
+    public static final String TYPE_ID = "moditbp_network"; //$NON-NLS-1$
+
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.common.CnATreeElement#getTypeId()
+     */
     @Override
     public String getTypeId() {
         return TYPE_ID;

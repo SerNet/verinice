@@ -34,6 +34,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
@@ -73,6 +74,14 @@ public class HUITypeFactory {
     private static final String HUI_PROPERTY = "huiproperty";
     private static final String HUI_PROPERTY_GROUP = "huipropertygroup";
     private static final String HUI_RELATION = "huirelation";
+    private static final String ABSTRACT_MODITBP_ID = "moditbp_abstractelement";
+    private static final String ABSTRACT_MODITBP_ID = "moditbp_abstractelement";
+    private static final String MODITBP_MODULE_ID = "moditbp_module";
+    private static final String MODITBP_THREAT_ID = "moditbp_threat";
+    private static final String MODITBP_REQUIREMENT_ID = "moditbp_requirement";
+    private static final String MODITBP_ITNETWORK_ID = "moditbp_itnetwork";
+    private static final String MODITBP_PERSON_ID = "moditbp_person";
+    private static final String ATTRIBUTE_INHERITING_ENTITY = "inheritingentity";
 
     private static Document doc;
     
@@ -182,7 +191,7 @@ public class HUITypeFactory {
         return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
     }
 
-    private void readAllEntities() {
+       private void readAllEntities() {
         this.allEntities = new HashMap<>();
         NodeList entities = doc.getElementsByTagName("huientity");
         for (int i = 0; i < entities.getLength(); ++i) {
@@ -205,7 +214,7 @@ public class HUITypeFactory {
         
         
     }
-
+   
     public Set<String> getAllTypeIds() {
         return allEntities.keySet();
     }

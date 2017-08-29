@@ -31,11 +31,7 @@ import sernet.verinice.model.iso27k.Group;
  */
 public class BpThreatGroup extends Group<BpThreat> implements IBpGroup {
     
-    private static final long serialVersionUID = 7752776589962581995L;
-    
-    public static final String TYPE_ID = "bp_threat_group";
-    
-    private static final String PROP_NAME = "bp_threat_group_name"; //$NON-NLS-1$
+    public static final String TYPE_ID = "moditbp_module"; //$NON-NLS-1$
 
     
     public static final String[] CHILD_TYPES = new String[] {BpThreat.TYPE_ID, BpThreatGroup.TYPE_ID};

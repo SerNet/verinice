@@ -17,45 +17,53 @@
  * Contributors:
  *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.service.commands;
+package sernet.verinice.model.moditbp.elements;
 
-import java.util.Set;
-
-import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class CreateITNetwork extends CreateElement {
+public class ImportModITBPGroup extends CnATreeElement {
+    
+    private static final long serialVersionUID = -7286059698308443978L;
+    
+    public static final String TYPE_ID = "moditbpimportgroup";
 
-    public CreateITNetwork(CnATreeElement container, Class type, boolean createChildren) {
-        super(container, type, true, createChildren);
+    public ImportModITBPGroup(CnATreeElement model) {
+        super(model);
+        setEntity(new Entity(TYPE_ID));
     }
     
-    @Override
-    public void execute() {
-        super.execute();
-        if (super.element instanceof ItNetwork) {
-            ItNetwork network = (ItNetwork) element;
-            if(createChildren) {
-                network.createNewCategories();
-            }
-            Set<CnATreeElement> children = network.getChildren();
-            for (CnATreeElement child : children) {
-                addPermissionsForScope(child);
-            }
-            element.setScopeId(element.getDbId());
-            for (CnATreeElement group : element.getChildren()) {
-                group.setScopeId(element.getDbId());
-            }
-        }
+    protected ImportModITBPGroup() {
         
     }
     
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.common.CnATreeElement#getTitle()
+     */
     @Override
-    public ItNetwork getNewElement() {
-        return (ItNetwork) super.getNewElement();
+    public String getTitle() {
+        return "imported Objects"; // TODO internationalize
     }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.common.CnATreeElement#getTypeId()
+     */
+    @Override
+    public String getTypeId() {
+        return TYPE_ID;
+    }
+    
+    @Override
+    public boolean canContain(Object obj) {
+        if (obj instanceof ITNetwork ){
+            return true;
+        }
+        return false;
+    }
+
 }
