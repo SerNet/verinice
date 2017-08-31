@@ -22,12 +22,12 @@ import java.util.List;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.INoAccessControl;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
+import sernet.verinice.model.moditbp.elements.BpModel;
 
 @SuppressWarnings("serial")
 public class LoadModITBPModel extends GenericCommand implements INoAccessControl {
 
-	private ModITBPModel model;
+	private BpModel model;
 
 	public LoadModITBPModel() {
 	}
@@ -35,10 +35,10 @@ public class LoadModITBPModel extends GenericCommand implements INoAccessControl
 	public void execute() {
 		RetrieveInfo ri = new RetrieveInfo();
 		ri.setChildren(true);
-		List<ModITBPModel> modelList = getDaoFactory().getDAO(ModITBPModel.class).findAll(ri);
+		List<BpModel> modelList = getDaoFactory().getDAO(BpModel.class).findAll(ri);
 		if(modelList != null) {
 			if(modelList.size()>1) {
-				throw new RuntimeException("More than one ModITBPRoot found.");
+				throw new RuntimeException("More than one IBpRoot found.");
 			} else if(modelList.size()==1) {			
 				model = modelList.get(0);
 			}
@@ -46,7 +46,7 @@ public class LoadModITBPModel extends GenericCommand implements INoAccessControl
 	}
 
 
-	public ModITBPModel getModel() {
+	public BpModel getModel() {
 		return model;
 	}
 	

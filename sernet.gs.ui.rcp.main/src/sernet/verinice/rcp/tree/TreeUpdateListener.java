@@ -36,7 +36,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.moditbp.IModITBPModelListener;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
+import sernet.verinice.model.moditbp.elements.BpModel;
 import sernet.verinice.model.validation.CnAValidation;
 import sernet.verinice.service.tree.ElementManager;
 
@@ -366,10 +366,10 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
     }
 
     /* (non-Javadoc)
-     * @see sernet.verinice.model.iso27k.IModITBPModelListener#modelReload(sernet.verinice.model.moditbp.elements.ModITBPModel)
+     * @see sernet.verinice.model.iso27k.IModITBPModelListener#modelReload(sernet.verinice.model.moditbp.elements.BpModel)
      */
     @Override
-    public void modelReload(ModITBPModel newModel) {
+    public void modelReload(BpModel newModel) {
         doModelReload(newModel);
     }
 }

@@ -19,42 +19,12 @@
  ******************************************************************************/
 package sernet.verinice.model.moditbp.elements;
 
-import sernet.hui.common.connect.Entity;
-import sernet.verinice.model.common.CnATreeElement;
-
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class OtherSystem extends ModITBPElement {
+public interface IBpRoot {
+
+    public String getTitle();
     
-    private static final long serialVersionUID = 8069670001186047412L;
-
-
-    public OtherSystem(CnATreeElement parent) {
-        super(parent);
-        setEntity(new Entity(TYPE_ID));
-        getEntity().initDefaultValues(getTypeFactory());
-        // sets the localized title via HUITypeFactory from message bundle
-        setTitel(getTypeFactory().getMessage(TYPE_ID));
-    }
-    
-    protected OtherSystem() {}
-
-    public static final String TYPE_ID = "moditbp_othersystem"; //$NON-NLS-1$
-
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTypeId()
-     */
-    @Override
-    public String getTypeId() {
-        return TYPE_ID;
-    }
-    
-    @Override
-    public boolean canContain(Object object) {
-        return object instanceof Module;
-    }
-
 }

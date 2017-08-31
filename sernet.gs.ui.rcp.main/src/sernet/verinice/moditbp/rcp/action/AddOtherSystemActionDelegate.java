@@ -30,7 +30,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.moditbp.categories.OtherSystemCategory;
-import sernet.verinice.model.moditbp.elements.OtherSystem;
+import sernet.verinice.model.moditbp.elements.Device;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -53,7 +53,7 @@ public class AddOtherSystemActionDelegate extends AbstractAddModITBPElementActio
                 CnATreeElement cont = (CnATreeElement) sel;
                 boolean inheritIcon = Activator.getDefault().getPreferenceStore()
                         .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);
-                newElement = CnAElementFactory.getInstance().saveNew(cont, OtherSystem.TYPE_ID, null, inheritIcon);
+                newElement = CnAElementFactory.getInstance().saveNew(cont, Device.TYPE_ID, null, inheritIcon);
             }
             if (newElement != null) {
                 EditorFactory.getInstance().openEditor(newElement);

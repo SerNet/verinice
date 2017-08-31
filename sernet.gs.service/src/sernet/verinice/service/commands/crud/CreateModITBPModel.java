@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.ChangeLogEntry;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
+import sernet.verinice.model.moditbp.elements.BpModel;
 import sernet.verinice.service.commands.SaveElement;
 import sernet.verinice.service.moditbp.LoadModITBPModel;
 
@@ -31,7 +31,7 @@ import sernet.verinice.service.moditbp.LoadModITBPModel;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class CreateModITBPModel extends SaveElement<ModITBPModel> {
+public class CreateModITBPModel extends SaveElement<BpModel> {
 
     private transient Logger log = Logger.getLogger(CreateModITBPModel.class);
 
@@ -46,7 +46,7 @@ public class CreateModITBPModel extends SaveElement<ModITBPModel> {
      * @param element
      */
     public CreateModITBPModel() {
-        this.element = new ModITBPModel();
+        this.element = new BpModel();
         this.stationId = ChangeLogEntry.STATION_ID;
     }
     
@@ -62,7 +62,7 @@ public class CreateModITBPModel extends SaveElement<ModITBPModel> {
             getLog().error("Error while loading model.", e);
             throw new RuntimeException("Error while loading model.", e);
         }
-        final ModITBPModel model = loadModel.getModel();
+        final BpModel model = loadModel.getModel();
         if(model==null) {
             super.execute();
         } else {

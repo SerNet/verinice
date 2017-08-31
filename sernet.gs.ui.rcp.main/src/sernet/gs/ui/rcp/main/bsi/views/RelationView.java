@@ -56,7 +56,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
+import sernet.verinice.model.moditbp.elements.BpModel;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.task.FindRelationsFor;
 
@@ -245,7 +245,7 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
             }
 
             @Override
-            public void loaded(ModITBPModel model) {
+            public void loaded(BpModel model) {
                 synchronized (loadListener) {
                     addModITBPModelListeners();
                 }                

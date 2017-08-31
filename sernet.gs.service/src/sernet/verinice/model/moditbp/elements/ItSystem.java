@@ -20,31 +20,28 @@
 package sernet.verinice.model.moditbp.elements;
 
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.moditbp.IBpElement;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public abstract class ModITBPElement extends CnATreeElement{
-
-    public static final String TYPE_ID = "moditbp_abstractelement"; //$NON-NLS-1$
+public class ItSystem extends CnATreeElement implements IBpElement {
     
-    public static final String PROP_NAME = "mitbpElement_name";
+    private static final long serialVersionUID = 2763978887704949977L;
     
-    public ModITBPElement (CnATreeElement parent) {
+    public static final String TYPE_ID = "bp_itsystem"; //$NON-NLS-1$
+    
+    protected ItSystem() {}
+    
+    public ItSystem(CnATreeElement parent) {
         super(parent);
+        init();
     }
     
-    protected ModITBPElement() {}
-    
-    public String getTitle() {
-        return getEntity().getProperties(PROP_NAME).getProperty(0).getPropertyValue();
-    };
-    
+    @Override
     public String getTypeId() {
         return TYPE_ID;
-    };
+    }
     
-   
-
 }

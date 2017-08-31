@@ -21,7 +21,7 @@ package sernet.verinice.model.moditbp.categories;
 
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.moditbp.ModITBPCategory;
-import sernet.verinice.model.moditbp.elements.ITSystem;
+import sernet.verinice.model.moditbp.elements.ItSystem;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -57,7 +57,7 @@ public class ITSystemCategory extends CnATreeElement implements ModITBPCategory 
     
     @Override
     public boolean canContain(Object object) {
-        return object instanceof ITSystem;
+        return object instanceof ItSystem;
     }
 
 }

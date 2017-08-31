@@ -29,7 +29,6 @@ import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.moditbp.ModITBPCategory;
-import sernet.verinice.model.moditbp.elements.ModITBPElement;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.iso27k.ControlMaturityService;
 import sernet.verinice.service.iso27k.ItemControlTransformer;
@@ -56,8 +55,6 @@ public class TreeLabelProvider extends LabelProvider  {
 		try {
     		if (!(obj instanceof IISO27kElement) && !(obj instanceof CnATreeElement)) {
     			return image;
-    		} else if (obj instanceof ModITBPElement || obj instanceof ModITBPCategory) { 
-    		    return image; // TODO, implement real image handling here 
     		} else {
     		    return getImage((IISO27kElement) obj);
     		} 		

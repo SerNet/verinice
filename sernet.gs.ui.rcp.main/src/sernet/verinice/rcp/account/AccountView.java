@@ -90,7 +90,7 @@ import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonGroup;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
 import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
+import sernet.verinice.model.moditbp.elements.BpModel;
 import sernet.verinice.rcp.ElementTitleCache;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.TextEventAdapter;
@@ -706,7 +706,7 @@ public class AccountView extends RightsEnabledView {
                 CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
             }
             @Override
-            public void loaded(ModITBPModel model) {
+            public void loaded(BpModel model) {
                 // nothing to do
             }             
         };

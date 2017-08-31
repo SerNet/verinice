@@ -19,38 +19,26 @@
  ******************************************************************************/
 package sernet.verinice.model.moditbp.elements;
 
-import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.moditbp.IBpElement;
 
 /**
+ * 
  * @author Sebastian Hagedorn sh[at]sernet.de
- *
  */
-public class ModITBPThreat extends CnATreeElement {
+public class Device extends CnATreeElement implements IBpElement {
     
-    public static final String TYPE_ID = "moditbp_threat"; //$NON-NLS-1$
+    private static final long serialVersionUID = -9128276389080852414L;
     
-    public ModITBPThreat(CnATreeElement parent) {
+    public static final String TYPE_ID = "bp_device"; //$NON-NLS-1$
+
+    protected Device() {}
+    
+    public Device(CnATreeElement parent) {
         super(parent);
-        setEntity(new Entity(TYPE_ID));
-        getEntity().initDefaultValues(getTypeFactory());
-        // sets the localized title via HUITypeFactory from message bundle
-        setTitel(getTypeFactory().getMessage(TYPE_ID));
+        init();
     }
 
-    protected ModITBPThreat() {}
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTitle()
-     */
-    @Override
-    public String getTitle() {
-        return getTypeFactory().getMessage(TYPE_ID);
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTypeId()
-     */
     @Override
     public String getTypeId() {
         return TYPE_ID;

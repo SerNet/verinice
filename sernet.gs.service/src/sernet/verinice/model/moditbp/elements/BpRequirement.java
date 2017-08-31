@@ -19,41 +19,33 @@
  ******************************************************************************/
 package sernet.verinice.model.moditbp.elements;
 
-import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class ITSystem extends ModITBPElement {
+public class BpRequirement extends CnATreeElement {
     
-    private static final long serialVersionUID = -659334637198374581L;
+    private static final long serialVersionUID = 436541703079680979L;
+    
+    public static final String TYPE_ID = "bp_requirement"; //$NON-NLS-1$
 
-    public ITSystem(CnATreeElement parent) {
+    protected BpRequirement() {}
+
+    public BpRequirement(CnATreeElement parent) {
         super(parent);
-        setEntity(new Entity(TYPE_ID));
-        getEntity().initDefaultValues(getTypeFactory());
-        // sets the localized title via HUITypeFactory from message bundle
-        setTitel(getTypeFactory().getMessage(TYPE_ID));
+        init();
     }
-
-    protected ITSystem() {}
     
-    public static final String TYPE_ID = "moditbp_itsystem"; //$NON-NLS-1$
-
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTypeId()
-     */
     @Override
     public String getTypeId() {
         return TYPE_ID;
     }
-
+    
     @Override
     public boolean canContain(Object object) {
-        return object instanceof Module;
+        return object instanceof BpThreat;
     }
-    
+
 }

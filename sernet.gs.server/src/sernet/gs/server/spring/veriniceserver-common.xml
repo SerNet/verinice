@@ -250,15 +250,13 @@ This variant:
 		<property name="icssystemDAO" ref="icssystemDAO" />
 		<property name="itnetworkDAO" ref="itnetworkDAO" />
 		<property name="itsystemDAO" ref="itsystemDAO" />
-		<property name="moditbpbelementDAO" ref="moditbpbelementDAO" />
-		<property name="moditbpPersonDAO" ref="moditbpPersonDAO" />
-		<property name="moditbpRequirementDAO" ref="moditbpRequirementDAO" />
-		<property name="moditbpThreatDAO" ref="moditbpThreatDAO" />
+		<property name="bpPersonDAO" ref="bpPersonDAO" />
+		<property name="bpThreatDAO" ref="bpThreatDAO" />
 		<property name="moduleDAO" ref="moduleDAO" />
 		<property name="networkDAO" ref="networkDAO" />
 		<property name="othersystemDAO" ref="othersystemDAO" />
 		<property name="roomDAO" ref="roomDAO" />
-		<property name="modITBPModelDAO" ref="modITBPModelDAO" />
+		<property name="bpModelDAO" ref="bpModelDAO" />
 		<property name="applicationCategoryDAO" ref="applicationCategoryDAO" />
 		<property name="businessProcessCategoryDAO" ref="businessProcessCategoryDAO" />
 		<property name="icsSystemCategoryDAO" ref="icsSystemCategoryDAO" />

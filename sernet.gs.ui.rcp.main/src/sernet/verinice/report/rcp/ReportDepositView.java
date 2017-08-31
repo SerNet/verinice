@@ -73,7 +73,7 @@ import sernet.verinice.interfaces.ReportTemplateServiceException;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
+import sernet.verinice.model.moditbp.elements.BpModel;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.rcp.ReportTemplateSync;
 import sernet.verinice.rcp.RightsEnabledView;
@@ -318,7 +318,7 @@ public class ReportDepositView extends RightsEnabledView {
         }
 
         @Override
-        public void loaded(ModITBPModel model) {
+        public void loaded(BpModel model) {
             // nothing to do
         }
     }

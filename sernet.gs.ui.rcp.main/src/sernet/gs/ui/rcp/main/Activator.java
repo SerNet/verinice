@@ -83,7 +83,7 @@ import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
+import sernet.verinice.model.moditbp.elements.BpModel;
 import sernet.verinice.rcp.ReportTemplateSync;
 import sernet.verinice.rcp.StartupImporter;
 import sernet.verinice.rcp.StatusResult;
@@ -320,7 +320,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
                 }
 
                 @Override
-                public void loaded(ModITBPModel model) {
+                public void loaded(BpModel model) {
                     // do nothing
                 }
             };

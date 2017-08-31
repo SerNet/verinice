@@ -53,7 +53,6 @@ import sernet.verinice.model.moditbp.categories.NetworkCategory;
 import sernet.verinice.model.moditbp.categories.OtherSystemCategory;
 import sernet.verinice.model.moditbp.categories.PersonCategory;
 import sernet.verinice.model.moditbp.categories.RoomCategory;
-import sernet.verinice.model.moditbp.elements.ModITBPElement;
 import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.linktable.CnaLinkPropertyConstants;
 
@@ -153,7 +152,6 @@ public class HUIObjectModelService implements IObjectModelService {
         allTypeIds.remove("role"); //$NON-NLS-1$
         allTypeIds.remove("configuration"); //$NON-NLS-1$
         allTypeIds.remove("attachment"); //$NON-NLS-1$
-        allTypeIds.remove(ModITBPElement.TYPE_ID);
     }
 
     private void addAllBSIElements() {

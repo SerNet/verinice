@@ -30,17 +30,19 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.moditbp.IModITBPModelListener;
 
 /**
+ * 
  * @author Sebastian Hagedorn sh[at]sernet.de
- *
  */
-public class ModITBPModel extends CnATreeElement implements ModITBPRoot {
+public class BpModel extends CnATreeElement implements IBpRoot {
     
-    private transient List<IModITBPModelListener> listeners;
+    public static final String TYPE_ID = "bp_model"; //$NON-NLS-1$    
+    public static final String TITLE = "Modernized ITBP Modeling"; //$NON-NLS-1$
+    
     private transient Logger log;
     
-    public static final String TYPE_ID = "moditbpmodel"; //$NON-NLS-1$
+    private transient List<IModITBPModelListener> listeners;
     
-    public static final String TITLE = "Modernized ITBP Modeling"; //$NON-NLS-1$
+    
     /* (non-Javadoc)
      * @see sernet.verinice.model.common.CnATreeElement#getTitle()
      */
@@ -74,14 +76,14 @@ public class ModITBPModel extends CnATreeElement implements ModITBPRoot {
     
     @Override
     public boolean canContain(Object obj) {
-        return (obj instanceof ITNetwork);
+        return (obj instanceof ItNetwork);
     }
 
     @Override
     public void childAdded(CnATreeElement category, CnATreeElement child) {
         for (IModITBPModelListener listener : getListeners()) {
             listener.childAdded(category, child);
-            if (child instanceof ITNetwork) {
+            if (child instanceof ItNetwork) {
                 listener.modelRefresh(null);
             }
         }
@@ -124,7 +126,6 @@ public class ModITBPModel extends CnATreeElement implements ModITBPRoot {
         }
     }
 
-    
     @Override
     public void childChanged(CnATreeElement child) {
         for (IModITBPModelListener listener : getListeners()) {
@@ -153,13 +154,14 @@ public class ModITBPModel extends CnATreeElement implements ModITBPRoot {
         }
     }
     
+    @Override
     public void linkAdded(CnALink link) {
         for (IModITBPModelListener listener : getListeners()) {
             listener.linkAdded(link);
         }
     }
     
-    public void modelReload(ModITBPModel newModel) {
+    public void modelReload(BpModel newModel) {
         for (IModITBPModelListener listener : getListeners()) {
             listener.modelReload(newModel);
             if (getLog().isDebugEnabled()) {
@@ -189,7 +191,7 @@ public class ModITBPModel extends CnATreeElement implements ModITBPRoot {
      * 
      * @param newModel 
      */
-    public void moveListener(ModITBPModel newModel) {
+    public void moveListener(BpModel newModel) {
         for (IModITBPModelListener listener : getListeners()) {
             newModel.addModITBOModelListener(listener);
         }
@@ -200,7 +202,7 @@ public class ModITBPModel extends CnATreeElement implements ModITBPRoot {
     
     private Logger getLog() {
         if(log==null) {
-            log = Logger.getLogger(ModITBPModel.class);
+            log = Logger.getLogger(BpModel.class);
         }
         return log;
     }

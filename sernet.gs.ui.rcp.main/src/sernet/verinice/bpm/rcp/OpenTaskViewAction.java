@@ -10,7 +10,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
+import sernet.verinice.model.moditbp.elements.BpModel;
 
 public class OpenTaskViewAction extends OpenViewAction {
 
@@ -29,7 +29,7 @@ public class OpenTaskViewAction extends OpenViewAction {
                 }
             }
             @Override
-            public void loaded(ModITBPModel model) {
+            public void loaded(BpModel model) {
                 // nothing to do
                 
             }
@@ -51,7 +51,7 @@ public class OpenTaskViewAction extends OpenViewAction {
                 }
             }
             @Override
-            public void loaded(ModITBPModel model) {
+            public void loaded(BpModel model) {
                 // nothing to do
             }
         });        

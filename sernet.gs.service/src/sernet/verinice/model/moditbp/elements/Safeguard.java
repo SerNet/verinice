@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Sebastian Hagedorn.
+ * Copyright (c) 2017 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -15,46 +15,33 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
+ *     Daniel Murygin dm[at]sernet.de - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.model.moditbp.elements;
 
-import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.moditbp.IBpElement;
 
 /**
- * @author Sebastian Hagedorn sh[at]sernet.de
+ * @author Daniel Murygin dm[at]sernet.de
  *
  */
-public class ModITBPPerson extends ModITBPElement {
+public class Safeguard extends CnATreeElement implements IBpElement {
     
-    private static final long serialVersionUID = -1764245620965365934L;
+    private static final long serialVersionUID = -2117441377311538326L;
+    
+    public static final String TYPE_ID = "bp_safeguard"; //$NON-NLS-1$
 
-    public ModITBPPerson(CnATreeElement parent) {
+    protected Safeguard() {}
+    
+    public Safeguard(CnATreeElement parent) {
         super(parent);
-        setEntity(new Entity(TYPE_ID));
-        getEntity().initDefaultValues(getTypeFactory());
-        // sets the localized title via HUITypeFactory from message bundle
-        setTitel(getTypeFactory().getMessage(TYPE_ID));
+        init();
     }
-    
-    protected ModITBPPerson() {}
 
-    public static final String TYPE_ID = "moditbp_person"; //$NON-NLS-1$
-
-
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTypeId()
-     */
     @Override
     public String getTypeId() {
         return TYPE_ID;
-    }
-    
-    @Override
-    public boolean canContain(Object object) {
-        return object instanceof Module;
     }
 
 }

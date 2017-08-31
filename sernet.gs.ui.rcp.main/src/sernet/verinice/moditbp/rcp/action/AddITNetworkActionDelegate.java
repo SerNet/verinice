@@ -33,7 +33,7 @@ import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.moditbp.elements.ITNetwork;
+import sernet.verinice.model.moditbp.elements.ItNetwork;
 import sernet.verinice.rcp.RightsEnabledActionDelegate;
 
 /**
@@ -59,7 +59,7 @@ public class AddITNetworkActionDelegate extends RightsEnabledActionDelegate impl
             CnATreeElement newElement = null;
             newElement = CnAElementFactory.getInstance().saveNew(
                     CnAElementFactory.getInstance().getModITBPModel(),
-                    ITNetwork.TYPE_ID, null, false);
+                    ItNetwork.TYPE_ID, null, false);
             if (newElement != null) {
                 EditorFactory.getInstance().openEditor(newElement);
             }

@@ -138,7 +138,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
      * at central location, and to use them in other points of application.
      * </p>
      * <p>
-     * Each {@link CnATreeElement}, representing a Object or Module, can be
+     * Each {@link CnATreeElement}, representing a Object or BpRequirement, can be
      * marked as modeling template or each Safeguard as central
      * ({@link TemplateType#TEMPLATE}).
      * </p>
@@ -158,15 +158,15 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
      * <b>IT Network 1</b> <ui>
      * <li>Object (marked as modeling template,
      * {@link TemplateType#TEMPLATE})</li> <ui>
-     * <li>Module 1 (marked as modeling template,
+     * <li>BpRequirement 1 (marked as modeling template,
      * {@link TemplateType#TEMPLATE})</li> <ui>
      * <li>Safeguard 1 (marked as central, {@link TemplateType#TEMPLATE})</li>
      * <li>Safeguard 2</li> </ui>
-     * <li>Module 2</li> <ui>
+     * <li>BpRequirement 2</li> <ui>
      * <li>Safeguard 1</li>
      * <li>Safeguard 2 (marked as central, {@link TemplateType#TEMPLATE})</li>
      * </ui>
-     * <li>Module 3...</li> </ui> </ui>
+     * <li>BpRequirement 3...</li> </ui> </ui>
      * </p>
      * <p>
      * After applying (implementing) this modeling template:
@@ -175,16 +175,16 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
      * <b>IT Network 2</b> <ui>
      * <li>Object (marked as implementation,
      * {@link TemplateType#IMPLEMENTATION})</li> <ui>
-     * <li>Module 1 (marked as implementation,
+     * <li>BpRequirement 1 (marked as implementation,
      * {@link TemplateType#IMPLEMENTATION})</li> <ui>
      * <li>Safeguard 1 (marked as central implementation,
      * {@link TemplateType#IMPLEMENTATION})</li>
      * <li>Safeguard 2</li> </ui>
-     * <li>Module 2</li> <ui>
+     * <li>BpRequirement 2</li> <ui>
      * <li>Safeguard 1</li>
      * <li>Safeguard 2 (marked as central implementation,
      * {@link TemplateType#IMPLEMENTATION})</li> </ui>
-     * <li>Module 3...</li> </ui> </ui>
+     * <li>BpRequirement 3...</li> </ui> </ui>
      * </p>
      * 
      * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
@@ -340,6 +340,13 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		children = new HashSet<CnATreeElement>();
 	}
 	
+    protected void init() {
+        setEntity(new Entity(getTypeId()));
+        getEntity().initDefaultValues(getTypeFactory());
+        // sets the localized title via HUITypeFactory from message bundle
+        setTitel(getTypeFactory().getMessage(getTypeId()));
+    }
+	
     protected void inherit(CnATreeElement parent) {
         if (parent != null) {
             inheritScopeId(parent);
@@ -376,7 +383,9 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         this.parentId = parentId;
     }
 
-    public abstract String getTitle();
+    public String getTitle() {
+        return getTypeFactory().getMessage(getTypeId());
+    }
 	
 	public void setTitel(String name) { // NOPMD by dm on 07.02.12 12:38
 		// override this method

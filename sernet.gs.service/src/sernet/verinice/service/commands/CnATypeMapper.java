@@ -94,17 +94,16 @@ import sernet.verinice.model.moditbp.categories.PersonCategory;
 import sernet.verinice.model.moditbp.categories.RoomCategory;
 import sernet.verinice.model.moditbp.elements.Application;
 import sernet.verinice.model.moditbp.elements.BusinessProcess;
-import sernet.verinice.model.moditbp.elements.ICSSystem;
-import sernet.verinice.model.moditbp.elements.ITNetwork;
-import sernet.verinice.model.moditbp.elements.ITSystem;
-import sernet.verinice.model.moditbp.elements.ModITBPElement;
-import sernet.verinice.model.moditbp.elements.ModITBPPerson;
-import sernet.verinice.model.moditbp.elements.ModITBPRequirement;
-import sernet.verinice.model.moditbp.elements.ModITBPThreat;
-import sernet.verinice.model.moditbp.elements.Module;
+import sernet.verinice.model.moditbp.elements.IcsSystem;
+import sernet.verinice.model.moditbp.elements.ItNetwork;
+import sernet.verinice.model.moditbp.elements.ItSystem;
+import sernet.verinice.model.moditbp.elements.BpPerson;
+import sernet.verinice.model.moditbp.elements.BpThreat;
+import sernet.verinice.model.moditbp.elements.BpRequirement;
 import sernet.verinice.model.moditbp.elements.Network;
-import sernet.verinice.model.moditbp.elements.OtherSystem;
+import sernet.verinice.model.moditbp.elements.Device;
 import sernet.verinice.model.moditbp.elements.Room;
+import sernet.verinice.model.moditbp.elements.Safeguard;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
@@ -196,7 +195,6 @@ public class CnATypeMapper {
         typeIdClass.put(GefaehrdungsUmsetzung.TYPE_ID, GefaehrdungsUmsetzung.class);
         typeIdClass.put(FinishedRiskAnalysis.TYPE_ID, FinishedRiskAnalysis.class);
         
-        typeIdClass.put(ModITBPElement.TYPE_ID, ModITBPElement.class);
         typeIdClass.put(ApplicationCategory.TYPE_ID, ApplicationCategory.class);
         typeIdClass.put(BusinessProcessCategory.TYPE_ID, BusinessProcessCategory.class);
         typeIdClass.put(ICSSystemCategory.TYPE_ID, ICSSystemCategory.class);
@@ -208,16 +206,16 @@ public class CnATypeMapper {
         
         typeIdClass.put(Application.TYPE_ID, Application.class);
         typeIdClass.put(BusinessProcess.TYPE_ID, BusinessProcess.class);
-        typeIdClass.put(ICSSystem.TYPE_ID, ICSSystem.class);
-        typeIdClass.put(ITNetwork.TYPE_ID, ITNetwork.class);
-        typeIdClass.put(ITSystem.TYPE_ID, ITSystem.class);
-        typeIdClass.put(ModITBPPerson.TYPE_ID, ModITBPPerson.class);
-        typeIdClass.put(ModITBPRequirement.TYPE_ID, ModITBPRequirement.class);
-        typeIdClass.put(ModITBPThreat.TYPE_ID, ModITBPThreat.class);
-        typeIdClass.put(Module.TYPE_ID, Module.class);
+        typeIdClass.put(IcsSystem.TYPE_ID, IcsSystem.class);
+        typeIdClass.put(ItNetwork.TYPE_ID, ItNetwork.class);
+        typeIdClass.put(ItSystem.TYPE_ID, ItSystem.class);
+        typeIdClass.put(BpPerson.TYPE_ID, BpPerson.class);
+        typeIdClass.put(BpThreat.TYPE_ID, BpThreat.class);
+        typeIdClass.put(BpRequirement.TYPE_ID, BpRequirement.class);
         typeIdClass.put(Network.TYPE_ID, Network.class);
-        typeIdClass.put(OtherSystem.TYPE_ID, OtherSystem.class);
+        typeIdClass.put(Device.TYPE_ID, Device.class);
         typeIdClass.put(Room.TYPE_ID, Room.class);
+        typeIdClass.put(Safeguard.TYPE_ID, Safeguard.class);
         
         // typeIdClass.put(RisikoMassnahmenUmsetzung.TYPE_ID,
         // RisikoMassnahmenUmsetzung.class);
@@ -272,7 +270,7 @@ public class CnATypeMapper {
         FindingGroup.TYPE_ID
     };
     
-    private static final String[] MODITBP_ELEMENT_TYPES = new String[] {
+    private static final String[] BP_ELEMENT_TYPES = new String[] {
             ApplicationCategory.TYPE_ID,
             BusinessProcessCategory.TYPE_ID,
             ICSSystemCategory.TYPE_ID,
@@ -281,10 +279,6 @@ public class CnATypeMapper {
             OtherSystemCategory.TYPE_ID,
             PersonCategory.TYPE_ID,
             RoomCategory.TYPE_ID,
-            
-            ModITBPRequirement.TYPE_ID,
-            ModITBPThreat.TYPE_ID,
-            Module.TYPE_ID
     };
     
     /**
@@ -314,7 +308,7 @@ public class CnATypeMapper {
     }
     
     public boolean isModITBPElement(CnATreeElement child) {
-        for (String strukturType : MODITBP_ELEMENT_TYPES) {
+        for (String strukturType : BP_ELEMENT_TYPES) {
             if (child.getEntityType() != null && child.getEntityType().getId().equals(strukturType)) {
                 return true;
             }

@@ -20,7 +20,7 @@
 package sernet.verinice.model.moditbp;
 
 import sernet.verinice.model.iso27k.IISO27KModelListener;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
+import sernet.verinice.model.moditbp.elements.BpModel;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -28,6 +28,6 @@ import sernet.verinice.model.moditbp.elements.ModITBPModel;
  */
 public interface IModITBPModelListener extends IISO27KModelListener {
     
-    void modelReload(ModITBPModel newModel);
+    void modelReload(BpModel newModel);
 
 }

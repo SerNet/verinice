@@ -19,8 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.model.moditbp.elements;
 
-import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.moditbp.IBpElement;
 import sernet.verinice.model.moditbp.categories.ApplicationCategory;
 import sernet.verinice.model.moditbp.categories.BusinessProcessCategory;
 import sernet.verinice.model.moditbp.categories.ICSSystemCategory;
@@ -34,23 +34,18 @@ import sernet.verinice.model.moditbp.categories.RoomCategory;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class ITNetwork extends  ModITBPElement {
+public class ItNetwork extends CnATreeElement implements IBpElement  {
     
     private static final long serialVersionUID = -542743048413632420L;
+       
+    public static final String TYPE_ID = "bp_itnetwork"; //$NON-NLS-1$
     
+    protected ItNetwork() {}
     
-    public static final String TYPE_ID = "moditbp_itnetwork"; //$NON-NLS-1$
-    
-    public ITNetwork(CnATreeElement parent) {
+    public ItNetwork(CnATreeElement parent) {
         super(parent);
-        setEntity(new Entity(TYPE_ID));
-        getEntity().initDefaultValues(getTypeFactory());
-        // sets the localized title via HUITypeFactory from message bundle
-        setTitel(getTypeFactory().getMessage(TYPE_ID));
-    }
-
-    
-    protected ITNetwork() {}
+        init();
+    }     
     
     public void createNewCategories() {
         addChild(new ApplicationCategory(this));
@@ -61,14 +56,6 @@ public class ITNetwork extends  ModITBPElement {
         addChild(new OtherSystemCategory(this));
         addChild(new PersonCategory(this));
         addChild(new RoomCategory(this));
-    }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTitle()
-     */
-    @Override
-    public String getTitle() {
-        return getTypeFactory().getMessage(TYPE_ID);
     }
 
     /* (non-Javadoc)
@@ -82,7 +69,7 @@ public class ITNetwork extends  ModITBPElement {
     
     @Override
     public boolean canContain(Object object) {
-        return object instanceof Module ||
+        return object instanceof BpRequirement ||
                 object instanceof ApplicationCategory ||
                 object instanceof BusinessProcessCategory ||
                 object instanceof ICSSystemCategory ||

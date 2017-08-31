@@ -74,7 +74,7 @@ import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
+import sernet.verinice.model.moditbp.elements.BpModel;
 
 /**
  * Abstract view with tree viewer to show {@link CnATreeElement}s of specific types
@@ -252,7 +252,7 @@ public abstract class ElementView extends ViewPart {
                     }
                 }
                 @Override
-                public void loaded(ModITBPModel model) {
+                public void loaded(BpModel model) {
                     // nothing to do
                     
                 }          

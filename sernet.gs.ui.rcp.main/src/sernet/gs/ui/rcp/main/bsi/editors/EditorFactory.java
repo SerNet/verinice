@@ -91,14 +91,13 @@ import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.model.moditbp.elements.Application;
 import sernet.verinice.model.moditbp.elements.BusinessProcess;
-import sernet.verinice.model.moditbp.elements.ICSSystem;
-import sernet.verinice.model.moditbp.elements.ITNetwork;
-import sernet.verinice.model.moditbp.elements.ITSystem;
-import sernet.verinice.model.moditbp.elements.ModITBPPerson;
-import sernet.verinice.model.moditbp.elements.ModITBPRequirement;
-import sernet.verinice.model.moditbp.elements.ModITBPThreat;
+import sernet.verinice.model.moditbp.elements.IcsSystem;
+import sernet.verinice.model.moditbp.elements.ItNetwork;
+import sernet.verinice.model.moditbp.elements.ItSystem;
+import sernet.verinice.model.moditbp.elements.BpPerson;
+import sernet.verinice.model.moditbp.elements.BpThreat;
 import sernet.verinice.model.moditbp.elements.Network;
-import sernet.verinice.model.moditbp.elements.OtherSystem;
+import sernet.verinice.model.moditbp.elements.Device;
 import sernet.verinice.model.moditbp.elements.Room;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.rcp.linktable.LinkTableEditor;
@@ -307,17 +306,16 @@ public final class EditorFactory {
         typedFactories.put(Record.class, bsiEditorFactory);
         typedFactories.put(RecordGroup.class, bsiEditorFactory);
         // Modernized ITBP elements
-        typedFactories.put(ITNetwork.class, bsiEditorFactory);
+        typedFactories.put(ItNetwork.class, bsiEditorFactory);
         typedFactories.put(Application.class, bsiEditorFactory);
         typedFactories.put(BusinessProcess.class, bsiEditorFactory);
-        typedFactories.put(ICSSystem.class, bsiEditorFactory);
-        typedFactories.put(ITSystem.class, bsiEditorFactory);
-        typedFactories.put(ModITBPPerson.class, bsiEditorFactory);
-        typedFactories.put(ModITBPRequirement.class, bsiEditorFactory);
-        typedFactories.put(ModITBPThreat.class, bsiEditorFactory);
+        typedFactories.put(IcsSystem.class, bsiEditorFactory);
+        typedFactories.put(ItSystem.class, bsiEditorFactory);
+        typedFactories.put(BpPerson.class, bsiEditorFactory);
+        typedFactories.put(BpThreat.class, bsiEditorFactory);
         typedFactories.put(Module.class, bsiEditorFactory);
         typedFactories.put(Network.class, bsiEditorFactory);
-        typedFactories.put(OtherSystem.class, bsiEditorFactory);
+        typedFactories.put(Device.class, bsiEditorFactory);
         typedFactories.put(Room.class, bsiEditorFactory);
         
         // Self Assessment (SAMT) elements

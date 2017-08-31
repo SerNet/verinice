@@ -75,7 +75,7 @@ import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
+import sernet.verinice.model.moditbp.elements.BpModel;
 import sernet.verinice.model.validation.CnAValidation;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.crud.LoadPolymorphicCnAElementById;
@@ -412,7 +412,7 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
             }
 
             @Override
-            public void loaded(ModITBPModel model) {
+            public void loaded(BpModel model) {
                 synchronized (modelLoadListener) {
                     startInitDataJob();
                     

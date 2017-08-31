@@ -21,7 +21,7 @@ package sernet.verinice.model.moditbp.categories;
 
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.moditbp.ModITBPCategory;
-import sernet.verinice.model.moditbp.elements.OtherSystem;
+import sernet.verinice.model.moditbp.elements.Device;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -57,7 +57,7 @@ public class OtherSystemCategory extends CnATreeElement implements ModITBPCatego
 
     @Override
     public boolean canContain(Object object) {
-        return object instanceof OtherSystem;
+        return object instanceof Device;
     }
     
 }

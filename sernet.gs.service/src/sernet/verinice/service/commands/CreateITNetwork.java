@@ -22,7 +22,7 @@ package sernet.verinice.service.commands;
 import java.util.Set;
 
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.moditbp.elements.ITNetwork;
+import sernet.verinice.model.moditbp.elements.ItNetwork;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -37,8 +37,8 @@ public class CreateITNetwork extends CreateElement {
     @Override
     public void execute() {
         super.execute();
-        if (super.element instanceof ITNetwork) {
-            ITNetwork network = (ITNetwork) element;
+        if (super.element instanceof ItNetwork) {
+            ItNetwork network = (ItNetwork) element;
             if(createChildren) {
                 network.createNewCategories();
             }
@@ -55,7 +55,7 @@ public class CreateITNetwork extends CreateElement {
     }
     
     @Override
-    public ITNetwork getNewElement() {
-        return (ITNetwork) super.getNewElement();
+    public ItNetwork getNewElement() {
+        return (ItNetwork) super.getNewElement();
     }
 }

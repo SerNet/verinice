@@ -68,8 +68,8 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.moditbp.IModITBPModelListener;
-import sernet.verinice.model.moditbp.elements.ITNetwork;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
+import sernet.verinice.model.moditbp.elements.ItNetwork;
+import sernet.verinice.model.moditbp.elements.BpModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.tree.TreeContentProvider;
@@ -240,7 +240,7 @@ public class ModITBPView extends RightsEnabledView
                     }
 
                     @Override
-                    public void loaded(ModITBPModel model) {
+                    public void loaded(BpModel model) {
                         startInitDataJob();
                     }
                     
@@ -251,7 +251,7 @@ public class ModITBPView extends RightsEnabledView
         }
     }
     
-    public void setInput(ModITBPModel model) {
+    public void setInput(BpModel model) {
         viewer.setInput(model);
     }
     
@@ -275,8 +275,8 @@ public class ModITBPView extends RightsEnabledView
         ISelection selection = viewer.getSelection();
         if(selection instanceof IStructuredSelection && ((IStructuredSelection) selection).size()==1) {
             Object sel = ((IStructuredSelection) selection).getFirstElement();
-            if(sel instanceof ITNetwork) {
-                ITNetwork element = (ITNetwork) sel;
+            if(sel instanceof ItNetwork) {
+                ItNetwork element = (ItNetwork) sel;
 //                if(CnAElementHome.getInstance().isNewChildAllowed(element)) {
 //                    MenuManager submenuNew = new MenuManager("&New","content/new"); //$NON-NLS-1$ //$NON-NLS-2$
 //                    submenuNew.add(new AddGroup(element,AssetGroup.TYPE_ID,Asset.TYPE_ID));

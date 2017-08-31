@@ -44,7 +44,7 @@ import sernet.verinice.interfaces.IRightsServiceClient;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
+import sernet.verinice.model.moditbp.elements.BpModel;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.sync.VeriniceArchive;
@@ -92,7 +92,7 @@ public abstract class StartupImporter {
                 }
 
                 @Override
-                public void loaded(ModITBPModel model) {
+                public void loaded(BpModel model) {
                     // nothing to do
                     
                 }

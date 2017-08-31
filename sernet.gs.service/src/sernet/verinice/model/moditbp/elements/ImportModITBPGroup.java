@@ -60,7 +60,7 @@ public class ImportModITBPGroup extends CnATreeElement {
     
     @Override
     public boolean canContain(Object obj) {
-        if (obj instanceof ITNetwork ){
+        if (obj instanceof ItNetwork ){
             return true;
         }
         return false;

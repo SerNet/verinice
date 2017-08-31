@@ -41,7 +41,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
+import sernet.verinice.model.moditbp.elements.BpModel;
 import sernet.verinice.rcp.NonModalWizardDialog;
 
 /**
@@ -105,7 +105,7 @@ public class RiskAnalysisAction extends RightsEnabledAction implements ISelectio
                 setEnabled(checkRights());
             }
             @Override
-            public void loaded(ModITBPModel model) {
+            public void loaded(BpModel model) {
                 // Nothing to do, this action is for ISO/IEC 27005 risk analysis
             }
         });

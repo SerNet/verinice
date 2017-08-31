@@ -21,7 +21,7 @@ package sernet.verinice.model.moditbp.categories;
 
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.moditbp.ModITBPCategory;
-import sernet.verinice.model.moditbp.elements.ModITBPPerson;
+import sernet.verinice.model.moditbp.elements.BpPerson;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -57,7 +57,7 @@ public class PersonCategory extends CnATreeElement implements ModITBPCategory {
     
     @Override
     public boolean canContain(Object object) {
-        return object instanceof ModITBPPerson;
+        return object instanceof BpPerson;
     }
 
 }
