@@ -20,36 +20,28 @@
 package sernet.verinice.model.moditbp.categories;
 
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.moditbp.ModITBPCategory;
-import sernet.verinice.model.moditbp.elements.IcsSystem;
+import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.moditbp.IBpGroup;
+import sernet.verinice.model.moditbp.elements.BpPerson;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class ICSSystemCategory extends CnATreeElement implements ModITBPCategory {
+public class BpPersonGroup extends Group<BpPerson> implements IBpGroup {
     
-    private static final long serialVersionUID = -5366579759422543907L;
+    private static final long serialVersionUID = 7752776589962581995L;
     
-    public static final String TYPE_ID = "moditbp_icssystemcategory";
+    public static final String TYPE_ID = "bp_persongroup";
     
-    public ICSSystemCategory(CnATreeElement parent) {
+    public static final String[] CHILD_TYPES = new String[] {BpPerson.TYPE_ID};
+    
+    protected BpPersonGroup() {}
+    
+    public BpPersonGroup(CnATreeElement parent) {
         super(parent);
     }
-    
-    protected ICSSystemCategory() {}
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTitle()
-     */
-    @Override
-    public String getTitle() {
-        return getTypeFactory().getMessage(TYPE_ID);
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTypeId()
-     */
     @Override
     public String getTypeId() {
         return TYPE_ID;
@@ -57,7 +49,12 @@ public class ICSSystemCategory extends CnATreeElement implements ModITBPCategory
     
     @Override
     public boolean canContain(Object object) {
-        return object instanceof IcsSystem;
+        return object instanceof BpPerson;
+    }
+    
+    @Override
+    public String[] getChildTypes() {
+        return CHILD_TYPES;
     }
 
 }

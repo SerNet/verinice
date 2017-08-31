@@ -677,56 +677,56 @@
 	
 	<bean id="applicationCategoryDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
-			<value>sernet.verinice.model.moditbp.categories.ApplicationCategory</value>
+			<value>sernet.verinice.model.moditbp.categories.ApplicationGroup</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
 	<bean id="businessProcessCategoryDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
-			<value>sernet.verinice.model.moditbp.categories.BusinessProcessCategory</value>
+			<value>sernet.verinice.model.moditbp.categories.BusinessProcessGroup</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="icsSystemCategoryDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
-			<value>sernet.verinice.model.moditbp.categories.ICSSystemCategory</value>
+			<value>sernet.verinice.model.moditbp.categories.IcsSystemGroup</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>	
 	
 	<bean id="itSystemCategoryDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
-			<value>sernet.verinice.model.moditbp.categories.ITSystemCategory</value>
+			<value>sernet.verinice.model.moditbp.categories.ItSystemGroup</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>	
 
 	<bean id="networkCategoryDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
-			<value>sernet.verinice.model.moditbp.categories.NetworkCategory</value>
+			<value>sernet.verinice.model.moditbp.categories.NetworkGroup</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
 	<bean id="otherSystemCategoryDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
-			<value>sernet.verinice.model.moditbp.categories.OtherSystemCategory</value>
+			<value>sernet.verinice.model.moditbp.categories.DeviceGroup</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>	
 
 	<bean id="personCategoryDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
-			<value>sernet.verinice.model.moditbp.categories.PersonCategory</value>
+			<value>sernet.verinice.model.moditbp.categories.BpPersonGroup</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
 	<bean id="roomCategoryDAO" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
-			<value>sernet.verinice.model.moditbp.categories.RoomCategory</value>
+			<value>sernet.verinice.model.moditbp.categories.RoomGroup</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>

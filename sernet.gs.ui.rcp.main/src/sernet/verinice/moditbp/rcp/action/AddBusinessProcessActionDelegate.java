@@ -29,14 +29,14 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.moditbp.categories.BusinessProcessCategory;
+import sernet.verinice.model.moditbp.categories.BusinessProcessGroup;
 import sernet.verinice.model.moditbp.elements.BusinessProcess;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class AddBusinessProcessActionDelegate extends AbstractAddModITBPElementActionDelegate {
+public class AddBusinessProcessActionDelegate extends AbstractAddBpElementActionDelegate {
 
     private IWorkbenchPart targetPart;
 
@@ -49,7 +49,7 @@ public class AddBusinessProcessActionDelegate extends AbstractAddModITBPElementA
         try {
             Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
             CnATreeElement newElement = null;
-            if (sel instanceof BusinessProcessCategory) {
+            if (sel instanceof BusinessProcessGroup) {
                 CnATreeElement cont = (CnATreeElement) sel;
                 boolean inheritIcon = Activator.getDefault().getPreferenceStore()
                         .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);

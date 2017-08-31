@@ -103,14 +103,17 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
-import sernet.verinice.model.moditbp.categories.ApplicationCategory;
-import sernet.verinice.model.moditbp.categories.BusinessProcessCategory;
-import sernet.verinice.model.moditbp.categories.ICSSystemCategory;
-import sernet.verinice.model.moditbp.categories.ITSystemCategory;
-import sernet.verinice.model.moditbp.categories.NetworkCategory;
-import sernet.verinice.model.moditbp.categories.OtherSystemCategory;
-import sernet.verinice.model.moditbp.categories.PersonCategory;
-import sernet.verinice.model.moditbp.categories.RoomCategory;
+import sernet.verinice.model.moditbp.categories.ApplicationGroup;
+import sernet.verinice.model.moditbp.categories.BusinessProcessGroup;
+import sernet.verinice.model.moditbp.categories.IcsSystemGroup;
+import sernet.verinice.model.moditbp.categories.ItSystemGroup;
+import sernet.verinice.model.moditbp.categories.NetworkGroup;
+import sernet.verinice.model.moditbp.categories.DeviceGroup;
+import sernet.verinice.model.moditbp.categories.BpPersonGroup;
+import sernet.verinice.model.moditbp.categories.BpRequirementGroup;
+import sernet.verinice.model.moditbp.categories.BpThreatGroup;
+import sernet.verinice.model.moditbp.categories.RoomGroup;
+import sernet.verinice.model.moditbp.categories.SafeguardGroup;
 import sernet.verinice.model.moditbp.elements.Application;
 import sernet.verinice.model.moditbp.elements.BusinessProcess;
 import sernet.verinice.model.moditbp.elements.IcsSystem;
@@ -1046,100 +1049,122 @@ public final class CnAElementFactory {
             }
         });
 
-        elementbuilders.put(ApplicationCategory.TYPE_ID, new ElementBuilder() {
+        elementbuilders.put(ApplicationGroup.TYPE_ID, new ElementBuilder() {
             public CnATreeElement build(CnATreeElement container,
                     BuildInput input) throws CommandException {
-                ApplicationCategory child = dbHome.save(container,
-                        ApplicationCategory.class,
-                        ApplicationCategory.TYPE_ID);
+                ApplicationGroup child = dbHome.save(container,
+                        ApplicationGroup.class,
+                        ApplicationGroup.TYPE_ID);
                 init(container, child);
                 return child;
             }
         });
-       
-        elementbuilders.put(BusinessProcessCategory.TYPE_ID, new ElementBuilder() {
+     
+        elementbuilders.put(BpPersonGroup.TYPE_ID, new ElementBuilder() {
             public CnATreeElement build(CnATreeElement container,
                     BuildInput input) throws CommandException {
-                BusinessProcessCategory child = dbHome.save(container,
-                        BusinessProcessCategory.class,
-                        BusinessProcessCategory.TYPE_ID);
+                BpPersonGroup child = dbHome.save(container,
+                        BpPersonGroup.class,
+                        BpPersonGroup.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+         
+        elementbuilders.put(BpRequirementGroup.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                BpRequirementGroup child = dbHome.save(container,
+                        BpRequirementGroup.class,
+                        BpRequirementGroup.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(BpThreatGroup.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                BpThreatGroup child = dbHome.save(container,
+                        BpThreatGroup.class,
+                        BpThreatGroup.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(BusinessProcessGroup.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                BusinessProcessGroup child = dbHome.save(container,
+                        BusinessProcessGroup.class,
+                        BusinessProcessGroup.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+        });
+        
+        elementbuilders.put(DeviceGroup.TYPE_ID, new ElementBuilder() {
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                DeviceGroup child = dbHome.save(container,
+                        DeviceGroup.class,
+                        DeviceGroup.TYPE_ID);
                 init(container, child);
                 return child;
             }
         });
 
-        elementbuilders.put(ICSSystemCategory.TYPE_ID, new ElementBuilder() {
+        elementbuilders.put(IcsSystemGroup.TYPE_ID, new ElementBuilder() {
             public CnATreeElement build(CnATreeElement container,
                     BuildInput input) throws CommandException {
-                ICSSystemCategory child = dbHome.save(container,
-                        ICSSystemCategory.class,
-                        ICSSystemCategory.TYPE_ID);
+                IcsSystemGroup child = dbHome.save(container,
+                        IcsSystemGroup.class,
+                        IcsSystemGroup.TYPE_ID);
                 init(container, child);
                 return child;
             }
         });
         
-        elementbuilders.put(ITSystemCategory.TYPE_ID, new ElementBuilder() {
+        elementbuilders.put(ItSystemGroup.TYPE_ID, new ElementBuilder() {
             public CnATreeElement build(CnATreeElement container,
                     BuildInput input) throws CommandException {
-                ITSystemCategory child = dbHome.save(container,
-                        ITSystemCategory.class,
-                        ITSystemCategory.TYPE_ID);
+                ItSystemGroup child = dbHome.save(container,
+                        ItSystemGroup.class,
+                        ItSystemGroup.TYPE_ID);
                 init(container, child);
                 return child;
             }
         });
         
-        elementbuilders.put(NetworkCategory.TYPE_ID, new ElementBuilder() {
+        elementbuilders.put(NetworkGroup.TYPE_ID, new ElementBuilder() {
             public CnATreeElement build(CnATreeElement container,
                     BuildInput input) throws CommandException {
-                NetworkCategory child = dbHome.save(container,
-                        NetworkCategory.class,
-                        NetworkCategory.TYPE_ID);
+                NetworkGroup child = dbHome.save(container,
+                        NetworkGroup.class,
+                        NetworkGroup.TYPE_ID);
                 init(container, child);
                 return child;
             }
         });
 
-        elementbuilders.put(NetworkCategory.TYPE_ID, new ElementBuilder() {
+        elementbuilders.put(RoomGroup.TYPE_ID, new ElementBuilder() {
             public CnATreeElement build(CnATreeElement container,
                     BuildInput input) throws CommandException {
-                NetworkCategory child = dbHome.save(container,
-                        NetworkCategory.class,
-                        NetworkCategory.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        
-        elementbuilders.put(OtherSystemCategory.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container,
-                    BuildInput input) throws CommandException {
-                OtherSystemCategory child = dbHome.save(container,
-                        OtherSystemCategory.class,
-                        OtherSystemCategory.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        
-        elementbuilders.put(PersonCategory.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container,
-                    BuildInput input) throws CommandException {
-                PersonCategory child = dbHome.save(container,
-                        PersonCategory.class,
-                        PersonCategory.TYPE_ID);
+                RoomGroup child = dbHome.save(container,
+                        RoomGroup.class,
+                        RoomGroup.TYPE_ID);
                 init(container, child);
                 return child;
             }
         });
 
-        elementbuilders.put(RoomCategory.TYPE_ID, new ElementBuilder() {
+        elementbuilders.put(SafeguardGroup.TYPE_ID, new ElementBuilder() {
             public CnATreeElement build(CnATreeElement container,
                     BuildInput input) throws CommandException {
-                RoomCategory child = dbHome.save(container,
-                        RoomCategory.class,
-                        RoomCategory.TYPE_ID);
+                SafeguardGroup child = dbHome.save(container,
+                        SafeguardGroup.class,
+                        SafeguardGroup.TYPE_ID);
                 init(container, child);
                 return child;
             }

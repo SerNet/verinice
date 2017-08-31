@@ -102,14 +102,17 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
-import sernet.verinice.model.moditbp.categories.ApplicationCategory;
-import sernet.verinice.model.moditbp.categories.BusinessProcessCategory;
-import sernet.verinice.model.moditbp.categories.ICSSystemCategory;
-import sernet.verinice.model.moditbp.categories.ITSystemCategory;
-import sernet.verinice.model.moditbp.categories.NetworkCategory;
-import sernet.verinice.model.moditbp.categories.OtherSystemCategory;
-import sernet.verinice.model.moditbp.categories.PersonCategory;
-import sernet.verinice.model.moditbp.categories.RoomCategory;
+import sernet.verinice.model.moditbp.categories.ApplicationGroup;
+import sernet.verinice.model.moditbp.categories.BusinessProcessGroup;
+import sernet.verinice.model.moditbp.categories.IcsSystemGroup;
+import sernet.verinice.model.moditbp.categories.ItSystemGroup;
+import sernet.verinice.model.moditbp.categories.NetworkGroup;
+import sernet.verinice.model.moditbp.categories.DeviceGroup;
+import sernet.verinice.model.moditbp.categories.BpPersonGroup;
+import sernet.verinice.model.moditbp.categories.BpRequirementGroup;
+import sernet.verinice.model.moditbp.categories.BpThreatGroup;
+import sernet.verinice.model.moditbp.categories.RoomGroup;
+import sernet.verinice.model.moditbp.categories.SafeguardGroup;
 import sernet.verinice.model.moditbp.elements.Application;
 import sernet.verinice.model.moditbp.elements.BusinessProcess;
 import sernet.verinice.model.moditbp.elements.IcsSystem;
@@ -514,23 +517,29 @@ public interface IDAOFactory {
 	
     void setSafeguardDAO(IBaseDao<Safeguard, Integer> daoToSet);
 	
-	void setModITBPModelDAO(IBaseDao<BpModel, Integer> daoToSet);
+	void setBpModelDAO(IBaseDao<BpModel, Integer> daoToSet);
 	
-	void setApplicationCategoryDAO(IBaseDao<ApplicationCategory, Integer> daoToSet);
+	void setApplicationGroupDAO(IBaseDao<ApplicationGroup, Integer> daoToSet);
+    
+    void setBpPersonGroupDAO(IBaseDao<BpPersonGroup, Integer> daoToSet);
+    
+    void setBpRequirementGroupDAO(IBaseDao<BpRequirementGroup, Integer> daoToSet);
+    
+    void setBpThreatGroupDAO(IBaseDao<BpThreatGroup, Integer> daoToSet);
 	
-	void setBusinessProcessCategoryDAO(IBaseDao<BusinessProcessCategory, Integer> daoToSet);
+	void setBusinessProcessCategoryDAO(IBaseDao<BusinessProcessGroup, Integer> daoToSet);
+    
+    void setDeviceGroupDAO(IBaseDao<DeviceGroup, Integer> daoToSet);
 	
-	void setIcsSystemCategoryDAO(IBaseDao<ICSSystemCategory, Integer> daoToSet);
+	void setIcsSystemGroupDAO(IBaseDao<IcsSystemGroup, Integer> daoToSet);
 	
-	void setItSystemCategoryDAO(IBaseDao<ITSystemCategory, Integer> daoToSet);
+	void setItSystemGroupDAO(IBaseDao<ItSystemGroup, Integer> daoToSet);
 	
-	void setNetworkCategoryDAO(IBaseDao<NetworkCategory, Integer> daoToSet);
+	void setNetworkGroupDAO(IBaseDao<NetworkGroup, Integer> daoToSet);
 	
-	void setOtherSystemCategoryDAO(IBaseDao<OtherSystemCategory, Integer> daoToSet);
-	
-	void setPersonCategoryDAO(IBaseDao<PersonCategory, Integer> daoToSet);
-	
-	void setRoomCategoryDAO(IBaseDao<RoomCategory, Integer> daoToSet);
+	void setRoomGroupDAO(IBaseDao<RoomGroup, Integer> daoToSet);
+    
+    void setSafeguardGroupDAO(IBaseDao<SafeguardGroup, Integer> daoToSet);
 
 	/**
      * Returns a special Dao for use 

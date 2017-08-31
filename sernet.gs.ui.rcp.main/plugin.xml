@@ -214,10 +214,10 @@
       </view>
       <view
             allowMultiple="false"
-            category="sernet.verinice.moditbp.rcp"
-            class="sernet.verinice.moditbp.rcp.ModITBPView"
+            category="sernet.verinice.bp.rcp"
+            class="sernet.verinice.bp.rcp.ModITBPView"
             icon="icons/sweetie-verinice/png/16-dice-grey.png"
-            id="sernet.verinice.moditbp.rcp.ModITBPView"
+            id="sernet.verinice.bp.rcp.ModITBPView"
             name="%view.name.20"
             restorable="true">
       </view>      
@@ -1109,41 +1109,97 @@
 		</objectContribution> 
 	<objectContribution
             adaptable="false"
-            id="sernet.gs.ui.rcp.main.moditbp.applicationContrib"
-            objectClass="sernet.verinice.model.moditbp.categories.ApplicationCategory">
+            id="sernet.gs.ui.rcp.main.bp.applicationContrib"
+            objectClass="sernet.verinice.model.bp.categories.ApplicationGroup">
          <action
-               class="sernet.verinice.moditbp.rcp.action.AddApplicationActionDelegate"
+               class="sernet.verinice.bp.rcp.action.AddApplicationActionDelegate"
                enablesFor="+"
                icon="icons/application_osx.png"
-               id="sernet.gs.ui.rcp.main.moditbp.application"
+               id="sernet.gs.ui.rcp.main.bp.application"
                label="%action.label.addApplication"
                menubarPath="content"
                style="push"
                tooltip="%action.tooltip.addApplication"/>
-      </objectContribution>
-	<objectContribution
+      </objectContribution>              
+	    <objectContribution
             adaptable="false"
-            id="sernet.gs.ui.rcp.main.moditbp.businessProcessContrib"
-            objectClass="sernet.verinice.model.moditbp.categories.BusinessProcessCategory">
+            id="sernet.gs.ui.rcp.main.bp.modITBPPersonContrib"
+            objectClass="sernet.verinice.model.bp.categories.BpPersonGroup">
          <action
-               class="sernet.verinice.moditbp.rcp.action.AddBusinessProcessActionDelegate"
+               class="sernet.verinice.bp.rcp.action.AddBpPersonActionDelegate"
                enablesFor="+"
                icon="icons/application_osx.png"
-               id="sernet.gs.ui.rcp.main.moditbp.businessprocess"
+               id="sernet.gs.ui.rcp.main.bp.modITBPperson"
+               label="%action.label.addModITBPPerson"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addModITBPPerson"/>
+      </objectContribution>           
+	    <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.BpRequirementContrib"
+            objectClass="sernet.verinice.model.bp.categories.BpRequirementGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddBpRequirementActionDelegate"
+               enablesFor="+"
+               icon="icons/application_osx.png"
+               id="sernet.gs.ui.rcp.main.bp.modITBpRequirement"
+               label="%action.label.addBpRequirement"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addBpRequirement"/>
+      </objectContribution>              
+	    <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.BpThreatContrib"
+            objectClass="sernet.verinice.model.bp.categories.BpThreatGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddBpThreatActionDelegate"
+               enablesFor="+"
+               icon="icons/application_osx.png"
+               id="sernet.gs.ui.rcp.main.bp.BpThreat"
+               label="%action.label.addBpThreat"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addBpThreat"/>
+      </objectContribution>
+	    <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.businessProcessContrib"
+            objectClass="sernet.verinice.model.bp.categories.BusinessProcessGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddBusinessProcessActionDelegate"
+               enablesFor="+"
+               icon="icons/application_osx.png"
+               id="sernet.gs.ui.rcp.main.bp.businessprocess"
                label="%action.label.addBusinessProcess"
                menubarPath="content"
                style="push"
                tooltip="%action.tooltip.addBusinessProcess"/>
       </objectContribution>
-      <objectContribution
+	    <objectContribution
             adaptable="false"
-            id="sernet.gs.ui.rcp.main.moditbp.icsSystemContrib"
-            objectClass="sernet.verinice.model.moditbp.categories.ICSSystemCategory">
+            id="sernet.gs.ui.rcp.main.bp.otherSystemContrib"
+            objectClass="sernet.verinice.model.bp.categories.DeviceGroup">
          <action
-               class="sernet.verinice.moditbp.rcp.action.AddICSSystemActionDelegate"
+               class="sernet.verinice.bp.rcp.action.AddDeviceActionDelegate"
                enablesFor="+"
                icon="icons/application_osx.png"
-               id="sernet.gs.ui.rcp.main.moditbp.icssystem"
+               id="sernet.gs.ui.rcp.main.bp.othersystem"
+               label="%action.label.addOtherSystem"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addOtherSystem"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.icsSystemContrib"
+            objectClass="sernet.verinice.model.bp.categories.IcsSystemGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddIcsSystemActionDelegate"
+               enablesFor="+"
+               icon="icons/application_osx.png"
+               id="sernet.gs.ui.rcp.main.bp.icssystem"
                label="%action.label.addICSSystem"
                menubarPath="content"
                style="push"
@@ -1151,73 +1207,73 @@
       </objectContribution>
 	<objectContribution
             adaptable="false"
-            id="sernet.gs.ui.rcp.main.moditbp.itSystemContrib"
-            objectClass="sernet.verinice.model.moditbp.categories.ITSystemCategory">
+            id="sernet.gs.ui.rcp.main.bp.itSystemContrib"
+            objectClass="sernet.verinice.model.bp.categories.ItSystemGroup">
          <action
-               class="sernet.verinice.moditbp.rcp.action.AddITSystemActionDelegate"
+               class="sernet.verinice.bp.rcp.action.AddItSystemActionDelegate"
                enablesFor="+"
                icon="icons/application_osx.png"
-               id="sernet.gs.ui.rcp.main.moditbp.itsystem"
+               id="sernet.gs.ui.rcp.main.bp.itsystem"
                label="%action.label.addITSystem"
                menubarPath="content"
                style="push"
                tooltip="%action.tooltip.addITSystem"/>
-      </objectContribution>               
-	<objectContribution
+      </objectContribution> 
+	    <objectContribution
             adaptable="false"
-            id="sernet.gs.ui.rcp.main.moditbp.modITBPPersonContrib"
-            objectClass="sernet.verinice.model.moditbp.categories.PersonCategory">
+            id="sernet.gs.ui.rcp.main.bp.deviceContrib"
+            objectClass="sernet.verinice.model.bp.categories.DeviceGroup">
          <action
-               class="sernet.verinice.moditbp.rcp.action.AddModITBPPersonActionDelegate"
+               class="sernet.verinice.bp.rcp.action.AddDeviceActionDelegate"
                enablesFor="+"
                icon="icons/application_osx.png"
-               id="sernet.gs.ui.rcp.main.moditbp.modITBPperson"
-               label="%action.label.addModITBPPerson"
+               id="sernet.gs.ui.rcp.main.bp.device"
+               label="%action.label.addDevice"
                menubarPath="content"
                style="push"
-               tooltip="%action.tooltip.addModITBPPerson"/>
+               tooltip="%action.tooltip.addDevice"/>
       </objectContribution>
-	<objectContribution
+	    <objectContribution
             adaptable="false"
-            id="sernet.gs.ui.rcp.main.moditbp.networkContrib"
-            objectClass="sernet.verinice.model.moditbp.categories.NetworkCategory">
+            id="sernet.gs.ui.rcp.main.bp.networkContrib"
+            objectClass="sernet.verinice.model.bp.categories.NetworkGroup">
          <action
-               class="sernet.verinice.moditbp.rcp.action.AddNetworkActionDelegate"
+               class="sernet.verinice.bp.rcp.action.AddNetworkActionDelegate"
                enablesFor="+"
                icon="icons/application_osx.png"
-               id="sernet.gs.ui.rcp.main.moditbp.network"
+               id="sernet.gs.ui.rcp.main.bp.network"
                label="%action.label.addNetwork"
                menubarPath="content"
                style="push"
                tooltip="%action.tooltip.addNetwork"/>
       </objectContribution>
-	<objectContribution
+	    <objectContribution
             adaptable="false"
-            id="sernet.gs.ui.rcp.main.moditbp.otherSystemContrib"
-            objectClass="sernet.verinice.model.moditbp.categories.OtherSystemCategory">
+            id="sernet.gs.ui.rcp.main.bp.roomContrib"
+            objectClass="sernet.verinice.model.bp.categories.RoomGroup">
          <action
-               class="sernet.verinice.moditbp.rcp.action.AddOtherSystemActionDelegate"
+               class="sernet.verinice.bp.rcp.action.AddRoomActionDelegate"
                enablesFor="+"
                icon="icons/application_osx.png"
-               id="sernet.gs.ui.rcp.main.moditbp.othersystem"
-               label="%action.label.addOtherSystem"
-               menubarPath="content"
-               style="push"
-               tooltip="%action.tooltip.addOtherSystem"/>
-      </objectContribution>
-	<objectContribution
-            adaptable="false"
-            id="sernet.gs.ui.rcp.main.moditbp.roomContrib"
-            objectClass="sernet.verinice.model.moditbp.categories.RoomCategory">
-         <action
-               class="sernet.verinice.moditbp.rcp.action.AddRoomActionDelegate"
-               enablesFor="+"
-               icon="icons/application_osx.png"
-               id="sernet.gs.ui.rcp.main.moditbp.room"
+               id="sernet.gs.ui.rcp.main.bp.room"
                label="%action.label.addRoom"
                menubarPath="content"
                style="push"
                tooltip="%action.tooltip.addRoom"/>
+      </objectContribution>
+	    <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.safeguardContrib"
+            objectClass="sernet.verinice.model.bp.categories.SafeguardGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddSafeguardActionDelegate"
+               enablesFor="+"
+               icon="icons/application_osx.png"
+               id="sernet.gs.ui.rcp.main.bp.safeguard"
+               label="%action.label.addSafeguard"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addSafeguard"/>
       </objectContribution>
    </extension>                               
    <extension point="org.eclipse.ui.menus">
@@ -1308,7 +1364,7 @@
                icon="icons/16-em-cross.png"
                label="%command.label.delete"/>
       </menuContribution>
-      <menuContribution locationURI="popup:sernet.verinice.moditbp.rcp.ModITBPView?after=additions">
+      <menuContribution locationURI="popup:sernet.verinice.bp.rcp.ModITBPView?after=additions">
          <command
                commandId="org.eclipse.ui.edit.cut"
                disabledIcon="icons/cut.png"
@@ -1860,12 +1916,12 @@
          </action>
       </viewContribution>
        <viewContribution
-      		id="sernet.verinice.moditbp.rcp.action.AddITNetworkActionDelegate"
-      		targetID="sernet.verinice.moditbp.rcp.ModITBPView">
+      		id="sernet.verinice.bp.rcp.action.AddItNetworkActionDelegate"
+      		targetID="sernet.verinice.bp.rcp.ModITBPView">
              <action
-               class="sernet.verinice.moditbp.rcp.action.AddITNetworkActionDelegate"
+               class="sernet.verinice.bp.rcp.action.AddItNetworkActionDelegate"
                icon="icons/note-new.png"
-               id="sernet.verinice.moditbp.rcp.action.AddITNetworkActionDelegate"
+               id="sernet.verinice.bp.rcp.action.AddItNetworkActionDelegate"
                label="%action.label.11"
                state="true"
                style="push"
@@ -1883,7 +1939,7 @@
 	     			<or>
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
-	       				<equals value="sernet.verinice.moditbp.rcp.ModITBPView" />
+	       				<equals value="sernet.verinice.bp.rcp.ModITBPView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -1946,7 +2002,7 @@
 	     			<or>
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
-	       				<equals value="sernet.verinice.moditbp.rcp.ModITBPView" />
+	       				<equals value="sernet.verinice.bp.rcp.ModITBPView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -1976,7 +2032,7 @@
 	     			<or>
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
-	       				<equals value="sernet.verinice.moditbp.rcp.ModITBPView" />
+	       				<equals value="sernet.verinice.bp.rcp.ModITBPView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -2036,7 +2092,7 @@
      			<or>
        				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
        				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
-       				<equals value="sernet.verinice.moditbp.rcp.ModITBPView" />
+       				<equals value="sernet.verinice.bp.rcp.ModITBPView" />
        			</or>
     		</with>
          </activeWhen> 

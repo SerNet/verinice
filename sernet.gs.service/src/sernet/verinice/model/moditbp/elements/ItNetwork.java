@@ -21,14 +21,17 @@ package sernet.verinice.model.moditbp.elements;
 
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.moditbp.IBpElement;
-import sernet.verinice.model.moditbp.categories.ApplicationCategory;
-import sernet.verinice.model.moditbp.categories.BusinessProcessCategory;
-import sernet.verinice.model.moditbp.categories.ICSSystemCategory;
-import sernet.verinice.model.moditbp.categories.ITSystemCategory;
-import sernet.verinice.model.moditbp.categories.NetworkCategory;
-import sernet.verinice.model.moditbp.categories.OtherSystemCategory;
-import sernet.verinice.model.moditbp.categories.PersonCategory;
-import sernet.verinice.model.moditbp.categories.RoomCategory;
+import sernet.verinice.model.moditbp.categories.ApplicationGroup;
+import sernet.verinice.model.moditbp.categories.BusinessProcessGroup;
+import sernet.verinice.model.moditbp.categories.IcsSystemGroup;
+import sernet.verinice.model.moditbp.categories.ItSystemGroup;
+import sernet.verinice.model.moditbp.categories.NetworkGroup;
+import sernet.verinice.model.moditbp.categories.DeviceGroup;
+import sernet.verinice.model.moditbp.categories.BpPersonGroup;
+import sernet.verinice.model.moditbp.categories.BpRequirementGroup;
+import sernet.verinice.model.moditbp.categories.BpThreatGroup;
+import sernet.verinice.model.moditbp.categories.RoomGroup;
+import sernet.verinice.model.moditbp.categories.SafeguardGroup;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -48,36 +51,38 @@ public class ItNetwork extends CnATreeElement implements IBpElement  {
     }     
     
     public void createNewCategories() {
-        addChild(new ApplicationCategory(this));
-        addChild(new BusinessProcessCategory(this));
-        addChild(new ICSSystemCategory(this));
-        addChild(new ITSystemCategory(this));
-        addChild(new NetworkCategory(this));
-        addChild(new OtherSystemCategory(this));
-        addChild(new PersonCategory(this));
-        addChild(new RoomCategory(this));
+        addChild(new ApplicationGroup(this));
+        addChild(new BpPersonGroup(this));
+        addChild(new BpRequirementGroup(this));
+        addChild(new BpThreatGroup(this));
+        addChild(new BusinessProcessGroup(this));
+        addChild(new DeviceGroup(this));
+        addChild(new IcsSystemGroup(this));
+        addChild(new ItSystemGroup(this));
+        addChild(new NetworkGroup(this));
+        addChild(new RoomGroup(this));
+        addChild(new SafeguardGroup(this));
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTypeId()
-     */
     @Override
     public String getTypeId() {
         return TYPE_ID;
     }
     
-    
     @Override
     public boolean canContain(Object object) {
         return object instanceof BpRequirement ||
-                object instanceof ApplicationCategory ||
-                object instanceof BusinessProcessCategory ||
-                object instanceof ICSSystemCategory ||
-                object instanceof ITSystemCategory ||
-                object instanceof NetworkCategory ||
-                object instanceof OtherSystemCategory ||
-                object instanceof PersonCategory ||
-                object instanceof RoomCategory;
+               object instanceof ApplicationGroup ||
+               object instanceof BpPersonGroup ||
+               object instanceof BpRequirementGroup ||
+               object instanceof BpThreatGroup ||
+               object instanceof BusinessProcessGroup ||
+               object instanceof DeviceGroup ||
+               object instanceof IcsSystemGroup ||
+               object instanceof ItSystemGroup ||
+               object instanceof NetworkGroup ||
+               object instanceof RoomGroup ||
+               object instanceof SafeguardGroup;
     }
 
 }

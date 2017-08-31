@@ -20,36 +20,28 @@
 package sernet.verinice.model.moditbp.categories;
 
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.moditbp.ModITBPCategory;
-import sernet.verinice.model.moditbp.elements.Application;
+import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.moditbp.IBpGroup;
+import sernet.verinice.model.moditbp.elements.BpRequirement;
 
 /**
+ * 
  * @author Sebastian Hagedorn sh[at]sernet.de
- *
  */
-public class ApplicationCategory extends CnATreeElement implements ModITBPCategory {
+public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup {
     
-    private static final long serialVersionUID = -6856197006068953402L;
-
-    public static final String TYPE_ID = "moditbp_applicationcategory";
+    private static final long serialVersionUID = 7752776589962581995L;
     
-    public ApplicationCategory(CnATreeElement parent) {
+    public static final String TYPE_ID = "bp_requirementgroup";
+    
+    public static final String[] CHILD_TYPES = new String[] {BpRequirement.TYPE_ID};
+    
+    protected BpRequirementGroup() {}
+    
+    public BpRequirementGroup(CnATreeElement parent) {
         super(parent);
     }
-    
-    protected ApplicationCategory() {}
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTitle()
-     */
-    @Override
-    public String getTitle() {
-        return getTypeFactory().getMessage(TYPE_ID);
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTypeId()
-     */
     @Override
     public String getTypeId() {
         return TYPE_ID;
@@ -57,7 +49,12 @@ public class ApplicationCategory extends CnATreeElement implements ModITBPCatego
     
     @Override
     public boolean canContain(Object object) {
-        return object instanceof Application;
+        return object instanceof BpRequirement;
+    }
+    
+    @Override
+    public String[] getChildTypes() {
+        return CHILD_TYPES;
     }
 
 }

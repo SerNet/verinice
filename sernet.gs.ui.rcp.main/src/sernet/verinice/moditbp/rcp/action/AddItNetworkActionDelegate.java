@@ -40,7 +40,7 @@ import sernet.verinice.rcp.RightsEnabledActionDelegate;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class AddITNetworkActionDelegate extends RightsEnabledActionDelegate implements IViewActionDelegate, RightEnabledUserInteraction{
+public class AddItNetworkActionDelegate extends RightsEnabledActionDelegate implements IViewActionDelegate, RightEnabledUserInteraction{
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()

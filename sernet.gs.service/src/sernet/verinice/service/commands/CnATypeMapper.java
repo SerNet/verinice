@@ -84,14 +84,17 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
-import sernet.verinice.model.moditbp.categories.ApplicationCategory;
-import sernet.verinice.model.moditbp.categories.BusinessProcessCategory;
-import sernet.verinice.model.moditbp.categories.ICSSystemCategory;
-import sernet.verinice.model.moditbp.categories.ITSystemCategory;
-import sernet.verinice.model.moditbp.categories.NetworkCategory;
-import sernet.verinice.model.moditbp.categories.OtherSystemCategory;
-import sernet.verinice.model.moditbp.categories.PersonCategory;
-import sernet.verinice.model.moditbp.categories.RoomCategory;
+import sernet.verinice.model.moditbp.categories.ApplicationGroup;
+import sernet.verinice.model.moditbp.categories.BusinessProcessGroup;
+import sernet.verinice.model.moditbp.categories.IcsSystemGroup;
+import sernet.verinice.model.moditbp.categories.ItSystemGroup;
+import sernet.verinice.model.moditbp.categories.NetworkGroup;
+import sernet.verinice.model.moditbp.categories.DeviceGroup;
+import sernet.verinice.model.moditbp.categories.BpPersonGroup;
+import sernet.verinice.model.moditbp.categories.BpRequirementGroup;
+import sernet.verinice.model.moditbp.categories.BpThreatGroup;
+import sernet.verinice.model.moditbp.categories.RoomGroup;
+import sernet.verinice.model.moditbp.categories.SafeguardGroup;
 import sernet.verinice.model.moditbp.elements.Application;
 import sernet.verinice.model.moditbp.elements.BusinessProcess;
 import sernet.verinice.model.moditbp.elements.IcsSystem;
@@ -195,25 +198,28 @@ public class CnATypeMapper {
         typeIdClass.put(GefaehrdungsUmsetzung.TYPE_ID, GefaehrdungsUmsetzung.class);
         typeIdClass.put(FinishedRiskAnalysis.TYPE_ID, FinishedRiskAnalysis.class);
         
-        typeIdClass.put(ApplicationCategory.TYPE_ID, ApplicationCategory.class);
-        typeIdClass.put(BusinessProcessCategory.TYPE_ID, BusinessProcessCategory.class);
-        typeIdClass.put(ICSSystemCategory.TYPE_ID, ICSSystemCategory.class);
-        typeIdClass.put(ITSystemCategory.TYPE_ID, ITSystemCategory.class);
-        typeIdClass.put(NetworkCategory.TYPE_ID, NetworkCategory.class);
-        typeIdClass.put(OtherSystemCategory.TYPE_ID, OtherSystemCategory.class);
-        typeIdClass.put(PersonCategory.TYPE_ID, PersonCategory.class);
-        typeIdClass.put(RoomCategory.TYPE_ID, RoomCategory.class);
+        typeIdClass.put(ApplicationGroup.TYPE_ID, ApplicationGroup.class);
+        typeIdClass.put(BpPersonGroup.TYPE_ID, BpPersonGroup.class);
+        typeIdClass.put(BpRequirementGroup.TYPE_ID, BpRequirementGroup.class);
+        typeIdClass.put(BpThreatGroup.TYPE_ID, BpThreatGroup.class);
+        typeIdClass.put(BusinessProcessGroup.TYPE_ID, BusinessProcessGroup.class);
+        typeIdClass.put(DeviceGroup.TYPE_ID, DeviceGroup.class);
+        typeIdClass.put(IcsSystemGroup.TYPE_ID, IcsSystemGroup.class);
+        typeIdClass.put(ItSystemGroup.TYPE_ID, ItSystemGroup.class);
+        typeIdClass.put(NetworkGroup.TYPE_ID, NetworkGroup.class);
+        typeIdClass.put(RoomGroup.TYPE_ID, RoomGroup.class);
+        typeIdClass.put(SafeguardGroup.TYPE_ID, SafeguardGroup.class);
         
         typeIdClass.put(Application.TYPE_ID, Application.class);
-        typeIdClass.put(BusinessProcess.TYPE_ID, BusinessProcess.class);
-        typeIdClass.put(IcsSystem.TYPE_ID, IcsSystem.class);
-        typeIdClass.put(ItNetwork.TYPE_ID, ItNetwork.class);
-        typeIdClass.put(ItSystem.TYPE_ID, ItSystem.class);
         typeIdClass.put(BpPerson.TYPE_ID, BpPerson.class);
         typeIdClass.put(BpThreat.TYPE_ID, BpThreat.class);
         typeIdClass.put(BpRequirement.TYPE_ID, BpRequirement.class);
-        typeIdClass.put(Network.TYPE_ID, Network.class);
+        typeIdClass.put(BusinessProcess.TYPE_ID, BusinessProcess.class);
         typeIdClass.put(Device.TYPE_ID, Device.class);
+        typeIdClass.put(IcsSystem.TYPE_ID, IcsSystem.class);
+        typeIdClass.put(ItNetwork.TYPE_ID, ItNetwork.class);
+        typeIdClass.put(ItSystem.TYPE_ID, ItSystem.class);
+        typeIdClass.put(Network.TYPE_ID, Network.class);
         typeIdClass.put(Room.TYPE_ID, Room.class);
         typeIdClass.put(Safeguard.TYPE_ID, Safeguard.class);
         
@@ -271,14 +277,17 @@ public class CnATypeMapper {
     };
     
     private static final String[] BP_ELEMENT_TYPES = new String[] {
-            ApplicationCategory.TYPE_ID,
-            BusinessProcessCategory.TYPE_ID,
-            ICSSystemCategory.TYPE_ID,
-            ITSystemCategory.TYPE_ID,
-            NetworkCategory.TYPE_ID,
-            OtherSystemCategory.TYPE_ID,
-            PersonCategory.TYPE_ID,
-            RoomCategory.TYPE_ID,
+        ApplicationGroup.TYPE_ID,
+        BpPersonGroup.TYPE_ID,
+        BpRequirementGroup.TYPE_ID,
+        BpThreatGroup.TYPE_ID,
+        BusinessProcessGroup.TYPE_ID,
+        DeviceGroup.TYPE_ID,
+        IcsSystemGroup.TYPE_ID,
+        ItSystemGroup.TYPE_ID,
+        NetworkGroup.TYPE_ID,
+        RoomGroup.TYPE_ID,
+        SafeguardGroup.TYPE_ID,
     };
     
     /**

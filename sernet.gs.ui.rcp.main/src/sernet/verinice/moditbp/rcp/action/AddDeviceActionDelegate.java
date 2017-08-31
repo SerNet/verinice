@@ -29,14 +29,15 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.moditbp.categories.PersonCategory;
-import sernet.verinice.model.moditbp.elements.BpPerson;
+import sernet.verinice.model.moditbp.categories.DeviceGroup;
+import sernet.verinice.model.moditbp.elements.Device;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class AddModITBPPersonActionDelegate extends AbstractAddModITBPElementActionDelegate {
+public class AddDeviceActionDelegate extends AbstractAddBpElementActionDelegate {
+
     private IWorkbenchPart targetPart;
 
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
@@ -48,19 +49,19 @@ public class AddModITBPPersonActionDelegate extends AbstractAddModITBPElementAct
         try {
             Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
             CnATreeElement newElement = null;
-            if (sel instanceof PersonCategory) {
+            if (sel instanceof DeviceGroup) {
                 CnATreeElement cont = (CnATreeElement) sel;
                 boolean inheritIcon = Activator.getDefault().getPreferenceStore()
                         .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);
-                newElement = CnAElementFactory.getInstance().saveNew(cont, BpPerson.TYPE_ID, null, inheritIcon);
+                newElement = CnAElementFactory.getInstance().saveNew(cont, Device.TYPE_ID, null, inheritIcon);
             }
             if (newElement != null) {
                 EditorFactory.getInstance().openEditor(newElement);
             }
         } catch (Exception e) {
-            ExceptionUtil.log(e, Messages.AddPersonDelegate_0);
+            ExceptionUtil.log(e, Messages.AddOtherSystemDelegate_0);
         }
 
     }
-
+    
 }

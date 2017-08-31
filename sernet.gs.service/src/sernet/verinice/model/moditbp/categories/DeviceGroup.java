@@ -20,44 +20,41 @@
 package sernet.verinice.model.moditbp.categories;
 
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.moditbp.ModITBPCategory;
-import sernet.verinice.model.moditbp.elements.Network;
+import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.moditbp.IBpGroup;
+import sernet.verinice.model.moditbp.elements.Device;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class NetworkCategory extends CnATreeElement implements ModITBPCategory {
+public class DeviceGroup extends Group<Device> implements IBpGroup {
     
-    private static final long serialVersionUID = 6166611011332324047L;
+    private static final long serialVersionUID = 2378844509548812805L;
     
-    public static final String TYPE_ID = "moditbp_networkcategory";
+    public static final String TYPE_ID = "bp_devicegroup";
     
-    public NetworkCategory(CnATreeElement parent) {
+    public static final String[] CHILD_TYPES = new String[] {Device.TYPE_ID};
+    
+    protected DeviceGroup() {}
+    
+    public DeviceGroup(CnATreeElement parent) {
         super(parent);
     }
-    
-    protected NetworkCategory() {}
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTitle()
-     */
-    @Override
-    public String getTitle() {
-        return getTypeFactory().getMessage(TYPE_ID);
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTypeId()
-     */
     @Override
     public String getTypeId() {
         return TYPE_ID;
     }
-    
+
     @Override
     public boolean canContain(Object object) {
-        return object instanceof Network;
+        return object instanceof Device;
     }
-
+    
+    @Override
+    public String[] getChildTypes() {
+        return CHILD_TYPES;
+    }
+    
 }

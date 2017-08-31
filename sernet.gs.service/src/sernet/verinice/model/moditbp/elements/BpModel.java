@@ -35,8 +35,10 @@ import sernet.verinice.model.moditbp.IModITBPModelListener;
  */
 public class BpModel extends CnATreeElement implements IBpRoot {
     
+    private static final long serialVersionUID = -1004542015430694865L;
+    
     public static final String TYPE_ID = "bp_model"; //$NON-NLS-1$    
-    public static final String TITLE = "Modernized ITBP Modeling"; //$NON-NLS-1$
+    public static final String TITLE = "Modernized ITBP Model"; //$NON-NLS-1$
     
     private transient Logger log;
     
@@ -69,7 +71,7 @@ public class BpModel extends CnATreeElement implements IBpRoot {
     
     private synchronized List<IModITBPModelListener> getListeners() {
         if (listeners == null){
-            listeners = new CopyOnWriteArrayList<IModITBPModelListener>();
+            listeners = new CopyOnWriteArrayList<>();
         }
         return listeners;
     }
@@ -113,6 +115,7 @@ public class BpModel extends CnATreeElement implements IBpRoot {
         }
     }
     
+    @Override
     public void databaseChildRemoved(CnATreeElement child) {
         for (IModITBPModelListener listener : getListeners()) {
             listener.databaseChildRemoved(child);

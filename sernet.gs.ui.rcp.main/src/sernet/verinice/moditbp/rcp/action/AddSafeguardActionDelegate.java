@@ -29,14 +29,14 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.moditbp.categories.ICSSystemCategory;
-import sernet.verinice.model.moditbp.elements.IcsSystem;
+import sernet.verinice.model.moditbp.categories.SafeguardGroup;
+import sernet.verinice.model.moditbp.elements.Safeguard;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class AddICSSystemActionDelegate extends AbstractAddModITBPElementActionDelegate {
+public class AddSafeguardActionDelegate extends AbstractAddBpElementActionDelegate {
 
     private IWorkbenchPart targetPart;
 
@@ -49,17 +49,17 @@ public class AddICSSystemActionDelegate extends AbstractAddModITBPElementActionD
         try {
             Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
             CnATreeElement newElement = null;
-            if (sel instanceof ICSSystemCategory) {
+            if (sel instanceof SafeguardGroup) {
                 CnATreeElement cont = (CnATreeElement) sel;
                 boolean inheritIcon = Activator.getDefault().getPreferenceStore()
                         .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);
-                newElement = CnAElementFactory.getInstance().saveNew(cont, IcsSystem.TYPE_ID, null, inheritIcon);
+                newElement = CnAElementFactory.getInstance().saveNew(cont, Safeguard.TYPE_ID, null, inheritIcon);
             }
             if (newElement != null) {
                 EditorFactory.getInstance().openEditor(newElement);
             }
         } catch (Exception e) {
-            ExceptionUtil.log(e, Messages.AddICSSystemDelegate_0);
+            ExceptionUtil.log(e, Messages.AddRoomDelegate_0);
         }
 
     }

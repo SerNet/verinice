@@ -20,42 +20,41 @@
 package sernet.verinice.model.moditbp.categories;
 
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.moditbp.ModITBPCategory;
-import sernet.verinice.model.moditbp.elements.BusinessProcess;
+import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.moditbp.IBpGroup;
+import sernet.verinice.model.moditbp.elements.ItSystem;
 
 /**
+ * 
  * @author Sebastian Hagedorn sh[at]sernet.de
- *
  */
-public class BusinessProcessCategory extends CnATreeElement  implements ModITBPCategory {
+public class ItSystemGroup extends Group<ItSystem> implements IBpGroup {
     
-    public static final String TYPE_ID = "moditbp_businessprocesscategory";
+    private static final long serialVersionUID = -8454160472717996490L;
     
-    public BusinessProcessCategory(CnATreeElement parent) {
+    public static final String TYPE_ID = "bp_itsystemgroup";
+    
+    public static final String[] CHILD_TYPES = new String[] {ItSystem.TYPE_ID};
+    
+    protected ItSystemGroup() {}
+    
+    public ItSystemGroup(CnATreeElement parent) {
         super(parent);
     }
-    
-    protected BusinessProcessCategory() {}
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.IBSIStrukturKategorie#getTitle()
-     */
-    @Override
-    public String getTitle() {
-        return getTypeFactory().getMessage(TYPE_ID);
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.common.CnATreeElement#getTypeId()
-     */
     @Override
     public String getTypeId() {
         return TYPE_ID;
     }
-
+    
     @Override
     public boolean canContain(Object object) {
-        return object instanceof BusinessProcess;
+        return object instanceof ItSystem;
+    }
+    
+    @Override
+    public String[] getChildTypes() {
+        return CHILD_TYPES;
     }
 
 }
