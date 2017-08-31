@@ -26,7 +26,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class RequirementGroup extends Group<Requirement> {
+public class RequirementGroup extends Group<Requirement> implements IISO27kGroup {
 
 	public static final String TYPE_ID = "requirementgroup"; //$NON-NLS-1$
 	public static final String PROP_NAME = "requirementgroup_name"; //$NON-NLS-1$

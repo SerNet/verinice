@@ -31,13 +31,12 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public abstract class Group<T> extends CnATreeElement implements IISO27kGroup {
+public abstract class Group<T> extends CnATreeElement {
 	
 	public Group() {
 		super();
 	}
 	
-	@Override
     public String getAbbreviation() {
 	    return "";
 	}
@@ -55,7 +54,6 @@ public abstract class Group<T> extends CnATreeElement implements IISO27kGroup {
 	 * 
 	 * @return array of child-type-ids
 	 */
-	@Override
     public abstract String[] getChildTypes();
 	
 	/* (non-Javadoc)
@@ -72,7 +70,6 @@ public abstract class Group<T> extends CnATreeElement implements IISO27kGroup {
 		return canContain;
 	}
 	
-	@Override
     public Collection<? extends String> getTags() {
 		// empty, override this to add tags to groups
 		// dont't forget to add a huiproperty to your SNCA.xml
