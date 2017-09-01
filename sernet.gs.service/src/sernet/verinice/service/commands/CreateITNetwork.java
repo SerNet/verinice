@@ -21,8 +21,8 @@ package sernet.verinice.service.commands;
 
 import java.util.Set;
 
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.moditbp.elements.ItNetwork;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de

@@ -61,7 +61,6 @@ import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
 import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
 import sernet.verinice.model.licensemanagement.NoLicenseAssignedException;
-import sernet.verinice.model.moditbp.ModITBPCategory;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.rcp.account.LicenseMgmtPage;
 import sernet.verinice.service.parser.GSScraperUtil;

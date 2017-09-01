@@ -52,11 +52,11 @@ import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.moditbp.elements.BpModel;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.task.FindRelationsFor;
 
@@ -247,7 +247,7 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
             @Override
             public void loaded(BpModel model) {
                 synchronized (loadListener) {
-                    addModITBPModelListeners();
+                    addBpModelListeners();
                 }                
             }
 
@@ -280,7 +280,7 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         JobScheduler.scheduleInitJob(initDataJob);
     }
 
-    protected void addModITBPModelListeners() {
+    protected void addBpModelListeners() {
         WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
@@ -288,7 +288,7 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
                 try {
                     monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
                     if (CnAElementFactory.isModelLoaded()) {
-                        CnAElementFactory.getInstance().getModITBPModel().addModITBOModelListener(contentProvider);
+                        CnAElementFactory.getInstance().getBpModel().addModITBOModelListener(contentProvider);
                     }
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
@@ -337,8 +337,8 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         if (CnAElementFactory.isIsoModelLoaded()) {
             CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
         }
-        if(CnAElementFactory.isModITBPModelLoaded()) {
-            CnAElementFactory.getInstance().getModITBPModel().removeModITBPModelListener(contentProvider);
+        if(CnAElementFactory.isBpModelLoaded()) {
+            CnAElementFactory.getInstance().getBpModel().removeBpModelListener(contentProvider);
         }
     }
 

@@ -34,7 +34,7 @@
             "searchreindex"
             "showallfiles" -->
             <action id="addbsielement" />
-            <action id="addmoditbpelement"/>
+            <action id="addbpelement"/>
             <action id="addcatalog" />
             <action id="addfile" />
             <action id="addismelement" />
@@ -81,7 +81,7 @@
             <action id="ismview" />
             <action id="ismviewweb" />
             <action id="konsolidator" />
-            <action id="moditbpmodelview" />
+            <action id="bpmodelview" />
             <action id="naturalize" />
             <action id="notes" />
             <action id="relations" />
@@ -128,7 +128,7 @@
             "showallfiles"
             "addsecurityassessment"-->
 	        <action id="addbsielement" />
-	        <action id="addmoditbpelement"/>
+	        <action id="addbpelement"/>
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
@@ -170,7 +170,7 @@
 	        <action id="ismview" />
           <action id="ismviewweb" />
 	        <action id="konsolidator" />
-	        <action id="moditbpmodelview" />
+	        <action id="bpmodelview" />
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />
@@ -218,7 +218,7 @@
             <action id="ismview" />
             <action id="ismviewweb" />
             <action id="konsolidator" />
-            <action id="moditbpmodelview" />
+            <action id="bpmodelview" />
             <action id="naturalize" />
             <action id="notes" />
             <action id="relations" />
@@ -256,7 +256,7 @@
           	"xmlimport"  -->
            	<action id="accesscontrol" />
 	        <action id="addbsielement" />
-	        <action id="addmoditbpelement"/>
+	        <action id="addbpelement"/>
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
@@ -296,7 +296,7 @@
 	        <action id="ismview" />
           <action id="ismviewweb" />
 	        <action id="konsolidator" />
-	        <action id="moditbpmodelview" />
+	        <action id="bpmodelview" />
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />
@@ -336,7 +336,7 @@
           	<action id="accesscontrol" /> 
             <action id="accountsettings" /> 
             <action id="addbsielement" /> 
-            <action id="addmoditbpelement"/>
+            <action id="addbpelement"/>
             <action id="addcatalog" /> 
             <action id="addfile" /> 
             <action id="addismelement" /> 
@@ -377,7 +377,7 @@
             <action id="ismview" /> 
           	<action id="ismviewweb" /> 
             <action id="konsolidator" /> 
-            <action id="moditbpmodelview" />
+            <action id="bpmodelview" />
             <action id="naturalize" /> 
             <action id="notes" /> 
             <action id="relations" /> 
@@ -409,7 +409,7 @@
 	      <action id="accesscontrol" />
 	        <action id="accountsettings" />
 	        <action id="addbsielement" />
-	        <action id="addmoditbpelement"/>
+	        <action id="addbpelement"/>
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
@@ -457,7 +457,7 @@
 	        <action id="ismview" />
           <action id="ismviewweb" />
 	        <action id="konsolidator" />
-	        <action id="moditbpmodelview" />
+	        <action id="bpmodelview" />
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />

@@ -215,9 +215,9 @@
       <view
             allowMultiple="false"
             category="sernet.verinice.bp.rcp"
-            class="sernet.verinice.bp.rcp.ModITBPView"
+            class="sernet.verinice.bp.rcp.BaseProtectionView"
             icon="icons/sweetie-verinice/png/16-dice-grey.png"
-            id="sernet.verinice.bp.rcp.ModITBPView"
+            id="sernet.verinice.bp.rcp.BaseProtectionView"
             name="%view.name.20"
             restorable="true">
       </view>      
@@ -1110,7 +1110,7 @@
 	<objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bp.applicationContrib"
-            objectClass="sernet.verinice.model.bp.categories.ApplicationGroup">
+            objectClass="sernet.verinice.model.bp.groups.ApplicationGroup">
          <action
                class="sernet.verinice.bp.rcp.action.AddApplicationActionDelegate"
                enablesFor="+"
@@ -1123,27 +1123,27 @@
       </objectContribution>              
 	    <objectContribution
             adaptable="false"
-            id="sernet.gs.ui.rcp.main.bp.modITBPPersonContrib"
-            objectClass="sernet.verinice.model.bp.categories.BpPersonGroup">
+            id="sernet.gs.ui.rcp.main.bp.bpPersonContrib"
+            objectClass="sernet.verinice.model.bp.groups.BpPersonGroup">
          <action
                class="sernet.verinice.bp.rcp.action.AddBpPersonActionDelegate"
                enablesFor="+"
                icon="icons/application_osx.png"
-               id="sernet.gs.ui.rcp.main.bp.modITBPperson"
-               label="%action.label.addModITBPPerson"
+               id="sernet.gs.ui.rcp.main.bp.bpperson"
+               label="%action.label.addBpPerson"
                menubarPath="content"
                style="push"
-               tooltip="%action.tooltip.addModITBPPerson"/>
+               tooltip="%action.tooltip.addBpPerson"/>
       </objectContribution>           
 	    <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bp.BpRequirementContrib"
-            objectClass="sernet.verinice.model.bp.categories.BpRequirementGroup">
+            objectClass="sernet.verinice.model.bp.groups.BpRequirementGroup">
          <action
                class="sernet.verinice.bp.rcp.action.AddBpRequirementActionDelegate"
                enablesFor="+"
                icon="icons/application_osx.png"
-               id="sernet.gs.ui.rcp.main.bp.modITBpRequirement"
+               id="sernet.gs.ui.rcp.main.bp.BpRequirement"
                label="%action.label.addBpRequirement"
                menubarPath="content"
                style="push"
@@ -1152,7 +1152,7 @@
 	    <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bp.BpThreatContrib"
-            objectClass="sernet.verinice.model.bp.categories.BpThreatGroup">
+            objectClass="sernet.verinice.model.bp.groups.BpThreatGroup">
          <action
                class="sernet.verinice.bp.rcp.action.AddBpThreatActionDelegate"
                enablesFor="+"
@@ -1166,7 +1166,7 @@
 	    <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bp.businessProcessContrib"
-            objectClass="sernet.verinice.model.bp.categories.BusinessProcessGroup">
+            objectClass="sernet.verinice.model.bp.groups.BusinessProcessGroup">
          <action
                class="sernet.verinice.bp.rcp.action.AddBusinessProcessActionDelegate"
                enablesFor="+"
@@ -1180,7 +1180,7 @@
 	    <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bp.otherSystemContrib"
-            objectClass="sernet.verinice.model.bp.categories.DeviceGroup">
+            objectClass="sernet.verinice.model.bp.groups.DeviceGroup">
          <action
                class="sernet.verinice.bp.rcp.action.AddDeviceActionDelegate"
                enablesFor="+"
@@ -1194,7 +1194,7 @@
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bp.icsSystemContrib"
-            objectClass="sernet.verinice.model.bp.categories.IcsSystemGroup">
+            objectClass="sernet.verinice.model.bp.groups.IcsSystemGroup">
          <action
                class="sernet.verinice.bp.rcp.action.AddIcsSystemActionDelegate"
                enablesFor="+"
@@ -1208,7 +1208,7 @@
 	<objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bp.itSystemContrib"
-            objectClass="sernet.verinice.model.bp.categories.ItSystemGroup">
+            objectClass="sernet.verinice.model.bp.groups.ItSystemGroup">
          <action
                class="sernet.verinice.bp.rcp.action.AddItSystemActionDelegate"
                enablesFor="+"
@@ -1222,7 +1222,7 @@
 	    <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bp.deviceContrib"
-            objectClass="sernet.verinice.model.bp.categories.DeviceGroup">
+            objectClass="sernet.verinice.model.bp.groups.DeviceGroup">
          <action
                class="sernet.verinice.bp.rcp.action.AddDeviceActionDelegate"
                enablesFor="+"
@@ -1236,7 +1236,7 @@
 	    <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bp.networkContrib"
-            objectClass="sernet.verinice.model.bp.categories.NetworkGroup">
+            objectClass="sernet.verinice.model.bp.groups.NetworkGroup">
          <action
                class="sernet.verinice.bp.rcp.action.AddNetworkActionDelegate"
                enablesFor="+"
@@ -1250,7 +1250,7 @@
 	    <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bp.roomContrib"
-            objectClass="sernet.verinice.model.bp.categories.RoomGroup">
+            objectClass="sernet.verinice.model.bp.groups.RoomGroup">
          <action
                class="sernet.verinice.bp.rcp.action.AddRoomActionDelegate"
                enablesFor="+"
@@ -1264,7 +1264,7 @@
 	    <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bp.safeguardContrib"
-            objectClass="sernet.verinice.model.bp.categories.SafeguardGroup">
+            objectClass="sernet.verinice.model.bp.groups.SafeguardGroup">
          <action
                class="sernet.verinice.bp.rcp.action.AddSafeguardActionDelegate"
                enablesFor="+"
@@ -1364,7 +1364,7 @@
                icon="icons/16-em-cross.png"
                label="%command.label.delete"/>
       </menuContribution>
-      <menuContribution locationURI="popup:sernet.verinice.bp.rcp.ModITBPView?after=additions">
+      <menuContribution locationURI="popup:sernet.verinice.bp.rcp.BaseProtectionView?after=additions">
          <command
                commandId="org.eclipse.ui.edit.cut"
                disabledIcon="icons/cut.png"
@@ -1917,7 +1917,7 @@
       </viewContribution>
        <viewContribution
       		id="sernet.verinice.bp.rcp.action.AddItNetworkActionDelegate"
-      		targetID="sernet.verinice.bp.rcp.ModITBPView">
+      		targetID="sernet.verinice.bp.rcp.BaseProtectionView">
              <action
                class="sernet.verinice.bp.rcp.action.AddItNetworkActionDelegate"
                icon="icons/note-new.png"
@@ -1939,7 +1939,7 @@
 	     			<or>
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
-	       				<equals value="sernet.verinice.bp.rcp.ModITBPView" />
+	       				<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -2002,7 +2002,7 @@
 	     			<or>
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
-	       				<equals value="sernet.verinice.bp.rcp.ModITBPView" />
+	       				<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -2032,7 +2032,7 @@
 	     			<or>
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
-	       				<equals value="sernet.verinice.bp.rcp.ModITBPView" />
+	       				<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -2092,7 +2092,7 @@
      			<or>
        				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
        				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
-       				<equals value="sernet.verinice.bp.rcp.ModITBPView" />
+       				<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
        			</or>
     		</with>
          </activeWhen> 

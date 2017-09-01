@@ -24,6 +24,31 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
+import sernet.verinice.model.bp.elements.Application;
+import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.elements.BusinessProcess;
+import sernet.verinice.model.bp.elements.Device;
+import sernet.verinice.model.bp.elements.IcsSystem;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.ItSystem;
+import sernet.verinice.model.bp.elements.Network;
+import sernet.verinice.model.bp.elements.Room;
+import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bp.groups.BpThreatGroup;
+import sernet.verinice.model.bp.groups.BusinessProcessGroup;
+import sernet.verinice.model.bp.groups.DeviceGroup;
+import sernet.verinice.model.bp.groups.IcsSystemGroup;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
+import sernet.verinice.model.bp.groups.ItSystemGroup;
+import sernet.verinice.model.bp.groups.NetworkGroup;
+import sernet.verinice.model.bp.groups.RoomGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.bsi.Addition;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
@@ -102,31 +127,6 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
-import sernet.verinice.model.moditbp.categories.ApplicationGroup;
-import sernet.verinice.model.moditbp.categories.BusinessProcessGroup;
-import sernet.verinice.model.moditbp.categories.IcsSystemGroup;
-import sernet.verinice.model.moditbp.categories.ItSystemGroup;
-import sernet.verinice.model.moditbp.categories.NetworkGroup;
-import sernet.verinice.model.moditbp.categories.DeviceGroup;
-import sernet.verinice.model.moditbp.categories.BpPersonGroup;
-import sernet.verinice.model.moditbp.categories.BpRequirementGroup;
-import sernet.verinice.model.moditbp.categories.BpThreatGroup;
-import sernet.verinice.model.moditbp.categories.RoomGroup;
-import sernet.verinice.model.moditbp.categories.SafeguardGroup;
-import sernet.verinice.model.moditbp.elements.Application;
-import sernet.verinice.model.moditbp.elements.BusinessProcess;
-import sernet.verinice.model.moditbp.elements.IcsSystem;
-import sernet.verinice.model.moditbp.elements.ItNetwork;
-import sernet.verinice.model.moditbp.elements.ItSystem;
-import sernet.verinice.model.moditbp.elements.ImportModITBPGroup;
-import sernet.verinice.model.moditbp.elements.BpModel;
-import sernet.verinice.model.moditbp.elements.BpPerson;
-import sernet.verinice.model.moditbp.elements.BpThreat;
-import sernet.verinice.model.moditbp.elements.BpRequirement;
-import sernet.verinice.model.moditbp.elements.Network;
-import sernet.verinice.model.moditbp.elements.Device;
-import sernet.verinice.model.moditbp.elements.Room;
-import sernet.verinice.model.moditbp.elements.Safeguard;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.UpdateElementEntity;
 
@@ -491,27 +491,27 @@ public interface IDAOFactory {
 	
 	void setImportBsiDAO(IBaseDao<ImportBsiGroup, Integer> daoToSet);
 	
-	void setImportModITBPDao(IBaseDao<ImportModITBPGroup, Integer> daoToSet);
+	void setImportBpDao(IBaseDao<ImportBpGroup, Integer> daoToSet);
 	
 	void setApplicationDAO(IBaseDao<Application, Integer> daoToSet);
 	
 	void setBusinessProcessDAO(IBaseDao<BusinessProcess, Integer> daoToSet);
 	
-	void setIcssystemDAO(IBaseDao<IcsSystem, Integer> daoToSet);
+	void setIcsSystemDAO(IBaseDao<IcsSystem, Integer> daoToSet);
 	
-	void setItnetworkDAO(IBaseDao<ItNetwork, Integer> daoToSet);
+	void setItNetworkDAO(IBaseDao<ItNetwork, Integer> daoToSet);
 	
-	void setItsystemDAO(IBaseDao<ItSystem, Integer> daoToSet);
+	void setItSystemDAO(IBaseDao<ItSystem, Integer> daoToSet);
 	
-	void setModitbpPersonDAO(IBaseDao<BpPerson, Integer> daoToSet);
+	void setBpPersonDAO(IBaseDao<BpPerson, Integer> daoToSet);
 	
-	void setModitbpThreatDAO(IBaseDao<BpThreat, Integer> daoToSet);
+	void setBpThreatDAO(IBaseDao<BpThreat, Integer> daoToSet);
 	
-	void setModuleDAO(IBaseDao<BpRequirement, Integer> daoToSet);
+	void setBpRequirementDAO(IBaseDao<BpRequirement, Integer> daoToSet);
 	
 	void setNetworkDAO(IBaseDao<Network, Integer> daoToSet);
 	
-	void setOthersystemDAO(IBaseDao<Device, Integer> daoToSet);
+	void setDeviceDAO(IBaseDao<Device, Integer> daoToSet);
 	
 	void setRoomDAO(IBaseDao<Room, Integer> daoToSet);
 	
@@ -527,7 +527,7 @@ public interface IDAOFactory {
     
     void setBpThreatGroupDAO(IBaseDao<BpThreatGroup, Integer> daoToSet);
 	
-	void setBusinessProcessCategoryDAO(IBaseDao<BusinessProcessGroup, Integer> daoToSet);
+	void setBusinessProcessGroupDAO(IBaseDao<BusinessProcessGroup, Integer> daoToSet);
     
     void setDeviceGroupDAO(IBaseDao<DeviceGroup, Integer> daoToSet);
 	

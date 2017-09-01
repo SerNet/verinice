@@ -75,13 +75,13 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
+import sernet.verinice.bp.rcp.BaseProtectionView;
 import sernet.verinice.bpm.rcp.OpenTaskViewAction;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.CatalogView;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap;
-import sernet.verinice.moditbp.rcp.ModITBPView;
 import sernet.verinice.rcp.ProfileEditAction;
 import sernet.verinice.rcp.ServerConnectionToggleAction;
 import sernet.verinice.rcp.account.AccountView;
@@ -198,7 +198,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
     private OpenViewAction openTemplateViewAction;
     
-    private OpenViewAction openModITBPViewAction;
+    private OpenViewAction openBpViewAction;
 
     private TestAction testAction;
 
@@ -255,7 +255,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.openSearchViewAction = new OpenSearchViewAction(window, Messages.ApplicationActionBarAdvisor_42);
         this.openGSToolMappingViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_43, GstoolImportMappingView.ID, ImageCache.VIEW_GSMAPPING, ActionRightIDs.GSTOOLIMPORT);
         this.openTemplateViewAction = getRightsService().isEnabled(ActionRightIDs.TEMPLATES) ? new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_44, TemplateView.ID, ImageCache.TEMPLATES, ActionRightIDs.TEMPLATES) : null;
-        this.openModITBPViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_45, ModITBPView.ID, ImageCache.VIEW_MODITBPMODEL, ActionRightIDs.MODITBPMODELVIEW);
+        this.openBpViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_45, BaseProtectionView.ID, ImageCache.VIEW_BPMODEL, ActionRightIDs.BASEPROTECTIONVIEW);
         this.reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         this.importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
         this.importCSVAction = new ImportCSVAction(window, Messages.ApplicationActionBarAdvisor_30);
@@ -293,7 +293,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 gsmbasicsecuritycheckAction,bausteinZuordnungAction,
                 gsmbausteinZuordnungAction, this.openDocumentViewAction,
                 this.introAction, this.openGroupViewAction, this.openReportdepositViewAction,
-                this.openSearchViewAction, this.openGSToolMappingViewAction, this.openModITBPViewAction
+                this.openSearchViewAction, this.openGSToolMappingViewAction, this.openBpViewAction
         };
         registerActions(actions);
 
@@ -423,7 +423,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(this.openValidationViewAction);
         viewsMenu.add(this.openSearchViewAction);
         viewsMenu.add(this.openGSToolMappingViewAction);
-        viewsMenu.add(this.openModITBPViewAction);
+        viewsMenu.add(this.openBpViewAction);
         
 
         viewsMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));

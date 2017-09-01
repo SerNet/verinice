@@ -20,6 +20,29 @@ package sernet.verinice.service.commands;
 import java.util.HashMap;
 import java.util.Map;
 
+import sernet.verinice.model.bp.elements.Application;
+import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.elements.BusinessProcess;
+import sernet.verinice.model.bp.elements.Device;
+import sernet.verinice.model.bp.elements.IcsSystem;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.ItSystem;
+import sernet.verinice.model.bp.elements.Network;
+import sernet.verinice.model.bp.elements.Room;
+import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bp.groups.BpThreatGroup;
+import sernet.verinice.model.bp.groups.BusinessProcessGroup;
+import sernet.verinice.model.bp.groups.DeviceGroup;
+import sernet.verinice.model.bp.groups.IcsSystemGroup;
+import sernet.verinice.model.bp.groups.ItSystemGroup;
+import sernet.verinice.model.bp.groups.NetworkGroup;
+import sernet.verinice.model.bp.groups.RoomGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.BSIModel;
@@ -84,29 +107,6 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
-import sernet.verinice.model.moditbp.categories.ApplicationGroup;
-import sernet.verinice.model.moditbp.categories.BusinessProcessGroup;
-import sernet.verinice.model.moditbp.categories.IcsSystemGroup;
-import sernet.verinice.model.moditbp.categories.ItSystemGroup;
-import sernet.verinice.model.moditbp.categories.NetworkGroup;
-import sernet.verinice.model.moditbp.categories.DeviceGroup;
-import sernet.verinice.model.moditbp.categories.BpPersonGroup;
-import sernet.verinice.model.moditbp.categories.BpRequirementGroup;
-import sernet.verinice.model.moditbp.categories.BpThreatGroup;
-import sernet.verinice.model.moditbp.categories.RoomGroup;
-import sernet.verinice.model.moditbp.categories.SafeguardGroup;
-import sernet.verinice.model.moditbp.elements.Application;
-import sernet.verinice.model.moditbp.elements.BusinessProcess;
-import sernet.verinice.model.moditbp.elements.IcsSystem;
-import sernet.verinice.model.moditbp.elements.ItNetwork;
-import sernet.verinice.model.moditbp.elements.ItSystem;
-import sernet.verinice.model.moditbp.elements.BpPerson;
-import sernet.verinice.model.moditbp.elements.BpThreat;
-import sernet.verinice.model.moditbp.elements.BpRequirement;
-import sernet.verinice.model.moditbp.elements.Network;
-import sernet.verinice.model.moditbp.elements.Device;
-import sernet.verinice.model.moditbp.elements.Room;
-import sernet.verinice.model.moditbp.elements.Safeguard;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
@@ -316,7 +316,7 @@ public class CnATypeMapper {
         return false;
     }
     
-    public boolean isModITBPElement(CnATreeElement child) {
+    public boolean isBpElement(CnATreeElement child) {
         for (String strukturType : BP_ELEMENT_TYPES) {
             if (child.getEntityType() != null && child.getEntityType().getId().equals(strukturType)) {
                 return true;

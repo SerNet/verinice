@@ -36,13 +36,13 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.IElementTitleCache;
 import sernet.verinice.interfaces.search.IJsonBuilder;
 import sernet.verinice.interfaces.search.ISearchService;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.model.moditbp.elements.ItNetwork;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

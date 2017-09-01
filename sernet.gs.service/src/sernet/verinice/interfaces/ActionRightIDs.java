@@ -77,7 +77,7 @@ public final class ActionRightIDs {
     public static final String ISMVIEWWEB = "ismviewweb";
     public static final String KONSOLIDATOR = "konsolidator";
     public static final String MARKTEMPLATE = "marktemplate";
-    public static final String MODITBPMODELVIEW = "moditbpmodelview";
+    public static final String BASEPROTECTIONVIEW = "baseprotectionview";
     public static final String NATURALIZE = "naturalize";
     public static final String NOTES = "notes";
     public static final String CHANGEOWNPASSWORD = "changeownpassword";

@@ -25,6 +25,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
+import sernet.verinice.model.bp.IBpModelListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -32,14 +34,12 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.moditbp.IModITBPModelListener;
-import sernet.verinice.model.moditbp.elements.BpModel;
 import sernet.verinice.model.validation.CnAValidation;
 
 /**
  *
  */
-public class CnAValidationContentProvider implements IStructuredContentProvider, IBSIModelListener, IISO27KModelListener, IModITBPModelListener {
+public class CnAValidationContentProvider implements IStructuredContentProvider, IBSIModelListener, IISO27KModelListener, IBpModelListener {
     
     CnAValidationView validationView;
     
@@ -225,9 +225,6 @@ public class CnAValidationContentProvider implements IStructuredContentProvider,
         validationView.reloadAll();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.iso27k.IModITBPModelListener#modelReload(sernet.verinice.model.moditbp.elements.BpModel)
-     */
     @Override
     public void modelReload(BpModel newModel) {
         Display.getDefault().asyncExec(new Runnable() {

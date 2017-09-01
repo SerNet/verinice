@@ -32,6 +32,17 @@ import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.hui.common.connect.PropertyGroup;
+import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bp.groups.BpThreatGroup;
+import sernet.verinice.model.bp.groups.BusinessProcessGroup;
+import sernet.verinice.model.bp.groups.DeviceGroup;
+import sernet.verinice.model.bp.groups.IcsSystemGroup;
+import sernet.verinice.model.bp.groups.ItSystemGroup;
+import sernet.verinice.model.bp.groups.NetworkGroup;
+import sernet.verinice.model.bp.groups.RoomGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.ClientsKategorie;
 import sernet.verinice.model.bsi.GebaeudeKategorie;
@@ -45,17 +56,6 @@ import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.model.moditbp.categories.ApplicationGroup;
-import sernet.verinice.model.moditbp.categories.BusinessProcessGroup;
-import sernet.verinice.model.moditbp.categories.IcsSystemGroup;
-import sernet.verinice.model.moditbp.categories.ItSystemGroup;
-import sernet.verinice.model.moditbp.categories.NetworkGroup;
-import sernet.verinice.model.moditbp.categories.DeviceGroup;
-import sernet.verinice.model.moditbp.categories.BpPersonGroup;
-import sernet.verinice.model.moditbp.categories.BpRequirementGroup;
-import sernet.verinice.model.moditbp.categories.BpThreatGroup;
-import sernet.verinice.model.moditbp.categories.RoomGroup;
-import sernet.verinice.model.moditbp.categories.SafeguardGroup;
 import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.linktable.CnaLinkPropertyConstants;
 
@@ -243,7 +243,7 @@ public class HUIObjectModelService implements IObjectModelService {
     @Override
     public Set<String> getPossibleRelationPartners(String typeID) {
         ServerInitializer.inheritVeriniceContextState();
-        if (getHuiTypeFactory().getEntityType(typeID) == null || isBSICategory(typeID) || isModITBPCategory(typeID)) {
+        if (getHuiTypeFactory().getEntityType(typeID) == null || isBSICategory(typeID) || isBpCategory(typeID)) {
             return new HashSet<>();
         }
         HashSet<String> possiblePartners = new HashSet<>();
@@ -264,7 +264,7 @@ public class HUIObjectModelService implements IObjectModelService {
 
     }
     
-    private boolean isModITBPCategory(String typeId) {
+    private boolean isBpCategory(String typeId) {
         return allBpCategories.contains(typeId);
     }
 
@@ -528,7 +528,7 @@ public class HUIObjectModelService implements IObjectModelService {
             allRelationLabels = new HashMap<>();
             Set<HuiRelation> allRelationIDs = new HashSet<>();
             for(String typeId : getAllTypeIDs()){
-                if (!isBSICategory(typeId) && !isModITBPCategory(typeId)) {
+                if (!isBSICategory(typeId) && !isBpCategory(typeId)) {
                     allRelationIDs.addAll(huiTypeFactory.getPossibleRelationsFrom(typeId));
                 }
                 

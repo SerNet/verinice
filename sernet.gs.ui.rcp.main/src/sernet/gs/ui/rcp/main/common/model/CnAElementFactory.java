@@ -34,6 +34,30 @@ import sernet.verinice.interfaces.CnATreeElementBuildException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IProgress;
+import sernet.verinice.model.bp.elements.Application;
+import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.elements.BusinessProcess;
+import sernet.verinice.model.bp.elements.Device;
+import sernet.verinice.model.bp.elements.IcsSystem;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.ItSystem;
+import sernet.verinice.model.bp.elements.Network;
+import sernet.verinice.model.bp.elements.Room;
+import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bp.groups.BpThreatGroup;
+import sernet.verinice.model.bp.groups.BusinessProcessGroup;
+import sernet.verinice.model.bp.groups.DeviceGroup;
+import sernet.verinice.model.bp.groups.IcsSystemGroup;
+import sernet.verinice.model.bp.groups.ItSystemGroup;
+import sernet.verinice.model.bp.groups.NetworkGroup;
+import sernet.verinice.model.bp.groups.RoomGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.BSIModel;
@@ -103,41 +127,17 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
-import sernet.verinice.model.moditbp.categories.ApplicationGroup;
-import sernet.verinice.model.moditbp.categories.BusinessProcessGroup;
-import sernet.verinice.model.moditbp.categories.IcsSystemGroup;
-import sernet.verinice.model.moditbp.categories.ItSystemGroup;
-import sernet.verinice.model.moditbp.categories.NetworkGroup;
-import sernet.verinice.model.moditbp.categories.DeviceGroup;
-import sernet.verinice.model.moditbp.categories.BpPersonGroup;
-import sernet.verinice.model.moditbp.categories.BpRequirementGroup;
-import sernet.verinice.model.moditbp.categories.BpThreatGroup;
-import sernet.verinice.model.moditbp.categories.RoomGroup;
-import sernet.verinice.model.moditbp.categories.SafeguardGroup;
-import sernet.verinice.model.moditbp.elements.Application;
-import sernet.verinice.model.moditbp.elements.BusinessProcess;
-import sernet.verinice.model.moditbp.elements.IcsSystem;
-import sernet.verinice.model.moditbp.elements.ItNetwork;
-import sernet.verinice.model.moditbp.elements.ItSystem;
-import sernet.verinice.model.moditbp.elements.BpModel;
-import sernet.verinice.model.moditbp.elements.BpPerson;
-import sernet.verinice.model.moditbp.elements.BpRequirement;
-import sernet.verinice.model.moditbp.elements.BpThreat;
-import sernet.verinice.model.moditbp.elements.Network;
-import sernet.verinice.model.moditbp.elements.Device;
-import sernet.verinice.model.moditbp.elements.Room;
-import sernet.verinice.model.moditbp.elements.Safeguard;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.service.bp.LoadBpModel;
 import sernet.verinice.service.commands.CreateAnwendung;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateITNetwork;
 import sernet.verinice.service.commands.CreateITVerbund;
 import sernet.verinice.service.commands.UpdateElement;
 import sernet.verinice.service.commands.crud.CreateIsoModel;
-import sernet.verinice.service.commands.crud.CreateModITBPModel;
+import sernet.verinice.service.commands.crud.CreateBpModel;
 import sernet.verinice.service.commands.crud.UpdateMultipleElements;
 import sernet.verinice.service.iso27k.LoadModel;
-import sernet.verinice.service.moditbp.LoadModITBPModel;
 
 /**
  * Factory for all model elements. Contains typed factories for sub-elements.
@@ -177,7 +177,7 @@ public final class CnAElementFactory {
 
 	private static ISO27KModel isoModel;
 	
-	private static BpModel modITBPModel;
+	private static BpModel boModel;
 
 	private ICommandService commandService;
 	
@@ -931,7 +931,7 @@ public final class CnAElementFactory {
                         .executeCommand(saveCommand);
                 ItNetwork itnetwork = saveCommand.getNewElement();
 
-                itnetwork.setParent(modITBPModel);
+                itnetwork.setParent(boModel);
                 return itnetwork;
             }
         });
@@ -1312,8 +1312,8 @@ public final class CnAElementFactory {
 		return (isoModel != null);
 	}
 	
-	public static boolean isModITBPModelLoaded() {
-	    return (modITBPModel != null);
+	public static boolean isBpModelLoaded() {
+	    return (boModel != null);
 	}
 	
 	public void closeModel() {
@@ -1401,16 +1401,16 @@ public final class CnAElementFactory {
 		}
 	}
 	
-	public BpModel getModITBPModel() {
+	public BpModel getBpModel() {
 	    synchronized(mutex) {
-	        if (modITBPModel == null) {
-	            modITBPModel = loadModITBPModel();
-	            if (modITBPModel == null) {
-	                createModITBPModel();
+	        if (boModel == null) {
+	            boModel = loadBpModel();
+	            if (boModel == null) {
+	                createBpModel();
 	            }
 	        }
 	    }
-	    return modITBPModel;
+	    return boModel;
 	}
 
 	/**
@@ -1452,10 +1452,10 @@ public final class CnAElementFactory {
 		}
 	}
 	
-	private BpModel loadModITBPModel() {
+	private BpModel loadBpModel() {
 	    BpModel model = null;
 	    try {
-	        LoadModITBPModel modelLoadCommand = new LoadModITBPModel();
+	        LoadBpModel modelLoadCommand = new LoadBpModel();
 	        modelLoadCommand = getCommandService().executeCommand(modelLoadCommand);
 	        model = modelLoadCommand.getModel();
 	        if (model != null) {
@@ -1469,17 +1469,17 @@ public final class CnAElementFactory {
 	    return model;
 	}
 	
-	private void createModITBPModel() {
+	private void createBpModel() {
 	    try {
-	        CreateModITBPModel modelCreationCommand = new CreateModITBPModel();
+	        CreateBpModel modelCreationCommand = new CreateBpModel();
 	        modelCreationCommand = getCommandService()
 	                .executeCommand(modelCreationCommand);
-	        modITBPModel = modelCreationCommand.getElement();
+	        boModel = modelCreationCommand.getElement();
             if (log.isInfoEnabled()) {
                 log.info("Model for modernized ITBP created"); //$NON-NLS-1$
             }
-            if (modITBPModel != null) {
-                fireLoad(modITBPModel);
+            if (boModel != null) {
+                fireLoad(boModel);
             }	        
 	        
 	    } catch (CommandException e) {
@@ -1551,15 +1551,15 @@ public final class CnAElementFactory {
 				isoModel = newModel;
 				fireLoad(isoModel);
 			}
-			if (isModITBPModelLoaded()) {
-			    BpModel newModel = loadModITBPModel();
+			if (isBpModelLoaded()) {
+			    BpModel newModel = loadBpModel();
 			    if (log.isDebugEnabled()) {
-			        log.debug("reloadModelFromDatabase, ModITBP-model loaded"); //$NON-NLS-1$
+			        log.debug("reloadModelFromDatabase, base protection model loaded"); //$NON-NLS-1$
 			    }
-			    modITBPModel.modelReload(newModel);
-			    modITBPModel.moveListener(newModel);
-			    modITBPModel = newModel;
-			    fireLoad(modITBPModel);
+			    boModel.modelReload(newModel);
+			    boModel.moveListener(newModel);
+			    boModel = newModel;
+			    fireLoad(boModel);
 			}
 		} catch (Exception e) {
 			log.error(Messages.getString("CnAElementFactory.5"), e); //$NON-NLS-1$
