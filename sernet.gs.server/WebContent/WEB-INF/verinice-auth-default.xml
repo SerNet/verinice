@@ -47,6 +47,7 @@
             <action id="assignallisatopics" />
             <action id="addownmodul"/>
             <action id="auditview" />
+            <action id="baseprotectionview" />
             <action id="bausteinzuordnung" />
             <action id="bsidnd" />
             <action id="bsibrowser" />
@@ -81,7 +82,6 @@
             <action id="ismview" />
             <action id="ismviewweb" />
             <action id="konsolidator" />
-            <action id="bpmodelview" />
             <action id="naturalize" />
             <action id="notes" />
             <action id="relations" />
@@ -137,6 +137,7 @@
 	        <action id="addownmodul"/>
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
+          <action id="baseprotectionview" />
 	        <action id="bausteinzuordnung" />
 	        <action id="bsidnd" />
         	<action id="bsibrowser" />
@@ -170,7 +171,6 @@
 	        <action id="ismview" />
           <action id="ismviewweb" />
 	        <action id="konsolidator" />
-	        <action id="bpmodelview" />
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />
@@ -218,7 +218,6 @@
             <action id="ismview" />
             <action id="ismviewweb" />
             <action id="konsolidator" />
-            <action id="bpmodelview" />
             <action id="naturalize" />
             <action id="notes" />
             <action id="relations" />
@@ -266,6 +265,7 @@
 	        <action id="marktemplate"/>
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
+          <action id="baseprotectionview" />
 	        <action id="bausteinzuordnung" />
 	        <action id="bsidnd" />
         	<action id="bsibrowser" />
@@ -296,7 +296,6 @@
 	        <action id="ismview" />
           <action id="ismviewweb" />
 	        <action id="konsolidator" />
-	        <action id="bpmodelview" />
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />
@@ -345,7 +344,8 @@
             <action id="addsecurityassessment" /> 
             <action id="addownmodul"/> 
             <action id="assignallisatopics" /> 
-            <action id="auditview" /> 
+            <action id="auditview" />
+            <action id="baseprotectionview" /> 
             <action id="bausteinzuordnung" /> 
             <action id="bsidnd" /> 
             <action id="bsibrowser" /> 
@@ -376,8 +376,7 @@
             <action id="ismcut" /> 
             <action id="ismview" /> 
           	<action id="ismviewweb" /> 
-            <action id="konsolidator" /> 
-            <action id="bpmodelview" />
+            <action id="konsolidator" />
             <action id="naturalize" /> 
             <action id="notes" /> 
             <action id="relations" /> 
@@ -423,6 +422,7 @@
 	        <action id="marktemplate"/>
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
+          <action id="baseprotectionview" />
 	        <action id="bausteinzuordnung" />
 	        <action id="bsidnd" />
         	<action id="bsibrowser" />
@@ -457,7 +457,6 @@
 	        <action id="ismview" />
           <action id="ismviewweb" />
 	        <action id="konsolidator" />
-	        <action id="bpmodelview" />
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />
