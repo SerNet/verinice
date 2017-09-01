@@ -49,7 +49,7 @@ public class HuiProperty implements Serializable {
 
     private static final Logger LOG = Logger.getLogger(HuiProperty.class);
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat();
+    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat();
 
     private String key;
 
@@ -214,11 +214,11 @@ public class HuiProperty implements Serializable {
 
     public List<String> getOptionList() {
         if (!getIsSingleSelect() && !getIsNumericSelect()) {
-            return null;
+            return Collections.emptyList();
         }
         List<String> itemList = Collections.emptyList();
         if (propertyType.getOptions() != null) {
-            itemList = new ArrayList<String>(propertyType.getOptions().size());
+            itemList = new ArrayList<>(propertyType.getOptions().size());
             if (getIsSingleSelect()) {
                 itemList.add(Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE));
             }
@@ -358,6 +358,9 @@ public class HuiProperty implements Serializable {
         return DATE_FORMAT;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -369,23 +372,23 @@ public class HuiProperty implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
+        if (this == obj)
             return true;
-        }
-        if (obj == null || (getClass() != obj.getClass())) {
+        if (obj == null)
             return false;
-        }
+        if (getClass() != obj.getClass())
+            return false;
         HuiProperty other = (HuiProperty) obj;
-        if (key == null && other.key != null) {
+        if (key == null) {
+            if (other.key != null)
+                return false;
+        } else if (!key.equals(other.key))
             return false;
-        } else if (key != null && !key.equals(other.key)) {
+        if (value == null) {
+            if (other.value != null)
+                return false;
+        } else if (!value.equals(other.value))
             return false;
-        }
-        if (value == null && other.value != null) {
-            return false;
-        } else if (value != null && !value.equals(other.value)) {
-            return false;
-        }
         return true;
     }
 
@@ -462,7 +465,7 @@ public class HuiProperty implements Serializable {
      * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
      *
      */
-    public interface ValueChangeListener {
+    public interface ValueChangeListener  extends Serializable {
 
         /**
          * Called whenever the value of the {@link HuiProperty} is changed.
