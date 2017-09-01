@@ -41,6 +41,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.event.SelectEvent;
 
 import sernet.gs.service.GSServiceException;
 import sernet.gs.service.RetrieveInfo;
@@ -548,13 +549,13 @@ public class EditBean {
         return optionId;
     }
 
-    public void onDateSelect(AjaxBehaviorEvent event) {
-        if (isTaskEditorContext()) {
-            String key = (String) ((UIInput) event.getComponent()).getAttributes().get("key");
-            String newValue = String.valueOf(((Date) event.getSource()).getTime());
+    public void onDateSelect(SelectEvent event) {
 
-            if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(newValue)) {
-                changedElementProperties.put(key, newValue);
+        HuiProperty huiProperty = extractHuiProperty(event);
+
+        if (isTaskEditorContext()) {
+            if (StringUtils.isNotEmpty(huiProperty.getValue())) {
+                changedElementProperties.put(huiProperty.getKey(), huiProperty.getValue());
             }
         }
     }

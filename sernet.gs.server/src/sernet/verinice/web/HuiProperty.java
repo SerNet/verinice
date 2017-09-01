@@ -183,8 +183,8 @@ public class HuiProperty implements Serializable {
             return null;
         }
         Date date = null;
-        if (value instanceof String && !((String) value).isEmpty()) {
-            date = new Date(Long.valueOf((String) value));
+        if (!value.isEmpty()) {
+            date = new Date(Long.valueOf(value));
         }
         return date;
     }
