@@ -22,7 +22,6 @@ package sernet.verinice.web;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -480,12 +479,16 @@ public class EditBean {
         HuiProperty huiProperty = extractHuiProperty(event);
         LOG.debug("hui property: " + huiProperty);
 
-        if (huiProperty != null) {
-            huiProperty.fireChangeListeners();
-        }
+        fireHuiPropertyValueChangeListener(huiProperty);
 
         if (isTaskEditorContext()) {
             trackChangedValuesForReleaseProcess(huiProperty);
+        }
+    }
+
+    private void fireHuiPropertyValueChangeListener(HuiProperty huiProperty) {
+        if (huiProperty != null) {
+            huiProperty.fireChangeListeners();
         }
     }
 
@@ -558,11 +561,14 @@ public class EditBean {
                 changedElementProperties.put(huiProperty.getKey(), huiProperty.getValue());
             }
         }
+
+        fireHuiPropertyValueChangeListener(huiProperty);
     }
 
     public void onUrlChange(AjaxBehaviorEvent event) {
         HuiProperty huiProperty = extractHuiProperty(event);
         changeURL(huiProperty.getKey(), huiProperty.getURLText(), huiProperty.getURLValue());
+        fireHuiPropertyValueChangeListener(huiProperty);
     }
 
 
