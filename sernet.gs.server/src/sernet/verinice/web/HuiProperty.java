@@ -407,8 +407,8 @@ public class HuiProperty implements Serializable {
      * respectively for EL.
      *
      * @param isEnabled
-     *            Indicates if the property satisfied all dependency, defined
-     *            by {@link DependsType}.
+     *            Indicates if the property satisfied all dependency, defined by
+     *            {@link DependsType}.
      */
     public void setIsEnabled(boolean isEnabled) {
         this.setEnabled(isEnabled);
@@ -437,17 +437,40 @@ public class HuiProperty implements Serializable {
         return !(getIsEditable() && getIsEnabled());
     }
 
+    /**
+     * Calls every registered {@link ValueChangeListener} manually.
+     */
     public void fireChangeListeners() {
         for (ValueChangeListener valueChangeListener : valueChangeListeners) {
             valueChangeListener.processChangedValue(this);
         }
     }
 
+    /**
+     * Registers a {@link ValueChangeListener}.
+     *
+     * @param valueChangeListener
+     *            The {@link ValueChangeListener} which is registered.
+     */
     public void addValueChangeListener(ValueChangeListener valueChangeListener) {
         valueChangeListeners.add(valueChangeListener);
     }
 
+    /**
+     * Listener is called whenever the {@value is changed}.
+     *
+     * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+     *
+     */
     public interface ValueChangeListener {
+
+        /**
+         * Called whenever the value of the {@link HuiProperty} is changed.
+         *
+         * @param huiProperty
+         *            The {@link HuiProperty} which experienced a change of its
+         *            {@link #value};
+         */
         void processChangedValue(HuiProperty huiProperty);
     }
 

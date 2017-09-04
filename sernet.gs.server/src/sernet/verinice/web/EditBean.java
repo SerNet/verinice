@@ -876,7 +876,8 @@ public class EditBean {
          * @param targetHuiProperty
          *            This {@link HuiProperty} which might depends on changes.
          *
-         * @param key2HuiProperty holds a map from property key to {@link HuiProperty}.
+         * @param key2HuiProperty
+         *            holds a map from property key to {@link HuiProperty}.
          */
         public DependencyChangeListener(HuiProperty targetHuiProperty, Map<String, HuiProperty> key2HuiProperty) {
             this.targetHuiProperty = targetHuiProperty;
@@ -901,7 +902,8 @@ public class EditBean {
             HuiProperty dependsOn = key2HuiProperty.get(dependsType.getPropertyId());
             String dependsOnValue = dependsOn.getValue();
 
-            // if no value for the comparison is set, the value has to false.
+            // if no value for the comparison is set, the depends value has be
+            // false.
             if (dependsOnValue == null) {
                 return false;
             }
