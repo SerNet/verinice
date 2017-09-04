@@ -29,7 +29,9 @@ import sernet.hui.common.multiselectionlist.IMLPropertyOption;
  * @author prack
  * @version $Id: PropertyOption.java,v 1.3 2006/06/02 15:04:21 aprack Exp $
  */
-public class PropertyOption implements IMLPropertyOption {		
+public class PropertyOption implements IMLPropertyOption {
+
+    private static final long serialVersionUID = 1L;
 
     public static final String SINGLESELECTDUMMYVALUE = "SingleSelectDummyValue";
     
@@ -102,12 +104,9 @@ public class PropertyOption implements IMLPropertyOption {
         return numericValue;
     }
     
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
-        return getName();
+        return "PropertyOption [id=" + id + ", name=" + name + ", numericValue=" + numericValue + "]";
     }
 	
 }

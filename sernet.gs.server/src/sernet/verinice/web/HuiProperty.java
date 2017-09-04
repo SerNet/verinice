@@ -23,12 +23,16 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.faces.model.SelectItem;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import sernet.hui.common.connect.DependsType;
@@ -62,6 +66,10 @@ public class HuiProperty implements Serializable {
     private boolean isEnabled = true;
 
     private final List<ValueChangeListener> valueChangeListeners = new LinkedList<>();
+
+    private List<SelectItem> options;
+
+    private List<String> selectedOptions;
 
     public HuiProperty(PropertyType type, String key, String value) {
         super();
@@ -172,6 +180,14 @@ public class HuiProperty implements Serializable {
 
     public boolean getIsBooleanSelect() {
         return propertyType.isBooleanSelect();
+    }
+
+    public boolean getIsReference(){
+        return propertyType.isReference();
+    }
+
+    public boolean getIsMultiselect(){
+        return propertyType.isMultiselect();
     }
 
     public boolean isShowInObjectBrowser() {
@@ -480,5 +496,38 @@ public class HuiProperty implements Serializable {
     @Override
     public String toString() {
         return "HuiProperty [key=" + key + ", value=" + value + ", propertyType=" + propertyType + ", showLabel=" + showLabel + ", isEnabled=" + isEnabled + "]";
+    }
+
+
+    public List<SelectItem> getOptions() {
+
+        if (propertyType.isMultiselect() && options == null) {
+            options = new ArrayList<>(propertyType.getOptions().size());
+            for (IMLPropertyOption imlPropertyOption : propertyType.getOptions()) {
+                SelectItem selectItem = new SelectItem(imlPropertyOption.getId(), imlPropertyOption.getName());
+                options.add(selectItem);
+            }
+        }
+
+        return options;
+    }
+
+    public List<String> getSelectedOptions(){
+        if(!getIsMultiselect()){
+            return Collections.emptyList();
+        }
+
+        String[] split = getValue().split(",");
+        return Arrays.asList(split);
+    }
+
+    public void setSelectedOptions(List<String> selectedOptions) {
+
+        String[] buffer = new String[selectedOptions.size()];
+        for (int i = 0; i < selectedOptions.size(); i++) {
+            buffer[i] = selectedOptions.get(i);
+        }
+        this.selectedOptions = selectedOptions;
+        this.value = StringUtils.join(buffer, ",");
     }
 }
