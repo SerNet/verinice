@@ -479,16 +479,8 @@ public class EditBean {
         HuiProperty huiProperty = extractHuiProperty(event);
         LOG.debug("hui property: " + huiProperty);
 
-        fireHuiPropertyValueChangeListener(huiProperty);
-
         if (isTaskEditorContext()) {
             trackChangedValuesForReleaseProcess(huiProperty);
-        }
-    }
-
-    private void fireHuiPropertyValueChangeListener(HuiProperty huiProperty) {
-        if (huiProperty != null) {
-            huiProperty.fireChangeListeners();
         }
     }
 
@@ -553,24 +545,17 @@ public class EditBean {
     }
 
     public void onDateSelect(SelectEvent event) {
-
         HuiProperty huiProperty = extractHuiProperty(event);
+        if (isTaskEditorContext() && StringUtils.isNotEmpty(huiProperty.getValue())) {
 
-        if (isTaskEditorContext()) {
-            if (StringUtils.isNotEmpty(huiProperty.getValue())) {
-                changedElementProperties.put(huiProperty.getKey(), huiProperty.getValue());
-            }
+            changedElementProperties.put(huiProperty.getKey(), huiProperty.getValue());
         }
-
-        fireHuiPropertyValueChangeListener(huiProperty);
     }
 
     public void onUrlChange(AjaxBehaviorEvent event) {
         HuiProperty huiProperty = extractHuiProperty(event);
         changeURL(huiProperty.getKey(), huiProperty.getURLText(), huiProperty.getURLValue());
-        fireHuiPropertyValueChangeListener(huiProperty);
     }
-
 
     private void changeURL(String key, String url, String label) {
         if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(url) && StringUtils.isNotEmpty(label)) {

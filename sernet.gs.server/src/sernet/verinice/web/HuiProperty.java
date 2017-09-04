@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 import org.apache.log4j.Logger;
 
@@ -256,22 +256,22 @@ public class HuiProperty implements Serializable {
             return null;
         }
         if (item == null) {
-            value = null;
+            setValue(null);
             return null;
         }
         if (getIsSingleSelect() && item.equals(Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE))) {
-            value = null;
+            setValue(null);
             return null;
         }
         for (IMLPropertyOption option : propertyType.getOptions()) {
             if (item.equals(option.getName())) {
-                value = getSelectionValue(option);
+                setValue(getSelectionValue(option));
 
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Set option value: " + value + " for label: " + item);
                 }
 
-                return value;
+                return getValue();
             }
         }
 
@@ -324,7 +324,10 @@ public class HuiProperty implements Serializable {
     }
 
     public void setValue(String value) {
-        this.value = value;
+        if(!Objects.equals(this.value, value)) {
+            this.value = value;
+            fireChangeListeners();
+        }
     }
 
     public PropertyType getType() {
