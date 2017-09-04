@@ -22,7 +22,6 @@ package sernet.verinice.web;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -38,7 +37,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIInput;
 import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.event.ValueChangeEvent;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -50,6 +48,7 @@ import sernet.gs.service.TimeFormatter;
 import sernet.gs.web.SecurityException;
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.connect.DependsType;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -93,7 +92,7 @@ public class EditBean {
     private String typeId;
     private String uuid;
     private String title;
-    private List<HuiProperty<String, String>> propertyList;
+    private List<HuiProperty> propertyList;
     private List<sernet.verinice.web.PropertyGroup> groupList;
     private List<String> noLabelTypeList = new LinkedList<>();
     private Set<String> roles = null;
@@ -191,7 +190,7 @@ public class EditBean {
             if (isVisible(groupHui)) {
                 sernet.verinice.web.PropertyGroup group = new sernet.verinice.web.PropertyGroup(groupHui.getId(), groupHui.getName());
                 List<PropertyType> typeListHui = groupHui.getPropertyTypes();
-                List<HuiProperty<String, String>> listOfGroup = createPropertyList(entity, typeListHui);
+                List<HuiProperty> listOfGroup = createPropertyList(entity, typeListHui);
                 group.setPropertyList(listOfGroup);
                 if (!listOfGroup.isEmpty()) {
                     groupList.add(group);
@@ -205,23 +204,51 @@ public class EditBean {
         propertyList = createPropertyList(entity, typeList);
     }
 
-    protected List<HuiProperty<String, String>> createPropertyList(Entity entity, List<PropertyType> typeListHui) {
-        List<HuiProperty<String, String>> listOfGroup = new ArrayList<>();
-        for (PropertyType huiType : typeListHui) {
-            if (isVisible(huiType)) {
-                String id = huiType.getId();
-                String value = entity.getRawPropertyValue(id);
-                HuiProperty<String, String> prop = new HuiProperty<>(huiType, id, value);
-                if (getNoLabelTypeList().contains(id)) {
-                    prop.setShowLabel(false);
-                }
-                listOfGroup.add(prop);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("prop: " + id + " (" + huiType.getInputName() + ") - " + value);
-                }
+    protected List<HuiProperty> createPropertyList(Entity entity, List<PropertyType> typeListHui) {
+        List<HuiProperty> huiProperties = new ArrayList<>(typeListHui.size());
+        initHuiProperties(entity, typeListHui, huiProperties);
+        Map<String, HuiProperty> key2HuiProperty = getPropertyKey2HuiPropertyMap(huiProperties);
+        initDependencyBehaviour(key2HuiProperty);
+        return huiProperties;
+    }
+
+    private void initDependencyBehaviour(Map<String, HuiProperty> key2HuiProperties) {
+        for (HuiProperty huiProperty : key2HuiProperties.values()) {
+            for (DependsType dependsType : huiProperty.getType().getDependencies()) {
+                HuiProperty dependsOn = key2HuiProperties.get(dependsType.getPropertyId());
+                dependsOn.addValueChangeListener(new DependencyChangeListener(huiProperty, key2HuiProperties));
+                dependsOn.fireChangeListeners();
             }
         }
-        return listOfGroup;
+    }
+
+    private Map<String, HuiProperty> getPropertyKey2HuiPropertyMap(List<HuiProperty> huiProperties) {
+        Map<String, HuiProperty> key2HuiProperty = new HashMap<>();
+        for (HuiProperty huiProperty : huiProperties) {
+            key2HuiProperty.put(huiProperty.getKey(), huiProperty);
+        }
+        return key2HuiProperty;
+    }
+
+    private void initHuiProperties(Entity entity, List<PropertyType> typeListHui, List<HuiProperty> huiProperties) {
+        for (PropertyType huiType : typeListHui) {
+            initHuiProperty(entity, huiProperties, huiType);
+        }
+    }
+
+    private void initHuiProperty(Entity entity, List<HuiProperty> huiProperties, PropertyType huiType) {
+        if (isVisible(huiType)) {
+            String id = huiType.getId();
+            String value = entity.getRawPropertyValue(id);
+            HuiProperty prop = new HuiProperty(huiType, id, value);
+            huiProperties.add(prop);
+            if (getNoLabelTypeList().contains(id)) {
+                prop.setShowLabel(false);
+            }
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("prop: " + id + " (" + huiType.getInputName() + ") - " + value);
+            }
+        }
     }
 
     private void checkMassnahmenUmsetzung() {
@@ -356,14 +383,14 @@ public class EditBean {
             throw new SecurityException("write is not allowed");
         }
         Entity entity = getElement().getEntity();
-        for (HuiProperty<String, String> property : getPropertyList()) {
+        for (HuiProperty property : getPropertyList()) {
             entity.setSimpleValue(property.getType(), property.getValue());
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Property: " + property.getType().getId() + " set to: " + property.getValue());
             }
         }
         for (sernet.verinice.web.PropertyGroup group : getGroupList()) {
-            for (HuiProperty<String, String> property : group.getPropertyList()) {
+            for (HuiProperty property : group.getPropertyList()) {
                 entity.setSimpleValue(property.getType(), property.getValue());
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Property: " + property.getType().getId() + " set to: " + property.getValue());
@@ -447,16 +474,24 @@ public class EditBean {
         return getConfigurationService().isWriteAllowed(element);
     }
 
-    // TODO: impl reference
-    // TODO: impl multiselect
-    public void onChange(ValueChangeEvent event) {
+    public void onChange(AjaxBehaviorEvent event) {
 
-        if (isNotTaskEditorContext()) {
-            return;
+        HuiProperty huiProperty = extractHuiProperty(event);
+        LOG.debug("hui property: " + huiProperty);
+
+        if (isTaskEditorContext()) {
+            trackChangedValuesForReleaseProcess(huiProperty);
         }
+    }
 
-        String key = (String) ((UIInput) event.getComponent()).getAttributes().get("key");
-        String newValue = handleBooleanValue(event.getNewValue());
+    private HuiProperty extractHuiProperty(AjaxBehaviorEvent event) {
+        HuiProperty huiProperty = (HuiProperty) ((UIInput) event.getComponent()).getAttributes().get("huiProperty");
+        return huiProperty;
+    }
+
+    private void trackChangedValuesForReleaseProcess(HuiProperty huiProperty) {
+        String key = huiProperty.getKey();
+        String newValue = handleBooleanValue(huiProperty.getValue());
 
         if (StringUtils.isNotEmpty(key)) {
 
@@ -476,18 +511,8 @@ public class EditBean {
         }
     }
 
-    private boolean isNotTaskEditorContext() {
-        return !isTaskEditorContext();
-    }
-
     public void onChangeNumericSelection(AjaxBehaviorEvent valueChangeEvent) {
-        if (task != null) {
-            String key = (String) ((UIInput) valueChangeEvent.getComponent()).getAttributes().get("key");
-            @SuppressWarnings("unchecked")
-            HuiProperty<String, String> huiProperty = (HuiProperty<String, String>) ((UIInput) valueChangeEvent.getComponent()).getAttributes().get("optionId");
-
-            changedElementProperties.put(key, huiProperty.getValue());
-        }
+        onChange(valueChangeEvent);
     }
 
     /**
@@ -520,28 +545,16 @@ public class EditBean {
     }
 
     public void onDateSelect(SelectEvent event) {
-        String key = (String) ((UIInput) event.getComponent()).getAttributes().get("key");
-        String newValue = String.valueOf(((Date) event.getObject()).getTime());
+        HuiProperty huiProperty = extractHuiProperty(event);
+        if (isTaskEditorContext() && StringUtils.isNotEmpty(huiProperty.getValue())) {
 
-        if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(newValue)) {
-            changedElementProperties.put(key, newValue);
+            changedElementProperties.put(huiProperty.getKey(), huiProperty.getValue());
         }
     }
 
-    public void onURLValueChange(ValueChangeEvent event) {
-        Map<String, Object> attributes = ((UIInput) event.getComponent()).getAttributes();
-        String key = (String) attributes.get("key");
-        String url = (String) event.getNewValue();
-        String label = (String) attributes.get("label");
-        changeURL(key, url, label);
-    }
-
-    public void onURLTextChange(ValueChangeEvent event) {
-        Map<String, Object> attributes = ((UIInput) event.getComponent()).getAttributes();
-        String key = (String) attributes.get("key");
-        String url = (String) attributes.get("url");
-        String label = (String) event.getNewValue();
-        changeURL(key, url, label);
+    public void onUrlChange(AjaxBehaviorEvent event) {
+        HuiProperty huiProperty = extractHuiProperty(event);
+        changeURL(huiProperty.getKey(), huiProperty.getURLText(), huiProperty.getURLValue());
     }
 
     private void changeURL(String key, String url, String label) {
@@ -638,9 +651,9 @@ public class EditBean {
         this.title = title;
     }
 
-    public List<HuiProperty<String, String>> getLabelPropertyList() {
-        List<HuiProperty<String, String>> emptyList = Collections.emptyList();
-        List<HuiProperty<String, String>> list = getPropertyList();
+    public List<HuiProperty> getLabelPropertyList() {
+        List<HuiProperty> emptyList = Collections.emptyList();
+        List<HuiProperty> list = getPropertyList();
         return list != null ? list : emptyList;
     }
 
@@ -654,7 +667,7 @@ public class EditBean {
         return true;
     }
 
-    public List<HuiProperty<String, String>> getPropertyList() {
+    public List<HuiProperty> getPropertyList() {
         if (propertyList == null) {
             propertyList = Collections.emptyList();
         }
@@ -663,7 +676,7 @@ public class EditBean {
     }
 
     private void moveURLPropertyToEndOfList() {
-        HuiProperty<String, String> docProp = null;
+        HuiProperty docProp = null;
         for (int i = 0; i < propertyList.size(); i++) {
             if (propertyList.get(i).getIsURL()) {
                 docProp = propertyList.get(i);
@@ -675,7 +688,7 @@ public class EditBean {
         }
     }
 
-    public void setPropertyList(List<HuiProperty<String, String>> properties) {
+    public void setPropertyList(List<HuiProperty> properties) {
         this.propertyList = properties;
     }
 
@@ -839,5 +852,67 @@ public class EditBean {
             text = "";
         }
         return text;
+    }
+
+    /**
+     * Holds reference to a {@link HuiProperty} which depends on a specific
+     * other {@link HuiProperty} and maybe more than one and updates the
+     * {@link HuiProperty#isEnabled()} status, according to the definition of
+     * the depends declaration in the SNCA.xml.
+     *
+     * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+     *
+     */
+    private final class DependencyChangeListener implements HuiProperty.ValueChangeListener {
+
+        private HuiProperty targetHuiProperty;
+
+        private Map<String, HuiProperty> key2HuiProperty;
+
+        /**
+         * The Huiproperty which depends on values of this {@link HuiProperty}
+         * this listener is attached to.
+         *
+         * @param targetHuiProperty
+         *            This {@link HuiProperty} which might depends on changes.
+         *
+         * @param key2HuiProperty
+         *            holds a map from property key to {@link HuiProperty}.
+         */
+        public DependencyChangeListener(HuiProperty targetHuiProperty, Map<String, HuiProperty> key2HuiProperty) {
+            this.targetHuiProperty = targetHuiProperty;
+            this.key2HuiProperty = key2HuiProperty;
+        }
+
+        @Override
+        public void processChangedValue(HuiProperty huiProperty) {
+            evalDependencies(targetHuiProperty.getType().getDependencies());
+        }
+
+        private void evalDependencies(Set<DependsType> dependencies) {
+            boolean result = true;
+            for (DependsType dependsType : dependencies) {
+                result &= evaluateDependsType(dependsType);
+            }
+
+            targetHuiProperty.setEnabled(result);
+        }
+
+        private boolean evaluateDependsType(DependsType dependsType) {
+            HuiProperty dependsOn = key2HuiProperty.get(dependsType.getPropertyId());
+            String dependsOnValue = dependsOn.getValue();
+
+            // if no value for the comparison is set, the depends value has be
+            // false.
+            if (dependsOnValue == null) {
+                return false;
+            }
+
+            if (dependsType.isInverse()) {
+                return !dependsOnValue.equals(dependsType.getPropertyValue());
+            } else {
+                return dependsOnValue.equals(dependsType.getPropertyValue());
+            }
+        }
     }
 }

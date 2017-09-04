@@ -50,11 +50,12 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.OptionSelectionHelper;
+import sernet.snutils.AssertException;
+import sernet.snutils.FormInputParser;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
-import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadAncestors;
 
@@ -261,6 +262,8 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
         } else if (propertyType.isSingleSelect() || propertyType.isMultiselect()) {
             value = loadTextForOptionProperty(propertyType, value);
             newText.setText(value);
+        } else if (propertyType.isDate()) {
+            newText.setText(getDate(value));
         } else {
             newText.setText(value);
         }
@@ -268,6 +271,15 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
         GridData gridData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH);
         gridData.widthHint = DIALOG_WIDTH / 3;
         newText.setLayoutData(gridData);
+    }
+
+    private String getDate(String value) {
+        try {
+            return FormInputParser.dateToString(new java.sql.Date(Long.parseLong(value)));
+        } catch (NumberFormatException | AssertException e) {
+            LOG.error("Invalid date", e);
+            return value;
+        }
     }
 
     private String loadTextForOptionProperty(PropertyType propertyType, String newValue) {
