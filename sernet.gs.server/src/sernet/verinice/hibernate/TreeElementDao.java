@@ -257,8 +257,10 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
 
         if(mergedElement instanceof CnATreeElement) {
             CnATreeElement element = (CnATreeElement) mergedElement;
-            index(element);   
+            fireChange(element);
+            index(element);
         }
+
         return mergedElement;
     }
 
