@@ -8876,6 +8876,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_itnetwork_abbr" name="Abbreviation" />
         <huiproperty id="bp_itnetwork_tag" name="Tags" 
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty id="bp_itnetwork_document" name="Document" isURL="true" />
     </huientity>
     
     <huientity id="bp_application" name="Application">
@@ -8883,6 +8884,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_application_abbr" name="Abbreviation" />
         <huiproperty id="bp_application_tag" name="Tags" 
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty id="bp_application_document" name="Document" isURL="true" />
         <huipropertygroup id="bp_application_group_business_impact" name="Business Impact"
             tags="Risk">
             <huiproperty id="bp_application_value_method_confidentiality"
@@ -8962,6 +8964,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_businessprocess_abbr" name="Abbreviation" />
         <huiproperty id="bp_businessprocess_tag" name="Tags" 
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty id="bp_businessprocess_document" name="Document" isURL="true" />
         <huipropertygroup id="bp_businessprocess_group_business_impact" name="Business Impact"
             tags="Risk">
             <huiproperty id="bp_businessprocess_value_method_confidentiality"
@@ -9041,6 +9044,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_icssystem_abbr" name="Abbreviation" />
         <huiproperty id="bp_icssystem_tag" name="Tags" 
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty id="bp_icssystem_document" name="Document" isURL="true" />
         <huipropertygroup id="bp_icssystem_group_business_impact" name="Business Impact"
             tags="Risk">
             <huiproperty id="bp_icssystem_value_method_confidentiality"
@@ -9120,6 +9124,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_itsystem_abbr" name="Abbreviation" />
         <huiproperty id="bp_itsystem_tag" name="Tags" 
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty id="bp_itsystem_document" name="Document" isURL="true" />
         <huipropertygroup id="bp_itsystem_group_business_impact" name="Business Impact"
             tags="Risk">
             <huiproperty id="bp_itsystem_value_method_confidentiality"
@@ -9195,6 +9200,7 @@ Wurden bereits weitere Stellen informiert?
     </huientity>
     
     <huientity id="bp_person" name="Person">
+        <huiproperty id="bp_person_document" name="Document" isURL="true" />
     </huientity>       
 
     <huientity id="bp_person_group" name="Person Group">
@@ -9208,12 +9214,13 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_requirement_abbr" name="Abbreviation" />
         <huiproperty id="bp_requirement_tag" name="Tags" 
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty id="bp_requirement_document" name="Document" isURL="true" />
     </huientity>
        
     <huientity id="bp_requirement_group" name="Requirement Group">
         <huiproperty id="bp_requirement_group_name" name="Title" required="true" />
         <huiproperty id="bp_requirement_group_desc" name="Description" inputtype="text" />
-        <huiproperty id="bp_requirement_group_tag" name="Tags" /> 
+        <huiproperty id="bp_requirement_group_tag" name="Tags" />
     </huientity>
     
     <huientity id="bp_threat" name="Threat">
@@ -9221,6 +9228,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_threat_abbr" name="Abbreviation" />
         <huiproperty id="bp_threat_tag" name="Tags" 
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty id="bp_threat_document" name="Document" isURL="true" />
     </huientity>
        
     <huientity id="bp_threat_group" name="bp_threat-Group">
@@ -9234,6 +9242,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_network_abbr" name="Abbreviation" />
         <huiproperty id="bp_network_tag" name="Tags" 
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty id="bp_network_document" name="Document" isURL="true" />
         <huipropertygroup id="bp_network_group_business_impact" name="Business Impact"
             tags="Risk">
             <huiproperty id="bp_network_value_method_confidentiality"
@@ -9313,6 +9322,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_device_abbr" name="Abbreviation" />
         <huiproperty id="bp_device_tag" name="Tags" 
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty id="bp_device_document" name="Document" isURL="true" />
         <huipropertygroup id="bp_device_group_business_impact" name="Business Impact"
             tags="Risk">
             <huiproperty id="bp_device_value_method_confidentiality"
@@ -9392,6 +9402,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_room_abbr" name="Abbreviation" />
         <huiproperty id="bp_room_tag" name="Tags" 
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty id="bp_room_document" name="Document" isURL="true" />
         <huipropertygroup id="bp_room_group_business_impact" name="Business Impact"
             tags="Risk">
             <huiproperty id="bp_room_value_method_confidentiality"
@@ -9471,6 +9482,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_safeguard_abbr" name="Abbreviation" />
         <huiproperty id="bp_safeguard_tag" name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+        <huiproperty id="bp_safeguard_document" name="Document" isURL="true" />
     </huientity> 
     
    <huientity id="bp_safeguard_group" name="Safeguard Group">
