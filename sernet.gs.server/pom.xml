@@ -56,7 +56,7 @@
 			</plugin>
 
 
-<!-- for sunfire we would need to make a test-plugin -->
+<!-- for surefire we would need to make a test-plugin -->
 <!-- 			<plugin> -->
 				<!-- <groupId>org.apache.maven.plugins</groupId> -->
 				<!-- <artifactId>maven-surefire-plugin</artifactId> -->
@@ -106,7 +106,7 @@
 
 	<repositories>
 		<repository>
-			<id>marven-central</id>
+			<id>maven-central</id>
 			<url>http://central.maven.org/maven2/</url>
 		</repository>
 
