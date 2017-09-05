@@ -83,15 +83,6 @@ To see where the Verinice client, client update site, server
 and report designer build artifacts can then be found
 read the following sections.
 
-**CI build of the `develop` branch:**
-
-[![Build Status](https://travis-ci.com/zaunerc/verinice-mirror.svg?token=dYtmMcJy99yawPLtZTwD&branch=develop)](https://travis-ci.com/zaunerc/verinice-mirror)
-
-The Travis CI server builds the project using the following JDKs:
-
-- OpenJDK 7
-- OracleJDK 8
-
 ## Verinice client
 
 The built artifacts will be located in
