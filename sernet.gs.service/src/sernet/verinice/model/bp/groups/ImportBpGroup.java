@@ -45,7 +45,7 @@ public class ImportBpGroup extends Group<Organization> implements IBpGroup {
     
     private static final long serialVersionUID = -7286059698308443978L;
     
-    public static final String TYPE_ID = "bp_importgroup";
+    public static final String TYPE_ID = "bp_import_group";
     
     public static final String[] CHILD_TYPES = new String[] { 
             ItNetwork.TYPE_ID,

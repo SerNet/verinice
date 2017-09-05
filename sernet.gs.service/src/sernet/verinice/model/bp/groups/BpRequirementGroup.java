@@ -32,7 +32,7 @@ public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup
     
     private static final long serialVersionUID = 7752776589962581995L;
     
-    public static final String TYPE_ID = "bp_requirementgroup";
+    public static final String TYPE_ID = "bp_requirement_group";
     
     public static final String[] CHILD_TYPES = new String[] {BpRequirement.TYPE_ID};
     

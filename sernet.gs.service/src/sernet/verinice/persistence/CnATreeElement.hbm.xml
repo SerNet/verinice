@@ -542,57 +542,57 @@
 	<subclass 
 		name="sernet.verinice.model.bp.groups.ApplicationGroup"
 		extends="CnATreeElement"
-		discriminator-value="bp_applicationgroup" />       
+		discriminator-value="bp_application_group" />       
                             
   <subclass 
     name="sernet.verinice.model.bp.groups.BpPersonGroup"
     extends="CnATreeElement"
-    discriminator-value="bp_persongroup" />
+    discriminator-value="bp_person_group" />
   
   <subclass 
     name="sernet.verinice.model.bp.groups.BpRequirementGroup"
     extends="CnATreeElement"
-    discriminator-value="bp_requirementgroup" />
+    discriminator-value="bp_requirement_group" />
   
   <subclass 
     name="sernet.verinice.model.bp.groups.BpThreatGroup"
     extends="CnATreeElement"
-    discriminator-value="bp_treatgroup" />
+    discriminator-value="bp_treat_group" />
 	
 	<subclass 
 		name="sernet.verinice.model.bp.groups.BusinessProcessGroup"
 		extends="CnATreeElement"
-		discriminator-value="bp_businessprocessgroup" />
+		discriminator-value="bp_businessprocess_group" />
     
   <subclass 
     name="sernet.verinice.model.bp.groups.DeviceGroup"
     extends="CnATreeElement"
-    discriminator-value="bp_devicegroup" />
+    discriminator-value="bp_device_group" />
 	
 	<subclass 
 		name="sernet.verinice.model.bp.groups.IcsSystemGroup"
 		extends="CnATreeElement"
-		discriminator-value="bp_icssystemgroup" />
+		discriminator-value="bp_icssystem_group" />
 	
 	<subclass 
 		name="sernet.verinice.model.bp.groups.ItSystemGroup"
 		extends="CnATreeElement"
-		discriminator-value="bp_itsystemgroup" />		
+		discriminator-value="bp_itsystem_group" />		
 	
 	<subclass 
 		name="sernet.verinice.model.bp.groups.NetworkGroup"
 		extends="CnATreeElement"
-		discriminator-value="bp_networkgroup" />
+		discriminator-value="bp_network_group" />
     
 	<subclass 
 		name="sernet.verinice.model.bp.groups.RoomGroup"
 		extends="CnATreeElement"
-		discriminator-value="bp_roomgroup" />
+		discriminator-value="bp_room_group" />
     
   <subclass 
     name="sernet.verinice.model.bp.groups.SafeguardGroup"
     extends="CnATreeElement"
-    discriminator-value="bp_safeguardgroup" />
+    discriminator-value="bp_safeguard_group" />
 
 	<!-- This filter implements the access check (read access) for CnATreeElement instances (and subclasses).
 	

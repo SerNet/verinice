@@ -32,7 +32,7 @@ public class NetworkGroup extends Group<Network> implements IBpGroup {
     
     private static final long serialVersionUID = 6166611011332324047L;
     
-    public static final String TYPE_ID = "bp_networkgroup";
+    public static final String TYPE_ID = "bp_network_group";
     
     public static final String[] CHILD_TYPES = new String[] {Network.TYPE_ID};
     

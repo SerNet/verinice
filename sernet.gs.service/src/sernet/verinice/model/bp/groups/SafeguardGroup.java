@@ -32,7 +32,7 @@ public class SafeguardGroup extends Group<Safeguard> implements IBpGroup {
     
     private static final long serialVersionUID = -6689926582876183791L;
     
-    public static final String TYPE_ID = "bp_safeguardgroup";
+    public static final String TYPE_ID = "bp_safeguard_group";
     
     public static final String[] CHILD_TYPES = new String[] {Safeguard.TYPE_ID};
     

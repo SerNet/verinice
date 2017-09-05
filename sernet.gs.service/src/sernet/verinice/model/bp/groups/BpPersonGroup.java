@@ -32,7 +32,7 @@ public class BpPersonGroup extends Group<BpPerson> implements IBpGroup {
     
     private static final long serialVersionUID = 7752776589962581995L;
     
-    public static final String TYPE_ID = "bp_persongroup";
+    public static final String TYPE_ID = "bp_person_group";
     
     public static final String[] CHILD_TYPES = new String[] {BpPerson.TYPE_ID};
     

@@ -32,7 +32,7 @@ public class ItSystemGroup extends Group<ItSystem> implements IBpGroup {
     
     private static final long serialVersionUID = -8454160472717996490L;
     
-    public static final String TYPE_ID = "bp_itsystemgroup";
+    public static final String TYPE_ID = "bp_itsystem_group";
     
     public static final String[] CHILD_TYPES = new String[] {ItSystem.TYPE_ID};
     

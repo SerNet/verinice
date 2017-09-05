@@ -32,7 +32,7 @@ public class BpThreatGroup extends Group<BpThreat> implements IBpGroup {
     
     private static final long serialVersionUID = 7752776589962581995L;
     
-    public static final String TYPE_ID = "bp_threatgroup";
+    public static final String TYPE_ID = "bp_threat_group";
     
     public static final String[] CHILD_TYPES = new String[] {BpThreat.TYPE_ID};
     

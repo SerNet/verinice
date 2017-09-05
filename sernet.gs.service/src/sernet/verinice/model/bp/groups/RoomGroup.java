@@ -32,7 +32,7 @@ public class RoomGroup extends Group<Room> implements IBpGroup {
     
     private static final long serialVersionUID = -6689926582876183791L;
     
-    public static final String TYPE_ID = "bp_roomgroup";
+    public static final String TYPE_ID = "bp_room_group";
     
     public static final String[] CHILD_TYPES = new String[] {Room.TYPE_ID};
     

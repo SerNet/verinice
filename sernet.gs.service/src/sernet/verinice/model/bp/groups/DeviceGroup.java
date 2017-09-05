@@ -32,7 +32,7 @@ public class DeviceGroup extends Group<Device> implements IBpGroup {
     
     private static final long serialVersionUID = 2378844509548812805L;
     
-    public static final String TYPE_ID = "bp_devicegroup";
+    public static final String TYPE_ID = "bp_device_group";
     
     public static final String[] CHILD_TYPES = new String[] {Device.TYPE_ID};
     

@@ -32,7 +32,7 @@ public class IcsSystemGroup extends Group<IcsSystem> implements IBpGroup {
     
     private static final long serialVersionUID = -5366579759422543907L;
     
-    public static final String TYPE_ID = "bp_icssystemgroup";
+    public static final String TYPE_ID = "bp_icssystem_group";
     
     public static final String[] CHILD_TYPES = new String[] {IcsSystem.TYPE_ID};
     

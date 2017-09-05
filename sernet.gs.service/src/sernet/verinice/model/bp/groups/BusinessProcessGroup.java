@@ -32,7 +32,7 @@ public class BusinessProcessGroup extends Group<BusinessProcess> implements IBpG
     
     private static final long serialVersionUID = -9081751520389572620L;
 
-    public static final String TYPE_ID = "bp_businessprocessgroup";
+    public static final String TYPE_ID = "bp_businessprocess_group";
     
     public static final String[] CHILD_TYPES = new String[] {BusinessProcess.TYPE_ID};
     
