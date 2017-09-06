@@ -57,8 +57,8 @@
 						<!-- Field for PropertyType: multiselection -->
 						<c:when test="#{huiProperty.isMultiselect}">
 							<p:selectCheckboxMenu value="#{huiProperty.selectedOptions}"
-								 filter="true"
-								filterMatchMode="startsWith" updateLabel="true">
+								label="#{msgEdit['multiselection.empty']}"
+								filter="true" filterMatchMode="startsWith" updateLabel="true">
 								<f:selectItems value="#{huiProperty.options}" var="option"
 									itemLabel="#{option.getName()}" itemValue="#{option}" />
 							</p:selectCheckboxMenu>

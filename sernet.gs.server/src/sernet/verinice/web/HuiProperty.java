@@ -69,8 +69,6 @@ public class HuiProperty implements Serializable {
 
     private List<SelectItem> options;
 
-    private List<String> selectedOptions;
-
     public HuiProperty(PropertyType type, String key, String value) {
         super();
         this.propertyType = type;
@@ -182,11 +180,11 @@ public class HuiProperty implements Serializable {
         return propertyType.isBooleanSelect();
     }
 
-    public boolean getIsReference(){
+    public boolean getIsReference() {
         return propertyType.isReference();
     }
 
-    public boolean getIsMultiselect(){
+    public boolean getIsMultiselect() {
         return propertyType.isMultiselect();
     }
 
@@ -512,22 +510,22 @@ public class HuiProperty implements Serializable {
         return options;
     }
 
-    public List<String> getSelectedOptions(){
-        if(!getIsMultiselect()){
+    public List<String> getSelectedOptions() {
+        if (!getIsMultiselect()) {
             return Collections.emptyList();
         }
 
-        String[] split = getValue().split(",");
-        return Arrays.asList(split);
+        String[] split = getValue() != null ? getValue().split(",s*") : new String[]{};
+        List<String> selectedOptions = new ArrayList<>(split.length);
+        for (int i = 0; i < split.length; i++) {
+            selectedOptions.add(split[i].trim());
+
+        }
+
+        return selectedOptions;
     }
 
     public void setSelectedOptions(List<String> selectedOptions) {
-
-        String[] buffer = new String[selectedOptions.size()];
-        for (int i = 0; i < selectedOptions.size(); i++) {
-            buffer[i] = selectedOptions.get(i);
-        }
-        this.selectedOptions = selectedOptions;
-        this.value = StringUtils.join(buffer, ",");
+        setValue(StringUtils.join(selectedOptions, ","));
     }
 }
