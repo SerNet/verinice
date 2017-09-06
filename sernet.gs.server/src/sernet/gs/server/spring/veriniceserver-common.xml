@@ -158,7 +158,7 @@ This variant:
 		<property name="propertyDao" ref="propertyDao" />
 		<property name="entityDao" ref="entityDao" />
 		<property name="cnaLinkDao" ref="cnaLinkDao" />
-        <property name="cnaTreeElementDao" ref="cnaTreeElementDao" />
+    <property name="cnaTreeElementDao" ref="cnaTreeElementDao" />
 		<property name="finishedRiskAnalysisListsDAO" ref="finishedRiskAnalysisListsDAO" />
 		<property name="gefaehrdungDao" ref="gefaehrdungDao" />
 		<property name="ownGefaehrdungDao" ref="ownGefaehrdungDao" />
@@ -242,31 +242,33 @@ This variant:
 		<property name="processDAO" ref="processDAO" />
 		<property name="recordGroupDAO" ref="recordGroupDAO" />
 		<property name="recordDAO" ref="recordDAO" />
-        <!-- Self Assessment (SAMT) Daos -->
-        <property name="samtTopicDAO" ref="samtTopicDAO" />   
+    <!-- Self Assessment (SAMT) Daos -->
+    <property name="samtTopicDAO" ref="samtTopicDAO" />   
 		<!-- Modernized ITBP DAOs -->
 		<property name="applicationDAO" ref="applicationDAO" />
+    <property name="bpPersonDAO" ref="bpPersonDAO" />
+    <property name="bpRequirementDAO" ref="bpRequirementDAO" />
+    <property name="bpThreatDAO" ref="bpThreatDAO" />
 		<property name="businessProcessDAO" ref="businessProcessDAO" />
-		<property name="icssystemDAO" ref="icssystemDAO" />
-		<property name="itnetworkDAO" ref="itnetworkDAO" />
-		<property name="itsystemDAO" ref="itsystemDAO" />
-		<property name="moditbpbelementDAO" ref="moditbpbelementDAO" />
-		<property name="moditbpPersonDAO" ref="moditbpPersonDAO" />
-		<property name="moditbpRequirementDAO" ref="moditbpRequirementDAO" />
-		<property name="moditbpThreatDAO" ref="moditbpThreatDAO" />
-		<property name="moduleDAO" ref="moduleDAO" />
+    <property name="deviceDAO" ref="deviceDAO" />
+		<property name="icsSystemDAO" ref="icsSystemDAO" />
+		<property name="itNetworkDAO" ref="itNetworkDAO" />
+		<property name="itSystemDAO" ref="itSystemDAO" />
 		<property name="networkDAO" ref="networkDAO" />
-		<property name="othersystemDAO" ref="othersystemDAO" />
 		<property name="roomDAO" ref="roomDAO" />
-		<property name="modITBPModelDAO" ref="modITBPModelDAO" />
-		<property name="applicationCategoryDAO" ref="applicationCategoryDAO" />
-		<property name="businessProcessCategoryDAO" ref="businessProcessCategoryDAO" />
-		<property name="icsSystemCategoryDAO" ref="icsSystemCategoryDAO" />
-		<property name="itSystemCategoryDAO" ref="itSystemCategoryDAO" />
-		<property name="networkCategoryDAO" ref="networkCategoryDAO" />
-		<property name="otherSystemCategoryDAO" ref="otherSystemCategoryDAO" />
-		<property name="personCategoryDAO" ref="personCategoryDAO" />
-		<property name="roomCategoryDAO" ref="roomCategoryDAO" />
+    <property name="safeguardDAO" ref="safeguardDAO" />
+		<property name="bpModelDAO" ref="bpModelDAO" />
+		<property name="applicationGroupDAO" ref="applicationGroupDAO" />
+    <property name="bpPersonGroupDAO" ref="bpPersonGroupDAO" />
+    <property name="bpRequirementGroupDAO" ref="bpRequirementGroupDAO" />
+    <property name="bpThreatGroupDAO" ref="bpThreatGroupDAO" />
+		<property name="businessProcessGroupDAO" ref="businessProcessGroupDAO" />
+    <property name="deviceGroupDAO" ref="deviceGroupDAO" />
+		<property name="icsSystemGroupDAO" ref="icsSystemGroupDAO" />
+		<property name="itSystemGroupDAO" ref="itSystemGroupDAO" />
+		<property name="networkGroupDAO" ref="networkGroupDAO" />
+		<property name="roomGroupDAO" ref="roomGroupDAO" />
+    <property name="safeguardGroupDAO" ref="safeguardGroupDAO" />
 
         <!-- Miscellaneous DAOs -->
         <property name="importIsoDAO" ref="importIsoDAO" /> 

@@ -33,6 +33,31 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.interfaces.IElementEntityDao;
 import sernet.verinice.interfaces.IFinishedRiskAnalysisListsDao;
+import sernet.verinice.model.bp.elements.Application;
+import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.elements.BusinessProcess;
+import sernet.verinice.model.bp.elements.Device;
+import sernet.verinice.model.bp.elements.IcsSystem;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.ItSystem;
+import sernet.verinice.model.bp.elements.Network;
+import sernet.verinice.model.bp.elements.Room;
+import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bp.groups.BpThreatGroup;
+import sernet.verinice.model.bp.groups.BusinessProcessGroup;
+import sernet.verinice.model.bp.groups.DeviceGroup;
+import sernet.verinice.model.bp.groups.IcsSystemGroup;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
+import sernet.verinice.model.bp.groups.ItSystemGroup;
+import sernet.verinice.model.bp.groups.NetworkGroup;
+import sernet.verinice.model.bp.groups.RoomGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.bsi.Addition;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
@@ -114,29 +139,6 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
-import sernet.verinice.model.moditbp.categories.ApplicationCategory;
-import sernet.verinice.model.moditbp.categories.BusinessProcessCategory;
-import sernet.verinice.model.moditbp.categories.ICSSystemCategory;
-import sernet.verinice.model.moditbp.categories.ITSystemCategory;
-import sernet.verinice.model.moditbp.categories.NetworkCategory;
-import sernet.verinice.model.moditbp.categories.OtherSystemCategory;
-import sernet.verinice.model.moditbp.categories.PersonCategory;
-import sernet.verinice.model.moditbp.categories.RoomCategory;
-import sernet.verinice.model.moditbp.elements.Application;
-import sernet.verinice.model.moditbp.elements.BusinessProcess;
-import sernet.verinice.model.moditbp.elements.ICSSystem;
-import sernet.verinice.model.moditbp.elements.ITNetwork;
-import sernet.verinice.model.moditbp.elements.ITSystem;
-import sernet.verinice.model.moditbp.elements.ImportModITBPGroup;
-import sernet.verinice.model.moditbp.elements.ModITBPElement;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
-import sernet.verinice.model.moditbp.elements.ModITBPPerson;
-import sernet.verinice.model.moditbp.elements.ModITBPRequirement;
-import sernet.verinice.model.moditbp.elements.ModITBPThreat;
-import sernet.verinice.model.moditbp.elements.Module;
-import sernet.verinice.model.moditbp.elements.Network;
-import sernet.verinice.model.moditbp.elements.OtherSystem;
-import sernet.verinice.model.moditbp.elements.Room;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.UpdateElementEntity;
 
@@ -893,222 +895,160 @@ public class DAOFactory implements IDAOFactory {
 	    return daosByTypeID.get(object.getTypeId());
 	}
 
-    /**
-     * @param typeId
-     * @return
-     */
     @Override
     public IBaseDao getDAO(String typeId) {
         return daosByTypeID.get(typeId);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setImportModITBPDao(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
-    public void setImportModITBPDao(IBaseDao<ImportModITBPGroup, Integer> daoToSet) {
-        daosByClass.put(ImportModITBPGroup.class, daoToSet);
-        daosByTypeID.put(ImportModITBPGroup.TYPE_ID, daoToSet);        
+    public void setImportBpDao(IBaseDao<ImportBpGroup, Integer> daoToSet) {
+        daosByClass.put(ImportBpGroup.class, daoToSet);
+        daosByTypeID.put(ImportBpGroup.TYPE_ID, daoToSet);        
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setApplicationDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
     public void setApplicationDAO(IBaseDao<Application, Integer> daoToSet) {
         daosByClass.put(Application.class, daoToSet);
         daosByTypeID.put(Application.TYPE_ID, daoToSet);        
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setBusinessProcessDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
     public void setBusinessProcessDAO(IBaseDao<BusinessProcess, Integer> daoToSet) {
         daosByClass.put(BusinessProcess.class, daoToSet);
         daosByTypeID.put(BusinessProcess.TYPE_ID, daoToSet);        
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setIcssystemDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
-    public void setIcssystemDAO(IBaseDao<ICSSystem, Integer> daoToSet) {
-        daosByClass.put(ICSSystem.class, daoToSet);
-        daosByTypeID.put(ICSSystem.TYPE_ID, daoToSet);        
+    public void setIcsSystemDAO(IBaseDao<IcsSystem, Integer> daoToSet) {
+        daosByClass.put(IcsSystem.class, daoToSet);
+        daosByTypeID.put(IcsSystem.TYPE_ID, daoToSet);        
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setItnetworkDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
-    public void setItnetworkDAO(IBaseDao<ITNetwork, Integer> daoToSet) {
-        daosByClass.put(ITNetwork.class, daoToSet);
-        daosByTypeID.put(ITNetwork.TYPE_ID, daoToSet);        
+    public void setItNetworkDAO(IBaseDao<ItNetwork, Integer> daoToSet) {
+        daosByClass.put(ItNetwork.class, daoToSet);
+        daosByTypeID.put(ItNetwork.TYPE_ID, daoToSet);        
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setItsystemDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
-    public void setItsystemDAO(IBaseDao<ITSystem, Integer> daoToSet) {
-        daosByClass.put(ITSystem.class, daoToSet);
-        daosByTypeID.put(ITSystem.TYPE_ID, daoToSet);    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setModitbpbelementDAO(sernet.verinice.interfaces.IBaseDao)
-     */
-    @Override
-    public void setModitbpbelementDAO(IBaseDao<ModITBPElement, Integer> daoToSet) {
-        daosByClass.put(ModITBPElement.class, daoToSet);
-        daosByTypeID.put(ModITBPElement.TYPE_ID, daoToSet);        
+    public void setItSystemDAO(IBaseDao<ItSystem, Integer> daoToSet) {
+        daosByClass.put(ItSystem.class, daoToSet);
+        daosByTypeID.put(ItSystem.TYPE_ID, daoToSet);    
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setModitbpPersonDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
-    public void setModitbpPersonDAO(IBaseDao<ModITBPPerson, Integer> daoToSet) {
-        daosByClass.put(ModITBPPerson.class, daoToSet);
-        daosByTypeID.put(ModITBPPerson.TYPE_ID, daoToSet);        
+    public void setBpPersonDAO(IBaseDao<BpPerson, Integer> daoToSet) {
+        daosByClass.put(BpPerson.class, daoToSet);
+        daosByTypeID.put(BpPerson.TYPE_ID, daoToSet);        
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setModitbpRequirementDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
-    public void setModitbpRequirementDAO(IBaseDao<ModITBPRequirement, Integer> daoToSet) {
-        daosByClass.put(ModITBPRequirement.class, daoToSet);
-        daosByTypeID.put(ModITBPRequirement.TYPE_ID, daoToSet);        
-                
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setModitbpThreatDAO(sernet.verinice.interfaces.IBaseDao)
-     */
-    @Override
-    public void setModitbpThreatDAO(IBaseDao<ModITBPThreat, Integer> daoToSet) {
-        daosByClass.put(ModITBPThreat.class, daoToSet);
-        daosByTypeID.put(ModITBPThreat.TYPE_ID, daoToSet);        
+    public void setBpThreatDAO(IBaseDao<BpThreat, Integer> daoToSet) {
+        daosByClass.put(BpThreat.class, daoToSet);
+        daosByTypeID.put(BpThreat.TYPE_ID, daoToSet);        
         
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setModuleDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
-    public void setModuleDAO(IBaseDao<Module, Integer> daoToSet) {
-        daosByClass.put(Module.class, daoToSet);
-        daosByTypeID.put(Module.TYPE_ID, daoToSet);        
+    public void setBpRequirementDAO(IBaseDao<BpRequirement, Integer> daoToSet) {
+        daosByClass.put(BpRequirement.class, daoToSet);
+        daosByTypeID.put(BpRequirement.TYPE_ID, daoToSet);        
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setNetworkDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
     public void setNetworkDAO(IBaseDao<Network, Integer> daoToSet) {
         daosByClass.put(Network.class, daoToSet);
         daosByTypeID.put(Network.TYPE_ID, daoToSet);        
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setOthersystemDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
-    public void setOthersystemDAO(IBaseDao<OtherSystem, Integer> daoToSet) {
-        daosByClass.put(OtherSystem.class, daoToSet);
-        daosByTypeID.put(OtherSystem.TYPE_ID, daoToSet);        
+    public void setDeviceDAO(IBaseDao<Device, Integer> daoToSet) {
+        daosByClass.put(Device.class, daoToSet);
+        daosByTypeID.put(Device.TYPE_ID, daoToSet);        
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setRoomDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
     public void setRoomDAO(IBaseDao<Room, Integer> daoToSet) {
         daosByClass.put(Room.class, daoToSet);
         daosByTypeID.put(Room.TYPE_ID, daoToSet);        
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setModITBPModelDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
-    public void setModITBPModelDAO(IBaseDao<ModITBPModel, Integer> daoToSet) {
-        daosByClass.put(ModITBPModel.class, daoToSet);
-        daosByTypeID.put(ModITBPModel.TYPE_ID, daoToSet);        
+    public void setSafeguardDAO(IBaseDao<Safeguard, Integer> daoToSet) {
+        daosByClass.put(Safeguard.class, daoToSet);
+        daosByTypeID.put(Safeguard.TYPE_ID, daoToSet);        
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setApplicationCategoryDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
-    public void setApplicationCategoryDAO(IBaseDao<ApplicationCategory, Integer> daoToSet) {
-        daosByClass.put(ApplicationCategory.class, daoToSet);
-        daosByTypeID.put(ApplicationCategory.TYPE_ID, daoToSet);        
+    public void setBpModelDAO(IBaseDao<BpModel, Integer> daoToSet) {
+        daosByClass.put(BpModel.class, daoToSet);
+        daosByTypeID.put(BpModel.TYPE_ID, daoToSet);        
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setBusinessProcessCategoryDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
-    public void setBusinessProcessCategoryDAO(IBaseDao<BusinessProcessCategory, Integer> daoToSet) {
-        daosByClass.put(BusinessProcessCategory.class, daoToSet);
-        daosByTypeID.put(BusinessProcessCategory.TYPE_ID, daoToSet);        
+    public void setApplicationGroupDAO(IBaseDao<ApplicationGroup, Integer> daoToSet) {
+        daosByClass.put(ApplicationGroup.class, daoToSet);
+        daosByTypeID.put(ApplicationGroup.TYPE_ID, daoToSet);        
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setIcsSystemCategoryDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
-    public void setIcsSystemCategoryDAO(IBaseDao<ICSSystemCategory, Integer> daoToSet) {
-        daosByClass.put(ICSSystemCategory.class, daoToSet);
-        daosByTypeID.put(ICSSystemCategory.TYPE_ID, daoToSet);        
+    public void setBpPersonGroupDAO(IBaseDao<BpPersonGroup, Integer> daoToSet) {
+        daosByClass.put(BpPersonGroup.class, daoToSet);
+        daosByTypeID.put(BpPersonGroup.TYPE_ID, daoToSet);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setItSystemCategoryDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
-    public void setItSystemCategoryDAO(IBaseDao<ITSystemCategory, Integer> daoToSet) {
-        daosByClass.put(ITSystemCategory.class, daoToSet);
-        daosByTypeID.put(ITSystemCategory.TYPE_ID, daoToSet);        
+    public void setBpRequirementGroupDAO(IBaseDao<BpRequirementGroup, Integer> daoToSet) {
+        daosByClass.put(BpRequirementGroup.class, daoToSet);
+        daosByTypeID.put(BpRequirementGroup.TYPE_ID, daoToSet);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setNetworkCategoryDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
-    public void setNetworkCategoryDAO(IBaseDao<NetworkCategory, Integer> daoToSet) {
-        daosByClass.put(NetworkCategory.class, daoToSet);
-        daosByTypeID.put(NetworkCategory.TYPE_ID, daoToSet);        
+    public void setBpThreatGroupDAO(IBaseDao<BpThreatGroup, Integer> daoToSet) {
+        daosByClass.put(BpThreatGroup.class, daoToSet);
+        daosByTypeID.put(BpThreatGroup.TYPE_ID, daoToSet);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setOtherSystemCategoryDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
-    public void setOtherSystemCategoryDAO(IBaseDao<OtherSystemCategory, Integer> daoToSet) {
-        daosByClass.put(OtherSystemCategory.class, daoToSet);
-        daosByTypeID.put(OtherSystemCategory.TYPE_ID, daoToSet);        
+    public void setBusinessProcessGroupDAO(IBaseDao<BusinessProcessGroup, Integer> daoToSet) {
+        daosByClass.put(BusinessProcessGroup.class, daoToSet);
+        daosByTypeID.put(BusinessProcessGroup.TYPE_ID, daoToSet);        
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setPersonCategoryDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
-    public void setPersonCategoryDAO(IBaseDao<PersonCategory, Integer> daoToSet) {
-        daosByClass.put(PersonCategory.class, daoToSet);
-        daosByTypeID.put(PersonCategory.TYPE_ID, daoToSet);        
+    public void setIcsSystemGroupDAO(IBaseDao<IcsSystemGroup, Integer> daoToSet) {
+        daosByClass.put(IcsSystemGroup.class, daoToSet);
+        daosByTypeID.put(IcsSystemGroup.TYPE_ID, daoToSet);        
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setRoomCategoryDAO(sernet.verinice.interfaces.IBaseDao)
-     */
     @Override
-    public void setRoomCategoryDAO(IBaseDao<RoomCategory, Integer> daoToSet) {
-        daosByClass.put(RoomCategory.class, daoToSet);
-        daosByTypeID.put(RoomCategory.TYPE_ID, daoToSet);        
+    public void setItSystemGroupDAO(IBaseDao<ItSystemGroup, Integer> daoToSet) {
+        daosByClass.put(ItSystemGroup.class, daoToSet);
+        daosByTypeID.put(ItSystemGroup.TYPE_ID, daoToSet);        
     }
 
+    @Override
+    public void setNetworkGroupDAO(IBaseDao<NetworkGroup, Integer> daoToSet) {
+        daosByClass.put(NetworkGroup.class, daoToSet);
+        daosByTypeID.put(NetworkGroup.TYPE_ID, daoToSet);        
+    }
+
+    @Override
+    public void setDeviceGroupDAO(IBaseDao<DeviceGroup, Integer> daoToSet) {
+        daosByClass.put(DeviceGroup.class, daoToSet);
+        daosByTypeID.put(DeviceGroup.TYPE_ID, daoToSet);        
+    }
+
+    @Override
+    public void setRoomGroupDAO(IBaseDao<RoomGroup, Integer> daoToSet) {
+        daosByClass.put(RoomGroup.class, daoToSet);
+        daosByTypeID.put(RoomGroup.TYPE_ID, daoToSet);        
+    }
+
+    @Override
+    public void setSafeguardGroupDAO(IBaseDao<SafeguardGroup, Integer> daoToSet) {
+        daosByClass.put(SafeguardGroup.class, daoToSet);
+        daosByTypeID.put(SafeguardGroup.TYPE_ID, daoToSet);      
+    }
 
 }

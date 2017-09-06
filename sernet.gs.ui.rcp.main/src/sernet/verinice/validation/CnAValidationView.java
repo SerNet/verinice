@@ -72,10 +72,10 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.model.validation.CnAValidation;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.crud.LoadPolymorphicCnAElementById;
@@ -311,7 +311,7 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
     protected void removeModelListeners() {
         CnAElementFactory.getLoadedModel().removeBSIModelListener(contentProvider);
         CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
-        CnAElementFactory.getInstance().getModITBPModel().removeModITBPModelListener(contentProvider);
+        CnAElementFactory.getInstance().getBpModel().removeBpModelListener(contentProvider);
     }
     
     protected void addISO27KModelListeners() {
@@ -358,7 +358,7 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
         JobScheduler.scheduleInitJob(initDataJob);      
     }
     
-    protected void addModITBPModelListener() {
+    protected void addBpModelListener() {
         WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
@@ -366,7 +366,7 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
                 try {
                     monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
                     if (CnAElementFactory.isModelLoaded()) {
-                        CnAElementFactory.getInstance().getModITBPModel().
+                        CnAElementFactory.getInstance().getBpModel().
                             addModITBOModelListener(contentProvider);
                     }
                 } catch (Exception e) {
@@ -412,7 +412,7 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
             }
 
             @Override
-            public void loaded(ModITBPModel model) {
+            public void loaded(BpModel model) {
                 synchronized (modelLoadListener) {
                     startInitDataJob();
                     

@@ -73,12 +73,6 @@ public class HUITypeFactory {
     private static final String HUI_PROPERTY = "huiproperty";
     private static final String HUI_PROPERTY_GROUP = "huipropertygroup";
     private static final String HUI_RELATION = "huirelation";
-    private static final String ABSTRACT_MODITBP_ID = "moditbp_abstractelement";
-    private static final String MODITBP_MODULE_ID = "moditbp_module";
-    private static final String MODITBP_THREAT_ID = "moditbp_threat";
-    private static final String MODITBP_REQUIREMENT_ID = "moditbp_requirement";
-    private static final String MODITBP_ITNETWORK_ID = "moditbp_itnetwork";
-    private static final String MODITBP_PERSON_ID = "moditbp_person";
 
     private static Document doc;
     
@@ -196,9 +190,6 @@ public class HUITypeFactory {
             Element entityEl = (Element) entities.item(i);
             EntityType entityObj = new EntityType();
             String id = entityEl.getAttribute(ATTRIBUTE_ID);
-            if ( id.toLowerCase().startsWith("moditbp_module")) {
-                LOG.debug("Found new itbp element type:\t" + id);
-            }
             entityObj.setId(id);
 
             // labels are loaded from SNCAMessages (resource bundles)
@@ -210,53 +201,11 @@ public class HUITypeFactory {
             
             
             readChildElements(entityObj, null);
-            handleModITBPElements(entityObj);
         }
         
         
     }
 
-    /**
-     * huientities that are part of the modernized ITBP data model, 
-     * needs to inherit properties from "moditbp_abstractelement"
-     * 
-     * @param entityObj
-     */
-    private void handleModITBPElements(EntityType entityObj) {
-        boolean isModITBPElement = entityObj.getId().startsWith("moditbp_");
-        boolean isAbstractElement = ABSTRACT_MODITBP_ID.equals(entityObj.getId());
-        boolean isCatalogElement = isCatalogueElement(entityObj.getId()); 
-        if(isModITBPElement && ! isAbstractElement && ! isCatalogElement ) {
-            EntityType abstractModITBPType = getEntityType(ABSTRACT_MODITBP_ID);
-            for (HuiRelation relation : abstractModITBPType.getPossibleRelations()) {
-                if (!entityObj.getPossibleRelations().contains(relation)) {
-                    entityObj.addRelation(relation);
-                }
-            }
-            for (PropertyGroup group : abstractModITBPType.getPropertyGroups() ) {
-                if (!entityObj.getPropertyGroups().contains(group)) {
-                    entityObj.addPropertyGroup(group);
-                }
-            }
-            for (PropertyType type : abstractModITBPType.getAllPropertyTypes()) {
-                if(!entityObj.getAllPropertyTypes().contains(type)) {
-                    entityObj.addPropertyType(type);
-                }
-            }
-        }
-    }
-    
-    private boolean isCatalogueElement(String id) {
-        return (MODITBP_MODULE_ID.equals(id) ||
-                MODITBP_REQUIREMENT_ID.equals(id) ||
-                MODITBP_THREAT_ID.equals(id)) ||
-                MODITBP_ITNETWORK_ID.equals(id) ||
-                MODITBP_PERSON_ID.equals(id)
-                ;
-    }
-    
-   
-   
     public Set<String> getAllTypeIds() {
         return allEntities.keySet();
     }

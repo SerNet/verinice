@@ -472,125 +472,127 @@
 		extends="CnATreeElement"
 		discriminator-value="samt_topic" />
 		
-	<!-- renewed / modernized ITBP -->
+	<!-- Modernized ITBP -->
+ 
+	<subclass 
+		name="sernet.verinice.model.bp.elements.BpModel"
+		extends="CnATreeElement"
+		discriminator-value="bp_model" />
+        
+  <subclass 
+    name="sernet.verinice.model.bp.elements.ItNetwork"
+    extends="CnATreeElement"
+    discriminator-value="bp_itnetwork" />
+    
+  <subclass 
+    name="sernet.verinice.model.bp.elements.Application"
+    extends="CnATreeElement"
+    discriminator-value="bp_application" />
+    
+  <subclass 
+    name="sernet.verinice.model.bp.elements.BpPerson"
+    extends="CnATreeElement"
+    discriminator-value="bp_person" />    	
+	
+  <subclass
+		name="sernet.verinice.model.bp.elements.BpRequirement"
+		extends="CnATreeElement"
+		discriminator-value="bp_requirement" />
+		
+	<subclass
+		name="sernet.verinice.model.bp.elements.BpThreat"
+		extends="CnATreeElement"
+		discriminator-value="bp_threat" />		
+		
+	<subclass 
+		name="sernet.verinice.model.bp.elements.BusinessProcess"
+		extends="CnATreeElement"
+		discriminator-value="bp_businessprocess" />
+    
+  <subclass 
+    name="sernet.verinice.model.bp.elements.Device"
+    extends="CnATreeElement"
+    discriminator-value="bp_device" /> 
+       
+	<subclass 
+		name="sernet.verinice.model.bp.elements.IcsSystem"
+		extends="CnATreeElement"
+		discriminator-value="bp_icssystem" />
+
+	<subclass 
+		name="sernet.verinice.model.bp.elements.ItSystem"
+		extends="CnATreeElement"
+		discriminator-value="bp_itsystem" />
+    
+	<subclass 
+		name="sernet.verinice.model.bp.elements.Network"
+		extends="CnATreeElement"
+		discriminator-value="bp_network" />
+   
+	<subclass 
+		name="sernet.verinice.model.bp.elements.Room"
+		extends="CnATreeElement"
+		discriminator-value="bp_room" />
+    
+  <subclass 
+    name="sernet.verinice.model.bp.elements.Safeguard"
+    extends="CnATreeElement"
+    discriminator-value="bp_safeguard" />
+  
+	<subclass 
+		name="sernet.verinice.model.bp.groups.ApplicationGroup"
+		extends="CnATreeElement"
+		discriminator-value="bp_application_group" />       
+                            
+  <subclass 
+    name="sernet.verinice.model.bp.groups.BpPersonGroup"
+    extends="CnATreeElement"
+    discriminator-value="bp_person_group" />
+  
+  <subclass 
+    name="sernet.verinice.model.bp.groups.BpRequirementGroup"
+    extends="CnATreeElement"
+    discriminator-value="bp_requirement_group" />
+  
+  <subclass 
+    name="sernet.verinice.model.bp.groups.BpThreatGroup"
+    extends="CnATreeElement"
+    discriminator-value="bp_treat_group" />
 	
 	<subclass 
-		name="sernet.verinice.model.moditbp.elements.ModITBPModel"
+		name="sernet.verinice.model.bp.groups.BusinessProcessGroup"
 		extends="CnATreeElement"
-		discriminator-value="moditbpmodel" />
+		discriminator-value="bp_businessprocess_group" />
+    
+  <subclass 
+    name="sernet.verinice.model.bp.groups.DeviceGroup"
+    extends="CnATreeElement"
+    discriminator-value="bp_device_group" />
 	
-	<subclass
-		name="sernet.verinice.model.moditbp.elements.Module"
+	<subclass 
+		name="sernet.verinice.model.bp.groups.IcsSystemGroup"
 		extends="CnATreeElement"
-		discriminator-value="moditbp_module" />
-		
-	<subclass
-		name="sernet.verinice.model.moditbp.elements.ModITBPRequirement"
+		discriminator-value="bp_icssystem_group" />
+	
+	<subclass 
+		name="sernet.verinice.model.bp.groups.ItSystemGroup"
 		extends="CnATreeElement"
-		discriminator-value="moditbp_requirement" />
-		
-	<subclass
-		name="sernet.verinice.model.moditbp.elements.ModITBPThreat"
+		discriminator-value="bp_itsystem_group" />		
+	
+	<subclass 
+		name="sernet.verinice.model.bp.groups.NetworkGroup"
 		extends="CnATreeElement"
-		discriminator-value="moditbp_threat" />		
-		
-	<subclass
-		name="sernet.verinice.model.moditbp.elements.ModITBPElement"
+		discriminator-value="bp_network_group" />
+    
+	<subclass 
+		name="sernet.verinice.model.bp.groups.RoomGroup"
 		extends="CnATreeElement"
-		discriminator-value="itbp-element">
-		<subclass 
-			name="sernet.verinice.model.moditbp.elements.Application"
-			extends="ModITBPElement"
-			discriminator-value="moditbp_application"
-		/>
-		<subclass 
-			name="sernet.verinice.model.moditbp.elements.BusinessProcess"
-			extends="ModITBPElement"
-			discriminator-value="moditbp_businessprocess"
-		/>
-		<subclass 
-			name="sernet.verinice.model.moditbp.elements.ICSSystem"
-			extends="ModITBPElement"
-			discriminator-value="moditbp_icssystem"
-		/>
-		<subclass 
-			name="sernet.verinice.model.moditbp.elements.ITNetwork"
-			extends="ModITBPElement"
-			discriminator-value="moditbp_itnetwork"
-		/>
-		<subclass 
-			name="sernet.verinice.model.moditbp.elements.ITSystem"
-			extends="ModITBPElement"
-			discriminator-value="moditbp_itsystem"
-		/>
-		<subclass 
-			name="sernet.verinice.model.moditbp.elements.ModITBPPerson"
-			extends="ModITBPElement"
-			discriminator-value="moditbp_person"
-		/>
-		<subclass 
-			name="sernet.verinice.model.moditbp.elements.Network"
-			extends="ModITBPElement"
-			discriminator-value="moditbp_network"
-		/>
-		<subclass 
-			name="sernet.verinice.model.moditbp.elements.OtherSystem"
-			extends="ModITBPElement"
-			discriminator-value="moditbp_othersystem"
-		/>
-		<subclass 
-			name="sernet.verinice.model.moditbp.elements.Room"
-			extends="ModITBPElement"
-			discriminator-value="moditbp_room"
-		/>
-		<subclass 
-			name="sernet.verinice.model.moditbp.categories.ApplicationCategory"
-			extends="ModITBPElement"
-			discriminator-value="moditbp_applicationcategory"
-		/>
-		
-		<subclass 
-			name="sernet.verinice.model.moditbp.categories.BusinessProcessCategory"
-			extends="ModITBPElement"
-			discriminator-value="moditbp_businessprocesscategory"
-		/>
-		
-		<subclass 
-			name="sernet.verinice.model.moditbp.categories.ICSSystemCategory"
-			extends="ModITBPElement"
-			discriminator-value="moditbp_icssystemcategory"
-		/>
-		
-		<subclass 
-			name="sernet.verinice.model.moditbp.categories.ITSystemCategory"
-			extends="ModITBPElement"
-			discriminator-value="moditbp_itsystemcategory"
-		/>		
-		
-		<subclass 
-			name="sernet.verinice.model.moditbp.categories.NetworkCategory"
-			extends="ModITBPElement"
-			discriminator-value="moditbp_networkcategory"
-		/>
-		
-		<subclass 
-			name="sernet.verinice.model.moditbp.categories.OtherSystemCategory"
-			extends="ModITBPElement"
-			discriminator-value="moditbp_othersystemcategory"
-		/>		
-								
-		<subclass 
-			name="sernet.verinice.model.moditbp.categories.PersonCategory"
-			extends="ModITBPElement"
-			discriminator-value="moditbp_personcategory"
-		/>
-		<subclass 
-			name="sernet.verinice.model.moditbp.categories.RoomCategory"
-			extends="ModITBPElement"
-			discriminator-value="moditbp_roomcategory"
-		/>
-																	
-	</subclass>
+		discriminator-value="bp_room_group" />
+    
+  <subclass 
+    name="sernet.verinice.model.bp.groups.SafeguardGroup"
+    extends="CnATreeElement"
+    discriminator-value="bp_safeguard_group" />
 
 	<!-- This filter implements the access check (read access) for CnATreeElement instances (and subclasses).
 	

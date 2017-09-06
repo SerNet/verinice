@@ -39,7 +39,7 @@ import sernet.verinice.model.common.CnATreeElement.TemplateType;
  * central location, and to use them in other points of application.
  * </p>
  * <p>
- * Each {@link CnATreeElement}, representing a Object or Module, can be marked
+ * Each {@link CnATreeElement}, representing a Object or BpRequirement, can be marked
  * as modeling template or each Safeguard as central
  * ({@link TemplateType#TEMPLATE}).
  * </p>
@@ -53,14 +53,14 @@ import sernet.verinice.model.common.CnATreeElement.TemplateType;
  * <b>IT Network 1</b> <ui>
  * <li>Object (marked as modeling template, {@link TemplateType#TEMPLATE})</li>
  * <ui>
- * <li>Module 1 (marked as modeling template,
+ * <li>BpRequirement 1 (marked as modeling template,
  * {@link TemplateType#TEMPLATE})</li> <ui>
  * <li>Safeguard 1 (marked as central, {@link TemplateType#TEMPLATE})</li>
  * <li>Safeguard 2</li> </ui>
- * <li>Module 2</li> <ui>
+ * <li>BpRequirement 2</li> <ui>
  * <li>Safeguard 1</li>
  * <li>Safeguard 2 (marked as central, {@link TemplateType#TEMPLATE})</li> </ui>
- * <li>Module 3...</li> </ui> </ui>
+ * <li>BpRequirement 3...</li> </ui> </ui>
  * </p>
  * 
  * @see CnATreeElement#implementedTemplateUuids

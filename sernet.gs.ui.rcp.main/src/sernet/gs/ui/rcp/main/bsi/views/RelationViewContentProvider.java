@@ -24,6 +24,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
+import sernet.verinice.model.bp.IBpModelListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -31,8 +33,6 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.moditbp.IModITBPModelListener;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.model.validation.CnAValidation;
 
 /**
@@ -41,7 +41,7 @@ import sernet.verinice.model.validation.CnAValidation;
  * 
  */
 public class RelationViewContentProvider implements IStructuredContentProvider,
-    IBSIModelListener, IISO27KModelListener, IModITBPModelListener {
+    IBSIModelListener, IISO27KModelListener, IBpModelListener {
 
 
 	private IRelationTable view;
@@ -192,10 +192,10 @@ public class RelationViewContentProvider implements IStructuredContentProvider,
     public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){}
 
     /* (non-Javadoc)
-     * @see sernet.verinice.model.iso27k.IModITBPModelListener#modelReload(sernet.verinice.model.moditbp.elements.ModITBPModel)
+     * @see sernet.verinice.model.iso27k.IBpModelListener#modelReload(sernet.verinice.model.bp.elements.BpModel)
      */
     @Override
-    public void modelReload(ModITBPModel newModel) {
+    public void modelReload(BpModel newModel) {
         view.reloadAll();
         
     };

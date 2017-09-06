@@ -41,6 +41,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.KeyMessage;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
@@ -49,7 +50,6 @@ import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
 import sernet.verinice.service.commands.LoadVisibleAccounts;
 
@@ -114,7 +114,7 @@ public class TaskViewDataLoader {
                 }
 
                 @Override
-                public void loaded(ModITBPModel model) {
+                public void loaded(BpModel model) {
                     // work is done in loaded(BSIModel model)
                 }
             };

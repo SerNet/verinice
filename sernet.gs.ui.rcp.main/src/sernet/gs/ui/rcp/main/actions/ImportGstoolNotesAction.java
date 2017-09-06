@@ -36,9 +36,9 @@ import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
 
 
 public class ImportGstoolNotesAction extends RightsEnabledAction {
@@ -78,7 +78,7 @@ public class ImportGstoolNotesAction extends RightsEnabledAction {
         }
 
         @Override
-        public void loaded(ModITBPModel model) {
+        public void loaded(BpModel model) {
             // nothing to do
         }
 	};

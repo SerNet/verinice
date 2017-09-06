@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.elasticsearch.common.inject.Module;
 
 import ITBP2VNA.generated.DescriptionType;
 import ITBP2VNA.generated.DocumentType;
@@ -17,11 +18,10 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.verinice.interfaces.CnATreeElementBuildException;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.moditbp.elements.ITNetwork;
-import sernet.verinice.model.moditbp.elements.ModITBPRequirement;
-import sernet.verinice.model.moditbp.elements.ModITBPThreat;
-import sernet.verinice.model.moditbp.elements.Module;
 
 /*******************************************************************************
  * Copyright (c) 2017 Sebastian Hagedorn.
@@ -58,7 +58,7 @@ public class NewITBPToVNA {
     
     private static String xmlRootDirectory = null;
     
-    private static ITNetwork rootNetwork = null;
+    private static ItNetwork rootNetwork = null;
     
     private static NewITBPToVNA instance;
     
@@ -77,7 +77,7 @@ public class NewITBPToVNA {
     private NewITBPToVNA(String xmlRoot) {
         this.xmlRootDirectory = xmlRoot;
         try {
-            rootNetwork = getRootITNetwork();
+            rootNetwork = getRootItNetwork();
         } catch (CommandException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -129,10 +129,10 @@ public class NewITBPToVNA {
         LOG.error("Successfully parsed modules:\t" + modules.size());
         LOG.error("Successfully parsed threats:\t" + threats.size());
         
-        transferModules(modules, threats, getRootITNetwork());
+        transferModules(modules, threats, getRootItNetwork());
         LOG.debug("Transformation of elements complete");
-        CnAElementHome.getInstance().update(getRootITNetwork());
-        LOG.debug("ITNetwork updated");
+        CnAElementHome.getInstance().update(getRootItNetwork());
+        LOG.debug("ItNetwork updated");
     }
     
     private static void handleParsedXML(Set<DocumentType> documents) {
@@ -143,13 +143,13 @@ public class NewITBPToVNA {
         }
     }
     
-    private static void transferModules(Set<DocumentType> modules, Set<DocumentType> threats, ITNetwork rootNetwork) throws CommandException, CnATreeElementBuildException {
+    private static void transferModules(Set<DocumentType> modules, Set<DocumentType> threats, ItNetwork rootNetwork) throws CommandException, CnATreeElementBuildException {
 
         for (DocumentType bsiModule : modules) {
             if (rootNetwork != null) {
-                Module veriniceModule = (Module)
+                BpRequirement veriniceModule = (BpRequirement)
                         CnAElementFactory.getInstance().saveNew(
-                                rootNetwork, Module.TYPE_ID, null, false);
+                                rootNetwork, BpRequirement.TYPE_ID, null, false);
                 veriniceModule.setTitel(bsiModule.getFullTitle());
                 veriniceModule.setIdentifier(bsiModule.getIdentifier());
                 veriniceModule.setAbbreviation(bsiModule.getIdentifier());
@@ -160,8 +160,8 @@ public class NewITBPToVNA {
                 createRequirements(bsiModule, veriniceModule);
 
                 for (SpecificThreatType threat : bsiModule.getThreatScenario().getSpecificThreats().getSpecificThreat()) {
-                    ModITBPThreat veriniceThreat = (ModITBPThreat) CnAElementFactory.getInstance().saveNew(veriniceModule,
-                            ModITBPThreat.TYPE_ID, null, false);
+                    BpThreat veriniceThreat = (BpThreat) CnAElementFactory.getInstance().saveNew(veriniceModule,
+                            BpThreat.TYPE_ID, null, false);
                     veriniceThreat.setTitel(threat.getHeadline());
                     veriniceThreat.setDescription(getDescriptionText(threat.getHeadline(), threat.getDescription()));
 
@@ -175,8 +175,8 @@ public class NewITBPToVNA {
                             break;
                         }
                     }
-                    ModITBPThreat veriniceThreat = (ModITBPThreat) CnAElementFactory.getInstance().saveNew(veriniceModule,
-                            ModITBPThreat.TYPE_ID, null, false);
+                    BpThreat veriniceThreat = (BpThreat) CnAElementFactory.getInstance().saveNew(veriniceModule,
+                            BpThreat.TYPE_ID, null, false);
                     veriniceThreat.setTitel(bsiThreat.getFullTitle());
                     veriniceThreat.setIdentifier(bsiThreat.getIdentifier());
                     veriniceThreat.setAbbreviation("E");
@@ -194,7 +194,7 @@ public class NewITBPToVNA {
      * @throws CommandException
      * @throws CnATreeElementBuildException
      */
-    private static void createRequirements(DocumentType bsiModule, Module veriniceModule) throws CommandException, CnATreeElementBuildException {
+    private static void createRequirements(DocumentType bsiModule, BpRequirement veriniceModule) throws CommandException, CnATreeElementBuildException {
         for (RequirementType requirement : bsiModule.getRequirements().getBasicRequirements().getRequirement()) {
             createRequirement(veriniceModule, requirement, "BASIC");
         }
@@ -207,12 +207,12 @@ public class NewITBPToVNA {
     }
 
     @SuppressWarnings("unused")
-    private static ModITBPRequirement createRequirement(Module parent, 
+    private static BpRequirement createRequirement(BpRequirement parent, 
             RequirementType bsiRequirement, String qualifier) 
                     throws CommandException, CnATreeElementBuildException {
-        ModITBPRequirement vRequirement = (ModITBPRequirement) 
+        BpRequirement vRequirement = (BpRequirement) 
                 CnAElementFactory.getInstance().saveNew(parent,
-                        ModITBPRequirement.TYPE_ID, null, false);
+                        BpRequirement.TYPE_ID, null, false);
         vRequirement.setTitel(bsiRequirement.getTitle());
         vRequirement.setAbbreviation(bsiRequirement.getIdentifier());
         vRequirement.setIdentifier(bsiRequirement.getIdentifier());
@@ -240,9 +240,9 @@ public class NewITBPToVNA {
         return sb.toString();
     }
     
-    private static ITNetwork getRootITNetwork() throws CommandException, CnATreeElementBuildException {
+    private static ItNetwork getRootItNetwork() throws CommandException, CnATreeElementBuildException {
         if(rootNetwork == null) {
-            rootNetwork = (ITNetwork)createNewElement(ITNetwork.TYPE_ID);
+            rootNetwork = (ItNetwork)createNewElement(ItNetwork.TYPE_ID);
             rootNetwork.setTitel("IT-Grundschutz-Kompendium");
         } 
         return rootNetwork;
@@ -251,7 +251,7 @@ public class NewITBPToVNA {
     private static CnATreeElement createNewElement(String typeId) 
             throws CommandException, CnATreeElementBuildException {
         return CnAElementFactory.getInstance().saveNew(
-                CnAElementFactory.getInstance().getModITBPModel(),
+                CnAElementFactory.getInstance().getBpModel(),
                 typeId, null, false);
     }
     

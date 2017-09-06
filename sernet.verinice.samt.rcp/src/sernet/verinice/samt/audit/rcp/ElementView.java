@@ -67,6 +67,7 @@ import sernet.verinice.iso27k.rcp.ISMViewContentProvider;
 import sernet.verinice.iso27k.rcp.ISMViewLabelProvider;
 import sernet.verinice.iso27k.rcp.ISO27KModelViewUpdate;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -74,7 +75,6 @@ import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
 
 /**
  * Abstract view with tree viewer to show {@link CnATreeElement}s of specific types
@@ -252,7 +252,7 @@ public abstract class ElementView extends ViewPart {
                     }
                 }
                 @Override
-                public void loaded(ModITBPModel model) {
+                public void loaded(BpModel model) {
                     // nothing to do
                     
                 }          

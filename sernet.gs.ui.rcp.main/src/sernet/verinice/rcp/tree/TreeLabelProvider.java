@@ -28,12 +28,6 @@ import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
-import sernet.verinice.model.moditbp.ModITBPCategory;
-import sernet.verinice.model.moditbp.elements.ITNetwork;
-import sernet.verinice.model.moditbp.elements.ModITBPElement;
-import sernet.verinice.model.moditbp.elements.ModITBPRequirement;
-import sernet.verinice.model.moditbp.elements.ModITBPThreat;
-import sernet.verinice.model.moditbp.elements.Module;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.iso27k.ControlMaturityService;
 import sernet.verinice.service.iso27k.ItemControlTransformer;
@@ -60,13 +54,6 @@ public class TreeLabelProvider extends LabelProvider  {
 		try {
     		if (!(obj instanceof IISO27kElement) && !(obj instanceof CnATreeElement)) {
     			return image;
-    		} else if (obj instanceof ModITBPElement || 
-    		        obj instanceof ModITBPCategory ||
-    		        obj instanceof ModITBPRequirement ||
-    		        obj instanceof ModITBPThreat ||
-    		        obj instanceof Module ||
-    		        obj instanceof ITNetwork) { 
-    		    return ImageCache.getInstance().getModITBPTypeImage(((CnATreeElement)obj).getTypeId()); // TODO, implement real image handling here 
     		} else {
     		    return getImage((IISO27kElement) obj);
     		} 		

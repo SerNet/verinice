@@ -36,7 +36,7 @@
                 "reportdepositdelete"
                 "reportdepositedit" -->
 	        <action id="addbsielement" />
-	        <action id="addmoditbpelement"/>
+	        <action id="addbpelement"/>
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
@@ -49,7 +49,8 @@
 	        <action id="addownmodul"/>
 	        <action id="marktemplate"/>
 	        <action id="assignallisatopics" />
-	        <action id="auditview" />
+	        <action id="auditview" /> 
+          <action id="baseprotectionview" />
 	        <action id="bausteinzuordnung" />
 	        <action id="bsidnd" />
         	<action id="bsibrowser" />
@@ -78,7 +79,6 @@
 	        <action id="ismview" />
           <action id="ismviewweb" />
 	        <action id="konsolidator" />
-	        <action id="moditbpmodelview" />
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />

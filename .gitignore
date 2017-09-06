@@ -39,3 +39,7 @@ sernet.gs.server/WebContent/WEB-INF/elasticsearch/data/
 
 # do not commit submodul configuration
 .gitmodules
+
+*/target 
+*/target/*
+

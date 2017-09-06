@@ -5,7 +5,8 @@
 
 <hibernate-mapping package="sernet.verinice.model.common">
 
-	<class name="CnATreeElement" table="cnatreeelement"
+	<class name="CnATreeElement" 
+		table="cnatreeelement"
 		batch-size="10"
 		abstract="true">
 		<id name="dbId" 
@@ -14,20 +15,19 @@
 			unsaved-value="null">
 			<generator class="native" />
 		</id>
-		
-		
+
 		<discriminator column="OBJECT_TYPE" type="string"/>	
-		
-		<property name="scopeId" 
+        
+        <property name="scopeId" 
             type="java.lang.Integer" 
             column="scope_id">
         </property>
-		
-		<property
-			name="objectType"
-			column="OBJECT_TYPE"
-			insert="false"
-			update="false"/>
+        
+        <property
+            name="objectType"
+            column="OBJECT_TYPE"
+            insert="false"
+            update="false"/>
 		
 		<property
 			name="uuid"
@@ -67,6 +67,7 @@
 			cascade="all"
 			inverse="true"
 			batch-size="10"
+			fetch="join"
 			>
 			<key column="parent" />
 			<one-to-many class="CnATreeElement"/>
@@ -120,8 +121,8 @@
 	<subclass 
 		name="sernet.verinice.model.bsi.MassnahmenUmsetzung"
 		extends="CnATreeElement"
-		discriminator-value="massnahmen-umsetzung">
-		
+		discriminator-value="massnahmen-umsetzung" >
+	
 		<subclass
 			name="sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung"
 			extends="MassnahmenUmsetzung"
@@ -438,13 +439,135 @@
 		name="sernet.verinice.model.iso27k.Record"
 		extends="CnATreeElement"
 		discriminator-value="record" />
-		
+
 	<!-- Self Assessment (SAMT) Elements -->
 	
 	<subclass 
 		name="sernet.verinice.model.samt.SamtTopic"
 		extends="CnATreeElement"
 		discriminator-value="samt_topic" />
+		
+	<!-- Modernized ITBP -->
+ 
+	<subclass 
+		name="sernet.verinice.model.bp.elements.BpModel"
+		extends="CnATreeElement"
+		discriminator-value="bp_model" />
+        
+  <subclass 
+    name="sernet.verinice.model.bp.elements.ItNetwork"
+    extends="CnATreeElement"
+    discriminator-value="bp_itnetwork" />
+    
+  <subclass 
+    name="sernet.verinice.model.bp.elements.Application"
+    extends="CnATreeElement"
+    discriminator-value="bp_application" />
+    
+  <subclass 
+    name="sernet.verinice.model.bp.elements.BpPerson"
+    extends="CnATreeElement"
+    discriminator-value="bp_person" />    	
+	
+  <subclass
+		name="sernet.verinice.model.bp.elements.BpRequirement"
+		extends="CnATreeElement"
+		discriminator-value="bp_requirement" />
+		
+	<subclass
+		name="sernet.verinice.model.bp.elements.BpThreat"
+		extends="CnATreeElement"
+		discriminator-value="bp_threat" />		
+		
+	<subclass 
+		name="sernet.verinice.model.bp.elements.BusinessProcess"
+		extends="CnATreeElement"
+		discriminator-value="bp_businessprocess" />
+    
+  <subclass 
+    name="sernet.verinice.model.bp.elements.Device"
+    extends="CnATreeElement"
+    discriminator-value="bp_device" /> 
+       
+	<subclass 
+		name="sernet.verinice.model.bp.elements.IcsSystem"
+		extends="CnATreeElement"
+		discriminator-value="bp_icssystem" />
+
+	<subclass 
+		name="sernet.verinice.model.bp.elements.ItSystem"
+		extends="CnATreeElement"
+		discriminator-value="bp_itsystem" />
+    
+	<subclass 
+		name="sernet.verinice.model.bp.elements.Network"
+		extends="CnATreeElement"
+		discriminator-value="bp_network" />
+   
+	<subclass 
+		name="sernet.verinice.model.bp.elements.Room"
+		extends="CnATreeElement"
+		discriminator-value="bp_room" />
+    
+  <subclass 
+    name="sernet.verinice.model.bp.elements.Safeguard"
+    extends="CnATreeElement"
+    discriminator-value="bp_safeguard" />
+  
+	<subclass 
+		name="sernet.verinice.model.bp.groups.ApplicationGroup"
+		extends="CnATreeElement"
+		discriminator-value="bp_application_group" />       
+                            
+  <subclass 
+    name="sernet.verinice.model.bp.groups.BpPersonGroup"
+    extends="CnATreeElement"
+    discriminator-value="bp_person_group" />
+  
+  <subclass 
+    name="sernet.verinice.model.bp.groups.BpRequirementGroup"
+    extends="CnATreeElement"
+    discriminator-value="bp_requirement_group" />
+  
+  <subclass 
+    name="sernet.verinice.model.bp.groups.BpThreatGroup"
+    extends="CnATreeElement"
+    discriminator-value="bp_treat_group" />
+	
+	<subclass 
+		name="sernet.verinice.model.bp.groups.BusinessProcessGroup"
+		extends="CnATreeElement"
+		discriminator-value="bp_businessprocess_group" />
+    
+  <subclass 
+    name="sernet.verinice.model.bp.groups.DeviceGroup"
+    extends="CnATreeElement"
+    discriminator-value="bp_device_group" />
+	
+	<subclass 
+		name="sernet.verinice.model.bp.groups.IcsSystemGroup"
+		extends="CnATreeElement"
+		discriminator-value="bp_icssystem_group" />
+	
+	<subclass 
+		name="sernet.verinice.model.bp.groups.ItSystemGroup"
+		extends="CnATreeElement"
+		discriminator-value="bp_itsystem_group" />		
+	
+	<subclass 
+		name="sernet.verinice.model.bp.groups.NetworkGroup"
+		extends="CnATreeElement"
+		discriminator-value="bp_network_group" />
+    
+	<subclass 
+		name="sernet.verinice.model.bp.groups.RoomGroup"
+		extends="CnATreeElement"
+		discriminator-value="bp_room_group" />
+    
+  <subclass 
+    name="sernet.verinice.model.bp.groups.SafeguardGroup"
+    extends="CnATreeElement"
+    discriminator-value="bp_safeguard_group" />
 	
 	</class>
 </hibernate-mapping>

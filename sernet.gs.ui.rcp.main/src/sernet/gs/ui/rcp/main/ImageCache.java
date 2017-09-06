@@ -29,8 +29,27 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
+import org.elasticsearch.common.inject.Module;
 import org.osgi.framework.Bundle;
 
+import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.elements.BusinessProcess;
+import sernet.verinice.model.bp.elements.Device;
+import sernet.verinice.model.bp.elements.IcsSystem;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.ItSystem;
+import sernet.verinice.model.bp.elements.Network;
+import sernet.verinice.model.bp.elements.Room;
+import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BusinessProcessGroup;
+import sernet.verinice.model.bp.groups.DeviceGroup;
+import sernet.verinice.model.bp.groups.IcsSystemGroup;
+import sernet.verinice.model.bp.groups.ItSystemGroup;
+import sernet.verinice.model.bp.groups.NetworkGroup;
+import sernet.verinice.model.bp.groups.RoomGroup;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -74,26 +93,6 @@ import sernet.verinice.model.iso27k.Requirement;
 import sernet.verinice.model.iso27k.Response;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
-import sernet.verinice.model.moditbp.categories.ApplicationCategory;
-import sernet.verinice.model.moditbp.categories.BusinessProcessCategory;
-import sernet.verinice.model.moditbp.categories.ICSSystemCategory;
-import sernet.verinice.model.moditbp.categories.ITSystemCategory;
-import sernet.verinice.model.moditbp.categories.NetworkCategory;
-import sernet.verinice.model.moditbp.categories.OtherSystemCategory;
-import sernet.verinice.model.moditbp.categories.PersonCategory;
-import sernet.verinice.model.moditbp.categories.RoomCategory;
-import sernet.verinice.model.moditbp.elements.Application;
-import sernet.verinice.model.moditbp.elements.BusinessProcess;
-import sernet.verinice.model.moditbp.elements.ICSSystem;
-import sernet.verinice.model.moditbp.elements.ITNetwork;
-import sernet.verinice.model.moditbp.elements.ITSystem;
-import sernet.verinice.model.moditbp.elements.ModITBPPerson;
-import sernet.verinice.model.moditbp.elements.ModITBPRequirement;
-import sernet.verinice.model.moditbp.elements.ModITBPThreat;
-import sernet.verinice.model.moditbp.elements.Module;
-import sernet.verinice.model.moditbp.elements.Network;
-import sernet.verinice.model.moditbp.elements.OtherSystem;
-import sernet.verinice.model.moditbp.elements.Room;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
@@ -204,7 +203,7 @@ public final class ImageCache {
     public static final String VIEW_TASK_COMPARE_CHANGES = "history_rep.gif";
     public static final String VIEW_VALIDATION = "quickfix_warning_obj.gif";
     public static final String VIEW_GSMAPPING = "plugin_depend.gif";
-    public static final String VIEW_MODITBPMODEL = "sweetie-verinice/png/16-dice-grey.png";
+    public static final String VIEW_BPMODEL = "sweetie-verinice/png/16-dice-grey.png";
 
 	public static final String EXPANDALL   = "expandall.gif";
 	public static final String COLLAPSEALL = "collapseall.gif";
@@ -352,7 +351,7 @@ public final class ImageCache {
 	private static final Map<String, String> ISO27K_ICON_MAP;
 	
 	// for modernized ITBP elements: map of <element type> : <icon name>
-	private static final Map<String, String> MODITBP_ICON_MAP;
+	private static final Map<String, String> BP_ICON_MAP;
 	
 	private static Bundle bundle;
 
@@ -410,28 +409,27 @@ public final class ImageCache {
 		BSI_ICON_MAP.put(BausteinUmsetzung.TYPE_ID, ImageCache.BAUSTEIN_UMSETZUNG);
 		BSI_ICON_MAP.put(MassnahmenUmsetzung.TYPE_ID, ImageCache.ISO27K_CONTROL);
 		
-		MODITBP_ICON_MAP = new HashMap<>();
+		BP_ICON_MAP = new HashMap<>();
 		
-		MODITBP_ICON_MAP.put(ITNetwork.TYPE_ID, ImageCache.EXPLORER);
-		MODITBP_ICON_MAP.put(Application.TYPE_ID, ImageCache.ANWENDUNG);
-		MODITBP_ICON_MAP.put(ApplicationCategory.TYPE_ID, ImageCache.ANWENDUNG);
-		MODITBP_ICON_MAP.put(BusinessProcess.TYPE_ID, ImageCache.ISO27K_PROCESS);
-		MODITBP_ICON_MAP.put(BusinessProcessCategory.TYPE_ID, ImageCache.ISO27K_PROCESS);
-		MODITBP_ICON_MAP.put(ICSSystem.TYPE_ID, ImageCache.CLIENT);
-		MODITBP_ICON_MAP.put(ICSSystemCategory.TYPE_ID, ImageCache.CLIENT);
-		MODITBP_ICON_MAP.put(ITSystemCategory.TYPE_ID, ImageCache.SERVER);
-		MODITBP_ICON_MAP.put(ITSystem.TYPE_ID, ImageCache.SERVER);
-		MODITBP_ICON_MAP.put(ModITBPPerson.TYPE_ID, ImageCache.PERSON);
-		MODITBP_ICON_MAP.put(PersonCategory.TYPE_ID, ImageCache.PERSON);
-		MODITBP_ICON_MAP.put(ModITBPThreat.TYPE_ID, ImageCache.GEFAEHRDUNG);
-		MODITBP_ICON_MAP.put(ModITBPRequirement.TYPE_ID, ImageCache.ISO27K_CONTROL);
-		MODITBP_ICON_MAP.put(Module.TYPE_ID, ImageCache.BAUSTEIN);
-		MODITBP_ICON_MAP.put(Network.TYPE_ID, ImageCache.NETWORK);
-		MODITBP_ICON_MAP.put(NetworkCategory.TYPE_ID, ImageCache.NETWORK);
-		MODITBP_ICON_MAP.put(OtherSystem.TYPE_ID, ImageCache.SONSTIT);
-		MODITBP_ICON_MAP.put(OtherSystemCategory.TYPE_ID, ImageCache.SONSTIT);
-		MODITBP_ICON_MAP.put(RoomCategory.TYPE_ID, ImageCache.RAUM);
-		MODITBP_ICON_MAP.put(Room.TYPE_ID, ImageCache.RAUM);
+		BP_ICON_MAP.put(ItNetwork.TYPE_ID, ImageCache.EXPLORER);
+		BP_ICON_MAP.put(sernet.verinice.model.bp.elements.Application.TYPE_ID, ImageCache.ANWENDUNG);
+		BP_ICON_MAP.put(ApplicationGroup.TYPE_ID, ImageCache.ANWENDUNG);
+		BP_ICON_MAP.put(BusinessProcess.TYPE_ID, ImageCache.ISO27K_PROCESS);
+		BP_ICON_MAP.put(BusinessProcessGroup.TYPE_ID, ImageCache.ISO27K_PROCESS);
+		BP_ICON_MAP.put(IcsSystem.TYPE_ID, ImageCache.CLIENT);
+		BP_ICON_MAP.put(IcsSystemGroup.TYPE_ID, ImageCache.CLIENT);
+		BP_ICON_MAP.put(ItSystemGroup.TYPE_ID, ImageCache.SERVER);
+		BP_ICON_MAP.put(ItSystem.TYPE_ID, ImageCache.SERVER);
+		BP_ICON_MAP.put(BpPerson.TYPE_ID, ImageCache.PERSON);
+		BP_ICON_MAP.put(BpPersonGroup.TYPE_ID, ImageCache.PERSON);
+		BP_ICON_MAP.put(BpThreat.TYPE_ID, ImageCache.GEFAEHRDUNG);
+		BP_ICON_MAP.put(BpRequirement.TYPE_ID, ImageCache.ISO27K_CONTROL);
+		BP_ICON_MAP.put(Network.TYPE_ID, ImageCache.NETWORK);
+		BP_ICON_MAP.put(NetworkGroup.TYPE_ID, ImageCache.NETWORK);
+		BP_ICON_MAP.put(Device.TYPE_ID, ImageCache.SONSTIT);
+		BP_ICON_MAP.put(DeviceGroup.TYPE_ID, ImageCache.SONSTIT);
+		BP_ICON_MAP.put(Room.TYPE_ID, ImageCache.RAUM);
+		BP_ICON_MAP.put(RoomGroup.TYPE_ID, ImageCache.RAUM);
 		
 	}
 	
@@ -474,8 +472,8 @@ public final class ImageCache {
     
     public Image getModITBPTypeImage(String typeId) {
         Image image = getImage(ImageCache.UNKNOWN);
-        if (typeId != null && MODITBP_ICON_MAP.get(typeId) != null) {
-            image = getImage(MODITBP_ICON_MAP.get(typeId));
+        if (typeId != null && BP_ICON_MAP.get(typeId) != null) {
+            image = getImage(BP_ICON_MAP.get(typeId));
         }
         return image;
     }
@@ -488,8 +486,8 @@ public final class ImageCache {
     }
     
     public String getModITBPImageURL(String typeId) {
-        if (typeId != null && MODITBP_ICON_MAP.get(typeId) != null) {
-            return MODITBP_ICON_MAP.get(typeId);
+        if (typeId != null && BP_ICON_MAP.get(typeId) != null) {
+            return BP_ICON_MAP.get(typeId);
         }
         return ImageCache.UNKNOWN;        
     }

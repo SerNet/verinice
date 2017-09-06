@@ -37,7 +37,7 @@ public final class ActionRightIDs {
     public static final String ADDISMORG = "addismorg";
     public static final String ADDITNETWORK = "additnetwork";
     public static final String ADDITVERBUND = "additverbund";
-    public static final String ADDMODITBPELEMENT = "addmoditbpelement";
+    public static final String ADDBPELEMENT = "addbpelement";
     public static final String ADDNOTE = "addnote";
     public static final String ADDSECURITYASSESSMENT = "addsecurityassessment";
     public static final String ADDOWNMODUL = "addownmodul";
@@ -77,7 +77,7 @@ public final class ActionRightIDs {
     public static final String ISMVIEWWEB = "ismviewweb";
     public static final String KONSOLIDATOR = "konsolidator";
     public static final String MARKTEMPLATE = "marktemplate";
-    public static final String MODITBPMODELVIEW = "moditbpmodelview";
+    public static final String BASEPROTECTIONVIEW = "baseprotectionview";
     public static final String NATURALIZE = "naturalize";
     public static final String NOTES = "notes";
     public static final String CHANGEOWNPASSWORD = "changeownpassword";

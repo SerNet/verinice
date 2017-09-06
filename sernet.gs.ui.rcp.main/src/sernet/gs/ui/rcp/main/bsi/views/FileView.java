@@ -92,12 +92,12 @@ import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachments;
@@ -1028,7 +1028,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
                     // work is done in loaded(BSIModel model)
                 }
                 @Override
-                public void loaded(ModITBPModel model) {
+                public void loaded(BpModel model) {
                  // work is done in loaded(BSIModel model)
                     
                 }

@@ -66,12 +66,12 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bpm.TodoViewItem;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.crud.LoadCnATreeElementTitles;
 import sernet.verinice.service.commands.task.FindMassnahmenForITVerbund;
@@ -456,7 +456,7 @@ public abstract class GenericMassnahmenView extends RightsEnabledView implements
         }
 
         @Override
-        public void loaded(ModITBPModel model) {
+        public void loaded(BpModel model) {
          // work is done in loaded(BSIModel model) 
         }
 	};

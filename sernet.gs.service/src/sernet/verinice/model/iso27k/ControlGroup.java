@@ -30,7 +30,7 @@ import sernet.verinice.model.samt.SamtTopic;
  *
  */
 @SuppressWarnings("serial")
-public class ControlGroup extends Group<Control> {
+public class ControlGroup extends Group<Control> implements IISO27kGroup {
     
     private static final Logger LOG = Logger.getLogger(ControlGroup.class);
 

@@ -74,10 +74,10 @@ import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.iso27k.rcp.action.ControlDragListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.AttachmentFileCreationFactory;
@@ -288,7 +288,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
                     }
 
                     @Override
-                    public void loaded(ModITBPModel model) {
+                    public void loaded(BpModel model) {
                      // work is done in loaded(ISO27KModel model)
                         
                     }

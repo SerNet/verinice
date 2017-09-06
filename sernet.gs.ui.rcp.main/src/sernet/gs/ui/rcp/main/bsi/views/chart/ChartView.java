@@ -43,6 +43,8 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.model.bp.IBpModelListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -50,8 +52,6 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.moditbp.IModITBPModelListener;
-import sernet.verinice.model.moditbp.elements.ModITBPModel;
 import sernet.verinice.model.validation.CnAValidation;
 
 /**
@@ -337,10 +337,10 @@ public class ChartView extends ViewPart {
             }
 
             @Override
-            public void loaded(ModITBPModel model) {
+            public void loaded(BpModel model) {
                 Display.getDefault().asyncExec(new Runnable() {
                     public void run() {
-                        CnAElementFactory.getInstance().getModITBPModel().addModITBOModelListener(changeListener);
+                        CnAElementFactory.getInstance().getBpModel().addModITBOModelListener(changeListener);
                     }
                 });
             }
@@ -442,7 +442,7 @@ public class ChartView extends ViewPart {
         return null;
     }
 	
-	protected class ChangeListener implements IBSIModelListener,IISO27KModelListener, IModITBPModelListener {
+	protected class ChangeListener implements IBSIModelListener,IISO27KModelListener, IBpModelListener {
 	    public void childAdded(CnATreeElement category, CnATreeElement child) {
             // do nothing
         }
@@ -504,10 +504,10 @@ public class ChartView extends ViewPart {
         public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){}
 
         /* (non-Javadoc)
-         * @see sernet.verinice.model.iso27k.IModITBPModelListener#modelReload(sernet.verinice.model.moditbp.elements.ModITBPModel)
+         * @see sernet.verinice.model.iso27k.IBpModelListener#modelReload(sernet.verinice.model.bp.elements.BpModel)
          */
         @Override
-        public void modelReload(ModITBPModel newModel) {
+        public void modelReload(BpModel newModel) {
             // TODO Auto-generated method stub
             
         };
