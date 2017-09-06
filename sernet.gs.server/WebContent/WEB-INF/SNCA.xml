@@ -8865,6 +8865,257 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_itnetwork_tag" name="Tags"
             tooltip="List of tags, separated by comma or space" />
         <huiproperty id="bp_itnetwork_document" name="Document" isURL="true" />
+        <huiproperty id="bp_itnetwork_employee_number" name="Number of employees" />
+        <huiproperty id="bp_itnetwork_Description" name="Description" />
+
+        <huipropertygroup id="bp_itnetwork_report" name="Reporting" tags="Dok.mgmt.">
+            <huiproperty id="bp_itnetwork_author" name="Author" tags="Dok.mgmt." />
+            <huiproperty id="bp_itnetwork_version" name="Version" tags="Dok.mgmt." />
+            <huiproperty id="bp_itnetwork_approved" name="Approved by" tags="Dok.mgmt." />
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_group_protection_level_insignificant"
+            name="Protection Level Category: Insignificant">
+            <huiproperty id="bp_itnetwork_pl_insignificant_laws" name="Laws / regulations / contracts"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_insignificant_laws_default">Violations of rules and laws with minor consequences. Minor
+                        infringements with low maximum penalties</param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_insignificant_privacy" name="Privacy"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_insignificant_privacy_default">An effect of informational self-determination would be assessed
+                        by the individual as tolerable. A possible abuse of personal data has a
+                        negligible impact on the social position or economic status of the person
+                        concerned.</param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_insignificant_injury" name="Injury"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_insignificant_injury_default">An adverse effect appears impossible.</param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_insignificant_service" name="Service Delivery"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_insignificant_service_default">The effect would be evaluated by those affected as tolerable.
+                        The maximum tolerable downtime of the IT system is larger than?? Hours.
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_insignificant_publicity" name="Publicity"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_insignificant_publicity_default">A low or only internal loss of reputation or trust is expected.
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_insignificant_financial" name="Financial Implications"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_insignificant_financial_default">The financial damage is less than EUR ?,-
+                    </param>
+                </defaultRule>
+            </huiproperty>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_group_protection_level_normal" name="Protection Level Category: Normal">
+            <huiproperty id="bp_itnetwork_pl_normal_laws" name="Laws / regulations / contracts"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_normal_laws_default">Violations of regulations and laws with serious consequences
+                        with high penalties for infringements
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_normal_privacy" name="Privacy" inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_normal_privacy_default">A significant effect of informational self-determination of the
+                        individual seems possible. A possible abuse of personal data has significant
+                        impact on the social position or economic status of the person concerned.
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_normal_injury" name="Injury" inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_normal_injury_default">An effect on the personal integrity of an individual can not be
+                        excluded completely.
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_normal_service" name="Service Delivery"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_normal_service_default_default">The effect would be perceived by at least some individuals as
+                        intolerable. An IT system failure is only tolerable between ??? und ???
+                        hours.
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_normal_publicity" name="Publicity"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_normal_publicity_default">=A wide loss of reputation or trust is expected.
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_normal_financial" name="Financial Implications"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_normal_financial_default">The financial loss is between EUR ???,- and EUR ???,-.
+                    </param>
+                </defaultRule>
+            </huiproperty>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_group_protection_level_high" name="Protection Level Category: High">
+            <huiproperty id="bp_itnetwork_pl_high_laws" name="Laws / regulations / contracts"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_high_laws_default">Fundamental breach of rules and laws of contract, their
+                        liability damages being ruinous
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_high_privacy" name="Privacy" inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_high_privacy_default">A particularly significant impairment of informational
+                        self-determination of the individual seems possible. A possible abuse of
+                        personal data would mean social or economic ruin for the affected person.
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_high_injury" name="Injury" inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_high_injury_default">Serious breaches of personal integrity are possible. Danger to
+                        life and limb.
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_high_service" name="Service Delivery"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_high_service_default">The effect would be evaluated by all concerned as intolerable.
+                        An IT system failure is tolerable only up to ??? hours.
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_high_publicity" name="Publicity" inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_high_publicity_default">A far-reaching reputation or confidence impairment, possibly
+                        even endangering the existence of the organization is conceivable.
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_high_financial" name="Financial Implications"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_high_financial_default">The financial loss is greater than ???,- EUR.
+                    </param>
+                </defaultRule>
+            </huiproperty>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_itnetwork_group_protection_level_very_high" name="Protection Level Category: Very High">
+            <huiproperty id="bp_itnetwork_pl_very_high_laws" name="Laws / regulations / contracts"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_very_high_laws_default">CHANGE TO VERY HIGH: Fundamental breach of rules and laws of
+                        contract, their liability damages being ruinous
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_very_high_privacy" name="Privacy"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_very_high_privacy_default">CHANGE TO VERY HIGH: A particularly significant impairment of
+                        informational self-determination of the individual seems possible. A
+                        possible abuse of personal data would mean social or economic ruin for the
+                        affected person.
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_very_high_injury" name="Injury" inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_very_high_injury_default">CHANGE TO VERY HIGH: Serious breaches of personal integrity are
+                        possible. Danger to life and limb.
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_very_high_service" name="Service Delivery"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_very_high_service_default">CHANGE TO VERY HIGH: The effect would be evaluated by all
+                        concerned as intolerable. An IT system failure is tolerable only up to ???
+                        hours.
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_very_high_publicity" name="Publicity"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_very_high_publicity_default">CHANGE TO VERY HIGH: A far-reaching reputation or confidence
+                        impairment, possibly even endangering the existence of the organization is
+                        conceivable.
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_very_high_financial" name="Financial Implications"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_very_high_financial_default">CHANGE TO VERY HIGH: The financial loss is greater than ???,-
+                        EUR.
+                    </param>
+                </defaultRule>
+            </huiproperty>
+        </huipropertygroup>
+    
+        <huipropertygroup id="bp_itnetwork_risk_group" name="Acceptable Risk Levels"
+            tags="Risk">
+            <huiproperty id="bp_itnetwork_risk_acceptance_c" name="Confidentiality"
+                inputtype="numericoption" min="0" max="11" tags="Risk" />
+            <huiproperty id="bp_itnetwork_risk_acceptance_i" name="Integrity" inputtype="numericoption"
+                min="0" max="10" tags="Risk" />
+            <huiproperty id="bp_itnetwork_risk_acceptance_a" name="Availability" inputtype="numericoption"
+                min="0" max="12" tags="Risk" />
+            <huiproperty id="bp_itnetwork_risk_acceptance_explanation" name="Explanation"
+                inputtype="text" tags="Risk" />
+        </huipropertygroup>
+    
+        <huipropertygroup id="bp_itnetwork_vv_bsig" name="VV BSIG">
+            <huiproperty id="bp_itnetwork_vv_bsig_authority" name="Authority" />
+            <huiproperty id="bp_itnetwork_vv_bsig_availability_phone" name="Availability Phone" />
+            <huiproperty id="bp_itnetwork_vv_bsig_availability_email" name="Availability E-Mail" />
+            <huiproperty id="bp_itnetwork_vv_bsig_enquiry_phone" name="Enquiry Phone" />
+            <huiproperty id="bp_itnetwork_vv_bsig_equiry_email" name="Enquiry E-Mail" />
+        </huipropertygroup>
+    
+        <huipropertygroup id="bp_itnetwork_data_protection_group"
+            name="Data protection supervisory authority">
+            <huiproperty id="bp_itnetwork_data_protection_authority" name="Competent supervisory authority" />
+            <huiproperty id="bp_itnetwork_data_protection_adress" name="Address" />
+            <huiproperty id="bp_itnetwork_data_protection_telephone" name="Phone" />
+            <huiproperty id="bp_itnetwork_data_protection_email" name="E-Mail" />
+        </huipropertygroup>
+        <huipropertygroup id="bp_itnetwork_threat_probability_group" name="Threat probability"
+            tags="Risk">
+            <huiproperty id="bp_itnetwork_threat_probability" name="Probability" inputtype="text"
+                textrows="6" tags="Risk">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_threat_probability_default">Threats are classified by the probability of their ocurrence as follows:
+0 Rare
+1 Annually
+2 Monthly
+3 Weekly
+4 Daily
+5 Hourly
+                    </param>
+                </defaultRule>
+            </huiproperty>
+        </huipropertygroup>
     </huientity>
 
     <huientity id="bp_application" name="Application">
