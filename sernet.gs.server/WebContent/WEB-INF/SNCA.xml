@@ -9572,6 +9572,13 @@ Wurden bereits weitere Stellen informiert?
     </huientity>
 
     <huientity id="bp_person" name="Person">
+        <huiproperty id="bp_person_first_name" name="First name" />
+        <huiproperty id="bp_person_last_name" name="Last name" required="true"/>
+        <huiproperty id="bp_person_phone" name="Phone"/>
+        <huiproperty id="bp_person_email" name="Email"/>
+        <huiproperty id="bp_person_org_unit" name="=Org. unit"/>
+        <huiproperty id="bp_person_explanation" name="Explanation"/>
+        <huiproperty id="bp_person_tag" name="Tags" />
         <huiproperty id="bp_person_document" name="Document" isURL="true" />
     </huientity>
 
@@ -9832,6 +9839,7 @@ Wurden bereits weitere Stellen informiert?
     <huientity id="bp_room" name="Room">
         <huiproperty id="bp_room_name" name="Title" required="true" />
         <huiproperty id="bp_room_abbr" name="Abbreviation" />
+        <huiproperty id="bp_room_explanation" name="Explanation" inputtype="text" />
         <huiproperty id="bp_room_tag" name="Tags" tooltip="List of tags, separated by comma or space" />
         <huiproperty id="bp_room_document" name="Document" isURL="true" />
         <huipropertygroup id="bp_room_group_business_impact" name="Business Impact"
