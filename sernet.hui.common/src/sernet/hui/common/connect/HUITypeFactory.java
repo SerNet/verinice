@@ -75,7 +75,6 @@ public class HUITypeFactory {
     private static final String HUI_PROPERTY_GROUP = "huipropertygroup";
     private static final String HUI_RELATION = "huirelation";
     private static final String ABSTRACT_MODITBP_ID = "moditbp_abstractelement";
-    private static final String ABSTRACT_MODITBP_ID = "moditbp_abstractelement";
     private static final String MODITBP_MODULE_ID = "moditbp_module";
     private static final String MODITBP_THREAT_ID = "moditbp_threat";
     private static final String MODITBP_REQUIREMENT_ID = "moditbp_requirement";

@@ -26,9 +26,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public abstract class ModITBPElement extends CnATreeElement{
-
-    public static final String TYPE_ID = "moditbp_abstractelement"; //$NON-NLS-1$
+public class ItSystem extends CnATreeElement implements IBpElement {
     
     private static final long serialVersionUID = 2763978887704949977L;
     
@@ -45,5 +43,5 @@ public abstract class ModITBPElement extends CnATreeElement{
     public String getTypeId() {
         return TYPE_ID;
     }
-    
+   
 }
