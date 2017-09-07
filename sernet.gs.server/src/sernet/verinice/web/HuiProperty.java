@@ -249,15 +249,18 @@ public class HuiProperty implements Serializable {
             return null;
         }
         String item = null;
+
         if (getIsSingleSelect() && getValue() != null) {
             option = propertyType.getOption((String) getValue());
         }
-        if (getIsNumericSelect() && getValue() != null) {
-            option = propertyType.getOption(Integer.valueOf((String) getValue()));
+        if (getIsNumericSelect() && getValue() != null && !getValue().equals("")) {
+            option = propertyType.getOption(Integer.valueOf(getValue()));
         }
+
         if (option != null) {
             item = option.getName();
         }
+
         return item;
     }
 
