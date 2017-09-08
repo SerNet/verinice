@@ -4835,7 +4835,8 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <huiproperty
 			name="Description" 
 			id="assetgroup_desc" 
-			inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true"/>
         
     </huientity>
     
@@ -4874,7 +4875,10 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
 		<huiproperty
-			name="Description" id="asset_description" inputtype="text" />	
+            name="Description"
+            id="asset_description"
+            inputtype="text"
+            showInObjectBrowser="true"/>
 		
 		<huiproperty
 			name="Type of Asset"
@@ -5255,8 +5259,8 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
              <huiproperty
 			name="Description" 
 			id="persongroup_desc" 
-			inputtype="text" />   
-        
+            inputtype="text"
+            showInObjectBrowser="true"/>
     </huientity>
     
     <huientity
@@ -5626,7 +5630,8 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
          <huiproperty
 			name="Description" 
 			id="auditgroup_desc" 
-			inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true"/>
         
         <huirelation to="asset" id="rel_auditgroup_asset"/>
     </huientity>
@@ -5819,7 +5824,8 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
 		<huiproperty
 			id="audit_description" 
 			inputtype="text" 
-            tags="Risk,VDA-ISA"/>
+            tags="Risk,VDA-ISA"
+            showInObjectBrowser="true"/>
 		<huiproperty 
 		    id="audit_isa_creat" 
             tags="VDA-ISA, VDA_ISA_Audit"
@@ -5928,11 +5934,21 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Title"
             id="controlgroup_name"
             required="true"/>
-       
+
+        <!-- The Object-Browser Description shall be above the
+            Desciption. I.e. this propery has to come first -->
+        <huiproperty
+            name="Object-Browser Description"
+            id="controlgroup_objectbrowser_description"
+            visible="false"
+            editable="false"
+            showInObjectBrowser="true"/>
+
         <huiproperty
 			name="Description" 
 			id="controlgroup_desc" 
-			inputtype="text" />
+            inputtype="text"
+            showInObjectBrowser="true"/>
 
 		<!-- Flag to define a root a catalog, which is used in dashboard -->
 		<huiproperty
@@ -5949,12 +5965,6 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         	inputtype="booleanoption" defaultValue="0"
         	tags="VDA_ISA_Audit" />
         	
-        <huiproperty 
-        	name="Object-Browser Description"
-        	id="controlgroup_objectbrowser_description"
-        	visible="false"
-        	editable="false"
-        	showInObjectBrowser="true"/>
     </huientity>
 
     <huientity
@@ -6451,7 +6461,8 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <huiproperty
 			name="Description" 
 			id="exceptiongroup_desc" 
-			inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true"/>
         
     </huientity>
     
@@ -6490,7 +6501,10 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             id="exception_document"
             isURL="true" />
         <huiproperty 
-        	name="Reason" id="exception_reason" inputtype="text"/>
+            name="Reason"
+            id="exception_reason"
+            inputtype="text"
+            showInObjectBrowser="true"/>
         <huiproperty
         	name="Approved" id="exception_approved" inputtype="singleoption">
 			<option name="Yes" id="exception_approved_yes" />       	
@@ -6524,7 +6538,8 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <huiproperty
 			name="Description" 
 			id="requirementgroup_desc" 
-			inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true"/>
     </huientity>
     
     <huientity
@@ -6551,7 +6566,10 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty
-			name="Description" id="requirement_desc" inputtype="text"/>
+            name="Description"
+            id="requirement_desc"
+            inputtype="text"
+            showInObjectBrowser="true"/>
 		<huiproperty
             name="Document"
             id="requirement_document"
@@ -6594,7 +6612,10 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty
-			name="Event(s)" id="incident_desc" inputtype="text"/>
+            name="Event(s)"
+            id="incident_desc"
+            inputtype="text"
+            showInObjectBrowser="true"/>
 		<huiproperty 
 			name="Date"
 			id="incident_date"
@@ -6778,7 +6799,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
 			name="Description" 
 			id="incident_group_desc" 
-			inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true"/>
     </huientity>
     
     <huientity
@@ -6809,7 +6831,11 @@ Wurden bereits weitere Stellen informiert?
             name="Tags,Basic"
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty 
-        	name="Explanation" id="incscen_explanation" inputtype="text" tags="Risk"/>
+            name="Explanation"
+            id="incscen_explanation"
+            inputtype="text"
+            tags="Risk"
+            showInObjectBrowser="true"/>
 		<huiproperty
             name="Document"
             id="incident_scenario_document"
@@ -6943,7 +6969,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
 			name="Description" 
 			id="incident_scenario_group_desc" 
-			inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true"/>
     </huientity>
     
     <huientity
@@ -6961,7 +6988,10 @@ Wurden bereits weitere Stellen informiert?
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty
-			name="Corrective Action" id="response_corract" inputtype="text" />
+            name="Corrective Action"
+            id="response_corract"
+            inputtype="text"
+            showInObjectBrowser="true"/>
 		<huiproperty
             name="Document"
             id="response_document"
@@ -6979,7 +7009,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
 			name="Description" 
 			id="response_group_desc" 
-			inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true"/>
     </huientity>
     
     <huientity
@@ -7045,7 +7076,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
 			name="Description" 
 			id="threat_group_desc" 
-			inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true"/>
     </huientity>
     
     <huientity
@@ -7058,7 +7090,10 @@ Wurden bereits weitere Stellen informiert?
             required="true" />
         <huiproperty
             name="Description"
-            id="vulnerability_desc" inputtype="text" tags="Risk,Basic"/>
+            id="vulnerability_desc"
+            inputtype="text"
+            tags="Risk,Basic"
+            showInObjectBrowser="true"/>
         <huiproperty
             name="Abbreviation"
             id="vulnerability_abbr" tags="Risk,Basic"/>
@@ -7099,7 +7134,9 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
 			name="Description" 
 			id="vulnerability_group_desc" 
-			inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true"/>
+
     </huientity>
     
     <huientity
@@ -7217,7 +7254,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
 			name="Description" 
 			id="document_group_desc" 
-			inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true"/>
     </huientity>
     
     <huientity
@@ -7288,7 +7326,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
 			name="Description" 
 			id="interview_group_desc" 
-			inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true"/>
     </huientity>
     
     <huientity
@@ -7329,7 +7368,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
 			name="Description" 
 			id="evidence_group_desc" 
-			inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true"/>
     </huientity>
     
     <huientity
@@ -7363,7 +7403,10 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
 			name="Description" id="finding_desc" inputtype="text" tags="VDA_ISA_Audit"/>
         <huiproperty
-			name="Root cause" id="finding_cause" inputtype="text"/>
+            name="Root cause"
+            id="finding_cause"
+            inputtype="text"
+            showInObjectBrowser="true"/>
 		<huiproperty
             name="Document"
             id="finding_document"
@@ -7406,7 +7449,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
 			name="Description" 
 			id="finding_group_desc" 
-			inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true"/>
     </huientity>
     
     <huientity name="Process" id="process" >
@@ -7425,7 +7469,8 @@ Wurden bereits weitere Stellen informiert?
             name="Description"
             inputtype="text"
             id="process_desc" 
-            tooltip="Kurzbeschreibung des Verfahrens"/>
+            tooltip="Kurzbeschreibung des Verfahrens"
+            showInObjectBrowser="true"/>
         <huiproperty
             name="Abbreviation"
             id="process_abbr" />
@@ -8273,7 +8318,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
 			name="Description" 
 			id="process_group_desc" 
-			inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true"/>
     </huientity>
     
     <huientity
@@ -8436,7 +8482,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
 			name="Description" 
 			id="record_group_desc" 
-			inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true"/>
     </huientity>
     
     <huientity
