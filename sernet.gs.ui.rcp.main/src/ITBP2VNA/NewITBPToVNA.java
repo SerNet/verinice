@@ -8,19 +8,22 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
-import org.elasticsearch.common.inject.Module;
 
 import ITBP2VNA.generated.DescriptionType;
 import ITBP2VNA.generated.DocumentType;
 import ITBP2VNA.generated.RequirementType;
 import ITBP2VNA.generated.SpecificThreatType;
+import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.verinice.interfaces.CnATreeElementBuildException;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.common.CnATreeElement;
 
 /*******************************************************************************
@@ -54,23 +57,53 @@ public class NewITBPToVNA {
 
     private final static Logger LOG = Logger.getLogger(NewITBPToVNA.class);
     
-    private final static Set<String> moduleIdentifierPrefixes;
+    private final static Set<String> processIdentifierPrefixes;
+    private final static Set<String> systemIdentifierPrefixes;
     
     private static String xmlRootDirectory = null;
     
     private static ItNetwork rootNetwork = null;
+    private static BpRequirementGroup processReqGroup = null;
+    private static BpRequirementGroup systemReqGroup = null;
+
+    private static BpThreatGroup processThreatGroup = null;
+    private static BpThreatGroup systemThreatGroup = null;
+    private static BpThreatGroup elementalThreatGroup = null;
+    
+    
     
     private static NewITBPToVNA instance;
     
+    private final static String rootRequirementGroupName = "31 Bausteine/Anforderungen (GS-Kompendium";
+    private final static String processRequirementGroupname = "Prozess-Bausteine";
+    private final static String systemRequirementGroupname = "System-Bausteine";
+    
+    private final static String rootThreatGroupName = "41 Gefährdungen";
+    private final static String elementalThreatGroupName = "Elementare Gefährdungen";
+    private final static String specificThreatGroupName = "Spezifische Gefährdungen";
+    private final static String specificProcessThreatGroupName = "Zu Prozess-Bausteinen";
+    private final static String specificSystemThreatGroupName = "Zu System-Bausteinen";
+    
+    private static Set<String> addedThreats = new HashSet<>();
+    private static Set<String> addedReqs = new HashSet<>();
+    
     static {
-        moduleIdentifierPrefixes = new HashSet<>();
-        moduleIdentifierPrefixes.addAll(Arrays.asList(new String[] {
-                "ORP",
-                "INF",
-                "IND",
-                "APP",
-                "ISMS"
+        processIdentifierPrefixes = new HashSet<>();
+        processIdentifierPrefixes.addAll(Arrays.asList(new String[] {
+                "CON",
+                "DER",
+                "ISMS",
+                "OPS",
+                "ORP"
                 
+        }));
+        systemIdentifierPrefixes = new HashSet<>();
+        systemIdentifierPrefixes.addAll(Arrays.asList(new String[] {
+                "APP",
+                "IND",
+                "INF",
+                "NET",
+                "SYS"
         }));
     }
     
@@ -121,7 +154,7 @@ public class NewITBPToVNA {
                    } else if (document.getIdentifier().startsWith("G ")) {
                        threats.add(document);
                    } else {
-                       LOG.warn("Ignoring " +  xmlFile.getAbsolutePath() + "[" + document.getIdentifier() +"]. Seems to be Umsetzungshinweis");
+                       LOG.debug("Ignoring " +  xmlFile.getAbsolutePath() + "[" + document.getIdentifier() +"]. Seems to be Umsetzungshinweis");
                    }
                }
             }
@@ -129,41 +162,106 @@ public class NewITBPToVNA {
         LOG.error("Successfully parsed modules:\t" + modules.size());
         LOG.error("Successfully parsed threats:\t" + threats.size());
         
+        prepareITNetwork();
+        CnAElementHome.getInstance().update(getRootItNetwork());
         transferModules(modules, threats, getRootItNetwork());
         LOG.debug("Transformation of elements complete");
         CnAElementHome.getInstance().update(getRootItNetwork());
         LOG.debug("ItNetwork updated");
     }
     
-    private static void handleParsedXML(Set<DocumentType> documents) {
-        for (DocumentType document : documents) {
-            if (moduleIdentifierPrefixes.contains(getIdentifierPrexif(document.getIdentifier()))){
-                transferModuleToVerinice(document);
-            }
+    
+    private static void prepareITNetwork() throws CommandException, CnATreeElementBuildException {
+
+        BpRequirementGroup rootReqGroup = (BpRequirementGroup) createNewElement(BpRequirementGroup.TYPE_ID, getRootItNetwork());
+        rootReqGroup.setTitel(rootRequirementGroupName);;
+        
+        systemReqGroup =  (BpRequirementGroup) createNewElement(BpRequirementGroup.TYPE_ID, rootReqGroup);
+        processReqGroup =  (BpRequirementGroup) createNewElement(BpRequirementGroup.TYPE_ID, rootReqGroup);
+        
+        
+        systemReqGroup.setTitel(systemRequirementGroupname);
+        processReqGroup.setTitel(processRequirementGroupname);
+        
+        
+        BpThreatGroup rootThreatGroup = (BpThreatGroup) createNewElement(BpThreatGroup.TYPE_ID, getRootItNetwork());
+        
+        rootThreatGroup.setTitel(rootThreatGroupName);
+
+        
+        elementalThreatGroup = (BpThreatGroup) createNewElement(BpThreatGroup.TYPE_ID, rootThreatGroup);
+        elementalThreatGroup.setTitel(elementalThreatGroupName);
+        BpThreatGroup specificThreatGroup = (BpThreatGroup) createNewElement(BpThreatGroup.TYPE_ID, rootThreatGroup);
+        specificThreatGroup.setTitel(specificThreatGroupName);
+        
+        processThreatGroup = (BpThreatGroup) createNewElement(BpThreatGroup.TYPE_ID, specificThreatGroup);
+        processThreatGroup.setTitel(specificProcessThreatGroupName);
+        systemThreatGroup = (BpThreatGroup) createNewElement(BpThreatGroup.TYPE_ID, specificThreatGroup);
+        systemThreatGroup.setTitel(specificSystemThreatGroupName);
+        
+        for (String name : systemIdentifierPrefixes ) {
+            BpRequirementGroup group = (BpRequirementGroup) createNewElement(BpRequirementGroup.TYPE_ID, systemReqGroup);
+            group.setTitel(name);
+            
+            BpThreatGroup tGroup = (BpThreatGroup) createNewElement(BpThreatGroup.TYPE_ID, systemThreatGroup);
+            tGroup.setTitel(name);
         }
+        
+        
+        for (String name : processIdentifierPrefixes ) {
+            BpRequirementGroup group = (BpRequirementGroup) createNewElement(BpRequirementGroup.TYPE_ID, processReqGroup);
+            group.setTitel(name);
+            
+            BpThreatGroup tGroup = (BpThreatGroup) createNewElement(BpThreatGroup.TYPE_ID, processThreatGroup);
+            tGroup.setTitel(name);
+        }
+        
+            
     }
     
     private static void transferModules(Set<DocumentType> modules, Set<DocumentType> threats, ItNetwork rootNetwork) throws CommandException, CnATreeElementBuildException {
 
         for (DocumentType bsiModule : modules) {
             if (rootNetwork != null) {
-                BpRequirement veriniceModule = (BpRequirement)
-                        CnAElementFactory.getInstance().saveNew(
-                                rootNetwork, BpRequirement.TYPE_ID, null, false);
-                veriniceModule.setTitel(bsiModule.getFullTitle());
-                veriniceModule.setIdentifier(bsiModule.getIdentifier());
-                veriniceModule.setAbbreviation(bsiModule.getIdentifier());
-                veriniceModule.setDescription(getDescriptionText(bsiModule.getFullTitle(), 
-                        bsiModule.getDescription()));
+                String groupIdentifier = getIdentifierPrefix(bsiModule.getIdentifier());
+                
+                BpRequirementGroup parent = getRequirementParentGroup(groupIdentifier);
+                
+                if (! addedReqs.contains(bsiModule.getFullTitle())) {
 
 
-                createRequirements(bsiModule, veriniceModule);
+                    BpRequirement veriniceModule = (BpRequirement)
+                            CnAElementFactory.getInstance().saveNew(
+                                    parent, BpRequirement.TYPE_ID, null, false);
+                    veriniceModule.setTitle(bsiModule.getFullTitle());
+                    veriniceModule.setIdentifier(bsiModule.getIdentifier());
+                    veriniceModule.setAbbreviation(bsiModule.getIdentifier());
+                    veriniceModule.setDescription(getDescriptionText(bsiModule.getFullTitle(), 
+                            bsiModule.getDescription()));
+                    LOG.debug("Module : \t" + veriniceModule.getTitle()+ " created");
+                    addedReqs.add(bsiModule.getFullTitle());
+                }
 
+
+//                createRequirements(bsiModule, veriniceModule);
+
+                
                 for (SpecificThreatType threat : bsiModule.getThreatScenario().getSpecificThreats().getSpecificThreat()) {
-                    BpThreat veriniceThreat = (BpThreat) CnAElementFactory.getInstance().saveNew(veriniceModule,
-                            BpThreat.TYPE_ID, null, false);
-                    veriniceThreat.setTitel(threat.getHeadline());
-                    veriniceThreat.setDescription(getDescriptionText(threat.getHeadline(), threat.getDescription()));
+
+
+
+                    BpThreatGroup tParent = getSpecificThreatParentGroup(groupIdentifier);
+
+                    String title = bsiModule.getIdentifier() + " " + threat.getHeadline();
+                    
+                    if (! addedThreats.contains(title)) {
+                        
+                        BpThreat veriniceThreat = (BpThreat) CnAElementFactory.getInstance().saveNew(tParent,
+                                BpThreat.TYPE_ID, null, false);
+                        veriniceThreat.setTitel(title);
+                        veriniceThreat.setDescription(getDescriptionText(threat.getHeadline(), threat.getDescription()));
+                        addedThreats.add(title);
+                    }
 
                 }
 
@@ -175,17 +273,94 @@ public class NewITBPToVNA {
                             break;
                         }
                     }
-                    BpThreat veriniceThreat = (BpThreat) CnAElementFactory.getInstance().saveNew(veriniceModule,
-                            BpThreat.TYPE_ID, null, false);
-                    veriniceThreat.setTitel(bsiThreat.getFullTitle());
-                    veriniceThreat.setIdentifier(bsiThreat.getIdentifier());
-                    veriniceThreat.setAbbreviation("E");
-                    //                    veriniceThreat.setDescription(bsiThreat.getDescription());
-                    LOG.debug("Threat : \t" + veriniceThreat.getTitle()+ " created");
+                    if (! addedThreats.contains(bsiThreat.getFullTitle())) {
+                        BpThreat veriniceThreat = (BpThreat) CnAElementFactory.getInstance().saveNew(elementalThreatGroup,
+                                BpThreat.TYPE_ID, null, false);
+                        veriniceThreat.setTitel(bsiThreat.getFullTitle());
+                        veriniceThreat.setIdentifier(bsiThreat.getIdentifier());
+                        veriniceThreat.setAbbreviation("E");
+                        //                    veriniceThreat.setDescription(bsiThreat.getDescription());
+                        addedThreats.add(bsiThreat.getFullTitle());
+                        LOG.debug("Threat : \t" + veriniceThreat.getTitle()+ " created");
+                    }
                 }
-                LOG.debug("Module : \t" + veriniceModule.getTitle()+ " created");
             }
         }
+    }
+    
+    private static Set<String> getAllChildrenTitle(CnATreeElement element){
+        Set<String> title = new HashSet<>();
+        
+        element = Retriever.checkRetrieveChildren(element);
+        
+        if ( element != null && element.getChildren() != null) {
+
+            for (CnATreeElement child : element.getChildren()) {
+                if (child instanceof IBpGroup) {
+                    title.addAll(getAllChildrenTitle(child));
+                } else {
+                    title.add(element.getTitle());
+                }
+            }
+        }
+        return title;
+    }
+
+    /**
+     * @param groupIdentifier
+     */
+    private static BpRequirementGroup getRequirementParentGroup(String groupIdentifier) {
+        BpRequirementGroup group = null;
+        
+        if (systemIdentifierPrefixes.contains(groupIdentifier)) {
+            
+            for (CnATreeElement reqGroup : systemReqGroup.getChildren()) {
+                if (reqGroup.getTypeId().equals(BpRequirementGroup.TYPE_ID) && reqGroup.getTitle().equals(groupIdentifier)) {
+                    group = (BpRequirementGroup) reqGroup;
+                    break;
+                }
+            }
+            
+        } else if (processIdentifierPrefixes.contains(groupIdentifier)) {
+            for (CnATreeElement reqGroup : processReqGroup.getChildren()) {
+                if (reqGroup.getTypeId().equals(BpRequirementGroup.TYPE_ID) && reqGroup.getTitle().equals(groupIdentifier)) {
+                    group = (BpRequirementGroup) reqGroup;
+                    break;
+                }
+            }
+            
+        }
+        return group;
+    }
+    
+    private static BpThreatGroup getSpecificThreatParentGroup(String groupIdentifier) {
+        BpThreatGroup group = null;
+        
+        if (systemIdentifierPrefixes.contains(groupIdentifier)) {
+            
+            for (CnATreeElement threatGroup : systemThreatGroup.getChildren()) {
+                if (threatGroup.getTypeId().equals(BpThreatGroup.TYPE_ID) && threatGroup.getTitle().equals(groupIdentifier)) {
+                    group = (BpThreatGroup) threatGroup;
+                    break;
+                }
+            }
+            
+        } else if (processIdentifierPrefixes.contains(groupIdentifier)) {
+            for (CnATreeElement threatGroup : processThreatGroup.getChildren()) {
+                if (threatGroup.getTypeId().equals(BpThreatGroup.TYPE_ID) && threatGroup.getTitle().equals(groupIdentifier)) {
+                    group = (BpThreatGroup) threatGroup;
+                    break;
+                }
+            }
+            
+        }
+        return group;
+    }
+    
+    private static String getIdentifierPrefix(String id) {
+        if (id != null && id.length() >= 3 && id.contains(".")) {
+            return id.substring(0, id.indexOf("."));
+        } else return id;
     }
 
     /**
@@ -218,7 +393,7 @@ public class NewITBPToVNA {
         vRequirement.setIdentifier(bsiRequirement.getIdentifier());
         vRequirement.setDescription(getDescriptionText(bsiRequirement.getTitle(),
                 bsiRequirement.getDescription()));
-        vRequirement.setQualifier(qualifier);
+//        vRequirement.setQualifier(qualifier);
         LOG.debug("Requierement : \t"  + vRequirement.getTitle() + "created ");
         return vRequirement;
     }
@@ -242,16 +417,17 @@ public class NewITBPToVNA {
     
     private static ItNetwork getRootItNetwork() throws CommandException, CnATreeElementBuildException {
         if(rootNetwork == null) {
-            rootNetwork = (ItNetwork)createNewElement(ItNetwork.TYPE_ID);
+            rootNetwork = (ItNetwork)createNewElement(ItNetwork.TYPE_ID, CnAElementFactory.getInstance().getBpModel());
             rootNetwork.setTitel("IT-Grundschutz-Kompendium");
         } 
         return rootNetwork;
     }
     
-    private static CnATreeElement createNewElement(String typeId) 
+    private static CnATreeElement createNewElement(String typeId, CnATreeElement container) 
             throws CommandException, CnATreeElementBuildException {
+        LOG.debug("creating instanceof " + typeId);
         return CnAElementFactory.getInstance().saveNew(
-                CnAElementFactory.getInstance().getBpModel(),
+                container,
                 typeId, null, false);
     }
     
@@ -272,6 +448,7 @@ public class NewITBPToVNA {
         }
         return instance;
     }
+    
     
     
 

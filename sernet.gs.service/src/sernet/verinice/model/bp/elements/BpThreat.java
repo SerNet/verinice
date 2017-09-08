@@ -29,6 +29,11 @@ public class BpThreat extends CnATreeElement implements IBpElement {
     
     private static final long serialVersionUID = -7182966153863832177L;
     
+    private static final String PROP_ABBR = "bp_threat_abbr"; //$NON-NLS-1$
+    private static final String PROP_DESC = "bp_threat_desc"; //$NON-NLS-1$
+    private static final String PROP_NAME = "bp_threat_name"; //$NON-NLS-1$
+    private static final String PROP_ID = "bp_threat_id"; //$NON-NLS-1$
+    
     public static final String TYPE_ID = "bp_threat"; //$NON-NLS-1$
     
     protected BpThreat() {}
@@ -41,6 +46,40 @@ public class BpThreat extends CnATreeElement implements IBpElement {
     @Override
     public String getTypeId() {
         return TYPE_ID;
+    }
+    
+    public String getDescription() {
+        return getEntity().getPropertyValue(PROP_DESC);
+    }
+    
+    public void setDescription(String description) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESC), description);
+    }
+    
+    public String getAbbreviation() {
+        return getEntity().getPropertyValue(PROP_ABBR);
+    }
+    
+    public void setAbbreviation(String abbreviation) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
+    }
+    
+    @Override
+    public String getTitle() {
+        return getEntity().getSimpleValue(PROP_NAME);
+    }
+    
+    @Override
+    public void setTitel(String title) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
+    }
+    
+    public String getIdentifier() {
+        return getEntity().getPropertyValue(PROP_ID);
+    }
+    
+    public void setIdentifier(String id) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), id);
     }
 
 }

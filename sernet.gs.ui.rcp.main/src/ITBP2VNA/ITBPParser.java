@@ -56,7 +56,7 @@ public class ITBPParser {
             document = o.getValue();
 
         } catch (JAXBException e) {
-            LOG.error("Error while parsing ITBP-Document:\t" + xmlFile.getAbsolutePath());
+            LOG.error("Error while parsing ITBP-Document:\t" + xmlFile.getAbsolutePath(),e);
         } 
         
         return document;

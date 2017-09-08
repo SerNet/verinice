@@ -19,18 +19,23 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
+import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class BpRequirement extends CnATreeElement {
+public class BpRequirement extends CnATreeElement implements IBpElement {
     
     private static final long serialVersionUID = 436541703079680979L;
     
     public static final String TYPE_ID = "bp_requirement"; //$NON-NLS-1$
-
+    
+    private static final String PROP_ABBR = "bp_requirement_abbr"; //$NON-NLS-1$
+    private static final String PROP_DESC = "bp_requirement_desc"; //$NON-NLS-1$
+    private static final String PROP_NAME = "bp_requirement_name"; //$NON-NLS-1$
+    private static final String PROP_ID = "bp_requirement_id"; //$NON-NLS-1$
     protected BpRequirement() {}
 
     public BpRequirement(CnATreeElement parent) {
@@ -46,6 +51,38 @@ public class BpRequirement extends CnATreeElement {
     @Override
     public boolean canContain(Object object) {
         return object instanceof BpThreat;
+    }
+    
+    public String getDescription() {
+        return getEntity().getPropertyValue(PROP_DESC);
+    }
+    
+    public void setDescription(String description) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESC), description);
+    }
+    
+    public String getAbbreviation() {
+        return getEntity().getPropertyValue(PROP_ABBR);
+    }
+    
+    public void setAbbreviation(String abbreviation) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
+    }
+    
+    public String getTitle() {
+        return getEntity().getPropertyValue(PROP_NAME);
+    }
+    
+    public void setTitle(String title) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
+    }
+    
+    public String getIdentifier() {
+        return getEntity().getPropertyValue(PROP_ID);
+    }
+    
+    public void setIdentifier(String id) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), id);
     }
 
 }

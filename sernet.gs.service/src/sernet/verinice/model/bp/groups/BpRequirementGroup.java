@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.groups;
 
+import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.common.CnATreeElement;
@@ -34,12 +35,18 @@ public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup
     
     public static final String TYPE_ID = "bp_requirement_group";
     
-    public static final String[] CHILD_TYPES = new String[] {BpRequirement.TYPE_ID};
+    private static final String PROP_NAME = "bp_requirement_group_name"; //$NON-NLS-1$
+    
+    public static final String[] CHILD_TYPES = new String[] {BpRequirement.TYPE_ID, BpRequirementGroup.TYPE_ID};
     
     protected BpRequirementGroup() {}
     
     public BpRequirementGroup(CnATreeElement parent) {
         super(parent);
+        setEntity(new Entity(TYPE_ID));
+        getEntity().initDefaultValues(getTypeFactory());
+        // sets the localized title via HUITypeFactory from message bundle
+        setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
 
     @Override
@@ -55,6 +62,16 @@ public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;
+    }
+    
+    @Override
+    public String getTitle() {
+        return getEntity().getSimpleValue(PROP_NAME);
+    }
+    
+    @Override
+    public void setTitel(String title) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
     }
 
 }

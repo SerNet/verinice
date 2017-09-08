@@ -9594,6 +9594,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_requirement_tag" name="Tags"
             tooltip="List of tags, separated by comma or space" />
         <huiproperty id="bp_requirement_document" name="Document" isURL="true" />
+        <huiproperty id="bp_requirement_desc" name="Description" />
+        <huiproperty id="bp_requirement_id" name="Identifier" />
     </huientity>
 
     <huientity id="bp_requirement_group" name="Requirement Group">
@@ -9607,6 +9609,9 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_threat_abbr" name="Abbreviation" />
         <huiproperty id="bp_threat_tag" name="Tags" tooltip="List of tags, separated by comma or space" />
         <huiproperty id="bp_threat_document" name="Document" isURL="true" />
+        <huiproperty id="bp_threat_desc" name="Description" />
+        <huiproperty id="bp_threat_id" name="Identifier" />
+        
     </huientity>
 
     <huientity id="bp_threat_group" name="bp_threat-Group">
