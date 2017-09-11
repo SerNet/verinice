@@ -4617,7 +4617,7 @@ st = new StringTokenizer(text,",", false);
 sb = new StringBuilder();
 while(st.hasMoreTokens()){
 	token = st.nextToken().trim();
-	TocHelper2.log("Token: " + token);
+//	TocHelper2.log("Token: " + token);
 	sb.append(token);
 	if(st.hasMoreTokens()){
 		sb.append("\n");
