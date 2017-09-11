@@ -384,7 +384,11 @@ public class EditBean {
         }
         Entity entity = getElement().getEntity();
         for (HuiProperty property : getPropertyList()) {
-            entity.setSimpleValue(property.getType(), property.getValue());
+            if (property.getIsMultiselect()) {
+                entity.setPropertyValue(property.getType().getId(), property.getValue());
+            } else {
+                entity.setSimpleValue(property.getType(), property.getValue());
+            }
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Property: " + property.getType().getId() + " set to: " + property.getValue());
             }
