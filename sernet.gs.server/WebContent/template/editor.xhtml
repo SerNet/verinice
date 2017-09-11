@@ -34,14 +34,12 @@
 							update="linkPanel" />
 
 						<p:tab title="#{msgEdit['general']}">
-							<vn:pprops list="#{edit.labelPropertyList}"
-								listNoLabel="#{edit.noLabelPropertyList}" />
+							<vn:pprops list="#{edit.generalPropertyList}" />
 						</p:tab>
 
 						<c:forEach var="group" items="#{edit.groupList}">
 							<p:tab title="#{group.name}">
-								<vn:pprops list="#{group.labelPropertyList}"
-									listNoLabel="#{group.noLabelPropertyList}" />
+								<vn:pprops list="#{group.labelPropertyList}" />
 							</p:tab>
 						</c:forEach>
 

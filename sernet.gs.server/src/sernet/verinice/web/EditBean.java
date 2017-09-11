@@ -64,6 +64,7 @@ import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.SaveElement;
@@ -210,8 +211,8 @@ public class EditBean {
 
     protected List<HuiProperty> createPropertyList(Entity entity, List<PropertyType> typeListHui) {
         ArrayList<HuiProperty> properties = new ArrayList<>(typeListHui.size());
-        initHuiProperties(entity, typeListHui );
-
+        initHuiProperties(entity, typeListHui, properties);
+        allProperties.addAll(properties);
         return properties;
     }
 
@@ -234,18 +235,18 @@ public class EditBean {
         return key2HuiProperty;
     }
 
-    private void initHuiProperties(Entity entity, List<PropertyType> typeListHui) {
+    private void initHuiProperties(Entity entity, List<PropertyType> typeListHui, List<HuiProperty> huiProperties) {
         for (PropertyType huiType : typeListHui) {
-            initHuiProperty(entity, huiType);
+            initHuiProperty(entity, huiType, huiProperties);
         }
     }
 
-    private void initHuiProperty(Entity entity, PropertyType huiType) {
+    private void initHuiProperty(Entity entity, PropertyType huiType, List<HuiProperty> huiProperties) {
         if (isVisible(huiType)) {
             String id = huiType.getId();
             String value = entity.getRawPropertyValue(id);
             HuiProperty prop = new HuiProperty(huiType, id, value);
-            generalPropertyList.add(prop);
+            huiProperties.add(prop);
             if (getNoLabelTypeList().contains(id)) {
                 prop.setShowLabel(false);
             }
@@ -441,6 +442,11 @@ public class EditBean {
         if (generalPropertyList != null) {
             generalPropertyList.clear();
         }
+
+        if(allProperties != null){
+            allProperties.clear();
+        }
+
         uuid = null;
         typeId = null;
         title = null;
@@ -865,6 +871,14 @@ public class EditBean {
             text = "";
         }
         return text;
+    }
+
+    public List<HuiProperty> getGeneralPropertyList() {
+        return generalPropertyList;
+    }
+
+    public void setGeneralPropertyList(List<HuiProperty> generalPropertyList) {
+        this.generalPropertyList = generalPropertyList;
     }
 
     /**
