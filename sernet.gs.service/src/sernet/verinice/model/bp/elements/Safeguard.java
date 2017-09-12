@@ -31,6 +31,11 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     private static final long serialVersionUID = -2117441377311538326L;
     
     public static final String TYPE_ID = "bp_safeguard"; //$NON-NLS-1$
+    private static final String PROP_ABBR = "bp_safeguard_abbr"; //$NON-NLS-1$
+    private static final String PROP_DESC = "bp_safeguard_desc"; //$NON-NLS-1$
+    private static final String PROP_NAME = "bp_safeguard_name"; //$NON-NLS-1$
+    private static final String PROP_ID = "bp_safeguard_id"; //$NON-NLS-1$
+    private static final String PROP_QUALIFIER = "bp_safeguard_qualifier"; //$NON-NLS-1$
 
     protected Safeguard() {}
     
@@ -42,6 +47,49 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     @Override
     public String getTypeId() {
         return TYPE_ID;
+    }
+    
+    public String getDescription() {
+        return getEntity().getPropertyValue(PROP_DESC);
+    }
+    
+    public void setDescription(String description) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESC), description);
+    }
+    
+    public String getAbbreviation() {
+        return getEntity().getPropertyValue(PROP_ABBR);
+    }
+    
+    public void setAbbreviation(String abbreviation) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
+    }
+    
+    public String getTitle() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[").append(getQualifier()).append("]").append(" ");
+        sb.append(getEntity().getPropertyValue(PROP_NAME));
+        return sb.toString();
+    }
+    
+    public void setTitle(String title) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
+    }
+    
+    public String getQualifier() {
+        return getEntity().getPropertyValue(PROP_QUALIFIER);
+    }
+    
+    public void setQualifier(String qualifier) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
+    }
+    
+    public String getIdentifier() {
+        return getEntity().getPropertyValue(PROP_ID);
+    }
+    
+    public void setIdentifier(String id) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), id);
     }
 
 }

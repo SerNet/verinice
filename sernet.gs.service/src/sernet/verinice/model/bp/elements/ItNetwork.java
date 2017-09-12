@@ -43,6 +43,8 @@ public class ItNetwork extends CnATreeElement implements IBpElement  {
        
     public static final String TYPE_ID = "bp_itnetwork"; //$NON-NLS-1$
     
+    private static final String PROP_NAME = "bp_itnetwork_name";
+    
     protected ItNetwork() {}
     
     public ItNetwork(CnATreeElement parent) {
@@ -83,6 +85,16 @@ public class ItNetwork extends CnATreeElement implements IBpElement  {
                object instanceof NetworkGroup ||
                object instanceof RoomGroup ||
                object instanceof SafeguardGroup;
+    }
+    
+    @Override
+    public String getTitle() {
+        return getEntity().getSimpleValue(PROP_NAME);
+    }
+    
+    @Override
+    public void setTitel(String title) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
     }
 
 }

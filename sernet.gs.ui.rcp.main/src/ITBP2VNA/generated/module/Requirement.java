@@ -2,37 +2,34 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2017.07.28 um 04:46:44 PM CEST 
+// Generiert: 2017.09.11 um 03:35:00 PM CEST 
 //
 
 
-package ITBP2VNA.generated;
-
-import java.util.ArrayList;
-import java.util.List;
+package ITBP2VNA.generated.module;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java-Klasse für requirementType complex type.
+ * <p>Java-Klasse für anonymous complex type.
  * 
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * 
  * <pre>
- * &lt;complexType name="requirementType">
+ * &lt;complexType>
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="identifier" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="title" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="cia" type="{}ciaType" minOccurs="0"/>
- *         &lt;element name="description" type="{}descriptionType" minOccurs="0"/>
- *         &lt;element name="ethreat" type="{}ethreatType" maxOccurs="unbounded" minOccurs="0"/>
- *       &lt;/sequence>
+ *       &lt;all>
+ *         &lt;element ref="{}identifier" minOccurs="0"/>
+ *         &lt;element ref="{}title" minOccurs="0"/>
+ *         &lt;element ref="{}responsibleRoles" minOccurs="0"/>
+ *         &lt;element ref="{}cia" minOccurs="0"/>
+ *         &lt;element ref="{}description" minOccurs="0"/>
+ *       &lt;/all>
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -41,21 +38,17 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "requirementType", propOrder = {
-    "identifier",
-    "title",
-    "cia",
-    "description",
-    "ethreat"
-})
-public class RequirementType {
+@XmlType(name = "", propOrder = {
 
-    @XmlElement(required = true)
+})
+@XmlRootElement(name = "requirement")
+public class Requirement {
+
     protected String identifier;
     protected String title;
-    protected CiaType cia;
-    protected DescriptionType description;
-    protected List<EthreatType> ethreat;
+    protected ResponsibleRoles responsibleRoles;
+    protected Cia cia;
+    protected Description description;
 
     /**
      * Ruft den Wert der identifier-Eigenschaft ab.
@@ -106,14 +99,38 @@ public class RequirementType {
     }
 
     /**
+     * Ruft den Wert der responsibleRoles-Eigenschaft ab.
+     * 
+     * @return
+     *     possible object is
+     *     {@link ResponsibleRoles }
+     *     
+     */
+    public ResponsibleRoles getResponsibleRoles() {
+        return responsibleRoles;
+    }
+
+    /**
+     * Legt den Wert der responsibleRoles-Eigenschaft fest.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link ResponsibleRoles }
+     *     
+     */
+    public void setResponsibleRoles(ResponsibleRoles value) {
+        this.responsibleRoles = value;
+    }
+
+    /**
      * Ruft den Wert der cia-Eigenschaft ab.
      * 
      * @return
      *     possible object is
-     *     {@link CiaType }
+     *     {@link Cia }
      *     
      */
-    public CiaType getCia() {
+    public Cia getCia() {
         return cia;
     }
 
@@ -122,10 +139,10 @@ public class RequirementType {
      * 
      * @param value
      *     allowed object is
-     *     {@link CiaType }
+     *     {@link Cia }
      *     
      */
-    public void setCia(CiaType value) {
+    public void setCia(Cia value) {
         this.cia = value;
     }
 
@@ -134,10 +151,10 @@ public class RequirementType {
      * 
      * @return
      *     possible object is
-     *     {@link DescriptionType }
+     *     {@link Description }
      *     
      */
-    public DescriptionType getDescription() {
+    public Description getDescription() {
         return description;
     }
 
@@ -146,40 +163,11 @@ public class RequirementType {
      * 
      * @param value
      *     allowed object is
-     *     {@link DescriptionType }
+     *     {@link Description }
      *     
      */
-    public void setDescription(DescriptionType value) {
+    public void setDescription(Description value) {
         this.description = value;
-    }
-
-    /**
-     * Gets the value of the ethreat property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the ethreat property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getEthreat().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link EthreatType }
-     * 
-     * 
-     */
-    public List<EthreatType> getEthreat() {
-        if (ethreat == null) {
-            ethreat = new ArrayList<EthreatType>();
-        }
-        return this.ethreat;
     }
 
 }

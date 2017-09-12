@@ -9596,14 +9596,16 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_requirement_document" name="Document" isURL="true" />
         <huiproperty id="bp_requirement_desc" name="Description" />
         <huiproperty id="bp_requirement_id" name="Identifier" />
+        <huiproperty id="bp_requirement_qualifier" name="Qualifier" />
     </huientity>
 
-    <huientity id="bp_requirement_group" name="Requirement Group">
+    <huientity id="bp_requirement_group" name="Module">
         <huiproperty id="bp_requirement_group_name" name="Title" required="true" />
         <huiproperty id="bp_requirement_group_desc" name="Description" inputtype="text" />
         <huiproperty id="bp_requirement_group_tag" name="Tags" />
+        <huiproperty id="bp_requirement_group_id" name="Identifier" />
     </huientity>
-
+    
     <huientity id="bp_threat" name="Threat">
         <huiproperty id="bp_threat_name" name="Title" required="true" />
         <huiproperty id="bp_threat_abbr" name="Abbreviation" />
@@ -9953,9 +9955,14 @@ Wurden bereits weitere Stellen informiert?
     <huientity id="bp_safeguard" name="Safeguard">
         <huiproperty id="bp_safeguard_name" name="Title" required="true" />
         <huiproperty id="bp_safeguard_abbr" name="Abbreviation" />
+        <huiproperty id="bp_safeguard_qualifier" 
+        	name="Qualifier" 
+        	visible = "false" 
+        	editable = "false"/>
         <huiproperty id="bp_safeguard_tag" name="Tags"
             tooltip="List of tags, separated by comma or space" />
         <huiproperty id="bp_safeguard_document" name="Document" isURL="true" />
+        <huiproperty id="bp_safeguard_id" name="Identifier" />
     </huientity>
 
     <huientity id="bp_safeguard_group" name="Safeguard Group">

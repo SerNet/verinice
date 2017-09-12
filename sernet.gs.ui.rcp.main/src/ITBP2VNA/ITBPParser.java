@@ -3,13 +3,12 @@ package ITBP2VNA;
 import java.io.File;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
 
-import ITBP2VNA.generated.DocumentType;
+import ITBP2VNA.generated.module.Document;
 
 /*******************************************************************************
  * Copyright (c) 2017 Sebastian Hagedorn.
@@ -44,25 +43,68 @@ public class ITBPParser {
     public ITBPParser() {
     }
     
-    public DocumentType parseFile(File xmlFile) {
+    public Document parseModule(File moduleXMLFile) {
         
-        DocumentType document = null;
-
+        Document moduleDocument = null;
+        
         try {
-        
-            JAXBContext context = JAXBContext.newInstance(DocumentType.class);
+            
+            JAXBContext context = JAXBContext.newInstance(Document.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            JAXBElement<DocumentType> o =  (JAXBElement<DocumentType>)unmarshaller.unmarshal(xmlFile);
-            document = o.getValue();
+            moduleDocument =  (Document)unmarshaller.unmarshal(moduleXMLFile);
 
         } catch (JAXBException e) {
-            LOG.error("Error while parsing ITBP-Document:\t" + xmlFile.getAbsolutePath(),e);
+            LOG.error("Error while parsing ITBP-Document:\t" + moduleXMLFile.getAbsolutePath(),e);
         } 
         
-        return document;
+        return moduleDocument;
+        
     }
     
+    public ITBP2VNA.generated.thread.Document parseThread(File threadXMLFile) {
+        
+        ITBP2VNA.generated.thread.Document threadDocument = null;
+        
+        try {
+            
+            JAXBContext context = JAXBContext.newInstance(ITBP2VNA.generated.thread.Document.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            threadDocument = (ITBP2VNA.generated.thread.Document)unmarshaller.unmarshal(threadXMLFile);
+
+        } catch (JAXBException e) {
+            LOG.error("Error while parsing ITBP-Document:\t" + threadXMLFile.getAbsolutePath(),e);
+        } 
+        
+        return threadDocument;
+        
+    }
+    
+    public ITBP2VNA.generated.implementationhint.Document parseImplementationHint(File implHintXMLFile) {
+        
+        ITBP2VNA.generated.implementationhint.Document implHintDocument = null;
+        
+        try {
+            
+            JAXBContext context = JAXBContext.newInstance(ITBP2VNA.generated.implementationhint.Document.class);
+            Unmarshaller unmarshaller = context.createUnmarshaller();
+            implHintDocument = (ITBP2VNA.generated.implementationhint.Document)unmarshaller.unmarshal(implHintXMLFile);
+
+        } catch (JAXBException e) {
+            LOG.error("Error while parsing ITBP-Document:\t" + implHintXMLFile.getAbsolutePath(),e);
+        } 
+        
+        return implHintDocument;
+        
+    }
+    
+    
+    
+
+    
     public static ITBPParser getInstance() {
+        if (instance == null) {
+            instance = new ITBPParser();
+        }
         return instance;
     }
 

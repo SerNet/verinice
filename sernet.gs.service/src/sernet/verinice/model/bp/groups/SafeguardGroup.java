@@ -34,12 +34,17 @@ public class SafeguardGroup extends Group<Safeguard> implements IBpGroup {
     
     public static final String TYPE_ID = "bp_safeguard_group";
     
+    private static final String PROP_DESC = "bp_safeguard_group_desc"; //$NON-NLS-1$
+    
+    private static final String PROP_NAME = "bp_safeguard_group_name"; //$NON-NLS-1$
+    
     public static final String[] CHILD_TYPES = new String[] {Safeguard.TYPE_ID};
     
     protected SafeguardGroup() {}
     
     public SafeguardGroup(CnATreeElement parent) {
         super(parent);
+        init();
     }
 
     @Override
@@ -49,12 +54,22 @@ public class SafeguardGroup extends Group<Safeguard> implements IBpGroup {
     
     @Override
     public boolean canContain(Object object) {
-        return object instanceof Safeguard;
+        return object instanceof Safeguard || object instanceof SafeguardGroup;
     }
     
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;
     }  
+    
+    @Override
+    public String getTitle() {
+        return getEntity().getSimpleValue(PROP_NAME);
+    }
+    
+    @Override
+    public void setTitel(String title) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
+    }
 
 }

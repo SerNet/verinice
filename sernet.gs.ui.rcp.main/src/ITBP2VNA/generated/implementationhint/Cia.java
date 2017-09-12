@@ -2,32 +2,33 @@
 // Diese Datei wurde mit der JavaTM Architecture for XML Binding(JAXB) Reference Implementation, v2.2.8-b130911.1802 generiert 
 // Siehe <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Änderungen an dieser Datei gehen bei einer Neukompilierung des Quellschemas verloren. 
-// Generiert: 2017.07.28 um 04:46:44 PM CEST 
+// Generiert: 2017.09.11 um 03:36:26 PM CEST 
 //
 
 
-package ITBP2VNA.generated;
+package ITBP2VNA.generated.implementationhint;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java-Klasse für ciaType complex type.
+ * <p>Java-Klasse für anonymous complex type.
  * 
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
  * 
  * <pre>
- * &lt;complexType name="ciaType">
+ * &lt;complexType>
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="confidentiality" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="integrity" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="availability" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *       &lt;/sequence>
+ *       &lt;all>
+ *         &lt;element ref="{}confidentiality"/>
+ *         &lt;element ref="{}integrity"/>
+ *         &lt;element ref="{}availability"/>
+ *       &lt;/all>
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -36,12 +37,11 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ciaType", propOrder = {
-    "confidentiality",
-    "integrity",
-    "availability"
+@XmlType(name = "", propOrder = {
+
 })
-public class CiaType {
+@XmlRootElement(name = "cia")
+public class Cia {
 
     @XmlElement(required = true)
     protected String confidentiality;

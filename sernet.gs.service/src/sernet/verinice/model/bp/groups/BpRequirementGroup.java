@@ -27,6 +27,8 @@ import sernet.verinice.model.iso27k.Group;
 
 /**
  * 
+ * this represents the ITBP Module
+ * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
 public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup {
@@ -34,6 +36,9 @@ public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup
     private static final long serialVersionUID = 7752776589962581995L;
     
     public static final String TYPE_ID = "bp_requirement_group";
+    
+    private static final String PROP_DESC = "bp_requirement_group_desc"; //$NON-NLS-1$
+    private static final String PROP_ID = "bp_requirement_group_id"; //$NON-NLS-1$
     
     private static final String PROP_NAME = "bp_requirement_group_name"; //$NON-NLS-1$
     
@@ -72,6 +77,22 @@ public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup
     @Override
     public void setTitel(String title) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
+    }
+    
+    public String getDescription() {
+        return getEntity().getPropertyValue(PROP_DESC);
+    }
+    
+    public void setDescription(String description) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESC), description);
+    }
+    
+    public String getIdentifier() {
+        return getEntity().getPropertyValue(PROP_ID);
+    }
+    
+    public void setIdentifier(String id) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), id);
     }
 
 }

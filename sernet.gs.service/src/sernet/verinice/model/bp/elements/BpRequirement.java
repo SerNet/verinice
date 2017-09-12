@@ -36,6 +36,7 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     private static final String PROP_DESC = "bp_requirement_desc"; //$NON-NLS-1$
     private static final String PROP_NAME = "bp_requirement_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_requirement_id"; //$NON-NLS-1$
+    private static final String PROP_QUALIFIER = "bp_requirement_qualifier"; //$NON-NLS-1$
     protected BpRequirement() {}
 
     public BpRequirement(CnATreeElement parent) {
@@ -83,6 +84,14 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     
     public void setIdentifier(String id) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), id);
+    }
+    
+    public String getQualifier() {
+        return getEntity().getPropertyValue(PROP_QUALIFIER);
+    }
+    
+    public void setQualifier(String qualifier) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
     }
 
 }
