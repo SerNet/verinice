@@ -390,7 +390,7 @@ public class EditBean {
         Entity entity = getElement().getEntity();
         for (HuiProperty property : getPropertyList()) {
             if (property.getIsMultiselect()) {
-                entity.setPropertyValue(property.getType().getId(), property.getValue());
+                entity.setPropertyValue(property.getType().getId(), property.getValue() == null ? "" : property.getValue());
             } else {
                 entity.setSimpleValue(property.getType(), property.getValue());
             }
@@ -402,7 +402,7 @@ public class EditBean {
             for (HuiProperty property : group.getPropertyList()) {
 
                 if (property.getIsMultiselect()) {
-                    entity.setPropertyValue(property.getType().getId(), property.getValue());
+                    entity.setPropertyValue(property.getType().getId(), property.getValue() == null ? "" : property.getValue());
                 } else {
                     entity.setSimpleValue(property.getType(), property.getValue());
                 }
