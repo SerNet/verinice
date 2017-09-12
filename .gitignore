@@ -1,4 +1,5 @@
 **/bin
+**/target
 
 sernet.gs.server/WebContent/WEB-INF/lib/sernet.gs.reveng.jar
 sernet.gs.server/WebContent/WEB-INF/lib/sernet.gs.service.jar
@@ -39,3 +40,5 @@ sernet.gs.server/WebContent/WEB-INF/elasticsearch/data/
 
 # do not commit submodul configuration
 .gitmodules
+
+workspace

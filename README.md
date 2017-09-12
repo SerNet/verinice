@@ -70,3 +70,47 @@ people to work on one ISMS - even across different locations.
 - after your pull request is approved, we pull the branch in our
   internal repository, do the merge there and push it back to the
   GitHub mirror
+
+# How to build
+
+To build the Verinice client, client update site, server and
+report designer all at once execute the following commands:
+
+1. `cd sernet.verinice.releng.parent`
+1. `mvn -Dtycho.disableP2Mirrors=true clean verify`
+
+To see where the Verinice client, client update site, server
+and report designer build artifacts can then be found
+read the following sections.
+
+## Verinice client
+
+The built artifacts will be located in
+`sernet.verinice.releng.client.product/target/products/`.
+Artifacts for the following platforms will be produced:
+
+* Linux GTK 32 and 64 bit
+* Windows 32 and 64 bit
+* Mac OS X 64 bit
+
+## Verinice client update site
+
+The P2 update site will be located in
+`sernet.verinice.update_site/target/repository`.
+
+## Verinice server
+
+The WAR file (which can be deployed e.g. to Tomcat)
+will be located under `sernet.verinice.releng.server.product/target/`.
+The WAR file is of course platform independent (in contrast to
+the Verinice client and report designer builds).
+
+## Verinice report designer
+
+The built artifacts will be located in
+`sernet.verinice.report.designer.tycho/target/products/`.
+Artifacts for the following platforms will be produced:
+
+* Linux GTK 32 and 64 bit
+* Windows 32 and 64 bit
+* Mac OS X 64 bit
