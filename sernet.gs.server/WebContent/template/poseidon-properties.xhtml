@@ -59,8 +59,7 @@
 							<p:selectCheckboxMenu value="#{huiProperty.selectedOptions}"
 								label="#{msgEdit['multiselection.empty']}"
 								filter="true" filterMatchMode="startsWith" updateLabel="true">
-								<f:selectItems value="#{huiProperty.options}" var="option"
-									itemLabel="#{option.getName()}" itemValue="#{option}" />
+								<f:selectItems value="#{huiProperty.options}"/>
 							</p:selectCheckboxMenu>
 						</c:when>
 

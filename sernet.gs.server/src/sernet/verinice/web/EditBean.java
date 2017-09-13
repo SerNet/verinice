@@ -388,7 +388,7 @@ public class EditBean {
             throw new SecurityException("write is not allowed");
         }
         Entity entity = getElement().getEntity();
-        for (HuiProperty property : getPropertyList()) {
+        for (HuiProperty property : getGeneralPropertyList()) {
             if (property.getIsMultiselect()) {
                 entity.setPropertyValue(property.getType().getId(), property.getValue() == null ? "" : property.getValue());
             } else {
@@ -672,7 +672,7 @@ public class EditBean {
 
     public List<HuiProperty> getLabelPropertyList() {
         List<HuiProperty> emptyList = Collections.emptyList();
-        List<HuiProperty> list = getPropertyList();
+        List<HuiProperty> list = getGeneralPropertyList();
         return list != null ? list : emptyList;
     }
 
@@ -684,14 +684,6 @@ public class EditBean {
     public boolean isNewAttachmentEnabled() {
         // TODO dm implement rights management in web frontend
         return true;
-    }
-
-    public List<HuiProperty> getPropertyList() {
-        if (generalPropertyList == null) {
-            generalPropertyList = Collections.emptyList();
-        }
-        moveURLPropertyToEndOfList();
-        return generalPropertyList;
     }
 
     private void moveURLPropertyToEndOfList() {
@@ -874,6 +866,11 @@ public class EditBean {
     }
 
     public List<HuiProperty> getGeneralPropertyList() {
+        if (generalPropertyList == null) {
+            generalPropertyList = Collections.emptyList();
+        }
+
+        moveURLPropertyToEndOfList();
         return generalPropertyList;
     }
 
