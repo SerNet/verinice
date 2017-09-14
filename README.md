@@ -83,6 +83,10 @@ To see where the Verinice client, client update site, server
 and report designer build artifacts can then be found
 read the following sections.
 
+If you want to skip the junit tests you need to add the -Dmaven.antrun.skip=true parameter.
+
+1. `mvn -Dtycho.disableP2Mirrors=true -Dmaven.antrun.skip=true  clean verify`
+
 ## Verinice client
 
 The built artifacts will be located in
