@@ -293,7 +293,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 gsmbasicsecuritycheckAction,bausteinZuordnungAction,
                 gsmbausteinZuordnungAction, this.openDocumentViewAction,
                 this.introAction, this.openGroupViewAction, this.openReportdepositViewAction,
-                this.openSearchViewAction, this.openGSToolMappingViewAction, this.openModITBPViewAction,
+                this.openSearchViewAction, this.openGSToolMappingViewAction, this.openBpViewAction,
                 this.testAction
          };
         registerActions(actions);
@@ -424,7 +424,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(this.openValidationViewAction);
         viewsMenu.add(this.openSearchViewAction);
         viewsMenu.add(this.openGSToolMappingViewAction);
-        viewsMenu.add(this.openModITBPViewAction);
+        viewsMenu.add(this.openBpViewAction);
         
 
         viewsMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));

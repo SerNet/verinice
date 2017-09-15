@@ -390,7 +390,7 @@ public class BSIElementEditor extends EditorPart {
         } else if (cnAElement instanceof BausteinUmsetzung) {
             icon = ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG);
         } else if (isBpElement(cnAElement)) {
-            icon = ImageCache.getInstance().getModITBPTypeImage(cnAElement.getTypeId());
+            icon = ImageCache.getInstance().getImageForTypeId(cnAElement.getTypeId());
         } else {
             icon = CnAImageProvider.getImage(cnAElement);
         }

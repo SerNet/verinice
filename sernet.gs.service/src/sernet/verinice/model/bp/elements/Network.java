@@ -38,8 +38,6 @@ public class Network extends CnATreeElement implements IBpElement {
         super(parent);
         init();
     }
-    
-    protected Network() {}
 
     @Override
     public String getTypeId() {

@@ -41,14 +41,8 @@ import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.elements.ItSystem;
 import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
-import sernet.verinice.model.bp.groups.ApplicationGroup;
-import sernet.verinice.model.bp.groups.BpPersonGroup;
-import sernet.verinice.model.bp.groups.BusinessProcessGroup;
-import sernet.verinice.model.bp.groups.DeviceGroup;
-import sernet.verinice.model.bp.groups.IcsSystemGroup;
-import sernet.verinice.model.bp.groups.ItSystemGroup;
-import sernet.verinice.model.bp.groups.NetworkGroup;
-import sernet.verinice.model.bp.groups.RoomGroup;
+import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -393,7 +387,7 @@ public final class ImageCache {
 		TYPE_ID_ICON_MAP.put(SamtTopic.TYPE_ID,   ImageCache.ISO27K_SAMTTOPIC);
 		TYPE_ID_ICON_MAP.put(ImportIsoGroup.TYPE_ID, ImageCache.ISO27K_IMPORT);
 		
-		TYPE_ID_ICON_MAP.put(Application.TYPE_ID, BP_APPLICATION);
+		TYPE_ID_ICON_MAP.put(sernet.verinice.model.bp.elements.Application.TYPE_ID, BP_APPLICATION);
 		TYPE_ID_ICON_MAP.put(BpPerson.TYPE_ID, BP_PERSON);
 		TYPE_ID_ICON_MAP.put(BpRequirement.TYPE_ID, BP_REQUIREMENT);
 		TYPE_ID_ICON_MAP.put(BpThreat.TYPE_ID, BP_THREAT);

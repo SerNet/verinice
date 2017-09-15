@@ -34,11 +34,8 @@ public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup
     
     public static final String TYPE_ID = "bp_requirement_group";
     public static final String PROP_NAME = "bp_requirement_group_name"; //$NON-NLS-1$
-    
     private static final String PROP_DESC = "bp_requirement_group_desc"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_requirement_group_id"; //$NON-NLS-1$
-    
-    private static final String PROP_NAME = "bp_requirement_group_name"; //$NON-NLS-1$
     
     public static final String[] CHILD_TYPES = new String[] {BpRequirement.TYPE_ID, BpRequirementGroup.TYPE_ID};
     
@@ -67,16 +64,6 @@ public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;
-    }
-    
-    @Override
-    public String getTitle() {
-        return getEntity().getSimpleValue(PROP_NAME);
-    }
-    
-    @Override
-    public void setTitel(String title) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
     }
     
     public String getDescription() {
