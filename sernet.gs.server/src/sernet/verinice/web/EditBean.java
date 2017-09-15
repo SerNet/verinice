@@ -64,7 +64,6 @@ import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.SaveElement;
