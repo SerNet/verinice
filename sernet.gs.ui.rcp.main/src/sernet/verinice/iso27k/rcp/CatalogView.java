@@ -77,6 +77,7 @@ import sernet.verinice.iso27k.rcp.action.ControlDragListener;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
@@ -291,6 +292,11 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
                     public void loaded(BpModel model) {
                      // work is done in loaded(ISO27KModel model)
                         
+                    }
+
+                    @Override
+                    public void loaded(CatalogModel model) {
+                        // nothing to do
                     }
 					
 				};

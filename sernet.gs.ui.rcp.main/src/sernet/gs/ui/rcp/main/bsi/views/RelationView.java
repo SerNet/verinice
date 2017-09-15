@@ -54,6 +54,7 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
@@ -249,6 +250,11 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
                 synchronized (loadListener) {
                     addBpModelListeners();
                 }                
+            }
+
+            @Override
+            public void loaded(CatalogModel model) {
+                // nothing to do
             }
 
         };

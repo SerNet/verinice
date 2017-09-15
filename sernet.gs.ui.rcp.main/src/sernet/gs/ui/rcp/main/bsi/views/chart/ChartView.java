@@ -47,6 +47,7 @@ import sernet.verinice.model.bp.IBpModelListener;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -343,6 +344,11 @@ public class ChartView extends ViewPart {
                         CnAElementFactory.getInstance().getBpModel().addModITBOModelListener(changeListener);
                     }
                 });
+            }
+
+            @Override
+            public void loaded(CatalogModel model) {
+                // nothing to do
             }
 		};
 

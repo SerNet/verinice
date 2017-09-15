@@ -31,6 +31,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
 public class TestAction extends Action {
@@ -62,6 +63,11 @@ public class TestAction extends Action {
             @Override
             public void loaded(BpModel model) {
                 setEnabled(true);
+            }
+
+            @Override
+            public void loaded(CatalogModel model) {
+                // nothing to do
             }
         });
     }

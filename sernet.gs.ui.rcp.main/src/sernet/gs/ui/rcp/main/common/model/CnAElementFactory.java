@@ -84,6 +84,7 @@ import sernet.verinice.model.bsi.SubtypenZielobjekte;
 import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.Datenverarbeitung;
@@ -135,6 +136,7 @@ import sernet.verinice.service.commands.CreateITNetwork;
 import sernet.verinice.service.commands.CreateITVerbund;
 import sernet.verinice.service.commands.UpdateElement;
 import sernet.verinice.service.commands.crud.CreateBpModel;
+import sernet.verinice.service.commands.crud.CreateCatalogModel;
 import sernet.verinice.service.commands.crud.CreateIsoModel;
 import sernet.verinice.service.commands.crud.UpdateMultipleElements;
 import sernet.verinice.service.model.LoadModel;
@@ -179,10 +181,13 @@ public final class CnAElementFactory {
 	
 	private static BpModel boModel;
 
+	private CatalogModel catalogModel;
+
 	private ICommandService commandService;
 	
 	private static final String WARNING_UNCHECKED = "unchecked";
 	private static final String WARNING_RAWTYPES = "rawtypes";
+
 
 	private interface IElementBuilder<T extends CnATreeElement, U> {
 		T build(CnATreeElement container, BuildInput<U> input)
@@ -1363,6 +1368,12 @@ public final class CnAElementFactory {
         }	    
 	}
 
+    private void fireLoad(CatalogModel model) {
+        for (IModelLoadListener listener : listeners) {
+            listener.loaded(model);
+        }
+    }
+
 	/**
 	 * Returns whether there is an active database connection.
 	 * 
@@ -1413,7 +1424,56 @@ public final class CnAElementFactory {
 	    return boModel;
 	}
 
-	/**
+	   public CatalogModel getCatalogModel() {
+	        synchronized(mutex) {
+	            if (catalogModel == null) {
+	                catalogModel = loadCatalogModel();
+	                if (catalogModel == null) {
+	                    createCatalogModel();
+	                }
+	            }
+	        }
+	        return catalogModel;
+	    }
+
+
+    private CatalogModel loadCatalogModel() {
+        CatalogModel model = null;
+        try {
+            LoadModel<CatalogModel> modelLoadCommand = new LoadModel<>(CatalogModel.class);
+            modelLoadCommand = getCommandService().executeCommand(modelLoadCommand);
+            model = modelLoadCommand.getModel();
+            if (model != null) {
+                fireLoad(model);
+            }
+        } catch (CommandException e) {
+            String msg = "Error loading Catalog Model";
+            log.error("Error loading Catalog Model", e);
+            throw new RuntimeException(msg, e);
+        }
+        return model;
+    }
+
+    private void createCatalogModel() {
+        try {
+            CreateCatalogModel modelCreationCommand = new CreateCatalogModel();
+            modelCreationCommand = getCommandService()
+                    .executeCommand(modelCreationCommand);
+            catalogModel = modelCreationCommand.getElement();
+
+            if (log.isInfoEnabled()) {
+                log.info("Catalog Model created"); //$NON-NLS-1$
+            }
+            if (catalogModel != null) {
+                fireLoad(catalogModel);
+            }
+
+        } catch (CommandException e) {
+            log.error(Messages.getString("CnAElementFactory.2"), e); //$NON-NLS-1$
+        }
+    }
+
+    /**
 	 * @return
 	 */
 	private ISO27KModel loadIsoModel() {

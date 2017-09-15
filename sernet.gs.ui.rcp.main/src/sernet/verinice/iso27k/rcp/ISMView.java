@@ -92,6 +92,7 @@ import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TagParameter;
 import sernet.verinice.model.common.TypeParameter;
@@ -321,6 +322,11 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 
                     @Override
                     public void loaded(BpModel model) {
+                        // nothing to do
+                    }
+
+                    @Override
+                    public void loaded(CatalogModel model) {
                         // nothing to do
                     }
 	                
