@@ -901,7 +901,7 @@ public class DAOFactory implements IDAOFactory {
     }
 
     @Override
-    public void setImportBpDao(IBaseDao<ImportBpGroup, Integer> daoToSet) {
+    public void setImportBpDAO(IBaseDao<ImportBpGroup, Integer> daoToSet) {
         daosByClass.put(ImportBpGroup.class, daoToSet);
         daosByTypeID.put(ImportBpGroup.TYPE_ID, daoToSet);        
     }

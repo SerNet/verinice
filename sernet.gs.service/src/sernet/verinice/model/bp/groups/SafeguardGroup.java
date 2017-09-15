@@ -53,11 +53,6 @@ public class SafeguardGroup extends Group<Safeguard> implements IBpGroup {
     }
     
     @Override
-    public boolean canContain(Object object) {
-        return object instanceof Safeguard || object instanceof SafeguardGroup;
-    }
-    
-    @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;
     }  

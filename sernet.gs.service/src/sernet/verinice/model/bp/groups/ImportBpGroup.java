@@ -80,11 +80,13 @@ public class ImportBpGroup extends Group<Organization> implements IBpGroup {
     }
     
     @Override
-    public boolean canContain(Object obj) {
-        if (obj instanceof ItNetwork ){
-            return true;
-        }
-        return false;
+    public boolean canContain(Object obj) {      
+        return isNotImportBpGroup(obj) && super.canContain(obj);
+    }
+
+    protected boolean isNotImportBpGroup(Object obj) {
+        CnATreeElement element = (CnATreeElement)obj;
+        return !(this.getTypeId().equals(element.getTypeId()));
     }
     
     @Override

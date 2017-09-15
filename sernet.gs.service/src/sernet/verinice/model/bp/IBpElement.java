@@ -25,5 +25,7 @@ package sernet.verinice.model.bp;
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
 public interface IBpElement {
+    public String getTypeId();
 
+    public String getTitle();
 }

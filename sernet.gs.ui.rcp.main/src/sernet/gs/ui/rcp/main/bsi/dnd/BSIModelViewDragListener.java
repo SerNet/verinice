@@ -26,11 +26,14 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionGroupTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinUmsetzungTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
+import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
@@ -74,19 +77,24 @@ public class BSIModelViewDragListener implements DragSourceListener {
 			event.doit = false;
 			return;	
 		}
-		List selectionList = new ArrayList(selection.size());
 		
-		for (Iterator iter = selection.iterator(); iter.hasNext();) {
-			Object o = iter.next();
-			selectionList.add(o);
-			if (!(o instanceof BausteinUmsetzung || o instanceof IBSIStrukturElement || o instanceof IISO27kElement || o instanceof IMassnahmeUmsetzung)
-				 || o instanceof ITVerbund) {
+		for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
+			if (!isDragableElement(iter.next())) {
 				event.doit = false;
 				return;	
 			}
 		}
 		event.doit = true;
 	}
+
+    protected boolean isDragableElement(Object element) {
+        return (element instanceof BausteinUmsetzung 
+                || element instanceof IBSIStrukturElement 
+                || element instanceof IISO27kElement 
+                || element instanceof IMassnahmeUmsetzung
+                || element instanceof IBpElement)
+                && !(element instanceof ITVerbund);
+    }
 	
 	/**
 	 * @param event
@@ -98,7 +106,9 @@ public class BSIModelViewDragListener implements DragSourceListener {
                 || IBSIStrukturElementTransfer.getInstance().isSupportedType(event.dataType)
                 || BausteinUmsetzungTransfer.getInstance().isSupportedType(event.dataType)
                 || ISO27kElementTransfer.getInstance().isSupportedType(event.dataType)
-                || ISO27kGroupTransfer.getInstance().isSupportedType(event.dataType));
+                || ISO27kGroupTransfer.getInstance().isSupportedType(event.dataType)
+                || BaseProtectionElementTransfer.getInstance().isSupportedType(event.dataType)
+                || BaseProtectionGroupTransfer.getInstance().isSupportedType(event.dataType));
 	}
 
 }

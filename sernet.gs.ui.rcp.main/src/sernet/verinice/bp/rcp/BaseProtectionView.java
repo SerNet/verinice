@@ -37,9 +37,9 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -50,16 +50,17 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.DrillDownAdapter;
 
-import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.Perspective;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
+import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionGroupTransfer;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
-import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -68,8 +69,11 @@ import sernet.verinice.iso27k.rcp.action.CollapseAction;
 import sernet.verinice.iso27k.rcp.action.ControlDropPerformer;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
+import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
+import sernet.verinice.model.bp.IBpModelListener;
+import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
@@ -88,6 +92,8 @@ public class BaseProtectionView extends RightsEnabledView
     
     private static final Logger LOG = Logger.getLogger(BaseProtectionView.class);
     
+    private static int operations = DND.DROP_COPY | DND.DROP_MOVE;
+    
     protected TreeViewer viewer;
     private TreeContentProvider contentProvider;
     private ElementManager elementManager;
@@ -102,9 +108,12 @@ public class BaseProtectionView extends RightsEnabledView
     
     private ShowBulkEditAction bulkEditAction;
     
-    private ExpandAction expandAction;
+    private MetaDropAdapter metaDropAdapter;
     
-    private CollapseAction collapseAction;
+    private ExpandAction expandAction; 
+    private Action expandAllAction; 
+    private CollapseAction collapseAction;   
+    private Action collapseAllAction;
     
     public static final String ID = "sernet.verinice.bp.rcp.BaseProtectionView"; //$NON-NLS-1$
     
@@ -125,7 +134,7 @@ public class BaseProtectionView extends RightsEnabledView
             startInitDataJob();
         } catch (Exception e) {
             LOG.error("Error while creating organization view", e); //$NON-NLS-1$
-            ExceptionUtil.log(e, Messages.ISMView_2);
+            ExceptionUtil.log(e, "Error while creating base protection view.");
         }
     }
 
@@ -157,7 +166,6 @@ public class BaseProtectionView extends RightsEnabledView
         
         contentProvider = new TreeContentProvider(elementManager);
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        viewer.setSorter(new ModITBViewerSorter());
         drillDownAdapter = new DrillDownAdapter(viewer);
         viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
         viewer.setContentProvider(contentProvider);
@@ -169,7 +177,7 @@ public class BaseProtectionView extends RightsEnabledView
         makeActions();
         addActions();
         fillToolBar();
-//        hookDNDListeners();
+        hookDndListeners();
         
 //        getSite().getPage().addPartListener(linkWithEditorPartListener);
         viewer.refresh(true);
@@ -180,16 +188,16 @@ public class BaseProtectionView extends RightsEnabledView
             LOG.debug("MotITBPview: startInitDataJob"); //$NON-NLS-1$
         }
         // TODO: create own job name, replace ism-constant
-        WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+        WorkspaceJob initDataJob = new WorkspaceJob("Loading data...") {
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 IStatus status = Status.OK_STATUS;
                 try {
-                    monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+                    monitor.beginTask("Loading data...", IProgressMonitor.UNKNOWN);
                     initData();
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.ISMView_4,e); //$NON-NLS-1$
+                    status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data",e);
                 } finally {
                     monitor.done();
                 }
@@ -273,7 +281,20 @@ public class BaseProtectionView extends RightsEnabledView
         getSite().registerContextMenu(menuMgr, viewer);
     }
     
-    
+    private void hookDndListeners() {
+        Transfer[] dragTypes = new Transfer[] { BaseProtectionElementTransfer.getInstance(),
+                                                BaseProtectionGroupTransfer.getInstance()
+                                              };
+        Transfer[] dropTypes = new Transfer[] { BaseProtectionElementTransfer.getInstance(),
+                                                BaseProtectionGroupTransfer.getInstance()
+                                              };
+        
+
+        viewer.addDragSupport(operations, dragTypes, new BSIModelViewDragListener(viewer));
+        viewer.addDropSupport(operations, dropTypes, metaDropAdapter);
+        
+    }
+     
     protected void fillContextMenu(IMenuManager manager) {
         ISelection selection = viewer.getSelection();
         if(selection instanceof IStructuredSelection && ((IStructuredSelection) selection).size()==1) {
@@ -313,14 +334,13 @@ public class BaseProtectionView extends RightsEnabledView
 //        manager.add(accessControlEditAction);
 //        manager.add(naturalizeAction);
 //        manager.add(new Separator());
-//        manager.add(expandAction);
-//        manager.add(collapseAction);
+        manager.add(expandAction);
+        manager.add(collapseAction);
         drillDownAdapter.addNavigationActions(manager); 
     }
     
     private void makeActions() {
-        ControlDropPerformer controlDropAdapter;
-        BSIModelViewDropListener bsiDropAdapter;
+        
         doubleClickAction = new Action() {
             @Override
             public void run() {
@@ -331,73 +351,49 @@ public class BaseProtectionView extends RightsEnabledView
             }
         };
         
-        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_6);
-    
-        // TODO: remove comments
+        makeExpandAndCollapseActions();
+     
+        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), "Bulk edit...");
+        
+        
+        BSIModelViewDropListener bsiDropAdapter;
+        metaDropAdapter = new MetaDropAdapter(viewer);
+        bsiDropAdapter = new BSIModelViewDropListener(viewer);
+        metaDropAdapter.addAdapter(bsiDropAdapter);
+
+    }
+
+
+    protected void makeExpandAndCollapseActions() {
         expandAction = new ExpandAction(viewer, contentProvider);
-        expandAction.setText(Messages.ISMView_7);
+        expandAction.setText("Expand children");
         expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
-
+        
         collapseAction = new CollapseAction(viewer);
-        collapseAction.setText(Messages.ISMView_8);
+        collapseAction.setText("Collapse chilren");
         collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
-    
-//        expandAllAction = new Action() {
-//            @Override
-//            public void run() {
-//                expandAll();
-//            }
-//        };
-//        expandAllAction.setText(Messages.ISMView_9);
-//        expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
-//
-//        collapseAllAction = new Action() {
-//            @Override
-//            public void run() {
-//                viewer.collapseAll();
-//            }
-//        };
-//        collapseAllAction.setText(Messages.ISMView_10);
-//        collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
         
-//        HideEmptyFilter hideEmptyFilter = createHideEmptyFilter();
-//        TypeParameter typeParameter = createTypeParameter();
-//        TagParameter tagParameter = new TagParameter();
-//        filterAction = new ISMViewFilter(viewer,
-//                Messages.ISMView_12,
-//                tagParameter,
-//                hideEmptyFilter,
-//                typeParameter);    
-       
-//        elementManager.addParameter(tagParameter);
-//        if(typeParameter!=null) {
-//            elementManager.addParameter(typeParameter);
-//        }   
-        
-//        metaDropAdapter = new MetaDropAdapter(viewer);
-//        controlDropAdapter = new ControlDropPerformer(viewer);
-//        bsiDropAdapter = new BSIModelViewDropListener(viewer);
-//        BSIModelDropPerformer bsi2IsmDropAdapter = new BSIModelDropPerformer(viewer);
-//        FileDropPerformer fileDropPerformer = new FileDropPerformer(viewer);
-//        metaDropAdapter.addAdapter(controlDropAdapter);
-//        metaDropAdapter.addAdapter(bsiDropAdapter); 
-//        
-//        metaDropAdapter.addAdapter(bsi2IsmDropAdapter);
-//        metaDropAdapter.addAdapter(fileDropPerformer); 
-//        
-//        accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_11);
-//        
-//        naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
-//        
-//        linkWithEditorAction = new Action(Messages.ISMView_5, IAction.AS_CHECK_BOX) {
-//            @Override
-//            public void run() {
-//                toggleLinking(isChecked());
-//            }
-//        };
-//        linkWithEditorAction.setChecked(isLinkingActive());
-//        linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
+        expandAllAction = new Action() {
+            @Override
+            public void run() {
+                expandAll();
+            }
+        };
+        expandAllAction.setText("Expand all");
+        expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
+        collapseAllAction = new Action() {
+            @Override
+            public void run() {
+                viewer.collapseAll();
+            }
+        };
+        collapseAllAction.setText("Collapse all");
+        collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
+    }
+    
+    protected void expandAll() {
+        viewer.expandAll();
     }
     
     /**
@@ -435,8 +431,8 @@ public class BaseProtectionView extends RightsEnabledView
     protected void fillToolBar() {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
-//        manager.add(expandAllAction);
-//        manager.add(collapseAllAction);
+        manager.add(expandAllAction);
+        manager.add(collapseAllAction);
         drillDownAdapter.addNavigationActions(manager);
 //        manager.add(filterAction);
 //        manager.add(linkWithEditorAction);
@@ -468,44 +464,6 @@ public class BaseProtectionView extends RightsEnabledView
         CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
 //        getSite().getPage().removePartListener(linkWithEditorPartListener);
         super.dispose();
-    }
-    
-    class ModITBViewerSorter extends ViewerSorter{
-        
-        NumericStringComparator comp = new NumericStringComparator();
-        
-        @Override
-        public int compare(Viewer viewer, Object e1, Object e2) {
-            
-            int result = 0;
-            
-            if (e1 instanceof CnATreeElement && e2 instanceof CnATreeElement) {
-                
-                CnATreeElement element1 = (CnATreeElement)e1;
-                CnATreeElement element2 = (CnATreeElement)e2;
-
-                if(element1.getTypeId().equals(NetworkGroup.TYPE_ID) ||
-                        element2.getTypeId().equals(NetworkGroup.TYPE_ID)) {
-                    "".hashCode();
-                    
-                }
-                          
-                
-                if( result == 0) {
-                    String message1 = HUITypeFactory.getInstance().getMessage(element1.getTypeId());
-                    String message2 = HUITypeFactory.getInstance().getMessage(element2.getTypeId());
-                    result = comp.compare(message1, message2);
-                }
-                
-
-                if(result == 0) {
-                    result = comp.compare(element1.getTitle(), element2.getTitle());
-                }
-            }
-           
-            return result;
-            
-        }
     }
     
 

@@ -42,6 +42,7 @@ public class ItNetwork extends CnATreeElement implements IBpElement  {
     private static final long serialVersionUID = -542743048413632420L;
        
     public static final String TYPE_ID = "bp_itnetwork"; //$NON-NLS-1$
+    public static final String PROP_NAME = "bp_itnetwork_name"; //$NON-NLS-1$
     
     private static final String PROP_NAME = "bp_itnetwork_name";
     
@@ -64,6 +65,16 @@ public class ItNetwork extends CnATreeElement implements IBpElement  {
         addChild(new NetworkGroup(this));
         addChild(new RoomGroup(this));
         addChild(new SafeguardGroup(this));
+    }
+    
+    @Override
+    public String getTitle() {
+        return getEntity().getPropertyValue(PROP_NAME);
+    }
+    
+    @Override
+    public void setTitel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
 
     @Override

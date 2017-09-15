@@ -40,6 +40,7 @@ public class BpPersonGroup extends Group<BpPerson> implements IBpGroup {
     
     public BpPersonGroup(CnATreeElement parent) {
         super(parent);
+        init();
     }
 
     @Override

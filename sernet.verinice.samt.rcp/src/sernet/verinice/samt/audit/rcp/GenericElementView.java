@@ -166,7 +166,7 @@ public class GenericElementView extends ElementView {
     public void switchElement(String objectTypeId) {
         if (commandMap.get(objectTypeId) != null) {
             setCommandFactory(commandMap.get(objectTypeId));
-            setIcon(ImageCache.getInstance().getISO27kTypeImage(objectTypeId));
+            setIcon(ImageCache.getInstance().getImageForTypeId(objectTypeId));
             reload();
             String title = HitroUtil.getInstance().getTypeFactory().getMessage(objectTypeId);
             setViewTitle(title);

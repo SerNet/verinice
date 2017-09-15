@@ -26,7 +26,7 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public interface IBpGroup {
+public interface IBpGroup extends IBpElement {
 
     boolean canContain(Object obj);
     

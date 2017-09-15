@@ -46,6 +46,20 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.CnATreeElementBuildException;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.IBpGroup;
+import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bp.groups.BpThreatGroup;
+import sernet.verinice.model.bp.groups.BusinessProcessGroup;
+import sernet.verinice.model.bp.groups.DeviceGroup;
+import sernet.verinice.model.bp.groups.IcsSystemGroup;
+import sernet.verinice.model.bp.groups.ItSystemGroup;
+import sernet.verinice.model.bp.groups.NetworkGroup;
+import sernet.verinice.model.bp.groups.RoomGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
@@ -57,6 +71,7 @@ import sernet.verinice.model.iso27k.DocumentGroup;
 import sernet.verinice.model.iso27k.EvidenceGroup;
 import sernet.verinice.model.iso27k.ExceptionGroup;
 import sernet.verinice.model.iso27k.FindingGroup;
+import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.IncidentGroup;
 import sernet.verinice.model.iso27k.IncidentScenarioGroup;
@@ -71,16 +86,19 @@ import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.rcp.RightsEnabledHandler;
 
 /**
- * @author Daniel Murygin <dm[at]sernet[dot]de>
+ * THis handler creates new groups for ISO2700 and base protection
+ * elements. 
  * 
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class AddGroupHandler extends RightsEnabledHandler implements IElementUpdater {
 	private static final Logger LOG = Logger.getLogger(AddGroupHandler.class);
 	
-	public static final Map<String, String> TITLE_FOR_TYPE;
+	protected static final Map<String, String> TITLE_FOR_TYPE;
 	
 	static {
-        TITLE_FOR_TYPE = new HashMap<String, String>();
+        TITLE_FOR_TYPE = new HashMap<>();
+        // ISO27000 
         TITLE_FOR_TYPE.put(AssetGroup.TYPE_ID, Messages.getString("AddGroup.0")); //$NON-NLS-1$
         TITLE_FOR_TYPE.put(AuditGroup.TYPE_ID, Messages.getString("AddGroup.1")); //$NON-NLS-1$
         TITLE_FOR_TYPE.put(ControlGroup.TYPE_ID, Messages.getString("AddGroup.2")); //$NON-NLS-1$
@@ -99,10 +117,21 @@ public class AddGroupHandler extends RightsEnabledHandler implements IElementUpd
         TITLE_FOR_TYPE.put(ThreatGroup.TYPE_ID, Messages.getString("AddGroup.15")); //$NON-NLS-1$
         TITLE_FOR_TYPE.put(VulnerabilityGroup.TYPE_ID, Messages.getString("AddGroup.16")); //$NON-NLS-1$
         TITLE_FOR_TYPE.put(Asset.TYPE_ID, Messages.getString("AddGroup.17")); //$NON-NLS-1$
-        
+        // Base protection
+        TITLE_FOR_TYPE.put(ApplicationGroup.TYPE_ID, Messages.getString("AddGroupHandler.application")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(BpPersonGroup.TYPE_ID, Messages.getString("AddGroupHandler.group")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(BpRequirementGroup.TYPE_ID, Messages.getString("AddGroupHandler.requirement")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(BpThreatGroup.TYPE_ID, Messages.getString("AddGroupHandler.threat")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(BusinessProcessGroup.TYPE_ID, Messages.getString("AddGroupHandler.business_process")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(DeviceGroup.TYPE_ID, Messages.getString("AddGroupHandler.device")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(IcsSystemGroup.TYPE_ID, Messages.getString("AddGroupHandler.ics_system")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(ItSystemGroup.TYPE_ID, Messages.getString("AddGroupHandler.it_system")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(NetworkGroup.TYPE_ID, Messages.getString("AddGroupHandler.network")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(RoomGroup.TYPE_ID, Messages.getString("AddGroupHandler.room")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(SafeguardGroup.TYPE_ID, Messages.getString("AddGroupHandler.safeguard")); //$NON-NLS-1$  
     }
 	
-	private IISO27kGroup parent;
+	private CnATreeElement parent;
     
     private String typeId;
 	
@@ -117,31 +146,10 @@ public class AddGroupHandler extends RightsEnabledHandler implements IElementUpd
     public Object execute(ExecutionEvent event) throws ExecutionException {
         try {
             if(checkRights()){
-                final IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);         
-                Object sel = selection.getFirstElement();
-                if(sel instanceof IISO27kGroup) {
-                    parent = (IISO27kGroup) sel;
-                }
-                          
-                CnATreeElement newElement = null;
-                if( parent != null) {          
-                    String currentType = this.typeId;
-                    if(currentType==null) {
-                        // child groups have the same type as parents
-                        currentType = parent.getTypeId();
-                        if(parent instanceof Asset) {
-                            currentType = ControlGroup.TYPE_ID;
-                        }
-                    }
-                    boolean inheritIcon = Activator.getDefault().getPreferenceStore()
-                            .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);
-                    newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) parent, currentType, null, inheritIcon);       
-                }
-                if (newElement != null) {
-                    EditorFactory.getInstance().openEditor(newElement);
-                }
+                parent = getSelectedElement(event);                       
+                createGroup();
             } else {
-                throw new NotSufficientRightsException("Action not allowed for user");
+                throw new NotSufficientRightsException("Action not allowed for user"); //$NON-NLS-1$
             }
         } catch (NotSufficientRightsException e){
             LOG.error("Could not add element", e); //$NON-NLS-1$
@@ -152,39 +160,82 @@ public class AddGroupHandler extends RightsEnabledHandler implements IElementUpd
         }
         return null;
     }
+
+    protected void createGroup() throws CommandException, CnATreeElementBuildException {
+        CnATreeElement newGroup = null;
+        if( parent != null) {          
+            String groupTypeId = this.typeId;
+            if(groupTypeId==null) {
+                // child groups have the same type as parents
+                groupTypeId = parent.getTypeId();
+                if(parent instanceof Asset) {
+                    groupTypeId = ControlGroup.TYPE_ID;
+                }
+            }
+            boolean inheritIcon = Activator.getDefault().getPreferenceStore()
+                    .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);
+            newGroup = CnAElementFactory.getInstance().saveNew((CnATreeElement) parent, groupTypeId, null, inheritIcon);       
+        }
+        if (newGroup != null) {
+            EditorFactory.getInstance().openEditor(newGroup);
+        }
+    }
+
+    protected CnATreeElement getSelectedElement(ExecutionEvent event) {
+        CnATreeElement element = null;
+        final IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);         
+        Object sel = selection.getFirstElement();
+        if(sel instanceof IISO27kGroup || sel instanceof IBpGroup) {
+            element = (CnATreeElement) sel;
+        }
+        return element;
+    }
     
     /* (non-Javadoc)
      * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
      */
+    @SuppressWarnings("rawtypes")
     @Override
     public void updateElement(UIElement menu, Map arg1) {
+        CnATreeElement selectedElement = getSelectedElement();
+        if(selectedElement!=null) {
+            configureMenu(menu, selectedElement);
+        }    
+    }
+    
+    private void configureMenu(UIElement menu, CnATreeElement selectedElement) {
+        boolean allowed = CnAElementHome.getInstance().isNewChildAllowed(selectedElement);
+        boolean enabled = false;         
+        if(selectedElement instanceof Audit) {
+            enabled = false;
+            menu.setText(Messages.getString("AddGroup.19")); //$NON-NLS-1$
+        } else if(selectedElement instanceof Group<?>) {
+            enabled = true;
+            Group<?> group = (Group<?>) selectedElement;
+            String childTypeId = group.getChildTypes()[0];
+            if(selectedElement instanceof Asset) {
+                childTypeId = Control.TYPE_ID;
+            }
+            menu.setIcon(ImageDescriptor.createFromImage(ImageCache.getInstance().getImageForTypeId(childTypeId)));   
+            menu.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.getString("AddGroup.19") ); //$NON-NLS-1$
+        } 
+        // Only change state when it is enabled, since we do not want to
+        // trash the enablement settings of plugin.xml
+        if (this.isEnabled()) {
+            this.setEnabled(allowed && enabled);
+        }     
+    }
+
+    private CnATreeElement getSelectedElement() {
+        CnATreeElement element = null;
         ISelection selection = getSelection();
         if(selection instanceof IStructuredSelection) {
             Object sel = ((IStructuredSelection) selection).getFirstElement();
-            boolean allowed = false;
-            boolean enabled = false;
             if (sel instanceof CnATreeElement) {
-                allowed = CnAElementHome.getInstance().isNewChildAllowed((CnATreeElement) sel);
-            }
-            if(sel instanceof Audit) {
-                enabled = false;
-                menu.setText(Messages.getString("AddGroup.19"));
-            } else if(sel instanceof IISO27kGroup) {
-                enabled = true;
-                IISO27kGroup group = (IISO27kGroup) sel;
-                String typeId0 = group.getChildTypes()[0];
-                if(group instanceof Asset) {
-                    typeId0 = Control.TYPE_ID;
-                }
-                menu.setIcon(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(typeId0)));   
-                menu.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.getString("AddGroup.19") ); //$NON-NLS-1$
-            }
-            // Only change state when it is enabled, since we do not want to
-            // trash the enablement settings of plugin.xml
-            if (this.isEnabled()) {
-                this.setEnabled(allowed && enabled);
+                element = (CnATreeElement) sel;
             }
         }
+        return element;
     }
 
     public ISelection getSelection() {
@@ -192,8 +243,7 @@ public class AddGroupHandler extends RightsEnabledHandler implements IElementUpd
         IWorkbench workbench = activator.getWorkbench();
         IWorkbenchWindow workbenchWindow = workbench.getActiveWorkbenchWindow();
         ISelectionService selectionService = workbenchWindow.getSelectionService();
-        ISelection selection = selectionService.getSelection();
-        return selection;
+        return selectionService.getSelection();
     }
     
 

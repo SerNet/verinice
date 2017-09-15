@@ -491,7 +491,7 @@ public interface IDAOFactory {
 	
 	void setImportBsiDAO(IBaseDao<ImportBsiGroup, Integer> daoToSet);
 	
-	void setImportBpDao(IBaseDao<ImportBpGroup, Integer> daoToSet);
+	void setImportBpDAO(IBaseDao<ImportBpGroup, Integer> daoToSet);
 	
 	void setApplicationDAO(IBaseDao<Application, Integer> daoToSet);
 	

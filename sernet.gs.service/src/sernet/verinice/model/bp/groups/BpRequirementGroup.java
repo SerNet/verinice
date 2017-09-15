@@ -19,15 +19,12 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.groups;
 
-import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 
 /**
- * 
- * this represents the ITBP Module
  * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
@@ -36,6 +33,7 @@ public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup
     private static final long serialVersionUID = 7752776589962581995L;
     
     public static final String TYPE_ID = "bp_requirement_group";
+    public static final String PROP_NAME = "bp_requirement_group_name"; //$NON-NLS-1$
     
     private static final String PROP_DESC = "bp_requirement_group_desc"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_requirement_group_id"; //$NON-NLS-1$
@@ -48,20 +46,22 @@ public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup
     
     public BpRequirementGroup(CnATreeElement parent) {
         super(parent);
-        setEntity(new Entity(TYPE_ID));
-        getEntity().initDefaultValues(getTypeFactory());
-        // sets the localized title via HUITypeFactory from message bundle
-        setTitel(getTypeFactory().getMessage(TYPE_ID));
+        init();
+    }
+    
+    @Override
+    public String getTitle() {
+        return getEntity().getPropertyValue(PROP_NAME);
+    }
+    
+    @Override
+    public void setTitel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
 
     @Override
     public String getTypeId() {
         return TYPE_ID;
-    }
-    
-    @Override
-    public boolean canContain(Object object) {
-        return object instanceof BpRequirement;
     }
     
     @Override

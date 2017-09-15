@@ -49,7 +49,7 @@ public class SwitchElementAction extends Action {
         this.objectTypeId = typeId;
         String title = HitroUtil.getInstance().getTypeFactory().getMessage(typeId);
         setText(title);
-        setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(objectTypeId)));
+        setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getImageForTypeId(objectTypeId)));
     }
 
     /*

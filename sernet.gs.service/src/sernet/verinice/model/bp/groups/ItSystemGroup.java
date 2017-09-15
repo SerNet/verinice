@@ -40,16 +40,12 @@ public class ItSystemGroup extends Group<ItSystem> implements IBpGroup {
     
     public ItSystemGroup(CnATreeElement parent) {
         super(parent);
+        init();
     }
 
     @Override
     public String getTypeId() {
         return TYPE_ID;
-    }
-    
-    @Override
-    public boolean canContain(Object object) {
-        return object instanceof ItSystem;
     }
     
     @Override

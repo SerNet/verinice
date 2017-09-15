@@ -40,16 +40,12 @@ public class DeviceGroup extends Group<Device> implements IBpGroup {
     
     public DeviceGroup(CnATreeElement parent) {
         super(parent);
+        init();
     }
 
     @Override
     public String getTypeId() {
         return TYPE_ID;
-    }
-
-    @Override
-    public boolean canContain(Object object) {
-        return object instanceof Device;
     }
     
     @Override

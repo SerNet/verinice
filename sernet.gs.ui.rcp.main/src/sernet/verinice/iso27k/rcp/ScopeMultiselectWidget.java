@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Composite;
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
@@ -53,6 +54,7 @@ public class ScopeMultiselectWidget extends MultiselectWidget<CnATreeElement> {
         Set<Class<?>> elementClasses = new HashSet<>();
         elementClasses.add(Organization.class);
         elementClasses.add(ITVerbund.class);
+        elementClasses.add(ItNetwork.class);
         return elementClasses;
     }
 

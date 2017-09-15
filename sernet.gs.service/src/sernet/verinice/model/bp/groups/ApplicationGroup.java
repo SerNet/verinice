@@ -33,6 +33,7 @@ public class ApplicationGroup extends Group<Application> implements IBpGroup {
     private static final long serialVersionUID = -6856197006068953402L;
 
     public static final String TYPE_ID = "bp_application_group";
+    public static final String PROP_NAME = "bp_application_group_name"; //$NON-NLS-1$
     
     public static final String[] CHILD_TYPES = new String[] {Application.TYPE_ID};
     
@@ -40,6 +41,17 @@ public class ApplicationGroup extends Group<Application> implements IBpGroup {
     
     public ApplicationGroup(CnATreeElement parent) {
         super(parent);
+        init();
+    }
+    
+    @Override
+    public String getTitle() {
+        return getEntity().getPropertyValue(PROP_NAME);
+    }
+    
+    @Override
+    public void setTitel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
     
     @Override

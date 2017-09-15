@@ -77,11 +77,11 @@ public class MetaDropAdapter extends ViewerDropAdapter {
     				if(adapter.performDrop(data, getCurrentTarget(), getViewer())) {
     					success = true;
     					if (LOG.isDebugEnabled()) {
-    						LOG.debug("performDrop, success: " + adapter);
+    						LOG.debug("performDrop, success: " + adapter.getClass().getName());
     					}
     				}
     			} else if (LOG.isDebugEnabled()) {
-    				LOG.debug("performDrop, adapter is not active: " + adapter);
+    				LOG.debug("performDrop, adapter is not active: " + adapter.getClass().getName());
     			}
     		}
 		} catch( RuntimeException e ) {

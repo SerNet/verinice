@@ -272,7 +272,8 @@ This variant:
 
         <!-- Miscellaneous DAOs -->
         <property name="importIsoDAO" ref="importIsoDAO" /> 
-        <property name="importBsiDAO" ref="importBsiDAO" />   
+        <property name="importBsiDAO" ref="importBsiDAO" />  
+        <property name="importBpDAO" ref="importBpDAO" />   
         <property name="elementEntityDao" ref="elementEntityDao" /> 
         
         <!-- unsecure daos (does not respect access rights or scope only restrictions -->

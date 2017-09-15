@@ -40,16 +40,12 @@ public class RoomGroup extends Group<Room> implements IBpGroup {
     
     public RoomGroup(CnATreeElement parent) {
         super(parent);
+        init();
     }
 
     @Override
     public String getTypeId() {
         return TYPE_ID;
-    }
-    
-    @Override
-    public boolean canContain(Object object) {
-        return object instanceof Room;
     }
     
     @Override

@@ -34,6 +34,7 @@ import sernet.verinice.interfaces.CnATreeElementBuildException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IProgress;
+import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bp.elements.BpPerson;
@@ -165,11 +166,11 @@ public final class CnAElementFactory {
 	
 	private Object mutex = new Object();
 	
-	private static List<IModelLoadListener> listeners = new CopyOnWriteArrayList<IModelLoadListener>();
+	private static List<IModelLoadListener> listeners = new CopyOnWriteArrayList<>();
 
 	private static volatile CnAElementFactory instance;
 
-	private Map<String, IElementBuilder> elementbuilders = new HashMap<String, IElementBuilder>();
+	private Map<String, IElementBuilder> elementbuilders = new HashMap<>();
 
 	private CnAElementHome dbHome;
 
@@ -502,10 +503,9 @@ public final class CnAElementFactory {
 							BuildInput<Baustein> input) throws CommandException {
 
 						if (input == null) {
-							BausteinUmsetzung child = dbHome.save(container,
+						    return dbHome.save(container,
 									BausteinUmsetzung.class,
 									BausteinUmsetzung.TYPE_ID);
-							return child;
 						} else {
 							BausteinUmsetzung bu = dbHome.save(container, input.getInput());
 							container.addChild(bu);
@@ -1190,7 +1190,7 @@ public final class CnAElementFactory {
 			boolean createChildren, boolean fireUpdates) throws CommandException {
 		String title = HitroUtil.getInstance().getTypeFactory()
 				.getMessage(Organization.TYPE_ID);
-		CreateElement<Organization> saveCommand = new CreateElement<Organization>(
+		CreateElement<Organization> saveCommand = new CreateElement<>(
 				container, Organization.class, title, false, createChildren);
 		saveCommand = getCommandService().executeCommand(saveCommand);
 		CnATreeElement child = saveCommand.getNewElement();
@@ -1284,7 +1284,7 @@ public final class CnAElementFactory {
 		        Audit.TYPE_ID.equals(containerTypeId))){
             child.setIconPath(iconPath);
             Activator.inheritVeriniceContextState();
-            UpdateElement<CnATreeElement> updateCommand = new UpdateElement<CnATreeElement>(child, false, ChangeLogEntry.STATION_ID);
+            UpdateElement<CnATreeElement> updateCommand = new UpdateElement<>(child, false, ChangeLogEntry.STATION_ID);
             getCommandService().executeCommand(updateCommand);
             if(log.isDebugEnabled()){
                 log.debug("IconPath of containerElement:\t" + iconPath);
@@ -1383,7 +1383,9 @@ public final class CnAElementFactory {
 		CnATreeElement model = null;
 		if (element instanceof ISO27KModel || element instanceof IISO27kElement) {
 			model = CnAElementFactory.getInstance().getISO27kModel();
-		} else {
+		} else if (element instanceof BpModel || element instanceof IBpElement) {
+            model = CnAElementFactory.getInstance().getBpModel();
+        } else {
 			model = CnAElementFactory.getLoadedModel();
 		}
 		return model;
@@ -1462,7 +1464,6 @@ public final class CnAElementFactory {
 	            fireLoad(model);
 	        }
 	    } catch (CommandException e) {
-	        // TODO internationalize
 	        log.error("Error loading model for modernized ITBP", e);
 	        throw new RuntimeException("Error loading model for modernized ITBP", e);
 	    }
@@ -1521,7 +1522,7 @@ public final class CnAElementFactory {
 	private void createBausteinVorschlaege() {
 		SubtypenZielobjekte mapping = new SubtypenZielobjekte();
 		List<BausteinVorschlag> list = mapping.getMapping();
-		UpdateMultipleElements<BausteinVorschlag> command = new UpdateMultipleElements<BausteinVorschlag>(
+		UpdateMultipleElements<BausteinVorschlag> command = new UpdateMultipleElements<>(
 				list, ChangeLogEntry.STATION_ID, ChangeLogEntry.TYPE_INSERT);
 		try {
 			ServiceFactory.lookupCommandService().executeCommand(

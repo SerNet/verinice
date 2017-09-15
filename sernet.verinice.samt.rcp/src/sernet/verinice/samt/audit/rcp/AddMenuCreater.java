@@ -70,10 +70,10 @@ public class AddMenuCreater implements IViewActionDelegate, IMenuCreator, ISelec
             // this is not a typo: "groupId"
             String title = AddElement.TITLE_FOR_TYPE.get(groupId);
             addElementAction = new AddAction(typeId, title, groupView);
-            addElementAction.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(typeId)));
+            addElementAction.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getImageForTypeId(typeId)));
             title = AddGroup.TITLE_FOR_TYPE.get(groupId);
             addGroupAction = new AddAction(groupId, title, groupView);
-            addGroupAction.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(groupId))); 
+            addGroupAction.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getImageForTypeId(groupId))); 
             view.getSite().getPage().addPostSelectionListener(this);
         }       
     }

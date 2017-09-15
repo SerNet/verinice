@@ -372,7 +372,6 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 		
 		bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_6);
 	
-		// TODO: remove comments
 		expandAction = new ExpandAction(viewer, contentProvider);
 		expandAction.setText(Messages.ISMView_7);
 		expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));

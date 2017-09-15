@@ -9120,6 +9120,10 @@ Wurden bereits weitere Stellen informiert?
     </huientity>
 
     <huientity id="bp_application" name="Application">
+      
+         <huirelation to="bp_itsystem" id="rel_bp_application_bp_itsystem" 
+            name="runs on" reversename="hosts" tooltip="One application may be run on a IT system."/>
+    
         <huiproperty id="bp_application_name" name="Title" required="true" />
         <huiproperty id="bp_application_abbr" name="Abbreviation" />
         <huiproperty id="bp_application_tag" name="Tags"
@@ -9351,6 +9355,10 @@ Wurden bereits weitere Stellen informiert?
     </huientity>
 
     <huientity id="bp_icssystem" name="ICS System">
+    
+         <huirelation to="bp_network" id="rel_bp_icssystem_bp_network" 
+            name="connected to" reversename="connects" tooltip="One ICS system may be connected to a network."/>
+    
         <huiproperty id="bp_icssystem_name" name="Title" required="true" />
         <huiproperty id="bp_icssystem_abbr" name="Abbreviation" />
         <huiproperty id="bp_icssystem_tag" name="Tags"
@@ -9462,6 +9470,9 @@ Wurden bereits weitere Stellen informiert?
     </huientity>
 
     <huientity id="bp_itsystem" name="IT System">
+         <huirelation to="bp_network" id="rel_bp_itsystem_bp_network" 
+            name="connected to" reversename="connects" tooltip="One IT system may be connected to a network."/>
+        
         <huiproperty id="bp_itsystem_name" name="Title" required="true" />
         <huiproperty id="bp_itsystem_abbr" name="Abbreviation" />
         <huiproperty id="bp_itsystem_tag" name="Tags"
@@ -9573,6 +9584,26 @@ Wurden bereits weitere Stellen informiert?
     </huientity>
 
     <huientity id="bp_person" name="Person">
+    
+        <huirelation to="bp_itnetwork" id="rel_bp_person_bp_itnetwork_ceo"
+            name="CEO of" reversename="CEO" tooltip="" />
+        <huirelation to="bp_itnetwork" id="rel_bp_person_bp_itnetwork_cto"
+            name="CTO of" reversename="CTO" tooltip="" />
+        <huirelation to="bp_itnetwork" id="rel_bp_person_bp_itnetwork_ciso"
+            name="CISO of" reversename="CISO" tooltip="" />
+        <huirelation to="bp_itnetwork" id="rel_bp_person_bp_itnetwork_dpo"
+            name="DPO of" reversename="DPO" tooltip="" />
+        <huirelation to="bp_itsystem" id="rel_bp_person_bp_itsystem" 
+            name="responsible for" reversename="responsible" tooltip="A person may be responsible for an IT system."/>        
+        <huirelation to="bp_icssystem" id="rel_bp_person_bp_icssystem" 
+            name="responsible for" reversename="responsible" tooltip="A person may be responsible for an ICS system."/>
+        <huirelation to="bp_application" id="rel_bp_person_bp_application_responsible" 
+            name="responsible for" reversename="responsible" tooltip="A person may be responsible for an application."/>
+        <huirelation to="bp_application" id="rel_bp_person_bp_application_user" 
+            name="uses" reversename="used by" tooltip="A person may use an application."/>
+        <huirelation to="bp_network" id="rel_bp_person_bp_network" 
+            name="responsible for" reversename="responsible" tooltip="A person may be responsible for a network."/>            
+                
         <huiproperty id="bp_person_first_name" name="First name" />
         <huiproperty id="bp_person_last_name" name="Last name" required="true"/>
         <huiproperty id="bp_person_phone" name="Phone"/>

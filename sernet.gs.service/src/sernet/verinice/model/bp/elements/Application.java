@@ -30,13 +30,24 @@ public class Application extends CnATreeElement implements IBpElement {
 
     private static final long serialVersionUID = -2569916837421863187L;
     
-    public static final String TYPE_ID = "bp_application"; //$NON-NLS-1$
+    public static final String TYPE_ID = "bp_application"; //$NON-NLS-1$   
+    public static final String PROP_NAME = "bp_application_name"; //$NON-NLS-1$
     
     protected Application() {}
 
     public Application(CnATreeElement parent) {
         super(parent);
         init();
+    }
+    
+    @Override
+    public String getTitle() {
+        return getEntity().getPropertyValue(PROP_NAME);
+    }
+    
+    @Override
+    public void setTitel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
   
     @Override

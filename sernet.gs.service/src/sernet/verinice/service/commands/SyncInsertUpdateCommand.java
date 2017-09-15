@@ -50,6 +50,9 @@ import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IRightsService;
+import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BSIModel;
@@ -69,6 +72,7 @@ import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.service.bp.LoadBpModel;
 import sernet.verinice.service.iso27k.LoadImportObjectsHolder;
 import sernet.verinice.service.iso27k.LoadModel;
 import sernet.verinice.service.sync.IVeriniceArchive;
@@ -895,6 +899,8 @@ public class SyncInsertUpdateCommand extends GenericCommand
             return createBsiContainer();
         } else if (BausteinUmsetzung.class.equals(clazz)) {
             return createBsiContainer();
+        } else if (LoadImportObjectsHolder.isImplementation(clazz, IBpElement.class)) {
+            return createBaseProtectionContainer();
         } else {
             return createIsoContainer();
         }
@@ -934,6 +940,26 @@ public class SyncInsertUpdateCommand extends GenericCommand
             addPermissions(importGroup);
             addPermissions(importGroup, IRightsService.USERDEFAULTGROUPNAME);
             getDao(ImportIsoGroup.class).saveOrUpdate(importGroup);
+        } catch (Exception e1) {
+            handleCreateContainerException(e1);
+        }
+        return importGroup;
+    }
+    
+    private CnATreeElement createBaseProtectionContainer() {
+        LoadBpModel cmdLoadModel = new LoadBpModel();
+        try {
+            cmdLoadModel = getCommandService().executeCommand(cmdLoadModel);
+        } catch (CommandException e) {
+            handleCreateContainerException(e);
+        }
+        BpModel model = cmdLoadModel.getModel();
+        ImportBpGroup importGroup = null;
+        try {
+            importGroup = new ImportBpGroup(model);
+            addPermissions(importGroup);
+            addPermissions(importGroup, IRightsService.USERDEFAULTGROUPNAME);
+            getDao(ImportBpGroup.class).saveOrUpdate(importGroup);
         } catch (Exception e1) {
             handleCreateContainerException(e1);
         }

@@ -37,6 +37,7 @@ import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ItemTransfer;
+import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
@@ -57,19 +58,11 @@ public final class DNDHelper {
                                              IBSIStrukturElement.class,
                                              IISO27kElement.class,
                                              IMassnahmeUmsetzung.class,
-                                             Item.class};
-    
-    private static Class<?> transferClasses[] = new Class[]{ BausteinElementTransfer.class,
-                                                             BausteinUmsetzungTransfer.class,
-                                                             IBSIStrukturElementTransfer.class,
-                                                             ISO27kElementTransfer.class,
-                                                             ISO27kGroupTransfer.class,
-                                                             ItemTransfer.class,
-                                                             IGSModelElementTransfer.class
-                                                };
+                                             Item.class,
+                                             IBpElement.class};
+   
     
     private static final String STD_ERR_MSG = "Error while casting dnd list";
-    private static final String ERR_MSG = "Error:";
     
     private DNDHelper(){}
     
@@ -99,7 +92,6 @@ public final class DNDHelper {
      * @return an array instance of specific type or if source contains multiple types an empty array.
      */
     public static Object[] castDataArray(Object[] source){
-        List<?> dest = null;
         Class<?> type = Object.class;
         for(Class<?> c : classes){
             if(source.length > 0 && c.isInstance(source[0])){
@@ -107,22 +99,12 @@ public final class DNDHelper {
                 break;
             }
         }
-        dest = createListOfType(type);
+        List<Object> dest = new ArrayList<>();
         for(Object o : source){
             if(type.isInstance(o)){
-                Method m;
-                try {
-                    m = dest.getClass().getDeclaredMethod("add", new Class[]{Object.class});
-                    m.invoke(dest, type.cast(o));
+                try {             
+                    dest.add(type.cast(o));                 
                 } catch (SecurityException e) {
-                    LOG.error(STD_ERR_MSG, e);
-                } catch (NoSuchMethodException e) {
-                    LOG.error(STD_ERR_MSG, e);
-                } catch (IllegalArgumentException e) {
-                    LOG.error(STD_ERR_MSG, e);
-                } catch (IllegalAccessException e) {
-                    LOG.error(STD_ERR_MSG, e);
-                } catch (InvocationTargetException e) {
                     LOG.error(STD_ERR_MSG, e);
                 }
             } else {
@@ -133,38 +115,6 @@ public final class DNDHelper {
 
         return dest.toArray((Object[])Array.newInstance(type, dest.size()));
     }
-    
-    private static <T> List<T> createListOfType(Class<T> type){
-        return new ArrayList<T>();
-    }
-    
-    public static String getTransferType(TransferData transferData){
-        for(Class<?> clazz : transferClasses){
-            try {
-                Method getTypeIDs = clazz.getMethod("getTypeIds", null);
-                if(!getTypeIDs.isAccessible()){
-                    getTypeIDs.setAccessible(true);
-                }
-                int[] typeIDs = (int[]) getTypeIDs.invoke(transferData, null);
-                for(int typeID : typeIDs){
-                    if(Integer.parseInt(String.valueOf(transferData.type)) == typeID){
-                        return clazz.getCanonicalName();
-                    }
-                }
-            } catch (SecurityException e) {
-                LOG.error(ERR_MSG, e);
-            } catch (NoSuchMethodException e) {
-                LOG.error(ERR_MSG, e);
-            } catch (IllegalArgumentException e) {
-                LOG.error(ERR_MSG, e);
-            } catch (IllegalAccessException e) {
-                LOG.error(ERR_MSG, e);
-            } catch (InvocationTargetException e) {
-                LOG.error(ERR_MSG, e);
-            }
-            
-        }
-        return "";
-    }
+     
 
 }

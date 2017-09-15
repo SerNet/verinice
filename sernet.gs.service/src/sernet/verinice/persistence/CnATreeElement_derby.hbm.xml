@@ -453,7 +453,12 @@
 		name="sernet.verinice.model.bp.elements.BpModel"
 		extends="CnATreeElement"
 		discriminator-value="bp_model" />
-        
+  
+  <subclass 
+    name="sernet.verinice.model.bp.groups.ImportBpGroup"
+    extends="CnATreeElement"
+    discriminator-value="bp_import_group"/>
+                
   <subclass 
     name="sernet.verinice.model.bp.elements.ItNetwork"
     extends="CnATreeElement"

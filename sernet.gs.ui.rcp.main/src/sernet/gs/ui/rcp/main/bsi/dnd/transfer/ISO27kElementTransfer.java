@@ -51,6 +51,9 @@ public final class ISO27kElementTransfer extends VeriniceElementTransfer {
      */
     @Override
     protected int[] getTypeIds() {
+        if (getLog().isDebugEnabled()) {
+            getLog().debug(TYPEID_ISOELEMENT + "=" + TYPENAME_ISOELEMENT);
+        }
         return new int[]{TYPEID_ISOELEMENT};
     }
     

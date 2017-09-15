@@ -40,16 +40,12 @@ public class IcsSystemGroup extends Group<IcsSystem> implements IBpGroup {
     
     public IcsSystemGroup(CnATreeElement parent) {
         super(parent);
+        init();
     }
 
     @Override
     public String getTypeId() {
         return TYPE_ID;
-    }
-    
-    @Override
-    public boolean canContain(Object object) {
-        return object instanceof IcsSystem;
     }
     
     @Override

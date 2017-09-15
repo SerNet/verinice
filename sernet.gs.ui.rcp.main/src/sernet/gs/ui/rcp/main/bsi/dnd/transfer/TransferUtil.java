@@ -28,6 +28,8 @@ import java.util.Arrays;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.TransferData;
 
+import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
@@ -60,9 +62,40 @@ public class TransferUtil {
             } else if (data instanceof IISO27kElement) {
                 elements.add((IISO27kElement) data);
             }
-
             write(transfer, transferData, elements);
         }
+    }
+    
+    public static void baseProtectionElementToNative(BaseProtectionElementTransfer transfer, Object data,
+            TransferData transferData) {
+        if (data == null || !(transfer.validateData(data))) {
+            return;
+        }
+        if (transfer.isSupportedType(transferData)) {
+            ArrayList<IBpElement> elements = new ArrayList<>();
+            if (data instanceof IBpElement[]) {
+                elements.addAll(Arrays.asList((IBpElement[]) data));
+            } else if (data instanceof IBpElement) {
+                elements.add((IBpElement) data);
+            }
+            write(transfer, transferData, elements);
+        }     
+    }
+    
+    public static void baseProtectionGroupToNative(BaseProtectionGroupTransfer transfer, Object data,
+            TransferData transferData) {
+        if (data == null || !(transfer.validateData(data))) {
+            return;
+        }
+        if (transfer.isSupportedType(transferData)) {
+            ArrayList<IBpGroup> elements = new ArrayList<>();
+            if (data instanceof IBpGroup[]) {
+                elements.addAll(Arrays.asList((IBpGroup[]) data));
+            } else if (data instanceof IBpGroup) {
+                elements.add((IBpGroup) data);
+            }
+            write(transfer, transferData, elements);
+        }     
     }
 
     public static void bSIStrukturElementToNative(VeriniceElementTransfer transfer, Object data,

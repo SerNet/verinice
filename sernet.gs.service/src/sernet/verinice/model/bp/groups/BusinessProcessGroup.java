@@ -40,16 +40,12 @@ public class BusinessProcessGroup extends Group<BusinessProcess> implements IBpG
     
     public BusinessProcessGroup(CnATreeElement parent) {
         super(parent);
+        init();
     }
 
     @Override
     public String getTypeId() {
         return TYPE_ID;
-    }
-
-    @Override
-    public boolean canContain(Object object) {
-        return object instanceof BusinessProcess;
     }
     
     @Override

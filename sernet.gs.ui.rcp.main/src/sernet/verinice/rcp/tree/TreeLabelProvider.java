@@ -23,6 +23,7 @@ import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
@@ -52,10 +53,10 @@ public class TreeLabelProvider extends LabelProvider  {
 	public Image getImage(Object obj) {
 		Image image = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
 		try {
-    		if (!(obj instanceof IISO27kElement) && !(obj instanceof CnATreeElement)) {
+    		if (!(obj instanceof CnATreeElement)) {
     			return image;
     		} else {
-    		    return getImage((IISO27kElement) obj);
+    		    return getImage((CnATreeElement) obj);
     		} 		
 		} catch(Exception e) {
             LOG.error("Error while getting image for tree item.", e);
@@ -63,15 +64,15 @@ public class TreeLabelProvider extends LabelProvider  {
         }		
 	}
     
-    private Image getImage(IISO27kElement element) {
+    private Image getImage(CnATreeElement element) {
         Image image = CnAImageProvider.getCustomImage((CnATreeElement)element);
         if (image!=null) {
             return image;
         }
-        if (element instanceof Group && !(element instanceof ImportIsoGroup)) {
+        if (element instanceof Group && !(element instanceof ImportIsoGroup) && !(element instanceof ImportBpGroup)) {
             Group group = (Group) element;
             // TODO - getChildTypes()[0] might be a problem for more than one type
-            image = ImageCache.getInstance().getISO27kTypeImage(group.getChildTypes()[0]);
+            image = ImageCache.getInstance().getImageForTypeId(group.getChildTypes()[0]);
         } else if (element instanceof SamtTopic) {
               SamtTopic topic = (SamtTopic) element;
               image = ImageCache.getInstance().
@@ -83,8 +84,7 @@ public class TreeLabelProvider extends LabelProvider  {
             
         } else {
             // else return type icon:
-            IISO27kElement elmt = (IISO27kElement) element;
-            image = ImageCache.getInstance().getISO27kTypeImage(elmt.getTypeId());
+            image = ImageCache.getInstance().getImageForTypeId(element.getTypeId());
         }
         
         if (image==null) {

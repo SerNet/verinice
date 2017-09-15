@@ -102,8 +102,6 @@ public class BSIElementEditor extends EditorPart {
 
     private Boolean isWriteAllowed = null;
 
-    // TODO the editor needs another way to determine whether or not to show the
-    // linkmaker so we can remove this reference to the SAMT bundle:
     public static final String SAMT_PERSPECTIVE_ID = "sernet.verinice.samt.rcp.SamtPerspective";
     // limit display in SAMT perspective to properties tagged as "VDA-ISA"
     // (simplified view):
@@ -224,13 +222,6 @@ public class BSIElementEditor extends EditorPart {
                 Job job = new RefreshJob("Refresh application...");
                 job.setRule(new RefreshJobRule());
                 job.schedule();
-
-                // TODO akoderman we need a way to close (with save dialog) or
-                // update editors of objects that have been changed in the
-                // database,
-                // i.e. by triggers (protection level)
-                // // close all other open editors on save (but only the ones
-                // without changes):
 
                 IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
                 ArrayList<IEditorReference> closeOthers = new ArrayList<IEditorReference>();
@@ -389,13 +380,11 @@ public class BSIElementEditor extends EditorPart {
     private Image getDefaultIcon() {
         Image icon;
         if (cnAElement instanceof Organization) {
-            icon = ImageCache.getInstance().getISO27kTypeImage(Organization.TYPE_ID);
+            icon = ImageCache.getInstance().getImageForTypeId(Organization.TYPE_ID);
         } else if (cnAElement instanceof Group) {
-            // TODO - getChildTypes()[0] might be a problem for more than
-            // one type
-            icon = ImageCache.getInstance().getISO27kTypeImage(((Group) cnAElement).getChildTypes()[0]);
-        } else if (cnAElement instanceof IISO27kElement) {
-            icon = ImageCache.getInstance().getISO27kTypeImage(cnAElement.getTypeId());
+            icon = ImageCache.getInstance().getImageForTypeId(((Group) cnAElement).getChildTypes()[0]);
+        } else if (cnAElement instanceof IISO27kElement || cnAElement instanceof IBpElement) {
+            icon = ImageCache.getInstance().getImageForTypeId(cnAElement.getTypeId());
         } else if (cnAElement instanceof IBSIStrukturElement || cnAElement instanceof IBSIStrukturKategorie) {
             icon = ImageCache.getInstance().getBSITypeImage(cnAElement.getTypeId());
         } else if (cnAElement instanceof BausteinUmsetzung) {
