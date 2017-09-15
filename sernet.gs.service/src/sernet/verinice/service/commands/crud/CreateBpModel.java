@@ -24,8 +24,8 @@ import org.apache.log4j.Logger;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.common.ChangeLogEntry;
-import sernet.verinice.service.bp.LoadBpModel;
 import sernet.verinice.service.commands.SaveElement;
+import sernet.verinice.service.model.LoadModel;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -55,7 +55,7 @@ public class CreateBpModel extends SaveElement<BpModel> {
      */
     @Override
     public void execute() {
-        LoadBpModel loadModel = new LoadBpModel();     
+        LoadModel<BpModel> loadModel = new LoadModel<>(BpModel.class);
         try {
             loadModel = getCommandService().executeCommand(loadModel);
         } catch (CommandException e) {

@@ -17,29 +17,19 @@
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.model.catalog;
-
-import sernet.verinice.model.common.CnATreeElement;
+package sernet.verinice.service.model;
 
 /**
- * The root {@link CnATreeElement} for all catalogs displayed by the Compendium
- * View.
+ * If a model cannot be loaded this exception is thrown.
  * 
- * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de> 
  *
  */
-public class CatalogModel extends CnATreeElement {
+public class LoadModelException extends RuntimeException{
 
     private static final long serialVersionUID = 1L;
 
-    @Override
-    public String getTypeId() {
-        return "catalog_model";
+    public LoadModelException(String msg) {
+        super(msg);
     }
-
-    @Override
-    public String getTitle() {
-        return "Catalog Model";
-    }
-
 }

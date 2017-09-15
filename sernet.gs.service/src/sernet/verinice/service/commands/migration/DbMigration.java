@@ -23,8 +23,8 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.service.commands.LoadBSIModel;
 import sernet.verinice.service.commands.SaveElement;
+import sernet.verinice.service.model.LoadModel;
 
 public abstract class DbMigration extends GenericCommand {
 	public abstract double getVersion();
@@ -32,7 +32,7 @@ public abstract class DbMigration extends GenericCommand {
 	protected void updateVersion() {
 		Logger.getLogger(this.getClass()).debug("Setting DB version to " + getVersion());
 		try {
-			LoadBSIModel command2 = new LoadBSIModel();
+			LoadModel<BSIModel> command2 = new LoadModel<>(BSIModel.class);
 			command2 = getCommandService().executeCommand(command2);
 			BSIModel model = command2.getModel();
 			model.setDbVersion(getVersion());

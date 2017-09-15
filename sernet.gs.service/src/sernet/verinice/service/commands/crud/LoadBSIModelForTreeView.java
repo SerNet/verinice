@@ -24,7 +24,7 @@ import sernet.verinice.interfaces.INoAccessControl;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
-import sernet.verinice.service.commands.LoadBSIModel;
+import sernet.verinice.service.model.LoadModel;
 
 @SuppressWarnings("serial")
 public class LoadBSIModelForTreeView extends GenericCommand implements INoAccessControl {
@@ -35,7 +35,7 @@ public class LoadBSIModelForTreeView extends GenericCommand implements INoAccess
 	}
 	
 	public void execute() {
-		LoadBSIModel command = new LoadBSIModel();
+        LoadModel<BSIModel> command = new LoadModel<>(BSIModel.class);
 		try {
 			command = getCommandService().executeCommand(command);
 		} catch (CommandException e) {

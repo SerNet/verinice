@@ -23,7 +23,8 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IVersionConstants;
-import sernet.verinice.service.commands.LoadBSIModel;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.service.model.LoadModel;
 
 /**
  * Version check.
@@ -131,7 +132,7 @@ public class DbVersion extends GenericCommand  {
 		}
 		
 		
-        LoadBSIModel command = new LoadBSIModel();
+        LoadModel<BSIModel> command = new LoadModel<BSIModel>(BSIModel.class);
 		double dbVersion;
 		try {
 			command = getCommandService().executeCommand(command);

@@ -9,7 +9,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
-import sernet.verinice.service.commands.LoadBSIModel;
+import sernet.verinice.service.model.LoadModel;
 
 public class LoadBSIModelComplete extends GenericCommand {
 
@@ -21,7 +21,7 @@ public class LoadBSIModelComplete extends GenericCommand {
 	}
 	
 	public void execute() {
-		LoadBSIModel command = new LoadBSIModel();
+		LoadModel<BSIModel> command = new LoadModel<>(BSIModel.class);
 		try {
 			command = getCommandService().executeCommand(command);
 		} catch (CommandException e) {

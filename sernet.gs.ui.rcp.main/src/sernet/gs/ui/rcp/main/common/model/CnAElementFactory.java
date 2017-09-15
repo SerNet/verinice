@@ -134,10 +134,10 @@ import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateITNetwork;
 import sernet.verinice.service.commands.CreateITVerbund;
 import sernet.verinice.service.commands.UpdateElement;
-import sernet.verinice.service.commands.crud.CreateIsoModel;
 import sernet.verinice.service.commands.crud.CreateBpModel;
+import sernet.verinice.service.commands.crud.CreateIsoModel;
 import sernet.verinice.service.commands.crud.UpdateMultipleElements;
-import sernet.verinice.service.iso27k.LoadModel;
+import sernet.verinice.service.model.LoadModel;
 
 /**
  * Factory for all model elements. Contains typed factories for sub-elements.
@@ -1419,7 +1419,7 @@ public final class CnAElementFactory {
 	private ISO27KModel loadIsoModel() {
 		ISO27KModel model = null;
 		try {
-			LoadModel loadModel = new LoadModel();
+			LoadModel<ISO27KModel> loadModel = new LoadModel<>(ISO27KModel.class);
 			loadModel = getCommandService().executeCommand(loadModel);
 			model = loadModel.getModel();
 			if (model != null) {

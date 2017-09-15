@@ -83,12 +83,12 @@ import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.AttachmentFileCreationFactory;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachmentsUserFiltered;
-import sernet.verinice.service.commands.LoadBSIModel;
 import sernet.verinice.service.commands.SaveNote;
 import sernet.verinice.service.commands.crud.DeleteNote;
 import sernet.verinice.service.iso27k.ImportCatalog;
 import sernet.verinice.service.iso27k.Item;
 import sernet.verinice.service.iso27k.ItemControlTransformer;
+import sernet.verinice.service.model.LoadModel;
 
 /**
  * @author Daniel <dm[at]sernet[dot]de>
@@ -525,7 +525,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
 	}
 	
 	public BSIModel loadBsiModel() {
-		LoadBSIModel loadBSIModel = new LoadBSIModel();
+		LoadModel<BSIModel> loadBSIModel = new LoadModel<>(BSIModel.class);
 		try {
 			loadBSIModel = getCommandService().executeCommand(loadBSIModel);
 		} catch (CommandException e) {
