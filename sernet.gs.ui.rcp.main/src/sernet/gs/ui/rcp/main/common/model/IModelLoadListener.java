@@ -44,7 +44,7 @@ public interface IModelLoadListener {
 	 * @param model a new loaded or created {@link BpModel}
 	 */
 	void loaded(BpModel model);
-
+	//TODO : add loadedCatalog
 	
 	/**
 	 * Method is called when an BSIModel is closed

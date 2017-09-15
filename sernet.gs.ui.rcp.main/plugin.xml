@@ -222,6 +222,17 @@
             restorable="true">
       </view>      
       
+     <view
+            allowMultiple="false"
+            category="sernet.verinice.rcp.catalog"
+            class="sernet.verinice.rcp.catalog.CatalogView"
+            icon="icons/sweetie-verinice/png/16-dice-grey.png"
+            id="sernet.verinice.rcp.catalog.CatalogView"
+            name="%view.name.rcp.catalog.catalogview"
+            restorable="true">
+      </view>      
+      
+      
    </extension>
    <extension point="org.eclipse.ui.commands">
       <command
