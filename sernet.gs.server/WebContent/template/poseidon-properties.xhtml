@@ -54,6 +54,15 @@
 							</p:calendar>
 						</c:when>
 
+						<!-- Field for PropertyType: multiselection -->
+						<c:when test="#{huiProperty.isMultiselect}">
+							<p:selectCheckboxMenu value="#{huiProperty.selectedOptions}"
+								label="#{msgEdit['multiselection.empty']}"
+								filter="true" filterMatchMode="startsWith" updateLabel="true">
+								<f:selectItems value="#{huiProperty.options}"/>
+							</p:selectCheckboxMenu>
+						</c:when>
+
 						<!-- Field for PropertyType: For the case that we have a combobox or
 						whatever we only want to display the text -->
 						<c:when

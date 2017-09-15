@@ -92,7 +92,8 @@ public class EditBean {
     private String typeId;
     private String uuid;
     private String title;
-    private List<HuiProperty> propertyList;
+    private List<HuiProperty> generalPropertyList;
+    private List<HuiProperty> allProperties;
     private List<sernet.verinice.web.PropertyGroup> groupList;
     private List<String> noLabelTypeList = new LinkedList<>();
     private Set<String> roles = null;
@@ -180,11 +181,13 @@ public class EditBean {
         getAttachmentBean().init();
 
         doInitPropertyGroups(entity);
-        doInitProperties(entity);
+        doInitGeneralProperties(entity);
+        initDependencyBehaviour();
     }
 
     protected void doInitPropertyGroups(Entity entity) {
         groupList = new ArrayList<>();
+        allProperties = new ArrayList<>();
         List<PropertyGroup> groupListHui = entityType.getPropertyGroups();
         for (PropertyGroup groupHui : groupListHui) {
             if (isVisible(groupHui)) {
@@ -192,6 +195,7 @@ public class EditBean {
                 List<PropertyType> typeListHui = groupHui.getPropertyTypes();
                 List<HuiProperty> listOfGroup = createPropertyList(entity, typeListHui);
                 group.setPropertyList(listOfGroup);
+                allProperties.addAll(listOfGroup);
                 if (!listOfGroup.isEmpty()) {
                     groupList.add(group);
                 }
@@ -199,32 +203,32 @@ public class EditBean {
         }
     }
 
-    protected void doInitProperties(Entity entity) {
+    protected void doInitGeneralProperties(Entity entity) {
         List<PropertyType> typeList = entityType.getPropertyTypesSorted();
-        propertyList = createPropertyList(entity, typeList);
+        generalPropertyList = createPropertyList(entity, typeList);
     }
 
     protected List<HuiProperty> createPropertyList(Entity entity, List<PropertyType> typeListHui) {
-        List<HuiProperty> huiProperties = new ArrayList<>(typeListHui.size());
-        initHuiProperties(entity, typeListHui, huiProperties);
-        Map<String, HuiProperty> key2HuiProperty = getPropertyKey2HuiPropertyMap(huiProperties);
-        initDependencyBehaviour(key2HuiProperty);
-        return huiProperties;
+        ArrayList<HuiProperty> properties = new ArrayList<>(typeListHui.size());
+        initHuiProperties(entity, typeListHui, properties);
+        allProperties.addAll(properties);
+        return properties;
     }
 
-    private void initDependencyBehaviour(Map<String, HuiProperty> key2HuiProperties) {
-        for (HuiProperty huiProperty : key2HuiProperties.values()) {
+    private void initDependencyBehaviour() {
+        Map<String, HuiProperty> key2HuiProperty = getPropertyKey2HuiPropertyMap();
+        for (HuiProperty huiProperty : key2HuiProperty.values()) {
             for (DependsType dependsType : huiProperty.getType().getDependencies()) {
-                HuiProperty dependsOn = key2HuiProperties.get(dependsType.getPropertyId());
-                dependsOn.addValueChangeListener(new DependencyChangeListener(huiProperty, key2HuiProperties));
+                HuiProperty dependsOn = key2HuiProperty.get(dependsType.getPropertyId());
+                dependsOn.addValueChangeListener(new DependencyChangeListener(huiProperty, key2HuiProperty));
                 dependsOn.fireChangeListeners();
             }
         }
     }
 
-    private Map<String, HuiProperty> getPropertyKey2HuiPropertyMap(List<HuiProperty> huiProperties) {
+    private Map<String, HuiProperty> getPropertyKey2HuiPropertyMap() {
         Map<String, HuiProperty> key2HuiProperty = new HashMap<>();
-        for (HuiProperty huiProperty : huiProperties) {
+        for (HuiProperty huiProperty : allProperties) {
             key2HuiProperty.put(huiProperty.getKey(), huiProperty);
         }
         return key2HuiProperty;
@@ -232,11 +236,11 @@ public class EditBean {
 
     private void initHuiProperties(Entity entity, List<PropertyType> typeListHui, List<HuiProperty> huiProperties) {
         for (PropertyType huiType : typeListHui) {
-            initHuiProperty(entity, huiProperties, huiType);
+            initHuiProperty(entity, huiType, huiProperties);
         }
     }
 
-    private void initHuiProperty(Entity entity, List<HuiProperty> huiProperties, PropertyType huiType) {
+    private void initHuiProperty(Entity entity, PropertyType huiType, List<HuiProperty> huiProperties) {
         if (isVisible(huiType)) {
             String id = huiType.getId();
             String value = entity.getRawPropertyValue(id);
@@ -383,17 +387,26 @@ public class EditBean {
             throw new SecurityException("write is not allowed");
         }
         Entity entity = getElement().getEntity();
-        for (HuiProperty property : getPropertyList()) {
-            entity.setSimpleValue(property.getType(), property.getValue());
+        for (HuiProperty property : getGeneralPropertyList()) {
+            if (property.getIsMultiselect()) {
+                entity.setPropertyValue(property.getType().getId(), property.getValue() == null ? "" : property.getValue());
+            } else {
+                entity.setSimpleValue(property.getType(), property.getValue());
+            }
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Property: " + property.getType().getId() + " set to: " + property.getValue());
             }
         }
         for (sernet.verinice.web.PropertyGroup group : getGroupList()) {
             for (HuiProperty property : group.getPropertyList()) {
-                entity.setSimpleValue(property.getType(), property.getValue());
+
+                if (property.getIsMultiselect()) {
+                    entity.setPropertyValue(property.getType().getId(), property.getValue() == null ? "" : property.getValue());
+                } else {
+                    entity.setSimpleValue(property.getType(), property.getValue());
+                }
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Property: " + property.getType().getId() + " set to: " + property.getValue());
+                    LOG.debug("Property: " + property.getType().getId() + " (" + property.getType().getInputName() + ") set to: " + property.getValue());
                 }
             }
         }
@@ -425,9 +438,14 @@ public class EditBean {
         if (groupList != null) {
             groupList.clear();
         }
-        if (propertyList != null) {
-            propertyList.clear();
+        if (generalPropertyList != null) {
+            generalPropertyList.clear();
         }
+
+        if(allProperties != null){
+            allProperties.clear();
+        }
+
         uuid = null;
         typeId = null;
         title = null;
@@ -653,7 +671,7 @@ public class EditBean {
 
     public List<HuiProperty> getLabelPropertyList() {
         List<HuiProperty> emptyList = Collections.emptyList();
-        List<HuiProperty> list = getPropertyList();
+        List<HuiProperty> list = getGeneralPropertyList();
         return list != null ? list : emptyList;
     }
 
@@ -667,29 +685,21 @@ public class EditBean {
         return true;
     }
 
-    public List<HuiProperty> getPropertyList() {
-        if (propertyList == null) {
-            propertyList = Collections.emptyList();
-        }
-        moveURLPropertyToEndOfList();
-        return propertyList;
-    }
-
     private void moveURLPropertyToEndOfList() {
         HuiProperty docProp = null;
-        for (int i = 0; i < propertyList.size(); i++) {
-            if (propertyList.get(i).getIsURL()) {
-                docProp = propertyList.get(i);
+        for (int i = 0; i < generalPropertyList.size(); i++) {
+            if (generalPropertyList.get(i).getIsURL()) {
+                docProp = generalPropertyList.get(i);
                 break;
             }
         }
         if (docProp != null) {
-            Collections.swap(propertyList, propertyList.indexOf(docProp), propertyList.size() - 1);
+            Collections.swap(generalPropertyList, generalPropertyList.indexOf(docProp), generalPropertyList.size() - 1);
         }
     }
 
     public void setPropertyList(List<HuiProperty> properties) {
-        this.propertyList = properties;
+        this.generalPropertyList = properties;
     }
 
     public List<sernet.verinice.web.PropertyGroup> getGroupList() {
@@ -854,6 +864,19 @@ public class EditBean {
         return text;
     }
 
+    public List<HuiProperty> getGeneralPropertyList() {
+        if (generalPropertyList == null) {
+            generalPropertyList = Collections.emptyList();
+        }
+
+        moveURLPropertyToEndOfList();
+        return generalPropertyList;
+    }
+
+    public void setGeneralPropertyList(List<HuiProperty> generalPropertyList) {
+        this.generalPropertyList = generalPropertyList;
+    }
+
     /**
      * Holds reference to a {@link HuiProperty} which depends on a specific
      * other {@link HuiProperty} and maybe more than one and updates the
@@ -864,6 +887,8 @@ public class EditBean {
      *
      */
     private final class DependencyChangeListener implements HuiProperty.ValueChangeListener {
+
+        private static final long serialVersionUID = 1L;
 
         private HuiProperty targetHuiProperty;
 
