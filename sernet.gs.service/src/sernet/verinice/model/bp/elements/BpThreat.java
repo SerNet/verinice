@@ -66,12 +66,12 @@ public class BpThreat extends CnATreeElement implements IBpElement {
     
     @Override
     public String getTitle() {
-        return getEntity().getSimpleValue(PROP_NAME);
+        return getEntity().getPropertyValue(PROP_NAME);
     }
     
     @Override
-    public void setTitel(String title) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
+    public void setTitel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
     
     public String getIdentifier() {

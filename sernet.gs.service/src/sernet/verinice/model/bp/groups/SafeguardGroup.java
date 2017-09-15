@@ -59,7 +59,7 @@ public class SafeguardGroup extends Group<Safeguard> implements IBpGroup {
     
     @Override
     public String getTitle() {
-        return getEntity().getSimpleValue(PROP_NAME);
+        return getEntity().getPropertyValue(PROP_NAME);
     }
     
     @Override

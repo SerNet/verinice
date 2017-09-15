@@ -30,7 +30,7 @@ public class Application extends CnATreeElement implements IBpElement {
 
     private static final long serialVersionUID = -2569916837421863187L;
     
-    public static final String TYPE_ID = "bp_application"; //$NON-NLS-1$   
+    public static final String TYPE_ID = "bp_application"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_application_name"; //$NON-NLS-1$
     
     protected Application() {}

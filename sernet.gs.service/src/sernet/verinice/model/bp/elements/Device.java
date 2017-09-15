@@ -31,12 +31,23 @@ public class Device extends CnATreeElement implements IBpElement {
     private static final long serialVersionUID = -9128276389080852414L;
     
     public static final String TYPE_ID = "bp_device"; //$NON-NLS-1$
+    public static final String PROP_NAME = "bp_device_name"; //$NON-NLS-1$
 
     protected Device() {}
     
     public Device(CnATreeElement parent) {
         super(parent);
         init();
+    }
+    
+    @Override
+    public String getTitle() {
+        return getEntity().getPropertyValue(PROP_NAME);
+    }
+    
+    @Override
+    public void setTitel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
 
     @Override

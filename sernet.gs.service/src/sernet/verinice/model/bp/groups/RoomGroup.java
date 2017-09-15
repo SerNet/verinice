@@ -32,7 +32,8 @@ public class RoomGroup extends Group<Room> implements IBpGroup {
     
     private static final long serialVersionUID = -6689926582876183791L;
     
-    public static final String TYPE_ID = "bp_room_group";
+    public static final String TYPE_ID = "bp_room_group"; //$NON-NLS-1$
+    public static final String PROP_NAME = "bp_room_group_name"; //$NON-NLS-1$
     
     public static final String[] CHILD_TYPES = new String[] {Room.TYPE_ID};
     
@@ -41,6 +42,16 @@ public class RoomGroup extends Group<Room> implements IBpGroup {
     public RoomGroup(CnATreeElement parent) {
         super(parent);
         init();
+    }
+    
+    @Override
+    public String getTitle() {
+        return getEntity().getPropertyValue(PROP_NAME);
+    }
+    
+    @Override
+    public void setTitel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
 
     @Override

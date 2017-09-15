@@ -32,7 +32,8 @@ public class BpThreatGroup extends Group<BpThreat> implements IBpGroup {
     
     private static final long serialVersionUID = 7752776589962581995L;
     
-    public static final String TYPE_ID = "bp_threat_group";
+    public static final String TYPE_ID = "bp_threat_group"; //$NON-NLS-1$
+    public static final String PROP_NAME = "bp_threat_group_name"; //$NON-NLS-1$
     
     public static final String[] CHILD_TYPES = new String[] {BpThreat.TYPE_ID};
     
@@ -41,6 +42,16 @@ public class BpThreatGroup extends Group<BpThreat> implements IBpGroup {
     public BpThreatGroup(CnATreeElement parent) {
         super(parent);
         init();
+    }
+    
+    @Override
+    public String getTitle() {
+        return getEntity().getPropertyValue(PROP_NAME);
+    }
+    
+    @Override
+    public void setTitel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
 
     @Override

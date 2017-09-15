@@ -32,7 +32,8 @@ public class DeviceGroup extends Group<Device> implements IBpGroup {
     
     private static final long serialVersionUID = 2378844509548812805L;
     
-    public static final String TYPE_ID = "bp_device_group";
+    public static final String TYPE_ID = "bp_device_group"; //$NON-NLS-1$
+    public static final String PROP_NAME = "bp_device_group_name"; //$NON-NLS-1$
     
     public static final String[] CHILD_TYPES = new String[] {Device.TYPE_ID};
     
@@ -41,6 +42,16 @@ public class DeviceGroup extends Group<Device> implements IBpGroup {
     public DeviceGroup(CnATreeElement parent) {
         super(parent);
         init();
+    }
+    
+    @Override
+    public String getTitle() {
+        return getEntity().getPropertyValue(PROP_NAME);
+    }
+    
+    @Override
+    public void setTitel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
 
     @Override

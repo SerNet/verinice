@@ -32,7 +32,8 @@ public class ItSystemGroup extends Group<ItSystem> implements IBpGroup {
     
     private static final long serialVersionUID = -8454160472717996490L;
     
-    public static final String TYPE_ID = "bp_itsystem_group";
+    public static final String TYPE_ID = "bp_itsystem_group"; //$NON-NLS-1$
+    public static final String PROP_NAME = "bp_itsystem_group_name"; //$NON-NLS-1$
     
     public static final String[] CHILD_TYPES = new String[] {ItSystem.TYPE_ID};
     
@@ -41,6 +42,16 @@ public class ItSystemGroup extends Group<ItSystem> implements IBpGroup {
     public ItSystemGroup(CnATreeElement parent) {
         super(parent);
         init();
+    }
+    
+    @Override
+    public String getTitle() {
+        return getEntity().getPropertyValue(PROP_NAME);
+    }
+    
+    @Override
+    public void setTitel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
 
     @Override
