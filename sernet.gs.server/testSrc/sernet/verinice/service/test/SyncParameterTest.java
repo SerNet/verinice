@@ -54,8 +54,8 @@ public class SyncParameterTest extends ContextConfiguration {
     @Test
     public void testSyncSettingsWithInsertUpdateDelete() throws IOException, CommandException, SyncParameterException {
         try {
-            for (boolean[] arguments : new BooleanCombinator(3).getBooleanList()) {
-                SyncParameter syncParameter = new SyncParameter(arguments[0], arguments[1], arguments[2]);
+            for (boolean[] arguments : new BooleanCombinator(4).getBooleanList()) {
+                SyncParameter syncParameter = new SyncParameter(arguments[0], arguments[1], arguments[2], arguments[3]);
                 importFromByteArray(syncParameter, IT_NETWORK_VNA);
                 importFromFile(syncParameter, IT_NETWORK_VNA);
             }

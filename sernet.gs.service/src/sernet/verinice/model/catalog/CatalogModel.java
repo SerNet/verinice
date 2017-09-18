@@ -29,6 +29,7 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  */
 public class CatalogModel extends CnATreeElement {
+
     private static final long serialVersionUID = 1L;
 
     public static final String TYPE_ID = "catalog_model";
@@ -43,5 +44,5 @@ public class CatalogModel extends CnATreeElement {
         return "Catalog Model";
     }
 
- 
+
 }

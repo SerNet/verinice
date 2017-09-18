@@ -162,7 +162,7 @@ public class LoadElementTitlesTest extends BeforeEachVNAImportHelper {
 
     @Override
     protected SyncParameter getSyncParameter() throws SyncParameterException {
-        return new SyncParameter(true, true, true);
+        return new SyncParameter(true, true, true, false);
     }
 
 
