@@ -32,6 +32,8 @@ public class CatalogModel extends CnATreeElement {
 
     private static final long serialVersionUID = 1L;
 
+    public static final String TYPE_ID = "Catalog Model";
+
     @Override
     public String getTypeId() {
         return "catalog_model";
@@ -39,7 +41,7 @@ public class CatalogModel extends CnATreeElement {
 
     @Override
     public String getTitle() {
-        return "Catalog Model";
+        return TYPE_ID;
     }
 
 }

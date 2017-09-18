@@ -67,6 +67,7 @@ import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.Datenverarbeitung;
 import sernet.verinice.model.ds.Personengruppen;
@@ -222,6 +223,7 @@ public class CnATypeMapper {
         typeIdClass.put(Network.TYPE_ID, Network.class);
         typeIdClass.put(Room.TYPE_ID, Room.class);
         typeIdClass.put(Safeguard.TYPE_ID, Safeguard.class);
+        typeIdClass.put(CatalogModel.TYPE_ID, CatalogModel.class);
         
         // typeIdClass.put(RisikoMassnahmenUmsetzung.TYPE_ID,
         // RisikoMassnahmenUmsetzung.class);
