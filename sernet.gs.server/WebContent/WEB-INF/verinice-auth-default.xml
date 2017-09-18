@@ -49,6 +49,7 @@
             <action id="auditview" />
             <action id="baseprotectionview" />
             <action id="bausteinzuordnung" />
+            <action id="bpimporter" />
             <action id="bsidnd" />
             <action id="bsibrowser" />
             <action id="bsimassnahmen" />
@@ -139,6 +140,7 @@
 	        <action id="auditview" />
           <action id="baseprotectionview" />
 	        <action id="bausteinzuordnung" />
+	        <action id="bpimporter" />
 	        <action id="bsidnd" />
         	<action id="bsibrowser" />
 	        <action id="bsimassnahmen" />
@@ -267,6 +269,7 @@
 	        <action id="auditview" />
           <action id="baseprotectionview" />
 	        <action id="bausteinzuordnung" />
+	        <action id="bpimporter" />
 	        <action id="bsidnd" />
         	<action id="bsibrowser" />
 	        <action id="bsimassnahmen" />
@@ -347,6 +350,7 @@
             <action id="auditview" />
             <action id="baseprotectionview" /> 
             <action id="bausteinzuordnung" /> 
+            <action id="bpimporter" />
             <action id="bsidnd" /> 
             <action id="bsibrowser" /> 
             <action id="bsimassnahmen" /> 
@@ -424,6 +428,7 @@
 	        <action id="auditview" />
           <action id="baseprotectionview" />
 	        <action id="bausteinzuordnung" />
+	        <action id="bpimporter" />
 	        <action id="bsidnd" />
         	<action id="bsibrowser" />
 	        <action id="bsimassnahmen" />

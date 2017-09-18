@@ -50,14 +50,15 @@
 	        <action id="marktemplate"/>
 	        <action id="assignallisatopics" />
 	        <action id="auditview" /> 
-          <action id="baseprotectionview" />
+          	<action id="baseprotectionview" />
 	        <action id="bausteinzuordnung" />
+	        <action id="bpimporter" />
 	        <action id="bsidnd" />
         	<action id="bsibrowser" />
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />
 	        <action id="bulkedit" />
-          <action id="changeicon" />
+          	<action id="changeicon" />
 	        <action id="deletecatalog" />
 	        <action id="deletefile" />
 	        <action id="deleteitem" />
@@ -65,7 +66,7 @@
 	        <action id="documentview" />
 	        <action id="dsmodelview" />
 	        <action id="editlinks" />
-          <action id="exportlinktable" />
+          	<action id="exportlinktable" />
 	        <action id="files" />
 	        <action id="generateauditreport" />
 	        <action id="generateorgreport" />

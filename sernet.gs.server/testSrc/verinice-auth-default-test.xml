@@ -46,6 +46,7 @@
             <action id="addownmodul"/>
             <action id="auditview" />
             <action id="bausteinzuordnung" />
+            <action id="bpimporter" />
             <action id="bsidnd" />
             <action id="bsibrowser" />
             <action id="bsimassnahmen" />
@@ -126,6 +127,7 @@
             <action id="assignallisatopics" />
             <action id="auditview" />
             <action id="bausteinzuordnung" />
+            <action id="bpimporter" />
             <action id="bsidnd" />
             <action id="bsibrowser" />
             <action id="bsimassnahmen" />
@@ -204,6 +206,7 @@
             <action id="assignallisatopics" />
             <action id="auditview" />
             <action id="bausteinzuordnung" />
+            <action id="bpimporter" />
             <action id="bsidnd" />
             <action id="bsibrowser" />
             <action id="bsimassnahmen" />
@@ -279,6 +282,7 @@
             <action id="assignallisatopics" />
             <action id="auditview" />
             <action id="bausteinzuordnung" />
+            <action id="bpimporter" />
             <action id="bsidnd" />
             <action id="bsibrowser" />
             <action id="bsimassnahmen" />
