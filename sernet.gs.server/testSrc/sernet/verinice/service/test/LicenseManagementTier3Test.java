@@ -48,11 +48,10 @@ import org.junit.Test;
 import org.threeten.bp.LocalDate;
 
 import sernet.gs.service.VeriniceCharset;
-import sernet.gs.ui.rcp.main.service.commands.UsernameExistsException;
-import sernet.gs.ui.rcp.main.service.crudcommands.PrepareObjectWithAccountDataForDeletion;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
+import sernet.verinice.interfaces.UsernameExistsException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.common.ChangeLogEntry;
