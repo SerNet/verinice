@@ -391,6 +391,12 @@ This variant:
         <property name="typeIds" value="it-verbund,org"/>
      </bean>
 
+	<bean name="bpImporter" class="sernet.verinice.service.bp.importer.BpImporter">
+		<property name="daoFactory" ref="daoFactory"/>
+		<property name="commandService" ref="commandService" />
+	</bean>
+	
+
 	<!-- Stores the verinice archive version. This schema is written into the
 		xml data of the export, so whenever the schema is changed, the property "vnaSchemaVersion"
 		should be increased. Also the list to which versions the schema is compatible
