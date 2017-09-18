@@ -82,6 +82,7 @@ import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.Permission;
@@ -540,6 +541,8 @@ public interface IDAOFactory {
 	void setRoomGroupDAO(IBaseDao<RoomGroup, Integer> daoToSet);
     
     void setSafeguardGroupDAO(IBaseDao<SafeguardGroup, Integer> daoToSet);
+
+    void setCatalogModelDAO(IBaseDao<CatalogModel, Integer> daoToSet);
 
 	/**
      * Returns a special Dao for use 

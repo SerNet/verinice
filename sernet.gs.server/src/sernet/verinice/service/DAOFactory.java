@@ -91,6 +91,7 @@ import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -1049,6 +1050,12 @@ public class DAOFactory implements IDAOFactory {
     public void setSafeguardGroupDAO(IBaseDao<SafeguardGroup, Integer> daoToSet) {
         daosByClass.put(SafeguardGroup.class, daoToSet);
         daosByTypeID.put(SafeguardGroup.TYPE_ID, daoToSet);      
+    }
+
+    @Override
+    public void setCatalogModelDAO(IBaseDao<CatalogModel, Integer> daoToSet) {
+        daosByClass.put(CatalogModel.class, daoToSet);
+        daosByTypeID.put(CatalogModel.TYPE_ID, daoToSet);
     }
 
 }
