@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="BPImporterPreferences"
+            class="sernet.verinice.bp.importer.preferences.BpImporterPreferencePage"
+            id="sernet.verinice.bp.importer.preferences.BpImporterPreferencePage">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="sernet.verinice.bp.importer.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+   
+	<extension point="org.eclipse.ui.menus">        
+		<menuContribution
+		  locationURI="menu:file?after=queryBuilder">
+			<menu id="BPImporter"
+			    label="%bpImporter.name">
+			    <command commandId="sernet.verinice.bp.importer.importaction"
+                  label="%bpImporter.run"
+                  style="push"
+                  tooltip="%bpImporter.run">
+            	</command>
+			</menu>
+		</menuContribution>
+   </extension>   
+
+</plugin>
