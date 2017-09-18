@@ -58,8 +58,6 @@ import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.Perspective;
-import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
-import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
@@ -69,14 +67,13 @@ import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Messages;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
-import sernet.verinice.iso27k.rcp.action.ControlDropPerformer;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.model.bp.IBpModelListener;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bp.elements.ItNetwork;
-import sernet.verinice.model.bp.groups.NetworkGroup;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.ISO27KModel;
@@ -144,8 +141,8 @@ public class CatalogView extends RightsEnabledView
      */
     @Override
     public String getRightID() {
-        return ActionRightIDs.BASEPROTECTIONVIEW;
-    }//TODO: urs add a right 
+        return ActionRightIDs.BASEPROTECTIONVIEW;//TODO: urs add a right constant
+    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
@@ -160,11 +157,9 @@ public class CatalogView extends RightsEnabledView
      */
     protected void initView(Composite parent) {
         IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
-        //TODO: urs methods for loading the CatalogModel 
-        if(CnAElementFactory.getInstance().isBpModelLoaded()) {
+        if(CnAElementFactory.isModernizedBpCatalogLoaded()) {
             CnAElementFactory.getInstance().reloadModelFromDatabase();
         }
-        
         
         contentProvider = new TreeContentProvider(elementManager);
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
@@ -188,9 +183,8 @@ public class CatalogView extends RightsEnabledView
     
     protected void startInitDataJob() {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("MotITBPview: startInitDataJob"); //$NON-NLS-1$
-        }//TODO : urs 
-        // TODO: create own job name, replace ism-constant
+            LOG.debug("Catalogview: startInitDataJob"); //$NON-NLS-1$
+        }
         WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
@@ -199,7 +193,7 @@ public class CatalogView extends RightsEnabledView
                     monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
                     initData();
                 } catch (Exception e) {
-                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
+                    LOG.error("Error while loading data for catalog view.", e); //$NON-NLS-1$
                     status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.ISMView_4,e); //$NON-NLS-1$
                 } finally {
                     monitor.done();
@@ -212,65 +206,45 @@ public class CatalogView extends RightsEnabledView
 
     protected void initData() { 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("MotITBPVIEW: initData"); //$NON-NLS-1$
-        }//TODO : urs use the lock and use the model load methods
+            LOG.debug("MotITBPCatalogVIEW: initData"); //$NON-NLS-1$
+        }
         lock.lock();
         try {
-            if(CnAElementFactory.isBpModelLoaded()) {//TODO : urs use the new model 
+            if(CnAElementFactory.isModernizedBpCatalogLoaded()) {
                 if (modelUpdateListener == null ) {
-                    // modellistener should only be created once!
                     if (LOG.isDebugEnabled()){
                         Logger.getLogger(this.getClass()).debug("Creating modelUpdateListener for MotITBPView."); //$NON-NLS-1$
                     }
                     modelUpdateListener = new TreeUpdateListener(viewer,elementManager);
-                    CnAElementFactory.getInstance().getBpModel().addModITBOModelListener(modelUpdateListener);
+                    //TODO: check the model listener
+//                    CnAElementFactory.getInstance().getCatalogModel().addModITBOModelListener(modelUpdateListener);//
                     Display.getDefault().syncExec(new Runnable(){
                         @Override
                         public void run() {
-                            setInput(CnAElementFactory.getInstance().getBpModel());
+                            setInput(CnAElementFactory.getInstance().getCatalogModel());
                             viewer.refresh();
                         }
                     });
                 }
             } else if(modelLoadListener==null) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("ISMView No model loaded, adding model load listener."); //$NON-NLS-1$
+                    LOG.debug("CatalogMOdel No model loaded, adding model load listener."); //$NON-NLS-1$
                 }
                 // model is not loaded yet: add a listener to load data when it's loaded
-                modelLoadListener = new IModelLoadListener() {
-                    
-                    @Override
-                    public void closed(BSIModel model) {
-                        // nothing to do
-                    }
-                    
-                    @Override
-                    public void loaded(BSIModel model) {
-                        // nothing to do
-                    }
-                    
-                    @Override
-                    public void loaded(ISO27KModel model) {
-                        // nothing to do
-                    }
-
-                    @Override
-                    public void loaded(BpModel model) {
-                        startInitDataJob();
-                    }
-                    
-                };
+                modelLoadListener = new ModelLoadListener();
                 CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
-                
             }
         } finally {
             lock.unlock();
         }
     }
     
-    //TODO : urs set the input with our model
-    public void setInput(BpModel model) {
-        viewer.setInput(model);
+    /**
+     * Set the input to the viewer.
+     * @param catalogModel
+     */
+    public void setInput(CatalogModel catalogModel) {
+        viewer.setInput(catalogModel);
     }
     
     private void hookContextMenu() {
@@ -288,43 +262,30 @@ public class CatalogView extends RightsEnabledView
         getSite().registerContextMenu(menuMgr, viewer);
     }
     
-    
     protected void fillContextMenu(IMenuManager manager) {
-        ISelection selection = viewer.getSelection();
-        if(selection instanceof IStructuredSelection && ((IStructuredSelection) selection).size()==1) {
-            Object sel = ((IStructuredSelection) selection).getFirstElement();
-            if(sel instanceof ItNetwork) {
-                ItNetwork element = (ItNetwork) sel;
-//                if(CnAElementHome.getInstance().isNewChildAllowed(element)) {
-//                    MenuManager submenuNew = new MenuManager("&New","content/new"); //$NON-NLS-1$ //$NON-NLS-2$
-//                    submenuNew.add(new AddGroup(element,AssetGroup.TYPE_ID,Asset.TYPE_ID));
-//                    submenuNew.add(new AddGroup(element,AuditGroup.TYPE_ID,Audit.TYPE_ID));
-//                    submenuNew.add(new AddGroup(element,ControlGroup.TYPE_ID,Control.TYPE_ID));
-//                    submenuNew.add(new AddGroup(element,DocumentGroup.TYPE_ID,Document.TYPE_ID));
-//                    submenuNew.add(new AddGroup(element,EvidenceGroup.TYPE_ID,Evidence.TYPE_ID));
-//                    submenuNew.add(new AddGroup(element,ExceptionGroup.TYPE_ID,sernet.verinice.model.iso27k.Exception.TYPE_ID));
-//                    submenuNew.add(new AddGroup(element,FindingGroup.TYPE_ID,Finding.TYPE_ID));
-//                    submenuNew.add(new AddGroup(element,IncidentGroup.TYPE_ID,Incident.TYPE_ID));
-//                    submenuNew.add(new AddGroup(element,IncidentScenarioGroup.TYPE_ID,IncidentScenario.TYPE_ID));
-//                    submenuNew.add(new AddGroup(element,InterviewGroup.TYPE_ID,Interview.TYPE_ID));
-//                    submenuNew.add(new AddGroup(element,PersonGroup.TYPE_ID,PersonIso.TYPE_ID));
-//                    submenuNew.add(new AddGroup(element,ProcessGroup.TYPE_ID,sernet.verinice.model.iso27k.Process.TYPE_ID));
-//                    submenuNew.add(new AddGroup(element,RecordGroup.TYPE_ID,Record.TYPE_ID));
-//                    submenuNew.add(new AddGroup(element,RequirementGroup.TYPE_ID,Requirement.TYPE_ID));
-//                    submenuNew.add(new AddGroup(element,ResponseGroup.TYPE_ID,Response.TYPE_ID));
-//                    submenuNew.add(new AddGroup(element,ThreatGroup.TYPE_ID,Threat.TYPE_ID));
-//                    submenuNew.add(new AddGroup(element,VulnerabilityGroup.TYPE_ID,Vulnerability.TYPE_ID));
-//                    manager.add(submenuNew);
-//                }
-            }
-        }
+        //TODO:urs What action we need in the contextmenue
+//        ISelection selection = viewer.getSelection();
+//        if(selection instanceof IStructuredSelection && ((IStructuredSelection) selection).size()==1) {
+//            Object sel = ((IStructuredSelection) selection).getFirstElement();
+//            if(sel instanceof ItNetwork) {
+//            }
+//        }
+        
+        manager.getItems();
+        manager.findMenuUsingPath("popup");
         
         manager.add(new GroupMarker("content")); //$NON-NLS-1$
         manager.add(new Separator());
         manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
         manager.add(new Separator());
-        manager.add(new GroupMarker("special")); //$NON-NLS-1$
-//        manager.add(bulkEditAction);
+//        manager.add(new GroupMarker("special")); //$NON-NLS-1$
+
+        
+        
+        
+        
+        
+        //        manager.add(bulkEditAction);
 //        manager.add(accessControlEditAction);
 //        manager.add(naturalizeAction);
 //        manager.add(new Separator());
@@ -333,9 +294,8 @@ public class CatalogView extends RightsEnabledView
         drillDownAdapter.addNavigationActions(manager); 
     }
     
+    
     private void makeActions() {
-        ControlDropPerformer controlDropAdapter;
-        BSIModelViewDropListener bsiDropAdapter;
         doubleClickAction = new Action() {
             @Override
             public void run() {
@@ -346,9 +306,6 @@ public class CatalogView extends RightsEnabledView
             }
         };
         
-//        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_6);
-    
-        // TODO: remove comments
         expandAction = new ExpandAction(viewer, contentProvider);
         expandAction.setText(Messages.ISMView_7);
         expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
@@ -356,64 +313,7 @@ public class CatalogView extends RightsEnabledView
         collapseAction = new CollapseAction(viewer);
         collapseAction.setText(Messages.ISMView_8);
         collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
-    
-//        expandAllAction = new Action() {
-//            @Override
-//            public void run() {
-//                expandAll();
-//            }
-//        };
-//        expandAllAction.setText(Messages.ISMView_9);
-//        expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
-//
-//        collapseAllAction = new Action() {
-//            @Override
-//            public void run() {
-//                viewer.collapseAll();
-//            }
-//        };
-//        collapseAllAction.setText(Messages.ISMView_10);
-//        collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
-        
-//        HideEmptyFilter hideEmptyFilter = createHideEmptyFilter();
-//        TypeParameter typeParameter = createTypeParameter();
-//        TagParameter tagParameter = new TagParameter();
-//        filterAction = new ISMViewFilter(viewer,
-//                Messages.ISMView_12,
-//                tagParameter,
-//                hideEmptyFilter,
-//                typeParameter);    
-       
-//        elementManager.addParameter(tagParameter);
-//        if(typeParameter!=null) {
-//            elementManager.addParameter(typeParameter);
-//        }   
-        
-//        metaDropAdapter = new MetaDropAdapter(viewer);
-//        controlDropAdapter = new ControlDropPerformer(viewer);
-//        bsiDropAdapter = new BSIModelViewDropListener(viewer);
-//        BSIModelDropPerformer bsi2IsmDropAdapter = new BSIModelDropPerformer(viewer);
-//        FileDropPerformer fileDropPerformer = new FileDropPerformer(viewer);
-//        metaDropAdapter.addAdapter(controlDropAdapter);
-//        metaDropAdapter.addAdapter(bsiDropAdapter); 
-//        
-//        metaDropAdapter.addAdapter(bsi2IsmDropAdapter);
-//        metaDropAdapter.addAdapter(fileDropPerformer); 
-//        
-//        accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_11);
-//        
-//        naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
-//        
-//        linkWithEditorAction = new Action(Messages.ISMView_5, IAction.AS_CHECK_BOX) {
-//            @Override
-//            public void run() {
-//                toggleLinking(isChecked());
-//            }
-//        };
-//        linkWithEditorAction.setChecked(isLinkingActive());
-//        linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
-
-    }
+     }
     
     /**
      * Override this in subclasses to hide empty groups
@@ -450,8 +350,8 @@ public class CatalogView extends RightsEnabledView
     protected void fillToolBar() {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
-//        manager.add(expandAllAction);
-//        manager.add(collapseAllAction);
+        manager.add(expandAction);
+        manager.add(collapseAction);
         drillDownAdapter.addNavigationActions(manager);
 //        manager.add(filterAction);
 //        manager.add(linkWithEditorAction);
@@ -463,8 +363,6 @@ public class CatalogView extends RightsEnabledView
      */
     @Override
     public void editorActivated(IEditorPart activeEditor) {
-        // TODO Auto-generated method stub
-        // DO THIS when model is loading correctly
     }
 
 
@@ -477,51 +375,61 @@ public class CatalogView extends RightsEnabledView
     @Override
     public void dispose() {
         elementManager.clearCache();
-        if(CnAElementFactory.isBpModelLoaded()) {
-            CnAElementFactory.getInstance().getBpModel().removeBpModelListener(modelUpdateListener);
+        if(CnAElementFactory.isModernizedBpCatalogLoaded()) {
+            //CnAElementFactory.getInstance().getBpModel().removeBpModelListener(modelUpdateListener);
+            //TODO: urs add the listener
         }
         CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
 //        getSite().getPage().removePartListener(linkWithEditorPartListener);
         super.dispose();
     }
     
-    class ModITBViewerSorter extends ViewerSorter{
-        
+    private final class ModelLoadListener implements IModelLoadListener {
+        @Override
+        public void closed(BSIModel model) {
+            // nothing to do
+        }
+
+        @Override
+        public void loaded(BSIModel model) {
+            // nothing to do
+        }
+
+        @Override
+        public void loaded(ISO27KModel model) {
+            // nothing to do
+        }
+
+        @Override
+        public void loaded(BpModel model) {
+         // nothing to do
+        }
+
+        @Override
+        public void loaded(CatalogModel model) {
+            startInitDataJob();
+        }
+    }
+
+    class ModITBViewerSorter extends ViewerSorter {
+
         NumericStringComparator comp = new NumericStringComparator();
-        
+
         @Override
         public int compare(Viewer viewer, Object e1, Object e2) {
-            
             int result = 0;
-            
             if (e1 instanceof CnATreeElement && e2 instanceof CnATreeElement) {
-                
-                CnATreeElement element1 = (CnATreeElement)e1;
-                CnATreeElement element2 = (CnATreeElement)e2;
+                CnATreeElement element1 = (CnATreeElement) e1;
+                CnATreeElement element2 = (CnATreeElement) e2;
+                String message1 = HUITypeFactory.getInstance().getMessage(element1.getTypeId());
+                String message2 = HUITypeFactory.getInstance().getMessage(element2.getTypeId());
+                result = comp.compare(message1, message2);
 
-                if(element1.getTypeId().equals(NetworkGroup.TYPE_ID) ||
-                        element2.getTypeId().equals(NetworkGroup.TYPE_ID)) {
-                    "".hashCode();
-                    
-                }
-                          
-                
-                if( result == 0) {
-                    String message1 = HUITypeFactory.getInstance().getMessage(element1.getTypeId());
-                    String message2 = HUITypeFactory.getInstance().getMessage(element2.getTypeId());
-                    result = comp.compare(message1, message2);
-                }
-                
-
-                if(result == 0) {
+                if (result == 0) {
                     result = comp.compare(element1.getTitle(), element2.getTitle());
                 }
             }
-           
             return result;
-            
         }
     }
-    
-
 }

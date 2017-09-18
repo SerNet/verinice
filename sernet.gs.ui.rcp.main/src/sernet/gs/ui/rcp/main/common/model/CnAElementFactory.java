@@ -1320,11 +1320,11 @@ public final class CnAElementFactory {
     public static boolean isBpModelLoaded() {
         return (boModel != null);
     }
-
+    
     public static boolean isModernizedBpCatalogLoaded() {
         return (catalogModel != null);
     }
-
+    
 	public void closeModel() {
 		dbHome.close();
 		fireClosed();
@@ -1375,7 +1375,7 @@ public final class CnAElementFactory {
 	private void fireLoad(CatalogModel model) {
         for (IModelLoadListener listener : listeners) {
             listener.loaded(model);
-        }
+        }       
     }
 
     /**
@@ -1428,53 +1428,49 @@ public final class CnAElementFactory {
 	    return boModel;
 	}
 
-	   public CatalogModel getCatalogModel() {
-	        synchronized(mutex) {
-	            if (catalogModel == null) {
-	                catalogModel = loadCatalogModel();
-	                if (catalogModel == null) {
-	                    createCatalogModel();
-	                }
-	            }
-	        }
-	        return catalogModel;
-	    }
-
-
-    private CatalogModel loadCatalogModel() {
-        CatalogModel model = null;
-        try {
-            LoadModel<CatalogModel> modelLoadCommand = new LoadModel<>(CatalogModel.class);
-            modelLoadCommand = getCommandService().executeCommand(modelLoadCommand);
-            model = modelLoadCommand.getModel();
-            if (model != null) {
-                fireLoad(model);
+	public CatalogModel getCatalogModel() {
+        synchronized(mutex) {
+            if (catalogModel == null) {
+                catalogModel = loadCatalogModel();
+                if (catalogModel == null) {
+                    createCatalogModel();
+                }
             }
-        } catch (CommandException e) {
-            String msg = "Error loading Catalog Model";
-            log.error("Error loading Catalog Model", e);
-            throw new RuntimeException(msg, e);
         }
-        return model;
+        return catalogModel;
     }
 
     private void createCatalogModel() {
         try {
-            CreateCatalogModel modelCreationCommand = new CreateCatalogModel();
-            modelCreationCommand = getCommandService()
-                    .executeCommand(modelCreationCommand);
-            catalogModel = modelCreationCommand.getElement();
-
-            if (log.isInfoEnabled()) {
-                log.info("Catalog Model created"); //$NON-NLS-1$
+            CreateCatalogModel command = new CreateCatalogModel();
+            command = getCommandService().executeCommand(command);
+            catalogModel = command.getElement();
+            if (log.isInfoEnabled()) {//TODO: urs change strings
+                log.info("ISO27KModel created"); //$NON-NLS-1$
             }
-            if (catalogModel != null) {
+            if (isoModel != null) {
                 fireLoad(catalogModel);
             }
-
-        } catch (CommandException e) {
+        } catch (CommandException e) {//TODO: urs change strings
             log.error(Messages.getString("CnAElementFactory.2"), e); //$NON-NLS-1$
         }
+    }
+
+    private CatalogModel loadCatalogModel() {
+        CatalogModel model = null;
+        try {
+            LoadModel<CatalogModel> loadModel = new LoadModel<>(CatalogModel.class);
+            loadModel = getCommandService().executeCommand(loadModel);
+            model = loadModel.getModel();
+            if (model != null) {
+                fireLoad(model);
+            }
+        } catch (Exception e) {//TODO: urs make new string
+            log.error(Messages.getString("CnAElementFactory.1"), e); //$NON-NLS-1$
+            throw new RuntimeException(
+                    Messages.getString("CnAElementFactory.1"), e);
+        }
+        return model;
     }
 
     /**
@@ -1615,16 +1611,27 @@ public final class CnAElementFactory {
 				isoModel = newModel;
 				fireLoad(isoModel);
 			}
-			if (isBpModelLoaded()) {
-			    BpModel newModel = loadBpModel();
-			    if (log.isDebugEnabled()) {
-			        log.debug("reloadModelFromDatabase, base protection model loaded"); //$NON-NLS-1$
-			    }
-			    boModel.modelReload(newModel);
-			    boModel.moveListener(newModel);
-			    boModel = newModel;
-			    fireLoad(boModel);
-			}
+            if (isBpModelLoaded()) {
+                BpModel newModel = loadBpModel();
+                if (log.isDebugEnabled()) {
+                    log.debug("reloadModelFromDatabase, base protection model loaded"); //$NON-NLS-1$
+                }
+                boModel.modelReload(newModel);
+                boModel.moveListener(newModel);
+                boModel = newModel;
+                fireLoad(boModel);
+            }
+            if (isModernizedBpCatalogLoaded()) {
+                CatalogModel newModel = loadCatalogModel();
+                if (log.isDebugEnabled()) {
+                    log.debug("reloadModelFromDatabase, base protection model loaded"); //$NON-NLS-1$
+                }//TODO urs add the listners
+//                catalogModel.modelReload(newModel);
+//                catalogModel.moveListener(newModel);
+                catalogModel = newModel;
+                fireLoad(catalogModel);
+            }
+			
 		} catch (Exception e) {
 			log.error(Messages.getString("CnAElementFactory.5"), e); //$NON-NLS-1$
 		}
