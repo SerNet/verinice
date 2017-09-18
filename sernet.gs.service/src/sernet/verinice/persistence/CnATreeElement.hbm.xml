@@ -594,6 +594,11 @@
     extends="CnATreeElement"
     discriminator-value="bp_safeguard_group" />
 
+  <subclass
+    name="sernet.verinice.model.catalog.CatalogModel"
+    extends="CnATreeElement"
+    discriminator-value="catalog_model" />
+
 	<!-- This filter implements the access check (read access) for CnATreeElement instances (and subclasses).
 	
 	When activated and given a list of roles (parameterRoles) all retrievals of CnATreeElements will be restricted

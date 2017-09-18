@@ -803,6 +803,14 @@
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
     
+
+    <bean id="catalogModelDao" parent="secureDao">
+        <constructor-arg>
+            <value>sernet.verinice.model.catalog.CatalogModel</value>
+        </constructor-arg>
+    </bean>
+
+
 	<!-- END dao definitions ============================================================================ -->
 
 </beans>

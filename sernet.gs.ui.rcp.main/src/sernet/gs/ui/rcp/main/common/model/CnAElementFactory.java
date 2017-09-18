@@ -135,11 +135,12 @@ import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateITNetwork;
 import sernet.verinice.service.commands.CreateITVerbund;
 import sernet.verinice.service.commands.UpdateElement;
+import sernet.verinice.service.commands.crud.CreateIsoModel;
 import sernet.verinice.service.commands.crud.CreateBpModel;
 import sernet.verinice.service.commands.crud.CreateCatalogModel;
-import sernet.verinice.service.commands.crud.CreateIsoModel;
 import sernet.verinice.service.commands.crud.UpdateMultipleElements;
 import sernet.verinice.service.model.LoadModel;
+
 
 /**
  * Factory for all model elements. Contains typed factories for sub-elements.
@@ -181,13 +182,12 @@ public final class CnAElementFactory {
 	
 	private static BpModel boModel;
 
-	private CatalogModel catalogModel;
+	private static CatalogModel catalogModel;
 
 	private ICommandService commandService;
 	
 	private static final String WARNING_UNCHECKED = "unchecked";
 	private static final String WARNING_RAWTYPES = "rawtypes";
-
 
 	private interface IElementBuilder<T extends CnATreeElement, U> {
 		T build(CnATreeElement container, BuildInput<U> input)
@@ -1317,10 +1317,14 @@ public final class CnAElementFactory {
 		return (isoModel != null);
 	}
 	
-	public static boolean isBpModelLoaded() {
-	    return (boModel != null);
-	}
-	
+    public static boolean isBpModelLoaded() {
+        return (boModel != null);
+    }
+
+    public static boolean isModernizedBpCatalogLoaded() {
+        return (catalogModel != null);
+    }
+
 	public void closeModel() {
 		dbHome.close();
 		fireClosed();
@@ -1368,13 +1372,13 @@ public final class CnAElementFactory {
         }	    
 	}
 
-    private void fireLoad(CatalogModel model) {
+	private void fireLoad(CatalogModel model) {
         for (IModelLoadListener listener : listeners) {
             listener.loaded(model);
         }
     }
 
-	/**
+    /**
 	 * Returns whether there is an active database connection.
 	 * 
 	 * @return

@@ -29,19 +29,21 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  */
 public class CatalogModel extends CnATreeElement {
+    private final static transient Logger log = Logger.getLogger(CatalogModel.class);
 
     private static final long serialVersionUID = 1L;
 
-    public static final String TYPE_ID = "Catalog Model";
+    public static final String TYPE_ID = "catalog_model";
 
     @Override
     public String getTypeId() {
-        return "catalog_model";
+        return TYPE_ID;
     }
 
     @Override
     public String getTitle() {
-        return TYPE_ID;
+        return "Catalog Model";
     }
+
 
 }
