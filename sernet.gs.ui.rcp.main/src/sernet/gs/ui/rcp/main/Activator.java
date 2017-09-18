@@ -611,6 +611,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
                     CnAElementFactory.getInstance().loadOrCreateModel(new ProgressAdapter(monitor));
                     CnAElementFactory.getInstance().getISO27kModel();
                     CnAElementFactory.getInstance().getBpModel();
+                    CnAElementFactory.getInstance().getCatalogModel();
                 } catch (Exception e) {
                     LOG.error("Error while loading model.", e); //$NON-NLS-1$
                     if (e.getCause() != null && e.getCause().getLocalizedMessage() != null) {
