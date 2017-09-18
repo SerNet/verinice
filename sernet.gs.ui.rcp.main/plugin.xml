@@ -216,7 +216,7 @@
             allowMultiple="false"
             category="sernet.verinice.bp.rcp"
             class="sernet.verinice.bp.rcp.BaseProtectionView"
-            icon="icons/sweetie-verinice/png/16-dice-grey.png"
+            icon="icons/base-protection/base_protection_view.png"
             id="sernet.verinice.bp.rcp.BaseProtectionView"
             name="%view.name.20"
             restorable="true">
@@ -1383,6 +1383,12 @@
                icon="icons/copy.png"
                label="%command.label.0"/>
          <command
+               commandId="sernet.verinice.iso27k.rcp.commands.copywithlinks"
+               disabledIcon="icons/copy.png"
+               icon="icons/copy.png"
+               label="%command.label.copywithlinks"
+               tooltip="%command.tooltip.copywithlinks"/>
+         <command
                commandId="org.eclipse.ui.edit.paste"
                disabledIcon="icons/copy.png"
                icon="icons/paste.png"
@@ -2010,6 +2016,7 @@
 	     			<or>
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+	       				<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -2027,6 +2034,9 @@
 	                    </not>
 	                    <not>
 	                    	<instanceof value="sernet.verinice.model.iso27k.ImportIsoGroup"/>
+	                    </not>
+	                    <not>
+	                    	<instanceof value="sernet.verinice.model.bp.groups.ImportBpGroup"/>
 	                    </not>
 	                </iterate>
             	</with>
