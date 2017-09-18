@@ -290,6 +290,12 @@
             name="%command.name.newGroup">
       </command>
       <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="%command.description.newGroup"
+            id="sernet.verinice.bp.rcp.commands.newGroup"
+            name="%command.name.newGroup">
+      </command>
+      <command
       		categoryId="sernet.gs.ui.rcp.commands"
       		defaultHandler="sernet.verinice.rcp.DefaultHandler"
       		id="sernet.verinice.iso27k.rcp.commands.charset"
@@ -378,6 +384,10 @@
             sequence="CTRL+SHIFT+C" />
        <key
             commandId="sernet.verinice.iso27k.rcp.commands.newGroup"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="CTRL+SHIFT+N" />
+       <key
+            commandId="sernet.verinice.bp.rcp.commands.newGroup"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="CTRL+SHIFT+N" />
    </extension>
@@ -1325,7 +1335,7 @@
       </menuContribution>
    	  <menuContribution locationURI="popup:sernet.verinice.bp.rcp.BaseProtectionView?after=content">	  
    	  	 <command
-               commandId="sernet.verinice.iso27k.rcp.commands.newGroup"
+               commandId="sernet.verinice.bp.rcp.commands.newGroup"
                disabledIcon="icons/generic_element_new.png"
                icon="icons/generic_element_new.png"
                label="New base protection group...">
@@ -2115,13 +2125,12 @@
         	</with>
 		 </enabledWhen>
       </handler>  
-      <handler class="sernet.verinice.iso27k.rcp.action.AddGroupHandler"
+      <handler class="sernet.verinice.iso27k.rcp.action.AddIsoGroupHandler"
             commandId="sernet.verinice.iso27k.rcp.commands.newGroup">
          <activeWhen>
          	<with variable="activePartId">
      			<or>
        				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
-       				<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
        			</or>
     		</with>
          </activeWhen> 
@@ -2133,6 +2142,24 @@
                 </iterate>
         	</with>
 		 </enabledWhen>
+      </handler>
+      <handler class="sernet.verinice.bp.rcp.action.AddBaseProtectionGroupHandler"
+            commandId="sernet.verinice.bp.rcp.commands.newGroup">
+				<activeWhen>
+					<with variable="activePartId">
+						<or>
+							<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
+						</or>
+					</with>
+				</activeWhen> 
+				<enabledWhen>
+					<with variable="selection">
+						<iterate operator="and">
+							<instanceof value="sernet.verinice.model.common.CnATreeElement"/>
+							<test property="sernet.verinice.iso27k.model.isWritable"/>            
+						</iterate>
+					</with>
+				</enabledWhen>
       </handler>
       <handler class="sernet.verinice.iso27k.rcp.action.PasteHandler"
             commandId="org.eclipse.ui.edit.paste">

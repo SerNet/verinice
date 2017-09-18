@@ -37,6 +37,7 @@
                 "reportdepositedit" -->
 	        <action id="addbsielement" />
 	        <action id="addbpelement"/>
+          <action id="addbpgroup"/>  
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
