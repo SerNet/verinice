@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.rcp.action;
+package sernet.verinice.rcp;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -91,44 +91,44 @@ import sernet.verinice.rcp.RightsEnabledHandler;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class AddGroupHandler extends RightsEnabledHandler implements IElementUpdater {
-	private static final Logger LOG = Logger.getLogger(AddGroupHandler.class);
+public abstract class AddGroupHandler extends RightsEnabledHandler implements IElementUpdater {
 	
+    private static final Logger LOG = Logger.getLogger(AddGroupHandler.class);	
 	protected static final Map<String, String> TITLE_FOR_TYPE;
 	
 	static {
         TITLE_FOR_TYPE = new HashMap<>();
         // ISO27000 
-        TITLE_FOR_TYPE.put(AssetGroup.TYPE_ID, Messages.getString("AddGroup.0")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(AuditGroup.TYPE_ID, Messages.getString("AddGroup.1")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(ControlGroup.TYPE_ID, Messages.getString("AddGroup.2")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(DocumentGroup.TYPE_ID, Messages.getString("AddGroup.3")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(EvidenceGroup.TYPE_ID, Messages.getString("AddGroup.4")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(ExceptionGroup.TYPE_ID, Messages.getString("AddGroup.5")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(FindingGroup.TYPE_ID, Messages.getString("AddGroup.6")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(IncidentGroup.TYPE_ID, Messages.getString("AddGroup.7")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(IncidentScenarioGroup.TYPE_ID, Messages.getString("AddGroup.8")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(InterviewGroup.TYPE_ID, Messages.getString("AddGroup.9")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(PersonGroup.TYPE_ID, Messages.getString("AddGroup.10")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(ProcessGroup.TYPE_ID, Messages.getString("AddGroup.11")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(RecordGroup.TYPE_ID, Messages.getString("AddGroup.12")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(RequirementGroup.TYPE_ID, Messages.getString("AddGroup.13")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(ResponseGroup.TYPE_ID, Messages.getString("AddGroup.14")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(ThreatGroup.TYPE_ID, Messages.getString("AddGroup.15")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(VulnerabilityGroup.TYPE_ID, Messages.getString("AddGroup.16")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(Asset.TYPE_ID, Messages.getString("AddGroup.17")); //$NON-NLS-1$
+        TITLE_FOR_TYPE.put(AssetGroup.TYPE_ID, Messages.AddGroup_0); 
+        TITLE_FOR_TYPE.put(AuditGroup.TYPE_ID, Messages.AddGroup_1);
+        TITLE_FOR_TYPE.put(ControlGroup.TYPE_ID, Messages.AddGroup_2);
+        TITLE_FOR_TYPE.put(DocumentGroup.TYPE_ID, Messages.AddGroup_3);
+        TITLE_FOR_TYPE.put(EvidenceGroup.TYPE_ID, Messages.AddGroup_4);
+        TITLE_FOR_TYPE.put(ExceptionGroup.TYPE_ID, Messages.AddGroup_5);
+        TITLE_FOR_TYPE.put(FindingGroup.TYPE_ID, Messages.AddGroup_6);
+        TITLE_FOR_TYPE.put(IncidentGroup.TYPE_ID, Messages.AddGroup_7);
+        TITLE_FOR_TYPE.put(IncidentScenarioGroup.TYPE_ID, Messages.AddGroup_8);
+        TITLE_FOR_TYPE.put(InterviewGroup.TYPE_ID, Messages.AddGroup_9);
+        TITLE_FOR_TYPE.put(PersonGroup.TYPE_ID, Messages.AddGroup_10);
+        TITLE_FOR_TYPE.put(ProcessGroup.TYPE_ID, Messages.AddGroup_11);
+        TITLE_FOR_TYPE.put(RecordGroup.TYPE_ID, Messages.AddGroup_12);
+        TITLE_FOR_TYPE.put(RequirementGroup.TYPE_ID, Messages.AddGroup_13);
+        TITLE_FOR_TYPE.put(ResponseGroup.TYPE_ID, Messages.AddGroup_14);
+        TITLE_FOR_TYPE.put(ThreatGroup.TYPE_ID, Messages.AddGroup_15);
+        TITLE_FOR_TYPE.put(VulnerabilityGroup.TYPE_ID, Messages.AddGroup_16);
+        TITLE_FOR_TYPE.put(Asset.TYPE_ID, Messages.AddGroup_17);
         // Base protection
-        TITLE_FOR_TYPE.put(ApplicationGroup.TYPE_ID, Messages.getString("AddGroupHandler.application")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(BpPersonGroup.TYPE_ID, Messages.getString("AddGroupHandler.group")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(BpRequirementGroup.TYPE_ID, Messages.getString("AddGroupHandler.requirement")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(BpThreatGroup.TYPE_ID, Messages.getString("AddGroupHandler.threat")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(BusinessProcessGroup.TYPE_ID, Messages.getString("AddGroupHandler.business_process")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(DeviceGroup.TYPE_ID, Messages.getString("AddGroupHandler.device")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(IcsSystemGroup.TYPE_ID, Messages.getString("AddGroupHandler.ics_system")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(ItSystemGroup.TYPE_ID, Messages.getString("AddGroupHandler.it_system")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(NetworkGroup.TYPE_ID, Messages.getString("AddGroupHandler.network")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(RoomGroup.TYPE_ID, Messages.getString("AddGroupHandler.room")); //$NON-NLS-1$
-        TITLE_FOR_TYPE.put(SafeguardGroup.TYPE_ID, Messages.getString("AddGroupHandler.safeguard")); //$NON-NLS-1$  
+        TITLE_FOR_TYPE.put(ApplicationGroup.TYPE_ID, Messages.AddGroupHandler_application);
+        TITLE_FOR_TYPE.put(BpPersonGroup.TYPE_ID, Messages.AddGroupHandler_group);
+        TITLE_FOR_TYPE.put(BpRequirementGroup.TYPE_ID, Messages.AddGroupHandler_requirement);
+        TITLE_FOR_TYPE.put(BpThreatGroup.TYPE_ID, Messages.AddGroupHandler_threat);
+        TITLE_FOR_TYPE.put(BusinessProcessGroup.TYPE_ID, Messages.AddGroupHandler_business_process);
+        TITLE_FOR_TYPE.put(DeviceGroup.TYPE_ID, Messages.AddGroupHandler_device);
+        TITLE_FOR_TYPE.put(IcsSystemGroup.TYPE_ID, Messages.AddGroupHandler_ics_system);
+        TITLE_FOR_TYPE.put(ItSystemGroup.TYPE_ID, Messages.AddGroupHandler_it_system);
+        TITLE_FOR_TYPE.put(NetworkGroup.TYPE_ID, Messages.AddGroupHandler_network);
+        TITLE_FOR_TYPE.put(RoomGroup.TYPE_ID, Messages.AddGroupHandler_room);
+        TITLE_FOR_TYPE.put(SafeguardGroup.TYPE_ID, Messages.AddGroupHandler_safeguard);  
     }
 	
 	private CnATreeElement parent;
@@ -153,10 +153,10 @@ public class AddGroupHandler extends RightsEnabledHandler implements IElementUpd
             }
         } catch (NotSufficientRightsException e){
             LOG.error("Could not add element", e); //$NON-NLS-1$
-            ExceptionUtil.log(e, Messages.getString("AddElement.21")); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.AddGroupHandler_permission_error); 
         } catch (Exception e) {
             LOG.error("Could not add element group", e); //$NON-NLS-1$
-            ExceptionUtil.log(e, Messages.getString("AddGroup.18")); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.AddGroupHandler_error);
         }
         return null;
     }
@@ -208,7 +208,7 @@ public class AddGroupHandler extends RightsEnabledHandler implements IElementUpd
         boolean enabled = false;         
         if(selectedElement instanceof Audit) {
             enabled = false;
-            menu.setText(Messages.getString("AddGroup.19")); //$NON-NLS-1$
+            menu.setText(Messages.AddGroupHandler_new_group); 
         } else if(selectedElement instanceof Group<?>) {
             enabled = true;
             Group<?> group = (Group<?>) selectedElement;
@@ -217,7 +217,7 @@ public class AddGroupHandler extends RightsEnabledHandler implements IElementUpd
                 childTypeId = Control.TYPE_ID;
             }
             menu.setIcon(ImageDescriptor.createFromImage(ImageCache.getInstance().getImageForTypeId(childTypeId)));   
-            menu.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.getString("AddGroup.19") ); //$NON-NLS-1$
+            menu.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.AddGroupHandler_new_group );
         } 
         // Only change state when it is enabled, since we do not want to
         // trash the enablement settings of plugin.xml
@@ -256,19 +256,4 @@ public class AddGroupHandler extends RightsEnabledHandler implements IElementUpd
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
-     */
-    @Override
-    public String getRightID() {
-        return ActionRightIDs.ADDISMGROUP;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // DO NOTHING
-    }
 }

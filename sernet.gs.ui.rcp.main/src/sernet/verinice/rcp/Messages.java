@@ -19,6 +19,36 @@ package sernet.verinice.rcp;
 
 import org.eclipse.osgi.util.NLS;
 
+import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bp.groups.BpThreatGroup;
+import sernet.verinice.model.bp.groups.BusinessProcessGroup;
+import sernet.verinice.model.bp.groups.DeviceGroup;
+import sernet.verinice.model.bp.groups.IcsSystemGroup;
+import sernet.verinice.model.bp.groups.ItSystemGroup;
+import sernet.verinice.model.bp.groups.NetworkGroup;
+import sernet.verinice.model.bp.groups.RoomGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
+import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.iso27k.AssetGroup;
+import sernet.verinice.model.iso27k.AuditGroup;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.DocumentGroup;
+import sernet.verinice.model.iso27k.EvidenceGroup;
+import sernet.verinice.model.iso27k.ExceptionGroup;
+import sernet.verinice.model.iso27k.FindingGroup;
+import sernet.verinice.model.iso27k.IncidentGroup;
+import sernet.verinice.model.iso27k.IncidentScenarioGroup;
+import sernet.verinice.model.iso27k.InterviewGroup;
+import sernet.verinice.model.iso27k.PersonGroup;
+import sernet.verinice.model.iso27k.ProcessGroup;
+import sernet.verinice.model.iso27k.RecordGroup;
+import sernet.verinice.model.iso27k.RequirementGroup;
+import sernet.verinice.model.iso27k.ResponseGroup;
+import sernet.verinice.model.iso27k.ThreatGroup;
+import sernet.verinice.model.iso27k.VulnerabilityGroup;
+
 /**
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ 
@@ -117,6 +147,41 @@ public class Messages extends NLS {
     public static String UserprofileDialog_9;
     public static String ValidationServiceUI_0;
     public static String ValidationServiceUI_1;
+    
+    public static String AddGroup_0;
+    public static String AddGroup_1;
+    public static String AddGroup_2;
+    public static String AddGroup_3;
+    public static String AddGroup_4;
+    public static String AddGroup_5;
+    public static String AddGroup_6;
+    public static String AddGroup_7;
+    public static String AddGroup_8;
+    public static String AddGroup_9;
+    public static String AddGroup_10;
+    public static String AddGroup_11;
+    public static String AddGroup_12;
+    public static String AddGroup_13;
+    public static String AddGroup_14;
+    public static String AddGroup_15;
+    public static String AddGroup_16;
+    public static String AddGroup_17;
+    
+    public static String AddGroupHandler_application;
+    public static String AddGroupHandler_group;
+    public static String AddGroupHandler_requirement;
+    public static String AddGroupHandler_threat;
+    public static String AddGroupHandler_business_process;
+    public static String AddGroupHandler_device;
+    public static String AddGroupHandler_error;
+    public static String AddGroupHandler_ics_system;
+    public static String AddGroupHandler_it_system;
+    public static String AddGroupHandler_network;
+    public static String AddGroupHandler_new_group;
+    public static String AddGroupHandler_permission_error;
+    public static String AddGroupHandler_room;
+    public static String AddGroupHandler_safeguard;
+   
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

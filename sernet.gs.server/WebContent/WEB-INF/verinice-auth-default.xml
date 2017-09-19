@@ -35,6 +35,7 @@
             "showallfiles" -->
             <action id="addbsielement" />
             <action id="addbpelement"/>
+            <action id="addbpgroup"/>  
             <action id="addcatalog" />
             <action id="addfile" />
             <action id="addismelement" />
@@ -130,6 +131,7 @@
             "addsecurityassessment"-->
 	        <action id="addbsielement" />
 	        <action id="addbpelement"/>
+          <action id="addbpgroup"/>  
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
@@ -258,6 +260,7 @@
            	<action id="accesscontrol" />
 	        <action id="addbsielement" />
 	        <action id="addbpelement"/>
+          <action id="addbpgroup"/>  
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
@@ -339,6 +342,7 @@
             <action id="accountsettings" /> 
             <action id="addbsielement" /> 
             <action id="addbpelement"/>
+            <action id="addbpgroup"/>  
             <action id="addcatalog" /> 
             <action id="addfile" /> 
             <action id="addismelement" /> 
@@ -413,6 +417,7 @@
 	        <action id="accountsettings" />
 	        <action id="addbsielement" />
 	        <action id="addbpelement"/>
+          <action id="addbpgroup"/>  
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />

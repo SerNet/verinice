@@ -16,7 +16,6 @@
  *
  * Contributors:
  *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
- *     Daniel Murygin dm[at]sernet.de - more actions
  ******************************************************************************/
 package sernet.verinice.bp.rcp;
 
@@ -39,7 +38,6 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -83,8 +81,8 @@ import sernet.verinice.model.bp.IBpModelListener;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.catalog.CatalogModel;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
@@ -111,10 +109,10 @@ public class BaseProtectionView extends RightsEnabledView
     private static int operations = DND.DROP_COPY | DND.DROP_MOVE;   
     private Object mutex = new Object();
     
-    private ElementManager elementManager;
-    
     protected TreeViewer viewer;
     private TreeContentProvider contentProvider;
+    private ElementManager elementManager;
+    
     private DrillDownAdapter drillDownAdapter;
     
     private IModelLoadListener modelLoadListener;
