@@ -1626,9 +1626,8 @@ public final class CnAElementFactory {
                 CatalogModel newModel = loadCatalogModel();
                 if (log.isDebugEnabled()) {
                     log.debug("reloadModelFromDatabase, base protection model loaded"); //$NON-NLS-1$
-                }//TODO urs add the listners
-//                catalogModel.modelReload(newModel);
-//                catalogModel.moveListener(newModel);
+                }
+                catalogModel.modelReload(newModel);
                 catalogModel = newModel;
                 fireLoad(catalogModel);
             }

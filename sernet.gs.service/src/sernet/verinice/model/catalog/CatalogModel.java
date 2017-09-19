@@ -19,6 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.model.catalog;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import org.apache.log4j.Logger;
+
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -29,10 +36,13 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  */
 public class CatalogModel extends CnATreeElement {
-
+    private static final Logger LOG = Logger.getLogger(CatalogModel.class);
     private static final long serialVersionUID = 1L;
 
     public static final String TYPE_ID = "catalog_model";
+    private transient List<ICatalogModelListener> listeners;
+
+    private Lock lock = new ReentrantLock();
 
     @Override
     public String getTypeId() {
@@ -44,5 +54,52 @@ public class CatalogModel extends CnATreeElement {
         return "Catalog Model";
     }
 
+    @Override
+    public void refreshAllListeners(Object source) {
+        for (ICatalogModelListener listener : getListeners()) {
+            listener.modelRefresh(source);
+        }
+    }
 
+    public void addCatalogModelListener(ICatalogModelListener listener) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Adding Catalog model listener.");
+        }
+        if (!getListeners().contains(listener)) {
+            getListeners().add(listener);
+        }
+    }
+
+    public void removeCatalogModelListener(ICatalogModelListener listener) {
+        if (getListeners().contains(listener)) {
+            getListeners().remove(listener);
+        }
+    }
+
+    public void modelReload(CatalogModel newModel) {
+        for (ICatalogModelListener listener : getListeners()) {
+             listener.modelReload(newModel);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("modelReload, listener: " + listener); //$NON-NLS-1$
+            }
+        }
+    }
+    
+    /**
+     * Create the listener list lazy. Ensure the list is created only once and synchronize only the necessary part of the code.
+     */
+    public List<ICatalogModelListener> getListeners() {
+        if (listeners == null) {
+            lock.lock();
+            try {
+                if (listeners != null) {
+                    return listeners;
+                }
+                listeners = new CopyOnWriteArrayList<>();
+            } finally {
+                lock.unlock();
+            }
+        }
+        return listeners;
+    }
 }
