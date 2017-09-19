@@ -38,7 +38,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -52,6 +51,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.internal.ObjectActionContributorManager;
 import org.eclipse.ui.part.DrillDownAdapter;
 
 import sernet.gs.service.NumericStringComparator;
@@ -69,11 +69,10 @@ import sernet.verinice.iso27k.rcp.Messages;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
-import sernet.verinice.model.bp.IBpModelListener;
 import sernet.verinice.model.bp.elements.BpModel;
-import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.catalog.CatalogModel;
+import sernet.verinice.model.catalog.ICatalogModelListener;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.ISO27KModel;
@@ -103,7 +102,7 @@ public class CatalogView extends RightsEnabledView
     
     
     private IModelLoadListener modelLoadListener;
-    private IBpModelListener modelUpdateListener;
+    private ICatalogModelListener modelUpdateListener;
     
     private Action doubleClickAction; 
     private ExpandAction expandAction;
@@ -136,8 +135,8 @@ public class CatalogView extends RightsEnabledView
      * @see sernet.verinice.rcp.RightsEnabledView#getRightID()
      */
     @Override
-    public String getRightID() {
-        return ActionRightIDs.CATALOGVIEW;
+    public String getRightID() {//TODO urs use the right id
+        return ActionRightIDs.BASEPROTECTIONVIEW;
     }
 
     /* (non-Javadoc)
@@ -212,8 +211,7 @@ public class CatalogView extends RightsEnabledView
                         Logger.getLogger(this.getClass()).debug("Creating modelUpdateListener for MotITBPView."); //$NON-NLS-1$
                     }
                     modelUpdateListener = new TreeUpdateListener(viewer,elementManager);
-                    //TODO: urs check the model listener
-//                    CnAElementFactory.getInstance().getCatalogModel().addModITBOModelListener(modelUpdateListener);//
+                    CnAElementFactory.getInstance().getCatalogModel().addCatalogModelListener(modelUpdateListener);//
                     Display.getDefault().syncExec(new Runnable(){
                         @Override
                         public void run() {
@@ -224,7 +222,7 @@ public class CatalogView extends RightsEnabledView
                 }
             } else if(modelLoadListener==null) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("CatalogMOdel No model loaded, adding model load listener."); //$NON-NLS-1$
+                    LOG.debug("CatalogModel No model loaded, adding model load listener."); //$NON-NLS-1$
                 }
                 // model is not loaded yet: add a listener to load data when it's loaded
                 modelLoadListener = new ModelLoadListener();
@@ -244,6 +242,7 @@ public class CatalogView extends RightsEnabledView
     }
     
     private void hookContextMenu() {
+        //TODO: urs do we really need an context menu ?
         MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
         menuMgr.setRemoveAllWhenShown(true);
         menuMgr.addMenuListener(new IMenuListener() {
@@ -259,9 +258,7 @@ public class CatalogView extends RightsEnabledView
     }
     
     protected void fillContextMenu(IMenuManager manager) {
-        //TODO:urs What actions do we need in the context menu.
-        manager.getItems();
-        manager.findMenuUsingPath("popup");
+        ObjectActionContributorManager.getManager().unregisterAllContributors();//this is not really nice
         
         manager.add(new GroupMarker("content")); //$NON-NLS-1$
         manager.add(new Separator());
@@ -278,8 +275,13 @@ public class CatalogView extends RightsEnabledView
                 if(viewer.getSelection() instanceof IStructuredSelection) {
                     Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();      
                     EditorFactory.getInstance().updateAndOpenObject(sel);
-                   
-                    
+//                    IEditorInput input = new BSIElementEditorInput((CnATreeElement) sel);
+//                    IEditorPart editor = getSite().getWorkbenchWindow().getActivePage().findEditor(input);
+//                    editor = getSite().getWorkbenchWindow().getActivePage().getActiveEditor();
+//                    if (editor instanceof BSIElementEditor) {
+//                        BSIElementEditor elementEditor = (BSIElementEditor) editor;
+//                        elementEditor.setIsWriteAllowed(false);//TODO urs this is to late
+//                    }
                 }
             }
         };
@@ -352,8 +354,7 @@ public class CatalogView extends RightsEnabledView
     public void dispose() {
         elementManager.clearCache();
         if(CnAElementFactory.isModernizedBpCatalogLoaded()) {
-            //CnAElementFactory.getInstance().getBpModel().removeBpModelListener(modelUpdateListener);
-            //TODO: urs add the listener
+            CnAElementFactory.getInstance().getCatalogModel().removeCatalogModelListener(modelUpdateListener);
         }
         CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
         super.dispose();

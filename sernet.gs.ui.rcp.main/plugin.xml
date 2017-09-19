@@ -1939,7 +1939,23 @@
                toolbarPath="additions"
                tooltip="%action.tooltip.11">
          </action>
-      </viewContribution>      
+      </viewContribution>
+      
+      <viewContribution
+            id="sernet.verinice.rcp.catalog.action.importOrganization"
+            targetID="sernet.verinice.rcp.catalog.CatalogView">
+         <action
+               class="sernet.gs.ui.rcp.main.actions.ImportXMLAction"
+               icon="icons/import.gif"
+               id="sernet.gs.ui.rcp.main.actions.ImportXMLAction"
+               label="%action.label.21"
+               state="true"
+               style="push"
+               toolbarPath="additions"
+               tooltip="%action.tooltip.21">
+         </action>
+      </viewContribution>
+            
    </extension>
    <extension point="org.eclipse.ui.handlers">
       <handler class="sernet.verinice.iso27k.rcp.action.CopyHandler"
