@@ -106,11 +106,7 @@ public class CatalogView extends RightsEnabledView
     private IBpModelListener modelUpdateListener;
     
     private Action doubleClickAction; 
-    
-//    private ShowBulkEditAction bulkEditAction;
-    
     private ExpandAction expandAction;
-    
     private CollapseAction collapseAction;
     
     public static final String ID = "sernet.verinice.rcp.catalog.CatalogView"; //$NON-NLS-1$
@@ -141,7 +137,7 @@ public class CatalogView extends RightsEnabledView
      */
     @Override
     public String getRightID() {
-        return ActionRightIDs.BASEPROTECTIONVIEW;//TODO: urs add a right constant
+        return ActionRightIDs.CATALOGVIEW;
     }
 
     /* (non-Javadoc)
@@ -216,7 +212,7 @@ public class CatalogView extends RightsEnabledView
                         Logger.getLogger(this.getClass()).debug("Creating modelUpdateListener for MotITBPView."); //$NON-NLS-1$
                     }
                     modelUpdateListener = new TreeUpdateListener(viewer,elementManager);
-                    //TODO: check the model listener
+                    //TODO: urs check the model listener
 //                    CnAElementFactory.getInstance().getCatalogModel().addModITBOModelListener(modelUpdateListener);//
                     Display.getDefault().syncExec(new Runnable(){
                         @Override
@@ -263,14 +259,7 @@ public class CatalogView extends RightsEnabledView
     }
     
     protected void fillContextMenu(IMenuManager manager) {
-        //TODO:urs What action we need in the contextmenue
-//        ISelection selection = viewer.getSelection();
-//        if(selection instanceof IStructuredSelection && ((IStructuredSelection) selection).size()==1) {
-//            Object sel = ((IStructuredSelection) selection).getFirstElement();
-//            if(sel instanceof ItNetwork) {
-//            }
-//        }
-        
+        //TODO:urs What actions do we need in the context menu.
         manager.getItems();
         manager.findMenuUsingPath("popup");
         
@@ -278,19 +267,6 @@ public class CatalogView extends RightsEnabledView
         manager.add(new Separator());
         manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
         manager.add(new Separator());
-//        manager.add(new GroupMarker("special")); //$NON-NLS-1$
-
-        
-        
-        
-        
-        
-        //        manager.add(bulkEditAction);
-//        manager.add(accessControlEditAction);
-//        manager.add(naturalizeAction);
-//        manager.add(new Separator());
-//        manager.add(expandAction);
-//        manager.add(collapseAction);
         drillDownAdapter.addNavigationActions(manager); 
     }
     
@@ -302,6 +278,8 @@ public class CatalogView extends RightsEnabledView
                 if(viewer.getSelection() instanceof IStructuredSelection) {
                     Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();      
                     EditorFactory.getInstance().updateAndOpenObject(sel);
+                   
+                    
                 }
             }
         };
@@ -353,8 +331,6 @@ public class CatalogView extends RightsEnabledView
         manager.add(expandAction);
         manager.add(collapseAction);
         drillDownAdapter.addNavigationActions(manager);
-//        manager.add(filterAction);
-//        manager.add(linkWithEditorAction);
     }
 
 
@@ -380,7 +356,6 @@ public class CatalogView extends RightsEnabledView
             //TODO: urs add the listener
         }
         CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
-//        getSite().getPage().removePartListener(linkWithEditorPartListener);
         super.dispose();
     }
     

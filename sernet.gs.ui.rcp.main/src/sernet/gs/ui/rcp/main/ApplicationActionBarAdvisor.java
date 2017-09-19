@@ -203,7 +203,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private TestAction testAction;
     
     private OpenViewAction openCatalogViewAction;
-    //TODO: urs add the catalog view here
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
