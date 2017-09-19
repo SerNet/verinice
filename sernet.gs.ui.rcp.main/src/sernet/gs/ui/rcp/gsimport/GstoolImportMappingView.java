@@ -54,6 +54,7 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.SonstIT;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.RightsEnabledView;
 
@@ -149,6 +150,11 @@ public class GstoolImportMappingView extends RightsEnabledView implements IGstoo
 
             @Override
             public void loaded(BpModel model) {
+                // nothing to do
+            }
+
+            @Override
+            public void loaded(CatalogModel model) {
                 // nothing to do
             }
         };

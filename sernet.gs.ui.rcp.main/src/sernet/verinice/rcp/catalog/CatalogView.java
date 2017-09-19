@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Sebastian Hagedorn.
+ * Copyright (c) 2017 Urs Zeidler.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -16,9 +16,12 @@
  *
  * Contributors:
  *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
- *     Daniel Murygin dm[at]sernet.de - more actions
+ *     Urs Zeidler uz[at]sernet.de - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.bp.rcp;
+package sernet.verinice.rcp.catalog;
+
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -27,7 +30,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
@@ -36,55 +38,43 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.dnd.DND;
-import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.part.DrillDownAdapter;
 
-import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.Perspective;
-import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
-import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
-import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionElementTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionGroupTransfer;
-import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
-import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditorInput;
-import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
-import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
+import sernet.verinice.iso27k.rcp.Messages;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
-import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
-import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IBpModelListener;
 import sernet.verinice.model.bp.elements.BpModel;
-import sernet.verinice.model.bsi.Attachment;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.catalog.CatalogModel;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
@@ -95,49 +85,42 @@ import sernet.verinice.rcp.tree.TreeUpdateListener;
 import sernet.verinice.service.tree.ElementManager;
 
 /**
- * This view shows all elements of a base protection IT network
- * in a tree. It provides action to add, edit, delete and manage these elements.
- * 
- * @author Sebastian Hagedorn sh[at]sernet.de
- * @author Daniel Murygin dm[at]sernet.de
+ * @author Urs Zeidler uz[at]sernet.de
+ *
  */
-public class BaseProtectionView extends RightsEnabledView 
+public class CatalogView extends RightsEnabledView 
     implements IAttachedToPerspective, ILinkedWithEditorView {
     
-    private static final Logger LOG = Logger.getLogger(BaseProtectionView.class);
-    
-    public static final String ID = "sernet.verinice.bp.rcp.BaseProtectionView"; //$NON-NLS-1$
-    
-    private static int operations = DND.DROP_COPY | DND.DROP_MOVE;   
-    private Object mutex = new Object();
-    
-    private ElementManager elementManager;
+    private static final Logger LOG = Logger.getLogger(CatalogView.class);
     
     protected TreeViewer viewer;
     private TreeContentProvider contentProvider;
+    private ElementManager elementManager;
+    
     private DrillDownAdapter drillDownAdapter;
+//    private Object mutex = new Object();
+    private Lock lock = new ReentrantLock();
+    
     
     private IModelLoadListener modelLoadListener;
     private IBpModelListener modelUpdateListener;
-    private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);   
     
     private Action doubleClickAction; 
-    private Action linkWithEditorAction; 
-    private ShowBulkEditAction bulkEditAction;     
-    private ExpandAction expandAction; 
-    private Action expandAllAction; 
-    private CollapseAction collapseAction;   
-    private Action collapseAllAction; 
     
-    private MetaDropAdapter metaDropAdapter;
-   
-    private boolean linkingActive = false;
+//    private ShowBulkEditAction bulkEditAction;
     
-    public BaseProtectionView() {
+    private ExpandAction expandAction;
+    
+    private CollapseAction collapseAction;
+    
+    public static final String ID = "sernet.verinice.rcp.catalog.CatalogView"; //$NON-NLS-1$
+    
+    public CatalogView() {
         super();
         elementManager = new ElementManager();
     }
-   
+
+    
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
      */
@@ -149,50 +132,69 @@ public class BaseProtectionView extends RightsEnabledView
             startInitDataJob();
         } catch (Exception e) {
             LOG.error("Error while creating organization view", e); //$NON-NLS-1$
-            ExceptionUtil.log(e, "Error while creating base protection view.");
+            ExceptionUtil.log(e, Messages.ISMView_2);
         }
     }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.BASEPROTECTIONVIEW;//TODO: urs add a right constant
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
+     */
+    @Override
+    public String getViewId() {
+        return ID;
+    }
     
+    /**
+     * @param parent
+     */
     protected void initView(Composite parent) {
         IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
-        if(CnAElementFactory.getInstance().isBpModelLoaded()) {
+        if(CnAElementFactory.isModernizedBpCatalogLoaded()) {
             CnAElementFactory.getInstance().reloadModelFromDatabase();
         }
-             
+        
         contentProvider = new TreeContentProvider(elementManager);
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        viewer.setSorter(new ModITBViewerSorter());
         drillDownAdapter = new DrillDownAdapter(viewer);
         viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(new DecoratingLabelProvider(new TreeLabelProvider(), workbench.getDecoratorManager()));
-        viewer.setSorter(new BaseProtectionTreeSorter());
-        toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
+//        toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
         
         getSite().setSelectionProvider(viewer);
         hookContextMenu();
         makeActions();
         addActions();
         fillToolBar();
-        hookDndListeners();
+//        hookDNDListeners();
         
-        getSite().getPage().addPartListener(linkWithEditorPartListener);
+//        getSite().getPage().addPartListener(linkWithEditorPartListener);
         viewer.refresh(true);
     }
     
     protected void startInitDataJob() {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("MotITBPview: startInitDataJob"); //$NON-NLS-1$
+            LOG.debug("Catalogview: startInitDataJob"); //$NON-NLS-1$
         }
-        WorkspaceJob initDataJob = new WorkspaceJob("Loading data...") {
+        WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 IStatus status = Status.OK_STATUS;
                 try {
-                    monitor.beginTask("Loading data...", IProgressMonitor.UNKNOWN);
+                    monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
                     initData();
                 } catch (Exception e) {
-                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data",e);
+                    LOG.error("Error while loading data for catalog view.", e); //$NON-NLS-1$
+                    status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.ISMView_4,e); //$NON-NLS-1$
                 } finally {
                     monitor.done();
                 }
@@ -204,53 +206,45 @@ public class BaseProtectionView extends RightsEnabledView
 
     protected void initData() { 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("BaseProtectionView: initData"); //$NON-NLS-1$
+            LOG.debug("MotITBPCatalogVIEW: initData"); //$NON-NLS-1$
         }
-        synchronized (mutex) {
-            if(CnAElementFactory.isBpModelLoaded()) {
+        lock.lock();
+        try {
+            if(CnAElementFactory.isModernizedBpCatalogLoaded()) {
                 if (modelUpdateListener == null ) {
-                    // model listener should only be created once!
                     if (LOG.isDebugEnabled()){
                         Logger.getLogger(this.getClass()).debug("Creating modelUpdateListener for MotITBPView."); //$NON-NLS-1$
                     }
                     modelUpdateListener = new TreeUpdateListener(viewer,elementManager);
-                    CnAElementFactory.getInstance().getBpModel().addModITBOModelListener(modelUpdateListener);
+                    //TODO: check the model listener
+//                    CnAElementFactory.getInstance().getCatalogModel().addModITBOModelListener(modelUpdateListener);//
                     Display.getDefault().syncExec(new Runnable(){
                         @Override
                         public void run() {
-                            setInput(CnAElementFactory.getInstance().getBpModel());
+                            setInput(CnAElementFactory.getInstance().getCatalogModel());
                             viewer.refresh();
                         }
                     });
                 }
             } else if(modelLoadListener==null) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("ISMView No model loaded, adding model load listener."); //$NON-NLS-1$
+                    LOG.debug("CatalogMOdel No model loaded, adding model load listener."); //$NON-NLS-1$
                 }
                 // model is not loaded yet: add a listener to load data when it's loaded
-                modelLoadListener = new IModelLoadListener() {                  
-                    @Override
-                    public void closed(BSIModel model) { /* nothing to do*/  }                 
-                    @Override
-                    public void loaded(BSIModel model) { /* nothing to do*/  }                 
-                    @Override
-                    public void loaded(ISO27KModel model) { /* nothing to do*/  }
-
-                    @Override
-                    public void loaded(BpModel model) {
-                        startInitDataJob();
-                    }
-
-                    @Override
-                    public void loaded(CatalogModel model) { /* nothing to do */ }
-                };
-                CnAElementFactory.getInstance().addLoadListener(modelLoadListener);             
+                modelLoadListener = new ModelLoadListener();
+                CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
             }
+        } finally {
+            lock.unlock();
         }
     }
     
-    public void setInput(BpModel model) {
-        viewer.setInput(model);
+    /**
+     * Set the input to the viewer.
+     * @param catalogModel
+     */
+    public void setInput(CatalogModel catalogModel) {
+        viewer.setInput(catalogModel);
     }
     
     private void hookContextMenu() {
@@ -268,36 +262,40 @@ public class BaseProtectionView extends RightsEnabledView
         getSite().registerContextMenu(menuMgr, viewer);
     }
     
-    private void hookDndListeners() {
-        Transfer[] dragTypes = new Transfer[] { BaseProtectionElementTransfer.getInstance(),
-                                                BaseProtectionGroupTransfer.getInstance()
-                                              };
-        Transfer[] dropTypes = new Transfer[] { BaseProtectionElementTransfer.getInstance(),
-                                                BaseProtectionGroupTransfer.getInstance()
-                                              };
-        
-        viewer.addDragSupport(operations, dragTypes, new BSIModelViewDragListener(viewer));
-        viewer.addDropSupport(operations, dropTypes, metaDropAdapter);
-        
-    }
-     
     protected void fillContextMenu(IMenuManager manager) {
+        //TODO:urs What action we need in the contextmenue
+//        ISelection selection = viewer.getSelection();
+//        if(selection instanceof IStructuredSelection && ((IStructuredSelection) selection).size()==1) {
+//            Object sel = ((IStructuredSelection) selection).getFirstElement();
+//            if(sel instanceof ItNetwork) {
+//            }
+//        }
+        
+        manager.getItems();
+        manager.findMenuUsingPath("popup");
+        
         manager.add(new GroupMarker("content")); //$NON-NLS-1$
         manager.add(new Separator());
         manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
         manager.add(new Separator());
-        manager.add(new GroupMarker("special")); //$NON-NLS-1$
-//        manager.add(bulkEditAction);
+//        manager.add(new GroupMarker("special")); //$NON-NLS-1$
+
+        
+        
+        
+        
+        
+        //        manager.add(bulkEditAction);
 //        manager.add(accessControlEditAction);
 //        manager.add(naturalizeAction);
 //        manager.add(new Separator());
-        manager.add(expandAction);
-        manager.add(collapseAction);
+//        manager.add(expandAction);
+//        manager.add(collapseAction);
         drillDownAdapter.addNavigationActions(manager); 
     }
     
+    
     private void makeActions() {
-        
         doubleClickAction = new Action() {
             @Override
             public void run() {
@@ -308,68 +306,14 @@ public class BaseProtectionView extends RightsEnabledView
             }
         };
         
-        makeExpandAndCollapseActions();
-     
-        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), "Bulk edit...");
-              
-        BSIModelViewDropListener bsiDropAdapter;
-        metaDropAdapter = new MetaDropAdapter(viewer);
-        bsiDropAdapter = new BSIModelViewDropListener(viewer);
-        metaDropAdapter.addAdapter(bsiDropAdapter);
-        
-        linkWithEditorAction = new Action("Link with Editor", IAction.AS_CHECK_BOX) {
-            @Override
-            public void run() {
-                toggleLinking(isChecked());
-            }
-        };
-        linkWithEditorAction.setChecked(isLinkingActive());
-        linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
-
-    }
-
-    protected void makeExpandAndCollapseActions() {
         expandAction = new ExpandAction(viewer, contentProvider);
-        expandAction.setText("Expand children");
+        expandAction.setText(Messages.ISMView_7);
         expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
-        
-        collapseAction = new CollapseAction(viewer);
-        collapseAction.setText("Collapse chilren");
-        collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
-        
-        expandAllAction = new Action() {
-            @Override
-            public void run() {
-                expandAll();
-            }
-        };
-        expandAllAction.setText("Expand all");
-        expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
-        collapseAllAction = new Action() {
-            @Override
-            public void run() {
-                viewer.collapseAll();
-            }
-        };
-        collapseAllAction.setText("Collapse all");
-        collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
-    }
-    
-    protected void expandAll() {
-        viewer.expandAll();
-    }
-    
-    protected void toggleLinking(boolean checked) {
-        this.linkingActive = checked;
-        if (checked) {
-            editorActivated(getSite().getPage().getActiveEditor());
-        }
-    }
-    
-    protected boolean isLinkingActive() {
-        return linkingActive;
-    }
+        collapseAction = new CollapseAction(viewer);
+        collapseAction.setText(Messages.ISMView_8);
+        collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
+     }
     
     /**
      * Override this in subclasses to hide empty groups
@@ -397,7 +341,8 @@ public class BaseProtectionView extends RightsEnabledView
             public void doubleClick(DoubleClickEvent event) {
                 doubleClickAction.run();
             }
-        });     
+        });
+        
         viewer.addSelectionChangedListener(expandAction);
         viewer.addSelectionChangedListener(collapseAction);
     }
@@ -405,44 +350,21 @@ public class BaseProtectionView extends RightsEnabledView
     protected void fillToolBar() {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
-        manager.add(expandAllAction);
-        manager.add(collapseAllAction);
+        manager.add(expandAction);
+        manager.add(collapseAction);
         drillDownAdapter.addNavigationActions(manager);
 //        manager.add(filterAction);
-       manager.add(linkWithEditorAction);
+//        manager.add(linkWithEditorAction);
     }
+
 
     /* (non-Javadoc)
      * @see sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.eclipse.ui.IEditorPart)
      */
     @Override
-    public void editorActivated(IEditorPart editor) {
-        if (!isLinkingActive() || !getViewSite().getPage().isPartVisible(this)) {
-            return;
-        }
-        CnATreeElement element = BSIElementEditorInput.extractElement(editor);
-        if(element == null && editor.getEditorInput() instanceof AttachmentEditorInput){
-            element = getElementFromAttachment(editor);                
-        }
-        if(element == null || !(element instanceof IBpElement)) {
-            return;
-        }       
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Element in editor: " + element.getUuid()); //$NON-NLS-1$
-            LOG.debug("Expanding tree now to show element..."); //$NON-NLS-1$
-        }
-        viewer.setSelection(new StructuredSelection(element),true);        
-        LOG.debug("Tree is expanded."); //$NON-NLS-1$
+    public void editorActivated(IEditorPart activeEditor) {
     }
-    
-    /**
-     * gets Element that is referenced by attachment shown by editor
-     * @param editor - ({@link AttachmentEditor}) Editor of {@link Attachment}
-     * @return {@link CnATreeElement}
-     */
-    private CnATreeElement getElementFromAttachment(IEditorPart editor) {
-        return AttachmentEditorInput.extractCnaTreeElement(editor);
-    }
+
 
     @Override
     public String getPerspectiveId() {
@@ -453,28 +375,61 @@ public class BaseProtectionView extends RightsEnabledView
     @Override
     public void dispose() {
         elementManager.clearCache();
-        if(CnAElementFactory.isBpModelLoaded()) {
-            CnAElementFactory.getInstance().getBpModel().removeBpModelListener(modelUpdateListener);
+        if(CnAElementFactory.isModernizedBpCatalogLoaded()) {
+            //CnAElementFactory.getInstance().getBpModel().removeBpModelListener(modelUpdateListener);
+            //TODO: urs add the listener
         }
         CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
 //        getSite().getPage().removePartListener(linkWithEditorPartListener);
         super.dispose();
     }
     
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.RightsEnabledView#getRightID()
-     */
-    @Override
-    public String getRightID() {
-        return ActionRightIDs.BASEPROTECTIONVIEW;
+    private final class ModelLoadListener implements IModelLoadListener {
+        @Override
+        public void closed(BSIModel model) {
+            // nothing to do
+        }
+
+        @Override
+        public void loaded(BSIModel model) {
+            // nothing to do
+        }
+
+        @Override
+        public void loaded(ISO27KModel model) {
+            // nothing to do
+        }
+
+        @Override
+        public void loaded(BpModel model) {
+         // nothing to do
+        }
+
+        @Override
+        public void loaded(CatalogModel model) {
+            startInitDataJob();
+        }
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
-     */
-    @Override
-    public String getViewId() {
-        return ID;
+    class ModITBViewerSorter extends ViewerSorter {
+
+        NumericStringComparator comp = new NumericStringComparator();
+
+        @Override
+        public int compare(Viewer viewer, Object e1, Object e2) {
+            int result = 0;
+            if (e1 instanceof CnATreeElement && e2 instanceof CnATreeElement) {
+                CnATreeElement element1 = (CnATreeElement) e1;
+                CnATreeElement element2 = (CnATreeElement) e2;
+                String message1 = HUITypeFactory.getInstance().getMessage(element1.getTypeId());
+                String message2 = HUITypeFactory.getInstance().getMessage(element2.getTypeId());
+                result = comp.compare(message1, message2);
+
+                if (result == 0) {
+                    result = comp.compare(element1.getTitle(), element2.getTitle());
+                }
+            }
+            return result;
+        }
     }
-    
 }

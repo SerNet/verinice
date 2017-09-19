@@ -25,7 +25,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.service.commands.SaveElement;
-import sernet.verinice.service.iso27k.LoadModel;
+import sernet.verinice.service.model.LoadModel;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -55,7 +55,7 @@ public class CreateIsoModel extends SaveElement<ISO27KModel> {
      */
     @Override
     public void execute() {
-        LoadModel loadModel = new LoadModel();     
+        LoadModel<ISO27KModel> loadModel = new LoadModel<>(ISO27KModel.class);
         try {
             loadModel = getCommandService().executeCommand(loadModel);
         } catch (CommandException e) {

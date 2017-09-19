@@ -41,7 +41,7 @@ import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.CopyCommand;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.RemoveElement;
-import sernet.verinice.service.iso27k.LoadModel;
+import sernet.verinice.service.model.LoadModel;
 
 /**
  * Test {@link CopyCommand} by copying all elements of all types to a sub-folder.
@@ -176,7 +176,7 @@ public class CopyTest extends CommandServiceProvider {
     }
     
     private ISO27KModel loadIsoModel() throws CommandException {
-        LoadModel loadModel = new LoadModel();
+        LoadModel<ISO27KModel> loadModel = new LoadModel<>(ISO27KModel.class);
         loadModel = commandService.executeCommand(loadModel);
         return loadModel.getModel();
     }

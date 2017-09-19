@@ -85,6 +85,7 @@ import sernet.verinice.model.bsi.SubtypenZielobjekte;
 import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.Datenverarbeitung;
@@ -137,8 +138,10 @@ import sernet.verinice.service.commands.CreateITVerbund;
 import sernet.verinice.service.commands.UpdateElement;
 import sernet.verinice.service.commands.crud.CreateIsoModel;
 import sernet.verinice.service.commands.crud.CreateBpModel;
+import sernet.verinice.service.commands.crud.CreateCatalogModel;
 import sernet.verinice.service.commands.crud.UpdateMultipleElements;
-import sernet.verinice.service.iso27k.LoadModel;
+import sernet.verinice.service.model.LoadModel;
+
 
 /**
  * Factory for all model elements. Contains typed factories for sub-elements.
@@ -179,6 +182,8 @@ public final class CnAElementFactory {
 	private static ISO27KModel isoModel;
 	
 	private static BpModel boModel;
+
+	private static CatalogModel catalogModel;
 
 	private ICommandService commandService;
 	
@@ -1312,10 +1317,14 @@ public final class CnAElementFactory {
 		return (isoModel != null);
 	}
 	
-	public static boolean isBpModelLoaded() {
-	    return (boModel != null);
-	}
-	
+    public static boolean isBpModelLoaded() {
+        return (boModel != null);
+    }
+    
+    public static boolean isModernizedBpCatalogLoaded() {
+        return (catalogModel != null);
+    }
+    
 	public void closeModel() {
 		dbHome.close();
 		fireClosed();
@@ -1363,7 +1372,13 @@ public final class CnAElementFactory {
         }	    
 	}
 
-	/**
+	private void fireLoad(CatalogModel model) {
+        for (IModelLoadListener listener : listeners) {
+            listener.loaded(model);
+        }       
+    }
+
+    /**
 	 * Returns whether there is an active database connection.
 	 * 
 	 * @return
@@ -1415,13 +1430,58 @@ public final class CnAElementFactory {
 	    return boModel;
 	}
 
-	/**
+	public CatalogModel getCatalogModel() {
+        synchronized(mutex) {
+            if (catalogModel == null) {
+                catalogModel = loadCatalogModel();
+                if (catalogModel == null) {
+                    createCatalogModel();
+                }
+            }
+        }
+        return catalogModel;
+    }
+
+    private void createCatalogModel() {
+        try {
+            CreateCatalogModel command = new CreateCatalogModel();
+            command = getCommandService().executeCommand(command);
+            catalogModel = command.getElement();
+            if (log.isInfoEnabled()) {//TODO: urs change strings
+                log.info("ISO27KModel created"); //$NON-NLS-1$
+            }
+            if (isoModel != null) {
+                fireLoad(catalogModel);
+            }
+        } catch (CommandException e) {//TODO: urs change strings
+            log.error(Messages.getString("CnAElementFactory.2"), e); //$NON-NLS-1$
+        }
+    }
+
+    private CatalogModel loadCatalogModel() {
+        CatalogModel model = null;
+        try {
+            LoadModel<CatalogModel> loadModel = new LoadModel<>(CatalogModel.class);
+            loadModel = getCommandService().executeCommand(loadModel);
+            model = loadModel.getModel();
+            if (model != null) {
+                fireLoad(model);
+            }
+        } catch (Exception e) {//TODO: urs make new string
+            log.error(Messages.getString("CnAElementFactory.1"), e); //$NON-NLS-1$
+            throw new RuntimeException(
+                    Messages.getString("CnAElementFactory.1"), e);
+        }
+        return model;
+    }
+
+    /**
 	 * @return
 	 */
 	private ISO27KModel loadIsoModel() {
 		ISO27KModel model = null;
 		try {
-			LoadModel loadModel = new LoadModel();
+			LoadModel<ISO27KModel> loadModel = new LoadModel<>(ISO27KModel.class);
 			loadModel = getCommandService().executeCommand(loadModel);
 			model = loadModel.getModel();
 			if (model != null) {
@@ -1552,16 +1612,27 @@ public final class CnAElementFactory {
 				isoModel = newModel;
 				fireLoad(isoModel);
 			}
-			if (isBpModelLoaded()) {
-			    BpModel newModel = loadBpModel();
-			    if (log.isDebugEnabled()) {
-			        log.debug("reloadModelFromDatabase, base protection model loaded"); //$NON-NLS-1$
-			    }
-			    boModel.modelReload(newModel);
-			    boModel.moveListener(newModel);
-			    boModel = newModel;
-			    fireLoad(boModel);
-			}
+            if (isBpModelLoaded()) {
+                BpModel newModel = loadBpModel();
+                if (log.isDebugEnabled()) {
+                    log.debug("reloadModelFromDatabase, base protection model loaded"); //$NON-NLS-1$
+                }
+                boModel.modelReload(newModel);
+                boModel.moveListener(newModel);
+                boModel = newModel;
+                fireLoad(boModel);
+            }
+            if (isModernizedBpCatalogLoaded()) {
+                CatalogModel newModel = loadCatalogModel();
+                if (log.isDebugEnabled()) {
+                    log.debug("reloadModelFromDatabase, base protection model loaded"); //$NON-NLS-1$
+                }//TODO urs add the listners
+//                catalogModel.modelReload(newModel);
+//                catalogModel.moveListener(newModel);
+                catalogModel = newModel;
+                fireLoad(catalogModel);
+            }
+			
 		} catch (Exception e) {
 			log.error(Messages.getString("CnAElementFactory.5"), e); //$NON-NLS-1$
 		}

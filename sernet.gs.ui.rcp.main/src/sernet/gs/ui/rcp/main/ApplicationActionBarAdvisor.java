@@ -201,6 +201,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private OpenViewAction openBpViewAction;
 
     private TestAction testAction;
+    
+    private OpenViewAction openCatalogViewAction;
+    //TODO: urs add the catalog view here
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -278,6 +281,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         this.testAction = new TestAction(window, "Import BSI-Compendium", "asset", 152); //$NON-NLS-1$ //$NON-NLS-2$
         this.introAction = ActionFactory.INTRO.create(window);
+        
+        this.openCatalogViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_46, sernet.verinice.rcp.catalog.CatalogView.ID, ImageCache.VIEW_BPMODEL, ActionRightIDs.BASEPROTECTIONVIEW);
 
         IAction actions[] = new IAction[]{this.exitAction, this.copyAction, this.pasteAction,
                 this.aboutAction, this.newWindowAction, this.saveAction, this.saveAsAction,
@@ -294,6 +299,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 gsmbausteinZuordnungAction, this.openDocumentViewAction,
                 this.introAction, this.openGroupViewAction, this.openReportdepositViewAction,
                 this.openSearchViewAction, this.openGSToolMappingViewAction, this.openBpViewAction,
+                this.openCatalogViewAction,
                 this.testAction
          };
         registerActions(actions);
@@ -426,6 +432,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(this.openGSToolMappingViewAction);
         viewsMenu.add(this.openBpViewAction);
         
+        viewsMenu.add(this.openCatalogViewAction);//TODO:urs  decide where to place the action
 
         viewsMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 

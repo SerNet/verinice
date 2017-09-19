@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.common.model;
 
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
 public interface IModelLoadListener {
@@ -44,6 +45,14 @@ public interface IModelLoadListener {
 	 * @param model a new loaded or created {@link BpModel}
 	 */
 	void loaded(BpModel model);
+
+
+	/**
+     * Method is called when an {@link CatalogModel} is loaded or created
+     *
+     * @param model a new loaded or created {@link CatalogModel}
+     */
+    void loaded(CatalogModel model);
 
 	
 	/**

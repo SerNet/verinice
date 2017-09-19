@@ -33,11 +33,10 @@ import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.commands.CreateConfiguration;
-import sernet.verinice.service.commands.LoadBSIModel;
 import sernet.verinice.service.commands.SaveConfiguration;
 import sernet.verinice.service.commands.UsernameExistsRuntimeException;
 import sernet.verinice.service.iso27k.LoadImportObjectsHolder;
-import sernet.verinice.service.iso27k.LoadModel;
+import sernet.verinice.service.model.LoadModel;
 
 public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLoggingCommand,IAuthAwareCommand {
 
@@ -181,7 +180,7 @@ public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLogging
     }
     
     private CnATreeElement createBsiContainer() {
-        LoadBSIModel cmdLoadModel = new LoadBSIModel();
+        LoadModel<BSIModel> cmdLoadModel = new LoadModel<BSIModel>(BSIModel.class);
         try {
             cmdLoadModel = getCommandService().executeCommand(cmdLoadModel);
         } catch (CommandException e) {
@@ -202,7 +201,7 @@ public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLogging
     }
     
     private CnATreeElement createIsoContainer() {
-        LoadModel cmdLoadModel = new LoadModel();
+        LoadModel<ISO27KModel> cmdLoadModel = new LoadModel<>(ISO27KModel.class);
         try {
             cmdLoadModel = getCommandService().executeCommand(cmdLoadModel);
         } catch (CommandException e) {

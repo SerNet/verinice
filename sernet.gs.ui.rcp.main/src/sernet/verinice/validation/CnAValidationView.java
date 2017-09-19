@@ -74,6 +74,7 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.validation.CnAValidation;
@@ -418,6 +419,11 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
                     
                 }
                 
+            }
+
+            @Override
+            public void loaded(CatalogModel model) {
+                // nothing to do
             }
             
         };

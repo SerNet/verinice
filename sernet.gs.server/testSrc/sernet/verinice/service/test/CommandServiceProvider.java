@@ -82,7 +82,7 @@ import sernet.verinice.service.commands.LoadCnAElementByExternalID;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.UpdateElementEntity;
-import sernet.verinice.service.iso27k.LoadModel;
+import sernet.verinice.service.model.LoadModel;
 
 /**
  * Tests executing several commands.
@@ -124,7 +124,7 @@ public abstract class CommandServiceProvider extends UuidLoader {
     }
 
     protected Organization createOrganization(String name) throws CommandException {
-        LoadModel loadModel = new LoadModel();
+        LoadModel<ISO27KModel> loadModel = new LoadModel<>(ISO27KModel.class);
         loadModel = commandService.executeCommand(loadModel);
         ISO27KModel model = loadModel.getModel();
 

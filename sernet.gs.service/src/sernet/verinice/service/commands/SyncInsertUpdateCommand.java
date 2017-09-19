@@ -74,7 +74,7 @@ import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.bp.LoadBpModel;
 import sernet.verinice.service.iso27k.LoadImportObjectsHolder;
-import sernet.verinice.service.iso27k.LoadModel;
+import sernet.verinice.service.model.LoadModel;
 import sernet.verinice.service.sync.IVeriniceArchive;
 
 /**
@@ -907,7 +907,7 @@ public class SyncInsertUpdateCommand extends GenericCommand
     }
 
     private CnATreeElement createBsiContainer() {
-        LoadBSIModel cmdLoadModel = new LoadBSIModel();
+        LoadModel<BSIModel> cmdLoadModel = new LoadModel<>(BSIModel.class);
         try {
             cmdLoadModel = getCommandService().executeCommand(cmdLoadModel);
         } catch (CommandException e) {
@@ -927,7 +927,7 @@ public class SyncInsertUpdateCommand extends GenericCommand
     }
 
     private CnATreeElement createIsoContainer() {
-        LoadModel cmdLoadModel = new LoadModel();
+        LoadModel<ISO27KModel> cmdLoadModel = new LoadModel<>(ISO27KModel.class);
         try {
             cmdLoadModel = getCommandService().executeCommand(cmdLoadModel);
         } catch (CommandException e) {

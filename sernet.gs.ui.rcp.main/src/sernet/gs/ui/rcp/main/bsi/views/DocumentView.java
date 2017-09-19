@@ -51,6 +51,7 @@ import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.DocumentLink;
 import sernet.verinice.model.bsi.DocumentReference;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.task.FindURLs;
@@ -85,6 +86,11 @@ public class DocumentView extends RightsEnabledView {
         public void loaded(BpModel model) {
          // work is done in loaded(BSIModel model)   
             
+        }
+
+        @Override
+        public void loaded(CatalogModel model) {
+            // nothing to do
         }
 	};
 

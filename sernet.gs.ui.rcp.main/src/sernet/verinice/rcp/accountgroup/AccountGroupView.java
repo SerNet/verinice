@@ -84,6 +84,7 @@ import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.RightsEnabledView;
@@ -174,6 +175,11 @@ public class AccountGroupView extends RightsEnabledView
 
             @Override
             public void loaded(BpModel model) {
+                // nothing to do
+            }
+
+            @Override
+            public void loaded(CatalogModel model) {
                 // nothing to do
             }
         };
@@ -869,6 +875,11 @@ public class AccountGroupView extends RightsEnabledView
 
     private IAuthService getAuthService() {
         return ServiceFactory.lookupAuthService();
+    }
+
+    @Override
+    public void loaded(CatalogModel model) {
+        // nothing to do
     }
 
 }

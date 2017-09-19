@@ -282,6 +282,7 @@ This variant:
         
         
         <property name="finishedRiskAnalysisListsDao" ref="finishedRiskAnalysisListsDao" />
+        <property name="catalogModelDAO" ref="catalogModelDao" />
 	</bean>
 
 	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">

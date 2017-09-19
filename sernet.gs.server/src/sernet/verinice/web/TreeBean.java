@@ -52,7 +52,7 @@ import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.RemoveElement;
-import sernet.verinice.service.iso27k.LoadModel;
+import sernet.verinice.service.model.LoadModel;
 import sernet.verinice.service.tree.ElementManager;
 
 /**
@@ -428,7 +428,7 @@ public class TreeBean implements IElementListener {
     private ISO27KModel loadIsoModel() {
         ISO27KModel model = null;
         try {
-            LoadModel loadModel = new LoadModel();
+            LoadModel<ISO27KModel> loadModel = new LoadModel<>(ISO27KModel.class);
             loadModel = getCommandService().executeCommand(loadModel);
             model = loadModel.getModel();
             
