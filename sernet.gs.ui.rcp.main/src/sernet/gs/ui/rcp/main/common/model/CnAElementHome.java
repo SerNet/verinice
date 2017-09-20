@@ -52,6 +52,7 @@ import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -435,6 +436,10 @@ public final class CnAElementHome {
      */
     public boolean isWriteAllowed(CnATreeElement cte) {
         try {
+            if(cte !=null && isPartOfCatalog(cte)){
+                return false;
+            }
+            
             // Short cut: If no permission handling is needed than all objects are
             // writable.
             ServiceFactory.lookupAuthService();
@@ -474,6 +479,18 @@ public final class CnAElementHome {
         return false;
     }
     
+    private boolean isPartOfCatalog(CnATreeElement cte) {
+        CnATreeElement parent = cte.getParent();
+        if (parent == null) {
+            return false;
+        }
+        if (CatalogModel.TYPE_ID.equals(parent.getTypeId())) {
+            return true;
+        }
+
+        return isPartOfCatalog(parent);
+    }
+
     public void createLinksAccordingToBusinessLogic(final CnATreeElement dropTarget, final List<CnATreeElement> toDrop) {
         createLinksAccordingToBusinessLogicAsync(dropTarget, toDrop, null);
     }

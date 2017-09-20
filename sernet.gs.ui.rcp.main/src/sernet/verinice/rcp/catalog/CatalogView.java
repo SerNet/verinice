@@ -138,8 +138,8 @@ public class CatalogView extends RightsEnabledView
      * @see sernet.verinice.rcp.RightsEnabledView#getRightID()
      */
     @Override
-    public String getRightID() {//TODO urs use the right id
-        return ActionRightIDs.BASEPROTECTIONVIEW;
+    public String getRightID() {
+        return ActionRightIDs.CATALOGVIEW;
     }
 
     /* (non-Javadoc)

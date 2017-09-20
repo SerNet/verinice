@@ -574,5 +574,10 @@
     extends="CnATreeElement"
     discriminator-value="bp_safeguard_group" />
 	
+  <subclass
+    name="sernet.verinice.model.catalog.CatalogModel"
+    extends="CnATreeElement"
+    discriminator-value="catalog_model" />
+	
 	</class>
 </hibernate-mapping>
