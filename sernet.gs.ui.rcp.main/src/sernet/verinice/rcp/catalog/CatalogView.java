@@ -253,7 +253,6 @@ public class CatalogView extends RightsEnabledView
     }
     
     private void hookContextMenu() {
-        //TODO: urs do we really need an context menu ?
         MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
         menuMgr.setRemoveAllWhenShown(true);
         menuMgr.addMenuListener(new IMenuListener() {
@@ -286,13 +285,6 @@ public class CatalogView extends RightsEnabledView
                 if(viewer.getSelection() instanceof IStructuredSelection) {
                     Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();      
                     EditorFactory.getInstance().updateAndOpenObject(sel);
-//                    IEditorInput input = new BSIElementEditorInput((CnATreeElement) sel);
-//                    IEditorPart editor = getSite().getWorkbenchWindow().getActivePage().findEditor(input);
-//                    editor = getSite().getWorkbenchWindow().getActivePage().getActiveEditor();
-//                    if (editor instanceof BSIElementEditor) {
-//                        BSIElementEditor elementEditor = (BSIElementEditor) editor;
-//                        elementEditor.setIsWriteAllowed(false);//TODO urs this is to late
-//                    }
                 }
             }
         };

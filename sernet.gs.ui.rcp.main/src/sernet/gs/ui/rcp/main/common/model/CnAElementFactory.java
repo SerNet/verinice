@@ -1628,6 +1628,7 @@ public final class CnAElementFactory {
                     log.debug("reloadModelFromDatabase, base protection model loaded"); //$NON-NLS-1$
                 }
                 catalogModel.modelReload(newModel);
+                catalogModel.moveListener(newModel);
                 catalogModel = newModel;
                 fireLoad(catalogModel);
             }

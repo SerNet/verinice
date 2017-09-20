@@ -57,8 +57,8 @@ public class TreeLabelProvider extends LabelProvider  {
     			return image;
     		} else {
     		    return getImage((CnATreeElement) obj);
-    		} 		
-		} catch(Exception e) {
+    		}
+    	} catch(Exception e) {
             LOG.error("Error while getting image for tree item.", e);
             return image;
         }		

@@ -26,6 +26,8 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.log4j.Logger;
 
+import sernet.verinice.model.bp.IBpModelListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -102,4 +104,19 @@ public class CatalogModel extends CnATreeElement {
         }
         return listeners;
     }
+
+    /**
+     * Moves all {@link IBpModelListener} from this model
+     * to newModel.
+     * 
+     * @param newModel 
+     */
+    public void moveListener(CatalogModel newModel) {
+        for (ICatalogModelListener listener : getListeners()) {
+            newModel.addCatalogModelListener(listener);
+        }
+        for (ICatalogModelListener listener : getListeners()) {
+            removeCatalogModelListener(listener);
+        }      
+    }    
 }
