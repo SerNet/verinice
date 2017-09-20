@@ -32,21 +32,13 @@ import org.eclipse.swt.dnd.TransferData;
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public abstract class VeriniceElementTransfer extends ByteArrayTransfer {
-
-
-    protected transient Logger log = null;
-
-    protected Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(VeriniceElementTransfer.class);
-        }
-        return log;
-    }
+    
+    private static final Logger log = Logger.getLogger(VeriniceElementTransfer.class);
 
     public Object nativeToJava(TransferData transferData) {
         Object o = null;
         if (transferData == null) {
-            getLog().error("transferData is null");
+            log.error("transferData is null");
         }
         if (isSupportedType(transferData)) {
             byte[] bs = (byte[]) super.nativeToJava(transferData);
@@ -59,14 +51,14 @@ public abstract class VeriniceElementTransfer extends ByteArrayTransfer {
                     bis.close();
                     in.close();
                 } catch (OptionalDataException e) {
-                    getLog().error("Wrong data", e);
+                    log.error("Wrong data", e);
                 } catch (IOException | ClassNotFoundException e) {
-                    getLog().error("Error while transfering dnd object back to java", e);
+                    log.error("Error while transfering dnd object back to java", e);
                 }
             } else {
-                getLog().error("bs is null");
+                log.error("bs is null");
                 if (transferData == null) {
-                    getLog().error("transferData also");
+                    log.error("transferData also");
                 }
             }
         }

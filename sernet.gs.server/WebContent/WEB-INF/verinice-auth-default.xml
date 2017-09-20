@@ -48,6 +48,7 @@
             <action id="assignallisatopics" />
             <action id="addownmodul"/>
             <action id="auditview" />
+            <action id="baseprotectionmodeling" />
             <action id="baseprotectionview" />
             <action id="bausteinzuordnung" />
             <action id="bpimporter" />
@@ -141,6 +142,7 @@
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
           <action id="baseprotectionview" />
+          <action id="baseprotectionmodeling" />
 	        <action id="bausteinzuordnung" />
 	        <action id="bpimporter" />
 	        <action id="bsidnd" />
@@ -270,6 +272,7 @@
 	        <action id="marktemplate"/>
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
+          <action id="baseprotectionmodeling" />
           <action id="baseprotectionview" />
 	        <action id="bausteinzuordnung" />
 	        <action id="bpimporter" />
@@ -352,6 +355,7 @@
             <action id="addownmodul"/> 
             <action id="assignallisatopics" /> 
             <action id="auditview" />
+            <action id="baseprotectionmodeling" />
             <action id="baseprotectionview" /> 
             <action id="bausteinzuordnung" /> 
             <action id="bpimporter" />
@@ -431,6 +435,7 @@
 	        <action id="marktemplate"/>
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
+          <action id="baseprotectionmodeling" />
           <action id="baseprotectionview" />
 	        <action id="bausteinzuordnung" />
 	        <action id="bpimporter" />

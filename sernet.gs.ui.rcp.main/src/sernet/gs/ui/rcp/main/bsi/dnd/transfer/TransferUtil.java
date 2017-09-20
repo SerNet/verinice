@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.TransferData;
@@ -82,20 +84,34 @@ public class TransferUtil {
         }     
     }
     
-    public static void baseProtectionGroupToNative(BaseProtectionGroupTransfer transfer, Object data,
+    public static void baseProtectionGroupToNative(BaseProtectionModelingTransfer transfer, Object data,
             TransferData transferData) {
         if (data == null || !(transfer.validateData(data))) {
             return;
         }
         if (transfer.isSupportedType(transferData)) {
-            ArrayList<IBpGroup> elements = new ArrayList<>();
+            List<IBpGroup> elements = new LinkedList<>();
             if (data instanceof IBpGroup[]) {
                 elements.addAll(Arrays.asList((IBpGroup[]) data));
+            } else if (data instanceof Object[]) {
+                elements = convertToBpGroupList(data);
             } else if (data instanceof IBpGroup) {
                 elements.add((IBpGroup) data);
             }
             write(transfer, transferData, elements);
         }     
+    }
+
+    protected static List<IBpGroup> convertToBpGroupList(Object data) {
+        List<IBpGroup> elements = new LinkedList<>();
+        for (Object o : (Object[])data) {
+            if(o instanceof IBpGroup) {
+                elements.add((IBpGroup) o);
+            } else {
+                LOG.warn("Element in drag and drop transfer data is not IBpGroup: " + o);
+            }
+        }
+        return elements;
     }
 
     public static void bSIStrukturElementToNative(VeriniceElementTransfer transfer, Object data,
@@ -134,7 +150,7 @@ public class TransferUtil {
     }
 
     private static void write(VeriniceElementTransfer transfer, TransferData transferData,
-            ArrayList<?> elements) {
+            List<?> elements) {
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             ObjectOutputStream objectOut = new ObjectOutputStream(out);

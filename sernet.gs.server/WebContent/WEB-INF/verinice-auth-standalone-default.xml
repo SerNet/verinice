@@ -51,7 +51,8 @@
 	        <action id="marktemplate"/>
 	        <action id="assignallisatopics" />
 	        <action id="auditview" /> 
-          	<action id="baseprotectionview" />
+          <action id="baseprotectionmodeling" />
+          <action id="baseprotectionview" />
 	        <action id="bausteinzuordnung" />
 	        <action id="bpimporter" />
 	        <action id="bsidnd" />

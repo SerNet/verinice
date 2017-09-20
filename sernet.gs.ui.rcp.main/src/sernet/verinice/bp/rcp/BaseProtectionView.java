@@ -60,7 +60,7 @@ import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionElementTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionGroupTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
 import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
@@ -267,16 +267,13 @@ public class BaseProtectionView extends RightsEnabledView
     }
     
     private void hookDndListeners() {
-        Transfer[] dragTypes = new Transfer[] { BaseProtectionElementTransfer.getInstance(),
-                                                BaseProtectionGroupTransfer.getInstance()
-                                              };
+        Transfer[] dragTypes = new Transfer[] { BaseProtectionElementTransfer.getInstance() };
         Transfer[] dropTypes = new Transfer[] { BaseProtectionElementTransfer.getInstance(),
-                                                BaseProtectionGroupTransfer.getInstance()
-                                              };
-        
+                BaseProtectionModelingTransfer.getInstance() };
+
         viewer.addDragSupport(operations, dragTypes, new BSIModelViewDragListener(viewer));
         viewer.addDropSupport(operations, dropTypes, metaDropAdapter);
-        
+
     }
      
     protected void fillContextMenu(IMenuManager manager) {
@@ -313,6 +310,8 @@ public class BaseProtectionView extends RightsEnabledView
         BSIModelViewDropListener bsiDropAdapter;
         metaDropAdapter = new MetaDropAdapter(viewer);
         bsiDropAdapter = new BSIModelViewDropListener(viewer);
+        BbModelingDropPerformer modelingDropPerformer = new BbModelingDropPerformer();
+        metaDropAdapter.addAdapter(modelingDropPerformer);
         metaDropAdapter.addAdapter(bsiDropAdapter);
         
         linkWithEditorAction = new Action("Link with Editor", IAction.AS_CHECK_BOX) {

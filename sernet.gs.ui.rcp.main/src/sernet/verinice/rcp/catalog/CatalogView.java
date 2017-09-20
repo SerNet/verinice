@@ -44,6 +44,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -58,6 +60,7 @@ import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.Perspective;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
@@ -175,12 +178,20 @@ public class CatalogView extends RightsEnabledView
         makeActions();
         addActions();
         fillToolBar();
-//        hookDNDListeners();
+        addDndListeners();
         
 //        getSite().getPage().addPartListener(linkWithEditorPartListener);
         viewer.refresh(true);
     }
     
+
+    private void addDndListeners() {
+        int ops = DND.DROP_COPY | DND.DROP_MOVE;
+        Transfer[] transfers = new Transfer[] { BaseProtectionModelingTransfer.getInstance()};
+        viewer.addDragSupport(ops, transfers, new CatalogDragListener(viewer));
+    }
+
+
     protected void startInitDataJob() {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Catalogview: startInitDataJob"); //$NON-NLS-1$

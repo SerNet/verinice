@@ -44,6 +44,7 @@ public final class ActionRightIDs {
     public static final String ADDOWNMODUL = "addownmodul";
     public static final String ASSIGNALLISATOPICS = "assignallisatopics";
     public static final String AUDITVIEW = "auditview";
+    public static final String BASEPROTECTIONMODELING = "baseprotectionmodeling";
     public static final String BAUSTEINZUORDNUNG = "bausteinzuordnung";
     public static final String BPIMPORTER = "bpimporter";
     public static final String BSIBROWSER = "bsibrowser";

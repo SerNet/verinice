@@ -17,9 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dnd;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -27,7 +25,7 @@ import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionElementTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionGroupTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinUmsetzungTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
@@ -107,8 +105,7 @@ public class BSIModelViewDragListener implements DragSourceListener {
                 || BausteinUmsetzungTransfer.getInstance().isSupportedType(event.dataType)
                 || ISO27kElementTransfer.getInstance().isSupportedType(event.dataType)
                 || ISO27kGroupTransfer.getInstance().isSupportedType(event.dataType)
-                || BaseProtectionElementTransfer.getInstance().isSupportedType(event.dataType)
-                || BaseProtectionGroupTransfer.getInstance().isSupportedType(event.dataType));
+                || BaseProtectionElementTransfer.getInstance().isSupportedType(event.dataType));
 	}
 
 }

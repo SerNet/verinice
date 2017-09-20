@@ -31,6 +31,7 @@ import sernet.verinice.model.bp.IBpElement;
  */
 public final class BaseProtectionElementTransfer extends VeriniceElementTransfer {
     
+    private static final Logger log = Logger.getLogger(BaseProtectionElementTransfer.class);
     private static final String TYPE_NAME_BASE_PROTECTION_ELEMENT = "baseProtectionElement";
     private static final int TYPE_ID_BASE_PROTECTION_ELEMENT = registerType(TYPE_NAME_BASE_PROTECTION_ELEMENT);
     
@@ -71,18 +72,11 @@ public final class BaseProtectionElementTransfer extends VeriniceElementTransfer
      */
     @Override
     protected int[] getTypeIds() {
-        if (getLog().isDebugEnabled()) {
-            getLog().debug(TYPE_ID_BASE_PROTECTION_ELEMENT + "=" + TYPE_NAME_BASE_PROTECTION_ELEMENT);
+        if (log.isDebugEnabled()) {
+            log.debug(TYPE_ID_BASE_PROTECTION_ELEMENT + "=" + TYPE_NAME_BASE_PROTECTION_ELEMENT);
         }
         return new int[]{TYPE_ID_BASE_PROTECTION_ELEMENT};
     }
     
-    @Override
-    protected Logger getLog() {
-        if(log == null){
-            log = Logger.getLogger(BaseProtectionElementTransfer.class);
-        }
-        return log;
-    }
 
 }

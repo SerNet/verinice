@@ -32,6 +32,8 @@ import sernet.gs.model.IGSModel;
  */
 public final class IGSModelElementTransfer extends VeriniceElementTransfer {
 
+    private static final Logger log = Logger.getLogger(IGSModelElementTransfer.class);
+    
     private static final String TYPENAME_IGSMODELELEMENT = "igsModelElement";
     private static final int TYPEID_IGSMODELELEMENT = registerType(TYPENAME_IGSMODELELEMENT);
     
@@ -81,14 +83,14 @@ public final class IGSModelElementTransfer extends VeriniceElementTransfer {
                 
                 super.javaToNative(out.toByteArray(), transferData);
             } catch (IOException e){
-                getLog().error("Error while serializing object for dnd", e);
+                log.error("Error while serializing object for dnd", e);
             } finally {
                 if(out != null && objectOut != null){
                     try {
                         out.close();
                         objectOut.close();
                     } catch (IOException e) {
-                        getLog().error("Error while closing stream", e);
+                        log.error("Error while closing stream", e);
                     }
                 }
             }
@@ -105,14 +107,6 @@ public final class IGSModelElementTransfer extends VeriniceElementTransfer {
     public boolean validateData(Object data){
         return (data instanceof IGSModel[]||
                 data instanceof IGSModel);
-    }
-
-    @Override
-    protected Logger getLog() {
-        if(log == null){
-            log = Logger.getLogger(IGSModelElementTransfer.class);
-        }
-        return log;
     }
 
 }

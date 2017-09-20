@@ -39,6 +39,7 @@ import sernet.gs.model.IGSModel;
 import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.dialogs.SanityCheckDialog;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinUmsetzungTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
@@ -202,6 +203,14 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
                 LOG.debug("ChechRights() failed  ... return false");
             }
             return false;
+        }
+        if(BaseProtectionModelingTransfer.getInstance().isSupportedType(transferData)) {
+            // do not handle elements which are dragged from base protection catalog view
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Elements dragged from base protection catalog view return false");
+            }
+            isActive=false;
+            return isActive;
         }
         if (target == null){
             if (LOG.isDebugEnabled()) {
