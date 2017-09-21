@@ -431,7 +431,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(this.openGSToolMappingViewAction);
         viewsMenu.add(this.openBpViewAction);
         
-        viewsMenu.add(this.openCatalogViewAction);//TODO:urs  decide where to place the action
+        viewsMenu.add(this.openCatalogViewAction);
 
         viewsMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 

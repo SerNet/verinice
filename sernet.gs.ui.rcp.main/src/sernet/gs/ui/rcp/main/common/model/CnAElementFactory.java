@@ -1447,14 +1447,14 @@ public final class CnAElementFactory {
             CreateCatalogModel command = new CreateCatalogModel();
             command = getCommandService().executeCommand(command);
             catalogModel = command.getElement();
-            if (log.isInfoEnabled()) {//TODO: urs change strings
-                log.info("ISO27KModel created"); //$NON-NLS-1$
+            if (log.isInfoEnabled()) {
+                log.info("Catalog Model created"); //$NON-NLS-1$
             }
             if (isoModel != null) {
                 fireLoad(catalogModel);
             }
-        } catch (CommandException e) {//TODO: urs change strings
-            log.error(Messages.getString("CnAElementFactory.2"), e); //$NON-NLS-1$
+        } catch (CommandException e) {
+            log.error("Error creating CatalogModel", e); //$NON-NLS-1$
         }
     }
 
@@ -1467,10 +1467,9 @@ public final class CnAElementFactory {
             if (model != null) {
                 fireLoad(model);
             }
-        } catch (Exception e) {//TODO: urs make new string
-            log.error(Messages.getString("CnAElementFactory.1"), e); //$NON-NLS-1$
-            throw new RuntimeException(
-                    Messages.getString("CnAElementFactory.1"), e);
+        } catch (Exception e) {
+            log.error("Error loading the CatalogModel", e); //$NON-NLS-1$
+            throw new RuntimeException("Error loading the CatalogModel", e);
         }
         return model;
     }

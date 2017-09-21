@@ -428,7 +428,6 @@ public class BSIElementEditor extends EditorPart {
     }
 
     public Boolean createIsWriteAllowed() {
-        //TODO: urs we would need to check if the root of the object 
         isWriteAllowed = CnAElementHome.getInstance().isWriteAllowed(cnAElement) && !cnAElement.isImplementation();
         return isWriteAllowed;
     }
