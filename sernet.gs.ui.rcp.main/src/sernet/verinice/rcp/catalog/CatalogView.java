@@ -317,7 +317,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
                 }
             }
         };
-        doubleClickAction.setText("open");
+        doubleClickAction.setText("open");//TODO: urs add this text in the messages
         doubleClickAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.OPEN_EDIT));
 
         expandAction = new ExpandAction(viewer, contentProvider);
