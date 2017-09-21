@@ -130,9 +130,13 @@ public class BSIElementEditor extends EditorPart {
         if (!(input instanceof BSIElementEditorInput)) {
             throw new PartInitException("invalid input"); //$NON-NLS-1$
         }
+        
         setSite(site);
         setInput(input);
         setPartName(input.getName());
+        if (((BSIElementEditorInput) input).isReadOnly()) {
+            isWriteAllowed = false;
+        }
     }
 
     private void initContent() {

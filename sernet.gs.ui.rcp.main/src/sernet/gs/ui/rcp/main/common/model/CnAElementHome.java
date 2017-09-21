@@ -436,10 +436,6 @@ public final class CnAElementHome {
      */
     public boolean isWriteAllowed(CnATreeElement cte) {
         try {
-            if(cte !=null && isPartOfCatalog(cte)){
-                return false;
-            }
-            
             // Short cut: If no permission handling is needed than all objects are
             // writable.
             ServiceFactory.lookupAuthService();
@@ -477,18 +473,6 @@ public final class CnAElementHome {
             log.error("Error while checking write permission.", e);
         }
         return false;
-    }
-    
-    private boolean isPartOfCatalog(CnATreeElement cte) {
-        CnATreeElement parent = cte.getParent();
-        if (parent == null) {
-            return false;
-        }
-        if (CatalogModel.TYPE_ID.equals(parent.getTypeId())) {
-            return true;
-        }
-
-        return isPartOfCatalog(parent);
     }
 
     public void createLinksAccordingToBusinessLogic(final CnATreeElement dropTarget, final List<CnATreeElement> toDrop) {

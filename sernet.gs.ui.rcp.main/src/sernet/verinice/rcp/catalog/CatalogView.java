@@ -53,6 +53,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.internal.ObjectActionContributorManager;
 import org.eclipse.ui.part.DrillDownAdapter;
 
@@ -61,7 +62,10 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.Perspective;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditor;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
+import sernet.gs.ui.rcp.main.bsi.editors.EditorRegistry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -92,39 +96,39 @@ import sernet.verinice.service.tree.ElementManager;
  * @author Urs Zeidler uz[at]sernet.de
  *
  */
-public class CatalogView extends RightsEnabledView 
-    implements IAttachedToPerspective, ILinkedWithEditorView {
-    
+public class CatalogView extends RightsEnabledView implements IAttachedToPerspective, ILinkedWithEditorView {
+
     private static final Logger LOG = Logger.getLogger(CatalogView.class);
-    
+
     protected TreeViewer viewer;
     private TreeContentProvider contentProvider;
     private ElementManager elementManager;
-    
+
     private DrillDownAdapter drillDownAdapter;
-//    private Object mutex = new Object();
+    // private Object mutex = new Object();
     private Lock lock = new ReentrantLock();
-    
-    
+
     private IModelLoadListener modelLoadListener;
     private ICatalogModelListener modelUpdateListener;
-    
-    private Action doubleClickAction; 
+
+    private Action doubleClickAction;
     private ExpandAction expandAction;
     private CollapseAction collapseAction;
 
     private ISMViewFilter filterAction;
-    
+
     public static final String ID = "sernet.verinice.rcp.catalog.CatalogView"; //$NON-NLS-1$
-    
+
     public CatalogView() {
         super();
         elementManager = new ElementManager();
     }
 
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
+     * widgets.Composite)
      */
     @Override
     public void createPartControl(final Composite parent) {
@@ -138,7 +142,9 @@ public class CatalogView extends RightsEnabledView
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getRightID()
      */
     @Override
@@ -146,51 +152,54 @@ public class CatalogView extends RightsEnabledView
         return ActionRightIDs.CATALOGVIEW;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
     public String getViewId() {
         return ID;
     }
-    
+
     /**
      * @param parent
      */
     protected void initView(Composite parent) {
         IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
-        if(CnAElementFactory.isModernizedBpCatalogLoaded()) {
+        if (CnAElementFactory.isModernizedBpCatalogLoaded()) {
             CnAElementFactory.getInstance().reloadModelFromDatabase();
         }
-        
+
         contentProvider = new TreeContentProvider(elementManager);
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         viewer.setSorter(new ModITBViewerSorter());
         drillDownAdapter = new DrillDownAdapter(viewer);
         viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
         viewer.setContentProvider(contentProvider);
-        viewer.setLabelProvider(new TreeLabelProvider());//TODO: urs check if we need some decorators at all
-//        viewer.setLabelProvider(new DecoratingLabelProvider(new TreeLabelProvider(), workbench.getDecoratorManager()));
-//        toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
-        
+        viewer.setLabelProvider(new TreeLabelProvider());// TODO: urs check if
+                                                         // we need some
+                                                         // decorators at all
+        // viewer.setLabelProvider(new DecoratingLabelProvider(new
+        // TreeLabelProvider(), workbench.getDecoratorManager()));
+        // toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
+
         getSite().setSelectionProvider(viewer);
         hookContextMenu();
         makeActions();
         addActions();
         fillToolBar();
         addDndListeners();
-        
-//        getSite().getPage().addPartListener(linkWithEditorPartListener);
+
+        // getSite().getPage().addPartListener(linkWithEditorPartListener);
         viewer.refresh(true);
     }
-    
 
     private void addDndListeners() {
         int ops = DND.DROP_COPY | DND.DROP_MOVE;
-        Transfer[] transfers = new Transfer[] { BaseProtectionModelingTransfer.getInstance()};
+        Transfer[] transfers = new Transfer[] { BaseProtectionModelingTransfer.getInstance() };
         viewer.addDragSupport(ops, transfers, new CatalogDragListener(viewer));
     }
-
 
     protected void startInitDataJob() {
         if (LOG.isDebugEnabled()) {
@@ -205,30 +214,30 @@ public class CatalogView extends RightsEnabledView
                     initData();
                 } catch (Exception e) {
                     LOG.error("Error while loading data for catalog view.", e); //$NON-NLS-1$
-                    status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.ISMView_4,e); //$NON-NLS-1$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.ISMView_4, e); //$NON-NLS-1$
                 } finally {
                     monitor.done();
                 }
                 return status;
             }
         };
-        JobScheduler.scheduleInitJob(initDataJob);      
+        JobScheduler.scheduleInitJob(initDataJob);
     }
 
-    protected void initData() { 
+    protected void initData() {
         if (LOG.isDebugEnabled()) {
             LOG.debug("MotITBPCatalogVIEW: initData"); //$NON-NLS-1$
         }
         lock.lock();
         try {
-            if(CnAElementFactory.isModernizedBpCatalogLoaded()) {
-                if (modelUpdateListener == null ) {
-                    if (LOG.isDebugEnabled()){
+            if (CnAElementFactory.isModernizedBpCatalogLoaded()) {
+                if (modelUpdateListener == null) {
+                    if (LOG.isDebugEnabled()) {
                         Logger.getLogger(this.getClass()).debug("Creating modelUpdateListener for MotITBPView."); //$NON-NLS-1$
                     }
-                    modelUpdateListener = new TreeUpdateListener(viewer,elementManager);
+                    modelUpdateListener = new TreeUpdateListener(viewer, elementManager);
                     CnAElementFactory.getInstance().getCatalogModel().addCatalogModelListener(modelUpdateListener);//
-                    Display.getDefault().syncExec(new Runnable(){
+                    Display.getDefault().syncExec(new Runnable() {
                         @Override
                         public void run() {
                             setInput(CnAElementFactory.getInstance().getCatalogModel());
@@ -236,11 +245,12 @@ public class CatalogView extends RightsEnabledView
                         }
                     });
                 }
-            } else if(modelLoadListener==null) {
+            } else if (modelLoadListener == null) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("CatalogModel No model loaded, adding model load listener."); //$NON-NLS-1$
                 }
-                // model is not loaded yet: add a listener to load data when it's loaded
+                // model is not loaded yet: add a listener to load data when
+                // it's loaded
                 modelLoadListener = new ModelLoadListener();
                 CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
             }
@@ -248,15 +258,16 @@ public class CatalogView extends RightsEnabledView
             lock.unlock();
         }
     }
-    
+
     /**
      * Set the input to the viewer.
+     * 
      * @param catalogModel
      */
     public void setInput(CatalogModel catalogModel) {
         viewer.setInput(catalogModel);
     }
-    
+
     private void hookContextMenu() {
         MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
         menuMgr.setRemoveAllWhenShown(true);
@@ -264,40 +275,54 @@ public class CatalogView extends RightsEnabledView
             @Override
             public void menuAboutToShow(IMenuManager manager) {
                 fillContextMenu(manager);
-            }           
+            }
         });
         Menu menu = menuMgr.createContextMenu(viewer.getControl());
-        
+
         viewer.getControl().setMenu(menu);
         getSite().registerContextMenu(menuMgr, viewer);
     }
-    
+
     protected void fillContextMenu(IMenuManager manager) {
-        ObjectActionContributorManager.getManager().unregisterAllContributors();//this is not really nice but necessary to remove all the plugin contributions
-        
+        ObjectActionContributorManager.getManager().unregisterAllContributors();// this
+                                                                                // is
+                                                                                // not
+                                                                                // really
+                                                                                // nice
+                                                                                // but
+                                                                                // necessary
+                                                                                // to
+                                                                                // remove
+                                                                                // all
+                                                                                // the
+                                                                                // plugin
+                                                                                // contributions
+
         manager.add(new GroupMarker("content")); //$NON-NLS-1$
         manager.add(new Separator());
         manager.add(doubleClickAction);
         manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
         manager.add(new Separator());
-        drillDownAdapter.addNavigationActions(manager); 
+        drillDownAdapter.addNavigationActions(manager);
     }
-    
-    
+
     private void makeActions() {
         doubleClickAction = new Action() {
             @Override
             public void run() {
-                if(viewer.getSelection() instanceof IStructuredSelection) {
-                    Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();      
-                    EditorFactory.getInstance().updateAndOpenObject(sel);
+                if (viewer.getSelection() instanceof IStructuredSelection) {
+                    Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+                    try {
+                        openEditorReadOnly(sel);
+                    } catch (PartInitException e) {
+                        LOG.error("Error opening the BSIElement editor for: "+sel);
+                    }
                 }
             }
         };
         doubleClickAction.setText("open");
         doubleClickAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.OPEN_EDIT));
-        
-        
+
         expandAction = new ExpandAction(viewer, contentProvider);
         expandAction.setText(Messages.ISMView_7);
         expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
@@ -305,22 +330,29 @@ public class CatalogView extends RightsEnabledView
         collapseAction = new CollapseAction(viewer);
         collapseAction.setText(Messages.ISMView_8);
         collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
-        
+
         HideEmptyFilter hideEmptyFilter = new HideEmptyFilter(viewer);
         hideEmptyFilter.setHideEmpty(true);
         TagParameter tagParameter = new TagParameter();
         TypeParameter typeParameter = new TypeParameter();
-        filterAction = new ISMViewFilter(viewer,
-                Messages.ISMView_12,
-                tagParameter,
-                hideEmptyFilter,
-                typeParameter);    
+        filterAction = new ISMViewFilter(viewer, Messages.ISMView_12, tagParameter, hideEmptyFilter, typeParameter);
 
-     }
-    
+    }
+
+    protected void openEditorReadOnly(Object sel) throws PartInitException {
+        CnATreeElement element = (CnATreeElement) sel;
+        IEditorPart editor = EditorRegistry.getInstance().getOpenEditor(element.getId());
+        if (editor == null) {
+            BSIElementEditorInput input = new BSIElementEditorInput(element, true);
+            editor = getSite().getPage().openEditor(input, BSIElementEditor.EDITOR_ID);
+            EditorRegistry.getInstance().registerOpenEditor(element.getId(), editor);
+        } else {
+            getSite().getPage().openEditor(editor.getEditorInput(), BSIElementEditor.EDITOR_ID);
+        }
+    }
+
     /**
-     * Override this in subclasses to hide empty groups
-     * on startup.
+     * Override this in subclasses to hide empty groups on startup.
      * 
      * @return a HideEmptyFilter
      */
@@ -329,15 +361,14 @@ public class CatalogView extends RightsEnabledView
     }
 
     /**
-     * Override this in subclasses to hide empty groups
-     * on startup.
+     * Override this in subclasses to hide empty groups on startup.
      * 
      * @return a {@link TypeParameter}
      */
     protected TypeParameter createTypeParameter() {
         return new TypeParameter();
     }
-    
+
     private void addActions() {
         viewer.addDoubleClickListener(new IDoubleClickListener() {
             @Override
@@ -345,11 +376,11 @@ public class CatalogView extends RightsEnabledView
                 doubleClickAction.run();
             }
         });
-        
+
         viewer.addSelectionChangedListener(expandAction);
         viewer.addSelectionChangedListener(collapseAction);
     }
-    
+
     protected void fillToolBar() {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
@@ -359,31 +390,33 @@ public class CatalogView extends RightsEnabledView
         manager.add(filterAction);
     }
 
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.eclipse.ui.IEditorPart)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.
+     * eclipse.ui.IEditorPart)
      */
     @Override
     public void editorActivated(IEditorPart activeEditor) {
     }
-
 
     @Override
     public String getPerspectiveId() {
         // TODO: implement own base protection perspective
         return Perspective.ID;
     }
-    
+
     @Override
     public void dispose() {
         elementManager.clearCache();
-        if(CnAElementFactory.isModernizedBpCatalogLoaded()) {
+        if (CnAElementFactory.isModernizedBpCatalogLoaded()) {
             CnAElementFactory.getInstance().getCatalogModel().removeCatalogModelListener(modelUpdateListener);
         }
         CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
         super.dispose();
     }
-    
+
     private final class ModelLoadListener implements IModelLoadListener {
         @Override
         public void closed(BSIModel model) {
@@ -402,7 +435,7 @@ public class CatalogView extends RightsEnabledView
 
         @Override
         public void loaded(BpModel model) {
-         // nothing to do
+            // nothing to do
         }
 
         @Override
