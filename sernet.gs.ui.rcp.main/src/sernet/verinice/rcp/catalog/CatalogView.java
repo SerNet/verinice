@@ -72,11 +72,13 @@ import sernet.verinice.iso27k.rcp.Messages;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
+import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.catalog.ICatalogModelListener;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.TagParameter;
 import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
@@ -110,6 +112,8 @@ public class CatalogView extends RightsEnabledView
     private Action doubleClickAction; 
     private ExpandAction expandAction;
     private CollapseAction collapseAction;
+
+    private ISMViewFilter filterAction;
     
     public static final String ID = "sernet.verinice.rcp.catalog.CatalogView"; //$NON-NLS-1$
     
@@ -165,7 +169,8 @@ public class CatalogView extends RightsEnabledView
         drillDownAdapter = new DrillDownAdapter(viewer);
         viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
         viewer.setContentProvider(contentProvider);
-        viewer.setLabelProvider(new DecoratingLabelProvider(new TreeLabelProvider(), workbench.getDecoratorManager()));
+        viewer.setLabelProvider(new TreeLabelProvider());//TODO: urs check if we need some decorators at all
+//        viewer.setLabelProvider(new DecoratingLabelProvider(new TreeLabelProvider(), workbench.getDecoratorManager()));
 //        toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
         
         getSite().setSelectionProvider(viewer);
@@ -268,10 +273,11 @@ public class CatalogView extends RightsEnabledView
     }
     
     protected void fillContextMenu(IMenuManager manager) {
-        ObjectActionContributorManager.getManager().unregisterAllContributors();//this is not really nice
+        ObjectActionContributorManager.getManager().unregisterAllContributors();//this is not really nice but necessary to remove all the plugin contributions
         
         manager.add(new GroupMarker("content")); //$NON-NLS-1$
         manager.add(new Separator());
+        manager.add(doubleClickAction);
         manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
         manager.add(new Separator());
         drillDownAdapter.addNavigationActions(manager); 
@@ -288,6 +294,9 @@ public class CatalogView extends RightsEnabledView
                 }
             }
         };
+        doubleClickAction.setText("open");
+        doubleClickAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.OPEN_EDIT));
+        
         
         expandAction = new ExpandAction(viewer, contentProvider);
         expandAction.setText(Messages.ISMView_7);
@@ -296,6 +305,17 @@ public class CatalogView extends RightsEnabledView
         collapseAction = new CollapseAction(viewer);
         collapseAction.setText(Messages.ISMView_8);
         collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
+        
+        HideEmptyFilter hideEmptyFilter = new HideEmptyFilter(viewer);
+        hideEmptyFilter.setHideEmpty(true);
+        TagParameter tagParameter = new TagParameter();
+        TypeParameter typeParameter = new TypeParameter();
+        filterAction = new ISMViewFilter(viewer,
+                Messages.ISMView_12,
+                tagParameter,
+                hideEmptyFilter,
+                typeParameter);    
+
      }
     
     /**
@@ -336,6 +356,7 @@ public class CatalogView extends RightsEnabledView
         manager.add(expandAction);
         manager.add(collapseAction);
         drillDownAdapter.addNavigationActions(manager);
+        manager.add(filterAction);
     }
 
 
