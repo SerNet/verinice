@@ -351,23 +351,6 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         }
     }
 
-    /**
-     * Override this in subclasses to hide empty groups on startup.
-     * 
-     * @return a HideEmptyFilter
-     */
-    protected HideEmptyFilter createHideEmptyFilter() {
-        return new HideEmptyFilter(viewer);
-    }
-
-    /**
-     * Override this in subclasses to hide empty groups on startup.
-     * 
-     * @return a {@link TypeParameter}
-     */
-    protected TypeParameter createTypeParameter() {
-        return new TypeParameter();
-    }
 
     private void addActions() {
         viewer.addDoubleClickListener(new IDoubleClickListener() {
