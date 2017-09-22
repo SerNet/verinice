@@ -17,13 +17,11 @@
  * Contributors:
  *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.bp.importer.actions;
+package sernet.verinice.service.commands;
 
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
-import sernet.verinice.bp.importer.preferences.PreferenceConstants;
-import sernet.verinice.interfaces.ActionRightIDs;
+import org.jbpm.pvm.internal.cmd.CommandException;
+
+import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.service.bp.exceptions.CreateBPElementException;
 import sernet.verinice.service.bp.importer.BpImporter;
 
@@ -31,33 +29,28 @@ import sernet.verinice.service.bp.importer.BpImporter;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class ImportBPCompendiumActionDelegate extends RightsEnabledAction {
+public class ImportBPCompendium extends GenericCommand {
     
-    public static final String ID = "sernet.verinice.bp.importer.importaction"; //$NON-NLS-1$
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
-     */
-    @Override
-    public String getRightID() {
-        return ActionRightIDs.BPIMPORTER;
+    private String xmlRoot;
+    
+    public ImportBPCompendium (String xmlRoot) {
+        this.xmlRoot = xmlRoot;
     }
 
     /* (non-Javadoc)
-     * @see sernet.verinice.rcp.RightsEnabledActionDelegate#doRun(org.eclipse.jface.action.IAction)
+     * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
-    public void doRun() {
-        String xmlRoot = Activator.getDefault().getPreferenceStore().
-                getString(PreferenceConstants.XML_ROOT_DIRECTORY);
-        BpImporter importer = new BpImporter(xmlRoot);
+    public void execute() {
+        BpImporter importer = new BpImporter(this.xmlRoot);
+        importer.setCommandService(getCommandService());
+        importer.setDaoFactory(getDaoFactory());
         try {
             importer.run();
         } catch (CreateBPElementException e) {
-            ExceptionUtil.log(e, "Something went wrong importing BSI BP-Compendium from " + xmlRoot);
+            throw new CommandException(e);
         }
 
     }
-
 
 }
