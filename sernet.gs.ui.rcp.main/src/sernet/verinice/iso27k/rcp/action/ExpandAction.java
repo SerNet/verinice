@@ -68,7 +68,7 @@ public class ExpandAction extends Action implements ISelectionChangedListener {
 		// add all elements form selection to organization
 		CnATreeElement element = selectedElement;
 		expandedElements.add(element);
-		if(!(element instanceof Organization) && !(element instanceof ImportIsoGroup)) {
+        if(!isScope(element)) {
 			while(element.getParent()!=null && !(parentIsScope(element))) {
 				element = element.getParent();
 				expandedElements.add(element);
@@ -117,12 +117,19 @@ public class ExpandAction extends Action implements ISelectionChangedListener {
             return false;
         }
         CnATreeElement parent = element.getParent();
-        return parent instanceof Organization 
-            || parent instanceof ItNetwork
-            || parent instanceof ITVerbund
-            || parent instanceof ImportBsiGroup
-            || parent instanceof ImportIsoGroup
-            || parent instanceof ImportBpGroup;
+        return isScope(parent);
+    }
+
+    /**
+     * Checks if the given element is a scope. Aka root node.
+     */
+    private boolean isScope(CnATreeElement element) {
+        return element instanceof Organization 
+            || element instanceof ItNetwork
+            || element instanceof ITVerbund
+            || element instanceof ImportBsiGroup
+            || element instanceof ImportIsoGroup
+            || element instanceof ImportBpGroup;
     }
 	
 }

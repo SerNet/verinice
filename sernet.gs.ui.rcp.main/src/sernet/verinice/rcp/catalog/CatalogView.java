@@ -68,6 +68,7 @@ import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorRegistry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -248,7 +249,12 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
                 }
                 // model is not loaded yet: add a listener to load data when
                 // it's loaded
-                modelLoadListener = new ModelLoadListener();
+                modelLoadListener = new DefaultModelLoadListener(){
+                    @Override
+                    public void loaded(CatalogModel model) {
+                        startInitDataJob();
+                    }  
+                };
                 CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
             }
         } finally {
@@ -281,19 +287,8 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
     }
 
     protected void fillContextMenu(IMenuManager manager) {
-        ObjectActionContributorManager.getManager().unregisterAllContributors();// this
-                                                                                // is
-                                                                                // not
-                                                                                // really
-                                                                                // nice
-                                                                                // but
-                                                                                // necessary
-                                                                                // to
-                                                                                // remove
-                                                                                // all
-                                                                                // the
-                                                                                // plugin
-                                                                                // contributions
+        //remove all the plugin contributions
+        ObjectActionContributorManager.getManager().unregisterAllContributors();
 
         manager.add(new GroupMarker("content")); //$NON-NLS-1$
         manager.add(new Separator());
@@ -312,12 +307,12 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
                     try {
                         openEditorReadOnly(sel);
                     } catch (PartInitException e) {
-                        LOG.error("Error opening the BSIElement editor for: " + sel, e);
+                        LOG.error("Error opening the BSIElement editor for: " + sel, e); //$NON-NLS-1$
                     }
                 }
             }
         };
-        doubleClickAction.setText("open");//TODO: urs add this text in the messages
+        doubleClickAction.setText(Messages.CatalogView_open_in_editor);
         doubleClickAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.OPEN_EDIT));
 
         expandAction = new ExpandAction(viewer, contentProvider);
@@ -391,7 +386,6 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         IToolBarManager manager = bars.getToolBarManager();
         manager.add(expandAction);
         manager.add(collapseAction);
-        manager.add(linkWithEditorAction);
         drillDownAdapter.addNavigationActions(manager);
         manager.add(filterAction);
         manager.add(linkWithEditorAction);
@@ -451,33 +445,6 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
         getSite().getPage().removePartListener(linkWithEditorPartListener);
         super.dispose();
-    }
-
-    private final class ModelLoadListener implements IModelLoadListener {//TODO: make a default implementation so we do not need to override all the methods
-        @Override
-        public void closed(BSIModel model) {
-            // nothing to do
-        }
-
-        @Override
-        public void loaded(BSIModel model) {
-            // nothing to do
-        }
-
-        @Override
-        public void loaded(ISO27KModel model) {
-            // nothing to do
-        }
-
-        @Override
-        public void loaded(BpModel model) {
-            // nothing to do
-        }
-
-        @Override
-        public void loaded(CatalogModel model) {
-            startInitDataJob();
-        }
     }
 
     class ModITBViewerSorter extends ViewerSorter {
