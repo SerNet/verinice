@@ -43,6 +43,7 @@ import sernet.verinice.concurrency.CustomNamedThreadGroupFactory;
 import sernet.verinice.concurrency.TrackableCompletionService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IElementTitleCache;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
@@ -114,7 +115,7 @@ public class Indexer {
             LOG.info("Elements: " + allUuids.size() + ", start indexing...");
         }
 
-        getTitleCache().load(new String[] { ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID });
+        getTitleCache().load(new String[] { ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID, ItNetwork.TYPE_ID });
         Collection<IndexThread> indexThreads = createIndexThreadsByUuids(allUuids);
 
         for (IndexThread indexThread : indexThreads) {

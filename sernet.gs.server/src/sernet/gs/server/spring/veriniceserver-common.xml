@@ -390,7 +390,7 @@ This variant:
     </bean>
      
      <bean name="loadScopeTitlesCommand" class="sernet.verinice.service.commands.LoadElementTitles">
-        <property name="typeIds" value="it-verbund,org"/>
+        <property name="typeIds" value="it-verbund,org,bp_itnetwork"/>
      </bean>
 
 	<bean name="bpImporter" class="sernet.verinice.service.bp.importer.BpImporter">
