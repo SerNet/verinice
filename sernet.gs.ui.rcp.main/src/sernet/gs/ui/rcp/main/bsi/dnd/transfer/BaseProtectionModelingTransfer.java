@@ -46,7 +46,6 @@ public final class BaseProtectionModelingTransfer extends VeriniceElementTransfe
     private static final List<String> CLASS_NAMES = new LinkedList<>();
     static {
         CLASS_NAMES.add(BpRequirementGroup.class.getName());
-        CLASS_NAMES.add(SafeguardGroup.class.getName());
     }
     
     private static BaseProtectionModelingTransfer instance = new BaseProtectionModelingTransfer();

@@ -20,18 +20,23 @@
 package sernet.verinice.model.bp.elements;
 
 import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.IBpGroup;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.ElementWithChilds;
 
 /**
  * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
-public class Device extends CnATreeElement implements IBpElement {
+public class Device extends ElementWithChilds implements IBpElement, IBpGroup {
     
     private static final long serialVersionUID = -9128276389080852414L;
     
     public static final String TYPE_ID = "bp_device"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_device_name"; //$NON-NLS-1$
+    
+    public static final String[] CHILD_TYPES = new String[] {BpRequirementGroup.TYPE_ID};
 
     protected Device() {}
     
@@ -53,6 +58,11 @@ public class Device extends CnATreeElement implements IBpElement {
     @Override
     public String getTypeId() {
         return TYPE_ID;
+    }
+
+    @Override
+    public String[] getChildTypes() {
+        return CHILD_TYPES;
     }
 
 }
