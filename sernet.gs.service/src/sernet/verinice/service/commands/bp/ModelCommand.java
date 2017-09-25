@@ -91,60 +91,24 @@ public class ModelCommand extends ChangeLoggingCommand {
     }
 
     private void handleModules() throws CommandException {
-        for (String targetUuid : targetUuids) {
-            CnATreeElement target = loadElementWithChildren(targetUuid);
-            List<String> missingUuids = createListOfMssingUuids(target);
-            if(!missingUuids.isEmpty()) {
-                CopyCommand copyCommand = new CopyCommand(targetUuid, missingUuids);
-                copyCommand = getCommandService().executeCommand(copyCommand);
-            }
-        }       
+        ModelModulesCommand modelModulesCommand = new ModelModulesCommand(requirementGroups, targetUuids);
+        modelModulesCommand = getCommandService().executeCommand(modelModulesCommand);
     }
     
- 
-    private List<String> createListOfMssingUuids(CnATreeElement targetWithChildren) {
-        List<String> uuids = new LinkedList<>();
-        Set<CnATreeElement> targetChildren = targetWithChildren.getChildren();
-        for (BpRequirementGroup module : requirementGroups) {
-            if(!isModuleInChildrenSet(targetChildren,module)) {
-                uuids.add(module.getUuid());
-            }
-        }
-        return uuids;
-    }
-
-
-    private boolean isModuleInChildrenSet(Set<CnATreeElement> targetChildren,
-            BpRequirementGroup module) {
-        for (CnATreeElement targetModuleElement : targetChildren) {
-            BpRequirementGroup targetModule = (BpRequirementGroup) targetModuleElement; 
-            if(nullSafeEquals(targetModule.getIdentifier(),module.getIdentifier())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean nullSafeEquals(String targetModuleId, String moduleId) {
-        if(targetModuleId==null || moduleId==null) {
-            return false;
-        }
-        return targetModuleId.equals(moduleId);
-    }
-
-
-    private void handleSafeguards() {
-        // TODO Auto-generated method stub
+    private void handleSafeguards() throws CommandException {
+        ModelSafeguardsCommand modelSafeguardsCommand = new ModelSafeguardsCommand(compendiumUuids,getTargetScopeId());
+        modelSafeguardsCommand = getCommandService().executeCommand(modelSafeguardsCommand);
         
     }
     
+    private Integer getTargetScopeId() {
+        return targetElements.get(0).getScopeId();
+    }
+
+
     private void handleThreats() {
         // TODO Auto-generated method stub
         
-    }
-    private CnATreeElement loadElementWithChildren(String uuid) {
-        RetrieveInfo ri = RetrieveInfo.getChildrenInstance().setChildrenProperties(true);
-        return getDao().findByUuid(uuid,ri); 
     }
     
     @SuppressWarnings("unchecked")
@@ -201,6 +165,13 @@ public class ModelCommand extends ChangeLoggingCommand {
         if(targetUuids.isEmpty()) {
             throw new IllegalArgumentException("Target element uuid list is empty.");
         }
+    }
+    
+    public static boolean nullSafeEquals(String targetModuleId, String moduleId) {
+        if(targetModuleId==null || moduleId==null) {
+            return false;
+        }
+        return targetModuleId.equals(moduleId);
     }
 
     /* (non-Javadoc)
