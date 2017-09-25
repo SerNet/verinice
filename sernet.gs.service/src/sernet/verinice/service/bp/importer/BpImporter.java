@@ -36,6 +36,7 @@ import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.ChangeLogEntry;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Link;
 import sernet.verinice.service.bp.LoadBpModel;
@@ -419,7 +420,7 @@ public class BpImporter {
             }
 
             if (parent != null) {
-                createSafeguardsForModule(bsiSafeguard.getSafeguards(), parent);
+                createSafeguardsForModule(bsiSafeguard, parent);
             } else {
                 LOG.warn("Could not determine parent for :\t" + bsiSafeguard.getTitle());
             }
@@ -596,6 +597,15 @@ public class BpImporter {
         }
     }
     
+    private BpRequirementGroup getModuleByIdentifier(String identifier) {
+        if(addedModules.containsKey(identifier) ) {
+            return addedModules.get(identifier);
+        } else {
+            LOG.error("Could not find module with id:\t" + identifier);
+            return null;            
+        }
+    }
+    
     private void generateElementalThreads(Set<ITBP2VNA.generated.thread.Document> threats) throws CreateBPElementException {
         for (ITBP2VNA.generated.thread.Document bsiThreat : threats) {
             if (! addedThreats.containsKey(bsiThreat.getIdentifier())) {
@@ -692,13 +702,17 @@ public class BpImporter {
      * @throws IllegalAccessException 
      * @throws InstantiationException 
      */
-    private void createSafeguardsForModule(Safeguards bsiModule, SafeguardGroup parent) 
+    private void createSafeguardsForModule(ITBP2VNA.generated.implementationhint.Document bsiSafeguardDocument, SafeguardGroup parent) 
             throws CreateBPElementException {
         List<Link> links = new ArrayList<>();
+        Safeguards bsiModule = bsiSafeguardDocument.getSafeguards();
+        String moduleIdentifier = bsiSafeguardDocument.getIdentifier();
+        
         for (ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard : bsiModule.getBasicSafeguards().getSafeguard()) {
             Safeguard safeguard = createSafeguard(parent, bsiSafeguard, "BASIC");
             if (safeguard != null) {
                 links.addAll(linkSafeguardToRequirements(safeguard));
+                links.addAll(linkSafeguardToElementalThreat(moduleIdentifier, safeguard));
             } else {
                 LOG.warn("Could not create Safeguard:\t" + bsiSafeguard.getTitle());
             }
@@ -707,6 +721,7 @@ public class BpImporter {
             Safeguard safeguard = createSafeguard(parent, bsiSafeguard, "STANDARD");
             if (safeguard != null) {
                 links.addAll(linkSafeguardToRequirements(safeguard));
+                links.addAll(linkSafeguardToElementalThreat(moduleIdentifier, safeguard));
             } else {
                 LOG.warn("Could not create Safeguard:\t" + bsiSafeguard.getTitle());
             }        }
@@ -714,16 +729,37 @@ public class BpImporter {
             Safeguard safeguard = createSafeguard(parent, bsiSafeguard, "HIGH");
             if (safeguard != null) {
                 links.addAll(linkSafeguardToRequirements(safeguard));
+                links.addAll(linkSafeguardToElementalThreat(moduleIdentifier, safeguard));
             } else {
                 LOG.warn("Could not create Safeguard:\t" + bsiSafeguard.getTitle());
             }
         }
+        
+        
+        
         CreateMultipleLinks linkCommand = new CreateMultipleLinks(links);
         try {
             getCommandService().executeCommand(linkCommand);
         } catch (CommandException e) {
             throw new CreateBPElementException(e, "Error creating links for safeguards");
         }
+    }
+    
+    private Set<Link> linkSafeguardToElementalThreat(String bsiModuleIdentifier, Safeguard vSafeguard){
+        Set<Link> links = new HashSet<>();
+        
+        BpRequirementGroup module = getModuleByIdentifier(bsiModuleIdentifier);
+        if ( module != null) {
+            for (CnALink link : module.getLinksDown()) {
+                if (link.getDependency() instanceof BpThreat) {
+                    links.add(new Link(vSafeguard, link.getDependency()));
+                } 
+            }
+        }
+        
+        return links;
+        
+        
     }
     
     /**
