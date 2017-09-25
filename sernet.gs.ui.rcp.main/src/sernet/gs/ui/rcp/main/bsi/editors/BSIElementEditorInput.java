@@ -41,6 +41,7 @@ public class BSIElementEditorInput implements IEditorInput {
     
 	private CnATreeElement element;
 	private TaskInformation task;
+    private boolean readOnly = false;
 	
 
 	public BSIElementEditorInput(CnATreeElement element) {
@@ -52,7 +53,12 @@ public class BSIElementEditorInput implements IEditorInput {
         this.task = task;
     }
 	
-	public boolean exists() {
+	public BSIElementEditorInput(CnATreeElement element, boolean isReadOnly) {
+	    this.element = element;
+	    this.readOnly = isReadOnly;
+    }
+
+    public boolean exists() {
 		return true;
 	}
 	
@@ -127,5 +133,9 @@ public class BSIElementEditorInput implements IEditorInput {
      */
     public TaskInformation getTask() {
         return task;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
     }
 }

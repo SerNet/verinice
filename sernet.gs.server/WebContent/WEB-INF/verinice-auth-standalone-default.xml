@@ -60,6 +60,7 @@
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />
 	        <action id="bulkedit" />
+	        <action id="catalogview" />
           	<action id="changeicon" />
 	        <action id="deletecatalog" />
 	        <action id="deletefile" />

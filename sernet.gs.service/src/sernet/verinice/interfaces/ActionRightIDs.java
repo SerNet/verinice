@@ -51,6 +51,7 @@ public final class ActionRightIDs {
     public static final String BSIMASSNAHMEN = "bsimassnahmen";
     public static final String BSIMODELVIEW = "bsimodelview";
     public static final String BULKEDIT = "bulkedit";
+    public static final String CATALOGVIEW = "catalogview";
     public static final String CHANGEICON = "changeicon";
     public static final String CNAVALIDATION = "cnavalidation";
     public static final String CREATE_GREENBONE_TASKS = "creategreenbonetasks";
@@ -111,7 +112,6 @@ public final class ActionRightIDs {
     public static final String UNIFY = "unify";
     public static final String XMLEXPORT = "xmlexport";
     public static final String XMLIMPORT = "xmlimport";
-    public static final String CATALOGVIEW = "catalogview";
 
     private static Logger log = Logger.getLogger(ActionRightIDs.class);
 

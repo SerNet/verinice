@@ -57,6 +57,7 @@
             <action id="bsimassnahmen" />
             <action id="bsimodelview" />
             <action id="bulkedit" />
+            <action id="catalogview" />
             <action id="changeicon" />
             <action id="changeownpassword" />
             <action id="cnavalidation" />
@@ -150,6 +151,7 @@
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />
 	        <action id="bulkedit" />
+	        <action id="catalogview" />
           <action id="changeicon" />
 	        <action id="cnavalidation" />
           <action id="creategreenbonetasks" />
@@ -281,6 +283,7 @@
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />
 	        <action id="bulkedit" />
+	        <action id="catalogview" />
           <action id="changeicon" />
 	        <action id="cnavalidation" />
           <action id="creategreenbonetasks" />
@@ -363,7 +366,8 @@
             <action id="bsibrowser" /> 
             <action id="bsimassnahmen" /> 
             <action id="bsimodelview" /> 
-            <action id="bulkedit" /> 
+            <action id="bulkedit" />
+            <action id="catalogview" /> 
           	<action id="changeicon" /> 
             <action id="cnavalidation" /> 
           	<action id="creategreenbonetasks" /> 
@@ -444,6 +448,7 @@
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />
 	        <action id="bulkedit" />
+	        <action id="catalogview" />
           <action id="changeicon" />
 	        <action id="cnavalidation" />
           <action id="creategreenbonetasks" />

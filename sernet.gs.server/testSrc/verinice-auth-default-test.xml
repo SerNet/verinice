@@ -49,7 +49,8 @@
             <action id="bpimporter" />
             <action id="bsidnd" />
             <action id="bsibrowser" />
-            <action id="bsimassnahmen" />
+            <action id="bsimassnahmen" />            
+            <action id="catalogview" />
             <action id="bsimodelview" />
             <action id="bulkedit" />
             <action id="changeicon" />
@@ -133,6 +134,7 @@
             <action id="bsimassnahmen" />
             <action id="bsimodelview" />
             <action id="bulkedit" />
+            <action id="catalogview" />
             <action id="changeicon" />
             <action id="changeownpassword" />
             <action id="cnavalidation" />
@@ -212,6 +214,7 @@
             <action id="bsimassnahmen" />
             <action id="bsimodelview" />
             <action id="bulkedit" />
+            <action id="catalogview" />
             <action id="changeicon" />
             <action id="changeownpassword" />
             <action id="cnavalidation" />
@@ -288,6 +291,7 @@
             <action id="bsimassnahmen" />
             <action id="bsimodelview" />
             <action id="bulkedit" />
+            <action id="catalogview" />
             <action id="changeicon" />
             <action id="changeownpassword" />
             <action id="cnavalidation" />
