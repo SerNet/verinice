@@ -99,8 +99,8 @@ h1 {
 
 #a-gb {
 	position:absolute; 
-	top:244px; 
-	left:158px;
+	top:366px; 
+	left:783px;
 	padding:0px;
 	margin-top:0px;
  	margin-bottom:0px;
@@ -116,9 +116,33 @@ h1 {
 .link-gb-text {
 	font-size: 16px;
 	position:absolute;
+	top:386px;
+	left:878px;
+	width:200px;
+}
+
+#a-modern-gs {
+	position:absolute; 
+	top:244px; 
+	left:158px;
+	padding:0px;
+	margin-top:0px;
+ 	margin-bottom:0px;
+	text-decoration: none;
+    display:block;
+  	background-image:url(link-modern-gs.png);
+	background-position: left top;
+	width:82px;
+ 	height:82px;
+}
+#a-modern-gs:hover {background-position: left bottom; }
+
+.link-modern-gs-text {
+	font-size: 16px;
+	position:absolute;
 	top:264px;
 	left:253px;
-	width:200px;
+	width:250px;
 }
 
 #a-info {

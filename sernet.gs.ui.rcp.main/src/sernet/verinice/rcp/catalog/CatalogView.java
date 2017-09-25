@@ -81,6 +81,7 @@ import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
+import sernet.verinice.rcp.bp.BaseProtectionPerspective;
 import sernet.verinice.rcp.tree.TreeContentProvider;
 import sernet.verinice.rcp.tree.TreeLabelProvider;
 import sernet.verinice.rcp.tree.TreeUpdateListener;
@@ -349,8 +350,7 @@ public class CatalogView extends RightsEnabledView
 
     @Override
     public String getPerspectiveId() {
-        // TODO: implement own base protection perspective
-        return Perspective.ID;
+        return BaseProtectionPerspective.ID;
     }
     
     @Override

@@ -36,6 +36,15 @@
             id="sernet.verinice.iso27k.rcp.GreenbonePerspective"
             name="%perspective.name.2">
       </perspective>
+            <perspective
+            class="sernet.verinice.rcp.bp.BaseProtectionPerspective"
+            icon="icons/greenbone.gif"
+            id="sernet.verinice.rcp.bp.BaseProtectionPerspective"
+            name="%perspective.name.3">
+      </perspective>
+      
+      
+      
    </extension>
    <extension
          point="org.eclipse.ui.views">
