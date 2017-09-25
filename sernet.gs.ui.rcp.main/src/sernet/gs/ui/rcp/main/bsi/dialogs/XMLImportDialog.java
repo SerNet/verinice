@@ -92,7 +92,9 @@ public class XMLImportDialog extends Dialog {
     private boolean importAsCatalog;
 
     private Button integrateButton;
-
+    private Button insertButton;
+    private Button updateButton;
+    
     private Text dataPathText;
     private boolean dataPathFlag;
 
@@ -339,8 +341,8 @@ public class XMLImportDialog extends Dialog {
             }
         };
 
-        Button insertCheck = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_25, true, insertListener);
-        insertCheck.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+        insertButton = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_25, true, insertListener);
+        insertButton.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
 
         Label insertText = new Label(operationGroup, SWT.LEFT);
         insertText.setText(Messages.XMLImportDialog_8);
@@ -354,8 +356,8 @@ public class XMLImportDialog extends Dialog {
                 integrateButton.setEnabled(insert || update);
             }
         };
-        Button updateCheck = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_26, true, updateCheckListener);
-        updateCheck.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+        updateButton = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_26, true, updateCheckListener);
+        updateButton.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
 
         Label updateText = new Label(operationGroup, SWT.LEFT);
         updateText.setText(Messages.XMLImportDialog_9);
@@ -674,6 +676,15 @@ public class XMLImportDialog extends Dialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 importAsCatalog = (e.getSource() instanceof Button) ? ((Button) (e.getSource())).getSelection() : importAsCatalog;
+                if (importAsCatalog) {
+                    integrateButton.setSelection(true);
+                    insertButton.setSelection(true);
+                    updateButton.setSelection(false);
+                } else {
+                    integrateButton.setSelection(true);
+                    insertButton.setSelection(false);
+                    updateButton.setSelection(true);
+                }
             }
         });
 
