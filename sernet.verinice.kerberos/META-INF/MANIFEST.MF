@@ -3,7 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Kerberos
 Bundle-SymbolicName: sernet.verinice.kerberos;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Eclipse-PlatformFilter: (osgi.os=win32)
 Bundle-Activator: sernet.verinice.kerberos.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
@@ -13,3 +12,4 @@ Require-Bundle: org.eclipse.ui,
 Import-Package: org.apache.log4j;version="1.2.15",
  waffle.windows.auth
 Bundle-ActivationPolicy: lazy
+Eclipse-PlatformFilter: (osgi.os=win32)

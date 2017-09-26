@@ -29,12 +29,20 @@
 		</fileset>
 		<pathelement location="${basedir}/lib/el-api.jar" />
 		<pathelement location="${basedir}/bin" />
+		<!-- add the missing classes on the classpath -->
+		<pathelement location="../sernet.gs.service/target/classes" />
+		<pathelement location="../sernet.gs.server/target/classes" />
+		<pathelement location="../sernet.hui.common/target/classes" />
+		
+		
 	</path>
 	<path id="classpath.test">
 		<pathelement location="${basedir}/lib/com.springsource.org.junit-4.4.0.jar" />
 		<pathelement location="${basedir}/lib/spring-test-2.5.6.jar" />		
 		<pathelement location="${basedir}/lib/jlorem-1.3.jar" />
 		<path refid="classpath.base" />
+		
+		<pathelement location="../sernet.gs.server/target/test-classes" />
 	</path>
 	
 	

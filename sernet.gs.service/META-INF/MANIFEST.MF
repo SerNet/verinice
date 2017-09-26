@@ -109,7 +109,7 @@ Require-Bundle: com.springsource.org.apache.commons.io;bundle-version="1.4.0",
  jfreechart-1.0.11-experimental;bundle-version="1.0.11",
  jcommon-1.0.14;bundle-version="1.0.14",
  sernet.gs.reveng;bundle-version="1.1.1",
- org.springframework.core;bundle-version="2.5.6",
+ org.springframework.core,
  com.springsource.org.hibernate
 Import-Package: org.eclipse.osgi.util,
  org.hibernate,
