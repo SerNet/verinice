@@ -55,7 +55,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.internal.ObjectActionContributorManager;
 import org.eclipse.ui.part.DrillDownAdapter;
 
 import sernet.gs.service.NumericStringComparator;
@@ -81,14 +80,11 @@ import sernet.verinice.iso27k.rcp.action.CollapseAction;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
-import sernet.verinice.model.bp.elements.BpModel;
-import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.catalog.ICatalogModelListener;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TagParameter;
 import sernet.verinice.model.common.TypeParameter;
-import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.tree.TreeContentProvider;
@@ -281,15 +277,11 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
             }
         });
         Menu menu = menuMgr.createContextMenu(viewer.getControl());
-
+        
         viewer.getControl().setMenu(menu);
-        getSite().registerContextMenu(menuMgr, viewer);
     }
 
     protected void fillContextMenu(IMenuManager manager) {
-        //remove all the plugin contributions
-        ObjectActionContributorManager.getManager().unregisterAllContributors();
-
         manager.add(new GroupMarker("content")); //$NON-NLS-1$
         manager.add(new Separator());
         manager.add(doubleClickAction);
