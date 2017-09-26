@@ -27,7 +27,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.model.bp.IBpModelListener;
-import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**

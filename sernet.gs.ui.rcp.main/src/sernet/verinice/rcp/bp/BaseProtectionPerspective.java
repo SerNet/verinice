@@ -23,9 +23,7 @@ import org.eclipse.ui.IPerspectiveFactory;
 
 import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
 import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
-import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.verinice.bp.rcp.BaseProtectionView;
-import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.rcp.catalog.CatalogView;
 
 /**
