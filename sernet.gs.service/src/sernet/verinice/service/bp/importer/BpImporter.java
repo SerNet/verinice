@@ -14,10 +14,11 @@ import java.util.Set;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.Text;
 
 import ITBP2VNA.generated.implementationhint.Document.Safeguards;
 import ITBP2VNA.generated.module.Document;
-import ITBP2VNA.generated.module.Document.Description;
 import ITBP2VNA.generated.module.ElementalthreatRef;
 import ITBP2VNA.generated.module.Requirement;
 import ITBP2VNA.generated.module.RequirementRef;
@@ -144,7 +145,7 @@ public class BpImporter {
     public void run() throws CreateBPElementException {
         long startImport = System.currentTimeMillis();
         Set<Document> modules = new HashSet<>();
-        Set<ITBP2VNA.generated.thread.Document> threats = new HashSet<>();
+        Set<ITBP2VNA.generated.threat.Document> threats = new HashSet<>();
         Set<ITBP2VNA.generated.implementationhint.Document> implementationHints = new HashSet<>();
         if (xmlRootDirectory == null || xmlRootDirectory.length() == 0) {
            LOG.error("Wrong number of arguments, please provide root-Directory to XML-Archive");
@@ -182,7 +183,7 @@ public class BpImporter {
      * @param threats
      * @param implementationHints
      */
-    private void setupImportProcess(Set<Document> modules, Set<ITBP2VNA.generated.thread.Document> threats, Set<ITBP2VNA.generated.implementationhint.Document> implementationHints) {
+    private void setupImportProcess(Set<Document> modules, Set<ITBP2VNA.generated.threat.Document> threats, Set<ITBP2VNA.generated.implementationhint.Document> implementationHints) {
         {
             File rootDir = new File(xmlRootDirectory);
             if (rootDir.exists() && rootDir.isDirectory()) {
@@ -210,7 +211,7 @@ public class BpImporter {
      * parses XML-Files in given Subdirectories of BSI-XML to
      * 
      * - {@link Document} into {@link Set} modules
-     * - {@link ITBP2VNA.generated.thread.Document} into {@link Set} threats
+     * - {@link ITBP2VNA.generated.threat.Document} into {@link Set} threats
      * - {@link ITBP2VNA.generated.implementationhint.Document} into {@link Set} implementationHints
      * 
      * @param modules
@@ -220,7 +221,7 @@ public class BpImporter {
      * @param threatDir
      * @param implHintDir
      */
-    private void parseBSIXml(Set<Document> modules, Set<ITBP2VNA.generated.thread.Document> threats, Set<ITBP2VNA.generated.implementationhint.Document> implementationHints, File moduleDir, File threatDir, File implHintDir) {
+    private void parseBSIXml(Set<Document> modules, Set<ITBP2VNA.generated.threat.Document> threats, Set<ITBP2VNA.generated.implementationhint.Document> implementationHints, File moduleDir, File threatDir, File implHintDir) {
         for (File xmlFile : getXMLFiles(moduleDir)) {
             modules.add(ITBPParser.getInstance().parseModule(xmlFile));
         }
@@ -565,8 +566,8 @@ public class BpImporter {
                 
                 veriniceThreat.setDescription(getAnyElementDescription(threat.getHeadline(),
                         threat.getDescription().getAny()));
-                Link link = new Link(veriniceModule, veriniceThreat);
-                linkList.add(link);
+//                Link link = new Link(veriniceModule, veriniceThreat);
+//                linkList.add(link);
                 addedThreats.put(title, veriniceThreat);
             } 
 
@@ -606,8 +607,8 @@ public class BpImporter {
         }
     }
     
-    private void generateElementalThreads(Set<ITBP2VNA.generated.thread.Document> threats) throws CreateBPElementException {
-        for (ITBP2VNA.generated.thread.Document bsiThreat : threats) {
+    private void generateElementalThreads(Set<ITBP2VNA.generated.threat.Document> threats) throws CreateBPElementException {
+        for (ITBP2VNA.generated.threat.Document bsiThreat : threats) {
             if (! addedThreats.containsKey(bsiThreat.getIdentifier())) {
                 BpThreat veriniceThreat = (BpThreat) createElement(BpThreat.TYPE_ID, 
                         elementalThreatGroup, bsiThreat.getFullTitle() );
@@ -615,13 +616,20 @@ public class BpImporter {
                 
                 veriniceThreat.setIdentifier(bsiThreat.getIdentifier());
                 veriniceThreat.setAbbreviation(bsiThreat.getCia().toString());
-                //                    veriniceThreat.setDescription(bsiThreat.getDescription());
+                veriniceThreat.setDescription(getSafeguardDescription(bsiThreat.getFullTitle(), bsiThreat.getDescription()));
                 veriniceThreat = (BpThreat) updateElement(veriniceThreat);
                 addedThreats.put(bsiThreat.getIdentifier(), veriniceThreat);
                 
                 LOG.debug("Threat : \t" + veriniceThreat.getTitle()+ " created");
             }
         }
+    }
+    
+    private String getElementalThreatDescription(String title, String description) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<H1>").append(title).append("</H1>");
+        sb.append(description);
+        return sb.toString();
     }
     
     /**
@@ -781,8 +789,13 @@ public class BpImporter {
             Safeguard safeguard = (Safeguard) createElement(Safeguard.TYPE_ID, parent, bsiSafeguard.getTitle());
             safeguard.setAbbreviation(bsiSafeguard.getIdentifier());
             safeguard.setIdentifier(bsiSafeguard.getIdentifier());
-            safeguard.setDescription(getSafeGuardDescription(bsiSafeguard.getTitle(),
-                    bsiSafeguard.getDescription().getContent()));
+            String description = getSafeguardDescription(bsiSafeguard.getTitle(),
+                    bsiSafeguard.getDescription().getContent());
+            if (description != null && description.length() > 0) {
+                safeguard.setDescription(description);
+            } else {
+                LOG.error("No description found for:\t" + bsiSafeguard.getTitle());
+            }
             safeguard.setQualifier(qualifier);
             safeguard.setTitle(bsiSafeguard.getTitle());
             LOG.debug("Safeguard : \t"  + safeguard.getTitle() + "created ");
@@ -890,15 +903,6 @@ public class BpImporter {
         }
     }
 
-    private String getSafeGuardDescription(String title, List<Object> content) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<H1>").append(title).append("</H1>");
-        for (Object element : content) {
-            sb.append(element.toString());
-        }
-        
-        return sb.toString();
-    }
     
     /**
      * experimental, tries to deal with the HTML/XML-Mixture
@@ -909,10 +913,56 @@ public class BpImporter {
     private String getAnyElementDescription(String title, List<Element> anyElements) {
         StringBuilder sb = new StringBuilder();
         sb.append("<H1>").append(title).append("</H1>");
-        for (Element element : anyElements) {
-            sb.append(element.toString());
+        for (Object element : anyElements) {
+            sb.append(extractContentFromElement(element));
         }
         
+        return sb.toString();
+    }
+
+
+    /**
+     * @param sb
+     * @param element
+     */
+    private String extractContentFromElement(Object element) {
+        StringBuilder sb = new StringBuilder();
+        if (element instanceof Element) {
+            sb.append(unwrapText((Element)element));
+        } else if(element instanceof String) {
+            sb.append((String)element);
+        }
+        return sb.toString();
+    }
+    
+    private String getSafeguardDescription(String title, List<Object> anyElements) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<H1>").append(title).append("</H1>");
+        if (anyElements != null) {
+            for (Object o : anyElements) {
+                sb.append(extractContentFromElement(o));            
+            }
+        } else {
+            LOG.error("No Description found for :\t" + String.valueOf(title));
+//            throw new NoDescriptionFoundException("No Description found for :\t" + String.valueOf(title)));
+        }
+        
+        return sb.toString();
+    }
+    
+    private String unwrapText(Node element) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < element.getChildNodes().getLength(); i++) {
+            Node node = element.getChildNodes().item(i);
+            if (node instanceof Text) {
+                String htmlFormatElement = node.getParentNode().getNodeName();
+                sb.append("<").append(htmlFormatElement).append(">");
+                sb.append(node.getNodeValue());
+                sb.append("</").append(htmlFormatElement).append(">");
+            } else {
+                sb.append(unwrapText(node));
+            }
+        }
         return sb.toString();
     }
     
@@ -925,19 +975,25 @@ public class BpImporter {
      * @param description
      * @return
      */
-    private String getModuleDescriptionText(String title, Description description) {
+    private String getModuleDescriptionText(String title, Document.Description description) {
         StringBuilder sb = new StringBuilder();
         sb.append("<H1>").append(title).append("</H1>");
         if(description != null) {
-            String introduction = (description.getIntroduction() != null ) 
-                    ? description.getIntroduction() : null;
-            String purpose = (description.getPurpose() != null ) 
-                    ? description.getPurpose() : null;
-            String differentiation = (description.getDifferentiation() != null ) 
-                    ? description.getDifferentiation() : null;
+            String introduction = getSafeguardDescription("", description.getIntroduction()); 
+            String purpose = getSafeguardDescription("", description.getPurpose());
+            String differentiation = getSafeguardDescription("", description.getDifferentiation());
             sb.append((introduction != null) ? introduction : "<p>No Introduction</p>");
             sb.append((purpose != null) ? purpose : "<p>No Purpose</p>");
-            sb.append((differentiation != null) ? differentiation : "<p>No differentiation</p>");
+            sb.append((differentiation != null) ? differentiation : "<p>No Differentiation</p>");
+            if (introduction != null && introduction.length() > 0) {
+                LOG.error("No introduction in description found for :\t" + title);
+            }
+            if (purpose != null && purpose.length() > 0) {
+                LOG.error("No purpose in description found for :\t" + title);
+            }
+            if (differentiation != null && differentiation.length() > 0) {
+                LOG.error("No differentiation in description found for :\t" + title);
+            }
         }
         return sb.toString();
     }

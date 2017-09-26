@@ -6,10 +6,13 @@
 //
 
 
-package ITBP2VNA.generated.thread;
+package ITBP2VNA.generated.threat;
+
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -65,8 +68,8 @@ public class Document {
     protected String title;
     @XmlElement(required = true)
     protected Document.Cia cia;
-    @XmlElement(required = true)
-    protected String description;
+    @XmlAnyElement(lax = true)
+    protected List<Object> description;
 
     /**
      * Ruft den Wert der fullTitle-Eigenschaft ab.
@@ -172,7 +175,7 @@ public class Document {
      *     {@link String }
      *     
      */
-    public String getDescription() {
+    public List<Object> getDescription() {
         return description;
     }
 
@@ -184,7 +187,7 @@ public class Document {
      *     {@link String }
      *     
      */
-    public void setDescription(String value) {
+    public void setDescription(List<Object> value) {
         this.description = value;
     }
 

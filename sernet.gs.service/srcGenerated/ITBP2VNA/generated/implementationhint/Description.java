@@ -48,8 +48,10 @@ import org.w3c.dom.Element;
 public class Description {
 
     @XmlMixed
-    @XmlAnyElement
+    @XmlAnyElement(lax = true)
     protected List<Object> content;
+    
+    // hier auf object zurück und dann eigene methode dafür
 
     /**
      * Gets the value of the content property.
