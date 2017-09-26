@@ -55,7 +55,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.internal.ObjectActionContributorManager;
 import org.eclipse.ui.part.DrillDownAdapter;
 
 import sernet.gs.service.NumericStringComparator;
@@ -280,13 +279,9 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         Menu menu = menuMgr.createContextMenu(viewer.getControl());
 
         viewer.getControl().setMenu(menu);
-        getSite().registerContextMenu(menuMgr, viewer);
     }
 
     protected void fillContextMenu(IMenuManager manager) {
-        //remove all the plugin contributions
-        ObjectActionContributorManager.getManager().unregisterAllContributors();
-
         manager.add(new GroupMarker("content")); //$NON-NLS-1$
         manager.add(new Separator());
         manager.add(doubleClickAction);
