@@ -112,6 +112,20 @@ public class BpImporter {
     private final static String SUBDIRECTORY_MEDIA = "media";
     private final static String SUBDIRECTORY_THREATS = "elementare_gefaehrdungen_1";
     private final static String SUBDIRECTORY_IMPL_HINTS = "umsetzungshinweise";
+    private final static String HTML_DESCRIPTION_PREAMBEL = "<html>\n" + 
+            "<head>\n" + 
+            "<style>\n" + 
+            ".copyright { margin-left: 220px; color: #333333; text-align: left; font-size: 0.7em; margin-top: 10px;  font-family: Verdana, Arial, Helvetica, sans-serif;}\n" + 
+            ".linievorcopy { margin-left: 220px; margin-top: 10px; text-align: left;background-color: #999999; clear: both; color: #999999; border: #999999; height: 1px}\n" + 
+            "</style>\n" + 
+            "\n" + 
+            "</head>\n" + 
+            "<body>";
+    
+    private final static String HTML_DESCRIPTION_SUFFIX = "  <hr class=\"linievorcopy\" >\n" + 
+            "  <div class=\"copyright\">&copy; Bundesamt f&uuml;r Sicherheit in der Informationstechnik. All rights reserved</div>\n" + 
+            "</body>\n" + 
+            "</html>";
     
     private Map<String, BpThreat> addedThreats = new HashMap<>();
     private Map<String, BpRequirement> addedReqs = new HashMap<>();
@@ -616,7 +630,10 @@ public class BpImporter {
                 
                 veriniceThreat.setIdentifier(bsiThreat.getIdentifier());
                 veriniceThreat.setAbbreviation(bsiThreat.getCia().toString());
-                veriniceThreat.setDescription(getSafeguardDescription(bsiThreat.getFullTitle(), bsiThreat.getDescription()));
+                String plainDescription = getSafeguardDescription(bsiThreat.getFullTitle(), bsiThreat.getDescription());
+                if (plainDescription != null && plainDescription.length() > 0) {
+                    veriniceThreat.setDescription(htmlizeDescription(plainDescription));
+                }
                 veriniceThreat = (BpThreat) updateElement(veriniceThreat);
                 addedThreats.put(bsiThreat.getIdentifier(), veriniceThreat);
                 
@@ -789,10 +806,11 @@ public class BpImporter {
             Safeguard safeguard = (Safeguard) createElement(Safeguard.TYPE_ID, parent, bsiSafeguard.getTitle());
             safeguard.setAbbreviation(bsiSafeguard.getIdentifier());
             safeguard.setIdentifier(bsiSafeguard.getIdentifier());
-            String description = getSafeguardDescription(bsiSafeguard.getTitle(),
+            String plainDescription = getSafeguardDescription(bsiSafeguard.getTitle(),
                     bsiSafeguard.getDescription().getContent());
-            if (description != null && description.length() > 0) {
-                safeguard.setDescription(description);
+            String htmlDescription = htmlizeDescription(plainDescription);
+            if (plainDescription != null && plainDescription.length() > 0) {
+                safeguard.setDescription(htmlDescription);
             } else {
                 LOG.error("No description found for:\t" + bsiSafeguard.getTitle());
             }
@@ -803,6 +821,21 @@ public class BpImporter {
             return (Safeguard) updateElement(safeguard);
         }
         return null;
+    }
+
+
+    /**
+     * @param plainDescription
+     * @return
+     */
+    private String htmlizeDescription(String plainDescription) {
+        StringBuilder htmlDescriptionBuilder = new StringBuilder();
+        
+        htmlDescriptionBuilder.append(HTML_DESCRIPTION_PREAMBEL);
+        htmlDescriptionBuilder.append(plainDescription);
+        htmlDescriptionBuilder.append(HTML_DESCRIPTION_SUFFIX);
+        String htmlDescription = htmlDescriptionBuilder.toString();
+        return htmlDescription;
     }
 
     private SafeguardGroup getSafeguardParent(SafeguardGroup rootGroup,
@@ -995,7 +1028,7 @@ public class BpImporter {
                 LOG.error("No differentiation in description found for :\t" + title);
             }
         }
-        return sb.toString();
+        return htmlizeDescription(sb.toString());
     }
     
     /**
