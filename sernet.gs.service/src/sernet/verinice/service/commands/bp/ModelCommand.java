@@ -54,7 +54,7 @@ public class ModelCommand extends ChangeLoggingCommand {
      * HQL query to load the elements. The entity and the properties
      * are loaded by a single statement with joins.
      */
-    private static final String HQL_QUERY = "select distinct element from CnATreeElement element " +
+    public static final String HQL_ELEMENT_WITH_PROPERTIES = "select distinct element from CnATreeElement element " +
             "join fetch element.entity as entity " +
             "join fetch entity.typedPropertyLists as propertyList " +
             "join fetch propertyList.properties as props " +
@@ -117,7 +117,7 @@ public class ModelCommand extends ChangeLoggingCommand {
         List<CnATreeElement> elements = getDao().findByCallback(new HibernateCallback() {
             @Override       
             public Object doInHibernate( Session session) throws HibernateException, SQLException {
-                Query query = session.createQuery(HQL_QUERY)
+                Query query = session.createQuery(HQL_ELEMENT_WITH_PROPERTIES)
                         .setParameterList("uuids", allUuids);
                 query.setReadOnly(true);
                 return query.list();

@@ -95,19 +95,13 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
             BpRequirementGroup module) {
         for (CnATreeElement targetModuleElement : targetChildren) {
             BpRequirementGroup targetModule = (BpRequirementGroup) targetModuleElement; 
-            if(nullSafeEquals(targetModule.getIdentifier(),module.getIdentifier())) {
+            if(ModelCommand.nullSafeEquals(targetModule.getIdentifier(),module.getIdentifier())) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean nullSafeEquals(String targetModuleId, String moduleId) {
-        if(targetModuleId==null || moduleId==null) {
-            return false;
-        }
-        return targetModuleId.equals(moduleId);
-    }
     private CnATreeElement loadElementWithChildren(String uuid) {
         RetrieveInfo ri = RetrieveInfo.getChildrenInstance().setChildrenProperties(true);
         return getDao().findByUuid(uuid,ri); 
