@@ -277,7 +277,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
             }
         });
         Menu menu = menuMgr.createContextMenu(viewer.getControl());
-
+        
         viewer.getControl().setMenu(menu);
     }
 
