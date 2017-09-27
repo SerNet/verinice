@@ -65,6 +65,7 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
+import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorRegistry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
@@ -339,9 +340,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         CnATreeElement element = (CnATreeElement) sel;
         IEditorPart editor = EditorRegistry.getInstance().getOpenEditor(element.getId());
         if (editor == null) {
-            BSIElementEditorInput input = new BSIElementEditorInput(element, true);
-            editor = getSite().getPage().openEditor(input, BSIElementEditor.EDITOR_ID);
-            EditorRegistry.getInstance().registerOpenEditor(element.getId(), editor);
+            EditorFactory.getInstance().updateAndOpenObject(element, true);
         } else {
             getSite().getPage().openEditor(editor.getEditorInput(), BSIElementEditor.EDITOR_ID);
         }

@@ -26,7 +26,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.elasticsearch.common.inject.Module;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -119,7 +118,7 @@ import sernet.verinice.rcp.linktable.LinkTableEditorInput;
 /**
  * This class is a singleton and maps editors for different ressources and
  * either opens a new editor or looks them up in the EditorRegistry and shows an
- * already open editor for an object
+ * already open editor for an object.
  * 
  * @author koderman[at]sernet[dot]de
  * @author dm[at]sernet[dot]de
@@ -187,6 +186,25 @@ public final class EditorFactory {
      */
     public void updateAndOpenObject(Object o) {
         EditorFactory.getInstance().openEditor(o);
+    }
+
+    /**
+     * Checks if an editor factory is registered for the given object type and
+     * opens a new editor for it. Also updates the object.
+     * 
+     * @param element
+     *            Object which is opened in the editor
+     * @param readOnly
+     *            should the editor opened in readOnly mode
+     */
+    public void updateAndOpenObject(CnATreeElement element, boolean readOnly) {
+        BSIElementEditorInput input = new BSIElementEditorInput(element, readOnly);
+        try {
+            openEditor(input.getId(), input, BSIElementEditor.EDITOR_ID);
+        } catch (Exception e) {
+            log.error("Error while opening editor.", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.EditorFactory_2);
+        }
     }
 
     private void registerNote() {
@@ -357,7 +375,7 @@ public final class EditorFactory {
             EditorRegistry.getInstance().registerOpenEditor(id, editor);
         } else {
             // show existing editor:
-            getPage().openEditor(editor.getEditorInput(), editorId);
+            editor = getPage().openEditor(editor.getEditorInput(), editorId);
         }
         return editor;
     }
