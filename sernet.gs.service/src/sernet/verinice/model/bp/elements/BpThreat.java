@@ -33,6 +33,10 @@ public class BpThreat extends CnATreeElement implements IBpElement {
     private static final String PROP_DESC = "bp_threat_desc"; //$NON-NLS-1$
     private static final String PROP_NAME = "bp_threat_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_threat_id"; //$NON-NLS-1$
+
+    private static final String PROP_CONFIDENIALITY = "bp_threat_value_method_confidentiality";
+    private static final String PROP_INTEGRITY ="bp_threat_value_method_integrity";
+    private static final String PROP_AVAILABILITY ="bp_threat_value_method_availability";
     
     public static final String TYPE_ID = "bp_threat"; //$NON-NLS-1$
     
@@ -80,6 +84,36 @@ public class BpThreat extends CnATreeElement implements IBpElement {
     
     public void setIdentifier(String id) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), id);
+    }
+    
+    public boolean isConfidentiality() {
+        String value = getEntity().getPropertyValue(PROP_CONFIDENIALITY);
+        return Boolean.getBoolean(value);
+    }
+    
+    public void setConfidentiality(boolean isConfidentiality) {
+        int value = (isConfidentiality) ? 1 : 0;
+        setNumericProperty(PROP_CONFIDENIALITY, value);
+    }
+    
+    public boolean isIntegrity() {
+        String value = getEntity().getPropertyValue(PROP_INTEGRITY);
+        return Boolean.getBoolean(value);
+    }
+    
+    public void setIntegrity(boolean isIntegrity) {
+        int value = (isIntegrity) ? 1 : 0;
+        setNumericProperty(PROP_INTEGRITY, value);
+    }
+    
+    public boolean isAvailability() {
+        String value = getEntity().getPropertyValue(PROP_AVAILABILITY);
+        return Boolean.getBoolean(value);
+    }
+    
+    public void setAvailibility(boolean isAvailability) {
+        int value = (isAvailability) ? 1 : 0;
+        setNumericProperty(PROP_AVAILABILITY, value);
     }
 
 }
