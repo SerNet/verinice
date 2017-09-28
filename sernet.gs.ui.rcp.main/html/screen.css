@@ -180,6 +180,10 @@ sup >a:link { text-decoration: none; border-style: none;}
 /*Link in einem hochgestellten Text (z.&nbsp;BAnmerkung) ohne Unterstreichung*/
 sup >a:visited { text-decoration: none; border-style: none; }
 
+/*emphasize*/
+em { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 0.7em; color: #333333; font-style: normal; font-weight: normal; line-height: 1.25em; margin-top: 0.8em; }
+
+
 /* die Tabellen */
 #content p  + table {margin-top: 1.0em}
 #content h1 + table {margin-top: 1.0em}

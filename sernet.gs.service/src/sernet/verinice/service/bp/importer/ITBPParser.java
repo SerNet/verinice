@@ -61,15 +61,15 @@ public class ITBPParser {
         
     }
     
-    public ITBP2VNA.generated.thread.Document parseThread(File threadXMLFile) {
+    public ITBP2VNA.generated.threat.Document parseThread(File threadXMLFile) {
         
-        ITBP2VNA.generated.thread.Document threadDocument = null;
+        ITBP2VNA.generated.threat.Document threadDocument = null;
         
         try {
             
-            JAXBContext context = JAXBContext.newInstance(ITBP2VNA.generated.thread.Document.class);
+            JAXBContext context = JAXBContext.newInstance(ITBP2VNA.generated.threat.Document.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            threadDocument = (ITBP2VNA.generated.thread.Document)unmarshaller.unmarshal(threadXMLFile);
+            threadDocument = (ITBP2VNA.generated.threat.Document)unmarshaller.unmarshal(threadXMLFile);
 
         } catch (JAXBException e) {
             LOG.error("Error while parsing ITBP-Document:\t" + threadXMLFile.getAbsolutePath(),e);

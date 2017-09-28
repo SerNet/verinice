@@ -8866,7 +8866,8 @@ Wurden bereits weitere Stellen informiert?
             tooltip="List of tags, separated by comma or space" />
         <huiproperty id="bp_itnetwork_document" name="Document" isURL="true" />
         <huiproperty id="bp_itnetwork_employee_number" name="Number of employees" />
-        <huiproperty id="bp_itnetwork_Description" name="Description" />
+        <huiproperty id="bp_itnetwork_Description" 
+        	name="Description" showInObjectBrowser="true"/>
 
         <huipropertygroup id="bp_itnetwork_report" name="Reporting" tags="Dok.mgmt.">
             <huiproperty id="bp_itnetwork_author" name="Author" tags="Dok.mgmt." />
@@ -9232,7 +9233,9 @@ Wurden bereits weitere Stellen informiert?
 
     <huientity id="bp_application_group" name="Application Group">
         <huiproperty id="bp_application_group_name" name="Title" required="true" />
-        <huiproperty id="bp_application_group_desc" name="Description" inputtype="text" />
+        <huiproperty id="bp_application_group_desc" 
+        	name="Description" inputtype="text" 
+        	showInObjectBrowser="true"/>
         <huiproperty id="bp_application_group_tag" name="Tags" />
     </huientity>
 
@@ -9349,7 +9352,9 @@ Wurden bereits weitere Stellen informiert?
 
     <huientity id="bp_businessprocess_group" name="Business Process Group">
         <huiproperty id="bp_businessprocess_group_name" name="Title" required="true" />
-        <huiproperty id="bp_businessprocess_group_desc" name="Description" inputtype="text" />
+        <huiproperty id="bp_businessprocess_group_desc" 
+        	name="Description" inputtype="text" 
+        	showInObjectBrowser="true"/>
         <huiproperty id="bp_businessprocess_group_tag" name="Tags" />
     </huientity>
 
@@ -9464,7 +9469,9 @@ Wurden bereits weitere Stellen informiert?
 
     <huientity id="bp_icssystem_group" name="ICS System Group">
         <huiproperty id="bp_icssystem_group_name" name="Title" required="true" />
-        <huiproperty id="bp_icssystem_group_desc" name="Description" inputtype="text" />
+        <huiproperty id="bp_icssystem_group_desc" 
+        	name="Description" inputtype="text" 
+        	showInObjectBrowser="true"/>
         <huiproperty id="bp_icssystem_group_tag" name="Tags" />
     </huientity>
 
@@ -9578,7 +9585,9 @@ Wurden bereits weitere Stellen informiert?
 
     <huientity id="bp_itsystem_group" name="IT System Group">
         <huiproperty id="bp_itsystem_group_name" name="Title" required="true" />
-        <huiproperty id="bp_itsystem_group_desc" name="Description" inputtype="text" />
+        <huiproperty id="bp_itsystem_group_desc" 
+        	name="Description" inputtype="text" 
+        	showInObjectBrowser="true"/>
         <huiproperty id="bp_itsystem_group_tag" name="Tags" />
     </huientity>
 
@@ -9615,7 +9624,9 @@ Wurden bereits weitere Stellen informiert?
 
     <huientity id="bp_person_group" name="Person Group">
         <huiproperty id="bp_person_group_name" name="Title" required="true" />
-        <huiproperty id="bp_person_group_desc" name="Description" inputtype="text" />
+        <huiproperty id="bp_person_group_desc" 
+        	name="Description" inputtype="text" 
+        	showInObjectBrowser="true"/>
         <huiproperty id="bp_person_group_tag" name="Tags" />
     </huientity>
 
@@ -9625,14 +9636,17 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_requirement_tag" name="Tags"
             tooltip="List of tags, separated by comma or space" />
         <huiproperty id="bp_requirement_document" name="Document" isURL="true" />
-        <huiproperty id="bp_requirement_desc" name="Description" />
+        <huiproperty id="bp_requirement_desc" 
+        	name="Description" showInObjectBrowser="true"/>
         <huiproperty id="bp_requirement_id" name="Identifier" />
         <huiproperty id="bp_requirement_qualifier" name="Qualifier" />
     </huientity>
 
     <huientity id="bp_requirement_group" name="Module">
         <huiproperty id="bp_requirement_group_name" name="Title" required="true" />
-        <huiproperty id="bp_requirement_group_desc" name="Description" inputtype="text" />
+        <huiproperty id="bp_requirement_group_desc" 
+        	name="Description" inputtype="text" 
+        	showInObjectBrowser="true"/>
         <huiproperty id="bp_requirement_group_tag" name="Tags" />
         <huiproperty id="bp_requirement_group_id" name="Identifier" />
     </huientity>
@@ -9642,13 +9656,16 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_threat_abbr" name="Abbreviation" />
         <huiproperty id="bp_threat_tag" name="Tags" tooltip="List of tags, separated by comma or space" />
         <huiproperty id="bp_threat_document" name="Document" isURL="true" />
-        <huiproperty id="bp_threat_desc" name="Description" />
+        <huiproperty id="bp_threat_desc" 
+        	name="Description" showInObjectBrowser="true"/>
         <huiproperty id="bp_threat_id" name="Identifier" />
     </huientity>
 
     <huientity id="bp_threat_group" name="bp_threat-Group">
         <huiproperty id="bp_threat_group_name" name="Title" required="true" />
-        <huiproperty id="bp_threat_group_desc" name="Description" inputtype="text" />
+        <huiproperty id="bp_threat_group_desc" 
+        	name="Description" inputtype="text" 
+        	showInObjectBrowser="true"/>
         <huiproperty id="bp_threat_group_tag" name="Tags" />
     </huientity>
 
@@ -9759,7 +9776,9 @@ Wurden bereits weitere Stellen informiert?
 
     <huientity id="bp_network_group" name="Network Group">
         <huiproperty id="bp_network_group_name" name="Title" required="true" />
-        <huiproperty id="bp_network_group_desc" name="Description" inputtype="text" />
+        <huiproperty id="bp_network_group_desc" 
+        	name="Description" inputtype="text" 
+        	showInObjectBrowser="true"/>
         <huiproperty id="bp_network_group_tag" name="Tags" />
     </huientity>
 
@@ -9869,7 +9888,9 @@ Wurden bereits weitere Stellen informiert?
 
     <huientity id="bp_device_group" name="Device Group">
         <huiproperty id="bp_device_group_name" name="Title" required="true" />
-        <huiproperty id="bp_device_group_desc" name="Description" inputtype="text" />
+        <huiproperty id="bp_device_group_desc" 
+        	name="Description" inputtype="text" 
+        	showInObjectBrowser="true"/>
         <huiproperty id="bp_device_group_tag" name="Tags" />
     </huientity>
 
@@ -9978,7 +9999,9 @@ Wurden bereits weitere Stellen informiert?
 
     <huientity id="bp_room_group" name="Room Group">
         <huiproperty id="bp_room_group_name" name="Title" required="true" />
-        <huiproperty id="bp_room_group_desc" name="Description" inputtype="text" />
+        <huiproperty id="bp_room_group_desc" 
+        	name="Description" inputtype="text"
+        	showInObjectBrowser="true" />
         <huiproperty id="bp_room_group_tag" name="Tags" />
     </huientity>
 
@@ -9993,11 +10016,16 @@ Wurden bereits weitere Stellen informiert?
             tooltip="List of tags, separated by comma or space" />
         <huiproperty id="bp_safeguard_document" name="Document" isURL="true" /> 
         <huiproperty id="bp_safeguard_id" name="Identifier" />
+        <huiproperty id="bp_safeguard_desc" 
+        	name="Description" inputtype="text"
+        	showInObjectBrowser="true" />
     </huientity>
 
     <huientity id="bp_safeguard_group" name="Safeguard Group">
         <huiproperty id="bp_safeguard_group_name" name="Title" required="true" />
-        <huiproperty id="bp_safeguard_group_desc" name="Description" inputtype="text" />
+        <huiproperty id="bp_safeguard_group_desc" 
+        	name="Description" inputtype="text"
+        	showInObjectBrowser="true" />
         <huiproperty id="bp_safeguard_group_tag" name="Tags" />
     </huientity>
 

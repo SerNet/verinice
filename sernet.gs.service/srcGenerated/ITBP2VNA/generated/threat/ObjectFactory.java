@@ -6,7 +6,7 @@
 //
 
 
-package ITBP2VNA.generated.thread;
+package ITBP2VNA.generated.threat;
 
 import javax.xml.bind.annotation.XmlRegistry;
 

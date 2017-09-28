@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -686,12 +687,12 @@ public class Document {
     })
     public static class Description {
 
-        @XmlElement(required = true)
-        protected String introduction;
-        @XmlElement(required = true)
-        protected String purpose;
-        @XmlElement(required = true)
-        protected String differentiation;
+        @XmlAnyElement(lax = true)
+        protected List<Object> introduction;
+        @XmlAnyElement(lax = true)
+        protected List<Object> purpose;
+        @XmlAnyElement(lax = true)
+        protected List<Object> differentiation;
 
         /**
          * Ruft den Wert der introduction-Eigenschaft ab.
@@ -701,7 +702,7 @@ public class Document {
          *     {@link String }
          *     
          */
-        public String getIntroduction() {
+        public List<Object> getIntroduction() {
             return introduction;
         }
 
@@ -713,7 +714,7 @@ public class Document {
          *     {@link String }
          *     
          */
-        public void setIntroduction(String value) {
+        public void setIntroduction(List<Object> value) {
             this.introduction = value;
         }
 
@@ -725,7 +726,7 @@ public class Document {
          *     {@link String }
          *     
          */
-        public String getPurpose() {
+        public List<Object> getPurpose() {
             return purpose;
         }
 
@@ -737,7 +738,7 @@ public class Document {
          *     {@link String }
          *     
          */
-        public void setPurpose(String value) {
+        public void setPurpose(List<Object>  value) {
             this.purpose = value;
         }
 
@@ -749,7 +750,7 @@ public class Document {
          *     {@link String }
          *     
          */
-        public String getDifferentiation() {
+        public List<Object> getDifferentiation() {
             return differentiation;
         }
 
@@ -761,7 +762,7 @@ public class Document {
          *     {@link String }
          *     
          */
-        public void setDifferentiation(String value) {
+        public void setDifferentiation(List<Object> value) {
             this.differentiation = value;
         }
 

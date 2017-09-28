@@ -23,7 +23,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IWorkbenchWindow;
 
-import ITBP2VNA.NewITBPToVNA;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -33,6 +32,7 @@ import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.service.bp.importer.BpImporter;
 
 public class TestAction extends Action {
 
@@ -179,7 +179,8 @@ public class TestAction extends Action {
 //              allsb.append("\n");
 //            }
             
-            NewITBPToVNA.getInstance("/home/sh/Schreibtisch/issues/vn-1795/XML-2017-08-21/DE").run();
+            BpImporter importer = new BpImporter("/home/sh/Schreibtisch/issues/vn-1795/XML-2017-08-21/DE");
+            importer.run();
             
             if (LOG.isDebugEnabled()) {
                 LOG.debug(allsb.toString());
