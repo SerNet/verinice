@@ -66,10 +66,13 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     }
     
     public String getTitle() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[").append(getQualifier()).append("]").append(" ");
-        sb.append(getEntity().getPropertyValue(PROP_NAME));
-        return sb.toString();
+        StringBuilder titleBuilder = new StringBuilder();
+        titleBuilder.append(getIdentifier()).append(" ");
+        titleBuilder.append("[").append(getQualifier());
+        titleBuilder.append("]").append(" ");
+        titleBuilder.append(getEntity().getPropertyValue(PROP_NAME));
+        return titleBuilder.toString();
+
     }
     
     public void setTitle(String title) {

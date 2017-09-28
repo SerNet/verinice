@@ -114,12 +114,6 @@ public class BpImporter {
     private final static String SUBDIRECTORY_THREATS = "elementare_gefaehrdungen_1";
     private final static String SUBDIRECTORY_IMPL_HINTS = "umsetzungshinweise";
     
-
-    
-            
-    
-
-    
     private Map<String, BpThreat> addedThreats = new HashMap<>();
     private Map<String, BpRequirement> addedReqs = new HashMap<>();
     private Map<String, BpRequirementGroup> addedModules = new HashMap<>();
@@ -492,13 +486,13 @@ public class BpImporter {
                 
                 if (! addedModules.containsKey(bsiModule.getIdentifier())) {
                     veriniceModule = createModule(bsiModule, parent);
+                    createSpecificThreats(bsiModule, groupIdentifier, veriniceModule);
+                    linkElementalThreats(bsiModule);
+                    addedModules.put(bsiModule.getIdentifier(), veriniceModule);
                 } else {
                     veriniceModule = addedModules.get(bsiModule.getIdentifier());
                 }
                 
-                createSpecificThreats(bsiModule, groupIdentifier, veriniceModule);
-                
-                linkElementalThreats(bsiModule);
             }
         }
     }
@@ -521,7 +515,6 @@ public class BpImporter {
             veriniceModule.setDescription(getModuleDescriptionText(bsiModule.getFullTitle(), 
                     bsiModule.getDescription()));
             LOG.debug("Module : \t" + veriniceModule.getTitle()+ " created");
-            addedModules.put(bsiModule.getIdentifier(), veriniceModule);
             createRequirementsForModule(bsiModule, veriniceModule);
         }
         return veriniceModule;
@@ -579,6 +572,9 @@ public class BpImporter {
                         threat.getDescription().getAny()));
 //                Link link = new Link(veriniceModule, veriniceThreat);
 //                linkList.add(link);
+//                veriniceThreat.setConfidentiality(Boolean.parseBoolean(threat.   .getCia().getConfidentiality()));
+//                veriniceThreat.setIntegrity(Boolean.parseBoolean(threat.getCia().getIntegrity()));
+//                veriniceThreat.setAvailibility(Boolean.parseBoolean(threat.getCia().getAvailability()));
                 addedThreats.put(title, veriniceThreat);
             } 
 
@@ -626,8 +622,12 @@ public class BpImporter {
                 veriniceThreat.setTitel(bsiThreat.getFullTitle());
                 
                 veriniceThreat.setIdentifier(bsiThreat.getIdentifier());
-                veriniceThreat.setAbbreviation(bsiThreat.getCia().toString());
+//                veriniceThreat.setAbbreviation(bsiThreat.getIdentifier());
                 String plainDescription = getSafeguardDescription(bsiThreat.getFullTitle(), bsiThreat.getDescription());
+                veriniceThreat.setConfidentiality(Boolean.parseBoolean(bsiThreat.getCia().getConfidentiality()));
+                veriniceThreat.setIntegrity(Boolean.parseBoolean(bsiThreat.getCia().getIntegrity()));
+                veriniceThreat.setAvailibility(Boolean.parseBoolean(bsiThreat.getCia().getAvailability()));
+                
                 if (plainDescription != null && plainDescription.length() > 0) {
                     veriniceThreat.setDescription(plainDescription);
                 }
@@ -728,13 +728,12 @@ public class BpImporter {
             throws CreateBPElementException {
         List<Link> links = new ArrayList<>();
         Safeguards bsiModule = bsiSafeguardDocument.getSafeguards();
-        String moduleIdentifier = bsiSafeguardDocument.getIdentifier();
         
         for (ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard : bsiModule.getBasicSafeguards().getSafeguard()) {
             Safeguard safeguard = createSafeguard(parent, bsiSafeguard, "BASIC");
             if (safeguard != null) {
                 links.addAll(linkSafeguardToRequirements(safeguard));
-                links.addAll(linkSafeguardToElementalThreat(moduleIdentifier, safeguard));
+                links.addAll(linkSafeguardToElementalThreat(bsiSafeguard.getIdentifier(), safeguard));
             } else {
                 LOG.warn("Could not create Safeguard:\t" + bsiSafeguard.getTitle());
             }
@@ -743,7 +742,7 @@ public class BpImporter {
             Safeguard safeguard = createSafeguard(parent, bsiSafeguard, "STANDARD");
             if (safeguard != null) {
                 links.addAll(linkSafeguardToRequirements(safeguard));
-                links.addAll(linkSafeguardToElementalThreat(moduleIdentifier, safeguard));
+                links.addAll(linkSafeguardToElementalThreat(bsiSafeguard.getIdentifier(), safeguard));
             } else {
                 LOG.warn("Could not create Safeguard:\t" + bsiSafeguard.getTitle());
             }        }
@@ -751,7 +750,7 @@ public class BpImporter {
             Safeguard safeguard = createSafeguard(parent, bsiSafeguard, "HIGH");
             if (safeguard != null) {
                 links.addAll(linkSafeguardToRequirements(safeguard));
-                links.addAll(linkSafeguardToElementalThreat(moduleIdentifier, safeguard));
+                links.addAll(linkSafeguardToElementalThreat(bsiSafeguard.getIdentifier(), safeguard));
             } else {
                 LOG.warn("Could not create Safeguard:\t" + bsiSafeguard.getTitle());
             }
@@ -767,12 +766,17 @@ public class BpImporter {
         }
     }
     
-    private Set<Link> linkSafeguardToElementalThreat(String bsiModuleIdentifier, Safeguard vSafeguard){
+    private Set<Link> linkSafeguardToElementalThreat(String bsiSafeguardIdentifier, Safeguard vSafeguard){
         Set<Link> links = new HashSet<>();
         
-        BpRequirementGroup module = getModuleByIdentifier(bsiModuleIdentifier);
-        if ( module != null) {
-            for (CnALink link : module.getLinksDown()) {
+        String firstPart = bsiSafeguardIdentifier.substring(0, bsiSafeguardIdentifier.lastIndexOf('.'));
+        String secondPart = bsiSafeguardIdentifier.substring(bsiSafeguardIdentifier.lastIndexOf('.'));
+        secondPart = secondPart.replace('M', 'A');
+        StringBuilder sb = new StringBuilder();
+        sb.append(firstPart).append(secondPart);
+        BpRequirement requirement = getRequirementByIdentifier(sb.toString());
+        if ( requirement != null) {
+            for (CnALink link : requirement.getLinksDown()) {
                 if (link.getDependency() instanceof BpThreat) {
                     links.add(new Link(vSafeguard, link.getDependency()));
                 } 
