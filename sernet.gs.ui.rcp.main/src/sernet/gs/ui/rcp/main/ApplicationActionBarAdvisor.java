@@ -257,7 +257,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.openSearchViewAction = new OpenSearchViewAction(window, Messages.ApplicationActionBarAdvisor_42);
         this.openGSToolMappingViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_43, GstoolImportMappingView.ID, ImageCache.VIEW_GSMAPPING, ActionRightIDs.GSTOOLIMPORT);
         this.openTemplateViewAction = getRightsService().isEnabled(ActionRightIDs.TEMPLATES) ? new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_44, TemplateView.ID, ImageCache.TEMPLATES, ActionRightIDs.TEMPLATES) : null;
-        this.openBpViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_45, BaseProtectionView.ID, ImageCache.VIEW_BPMODEL, ActionRightIDs.BASEPROTECTIONVIEW);
+        this.openBpViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_45, BaseProtectionView.ID, ImageCache.VIEW_BASE_PROTECTION, ActionRightIDs.BASEPROTECTIONVIEW);
         this.reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         this.importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
         this.importCSVAction = new ImportCSVAction(window, Messages.ApplicationActionBarAdvisor_30);
@@ -281,7 +281,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.testAction = new TestAction(window, "Import BSI-Compendium", "asset", 152); //$NON-NLS-1$ //$NON-NLS-2$
         this.introAction = ActionFactory.INTRO.create(window);
         
-        this.openCatalogViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_46, sernet.verinice.rcp.catalog.CatalogView.ID, ImageCache.VIEW_BPMODEL, ActionRightIDs.CATALOGVIEW);
+        this.openCatalogViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_CatalogView, sernet.verinice.rcp.catalog.CatalogView.ID, ImageCache.VIEW_CATALOG, ActionRightIDs.CATALOGVIEW);
 
         IAction actions[] = new IAction[]{this.exitAction, this.copyAction, this.pasteAction,
                 this.aboutAction, this.newWindowAction, this.saveAction, this.saveAsAction,

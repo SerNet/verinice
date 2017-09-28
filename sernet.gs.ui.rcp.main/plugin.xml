@@ -38,9 +38,9 @@
       </perspective>
             <perspective
             class="sernet.verinice.rcp.bp.BaseProtectionPerspective"
-            icon="icons/greenbone.gif"
+            icon="icons/base-protection/base_protection_perspective.png"
             id="sernet.verinice.rcp.bp.BaseProtectionPerspective"
-            name="%perspective.name.3">
+            name="%perspective.name.bp">
       </perspective>
       
       
@@ -235,9 +235,9 @@
             allowMultiple="false"
             category="sernet.verinice.rcp.catalog"
             class="sernet.verinice.rcp.catalog.CatalogView"
-            icon="icons/sweetie-verinice/png/16-dice-grey.png"
+            icon="icons/catalog-view.png"
             id="sernet.verinice.rcp.catalog.CatalogView"
-            name="%view.name.rcp.catalog.catalogview"
+            name="%view.name.catalog"
             restorable="true">
       </view>      
       

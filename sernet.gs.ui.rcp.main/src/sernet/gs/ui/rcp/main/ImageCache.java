@@ -196,7 +196,8 @@ public final class ImageCache {
     public static final String VIEW_TASK_COMPARE_CHANGES = "history_rep.gif";
     public static final String VIEW_VALIDATION = "quickfix_warning_obj.gif";
     public static final String VIEW_GSMAPPING = "plugin_depend.gif";
-    public static final String VIEW_BPMODEL = "sweetie-verinice/png/16-dice-grey.png";
+    public static final String VIEW_BASE_PROTECTION = "base-protection/base_protection_view.png";
+    public static final String VIEW_CATALOG = "catalog-view.png";
 
 	public static final String EXPANDALL   = "expandall.gif";
 	public static final String COLLAPSEALL = "collapseall.gif";
