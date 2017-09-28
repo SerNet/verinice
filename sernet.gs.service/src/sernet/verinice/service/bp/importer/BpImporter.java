@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
@@ -112,20 +113,12 @@ public class BpImporter {
     private final static String SUBDIRECTORY_MEDIA = "media";
     private final static String SUBDIRECTORY_THREATS = "elementare_gefaehrdungen_1";
     private final static String SUBDIRECTORY_IMPL_HINTS = "umsetzungshinweise";
-    private final static String HTML_DESCRIPTION_PREAMBEL = "<html>\n" + 
-            "<head>\n" + 
-            "<style>\n" + 
-            ".copyright { margin-left: 220px; color: #333333; text-align: left; font-size: 0.7em; margin-top: 10px;  font-family: Verdana, Arial, Helvetica, sans-serif;}\n" + 
-            ".linievorcopy { margin-left: 220px; margin-top: 10px; text-align: left;background-color: #999999; clear: both; color: #999999; border: #999999; height: 1px}\n" + 
-            "</style>\n" + 
-            "\n" + 
-            "</head>\n" + 
-            "<body>";
     
-    private final static String HTML_DESCRIPTION_SUFFIX = "  <hr class=\"linievorcopy\" >\n" + 
-            "  <div class=\"copyright\">&copy; Bundesamt f&uuml;r Sicherheit in der Informationstechnik. All rights reserved</div>\n" + 
-            "</body>\n" + 
-            "</html>";
+
+    
+            
+    
+
     
     private Map<String, BpThreat> addedThreats = new HashMap<>();
     private Map<String, BpRequirement> addedReqs = new HashMap<>();
@@ -321,14 +314,18 @@ public class BpImporter {
      * @return
      */
     private List<File> getXMLFiles(File dir){
-        File[] directories = dir.listFiles(new FileFilter() {
-            
-            @Override
-            public boolean accept(File pathname) {
-                return FilenameUtils.isExtension(pathname.getName(), "xml");
-            }
-        });
-        return Arrays.asList(directories);
+        if (dir != null && dir.exists() && dir.isDirectory()) {
+            File[] directories = dir.listFiles(new FileFilter() {
+
+                @Override
+                public boolean accept(File pathname) {
+                    return FilenameUtils.isExtension(pathname.getName(), "xml");
+                }
+            });
+            return Arrays.asList(directories);
+        } else {
+            return new ArrayList<File>();
+        }
     }
     
     
@@ -632,7 +629,7 @@ public class BpImporter {
                 veriniceThreat.setAbbreviation(bsiThreat.getCia().toString());
                 String plainDescription = getSafeguardDescription(bsiThreat.getFullTitle(), bsiThreat.getDescription());
                 if (plainDescription != null && plainDescription.length() > 0) {
-                    veriniceThreat.setDescription(htmlizeDescription(plainDescription));
+                    veriniceThreat.setDescription(plainDescription);
                 }
                 veriniceThreat = (BpThreat) updateElement(veriniceThreat);
                 addedThreats.put(bsiThreat.getIdentifier(), veriniceThreat);
@@ -808,7 +805,7 @@ public class BpImporter {
             safeguard.setIdentifier(bsiSafeguard.getIdentifier());
             String plainDescription = getSafeguardDescription(bsiSafeguard.getTitle(),
                     bsiSafeguard.getDescription().getContent());
-            String htmlDescription = htmlizeDescription(plainDescription);
+            String htmlDescription = plainDescription;
             if (plainDescription != null && plainDescription.length() > 0) {
                 safeguard.setDescription(htmlDescription);
             } else {
@@ -828,15 +825,7 @@ public class BpImporter {
      * @param plainDescription
      * @return
      */
-    private String htmlizeDescription(String plainDescription) {
-        StringBuilder htmlDescriptionBuilder = new StringBuilder();
-        
-        htmlDescriptionBuilder.append(HTML_DESCRIPTION_PREAMBEL);
-        htmlDescriptionBuilder.append(plainDescription);
-        htmlDescriptionBuilder.append(HTML_DESCRIPTION_SUFFIX);
-        String htmlDescription = htmlDescriptionBuilder.toString();
-        return htmlDescription;
-    }
+
 
     private SafeguardGroup getSafeguardParent(SafeguardGroup rootGroup,
             String identifier) throws CreateBPElementException {
@@ -986,14 +975,18 @@ public class BpImporter {
     private String unwrapText(Node element) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < element.getChildNodes().getLength(); i++) {
+            Stack<String> htmlElements = new Stack<>();
             Node node = element.getChildNodes().item(i);
+            String htmlFormatElement = node.getParentNode().getNodeName();
+            sb.append("<").append(htmlFormatElement).append(">");
+            htmlElements.push(htmlFormatElement);
             if (node instanceof Text) {
-                String htmlFormatElement = node.getParentNode().getNodeName();
-                sb.append("<").append(htmlFormatElement).append(">");
                 sb.append(node.getNodeValue());
-                sb.append("</").append(htmlFormatElement).append(">");
             } else {
                 sb.append(unwrapText(node));
+            }
+            while (! htmlElements.isEmpty()) {
+                sb.append("</").append(htmlElements.pop()).append(">");
             }
         }
         return sb.toString();
@@ -1028,7 +1021,7 @@ public class BpImporter {
                 LOG.error("No differentiation in description found for :\t" + title);
             }
         }
-        return htmlizeDescription(sb.toString());
+        return sb.toString();
     }
     
     /**
