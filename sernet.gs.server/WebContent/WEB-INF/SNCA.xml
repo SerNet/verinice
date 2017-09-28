@@ -9659,7 +9659,27 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_threat_desc" 
         	name="Description" showInObjectBrowser="true"/>
         <huiproperty id="bp_threat_id" name="Identifier" />
-    </huientity>
+
+        <huiproperty
+                    id="bp_threat_value_method_confidentiality"
+                    name="Affects Confidentiality"
+                    tags="Risk"
+                    inputtype="booleanoption" defaultValue="1">
+                </huiproperty>  
+        <huiproperty
+                    id="bp_threat_value_method_integrity"
+                    name="Affects Integrity"
+                    tags="Risk"
+                    inputtype="booleanoption"  defaultValue="1">
+                </huiproperty>  
+        <huiproperty
+                    id="bp_threat_value_method_availability"
+                    name="Affects Availability"
+                    tags="Risk"
+                    inputtype="booleanoption"  defaultValue="1">
+        </huiproperty>  
+
+		</huientity>
 
     <huientity id="bp_threat_group" name="bp_threat-Group">
         <huiproperty id="bp_threat_group_name" name="Title" required="true" />
