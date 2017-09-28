@@ -42,6 +42,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -55,7 +56,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.internal.ObjectActionContributorManager;
 import org.eclipse.ui.part.DrillDownAdapter;
 
 import sernet.gs.service.NumericStringComparator;
@@ -65,6 +65,7 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
+import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorRegistry;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
@@ -80,6 +81,8 @@ import sernet.verinice.iso27k.rcp.action.CollapseAction;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.catalog.ICatalogModelListener;
 import sernet.verinice.model.common.CnATreeElement;
@@ -172,11 +175,12 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
 
         contentProvider = new TreeContentProvider(elementManager);
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-        viewer.setSorter(new ModITBViewerSorter());
+        viewer.setSorter(new ModITBCatalogViewerSorter());
         drillDownAdapter = new DrillDownAdapter(viewer);
         viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(new TreeLabelProvider());
+
         toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
         getSite().setSelectionProvider(viewer);
@@ -278,15 +282,11 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
             }
         });
         Menu menu = menuMgr.createContextMenu(viewer.getControl());
-
+        
         viewer.getControl().setMenu(menu);
-        getSite().registerContextMenu(menuMgr, viewer);
     }
 
     protected void fillContextMenu(IMenuManager manager) {
-        //remove all the plugin contributions
-        ObjectActionContributorManager.getManager().unregisterAllContributors();
-
         manager.add(new GroupMarker("content")); //$NON-NLS-1$
         manager.add(new Separator());
         manager.add(doubleClickAction);
@@ -340,9 +340,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         CnATreeElement element = (CnATreeElement) sel;
         IEditorPart editor = EditorRegistry.getInstance().getOpenEditor(element.getId());
         if (editor == null) {
-            BSIElementEditorInput input = new BSIElementEditorInput(element, true);
-            editor = getSite().getPage().openEditor(input, BSIElementEditor.EDITOR_ID);
-            EditorRegistry.getInstance().registerOpenEditor(element.getId(), editor);
+            EditorFactory.getInstance().updateAndOpenObject(element, true);
         } else {
             getSite().getPage().openEditor(editor.getEditorInput(), BSIElementEditor.EDITOR_ID);
         }
@@ -426,16 +424,29 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         super.dispose();
     }
 
-    class ModITBViewerSorter extends ViewerSorter {
-
-        NumericStringComparator comp = new NumericStringComparator();
+    class ModITBCatalogViewerSorter extends ViewerSorter {
+        private static final String HIGH = "HIGH";
+        private static final String STANDARD = "STANDARD";
+        private static final String BASIC = "BASIC";
+        
+        private NumericStringComparator comp = new NumericStringComparator();
 
         @Override
-        public int compare(Viewer viewer, Object e1, Object e2) {
+        public int compare(Viewer viewer, Object o1, Object o2) {
             int result = 0;
-            if (e1 instanceof CnATreeElement && e2 instanceof CnATreeElement) {
-                CnATreeElement element1 = (CnATreeElement) e1;
-                CnATreeElement element2 = (CnATreeElement) e2;
+            if (o1 instanceof Safeguard  && o2 instanceof Safeguard) {
+                Safeguard sg1 = (Safeguard) o1;
+                Safeguard sg2 = (Safeguard) o2;
+                result = quallifierToValue(sg1.getQualifier())-quallifierToValue(sg2.getQualifier());
+            }
+            if (o1 instanceof BpRequirement && o2 instanceof BpRequirement && result == 0) {
+                BpRequirement br1 = (BpRequirement) o1;
+                BpRequirement br2 = (BpRequirement) o2;
+                result = quallifierToValue(br1.getQualifier())-quallifierToValue(br2.getQualifier());
+            }
+            if (o1 instanceof CnATreeElement && o2 instanceof CnATreeElement && result == 0) {
+                CnATreeElement element1 = (CnATreeElement) o1;
+                CnATreeElement element2 = (CnATreeElement) o2;
                 String message1 = HUITypeFactory.getInstance().getMessage(element1.getTypeId());
                 String message2 = HUITypeFactory.getInstance().getMessage(element2.getTypeId());
                 result = comp.compare(message1, message2);
@@ -446,5 +457,17 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
             }
             return result;
         }
+        
+        private int quallifierToValue(String qualifier) {
+            if(BASIC.equals(qualifier)){
+                return 1;
+            }else if(STANDARD.equals(qualifier)){
+                return 2;
+            }else if(HIGH.equals(qualifier)){
+                return 3;
+            }
+            return 0;
+        }
+
     }
 }

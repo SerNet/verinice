@@ -59,6 +59,7 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.RightsEnabledView;
+import sernet.verinice.rcp.catalog.CatalogView;
 import sernet.verinice.service.commands.task.FindRelationsFor;
 
 /**
@@ -90,6 +91,9 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
     private Action linkWithEditorAction;
 
     private boolean linkingActive = false;
+    
+    private boolean readOnly = false;
+
 
     /**
      * The constructor.
@@ -416,6 +420,7 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         }
         Object element = ((IStructuredSelection) selection).getFirstElement();
         if (element instanceof CnATreeElement) {
+            readOnly =  part instanceof CatalogView ? true : false;
             setNewInput((CnATreeElement) element);
         }
     }
@@ -470,6 +475,7 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         jumpToAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ARROW_IN));
 
         doubleClickAction = new Action() {
+
             @Override
             public void run() {
                 ISelection selection = viewer.getSelection();
@@ -478,9 +484,9 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
 
                 // open the object on the other side of the link:
                 if (CnALink.isDownwardLink(inputElmt, link))
-                    EditorFactory.getInstance().updateAndOpenObject(link.getDependency());
+                    EditorFactory.getInstance().updateAndOpenObject(link.getDependency(), readOnly);
                 else
-                    EditorFactory.getInstance().updateAndOpenObject(link.getDependant());
+                    EditorFactory.getInstance().updateAndOpenObject(link.getDependant(), readOnly);
             }
         };
 
@@ -601,6 +607,10 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         CnATreeElement element = BSIElementEditorInput.extractElement(activeEditor);
         if (element == null) {
             return;
+        }
+        if (activeEditor.getEditorInput() instanceof BSIElementEditorInput) {
+            BSIElementEditorInput editorInput = (BSIElementEditorInput) activeEditor.getEditorInput();
+            readOnly = editorInput.isReadOnly();
         }
         setNewInput(element);
     }
