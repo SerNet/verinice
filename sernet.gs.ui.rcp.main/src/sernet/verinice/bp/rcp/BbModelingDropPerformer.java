@@ -19,20 +19,30 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.ui.PlatformUI;
+import org.springframework.jmx.access.InvocationFailureException;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.VeriniceElementTransfer;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.action.DropPerformer;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
@@ -45,6 +55,7 @@ import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.catalog.CatalogDragListener;
+import sernet.verinice.service.commands.bp.ModelCommand;
 
 /**
  * This drop performer class starts the modeling process
@@ -71,6 +82,8 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         supportedDropTypeIds.add(Room.TYPE_ID);
     }
     
+    private ICommandService commandService;
+    
     private boolean isActive = false;
     private CnATreeElement targetElement = null; 
 
@@ -83,18 +96,48 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
      */
     @Override
     public boolean performDrop(Object data, Object target, Viewer viewer) {
-        List<CnATreeElement> draggedModules = getDraggedElements(data);
-        if (log.isDebugEnabled()) {
-            logParameter(draggedModules, targetElement);
-        }  
-        modelModulesAndElement(draggedModules,targetElement);
-        return true;
+        try {
+            final List<CnATreeElement> draggedModules = getDraggedElements(data);
+            if (log.isDebugEnabled()) {
+                logParameter(draggedModules, targetElement);
+            }                
+            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {  
+                @Override
+                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    try {
+                        monitor.beginTask(getTaskMessage(draggedModules,targetElement), IProgressMonitor.UNKNOWN);
+                        modelModulesAndElement(draggedModules,targetElement);
+                        monitor.done();
+                    } catch (CommandException e) {
+                        throw new InvocationFailureException("Error while model module and element", e);
+                    }
+                }
+            });
+            return true;
+        } catch (InvocationTargetException e) {
+            log.error(e);
+            showErrorMessage(e, "Error while modeling modules.");
+            return false;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();  // set interrupt flag
+            log.error("InterruptedException occured while model module and element",e);
+            showErrorMessage(e, "Error while modeling modules.");
+            return false;
+        }
     }
-    
 
     private void modelModulesAndElement(List<CnATreeElement> draggedModules,
-            CnATreeElement element) {
-        // TODO Auto-generated method stub      
+            CnATreeElement element) throws CommandException {
+        List<String> compendiumUuids = new LinkedList<>();
+        for (CnATreeElement module : draggedModules) {
+            compendiumUuids.add(module.getUuid());
+        }
+        List<String> targetUuids = new LinkedList<>();
+        targetUuids.add(element.getUuid());
+        
+        ModelCommand modelCommand = new ModelCommand(compendiumUuids, targetUuids);     
+        modelCommand = getCommandService().executeCommand(modelCommand);
+        CnAElementFactory.getInstance().reloadModelFromDatabase();
     }
 
     private List<CnATreeElement> getDraggedElements(Object data) {
@@ -110,6 +153,19 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
             elementList = Collections.emptyList();
         }
         return elementList;
+    }
+    
+    protected String getTaskMessage(List<CnATreeElement> draggedModules,
+            CnATreeElement targetElement) {
+        int number = draggedModules.size();
+        StringBuilder sb  = new StringBuilder();      
+        if(number==1) {
+            sb.append("Model module ");
+        } else {
+            sb.append("Model ").append(number).append(" modules ");
+        }       
+        sb.append("with object ").append(targetElement.getTitle()).append(".");
+        return sb.toString();
     }
 
     /* 
@@ -190,6 +246,10 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         return this.targetElement!=null;
     }
 
+    private void showErrorMessage(Exception e, String message) {
+        ExceptionUtil.log(e, message);       
+    }
+    
     protected VeriniceElementTransfer getTransfer() {
         return BaseProtectionModelingTransfer.getInstance();
     }
@@ -200,6 +260,17 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
             log.debug(module);
         }
         log.debug("is/are modeled with: " + targetElementParam + "...");
+    }
+    
+    private ICommandService getCommandService() {
+        if (commandService == null) {
+            commandService = createCommandService();
+        }
+        return commandService;
+    }
+
+    private ICommandService createCommandService() {
+        return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
     }
 
 }

@@ -92,6 +92,8 @@ public class CopyCommand extends GenericCommand {
     private boolean copyLinks = false;
     
     private boolean copyAttachments = false;
+    
+    private boolean copyChildren = true;
 
     /**
      * @param uuidGroup Uuid of an group
@@ -180,7 +182,9 @@ public class CopyCommand extends GenericCommand {
                 elementCopy = saveCopy(group, element);
                 number++;
                 afterCopy(element.getUuid(), elementCopy.getUuid(), sourceDestMap);
-                copyChildrenIfExistant(element, sourceDestMap, elementCopy);
+                if(isCopyChildren()) {
+                    copyChildrenIfExistant(element, sourceDestMap, elementCopy);
+                }
             }
         } else if(element!=null) {
             getLog().warn("Can not copy element with pk: " + element.getDbId() + " to group with pk: " + selectedGroup.getDbId()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -521,6 +525,14 @@ public class CopyCommand extends GenericCommand {
             }
         }
        
+    }
+
+    public boolean isCopyChildren() {
+        return copyChildren;
+    }
+
+    public void setCopyChildren(boolean copyChildren) {
+        this.copyChildren = copyChildren;
     }
 
     /**
