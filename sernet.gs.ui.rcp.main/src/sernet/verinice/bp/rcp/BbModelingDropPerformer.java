@@ -34,6 +34,7 @@ import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.PlatformUI;
 import org.springframework.jmx.access.InvocationFailureException;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.VeriniceElementTransfer;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -115,10 +116,12 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
             return true;
         } catch (InvocationTargetException e) {
             log.error(e);
+            showErrorMessage(e, "Error while modeling modules.");
             return false;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();  // set interrupt flag
             log.error("InterruptedException occured while model module and element",e);
+            showErrorMessage(e, "Error while modeling modules.");
             return false;
         }
     }
@@ -243,6 +246,10 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         return this.targetElement!=null;
     }
 
+    private void showErrorMessage(Exception e, String message) {
+        ExceptionUtil.log(e, message);       
+    }
+    
     protected VeriniceElementTransfer getTransfer() {
         return BaseProtectionModelingTransfer.getInstance();
     }

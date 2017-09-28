@@ -20,6 +20,7 @@
 package sernet.verinice.service.commands.bp;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -46,14 +47,15 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     private transient Logger log = Logger.getLogger(ModelModulesCommand.class);
 
     private List<String> targetUuids;
-    private transient List<BpRequirementGroup> modules;
+    private transient List<BpRequirementGroup> modulesCompendium;
+    private List<String> newModuleUuids = Collections.emptyList();
     
     private String stationId;
     
     public ModelModulesCommand(List<BpRequirementGroup> modules, List<String> targetUuids) {
         super();
         this.stationId = ChangeLogEntry.STATION_ID;
-        this.modules = modules;
+        this.modulesCompendium = modules;
         this.targetUuids = targetUuids;
     }
     
@@ -74,6 +76,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
             if(!missingUuids.isEmpty()) {
                 CopyCommand copyCommand = new CopyCommand(targetUuid, missingUuids);
                 copyCommand = getCommandService().executeCommand(copyCommand);
+                newModuleUuids = copyCommand.getNewElements();
             }
         }       
     }
@@ -82,7 +85,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     private List<String> createListOfMssingUuids(CnATreeElement targetWithChildren) {
         List<String> uuids = new LinkedList<>();
         Set<CnATreeElement> targetChildren = targetWithChildren.getChildren();
-        for (BpRequirementGroup module : modules) {
+        for (BpRequirementGroup module : modulesCompendium) {
             if(!isModuleInChildrenSet(targetChildren,module)) {
                 uuids.add(module.getUuid());
             }
@@ -116,12 +119,16 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         this.targetUuids = targetUuids;
     }
 
-    public List<BpRequirementGroup> getModules() {
-        return modules;
+    public List<BpRequirementGroup> getModulesCompendium() {
+        return modulesCompendium;
     }
 
-    public void setModules(List<BpRequirementGroup> requirementGroups) {
-        this.modules = requirementGroups;
+    public void setModulesCompendium(List<BpRequirementGroup> requirementGroups) {
+        this.modulesCompendium = requirementGroups;
+    }
+
+    public List<String> getNewModuleUuids() {
+        return newModuleUuids;
     }
 
     private IBaseDao<CnATreeElement, Serializable> getDao() {

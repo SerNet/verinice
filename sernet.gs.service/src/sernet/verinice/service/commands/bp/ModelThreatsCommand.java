@@ -39,67 +39,66 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
-import sernet.verinice.model.bp.groups.SafeguardGroup;
+import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CopyCommand;
 
 /**
- * This command models the safeguards of the ITBP compendium with an IT 
+ * This command models the threats of the ITBP compendium with an IT 
  * network.
  *
  * If an implementation hint (safeguard group) is available for the module in
- * the ITBP Compendium all safeguards and all applicable groups are created in
- * the I network. Safeguards and groups are only created once in the IT network.
+ * the ITBP Compendium all threats and all applicable groups are created in
+ * the I network. Threats and groups are only created once in the IT network.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class ModelSafeguardsCommand extends ChangeLoggingCommand {
+public class ModelThreatsCommand extends ChangeLoggingCommand {
 
-    private transient Logger log = Logger.getLogger(ModelSafeguardsCommand.class);
+    private transient Logger log = Logger.getLogger(ModelThreatsCommand.class);
 
     /**
-     * HQL query to load the linked safeguards of a module
+     * HQL query to load the linked threats of a module
      */
-    private static final String HQL_LINKED_SAFEGUARDS = "select distinct safeguard from CnATreeElement safeguard " +
-            "join safeguard.linksUp as linksUp " +
+    private static final String HQL_LINKED_THREAT = "select distinct threat from CnATreeElement threat " +
+            "join threat.linksUp as linksUp " +
             "join linksUp.dependant as requirement " +
             "join requirement.parent as module " +
-            "join fetch safeguard.entity as entity " +
+            "join fetch threat.entity as entity " +
             "join fetch entity.typedPropertyLists as propertyList " +
             "join fetch propertyList.properties as props " +
-            "where safeguard.objectType = '" + Safeguard.TYPE_ID + "' " +
+            "where threat.objectType = '" + BpThreat.TYPE_ID + "' " +
             "and module.uuid in (:uuids)"; //$NON-NLS-1$
     
     /**
-     * HQL query to load the linked safeguards of a module
+     * HQL query to load the linked threats of a module
      */
-    private static final String HQL_LOAD_PARENT_IDS = "select distinct safeguard from CnATreeElement safeguard " +
-            "join fetch safeguard.parent as p1 " +
-            "join fetch p1.parent as p2 " +
-            "join fetch p2.parent as p3 " +
-            "where safeguard.uuid in (:uuids)"; //$NON-NLS-1$
+    private static final String HQL_LOAD_PARENT_IDS = "select distinct threat from CnATreeElement threat " +
+            "join fetch threat.parent as p1 " +
+            "where threat.uuid in (:uuids)"; //$NON-NLS-1$
     
     private List<String> moduleUuids;
     private Integer targetScopeId;
-    private transient List<Safeguard> compendiumSafeguards;
-    private transient List<Safeguard> scopeSafeguards;
-    private transient Map<String, Safeguard> missingSafeguards;
-    private transient Map<String, Safeguard> safeguardsWithParents;
-    private transient Map<String, CnATreeElement> safeguardParentsWithProperties;
+    private transient List<BpThreat> compendiumThreats;
+    private transient List<BpThreat> scopeThreats;
+    private transient Map<String, BpThreat> missingThreats;
+    private transient Map<String, BpThreat> threatsWithParents;
+    private transient Map<String, CnATreeElement> threatParentsWithProperties;
 
     private String stationId;
 
-    public ModelSafeguardsCommand(List<String> moduleUuids, Integer targetScopeId) {
+    public ModelThreatsCommand(List<String> moduleUuids, Integer targetScopeId) {
         super();
         this.stationId = ChangeLogEntry.STATION_ID;
         this.moduleUuids = moduleUuids;
         this.targetScopeId = targetScopeId;
-        missingSafeguards = new HashMap<>();
-        safeguardsWithParents = new HashMap<>();
-        safeguardParentsWithProperties = new HashMap<>();
+        missingThreats = new HashMap<>();
+        threatsWithParents = new HashMap<>();
+        threatParentsWithProperties = new HashMap<>();
     }
 
     /*
@@ -110,57 +109,51 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
     @Override
     public void execute() {
         try {
-            loadCompendiumSafeguards();
-            loadScopeSafeguards();
-            createListOfMissingSafeguards();
-            if(!missingSafeguards.isEmpty()) {
+            loadCompendiumThreats();
+            loadScopeThreats();
+            createListOfMissingThreats();
+            if(!missingThreats.isEmpty()) {
                 loadParents();
-                insertMissingSafeguards();
+                insertMissingThreats();
             }
         } catch (CommandException e) {
-            getLog().error("Error while modeling safeguards.", e);
-            throw new RuntimeCommandException("Error while modeling safeguards.", e);
+            getLog().error("Error while modeling threats.", e);
+            throw new RuntimeCommandException("Error while modeling threats.", e);
         }
     }
 
-    private void insertMissingSafeguards() throws CommandException {
-        SafeguardGroup safeguardGroup = getSafeguardRootGroup();
-        for (Safeguard safeguard : safeguardsWithParents.values()) {
-            insertSafeguard(safeguardGroup, safeguard);
+    private void insertMissingThreats() throws CommandException {
+        BpThreatGroup threatGroup = getThreatRootGroup();
+        for (BpThreat threat : threatsWithParents.values()) {
+            insertThreat(threatGroup, threat);
         }
     }
 
-    protected void insertSafeguard(SafeguardGroup safeguardGroup, Safeguard safeguard)
+    protected void insertThreat(CnATreeElement threatGroup, CnATreeElement threat)
             throws CommandException {
-        CnATreeElement group = safeguard.getParent().getParent().getParent();
-        CnATreeElement parent = getOrCreateGroup(safeguardGroup,
-                safeguardParentsWithProperties.get(group.getUuid()));
+        CnATreeElement group = threat.getParent();
+        CnATreeElement parent = getOrCreateGroup(threatGroup,
+                threatParentsWithProperties.get(group.getUuid()));
 
-        group = safeguard.getParent().getParent();
-        parent = getOrCreateGroup(parent, safeguardParentsWithProperties.get(group.getUuid()));
-
-        group = safeguard.getParent();
-        parent = getOrCreateGroup(parent, safeguardParentsWithProperties.get(group.getUuid()));
-
-        if (!isSafeguardInChildrenSet(parent.getChildren(),
-                missingSafeguards.get(safeguard.getUuid()))) {
+        if (!isThreatInChildrenSet(parent.getChildren(),
+                missingThreats.get(threat.getUuid()))) {
             CopyCommand copyCommand = new CopyCommand(parent.getUuid(),
-                    Arrays.asList(safeguard.getUuid()));
+                    Arrays.asList(threat.getUuid()));
             getCommandService().executeCommand(copyCommand);
             if (getLog().isDebugEnabled()) {
-                getLog().debug("Safeguard: " + safeguard.getTitle() + " created in group: "
+                getLog().debug("Threat: " + threat.getTitle() + " created in group: "
                         + parent.getTitle());
             }
         } else if (getLog().isDebugEnabled()) {
-            getLog().debug("Safeguard: " + safeguard.getTitle() + " already exists in group: "
+            getLog().debug("Threat: " + threat.getTitle() + " already exists in group: "
                     + parent.getTitle());
         }
     }
 
-    private boolean isSafeguardInChildrenSet(Set<CnATreeElement> targetChildren, Safeguard safeguard) {
-        for (CnATreeElement targetSafeguardElement : targetChildren) {
-            Safeguard targetSafeguard = (Safeguard) targetSafeguardElement;
-            if (ModelCommand.nullSafeEquals(targetSafeguard.getIdentifier(), safeguard.getIdentifier())) {
+    private boolean isThreatInChildrenSet(Set<CnATreeElement> targetChildren, BpThreat threat) {
+        for (CnATreeElement targetThreatElement : targetChildren) {
+            BpThreat targetThreat = (BpThreat) targetThreatElement;
+            if (ModelCommand.nullSafeEquals(targetThreat.getIdentifier(), threat.getIdentifier())) {
                 return true;
             }
         }
@@ -181,7 +174,7 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
         if (!groupFound) {
             group = createGroup(parent, compendiumGroup);
         } else if (getLog().isDebugEnabled()) {
-            getLog().debug("Safeguard group: " + compendiumGroup.getTitle()
+            getLog().debug("Threat group: " + compendiumGroup.getTitle()
                     + " already exists in group: " + parent.getTitle());
         }
         return group;
@@ -199,75 +192,73 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
                 RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
         parent.addChild(group);
         if (getLog().isDebugEnabled()) {
-            getLog().debug("Safeguard group: " + compendiumGroup.getTitle() + " created in group: "
+            getLog().debug("Threat group: " + compendiumGroup.getTitle() + " created in group: "
                     + parent.getTitle());
         }
         return group;
     }
 
-    protected SafeguardGroup getSafeguardRootGroup() {
-        SafeguardGroup safeguardGroup = null;
+    protected BpThreatGroup getThreatRootGroup() {
+        BpThreatGroup threatGroup = null;
         CnATreeElement scope = getDao().retrieve(targetScopeId, RetrieveInfo.getChildrenInstance());
         for (CnATreeElement group : scope.getChildren()) {
-            if (group.getTypeId().equals(SafeguardGroup.TYPE_ID)) {
-                safeguardGroup = (SafeguardGroup) group;
+            if (group.getTypeId().equals(BpThreatGroup.TYPE_ID)) {
+                threatGroup = (BpThreatGroup) group;
             }
         }
-        return (SafeguardGroup) getDao().retrieve(safeguardGroup.getDbId(),
+        return (BpThreatGroup) getDao().retrieve(threatGroup.getDbId(),
                 RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
     }
 
     @SuppressWarnings("unchecked")
-    private void loadCompendiumSafeguards() {
-        compendiumSafeguards = getDao().findByCallback(new HibernateCallback() {
+    private void loadCompendiumThreats() {
+        compendiumThreats = getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(HQL_LINKED_SAFEGUARDS).setParameterList("uuids",
+                Query query = session.createQuery(HQL_LINKED_THREAT).setParameterList("uuids",
                         moduleUuids);
                 query.setReadOnly(true);
                 return query.list();
             }
         });
         if (getLog().isDebugEnabled()) {
-            getLog().debug("Safeguards linked to modules: ");
-            logElements(compendiumSafeguards);
+            getLog().debug("Threats linked to modules: ");
+            logElements(compendiumThreats);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void loadScopeSafeguards() {
-        scopeSafeguards = getDao().findByCallback(new HibernateCallback() {
+    private void loadScopeThreats() {
+        scopeThreats = getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
                 Query query = session.createQuery(ModelCommand.HQL_SCOPE_ELEMENTS).setParameter("scopeId",
-                        targetScopeId).setParameter("typeId", Safeguard.TYPE_ID);
+                        targetScopeId).setParameter("typeId", BpThreat.TYPE_ID);
                 query.setReadOnly(true);
                 return query.list();
             }
         });
         if (getLog().isDebugEnabled()) {
-            getLog().debug("Safeguards in target scope: ");
-            logElements(scopeSafeguards);
+            getLog().debug("Threats in target scope: ");
+            logElements(scopeThreats);
         }
     }
 
     @SuppressWarnings("unchecked")
     private void loadParents() {
-        List<Safeguard> safeguards = getDao().findByCallback(new HibernateCallback() {
+        List<BpThreat> threats = getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
                 Query query = session.createQuery(HQL_LOAD_PARENT_IDS).setParameterList("uuids",
-                        missingSafeguards.keySet());
+                        missingThreats.keySet());
                 query.setReadOnly(true);
                 return query.list();
             }
         });
         final List<String> parentUuids = new LinkedList<>();
-        for (Safeguard safeguard : safeguards) {
-            safeguardsWithParents.put(safeguard.getUuid(), safeguard);
-            parentUuids.add(safeguard.getParent().getUuid());
-            parentUuids.add(safeguard.getParent().getParent().getUuid());
-            parentUuids.add(safeguard.getParent().getParent().getParent().getUuid());
+        for (BpThreat threat : threats) {
+            threatsWithParents.put(threat.getUuid(), threat);
+            parentUuids.add(threat.getParent().getUuid());
         }
         List<CnATreeElement> groupsWithProperties = getDao()
                 .findByCallback(new HibernateCallback() {
@@ -280,30 +271,30 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
                     }
                 });
         for (CnATreeElement group : groupsWithProperties) {
-            safeguardParentsWithProperties.put(group.getUuid(), group);
+            threatParentsWithProperties.put(group.getUuid(), group);
         }
         if (getLog().isDebugEnabled()) {
-            getLog().debug("Safeguards parents: ");
-            logElements(safeguardParentsWithProperties.values());
+            getLog().debug("Threats parents: ");
+            logElements(threatParentsWithProperties.values());
         }
     }
 
-    private void createListOfMissingSafeguards() {
-        missingSafeguards.clear();
-        for (Safeguard safeguard : compendiumSafeguards) {
-            if (!isSafeguardInScope(safeguard)) {
+    private void createListOfMissingThreats() {
+        missingThreats.clear();
+        for (BpThreat threat : compendiumThreats) {
+            if (!isThreatInScope(threat)) {
                 if (getLog().isDebugEnabled()) {
-                    getLog().debug("Safeguard is not in scope yet: " + safeguard);
+                    getLog().debug("Threat is not in scope yet: " + threat);
                 }
-                missingSafeguards.put(safeguard.getUuid(), safeguard);
+                missingThreats.put(threat.getUuid(), threat);
             }
         }
     }
 
-    private boolean isSafeguardInScope(Safeguard compendiumSafeguard) {
-        for (Safeguard scopeSafeguard : scopeSafeguards) {
-            if (ModelCommand.nullSafeEquals(scopeSafeguard.getIdentifier(),
-                    compendiumSafeguard.getIdentifier())) {
+    private boolean isThreatInScope(BpThreat compendiumThreat) {
+        for (BpThreat scopeThreat : scopeThreats) {
+            if (ModelCommand.nullSafeEquals(scopeThreat.getIdentifier(),
+                    compendiumThreat.getIdentifier())) {
                 return true;
             }
         }
@@ -339,7 +330,7 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
 
     public Logger getLog() {
         if (log == null) {
-            log = Logger.getLogger(ModelSafeguardsCommand.class);
+            log = Logger.getLogger(ModelThreatsCommand.class);
         }
         return log;
     }

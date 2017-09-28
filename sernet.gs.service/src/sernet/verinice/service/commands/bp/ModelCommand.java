@@ -21,17 +21,15 @@ package sernet.verinice.service.commands.bp;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
@@ -39,7 +37,6 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.CopyCommand;
 
 /**
  *
@@ -60,11 +57,21 @@ public class ModelCommand extends ChangeLoggingCommand {
             "join fetch propertyList.properties as props " +
             "where element.uuid in (:uuids)"; //$NON-NLS-1$
     
+    /**
+     * HQL query to load all safeguards of a scope
+     */
+    public static final String HQL_SCOPE_ELEMENTS = "select distinct safeguard from CnATreeElement safeguard " +
+            "join fetch safeguard.entity as entity " +
+            "join fetch entity.typedPropertyLists as propertyList " +
+            "join fetch propertyList.properties as props " +
+            "where safeguard.objectType = :typeId " +
+            "and safeguard.scopeId = :scopeId"; //$NON-NLS-1$
     
     private List<String> compendiumUuids;
     private List<String> targetUuids;
     private transient List<BpRequirementGroup> requirementGroups;
     private transient List<CnATreeElement> targetElements;
+    private transient List<String> newModuleUuidsScope = Collections.emptyList();
     
     private String stationId;
     
@@ -81,9 +88,12 @@ public class ModelCommand extends ChangeLoggingCommand {
     public void execute() {
         try {
             loadElements();
-            handleModules();         
-            handleSafeguards();
-            handleThreats();
+            handleModules();     
+            if(!newModuleUuidsScope.isEmpty()) {
+                handleSafeguards();
+                handleThreats();
+                createLinks();
+            }
         } catch (CommandException e) {
             getLog().error("Error while modeling.", e);
             throw new RuntimeCommandException("Error while modeling.", e);
@@ -93,6 +103,7 @@ public class ModelCommand extends ChangeLoggingCommand {
     private void handleModules() throws CommandException {
         ModelModulesCommand modelModulesCommand = new ModelModulesCommand(requirementGroups, targetUuids);
         modelModulesCommand = getCommandService().executeCommand(modelModulesCommand);
+        newModuleUuidsScope = modelModulesCommand.getNewModuleUuids();
     }
     
     private void handleSafeguards() throws CommandException {
@@ -100,15 +111,22 @@ public class ModelCommand extends ChangeLoggingCommand {
         modelSafeguardsCommand = getCommandService().executeCommand(modelSafeguardsCommand);
         
     }
+
+    private void handleThreats() throws CommandException {
+        ModelThreatsCommand modelThreatsCommand = new ModelThreatsCommand(compendiumUuids,getTargetScopeId());
+        modelThreatsCommand = getCommandService().executeCommand(modelThreatsCommand);
+    }
     
-    private Integer getTargetScopeId() {
-        return targetElements.get(0).getScopeId();
+
+    private void createLinks() throws CommandException {
+       ModelLinksCommand modelLinksCommand = new ModelLinksCommand(compendiumUuids, newModuleUuidsScope, getTargetScopeId());
+       modelLinksCommand = getCommandService().executeCommand(modelLinksCommand);
     }
 
 
-    private void handleThreats() {
-        // TODO Auto-generated method stub
-        
+    
+    private Integer getTargetScopeId() {
+        return targetElements.get(0).getScopeId();
     }
     
     @SuppressWarnings("unchecked")
@@ -116,7 +134,7 @@ public class ModelCommand extends ChangeLoggingCommand {
         final List<String> allUuids = getAllUuids();
         List<CnATreeElement> elements = getDao().findByCallback(new HibernateCallback() {
             @Override       
-            public Object doInHibernate( Session session) throws HibernateException, SQLException {
+            public Object doInHibernate( Session session) throws SQLException {
                 Query query = session.createQuery(HQL_ELEMENT_WITH_PROPERTIES)
                         .setParameterList("uuids", allUuids);
                 query.setReadOnly(true);
