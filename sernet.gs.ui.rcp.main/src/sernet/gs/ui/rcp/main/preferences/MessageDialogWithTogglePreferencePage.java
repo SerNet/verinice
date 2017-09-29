@@ -63,6 +63,10 @@ public class MessageDialogWithTogglePreferencePage extends FieldEditorPreference
                 getFieldEditorParent());
         addField(infoDialogTransformCatalogItems);
 
+        BooleanFieldEditor infoDialogTransformCatalog2ModernizedGsItems = new BooleanFieldEditor(PreferenceConstants.INFO_CONTROLS_TRANSFORMED_TO_MODERNIZED_GS, Messages.getString("GeneralSettingsPage.InfoControlsAdded"), //$NON-NLS-1$
+                getFieldEditorParent());
+        addField(infoDialogTransformCatalog2ModernizedGsItems);
+
         BooleanFieldEditor infoDialogCopy = new BooleanFieldEditor(PreferenceConstants.INFO_ELEMENTS_COPIED, Messages.getString("GeneralSettingsPage.InfoCopy"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(infoDialogCopy);
