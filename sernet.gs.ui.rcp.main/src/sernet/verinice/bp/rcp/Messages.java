@@ -28,6 +28,12 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.bp.rcp.messages"; //$NON-NLS-1$
+    public static String GsCatalogModelingDropPerformer_exception_dialog_message;
+    public static String GsCatalogModelingDropPerformer_exception_dialog_title;
+    public static String GsCatalogModelingDropPerformer_finished_dialog_message;
+    public static String GsCatalogModelingDropPerformer_finished_dialog_title;
+    public static String GsCatalogModelingDropPerformer_finished_dialog_toggle_message;
+    public static String GsCatalogModelingDropPerformer_transform_error_message;
     public static String BaseProtectionView_AccessControl;
     public static String BaseProtectionView_BulkEdit;
     public static String BaseProtectionView_CollapseAll;
@@ -38,6 +44,7 @@ public class Messages extends NLS {
     public static String BaseProtectionView_LinkWithEditor;
     public static String BaseProtectionView_Loading_1;
     public static String BaseProtectionView_Loading_2;
+    
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
