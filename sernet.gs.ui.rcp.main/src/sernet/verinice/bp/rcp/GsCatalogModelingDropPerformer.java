@@ -217,7 +217,7 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
             IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
             displayToggleDialog(message, Messages.GsCatalogModelingDropPerformer_finished_dialog_title,
                     Messages.GsCatalogModelingDropPerformer_finished_dialog_toggle_message, preferenceStore,
-                    PreferenceConstants.INFO_CONTROLS_ADDED);
+                    PreferenceConstants.INFO_CONTROLS_TRANSFORMED_TO_MODERNIZED_GS);
 
             // Restore old selection in tree
             if (!oldSelection.isEmpty()) {
