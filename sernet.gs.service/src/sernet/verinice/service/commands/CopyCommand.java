@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -89,8 +89,6 @@ public class CopyCommand extends GenericCommand {
     
     private List<String> newElements;
     
-    private boolean copyLinks = false;
-    
     private boolean copyAttachments = false;
 
     /**
@@ -119,9 +117,8 @@ public class CopyCommand extends GenericCommand {
         super();
         this.uuidGroup = uuidGroup;
         this.uuidList = uuidList;
-        this.copyLinks = copyLinks;
         this.postProcessorList = postProcessorList;
-        if(copyLinks) {
+        if (copyLinks) {
             addPostProcessor(new CopyLinks());
         }
     }
@@ -140,7 +137,7 @@ public class CopyCommand extends GenericCommand {
             number = 0;
             copyElements = createInsertList(uuidList);
             selectedGroup = getDao().findByUuid(uuidGroup, RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));       
-            final Map<String, String> sourceDestMap = new Hashtable<String, String>();
+            final Map<String, String> sourceDestMap = new HashMap<>();
             for (final CnATreeElement copyElement : copyElements) {     
                 final CnATreeElement newElement = copy(selectedGroup, copyElement, sourceDestMap);
                 if(newElement != null && newElement.getUuid() != null){
