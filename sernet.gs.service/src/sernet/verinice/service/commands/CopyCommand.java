@@ -131,6 +131,8 @@ public class CopyCommand extends GenericCommand {
      */
     @Override
     public void execute() {
+        long startTime = System.currentTimeMillis();
+        getLog().debug("Starting execution of CopyCommand");
         try { 
             List<CnATreeElement> copyElements;
             newElements = new ArrayList<String>(0);
@@ -145,6 +147,7 @@ public class CopyCommand extends GenericCommand {
                     createTaskWhileApplyingTemplateCommand(copyElement, newElement);
                 }
             }
+            getLog().debug(String.format("Finished copying of %d elements in %dms", number, System.currentTimeMillis() - startTime));
             if(getPostProcessorList()!=null && !getPostProcessorList().isEmpty()) {
                 getDao().flush();
                 getDao().clear();
@@ -160,6 +163,8 @@ public class CopyCommand extends GenericCommand {
         } catch (final Exception e) {
             getLog().error("Error while copying element", e); //$NON-NLS-1$
             throw new RuntimeException("Error while copying element", e); //$NON-NLS-1$
+        } finally {
+            getLog().debug(String.format("Finished execution of CopyCommand after %dms", System.currentTimeMillis() - startTime));
         }
     }
 
@@ -510,11 +515,15 @@ public class CopyCommand extends GenericCommand {
          */
         @Override
         public void process(final List<String> copyUuidList, final Map<String, String> sourceDestMap) {
+            getLog().debug("Starting execution of CopyCommand");
+            long startTime = System.currentTimeMillis();
             try {
                 final CopyLinksCommand copyLinksCommand = new CopyLinksCommand(sourceDestMap);          
                 getCommandService().executeCommand(copyLinksCommand);
             } catch (final CommandException e) {
                 getLog().error("Error while copy links on server.", e);
+            } finally {
+                getLog().debug(String.format("Finished copying links after %dms", System.currentTimeMillis() - startTime));
             }
         }
        
