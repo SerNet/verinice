@@ -55,8 +55,9 @@ import org.eclipse.ui.part.DrillDownAdapter;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.Perspective;
+import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
+import sernet.gs.ui.rcp.main.bsi.actions.NaturalizeAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionElementTransfer;
@@ -127,6 +128,8 @@ public class BaseProtectionView extends RightsEnabledView
     private Action expandAllAction; 
     private CollapseAction collapseAction;   
     private Action collapseAllAction; 
+    private ShowAccessControlEditAction accessControlEditAction;
+    private NaturalizeAction naturalizeAction;
     
     private MetaDropAdapter metaDropAdapter;
    
@@ -284,8 +287,8 @@ public class BaseProtectionView extends RightsEnabledView
         manager.add(new Separator());
         manager.add(new GroupMarker("special")); //$NON-NLS-1$
 //        manager.add(bulkEditAction);
-//        manager.add(accessControlEditAction);
-//        manager.add(naturalizeAction);
+        manager.add(accessControlEditAction);
+        manager.add(naturalizeAction);
 //        manager.add(new Separator());
         manager.add(expandAction);
         manager.add(collapseAction);
@@ -323,7 +326,9 @@ public class BaseProtectionView extends RightsEnabledView
         };
         linkWithEditorAction.setChecked(isLinkingActive());
         linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
-
+        naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
+        accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), "Access control...");
+        
     }
 
     protected void makeExpandAndCollapseActions() {
