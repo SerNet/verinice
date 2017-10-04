@@ -36,52 +36,74 @@ public class ToHtmlTableTransformer {
     private final static Logger LOG = Logger.getLogger(ToHtmlTableTransformer.class);
 
     private static final String HEADERSTYLE = "style=\"background: gray;\"";
-    private static final String ODDSTYLE = "style=\"text-align: center;\"";;
-    private static final String EVENSTYLE = "style=\"background: lightGrey;text-align: center;\"";
+    private static final String ODDSTYLE = "";
+    private static final String EVENSTYLE = "style=\"background: lightGrey\"";
+    private static final String DATASTYLE = "style=\"text-align: center;\"";
+    private static final String TABLESTYLE = "style=\"border-collapse: collapse;\"";
 
     private ToHtmlTableTransformer() {
         super();
     }
 
     /**
-     * Create the html table for the requirements to thread coded in the {@link Crossreferences} table.
+     * Create the html table for the requirements to thread coded in the
+     * {@link Crossreferences} table.
      * 
      * @param crossreferences
      * @return
      */
     public static String createCrossreferenceTable(Crossreferences crossreferences) {
-        List<String> reqHeader = createRequirementHeader(crossreferences);
+        StringBuilder builder = new StringBuilder();
+        createCrossReferenceTable(crossreferences, builder);
+        return builder.toString();
+    }
+
+    /**
+     * Create the html table for the requirements to thread coded in the
+     * {@link Crossreferences} table.
+     * 
+     * @param crossreferences
+     * @param builder
+     *            a string builder containing the table in the end
+     */
+    public static void createCrossReferenceTable(Crossreferences crossreferences, StringBuilder builder) {
+        List<String> requirementHeader = createRequirementHeader(crossreferences);
         List<String> threadHeader = createThreadHeader(crossreferences);
 
-        if (reqHeader.isEmpty() || threadHeader.isEmpty()) {
+        if (requirementHeader.isEmpty() || threadHeader.isEmpty()) {
             LOG.debug("Requierments or Thread headers are empty. ");
-            LOG.debug(reqHeader);
+            LOG.debug(requirementHeader);
             LOG.debug(threadHeader);
-            return "";
+            return;
         }
 
-        StringBuilder builder = new StringBuilder();
-        builder.append("<table style=\"border-collapse: collapse;\">").append("<th ").append(HEADERSTYLE).append(">").append("Gefährdung<br/>Anforderungen").append("</th>");
+        builder.append("<table ").append(TABLESTYLE).append(">").append("<th ").append(HEADERSTYLE).append(">").append("Gefährdung<br/>Anforderungen").append("</th>");
         for (String header : threadHeader) {
             builder.append("<th ").append(HEADERSTYLE).append(">").append(header).append("</th>");
         }
         builder.append("\n");
-        int x = 0;
-        for (RequirementRef rr : crossreferences.getRequirementRef()) {
-            List<ElementalthreatRef> list = rr.getElementalthreatRef();
-            builder.append("<tr>");
-            String tt = reqHeader.get(x);
-            builder.append("<td ").append(HEADERSTYLE).append(">").append(tt).append("</td>");
-            for (ElementalthreatRef ref2 : list) {
-                String isReferenced = Boolean.parseBoolean(ref2.getIsReferenced()) ? " X" : "";
-                builder.append("<td ").append(x % 2 == 1 ? ODDSTYLE : EVENSTYLE).append(">").append(isReferenced).append("</td>");
+        int row = 0;
+        for (RequirementRef reference : crossreferences.getRequirementRef()) {
+            List<ElementalthreatRef> threadRefs = reference.getElementalthreatRef();
+            builder.append("<tr ").append(row % 2 == 1 ? ODDSTYLE : EVENSTYLE).append(">");
+            if (threadRefs.size() != threadHeader.size()) {
+                LOG.warn("Elementar threads number don't match header size. Header: " + threadHeader.size() + " current list of threads: " + threadRefs.size());
+            }
+            if (row > requirementHeader.size()) {
+                LOG.warn("More references than requirement headers, finishing row and table. ");
+                builder.append("</tr>\n");
+                break;
+            }
+            String headerTitle = requirementHeader.get(row);
+            builder.append("<td ").append(HEADERSTYLE).append(">").append(headerTitle).append("</td>");
+            for (ElementalthreatRef threadRef : threadRefs) {
+                String isReferenced = Boolean.parseBoolean(threadRef.getIsReferenced()) ? "X" : "";
+                builder.append("<td ").append(DATASTYLE).append(">").append(isReferenced).append("</td>");
             }
             builder.append("</tr>\n");
-            x++;
+            row++;
         }
-
         builder.append("</table>");
-        return builder.toString();
     }
 
     /**
@@ -110,5 +132,10 @@ public class ToHtmlTableTransformer {
             reqHeader.add(rr.getIdentifier());
         }
         return reqHeader;
+    }
+
+    public static String stripHtml(String string) {
+        String striped = string.replaceAll("<differentiation>[ ]*</differentiation>", "").replaceAll("<H1>[ ]*</H1>", "");
+        return striped;
     }
 }
