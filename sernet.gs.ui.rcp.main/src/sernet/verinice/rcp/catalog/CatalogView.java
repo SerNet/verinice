@@ -72,6 +72,7 @@ import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.verinice.bp.rcp.BaseProtectionTreeSorter;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -424,36 +425,22 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         super.dispose();
     }
 
-    class ModITBCatalogViewerSorter extends ViewerSorter {
+    class ModITBCatalogViewerSorter extends BaseProtectionTreeSorter {
         private static final String HIGH = "HIGH";
         private static final String STANDARD = "STANDARD";
         private static final String BASIC = "BASIC";
         
-        private NumericStringComparator comp = new NumericStringComparator();
-
         @Override
         public int compare(Viewer viewer, Object o1, Object o2) {
-            int result = 0;
+            int result = super.compare(viewer, o1, o2);
             if (o1 instanceof Safeguard  && o2 instanceof Safeguard) {
                 Safeguard sg1 = (Safeguard) o1;
                 Safeguard sg2 = (Safeguard) o2;
                 result = quallifierToValue(sg1.getQualifier())-quallifierToValue(sg2.getQualifier());
-            }
-            if (o1 instanceof BpRequirement && o2 instanceof BpRequirement && result == 0) {
+            }else if (o1 instanceof BpRequirement && o2 instanceof BpRequirement) {
                 BpRequirement br1 = (BpRequirement) o1;
                 BpRequirement br2 = (BpRequirement) o2;
                 result = quallifierToValue(br1.getQualifier())-quallifierToValue(br2.getQualifier());
-            }
-            if (o1 instanceof CnATreeElement && o2 instanceof CnATreeElement && result == 0) {
-                CnATreeElement element1 = (CnATreeElement) o1;
-                CnATreeElement element2 = (CnATreeElement) o2;
-                String message1 = HUITypeFactory.getInstance().getMessage(element1.getTypeId());
-                String message2 = HUITypeFactory.getInstance().getMessage(element2.getTypeId());
-                result = comp.compare(message1, message2);
-
-                if (result == 0) {
-                    result = comp.compare(element1.getTitle(), element2.getTitle());
-                }
             }
             return result;
         }
@@ -468,6 +455,5 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
             }
             return 0;
         }
-
     }
 }
