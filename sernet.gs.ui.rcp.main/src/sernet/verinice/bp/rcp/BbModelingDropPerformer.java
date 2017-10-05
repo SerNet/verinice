@@ -50,6 +50,7 @@ import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.BusinessProcess;
 import sernet.verinice.model.bp.elements.Device;
 import sernet.verinice.model.bp.elements.IcsSystem;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.elements.ItSystem;
 import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
@@ -72,7 +73,8 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
     private static final Logger log = Logger.getLogger(BbModelingDropPerformer.class);
     private static final List<String> supportedDropTypeIds;
     static {
-        supportedDropTypeIds = new ArrayList<>(8);
+        supportedDropTypeIds = new ArrayList<>(9);
+        supportedDropTypeIds.add(ItNetwork.TYPE_ID);
         supportedDropTypeIds.add(Application.TYPE_ID);
         supportedDropTypeIds.add(BusinessProcess.TYPE_ID);
         supportedDropTypeIds.add(Device.TYPE_ID);

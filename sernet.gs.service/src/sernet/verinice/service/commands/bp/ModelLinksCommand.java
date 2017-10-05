@@ -43,7 +43,10 @@ import sernet.verinice.model.common.Link;
 import sernet.verinice.service.commands.CreateMultipleLinks;
 
 /**
- *
+ * This command models modules (requirements groups) from the ITBP compendium
+ * with certain target object types of an IT network.
+ * 
+ * See {@link ModelCommand} for more documentation about the modeling process.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
@@ -82,8 +85,6 @@ public class ModelLinksCommand extends GenericCommand {
     private transient Map<String,BpRequirement> requirementsScope;
     private transient Map<String,Safeguard> safeguardsScope;
     private transient Map<String,BpThreat> threatsScope;
-    
-    
     
     public ModelLinksCommand(List<String> moduleUuidsCompendium, List<String> moduleUuidsScope,
             Integer scopeId) {

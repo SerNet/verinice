@@ -38,7 +38,10 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CopyCommand;
 
 /**
- *
+ * This command models modules (requirements groups) from the ITBP compendium
+ * with certain target object types of an IT network.
+ * 
+ * See {@link ModelCommand} for more documentation about the modeling process.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
@@ -72,7 +75,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     private void handleModules() throws CommandException {
         for (String targetUuid : targetUuids) {
             CnATreeElement target = loadElementWithChildren(targetUuid);
-            List<String> missingUuids = createListOfMssingUuids(target);
+            List<String> missingUuids = createListOfMissingUuids(target);
             if(!missingUuids.isEmpty()) {
                 CopyCommand copyCommand = new CopyCommand(targetUuid, missingUuids);
                 copyCommand = getCommandService().executeCommand(copyCommand);
@@ -81,8 +84,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         }       
     }
     
- 
-    private List<String> createListOfMssingUuids(CnATreeElement targetWithChildren) {
+    private List<String> createListOfMissingUuids(CnATreeElement targetWithChildren) {
         List<String> uuids = new LinkedList<>();
         Set<CnATreeElement> targetChildren = targetWithChildren.getChildren();
         for (BpRequirementGroup module : modulesCompendium) {
@@ -93,13 +95,14 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         return uuids;
     }
 
-
     private boolean isModuleInChildrenSet(Set<CnATreeElement> targetChildren,
             BpRequirementGroup module) {
-        for (CnATreeElement targetModuleElement : targetChildren) {
-            BpRequirementGroup targetModule = (BpRequirementGroup) targetModuleElement; 
-            if(ModelCommand.nullSafeEquals(targetModule.getIdentifier(),module.getIdentifier())) {
-                return true;
+        for (CnATreeElement child : targetChildren) {
+            if(BpRequirementGroup.TYPE_ID.equals(child.getTypeId())) {
+                BpRequirementGroup targetModule = (BpRequirementGroup) child; 
+                if(ModelCommand.nullSafeEquals(targetModule.getIdentifier(),module.getIdentifier())) {
+                    return true;
+                }
             }
         }
         return false;
@@ -157,5 +160,4 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         }
         return log;
     }
-
 }

@@ -39,7 +39,45 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
+ * This command models modules (requirements groups) from the ITBP compendium
+ * with certain target object types of an IT network. Supported types are: IT
+ * networks, business processes, other/IoT systems, ICS systems, IT systems,
+ * networks and rooms.
+ * 
+ * Modeling process:
+ * 
+ * Requirements
+ * 
+ * The module is created as a child object below the target object. All
+ * requirements in the module are copied as well. Modules and requirements are
+ * only created once per target object but can occur multiple times in different
+ * target objects.
+ * 
+ * Safeguards
+ * 
+ * If an implementation hint (safeguard group) is available for the module in
+ * the ITBP Compendium all safeguards and all applicable safeguard groups are
+ * created in the IT network. Safeguards and groups are only created once in the
+ * IT network.
+ * 
+ * Elemental threats
+ * 
+ * Elemental threat groups and the elemental threats are created as objects in
+ * the IT network. They are only created once in the IT network.
  *
+ * Specific threats
+ * 
+ * Specific threats groups and specific threats are created as objects in the IT
+ * network. They are only created once in the IT network.
+ * 
+ * Links
+ * 
+ * Links from newly created requirements to elemental threats are created
+ * according to the cross reference tables in the ITBP compendium modules If
+ * safeguards (in an implementation hint) for an module in the ITBP compendium
+ * exist two links are created: Requirement to safeguard and safeguard to
+ * elemental threat. According to the definition in compendium a link from a
+ * module to the specific threat group is created.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
@@ -82,7 +120,6 @@ public class ModelCommand extends ChangeLoggingCommand {
         this.compendiumUuids = compendiumUuids;
         this.targetUuids = targetUuids;
     }
-    
 
     @Override
     public void execute() {

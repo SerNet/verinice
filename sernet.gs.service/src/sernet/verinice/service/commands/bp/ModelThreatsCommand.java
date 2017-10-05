@@ -40,16 +40,16 @@ import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.elements.BpThreat;
-import sernet.verinice.model.bp.elements.Safeguard;
-import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CopyCommand;
 
 /**
- * This command models the threats of the ITBP compendium with an IT 
- * network.
+ * This command models modules (requirements groups) from the ITBP compendium
+ * with certain target object types of an IT network.
+ * 
+ * See {@link ModelCommand} for more documentation about the modeling process.
  *
  * If an implementation hint (safeguard group) is available for the module in
  * the ITBP Compendium all threats and all applicable groups are created in
