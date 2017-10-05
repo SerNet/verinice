@@ -23,6 +23,7 @@ import java.text.Collator;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 
 import sernet.gs.service.NumericStringCollator;
@@ -60,8 +61,12 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
 public class BaseProtectionTreeSorter extends ViewerSorter {
-
     private static Map<String, Integer> typeSortCategoryMap = new HashMap<>();
+
+    private static final String HIGH = "HIGH";
+    private static final String STANDARD = "STANDARD";
+    private static final String BASIC = "BASIC";
+
     
     static {
         // Sort order of groups in IT network
@@ -107,4 +112,30 @@ public class BaseProtectionTreeSorter extends ViewerSorter {
         return category;
     }
     
+    @Override
+    public int compare(Viewer viewer, Object o1, Object o2) {
+        int result = super.compare(viewer, o1, o2);
+        if (o1 instanceof Safeguard  && o2 instanceof Safeguard) {
+            Safeguard sg1 = (Safeguard) o1;
+            Safeguard sg2 = (Safeguard) o2;
+            result = quallifierToValue(sg1.getQualifier())-quallifierToValue(sg2.getQualifier());
+        }else if (o1 instanceof BpRequirement && o2 instanceof BpRequirement) {
+            BpRequirement br1 = (BpRequirement) o1;
+            BpRequirement br2 = (BpRequirement) o2;
+            result = quallifierToValue(br1.getQualifier())-quallifierToValue(br2.getQualifier());
+        }
+        return result;
+    }
+    
+    private int quallifierToValue(String qualifier) {
+        if(BASIC.equals(qualifier)){
+            return 1;
+        }else if(STANDARD.equals(qualifier)){
+            return 2;
+        }else if(HIGH.equals(qualifier)){
+            return 3;
+        }
+        return 0;
+    }
+
 }
