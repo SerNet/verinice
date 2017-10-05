@@ -47,6 +47,7 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -67,6 +68,7 @@ import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorRegistry;
+import sernet.gs.ui.rcp.main.bsi.views.BSIModelViewLabelProvider;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
@@ -84,6 +86,8 @@ import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bsi.IBSIStrukturElement;
+import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.catalog.ICatalogModelListener;
 import sernet.verinice.model.common.CnATreeElement;
@@ -117,9 +121,14 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
     private CollapseAction collapseAction;
     private ISMViewFilter filterAction;
     private Action linkWithEditorAction;
-    private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
+    private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
+    private BSIModelViewLabelProvider bsiLableProvider = new BSIModelViewLabelProvider();
 
     private boolean linkingActive;
+
+    private Action expandAllAction;
+
+    private Action collapseAllAction;
 
     public static final String ID = "sernet.verinice.rcp.catalog.CatalogView"; //$NON-NLS-1$
 
@@ -180,7 +189,23 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         drillDownAdapter = new DrillDownAdapter(viewer);
         viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
         viewer.setContentProvider(contentProvider);
-        viewer.setLabelProvider(new TreeLabelProvider());
+        viewer.setLabelProvider(new TreeLabelProvider() {
+            @Override
+            public Image getImage(Object obj) {
+                if (obj instanceof IBSIStrukturElement || obj instanceof IBSIStrukturKategorie) {
+                    return bsiLableProvider.getImage(obj);
+                }
+                return super.getImage(obj);
+            }
+            
+            @Override
+            public String getText(Object obj) {
+                if (obj instanceof IBSIStrukturElement || obj instanceof IBSIStrukturKategorie) {
+                    return bsiLableProvider.getText(obj);
+                }
+                return super.getText(obj);
+            }
+        });
 
         toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
@@ -251,11 +276,11 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
                 }
                 // model is not loaded yet: add a listener to load data when
                 // it's loaded
-                modelLoadListener = new DefaultModelLoadListener(){
+                modelLoadListener = new DefaultModelLoadListener() {
                     @Override
                     public void loaded(CatalogModel model) {
                         startInitDataJob();
-                    }  
+                    }
                 };
                 CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
             }
@@ -283,7 +308,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
             }
         });
         Menu menu = menuMgr.createContextMenu(viewer.getControl());
-        
+
         viewer.getControl().setMenu(menu);
     }
 
@@ -292,6 +317,9 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         manager.add(new Separator());
         manager.add(doubleClickAction);
         manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+        manager.add(new Separator());
+        manager.add(expandAction);
+        manager.add(collapseAction);
         manager.add(new Separator());
         drillDownAdapter.addNavigationActions(manager);
     }
@@ -312,14 +340,15 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         };
         doubleClickAction.setText(Messages.CatalogView_open_in_editor);
         doubleClickAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.OPEN_EDIT));
-
-        expandAction = new ExpandAction(viewer, contentProvider);
-        expandAction.setText(Messages.ISMView_7);
-        expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
-
-        collapseAction = new CollapseAction(viewer);
-        collapseAction.setText(Messages.ISMView_8);
-        collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
+        
+        makeExpandAndCollapseActions();
+//        expandAction = new ExpandAction(viewer, contentProvider);
+//        expandAction.setText(Messages.ISMView_7);
+//        expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
+//
+//        collapseAction = new CollapseAction(viewer);
+//        collapseAction.setText(Messages.ISMView_8);
+//        collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 
         HideEmptyFilter hideEmptyFilter = new HideEmptyFilter(viewer);
         hideEmptyFilter.setHideEmpty(true);
@@ -336,6 +365,35 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         linkWithEditorAction.setChecked(isLinkingActive());
         linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
     }
+    
+    private void makeExpandAndCollapseActions() {
+        expandAction = new ExpandAction(viewer, contentProvider);
+        expandAction.setText(Messages.ISMView_7);
+        expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
+        
+        collapseAction = new CollapseAction(viewer);
+        collapseAction.setText(Messages.ISMView_8);
+        collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
+        
+        expandAllAction = new Action() {
+            @Override
+            public void run() {
+                viewer.expandAll();
+            }
+        };
+        expandAllAction.setText(Messages.ISMView_9);
+        expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
+
+        collapseAllAction = new Action() {
+            @Override
+            public void run() {
+                viewer.collapseAll();
+            }
+        };
+        collapseAllAction.setText(Messages.ISMView_10);
+        collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
+    }
+
 
     protected void openEditorReadOnly(Object sel) throws PartInitException {
         CnATreeElement element = (CnATreeElement) sel;
@@ -346,7 +404,6 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
             getSite().getPage().openEditor(editor.getEditorInput(), BSIElementEditor.EDITOR_ID);
         }
     }
-
 
     private void addActions() {
         viewer.addDoubleClickListener(new IDoubleClickListener() {
@@ -363,8 +420,8 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
     protected void fillToolBar() {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
-        manager.add(expandAction);
-        manager.add(collapseAction);
+        manager.add(expandAllAction);
+        manager.add(collapseAllAction);
         drillDownAdapter.addNavigationActions(manager);
         manager.add(filterAction);
         manager.add(linkWithEditorAction);
@@ -394,19 +451,19 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
             return;
         }
         CnATreeElement element = BSIElementEditorInput.extractElement(activeEditor);
-        
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("Element in editor: " + element.getUuid()); //$NON-NLS-1$
         }
-        if(element != null){
-            viewer.setSelection(new StructuredSelection(element),true);
+        if (element != null) {
+            viewer.setSelection(new StructuredSelection(element), true);
         } else {
             return;
         }
-        
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("Tree is expanded."); //$NON-NLS-1$
-        } 
+        }
     }
 
     @Override
