@@ -67,6 +67,8 @@ BUILD INSTRUCTIONS
         <module>../sernet.verinice.releng.client.product</module>
         <module>../sernet.verinice.update_site</module>
         <module>../sernet.verinice.releng.server.product</module>
+        <!--  the modernized gs catalog importer -->
+        <module>../sernet.verinice.bp.importer</module>
         
         <!-- Report designer inclusive dependencies only needed by this module -->
         
