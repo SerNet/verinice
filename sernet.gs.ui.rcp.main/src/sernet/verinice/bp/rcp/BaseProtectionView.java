@@ -151,7 +151,7 @@ public class BaseProtectionView extends RightsEnabledView
             startInitDataJob();
         } catch (Exception e) {
             LOG.error("Error while creating organization view", e); //$NON-NLS-1$
-            ExceptionUtil.log(e, "Error while creating base protection view.");
+            ExceptionUtil.log(e, Messages.BaseProtectionView_ErrorCreating);
         }
     }
     
@@ -185,16 +185,16 @@ public class BaseProtectionView extends RightsEnabledView
         if (LOG.isDebugEnabled()) {
             LOG.debug("MotITBPview: startInitDataJob"); //$NON-NLS-1$
         }
-        WorkspaceJob initDataJob = new WorkspaceJob("Loading data...") {
+        WorkspaceJob initDataJob = new WorkspaceJob(Messages.BaseProtectionView_Loading_1) {
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 IStatus status = Status.OK_STATUS;
                 try {
-                    monitor.beginTask("Loading data...", IProgressMonitor.UNKNOWN);
+                    monitor.beginTask(Messages.BaseProtectionView_Loading_2, IProgressMonitor.UNKNOWN);
                     initData();
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data",e);
+                    status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data",e); //$NON-NLS-1$ //$NON-NLS-2$
                 } finally {
                     monitor.done();
                 }
@@ -213,7 +213,7 @@ public class BaseProtectionView extends RightsEnabledView
                 if (modelUpdateListener == null ) {
                     // model listener should only be created once!
                     if (LOG.isDebugEnabled()){
-                        Logger.getLogger(this.getClass()).debug("Creating modelUpdateListener for MotITBPView."); //$NON-NLS-1$
+                        Logger.getLogger(this.getClass()).debug("Creating modelUpdateListener for BaseProtectionView."); //$NON-NLS-1$
                     }
                     modelUpdateListener = new TreeUpdateListener(viewer,elementManager);
                     CnAElementFactory.getInstance().getBpModel().addModITBOModelListener(modelUpdateListener);
@@ -309,7 +309,7 @@ public class BaseProtectionView extends RightsEnabledView
         
         makeExpandAndCollapseActions();
      
-        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), "Bulk edit...");
+        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), Messages.BaseProtectionView_BulkEdit);
               
         BSIModelViewDropListener bsiDropAdapter;
         metaDropAdapter = new MetaDropAdapter(viewer);
@@ -318,7 +318,7 @@ public class BaseProtectionView extends RightsEnabledView
         metaDropAdapter.addAdapter(modelingDropPerformer);
         metaDropAdapter.addAdapter(bsiDropAdapter);
         
-        linkWithEditorAction = new Action("Link with Editor", IAction.AS_CHECK_BOX) {
+        linkWithEditorAction = new Action(Messages.BaseProtectionView_LinkWithEditor, IAction.AS_CHECK_BOX) {
             @Override
             public void run() {
                 toggleLinking(isChecked());
@@ -327,17 +327,17 @@ public class BaseProtectionView extends RightsEnabledView
         linkWithEditorAction.setChecked(isLinkingActive());
         linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
         naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
-        accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), "Access control...");
+        accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.BaseProtectionView_AccessControl);
         
     }
 
     protected void makeExpandAndCollapseActions() {
         expandAction = new ExpandAction(viewer, contentProvider);
-        expandAction.setText("Expand children");
+        expandAction.setText(Messages.BaseProtectionView_ExpandChildren);
         expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
         
         collapseAction = new CollapseAction(viewer);
-        collapseAction.setText("Collapse chilren");
+        collapseAction.setText(Messages.BaseProtectionView_CollapseChildren);
         collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
         
         expandAllAction = new Action() {
@@ -346,7 +346,7 @@ public class BaseProtectionView extends RightsEnabledView
                 expandAll();
             }
         };
-        expandAllAction.setText("Expand all");
+        expandAllAction.setText(Messages.BaseProtectionView_ExpandAll);
         expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
         collapseAllAction = new Action() {
@@ -355,7 +355,7 @@ public class BaseProtectionView extends RightsEnabledView
                 viewer.collapseAll();
             }
         };
-        collapseAllAction.setText("Collapse all");
+        collapseAllAction.setText(Messages.BaseProtectionView_CollapseAll);
         collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
     }
     
