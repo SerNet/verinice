@@ -3,8 +3,11 @@ package sernet.verinice.service.bp.importer;
 import java.io.File;
 import java.io.FileFilter;
 import java.lang.reflect.InvocationTargetException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -99,7 +102,7 @@ public class BpImporter {
     ICommandService commandService;
     IDAOFactory daoFactory;
     
-    private final static String rootRequirementGroupName = "Bausteine/Anforderungen (GS-Kompendium";
+    private final static String rootRequirementGroupName = "Bausteine";
     private final static String processRequirementGroupname = "Prozess-Bausteine";
     private final static String systemRequirementGroupname = "System-Bausteine";
     
@@ -371,9 +374,9 @@ public class BpImporter {
      */
     private void createStructuredSubGroups(BpThreatGroup rootThreatGroup, SafeguardGroup safeguardRootGroup) throws CreateBPElementException {
         elementalThreatGroup = (BpThreatGroup) createElement(BpThreatGroup.TYPE_ID, rootThreatGroup, elementalThreatGroupName);
-        BpThreatGroup specificThreatGroup = (BpThreatGroup) createElement(BpThreatGroup.TYPE_ID, rootThreatGroup, specificThreatGroupName);
-        processThreatGroup = (BpThreatGroup) createElement(BpThreatGroup.TYPE_ID, specificThreatGroup, specificProcessThreatGroupName);
-        systemThreatGroup = (BpThreatGroup) createElement(BpThreatGroup.TYPE_ID, specificThreatGroup, specificSystemThreatGroupName);
+//        BpThreatGroup specificThreatGroup = (BpThreatGroup) createElement(BpThreatGroup.TYPE_ID, rootThreatGroup, specificThreatGroupName);
+//        processThreatGroup = (BpThreatGroup) createElement(BpThreatGroup.TYPE_ID, specificThreatGroup, specificProcessThreatGroupName);
+//        systemThreatGroup = (BpThreatGroup) createElement(BpThreatGroup.TYPE_ID, specificThreatGroup, specificSystemThreatGroupName);
         processSafeguardGroup = (SafeguardGroup) createElement(SafeguardGroup.TYPE_ID, safeguardRootGroup, processRequirementGroupname);
         systemSafeguardGroup = (SafeguardGroup) createElement(SafeguardGroup.TYPE_ID, safeguardRootGroup, systemRequirementGroupname);
 
@@ -381,14 +384,14 @@ public class BpImporter {
 
         for (String name : systemIdentifierPrefixes ) {
             createElement(BpRequirementGroup.TYPE_ID, systemReqGroup, name);
-            createElement(BpThreatGroup.TYPE_ID, systemThreatGroup, name);
+//            createElement(BpThreatGroup.TYPE_ID, systemThreatGroup, name);
             createElement(SafeguardGroup.TYPE_ID, systemSafeguardGroup,  name);
         }
 
 
         for (String name : processIdentifierPrefixes ) {
             createElement(BpRequirementGroup.TYPE_ID, processReqGroup, name);
-            createElement(BpThreatGroup.TYPE_ID, processThreatGroup, name);
+//            createElement(BpThreatGroup.TYPE_ID, processThreatGroup, name);
             createElement(SafeguardGroup.TYPE_ID, processSafeguardGroup, name);
         }
     }  
@@ -486,7 +489,7 @@ public class BpImporter {
                 
                 if (! addedModules.containsKey(bsiModule.getIdentifier())) {
                     veriniceModule = createModule(bsiModule, parent);
-                    createSpecificThreats(bsiModule, groupIdentifier, veriniceModule);
+//                    createSpecificThreats(bsiModule, groupIdentifier, veriniceModule);
                     linkElementalThreats(bsiModule);
                     addedModules.put(bsiModule.getIdentifier(), veriniceModule);
                 } else {
@@ -570,6 +573,7 @@ public class BpImporter {
                 
                 veriniceThreat.setDescription(getAnyElementDescription(threat.getHeadline(),
                         threat.getDescription().getAny()));
+                veriniceThreat.setIdentifier(bsiModule.getIdentifier());
 //                Link link = new Link(veriniceModule, veriniceThreat);
 //                linkList.add(link);
 //                veriniceThreat.setConfidentiality(Boolean.parseBoolean(threat.   .getCia().getConfidentiality()));
@@ -1044,7 +1048,13 @@ public class BpImporter {
             CreateITNetwork command = new CreateITNetwork(model, ItNetwork.class, true);
             command = getCommandService().executeCommand(command);
             rootNetwork = command.getNewElement();
-            rootNetwork.setTitel("IT-Grundschutz-Kompendium");
+            StringBuilder titleBuilder = new StringBuilder();
+            titleBuilder.append("IT-Grundschutz-Kompendium");
+            titleBuilder.append(" (");
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateInISO = df.format(new Date());
+            titleBuilder.append(dateInISO).append(" )");
+            rootNetwork.setTitel(titleBuilder.toString());
         } 
         } catch (CommandException e) {
             throw new CreateBPElementException(e, "Error while loading BPModel"); // TODO : internationalize
