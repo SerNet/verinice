@@ -30,7 +30,7 @@ public class BpThreat extends CnATreeElement implements IBpElement {
     private static final long serialVersionUID = -7182966153863832177L;
     
     private static final String PROP_ABBR = "bp_threat_abbr"; //$NON-NLS-1$
-    private static final String PROP_DESC = "bp_threat_desc"; //$NON-NLS-1$
+    private static final String PROP_OBJECTBROWSER_DESC = "bp_threat_objectbrowser_content"; //$NON-NLS-1$
     private static final String PROP_NAME = "bp_threat_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_threat_id"; //$NON-NLS-1$
 
@@ -52,12 +52,12 @@ public class BpThreat extends CnATreeElement implements IBpElement {
         return TYPE_ID;
     }
     
-    public String getDescription() {
-        return getEntity().getPropertyValue(PROP_DESC);
+    public String getObjectBrowserDescription() {
+        return getEntity().getPropertyValue(PROP_OBJECTBROWSER_DESC);
     }
     
-    public void setDescription(String description) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESC), description);
+    public void setObjectBrowserDescription(String description) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER_DESC), description);
     }
     
     public String getAbbreviation() {
