@@ -32,7 +32,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     
     public static final String TYPE_ID = "bp_safeguard"; //$NON-NLS-1$
     private static final String PROP_ABBR = "bp_safeguard_abbr"; //$NON-NLS-1$
-    private static final String PROP_DESC = "bp_safeguard_desc"; //$NON-NLS-1$
+    private static final String PROP_OBJECTBROWSER_DESC = "bp_safeguard_objectbrowser_content"; //$NON-NLS-1$
     private static final String PROP_NAME = "bp_safeguard_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_safeguard_id"; //$NON-NLS-1$
     private static final String PROP_QUALIFIER = "bp_safeguard_qualifier"; //$NON-NLS-1$
@@ -49,12 +49,12 @@ public class Safeguard extends CnATreeElement implements IBpElement {
         return TYPE_ID;
     }
     
-    public String getDescription() {
-        return getEntity().getPropertyValue(PROP_DESC);
+    public String getObjectBrowserDescription() {
+        return getEntity().getPropertyValue(PROP_OBJECTBROWSER_DESC);
     }
     
-    public void setDescription(String description) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESC), description);
+    public void setObjectBrowserDescription(String description) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER_DESC), description);
     }
     
     public String getAbbreviation() {

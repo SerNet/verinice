@@ -17,7 +17,7 @@
  * Contributors:
  *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.bp.importer;
+package sernet.verinice.bp.importer.preferences;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -27,9 +27,9 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
     
-    private static final String BUNDLE_NAME = "sernet.verinice.bp.importer.messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "sernet.verinice.bp.importer.preferences.messages"; //$NON-NLS-1$
     
-    public static String Importer_Menu_Label;
+    public static String Importer_Prefpage_Intro;
 
     static {
         // initialize resource bundle

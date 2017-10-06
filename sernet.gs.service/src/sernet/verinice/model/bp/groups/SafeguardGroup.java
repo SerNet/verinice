@@ -34,7 +34,7 @@ public class SafeguardGroup extends Group<Safeguard> implements IBpGroup {
     
     public static final String TYPE_ID = "bp_safeguard_group";
     
-    private static final String PROP_DESC = "bp_safeguard_group_desc"; //$NON-NLS-1$
+    private static final String PROP_DESC = "bp_safeguard_group_objectbrowser_content"; //$NON-NLS-1$
     
     private static final String PROP_NAME = "bp_safeguard_group_name"; //$NON-NLS-1$
     

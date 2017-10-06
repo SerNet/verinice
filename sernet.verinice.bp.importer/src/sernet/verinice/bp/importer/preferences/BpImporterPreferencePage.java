@@ -28,7 +28,7 @@ public class BpImporterPreferencePage
 	public BpImporterPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("BP Importer Preference Page");
+		setDescription(Messages.Importer_Prefpage_Intro);
 	}
 	
 	/**
@@ -39,7 +39,7 @@ public class BpImporterPreferencePage
 	 */
 	public void createFieldEditors() {
 		addField(new DirectoryFieldEditor(PreferenceConstants.XML_ROOT_DIRECTORY, 
-				"Root-XML-Directory:", getFieldEditorParent()));
+				"BSI-XML-Root-Directory:", getFieldEditorParent()));
 	}
 
 	/* (non-Javadoc)

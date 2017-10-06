@@ -34,7 +34,7 @@ public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup
     
     public static final String TYPE_ID = "bp_requirement_group";
     public static final String PROP_NAME = "bp_requirement_group_name"; //$NON-NLS-1$
-    private static final String PROP_DESC = "bp_requirement_group_desc"; //$NON-NLS-1$
+    private static final String PROP_OBJECTBROWSER_DESC = "bp_requirement_group_objectbrowser_content"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_requirement_group_id"; //$NON-NLS-1$
     
     public static final String[] CHILD_TYPES = new String[] {BpRequirement.TYPE_ID, BpRequirementGroup.TYPE_ID};
@@ -66,12 +66,12 @@ public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup
         return CHILD_TYPES;
     }
     
-    public String getDescription() {
-        return getEntity().getPropertyValue(PROP_DESC);
+    public String getObjectBrowserDescription() {
+        return getEntity().getPropertyValue(PROP_OBJECTBROWSER_DESC);
     }
     
-    public void setDescription(String description) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESC), description);
+    public void setObjectBrowserDescription(String description) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER_DESC), description);
     }
     
     public String getIdentifier() {

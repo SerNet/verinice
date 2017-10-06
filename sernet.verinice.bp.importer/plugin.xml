@@ -5,7 +5,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            name="BPImporterPreferences"
+            name="%importer.preferences"
             class="sernet.verinice.bp.importer.preferences.BpImporterPreferencePage"
             id="sernet.verinice.bp.importer.preferences.BpImporterPreferencePage">
       </page>
