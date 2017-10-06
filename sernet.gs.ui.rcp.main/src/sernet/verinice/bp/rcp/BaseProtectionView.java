@@ -286,10 +286,10 @@ public class BaseProtectionView extends RightsEnabledView
         manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
         manager.add(new Separator());
         manager.add(new GroupMarker("special")); //$NON-NLS-1$
-//        manager.add(bulkEditAction);
+        manager.add(bulkEditAction);
         manager.add(accessControlEditAction);
         manager.add(naturalizeAction);
-//        manager.add(new Separator());
+        manager.add(new Separator());
         manager.add(expandAction);
         manager.add(collapseAction);
         drillDownAdapter.addNavigationActions(manager); 

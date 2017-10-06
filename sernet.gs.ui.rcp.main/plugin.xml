@@ -465,6 +465,7 @@
 		   	     <objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>
 		         <objectClass name="sernet.verinice.model.bsi.MassnahmenUmsetzung"/>
 		   	     <objectClass name="sernet.verinice.model.iso27k.IISO27kElement"/>
+		   	     <objectClass name="sernet.verinice.model.bp.IBpElement"/>
 		      </or>
 		   </enablement>
 		</action>
@@ -833,7 +834,22 @@
                style="push"
                tooltip="%action.tooltip.20">
          </action>
-      </objectContribution>      
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.model.bp.exportItNetwork"
+            objectClass="sernet.verinice.model.bp.elements.ItNetwork">
+         <action
+               class="sernet.verinice.iso27k.rcp.action.ExportAction"
+               enablesFor="1"
+               icon="icons/export.gif"
+               id="sernet.verinice.model.iso27k.ExportOrganization.menu"
+               label="%action.label.exportItNetwork"
+               menubarPath="additions"
+               style="push"
+               tooltip="%action.tooltip.exportItNetwork">
+         </action>
+      </objectContribution>     
       <objectContribution
             adaptable="false"
             id="sernet.verinice.model.iso27k.Person"
@@ -1364,10 +1380,10 @@
          	    	<and>
 	         	    	<count value="1" />
 	         	    	<iterate operator="and">	         	    		
-	                    <instanceof value="sernet.verinice.model.bp.IBpGroup" />                  
+	                    <instanceof value="sernet.verinice.model.iso27k.Group" />                  
 			                <not>
 			                	<instanceof value="sernet.verinice.model.bp.groups.ImportBpGroup" />
-			               	</not>                       
+			               	</not>                    
 	                </iterate>
                </and>            
 		        </with>
