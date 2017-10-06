@@ -78,17 +78,35 @@ public class GS2BSITransformService {
     };
 
     /**
+<<<<<<< HEAD
      * Strategy interface to transform the given item to an target object.
      *
+||||||| merged common ancestors
+     * Strategy interface to transform the given item to an target object.
+     * 
+=======
+     * Strategy interface to transform the given item to a target object.
+     * 
+>>>>>>> Some typo and todo
      * @author uz[at]sernet.de
      *
      */
     public interface ItemTransformer {
         /**
          * Transforms the given item to a target object and stores it in the
+<<<<<<< HEAD
          * elements list.
          *
          * @param group - the group the trasformed elements ar added to
+||||||| merged common ancestors
+         * elements list. 
+         * 
+         * @param group - the group the trasformed elements ar added to
+=======
+         * elements list. 
+         * 
+         * @param group - the group the transformed elements are added to
+>>>>>>> Some typo and todo
          * @param item - the item to transform
          * @param elements - the list of transformed elements
          */

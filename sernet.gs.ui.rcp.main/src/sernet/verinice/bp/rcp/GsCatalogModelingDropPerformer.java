@@ -74,8 +74,9 @@ import sernet.verinice.service.parser.GSScraperUtil;
  * @author Urs Zeidler - uz[at]sernet.de
  */
 public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabledUserInteraction {
-    // TODO : GsCatalogModelingDropPerformer and BbModelingDropPerformer 
+    // TODO : GsCatalogModelingDropPerformer and BbModelingDropPerformer
     // share a lot in common could have a common class. Also other DropPerformer.
+
     /**
      * Strategy implementation for the {@link GS2BSITransformOperation}.
      * Transforms {@link Baustein}, {@link Gefaehrdung} and {@link Massnahme} to
@@ -205,11 +206,6 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
         try {
             GS2BSITransformOperation operation = new GS2BSITransformOperation(group, draggedModules, new GsItem2BpTransformer());
 
-//            // set target to current treeselection if it isnt already
-//            // selected
-//            if (viewer.getSelection() == null) {
-//                viewer.setSelection(new StructuredSelection(target));
-//            }
             IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
             progressService.run(true, true, operation);
             String message = MessageFormat.format(Messages.GsCatalogModelingDropPerformer_finished_dialog_message,
