@@ -143,7 +143,7 @@ public class ModelLinksCommand extends GenericCommand {
                 threatScope = threatsScope.get(threatCompendium.getIdentifier());        
             }
             if(safeguardScope!=null && threatScope!=null) {
-                linkList.add(new Link(safeguardScope, threatScope));
+                linkList.add(new Link(safeguardScope, threatScope, Safeguard.REL_BP_SAFEGUARD_BP_THREAT));
             }
         }
         return linkList;
@@ -153,7 +153,7 @@ public class ModelLinksCommand extends GenericCommand {
         BpRequirement requirementScope = requirementsScope.get(requirementCompendium.getIdentifier());
         Safeguard safeguardScope = safeguardsScope.get(safeguardCompendium.getIdentifier());
         if(validate(requirementScope, safeguardScope))  {
-            return new Link(requirementScope, safeguardScope);
+            return new Link(requirementScope, safeguardScope, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
         } else {
             return null;
         }
@@ -163,7 +163,7 @@ public class ModelLinksCommand extends GenericCommand {
         BpRequirement requirementScope = requirementsScope.get(requirementCompendium.getIdentifier());
         BpThreat threatScope = threatsScope.get(threatCompendium.getIdentifier());        
         if(validate(requirementScope, threatScope))  {
-            return new Link(requirementScope, threatScope);
+            return new Link(requirementScope, threatScope, BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
         } else {
             return null;
         }
