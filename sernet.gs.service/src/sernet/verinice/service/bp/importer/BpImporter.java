@@ -530,8 +530,9 @@ public class BpImporter {
             veriniceModule = (BpRequirementGroup)createElement(BpRequirementGroup.TYPE_ID, parent, bsiModule.getFullTitle());
 
             veriniceModule.setIdentifier(bsiModule.getIdentifier());
-            veriniceModule.setObjectBrowserDescription(getModuleDescriptionText(bsiModule.getFullTitle(), 
-                    bsiModule.getDescription()));
+//            veriniceModule.setObjectBrowserDescription(getModuleDescriptionText(bsiModule.getFullTitle(), 
+//                    bsiModule.getDescription()));
+            veriniceModule.setObjectBrowserDescription(getCompleteModuleXMLText(bsiModule));
             LOG.debug("Module : \t" + veriniceModule.getTitle()+ " created");
             createRequirementsForModule(bsiModule, veriniceModule);
         }
@@ -540,8 +541,9 @@ public class BpImporter {
     
     private String getCompleteModuleXMLText(Document module) {
         StringBuilder descriptionBuilder = new StringBuilder();
+        descriptionBuilder.append("<H1>");
         descriptionBuilder.append(module.getFullTitle());
-        
+        descriptionBuilder.append("</H1>");
         descriptionBuilder.append("<p>");
         
         descriptionBuilder.append(getAnyObjectDescription("", 0, module.getDescription().getIntroduction()));
@@ -557,8 +559,6 @@ public class BpImporter {
         SpecificThreats specificThreats = module.getThreatScenario().getSpecificThreats();
         
         for (SpecificThreat specificThreat : specificThreats.getSpecificThreat()) {
-            descriptionBuilder.append(specificThreat.getHeadline());
-            descriptionBuilder.append(specificThreat.getDescription());
             descriptionBuilder.append(getAnyElementDescription(specificThreat.getHeadline(),
                     2, specificThreat.getDescription().getAny()));
             descriptionBuilder.append("</p><p>");
@@ -574,17 +574,42 @@ public class BpImporter {
         
         FurtherResponsibleRoles roles = module.getRequirements().getFurtherResponsibleRoles();
         
-        descriptionBuilder.append("</p><p>");
-        descriptionBuilder.append("Weitere Verantwortliche:");
-        descriptionBuilder.append("<ul>");
-        
-        for (String role : roles.getRole()) {
-            descriptionBuilder.append("<li>").append(role).append("</li>");    
+        if (roles != null && roles.getRole().size() > 0) {
+            descriptionBuilder.append("</p><p>");
+            descriptionBuilder.append("Weitere Verantwortliche:");
+            descriptionBuilder.append("<ul>");
+
+            for (String role : roles.getRole()) {
+                descriptionBuilder.append("<li>").append(role).append("</li>");    
+            }
+
+            descriptionBuilder.append("</p><p>");
         }
-        descriptionBuilder.append("</p><p>");
         
         descriptionBuilder.append("Basis-Anforderungen");
         descriptionBuilder.append(getModuleRequirementDescription(module.getRequirements().getBasicRequirements().getRequirement()));
+        
+        descriptionBuilder.append("</p><p>");
+        
+        descriptionBuilder.append("Standard-Anforderungen");
+        descriptionBuilder.append(getModuleRequirementDescription(module.getRequirements().getStandardRequirements().getRequirement()));        
+        
+        descriptionBuilder.append("</p><p>");
+        
+        descriptionBuilder.append("Hoch-Anforderungen");
+        descriptionBuilder.append(getModuleRequirementDescription(module.getRequirements().getHighLevelRequirements().getRequirement()));        
+        
+        descriptionBuilder.append("</p><p>");
+        
+        descriptionBuilder.append("Elementare Gefährdungen:<ul>");
+        for(String threat : module.getElementalThreats().getElementalThreat()){
+            descriptionBuilder.append("<li>").append(threat).append("</li>");
+        }
+        descriptionBuilder.append("</ul>");
+        
+        descriptionBuilder.append("</p>");
+        
+        // TODO: insert crossreference table here
         
         return descriptionBuilder.toString();
         
@@ -610,10 +635,16 @@ public class BpImporter {
                 }
                 sb.append("</ul>");
             }
+            
+            String confidentiality = (Boolean.parseBoolean(requirement.getCia().getConfidentiality())) ? "X" : "-";
+            String integrity = (Boolean.parseBoolean(requirement.getCia().getIntegrity())) ? "X" : "-";
+            String availitbility = (Boolean.parseBoolean(requirement.getCia().getAvailability())) ? "X" : "-";
+            
             sb.append("<table>");
-            sb.append("<tr><td>Vertraulichkeit</td><td>").append(requirement.getCia().getConfidentiality()).append("</td></tr>");
-            sb.append("<tr><td>Integrität</td><td>").append(requirement.getCia().getIntegrity()).append("</td></tr>");
-            sb.append("<tr><td>Verfügabrkeit</td><td>").append(requirement.getCia().getAvailability()).append("</td></tr>");
+            sb.append("<tr><td>Betrifft</td><td>Ja (\"X\") / Nein (\"-\")");
+            sb.append("<tr><td>Vertraulichkeit</td><td>").append(confidentiality).append("</td></tr>");
+            sb.append("<tr><td>Integrität</td><td>").append(integrity).append("</td></tr>");
+            sb.append("<tr><td>Verfügabrkeit</td><td>").append(availitbility).append("</td></tr>");
             sb.append("</table>");
             
             sb.append("<p>");
