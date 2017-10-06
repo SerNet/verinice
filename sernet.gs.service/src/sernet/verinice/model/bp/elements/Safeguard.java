@@ -36,6 +36,8 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     private static final String PROP_NAME = "bp_safeguard_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_safeguard_id"; //$NON-NLS-1$
     private static final String PROP_QUALIFIER = "bp_safeguard_qualifier"; //$NON-NLS-1$
+    
+    public static final String REL_BP_SAFEGUARD_BP_THREAT = "rel_bp_safeguard_bp_threat"; //$NON-NLS-1$
 
     protected Safeguard() {}
     
