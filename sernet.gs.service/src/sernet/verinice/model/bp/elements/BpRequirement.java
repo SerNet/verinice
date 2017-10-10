@@ -19,6 +19,12 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.StringTokenizer;
+
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -37,6 +43,8 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     private static final String PROP_NAME = "bp_requirement_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_requirement_id"; //$NON-NLS-1$
     private static final String PROP_QUALIFIER = "bp_requirement_qualifier"; //$NON-NLS-1$
+    private static final String PROP_LAST_CHANGE = "bp_requirement_last_change"; //$NON-NLS-1$
+    private static final String PROP_RESPONSIBLE_ROLES = "bp_requirement_responsibleroles"; //$NON-NLS-1$
 
     public static final String REL_BP_REQUIREMENT_BP_THREAT = "rel_bp_requirement_bp_threat"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_SAFEGUARD = "rel_bp_requirement_bp_safeguard"; //$NON-NLS-1$
@@ -102,5 +110,47 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     public void setQualifier(String qualifier) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
     }
+    
+    public Date getLastChange() {
+        return getEntity().getDate(PROP_LAST_CHANGE);
+    }
+    
+    public void setLastChange(Date date) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE), String.valueOf(date.getTime()));
+    }
+    
+    public Set<String> getResponsibleRoles(){
+        String property = getEntity().getPropertyValue(PROP_RESPONSIBLE_ROLES);
+        Set<String> roles;
+        if (property != null && property.length() > 0) {
+            StringTokenizer tokenizer = new StringTokenizer(property, "/");
+            roles = new HashSet<>(tokenizer.countTokens() + 1);
+            while (tokenizer.hasMoreTokens()) {
+                roles.add(tokenizer.nextToken());
+            }
+        } else {
+            roles = new HashSet<>();
+        }
+        return roles;
+    }
+    
+    public void setResponisbleRoles(String roles) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_RESPONSIBLE_ROLES), roles);
+    }
+    
+    public void addResponsibleRole(String role) {
+        Set<String> roles = getResponsibleRoles();
+        roles.add(role);
+        StringBuilder property = new StringBuilder();
+        Iterator<String> iter = roles.iterator();
+        while (iter.hasNext()) {
+            property.append(iter.next());
+            if (iter.hasNext()) {
+                property.append(" / ");
+            }
+        }
+        setResponisbleRoles(property.toString());
+    }
+
 
 }

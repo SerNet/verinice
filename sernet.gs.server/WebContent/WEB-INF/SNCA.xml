@@ -9448,6 +9448,10 @@ Wurden bereits weitere Stellen informiert?
     <huiproperty editable="true" id="bp_requirement_desc" inputtype="text" name="Description" showInObjectBrowser="false" visible="true"/>
     <huiproperty id="bp_requirement_tag" name="Tags" tooltip="List of tags, separated by comma or space"/>
     <huiproperty id="bp_requirement_document" isURL="true" name="Document"/>
+    <huiproperty id="bp_requirement_last_change" name="Last Change" inputtype="date" editable="false">
+        <defaultRule class="Today"/>
+    </huiproperty>
+    <huiproperty id="bp_requirement_responsibleroles" name="Responsible Roles"/>
   </huientity>
   <huientity id="bp_requirement_group" name="Module">
     <huiproperty id="bp_requirement_group_name" name="Title" required="true"/>
@@ -9455,6 +9459,11 @@ Wurden bereits weitere Stellen informiert?
     <huiproperty id="bp_requirement_group_desc" inputtype="text" name="Description"/>
     <huiproperty id="bp_requirement_group_tag" name="Tags"/>
     <huiproperty id="bp_requirement_group_id" name="Identifier"/>
+    <huiproperty id="bp_requirement_group_last_change" name="Last Change" inputtype="date" editable="false">
+        <defaultRule class="Today"/>
+    </huiproperty>
+    <huiproperty id="bp_requirement_group_mainresponsible" name="Main Responsible Role"/>
+    <huiproperty id="bp_requirement_group_furtherresponsible" name="Further Responsible Roles"/>
   </huientity>
   <huientity id="bp_threat" name="Threat">
     <huiproperty editable="true" id="bp_threat_id" name="Identifier"/>
@@ -9749,6 +9758,10 @@ Wurden bereits weitere Stellen informiert?
     <huiproperty editable="false" id="bp_safeguard_objectbrowser_content" inputtype="text" name="Safeguard Content" showInObjectBrowser="true" textrows="4" visible="false"/>
     <huiproperty editable="false" id="bp_safeguard_desc" inputtype="text" name="Description" showInObjectBrowser="true" textrows="4" visible="false"/>
     <huiproperty id="bp_safeguard_document" isURL="true" name="Document"/>
+    <huiproperty id="bp_safeguard_last_change" name="Last Change" inputtype="date" editable="false">
+        <defaultRule class="Today"/>
+    </huiproperty>
+    <huiproperty id="bp_safeguard_responsibleroles" name="Responsible Roles"/>
   </huientity>
   <huientity id="bp_safeguard_group" name="Safeguard Group">
     <huiproperty id="bp_safeguard_group_name" name="Title" required="true"/>
