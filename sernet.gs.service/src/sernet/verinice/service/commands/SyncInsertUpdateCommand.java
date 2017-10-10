@@ -52,6 +52,7 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
@@ -301,8 +302,7 @@ public class SyncInsertUpdateCommand extends GenericCommand
                     elementInDB.setExtId(extId);
                 }
 
-                if (elementInDB instanceof Organization 
-                        || elementInDB instanceof ITVerbund) {
+                if (isScope(elementInDB)) {
                     addElement(elementInDB);
                 }
 
@@ -364,9 +364,8 @@ public class SyncInsertUpdateCommand extends GenericCommand
             parent.addChild(elementInDB);
             elementInDB.setParentAndScope(parent);
 
-            // set the scope id of orgs. and it-verbunds.
-            if (elementInDB instanceof Organization 
-                    || elementInDB instanceof ITVerbund) {
+            // set the scope id of scopes 
+            if (isScope(elementInDB)) {
                 elementInDB.setScopeId(elementInDB.getDbId());
             }
 
@@ -991,6 +990,12 @@ public class SyncInsertUpdateCommand extends GenericCommand
             elementSet = new HashSet<>();
         }
         elementSet.add(element);
+    }
+    
+    protected boolean isScope(CnATreeElement element) {
+        return element instanceof Organization 
+                || element instanceof ITVerbund
+                || element instanceof ItNetwork;
     }
 
     public Risk getSyncRisk() {
