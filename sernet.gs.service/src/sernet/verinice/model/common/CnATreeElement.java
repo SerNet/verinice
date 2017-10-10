@@ -483,6 +483,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	
 	/**
      * dependant in linksDown is this {@link CnATreeElement}
+     * </p>
+     * Might also been called getLinksToDependencies();
      *
      * @return
      */
@@ -496,6 +498,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
 	/**
      * dependency in linksUp is this {@link CnATreeElement}
+     * </p>
+     * Might also been called getLinksToDependants();
      *
      * @return
      */
