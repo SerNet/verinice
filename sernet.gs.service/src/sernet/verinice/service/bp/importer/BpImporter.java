@@ -467,7 +467,7 @@ public class BpImporter {
             if (requirement instanceof BpRequirement) {
                 LOG.debug("Child is Requirement:\t" + requirement.getTitle() + " with identifier:\t" + ((BpRequirement)requirement).getIdentifier());
                 if (((BpRequirement)requirement).getIdentifier().equals(comparableIdentifier)){
-                    links.add(new Link((BpRequirement)requirement, safeguard, "rel_bp_requirement_bp_safeguard", ""));
+                    links.add(new Link((BpRequirement)requirement, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, ""));
                 }
             } else if (requirement instanceof BpRequirementGroup) {
                 LOG.debug("child is RequirementGroup :\t" + requirement.getTitle());
@@ -475,7 +475,7 @@ public class BpImporter {
                     if (child instanceof BpRequirement) {
                         LOG.debug("child is grandchild:\t" + child.getTitle() + " with identifier:\t" + ((BpRequirement)child).getIdentifier());
                         if (((BpRequirement)child).getIdentifier().equals(comparableIdentifier)){
-                            links.add(new Link(((BpRequirement)child), safeguard, "rel_bp_requirement_bp_safeguard", ""));
+                            links.add(new Link(((BpRequirement)child), safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, ""));
                         }
                     }
                 }
@@ -675,7 +675,7 @@ public class BpImporter {
                 BpThreat threat = getElementalThreadByIdentifier(threatIdentifier);
                 
                 if (Boolean.parseBoolean(isReferenced)) {
-                    Link link = new Link(requirement, threat, "rel_bp_requirement_bp_threat", "");
+                    Link link = new Link(requirement, threat, BpRequirement.REL_BP_REQUIREMENT_BP_THREAT, "");
                     linkList.add(link);
                 }
             }
@@ -920,7 +920,7 @@ public class BpImporter {
         if ( requirement != null) {
             for (CnALink link : requirement.getLinksDown()) {
                 if (link.getDependency() instanceof BpThreat) {
-                    links.add(new Link(vSafeguard, link.getDependency(), "rel_bp_safeguard_bp_threat", ""));
+                    links.add(new Link(vSafeguard, link.getDependency(), Safeguard.REL_BP_SAFEGUARD_BP_THREAT, ""));
                 } 
             }
         }
@@ -960,6 +960,9 @@ public class BpImporter {
             safeguard.setQualifier(qualifier);
             safeguard.setTitle(bsiSafeguard.getTitle());
             safeguard.setLastChange(getBSIDate(lastChange));
+            safeguard.setIsAffectsConfidentiality("true".equals(bsiSafeguard.getCia().getConfidentiality())? true : false);
+            safeguard.setIsAffectsAvailability("true".equals(bsiSafeguard.getCia().getAvailability())? true : false);
+            safeguard.setIsAffectsIntegrity("true".equals(bsiSafeguard.getCia().getIntegrity())? true : false);
             
             if (bsiSafeguard.getResponsibleRoles() != null) {
                 for ( String role : bsiSafeguard.getResponsibleRoles().getRole()) {
@@ -1070,6 +1073,10 @@ public class BpImporter {
             vRequirement.setObjectBrowserDescription(getAnyElementDescription(bsiRequirement.getTitle(), 1, bsiRequirement.getDescription().getAny()));
             vRequirement.setTitle(bsiRequirement.getTitle());
             vRequirement.setLastChange(parent.getLastChange());
+            vRequirement.setIsAffectsConfidentiality("true".equals(bsiRequirement.getCia().getConfidentiality()) ? true : false);
+            vRequirement.setIsAffectsIntegrity("true".equals(bsiRequirement.getCia().getIntegrity()) ? true : false);
+            vRequirement.setIsAffectsAvailability("true".equals(bsiRequirement.getCia().getAvailability()) ? true : false);
+            
             
             if ( bsiRequirement.getResponsibleRoles() != null ) {
 
