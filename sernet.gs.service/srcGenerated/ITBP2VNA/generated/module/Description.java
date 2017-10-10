@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
+@XmlType(name = "description", propOrder = {
     "any"
 })
 @XmlRootElement(name = "description")

@@ -19,6 +19,12 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.groups;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.StringTokenizer;
+
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.common.CnATreeElement;
@@ -36,6 +42,10 @@ public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup
     public static final String PROP_NAME = "bp_requirement_group_name"; //$NON-NLS-1$
     private static final String PROP_OBJECTBROWSER_DESC = "bp_requirement_group_objectbrowser_content"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_requirement_group_id"; //$NON-NLS-1$
+    private static final String PROP_LAST_CHANGE = "bp_requirement_group_last_change"; //$NON-NLS-1$
+    private static final String PROP_MAIN_RESPONSIBLE = "bp_requirement_group_mainresponsible"; //$NON-NLS-1$
+    private static final String PROP_FURTHER_RESPONSIBLES = "bp_requirement_group_furtherresponsible"; //$NON-NLS-1$
+    
     
     public static final String[] CHILD_TYPES = new String[] {BpRequirement.TYPE_ID, BpRequirementGroup.TYPE_ID};
     
@@ -80,6 +90,55 @@ public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup
     
     public void setIdentifier(String id) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), id);
+    }
+    
+    public Date getLastChange() {
+        return getEntity().getDate(PROP_LAST_CHANGE);
+    }
+    
+    public void setLastChange(Date date) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE), String.valueOf(date.getTime()));
+    }
+    
+    public String getMainResponsibleRole() {
+        return getEntity().getPropertyValue(PROP_MAIN_RESPONSIBLE);
+    }
+    
+    public void setMainResponsibleRole(String role) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_MAIN_RESPONSIBLE), role);
+    }
+    
+    public Set<String> getFurtherResponsibleRoles(){
+        String property = getEntity().getPropertyValue(PROP_FURTHER_RESPONSIBLES);
+        Set<String> roles;
+        if (property != null && property.length() > 0) {
+            StringTokenizer tokenizer = new StringTokenizer(property, "/");
+            roles = new HashSet<>(tokenizer.countTokens() + 1);
+            while (tokenizer.hasMoreTokens()) {
+                roles.add(tokenizer.nextToken());
+            }
+        } else {
+            roles = new HashSet<>();
+        }
+        return roles;
+    }
+    
+    public void setFurtherResponisbleRoles(String roles) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_FURTHER_RESPONSIBLES), roles);
+    }
+    
+    public void addFurtherResponsibleRole(String role) {
+        Set<String> roles = getFurtherResponsibleRoles();
+        roles.add(role);
+        StringBuilder property = new StringBuilder();
+        Iterator<String> iter = roles.iterator();
+        while (iter.hasNext()) {
+            property.append(iter.next());
+            if (iter.hasNext()) {
+                property.append(" / ");
+            }
+        }
+        setFurtherResponisbleRoles(property.toString());
     }
 
 }

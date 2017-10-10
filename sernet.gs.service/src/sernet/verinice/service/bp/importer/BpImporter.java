@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -530,8 +531,11 @@ public class BpImporter {
             veriniceModule = (BpRequirementGroup)createElement(BpRequirementGroup.TYPE_ID, parent, bsiModule.getFullTitle());
 
             veriniceModule.setIdentifier(bsiModule.getIdentifier());
-            veriniceModule.setObjectBrowserDescription(getModuleDescriptionText(bsiModule.getFullTitle(), 
-                    bsiModule.getDescription()));
+//            veriniceModule.setObjectBrowserDescription(getModuleDescriptionText(bsiModule.getFullTitle(), 
+//                    bsiModule.getDescription()));
+            veriniceModule.setObjectBrowserDescription(getCompleteModuleXMLText(bsiModule));
+            veriniceModule.setLastChange(getBSIDate(bsiModule.getLastChange()));  
+//            veriniceModule.setMainResponsibleRole(bsiModule.X );
             LOG.debug("Module : \t" + veriniceModule.getTitle()+ " created");
             createRequirementsForModule(bsiModule, veriniceModule);
         }
@@ -540,9 +544,11 @@ public class BpImporter {
     
     private String getCompleteModuleXMLText(Document module) {
         StringBuilder descriptionBuilder = new StringBuilder();
+        descriptionBuilder.append("<H1>");
         descriptionBuilder.append(module.getFullTitle());
-        
+        descriptionBuilder.append("</H1>");
         descriptionBuilder.append("<p>");
+        
         
         descriptionBuilder.append(getAnyObjectDescription("", 0, module.getDescription().getIntroduction()));
         descriptionBuilder.append(getAnyObjectDescription("", 0, module.getDescription().getPurpose()));
@@ -557,10 +563,8 @@ public class BpImporter {
         SpecificThreats specificThreats = module.getThreatScenario().getSpecificThreats();
         
         for (SpecificThreat specificThreat : specificThreats.getSpecificThreat()) {
-            descriptionBuilder.append(specificThreat.getHeadline());
-            descriptionBuilder.append(specificThreat.getDescription());
             descriptionBuilder.append(getAnyElementDescription(specificThreat.getHeadline(),
-                    2, specificThreat.getDescription().getAny()));
+                    1, specificThreat.getDescription().getAny()));
             descriptionBuilder.append("</p><p>");
         }
         
@@ -574,17 +578,42 @@ public class BpImporter {
         
         FurtherResponsibleRoles roles = module.getRequirements().getFurtherResponsibleRoles();
         
-        descriptionBuilder.append("</p><p>");
-        descriptionBuilder.append("Weitere Verantwortliche:");
-        descriptionBuilder.append("<ul>");
-        
-        for (String role : roles.getRole()) {
-            descriptionBuilder.append("<li>").append(role).append("</li>");    
+        if (roles != null && roles.getRole().size() > 0) {
+            descriptionBuilder.append("</p><p>");
+            descriptionBuilder.append("Weitere Verantwortliche:");
+            descriptionBuilder.append("<ul>");
+
+            for (String role : roles.getRole()) {
+                descriptionBuilder.append("<li>").append(role).append("</li>");    
+            }
+
+            descriptionBuilder.append("</p><p>");
         }
-        descriptionBuilder.append("</p><p>");
         
         descriptionBuilder.append("Basis-Anforderungen");
         descriptionBuilder.append(getModuleRequirementDescription(module.getRequirements().getBasicRequirements().getRequirement()));
+        
+        descriptionBuilder.append("</p><p>");
+        
+        descriptionBuilder.append("Standard-Anforderungen");
+        descriptionBuilder.append(getModuleRequirementDescription(module.getRequirements().getStandardRequirements().getRequirement()));        
+        
+        descriptionBuilder.append("</p><p>");
+        
+        descriptionBuilder.append("Hoch-Anforderungen");
+        descriptionBuilder.append(getModuleRequirementDescription(module.getRequirements().getHighLevelRequirements().getRequirement()));        
+        
+        descriptionBuilder.append("</p><p>");
+        
+        descriptionBuilder.append("Elementare Gefährdungen:<ul>");
+        for(String threat : module.getElementalThreats().getElementalThreat()){
+            descriptionBuilder.append("<li>").append(threat).append("</li>");
+        }
+        descriptionBuilder.append("</ul>");
+        
+        descriptionBuilder.append("</p>");
+        
+        // TODO: insert crossreference table here
         
         return descriptionBuilder.toString();
         
@@ -610,10 +639,16 @@ public class BpImporter {
                 }
                 sb.append("</ul>");
             }
+            
+            String confidentiality = (Boolean.parseBoolean(requirement.getCia().getConfidentiality())) ? "X" : "-";
+            String integrity = (Boolean.parseBoolean(requirement.getCia().getIntegrity())) ? "X" : "-";
+            String availitbility = (Boolean.parseBoolean(requirement.getCia().getAvailability())) ? "X" : "-";
+            
             sb.append("<table>");
-            sb.append("<tr><td>Vertraulichkeit</td><td>").append(requirement.getCia().getConfidentiality()).append("</td></tr>");
-            sb.append("<tr><td>Integrität</td><td>").append(requirement.getCia().getIntegrity()).append("</td></tr>");
-            sb.append("<tr><td>Verfügabrkeit</td><td>").append(requirement.getCia().getAvailability()).append("</td></tr>");
+            sb.append("<tr><td>Betrifft</td><td>Ja (\"X\") / Nein (\"-\")");
+            sb.append("<tr><td>Vertraulichkeit</td><td>").append(confidentiality).append("</td></tr>");
+            sb.append("<tr><td>Integrität</td><td>").append(integrity).append("</td></tr>");
+            sb.append("<tr><td>Verfügabrkeit</td><td>").append(availitbility).append("</td></tr>");
             sb.append("</table>");
             
             sb.append("<p>");
@@ -837,7 +872,7 @@ public class BpImporter {
         Safeguards bsiModule = bsiSafeguardDocument.getSafeguards();
         
         for (ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard : bsiModule.getBasicSafeguards().getSafeguard()) {
-            Safeguard safeguard = createSafeguard(parent, bsiSafeguard, "BASIC");
+            Safeguard safeguard = createSafeguard(parent, bsiSafeguard, "BASIC", bsiSafeguardDocument.getLastChange().toString());
             if (safeguard != null) {
                 links.addAll(linkSafeguardToRequirements(safeguard));
                 links.addAll(linkSafeguardToElementalThreat(bsiSafeguard.getIdentifier(), safeguard));
@@ -846,7 +881,7 @@ public class BpImporter {
             }
         }
         for (ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard : bsiModule.getStandardSafeguards().getSafeguard()) {
-            Safeguard safeguard = createSafeguard(parent, bsiSafeguard, "STANDARD");
+            Safeguard safeguard = createSafeguard(parent, bsiSafeguard, "STANDARD", bsiSafeguardDocument.getLastChange().toString());
             if (safeguard != null) {
                 links.addAll(linkSafeguardToRequirements(safeguard));
                 links.addAll(linkSafeguardToElementalThreat(bsiSafeguard.getIdentifier(), safeguard));
@@ -854,7 +889,7 @@ public class BpImporter {
                 LOG.warn("Could not create Safeguard:\t" + bsiSafeguard.getTitle());
             }        }
         for (ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard : bsiModule.getHighLevelSafeguards().getSafeguard()) {
-            Safeguard safeguard = createSafeguard(parent, bsiSafeguard, "HIGH");
+            Safeguard safeguard = createSafeguard(parent, bsiSafeguard, "HIGH", bsiSafeguardDocument.getLastChange().toString());
             if (safeguard != null) {
                 links.addAll(linkSafeguardToRequirements(safeguard));
                 links.addAll(linkSafeguardToElementalThreat(bsiSafeguard.getIdentifier(), safeguard));
@@ -907,7 +942,7 @@ public class BpImporter {
      */
     @SuppressWarnings("unused")
     private Safeguard createSafeguard(SafeguardGroup parent, 
-            ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard, String qualifier) 
+            ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard, String qualifier, String lastChange) 
                     throws CreateBPElementException {
         parent = getSafeguardParent(parent, bsiSafeguard.getIdentifier());
         if( parent != null) {
@@ -924,6 +959,14 @@ public class BpImporter {
             }
             safeguard.setQualifier(qualifier);
             safeguard.setTitle(bsiSafeguard.getTitle());
+            safeguard.setLastChange(getBSIDate(lastChange));
+            
+            if (bsiSafeguard.getResponsibleRoles() != null) {
+                for ( String role : bsiSafeguard.getResponsibleRoles().getRole()) {
+                    safeguard.addResponsibleRole(role);
+                }
+            }
+            
             LOG.debug("Safeguard : \t"  + safeguard.getTitle() + "created ");
 
             return (Safeguard) updateElement(safeguard);
@@ -1026,6 +1069,15 @@ public class BpImporter {
             vRequirement.setIdentifier(bsiRequirement.getIdentifier());
             vRequirement.setObjectBrowserDescription(getAnyElementDescription(bsiRequirement.getTitle(), 1, bsiRequirement.getDescription().getAny()));
             vRequirement.setTitle(bsiRequirement.getTitle());
+            vRequirement.setLastChange(parent.getLastChange());
+            
+            if ( bsiRequirement.getResponsibleRoles() != null ) {
+
+                for ( String role : bsiRequirement.getResponsibleRoles().getRole()) {
+                    vRequirement.addResponsibleRole(role);
+                }
+
+            }
             //        bsiRequirement.getResponsibleRoles(); // TODO
             //        bsiRequirement.getCia(); // TODO
             vRequirement.setQualifier(qualifier);
@@ -1033,6 +1085,16 @@ public class BpImporter {
             return (BpRequirement) updateElement(vRequirement);
         } else {
             return addedReqs.get(bsiRequirement.getIdentifier());
+        }
+    }
+    
+    private Date getBSIDate(String dateString) throws CreateBPElementException{
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            return format.parse(dateString);
+        } catch (ParseException e) {
+            throw new CreateBPElementException(
+                    "Could not parse bsiDate:\t" + dateString);
         }
     }
 
@@ -1105,13 +1167,19 @@ public class BpImporter {
     }
     
     private String unwrapText(Node element) {
+        Set<String> blacklist = new HashSet<>();
+        blacklist.add("introduction");
+        blacklist.add("purpose");
+        blacklist.add("differentiation");
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < element.getChildNodes().getLength(); i++) {
             Stack<String> htmlElements = new Stack<>();
             Node node = element.getChildNodes().item(i);
             String htmlFormatElement = node.getParentNode().getNodeName();
-            sb.append("<").append(htmlFormatElement).append(">");
-            htmlElements.push(htmlFormatElement);
+            if( !blacklist.contains(htmlFormatElement)) {
+                sb.append("<").append(htmlFormatElement).append(">");   
+                htmlElements.push(htmlFormatElement);
+            }
             if (node instanceof Text) {
                 sb.append(node.getNodeValue());
             } else {
