@@ -43,7 +43,7 @@ import sernet.verinice.model.iso27k.Organization;
 public class LoadElementTitles extends GenericCommand {
    
     private static final long serialVersionUID = -7681461422144808207L;
-    private static final String QUERY = "select distinct elmt from CnATreeElement elmt " +
+    private static final String QUERY = "select elmt from CnATreeElement elmt " +
             "join fetch elmt.entity as entity " +
             "join fetch entity.typedPropertyLists as propertyList " +
             "join fetch propertyList.properties as props " +
