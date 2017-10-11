@@ -45,9 +45,13 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     private static final String PROP_QUALIFIER = "bp_requirement_qualifier"; //$NON-NLS-1$
     private static final String PROP_LAST_CHANGE = "bp_requirement_last_change"; //$NON-NLS-1$
     private static final String PROP_RESPONSIBLE_ROLES = "bp_requirement_responsibleroles"; //$NON-NLS-1$
+    public static final String PROP_CONFIDENTIALITY = "bp_requirement_value_method_confidentiality";//$NON-NLS-1$
+    public static final String PROP_INTEGRITY = "bp_requirement_value_method_integrity";//$NON-NLS-1$
+    public static final String PROP_AVAILABILITY = "bp_requirement_value_method_availability";//$NON-NLS-1$  
 
     public static final String REL_BP_REQUIREMENT_BP_THREAT = "rel_bp_requirement_bp_threat"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_SAFEGUARD = "rel_bp_requirement_bp_safeguard"; //$NON-NLS-1$
+    
     
     protected BpRequirement() {}
 
@@ -151,6 +155,29 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         }
         setResponisbleRoles(property.toString());
     }
-
+    
+    public void setIsAffectsConfidentiality(boolean affectsConfidentiality) {
+        this.setNumericProperty(PROP_CONFIDENTIALITY, (affectsConfidentiality) ? 1 : 0);
+    }
+    
+    public boolean IsAffectsConfidentiality() {
+        return ((this.getNumericProperty(PROP_CONFIDENTIALITY) == 1) ? true : false); 
+    }
+    
+    public void setIsAffectsIntegrity(boolean affectsIntegrity) {
+        this.setNumericProperty(PROP_INTEGRITY, (affectsIntegrity) ? 1 : 0);
+    }
+    
+    public boolean IsAffectsIntegrity() {
+        return ((this.getNumericProperty(PROP_INTEGRITY) == 1) ? true : false); 
+    }  
+    
+    public void setIsAffectsAvailability(boolean affectsAvailability) {
+        this.setNumericProperty(PROP_AVAILABILITY, (affectsAvailability) ? 1 : 0);
+    }
+    
+    public boolean IsAffectsAvailability() {
+        return ((this.getNumericProperty(PROP_AVAILABILITY) == 1) ? true : false); 
+    }
 
 }
