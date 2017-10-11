@@ -32,6 +32,10 @@ public class Link implements Serializable {
     private String relationId;
     private String comment;
     
+    /**
+     * @param from The dependant
+     * @param to The dependency
+     */
     public Link(CnATreeElement from, CnATreeElement to, String relationId, String comment) {
         super();
         this.from = from;

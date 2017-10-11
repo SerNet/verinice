@@ -108,7 +108,13 @@ public class PasteHandler extends AbstractHandler {
 					LOG.debug("User is not allowed to add elements to this group"); //$NON-NLS-1$
 				}
 			}		
-		} catch(PermissionException e) {
+		} catch (InvocationTargetException e) {
+            LOG.error("Error while pasting", e); //$NON-NLS-1$
+            LOG.error("Error while pasting with target exception", e.getTargetException()); //$NON-NLS-1$
+            
+            ExceptionUtil.log(e, Messages.getString("PasteHandler.1")); //$NON-NLS-1$
+		}
+		catch(PermissionException e) {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(e);
 			}
