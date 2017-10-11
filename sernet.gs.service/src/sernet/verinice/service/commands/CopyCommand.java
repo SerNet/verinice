@@ -399,7 +399,7 @@ public class CopyCommand extends GenericCommand {
             if (depthLocal == 0) {
                 insertList.add(element);
             }
-            if (isGroupElementWithChildren(element)) {
+            if (containsChildrenToCopy(element)) {
                 depthLocal++;
                 for (final CnATreeElement child : element.getChildren()) {
                     createInsertList(child, tempList, insertList, depthLocal, removed);
@@ -411,7 +411,7 @@ public class CopyCommand extends GenericCommand {
         }
     }
 
-    private boolean isGroupElementWithChildren(final CnATreeElement element) {
+    private boolean containsChildrenToCopy(final CnATreeElement element) {
         return (element instanceof IISO27kGroup || element instanceof BausteinUmsetzung)
                 && element.getChildren() != null;
     }
