@@ -2021,9 +2021,9 @@
             id="sernet.verinice.rcp.catalog.action.importOrganization"
             targetID="sernet.verinice.rcp.catalog.CatalogView">
          <action
-               class="sernet.gs.ui.rcp.main.actions.ImportXMLAction"
+               class="sernet.gs.ui.rcp.main.actions.ImportCatalogAction"
                icon="icons/import.gif"
-               id="sernet.gs.ui.rcp.main.actions.ImportXMLAction"
+               id="sernet.gs.ui.rcp.main.actions.ImportCatalogAction"
                label="%action.label.21"
                state="true"
                style="push"

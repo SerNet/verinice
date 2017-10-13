@@ -130,6 +130,11 @@ public class XMLImportDialog extends Dialog {
     public XMLImportDialog(Shell shell) {
         super(shell);
     }
+    
+    public XMLImportDialog(Shell shell, boolean catalogImport) {
+        super(shell);
+        this.importAsCatalog = catalogImport;
+    }
 
     @Override
     public void okPressed() {
@@ -687,12 +692,15 @@ public class XMLImportDialog extends Dialog {
                 }
             }
         });
+        importAsCatalogButton.setEnabled(importAsCatalog);
+        importAsCatalogButton.setSelection(importAsCatalog);
 
         importAsCatalogButton.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
 
         Label importAsCatalogText = new Label(importAsCatalogGroup, SWT.LEFT);
         importAsCatalogText.setText(Messages.XMLImportDialog_Import_As_Catalog_Option_Description);
         importAsCatalogText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
+        importAsCatalogText.setEnabled(importAsCatalog);
     }
 
     private void displayFiles(Shell shell, Text pathText, File file) {
