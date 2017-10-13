@@ -97,8 +97,7 @@ public class BpImporter {
      *  (false means, the specific threats just appear within the object-browser-description
      *  of the {@link BpRequirementGroup} instances (modules))
      */
-    private boolean importSpecificThreats = false;
-    
+
     private static final Set<String> processIdentifierPrefixes;
     private static final Set<String> systemIdentifierPrefixes;
     
@@ -426,11 +425,6 @@ public class BpImporter {
             SafeguardGroup safeguardRootGroup) throws CreateBPElementException {
         elementalThreatGroup = (BpThreatGroup) createElement(BpThreatGroup.TYPE_ID, 
                 rootThreatGroup, Messages.ELEMENTAL_THREAT_GROUP_NAME);
-        if (importSpecificThreats) {
-            BpThreatGroup specificThreatGroup = (BpThreatGroup) createElement(BpThreatGroup.TYPE_ID, rootThreatGroup, Messages.SPECIFIC_THREAT_GROUP_NAME);
-            processThreatGroup = (BpThreatGroup) createElement(BpThreatGroup.TYPE_ID, specificThreatGroup, Messages.SPECIFIC_PROCESS_THREAT_GROUP_NAME);
-            systemThreatGroup = (BpThreatGroup) createElement(BpThreatGroup.TYPE_ID, specificThreatGroup, Messages.SPECIFIC_SYSTEM_THREAT_GROUP_NAME);
-        }
         processSafeguardGroup = (SafeguardGroup) createElement(SafeguardGroup.TYPE_ID,
                 safeguardRootGroup, Messages.PROCESS_REQUIREMENT_GROUP_NAME);
         systemSafeguardGroup = (SafeguardGroup) createElement(SafeguardGroup.TYPE_ID, 
@@ -440,18 +434,12 @@ public class BpImporter {
 
         for (String name : systemIdentifierPrefixes ) {
             createElement(BpRequirementGroup.TYPE_ID, systemReqGroup, name);
-            if (importSpecificThreats) {
-                createElement(BpThreatGroup.TYPE_ID, systemThreatGroup, name);
-            }
             createElement(SafeguardGroup.TYPE_ID, systemSafeguardGroup,  name);
         }
 
 
         for (String name : processIdentifierPrefixes ) {
             createElement(BpRequirementGroup.TYPE_ID, processReqGroup, name);
-            if (importSpecificThreats) {
-                createElement(BpThreatGroup.TYPE_ID, processThreatGroup, name);
-            }
             createElement(SafeguardGroup.TYPE_ID, processSafeguardGroup, name);
         }
     }  
@@ -558,9 +546,6 @@ public class BpImporter {
                 
                 if (! addedModules.containsKey(bsiModule.getIdentifier())) {
                     veriniceModule = createModule(bsiModule, parent);
-                    if (importSpecificThreats) {
-                        createSpecificThreats(bsiModule, groupIdentifier, veriniceModule);
-                    }
                     linkElementalThreats(bsiModule);
                     addedModules.put(bsiModule.getIdentifier(), veriniceModule);
                 } else {
@@ -666,7 +651,6 @@ public class BpImporter {
         
         descriptionBuilder.append(HTML_CLOSE_PARAGRAGPH);
         
-        // TODO: insert crossreference table here
         descriptionBuilder.append(ToHtmlTableTransformer.createCrossreferenceTable(module.getCrossreferences()));
 
         
@@ -818,51 +802,6 @@ public class BpImporter {
         }
     }
 
-
-    /**
-     * @param bsiModule
-     * @param groupIdentifier
-     * @param veriniceModule
-     * @throws CreateBPElementException
-     */
-    private void createSpecificThreats(Document bsiModule, String groupIdentifier,
-            BpRequirementGroup veriniceModule) throws CreateBPElementException {
-        List<Link> linkList = new ArrayList<>();
-        for (SpecificThreat threat : bsiModule.getThreatScenario()
-                .getSpecificThreats().getSpecificThreat()) {
-
-            BpThreatGroup tParent = getSpecificThreatParentGroup(groupIdentifier,
-                    veriniceModule.getTitle());
-
-            String title = bsiModule.getIdentifier() + " " + threat.getHeadline();
-            
-            if (! addedThreats.containsKey(title) && tParent != null) {
-                
-                BpThreat veriniceThreat = (BpThreat) createElement(BpThreat.TYPE_ID,
-                        tParent, title);
-                
-                veriniceThreat.setObjectBrowserDescription(
-                        getAnyElementDescription(threat.getHeadline(),
-                        1, threat.getDescription().getAny()));
-                veriniceThreat.setIdentifier(bsiModule.getIdentifier());
-                if (importSpecificThreats) {
-                    Link link = new Link(veriniceModule, veriniceThreat);
-                    linkList.add(link);
-//                    veriniceThreat.setConfidentiality(Boolean.parseBoolean(veriniceModule.co));
-//                    veriniceThreat.setIntegrity(Boolean.parseBoolean(threat.getCia().getIntegrity()));
-//                    veriniceThreat.setAvailibility(Boolean.parseBoolean(threat.getCia().getAvailability()));
-                }
-                addedThreats.put(title, veriniceThreat);
-            } 
-
-        }
-        CreateMultipleLinks linkCommand = new CreateMultipleLinks(linkList);
-        try {
-            getCommandService().executeCommand(linkCommand);
-        } catch (CommandException e) {
-            throw new CreateBPElementException(e, "Error creating links to specific threads");
-        }
-    }
     
     private BpThreat getElementalThreadByIdentifier(String identifier) {
         if (addedThreats.containsKey(identifier)) {
@@ -899,7 +838,6 @@ public class BpImporter {
                 veriniceThreat.setTitel(bsiThreat.getFullTitle());
                 
                 veriniceThreat.setIdentifier(bsiThreat.getIdentifier());
-//                veriniceThreat.setAbbreviation(bsiThreat.getIdentifier());
                 String plainDescription = getAnyObjectDescription(bsiThreat.getFullTitle(), 1, bsiThreat.getDescription());
                 veriniceThreat.setConfidentiality(Boolean.parseBoolean(bsiThreat.getCia().getConfidentiality()));
                 veriniceThreat.setIntegrity(Boolean.parseBoolean(bsiThreat.getCia().getIntegrity()));
@@ -952,40 +890,6 @@ public class BpImporter {
             
         }
         return group;
-    }
-    
-    private BpThreatGroup getSpecificThreatParentGroup(String groupIdentifier,
-            String moduleTitle) throws CreateBPElementException {
-        BpThreatGroup group = null;
-        BpThreatGroup threatParentGroup = null;
-        
-        if (systemIdentifierPrefixes.contains(groupIdentifier)) {
-            
-            for (CnATreeElement threatGroup : systemThreatGroup.getChildren()) {
-                if (threatGroup.getTypeId().equals(BpThreatGroup.TYPE_ID) 
-                        && threatGroup.getTitle().equals(groupIdentifier)) {
-                    group = (BpThreatGroup) threatGroup;
-                    break;
-                }
-            }
-            
-        } else if (processIdentifierPrefixes.contains(groupIdentifier)) {
-            for (CnATreeElement threatGroup : processThreatGroup.getChildren()) {
-                if (threatGroup.getTypeId().equals(BpThreatGroup.TYPE_ID) 
-                        && threatGroup.getTitle().equals(groupIdentifier)) {
-                    group = (BpThreatGroup) threatGroup;
-                    
-                    break;
-                }
-            }
-            
-        }
-        threatParentGroup = (BpThreatGroup) getIBGroupByNameRecursive(group, moduleTitle);
-        if ( threatParentGroup == null ) {
-            threatParentGroup = (BpThreatGroup) createElement(
-                    BpThreatGroup.TYPE_ID, group, moduleTitle);
-        }
-        return threatParentGroup;
     }
     
     private String getIdentifierPrefix(String id) {
