@@ -667,6 +667,8 @@ public class BpImporter {
         descriptionBuilder.append(HTML_CLOSE_PARAGRAGPH);
         
         // TODO: insert crossreference table here
+        descriptionBuilder.append(ToHtmlTableTransformer.createCrossreferenceTable(module.getCrossreferences()));
+
         
         return descriptionBuilder.toString();
         
