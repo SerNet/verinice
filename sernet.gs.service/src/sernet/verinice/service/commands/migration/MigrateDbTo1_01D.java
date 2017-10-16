@@ -25,7 +25,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.engine.SessionFactoryImplementor;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.hui.common.connect.HUITypeFactory;
@@ -38,10 +37,6 @@ import sernet.verinice.model.bsi.Attachment;
 @SuppressWarnings("serial")
 public class MigrateDbTo1_01D extends DbMigration {
     
-    private static final String HIBERNATE_DIALECT_POSTGRSQL = "org.hibernate.dialect.PostgreSQLDialect";
-    private static final String HIBERNATE_DIALECT_ORACLE = "sernet.verinice.hibernate.Oracle10gNclobDialect";
-    private static final String HIBERNATE_DIALECT_DERBY = "sernet.verinice.hibernate.ByteArrayDerbyDialect";
-    
     private static final String ORACLE_TEMP_TABLE_NAME = "TEMP_FILESIZE_TABLE";
     
     private transient Logger log;
@@ -52,28 +47,27 @@ public class MigrateDbTo1_01D extends DbMigration {
     @Override
     public void execute() {
         long callBackStartTime = System.currentTimeMillis();
-        try{
+        try {
             List<Object[]> idToSizeList = getIdSizeList();
-            if(getLog().isDebugEnabled()){
-                getLog().debug("Time for executing callback:\t" + String.valueOf(((System.currentTimeMillis() - callBackStartTime)/1000)) + "seconds");
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("Time for executing callback:\t" + String.valueOf(((System.currentTimeMillis() - callBackStartTime) / 1000)) + "seconds");
             }
             addFileSizeToAttachments(idToSizeList);
-            if(isOracle()){
+            if (isOracle()) {
                 removeTempTable();
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             handleError(e, "Something went wrong");
         }
 
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Time for updating all entities:\t" + String.valueOf(((System.currentTimeMillis() - callBackStartTime)/1000)) + "seconds");
+        if (getLog().isDebugEnabled()) {
+            getLog().debug("Time for updating all entities:\t" + String.valueOf(((System.currentTimeMillis() - callBackStartTime) / 1000)) + "seconds");
         }
 
-        
         super.updateVersion();
-        
+
     }
-    
+
     /**
      * removes table with name ORACLE_TEMP_TABLE_NAME 
      * (created if HIBERNATE_DIALECT_ORACLE is used by hibernate)
@@ -137,7 +131,7 @@ public class MigrateDbTo1_01D extends DbMigration {
      * returns a list of Object[] that contains key value pairs: {dbid, filesize}
      * @return
      */
-    @SuppressWarnings({"unchecked", "restriction"})
+    @SuppressWarnings({"unchecked"})
     private List<Object[]> getIdSizeList() {
         return (List<Object[]>)getDaoFactory().getDAO(Attachment.class).executeCallback(new HibernateCallback() {
             
@@ -194,58 +188,30 @@ public class MigrateDbTo1_01D extends DbMigration {
                 }
                 return retVal;
             }
-
-            
         });
     }
-    
+
     /**
      * gets filesize of filedata selecting query dependent on used database dialect
      * @param dialect
      * @return
      */
     private String determineDialectSpecificQueryText(String dialect) {
-        if(isPostgres()){
+        if (isPostgres()) {
             return "select dbid, BIT_LENGTH(filedata) from note";
-        } else if(isOracle()){
+        } else if (isOracle()) {
             return "create table " + ORACLE_TEMP_TABLE_NAME + " as select dbid, to_lob(filedata) obj from note";
-        } else if(isDerby()){
+        } else if (isDerby()) {
             return "select dbid, length(filedata) from note";
         } else {
             return "";
         }
     }
     
-    /**
-     * reads in hibernatesession configured database dialog
-     * @return
-     */
-    @SuppressWarnings({"unchecked", "restriction"})
-    private String getHibernateDialect(){
-        return (String)getDaoFactory().getDAO(Attachment.class).executeCallback(new HibernateCallback() {
-            
-            @Override
-            public Object doInHibernate(Session session) throws HibernateException, SQLException {
-                return ((SessionFactoryImplementor)session.getSessionFactory()).getDialect().toString();
-            }
-        });
-    }
-
-    private boolean isOracle(){
-        return HIBERNATE_DIALECT_ORACLE.equals(getHibernateDialect());
-    }
-    
-    private boolean isPostgres(){
-        return HIBERNATE_DIALECT_POSTGRSQL.equals(getHibernateDialect());
-    }
-    
-    private boolean isDerby(){
-        return HIBERNATE_DIALECT_DERBY.equals(getHibernateDialect());
-    }
-    
-    private String getDeleteTempTableSQL(){
+    private String getDeleteTempTableSQL() {
         return "drop table " + ORACLE_TEMP_TABLE_NAME;
     }
+    
     /* (non-Javadoc)
      * @see sernet.gs.ui.rcp.main.service.migrationcommands.DbMigration#getVersion()
      */
@@ -253,16 +219,15 @@ public class MigrateDbTo1_01D extends DbMigration {
     public double getVersion() {
         return 1.01D;
     }
-    
+
     private void handleError(Exception ex, String message) {
         getLog().error(message, ex);
         throw new RuntimeException(message);
     }
-    
+
     private Logger getLog() {
         if (log == null)
             log = Logger.getLogger(MigrateDbTo1_01D.class);
         return log;
     }
-
 }
