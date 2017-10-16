@@ -7,12 +7,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.engine.SessionFactoryImplementor;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.verinice.model.bsi.Attachment;
-import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
-import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 
 /**
  * This migration shall increase the length of the PROPERTYVALUE column for Derby.
@@ -40,12 +37,7 @@ public class MigrateDbTo1_04D extends DbMigration {
 
     private transient Logger log;
 
-    private static final String HIBERNATE_DIALECT_POSTGRSQL = "org.hibernate.dialect.PostgreSQLDialect";
-    private static final String HIBERNATE_DIALECT_ORACLE = "sernet.verinice.hibernate.Oracle10gNclobDialect";
-    private static final String HIBERNATE_DIALECT_DERBY = "sernet.verinice.hibernate.ByteArrayDerbyDialect";
-
     private static final List<String> DERBY_SQL_LIST;
-
     static {
         DERBY_SQL_LIST = new ArrayList<String>();
         DERBY_SQL_LIST.add("ALTER TABLE PROPERTIES ADD COLUMN PROPERTYVALUE_AS_CLOB CLOB");
@@ -58,7 +50,7 @@ public class MigrateDbTo1_04D extends DbMigration {
     public void execute() {
         getLog().debug("Updating db to Version: " + getVersion());
         // This migration only effects Apache Derby
-        if (HIBERNATE_DIALECT_DERBY.equals(getHibernateDialect())) {
+        if (isDerby()) {
             updateDerby();
         }
 
@@ -96,15 +88,5 @@ public class MigrateDbTo1_04D extends DbMigration {
         if (log == null)
             log = Logger.getLogger(MigrateDbTo1_04D.class);
         return log;
-    }
-
-    private String getHibernateDialect() {
-        return (String) getDaoFactory().getDAO(Attachment.class).executeCallback(new HibernateCallback() {
-
-            @Override
-            public Object doInHibernate(Session session) throws HibernateException, SQLException {
-                return ((SessionFactoryImplementor) session.getSessionFactory()).getDialect().toString();
-            }
-        });
     }
 }
