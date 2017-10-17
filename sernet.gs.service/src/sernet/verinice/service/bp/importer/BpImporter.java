@@ -17,14 +17,16 @@ import java.util.Set;
 import java.util.Stack;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
 import ITBP2VNA.generated.implementationhint.Document.Safeguards;
+import ITBP2VNA.generated.module.BibItem;
+import ITBP2VNA.generated.module.Description;
 import ITBP2VNA.generated.module.Document;
-import ITBP2VNA.generated.module.Document.Requirements.FurtherResponsibleRoles;
 import ITBP2VNA.generated.module.Document.ThreatScenario.SpecificThreats;
 import ITBP2VNA.generated.module.ElementalthreatRef;
 import ITBP2VNA.generated.module.Requirement;
@@ -134,8 +136,8 @@ public class BpImporter {
     private static final String HTML_OPEN_TD="<td>"; //$NON-NLS-1$
     private static final String HTML_CLOSE_TD="</td>"; //$NON-NLS-1$
     
-    private static final String HTML_OPEN_PARAGRAGPH="<p>"; //$NON-NLS-1$
-    private static final String HTML_CLOSE_PARAGRAGPH="</p>"; //$NON-NLS-1$
+    private static final String HTML_OPEN_PARAGRAPH="<p>"; //$NON-NLS-1$
+    private static final String HTML_CLOSE_PARAGRAPH="</p>"; //$NON-NLS-1$
     private static final String HTML_CLOSE_OPEN_PARAGRAPH = "</p><p>"; //$NON-NLS-1$
     private static final String HTML_CLOSE_H1 = "</H1>"; //$NON-NLS-1$
     private static final String HTML_OPEN_H1 = "<H1>"; //$NON-NLS-1$
@@ -588,9 +590,18 @@ public class BpImporter {
         
         descriptionBuilder.append(getModuleDescriptionStart(module));
         
-        descriptionBuilder.append(module.getThreatScenario().getDescription());
-        
         descriptionBuilder.append(HTML_CLOSE_OPEN_PARAGRAPH);
+        
+        for (Object o : module.getThreatScenario().getDescription()) {
+            if (o instanceof ITBP2VNA.generated.module.Description) {
+                ITBP2VNA.generated.module.Description desc = (ITBP2VNA.generated.module.Description) o;
+                descriptionBuilder.append(getAnyElementDescription("", 0, desc.getAny()));
+            } 
+                
+        }
+        
+        
+        descriptionBuilder.append(HTML_BR);
         
         SpecificThreats specificThreats = module.getThreatScenario().getSpecificThreats();
         
@@ -600,7 +611,17 @@ public class BpImporter {
             descriptionBuilder.append(HTML_CLOSE_OPEN_PARAGRAPH);
         }
         
-        descriptionBuilder.append(module.getRequirements().getDescription());
+        for (Object o : module.getRequirements().getDescription()) {
+            if (o instanceof Description) {
+                descriptionBuilder.append(HTML_OPEN_PARAGRAPH);
+                descriptionBuilder.append("<b>");
+                Description desc = (Description)o;
+                descriptionBuilder.append(getAnyElementDescription("", 0, desc.getAny()));
+                descriptionBuilder.append("</b>");
+                descriptionBuilder.append(HTML_CLOSE_PARAGRAPH);
+            }
+        }
+//        descriptionBuilder.append(getAnyObjectDescription("", 1, module.getRequirements().getDescription()));
         
         descriptionBuilder.append(HTML_CLOSE_OPEN_PARAGRAPH);
         
@@ -608,15 +629,18 @@ public class BpImporter {
                 module.getRequirements().getMainResponsibleRole());
         
         descriptionBuilder.append(HTML_CLOSE_OPEN_PARAGRAPH);
+
+        List<String> roles = null;
+        if (module.getRequirements().getFurtherResponsibleRoles() != null) {
+            roles = module.getRequirements().getFurtherResponsibleRoles().getRole();
+        }
         
-        FurtherResponsibleRoles roles = module.getRequirements().getFurtherResponsibleRoles();
-        
-        if (roles != null && roles.getRole().isEmpty()) {
+        if (roles != null && !roles.isEmpty()) {
             descriptionBuilder.append(HTML_CLOSE_OPEN_PARAGRAPH);
             descriptionBuilder.append(Messages.FURTHER_RESPONSIBLES + ":");
             descriptionBuilder.append(HTML_OPEN_UL);
 
-            for (String role : roles.getRole()) {
+            for (String role : roles) {
                 descriptionBuilder.append(HTML_OPEN_LIST_ITEM)
                     .append(role).append(HTML_CLOSE_LIST_ITEM);    
             }
@@ -624,7 +648,7 @@ public class BpImporter {
             descriptionBuilder.append(HTML_CLOSE_OPEN_PARAGRAPH);
         }
         
-        descriptionBuilder.append(Messages.BASIC_REQUIREMENTS);
+        descriptionBuilder.append("<H1><b>" + Messages.BASIC_REQUIREMENTS + "</b></H1>");
         descriptionBuilder.append(getModuleRequirementDescription(module.getRequirements()
                 .getBasicRequirements().getRequirement()));
         
@@ -649,10 +673,29 @@ public class BpImporter {
         }
         descriptionBuilder.append(HTML_CLOSE_UL);
         
-        descriptionBuilder.append(HTML_CLOSE_PARAGRAGPH);
+        descriptionBuilder.append(HTML_CLOSE_PARAGRAPH);
         
         descriptionBuilder.append(ToHtmlTableTransformer.createCrossreferenceTable(module.getCrossreferences()));
+        
+        descriptionBuilder.append(HTML_OPEN_PARAGRAPH);
+        
+        if (module.getBibliography() != null) {
 
+            descriptionBuilder.append(HTML_OPEN_H1).append("Literatur").append(HTML_CLOSE_H1);
+            descriptionBuilder.append(HTML_OPEN_UL);
+
+
+
+            for(BibItem bibItem :  module.getBibliography().getBibItem() ) {
+                descriptionBuilder.append(HTML_OPEN_LIST_ITEM);
+                descriptionBuilder.append(getAnyElementDescription(bibItem.getTitle(), 1, bibItem.getDescription().getAny()));
+                descriptionBuilder.append(bibItem.getShortHand()).append(HTML_BR);
+                descriptionBuilder.append(HTML_CLOSE_LIST_ITEM);
+            }
+
+            descriptionBuilder.append(HTML_CLOSE_UL);
+            descriptionBuilder.append(HTML_CLOSE_PARAGRAPH);
+        }
         
         return descriptionBuilder.toString();
         
@@ -669,7 +712,7 @@ public class BpImporter {
         sb.append(HTML_OPEN_H1);
         sb.append(module.getFullTitle());
         sb.append(HTML_CLOSE_H1);
-        sb.append(HTML_OPEN_PARAGRAGPH);
+        sb.append(HTML_OPEN_PARAGRAPH);
         
         
         sb.append(getAnyObjectDescription("", 0, 
@@ -694,9 +737,9 @@ public class BpImporter {
             
             sb.append(getRequirementCIATable(requirement));
             
-            sb.append(HTML_OPEN_PARAGRAGPH);
+            sb.append(HTML_OPEN_PARAGRAPH);
             sb.append(getAnyElementDescription("", 0, requirement.getDescription().getAny()));
-            sb.append(HTML_CLOSE_PARAGRAGPH);
+            sb.append(HTML_CLOSE_PARAGRAPH);
         }
         
         return sb.toString();
@@ -709,13 +752,13 @@ public class BpImporter {
      */
     private String getRequirementDescriptionStart(Requirement requirement) {
         StringBuilder sb = new StringBuilder();
-        sb.append(HTML_OPEN_PARAGRAGPH);
+        sb.append(HTML_OPEN_PARAGRAPH);
         sb.append(HTML_OPEN_H2);
         sb.append(requirement.getIdentifier());
         sb.append(" ");
         sb.append(requirement.getTitle());
         sb.append(HTML_CLOSE_H2);
-        sb.append(HTML_CLOSE_PARAGRAGPH);
+        sb.append(HTML_CLOSE_PARAGRAPH);
         return sb.toString();
     }
 
@@ -1200,12 +1243,17 @@ public class BpImporter {
                 sb.append(title).append("</H");
                 sb.append(String.valueOf(headlineLvl));
                 sb.append(">");
+                sb.append(HTML_OPEN_PARAGRAPH);
             } else {
                 sb.append(HTML_BR).append(title).append(HTML_BR);
             }
         }
         for (Object element : anyElements) {
             sb.append(extractContentFromObject(element));
+        }
+        
+        if (! "".equals(title)) {
+            sb.append(HTML_CLOSE_PARAGRAPH);
         }
         
         return sb.toString();
@@ -1222,7 +1270,7 @@ public class BpImporter {
             sb.append(unwrapText((Element)element));
         } else if(element instanceof String) {
             sb.append((String)element);
-        }
+        } 
         return sb.toString();
     }
     
@@ -1255,11 +1303,13 @@ public class BpImporter {
         blacklist.add("introduction");
         blacklist.add("purpose");
         blacklist.add("differentiation");
+        blacklist.add("");
+        blacklist.add("#text");
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < element.getChildNodes().getLength(); i++) {
             Stack<String> htmlElements = new Stack<>();
             Node node = element.getChildNodes().item(i);
-            String htmlFormatElement = node.getParentNode().getNodeName();
+            String htmlFormatElement = StringUtils.isNotEmpty(node.getNodeName()) ? node.getNodeName() : "";
             if( !blacklist.contains(htmlFormatElement)) {
                 sb.append("<").append(htmlFormatElement).append(">");   
                 htmlElements.push(htmlFormatElement);

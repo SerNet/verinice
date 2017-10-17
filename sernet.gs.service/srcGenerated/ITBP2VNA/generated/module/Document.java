@@ -15,6 +15,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlMixed;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
@@ -898,8 +899,9 @@ public class Document {
     })
     public static class Requirements {
 
-        @XmlElement(required = true)
-        protected String description;
+        @XmlMixed
+        @XmlAnyElement(lax = true)
+        protected List<Object> description;
         @XmlElement(required = true)
         protected String mainResponsibleRole;
         protected Document.Requirements.FurtherResponsibleRoles furtherResponsibleRoles;
@@ -918,7 +920,7 @@ public class Document {
          *     {@link String }
          *     
          */
-        public String getDescription() {
+        public List<Object> getDescription() {
             return description;
         }
 
@@ -930,7 +932,7 @@ public class Document {
          *     {@link String }
          *     
          */
-        public void setDescription(String value) {
+        public void setDescription(List<Object> value) {
             this.description = value;
         }
 
@@ -1329,8 +1331,9 @@ public class Document {
     })
     public static class ThreatScenario {
 
-        @XmlElement(required = true)
-        protected String description;
+        @XmlMixed
+        @XmlAnyElement(lax = true)
+        protected List<Object> description;
         @XmlElement(required = true)
         protected Document.ThreatScenario.SpecificThreats specificThreats;
 
@@ -1342,7 +1345,7 @@ public class Document {
          *     {@link String }
          *     
          */
-        public String getDescription() {
+        public List<Object> getDescription() {
             return description;
         }
 
@@ -1354,7 +1357,7 @@ public class Document {
          *     {@link String }
          *     
          */
-        public void setDescription(String value) {
+        public void setDescription(List<Object> value) {
             this.description = value;
         }
 

@@ -103,7 +103,6 @@ public abstract class HtmlWriter {
         
         if (element instanceof IBpElement || element instanceof IBpGroup) {
             StringBuilder buf = new StringBuilder();
-            html = removeUnsupportedHtmlPattern(html);
             writeHtml(buf, "", html, VeriniceCharset.CHARSET_UTF_8.name());
             html = buf.toString();
         }
