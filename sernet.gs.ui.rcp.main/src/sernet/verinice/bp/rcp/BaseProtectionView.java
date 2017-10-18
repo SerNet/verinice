@@ -76,6 +76,7 @@ import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
+import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IBpModelListener;
@@ -84,6 +85,7 @@ import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.TagParameter;
 import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
@@ -128,6 +130,7 @@ public class BaseProtectionView extends RightsEnabledView
     private Action expandAllAction; 
     private CollapseAction collapseAction;   
     private Action collapseAllAction; 
+    private ISMViewFilter filterAction;
     private ShowAccessControlEditAction accessControlEditAction;
     private NaturalizeAction naturalizeAction;
     
@@ -329,6 +332,15 @@ public class BaseProtectionView extends RightsEnabledView
         naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
         accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.BaseProtectionView_AccessControl);
         
+
+        HideEmptyFilter hideEmptyFilter = createHideEmptyFilter();
+        TypeParameter typeParameter = createTypeParameter();
+        TagParameter tagParameter = new TagParameter();
+        filterAction = new ISMViewFilter(viewer,
+                "Filter...",
+                tagParameter,
+                hideEmptyFilter,
+                typeParameter);
     }
 
     protected void makeExpandAndCollapseActions() {
@@ -411,7 +423,7 @@ public class BaseProtectionView extends RightsEnabledView
         manager.add(expandAllAction);
         manager.add(collapseAllAction);
         drillDownAdapter.addNavigationActions(manager);
-//        manager.add(filterAction);
+        manager.add(filterAction);
        manager.add(linkWithEditorAction);
     }
 
