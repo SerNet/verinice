@@ -464,14 +464,19 @@ public class BpImporter {
         for (CnATreeElement child : systemSafeguardGroup.getChildren()) {
             if (SafeguardGroup.TYPE_ID.equals(child.getTypeId())) {
                 subGroups.add((SafeguardGroup)child );
+                updateElement(child);
             }
         }
         
         for (CnATreeElement child : processSafeguardGroup.getChildren()) {
             if (SafeguardGroup.TYPE_ID.equals(child.getTypeId())) {
                 subGroups.add((SafeguardGroup)child );
+                updateElement(child);
             }
         }
+        
+        updateElement(processSafeguardGroup);
+        updateElement(systemSafeguardGroup);
         
         for (ITBP2VNA.generated.implementationhint.Document bsiSafeguard : implementationHints) {
             SafeguardGroup safeGuardParent = null;
@@ -480,7 +485,7 @@ public class BpImporter {
                     safeGuardParent = candidate;
                 }
             }
-
+            
             if (safeGuardParent != null) {
                 createSafeguardsForModule(bsiSafeguard, safeGuardParent);
             } else {
@@ -497,7 +502,7 @@ public class BpImporter {
                 safeguard.getTitle() + "\t with Identifier:\t" + safeguard.getIdentifier());
         String groupIdentifier = getIdentifierPrefix(safeguard.getIdentifier());
         LOG.debug("GroupIdentifier:\t" + groupIdentifier);
-        BpRequirementGroup parent = getRequirementParentGroup(groupIdentifier);
+        BpRequirementGroup parent = (BpRequirementGroup)getRequirementParentGroup(groupIdentifier, BpRequirementGroup.TYPE_ID, systemReqGroup, processReqGroup);
         LOG.debug("Parent:\t" + parent.getTitle());
         String safeguardIdentifier = safeguard.getIdentifier();
         String comparableIdentifier = safeguardIdentifier.replace('M', 'A');
@@ -542,7 +547,7 @@ public class BpImporter {
             if (rootNetwork != null) {
                 String groupIdentifier = getIdentifierPrefix(bsiModule.getIdentifier());
                 
-                BpRequirementGroup parent = getRequirementParentGroup(groupIdentifier);
+                BpRequirementGroup parent = (BpRequirementGroup)getRequirementParentGroup(groupIdentifier, BpRequirementGroup.TYPE_ID, systemReqGroup, processReqGroup);
                 
                 BpRequirementGroup veriniceModule = null;
                 
@@ -909,24 +914,25 @@ public class BpImporter {
     /**
      * @param groupIdentifier
      */
-    private BpRequirementGroup getRequirementParentGroup(String groupIdentifier) {
-        BpRequirementGroup group = null;
+    private CnATreeElement getRequirementParentGroup(String groupIdentifier, String typeId,
+            CnATreeElement systemGroup, CnATreeElement processGroup) {
+        CnATreeElement group = null;
         
         if (systemIdentifierPrefixes.contains(groupIdentifier)) {
             
-            for (CnATreeElement reqGroup : systemReqGroup.getChildren()) {
-                if (reqGroup.getTypeId().equals(BpRequirementGroup.TYPE_ID) 
+            for (CnATreeElement reqGroup : systemGroup.getChildren()) {
+                if (reqGroup.getTypeId().equals(typeId) 
                         && reqGroup.getTitle().equals(groupIdentifier)) {
-                    group = (BpRequirementGroup) reqGroup;
+                    group = reqGroup;
                     break;
                 }
             }
             
         } else if (processIdentifierPrefixes.contains(groupIdentifier)) {
-            for (CnATreeElement reqGroup : processReqGroup.getChildren()) {
-                if (reqGroup.getTypeId().equals(BpRequirementGroup.TYPE_ID) 
+            for (CnATreeElement reqGroup : processGroup.getChildren()) {
+                if (reqGroup.getTypeId().equals(typeId) 
                         && reqGroup.getTitle().equals(groupIdentifier)) {
-                    group = (BpRequirementGroup) reqGroup;
+                    group = reqGroup;
                     break;
                 }
             }
@@ -934,6 +940,8 @@ public class BpImporter {
         }
         return group;
     }
+    
+    
     
     private String getIdentifierPrefix(String id) {
         if (id != null && id.length() >= 3 && id.contains(".")) {
@@ -963,7 +971,10 @@ public class BpImporter {
         List<ITBP2VNA.generated.implementationhint.Safeguard> safeGuards = 
                 bsiModule.getBasicSafeguards().getSafeguard();
         for (ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard : safeGuards) {
-            Safeguard safeguard = createSafeguard(parent, bsiSafeguard, Messages.QUALIFIER_BASIC,
+            
+            SafeguardGroup safeGuardParent = getSafeguardParent(parent, bsiSafeguard.getIdentifier());
+            
+            Safeguard safeguard = createSafeguard(safeGuardParent, bsiSafeguard, Messages.QUALIFIER_BASIC,
                     bsiSafeguardDocument.getLastChange().toString());
             if (safeguard != null) {
                 links.addAll(linkSafeguardToRequirements(safeguard));
@@ -976,7 +987,8 @@ public class BpImporter {
         safeGuards.clear();
         safeGuards = bsiModule.getStandardSafeguards().getSafeguard();
         for (ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard : safeGuards) {
-            Safeguard safeguard = createSafeguard(parent, bsiSafeguard, Messages.QUALIFIER_STANDARD,
+            SafeguardGroup safeGuardParent = getSafeguardParent(parent, bsiSafeguard.getIdentifier());
+            Safeguard safeguard = createSafeguard(safeGuardParent, bsiSafeguard, Messages.QUALIFIER_STANDARD,
                     bsiSafeguardDocument.getLastChange().toString());
             if (safeguard != null) {
                 links.addAll(linkSafeguardToRequirements(safeguard));
@@ -989,7 +1001,8 @@ public class BpImporter {
         safeGuards.clear();
         safeGuards = bsiModule.getHighLevelSafeguards().getSafeguard();
         for (ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard : safeGuards) {
-            Safeguard safeguard = createSafeguard(parent, bsiSafeguard, Messages.QUALIFIER_HIGH,
+            SafeguardGroup safeGuardParent = getSafeguardParent(parent, bsiSafeguard.getIdentifier());
+            Safeguard safeguard = createSafeguard(safeGuardParent, bsiSafeguard, Messages.QUALIFIER_HIGH,
                     bsiSafeguardDocument.getLastChange().toString());
             if (safeguard != null) {
                 links.addAll(linkSafeguardToRequirements(safeguard));
