@@ -87,7 +87,6 @@ import sernet.verinice.iso27k.rcp.action.ControlDropPerformer;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.FileDropPerformer;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
-import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.Attachment;
@@ -132,6 +131,7 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
+import sernet.verinice.rcp.ViewFilterAction;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.tree.TreeContentProvider;
 import sernet.verinice.rcp.tree.TreeLabelProvider;
@@ -173,7 +173,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 	
 	private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
 	
-	private ISMViewFilter filterAction;
+	private ViewFilterAction filterAction;
 	
 	private MetaDropAdapter metaDropAdapter;
 
@@ -407,7 +407,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 		HideEmptyFilter hideEmptyFilter = createHideEmptyFilter();
 		TypeParameter typeParameter = createTypeParameter();
 		TagParameter tagParameter = new TagParameter();
-        filterAction = new ISMViewFilter(viewer,
+        filterAction = new ViewFilterAction(viewer,
 				Messages.ISMView_12,
 				tagParameter,
 				hideEmptyFilter,

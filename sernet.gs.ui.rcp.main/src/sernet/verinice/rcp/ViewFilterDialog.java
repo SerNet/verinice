@@ -17,7 +17,7 @@
  *     Robert Schuster <r.schuster[at]tarent.de> - rewritten to use set of classes
  *     Daniel Murygin <dm[at]sernet[dot]de> - TypeParameter Added, RCP Layout
  ******************************************************************************/
-package sernet.verinice.iso27k.rcp;
+package sernet.verinice.rcp;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -50,7 +50,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
+import sernet.verinice.iso27k.rcp.Messages;
 import sernet.verinice.model.common.ElementFilter;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
@@ -94,7 +94,7 @@ import sernet.verinice.model.samt.SamtTopic;
  * 
  * @author koderman[at]sernet[dot]de
  */
-public class ISMViewFilterDialog extends Dialog {
+public class ViewFilterDialog extends Dialog {
 
     private static final int CHECKBOX_COLUMN_WIDTH = 430;
     private static final int VIEWER_TABLE_WIDTH = 470;
@@ -138,7 +138,7 @@ public class ISMViewFilterDialog extends Dialog {
     private CheckboxTableViewer viewerType;
     private Set<String[]> visibleTypes = new HashSet<String[]>();
 
-    public ISMViewFilterDialog(Shell parent, ISMViewFilter ismViewFilter) {
+    public ViewFilterDialog(Shell parent, ViewFilterAction ismViewFilter) {
         super(parent);
         int style = SWT.CLOSE | SWT.TITLE | SWT.BORDER;
         style = style | SWT.APPLICATION_MODAL | SWT.RESIZE;

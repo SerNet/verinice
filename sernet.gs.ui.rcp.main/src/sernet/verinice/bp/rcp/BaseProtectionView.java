@@ -76,7 +76,6 @@ import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
-import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IBpModelListener;
@@ -89,6 +88,7 @@ import sernet.verinice.model.common.TagParameter;
 import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
+import sernet.verinice.rcp.ViewFilterAction;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.bp.BaseProtectionPerspective;
 import sernet.verinice.rcp.tree.TreeContentProvider;
@@ -130,7 +130,7 @@ public class BaseProtectionView extends RightsEnabledView
     private Action expandAllAction; 
     private CollapseAction collapseAction;   
     private Action collapseAllAction; 
-    private ISMViewFilter filterAction;
+    private ViewFilterAction filterAction;
     private ShowAccessControlEditAction accessControlEditAction;
     private NaturalizeAction naturalizeAction;
     
@@ -336,7 +336,7 @@ public class BaseProtectionView extends RightsEnabledView
         HideEmptyFilter hideEmptyFilter = createHideEmptyFilter();
         TypeParameter typeParameter = createTypeParameter();
         TagParameter tagParameter = new TagParameter();
-        filterAction = new ISMViewFilter(viewer,
+        filterAction = new ViewFilterAction(viewer,
                 "Filter...",
                 tagParameter,
                 hideEmptyFilter,

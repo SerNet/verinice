@@ -15,7 +15,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.rcp.action;
+package sernet.verinice.rcp;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -32,23 +32,23 @@ import org.eclipse.ui.PlatformUI;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.model.common.TypeParameter;
+import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.model.common.TagParameter;
-import sernet.verinice.iso27k.rcp.ISMViewFilterDialog;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("restriction")
-public class ISMViewFilter extends Action {
+public class ViewFilterAction extends Action {
     
-    private static final Logger LOG = Logger.getLogger(ISMViewFilter.class);
+    private static final Logger LOG = Logger.getLogger(ViewFilterAction.class);
     
     private Shell shell;
     private TagParameter tagParameter;
     private HideEmptyFilter hideEmptyFilter;
     private TypeParameter typeParameter;
 
-    public ISMViewFilter(
+    public ViewFilterAction(
             StructuredViewer viewer, 
             String title, 
             TagParameter tagFilter, 
@@ -69,7 +69,7 @@ public class ISMViewFilter extends Action {
 
     @Override
     public void run() {
-        ISMViewFilterDialog dialog = new ISMViewFilterDialog(shell, this);
+        ViewFilterDialog dialog = new ViewFilterDialog(shell, this);
         if (dialog.open() == InputDialog.OK) {
             tagParameter.setPattern(dialog.getCheckedElements());
             tagParameter.setFilterOrgs(dialog.getFilterOrgs());
