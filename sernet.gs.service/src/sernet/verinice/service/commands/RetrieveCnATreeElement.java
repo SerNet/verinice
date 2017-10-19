@@ -108,7 +108,7 @@ public class RetrieveCnATreeElement extends GenericCommand {
 	public void execute() {
 		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
 		element = dao.retrieve(dbId,getRetrieveInfo());
-		ElementFilter.applyParameter(element, parameter);
+		ElementFilter.filterChildrenOfElement(element, parameter);
 	}
 
     public void setElement(CnATreeElement element) {

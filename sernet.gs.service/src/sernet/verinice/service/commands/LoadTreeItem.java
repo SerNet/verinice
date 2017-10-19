@@ -61,7 +61,7 @@ public class LoadTreeItem extends GenericCommand {
     }
     
     public LoadTreeItem(String uuid, RetrieveInfo ri,  List<IParameter> parameterList) {
-        this(uuid,ri,ElementFilter.getConvertToMap(parameterList));
+        this(uuid,ri,ElementFilter.convertToMap(parameterList));
     }
     
     public LoadTreeItem(String uuid, RetrieveInfo ri, Map<String, Object> parameter) {
@@ -76,7 +76,7 @@ public class LoadTreeItem extends GenericCommand {
 	    IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
 	    // one select with joins specified in RetrieveInfo
         element = dao.findByUuid(uuid,ri);
-        ElementFilter.applyParameter(element, parameter);
+        ElementFilter.filterChildrenOfElement(element, parameter);
         
         hasChildrenMap = new Hashtable<String, Boolean>();
         Set<CnATreeElement> children = element.getChildren();

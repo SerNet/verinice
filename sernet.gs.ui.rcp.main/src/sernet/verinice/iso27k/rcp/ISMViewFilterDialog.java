@@ -89,9 +89,10 @@ import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
+ * A dialog with a form for filtering elements in the views ISMView
+ * and BaseProtectionView.
  * 
  * @author koderman[at]sernet[dot]de
- * 
  */
 public class ISMViewFilterDialog extends Dialog {
 

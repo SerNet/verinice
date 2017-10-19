@@ -19,9 +19,14 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
+import sernet.verinice.model.common.ElementFilter;
+import sernet.verinice.service.commands.LoadTreeItem;
+
 /**
- * A search parameter for filtering the tree of {@link ISMView}
+ * A parameter for searching for elements in the command LoadTreeItem.
  * 
+ * @see LoadTreeItem
+ * @see ElementFilter
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public interface IParameter {
