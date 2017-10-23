@@ -333,6 +333,7 @@ public class DeleteHandler extends RightsEnabledHandler {
     protected void removeElement(CnATreeElement elementToRemove) throws CommandException {
         CnAElementHome.getInstance().remove(elementToRemove);
         CnAElementFactory.getModel(elementToRemove).databaseChildRemoved(elementToRemove);
+        CnAElementFactory.getInstance().getCatalogModel().databaseChildRemoved(elementToRemove);
     }
 
     protected boolean loadConfiguration(CnATreeElement elmt) {

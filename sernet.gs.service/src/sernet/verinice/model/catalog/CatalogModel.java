@@ -85,7 +85,14 @@ public class CatalogModel extends CnATreeElement {
             }
         }
     }
-    
+
+    @Override
+    public void databaseChildRemoved(CnATreeElement child) {
+        for (ICatalogModelListener listener : getListeners()) {
+            listener.databaseChildRemoved(child);
+        }
+    }
+
     /**
      * Create the listener list lazy. Ensure the list is created only once and synchronize only the necessary part of the code.
      */

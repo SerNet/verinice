@@ -38,7 +38,7 @@ public class DeleteSelectionAction extends Action implements ISelectionChangedLi
         super(Messages.CatalogView_delete, ImageCache.getInstance().getImageDescriptor(ImageCache.CROSS));
         setDisabledImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.CROSS));
     }
-    
+
     @Override
     public void selectionChanged(SelectionChangedEvent event) {
         selection = event.getSelection();
