@@ -33,7 +33,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.service.Retriever;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -273,6 +272,7 @@ public class CopyCommand extends GenericCommand {
     private CnATreeElement saveCopy(CnATreeElement toGroup, CnATreeElement elementToCopy)
             throws CommandException, IOException {
         CnATreeElement copyElement = getDao().initializeAndUnproxy(elementToCopy); // TODO is this needed?
+        // FIXME do not create unnecessary entity
         CnATreeElement newElement = saveNew(toGroup, copyElement);
         if(newElement.getEntity()!=null) {
             if (copyElement.isTemplateOrImplementation()) {
