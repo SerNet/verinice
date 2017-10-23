@@ -90,10 +90,14 @@ public class DeleteHandler extends RightsEnabledHandler {
      */
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        changeSelection(HandlerUtil.getCurrentSelection(event));
+        final IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
+        return execute(selection);
+    }
+
+    public Object execute(final IStructuredSelection selection) {
+        changeSelection(selection);
         try {
             Activator.inheritVeriniceContextState();
-            final IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
            
             if (!MessageDialog.openQuestion(Display.getCurrent().getActiveShell(), Messages.DeleteActionDelegate_0, NLS.bind(Messages.DeleteActionDelegate_1, selection.size()))) {
                 return null;
@@ -321,16 +325,16 @@ public class DeleteHandler extends RightsEnabledHandler {
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
             } else {
                 return;
-            }                                    
+            }
         }
         removeElement(element);
     }
     
-    protected void removeElement(CnATreeElement elementToRemove) throws CommandException {     
+    protected void removeElement(CnATreeElement elementToRemove) throws CommandException {
         CnAElementHome.getInstance().remove(elementToRemove);
         CnAElementFactory.getModel(elementToRemove).databaseChildRemoved(elementToRemove);
     }
-    
+
     protected boolean loadConfiguration(CnATreeElement elmt) {
         String[] types = new String[] { Person.TYPE_ID, PersonIso.TYPE_ID };
         ICommandService service = ServiceFactory.lookupCommandService();
@@ -362,7 +366,7 @@ public class DeleteHandler extends RightsEnabledHandler {
     }
 
 
-    public void changeSelection(ISelection selection) {
+    private void changeSelection(ISelection selection) {
         boolean allowed = checkRights();
         boolean isWriteAllowed = true;
         

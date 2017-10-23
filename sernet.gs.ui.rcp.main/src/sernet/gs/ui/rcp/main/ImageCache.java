@@ -343,6 +343,7 @@ public final class ImageCache {
     public static final String OK_DISABLED = "ok-disabled.png";
     
     public static final String UPDATE_SITE = "update-site.png";
+    public static final String CROSS = "16-em-cross.png";
 	
 	private static ImageCache instance;
 
