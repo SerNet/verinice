@@ -100,31 +100,9 @@ public class ViewFilterDialog extends Dialog {
     private static final int VIEWER_TABLE_WIDTH = 470;
     private static final int VIEWER_TABLE_HEIGHT = 135;
     
+    private String[][] types = ViewFilterAction.ISO_TYPES; 
+
     private boolean state = true;
-
-    private static final String[][] TYPES = new String[][] {
-        new String[] {Asset.TYPE_ID,AssetGroup.TYPE_ID},
-        new String[] {Audit.TYPE_ID,AuditGroup.TYPE_ID},
-        new String[] {Control.TYPE_ID,ControlGroup.TYPE_ID},
-        new String[] {SamtTopic.TYPE_ID,ControlGroup.TYPE_ID},           
-        new String[] {Document.TYPE_ID,DocumentGroup.TYPE_ID},        
-        new String[] {Evidence.TYPE_ID,EvidenceGroup.TYPE_ID},        
-        new String[] {Exception.TYPE_ID,ExceptionGroup.TYPE_ID},        
-        new String[] {Finding.TYPE_ID,FindingGroup.TYPE_ID},        
-        new String[] {Incident.TYPE_ID,IncidentGroup.TYPE_ID},        
-        new String[] {Interview.TYPE_ID,InterviewGroup.TYPE_ID},       
-        new String[] {PersonIso.TYPE_ID,PersonGroup.TYPE_ID},        
-        new String[] {Process.TYPE_ID,ProcessGroup.TYPE_ID},
-        new String[] {Record.TYPE_ID,RecordGroup.TYPE_ID},       
-        new String[] {Requirement.TYPE_ID,RequirementGroup.TYPE_ID},       
-        new String[] {Response.TYPE_ID,ResponseGroup.TYPE_ID},       
-        new String[] {IncidentScenario.TYPE_ID,IncidentScenarioGroup.TYPE_ID},       
-        new String[] {Threat.TYPE_ID,ThreatGroup.TYPE_ID},       
-        new String[] {Vulnerability.TYPE_ID,VulnerabilityGroup.TYPE_ID}
-    };
-    
-
-
     private String[] tagPattern;
     private CheckboxTableViewer viewer;
     private String[] checkedElements;
@@ -219,7 +197,7 @@ public class ViewFilterDialog extends Dialog {
             public void addListener(ILabelProviderListener listener) {}
         });
         viewerType.setCheckStateProvider(new CheckStateProvider(getVisibleTypes()));
-        viewerType.setInput(TYPES);  
+        viewerType.setInput(getTypes());  
         
         viewerType.addDoubleClickListener(new IDoubleClickListener() {
             @Override
@@ -349,7 +327,7 @@ public class ViewFilterDialog extends Dialog {
         this.hideEmpty = hideEmptyCheckbox.getSelection();
         visibleTypes.clear();
         List<Object> typeList = Arrays.asList(viewerType.getCheckedElements());
-        if(typeList.size()>=TYPES.length) {
+        if(typeList.size()>=getTypes().length) {
             visibleTypes.add(ElementFilter.ALL_TYPES);
         } else {
             for (Object object : typeList) {
@@ -372,6 +350,14 @@ public class ViewFilterDialog extends Dialog {
     
     protected HUITypeFactory getTypeFactory() {
         return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+    }
+
+    public String[][] getTypes() {
+        return types;
+    }
+
+    public void setTypes(String[][] types) {
+        this.types = types;
     }
     
     

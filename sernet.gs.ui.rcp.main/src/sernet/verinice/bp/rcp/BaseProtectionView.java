@@ -333,6 +333,10 @@ public class BaseProtectionView extends RightsEnabledView
         accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.BaseProtectionView_AccessControl);
         
 
+        makeFilterAction();
+    }
+
+    private void makeFilterAction() {
         HideEmptyFilter hideEmptyFilter = createHideEmptyFilter();
         TypeParameter typeParameter = createTypeParameter();
         TagParameter tagParameter = new TagParameter();
@@ -341,6 +345,11 @@ public class BaseProtectionView extends RightsEnabledView
                 tagParameter,
                 hideEmptyFilter,
                 typeParameter);
+        filterAction.setTypes(ViewFilterAction.BASE_PROTECTION_TYPES);
+        elementManager.addParameter(tagParameter);
+        if(typeParameter!=null) {
+            elementManager.addParameter(typeParameter);
+        }
     }
 
     protected void makeExpandAndCollapseActions() {
