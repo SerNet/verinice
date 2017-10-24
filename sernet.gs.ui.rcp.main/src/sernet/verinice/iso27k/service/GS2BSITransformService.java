@@ -78,37 +78,22 @@ public class GS2BSITransformService {
     };
 
     /**
-<<<<<<< HEAD
      * Strategy interface to transform the given item to an target object.
      *
-||||||| merged common ancestors
-     * Strategy interface to transform the given item to an target object.
-     * 
-=======
-     * Strategy interface to transform the given item to a target object.
-     * 
->>>>>>> Some typo and todo
      * @author uz[at]sernet.de
      *
      */
     public interface ItemTransformer {
         /**
          * Transforms the given item to a target object and stores it in the
-<<<<<<< HEAD
          * elements list.
          *
-         * @param group - the group the trasformed elements ar added to
-||||||| merged common ancestors
-         * elements list. 
-         * 
-         * @param group - the group the trasformed elements ar added to
-=======
-         * elements list. 
-         * 
-         * @param group - the group the transformed elements are added to
->>>>>>> Some typo and todo
-         * @param item - the item to transform
-         * @param elements - the list of transformed elements
+         * @param group
+         *            - the group the transformed elements are added to
+         * @param item
+         *            - the item to transform
+         * @param elements
+         *            - the list of transformed elements
          */
         void transformElement(Group<?> group, Object item, List<CnATreeElement> elements);
     }
@@ -191,47 +176,43 @@ public class GS2BSITransformService {
      * @param elements
      */
     private void transformGsElement(Group<?> group, Object item, List<CnATreeElement> elements) {
-        if(item instanceof Massnahme){
-		Massnahme m = (Massnahme)item;
-		elements.add((CnATreeElement)generateControl(m, group));
+        if (item instanceof Massnahme) {
+            Massnahme m = (Massnahme) item;
+            elements.add((CnATreeElement) generateControl(m, group));
         }
-        if (item instanceof Gefaehrdung){
-		Gefaehrdung g = (Gefaehrdung)item;
-		elements.add(generateScenario(g, group));
+        if (item instanceof Gefaehrdung) {
+            Gefaehrdung g = (Gefaehrdung) item;
+            elements.add(generateScenario(g, group));
         }
-        if(item instanceof Baustein){
+        if (item instanceof Baustein) {
             try {
-                Baustein b = (Baustein)item;
-                if(group.canContain(new IncidentScenario())){
+                Baustein b = (Baustein) item;
+                if (group.canContain(new IncidentScenario())) {
                     IncidentScenarioGroup newGroup = new IncidentScenarioGroup(group);
                     newGroup.setTitel(b.getId() + " " + b.getTitel());
                     CnATreeElement saveNew = null;
-                    saveNew = CnAElementFactory.getInstance().saveNew(group,
-                            IncidentScenarioGroup.TYPE_ID,
-                            new BuildInput<IncidentScenarioGroup>(newGroup),
-                            false /* do not notify single elements*/,
+                    saveNew = CnAElementFactory.getInstance().saveNew(group, IncidentScenarioGroup.TYPE_ID, new BuildInput<IncidentScenarioGroup>(newGroup),
+                            false /* do not notify single elements */,
                             false /* do not inherit icon */);
                     saveNew.setTitel(b.getId() + " " + b.getTitel());
                     CnAElementHome.getInstance().updateEntity(saveNew);
-                    CnAElementFactory.getLoadedModel().childAdded(group,saveNew);
-                    for(Gefaehrdung g : b.getGefaehrdungen()){
-                        IncidentScenario scen = generateScenario(g, (IncidentScenarioGroup)saveNew);
+                    CnAElementFactory.getLoadedModel().childAdded(group, saveNew);
+                    for (Gefaehrdung g : b.getGefaehrdungen()) {
+                        IncidentScenario scen = generateScenario(g, (IncidentScenarioGroup) saveNew);
                         elements.add(scen);
                     }
-                } else if(group.canContain(new Control())){
+                } else if (group.canContain(new Control())) {
                     ControlGroup newGroup = new ControlGroup(group);
                     newGroup.setTitel(b.getTitel());
                     CnATreeElement saveNew = null;
-                    saveNew = CnAElementFactory.getInstance().saveNew(group,
-                            ControlGroup.TYPE_ID,
-                            new BuildInput<ControlGroup>(newGroup),
-                            false /* do not notify single elements*/,
+                    saveNew = CnAElementFactory.getInstance().saveNew(group, ControlGroup.TYPE_ID, new BuildInput<ControlGroup>(newGroup),
+                            false /* do not notify single elements */,
                             false /* do not inherit icon */);
                     saveNew.setTitel(b.getId() + " " + b.getTitel());
                     CnAElementHome.getInstance().updateEntity(saveNew);
-                    CnAElementFactory.getLoadedModel().childAdded(group,saveNew);
-                    for(Massnahme m : b.getMassnahmen()){
-                        elements.add(generateControl(m, (ControlGroup)saveNew));
+                    CnAElementFactory.getLoadedModel().childAdded(group, saveNew);
+                    for (Massnahme m : b.getMassnahmen()) {
+                        elements.add(generateControl(m, (ControlGroup) saveNew));
                     }
                 }
             } catch (Exception e) {
