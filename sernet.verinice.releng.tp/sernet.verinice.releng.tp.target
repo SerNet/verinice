@@ -13,14 +13,14 @@
 		-->
 
         <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="http://bob.sernet.private/target-platform/"/>
+			<repository location="http://updates.verinice.org/pub/verinice/target-platform/backports/"/>
             <unit id="threeten.backport" version="1.3.3"/>
             <unit id="org.apache.servicemix.bundles.commons-beanutils" version="1.8.3.2"/>
         </location>
 
 
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="http://bob.sernet.private/verinice-third-party"/>
+			<repository location="http://updates.verinice.org/pub/verinice/target-platform/third-party/"/>
 
 				<unit id="bouncycastle" version="0.0.0"/>
 				<unit id="com.google.gson" version="0.0.0"/>
@@ -134,19 +134,19 @@
 		-->
 
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="http://bob.sernet.private/birt-3.7"/>
+			<repository location="http://updates.verinice.org/pub/verinice/target-platform/birt/"/>
 			<unit id="org.eclipse.birt.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.birt.chart.feature.group" version="0.0.0"/>
 			<unit id="org.eclipse.birt.example.feature.group" version="0.0.0"/>
 		</location>
 
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="http://bob.sernet.private/emf-xsd-SDK-2.7.1"/>
+			<repository location="http://updates.verinice.org/pub/verinice/target-platform/emf-xsd-sdk/"/>
 			<unit id="org.eclipse.emf.common.feature.group" version="0.0.0"/>
 		</location>
 
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="http://bob.sernet.private/dtp-sdk"/>
+			<repository location="http://updates.verinice.org/pub/verinice/target-platform/dtp-sdk/"/>
 			<unit id="org.eclipse.datatools.enablement.feature.feature.group" version="0.0.0"/>
 		</location>
 

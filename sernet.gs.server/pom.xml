@@ -153,11 +153,10 @@
 			<version>3.2.2</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<version>9.1-903.jdbc4-atlassian-hosted</version>
+			<version>9.1-901-1.jdbc4</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -172,6 +171,5 @@
 			<version>1.6.1</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 </project>
