@@ -493,7 +493,8 @@ public abstract class HtmlWriter {
     
     private static String toHtml(RisikoMassnahmenUmsetzung ums) {
         StringBuilder buf = new StringBuilder();
-        writeHtml(buf, ums.getNumber() + " " + ums.getName(), ums.getDescription(), ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$
+        writeHtml(buf, ums.getNumber() + " " + ums.getName(),
+                ums.getDescription(), ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$
         return buf.toString();
     }
     
@@ -504,8 +505,11 @@ public abstract class HtmlWriter {
     }
     
     private static void writeHtml(StringBuilder buf, String headline, String bodytext, String encoding) {
+        
+        String cssFile = "screen.css";
+        
         String cssDir = CnAWorkspace.getInstance().getWorkdir()+ 
-                File.separator + "html" + File.separator + "screen.css"; //$NON-NLS-1$ //$NON-NLS-2$
+                File.separator + "html" + File.separator + cssFile; //$NON-NLS-1$ //$NON-NLS-2$
         buf.append("<html><head>"); //$NON-NLS-1$
         buf.append("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=").
         append(encoding).append("\"/>\n"); //$NON-NLS-1$ //$NON-NLS-2$
