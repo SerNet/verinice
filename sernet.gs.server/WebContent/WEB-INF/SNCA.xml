@@ -8859,1082 +8859,1424 @@ Wurden bereits weitere Stellen informiert?
     
     <!-- Modernised base protection elements -->
 
-  <huientity id="bp_itnetwork" name="Information Network">
-    <huiproperty id="bp_itnetwork_name" name="Title" required="true"/>
-    <huiproperty id="bp_itnetwork_abbr" name="Abbreviation"/>
-    <huiproperty id="bp_itnetwork_tag" name="Tags" tooltip="List of tags, separated by comma or space"/>
-    <huiproperty id="bp_itnetwork_employee_number" name="Number of employees"/>
-    <huiproperty id="bp_itnetwork_description" name="Description"/>
-    <huiproperty id="bp_itnetwork_document" isURL="true" name="Document"/>
-    <huipropertygroup id="bp_itnetwork_report" name="Reporting" tags="Dok.mgmt.">
-      <huiproperty id="bp_itnetwork_author" name="Author" tags="Dok.mgmt."/>
-      <huiproperty id="bp_itnetwork_version" name="Version" tags="Dok.mgmt."/>
-      <huiproperty id="bp_itnetwork_approved" name="Approved by" tags="Dok.mgmt."/>
-    </huipropertygroup>
-    <huipropertygroup id="bp_itnetwork_group_protection_level_insignificant" name="Protection Level Category: Insignificant">
-      <huiproperty id="bp_itnetwork_pl_insignificant_laws" inputtype="text" name="Laws / regulations / contracts">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_insignificant_laws_default">Violations of rules and laws with minor consequences. Minor
-                        infringements with low maximum penalties</param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_insignificant_privacy" inputtype="text" name="Privacy">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_insignificant_privacy_default">An effect of informational self-determination would be assessed
+    <huientity id="bp_itnetwork" name="Information Network">
+        <huiproperty id="bp_itnetwork_name" name="Title" required="true" />
+        <huiproperty id="bp_itnetwork_abbr" name="Abbreviation" />
+        <huiproperty id="bp_itnetwork_tag" name="Tags"
+            tooltip="List of tags, separated by comma or space" />
+        <huiproperty id="bp_itnetwork_employee_number" name="Number of employees" />
+        <huiproperty id="bp_itnetwork_description" name="Description" />
+        <huiproperty id="bp_itnetwork_document" isURL="true" name="Document" />
+        <huipropertygroup id="bp_itnetwork_report" name="Reporting" tags="Dok.mgmt.">
+            <huiproperty id="bp_itnetwork_author" name="Author" tags="Dok.mgmt." />
+            <huiproperty id="bp_itnetwork_version" name="Version" tags="Dok.mgmt." />
+            <huiproperty id="bp_itnetwork_approved" name="Approved by" tags="Dok.mgmt." />
+        </huipropertygroup>
+        <huipropertygroup id="bp_itnetwork_group_protection_level_insignificant"
+            name="Protection Level Category: Insignificant">
+            <huiproperty id="bp_itnetwork_pl_insignificant_laws" inputtype="text"
+                name="Laws / regulations / contracts">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_insignificant_laws_default">Violations of rules and laws with minor consequences. Minor
+                        infringements with low maximum penalties
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_insignificant_privacy" inputtype="text"
+                name="Privacy">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_insignificant_privacy_default">An effect of informational self-determination would be assessed
                         by the individual as tolerable. A possible abuse of personal data has a
                         negligible impact on the social position or economic status of the person
-                        concerned.</param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_insignificant_injury" inputtype="text" name="Injury">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_insignificant_injury_default">An adverse effect appears impossible.</param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_insignificant_service" inputtype="text" name="Service Delivery">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_insignificant_service_default">The effect would be evaluated by those affected as tolerable.
+                        concerned.
+                    </param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_insignificant_injury" inputtype="text"
+                name="Injury">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_insignificant_injury_default">An adverse effect appears impossible.</param>
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_insignificant_service" inputtype="text"
+                name="Service Delivery">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_insignificant_service_default">The effect would be evaluated by those affected as tolerable.
                         The maximum tolerable downtime of the IT system is larger than?? Hours.
                     </param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_insignificant_publicity" inputtype="text" name="Publicity">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_insignificant_publicity_default">A low or only internal loss of reputation or trust is expected.
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_insignificant_publicity" inputtype="text"
+                name="Publicity">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_insignificant_publicity_default">A low or only internal loss of reputation or trust is expected.
                     </param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_insignificant_financial" inputtype="text" name="Financial Implications">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_insignificant_financial_default">The financial damage is less than EUR ?,-
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_insignificant_financial" inputtype="text"
+                name="Financial Implications">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_insignificant_financial_default">The financial damage is less than EUR ?,-
                     </param>
-        </defaultRule>
-      </huiproperty>
-    </huipropertygroup>
-    <huipropertygroup id="bp_itnetwork_group_protection_level_normal" name="Protection Level Category: Normal">
-      <huiproperty id="bp_itnetwork_pl_normal_laws" inputtype="text" name="Laws / regulations / contracts">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_normal_laws_default">Violations of regulations and laws with serious consequences
+                </defaultRule>
+            </huiproperty>
+        </huipropertygroup>
+        <huipropertygroup id="bp_itnetwork_group_protection_level_normal" name="Protection Level Category: Normal">
+            <huiproperty id="bp_itnetwork_pl_normal_laws" inputtype="text"
+                name="Laws / regulations / contracts">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_normal_laws_default">Violations of regulations and laws with serious consequences
                         with high penalties for infringements
                     </param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_normal_privacy" inputtype="text" name="Privacy">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_normal_privacy_default">A significant effect of informational self-determination of the
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_normal_privacy" inputtype="text" name="Privacy">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_normal_privacy_default">A significant effect of informational self-determination of the
                         individual seems possible. A possible abuse of personal data has significant
                         impact on the social position or economic status of the person concerned.
                     </param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_normal_injury" inputtype="text" name="Injury">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_normal_injury_default">An effect on the personal integrity of an individual can not be
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_normal_injury" inputtype="text" name="Injury">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_normal_injury_default">An effect on the personal integrity of an individual can not be
                         excluded completely.
                     </param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_normal_service" inputtype="text" name="Service Delivery">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_normal_service_default_default">The effect would be perceived by at least some individuals as
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_normal_service" inputtype="text"
+                name="Service Delivery">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_normal_service_default_default">The effect would be perceived by at least some individuals as
                         intolerable. An IT system failure is only tolerable between ??? und ???
                         hours.
                     </param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_normal_publicity" inputtype="text" name="Publicity">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_normal_publicity_default">=A wide loss of reputation or trust is expected.
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_normal_publicity" inputtype="text" name="Publicity">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_normal_publicity_default">=A wide loss of reputation or trust is expected.
                     </param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_normal_financial" inputtype="text" name="Financial Implications">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_normal_financial_default">The financial loss is between EUR ???,- and EUR ???,-.
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_normal_financial" inputtype="text"
+                name="Financial Implications">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_normal_financial_default">The financial loss is between EUR ???,- and EUR ???,-.
                     </param>
-        </defaultRule>
-      </huiproperty>
-    </huipropertygroup>
-    <huipropertygroup id="bp_itnetwork_group_protection_level_high" name="Protection Level Category: High">
-      <huiproperty id="bp_itnetwork_pl_high_laws" inputtype="text" name="Laws / regulations / contracts">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_high_laws_default">Fundamental breach of rules and laws of contract, their
+                </defaultRule>
+            </huiproperty>
+        </huipropertygroup>
+        <huipropertygroup id="bp_itnetwork_group_protection_level_high" name="Protection Level Category: High">
+            <huiproperty id="bp_itnetwork_pl_high_laws" inputtype="text"
+                name="Laws / regulations / contracts">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_high_laws_default">Fundamental breach of rules and laws of contract, their
                         liability damages being ruinous
                     </param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_high_privacy" inputtype="text" name="Privacy">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_high_privacy_default">A particularly significant impairment of informational
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_high_privacy" inputtype="text" name="Privacy">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_high_privacy_default">A particularly significant impairment of informational
                         self-determination of the individual seems possible. A possible abuse of
                         personal data would mean social or economic ruin for the affected person.
                     </param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_high_injury" inputtype="text" name="Injury">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_high_injury_default">Serious breaches of personal integrity are possible. Danger to
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_high_injury" inputtype="text" name="Injury">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_high_injury_default">Serious breaches of personal integrity are possible. Danger to
                         life and limb.
                     </param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_high_service" inputtype="text" name="Service Delivery">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_high_service_default">The effect would be evaluated by all concerned as intolerable.
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_high_service" inputtype="text" name="Service Delivery">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_high_service_default">The effect would be evaluated by all concerned as intolerable.
                         An IT system failure is tolerable only up to ??? hours.
                     </param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_high_publicity" inputtype="text" name="Publicity">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_high_publicity_default">A far-reaching reputation or confidence impairment, possibly
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_high_publicity" inputtype="text" name="Publicity">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_high_publicity_default">A far-reaching reputation or confidence impairment, possibly
                         even endangering the existence of the organization is conceivable.
                     </param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_high_financial" inputtype="text" name="Financial Implications">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_high_financial_default">The financial loss is greater than ???,- EUR.
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_high_financial" inputtype="text"
+                name="Financial Implications">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_high_financial_default">The financial loss is greater than ???,- EUR.
                     </param>
-        </defaultRule>
-      </huiproperty>
-    </huipropertygroup>
-    <huipropertygroup id="bp_itnetwork_group_protection_level_very_high" name="Protection Level Category: Very High">
-      <huiproperty id="bp_itnetwork_pl_very_high_laws" inputtype="text" name="Laws / regulations / contracts">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_very_high_laws_default">CHANGE TO VERY HIGH: Fundamental breach of rules and laws of
+                </defaultRule>
+            </huiproperty>
+        </huipropertygroup>
+        <huipropertygroup id="bp_itnetwork_group_protection_level_very_high" name="Protection Level Category: Very High">
+            <huiproperty id="bp_itnetwork_pl_very_high_laws" inputtype="text"
+                name="Laws / regulations / contracts">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_very_high_laws_default">CHANGE TO VERY HIGH: Fundamental breach of rules and laws of
                         contract, their liability damages being ruinous
                     </param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_very_high_privacy" inputtype="text" name="Privacy">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_very_high_privacy_default">CHANGE TO VERY HIGH: A particularly significant impairment of
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_very_high_privacy" inputtype="text" name="Privacy">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_very_high_privacy_default">CHANGE TO VERY HIGH: A particularly significant impairment of
                         informational self-determination of the individual seems possible. A
                         possible abuse of personal data would mean social or economic ruin for the
                         affected person.
                     </param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_very_high_injury" inputtype="text" name="Injury">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_very_high_injury_default">CHANGE TO VERY HIGH: Serious breaches of personal integrity are
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_very_high_injury" inputtype="text" name="Injury">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_very_high_injury_default">CHANGE TO VERY HIGH: Serious breaches of personal integrity are
                         possible. Danger to life and limb.
                     </param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_very_high_service" inputtype="text" name="Service Delivery">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_very_high_service_default">CHANGE TO VERY HIGH: The effect would be evaluated by all
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_very_high_service" inputtype="text"
+                name="Service Delivery">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_very_high_service_default">CHANGE TO VERY HIGH: The effect would be evaluated by all
                         concerned as intolerable. An IT system failure is tolerable only up to ???
                         hours.
                     </param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_very_high_publicity" inputtype="text" name="Publicity">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_very_high_publicity_default">CHANGE TO VERY HIGH: A far-reaching reputation or confidence
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_very_high_publicity" inputtype="text" name="Publicity">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_very_high_publicity_default">CHANGE TO VERY HIGH: A far-reaching reputation or confidence
                         impairment, possibly even endangering the existence of the organization is
                         conceivable.
                     </param>
-        </defaultRule>
-      </huiproperty>
-      <huiproperty id="bp_itnetwork_pl_very_high_financial" inputtype="text" name="Financial Implications">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_pl_very_high_financial_default">CHANGE TO VERY HIGH: The financial loss is greater than ???,-
+                </defaultRule>
+            </huiproperty>
+            <huiproperty id="bp_itnetwork_pl_very_high_financial" inputtype="text"
+                name="Financial Implications">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_pl_very_high_financial_default">CHANGE TO VERY HIGH: The financial loss is greater than ???,-
                         EUR.
                     </param>
-        </defaultRule>
-      </huiproperty>
-    </huipropertygroup>
-    <huipropertygroup id="bp_itnetwork_threat_probability_group" name="Threat probability" tags="Risk">
-      <huiproperty id="bp_itnetwork_threat_probability" inputtype="text" name="Probability" tags="Risk" textrows="6">
-        <defaultRule class="SimpleValue">
-          <param id="bp_itnetwork_threat_probability_default">Threats are classified by the probability of their ocurrence as follows:
-Rare
-Medium
-Frequent
-Very often
+                </defaultRule>
+            </huiproperty>
+        </huipropertygroup>
+        <huipropertygroup id="bp_itnetwork_threat_probability_group" name="Threat probability"
+            tags="Risk">
+            <huiproperty id="bp_itnetwork_threat_probability" inputtype="text" name="Probability"
+                tags="Risk" textrows="6">
+                <defaultRule class="SimpleValue">
+                    <param id="bp_itnetwork_threat_probability_default">Threats are classified by the probability of their ocurrence as
+                        follows:
+                        Rare
+                        Medium
+                        Frequent
+                        Very often
                     </param>
-        </defaultRule>
-      </huiproperty>
-    </huipropertygroup>
-    <huipropertygroup id="bp_itnetwork_risk_group" name="Acceptable Risk Levels" tags="Risk">
-      <huiproperty id="bp_itnetwork_risk_acceptance_c" inputtype="numericoption" max="6" min="0" name="Confidentiality" tags="Risk"/>
-      <huiproperty id="bp_itnetwork_risk_acceptance_i" inputtype="numericoption" max="6" min="0" name="Integrity" tags="Risk"/>
-      <huiproperty id="bp_itnetwork_risk_acceptance_a" inputtype="numericoption" max="6" min="0" name="Availability" tags="Risk"/>
-      <huiproperty id="bp_itnetwork_risk_acceptance_explanation" inputtype="text" name="Explanation" tags="Risk"/>
-    </huipropertygroup>
-    <huipropertygroup id="bp_itnetwork_vv_bsig" name="VV BSIG">
-      <huiproperty id="bp_itnetwork_vv_bsig_authority" name="Authority"/>
-      <huiproperty id="bp_itnetwork_vv_bsig_availability_phone" name="Availability Phone"/>
-      <huiproperty id="bp_itnetwork_vv_bsig_availability_email" name="Availability E-Mail"/>
-      <huiproperty id="bp_itnetwork_vv_bsig_enquiry_phone" name="Enquiry Phone"/>
-      <huiproperty id="bp_itnetwork_vv_bsig_equiry_email" name="Enquiry E-Mail"/>
-    </huipropertygroup>
-    <huipropertygroup id="bp_itnetwork_data_protection_group" name="Data protection supervisory authority">
-      <huiproperty id="bp_itnetwork_data_protection_authority" name="Competent supervisory authority"/>
-      <huiproperty id="bp_itnetwork_data_protection_adress" name="Address"/>
-      <huiproperty id="bp_itnetwork_data_protection_telephone" name="Phone"/>
-      <huiproperty id="bp_itnetwork_data_protection_email" name="E-Mail"/>
-    </huipropertygroup>
-  </huientity>
-  
-  <huientity id="bp_application" name="Application">
-	<huirelation to="bp_application" id="rel_bp_application_bp_application" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_itsystem" id="rel_bp_application_bp_itsystem" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_icssystem" id="rel_bp_application_bp_icssystem" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_device" id="rel_bp_application_bp_device" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_network" id="rel_bp_application_bp_network" name="depends on" reversename="necessary for"/>
-   
-    <huiproperty id="bp_application_abbr" name="Abbreviation" required="true"/>
-    <huiproperty id="bp_application_name" name="Title" required="true"/>
-    <huiproperty id="bp_application_tag" name="Tags" tooltip="List of tags, separated by comma or space"/>
-    <huiproperty id="bp_application_description" inputtype="text" name="Description"/>
-    <huiproperty id="bp_application_platform" name="Platform / Module"/>
-    <huiproperty id="bp_application_count" name="Anzahl"/>
-    <huiproperty id="bp_application_status" inputtype="singleoption" name="Status">
-      <option id="bp_application_status_operation" name="Operation"/>
-      <option id="bp_application_status_planning" name="Planning"/>
-      <option id="bp_application_status_test" name="Test"/>
-      <option id="bp_application_status_reserve" name="Reserve"/>
-    </huiproperty>
-   
-    <huiproperty id="bp_application_document" isURL="true" name="Document"/>
-    <huipropertygroup id="bp_application_group_business_impact" name="Protection Requirement" tags="Risk">
-      <huiproperty defaultValue="1" id="bp_application_value_method_confidentiality" inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk"/>
-      <huiproperty defaultValue="1" id="bp_application_value_method_integrity" inputtype="booleanoption" name="Deduce Integrity" tags="Risk"/>
-      <huiproperty defaultValue="1" id="bp_application_value_method_availability" inputtype="booleanoption" name="Deduce Availability" tags="Risk"/>
-      <huiproperty id="bp_application_value_confidentiality" inputtype="numericoption" max="3" min="0" name="Confidentiality" tags="Risk">
-        <depends option="bp_application_value_method_confidentiality" value="0"/>
-        <option id="bp_application_value_confidentiality_low" name="Insignificant" value="0"/>
-        <option id="bp_application_value_confidentiality_normal" name="Normal" value="1"/>
-        <option id="bp_application_value_confidentiality_high" name="High" value="2"/>
-        <option id="bp_application_value_confidentiality_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty defaultValue="0" id="bp_application_value_integrity" inputtype="numericoption" max="3" min="0" name="Integrity" tags="Risk">
-        <depends option="bp_application_value_method_integrity" value="0"/>
-        <option id="bp_application_value_integrity_low" name="Insignificant" value="0"/>
-        <option id="bp_application_value_integrity_normal" name="Normal" value="1"/>
-        <option id="bp_application_value_integrity_high" name="High" value="2"/>
-        <option id="bp_application_value_integrity_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_application_value_availability" inputtype="numericoption" max="3" min="0" name="Availability" tags="Risk">
-        <depends option="bp_application_value_method_availability" value="0"/>
-        <option id="bp_application_value_availability_low" name="Insignificant" value="0"/>
-        <option id="bp_application_value_availability_normal" name="Normal" value="1"/>
-        <option id="bp_application_value_availability_high" name="High" value="2"/>
-        <option id="bp_application_value_availability_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_application_value_comment_c" inputtype="text" name="Explanation Confidentiality" tags="Risk"/>
-      <huiproperty id="bp_application_value_comment_i" inputtype="text" name="Explanation Integrity" tags="Risk"/>
-      <huiproperty id="bp_application_value_comment_a" inputtype="text" name="Explanation Availability" tags="Risk"/>
-      
-      <huiproperty id="bp_application_replacementcost" name="Replacement Cost" tags="Finance"/>
-      <huiproperty id="bp_application_replcost_currency" inputtype="singleoption" name="Currency" tags="Finance">
-        <option id="bp_application_replcost_currency_eur" name="€"/>
-        <option id="bp_application_replcost_currency_usd" name="$"/>
-        <option id="bp_application_replcost_currency_bpd" name="£"/>
-        <option id="bp_application_replcost_currency_yen" name="¥"/>
-      </huiproperty>
+                </defaultRule>
+            </huiproperty>
+        </huipropertygroup>
+        <huipropertygroup id="bp_itnetwork_risk_group" name="Acceptable Risk Levels"
+            tags="Risk">
+            <huiproperty id="bp_itnetwork_risk_acceptance_c" inputtype="numericoption"
+                max="6" min="0" name="Confidentiality" tags="Risk" />
+            <huiproperty id="bp_itnetwork_risk_acceptance_i" inputtype="numericoption"
+                max="6" min="0" name="Integrity" tags="Risk" />
+            <huiproperty id="bp_itnetwork_risk_acceptance_a" inputtype="numericoption"
+                max="6" min="0" name="Availability" tags="Risk" />
+            <huiproperty id="bp_itnetwork_risk_acceptance_explanation" inputtype="text"
+                name="Explanation" tags="Risk" />
+        </huipropertygroup>
+        <huipropertygroup id="bp_itnetwork_vv_bsig" name="VV BSIG">
+            <huiproperty id="bp_itnetwork_vv_bsig_authority" name="Authority" />
+            <huiproperty id="bp_itnetwork_vv_bsig_availability_phone" name="Availability Phone" />
+            <huiproperty id="bp_itnetwork_vv_bsig_availability_email" name="Availability E-Mail" />
+            <huiproperty id="bp_itnetwork_vv_bsig_enquiry_phone" name="Enquiry Phone" />
+            <huiproperty id="bp_itnetwork_vv_bsig_equiry_email" name="Enquiry E-Mail" />
+        </huipropertygroup>
+        <huipropertygroup id="bp_itnetwork_data_protection_group" name="Data protection supervisory authority">
+            <huiproperty id="bp_itnetwork_data_protection_authority" name="Competent supervisory authority" />
+            <huiproperty id="bp_itnetwork_data_protection_adress" name="Address" />
+            <huiproperty id="bp_itnetwork_data_protection_telephone" name="Phone" />
+            <huiproperty id="bp_itnetwork_data_protection_email" name="E-Mail" />
+        </huipropertygroup>
+    </huientity>
 
-    </huipropertygroup>
-    <huipropertygroup id="bp_application_risk_group" name="Risk Management" tags="Risk">
-      <huiproperty editable="false" id="bp_application_risk_c" name="Confidentiality risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_application_risk_i" name="Integrity risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_application_risk_a" name="Availability risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_application_risk_with_control_c" name="Confidentiality risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_application_risk_with_control_i" name="Integrity risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_application_risk_with_control_a" name="Availability risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_application_risk_planned_control_c" name="Confidentiality risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_application_risk_planned_control_i" name="Integrity risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_application_risk_planned_control_a" name="Availability risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_application_risk_without_na_control_c" name="Confidentiality risk without N.A safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_application_risk_without_na_control_i" name="Integrity risk without N.A safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_application_risk_without_na_control_a" name="Availability risk without N.A safeguards" tags="Risk"/>
-    </huipropertygroup>
-    <huipropertygroup id="bp_application_risktreat_group" name="Risk Treatment" tags="Risk">
-      <huiproperty id="bp_application_risktreat" inputtype="singleoption" name="Risk Treatment" tags="Risk">
-        <option id="bp_application_risktreat_reduct" name="Reduction"/>
-        <option id="bp_application_risktreat_retent" name="Retention"/>
-        <option id="bp_application_risktreat_avoid" name="Avoidance"/>
-        <option id="bp_application_risktreat_transfer" name="Transfer"/>
-      </huiproperty>
-      <huiproperty id="bp_application_risktreat_explanation" inputtype="text" name="Explanation" tags="Risk"/>
-    </huipropertygroup>
-  </huientity>
-  
-  <huientity id="bp_application_group" name="Application Group">
-    <huiproperty id="bp_application_group_name" name="Title" required="true"/>
-    <huiproperty id="bp_application_group_desc" inputtype="text" name="Description"/>
-    <huiproperty id="bp_application_group_tag" name="Tags"/>
-  </huientity>
-  
-  <huientity id="bp_businessprocess" name="Business Process">
-	<huirelation to="bp_businessprocess" id="rel_bp_businessprocess_bp_businessprocess" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_application" id="rel_bp_businessprocess_bp_application" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_itsystem" id="rel_bp_businessprocess_bp_itsystem" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_icssystem" id="rel_bp_businessprocess_bp_icssystem" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_device" id="rel_bp_businessprocess_bp_device" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_network" id="rel_bp_businessprocess_bp_network" name="depends on" reversename="necessary for"/>
-    
-    <huiproperty id="bp_businessprocess_abbr" name="Abbreviation" required="true"/>
-    <huiproperty id="bp_businessprocess_name" name="Title" required="true"/>
-    <huiproperty id="bp_businessprocess_tag" name="Tags" tooltip="List of tags, separated by comma or space"/>
-    <huiproperty id="bp_businessprocess_description" inputtype="text" name="Description"/>
-    <huiproperty id="bp_businessprocess_type" inputtype="singleoption" name="Type of Process">
-      <option id="bp_businessprocess_type_core" name="Core Business"/>
-      <option id="bp_businessprocess_type_support" name="Supporting Process"/>
-    </huiproperty>
-    
-    <huiproperty id="bp_businessprocess_document" isURL="true" name="Document"/>
-    <huipropertygroup id="bp_businessprocess_group_business_impact" name="Protection Requirement" tags="Risk">
-      <huiproperty defaultValue="0" id="bp_businessprocess_value_method_confidentiality" inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk"/>
-      <huiproperty defaultValue="0" id="bp_businessprocess_value_method_integrity" inputtype="booleanoption" name="Deduce Integrity" tags="Risk"/>
-      <huiproperty defaultValue="0" id="bp_businessprocess_value_method_availability" inputtype="booleanoption" name="Deduce Availability" tags="Risk"/>
-      <huiproperty id="bp_businessprocess_value_confidentiality" inputtype="numericoption" max="3" min="0" name="Confidentiality" tags="Risk">
-        <depends option="bp_businessprocess_value_method_confidentiality" value="0"/>
-        <option id="bp_businessprocess_value_confidentiality_low" name="Insignificant" value="0"/>
-        <option id="bp_businessprocess_value_confidentiality_normal" name="Normal" value="1"/>
-        <option id="bp_businessprocess_value_confidentiality_high" name="High" value="2"/>
-        <option id="bp_businessprocess_value_confidentiality_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_businessprocess_value_integrity" inputtype="numericoption" max="3" min="0" name="Integrity" tags="Risk">
-        <depends option="bp_businessprocess_value_method_integrity" value="0"/>
-        <option id="bp_businessprocess_value_integrity_low" name="Insignificant" value="0"/>
-        <option id="bp_businessprocess_value_integrity_normal" name="Normal" value="1"/>
-        <option id="bp_businessprocess_value_integrity_high" name="High" value="2"/>
-        <option id="bp_businessprocess_value_integrity_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_businessprocess_value_availability" inputtype="numericoption" max="3" min="0" name="Availability" tags="Risk">
-        <depends option="bp_businessprocess_value_method_availability" value="0"/>
-        <option id="bp_businessprocess_value_availability_low" name="Insignificant" value="0"/>
-        <option id="bp_businessprocess_value_availability_normal" name="Normal" value="1"/>
-        <option id="bp_businessprocess_value_availability_high" name="High" value="2"/>
-        <option id="bp_businessprocess_value_availability_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_businessprocess_value_comment_c" inputtype="text" name="Explanation Confidentiality" tags="Risk"/>
-      <huiproperty id="bp_businessprocess_value_comment_i" inputtype="text" name="Explanation Integrity" tags="Risk"/>
-      <huiproperty id="bp_businessprocess_value_comment_a" inputtype="text" name="Explanation Availability" tags="Risk"/>
-      
-      <huiproperty id="bp_businessprocess_replacementcost" name="Replacement Cost" tags="Finance"/>
-      <huiproperty id="bp_businessprocess_replcost_currency" inputtype="singleoption" name="Currency" tags="Finance">
-        <option id="bp_businessprocess_replcost_currency_eur" name="€"/>
-        <option id="bp_businessprocess_replcost_currency_usd" name="$"/>
-        <option id="bp_businessprocess_replcost_currency_bpd" name="£"/>
-        <option id="bp_businessprocess_replcost_currency_yen" name="¥"/>
-      </huiproperty>
-      
-    </huipropertygroup>
-    
-    <huipropertygroup id="bp_businessprocess_risk_group" name="Risk Management" tags="Risk">
-      <huiproperty editable="false" id="bp_businessprocess_risk_c" name="Confidentiality risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_businessprocess_risk_i" name="Integrity risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_businessprocess_risk_a" name="Availability risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_businessprocess_risk_with_control_c" name="Confidentiality risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_businessprocess_risk_with_control_i" name="Integrity risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_businessprocess_risk_with_control_a" name="Availability risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_businessprocess_risk_planned_control_c" name="Confidentiality risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_businessprocess_risk_planned_control_i" name="Integrity risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_businessprocess_risk_planned_control_a" name="Availability risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_businessprocess_risk_without_na_control_c" name="Confidentiality risk without N.A safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_businessprocess_risk_without_na_control_i" name="Integrity risk without N.A safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_businessprocess_risk_without_na_control_a" name="Availability risk without N.A safeguards" tags="Risk"/>
-    </huipropertygroup>
-    <huipropertygroup id="bp_businessprocess_risktreat_group" name="Risk Treatment" tags="Risk">
-      <huiproperty id="bp_businessprocess_risktreat" inputtype="singleoption" name="Risk Treatment" tags="Risk">
-        <option id="bp_businessprocess_risktreat_reduct" name="Reduction"/>
-        <option id="bp_businessprocess_risktreat_retent" name="Retention"/>
-        <option id="bp_businessprocess_risktreat_avoid" name="Avoidance"/>
-        <option id="bp_businessprocess_risktreat_transfer" name="Transfer"/>
-      </huiproperty>
-      <huiproperty id="bp_businessprocess_risktreat_explanation" inputtype="text" name="Explanation" tags="Risk"/>
-    </huipropertygroup>
-  </huientity>
-  <huientity id="bp_businessprocess_group" name="Business Process Group">
-    <huiproperty id="bp_businessprocess_group_name" name="Title" required="true"/>
-    <huiproperty id="bp_businessprocess_group_desc" inputtype="text" name="Description"/>
-    <huiproperty id="bp_businessprocess_group_tag" name="Tags"/>
-  </huientity>
-  
-  <huientity id="bp_icssystem" name="ICS System">
-    <huirelation to="bp_icssystem" id="rel_bp_icssystem_bp_icssystem" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_device" id="rel_bp_icssystem_bp_device" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_network" id="rel_bp_icssystem_bp_network" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_room" id="rel_bp_icssystem_bp_room" name="located in" reversename="includes"/>
-    
-    <huiproperty id="bp_icssystem_abbr" name="Abbreviation" required="true"/>
-    <huiproperty id="bp_icssystem_name" name="Title" required="true"/>
-    <huiproperty id="bp_icssystem_tag" name="Tags" tooltip="List of tags, separated by comma or space"/>
-    <huiproperty id="bp_icssystem_description" inputtype="text" name="Description"/>
-    <huiproperty id="bp_icssystem_platform" name="Platform / Module"/>
-    <huiproperty id="bp_icssystem_count" name="Anzahl"/>
-    <huiproperty id="bp_icssystem_status" inputtype="singleoption" name="Status">
-      <option id="bp_icssystem_status_operation" name="Operation"/>
-      <option id="bp_icssystem_status_planning" name="Planning"/>
-      <option id="bp_icssystem_status_test" name="Test"/>
-      <option id="bp_icssystem_status_reserve" name="Reserve"/>
-    </huiproperty>
-    
-    <huiproperty id="bp_icssystem_document" isURL="true" name="Document"/>
-    <huipropertygroup id="bp_icssystem_group_business_impact" name="Protection Requirement" tags="Risk">
-      <huiproperty defaultValue="1" id="bp_icssystem_value_method_confidentiality" inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk"/>
-      <huiproperty defaultValue="1" id="bp_icssystem_value_method_integrity" inputtype="booleanoption" name="Deduce Integrity" tags="Risk"/>
-      <huiproperty defaultValue="1" id="bp_icssystem_value_method_availability" inputtype="booleanoption" name="Deduce Availability" tags="Risk"/>
-      <huiproperty id="bp_icssystem_value_confidentiality" inputtype="numericoption" max="3" min="0" name="Confidentiality" tags="Risk">
-        <depends option="bp_icssystem_value_method_confidentiality" value="0"/>
-        <option id="bp_icssystem_value_confidentiality_low" name="Insignificant" value="0"/>
-        <option id="bp_icssystem_value_confidentiality_normal" name="Normal" value="1"/>
-        <option id="bp_icssystem_value_confidentiality_high" name="High" value="2"/>
-        <option id="bp_icssystem_value_confidentiality_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_icssystem_value_integrity" inputtype="numericoption" max="3" min="0" name="Integrity" tags="Risk">
-        <depends option="bp_icssystem_value_method_integrity" value="0"/>
-        <option id="bp_icssystem_value_integrity_low" name="Insignificant" value="0"/>
-        <option id="bp_icssystem_value_integrity_normal" name="Normal" value="1"/>
-        <option id="bp_icssystem_value_integrity_high" name="High" value="2"/>
-        <option id="bp_icssystem_value_integrity_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_icssystem_value_availability" inputtype="numericoption" max="3" min="0" name="Availability" tags="Risk">
-        <depends option="bp_icssystem_value_method_availability" value="0"/>
-        <option id="bp_icssystem_value_availability_low" name="Insignificant" value="0"/>
-        <option id="bp_icssystem_value_availability_normal" name="Normal" value="1"/>
-        <option id="bp_icssystem_value_availability_high" name="High" value="2"/>
-        <option id="bp_icssystem_value_availability_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_icssystem_value_comment_c" inputtype="text" name="Explanation Confidentiality" tags="Risk"/>
-      <huiproperty id="bp_icssystem_value_comment_i" inputtype="text" name="Explanation Integrity" tags="Risk"/>
-      <huiproperty id="bp_icssystem_value_comment_a" inputtype="text" name="Explanation Availability" tags="Risk"/>
-      
-      <huiproperty id="bp_icssystem_replacementcost" name="Replacement Cost" tags="Finance"/>
-      <huiproperty id="bp_icssystem_replcost_currency" inputtype="singleoption" name="Currency" tags="Finance">
-        <option id="bp_icssystem_replcost_currency_eur" name="€"/>
-        <option id="bp_icssystem_replcost_currency_usd" name="$"/>
-        <option id="bp_icssystem_replcost_currency_bpd" name="£"/>
-        <option id="bp_icssystem_replcost_currency_yen" name="¥"/>
-      </huiproperty>
-     
-    </huipropertygroup>
-    <huipropertygroup id="bp_icssystem_risk_group" name="Risk Management" tags="Risk">
-      <huiproperty editable="false" id="bp_icssystem_risk_c" name="Confidentiality risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_icssystem_risk_i" name="Integrity risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_icssystem_risk_a" name="Availability risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_icssystem_risk_with_control_c" name="Confidentiality risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_icssystem_risk_with_control_i" name="Integrity risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_icssystem_risk_with_control_a" name="Availability risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_icssystem_risk_planned_control_c" name="Confidentiality risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_icssystem_risk_planned_control_i" name="Integrity risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_icssystem_risk_planned_control_a" name="Availability risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_icssystem_risk_without_na_control_c" name="Confidentiality risk without N.A safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_icssystem_risk_without_na_control_i" name="Integrity risk without N.A safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_icssystem_risk_without_na_control_a" name="Availability risk without N.A safeguards" tags="Risk"/>
-    </huipropertygroup>
-    <huipropertygroup id="bp_icssystem_risktreat_group" name="Risk Treatment" tags="Risk">
-      <huiproperty id="bp_icssystem_risktreat" inputtype="singleoption" name="Risk Treatment" tags="Risk">
-        <option id="bp_icssystem_risktreat_reduct" name="Reduction"/>
-        <option id="bp_icssystem_risktreat_retent" name="Retention"/>
-        <option id="bp_icssystem_risktreat_avoid" name="Avoidance"/>
-        <option id="bp_icssystem_risktreat_transfer" name="Transfer"/>
-      </huiproperty>
-      <huiproperty id="bp_icssystem_risktreat_explanation" inputtype="text" name="Explanation" tags="Risk"/>
-    </huipropertygroup>
-  </huientity>
-  <huientity id="bp_icssystem_group" name="ICS System Group">
-    <huiproperty id="bp_icssystem_group_name" name="Title" required="true"/>
-    <huiproperty id="bp_icssystem_group_desc" inputtype="text" name="Description"/>
-    <huiproperty id="bp_icssystem_group_tag" name="Tags"/>
-  </huientity>
-  
-  <huientity id="bp_itsystem" name="IT System">
-	<huirelation to="bp_itsystem" id="rel_bp_itsystem_bp_itsystem" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_icssystem" id="rel_bp_itsystem_bp_icssystem" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_device" id="rel_bp_itsystem_bp_device" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_network" id="rel_bp_itsystem_bp_network" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_room" id="rel_bp_itsystem_bp_room" name="located in" reversename="includes"/>
-    
-    <huiproperty id="bp_itsystem_abbr" name="Abbreviation" required="true"/>
-    <huiproperty id="bp_itsystem_name" name="Title" required="true"/>
-    <huiproperty id="bp_itsystem_tag" name="Tags" tooltip="List of tags, separated by comma or space"/>
-    <huiproperty id="bp_itsystem_description" inputtype="text" name="Description"/>
-    <huiproperty id="bp_itsystem_platform" name="Platform / Module"/>
-    <huiproperty id="bp_itsystem_count" name="Anzahl"/>
-    <huiproperty id="bp_itsystem_status" inputtype="singleoption" name="Status">
-      <option id="bp_itsystem_status_operation" name="Operation"/>
-      <option id="bp_itsystem_status_planning" name="Planning"/>
-      <option id="bp_itsystem_status_test" name="Test"/>
-      <option id="bp_itsystem_status_reserve" name="Reserve"/>
-    </huiproperty>
-    
-    <huiproperty id="bp_itsystem_document" isURL="true" name="Document"/>
-    <huipropertygroup id="bp_itsystem_group_business_impact" name="Protection Requirement" tags="Risk">
-      <huiproperty defaultValue="1" id="bp_itsystem_value_method_confidentiality" inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk"/>
-      <huiproperty defaultValue="1" id="bp_itsystem_value_method_integrity" inputtype="booleanoption" name="Deduce Integrity" tags="Risk"/>
-      <huiproperty defaultValue="1" id="bp_itsystem_value_method_availability" inputtype="booleanoption" name="Deduce Availability" tags="Risk"/>
-      <huiproperty id="bp_itsystem_value_confidentiality" inputtype="numericoption" max="3" min="0" name="Confidentiality" tags="Risk">
-        <depends option="bp_itsystem_value_method_confidentiality" value="0"/>
-        <option id="bp_itsystem_value_confidentiality_low" name="Insignificant" value="0"/>
-        <option id="bp_itsystem_value_confidentiality_normal" name="Normal" value="1"/>
-        <option id="bp_itsystem_value_confidentiality_high" name="High" value="2"/>
-        <option id="bp_itsystem_value_confidentiality_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_itsystem_value_integrity" inputtype="numericoption" max="3" min="0" name="Integrity" tags="Risk">
-        <depends option="bp_itsystem_value_method_integrity" value="0"/>
-        <option id="bp_itsystem_value_integrity_low" name="Insignificant" value="0"/>
-        <option id="bp_itsystem_value_integrity_normal" name="Normal" value="1"/>
-        <option id="bp_itsystem_value_integrity_high" name="High" value="2"/>
-        <option id="bp_itsystem_value_integrity_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_itsystem_value_availability" inputtype="numericoption" max="3" min="0" name="Availability" tags="Risk">
-        <depends option="bp_itsystem_value_method_availability" value="0"/>
-        <option id="bp_itsystem_value_availability_low" name="Insignificant" value="0"/>
-        <option id="bp_itsystem_value_availability_normal" name="Normal" value="1"/>
-        <option id="bp_itsystem_value_availability_high" name="High" value="2"/>
-        <option id="bp_itsystem_value_availability_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_itsystem_value_comment_c" inputtype="text" name="Explanation Confidentiality" tags="Risk"/>
-      <huiproperty id="bp_itsystem_value_comment_i" inputtype="text" name="Explanation Integrity" tags="Risk"/>
-      <huiproperty id="bp_itsystem_value_comment_a" inputtype="text" name="Explanation Availability" tags="Risk"/>
-      
-      <huiproperty id="bp_itsystem_replacementcost" name="Replacement Cost" tags="Finance"/>
-      <huiproperty id="bp_itsystem_replcost_currency" inputtype="singleoption" name="Currency" tags="Finance">
-        <option id="bp_itsystem_replcost_currency_eur" name="€"/>
-        <option id="bp_itsystem_replcost_currency_usd" name="$"/>
-        <option id="bp_itsystem_replcost_currency_bpd" name="£"/>
-        <option id="bp_itsystem_replcost_currency_yen" name="¥"/>
-      </huiproperty>
-      
-    </huipropertygroup>
-    <huipropertygroup id="bp_itsystem_risk_group" name="Risk Management" tags="Risk">
-      <huiproperty editable="false" id="bp_itsystem_risk_c" name="Confidentiality risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_itsystem_risk_i" name="Integrity risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_itsystem_risk_a" name="Availability risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_itsystem_risk_with_control_c" name="Confidentiality risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_itsystem_risk_with_control_i" name="Integrity risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_itsystem_risk_with_control_a" name="Availability risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_itsystem_risk_planned_control_c" name="Confidentiality risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_itsystem_risk_planned_control_i" name="Integrity risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_itsystem_risk_planned_control_a" name="Availability risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_itsystem_risk_without_na_control_c" name="Confidentiality risk without N.A safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_itsystem_risk_without_na_control_i" name="Integrity risk without N.A safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_itsystem_risk_without_na_control_a" name="Availability risk without N.A safeguards" tags="Risk"/>
-    </huipropertygroup>
-    <huipropertygroup id="bp_itsystem_risktreat_group" name="Risk Treatment" tags="Risk">
-      <huiproperty id="bp_itsystem_risktreat" inputtype="singleoption" name="Risk Treatment" tags="Risk">
-        <option id="bp_itsystem_risktreat_reduct" name="Reduction"/>
-        <option id="bp_itsystem_risktreat_retent" name="Retention"/>
-        <option id="bp_itsystem_risktreat_avoid" name="Avoidance"/>
-        <option id="bp_itsystem_risktreat_transfer" name="Transfer"/>
-      </huiproperty>
-      <huiproperty id="bp_itsystem_risktreat_explanation" inputtype="text" name="Explanation" tags="Risk"/>
-    </huipropertygroup>
-  </huientity>
-  <huientity id="bp_itsystem_group" name="IT System Group">
-    <huiproperty id="bp_itsystem_group_name" name="Title" required="true"/>
-    <huiproperty id="bp_itsystem_group_desc" inputtype="text" name="Description"/>
-    <huiproperty id="bp_itsystem_group_tag" name="Tags"/>
-  </huientity>
-  <huientity id="bp_person" name="Person">
-	<huirelation to="bp_businessprocess" id="rel_bp_person_bp_businessprocess" name="Responsible for" reversename="Person responsible"/>
-	<huirelation to="bp_application" id="rel_bp_person_bp_application" name="Responsible for" reversename="Person responsible"/>
- 	<huirelation to="bp_itsystem" id="rel_bp_person_bp_itsystem" name="Responsible for" reversename="Person responsible"/>
-	<huirelation to="bp_icssystem" id="rel_bp_person_bp_icssystem" name="Responsible for" reversename="Person responsible"/>
-	<huirelation to="bp_device" id="rel_bp_person_bp_device" name="Responsible for" reversename="Person responsible"/>
-	<huirelation to="bp_network" id="rel_bp_person_bp_network" name="Responsible for" reversename="Person responsible"/>
-	<huirelation to="bp_room" id="rel_bp_person_bp_room" name="Responsible for" reversename="Person responsible"/>
-	<huirelation to="bp_requirement_group" id="rel_bp_person_bp_requirement_group" name="Responsible for" reversename="Person responsible"/>
-	<huirelation to="bp_requirement" id="rel_bp_person_bp_requirement" name="Responsible for" reversename="Person responsible"/>
-	<huirelation to="bp_threat" id="rel_bp_person_bp_threat" name="Responsible for" reversename="Person responsible"/>
-	<huirelation to="bp_safeguard_group" id="rel_bp_person_bp_safeguard_group" name="Responsible for" reversename="Person responsible"/>
-	<huirelation to="bp_safeguard" id="rel_bp_person_bp_safeguard" name="Responsible for" reversename="Person responsible"/>	
-	
-	<huiproperty id="bp_person_abbr" name="Abbreviation" required="true"/>
-    <huiproperty id="bp_person_title" inputtype="singleoption" name="Anrede">
-      <option id="bp_person_title_none" name=""/>
-      <option id="bp_person_titel_mr" name="Herr"/>
-      <option id="bp_person_titel_mrs" name="Frau"/>
-      <option id="bp_person_titel_mrdr" name="Herr Dr."/>
-      <option id="bp_person_titel_mrsdr" name="Frau Dr."/>
-    </huiproperty>
-    <huiproperty id="bp_person_first_name" name="First name"/>
-    <huiproperty id="bp_person_last_name" name="Last name" required="true"/>
-    <huiproperty id="bp_person_phone" name="Phone"/>
-    <huiproperty id="bp_person_email" name="Email"/>
-    <huiproperty id="bp_person_org_unit" name="=Org. unit"/>
-    <huiproperty id="bp_person_explanation" name="Explanation"/>
-    <huiproperty id="bp_person_tag" name="Tags"/>
-    <huiproperty id="bp_person_document" isURL="true" name="Document"/>
-  </huientity>
-  <huientity id="bp_person_group" name="Person Group">
-    <huiproperty id="bp_person_group_name" name="Title" required="true"/>
-    <huiproperty id="bp_person_group_desc" inputtype="text" name="Description"/>
-    <huiproperty id="bp_person_group_tag" name="Tags"/>
-  </huientity>
-  
-  <huientity id="bp_requirement" name="Requirement">
-	<huirelation to="bp_safeguard" id="rel_bp_requirement_bp_safeguard" name="fulfilled through" reversename="fulfills" />
-	<huirelation to="bp_threat" id="rel_bp_requirement_bp_threat" name="reduces probability" reversename="probability reduced by" />
-	<huirelation to="bp_itnetwork" id="rel_bp_requirement_bp_itnetwork" name="reduces impact of" reversename="impact reduced by" />
-	<huirelation to="bp_businessprocess" id="rel_bp_requirement_bp_businessprocess" name="reduces impact of" reversename="impact reduced by" />
-	<huirelation to="bp_application" id="rel_bp_requirement_bp_application" name="reduces impact of" reversename="impact reduced by" />
-	<huirelation to="bp_itsystem" id="rel_bp_requirement_bp_itsystem" name="reduces impact of" reversename="impact reduced by" />
-	<huirelation to="bp_icssystem" id="rel_bp_requirement_bp_icssystem" name="reduces impact of" reversename="impact reduced by" />
-	<huirelation to="bp_device" id="rel_bp_requirement_bp_device" name="reduces impact of" reversename="impact reduced by" />
-	<huirelation to="bp_network" id="rel_bp_requirement_bp_network" name="reduces impact of" reversename="impact reduced by" />
-	<huirelation to="bp_room" id="rel_bp_requirement_bp_room" name="reduces impact of" reversename="impact reduced by" />
-	
-	<huirelation to="bp_itnetwork" id="rel_bp_requirement_bp_itnetwork_mod" name="models" reversename="modeled with" />
-	<huirelation to="bp_businessprocess" id="rel_bp_requirement_bp_businessprocess_mod" name="models" reversename="modeled with" />
-	<huirelation to="bp_application" id="rel_bp_requirement_bp_application_mod" name="models" reversename="modeled with" />
-	<huirelation to="bp_itsystem" id="rel_bp_requirement_bp_itsystem_mod" name="models" reversename="modeled with" />
-	<huirelation to="bp_icssystem" id="rel_bp_requirement_bp_icssystem_mod" name="models" reversename="modeled with" />
-	<huirelation to="bp_device" id="rel_bp_requirement_bp_device_mod" name="models" reversename="modeled with" />
-	<huirelation to="bp_network" id="rel_bp_requirement_bp_network_mod" name="models" reversename="modeled with" />
-	<huirelation to="bp_room" id="rel_bp_requirement_bp_room_mod" name="models" reversename="modeled with" />
-	
-    <huiproperty id="bp_requirement_id" name="Identifier"/>
-    <huiproperty id="bp_requirement_name" name="Title" required="true"/>
-    <huiproperty id="bp_requirement_qualifier" name="Qualifier" editable="true" visible="true"/>
-    <huiproperty editable="false" id="bp_requirement_objectbrowser_content" inputtype="text" name="Requirement Content" showInObjectBrowser="true" visible="false"/>
-    <huiproperty editable="true" id="bp_requirement_desc" inputtype="text" name="Description" showInObjectBrowser="false" visible="true"/>
-    <huiproperty id="bp_requirement_tag" name="Tags" tooltip="List of tags, separated by comma or space"/>
-    <huiproperty id="bp_requirement_document" isURL="true" name="Document"/>
-    <huiproperty id="bp_requirement_last_change" name="Last Change" inputtype="date" editable="false">
-        <defaultRule class="Today"/>
-    </huiproperty>
-    
-    <huiproperty id="bp_requirement_responsibleroles" name="Responsible Roles"/>
-    <huiproperty defaultValue="1" id="bp_requirement_value_method_confidentiality" inputtype="booleanoption" name="Affects Confidentiality" tags="Risk"/>
-    <huiproperty defaultValue="1" id="bp_requirement_value_method_integrity" inputtype="booleanoption" name="Affects Integrity" tags="Risk"/>
-    <huiproperty defaultValue="1" id="bp_requirement_value_method_availability" inputtype="booleanoption" name="Affects Availability" tags="Risk"/>    
-  
-  <huipropertygroup id="bp_requirement_implementation" name="Implementation"> 
-    <huiproperty defaultValue="1" id="bp_requirement_implementation_deduce" inputtype="booleanoption" name="Deduce Implementation Status from Safeguard" tags="Risk"/>
-    <huiproperty id="bp_requirement_implementation_status" name="Implementation Status"  required="true" inputtype="singleoption">
-      <depends option="bp_requirement_implementation_deduce" value="0"/>
-       <option  id="bp_requirement_implementation_status_no" name="No" />
-       <option  id="bp_requirement_implementation_status_yes"    name="Yes" />
-       <option id="bp_requirement_implementation_status_partially" name="Partially" />
-       <option   id="bp_requirement_implementation_status_na"  name="Not Applicable" />
+    <huientity id="bp_application" name="Application">
+        <huirelation to="bp_application" id="rel_bp_application_bp_application" name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_itsystem" id="rel_bp_application_bp_itsystem" name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_icssystem" id="rel_bp_application_bp_icssystem" name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_device" id="rel_bp_application_bp_device" name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_network" id="rel_bp_application_bp_network" name="depends on"
+            reversename="necessary for" />
+
+        <huiproperty id="bp_application_abbr" name="Abbreviation" required="true" />
+        <huiproperty id="bp_application_name" name="Title" required="true" />
+        <huiproperty id="bp_application_tag" name="Tags"
+            tooltip="List of tags, separated by comma or space" />
+        <huiproperty id="bp_application_description" inputtype="text" name="Description" />
+        <huiproperty id="bp_application_platform" name="Platform / Module" />
+        <huiproperty id="bp_application_count" name="Anzahl" />
+        <huiproperty id="bp_application_status" inputtype="singleoption" name="Status">
+            <option id="bp_application_status_operation" name="Operation" />
+            <option id="bp_application_status_planning" name="Planning" />
+            <option id="bp_application_status_test" name="Test" />
+            <option id="bp_application_status_reserve" name="Reserve" />
+        </huiproperty>
+
+        <huiproperty id="bp_application_document" isURL="true" name="Document" />
+        <huipropertygroup id="bp_application_group_business_impact" name="Protection Requirement"
+            tags="Risk">
+            <huiproperty defaultValue="1" id="bp_application_value_method_confidentiality"
+                inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk" />
+            <huiproperty defaultValue="1" id="bp_application_value_method_integrity"
+                inputtype="booleanoption" name="Deduce Integrity" tags="Risk" />
+            <huiproperty defaultValue="1" id="bp_application_value_method_availability"
+                inputtype="booleanoption" name="Deduce Availability" tags="Risk" />
+            <huiproperty id="bp_application_value_confidentiality" inputtype="numericoption"
+                max="3" min="0" name="Confidentiality" tags="Risk">
+                <depends option="bp_application_value_method_confidentiality" value="0" />
+                <option id="bp_application_value_confidentiality_low" name="Insignificant"
+                    value="0" />
+                <option id="bp_application_value_confidentiality_normal" name="Normal" value="1" />
+                <option id="bp_application_value_confidentiality_high" name="High" value="2" />
+                <option id="bp_application_value_confidentiality_very_high" name="Very High"
+                    value="3" />
             </huiproperty>
-    <huiproperty id="bp_requirement_implementation_desc" name="Description" required="false" inputtype="text" focus="true" />
-  </huipropertygroup>
-  
-  <huipropertygroup id="bp_requirement_effectivenessgroup" name="Safeguard Strength" tags="Risk">
+
+            <huiproperty defaultValue="0" id="bp_application_value_integrity" inputtype="numericoption"
+                max="3" min="0" name="Integrity" tags="Risk">
+                <depends option="bp_application_value_method_integrity" value="0" />
+                <option id="bp_application_value_integrity_low" name="Insignificant" value="0" />
+                <option id="bp_application_value_integrity_normal" name="Normal" value="1" />
+                <option id="bp_application_value_integrity_high" name="High" value="2" />
+                <option id="bp_application_value_integrity_very_high" name="Very High" value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_application_value_availability" inputtype="numericoption"
+                max="3" min="0" name="Availability" tags="Risk">
+                <depends option="bp_application_value_method_availability" value="0" />
+                <option id="bp_application_value_availability_low" name="Insignificant"
+                    value="0" />
+                <option id="bp_application_value_availability_normal" name="Normal" value="1" />
+                <option id="bp_application_value_availability_high" name="High" value="2" />
+                <option id="bp_application_value_availability_very_high" name="Very High"
+                    value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_application_value_comment_c" inputtype="text"
+                name="Explanation Confidentiality" tags="Risk" />
+            <huiproperty id="bp_application_value_comment_i" inputtype="text"
+                name="Explanation Integrity" tags="Risk" />
+            <huiproperty id="bp_application_value_comment_a" inputtype="text"
+                name="Explanation Availability" tags="Risk" />
+
+            <huiproperty id="bp_application_replacementcost" name="Replacement Cost"
+                tags="Finance" />
+            <huiproperty id="bp_application_replcost_currency" inputtype="singleoption"
+                name="Currency" tags="Finance">
+                <option id="bp_application_replcost_currency_eur" name="€" />
+                <option id="bp_application_replcost_currency_usd" name="$" />
+                <option id="bp_application_replcost_currency_bpd" name="£" />
+                <option id="bp_application_replcost_currency_yen" name="¥" />
+            </huiproperty>
+
+        </huipropertygroup>
+        <huipropertygroup id="bp_application_risk_group" name="Risk Management"
+            tags="Risk">
+            <huiproperty editable="false" id="bp_application_risk_c" name="Confidentiality risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_application_risk_i" name="Integrity risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_application_risk_a" name="Availability risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_application_risk_with_control_c"
+                name="Confidentiality risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_application_risk_with_control_i"
+                name="Integrity risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_application_risk_with_control_a"
+                name="Availability risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_application_risk_planned_control_c"
+                name="Confidentiality risk with planned safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_application_risk_planned_control_i"
+                name="Integrity risk with planned safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_application_risk_planned_control_a"
+                name="Availability risk with planned safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_application_risk_without_na_control_c"
+                name="Confidentiality risk without N.A safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_application_risk_without_na_control_i"
+                name="Integrity risk without N.A safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_application_risk_without_na_control_a"
+                name="Availability risk without N.A safeguards" tags="Risk" />
+        </huipropertygroup>
+        <huipropertygroup id="bp_application_risktreat_group" name="Risk Treatment"
+            tags="Risk">
+            <huiproperty id="bp_application_risktreat" inputtype="singleoption" name="Risk Treatment"
+                tags="Risk">
+                <option id="bp_application_risktreat_reduct" name="Reduction" />
+                <option id="bp_application_risktreat_retent" name="Retention" />
+                <option id="bp_application_risktreat_avoid" name="Avoidance" />
+                <option id="bp_application_risktreat_transfer" name="Transfer" />
+            </huiproperty>
+            <huiproperty id="bp_application_risktreat_explanation" inputtype="text"
+                name="Explanation" tags="Risk" />
+        </huipropertygroup>
+    </huientity>
+
+    <huientity id="bp_application_group" name="Application Group">
+        <huiproperty id="bp_application_group_name" name="Title" required="true" />
+        <huiproperty id="bp_application_group_desc" inputtype="text" name="Description" />
+        <huiproperty id="bp_application_group_tag" name="Tags" />
+    </huientity>
+
+    <huientity id="bp_businessprocess" name="Business Process">
+        <huirelation to="bp_businessprocess" id="rel_bp_businessprocess_bp_businessprocess"
+            name="depends on" reversename="necessary for" />
+        <huirelation to="bp_application" id="rel_bp_businessprocess_bp_application"
+            name="depends on" reversename="necessary for" />
+        <huirelation to="bp_itsystem" id="rel_bp_businessprocess_bp_itsystem" name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_icssystem" id="rel_bp_businessprocess_bp_icssystem" name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_device" id="rel_bp_businessprocess_bp_device" name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_network" id="rel_bp_businessprocess_bp_network" name="depends on"
+            reversename="necessary for" />
+
+        <huiproperty id="bp_businessprocess_abbr" name="Abbreviation" required="true" />
+        <huiproperty id="bp_businessprocess_name" name="Title" required="true" />
+        <huiproperty id="bp_businessprocess_tag" name="Tags"
+            tooltip="List of tags, separated by comma or space" />
+        <huiproperty id="bp_businessprocess_description" inputtype="text" name="Description" />
+        <huiproperty id="bp_businessprocess_type" inputtype="singleoption" name="Type of Process">
+            <option id="bp_businessprocess_type_core" name="Core Business" />
+            <option id="bp_businessprocess_type_support" name="Supporting Process" />
+        </huiproperty>
+
+        <huiproperty id="bp_businessprocess_document" isURL="true" name="Document" />
+        <huipropertygroup id="bp_businessprocess_group_business_impact" name="Protection Requirement"
+            tags="Risk">
+            <huiproperty defaultValue="0" id="bp_businessprocess_value_method_confidentiality"
+                inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk" />
+            <huiproperty defaultValue="0" id="bp_businessprocess_value_method_integrity"
+                inputtype="booleanoption" name="Deduce Integrity" tags="Risk" />
+            <huiproperty defaultValue="0" id="bp_businessprocess_value_method_availability"
+                inputtype="booleanoption" name="Deduce Availability" tags="Risk" />
+            <huiproperty id="bp_businessprocess_value_confidentiality" inputtype="numericoption"
+                max="3" min="0" name="Confidentiality" tags="Risk">
+                <depends option="bp_businessprocess_value_method_confidentiality" value="0" />
+                <option id="bp_businessprocess_value_confidentiality_low" name="Insignificant"
+                    value="0" />
+                <option id="bp_businessprocess_value_confidentiality_normal" name="Normal"
+                    value="1" />
+                <option id="bp_businessprocess_value_confidentiality_high" name="High" value="2" />
+                <option id="bp_businessprocess_value_confidentiality_very_high" name="Very High"
+                    value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_businessprocess_value_integrity" inputtype="numericoption"
+                max="3" min="0" name="Integrity" tags="Risk">
+                <depends option="bp_businessprocess_value_method_integrity" value="0" />
+                <option id="bp_businessprocess_value_integrity_low" name="Insignificant"
+                    value="0" />
+                <option id="bp_businessprocess_value_integrity_normal" name="Normal" value="1" />
+                <option id="bp_businessprocess_value_integrity_high" name="High" value="2" />
+                <option id="bp_businessprocess_value_integrity_very_high" name="Very High"
+                    value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_businessprocess_value_availability" inputtype="numericoption"
+                max="3" min="0" name="Availability" tags="Risk">
+                <depends option="bp_businessprocess_value_method_availability" value="0" />
+                <option id="bp_businessprocess_value_availability_low" name="Insignificant"
+                    value="0" />
+                <option id="bp_businessprocess_value_availability_normal" name="Normal"
+                    value="1" />
+                <option id="bp_businessprocess_value_availability_high" name="High" value="2" />
+                <option id="bp_businessprocess_value_availability_very_high" name="Very High"
+                    value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_businessprocess_value_comment_c" inputtype="text"
+                name="Explanation Confidentiality" tags="Risk" />
+            <huiproperty id="bp_businessprocess_value_comment_i" inputtype="text"
+                name="Explanation Integrity" tags="Risk" />
+            <huiproperty id="bp_businessprocess_value_comment_a" inputtype="text"
+                name="Explanation Availability" tags="Risk" />
+
+            <huiproperty id="bp_businessprocess_replacementcost" name="Replacement Cost"
+                tags="Finance" />
+            <huiproperty id="bp_businessprocess_replcost_currency" inputtype="singleoption"
+                name="Currency" tags="Finance">
+                <option id="bp_businessprocess_replcost_currency_eur" name="€" />
+                <option id="bp_businessprocess_replcost_currency_usd" name="$" />
+                <option id="bp_businessprocess_replcost_currency_bpd" name="£" />
+                <option id="bp_businessprocess_replcost_currency_yen" name="¥" />
+            </huiproperty>
+
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_businessprocess_risk_group" name="Risk Management"
+            tags="Risk">
+            <huiproperty editable="false" id="bp_businessprocess_risk_c" name="Confidentiality risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_businessprocess_risk_i" name="Integrity risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_businessprocess_risk_a" name="Availability risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_businessprocess_risk_with_control_c"
+                name="Confidentiality risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_businessprocess_risk_with_control_i"
+                name="Integrity risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_businessprocess_risk_with_control_a"
+                name="Availability risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_businessprocess_risk_planned_control_c"
+                name="Confidentiality risk with planned safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_businessprocess_risk_planned_control_i"
+                name="Integrity risk with planned safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_businessprocess_risk_planned_control_a"
+                name="Availability risk with planned safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_businessprocess_risk_without_na_control_c"
+                name="Confidentiality risk without N.A safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_businessprocess_risk_without_na_control_i"
+                name="Integrity risk without N.A safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_businessprocess_risk_without_na_control_a"
+                name="Availability risk without N.A safeguards" tags="Risk" />
+        </huipropertygroup>
+        <huipropertygroup id="bp_businessprocess_risktreat_group" name="Risk Treatment"
+            tags="Risk">
+            <huiproperty id="bp_businessprocess_risktreat" inputtype="singleoption"
+                name="Risk Treatment" tags="Risk">
+                <option id="bp_businessprocess_risktreat_reduct" name="Reduction" />
+                <option id="bp_businessprocess_risktreat_retent" name="Retention" />
+                <option id="bp_businessprocess_risktreat_avoid" name="Avoidance" />
+                <option id="bp_businessprocess_risktreat_transfer" name="Transfer" />
+            </huiproperty>
+            <huiproperty id="bp_businessprocess_risktreat_explanation" inputtype="text"
+                name="Explanation" tags="Risk" />
+        </huipropertygroup>
+    </huientity>
+    <huientity id="bp_businessprocess_group" name="Business Process Group">
+        <huiproperty id="bp_businessprocess_group_name" name="Title" required="true" />
+        <huiproperty id="bp_businessprocess_group_desc" inputtype="text" name="Description" />
+        <huiproperty id="bp_businessprocess_group_tag" name="Tags" />
+    </huientity>
+
+    <huientity id="bp_icssystem" name="ICS System">
+        <huirelation to="bp_icssystem" id="rel_bp_icssystem_bp_icssystem" name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_device" id="rel_bp_icssystem_bp_device" name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_network" id="rel_bp_icssystem_bp_network" name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_room" id="rel_bp_icssystem_bp_room" name="located in"
+            reversename="includes" />
+
+        <huiproperty id="bp_icssystem_abbr" name="Abbreviation" required="true" />
+        <huiproperty id="bp_icssystem_name" name="Title" required="true" />
+        <huiproperty id="bp_icssystem_tag" name="Tags"
+            tooltip="List of tags, separated by comma or space" />
+        <huiproperty id="bp_icssystem_description" inputtype="text" name="Description" />
+        <huiproperty id="bp_icssystem_platform" name="Platform / Module" />
+        <huiproperty id="bp_icssystem_count" name="Anzahl" />
+        <huiproperty id="bp_icssystem_status" inputtype="singleoption" name="Status">
+            <option id="bp_icssystem_status_operation" name="Operation" />
+            <option id="bp_icssystem_status_planning" name="Planning" />
+            <option id="bp_icssystem_status_test" name="Test" />
+            <option id="bp_icssystem_status_reserve" name="Reserve" />
+        </huiproperty>
+
+        <huiproperty id="bp_icssystem_document" isURL="true" name="Document" />
+        <huipropertygroup id="bp_icssystem_group_business_impact" name="Protection Requirement"
+            tags="Risk">
+            <huiproperty defaultValue="1" id="bp_icssystem_value_method_confidentiality"
+                inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk" />
+            <huiproperty defaultValue="1" id="bp_icssystem_value_method_integrity"
+                inputtype="booleanoption" name="Deduce Integrity" tags="Risk" />
+            <huiproperty defaultValue="1" id="bp_icssystem_value_method_availability"
+                inputtype="booleanoption" name="Deduce Availability" tags="Risk" />
+            <huiproperty id="bp_icssystem_value_confidentiality" inputtype="numericoption"
+                max="3" min="0" name="Confidentiality" tags="Risk">
+                <depends option="bp_icssystem_value_method_confidentiality" value="0" />
+                <option id="bp_icssystem_value_confidentiality_low" name="Insignificant"
+                    value="0" />
+                <option id="bp_icssystem_value_confidentiality_normal" name="Normal" value="1" />
+                <option id="bp_icssystem_value_confidentiality_high" name="High" value="2" />
+                <option id="bp_icssystem_value_confidentiality_very_high" name="Very High"
+                    value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_icssystem_value_integrity" inputtype="numericoption"
+                max="3" min="0" name="Integrity" tags="Risk">
+                <depends option="bp_icssystem_value_method_integrity" value="0" />
+                <option id="bp_icssystem_value_integrity_low" name="Insignificant" value="0" />
+                <option id="bp_icssystem_value_integrity_normal" name="Normal" value="1" />
+                <option id="bp_icssystem_value_integrity_high" name="High" value="2" />
+                <option id="bp_icssystem_value_integrity_very_high" name="Very High" value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_icssystem_value_availability" inputtype="numericoption"
+                max="3" min="0" name="Availability" tags="Risk">
+                <depends option="bp_icssystem_value_method_availability" value="0" />
+                <option id="bp_icssystem_value_availability_low" name="Insignificant" value="0" />
+                <option id="bp_icssystem_value_availability_normal" name="Normal" value="1" />
+                <option id="bp_icssystem_value_availability_high" name="High" value="2" />
+                <option id="bp_icssystem_value_availability_very_high" name="Very High"
+                    value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_icssystem_value_comment_c" inputtype="text"
+                name="Explanation Confidentiality" tags="Risk" />
+            <huiproperty id="bp_icssystem_value_comment_i" inputtype="text"
+                name="Explanation Integrity" tags="Risk" />
+            <huiproperty id="bp_icssystem_value_comment_a" inputtype="text"
+                name="Explanation Availability" tags="Risk" />
+
+            <huiproperty id="bp_icssystem_replacementcost" name="Replacement Cost" tags="Finance" />
+            <huiproperty id="bp_icssystem_replcost_currency" inputtype="singleoption"
+                name="Currency" tags="Finance">
+                <option id="bp_icssystem_replcost_currency_eur" name="€" />
+                <option id="bp_icssystem_replcost_currency_usd" name="$" />
+                <option id="bp_icssystem_replcost_currency_bpd" name="£" />
+                <option id="bp_icssystem_replcost_currency_yen" name="¥" />
+            </huiproperty>
+
+        </huipropertygroup>
+        <huipropertygroup id="bp_icssystem_risk_group" name="Risk Management" tags="Risk">
+            <huiproperty editable="false" id="bp_icssystem_risk_c" name="Confidentiality risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_icssystem_risk_i" name="Integrity risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_icssystem_risk_a" name="Availability risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_icssystem_risk_with_control_c"
+                name="Confidentiality risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_icssystem_risk_with_control_i"
+                name="Integrity risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_icssystem_risk_with_control_a"
+                name="Availability risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_icssystem_risk_planned_control_c"
+                name="Confidentiality risk with planned safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_icssystem_risk_planned_control_i" name="Integrity risk with planned safeguards"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_icssystem_risk_planned_control_a" name="Availability risk with planned safeguards"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_icssystem_risk_without_na_control_c"
+                name="Confidentiality risk without N.A safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_icssystem_risk_without_na_control_i"
+                name="Integrity risk without N.A safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_icssystem_risk_without_na_control_a"
+                name="Availability risk without N.A safeguards" tags="Risk" />
+        </huipropertygroup>
+        <huipropertygroup id="bp_icssystem_risktreat_group" name="Risk Treatment"
+            tags="Risk">
+            <huiproperty id="bp_icssystem_risktreat" inputtype="singleoption" name="Risk Treatment"
+                tags="Risk">
+                <option id="bp_icssystem_risktreat_reduct" name="Reduction" />
+                <option id="bp_icssystem_risktreat_retent" name="Retention" />
+                <option id="bp_icssystem_risktreat_avoid" name="Avoidance" />
+                <option id="bp_icssystem_risktreat_transfer" name="Transfer" />
+            </huiproperty>
+            <huiproperty id="bp_icssystem_risktreat_explanation" inputtype="text" name="Explanation"
+                tags="Risk" />
+        </huipropertygroup>
+    </huientity>
+    <huientity id="bp_icssystem_group" name="ICS System Group">
+        <huiproperty id="bp_icssystem_group_name" name="Title" required="true" />
+        <huiproperty id="bp_icssystem_group_desc" inputtype="text" name="Description" />
+        <huiproperty id="bp_icssystem_group_tag" name="Tags" />
+    </huientity>
+
+    <huientity id="bp_itsystem" name="IT System">
+        <huirelation to="bp_itsystem" id="rel_bp_itsystem_bp_itsystem" name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_icssystem" id="rel_bp_itsystem_bp_icssystem" name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_device" id="rel_bp_itsystem_bp_device" name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_network" id="rel_bp_itsystem_bp_network" name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_room" id="rel_bp_itsystem_bp_room" name="located in"
+            reversename="includes" />
+
+        <huiproperty id="bp_itsystem_abbr" name="Abbreviation" required="true" />
+        <huiproperty id="bp_itsystem_name" name="Title" required="true" />
+        <huiproperty id="bp_itsystem_tag" name="Tags"
+            tooltip="List of tags, separated by comma or space" />
+        <huiproperty id="bp_itsystem_description" inputtype="text" name="Description" />
+        <huiproperty id="bp_itsystem_platform" name="Platform / Module" />
+        <huiproperty id="bp_itsystem_count" name="Anzahl" />
+        <huiproperty id="bp_itsystem_status" inputtype="singleoption" name="Status">
+            <option id="bp_itsystem_status_operation" name="Operation" />
+            <option id="bp_itsystem_status_planning" name="Planning" />
+            <option id="bp_itsystem_status_test" name="Test" />
+            <option id="bp_itsystem_status_reserve" name="Reserve" />
+        </huiproperty>
+
+        <huiproperty id="bp_itsystem_document" isURL="true" name="Document" />
+        <huipropertygroup id="bp_itsystem_group_business_impact" name="Protection Requirement"
+            tags="Risk">
+            <huiproperty defaultValue="1" id="bp_itsystem_value_method_confidentiality"
+                inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk" />
+            <huiproperty defaultValue="1" id="bp_itsystem_value_method_integrity"
+                inputtype="booleanoption" name="Deduce Integrity" tags="Risk" />
+            <huiproperty defaultValue="1" id="bp_itsystem_value_method_availability"
+                inputtype="booleanoption" name="Deduce Availability" tags="Risk" />
+            <huiproperty id="bp_itsystem_value_confidentiality" inputtype="numericoption"
+                max="3" min="0" name="Confidentiality" tags="Risk">
+                <depends option="bp_itsystem_value_method_confidentiality" value="0" />
+                <option id="bp_itsystem_value_confidentiality_low" name="Insignificant"
+                    value="0" />
+                <option id="bp_itsystem_value_confidentiality_normal" name="Normal" value="1" />
+                <option id="bp_itsystem_value_confidentiality_high" name="High" value="2" />
+                <option id="bp_itsystem_value_confidentiality_very_high" name="Very High"
+                    value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_itsystem_value_integrity" inputtype="numericoption" max="3"
+                min="0" name="Integrity" tags="Risk">
+                <depends option="bp_itsystem_value_method_integrity" value="0" />
+                <option id="bp_itsystem_value_integrity_low" name="Insignificant" value="0" />
+                <option id="bp_itsystem_value_integrity_normal" name="Normal" value="1" />
+                <option id="bp_itsystem_value_integrity_high" name="High" value="2" />
+                <option id="bp_itsystem_value_integrity_very_high" name="Very High" value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_itsystem_value_availability" inputtype="numericoption"
+                max="3" min="0" name="Availability" tags="Risk">
+                <depends option="bp_itsystem_value_method_availability" value="0" />
+                <option id="bp_itsystem_value_availability_low" name="Insignificant" value="0" />
+                <option id="bp_itsystem_value_availability_normal" name="Normal" value="1" />
+                <option id="bp_itsystem_value_availability_high" name="High" value="2" />
+                <option id="bp_itsystem_value_availability_very_high" name="Very High" value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_itsystem_value_comment_c" inputtype="text"
+                name="Explanation Confidentiality" tags="Risk" />
+            <huiproperty id="bp_itsystem_value_comment_i" inputtype="text"
+                name="Explanation Integrity" tags="Risk" />
+            <huiproperty id="bp_itsystem_value_comment_a" inputtype="text"
+                name="Explanation Availability" tags="Risk" />
+
+            <huiproperty id="bp_itsystem_replacementcost" name="Replacement Cost" tags="Finance" />
+            <huiproperty id="bp_itsystem_replcost_currency" inputtype="singleoption"
+                name="Currency" tags="Finance">
+                <option id="bp_itsystem_replcost_currency_eur" name="€" />
+                <option id="bp_itsystem_replcost_currency_usd" name="$" />
+                <option id="bp_itsystem_replcost_currency_bpd" name="£" />
+                <option id="bp_itsystem_replcost_currency_yen" name="¥" />
+            </huiproperty>
+
+        </huipropertygroup>
+        <huipropertygroup id="bp_itsystem_risk_group" name="Risk Management" tags="Risk">
+            <huiproperty editable="false" id="bp_itsystem_risk_c" name="Confidentiality risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_itsystem_risk_i" name="Integrity risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_itsystem_risk_a" name="Availability risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_itsystem_risk_with_control_c"
+                name="Confidentiality risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_itsystem_risk_with_control_i"
+                name="Integrity risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_itsystem_risk_with_control_a"
+                name="Availability risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_itsystem_risk_planned_control_c"
+                name="Confidentiality risk with planned safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_itsystem_risk_planned_control_i" name="Integrity risk with planned safeguards"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_itsystem_risk_planned_control_a" name="Availability risk with planned safeguards"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_itsystem_risk_without_na_control_c"
+                name="Confidentiality risk without N.A safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_itsystem_risk_without_na_control_i"
+                name="Integrity risk without N.A safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_itsystem_risk_without_na_control_a"
+                name="Availability risk without N.A safeguards" tags="Risk" />
+        </huipropertygroup>
+        <huipropertygroup id="bp_itsystem_risktreat_group" name="Risk Treatment"
+            tags="Risk">
+            <huiproperty id="bp_itsystem_risktreat" inputtype="singleoption" name="Risk Treatment"
+                tags="Risk">
+                <option id="bp_itsystem_risktreat_reduct" name="Reduction" />
+                <option id="bp_itsystem_risktreat_retent" name="Retention" />
+                <option id="bp_itsystem_risktreat_avoid" name="Avoidance" />
+                <option id="bp_itsystem_risktreat_transfer" name="Transfer" />
+            </huiproperty>
+            <huiproperty id="bp_itsystem_risktreat_explanation" inputtype="text" name="Explanation"
+                tags="Risk" />
+        </huipropertygroup>
+    </huientity>
+    <huientity id="bp_itsystem_group" name="IT System Group">
+        <huiproperty id="bp_itsystem_group_name" name="Title" required="true" />
+        <huiproperty id="bp_itsystem_group_desc" inputtype="text" name="Description" />
+        <huiproperty id="bp_itsystem_group_tag" name="Tags" />
+    </huientity>
+    <huientity id="bp_person" name="Person">
+        <huirelation to="bp_businessprocess" id="rel_bp_person_bp_businessprocess" name="Responsible for"
+            reversename="Person responsible" />
+        <huirelation to="bp_application" id="rel_bp_person_bp_application" name="Responsible for"
+            reversename="Person responsible" />
+        <huirelation to="bp_itsystem" id="rel_bp_person_bp_itsystem" name="Responsible for"
+            reversename="Person responsible" />
+        <huirelation to="bp_icssystem" id="rel_bp_person_bp_icssystem" name="Responsible for"
+            reversename="Person responsible" />
+        <huirelation to="bp_device" id="rel_bp_person_bp_device" name="Responsible for"
+            reversename="Person responsible" />
+        <huirelation to="bp_network" id="rel_bp_person_bp_network" name="Responsible for"
+            reversename="Person responsible" />
+        <huirelation to="bp_room" id="rel_bp_person_bp_room" name="Responsible for"
+            reversename="Person responsible" />
+        <huirelation to="bp_requirement_group" id="rel_bp_person_bp_requirement_group"
+            name="Responsible for" reversename="Person responsible" />
+        <huirelation to="bp_requirement" id="rel_bp_person_bp_requirement" name="Responsible for"
+            reversename="Person responsible" />
+        <huirelation to="bp_threat" id="rel_bp_person_bp_threat" name="Responsible for"
+            reversename="Person responsible" />
+        <huirelation to="bp_safeguard_group" id="rel_bp_person_bp_safeguard_group" name="Responsible for"
+            reversename="Person responsible" />
+        <huirelation to="bp_safeguard" id="rel_bp_person_bp_safeguard" name="Responsible for"
+            reversename="Person responsible" />
+
+        <huiproperty id="bp_person_abbr" name="Abbreviation" required="true" />
+        <huiproperty id="bp_person_title" inputtype="singleoption" name="Anrede">
+            <option id="bp_person_title_none" name="" />
+            <option id="bp_person_titel_mr" name="Herr" />
+            <option id="bp_person_titel_mrs" name="Frau" />
+            <option id="bp_person_titel_mrdr" name="Herr Dr." />
+            <option id="bp_person_titel_mrsdr" name="Frau Dr." />
+        </huiproperty>
+        <huiproperty id="bp_person_first_name" name="First name" />
+        <huiproperty id="bp_person_last_name" name="Last name" required="true" />
+        <huiproperty id="bp_person_phone" name="Phone" />
+        <huiproperty id="bp_person_email" name="Email" />
+        <huiproperty id="bp_person_org_unit" name="=Org. unit" />
+        <huiproperty id="bp_person_explanation" name="Explanation" />
+        <huiproperty id="bp_person_tag" name="Tags" />
+        <huiproperty id="bp_person_document" isURL="true" name="Document" />
+    </huientity>
+    <huientity id="bp_person_group" name="Person Group">
+        <huiproperty id="bp_person_group_name" name="Title" required="true" />
+        <huiproperty id="bp_person_group_desc" inputtype="text" name="Description" />
+        <huiproperty id="bp_person_group_tag" name="Tags" />
+    </huientity>
+
+    <huientity id="bp_requirement" name="Requirement">
+        <huirelation to="bp_safeguard" id="rel_bp_requirement_bp_safeguard" name="fulfilled through"
+            reversename="fulfills" />
+        <huirelation to="bp_threat" id="rel_bp_requirement_bp_threat" name="reduces probability"
+            reversename="probability reduced by" />
+        <huirelation to="bp_itnetwork" id="rel_bp_requirement_bp_itnetwork" name="reduces impact of"
+            reversename="impact reduced by" />
+        <huirelation to="bp_businessprocess" id="rel_bp_requirement_bp_businessprocess"
+            name="reduces impact of" reversename="impact reduced by" />
+        <huirelation to="bp_application" id="rel_bp_requirement_bp_application" name="reduces impact of"
+            reversename="impact reduced by" />
+        <huirelation to="bp_itsystem" id="rel_bp_requirement_bp_itsystem" name="reduces impact of"
+            reversename="impact reduced by" />
+        <huirelation to="bp_icssystem" id="rel_bp_requirement_bp_icssystem" name="reduces impact of"
+            reversename="impact reduced by" />
+        <huirelation to="bp_device" id="rel_bp_requirement_bp_device" name="reduces impact of"
+            reversename="impact reduced by" />
+        <huirelation to="bp_network" id="rel_bp_requirement_bp_network" name="reduces impact of"
+            reversename="impact reduced by" />
+        <huirelation to="bp_room" id="rel_bp_requirement_bp_room" name="reduces impact of"
+            reversename="impact reduced by" />
+
+        <huirelation to="bp_itnetwork" id="rel_bp_requirement_bp_itnetwork_mod" name="models"
+            reversename="modeled with" />
+        <huirelation to="bp_businessprocess" id="rel_bp_requirement_bp_businessprocess_mod"
+            name="models" reversename="modeled with" />
+        <huirelation to="bp_application" id="rel_bp_requirement_bp_application_mod"
+            name="models" reversename="modeled with" />
+        <huirelation to="bp_itsystem" id="rel_bp_requirement_bp_itsystem_mod" name="models"
+            reversename="modeled with" />
+        <huirelation to="bp_icssystem" id="rel_bp_requirement_bp_icssystem_mod" name="models"
+            reversename="modeled with" />
+        <huirelation to="bp_device" id="rel_bp_requirement_bp_device_mod" name="models"
+            reversename="modeled with" />
+        <huirelation to="bp_network" id="rel_bp_requirement_bp_network_mod" name="models"
+            reversename="modeled with" />
+        <huirelation to="bp_room" id="rel_bp_requirement_bp_room_mod" name="models"
+            reversename="modeled with" />
+
+        <huiproperty id="bp_requirement_id" name="Identifier" />
+        <huiproperty id="bp_requirement_name" name="Title" required="true" />
+        <huiproperty id="bp_requirement_qualifier" name="Qualifier" editable="true"
+            visible="true" />
+        <huiproperty editable="false" id="bp_requirement_objectbrowser_content"
+            inputtype="text" name="Requirement Content" showInObjectBrowser="true" visible="false" />
+        <huiproperty editable="true" id="bp_requirement_desc" inputtype="text" name="Description"
+            showInObjectBrowser="false" visible="true" />
+        <huiproperty id="bp_requirement_tag" name="Tags"
+            tooltip="List of tags, separated by comma or space" />
+        <huiproperty id="bp_requirement_document" isURL="true" name="Document" />
+        <huiproperty id="bp_requirement_last_change" name="Last Change" inputtype="date"
+            editable="false">
+            <defaultRule class="Today" />
+        </huiproperty>
+
+        <huiproperty id="bp_requirement_responsibleroles" name="Responsible Roles" />
+        <huiproperty defaultValue="1" id="bp_requirement_value_method_confidentiality"
+            inputtype="booleanoption" name="Affects Confidentiality" tags="Risk" />
+        <huiproperty defaultValue="1" id="bp_requirement_value_method_integrity"
+            inputtype="booleanoption" name="Affects Integrity" tags="Risk" />
+        <huiproperty defaultValue="1" id="bp_requirement_value_method_availability"
+            inputtype="booleanoption" name="Affects Availability" tags="Risk" />
+
+        <huipropertygroup id="bp_requirement_implementation" name="Implementation">
+            <huiproperty defaultValue="1" id="bp_requirement_implementation_deduce"
+                inputtype="booleanoption" name="Deduce Implementation Status from Safeguard" tags="Risk" />
+            <huiproperty id="bp_requirement_implementation_status" name="Implementation Status"
+                required="true" inputtype="singleoption">
+                <depends option="bp_requirement_implementation_deduce" value="0" />
+                <option id="bp_requirement_implementation_status_no" name="No" />
+                <option id="bp_requirement_implementation_status_yes" name="Yes" />
+                <option id="bp_requirement_implementation_status_partially" name="Partially" />
+                <option id="bp_requirement_implementation_status_na" name="Not Applicable" />
+            </huiproperty>
+            <huiproperty id="bp_requirement_implementation_desc" name="Description"
+                required="false" inputtype="text" focus="true" />
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_requirement_effectivenessgroup" name="Safeguard Strength"
+            tags="Risk">
             <huiproperty name="Impact on Confidentiality" id="bp_requirement_effectiveness_c"
-            tags="Risk" inputtype="numericoption" min="0" max="4" >
-                <option name="No effect"         		 id="bp_requirement_effectiveness_c_0" value="0" />
-                <option name="Modified to Very High"   	 id="bp_requirement_effectiveness_c_1" value="1" />
-                <option name="Modified to High"   		 id="bp_requirement_effectiveness_c_2" value="2" />
-                <option name="Modified to Normal"		 id="bp_requirement_effectiveness_c_3" value="3" />
-                <option name="Modified to Insignificant" id="bp_requirement_effectiveness_c_4" value="4" />
+                tags="Risk" inputtype="numericoption" min="0" max="4">
+                <option name="No effect" id="bp_requirement_effectiveness_c_0" value="0" />
+                <option name="Modified to Very High" id="bp_requirement_effectiveness_c_1"
+                    value="1" />
+                <option name="Modified to High" id="bp_requirement_effectiveness_c_2" value="2" />
+                <option name="Modified to Normal" id="bp_requirement_effectiveness_c_3"
+                    value="3" />
+                <option name="Modified to Insignificant" id="bp_requirement_effectiveness_c_4"
+                    value="4" />
             </huiproperty>
-            <huiproperty tags="Risk" name="Impact on Integrity" id="bp_requirement_effectiveness_i" 
+            <huiproperty tags="Risk" name="Impact on Integrity" id="bp_requirement_effectiveness_i"
                 inputtype="numericoption" min="0" max="4">
-                <option name="No effect"         		 id="bp_requirement_effectiveness_i_0" value="0" />
-                <option name="Modified to Very High"   	 id="bp_requirement_effectiveness_i_1" value="1" />
-                <option name="Modified to High"   		 id="bp_requirement_effectiveness_i_2" value="2" />
-                <option name="Modified to Normal"		 id="bp_requirement_effectiveness_i_3" value="3" />
-                <option name="Modified to Insignificant" id="bp_requirement_effectiveness_i_4" value="4" />
+                <option name="No effect" id="bp_requirement_effectiveness_i_0" value="0" />
+                <option name="Modified to Very High" id="bp_requirement_effectiveness_i_1"
+                    value="1" />
+                <option name="Modified to High" id="bp_requirement_effectiveness_i_2" value="2" />
+                <option name="Modified to Normal" id="bp_requirement_effectiveness_i_3"
+                    value="3" />
+                <option name="Modified to Insignificant" id="bp_requirement_effectiveness_i_4"
+                    value="4" />
             </huiproperty>
-            <huiproperty tags="Risk" name="Impact on Availability" id="bp_requirement_effectiveness_a" 
-                inputtype="numericoption" min="0" max="4" >
-                <option name="No effect"         		 id="bp_requirement_effectiveness_a_0" value="0" />
-                <option name="Modified to Very High"   	 id="bp_requirement_effectiveness_a_1" value="1" />
-                <option name="Modified to High"   		 id="bp_requirement_effectiveness_a_2" value="2" />
-                <option name="Modified to Normal"		 id="bp_requirement_effectiveness_a_3" value="3" />
-                <option name="Modified to Insignificant" id="bp_requirement_effectiveness_a_4" value="4" />
+            <huiproperty tags="Risk" name="Impact on Availability" id="bp_requirement_effectiveness_a"
+                inputtype="numericoption" min="0" max="4">
+                <option name="No effect" id="bp_requirement_effectiveness_a_0" value="0" />
+                <option name="Modified to Very High" id="bp_requirement_effectiveness_a_1"
+                    value="1" />
+                <option name="Modified to High" id="bp_requirement_effectiveness_a_2" value="2" />
+                <option name="Modified to Normal" id="bp_requirement_effectiveness_a_3"
+                    value="3" />
+                <option name="Modified to Insignificant" id="bp_requirement_effectiveness_a_4"
+                    value="4" />
             </huiproperty>
             <huiproperty tags="Risk" name="Probability of threat" id="bp_requirement_effectiveness_p"
-                inputtype="numericoption" min="0" max="4" >
-                <option name="No effect"         		 id="bp_requirement_effectiveness_p_0" value="0" />
-                <option name="Modified to Very Often"    id="bp_requirement_effectiveness_p_1" value="1" />
-                <option name="Modified to Frequently"    id="bp_requirement_effectiveness_p_2" value="2" />
-                <option name="Modified to Medium"		 id="bp_requirement_effectiveness_p_3" value="3" />
-                <option name="Modified to Rare"			 id="bp_requirement_effectiveness_p_4" value="4" />
+                inputtype="numericoption" min="0" max="4">
+                <option name="No effect" id="bp_requirement_effectiveness_p_0" value="0" />
+                <option name="Modified to Very Often" id="bp_requirement_effectiveness_p_1"
+                    value="1" />
+                <option name="Modified to Frequently" id="bp_requirement_effectiveness_p_2"
+                    value="2" />
+                <option name="Modified to Medium" id="bp_requirement_effectiveness_p_3"
+                    value="3" />
+                <option name="Modified to Rare" id="bp_requirement_effectiveness_p_4" value="4" />
             </huiproperty>
-            <huiproperty tags="Risk" name="Description" id="bp_requirement_effectiveness_desc" inputtype="text"/>
-                
+            <huiproperty tags="Risk" name="Description" id="bp_requirement_effectiveness_desc"
+                inputtype="text" />
+
         </huipropertygroup>
-  </huientity>
-  
-  <huientity id="bp_requirement_group" name="Module">
-    <huiproperty id="bp_requirement_group_name" name="Title" required="true"/>
-    <huiproperty editable="false" id="bp_requirement_group_objectbrowser_content" inputtype="text" name="Module Content" showInObjectBrowser="true" visible="false"/>
-    <huiproperty id="bp_requirement_group_desc" inputtype="text" name="Description"/>
-    <huiproperty id="bp_requirement_group_tag" name="Tags"/>
-    <huiproperty id="bp_requirement_group_id" name="Identifier"/>
-    <huiproperty id="bp_requirement_group_last_change" name="Last Change" inputtype="date" editable="false">
-        <defaultRule class="Today"/>
-    </huiproperty>
-    <huiproperty id="bp_requirement_group_mainresponsible" name="Main Responsible Role"/>
-    <huiproperty id="bp_requirement_group_furtherresponsible" name="Further Responsible Roles"/>
-  </huientity>
-  
-  <huientity id="bp_threat" name="Threat">
-    <huirelation to="bp_itnetwork" id="rel_bp_threat_bp_itnetwork" name="affects" reversename="affected by" />
-	<huirelation to="bp_businessprocess" id="rel_bp_threat_bp_businessprocess" name="affects" reversename="affected by" />
-	<huirelation to="bp_application" id="rel_bp_threat_bp_application" name="affects" reversename="affected by" />
-	<huirelation to="bp_itsystem" id="rel_bp_threat_bp_itsystem" name="affects" reversename="affected by" />
-	<huirelation to="bp_icssystem" id="rel_bp_threat_bp_icssystem" name="affects" reversename="affected by" />
-	<huirelation to="bp_device" id="rel_bp_threat_bp_device" name="affects" reversename="affected by" />
-	<huirelation to="bp_network" id="rel_bp_threat_bp_network" name="affects" reversename="affected by" />
-	<huirelation to="bp_room" id="rel_bp_threat_bp_room" name="affects" reversename="affected by" />
-  
-    <huiproperty editable="true" id="bp_threat_id" name="Identifier"/>
-    <huiproperty id="bp_threat_name" name="Title" required="true"/>
-    <huiproperty id="bp_threat_tag" name="Tags" tooltip="List of tags, separated by comma or space"/>
-    <huiproperty editable="false" id="bp_threat_objectbrowser_content" inputtype="text" name="Elemental Threat Content" showInObjectBrowser="true" visible="false"/>
-    <huiproperty id="bp_threat_desc" inputtype="text" name="Description" showInObjectBrowser="false" visible="true"/>
-    <huiproperty id="bp_threat_document" isURL="true" name="Document"/>
-    <huiproperty defaultValue="1" id="bp_threat_value_method_confidentiality" inputtype="booleanoption" name="Affects Confidentiality" tags="Risk"/>
-    <huiproperty defaultValue="1" id="bp_threat_value_method_integrity" inputtype="booleanoption" name="Affects Integrity" tags="Risk"/>
-    <huiproperty defaultValue="1" id="bp_threat_value_method_availability" inputtype="booleanoption" name="Affects Availability" tags="Risk"/>
-    <huiproperty defaultValue="0" id="bp_threat_probability" inputtype="numericoption" max="3" min="0" name="Threat Probability" tags="Risk">
-      <option id="bp_threat_probability_0" name="Rare" value="0"/>
-      <option id="bp_threat_probability_1" name="Medium" value="1"/>
-      <option id="bp_threat_probability_2" name="Frequently" value="2"/>
-      <option id="bp_threat_probability_3" name="Very Often" value="3"/>
-    </huiproperty>
-  </huientity>
-  
-  <huientity id="bp_threat_group" name="bp_threat-Group">
-    <huiproperty id="bp_threat_group_name" name="Title" required="true"/>
-    <huiproperty editable="false" id="bp_threat_group_objectbrowser_content" inputtype="text" name="Threatgroup Content" showInObjectBrowser="true" visible="false"/>
-    <huiproperty id="bp_threat_group_desc" inputtype="text" name="Description"/>
-    <huiproperty id="bp_threat_group_tag" name="Tags"/>
-  </huientity>
-  
-  <huientity id="bp_network" name="Network">
-  <huirelation to="bp_network" id="rel_bp_network_bp_network" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_room" id="rel_bp_network_bp_room" name="located in" reversename="includes"/>
-    
-    <huiproperty id="bp_network_abbr" name="Abbreviation"/>
-    <huiproperty id="bp_network_name" name="Title" required="true"/>
-    <huiproperty id="bp_network_tag" name="Tags" tooltip="List of tags, separated by comma or space"/>
-    <huiproperty id="bp_network_description" inputtype="text" name="Description"/>
-    <huiproperty id="bp_network_platform" name="Platform / Module"/>
-    <huiproperty id="bp_network_status" inputtype="singleoption" name="Status">
-      <option id="bp_network_status_operation" name="Operation"/>
-      <option id="bp_network_status_planning" name="Planning"/>
-      <option id="bp_network_status_test" name="Test"/>
-      <option id="bp_network_status_reserve" name="Reserve"/>
-    </huiproperty>
-    
-    <huiproperty id="bp_network_netadr" name="Netadresses"/>
-    <huiproperty id="bp_network_coms" inputtype="multioption" name="Schnittstellen">
-      <option id="bp_network_coms_ether" name="Ethernet"/>
-      <option id="bp_network_coms_wlan" name="WLAN"/>
-      <option id="bp_network_coms_blue" name="Bluetooth"/>
-      <option id="bp_network_coms_irda" name="IrDA"/>
-      <option id="bp_network_coms_modem" name="Modem"/>
-      <option id="bp_network_coms_usb" name="USB"/>
-      <option id="bp_network_coms_ieee1394" name="IEEE 1394"/>
-      <option id="bp_network_coms_seriell" name="Seriell"/>
-      <option id="bp_network_coms_parallel" name="Parallel"/>
-      <option id="bp_network_coms_scsi" name="Ext. SCSI"/>
-      <option id="bp_network_coms_sata" name="Ext. SATA"/>
-      <option id="bp_network_coms_ide" name="Ext. IDE"/>
-      <option id="bp_network_coms_audio" name="Audio In"/>
-      <option id="bp_network_coms_video" name="Video In"/>
-    </huiproperty>
-    
-    <huiproperty id="bp_network_document" isURL="true" name="Document"/>
-    <huipropertygroup id="bp_network_group_business_impact" name="Protection Requirement" tags="Risk">
-      <huiproperty defaultValue="1" id="bp_network_value_method_confidentiality" inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk"/>
-      <huiproperty defaultValue="1" id="bp_network_value_method_integrity" inputtype="booleanoption" name="Deduce Integrity" tags="Risk"/>
-      <huiproperty defaultValue="1" id="bp_network_value_method_availability" inputtype="booleanoption" name="Deduce Availability" tags="Risk"/>
-      <huiproperty id="bp_network_value_confidentiality" inputtype="numericoption" max="3" min="0" name="Confidentiality" tags="Risk">
-        <depends option="bp_network_value_method_confidentiality" value="0"/>
-        <option id="bp_network_value_confidentiality_low" name="Insignificant" value="0"/>
-        <option id="bp_network_value_confidentiality_normal" name="Normal" value="1"/>
-        <option id="bp_network_value_confidentiality_high" name="High" value="2"/>
-        <option id="bp_network_value_confidentiality_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_network_value_integrity" inputtype="numericoption" max="3" min="0" name="Integrity" tags="Risk">
-        <depends option="bp_network_value_method_integrity" value="0"/>
-        <option id="bp_network_value_integrity_low" name="Insignificant" value="0"/>
-        <option id="bp_network_value_integrity_normal" name="Normal" value="1"/>
-        <option id="bp_network_value_integrity_high" name="High" value="2"/>
-        <option id="bp_network_value_integrity_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_network_value_availability" inputtype="numericoption" max="3" min="0" name="Availability" tags="Risk">
-        <depends option="bp_network_value_method_availability" value="0"/>
-        <option id="bp_network_value_availability_low" name="Insignificant" value="0"/>
-        <option id="bp_network_value_availability_normal" name="Normal" value="1"/>
-        <option id="bp_network_value_availability_high" name="High" value="2"/>
-        <option id="bp_network_value_availability_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_network_value_comment_c" inputtype="text" name="Explanation Confidentiality" tags="Risk"/>
-      <huiproperty id="bp_network_value_comment_i" inputtype="text" name="Explanation Integrity" tags="Risk"/>
-      <huiproperty id="bp_network_value_comment_a" inputtype="text" name="Explanation Availability" tags="Risk"/>
-      
-      <huiproperty id="bp_network_replacementcost" name="Replacement Cost" tags="Finance"/>
-      <huiproperty id="bp_network_replcost_currency" inputtype="singleoption" name="Currency" tags="Finance">
-        <option id="bp_network_replcost_currency_eur" name="€"/>
-        <option id="bp_network_replcost_currency_usd" name="$"/>
-        <option id="bp_network_replcost_currency_bpd" name="£"/>
-        <option id="bp_network_replcost_currency_yen" name="¥"/>
-      </huiproperty>
-    </huipropertygroup>
-    
-    <huipropertygroup id="bp_network_risk_group" name="Risk Management" tags="Risk">
-      <huiproperty editable="false" id="bp_network_risk_c" name="Confidentiality risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_network_risk_i" name="Integrity risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_network_risk_a" name="Availability risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_network_risk_with_control_c" name="Confidentiality risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_network_risk_with_control_i" name="Integrity risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_network_risk_with_control_a" name="Availability risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_network_risk_planned_control_c" name="Confidentiality risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_network_risk_planned_control_i" name="Integrity risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_network_risk_planned_control_a" name="Availability risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_network_risk_without_na_control_c" name="Confidentiality risk without N.A safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_network_risk_without_na_control_i" name="Integrity risk without N.A safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_network_risk_without_na_control_a" name="Availability risk without N.A safeguards" tags="Risk"/>
-    </huipropertygroup>
-    <huipropertygroup id="bp_network_risktreat_group" name="Risk Treatment" tags="Risk">
-      <huiproperty id="bp_network_risktreat" inputtype="singleoption" name="Risk Treatment" tags="Risk">
-        <option id="bp_network_risktreat_reduct" name="Reduction"/>
-        <option id="bp_network_risktreat_retent" name="Retention"/>
-        <option id="bp_network_risktreat_avoid" name="Avoidance"/>
-        <option id="bp_network_risktreat_transfer" name="Transfer"/>
-      </huiproperty>
-      <huiproperty id="bp_network_risktreat_explanation" inputtype="text" name="Explanation" tags="Risk"/>
-    </huipropertygroup>
-  </huientity>
-  <huientity id="bp_network_group" name="Network Group">
-    <huiproperty id="bp_network_group_name" name="Title" required="true"/>
-    <huiproperty id="bp_network_group_desc" inputtype="text" name="Description"/>
-    <huiproperty id="bp_network_group_tag" name="Tags"/>
-  </huientity>
-  
-  <huientity id="bp_device" name="Other System">
-	<huirelation to="bp_device" id="rel_bp_device_bp_device" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_network" id="rel_bp_device_bp_network" name="depends on" reversename="necessary for"/>
-	<huirelation to="bp_room" id="rel_bp_device_bp_room" name="located in" reversename="includes"/>
-  
-    <huiproperty id="bp_device_abbr" name="Abbreviation" required="true"/>
-    <huiproperty id="bp_device_name" name="Title" required="true"/>
-    <huiproperty id="bp_device_tag" name="Tags" tooltip="List of tags, separated by comma or space"/>
-    <huiproperty id="bp_device_description" inputtype="text" name="Description"/>
-    <huiproperty id="bp_device_platform" name="Platform / Module"/>
-    <huiproperty id="bp_device_count" name="Anzahl"/>
-    <huiproperty id="bp_device_status" inputtype="singleoption" name="Status">
-      <option id="bp_device_status_operation" name="Operation"/>
-      <option id="bp_device_status_planning" name="Planning"/>
-      <option id="bp_device_status_test" name="Test"/>
-      <option id="bp_device_status_reserve" name="Reserve"/>
-    </huiproperty>
-    
-    <huiproperty id="bp_device_document" isURL="true" name="Document"/>
-    <huipropertygroup id="bp_device_group_business_impact" name="Protection Requirement" tags="Risk">
-      <huiproperty defaultValue="1" id="bp_device_value_method_confidentiality" inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk"/>
-      <huiproperty defaultValue="1" id="bp_device_value_method_integrity" inputtype="booleanoption" name="Deduce Integrity" tags="Risk"/>
-      <huiproperty defaultValue="1" id="bp_device_value_method_availability" inputtype="booleanoption" name="Deduce Availability" tags="Risk"/>
-      <huiproperty id="bp_device_value_confidentiality" inputtype="numericoption" max="3" min="0" name="Confidentiality" tags="Risk">
-        <depends option="bp_device_value_method_confidentiality" value="0"/>
-        <option id="bp_device_value_confidentiality_low" name="Insignificant" value="0"/>
-        <option id="bp_device_value_confidentiality_normal" name="Normal" value="1"/>
-        <option id="bp_device_value_confidentiality_high" name="High" value="2"/>
-        <option id="bp_device_value_confidentiality_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_device_value_integrity" inputtype="numericoption" max="3" min="0" name="Integrity" tags="Risk">
-        <depends option="bp_device_value_method_integrity" value="0"/>
-        <option id="bp_device_value_integrity_low" name="Insignificant" value="0"/>
-        <option id="bp_device_value_integrity_normal" name="Normal" value="1"/>
-        <option id="bp_device_value_integrity_high" name="High" value="2"/>
-        <option id="bp_device_value_integrity_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_device_value_availability" inputtype="numericoption" max="3" min="0" name="Availability" tags="Risk">
-        <depends option="bp_device_value_method_availability" value="0"/>
-        <option id="bp_device_value_availability_low" name="Insignificant" value="0"/>
-        <option id="bp_device_value_availability_normal" name="Normal" value="1"/>
-        <option id="bp_device_value_availability_high" name="High" value="2"/>
-        <option id="bp_device_value_availability_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_device_value_comment_c" inputtype="text" name="Explanation Confidentiality" tags="Risk"/>
-      <huiproperty id="bp_device_value_comment_i" inputtype="text" name="Explanation Integrity" tags="Risk"/>
-      <huiproperty id="bp_device_value_comment_a" inputtype="text" name="Explanation Availability" tags="Risk"/>
-      
-      <huiproperty id="bp_device_replacementcost" name="Replacement Cost" tags="Finance"/>
-      <huiproperty id="bp_device_replcost_currency" inputtype="singleoption" name="Currency" tags="Finance">
-        <option id="bp_device_replcost_currency_eur" name="€"/>
-        <option id="bp_device_replcost_currency_usd" name="$"/>
-        <option id="bp_device_replcost_currency_bpd" name="£"/>
-        <option id="bp_device_replcost_currency_yen" name="¥"/>
-      </huiproperty>
-    </huipropertygroup>
-    
-    <huipropertygroup id="bp_device_risk_group" name="Risk Management" tags="Risk">
-      <huiproperty editable="false" id="bp_device_risk_c" name="Confidentiality risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_device_risk_i" name="Integrity risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_device_risk_a" name="Availability risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_device_risk_with_control_c" name="Confidentiality risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_device_risk_with_control_i" name="Integrity risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_device_risk_with_control_a" name="Availability risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_device_risk_planned_control_c" name="Confidentiality risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_device_risk_planned_control_i" name="Integrity risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_device_risk_planned_control_a" name="Availability risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_device_risk_without_na_control_c" name="Confidentiality risk without N.A safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_device_risk_without_na_control_i" name="Integrity risk without N.A safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_device_risk_without_na_control_a" name="Availability risk without N.A safeguards" tags="Risk"/>
-    </huipropertygroup>
-    <huipropertygroup id="bp_device_risktreat_group" name="Risk Treatment" tags="Risk">
-      <huiproperty id="bp_device_risktreat" inputtype="singleoption" name="Risk Treatment" tags="Risk">
-        <option id="bp_device_risktreat_reduct" name="Reduction"/>
-        <option id="bp_device_risktreat_retent" name="Retention"/>
-        <option id="bp_device_risktreat_avoid" name="Avoidance"/>
-        <option id="bp_device_risktreat_transfer" name="Transfer"/>
-      </huiproperty>
-      <huiproperty id="bp_device_risktreat_explanation" inputtype="text" name="Explanation" tags="Risk"/>
-    </huipropertygroup>
-  </huientity>
-  <huientity id="bp_device_group" name="Device Group">
-    <huiproperty id="bp_device_group_name" name="Title" required="true"/>
-    <huiproperty id="bp_device_group_desc" inputtype="text" name="Description"/>
-    <huiproperty id="bp_device_group_tag" name="Tags"/>
-  </huientity>
-  
-  <huientity id="bp_room" name="Room">
-	<huirelation to="bp_room" id="rel_bp_room_bp_room" name="includes" reversename="located in"/>
-    
-    <huiproperty id="bp_room_abbr" name="Abbreviation" required="true"/>
-    <huiproperty id="bp_room_name" name="Title" required="true"/>
-    <huiproperty id="bp_room_description" inputtype="text" name="Description"/>
-    <huiproperty id="bp_room_platform" name="Platform / Module"/>
-    <huiproperty id="bp_room_count" name="Anzahl"/>
-    <huiproperty id="bp_room_status" inputtype="singleoption" name="Status">
-      <option id="bp_room_status_operation" name="Operation"/>
-      <option id="bp_room_status_planning" name="Planning"/>
-      <option id="bp_room_status_test" name="Test"/>
-      <option id="bp_room_status_reserve" name="Reserve"/>
-    </huiproperty>
-    
-    <huiproperty id="bp_room_tag" name="Tags" tooltip="List of tags, separated by comma or space"/>
-    <huiproperty id="bp_room_document" isURL="true" name="Document"/>
-    <huipropertygroup id="bp_room_group_business_impact" name="Protection Requirement" tags="Risk">
-      <huiproperty defaultValue="1" id="bp_room_value_method_confidentiality" inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk"/>
-      <huiproperty defaultValue="1" id="bp_room_value_method_integrity" inputtype="booleanoption" name="Deduce Integrity" tags="Risk"/>
-      <huiproperty defaultValue="1" id="bp_room_value_method_availability" inputtype="booleanoption" name="Deduce Availability" tags="Risk"/>
-      <huiproperty id="bp_room_value_confidentiality" inputtype="numericoption" max="3" min="0" name="Confidentiality" tags="Risk">
-        <depends option="bp_room_value_method_confidentiality" value="0"/>
-        <option id="bp_room_value_confidentiality_low" name="Insignificant" value="0"/>
-        <option id="bp_room_value_confidentiality_normal" name="Normal" value="1"/>
-        <option id="bp_room_value_confidentiality_high" name="High" value="2"/>
-        <option id="bp_room_value_confidentiality_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_room_value_integrity" inputtype="numericoption" max="3" min="0" name="Integrity" tags="Risk">
-        <depends option="bp_room_value_method_integrity" value="0"/>
-        <option id="bp_room_value_integrity_low" name="Insignificant" value="0"/>
-        <option id="bp_room_value_integrity_normal" name="Normal" value="1"/>
-        <option id="bp_room_value_integrity_high" name="High" value="2"/>
-        <option id="bp_room_value_integrity_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_room_value_availability" inputtype="numericoption" max="3" min="0" name="Availability" tags="Risk">
-        <depends option="bp_room_value_method_availability" value="0"/>
-        <option id="bp_room_value_availability_low" name="Insignificant" value="0"/>
-        <option id="bp_room_value_availability_normal" name="Normal" value="1"/>
-        <option id="bp_room_value_availability_high" name="High" value="2"/>
-        <option id="bp_room_value_availability_very_high" name="Very High" value="3"/>
-      </huiproperty>
-      
-      <huiproperty id="bp_room_value_comment_c" inputtype="text" name="Explanation Confidentiality" tags="Risk"/>
-      <huiproperty id="bp_room_value_comment_i" inputtype="text" name="Explanation Integrity" tags="Risk"/>
-      <huiproperty id="bp_room_value_comment_a" inputtype="text" name="Explanation Availability" tags="Risk"/>
-      
-      <huiproperty id="bp_room_replacementcost" name="Replacement Cost" tags="Finance"/>
-      <huiproperty id="bp_room_replcost_currency" inputtype="singleoption" name="Currency" tags="Finance">
-        <option id="bp_room_replcost_currency_eur" name="€"/>
-        <option id="bp_room_replcost_currency_usd" name="$"/>
-        <option id="bp_room_replcost_currency_bpd" name="£"/>
-        <option id="bp_room_replcost_currency_yen" name="¥"/>
-      </huiproperty>
-    </huipropertygroup>
-    
-    <huipropertygroup id="bp_room_risk_group" name="Risk Management" tags="Risk">
-      <huiproperty editable="false" id="bp_room_risk_c" name="Confidentiality risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_room_risk_i" name="Integrity risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_room_risk_a" name="Availability risk value" tags="Risk"/>
-      <huiproperty editable="false" id="bp_room_risk_with_control_c" name="Confidentiality risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_room_risk_with_control_i" name="Integrity risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_room_risk_with_control_a" name="Availability risk with implemented safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_room_risk_planned_control_c" name="Confidentiality risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_room_risk_planned_control_i" name="Integrity risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_room_risk_planned_control_a" name="Availability risk with planned safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_room_risk_without_na_control_c" name="Confidentiality risk without N.A safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_room_risk_without_na_control_i" name="Integrity risk without N.A safeguards" tags="Risk"/>
-      <huiproperty editable="false" id="bp_room_risk_without_na_control_a" name="Availability risk without N.A safeguards" tags="Risk"/>
-    </huipropertygroup>
-    <huipropertygroup id="bp_room_risktreat_group" name="Risk Treatment" tags="Risk">
-      <huiproperty id="bp_room_risktreat" inputtype="singleoption" name="Risk Treatment" tags="Risk">
-        <option id="bp_room_risktreat_reduct" name="Reduction"/>
-        <option id="bp_room_risktreat_retent" name="Retention"/>
-        <option id="bp_room_risktreat_avoid" name="Avoidance"/>
-        <option id="bp_room_risktreat_transfer" name="Transfer"/>
-      </huiproperty>
-      <huiproperty id="bp_room_risktreat_explanation" inputtype="text" name="Explanation" tags="Risk"/>
-    </huipropertygroup>
-  </huientity>
-  
-  <huientity id="bp_room_group" name="Room Group">
-    <huiproperty id="bp_room_group_name" name="Title" required="true"/>
-    <huiproperty id="bp_room_group_desc" inputtype="text" name="Description"/>
-    <huiproperty id="bp_room_group_tag" name="Tags"/>
-  </huientity>
-  
-  <huientity id="bp_safeguard" name="Safeguard">	
-	<huiproperty id="bp_safeguard_id" name="Identifier"/>
-    <huiproperty id="bp_safeguard_name" name="Title" required="true"/>
-    <huiproperty editable="true" id="bp_safeguard_qualifier" name="Qualifier" visible="true"/>
-    <huiproperty editable="false" id="bp_safeguard_objectbrowser_content" inputtype="text" name="Safeguard Content" showInObjectBrowser="true" textrows="4" visible="false"/>
-    <huiproperty editable="true" id="bp_safeguard_desc" inputtype="text" name="Description" showInObjectBrowser="false" textrows="4" visible="true"/>
-    <huiproperty id="bp_safeguard_tag" name="Tags" tooltip="List of tags, separated by comma or space"/>
-    <huiproperty id="bp_safeguard_document" isURL="true" name="Document"/>
-    <huiproperty id="bp_safeguard_last_change" name="Last Change" inputtype="date" editable="false">
-        <defaultRule class="Today"/>
-    
-    </huiproperty>
-    <huiproperty id="bp_safeguard_responsibleroles" name="Responsible Roles"/>
-    <huiproperty defaultValue="1" id="bp_safeguard_value_method_confidentiality" inputtype="booleanoption" name="Affects Confidentiality" tags="Risk"/>
-    <huiproperty defaultValue="1" id="bp_safeguard_value_method_integrity" inputtype="booleanoption" name="Affects Integrity" tags="Risk"/>
-    <huiproperty defaultValue="1" id="bp_safeguard_value_method_availability" inputtype="booleanoption" name="Affects Availability" tags="Risk"/>
-  
-  
-  <huipropertygroup id="bp_safeguard_implementation" name="Implementation">
-    <huiproperty id="bp_safeguard_implementation_status" name="Implementation Status"  required="true" inputtype="singleoption">
-       <option  id="bp_safeguard_implementation_status_no" name="No" />
-       <option  id="bp_safeguard_implementation_status_yes"    name="Yes" />
-       <option id="bp_safeguard_implementation_status_partially" name="Partially" />
-       <option   id="bp_safeguard_implementation_status_na"  name="Not Applicable" />
+    </huientity>
+
+    <huientity id="bp_requirement_group" name="Module">
+        <huiproperty id="bp_requirement_group_name" name="Title" required="true" />
+        <huiproperty editable="false" id="bp_requirement_group_objectbrowser_content"
+            inputtype="text" name="Module Content" showInObjectBrowser="true" visible="false" />
+        <huiproperty id="bp_requirement_group_desc" inputtype="text" name="Description" />
+        <huiproperty id="bp_requirement_group_tag" name="Tags" />
+        <huiproperty id="bp_requirement_group_id" name="Identifier" />
+        <huiproperty id="bp_requirement_group_last_change" name="Last Change" inputtype="date"
+            editable="false">
+            <defaultRule class="Today" />
+        </huiproperty>
+        <huiproperty id="bp_requirement_group_mainresponsible" name="Main Responsible Role" />
+        <huiproperty id="bp_requirement_group_furtherresponsible" name="Further Responsible Roles" />
+    </huientity>
+
+    <huientity id="bp_threat" name="Threat">
+        <huirelation to="bp_itnetwork" id="rel_bp_threat_bp_itnetwork" name="affects"
+            reversename="affected by" />
+        <huirelation to="bp_businessprocess" id="rel_bp_threat_bp_businessprocess" name="affects"
+            reversename="affected by" />
+        <huirelation to="bp_application" id="rel_bp_threat_bp_application" name="affects"
+            reversename="affected by" />
+        <huirelation to="bp_itsystem" id="rel_bp_threat_bp_itsystem" name="affects"
+            reversename="affected by" />
+        <huirelation to="bp_icssystem" id="rel_bp_threat_bp_icssystem" name="affects"
+            reversename="affected by" />
+        <huirelation to="bp_device" id="rel_bp_threat_bp_device" name="affects"
+            reversename="affected by" />
+        <huirelation to="bp_network" id="rel_bp_threat_bp_network" name="affects"
+            reversename="affected by" />
+        <huirelation to="bp_room" id="rel_bp_threat_bp_room" name="affects" reversename="affected by" />
+
+        <huiproperty editable="true" id="bp_threat_id" name="Identifier" />
+        <huiproperty id="bp_threat_name" name="Title" required="true" />
+        <huiproperty id="bp_threat_tag" name="Tags" tooltip="List of tags, separated by comma or space" />
+        <huiproperty editable="false" id="bp_threat_objectbrowser_content" inputtype="text"
+            name="Elemental Threat Content" showInObjectBrowser="true" visible="false" />
+        <huiproperty id="bp_threat_desc" inputtype="text" name="Description"
+            showInObjectBrowser="false" visible="true" />
+        <huiproperty id="bp_threat_document" isURL="true" name="Document" />
+        <huiproperty defaultValue="1" id="bp_threat_value_method_confidentiality"
+            inputtype="booleanoption" name="Affects Confidentiality" tags="Risk" />
+        <huiproperty defaultValue="1" id="bp_threat_value_method_integrity" inputtype="booleanoption"
+            name="Affects Integrity" tags="Risk" />
+        <huiproperty defaultValue="1" id="bp_threat_value_method_availability"
+            inputtype="booleanoption" name="Affects Availability" tags="Risk" />
+        <huiproperty defaultValue="0" id="bp_threat_probability" inputtype="numericoption"
+            max="3" min="0" name="Threat Probability" tags="Risk">
+            <option id="bp_threat_probability_0" name="Rare" value="0" />
+            <option id="bp_threat_probability_1" name="Medium" value="1" />
+            <option id="bp_threat_probability_2" name="Frequently" value="2" />
+            <option id="bp_threat_probability_3" name="Very Often" value="3" />
+        </huiproperty>
+    </huientity>
+
+    <huientity id="bp_threat_group" name="bp_threat-Group">
+        <huiproperty id="bp_threat_group_name" name="Title" required="true" />
+        <huiproperty editable="false" id="bp_threat_group_objectbrowser_content"
+            inputtype="text" name="Threatgroup Content" showInObjectBrowser="true" visible="false" />
+        <huiproperty id="bp_threat_group_desc" inputtype="text" name="Description" />
+        <huiproperty id="bp_threat_group_tag" name="Tags" />
+    </huientity>
+
+    <huientity id="bp_network" name="Network">
+        <huirelation to="bp_network" id="rel_bp_network_bp_network" name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_room" id="rel_bp_network_bp_room" name="located in"
+            reversename="includes" />
+
+        <huiproperty id="bp_network_abbr" name="Abbreviation" />
+        <huiproperty id="bp_network_name" name="Title" required="true" />
+        <huiproperty id="bp_network_tag" name="Tags"
+            tooltip="List of tags, separated by comma or space" />
+        <huiproperty id="bp_network_description" inputtype="text" name="Description" />
+        <huiproperty id="bp_network_platform" name="Platform / Module" />
+        <huiproperty id="bp_network_status" inputtype="singleoption" name="Status">
+            <option id="bp_network_status_operation" name="Operation" />
+            <option id="bp_network_status_planning" name="Planning" />
+            <option id="bp_network_status_test" name="Test" />
+            <option id="bp_network_status_reserve" name="Reserve" />
+        </huiproperty>
+
+        <huiproperty id="bp_network_netadr" name="Netadresses" />
+        <huiproperty id="bp_network_coms" inputtype="multioption" name="Schnittstellen">
+            <option id="bp_network_coms_ether" name="Ethernet" />
+            <option id="bp_network_coms_wlan" name="WLAN" />
+            <option id="bp_network_coms_blue" name="Bluetooth" />
+            <option id="bp_network_coms_irda" name="IrDA" />
+            <option id="bp_network_coms_modem" name="Modem" />
+            <option id="bp_network_coms_usb" name="USB" />
+            <option id="bp_network_coms_ieee1394" name="IEEE 1394" />
+            <option id="bp_network_coms_seriell" name="Seriell" />
+            <option id="bp_network_coms_parallel" name="Parallel" />
+            <option id="bp_network_coms_scsi" name="Ext. SCSI" />
+            <option id="bp_network_coms_sata" name="Ext. SATA" />
+            <option id="bp_network_coms_ide" name="Ext. IDE" />
+            <option id="bp_network_coms_audio" name="Audio In" />
+            <option id="bp_network_coms_video" name="Video In" />
+        </huiproperty>
+
+        <huiproperty id="bp_network_document" isURL="true" name="Document" />
+        <huipropertygroup id="bp_network_group_business_impact" name="Protection Requirement"
+            tags="Risk">
+            <huiproperty defaultValue="1" id="bp_network_value_method_confidentiality"
+                inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk" />
+            <huiproperty defaultValue="1" id="bp_network_value_method_integrity"
+                inputtype="booleanoption" name="Deduce Integrity" tags="Risk" />
+            <huiproperty defaultValue="1" id="bp_network_value_method_availability"
+                inputtype="booleanoption" name="Deduce Availability" tags="Risk" />
+            <huiproperty id="bp_network_value_confidentiality" inputtype="numericoption"
+                max="3" min="0" name="Confidentiality" tags="Risk">
+                <depends option="bp_network_value_method_confidentiality" value="0" />
+                <option id="bp_network_value_confidentiality_low" name="Insignificant" value="0" />
+                <option id="bp_network_value_confidentiality_normal" name="Normal" value="1" />
+                <option id="bp_network_value_confidentiality_high" name="High" value="2" />
+                <option id="bp_network_value_confidentiality_very_high" name="Very High"
+                    value="3" />
             </huiproperty>
-    <huiproperty id="bp_safeguard_implementation_desc" name="Description" required="false" inputtype="text" focus="true" />
-  </huipropertygroup>
-  
-  </huientity>
-  
-  <huientity id="bp_safeguard_group" name="Safeguard Group">
-    <huiproperty id="bp_safeguard_group_name" name="Title" required="true"/>
-    <huiproperty editable="false" id="bp_safeguard_group_objectbrowser_content" inputtype="text" name="Safeguardgroup Content" showInObjectBrowser="true" visible="false"/>
-    <huiproperty id="bp_safeguard_group_desc" inputtype="text" name="Description"/>
-    <huiproperty id="bp_safeguard_group_tag" name="Tags"/>
-  </huientity>
+
+            <huiproperty id="bp_network_value_integrity" inputtype="numericoption" max="3"
+                min="0" name="Integrity" tags="Risk">
+                <depends option="bp_network_value_method_integrity" value="0" />
+                <option id="bp_network_value_integrity_low" name="Insignificant" value="0" />
+                <option id="bp_network_value_integrity_normal" name="Normal" value="1" />
+                <option id="bp_network_value_integrity_high" name="High" value="2" />
+                <option id="bp_network_value_integrity_very_high" name="Very High" value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_network_value_availability" inputtype="numericoption"
+                max="3" min="0" name="Availability" tags="Risk">
+                <depends option="bp_network_value_method_availability" value="0" />
+                <option id="bp_network_value_availability_low" name="Insignificant" value="0" />
+                <option id="bp_network_value_availability_normal" name="Normal" value="1" />
+                <option id="bp_network_value_availability_high" name="High" value="2" />
+                <option id="bp_network_value_availability_very_high" name="Very High" value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_network_value_comment_c" inputtype="text"
+                name="Explanation Confidentiality" tags="Risk" />
+            <huiproperty id="bp_network_value_comment_i" inputtype="text"
+                name="Explanation Integrity" tags="Risk" />
+            <huiproperty id="bp_network_value_comment_a" inputtype="text"
+                name="Explanation Availability" tags="Risk" />
+
+            <huiproperty id="bp_network_replacementcost" name="Replacement Cost" tags="Finance" />
+            <huiproperty id="bp_network_replcost_currency" inputtype="singleoption"
+                name="Currency" tags="Finance">
+                <option id="bp_network_replcost_currency_eur" name="€" />
+                <option id="bp_network_replcost_currency_usd" name="$" />
+                <option id="bp_network_replcost_currency_bpd" name="£" />
+                <option id="bp_network_replcost_currency_yen" name="¥" />
+            </huiproperty>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_network_risk_group" name="Risk Management" tags="Risk">
+            <huiproperty editable="false" id="bp_network_risk_c" name="Confidentiality risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_network_risk_i" name="Integrity risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_network_risk_a" name="Availability risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_network_risk_with_control_c"
+                name="Confidentiality risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_network_risk_with_control_i"
+                name="Integrity risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_network_risk_with_control_a"
+                name="Availability risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_network_risk_planned_control_c"
+                name="Confidentiality risk with planned safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_network_risk_planned_control_i" name="Integrity risk with planned safeguards"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_network_risk_planned_control_a" name="Availability risk with planned safeguards"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_network_risk_without_na_control_c"
+                name="Confidentiality risk without N.A safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_network_risk_without_na_control_i"
+                name="Integrity risk without N.A safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_network_risk_without_na_control_a"
+                name="Availability risk without N.A safeguards" tags="Risk" />
+        </huipropertygroup>
+        <huipropertygroup id="bp_network_risktreat_group" name="Risk Treatment"
+            tags="Risk">
+            <huiproperty id="bp_network_risktreat" inputtype="singleoption" name="Risk Treatment"
+                tags="Risk">
+                <option id="bp_network_risktreat_reduct" name="Reduction" />
+                <option id="bp_network_risktreat_retent" name="Retention" />
+                <option id="bp_network_risktreat_avoid" name="Avoidance" />
+                <option id="bp_network_risktreat_transfer" name="Transfer" />
+            </huiproperty>
+            <huiproperty id="bp_network_risktreat_explanation" inputtype="text" name="Explanation"
+                tags="Risk" />
+        </huipropertygroup>
+    </huientity>
+    <huientity id="bp_network_group" name="Network Group">
+        <huiproperty id="bp_network_group_name" name="Title" required="true" />
+        <huiproperty id="bp_network_group_desc" inputtype="text" name="Description" />
+        <huiproperty id="bp_network_group_tag" name="Tags" />
+    </huientity>
+
+    <huientity id="bp_device" name="Other System">
+        <huirelation to="bp_device" id="rel_bp_device_bp_device" name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_network" id="rel_bp_device_bp_network" name="depends on"
+            reversename="necessary for" />
+        <huirelation to="bp_room" id="rel_bp_device_bp_room" name="located in"
+            reversename="includes" />
+
+        <huiproperty id="bp_device_abbr" name="Abbreviation" required="true" />
+        <huiproperty id="bp_device_name" name="Title" required="true" />
+        <huiproperty id="bp_device_tag" name="Tags" tooltip="List of tags, separated by comma or space" />
+        <huiproperty id="bp_device_description" inputtype="text" name="Description" />
+        <huiproperty id="bp_device_platform" name="Platform / Module" />
+        <huiproperty id="bp_device_count" name="Anzahl" />
+        <huiproperty id="bp_device_status" inputtype="singleoption" name="Status">
+            <option id="bp_device_status_operation" name="Operation" />
+            <option id="bp_device_status_planning" name="Planning" />
+            <option id="bp_device_status_test" name="Test" />
+            <option id="bp_device_status_reserve" name="Reserve" />
+        </huiproperty>
+
+        <huiproperty id="bp_device_document" isURL="true" name="Document" />
+        <huipropertygroup id="bp_device_group_business_impact" name="Protection Requirement"
+            tags="Risk">
+            <huiproperty defaultValue="1" id="bp_device_value_method_confidentiality"
+                inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk" />
+            <huiproperty defaultValue="1" id="bp_device_value_method_integrity"
+                inputtype="booleanoption" name="Deduce Integrity" tags="Risk" />
+            <huiproperty defaultValue="1" id="bp_device_value_method_availability"
+                inputtype="booleanoption" name="Deduce Availability" tags="Risk" />
+            <huiproperty id="bp_device_value_confidentiality" inputtype="numericoption"
+                max="3" min="0" name="Confidentiality" tags="Risk">
+                <depends option="bp_device_value_method_confidentiality" value="0" />
+                <option id="bp_device_value_confidentiality_low" name="Insignificant" value="0" />
+                <option id="bp_device_value_confidentiality_normal" name="Normal" value="1" />
+                <option id="bp_device_value_confidentiality_high" name="High" value="2" />
+                <option id="bp_device_value_confidentiality_very_high" name="Very High"
+                    value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_device_value_integrity" inputtype="numericoption" max="3"
+                min="0" name="Integrity" tags="Risk">
+                <depends option="bp_device_value_method_integrity" value="0" />
+                <option id="bp_device_value_integrity_low" name="Insignificant" value="0" />
+                <option id="bp_device_value_integrity_normal" name="Normal" value="1" />
+                <option id="bp_device_value_integrity_high" name="High" value="2" />
+                <option id="bp_device_value_integrity_very_high" name="Very High" value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_device_value_availability" inputtype="numericoption"
+                max="3" min="0" name="Availability" tags="Risk">
+                <depends option="bp_device_value_method_availability" value="0" />
+                <option id="bp_device_value_availability_low" name="Insignificant" value="0" />
+                <option id="bp_device_value_availability_normal" name="Normal" value="1" />
+                <option id="bp_device_value_availability_high" name="High" value="2" />
+                <option id="bp_device_value_availability_very_high" name="Very High" value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_device_value_comment_c" inputtype="text"
+                name="Explanation Confidentiality" tags="Risk" />
+            <huiproperty id="bp_device_value_comment_i" inputtype="text"
+                name="Explanation Integrity" tags="Risk" />
+            <huiproperty id="bp_device_value_comment_a" inputtype="text"
+                name="Explanation Availability" tags="Risk" />
+
+            <huiproperty id="bp_device_replacementcost" name="Replacement Cost" tags="Finance" />
+            <huiproperty id="bp_device_replcost_currency" inputtype="singleoption" name="Currency"
+                tags="Finance">
+                <option id="bp_device_replcost_currency_eur" name="€" />
+                <option id="bp_device_replcost_currency_usd" name="$" />
+                <option id="bp_device_replcost_currency_bpd" name="£" />
+                <option id="bp_device_replcost_currency_yen" name="¥" />
+            </huiproperty>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_device_risk_group" name="Risk Management" tags="Risk">
+            <huiproperty editable="false" id="bp_device_risk_c" name="Confidentiality risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_device_risk_i" name="Integrity risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_device_risk_a" name="Availability risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_device_risk_with_control_c"
+                name="Confidentiality risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_device_risk_with_control_i"
+                name="Integrity risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_device_risk_with_control_a"
+                name="Availability risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_device_risk_planned_control_c"
+                name="Confidentiality risk with planned safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_device_risk_planned_control_i" name="Integrity risk with planned safeguards"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_device_risk_planned_control_a" name="Availability risk with planned safeguards"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_device_risk_without_na_control_c"
+                name="Confidentiality risk without N.A safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_device_risk_without_na_control_i" name="Integrity risk without N.A safeguards"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_device_risk_without_na_control_a" name="Availability risk without N.A safeguards"
+                tags="Risk" />
+        </huipropertygroup>
+        <huipropertygroup id="bp_device_risktreat_group" name="Risk Treatment"
+            tags="Risk">
+            <huiproperty id="bp_device_risktreat" inputtype="singleoption" name="Risk Treatment"
+                tags="Risk">
+                <option id="bp_device_risktreat_reduct" name="Reduction" />
+                <option id="bp_device_risktreat_retent" name="Retention" />
+                <option id="bp_device_risktreat_avoid" name="Avoidance" />
+                <option id="bp_device_risktreat_transfer" name="Transfer" />
+            </huiproperty>
+            <huiproperty id="bp_device_risktreat_explanation" inputtype="text" name="Explanation"
+                tags="Risk" />
+        </huipropertygroup>
+    </huientity>
+    <huientity id="bp_device_group" name="Device Group">
+        <huiproperty id="bp_device_group_name" name="Title" required="true" />
+        <huiproperty id="bp_device_group_desc" inputtype="text" name="Description" />
+        <huiproperty id="bp_device_group_tag" name="Tags" />
+    </huientity>
+
+    <huientity id="bp_room" name="Room">
+        <huirelation to="bp_room" id="rel_bp_room_bp_room" name="includes" reversename="located in" />
+
+        <huiproperty id="bp_room_abbr" name="Abbreviation" required="true" />
+        <huiproperty id="bp_room_name" name="Title" required="true" />
+        <huiproperty id="bp_room_description" inputtype="text" name="Description" />
+        <huiproperty id="bp_room_platform" name="Platform / Module" />
+        <huiproperty id="bp_room_count" name="Anzahl" />
+        <huiproperty id="bp_room_status" inputtype="singleoption" name="Status">
+            <option id="bp_room_status_operation" name="Operation" />
+            <option id="bp_room_status_planning" name="Planning" />
+            <option id="bp_room_status_test" name="Test" />
+            <option id="bp_room_status_reserve" name="Reserve" />
+        </huiproperty>
+
+        <huiproperty id="bp_room_tag" name="Tags" tooltip="List of tags, separated by comma or space" />
+        <huiproperty id="bp_room_document" isURL="true" name="Document" />
+        <huipropertygroup id="bp_room_group_business_impact" name="Protection Requirement"
+            tags="Risk">
+            <huiproperty defaultValue="1" id="bp_room_value_method_confidentiality"
+                inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk" />
+            <huiproperty defaultValue="1" id="bp_room_value_method_integrity" inputtype="booleanoption"
+                name="Deduce Integrity" tags="Risk" />
+            <huiproperty defaultValue="1" id="bp_room_value_method_availability"
+                inputtype="booleanoption" name="Deduce Availability" tags="Risk" />
+            <huiproperty id="bp_room_value_confidentiality" inputtype="numericoption"
+                max="3" min="0" name="Confidentiality" tags="Risk">
+                <depends option="bp_room_value_method_confidentiality" value="0" />
+                <option id="bp_room_value_confidentiality_low" name="Insignificant" value="0" />
+                <option id="bp_room_value_confidentiality_normal" name="Normal" value="1" />
+                <option id="bp_room_value_confidentiality_high" name="High" value="2" />
+                <option id="bp_room_value_confidentiality_very_high" name="Very High" value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_room_value_integrity" inputtype="numericoption" max="3"
+                min="0" name="Integrity" tags="Risk">
+                <depends option="bp_room_value_method_integrity" value="0" />
+                <option id="bp_room_value_integrity_low" name="Insignificant" value="0" />
+                <option id="bp_room_value_integrity_normal" name="Normal" value="1" />
+                <option id="bp_room_value_integrity_high" name="High" value="2" />
+                <option id="bp_room_value_integrity_very_high" name="Very High" value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_room_value_availability" inputtype="numericoption" max="3"
+                min="0" name="Availability" tags="Risk">
+                <depends option="bp_room_value_method_availability" value="0" />
+                <option id="bp_room_value_availability_low" name="Insignificant" value="0" />
+                <option id="bp_room_value_availability_normal" name="Normal" value="1" />
+                <option id="bp_room_value_availability_high" name="High" value="2" />
+                <option id="bp_room_value_availability_very_high" name="Very High" value="3" />
+            </huiproperty>
+
+            <huiproperty id="bp_room_value_comment_c" inputtype="text"
+                name="Explanation Confidentiality" tags="Risk" />
+            <huiproperty id="bp_room_value_comment_i" inputtype="text" name="Explanation Integrity"
+                tags="Risk" />
+            <huiproperty id="bp_room_value_comment_a" inputtype="text"
+                name="Explanation Availability" tags="Risk" />
+
+            <huiproperty id="bp_room_replacementcost" name="Replacement Cost" tags="Finance" />
+            <huiproperty id="bp_room_replcost_currency" inputtype="singleoption" name="Currency"
+                tags="Finance">
+                <option id="bp_room_replcost_currency_eur" name="€" />
+                <option id="bp_room_replcost_currency_usd" name="$" />
+                <option id="bp_room_replcost_currency_bpd" name="£" />
+                <option id="bp_room_replcost_currency_yen" name="¥" />
+            </huiproperty>
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_room_risk_group" name="Risk Management" tags="Risk">
+            <huiproperty editable="false" id="bp_room_risk_c" name="Confidentiality risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_room_risk_i" name="Integrity risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_room_risk_a" name="Availability risk value"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_room_risk_with_control_c"
+                name="Confidentiality risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_room_risk_with_control_i"
+                name="Integrity risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_room_risk_with_control_a"
+                name="Availability risk with implemented safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_room_risk_planned_control_c"
+                name="Confidentiality risk with planned safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_room_risk_planned_control_i" name="Integrity risk with planned safeguards"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_room_risk_planned_control_a" name="Availability risk with planned safeguards"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_room_risk_without_na_control_c"
+                name="Confidentiality risk without N.A safeguards" tags="Risk" />
+            <huiproperty editable="false" id="bp_room_risk_without_na_control_i" name="Integrity risk without N.A safeguards"
+                tags="Risk" />
+            <huiproperty editable="false" id="bp_room_risk_without_na_control_a" name="Availability risk without N.A safeguards"
+                tags="Risk" />
+        </huipropertygroup>
+        <huipropertygroup id="bp_room_risktreat_group" name="Risk Treatment" tags="Risk">
+            <huiproperty id="bp_room_risktreat" inputtype="singleoption" name="Risk Treatment"
+                tags="Risk">
+                <option id="bp_room_risktreat_reduct" name="Reduction" />
+                <option id="bp_room_risktreat_retent" name="Retention" />
+                <option id="bp_room_risktreat_avoid" name="Avoidance" />
+                <option id="bp_room_risktreat_transfer" name="Transfer" />
+            </huiproperty>
+            <huiproperty id="bp_room_risktreat_explanation" inputtype="text" name="Explanation"
+                tags="Risk" />
+        </huipropertygroup>
+    </huientity>
+
+    <huientity id="bp_room_group" name="Room Group">
+        <huiproperty id="bp_room_group_name" name="Title" required="true" />
+        <huiproperty id="bp_room_group_desc" inputtype="text" name="Description" />
+        <huiproperty id="bp_room_group_tag" name="Tags" />
+    </huientity>
+
+    <huientity id="bp_safeguard" name="Safeguard">
+        <huiproperty id="bp_safeguard_id" name="Identifier" />
+        <huiproperty id="bp_safeguard_name" name="Title" required="true" />
+        <huiproperty editable="true" id="bp_safeguard_qualifier" name="Qualifier"
+            visible="true" />
+        <huiproperty editable="false" id="bp_safeguard_objectbrowser_content" inputtype="text"
+            name="Safeguard Content" showInObjectBrowser="true" textrows="4" visible="false" />
+        <huiproperty editable="true" id="bp_safeguard_desc" inputtype="text" name="Description"
+            showInObjectBrowser="false" textrows="4" visible="true" />
+        <huiproperty id="bp_safeguard_tag" name="Tags"
+            tooltip="List of tags, separated by comma or space" />
+        <huiproperty id="bp_safeguard_document" isURL="true" name="Document" />
+        <huiproperty id="bp_safeguard_last_change" name="Last Change" inputtype="date"
+            editable="false">
+            <defaultRule class="Today" />
+
+        </huiproperty>
+        <huiproperty id="bp_safeguard_responsibleroles" name="Responsible Roles" />
+        <huiproperty defaultValue="1" id="bp_safeguard_value_method_confidentiality"
+            inputtype="booleanoption" name="Affects Confidentiality" tags="Risk" />
+        <huiproperty defaultValue="1" id="bp_safeguard_value_method_integrity"
+            inputtype="booleanoption" name="Affects Integrity" tags="Risk" />
+        <huiproperty defaultValue="1" id="bp_safeguard_value_method_availability"
+            inputtype="booleanoption" name="Affects Availability" tags="Risk" />
+
+
+        <huipropertygroup id="bp_safeguard_implementation" name="Implementation">
+            <huiproperty id="bp_safeguard_implementation_status" name="Implementation Status"
+                required="true" inputtype="singleoption">
+                <option id="bp_safeguard_implementation_status_no" name="No" />
+                <option id="bp_safeguard_implementation_status_yes" name="Yes" />
+                <option id="bp_safeguard_implementation_status_partially" name="Partially" />
+                <option id="bp_safeguard_implementation_status_na" name="Not Applicable" />
+            </huiproperty>
+            <huiproperty id="bp_safeguard_implementation_desc" name="Description"
+                required="false" inputtype="text" focus="true" />
+        </huipropertygroup>
+
+    </huientity>
+
+    <huientity id="bp_safeguard_group" name="Safeguard Group">
+        <huiproperty id="bp_safeguard_group_name" name="Title" required="true" />
+        <huiproperty editable="false" id="bp_safeguard_group_objectbrowser_content"
+            inputtype="text" name="Safeguardgroup Content" showInObjectBrowser="true" visible="false" />
+        <huiproperty id="bp_safeguard_group_desc" inputtype="text" name="Description" />
+        <huiproperty id="bp_safeguard_group_tag" name="Tags" />
+    </huientity>
 </huientities>
