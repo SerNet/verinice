@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.ui.actions.ActionFactory;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.actions.DeleteHandler;
@@ -37,6 +38,7 @@ public class DeleteSelectionAction extends Action implements ISelectionChangedLi
     public DeleteSelectionAction() {
         super(Messages.CatalogView_delete, ImageCache.getInstance().getImageDescriptor(ImageCache.CROSS));
         setDisabledImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.CROSS));
+        setActionDefinitionId(ActionFactory.DELETE.getCommandId());
     }
 
     @Override

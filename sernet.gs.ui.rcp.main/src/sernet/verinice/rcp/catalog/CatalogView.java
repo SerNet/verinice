@@ -48,6 +48,8 @@ import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -342,6 +344,15 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
 
         deleteAction = new DeleteSelectionAction();
+        // We have to bind key for custom actions by hand.
+        viewer.getTree().addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent event) {
+              if (event.keyCode == SWT.DEL && viewer.getTree().getSelectionCount() == 1) {
+                  deleteAction.run();
+              }
+            }
+          });
     }
     
     private void makeExpandAndCollapseActions() {
