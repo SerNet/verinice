@@ -84,9 +84,11 @@ import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.TagParameter;
 import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
+import sernet.verinice.rcp.ViewFilterAction;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.bp.BaseProtectionPerspective;
 import sernet.verinice.rcp.tree.TreeContentProvider;
@@ -128,6 +130,7 @@ public class BaseProtectionView extends RightsEnabledView
     private Action expandAllAction; 
     private CollapseAction collapseAction;   
     private Action collapseAllAction; 
+    private ViewFilterAction filterAction;
     private ShowAccessControlEditAction accessControlEditAction;
     private NaturalizeAction naturalizeAction;
     
@@ -329,6 +332,24 @@ public class BaseProtectionView extends RightsEnabledView
         naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
         accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.BaseProtectionView_AccessControl);
         
+
+        makeFilterAction();
+    }
+
+    private void makeFilterAction() {
+        HideEmptyFilter hideEmptyFilter = createHideEmptyFilter();
+        TypeParameter typeParameter = createTypeParameter();
+        TagParameter tagParameter = new TagParameter();
+        filterAction = new ViewFilterAction(viewer,
+                "Filter...",
+                tagParameter,
+                hideEmptyFilter,
+                typeParameter);
+        filterAction.setTypes(ViewFilterAction.BASE_PROTECTION_TYPES);
+        elementManager.addParameter(tagParameter);
+        if(typeParameter!=null) {
+            elementManager.addParameter(typeParameter);
+        }
     }
 
     protected void makeExpandAndCollapseActions() {
@@ -411,7 +432,7 @@ public class BaseProtectionView extends RightsEnabledView
         manager.add(expandAllAction);
         manager.add(collapseAllAction);
         drillDownAdapter.addNavigationActions(manager);
-//        manager.add(filterAction);
+        manager.add(filterAction);
        manager.add(linkWithEditorAction);
     }
 

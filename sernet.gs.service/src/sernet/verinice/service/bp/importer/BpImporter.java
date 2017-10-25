@@ -11,20 +11,23 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
 import ITBP2VNA.generated.implementationhint.Document.Safeguards;
+import ITBP2VNA.generated.module.BibItem;
+import ITBP2VNA.generated.module.Description;
 import ITBP2VNA.generated.module.Document;
-import ITBP2VNA.generated.module.Document.Requirements.FurtherResponsibleRoles;
 import ITBP2VNA.generated.module.Document.ThreatScenario.SpecificThreats;
 import ITBP2VNA.generated.module.ElementalthreatRef;
 import ITBP2VNA.generated.module.Requirement;
@@ -129,13 +132,16 @@ public class BpImporter {
     private static final String HTML_CLOSE_TABLE="</table>"; //$NON-NLS-1$
     private static final String HTML_OPEN_UL="<ul>"; //$NON-NLS-1$
     private static final String HTML_CLOSE_UL="</ul>"; //$NON-NLS-1$
+    private static final String HTML_OPEN_OL="<ol>"; //$NON-NLS-1$
+    private static final String HTML_CLOSE_OL="</ol>"; //$NON-NLS-1$
     private static final String HTML_OPEN_TR="<tr>"; //$NON-NLS-1$
     private static final String HTML_CLOSE_TR="</tr>"; //$NON-NLS-1$
     private static final String HTML_OPEN_TD="<td>"; //$NON-NLS-1$
     private static final String HTML_CLOSE_TD="</td>"; //$NON-NLS-1$
+    private static final String HTML_SPACE="&nbsp;"; //$NON-NLS-1$
     
-    private static final String HTML_OPEN_PARAGRAGPH="<p>"; //$NON-NLS-1$
-    private static final String HTML_CLOSE_PARAGRAGPH="</p>"; //$NON-NLS-1$
+    private static final String HTML_OPEN_PARAGRAPH="<p>"; //$NON-NLS-1$
+    private static final String HTML_CLOSE_PARAGRAPH="</p>"; //$NON-NLS-1$
     private static final String HTML_CLOSE_OPEN_PARAGRAPH = "</p><p>"; //$NON-NLS-1$
     private static final String HTML_CLOSE_H1 = "</H1>"; //$NON-NLS-1$
     private static final String HTML_OPEN_H1 = "<H1>"; //$NON-NLS-1$
@@ -328,7 +334,7 @@ public class BpImporter {
      */
     private CnATreeElement updateElement(CnATreeElement element) throws CreateBPElementException{
         try {
-            UpdateElement<CnATreeElement> command = new UpdateElement<CnATreeElement>(
+            UpdateElement<CnATreeElement> command = new UpdateElement<>(
                     element, true, ChangeLogEntry.STATION_ID);
             return getCommandService().executeCommand(command).getElement();
         } catch (CommandException e) {
@@ -462,14 +468,19 @@ public class BpImporter {
         for (CnATreeElement child : systemSafeguardGroup.getChildren()) {
             if (SafeguardGroup.TYPE_ID.equals(child.getTypeId())) {
                 subGroups.add((SafeguardGroup)child );
+                updateElement(child);
             }
         }
         
         for (CnATreeElement child : processSafeguardGroup.getChildren()) {
             if (SafeguardGroup.TYPE_ID.equals(child.getTypeId())) {
                 subGroups.add((SafeguardGroup)child );
+                updateElement(child);
             }
         }
+        
+        updateElement(processSafeguardGroup);
+        updateElement(systemSafeguardGroup);
         
         for (ITBP2VNA.generated.implementationhint.Document bsiSafeguard : implementationHints) {
             SafeguardGroup safeGuardParent = null;
@@ -478,7 +489,7 @@ public class BpImporter {
                     safeGuardParent = candidate;
                 }
             }
-
+            
             if (safeGuardParent != null) {
                 createSafeguardsForModule(bsiSafeguard, safeGuardParent);
             } else {
@@ -495,7 +506,7 @@ public class BpImporter {
                 safeguard.getTitle() + "\t with Identifier:\t" + safeguard.getIdentifier());
         String groupIdentifier = getIdentifierPrefix(safeguard.getIdentifier());
         LOG.debug("GroupIdentifier:\t" + groupIdentifier);
-        BpRequirementGroup parent = getRequirementParentGroup(groupIdentifier);
+        BpRequirementGroup parent = (BpRequirementGroup)getRequirementParentGroup(groupIdentifier, BpRequirementGroup.TYPE_ID, systemReqGroup, processReqGroup);
         LOG.debug("Parent:\t" + parent.getTitle());
         String safeguardIdentifier = safeguard.getIdentifier();
         String comparableIdentifier = safeguardIdentifier.replace('M', 'A');
@@ -540,7 +551,7 @@ public class BpImporter {
             if (rootNetwork != null) {
                 String groupIdentifier = getIdentifierPrefix(bsiModule.getIdentifier());
                 
-                BpRequirementGroup parent = getRequirementParentGroup(groupIdentifier);
+                BpRequirementGroup parent = (BpRequirementGroup)getRequirementParentGroup(groupIdentifier, BpRequirementGroup.TYPE_ID, systemReqGroup, processReqGroup);
                 
                 BpRequirementGroup veriniceModule = null;
                 
@@ -583,77 +594,150 @@ public class BpImporter {
         return veriniceModule;
     }
     
+    
+    
+    private String generateChapterHeader(int chapter, int subChapter, int subSubChapter, String headline) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(HTML_OPEN_H1);
+        sb.append(chapter);
+        if(subChapter >= 0) {
+            sb.append('.');
+            sb.append(subChapter);
+            if(subSubChapter >= 0) {
+                sb.append('.');
+                sb.append(subSubChapter);
+            }
+        }
+        sb.append(HTML_SPACE);
+        sb.append(headline);
+        
+        sb.append(HTML_CLOSE_H1);
+        sb.append(HTML_BR);
+        return sb.toString();
+    }
+    
     private String getCompleteModuleXMLText(Document module) {
         StringBuilder descriptionBuilder = new StringBuilder();
+        int chapter = 1;
+        int subChapter = 0;
+        int subsubChapter = 0;
         
-        descriptionBuilder.append(getModuleDescriptionStart(module));
+        descriptionBuilder.append(HTML_OPEN_H1);
+        descriptionBuilder.append(module.getFullTitle());
+        descriptionBuilder.append(HTML_CLOSE_H1);
         
-        descriptionBuilder.append(module.getThreatScenario().getDescription());
+        descriptionBuilder.append(generateChapterHeader(chapter, -1, -1, "Beschreibung"));
+        descriptionBuilder.append(getModuleDescriptionStart(module, chapter++));
         
-        descriptionBuilder.append(HTML_CLOSE_OPEN_PARAGRAPH);
+        descriptionBuilder.append(generateChapterHeader(chapter, -1, -1, "Gefährdungslage"));
+        descriptionBuilder.append(HTML_OPEN_PARAGRAPH);
+        for (Object o : module.getThreatScenario().getDescription()) {
+            if (o instanceof ITBP2VNA.generated.module.Description) {
+                ITBP2VNA.generated.module.Description desc = (ITBP2VNA.generated.module.Description) o;
+                descriptionBuilder.append(getAnyElementDescription("", -1, -1, -1, desc.getAny()));
+            } 
+                
+        }
+        descriptionBuilder.append(HTML_CLOSE_PARAGRAPH);
+        
+        descriptionBuilder.append(HTML_BR);
+        
+        
         
         SpecificThreats specificThreats = module.getThreatScenario().getSpecificThreats();
         
+        subChapter = 1;
         for (SpecificThreat specificThreat : specificThreats.getSpecificThreat()) {
-            descriptionBuilder.append(getAnyElementDescription(specificThreat.getHeadline(),
-                    1, specificThreat.getDescription().getAny()));
-            descriptionBuilder.append(HTML_CLOSE_OPEN_PARAGRAPH);
+            descriptionBuilder.append(HTML_BR + generateChapterHeader(chapter, subChapter++, -1, specificThreat.getHeadline()));
+            descriptionBuilder.append(HTML_OPEN_PARAGRAPH);
+            descriptionBuilder.append(getAnyElementDescription("",
+                   -1, -1 , -1, specificThreat.getDescription().getAny()));
+            descriptionBuilder.append(HTML_CLOSE_PARAGRAPH);
         }
         
-        descriptionBuilder.append(module.getRequirements().getDescription());
+        chapter++;
         
-        descriptionBuilder.append(HTML_CLOSE_OPEN_PARAGRAPH);
+        descriptionBuilder.append(generateChapterHeader(chapter, -1, -1, "Anforderungen"));
         
-        descriptionBuilder.append(Messages.MAIN_RESPONSIBLE +  ":\t" + 
-                module.getRequirements().getMainResponsibleRole());
-        
-        descriptionBuilder.append(HTML_CLOSE_OPEN_PARAGRAPH);
-        
-        FurtherResponsibleRoles roles = module.getRequirements().getFurtherResponsibleRoles();
-        
-        if (roles != null && roles.getRole().isEmpty()) {
-            descriptionBuilder.append(HTML_CLOSE_OPEN_PARAGRAPH);
-            descriptionBuilder.append(Messages.FURTHER_RESPONSIBLES + ":");
-            descriptionBuilder.append(HTML_OPEN_UL);
-
-            for (String role : roles.getRole()) {
-                descriptionBuilder.append(HTML_OPEN_LIST_ITEM)
-                    .append(role).append(HTML_CLOSE_LIST_ITEM);    
+        subChapter = 1;
+        for (Object o : module.getRequirements().getDescription()) {
+            if (o instanceof Description) {
+                Description desc = (Description)o;
+                descriptionBuilder.append(HTML_OPEN_PARAGRAPH);
+                descriptionBuilder.append(getAnyElementDescription("", chapter, subChapter, subsubChapter, desc.getAny()));
+                descriptionBuilder.append(HTML_CLOSE_PARAGRAPH);
             }
-
-            descriptionBuilder.append(HTML_CLOSE_OPEN_PARAGRAPH);
         }
         
-        descriptionBuilder.append(Messages.BASIC_REQUIREMENTS);
+        descriptionBuilder.append(HTML_OPEN_TABLE);
+        descriptionBuilder.append(HTML_OPEN_TR);
+        descriptionBuilder.append(HTML_OPEN_TD);
+        descriptionBuilder.append(Messages.MAIN_RESPONSIBLE);
+        descriptionBuilder.append(module.getRequirements().getMainResponsibleRole());
+        descriptionBuilder.append(HTML_CLOSE_TD);
+        descriptionBuilder.append(HTML_CLOSE_TR);
+        descriptionBuilder.append(HTML_OPEN_TR);
+        descriptionBuilder.append(HTML_OPEN_TD);
+        descriptionBuilder.append(Messages.FURTHER_RESPONSIBLES);
+        
+        List<String> roles = null;
+        if (module.getRequirements().getFurtherResponsibleRoles() != null) {
+            roles = module.getRequirements().getFurtherResponsibleRoles().getRole();
+        }
+        if (roles != null && roles.size() > 0) {
+            descriptionBuilder.append(roles.toString());
+        }
+        descriptionBuilder.append(HTML_CLOSE_TD);
+        descriptionBuilder.append(HTML_CLOSE_TR);        
+        descriptionBuilder.append(HTML_CLOSE_TABLE);
+        
+        
+        subChapter = 1;
+        descriptionBuilder.append(generateChapterHeader(chapter, subChapter++, -1, Messages.BASIC_REQUIREMENTS));
         descriptionBuilder.append(getModuleRequirementDescription(module.getRequirements()
                 .getBasicRequirements().getRequirement()));
         
         descriptionBuilder.append(HTML_CLOSE_OPEN_PARAGRAPH);
         
-        descriptionBuilder.append(Messages.STANDARD_REQUIREMENTS);
+        descriptionBuilder.append(generateChapterHeader(chapter, subChapter++, -1, Messages.STANDARD_REQUIREMENTS));
         descriptionBuilder.append(getModuleRequirementDescription(module.getRequirements()
                 .getStandardRequirements().getRequirement()));        
         
         descriptionBuilder.append(HTML_CLOSE_OPEN_PARAGRAPH);
         
-        descriptionBuilder.append(Messages.HIGH_REQUIREMENTS);
+        descriptionBuilder.append(generateChapterHeader(chapter, subChapter++, -1, Messages.HIGH_REQUIREMENTS));
         descriptionBuilder.append(getModuleRequirementDescription(module.getRequirements()
                 .getHighLevelRequirements().getRequirement()));        
         
-        descriptionBuilder.append(HTML_CLOSE_OPEN_PARAGRAPH);
-        
-        descriptionBuilder.append(Messages.ELEMENTAL_THREAT_GROUP_NAME + HTML_OPEN_UL);
-        for(String threat : module.getElementalThreats().getElementalThreat()){
-            descriptionBuilder.append(HTML_OPEN_LIST_ITEM)
-                .append(threat).append(HTML_CLOSE_LIST_ITEM);
-        }
-        descriptionBuilder.append(HTML_CLOSE_UL);
-        
-        descriptionBuilder.append(HTML_CLOSE_PARAGRAGPH);
+//        descriptionBuilder.append(HTML_CLOSE_OPEN_PARAGRAPH);
+        descriptionBuilder.append(HTML_CLOSE_PARAGRAPH);
+//        
+//        descriptionBuilder.append(Messages.ELEMENTAL_THREAT_GROUP_NAME + HTML_OPEN_OL);
+//        for(String threat : module.getElementalThreats().getElementalThreat()){
+//            descriptionBuilder.append(HTML_OPEN_LIST_ITEM)
+//                .append(threat).append(HTML_CLOSE_LIST_ITEM);
+//        }
+//        
+//        descriptionBuilder.append(HTML_CLOSE_PARAGRAPH);
         
         descriptionBuilder.append(ToHtmlTableTransformer.createCrossreferenceTable(module.getCrossreferences()));
-
         
+        descriptionBuilder.append(HTML_OPEN_PARAGRAPH);
+        
+        if (module.getBibliography() != null) {
+
+            chapter++;
+            descriptionBuilder.append(generateChapterHeader(chapter, -1, -1, "Literatur"));
+
+            subChapter = 1;
+            for(BibItem bibItem :  module.getBibliography().getBibItem() ) {
+                descriptionBuilder.append(HTML_OPEN_PARAGRAPH);
+                descriptionBuilder.append(getAnyElementDescription(bibItem.getTitle(), chapter, subChapter++, subsubChapter, bibItem.getDescription().getAny()));
+                descriptionBuilder.append(bibItem.getShortHand());
+                descriptionBuilder.append(HTML_CLOSE_PARAGRAPH);
+            }
+
+        }
         return descriptionBuilder.toString();
         
         
@@ -664,22 +748,42 @@ public class BpImporter {
      * @param module
      * @param descriptionBuilder
      */
-    private String getModuleDescriptionStart(Document module) {
+    private String getModuleDescriptionStart(Document module, int chapter) {
         StringBuilder sb = new StringBuilder();
-        sb.append(HTML_OPEN_H1);
-        sb.append(module.getFullTitle());
-        sb.append(HTML_CLOSE_H1);
-        sb.append(HTML_OPEN_PARAGRAGPH);
         
         
-        sb.append(getAnyObjectDescription("", 0, 
-                module.getDescription().getIntroduction()));
-        sb.append(getAnyObjectDescription("", 0, 
-                module.getDescription().getPurpose()));
-        sb.append(getAnyObjectDescription("", 0, 
-                module.getDescription().getDifferentiation()));
+        List<Object> introduction = module.getDescription().getIntroduction();
         
-        sb.append(HTML_CLOSE_OPEN_PARAGRAPH);
+        int subChapter = 1;
+        
+        for (Object o : introduction) {
+            if (o instanceof Element) {
+                Element node = (Element)o;
+                if ("introduction".equals(node.getNodeName())){
+                    sb.append(generateChapterHeader(chapter, subChapter++, -1, "Einleitung"));
+                    sb.append(HTML_OPEN_PARAGRAPH);
+                    sb.append(node.getTextContent());
+                    sb.append(HTML_CLOSE_PARAGRAPH);
+                } else if ("purpose".equals(node.getNodeName())) {
+                    sb.append(generateChapterHeader(chapter, subChapter++, -1, "Zielsetzung"));
+                    sb.append(HTML_OPEN_PARAGRAPH);
+                    sb.append(node.getTextContent());
+                    sb.append(HTML_CLOSE_PARAGRAPH);
+                } else if ("differentiation".equals(node.getNodeName())) {
+                    sb.append(generateChapterHeader(chapter, subChapter++, -1, "Abgrenzung"));
+                    sb.append(HTML_OPEN_PARAGRAPH);
+                    sb.append(node.getTextContent());
+                    sb.append(HTML_CLOSE_PARAGRAPH);
+                }
+            }
+        }
+        
+//        sb.append(getAnyObjectDescription("", 0, 
+//                module.getDescription().getIntroduction()));
+//        sb.append(getAnyObjectDescription("", 0, 
+//                module.getDescription().getPurpose()));
+//        sb.append(getAnyObjectDescription("", 0, 
+//                module.getDescription().getDifferentiation()));
         
         return sb.toString();
     }
@@ -688,15 +792,16 @@ public class BpImporter {
         StringBuilder sb = new StringBuilder();
         
         for (Requirement requirement : requirements) {
-            sb.append(getRequirementDescriptionStart(requirement));
+            String title = getRequirementDescriptionStart(requirement);
+            title += getRequirementResponsibleDescription(requirement);
             
-            sb.append(getRequirementResponsibleDescription(requirement));
-            
-            sb.append(getRequirementCIATable(requirement));
-            
-            sb.append(HTML_OPEN_PARAGRAGPH);
-            sb.append(getAnyElementDescription("", 0, requirement.getDescription().getAny()));
-            sb.append(HTML_CLOSE_PARAGRAGPH);
+            title += getRequirementCIATable(requirement);
+            sb.append(HTML_OPEN_H1);
+            sb.append(title);
+            sb.append(HTML_CLOSE_H1);
+            sb.append(HTML_OPEN_PARAGRAPH);
+            sb.append(getAnyElementDescription("", -1, -1 ,-1 , requirement.getDescription().getAny()));
+            sb.append(HTML_CLOSE_PARAGRAPH);
         }
         
         return sb.toString();
@@ -709,13 +814,9 @@ public class BpImporter {
      */
     private String getRequirementDescriptionStart(Requirement requirement) {
         StringBuilder sb = new StringBuilder();
-        sb.append(HTML_OPEN_PARAGRAGPH);
-        sb.append(HTML_OPEN_H2);
         sb.append(requirement.getIdentifier());
         sb.append(" ");
         sb.append(requirement.getTitle());
-        sb.append(HTML_CLOSE_H2);
-        sb.append(HTML_CLOSE_PARAGRAGPH);
         return sb.toString();
     }
 
@@ -726,13 +827,18 @@ public class BpImporter {
      */
     private String getRequirementResponsibleDescription(Requirement requirement) {
         StringBuilder sb = new StringBuilder();
+        
         if(requirement.getResponsibleRoles() != null &&
-                requirement.getResponsibleRoles().getRole().isEmpty()) {
-            sb.append(Messages.RESPONSIBLES).append(":").append(HTML_OPEN_UL);
-            for (String role : requirement.getResponsibleRoles().getRole()) {
-                sb.append(HTML_OPEN_LIST_ITEM).append(role).append(HTML_CLOSE_LIST_ITEM);
+                !requirement.getResponsibleRoles().getRole().isEmpty()) {
+            sb.append("[");
+            Iterator<String> iter = requirement.getResponsibleRoles().getRole().iterator();
+            while (iter.hasNext()) {
+                sb.append(iter.next());
+                if (iter.hasNext()) {
+                    sb.append("," );                    
+                }
             }
-            sb.append(HTML_CLOSE_UL);
+            sb.append("]");
         }
         return sb.toString();
     }
@@ -744,32 +850,18 @@ public class BpImporter {
      */
     private String getRequirementCIATable(Requirement requirement) {
         StringBuilder sb = new StringBuilder();
-        String confidentiality = (Boolean.parseBoolean(requirement.getCia().getConfidentiality())) ? "X" : "-";
-        String integrity = (Boolean.parseBoolean(requirement.getCia().getIntegrity())) ? "X" : "-";
-        String availitbility = (Boolean.parseBoolean(requirement.getCia().getAvailability())) ? "X" : "-";
         
-        sb.append(HTML_OPEN_TABLE);
-        sb.append(HTML_OPEN_TR).append(HTML_OPEN_TD);
-        sb.append(Messages.CIA_AFFECTS);
-        sb.append(HTML_CLOSE_TD).append(HTML_OPEN_TD);
-        sb.append(Messages.CIA_AFFECTS_YES);
-        sb.append(" / ");
-        sb.append(Messages.CIA_AFFECTS_NO);
-        sb.append(HTML_CLOSE_TD).append(HTML_CLOSE_TR);
-        sb.append(HTML_OPEN_TR).append(HTML_OPEN_TD);
-        sb.append(Messages.CIA_AFFECTS_CONFIDENTIALITY);
-        sb.append(HTML_CLOSE_TD).append(HTML_OPEN_TD);
-        sb.append(confidentiality).append(HTML_CLOSE_TABLE_DOWN_ROW);
-        sb.append(HTML_OPEN_TR).append(HTML_OPEN_TD);
-        sb.append(Messages.CIA_AFFECTS_INTEGRITY).append(HTML_CLOSE_TD).append(HTML_OPEN_TD);
-        sb.append(integrity).append(HTML_CLOSE_TD).append(HTML_CLOSE_TABLE_DOWN_ROW);
-        sb.append(HTML_OPEN_TR).append(HTML_OPEN_TD);
-        sb.append(Messages.CIA_AFFECTS_AVAILABILITY);
-        sb.append(HTML_CLOSE_TD).append(HTML_OPEN_TD);
-        sb.append(availitbility)
-            .append(HTML_CLOSE_TD)
-            .append(HTML_CLOSE_TABLE_DOWN_ROW);
-        sb.append(HTML_CLOSE_TABLE);
+        String confidentiality = (Boolean.parseBoolean(requirement.getCia().getConfidentiality())) ? "C" : "";
+        String integrity = (Boolean.parseBoolean(requirement.getCia().getIntegrity())) ? "I" : "";
+        String availitbility = (Boolean.parseBoolean(requirement.getCia().getAvailability())) ? "A" : "";
+        
+        String cia = confidentiality + integrity + availitbility;
+
+        if ( StringUtils.isNotEmpty(cia)) {
+            cia = "(" + cia + ")";
+            sb.append(cia);
+        }
+        
         return sb.toString();
     }
 
@@ -866,24 +958,25 @@ public class BpImporter {
     /**
      * @param groupIdentifier
      */
-    private BpRequirementGroup getRequirementParentGroup(String groupIdentifier) {
-        BpRequirementGroup group = null;
+    private CnATreeElement getRequirementParentGroup(String groupIdentifier, String typeId,
+            CnATreeElement systemGroup, CnATreeElement processGroup) {
+        CnATreeElement group = null;
         
         if (systemIdentifierPrefixes.contains(groupIdentifier)) {
             
-            for (CnATreeElement reqGroup : systemReqGroup.getChildren()) {
-                if (reqGroup.getTypeId().equals(BpRequirementGroup.TYPE_ID) 
+            for (CnATreeElement reqGroup : systemGroup.getChildren()) {
+                if (reqGroup.getTypeId().equals(typeId) 
                         && reqGroup.getTitle().equals(groupIdentifier)) {
-                    group = (BpRequirementGroup) reqGroup;
+                    group = reqGroup;
                     break;
                 }
             }
             
         } else if (processIdentifierPrefixes.contains(groupIdentifier)) {
-            for (CnATreeElement reqGroup : processReqGroup.getChildren()) {
-                if (reqGroup.getTypeId().equals(BpRequirementGroup.TYPE_ID) 
+            for (CnATreeElement reqGroup : processGroup.getChildren()) {
+                if (reqGroup.getTypeId().equals(typeId) 
                         && reqGroup.getTitle().equals(groupIdentifier)) {
-                    group = (BpRequirementGroup) reqGroup;
+                    group = reqGroup;
                     break;
                 }
             }
@@ -891,6 +984,8 @@ public class BpImporter {
         }
         return group;
     }
+    
+    
     
     private String getIdentifierPrefix(String id) {
         if (id != null && id.length() >= 3 && id.contains(".")) {
@@ -920,7 +1015,10 @@ public class BpImporter {
         List<ITBP2VNA.generated.implementationhint.Safeguard> safeGuards = 
                 bsiModule.getBasicSafeguards().getSafeguard();
         for (ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard : safeGuards) {
-            Safeguard safeguard = createSafeguard(parent, bsiSafeguard, Messages.QUALIFIER_BASIC,
+            
+            SafeguardGroup safeGuardParent = getSafeguardParent(parent, bsiSafeguard.getIdentifier());
+            
+            Safeguard safeguard = createSafeguard(safeGuardParent, bsiSafeguard, Messages.QUALIFIER_BASIC,
                     bsiSafeguardDocument.getLastChange().toString());
             if (safeguard != null) {
                 links.addAll(linkSafeguardToRequirements(safeguard));
@@ -933,7 +1031,8 @@ public class BpImporter {
         safeGuards.clear();
         safeGuards = bsiModule.getStandardSafeguards().getSafeguard();
         for (ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard : safeGuards) {
-            Safeguard safeguard = createSafeguard(parent, bsiSafeguard, Messages.QUALIFIER_STANDARD,
+            SafeguardGroup safeGuardParent = getSafeguardParent(parent, bsiSafeguard.getIdentifier());
+            Safeguard safeguard = createSafeguard(safeGuardParent, bsiSafeguard, Messages.QUALIFIER_STANDARD,
                     bsiSafeguardDocument.getLastChange().toString());
             if (safeguard != null) {
                 links.addAll(linkSafeguardToRequirements(safeguard));
@@ -946,7 +1045,8 @@ public class BpImporter {
         safeGuards.clear();
         safeGuards = bsiModule.getHighLevelSafeguards().getSafeguard();
         for (ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard : safeGuards) {
-            Safeguard safeguard = createSafeguard(parent, bsiSafeguard, Messages.QUALIFIER_HIGH,
+            SafeguardGroup safeGuardParent = getSafeguardParent(parent, bsiSafeguard.getIdentifier());
+            Safeguard safeguard = createSafeguard(safeGuardParent, bsiSafeguard, Messages.QUALIFIER_HIGH,
                     bsiSafeguardDocument.getLastChange().toString());
             if (safeguard != null) {
                 links.addAll(linkSafeguardToRequirements(safeguard));
@@ -1147,7 +1247,7 @@ public class BpImporter {
             vRequirement = (BpRequirement) createElement(BpRequirement.TYPE_ID, parent, bsiRequirement.getTitle());
             vRequirement.setIdentifier(bsiRequirement.getIdentifier());
             vRequirement.setObjectBrowserDescription(getAnyElementDescription(
-                    bsiRequirement.getTitle(), 1, bsiRequirement.getDescription().getAny()));
+                    bsiRequirement.getTitle(), -1, -1 ,-1 , bsiRequirement.getDescription().getAny()));
             vRequirement.setTitle(bsiRequirement.getTitle());
             vRequirement.setLastChange(parent.getLastChange());
             vRequirement.setIsAffectsConfidentiality(trueValue.equals(
@@ -1190,22 +1290,18 @@ public class BpImporter {
      * @param anyElements
      * @return
      */
-    private String getAnyElementDescription(String title, int headlineLvl, List<Element> anyElements) {
+    private String getAnyElementDescription(String title, int chapter, int subChapter, int subSubChapter, List<Element> anyElements) {
         StringBuilder sb = new StringBuilder();
         if (! "".equals(title)) {
-            if (headlineLvl > 0) {
-                sb.append("<H");
-                sb.append(String.valueOf(headlineLvl));
-                sb.append(">");
-                sb.append(title).append("</H");
-                sb.append(String.valueOf(headlineLvl));
-                sb.append(">");
-            } else {
-                sb.append(HTML_BR).append(title).append(HTML_BR);
-            }
+                sb.append(generateChapterHeader(chapter, subChapter, subSubChapter, title));
+                sb.append(HTML_OPEN_PARAGRAPH);
         }
         for (Object element : anyElements) {
             sb.append(extractContentFromObject(element));
+        }
+        
+        if (! "".equals(title)) {
+            sb.append(HTML_CLOSE_PARAGRAPH);
         }
         
         return sb.toString();
@@ -1222,7 +1318,7 @@ public class BpImporter {
             sb.append(unwrapText((Element)element));
         } else if(element instanceof String) {
             sb.append((String)element);
-        }
+        } 
         return sb.toString();
     }
     
@@ -1255,11 +1351,13 @@ public class BpImporter {
         blacklist.add("introduction");
         blacklist.add("purpose");
         blacklist.add("differentiation");
+        blacklist.add("");
+        blacklist.add("#text");
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < element.getChildNodes().getLength(); i++) {
             Stack<String> htmlElements = new Stack<>();
             Node node = element.getChildNodes().item(i);
-            String htmlFormatElement = node.getParentNode().getNodeName();
+            String htmlFormatElement = StringUtils.isNotEmpty(node.getNodeName()) ? node.getNodeName() : "";
             if( !blacklist.contains(htmlFormatElement)) {
                 sb.append("<").append(htmlFormatElement).append(">");   
                 htmlElements.push(htmlFormatElement);

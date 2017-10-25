@@ -83,7 +83,6 @@ import sernet.verinice.iso27k.rcp.Messages;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
-import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
@@ -94,6 +93,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TagParameter;
 import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.rcp.IAttachedToPerspective;
+import sernet.verinice.rcp.ViewFilterAction;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.bp.BaseProtectionPerspective;
 import sernet.verinice.rcp.tree.TreeContentProvider;
@@ -119,7 +119,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
     private Action doubleClickAction;
     private ExpandAction expandAction;
     private CollapseAction collapseAction;
-    private ISMViewFilter filterAction;
+    private ViewFilterAction filterAction;
     private Action linkWithEditorAction;
     private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
     private BSIModelViewLabelProvider bsiLableProvider = new BSIModelViewLabelProvider();
@@ -354,7 +354,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         hideEmptyFilter.setHideEmpty(true);
         TagParameter tagParameter = new TagParameter();
         TypeParameter typeParameter = new TypeParameter();
-        filterAction = new ISMViewFilter(viewer, Messages.ISMView_12, tagParameter, hideEmptyFilter, typeParameter);
+        filterAction = new ViewFilterAction(viewer, Messages.ISMView_12, tagParameter, hideEmptyFilter, typeParameter);
 
         linkWithEditorAction = new Action(Messages.ISMView_5, IAction.AS_CHECK_BOX) {
             @Override

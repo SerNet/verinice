@@ -38,8 +38,9 @@ import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
+ * Do not instantiate this class use public final methods.
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
  */
 public abstract class ElementFilter {
 
@@ -49,21 +50,39 @@ public abstract class ElementFilter {
     public static final String PARAM_FILTER_ORGS = "filter_orgs"; //$NON-NLS-1$
     public static final String[] ALL_TYPES = new String[]{"ALL_TYPES","ALL_TYPES"}; //$NON-NLS-1$ //$NON-NLS-1$
     
-    public static void applyParameter(CnATreeElement element, Map<String, Object> parameter) {
-        if(parameter!=null && element!=null && !parameter.isEmpty()) {
-            Set<IFilter> filterSet = new HashSet<IFilter>();
-            Set<String[]> typeIdSet = (Set<String[]>) parameter.get(PARAM_TYPE_IDS);
+    private ElementFilter() {
+        super();
+    }
+
+    /**
+     * @deprecated Use filterChildrenOfElement(CnATreeElement, Map<String, Object>) instead
+     */
+    @Deprecated 
+    public static void applyParameter(CnATreeElement element, Map<String, Object> filterParameter) {
+        filterChildrenOfElement(element, filterParameter);
+    }
+    
+    /**
+     * Filters the element's children with the filter parameters.
+     * 
+     * @param element
+     * @param filterParameters
+     */
+    public static void filterChildrenOfElement(CnATreeElement element, Map<String, Object> filterParameters) {
+        if(filterParameters!=null && element!=null && !filterParameters.isEmpty()) {
+            Set<IFilter> filterSet = new HashSet<>();
+            Set<String[]> typeIdSet = (Set<String[]>) filterParameters.get(PARAM_TYPE_IDS);
             if(typeIdSet!=null && !typeIdSet.isEmpty()) {
                 filterSet.add(TypeFilter.createFilter(typeIdSet));
             }
-            String[] tagArray = (String[]) parameter.get(PARAM_TAGS);
-            Object filterOrgsParam = parameter.get(PARAM_FILTER_ORGS);
+            String[] tagArray = (String[]) filterParameters.get(PARAM_TAGS);
+            Object filterOrgsParam = filterParameters.get(PARAM_FILTER_ORGS);
             boolean filterOrgs = filterOrgsParam!=null && ((Boolean)filterOrgsParam).booleanValue();
             if(tagArray!=null && tagArray.length>0) {
                 filterSet.add(TagFilter.createFilter(tagArray,filterOrgs));
             }
             Set<CnATreeElement> children = element.getChildren();
-            Set<CnATreeElement> childrenFiltered = new HashSet<CnATreeElement>();
+            Set<CnATreeElement> childrenFiltered = new HashSet<>();
             for (CnATreeElement child : children) {
                 if(checkElement(child, filterSet)) {
                     childrenFiltered.add(child);
@@ -73,13 +92,10 @@ public abstract class ElementFilter {
         }       
     }
     
-    /**
-     * @return
-     */
-    public static Map<String, Object> getConvertToMap(List<IParameter> paramerterList) {
+    public static Map<String, Object> convertToMap(List<IParameter> paramerterList) {
         Map<String, Object> result = null;
         if(paramerterList!=null && !paramerterList.isEmpty()) {
-            result = new Hashtable<String, Object>();
+            result = new Hashtable<>();
             for (IParameter param : paramerterList) {
                if(param instanceof TypeParameter) {              
                    Set<String[]> typeIdSet = (Set<String[]>) param.getParameter();
@@ -122,17 +138,11 @@ public abstract class ElementFilter {
             return new TypeFilter(visibleTypeSet);
         }
         
-        /**
-         * @param visibleTypeSet
-         */
         protected TypeFilter(Set<String[]> visibleTypeSet) {
             super();
             this.visibleTypeSet = visibleTypeSet;
         }
 
-        /* (non-Javadoc)
-         * @see sernet.verinice.iso27k.service.commands.IFilter#check(sernet.verinice.model.common.CnATreeElement)
-         */
         @Override
         public boolean check(CnATreeElement element) {
             return contains(visibleTypeSet,element.getTypeId());
@@ -160,10 +170,6 @@ public abstract class ElementFilter {
             return new TagFilter(tagArray,filterOrgs);
         }
         
-        /**
-         * @param filterOrgs 
-         * @param visibleTypeSet
-         */
         protected TagFilter(String[] tagArray, boolean filterOrgs) {
             super();
             this.tagArray = (tagArray != null) ? tagArray.clone() : null;
@@ -182,10 +188,8 @@ public abstract class ElementFilter {
                     result = false;
                     Collection<String> tagList = TagHelper.getTags(element.getEntity().getSimpleValue(Organization.PROP_TAG));
                     for (String tag : tagArray) {
-                        if (tag.equals(NO_TAG)) {
-                            if (tagList.size() < 1) {
-                                result = true;
-                            }
+                        if (tag.equals(NO_TAG) && tagList.isEmpty() ) {
+                            result = true;
                         }
                         for (String zielTag : tagList) {
                             if (zielTag.equals(tag)) {
@@ -200,7 +204,7 @@ public abstract class ElementFilter {
                     result = false;
                     IISO27kElement iso = (IISO27kElement) element;
                     for (String tag : tagArray) {
-                        if (tag.equals(NO_TAG) && iso.getTags().size() < 1) {
+                        if (tag.equals(NO_TAG) && iso.getTags().isEmpty()) {
                             result = true;
                         }
                         for (String zielTag : iso.getTags()) {

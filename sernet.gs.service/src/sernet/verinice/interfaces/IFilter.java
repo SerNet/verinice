@@ -22,10 +22,18 @@ package sernet.verinice.interfaces;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
+ * A filter for searching for {@link CnATreeElement}. IFilter is used in class
+ * ElementFilter.
+ * 
+ * @see sernet.verinice.model.common.ElementFilter
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
 public interface IFilter {
-    
+
+    /**
+     * @param element
+     * @return true if the element matches the filter criteria, false if not
+     */
     boolean check(CnATreeElement element);
 }

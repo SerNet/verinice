@@ -35,12 +35,12 @@ import ITBP2VNA.generated.module.RequirementRef;
 public class ToHtmlTableTransformer {
     private final static Logger LOG = Logger.getLogger(ToHtmlTableTransformer.class);
 
-    private static final String HEADERSTYLE = "style=\"background: gray;\"";
+    private static final String HEADERSTYLE = "style=\"background: lightGray;\"";
     private static final String ODDSTYLE = "";
     private static final String EVENSTYLE = "style=\"background: lightGrey\"";
     private static final String DATASTYLE = "style=\"text-align: center;\"";
     private static final String TABLESTYLE = "style=\"border-collapse: collapse;\"";
-
+    
     private ToHtmlTableTransformer() {
         super();
     }

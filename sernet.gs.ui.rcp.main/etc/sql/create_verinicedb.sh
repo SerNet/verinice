@@ -15,6 +15,14 @@
 # An admin account with login 'rr' and password 'geheim' and 
 # an normal user with login 'nn' and password 'geheim'.
 #
-dropdb verinicedb
-createdb -O verinice verinicedb
-pg_restore -d verinicedb ./verinicedb.sql.tar.gz
+postgresql_bin_directory=""
+if [ "-p" == "$1" ]; then
+    postgresql_bin_directory=$2
+fi
+if [ "-h" == "${1}" ]; then
+	echo "usage: $0 [-h|-p <PostgresSQL bin directory>] (Add a slash in the end of the path!)"
+	exit 1
+fi
+${postgresql_bin_directory}dropdb verinicedb
+${postgresql_bin_directory}createdb -O verinice verinicedb
+${postgresql_bin_directory}pg_restore -d verinicedb ./verinicedb.sql.tar.gz
