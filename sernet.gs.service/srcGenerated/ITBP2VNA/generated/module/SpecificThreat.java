@@ -45,7 +45,7 @@ public class SpecificThreat {
     @XmlElement(required = true)
     protected String headline;
     @XmlElement(required = true)
-    protected Description description;
+    protected String description;
 
     /**
      * Ruft den Wert der headline-Eigenschaft ab.
@@ -79,7 +79,7 @@ public class SpecificThreat {
      *     {@link Description }
      *     
      */
-    public Description getDescription() {
+    public String getDescription() {
         return description;
     }
 
@@ -91,7 +91,7 @@ public class SpecificThreat {
      *     {@link Description }
      *     
      */
-    public void setDescription(Description value) {
+    public void setDescription(String value) {
         this.description = value;
     }
 

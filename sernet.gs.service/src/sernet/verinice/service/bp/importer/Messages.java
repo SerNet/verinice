@@ -28,30 +28,41 @@ public class Messages extends NLS {
     
     private static final String BUNDLE_NAME = "sernet.verinice.service.bp.importer.messages"; //$NON-NLS-1$
     
-    public static String ROOT_REQUIREMENT_GROUP_NAME;
-    public static String PROCESS_REQUIREMENT_GROUP_NAME;
-    public static String SYSTEM_REQUIREMENT_GROUP_NAME;
-    public static String ROOT_THREAT_GROUP_NAME;
-    public static String ELEMENTAL_THREAT_GROUP_NAME;
-    public static String SPECIFIC_THREAT_GROUP_NAME;
-    public static String SPECIFIC_PROCESS_THREAT_GROUP_NAME;
-    public static String SPECIFIC_SYSTEM_THREAT_GROUP_NAME;
-    public static String IT_NETWORK_NAME;
-    public static String QUALIFIER_STANDARD;
-    public static String QUALIFIER_BASIC;
-    public static String QUALIFIER_HIGH;
-    public static String MAIN_RESPONSIBLE;
-    public static String FURTHER_RESPONSIBLES;
-    public static String BASIC_REQUIREMENTS;
-    public static String STANDARD_REQUIREMENTS;
-    public static String HIGH_REQUIREMENTS;
-    public static String CIA_AFFECTS;
-    public static String CIA_AFFECTS_YES;
-    public static String CIA_AFFECTS_NO;
-    public static String CIA_AFFECTS_CONFIDENTIALITY;
-    public static String CIA_AFFECTS_INTEGRITY;
-    public static String CIA_AFFECTS_AVAILABILITY;
-    public static String RESPONSIBLES;
+    public static String Root_Requirement_Group_Name;
+    public static String Process_Requirement_Group_Name;
+    public static String System_Requirement_Group_Name;
+    public static String Root_Threat_Group_Name;
+    public static String Elemental_Threat_Group_Name;
+    public static String Specific_Threat_Group_Name;
+    public static String Specific_Process_Threat_Group_Name;
+    public static String Specific_System_Threat_Group_Name;
+    public static String IT_Network_Name;
+    public static String Qualifier_Standard;
+    public static String Qualifier_Basic;
+    public static String Qualifier_High;
+    public static String Main_Responsible;
+    public static String Further_Responsibles;
+    public static String Basic_Requirements;
+    public static String Basic_Requirements_Intro;
+    public static String Standard_Requirements;
+    public static String Standard_Requirements_Intro;
+    public static String High_Requirements;
+    public static String High_Requirements_Intro;
+    public static String CIA_Affects;
+    public static String CIA_Affects_Yes;
+    public static String CIA_Affects_No;
+    public static String CIA_Affects_Confidentiality;
+    public static String CIA_Affects_Integrity;
+    public static String CIA_Affects_Availability;
+    public static String Responsibles;
+    public static String Requirements;
+    public static String Further_Information;
+    public static String Literature;
+    public static String Introduction;
+    public static String Purpose;
+    public static String Differentiation;
+    public static String Threat_Situation;
+    public static String Description;
     
     static {
         // initialize resource bundle
