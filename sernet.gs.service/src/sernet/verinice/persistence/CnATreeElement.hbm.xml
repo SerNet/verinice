@@ -614,12 +614,12 @@
 	-->	
   	<filter
   		name="userAccessReadFilter"
-  		condition="(object_type='bsimodel' or object_type='iso27kmodel' or exists (select p.dbid from permission p where p.cte_id = dbId and p.role in (:currentRoles) and p.readAllowed = :readAllowed))"
+  		condition="(object_type in ('bsimodel','iso27kmodel','bp_model','catalog_model') or exists (select p.dbid from permission p where p.cte_id = dbId and p.role in (:currentRoles) and p.readAllowed = :readAllowed))"
  	/>
     
     <filter
         name="scopeFilter"
-        condition="(object_type='bsimodel' or object_type='iso27kmodel' or scope_id=:scopeId)"
+        condition="(object_type in ('bsimodel','iso27kmodel','bp_model','catalog_model') or scope_id=:scopeId)"
     />
 
 	</class>
