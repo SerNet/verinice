@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.engine.SessionFactoryImplementor;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.verinice.model.bsi.Attachment;
@@ -27,19 +26,14 @@ import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
  */
 @SuppressWarnings("serial")
 public class MigrateDbTo1_02D extends DbMigration {
-	
-	private transient Logger log;
-	
-    private static final String HIBERNATE_DIALECT_POSTGRSQL = "org.hibernate.dialect.PostgreSQLDialect";
-    private static final String HIBERNATE_DIALECT_ORACLE = "sernet.verinice.hibernate.Oracle10gNclobDialect";
-    private static final String HIBERNATE_DIALECT_DERBY = "sernet.verinice.hibernate.ByteArrayDerbyDialect";
-    
-    
-    private static final List<String> DERBY_SQL_LIST ;
-    private static final List<String> ORACLE_SQL_LIST ;
-    
+
+    private transient Logger log;
+
+    private static final List<String> DERBY_SQL_LIST;
+    private static final List<String> ORACLE_SQL_LIST;
+
     private static final String MASSNAHME_TMP_COLUMN_NAME = "TMP_DESC_MASS";
-    
+
     static {
         DERBY_SQL_LIST = new ArrayList<String>();
         DERBY_SQL_LIST.add("ALTER TABLE RISIKOMASSNAHME ADD COLUMN " + MASSNAHME_TMP_COLUMN_NAME + " VARCHAR (32672)");
@@ -60,96 +54,74 @@ public class MigrateDbTo1_02D extends DbMigration {
     
     private static final String POSTGRE_SQL = "ALTER TABLE risikomassnahme ALTER COLUMN description TYPE varchar(400000);";
 
-	@Override
-	public void execute() {
-		
-		alterDatabases();
-		
-		super.updateVersion();
+    @Override
+    public void execute() {
 
-	}
-	
-	private void alterDatabases(){
-		String dialect = getHibernateDialect();
-		if(getLog().isDebugEnabled()){
-		    getLog().debug("Updating db to Version: " + getVersion() + " using dialect: " + dialect);
-		}
-		if(HIBERNATE_DIALECT_DERBY.equals(dialect)){
-			alterDerby();
-		} else if(HIBERNATE_DIALECT_POSTGRSQL.equals(dialect)){
-			alterPostgres();
-		} else if(HIBERNATE_DIALECT_ORACLE.equals(dialect)){
-			alterOracle();
-		} else {
-			getLog().error("configured Hibernate Dialect is not supported by this migration. please contact support and ask for customized help to migrate to db 1.02D");
-		}
-		
-		
-	}
-	
-	private void alterDerby(){
-	    for(String sqlStatement : DERBY_SQL_LIST){
-	        executeHibernateCallback(sqlStatement);
-	    }
-	}
-	
-	private void alterPostgres(){
-	    executeHibernateCallback(POSTGRE_SQL);
-		
-	}
-	
-	private void alterOracle(){
-	    for(String sqlStatement : ORACLE_SQL_LIST){
-	        executeHibernateCallback(sqlStatement);
-	    }
-	}
-	
-	/**
-	 * executes given sql query within the current hibernate session
-	 * @param sql
-	 * @return
-	 */
-	@SuppressWarnings({"unchecked", "restriction"})
-    private int executeHibernateCallback(final String sql){
-	    return (int)getDaoFactory().getDAO(Attachment.class).executeCallback(new HibernateCallback() {
-            
+        alterDatabases();
+
+        super.updateVersion();
+
+    }
+
+    private void alterDatabases() {
+        String dialect = getHibernateDialect();
+        if (getLog().isDebugEnabled()) {
+            getLog().debug("Updating db to Version: " + getVersion() + " using dialect: " + dialect);
+        }
+        if (HIBERNATE_DIALECT_DERBY.equals(dialect)) {
+            alterDerby();
+        } else if (HIBERNATE_DIALECT_POSTGRSQL.equals(dialect)) {
+            alterPostgres();
+        } else if (HIBERNATE_DIALECT_ORACLE.equals(dialect)) {
+            alterOracle();
+        } else {
+            getLog().error("configured Hibernate Dialect is not supported by this migration. please contact support and ask for customized help to migrate to db 1.02D");
+        }
+
+    }
+
+    private void alterDerby() {
+        for (String sqlStatement : DERBY_SQL_LIST) {
+            executeHibernateCallback(sqlStatement);
+        }
+    }
+
+    private void alterPostgres() {
+        executeHibernateCallback(POSTGRE_SQL);
+
+    }
+
+    private void alterOracle() {
+        for (String sqlStatement : ORACLE_SQL_LIST) {
+            executeHibernateCallback(sqlStatement);
+        }
+    }
+
+    /**
+     * executes given sql query within the current hibernate session
+     */
+    private int executeHibernateCallback(final String sql) {
+        return (int) getDaoFactory().getDAO(Attachment.class).executeCallback(new HibernateCallback() {
+
             @Override
             public Integer doInHibernate(Session session) throws HibernateException, SQLException {
-
                 int result = session.createSQLQuery(sql).executeUpdate();
-                if(getLog().isDebugEnabled()){
+                if (getLog().isDebugEnabled()) {
                     getLog().debug("Result of session.executeUpdate():\t" + result);
                 }
                 return result;
             }
         });
-	}
-	
+    }
 
-	@Override
-	public double getVersion() {
-		return 1.02D;
-	}
-	
+    @Override
+    public double getVersion() {
+        return 1.02D;
+    }
+
     private Logger getLog() {
         if (log == null)
             log = Logger.getLogger(MigrateDbTo1_02D.class);
         return log;
     }
-	
-    /**
-     * reads in hibernatesession configured database dialog
-     * @return
-     */
-    @SuppressWarnings({"unchecked", "restriction"})
-    private String getHibernateDialect(){
-        return (String)getDaoFactory().getDAO(Attachment.class).executeCallback(new HibernateCallback() {
-            
-            @Override
-            public Object doInHibernate(Session session) throws HibernateException, SQLException {
-                return ((SessionFactoryImplementor)session.getSessionFactory()).getDialect().toString();
-            }
-        });
-    }
-
 }
