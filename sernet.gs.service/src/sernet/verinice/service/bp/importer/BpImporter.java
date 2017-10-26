@@ -11,27 +11,18 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.Text;
 
 import ITBP2VNA.generated.implementationhint.Document.Safeguards;
-import ITBP2VNA.generated.module.BibItem;
 import ITBP2VNA.generated.module.Document;
-import ITBP2VNA.generated.module.Document.ThreatScenario.SpecificThreats;
 import ITBP2VNA.generated.module.ElementalthreatRef;
 import ITBP2VNA.generated.module.Requirement;
 import ITBP2VNA.generated.module.RequirementRef;
-import ITBP2VNA.generated.module.SpecificThreat;
 import sernet.verinice.interfaces.CnATreeElementBuildException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
@@ -51,6 +42,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Link;
 import sernet.verinice.service.bp.LoadBpModel;
 import sernet.verinice.service.bp.exceptions.CreateBPElementException;
+import sernet.verinice.service.bp.importer.html.HtmlHelper;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateITNetwork;
 import sernet.verinice.service.commands.CreateMultipleLinks;
@@ -110,27 +102,6 @@ public class BpImporter {
     private static final String SUBDIRECTORY_MEDIA = "media";
     private static final String SUBDIRECTORY_THREATS = "elementare_gefaehrdungen_1";
     private static final String SUBDIRECTORY_IMPL_HINTS = "umsetzungshinweise";
-    
-    
-    private static final String HTML_OPEN_TABLE = 
-            "<table style=\"border-collapse: collapse;\">"; //$NON-NLS-1$
-    private static final String HTML_CLOSE_TABLE = "</table>"; //$NON-NLS-1$
-    private static final String HTML_OPEN_UL = "<ul>"; //$NON-NLS-1$
-    private static final String HTML_CLOSE_UL = "</ul>"; //$NON-NLS-1$
-    private static final String HTML_OPEN_TR = "<tr>"; //$NON-NLS-1$
-    private static final String HTML_CLOSE_TR = "</tr>"; //$NON-NLS-1$
-    private static final String HTML_OPEN_TD = 
-            "<td style=\"border: 1px solid black\">"; //$NON-NLS-1$
-    private static final String HTML_CLOSE_TD = "</td>"; //$NON-NLS-1$
-    private static final String HTML_SPACE = "&nbsp;"; //$NON-NLS-1$
-    private static final String HTML_OPEN_PARAGRAPH = "<p>"; //$NON-NLS-1$
-    private static final String HTML_CLOSE_PARAGRAPH = "</p>"; //$NON-NLS-1$
-    private static final String HTML_CLOSE_OPEN_PARAGRAPH = "</p><p>"; //$NON-NLS-1$
-    private static final String HTML_CLOSE_H1 = "</H1>"; //$NON-NLS-1$
-    private static final String HTML_OPEN_H1 = "<H1>"; //$NON-NLS-1$
-    private static final String HTML_OPEN_LIST_ITEM = "<li>"; //$NON-NLS-1$
-    private static final String HTML_CLOSE_LIST_ITEM = "</li>"; //$NON-NLS-1$
-    private static final String HTML_BR = "<br>"; //$NON-NLS-1$
     
     private static final int MILLIS_PER_SECOND = 1000;
     
@@ -652,7 +623,8 @@ public class BpImporter {
                     parent, bsiModule.getFullTitle());
 
             veriniceModule.setIdentifier(bsiModule.getIdentifier());
-            veriniceModule.setObjectBrowserDescription(getCompleteModuleXMLText(bsiModule));
+            veriniceModule.setObjectBrowserDescription(
+                    HtmlHelper.getCompleteModuleXMLText(bsiModule));
             veriniceModule.setLastChange(getBSIDate(bsiModule.getLastChange())); 
             LOG.debug("Module : \t" + veriniceModule.getTitle() + " created");
             createRequirementsForModule(bsiModule, veriniceModule);
@@ -660,417 +632,6 @@ public class BpImporter {
         return veriniceModule;
     }
     
-    
-    /**
-     * creates a formatted String like one of the following:
-     * 
-     * 1 Chaptertitle
-     * 1.0 Chaptertitle
-     * 1.2.3 Chaptertitle
-     * 
-     * to not create subchapters, set the int to -1
-     * 
-     * @param chapter
-     * @param subChapter
-     * @param subSubChapter
-     * @param headline
-     * @return
-     */
-    private String generateChapterHeader(int chapter, int subChapter,
-            int subSubChapter, String headline) {
-        StringBuilder sb = new StringBuilder();
-        if (StringUtils.isNotEmpty(headline)) {
-            sb.append(HTML_OPEN_H1);
-        }
-
-        if (chapter >= 1) {
-            sb.append(chapter);
-            if (subChapter >= 0) {
-                sb.append('.');
-                sb.append(subChapter);
-                if (subSubChapter >= 0) {
-                    sb.append('.');
-                    sb.append(subSubChapter);
-                }
-            }
-        }
-        
-        if (StringUtils.isNotEmpty(headline)) {
-            sb.append(HTML_SPACE);
-            sb.append(headline);
-            sb.append(HTML_CLOSE_H1);
-            sb.append(HTML_BR);
-        }
-        
-        return sb.toString();
-    }
-    
-    
-    /**
-     * The description (shown in the objectbrowser) for a module needs to show all (!) the content
-     * which is defined in the related XML-File. It should be the equivalent
-     * to the content that is shown in the printed (pdf) version of
-     * the BSI-Baseline-Protection Compendium
-     * 
-     * this method gathers all that information and creates
-     * a html-structure around it to format it in a pretty way
-     * 
-     * @param module
-     * @return
-     */
-    private String getCompleteModuleXMLText(Document module) {
-        StringBuilder descriptionBuilder = new StringBuilder();
-
-        int chapter = 1;
-        int subChapter = 0;
-        
-        chapter = getModuleIntroduction(module, descriptionBuilder, chapter);
-        
-        descriptionBuilder.append(getModuleSpecificThreats(module, chapter));
-        
-        chapter++;
-        
-        descriptionBuilder.append(getModuleReqIntro(module, chapter));
-        
-        subChapter = 1;
-        
-        descriptionBuilder.append(getModuleReqMain(module, chapter, subChapter));
-        
-        descriptionBuilder.append(ToHtmlTableTransformer.
-                createCrossreferenceTable(module.getCrossreferences()));
-        
-        descriptionBuilder.append(getModuleDescriptionSuffix(module, chapter));
-        
-        return descriptionBuilder.toString();
-        
-        
-    }
-
-    /**
-     * generates the part of the {@link BpRequirementGroup} (Module) 
-     * object-browser-property that describes the {@link BpRequirement}
-     * further Information (the literature notes) related to the module
-     *  
-     * @param module
-     * @param descriptionBuilder
-     * @param chapter
-     */
-    private String getModuleDescriptionSuffix(Document module, int chapter) {
-        StringBuilder sb = new StringBuilder();
-        int subChapter;
-        sb.append(HTML_OPEN_PARAGRAPH);
-        
-        if (module.getBibliography() != null) {
-
-            chapter++;
-            sb.append(generateChapterHeader(chapter, -1, -1, Messages.Further_Information));
-            
-            subChapter = 1;
-            sb.append(generateChapterHeader(chapter, subChapter, -1, Messages.Literature));
-            for (BibItem bibItem :  module.getBibliography().getBibItem()) {
-                StringBuilder bibBuilder = new StringBuilder();
-                bibBuilder.append(HTML_OPEN_UL);
-                bibBuilder.append(HTML_OPEN_LIST_ITEM);
-                bibBuilder.append(bibItem.getShortHand()).append(" ");
-                String descriptionText = bibItem.getDescription();
-                descriptionText = descriptionText.replaceAll("<p>", "");
-                descriptionText = descriptionText.replaceAll("</p>", "");
-                descriptionText = descriptionText.replaceAll("<br />", "");
-                bibBuilder.append(descriptionText);
-                bibBuilder.append(HTML_CLOSE_LIST_ITEM);
-                bibBuilder.append(HTML_CLOSE_UL);
-                sb.append(bibBuilder.toString());
-            }
-        }
-        return sb.toString();
-    }
-
-    /**
-     * generates the part of the {@link BpRequirementGroup} (Module) 
-     * object-browser-property that describes the {@link BpRequirement}
-     * defined within that module
-     * 
-     * @param module
-     * @param descriptionBuilder
-     * @param chapter
-     * @param subChapter
-     */
-    private String getModuleReqMain(Document module, int chapter, int subChapter) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(generateChapterHeader(chapter, subChapter++, -1, Messages.Basic_Requirements));
-        sb.append(HTML_OPEN_PARAGRAPH);
-        sb.append(Messages.Basic_Requirements_Intro);
-        sb.append(HTML_CLOSE_PARAGRAPH);
-        sb.append(getModuleRequirementDescription(module.getRequirements()
-                .getBasicRequirements().getRequirement()));
-        
-        sb.append(HTML_CLOSE_PARAGRAPH);
-        
-        sb.append(generateChapterHeader(chapter, subChapter++, -1, Messages.Standard_Requirements));
-        sb.append(HTML_OPEN_PARAGRAPH);
-        sb.append(Messages.Standard_Requirements_Intro);
-        sb.append(HTML_CLOSE_PARAGRAPH);
-        sb.append(getModuleRequirementDescription(module.getRequirements()
-                .getStandardRequirements().getRequirement()));        
-        
-        sb.append(HTML_CLOSE_OPEN_PARAGRAPH);
-        
-        sb.append(generateChapterHeader(chapter, subChapter++, -1, Messages.High_Requirements));
-
-        sb.append(HTML_OPEN_PARAGRAPH);
-        sb.append(Messages.High_Requirements_Intro);
-        sb.append(HTML_CLOSE_PARAGRAPH);
-        
-        sb.append(getModuleRequirementDescription(module.getRequirements()
-                .getHighLevelRequirements().getRequirement()));        
-        
-        sb.append(HTML_CLOSE_PARAGRAPH);
-        return sb.toString();
-    }
-
-    /**
-     * get Introduction of Requirements-Description of description of
-     * {@link BpRequirementGroup} (Module)
-     * 
-     * @param module
-     * @param descriptionBuilder
-     * @param chapter
-     */
-    private String getModuleReqIntro(Document module, int chapter) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(HTML_OPEN_PARAGRAPH);
-        
-        sb.append(generateChapterHeader(chapter, -1, -1, Messages.Requirements));
-        
-        sb.append(module.getRequirements().getDescription());
-        
-        sb.append(HTML_OPEN_TABLE);
-        sb.append(HTML_OPEN_TR);
-        sb.append(HTML_OPEN_TD);
-        sb.append(Messages.Main_Responsible);
-        sb.append(HTML_CLOSE_TD);
-        sb.append(HTML_OPEN_TD);
-        sb.append(module.getRequirements().getMainResponsibleRole());
-        sb.append(HTML_CLOSE_TD);
-        sb.append(HTML_CLOSE_TR);
-        sb.append(HTML_OPEN_TR);
-        sb.append(HTML_OPEN_TD);
-        sb.append(Messages.Further_Responsibles);
-        sb.append(HTML_CLOSE_TD);
-        sb.append(HTML_OPEN_TD);
-        
-        List<String> roles = null;
-        if (module.getRequirements().getFurtherResponsibleRoles() != null) {
-            roles = module.getRequirements().getFurtherResponsibleRoles().getRole();
-        }
-        if (roles != null && !roles.isEmpty()) {
-            Iterator<String> iter = roles.iterator();
-            while (iter.hasNext()) {
-                sb.append(iter.next());
-                if (iter.hasNext()) {
-                    sb.append(", ");
-                }
-            }
-            
-        }
-        sb.append(HTML_CLOSE_TD);
-        sb.append(HTML_CLOSE_TR);        
-        sb.append(HTML_CLOSE_TABLE);
-        
-        sb.append(HTML_CLOSE_PARAGRAPH);
-        return sb.toString();
-    }
-
-    /**
-     * 
-     * creates the specific-threats describing part of the 
-     * {@link BpRequirementGroup} (Module) description
-     * 
-     * @param module
-     * @param descriptionBuilder
-     * @param chapter
-     */
-    private String getModuleSpecificThreats(Document module, int chapter) {
-        int subChapter;
-        StringBuilder sb = new StringBuilder();
-        sb.append(generateChapterHeader(chapter, -1, -1, Messages.Threat_Situation));
-        sb.append(module.getThreatScenario().getDescription());
-        
-        SpecificThreats specificThreats = module.getThreatScenario().getSpecificThreats();
-        
-        subChapter = 1;
-        for (SpecificThreat specificThreat : specificThreats.getSpecificThreat()) {
-            sb.append(HTML_OPEN_PARAGRAPH);
-            sb.append(generateChapterHeader(chapter, 
-                    subChapter++, -1, specificThreat.getHeadline()));
-            sb.append(specificThreat.getDescription());
-            sb.append(HTML_CLOSE_PARAGRAPH);
-        }
-        return sb.toString();
-    }
-
-    /**
-     * creates the intro of a {@link BpRequirementGroup} (Module) description
-     * 
-     * @param module
-     * @param descriptionBuilder
-     * @param chapter
-     * @return
-     */
-    private int getModuleIntroduction(Document module, 
-            StringBuilder descriptionBuilder, int chapter) {
-        descriptionBuilder.append(HTML_OPEN_H1);
-        descriptionBuilder.append(module.getFullTitle());
-        descriptionBuilder.append(HTML_CLOSE_H1);
-        
-        descriptionBuilder.append(generateChapterHeader(chapter, -1, -1, Messages.Description));
-        descriptionBuilder.append(getModuleDescriptionStart(module, chapter++));
-        return chapter;
-    }
-
-
-    /**
-     * returns the description (three parts (Introduction, Purpose, Differentiation))
-     * of a module {@link BpRequirementGroup}
-     * 
-     * @param module
-     * @param descriptionBuilder
-     */
-    private String getModuleDescriptionStart(Document module, int chapter) {
-        StringBuilder sb = new StringBuilder();
-        
-        
-        List<Object> introduction = module.getDescription().getIntroduction();
-        
-        int subChapter = 1;
-        
-        for (Object o : introduction) {
-            if (o instanceof Element) {
-                Element node = (Element)o;
-                if ("introduction".equals(node.getNodeName())){
-                    sb.append(generateChapterHeader(chapter, subChapter++,
-                            -1, Messages.Introduction));
-                    sb.append(HTML_OPEN_PARAGRAPH);
-                    sb.append(node.getTextContent());
-                    sb.append(HTML_CLOSE_PARAGRAPH);
-                } else if ("purpose".equals(node.getNodeName())) {
-                    sb.append(generateChapterHeader(chapter, subChapter++, -1, Messages.Purpose));
-                    sb.append(HTML_OPEN_PARAGRAPH);
-                    sb.append(node.getTextContent());
-                    sb.append(HTML_CLOSE_PARAGRAPH);
-                } else if ("differentiation".equals(node.getNodeName())) {
-                    sb.append(generateChapterHeader(chapter, subChapter++,
-                            -1, Messages.Differentiation));
-                    sb.append(HTML_OPEN_PARAGRAPH);
-                    sb.append(node.getTextContent());
-                    sb.append(HTML_CLOSE_PARAGRAPH);
-                }
-            }
-        }
-        
-        return sb.toString();
-    }
-    
-    
-    /**
-     * returns the description of a {@link BpRequirement}
-     * HTML-Formatted
-     *  
-     * @param requirements
-     * @return
-     */
-    public String getModuleRequirementDescription(List<Requirement> requirements) {
-        StringBuilder sb = new StringBuilder();
-        
-        for (Requirement requirement : requirements) {
-            String title = getRequirementDescriptionStart(requirement);
-            title += " ";
-            title += getRequirementResponsibleDescription(requirement);
-            title += " ";
-            title += getRequirementCIA(requirement);
-            sb.append(HTML_OPEN_H1);
-            sb.append(title);
-            sb.append(HTML_CLOSE_H1);
-            sb.append(HTML_OPEN_PARAGRAPH);
-            sb.append(getAnyElementDescription("", -1, -1 ,-1,
-                    requirement.getDescription().getAny()));
-            sb.append(HTML_CLOSE_PARAGRAPH);
-        }
-        
-        return sb.toString();
-    }
-
-
-    /**
-     * returns the description-prefix of a {@link BpRequirement}
-     * HTML-Formatted
-     * 
-     * @param requirement
-     */
-    private String getRequirementDescriptionStart(Requirement requirement) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(requirement.getIdentifier());
-        sb.append(" ");
-        sb.append(requirement.getTitle());
-        return sb.toString();
-    }
-
-
-    /**
-     * returns a string that is the suffix to a {@link BpRequirement} title,
-     * that contains all responsible roles
-     * 
-     * @param requirement
-     */
-    private String getRequirementResponsibleDescription(Requirement requirement) {
-        StringBuilder sb = new StringBuilder();
-        
-        if (requirement.getResponsibleRoles() != null 
-                && !requirement.getResponsibleRoles().getRole().isEmpty()) {
-            sb.append("[");
-            Iterator<String> iter = requirement.getResponsibleRoles().getRole().iterator();
-            while (iter.hasNext()) {
-                sb.append(iter.next());
-                if (iter.hasNext()) {
-                    sb.append(",");                    
-                }
-            }
-            sb.append("]");
-        }
-        return sb.toString();
-    }
-
-
-    /**
-     * returns a string that is the suffix to a {@link BpRequirement} title,
-     * that contains which protection categories are affected by this requirement
-     * 
-     * C for Confidentiality
-     * I for Integrity
-     * A for Availabiltiy
-     * 
-     * @param requirement
-     */
-    private String getRequirementCIA(Requirement requirement) {
-        StringBuilder sb = new StringBuilder();
-        
-        String confidentiality = (Boolean.parseBoolean(requirement.getCia().
-                getConfidentiality())) ? "C" : "";
-        String integrity = (Boolean.parseBoolean(requirement.getCia().
-                getIntegrity())) ? "I" : "";
-        String availitbility = (Boolean.parseBoolean(requirement.getCia().
-                getAvailability())) ? "A" : "";
-        
-        String cia = confidentiality + integrity + availitbility;
-
-        if (StringUtils.isNotEmpty(cia)) {
-            cia = "(" + cia + ")";
-            sb.append(cia);
-        }
-        
-        return sb.toString();
-    }
-
 
     /**
      * create links between {@link BpThreat} and related {@link BpRequirement}
@@ -1152,7 +713,7 @@ public class BpImporter {
                 veriniceThreat.setTitel(bsiThreat.getFullTitle());
                 
                 veriniceThreat.setIdentifier(bsiThreat.getIdentifier());
-                String plainDescription = getAnyObjectDescription(
+                String plainDescription = HtmlHelper.getAnyObjectDescription(
                         bsiThreat.getFullTitle(), 1, bsiThreat.getDescription());
                 veriniceThreat.setConfidentiality(
                         Boolean.parseBoolean(bsiThreat.getCia().getConfidentiality()));
@@ -1348,7 +909,7 @@ public class BpImporter {
             Safeguard safeguard) throws CreateBPElementException {
         safeguard.setAbbreviation(bsiSafeguard.getIdentifier());
         safeguard.setIdentifier(bsiSafeguard.getIdentifier());
-        String plainDescription = getAnyObjectDescription(bsiSafeguard.getTitle(), 1,
+        String plainDescription = HtmlHelper.getAnyObjectDescription(bsiSafeguard.getTitle(), 1,
                 bsiSafeguard.getDescription().getContent());
         String htmlDescription = plainDescription;
         if (plainDescription != null && plainDescription.length() > 0) {
@@ -1494,7 +1055,8 @@ public class BpImporter {
             veriniceRequirement = (BpRequirement) createElement(
                     BpRequirement.TYPE_ID, parent, bsiRequirement.getTitle());
             veriniceRequirement.setIdentifier(bsiRequirement.getIdentifier());
-            veriniceRequirement.setObjectBrowserDescription(getAnyElementDescription(
+            veriniceRequirement.setObjectBrowserDescription(
+                    HtmlHelper.getAnyElementDescription(
                     bsiRequirement.getTitle(), -1, -1 ,-1 ,
                     bsiRequirement.getDescription().getAny()));
             veriniceRequirement.setTitle(bsiRequirement.getTitle());
@@ -1540,132 +1102,6 @@ public class BpImporter {
                     "Could not parse bsiDate:\t" + dateString);
         }
     }
-
-    
-    /**
-     * transforms mixed HTML/XML-Content 
-     * (given by a {@link List} of {@link Element} 
-     * to a html-formatted String
-     * 
-     * @param title
-     * @param anyElements
-     * @return
-     */
-    private String getAnyElementDescription(String title, int chapter, int subChapter,
-            int subSubChapter, List<Element> anyElements) {
-        StringBuilder sb = new StringBuilder();
-        if (! "".equals(title)) {
-            sb.append(generateChapterHeader(chapter, subChapter,
-                    subSubChapter, title));
-            sb.append(HTML_OPEN_PARAGRAPH);
-        }
-        for (Object element : anyElements) {
-            sb.append(extractContentFromObject(element));
-        }
-        
-        if (! "".equals(title)) {
-            sb.append(HTML_CLOSE_PARAGRAPH);
-        }
-        
-        return sb.toString();
-    }
-
-
-    /**
-     * searches for a text-element in a tree given by an {@link Element}
-     * and returns it
-     * 
-     * @param sb
-     * @param element
-     */
-    private String extractContentFromObject(Object element) {
-        StringBuilder sb = new StringBuilder();
-        if (element instanceof Element) {
-            sb.append(unwrapText((Element)element));
-        } else if (element instanceof String) {
-            sb.append((String)element);
-        } 
-        return sb.toString();
-    }
-    
-    /**
-     * transforms mixed HTML/XML-Content 
-     * (given by a {@link List} of {@link Object} 
-     * to a html-formatted String
-     * 
-     * @param title
-     * @param headlineLevel
-     * @param anyObjects
-     * @return
-     */
-    private String getAnyObjectDescription(String title, 
-            int headlineLevel, List<Object> anyObjects) {
-        StringBuilder sb = new StringBuilder();
-        if (! "".equals(title)) {
-            if (headlineLevel > 0) {
-                sb.append("<H");
-                sb.append(String.valueOf(headlineLevel));
-                sb.append(">").append(title).append("</H");
-                sb.append(String.valueOf(headlineLevel));
-                sb.append(">");
-            } else {
-                sb.append(HTML_BR).append(title).append(HTML_BR);
-            }
-        }
-        if (anyObjects != null) {
-            sb.append(HTML_OPEN_PARAGRAPH);
-            for (Object o : anyObjects) {
-                sb.append(extractContentFromObject(o));            
-            }
-            sb.append(HTML_CLOSE_PARAGRAPH);
-        } else {
-            LOG.debug("No Description found for :\t" + title);
-        }
-        
-        return sb.toString();
-    }
-    
-    
-    /**
-     * creates a html-formatted text (including nested tags) 
-     * that is given by a {@link Node}
-     * 
-     * blacklists known BSI-XML-Structure defining strings to not 
-     * appear as html-tags in the output
-     * 
-     * @param element
-     * @return
-     */
-    private String unwrapText(Node element) {
-        Set<String> blacklist = new HashSet<>();
-        blacklist.add("introduction");
-        blacklist.add("purpose");
-        blacklist.add("differentiation");
-        blacklist.add("description");
-        blacklist.add("");
-        blacklist.add("#text");
-        StringBuilder sb = new StringBuilder();
-        Stack<String> htmlElements = new Stack<>();
-        Node node = element;
-        String htmlFormatElement = StringUtils.
-                isNotEmpty(node.getNodeName()) ? node.getNodeName() : "";
-        if (!blacklist.contains(htmlFormatElement)) {
-            sb.append("<").append(htmlFormatElement).append(">");   
-            htmlElements.push(htmlFormatElement);
-        }
-        if (node instanceof Text) {
-            sb.append(node.getNodeValue());
-        } else {
-            for (int i = 0; i < element.getChildNodes().getLength(); i++) {
-                sb.append(unwrapText(element.getChildNodes().item(i)));
-            }
-        }
-        while (! htmlElements.isEmpty()) {
-            sb.append("</").append(htmlElements.pop()).append(">");
-        }
-        return sb.toString();
-    }
-    
     
     /**
      * get the root {@link ItNetwork} and creates it at the first call
