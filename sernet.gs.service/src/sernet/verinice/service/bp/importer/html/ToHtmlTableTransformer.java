@@ -17,7 +17,7 @@
  * Contributors:
  *     Urs Zeidler uz[at]sernet.de - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.service.bp.importer;
+package sernet.verinice.service.bp.importer.html;
 
 import java.util.ArrayList;
 import java.util.List;
