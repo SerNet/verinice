@@ -276,6 +276,8 @@ public class CopyCommand extends GenericCommand {
         CnATreeElement newElement = saveNew(toGroup, copyElement);
         if(newElement.getEntity()!=null) {
             if (copyElement.isTemplateOrImplementation()) {
+                IBaseDao dao = getDaoFactory().getDAOforTypedElement(newElement.getEntity());
+                dao.delete(newElement.getEntity());
                 newElement.setEntity(copyElement.getEntity());
                 newElement.setTemplateType(TemplateType.IMPLEMENTATION);
                 newElement.getImplementedTemplateUuids().add(copyElement.getUuid());
