@@ -164,7 +164,7 @@ public class BaseProtectionView extends RightsEnabledView
         if (CnAElementFactory.isBpModelLoaded()) {
             CnAElementFactory.getInstance().reloadModelFromDatabase();
         }
-             
+
         contentProvider = new TreeContentProvider(elementManager);
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         drillDownAdapter = new DrillDownAdapter(viewer);
@@ -173,18 +173,18 @@ public class BaseProtectionView extends RightsEnabledView
         viewer.setLabelProvider(new DecoratingLabelProvider(new TreeLabelProvider(), workbench.getDecoratorManager()));
         viewer.setSorter(new BaseProtectionTreeSorter());
         toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
-        
+
         getSite().setSelectionProvider(viewer);
         hookContextMenu();
         makeActions();
         addActions();
         fillToolBar();
         hookDndListeners();
-        
+
         getSite().getPage().addPartListener(linkWithEditorPartListener);
         viewer.refresh(true);
     }
-    
+
     protected void startInitDataJob() {
         if (LOG.isDebugEnabled()) {
             LOG.debug("MotITBPview: startInitDataJob"); //$NON-NLS-1$
@@ -438,7 +438,7 @@ public class BaseProtectionView extends RightsEnabledView
         manager.add(collapseAllAction);
         drillDownAdapter.addNavigationActions(manager);
         manager.add(filterAction);
-       manager.add(linkWithEditorAction);
+        manager.add(linkWithEditorAction);
     }
 
     /* (non-Javadoc)

@@ -30,6 +30,7 @@ import java.util.Set;
 
 import sernet.verinice.interfaces.IFilter;
 import sernet.verinice.interfaces.IParameter;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27Scope;
@@ -149,7 +150,7 @@ public abstract class ElementFilter {
         }
         
         private boolean contains(Set<String[]> visibleTypeSet, String typeId) {
-            boolean result = Organization.TYPE_ID.equals(typeId) || ISO27KModel.TYPE_ID.equals(typeId);
+            boolean result = Organization.TYPE_ID.equals(typeId) || ItNetwork.TYPE_ID.equals(typeId) || ISO27KModel.TYPE_ID.equals(typeId);
             if(!result) {
                 for (Iterator<String[]> iterator = visibleTypeSet.iterator(); iterator.hasNext() && !result;) {
                     String[] strings = iterator.next();
