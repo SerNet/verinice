@@ -275,7 +275,7 @@ public class CopyCommand extends GenericCommand {
         // FIXME do not create unnecessary entity
         CnATreeElement newElement = saveNew(toGroup, copyElement);
         if(newElement.getEntity()!=null) {
-            if (copyElement.isTemplateOrImplementation()) {
+            if (PropertyLoader.isModelingTemplateActive() && copyElement.isTemplateOrImplementation()) {
                 newElement.setEntity(copyElement.getEntity());
                 newElement.setTemplateType(TemplateType.IMPLEMENTATION);
                 newElement.getImplementedTemplateUuids().add(copyElement.getUuid());
@@ -440,7 +440,7 @@ public class CopyCommand extends GenericCommand {
     }
 
     private void createTaskWhileApplyingTemplateCommand(final CnATreeElement selectedModelingTemplate, final CnATreeElement applyToElement) {
-        if (selectedModelingTemplate.isTemplate() && !MassnahmenUmsetzung.TYPE_ID.equals(selectedModelingTemplate.getTypeId())) {
+        if (PropertyLoader.isModelingTemplateActive() && selectedModelingTemplate.isTemplate() && !MassnahmenUmsetzung.TYPE_ID.equals(selectedModelingTemplate.getTypeId())) {
             try {
                 CreateTaskWhileApplyingTemplateCommand command = new CreateTaskWhileApplyingTemplateCommand(selectedModelingTemplate, applyToElement);
                 getCommandService().executeCommand(command);

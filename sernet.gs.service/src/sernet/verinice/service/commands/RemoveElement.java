@@ -174,10 +174,12 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
      */
     private void deleteChildren(CnATreeElement[] children) throws CommandException {
         for (int i = 0; i < children.length; i++) {
-            // deletion of children instances of this children instance
-            deleteChildren(children[i].getChildrenAsArray());
-            deleteOrphanEntity(children[i]);
-
+            if (PropertyLoader.isModelingTemplateActive()) {
+                // deletion of children instances of this children instance
+                deleteChildren(children[i].getChildrenAsArray());
+                deleteOrphanEntity(children[i]);
+            }
+            
             if (children[i] instanceof FinishedRiskAnalysis) {
                 removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
             }
@@ -338,7 +340,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     }
 
     private void deleteOrphanEntity(CnATreeElement element) {
-        if (element.getEntity() != null) {
+        if (PropertyLoader.isModelingTemplateActive() && element.getEntity() != null) {
             if (!hasOrphanEntity(element)) {
                 element.setEntity(null);
             }
