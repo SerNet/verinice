@@ -86,7 +86,6 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
      * spring configuration.
      */
 
-    @Override
     public void saveOrUpdate(T entity) { 
         if(LOG_INHERIT.isDebug()) {
             LOG_INHERIT.debug("saveOrUpdate...");
@@ -99,7 +98,6 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         }
     }
 
-    @Override
     public List findAll(IRetrieveInfo ri) {
         // this could be used to limit result size:
         // DetachedCriteria criteria = DetachedCriteria.forClass(type);
@@ -112,7 +110,6 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         return findByCriteria(criteria);
     }
 
-    @Override
     public T findById(ID id) {
         // NEVER use load() because it does not use the filter used to restrict
         // read access!
@@ -120,7 +117,6 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         return retrieve(id, (new RetrieveInfo()).setProperties(true));
     }
     
-    @Override
     public T findByUuid(String uuid, IRetrieveInfo ri) {
         IRetrieveInfo ri0 = (ri == null) ? new RetrieveInfo() : ri;
         DetachedCriteria criteria = DetachedCriteria.forClass(type);
@@ -129,7 +125,6 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         return loadByCriteria(criteria);
     }
 
-    @Override
     public T retrieve(ID id, IRetrieveInfo ri) {
         IRetrieveInfo ri0 = null;
         if(LOG.isDebugEnabled()) {
@@ -188,22 +183,6 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
             if (ri.isParentPermissions()) {
                 criteria.setFetchMode("parent.permissions", FetchMode.JOIN);
             }
-            DetachedCriteria criteriaParent = null;
-            DetachedCriteria criteriaParentEntity = null;
-            if (ri.isInnerJoin()) {
-                criteriaParent = criteria.createCriteria("parent");
-            }
-            if (ri.isParentProperties()) {
-                criteria.setFetchMode("parent.entity", FetchMode.JOIN);
-                if (ri.isInnerJoin()) {
-                    criteriaParentEntity = criteriaParent.createCriteria("entity");
-                }
-                criteria.setFetchMode("parent.entity.typedPropertyLists", FetchMode.JOIN);
-                if (ri.isInnerJoin()) {
-                    criteriaParentEntity.createCriteria("typedPropertyLists");
-                }
-                criteria.setFetchMode("parent.entity.typedPropertyLists.properties", FetchMode.JOIN);
-            }
         }
         if (ri.isChildren()) {
             criteria.setFetchMode("children", FetchMode.JOIN);
@@ -251,7 +230,6 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         return result;
     }
     
-    @Override
     public T merge(T entity) {
         T mergedElement = super.merge(entity);
 
@@ -262,7 +240,6 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         return mergedElement;
     }
 
-    @Override
     public T merge(T entity, boolean fireChange) {
         if(LOG_INHERIT.isDebug()) {
             LOG_INHERIT.debug("merge...");
@@ -342,7 +319,6 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         elmt.fireVertraulichkeitChanged(new CascadingTransaction());   
     }
 
-    @Override
     public Class<T> getType() {
         return this.type;
     }

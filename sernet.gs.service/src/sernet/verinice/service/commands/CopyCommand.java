@@ -42,12 +42,10 @@ import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.CnATreeElement.TemplateType;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 
 /**
@@ -140,8 +138,7 @@ public class CopyCommand extends GenericCommand {
             for (final CnATreeElement copyElement : rootElementsToCopy) {
                 final CnATreeElement newElement = copy(groupToPasteTo, copyElement, sourceDestMap);
                 if(newElement != null && newElement.getUuid() != null){
-                    newElements.add(newElement.getUuid());
-                    createTaskWhileApplyingTemplateCommand(copyElement, newElement);
+                    newElements.add(newElement.getUuid());         
                 }
             }
             if(getPostProcessorList()!=null && !getPostProcessorList().isEmpty()) {
@@ -275,14 +272,7 @@ public class CopyCommand extends GenericCommand {
         CnATreeElement copyElement = getDao().initializeAndUnproxy(elementToCopy); // TODO is this needed?
         CnATreeElement newElement = saveNew(toGroup, copyElement);
         if(newElement.getEntity()!=null) {
-            if (copyElement.isTemplateOrImplementation()) {
-                newElement.setEntity(copyElement.getEntity());
-                newElement.setTemplateType(TemplateType.IMPLEMENTATION);
-                newElement.getImplementedTemplateUuids().add(copyElement.getUuid());
-            } else {
-                newElement.getEntity().copyEntity(copyElement.getEntity());
-            }
-
+            newElement.getEntity().copyEntity(copyElement.getEntity());
             if(copyElement.getIconPath()!=null) {
                 newElement.setIconPath(copyElement.getIconPath());
             }
@@ -437,17 +427,6 @@ public class CopyCommand extends GenericCommand {
 
     private String getCopyTitle(final String title, final int n) {
         return Messages.getString("CopyCommand.0", title, n); //$NON-NLS-1$
-    }
-
-    private void createTaskWhileApplyingTemplateCommand(final CnATreeElement selectedModelingTemplate, final CnATreeElement applyToElement) {
-        if (selectedModelingTemplate.isTemplate() && !MassnahmenUmsetzung.TYPE_ID.equals(selectedModelingTemplate.getTypeId())) {
-            try {
-                CreateTaskWhileApplyingTemplateCommand command = new CreateTaskWhileApplyingTemplateCommand(selectedModelingTemplate, applyToElement);
-                getCommandService().executeCommand(command);
-            } catch (Exception e) {
-                getLog().warn("Could not create task while applying template.", e); // $NON-NLS-1$
-            }
-        }
     }
 
     public String getUuidGroup() {

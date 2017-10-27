@@ -28,10 +28,8 @@ package sernet.verinice.service.commands;
 public class PropertyLoader {
 
     public static final String FILESIZE_MAX = "veriniceserver.filesize.max";
-    public static final String MODELING_TEMPLATE_MASTER = "modeling.template.master";
     
     private static String fileSizeMax;
-    private static String modelingTemplateMaster;
 
     /**
      * Returns the value of veriniceserver.filesize.max property in file veriniceserver-plain.properties
@@ -46,11 +44,4 @@ public class PropertyLoader {
         PropertyLoader.fileSizeMax = fileSizeMax;
     }
 
-    public static String getModelingTemplateMaster() {
-        return modelingTemplateMaster;
-    }
-
-    public void setModelingTemplateMaster(String modelingTemplateMaster) {
-        PropertyLoader.modelingTemplateMaster = modelingTemplateMaster;
-    } 
 }

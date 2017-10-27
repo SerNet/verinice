@@ -54,7 +54,7 @@
 			name="entity"
 			column="entity_id"
 			class="sernet.hui.common.connect.Entity"
-			cascade="persist,merge,save-update"
+			cascade="all"
 			fetch="join"
 			not-null="false"
 			/>
@@ -121,15 +121,6 @@
         </set>
         
         <property name="iconPath" column="icon" type="string" length="256"/>
-        
-        <property name="templateTypeValue" type="string">
-            <column name="template_type" not-null="true" default="'NONE'" />
-        </property>
-        
-		<set name="implementedTemplateUuids" table="templaterelations" lazy="false">
-		    <key column="cnatreeelement_id" not-null="true" />
-		    <element column="template_uuid" type="java.lang.String" not-null="true" unique="false" />
-		</set>
 		
 <!-- Grundschutz-Elemente: ################################################################# -->
 

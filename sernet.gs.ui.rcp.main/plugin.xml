@@ -51,14 +51,6 @@
             class="sernet.gs.ui.rcp.main.bsi.views.RelationView"
             id="sernet.gs.ui.rcp.main.bsi.views.RelationView">
       </view>
-      
-      <view
-            name="%view.name.19"
-            icon="icons/copy.png"
-            category="sernet.gs.ui.rcp.main.views"
-            class="sernet.verinice.rcp.templates.TemplateView"
-            id="sernet.verinice.rcp.templates.TemplateView">
-      </view>
      
       <view
             allowMultiple="true"
@@ -613,10 +605,10 @@
                menubarPath="special"
                style="push"
                tooltip="%action.tooltip.29">
-            </action>
-      </objectContribution>   
-      <objectContribution
-            adaptable="false"
+              </action>
+            </objectContribution>   
+            <objectContribution
+                adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.BausteinMassnahmeContrib"
             objectClass="sernet.verinice.model.bsi.BausteinUmsetzung">
          <action
@@ -627,9 +619,8 @@
                label="%action.label.30"
                menubarPath="content"
                style="push"
-               tooltip="%action.tooltip.30">
-         </action>
-     </objectContribution>
+               tooltip="%action.tooltip.30"/>
+           </objectContribution>
 		<objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.BausteinGefaehrdungContrib"
@@ -644,52 +635,7 @@
                style="push"
                tooltip="%action.tooltip.37">
               </action>
-        </objectContribution>  
-        <objectContribution
-            adaptable="false"
-            id="sernet.gs.ui.rcp.main.bsi.TemplateBSIStrukturElement"
-            objectClass="sernet.verinice.model.bsi.IBSIStrukturElement">
-            <action
-               class="sernet.verinice.rcp.templates.MarkTemplateBSIStrukturElementActionDelegate"
-               enablesFor="+"
-               icon="icons/blue-document-block.png"
-               id="sernet.gs.ui.rcp.main.markTemplateBSIStrukturElement"
-               label="%action.label.38"
-               menubarPath="special"
-               style="push"
-               tooltip="%action.tooltip.38">
-            </action>
-      </objectContribution>             
-      <objectContribution
-            adaptable="false"
-            id="sernet.gs.ui.rcp.main.bsi.TemplateModule"
-            objectClass="sernet.verinice.model.bsi.BausteinUmsetzung">
-            <action
-               class="sernet.verinice.rcp.templates.MarkTemplateModuleActionDelegate"
-               enablesFor="+"
-               icon="icons/blue-document-block.png"
-               id="sernet.gs.ui.rcp.main.markTemplateModule"
-               label="%action.label.38"
-               menubarPath="special"
-               style="push"
-               tooltip="%action.tooltip.38">
-            </action>
-      </objectContribution>   
-      <objectContribution
-            adaptable="false"
-            id="sernet.gs.ui.rcp.main.bsi.TemplateSafeguard"
-            objectClass="sernet.verinice.model.bsi.MassnahmenUmsetzung">
-         <action
-               class="sernet.verinice.rcp.templates.MarkTemplateSafeguardActionDelegate"
-               enablesFor="+"
-               icon="icons/blue-document-bookmark.png"
-               id="sernet.gs.ui.rcp.main.markTemplateSafeguard"
-               label="%action.label.39"
-               menubarPath="special"
-               style="push"
-               tooltip="%action.tooltip.39">
-         </action>
-     </objectContribution>
+        </objectContribution>              
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.personContribution1"
@@ -2085,30 +2031,6 @@
 	          	<objectClass name="sernet.verinice.model.bsi.MassnahmenUmsetzung"/>
 	         </enablement>
 	      </decorator>
-          <decorator
-                adaptable="true"
-                class="sernet.verinice.rcp.templates.TemplateDecorator"
-                id="sernet.verinice.rcp.TDecorator"
-                label="TemplateDecorator"
-                lightweight="true"
-                location="TOP_LEFT"
-                state="true">
-              <enablement>
-                <objectClass name="sernet.verinice.model.common.CnATreeElement"/>
-             </enablement>
-          </decorator>
-          <decorator
-                adaptable="true"
-                class="sernet.verinice.rcp.templates.TemplateImplementationDecorator"
-                id="sernet.verinice.rcp.TIDecorator"
-                label="TemplateImplementationDecorator"
-                lightweight="true"
-                location="TOP_LEFT"
-                state="true">
-              <enablement>
-                <objectClass name="sernet.verinice.model.common.CnATreeElement"/>
-             </enablement>
-          </decorator>
 	      <decorator
 	      		adaptable="true"
 	      		class="sernet.verinice.rcp.DBIDDecorator"

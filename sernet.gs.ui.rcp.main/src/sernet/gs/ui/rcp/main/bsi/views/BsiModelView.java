@@ -35,6 +35,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -269,7 +270,7 @@ public class BsiModelView extends RightsEnabledView
         TreeContentProvider contentProvider = new TreeContentProvider(elementManager);
         viewer.setContentProvider(contentProvider);
                 
-        viewer.setLabelProvider(new TreeElementDecoratingLabelProvider(new BSIModelViewLabelProvider(),
+        viewer.setLabelProvider(new DecoratingLabelProvider(new BSIModelViewLabelProvider(),
                 workbench.getDecoratorManager()));
         viewer.setSorter(new CnAElementByTitelSorter());
         toggleLinking(Activator.getDefault().getPreferenceStore()

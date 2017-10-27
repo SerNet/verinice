@@ -32,6 +32,7 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.PropertyList;
+import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -131,77 +132,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	
 	private Set<Attachment> files = new HashSet<Attachment>(1);
 	
-    /**
-     * <p>
-     * Modeling templates in the BSI IT baseline security allow to create and
-     * maintain the modules, safeguards and objects at freely definable, ideally
-     * at central location, and to use them in other points of application.
-     * </p>
-     * <p>
-     * Each {@link CnATreeElement}, representing a Object or Module, can be
-     * marked as modeling template or each Safeguard as central
-     * ({@link TemplateType#TEMPLATE}).
-     * </p>
-     * <p>
-     * Copy & paste a modeling template means using those to model a new
-     * {@link CnATreeElement} which implements all underlying elements
-     * ({@link TemplateType#IMPLEMENTATION}) that belong to the modeling
-     * template.
-     * </p>
-     * <p>
-     * Example:
-     * </p>
-     * <p>
-     * A Modeling template in the BSI IT baseline:
-     * </p>
-     * <p>
-     * <b>IT Network 1</b> <ui>
-     * <li>Object (marked as modeling template,
-     * {@link TemplateType#TEMPLATE})</li> <ui>
-     * <li>Module 1 (marked as modeling template,
-     * {@link TemplateType#TEMPLATE})</li> <ui>
-     * <li>Safeguard 1 (marked as central, {@link TemplateType#TEMPLATE})</li>
-     * <li>Safeguard 2</li> </ui>
-     * <li>Module 2</li> <ui>
-     * <li>Safeguard 1</li>
-     * <li>Safeguard 2 (marked as central, {@link TemplateType#TEMPLATE})</li>
-     * </ui>
-     * <li>Module 3...</li> </ui> </ui>
-     * </p>
-     * <p>
-     * After applying (implementing) this modeling template:
-     * </p>
-     * <p>
-     * <b>IT Network 2</b> <ui>
-     * <li>Object (marked as implementation,
-     * {@link TemplateType#IMPLEMENTATION})</li> <ui>
-     * <li>Module 1 (marked as implementation,
-     * {@link TemplateType#IMPLEMENTATION})</li> <ui>
-     * <li>Safeguard 1 (marked as central implementation,
-     * {@link TemplateType#IMPLEMENTATION})</li>
-     * <li>Safeguard 2</li> </ui>
-     * <li>Module 2</li> <ui>
-     * <li>Safeguard 1</li>
-     * <li>Safeguard 2 (marked as central implementation,
-     * {@link TemplateType#IMPLEMENTATION})</li> </ui>
-     * <li>Module 3...</li> </ui> </ui>
-     * </p>
-     * 
-     * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
-     * @see sernet.gs.server.DeleteOrphanTemplateRelationsJob
-     */
-	public enum TemplateType { NONE, TEMPLATE, IMPLEMENTATION }
-	public String templateTypeValue = TemplateType.NONE.name();
-	
-    /**
-     * Holds references to {@link TemplateType#TEMPLATE}s which are implemented
-     * in this {@link CnATreeElement}.
-     * 
-     * @see TemplateType
-     * @see sernet.gs.server.DeleteOrphanTemplateRelationsJob
-     */
-    private Set<String> implementedTemplateUuids = new HashSet<String>();
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj){
@@ -869,101 +799,4 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     
     @Override
     public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
-    
-    /**
-     * Returns the TemplateTypeValue of this {@link CnATreeElement}.
-     * 
-     * @return the TemplateType
-     * 
-     * @see TemplateType
-     */
-    public TemplateType getTemplateType() {
-        return getTemplateTypeValue() == null? TemplateType.NONE : TemplateType.valueOf(getTemplateTypeValue());
-    }
-
-    /**
-     * Sets the TemplateTypeValue of this {@link CnATreeElement}.
-     * 
-     * @param templateType
-     *            the templateType to set
-     * 
-     * @see TemplateType
-     */
-    public void setTemplateType(TemplateType templateType) {
-        this.templateTypeValue = templateType.name();
-    }
-
-    /**
-     * Returns the TemplateTypeValue of this {@link CnATreeElement}.
-     * 
-     * @return the templateTypeValue
-     * 
-     * @see TemplateType
-     */
-    public String getTemplateTypeValue() {
-        return templateTypeValue;
-    }
-
-    /**
-     * Sets the TemplateTypeValue of this {@link CnATreeElement}.
-     * 
-     * @param templateTypeValue
-     *            the templateTypeValue to set
-     * 
-     * @see TemplateType
-     */
-    public void setTemplateTypeValue(String templateTypeValue) {
-        this.templateTypeValue = templateTypeValue;
-    }
-
-    /**
-     * @return true if this {@link CnATreeElement} is a
-     *         {@link TemplateType#TEMPLATE}, false otherwise.
-     * @see TemplateType
-     */
-    public boolean isTemplate() {
-        return TemplateType.TEMPLATE.equals(this.getTemplateType());
-    }
-
-    /**
-     * @return true if this {@link CnATreeElement} is a
-     *         {@link TemplateType#IMPLEMENTATION}, false otherwise.
-     * @see TemplateType
-     */
-    public boolean isImplementation() {
-        return TemplateType.IMPLEMENTATION.equals(this.getTemplateType());
-    }
-    
-    /**
-     * @return true if this {@link CnATreeElement} is a
-     *         {@link TemplateType#TEMPLATE} or
-     *         {@link TemplateType#IMPLEMENTATION}, false otherwise.
-     * @see TemplateType
-     */
-    public boolean isTemplateOrImplementation() {
-        return TemplateType.TEMPLATE.equals(this.getTemplateType()) || TemplateType.IMPLEMENTATION.equals(this.getTemplateType());
-    }
-
-    /**
-     * @return all references to {@link TemplateType#TEMPLATE}s which are
-     *         implemented in this {@link CnATreeElement}.
-     * @see TemplateType
-     * @see sernet.gs.server.DeleteOrphanTemplateRelationsJob
-     */
-    public Set<String> getImplementedTemplateUuids() {
-        return implementedTemplateUuids;
-    }
-
-    /**
-     * Set new references to {@link TemplateType#TEMPLATE} which are implemented
-     * in this {@link CnATreeElement}
-     * 
-     * @param implementedTemplateUuids
-     *            the UUIds of {@link TemplateType#TEMPLATE}s
-     * @see TemplateType
-     * @see sernet.gs.server.DeleteOrphanTemplateRelationsJob
-     */
-    public void setImplementedTemplateUuids(Set<String> implementedTemplateUuids) {
-        this.implementedTemplateUuids = implementedTemplateUuids;
-    }
 }

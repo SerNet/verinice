@@ -85,33 +85,29 @@ public class CopyService extends PasteService implements IProgressTask {
      */
 	@Override
     public void run()  {
-        if (this.elements.size() == 0) {
-            log.debug("Can not copy elements because element list is empty.");
-            return;
-        }
-        try {
-            Activator.inheritVeriniceContextState();
-            final List<String> uuidList = new ArrayList<String>(this.elements.size());
-            for (final CnATreeElement element : this.elements) {
-                uuidList.add(element.getUuid());
-            }
-            numberOfElements = uuidList.size();
-            // -1 means unknown runtime
-            progressObserver.beginTask(Messages.getString("CopyService.1", numberOfElements), -1); //$NON-NLS-1$
-            CopyCommand cc = new CopyCommand(this.selectedGroup.getUuid(), uuidList, getPostProcessorList(), this.copyLinks);
-            cc.setCopyAttachments(isCopyAttachments());
-            cc = getCommandService().executeCommand(cc);
-            numberOfElements = cc.getNumber();
-            progressObserver.setTaskName(Messages.getString("CopyService.4")); //$NON-NLS-1$
-            CnAElementFactory.getInstance().reloadModelFromDatabase();
-            newElements = cc.getNewElements();
-        } catch (final Exception e) {
-            log.error("Error while copying element", e); //$NON-NLS-1$
-            throw new RuntimeException("Error while copying element", e); //$NON-NLS-1$
-        } finally {
-            progressObserver.done();
-        }
-    }
+		try {	
+			Activator.inheritVeriniceContextState();
+		    final List<String> uuidList = new ArrayList<String>(this.elements.size());
+			for (final CnATreeElement element : this.elements) {
+			    uuidList.add(element.getUuid());
+				}
+			numberOfElements = uuidList.size();
+			// -1 means unknown runtime
+			progressObserver.beginTask(Messages.getString("CopyService.1",numberOfElements), -1);         //$NON-NLS-1$
+			CopyCommand cc = new CopyCommand(this.selectedGroup.getUuid(), uuidList, getPostProcessorList(), this.copyLinks);
+			cc.setCopyAttachments(isCopyAttachments());
+			cc = getCommandService().executeCommand(cc);
+			numberOfElements = cc.getNumber();
+			progressObserver.setTaskName(Messages.getString("CopyService.4")); //$NON-NLS-1$
+			CnAElementFactory.getInstance().reloadModelFromDatabase();
+			newElements = cc.getNewElements();
+		} catch (final Exception e) {
+			log.error("Error while copying element", e); //$NON-NLS-1$
+			throw new RuntimeException("Error while copying element", e); //$NON-NLS-1$
+		} finally {
+			progressObserver.done();
+		}
+	}
 
     public List<String> getNewElements() {
         return newElements;

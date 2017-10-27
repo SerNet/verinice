@@ -18,28 +18,15 @@
 package sernet.gs.ui.rcp.main;
 
 import org.eclipse.core.runtime.IExtension;
-import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.jface.action.ICoolBarManager;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IStatusLineManager;
-import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.action.StatusLineContributionItem;
-import org.eclipse.jface.action.ToolBarContributionItem;
-import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.action.*;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IPerspectiveListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.actions.*;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
-import org.eclipse.ui.actions.ContributionItemFactory;
-import org.eclipse.ui.actions.OpenPerspectiveAction;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.internal.ChangeToPerspectiveMenu;
@@ -49,47 +36,21 @@ import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
 import sernet.gs.ui.rcp.gsimport.GstoolImportMappingView;
-import sernet.gs.ui.rcp.main.actions.ChangeOwnPasswordAction;
-import sernet.gs.ui.rcp.main.actions.GSMBasicSecurityCheckAction;
-import sernet.gs.ui.rcp.main.actions.ImportCSVAction;
-import sernet.gs.ui.rcp.main.actions.ImportGstoolAction;
-import sernet.gs.ui.rcp.main.actions.ImportGstoolNotesAction;
-import sernet.gs.ui.rcp.main.actions.OpenMultipleViewAction;
-import sernet.gs.ui.rcp.main.actions.OpenSearchViewAction;
-import sernet.gs.ui.rcp.main.actions.OpenViewAction;
-import sernet.gs.ui.rcp.main.actions.ReloadAction;
-import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
-import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
-import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
-import sernet.gs.ui.rcp.main.actions.TestAction;
+import sernet.gs.ui.rcp.main.actions.*;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.actions.GSMBausteinZuordnungAction;
-import sernet.gs.ui.rcp.main.bsi.views.AuditView;
-import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
-import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
-import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
-import sernet.gs.ui.rcp.main.bsi.views.DSModelView;
-import sernet.gs.ui.rcp.main.bsi.views.DocumentView;
-import sernet.gs.ui.rcp.main.bsi.views.FileView;
-import sernet.gs.ui.rcp.main.bsi.views.NoteView;
-import sernet.gs.ui.rcp.main.bsi.views.RelationView;
-import sernet.gs.ui.rcp.main.bsi.views.TodoView;
+import sernet.gs.ui.rcp.main.bsi.views.*;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction;
-import sernet.hui.common.VeriniceContext;
-import sernet.springclient.RightsServiceClient;
 import sernet.verinice.bpm.rcp.OpenTaskViewAction;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.iso27k.rcp.CatalogView;
-import sernet.verinice.iso27k.rcp.ISMView;
-import sernet.verinice.iso27k.rcp.Iso27kPerspective;
+import sernet.verinice.iso27k.rcp.*;
 import sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap;
 import sernet.verinice.rcp.ProfileEditAction;
 import sernet.verinice.rcp.ServerConnectionToggleAction;
 import sernet.verinice.rcp.account.AccountView;
 import sernet.verinice.rcp.accountgroup.AccountGroupView;
 import sernet.verinice.rcp.risk.RiskAnalysisAction;
-import sernet.verinice.rcp.templates.TemplateView;
 import sernet.verinice.report.rcp.ReportDepositView;
 import sernet.verinice.validation.CnAValidationView;
 
@@ -198,8 +159,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private OpenViewAction openGSToolMappingViewAction;
     
-    private OpenViewAction openTemplateViewAction;
-
     private TestAction testAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
@@ -263,7 +222,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.openReportdepositViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_41, ReportDepositView.ID, ImageCache.REPORT_DEPOSIT, ActionRightIDs.REPORTDEPOSIT);
         this.openSearchViewAction = new OpenSearchViewAction(window, Messages.ApplicationActionBarAdvisor_42);
         this.openGSToolMappingViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_43, GstoolImportMappingView.ID, ImageCache.VIEW_GSMAPPING, ActionRightIDs.GSTOOLIMPORT);
-        this.openTemplateViewAction = getRightsService().isEnabled(ActionRightIDs.TEMPLATES) ? new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_44, TemplateView.ID, ImageCache.TEMPLATES, ActionRightIDs.TEMPLATES) : null;
+
         this.reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         this.importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
         this.importCSVAction = new ImportCSVAction(window, Messages.ApplicationActionBarAdvisor_30);
@@ -425,9 +384,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(this.openNoteAction);
         viewsMenu.add(this.openFileAction);
         viewsMenu.add(this.openRelationViewAction);
-        if (getRightsService().isEnabled(ActionRightIDs.TEMPLATES)) {
-            viewsMenu.add(this.openTemplateViewAction);
-        }
         viewsMenu.add(this.openValidationViewAction);
         viewsMenu.add(this.openSearchViewAction);
         viewsMenu.add(this.openGSToolMappingViewAction);
@@ -482,9 +438,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         myToolbar.add(this.openTodoViewAction);
         myToolbar.add(this.openAuditViewAction);
         myToolbar.add(this.openDocumentViewAction);
-        if (getRightsService().isEnabled(ActionRightIDs.TEMPLATES)) {
-            myToolbar.add(this.openTemplateViewAction);
-        }
+
         myToolbar.add(new Separator());
         // ISO 27k items
         myToolbar.add(this.openISMViewAction);
@@ -557,8 +511,4 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         return Activator.getDefault().getPreferenceStore();
     }
 
-    private RightsServiceClient getRightsService() {
-        RightsServiceClient service = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
-        return service;
-    }
 }

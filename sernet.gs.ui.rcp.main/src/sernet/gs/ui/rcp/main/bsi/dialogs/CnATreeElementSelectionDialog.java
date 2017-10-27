@@ -90,7 +90,15 @@ public class CnATreeElementSelectionDialog extends Dialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
-        createSelectionComponent(container);
+        Integer scopeId = null;
+        if(this.inputElmt!=null) {
+            scopeId = this.inputElmt.getScopeId();
+        }
+        selectionComponent = new ElementSelectionComponent(container, this.entityType, scopeId);
+        selectionComponent.setScopeOnly(scopeOnly);
+        selectionComponent.setShowScopeCheckbox(showScopeCheckbox);
+        selectionComponent.init();
+        selectionComponent.loadElements();
 
         selectionComponent.getViewer().addDoubleClickListener(new IDoubleClickListener() {           
             @Override
@@ -99,18 +107,6 @@ public class CnATreeElementSelectionDialog extends Dialog {
             }
         });
         return selectionComponent.getContainer();
-    }
-
-    /**
-     * @param container
-     * @param scopeId
-     */
-    protected void createSelectionComponent(Composite container) {
-        selectionComponent = new ElementSelectionComponent(container, this.entityType, this.inputElmt.getScopeId());
-        selectionComponent.setScopeOnly(scopeOnly);
-        selectionComponent.setShowScopeCheckbox(showScopeCheckbox);
-        selectionComponent.init();
-        selectionComponent.loadElements();
     }
 
     /**
@@ -134,37 +130,6 @@ public class CnATreeElementSelectionDialog extends Dialog {
         }
     }
 
-    public String getEntityType() {
-        return entityType;
-    }
-
-    public void setEntityType(String entityType) {
-        this.entityType = entityType;
-    }
-
-    public CnATreeElement getInputElmt() {
-        return inputElmt;
-    }
-
-    public void setInputElmt(CnATreeElement inputElmt) {
-        this.inputElmt = inputElmt;
-    }
-
-    public ElementSelectionComponent getSelectionComponent() {
-        return selectionComponent;
-    }
-
-    public void setSelectionComponent(ElementSelectionComponent selectionComponent) {
-        this.selectionComponent = selectionComponent;
-    }
-
-    public boolean isScopeOnly() {
-        return scopeOnly;
-    }
-
-    public boolean isShowScopeCheckbox() {
-        return showScopeCheckbox;
-    }
 }
 
 

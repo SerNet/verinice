@@ -20,10 +20,7 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 
@@ -61,10 +58,6 @@ public class LoadElementsByUuid<T extends CnATreeElement> extends GenericCommand
     public LoadElementsByUuid(List<String> uuids) {
         this(null, uuids, null);
     }
-
-    public LoadElementsByUuid(Set<String> uuids, RetrieveInfo ri) {
-        this(null, new ArrayList<String>(uuids), ri);
-    }
 	
     public LoadElementsByUuid(List<String> uuids, RetrieveInfo ri) {
         this(null, uuids, ri);
@@ -85,7 +78,6 @@ public class LoadElementsByUuid<T extends CnATreeElement> extends GenericCommand
 		}
 	}
 	
-    @Override
     public void execute() {
         long start = 0;
         if (getLog().isDebugEnabled()) {

@@ -158,7 +158,6 @@ public final class ImageCache {
 	public static final String SONSTIT = "sonstit.png";
 
 	public static final String LINKS = "link.png";
-    public static final String TEMPLATES = "copy.png";
 
 	public static final String CHART_PIE = "chart_pie.png";
 	public static final String CHART_BAR = "chart_bar.png";

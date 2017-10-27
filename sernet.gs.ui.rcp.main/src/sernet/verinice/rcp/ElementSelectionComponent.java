@@ -122,7 +122,11 @@ public class ElementSelectionComponent {
     }
     
     public void init() {
+       
         final int formAttachmentDefaultOffset = 5;
+        final int column1Width = 25;
+        final int column2Width = 200;
+        final int column3Width = 150;
         final int formData2Numerator = 100;
         final int formData3Numerator = formData2Numerator;
         container.setLayout(new FormLayout());
@@ -203,69 +207,6 @@ public class ElementSelectionComponent {
         viewer.getTable().setHeaderVisible(true);
         viewer.getTable().setLinesVisible(true);
         
-        createColumns();
-        
-        viewer.setColumnProperties(new String[]
-                {COLUMN_IMG, COLUMN_SCOPE_ID, COLUMN_LABEL});
-        viewer.setContentProvider(new ArrayContentProvider());
-        filter = new CnaTreeElementTitleFilter(viewer);
-        viewer.setSorter(new ViewerSorter() {
-            @Override
-            public int compare(Viewer viewer, Object e1, Object e2) {
-                String title1 = "";
-                String title2 = "";
-                CnATreeElement elmt1 = (CnATreeElement) e1;
-                CnATreeElement elmt2 = (CnATreeElement) e2;
-                if (titleMap!=null){
-                    title1 = titleMap.get(elmt1.getScopeId());
-                    title2 = titleMap.get(elmt2.getScopeId());
-                    if (title1 != null && title2 != null){
-                        int allScopeTitles = title1.compareTo(title2);
-                        if (allScopeTitles == 0){
-                            return makeTitle(elmt1).compareTo(makeTitle(elmt2));
-                        }
-                        return title1.compareTo(title2);
-                    } else {
-                        if (title1==null && title2==null) {
-                            return makeTitle(elmt1).compareTo(makeTitle(elmt2));  
-                        }
-                        if (title1 == null){
-                            return 1;
-                        } if (title2 == null) {
-                            return -1;
-                        }
-                    }
-                }
-                return makeTitle(elmt1).compareTo(makeTitle(elmt2));  
-            } 
-        });
-        
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                selectedElements = ((IStructuredSelection)viewer.
-                        getSelection()).toList();
-            }
-        });
-        
-        viewer.addDoubleClickListener(new IDoubleClickListener() {           
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                selectedElements = ((IStructuredSelection)viewer.
-                        getSelection()).toList();
-            }
-        });
-    }
-
-    /**
-     * @param column1Width
-     * @param column2Width
-     * @param column3Width
-     */
-    protected void createColumns() {
-        final int column1Width = 25;
-        final int column2Width = 200;
-        final int column3Width = 150;
         // image column:
         TableViewerColumn column1 = new TableViewerColumn(viewer, SWT.LEFT);
         column1.getColumn().setText(""); //$NON-NLS-1$
@@ -329,6 +270,57 @@ public class ElementSelectionComponent {
                 }
                 cell.setText(title);
             }    
+        });
+        
+        viewer.setColumnProperties(new String[]
+                {COLUMN_IMG, COLUMN_SCOPE_ID, COLUMN_LABEL});
+        viewer.setContentProvider(new ArrayContentProvider());
+        filter = new CnaTreeElementTitleFilter(viewer);
+        viewer.setSorter(new ViewerSorter() {
+            @Override
+            public int compare(Viewer viewer, Object e1, Object e2) {
+                String title1 = "";
+                String title2 = "";
+                CnATreeElement elmt1 = (CnATreeElement) e1;
+                CnATreeElement elmt2 = (CnATreeElement) e2;
+                if (titleMap!=null){
+                    title1 = titleMap.get(elmt1.getScopeId());
+                    title2 = titleMap.get(elmt2.getScopeId());
+                    if (title1 != null && title2 != null){
+                        int allScopeTitles = title1.compareTo(title2);
+                        if (allScopeTitles == 0){
+                            return makeTitle(elmt1).compareTo(makeTitle(elmt2));
+                        }
+                        return title1.compareTo(title2);
+                    } else {
+                        if (title1==null && title2==null) {
+                            return makeTitle(elmt1).compareTo(makeTitle(elmt2));  
+                        }
+                        if (title1 == null){
+                            return 1;
+                        } if (title2 == null) {
+                            return -1;
+                        }
+                    }
+                }
+                return makeTitle(elmt1).compareTo(makeTitle(elmt2));  
+            } 
+        });
+        
+        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                selectedElements = ((IStructuredSelection)viewer.
+                        getSelection()).toList();
+            }
+        });
+        
+        viewer.addDoubleClickListener(new IDoubleClickListener() {           
+            @Override
+            public void doubleClick(DoubleClickEvent event) {
+                selectedElements = ((IStructuredSelection)viewer.
+                        getSelection()).toList();
+            }
         });
     }
     
@@ -421,7 +413,7 @@ public class ElementSelectionComponent {
         this.showScopeCheckbox = showScopeCheckbox;
     }
 
-    protected void loadElementsFromDb() throws CommandException {
+    private void loadElementsFromDb() throws CommandException {
         LoadCnAElementByEntityTypeId command;
         if (scopeOnly) {
             command = new LoadCnAElementByEntityTypeId(typeId, getScopeId(),
@@ -433,7 +425,7 @@ public class ElementSelectionComponent {
         showElementsInTable(command.getElements());
     }
     
-    protected void showElementsInTable(final List<CnATreeElement> list) {
+    private void showElementsInTable(final List<CnATreeElement> list) {
         Display.getDefault().asyncExec(new Runnable() {
             @Override
             public void run() {
