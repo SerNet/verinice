@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
@@ -514,12 +515,37 @@ public class BpImporter {
                 groupIdentifier, BpRequirementGroup.TYPE_ID, 
                 systemReqGroup, processReqGroup);
         String safeguardIdentifier = safeguard.getIdentifier();
-        String comparableIdentifier = safeguardIdentifier.replace('M', 'A');
+
+        String comparableIdentifier = 
+                getRequirementIdentifierForSafeguardLink(safeguardIdentifier);
         for (CnATreeElement requirement : parent.getChildren()) {
             links.addAll(createSafeGuardToRequirementLinks(safeguard,
                     comparableIdentifier, requirement));
         }
         return links;
+    }
+
+    /**
+     * to find relating requirements to link to,
+     * the identifier has to changed from 
+     * '$group.$x.M.$y' to
+     * '$group.$x.A.$y'
+     */
+    private String getRequirementIdentifierForSafeguardLink(
+            String safeguardIdentifier) {
+        StringTokenizer tokenizer = new StringTokenizer(
+                safeguardIdentifier, ".");
+        StringBuilder sb = new StringBuilder();
+        while (tokenizer.hasMoreTokens()) {
+            String token = tokenizer.nextToken();
+            
+            if (!tokenizer.hasMoreTokens()) {
+                sb.append(token.replace('M', 'A'));
+            } else {
+                sb.append(token).append('.');
+            }
+        }
+        return sb.toString();
     }
 
 
