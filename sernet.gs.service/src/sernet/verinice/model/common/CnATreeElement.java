@@ -268,8 +268,15 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		if (getParent() != null) {
 			getParent().removeChild(this);
 		}
-		
-		CopyOnWriteArrayList<CnALink> list2 = new CopyOnWriteArrayList<CnALink>(getLinksDown());
+		removeCnLinks();
+	}
+
+    /**
+     * Remove all links from and to this item.
+     * 
+     */
+    public void removeCnLinks() {
+        CopyOnWriteArrayList<CnALink> list2 = new CopyOnWriteArrayList<CnALink>(getLinksDown());
 		for (CnALink link : list2) {
 			link.remove();
 		}
@@ -278,7 +285,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		for (CnALink link : list2) {
 			link.remove();
 		}
-	}
+    }
 
 	public CnATreeElement[] getChildrenAsArray() {
 		return children.toArray(new CnATreeElement[children.size()]);
