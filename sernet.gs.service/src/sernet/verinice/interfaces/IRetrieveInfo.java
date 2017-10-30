@@ -81,6 +81,10 @@ public interface IRetrieveInfo {
 
 	IRetrieveInfo setParent(boolean parent);
 
+    boolean isParentProperties();
+
+    IRetrieveInfo setParentProperties(boolean parentProperties);
+
 	boolean isSiblings();
 
 	IRetrieveInfo setSiblings(boolean siblings);

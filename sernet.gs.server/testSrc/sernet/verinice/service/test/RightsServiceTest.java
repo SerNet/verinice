@@ -58,6 +58,8 @@ public class RightsServiceTest extends ContextConfiguration {
         ActionRightIDs.TASKCHANGEASSIGNEE,
         ActionRightIDs.TASKCHANGEDUEDATE,
         ActionRightIDs.TASKWITHRELEASEPROCESS,
+        ActionRightIDs.MARKTEMPLATE,
+        ActionRightIDs.TEMPLATES
     };
     
     public static final String[] newProfileActionIds = {
