@@ -140,12 +140,12 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
                 GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) element;
                 removeFromLists(element.getParent().getDbId(), gef);
             }   
-            
+
+            deleteChildren(children);
+
             if (element instanceof ITVerbund) {
                 removeAllGefaehrdungsUmsetzungen();
             }
-
-            deleteChildren(children);
 
             deleteOrphanEntity(element);
             element.remove();
@@ -174,14 +174,12 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
      */
     private void deleteChildren(CnATreeElement[] children) throws CommandException {
         for (int i = 0; i < children.length; i++) {
-            if (PropertyLoader.isModelingTemplateActive()) {
+            if (children[i] instanceof FinishedRiskAnalysis) {
+                removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
+            } else if (PropertyLoader.isModelingTemplateActive()) {
                 // deletion of children instances of this children instance
                 deleteChildren(children[i].getChildrenAsArray());
                 deleteOrphanEntity(children[i]);
-            }
-            
-            if (children[i] instanceof FinishedRiskAnalysis) {
-                removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
             }
         }
     }
@@ -330,9 +328,8 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
                 DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
                 crit.setFetchMode("entity", FetchMode.JOIN);
                 crit.add(Restrictions.eq("entity.dbId", element.getEntity().getDbId()));
-
-                IBaseDao dao = getDaoFactory().getDAOforTypedElement(element);
-                List<CnATreeElement> entities = dao.findByCriteria(crit);
+                IBaseDao<?, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
+                List<?> entities = dao.findByCriteria(crit);
                 return entities.size() > 1 ? false : true;
             }
         }
@@ -342,6 +339,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     private void deleteOrphanEntity(CnATreeElement element) {
         if (PropertyLoader.isModelingTemplateActive() && element.getEntity() != null) {
             if (!hasOrphanEntity(element)) {
+                element.removeCnLinks();
                 element.setEntity(null);
             }
         }
