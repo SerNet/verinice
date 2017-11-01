@@ -19,11 +19,12 @@
  ******************************************************************************/
 package sernet.verinice.service.bp.importer.html;
 
+import java.util.ArrayDeque;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.Stack;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -72,6 +73,17 @@ public class HtmlHelper {
     private static final String HTML_OPEN_LIST_ITEM = "<li>"; //$NON-NLS-1$
     private static final String HTML_CLOSE_LIST_ITEM = "</li>"; //$NON-NLS-1$
     private static final String HTML_BR = "<br>"; //$NON-NLS-1$
+    
+    private static final Set<String> HTML_TAG_BLACKLIST = new HashSet<>();
+    
+    static {
+        HTML_TAG_BLACKLIST.add("introduction");
+        HTML_TAG_BLACKLIST.add("purpose");
+        HTML_TAG_BLACKLIST.add("differentiation");
+        HTML_TAG_BLACKLIST.add("description");
+        HTML_TAG_BLACKLIST.add("");
+        HTML_TAG_BLACKLIST.add("#text");
+    }
     
     private HtmlHelper() {
         // default constructor
@@ -150,15 +162,11 @@ public class HtmlHelper {
         subChapter = 1;
         
         descriptionBuilder.append(getModuleReqMain(module, chapter, subChapter));
-        
         descriptionBuilder.append(ToHtmlTableTransformer.
                 createCrossreferenceTable(module.getCrossreferences()));
-        
         descriptionBuilder.append(getModuleDescriptionSuffix(module, chapter));
         
         return descriptionBuilder.toString();
-        
-        
     }
     
     /**
@@ -274,25 +282,25 @@ public class HtmlHelper {
         sb.append(HTML_CLOSE_TD);
         sb.append(HTML_OPEN_TD);
         
-        List<String> roles = null;
+        List<String> roles = Collections.emptyList();
+        
         if (module.getRequirements().getFurtherResponsibleRoles() != null) {
             roles = module.getRequirements().getFurtherResponsibleRoles().getRole();
         }
-        if (roles != null && !roles.isEmpty()) {
-            Iterator<String> iter = roles.iterator();
-            while (iter.hasNext()) {
-                sb.append(iter.next());
-                if (iter.hasNext()) {
-                    sb.append(", ");
-                }
+        
+        Iterator<String> iter = roles.iterator();
+        while (iter.hasNext()) {
+            sb.append(iter.next());
+            if (iter.hasNext()) {
+                sb.append(", ");
             }
-            
         }
+        
         sb.append(HTML_CLOSE_TD);
         sb.append(HTML_CLOSE_TR);        
         sb.append(HTML_CLOSE_TABLE);
-        
         sb.append(HTML_CLOSE_PARAGRAPH);
+        
         return sb.toString();
     }
     
@@ -353,7 +361,6 @@ public class HtmlHelper {
     private static String getModuleDescriptionStart(Document module, int chapter) {
         StringBuilder sb = new StringBuilder();
         
-        
         List<Object> introduction = module.getDescription().getIntroduction();
         
         int subChapter = 1;
@@ -364,24 +371,35 @@ public class HtmlHelper {
                 if ("introduction".equals(node.getNodeName())){
                     sb.append(generateChapterHeader(chapter, subChapter++,
                             -1, Messages.Introduction));
-                    sb.append(HTML_OPEN_PARAGRAPH);
+                    if (!node.getTextContent().trim().startsWith(HTML_OPEN_PARAGRAPH)) {
+                        sb.append(HTML_OPEN_PARAGRAPH);
+                    }
                     sb.append(node.getTextContent());
-                    sb.append(HTML_CLOSE_PARAGRAPH);
+                    if (!node.getTextContent().trim().startsWith(HTML_OPEN_PARAGRAPH)) {
+                        sb.append(HTML_CLOSE_PARAGRAPH);
+                    }
                 } else if ("purpose".equals(node.getNodeName())) {
                     sb.append(generateChapterHeader(chapter, subChapter++, -1, Messages.Purpose));
-                    sb.append(HTML_OPEN_PARAGRAPH);
+                    if (!node.getTextContent().trim().startsWith(HTML_OPEN_PARAGRAPH)) {
+                        sb.append(HTML_OPEN_PARAGRAPH);
+                    }
                     sb.append(node.getTextContent());
-                    sb.append(HTML_CLOSE_PARAGRAPH);
+                    if (!node.getTextContent().trim().startsWith(HTML_OPEN_PARAGRAPH)) {
+                        sb.append(HTML_CLOSE_PARAGRAPH);
+                    }
                 } else if ("differentiation".equals(node.getNodeName())) {
                     sb.append(generateChapterHeader(chapter, subChapter++,
                             -1, Messages.Differentiation));
-                    sb.append(HTML_OPEN_PARAGRAPH);
+                    if (!node.getTextContent().trim().startsWith(HTML_OPEN_PARAGRAPH)) {
+                        sb.append(HTML_OPEN_PARAGRAPH);
+                    }
                     sb.append(node.getTextContent());
-                    sb.append(HTML_CLOSE_PARAGRAPH);
+                    if (!node.getTextContent().trim().startsWith(HTML_OPEN_PARAGRAPH)) {
+                        sb.append(HTML_CLOSE_PARAGRAPH);
+                    }
                 }
             }
         }
-        
         return sb.toString();
     }
     
@@ -396,13 +414,12 @@ public class HtmlHelper {
         StringBuilder sb = new StringBuilder();
         
         for (Requirement requirement : requirements) {
-            String title = getRequirementDescriptionStart(requirement);
-            title += " ";
-            title += getRequirementResponsibleDescription(requirement);
-            title += " ";
-            title += getRequirementCIA(requirement);
             sb.append(HTML_OPEN_H1);
-            sb.append(title);
+            sb.append(getRequirementDescriptionStart(requirement));
+            sb.append(" ");
+            sb.append(getRequirementResponsibleDescription(requirement));
+            sb.append(" ");
+            sb.append(getRequirementCIA(requirement));
             sb.append(HTML_CLOSE_H1);
             sb.append(HTML_OPEN_PARAGRAPH);
             sb.append(getAnyElementDescription("", -1, -1 ,-1,
@@ -496,7 +513,7 @@ public class HtmlHelper {
     public static String getAnyElementDescription(String title, int chapter, int subChapter,
             int subSubChapter, List<Element> anyElements) {
         StringBuilder sb = new StringBuilder();
-        if (! "".equals(title)) {
+        if (StringUtils.isNotEmpty(title)) {
             sb.append(generateChapterHeader(chapter, subChapter,
                     subSubChapter, title));
             sb.append(HTML_OPEN_PARAGRAPH);
@@ -505,7 +522,7 @@ public class HtmlHelper {
             sb.append(extractContentFromObject(element));
         }
         
-        if (! "".equals(title)) {
+        if (StringUtils.isNotEmpty(title)) {
             sb.append(HTML_CLOSE_PARAGRAPH);
         }
         
@@ -542,7 +559,7 @@ public class HtmlHelper {
     public static String getAnyObjectDescription(String title, 
             int headlineLevel, List<Object> anyObjects) {
         StringBuilder sb = new StringBuilder();
-        if (! "".equals(title)) {
+        if (StringUtils.isNotEmpty(title)) {
             if (headlineLevel > 0) {
                 sb.append("<H");
                 sb.append(String.valueOf(headlineLevel));
@@ -577,19 +594,12 @@ public class HtmlHelper {
      * @return
      */
     private static String unwrapText(Node element) {
-        Set<String> blacklist = new HashSet<>();
-        blacklist.add("introduction");
-        blacklist.add("purpose");
-        blacklist.add("differentiation");
-        blacklist.add("description");
-        blacklist.add("");
-        blacklist.add("#text");
         StringBuilder sb = new StringBuilder();
-        Stack<String> htmlElements = new Stack<>();
+        ArrayDeque<String> htmlElements = new ArrayDeque<>();
         Node node = element;
         String htmlFormatElement = StringUtils.
                 isNotEmpty(node.getNodeName()) ? node.getNodeName() : "";
-        if (!blacklist.contains(htmlFormatElement)) {
+        if (!HTML_TAG_BLACKLIST.contains(htmlFormatElement)) {
             sb.append("<").append(htmlFormatElement).append(">");   
             htmlElements.push(htmlFormatElement);
         }

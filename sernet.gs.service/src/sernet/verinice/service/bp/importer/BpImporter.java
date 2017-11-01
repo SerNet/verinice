@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,6 +18,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import ITBP2VNA.generated.implementationhint.Document.Safeguards;
@@ -147,35 +149,34 @@ public class BpImporter {
         if (xmlRootDirectory == null || xmlRootDirectory.length() == 0) {
             LOG.error("Wrong number of arguments, please provide root-Directory to XML-Archive");
             return;
-        } else {
-            setupImportAndParseContent(modules, threats, implementationHints);
-            LOG.debug("Successfully parsed modules:\t" + modules.size());
-            LOG.debug("Successfully parsed threats:\t" + threats.size());
-            LOG.debug("Successfully parsed implementation hints:\t" + implementationHints.size());
+        } 
+        setupImportAndParseContent(modules, threats, implementationHints);
+        LOG.debug("Successfully parsed modules:\t" + modules.size());
+        LOG.debug("Successfully parsed threats:\t" + threats.size());
+        LOG.debug("Successfully parsed implementation hints:\t" + implementationHints.size());
 
-            long veryBeginning = System.currentTimeMillis();
-            prepareITNetwork();
-            long itnetworkReady = System.currentTimeMillis();
-            LOG.debug("ITNetwork prepared, took :\t" 
-                    + (itnetworkReady - veryBeginning) / MILLIS_PER_SECOND) ;
-            generateElementalThreads(threats);
-            long elementalThreadsReady = System.currentTimeMillis();
-            LOG.debug("Elementalthreats ready, took :\t" 
-                    + (elementalThreadsReady - itnetworkReady) / MILLIS_PER_SECOND);
-            transferModules(modules);
-            long modulesReady = System.currentTimeMillis();
-            LOG.debug("Modules ready, took :\t" 
-                    + (modulesReady - elementalThreadsReady) / MILLIS_PER_SECOND);
-            LOG.debug("Transformation of elements complete");
-            createSafeguards(implementationHints);
-            long safeguardsReady = System.currentTimeMillis();
-            LOG.debug("Safeguards ready, took:\t" 
-                    + (safeguardsReady - modulesReady) / MILLIS_PER_SECOND);
-            updateElement(getRootItNetwork());
-            LOG.debug("ItNetwork updated");
-            LOG.debug("Import finished, took:\t" 
-                    + (System.currentTimeMillis() - startImport) / MILLIS_PER_SECOND);
-        }
+        long veryBeginning = System.currentTimeMillis();
+        prepareITNetwork();
+        long itnetworkReady = System.currentTimeMillis();
+        LOG.debug("ITNetwork prepared, took :\t" 
+                + (itnetworkReady - veryBeginning) / MILLIS_PER_SECOND) ;
+        generateElementalThreads(threats);
+        long elementalThreadsReady = System.currentTimeMillis();
+        LOG.debug("Elementalthreats ready, took :\t" 
+                + (elementalThreadsReady - itnetworkReady) / MILLIS_PER_SECOND);
+        transferModules(modules);
+        long modulesReady = System.currentTimeMillis();
+        LOG.debug("Modules ready, took :\t" 
+                + (modulesReady - elementalThreadsReady) / MILLIS_PER_SECOND);
+        LOG.debug("Transformation of elements complete");
+        createSafeguards(implementationHints);
+        long safeguardsReady = System.currentTimeMillis();
+        LOG.debug("Safeguards ready, took:\t" 
+                + (safeguardsReady - modulesReady) / MILLIS_PER_SECOND);
+        updateElement(getRootItNetwork());
+        LOG.debug("ItNetwork updated");
+        LOG.debug("Import finished, took:\t" 
+                + (System.currentTimeMillis() - startImport) / MILLIS_PER_SECOND);
     }
 
 
@@ -294,7 +295,6 @@ public class BpImporter {
                 LOG.warn(warningMoreThanOneDirectory + SUBDIRECTORY_IMPL_HINTS);
             }
             dirs[2] = subDirectory;
-            
         } else if (SUBDIRECTORY_MEDIA.equals(subDirectory.getName())) {
             if (mediaDir != null) {
                 LOG.warn(warningMoreThanOneDirectory + SUBDIRECTORY_MEDIA);
@@ -305,7 +305,6 @@ public class BpImporter {
                 LOG.warn(warningMoreThanOneDirectory + SUBDIRECTORY_MODULES);
             }
             dirs[0] = subDirectory;
-            
         } else if (SUBDIRECTORY_THREATS.equals(subDirectory.getName())) {
             if (threatDir != null) {
                 LOG.warn(warningMoreThanOneDirectory + SUBDIRECTORY_THREATS);
@@ -349,7 +348,7 @@ public class BpImporter {
             });
             return Arrays.asList(directories);
         } else {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
     }
     
@@ -390,11 +389,12 @@ public class BpImporter {
             }
         } 
 
-        rootThreatGroup.setTitel(Messages.Root_Threat_Group_Name);
-
-
-        createStructuredSubGroups(rootThreatGroup, safeguardRootGroup);
-
+        if (rootThreatGroup != null) {
+            rootThreatGroup.setTitel(Messages.Root_Threat_Group_Name);
+            if (safeguardRootGroup != null) {
+                createStructuredSubGroups(rootThreatGroup, safeguardRootGroup);
+            }
+        }
     }
     
     /**
@@ -432,13 +432,10 @@ public class BpImporter {
         systemSafeguardGroup = (SafeguardGroup) createElement(SafeguardGroup.TYPE_ID, 
                 safeguardRootGroup, Messages.System_Requirement_Group_Name);
 
-
-
         for (String name : systemIdentifierPrefixes) {
             createElement(BpRequirementGroup.TYPE_ID, systemReqGroup, name);
             createElement(SafeguardGroup.TYPE_ID, systemSafeguardGroup,  name);
         }
-
 
         for (String name : processIdentifierPrefixes) {
             createElement(BpRequirementGroup.TYPE_ID, processReqGroup, name);
@@ -484,6 +481,7 @@ public class BpImporter {
                 if (candidate.getTitle().
                         startsWith(getIdentifierPrefix(bsiSafeguard.getIdentifier()))) {
                     safeGuardParent = candidate;
+                    break;
                 }
             }
             
@@ -493,8 +491,6 @@ public class BpImporter {
                 LOG.warn("Could not determine parent for :\t" + bsiSafeguard.getTitle());
             }
         }
-        
-        
     }
     
     /**
@@ -613,22 +609,25 @@ public class BpImporter {
      */
     private void transferModules(Set<Document> modules) throws CreateBPElementException {
 
+        if (rootNetwork == null) {
+            LOG.error("Root-IT-Network not initialized. Ending import");
+            return;
+        }
+
         for (Document bsiModule : modules) {
-            if (rootNetwork != null) {
-                String groupIdentifier = getIdentifierPrefix(bsiModule.getIdentifier());
-                
-                BpRequirementGroup parent = (BpRequirementGroup)getRequirementParentGroup(
-                        groupIdentifier, BpRequirementGroup.TYPE_ID, 
-                        systemReqGroup, processReqGroup);
-                
-                BpRequirementGroup veriniceModule = null;
-                
-                if (! addedModules.containsKey(bsiModule.getIdentifier())) {
-                    veriniceModule = createModule(bsiModule, parent);
-                    linkElementalThreats(bsiModule);
-                    addedModules.put(bsiModule.getIdentifier(), veriniceModule);
-                } 
-            }
+            String groupIdentifier = getIdentifierPrefix(bsiModule.getIdentifier());
+
+            BpRequirementGroup parent = (BpRequirementGroup)getRequirementParentGroup(
+                    groupIdentifier, BpRequirementGroup.TYPE_ID, 
+                    systemReqGroup, processReqGroup);
+
+            BpRequirementGroup veriniceModule = null;
+
+            if (!addedModules.containsKey(bsiModule.getIdentifier()) && parent != null) {
+                veriniceModule = createModule(bsiModule, parent);
+                linkElementalThreats(bsiModule);
+                addedModules.put(bsiModule.getIdentifier(), veriniceModule);
+            } 
         }
     }
 
@@ -723,7 +722,7 @@ public class BpImporter {
     
     
     /**
-     * generate elemental-threats definied in a {@link Document} as instances of {@link BpThreat}
+     * generate elemental-threats defined in a {@link Document} as instances of {@link BpThreat}
      * within the given structure
      * 
      * @param threats
@@ -736,7 +735,6 @@ public class BpImporter {
             if (! addedThreats.containsKey(bsiThreat.getIdentifier())) {
                 BpThreat veriniceThreat = (BpThreat) createElement(BpThreat.TYPE_ID, 
                         elementalThreatGroup, bsiThreat.getFullTitle());
-                veriniceThreat.setTitel(bsiThreat.getFullTitle());
                 
                 veriniceThreat.setIdentifier(bsiThreat.getIdentifier());
                 String plainDescription = HtmlHelper.getAnyObjectDescription(
@@ -747,8 +745,7 @@ public class BpImporter {
                         Boolean.parseBoolean(bsiThreat.getCia().getIntegrity()));
                 veriniceThreat.setAvailibility(
                         Boolean.parseBoolean(bsiThreat.getCia().getAvailability()));
-                
-                if (plainDescription != null && plainDescription.length() > 0) {
+                if (StringUtils.isNotEmpty(plainDescription)) {
                     veriniceThreat.setObjectBrowserDescription(plainDescription);
                 }
                 veriniceThreat = (BpThreat) updateElement(veriniceThreat);
@@ -875,8 +872,6 @@ public class BpImporter {
             }
         }
         
-        
-        
         CreateMultipleLinks linkCommand = new CreateMultipleLinks(links);
         try {
             getCommandService().executeCommand(linkCommand);
@@ -898,17 +893,15 @@ public class BpImporter {
      * @return
      * @throws CreateBPElementException
      */
-    @SuppressWarnings("unused")
     private Safeguard createSafeguard(SafeguardGroup parent, 
             ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard, 
             String qualifier, String lastChange) 
                     throws CreateBPElementException {
-        final String trueValue = "true";
-        if( parent != null) {
+        if (parent != null) {
             Safeguard safeguard = (Safeguard) createElement(Safeguard.TYPE_ID, 
                     parent, bsiSafeguard.getTitle());
             safeguard = setSafeguardProperties(bsiSafeguard, 
-                    qualifier, lastChange, trueValue, safeguard);
+                    qualifier, lastChange, safeguard);
             
             LOG.debug("Safeguard : \t"  + safeguard.getTitle() + "created ");
 
@@ -931,27 +924,26 @@ public class BpImporter {
      */
     private Safeguard setSafeguardProperties(
             ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard, 
-            String qualifier, String lastChange, final String trueValue,
-            Safeguard safeguard) throws CreateBPElementException {
+            String qualifier, String lastChange, Safeguard safeguard)
+                    throws CreateBPElementException {
         safeguard.setAbbreviation(bsiSafeguard.getIdentifier());
         safeguard.setIdentifier(bsiSafeguard.getIdentifier());
         String plainDescription = HtmlHelper.getAnyObjectDescription(bsiSafeguard.getTitle(), 1,
                 bsiSafeguard.getDescription().getContent());
-        String htmlDescription = plainDescription;
-        if (plainDescription != null && plainDescription.length() > 0) {
-            safeguard.setObjectBrowserDescription(htmlDescription);
+        if (StringUtils.isNotEmpty(plainDescription)) {
+            safeguard.setObjectBrowserDescription(plainDescription);
         } else {
             LOG.debug("No description found for:\t" + bsiSafeguard.getTitle());
         }
         safeguard.setQualifier(qualifier);
         safeguard.setTitle(bsiSafeguard.getTitle());
         safeguard.setLastChange(getBSIDate(lastChange));
-        safeguard.setIsAffectsConfidentiality(trueValue.equals(
-                bsiSafeguard.getCia().getConfidentiality()) ? true : false);
-        safeguard.setIsAffectsAvailability(trueValue.equals(
-                bsiSafeguard.getCia().getAvailability()) ? true : false);
-        safeguard.setIsAffectsIntegrity(trueValue.equals(
-                bsiSafeguard.getCia().getIntegrity()) ? true : false);
+        safeguard.setIsAffectsConfidentiality(Boolean.parseBoolean(
+                bsiSafeguard.getCia().getConfidentiality()));
+        safeguard.setIsAffectsAvailability(Boolean.parseBoolean(
+                bsiSafeguard.getCia().getAvailability()));
+        safeguard.setIsAffectsIntegrity(Boolean.parseBoolean(
+                bsiSafeguard.getCia().getIntegrity()));
         
         if (bsiSafeguard.getResponsibleRoles() != null) {
             for (String role : bsiSafeguard.getResponsibleRoles().getRole()) {
@@ -969,7 +961,7 @@ public class BpImporter {
      * a {@link SafeguardGroup} for every instance of {@link BpRequirementGroup}
      * 
      * this method returns this {@link SafeguardGroup} for a given 
-     * safeguard- identifier or creates it, if not existant yet
+     * safeguard- identifier or creates it, if not existent yet
      * 
      * @param rootGroup
      * @param identifier
@@ -978,36 +970,34 @@ public class BpImporter {
      */
     private SafeguardGroup getSafeguardParent(SafeguardGroup rootGroup,
             String identifier) throws CreateBPElementException {
-        String moduleIdentifier = identifier.substring(0, identifier.lastIndexOf(".M"));
-        String subGroupIdentifier = identifier.substring(0, identifier.indexOf('.'));
-        String moduleTitle = null;
-        if (addedModules.containsKey(moduleIdentifier)) {
-            moduleTitle = addedModules.get(moduleIdentifier).getTitle();
-        } else {
-            return null;
-        }
-        // safeguardparent is a module
-        SafeguardGroup safeguardParent = 
-                (SafeguardGroup)getIBGroupByNameRecursive(rootGroup, moduleTitle);
-        // moduleparent is a safeguardGroup like "APP", "DER", "INF, "CON", ...
-        SafeguardGroup safeguardRoot = (SafeguardGroup) processSafeguardGroup.getParent();
-        SafeguardGroup moduleParent = (SafeguardGroup)getIBGroupByNameRecursive(
-                (IBpGroup) safeguardRoot, subGroupIdentifier);
-        if (safeguardParent == null) {
-            if (moduleParent != null) {
+        SafeguardGroup safeguardParent = null;
+        if (identifier.contains(".M")) {
+            String moduleIdentifier = identifier.substring(0, identifier.lastIndexOf(".M"));
+            String subGroupIdentifier = identifier.substring(0, identifier.indexOf('.'));
+            String moduleTitle = null;
+            if (addedModules.containsKey(moduleIdentifier)) {
+                moduleTitle = addedModules.get(moduleIdentifier).getTitle();
+            } else {
+                return null;
+            }
+            // safeguardparent is a module
+            safeguardParent = 
+                    (SafeguardGroup)getIBGroupByNameRecursive(rootGroup, moduleTitle);
+            // moduleparent is a safeguardGroup like "APP", "DER", "INF, "CON", ...
+            SafeguardGroup safeguardRoot = (SafeguardGroup) processSafeguardGroup.getParent();
+            SafeguardGroup moduleParent = (SafeguardGroup)getIBGroupByNameRecursive(
+                    (IBpGroup) safeguardRoot, subGroupIdentifier);
+            if (safeguardParent == null && moduleParent != null) {
                 safeguardParent = (SafeguardGroup)getIBGroupByNameRecursive(
                         (IBpGroup) moduleParent, moduleTitle);
                 if (safeguardParent == null) {
                     safeguardParent = (SafeguardGroup)createElement(
                             SafeguardGroup.TYPE_ID, moduleParent, moduleTitle);
                 }
-            } else {
-                safeguardParent = null;
-            }
-        } 
-        
+            } 
+        }
         return safeguardParent;
-        
+
     }
     
     /**
@@ -1075,7 +1065,6 @@ public class BpImporter {
      */
     private BpRequirement createRequirement(BpRequirementGroup parent,
             Requirement bsiRequirement, String qualifier) throws CreateBPElementException {
-        final String trueValue = "true";
         if (!addedReqs.containsKey(bsiRequirement.getIdentifier())) {
             BpRequirement veriniceRequirement = null; 
             veriniceRequirement = (BpRequirement) createElement(
@@ -1087,20 +1076,17 @@ public class BpImporter {
                     bsiRequirement.getDescription().getAny()));
             veriniceRequirement.setTitle(bsiRequirement.getTitle());
             veriniceRequirement.setLastChange(parent.getLastChange());
-            veriniceRequirement.setIsAffectsConfidentiality(trueValue.equals(
-                    bsiRequirement.getCia().getConfidentiality()) ? true : false);
-            veriniceRequirement.setIsAffectsIntegrity(trueValue.equals(
-                    bsiRequirement.getCia().getIntegrity()) ? true : false);
-            veriniceRequirement.setIsAffectsAvailability(trueValue.equals(
-                    bsiRequirement.getCia().getAvailability()) ? true : false);
-            
+            veriniceRequirement.setIsAffectsConfidentiality(
+                    Boolean.parseBoolean(bsiRequirement.getCia().getConfidentiality()));
+            veriniceRequirement.setIsAffectsIntegrity(
+                    Boolean.parseBoolean(bsiRequirement.getCia().getIntegrity()));
+            veriniceRequirement.setIsAffectsAvailability(
+                    Boolean.parseBoolean(bsiRequirement.getCia().getAvailability()));
             
             if (bsiRequirement.getResponsibleRoles() != null) {
-
                 for (String role : bsiRequirement.getResponsibleRoles().getRole()) {
                     veriniceRequirement.addResponsibleRole(role);
                 }
-
             }
             veriniceRequirement.setQualifier(qualifier);
             addedReqs.put(bsiRequirement.getIdentifier(), veriniceRequirement);
