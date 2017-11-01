@@ -17,7 +17,7 @@
  * Contributors:
  *     Urs Zeidler uz[at]sernet.de - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.service.bp.importer;
+package sernet.verinice.service.bp.importer.html;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,7 +91,7 @@ public class ToHtmlTableTransformer {
             }
             if (row > requirementHeader.size()) {
                 LOG.warn("More references than requirement headers, finishing row and table. ");
-                builder.append("</tr>\n");
+                builder.append("</tr>");
                 break;
             }
             String headerTitle = requirementHeader.get(row);
@@ -100,7 +100,7 @@ public class ToHtmlTableTransformer {
                 String isReferenced = Boolean.parseBoolean(threadRef.getIsReferenced()) ? "X" : "";
                 builder.append("<td ").append(DATASTYLE).append(">").append(isReferenced).append("</td>");
             }
-            builder.append("</tr>\n");
+            builder.append("</tr>");
             row++;
         }
         builder.append("</table>");

@@ -44,7 +44,7 @@ public class BibItem {
 
     protected String shortHand;
     protected String title;
-    protected Description description;
+    protected String description;
 
     /**
      * Ruft den Wert der shortHand-Eigenschaft ab.
@@ -102,7 +102,7 @@ public class BibItem {
      *     {@link Description }
      *     
      */
-    public Description getDescription() {
+    public String getDescription() {
         return description;
     }
 
@@ -114,7 +114,7 @@ public class BibItem {
      *     {@link Description }
      *     
      */
-    public void setDescription(Description value) {
+    public void setDescription(String value) {
         this.description = value;
     }
 
