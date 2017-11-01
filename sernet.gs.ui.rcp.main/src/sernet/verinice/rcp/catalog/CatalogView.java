@@ -180,10 +180,6 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
      * @param parent
      */
     protected void initView(Composite parent) {
-        if (CnAElementFactory.isModernizedBpCatalogLoaded()) {
-            CnAElementFactory.getInstance().reloadModelFromDatabase();
-        }
-
         contentProvider = new TreeContentProvider(elementManager);
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         viewer.setSorter(new BaseProtectionTreeSorter());
@@ -198,7 +194,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
                 }
                 return super.getImage(obj);
             }
-            
+
             @Override
             public String getText(Object obj) {
                 if (obj instanceof IBSIStrukturElement || obj instanceof IBSIStrukturKategorie) {
@@ -209,7 +205,6 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         });
 
         toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
-
         getSite().setSelectionProvider(viewer);
         hookContextMenu();
         makeActions();
@@ -325,7 +320,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         };
         doubleClickAction.setText(Messages.CatalogView_open_in_editor);
         doubleClickAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.OPEN_EDIT));
-        
+
         makeExpandAndCollapseActions();
 
         HideEmptyFilter hideEmptyFilter = new HideEmptyFilter(viewer);
@@ -348,22 +343,22 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         viewer.getTree().addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent event) {
-              if (event.keyCode == SWT.DEL && viewer.getTree().getSelectionCount() == 1) {
-                  deleteAction.run();
-              }
+                if (event.keyCode == SWT.DEL && viewer.getTree().getSelectionCount() == 1) {
+                    deleteAction.run();
+                }
             }
-          });
+        });
     }
-    
+
     private void makeExpandAndCollapseActions() {
         expandAction = new ExpandAction(viewer, contentProvider);
         expandAction.setText(Messages.ISMView_7);
         expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
-        
+
         collapseAction = new CollapseAction(viewer);
         collapseAction.setText(Messages.ISMView_8);
         collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
-        
+
         expandAllAction = new Action() {
             @Override
             public void run() {
@@ -382,7 +377,6 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         collapseAllAction.setText(Messages.ISMView_10);
         collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
     }
-
 
     protected void openEditorReadOnly(Object sel) throws PartInitException {
         CnATreeElement element = (CnATreeElement) sel;
@@ -494,7 +488,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
 
         @Override
         public void selectionChanged(SelectionChangedEvent event) {
-            selection = (IStructuredSelection)event.getSelection();
+            selection = (IStructuredSelection) event.getSelection();
         }
     }
 
