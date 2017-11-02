@@ -23,7 +23,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -41,15 +40,18 @@ import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.IGSModel;
 import sernet.gs.model.Massnahme;
 import sernet.gs.service.GSServiceException;
+import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.VeriniceElementTransfer;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.GS2BSITransformOperation;
 import sernet.verinice.iso27k.rcp.action.DropPerformer;
@@ -92,14 +94,16 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
         public void transformElement(Group<?> group, Object item, List<CnATreeElement> elements) {
             if (item instanceof Baustein) {
                 Baustein b = (Baustein) item;
+                String titel = b.getId() + " " + b.getTitel();
                 if (group instanceof BpThreatGroup) {
-                    List<Gefaehrdung> gefaehrdungen = b.getGefaehrdungen();
-                    for (Gefaehrdung g : gefaehrdungen) {
-                        transformGefaerdung(group, elements, g);
+                    Group<?> saveGroup = createGroup(group, titel, BpThreatGroup.class, BpThreatGroup.TYPE_ID);
+                    for (Gefaehrdung g : b.getGefaehrdungen()) {
+                        transformGefaerdung(saveGroup, elements, g);
                     }
                 } else if (group instanceof SafeguardGroup) {
+                    Group<?> saveGroup = createGroup(group, titel, SafeguardGroup.class, SafeguardGroup.TYPE_ID);
                     for (Massnahme m : b.getMassnahmen()) {
-                        transformMaßnahme(group, elements, m);
+                        transformMaßnahme(saveGroup, elements, m);
                     }
                 }
             } else if (item instanceof Massnahme) {
@@ -112,7 +116,28 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
         }
 
         /**
-         * Transform {@link Gefaehrdung} to {@link BpThreat}
+         * Create a subgroup for the transformed elements.
+         * 
+         * @param container - the group the created group is added to
+         * @param titel the title of the created group
+         * @param elementClass - the class of the container 
+         * @param typeId - the type id 
+         * @return the created container
+         */
+        private Group<?> createGroup(Group<?> container, String titel, Class<? extends Group<?>> elementClass, String typeId) {
+            try {
+                Group<?> saveNew = CnAElementHome.getInstance().save(container, elementClass, typeId);
+                saveNew.setTitel(titel);
+                CnAElementHome.getInstance().updateEntity(saveNew);
+                CnAElementFactory.getModel(container).childAdded(container, saveNew);
+                return saveNew;
+            } catch (CommandException e) {
+                throw new RuntimeCommandException("Error while creating/saving Group: " + titel, e);
+            }
+        }
+
+        /**
+         * Transform {@link Gefaehrdung} to {@link BpThreat}.
          *
          * @param group
          *            - the target group
@@ -123,7 +148,8 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
          */
         private void transformGefaerdung(Group<?> group, List<CnATreeElement> elements, Gefaehrdung g) {
             BpThreat bpThreat = new BpThreat(group);
-            bpThreat.setTitel(g.getId() + " " + g.getTitel()); //$NON-NLS-1$
+//            bpThreat.setIdentifier(g.getId()); // TODO: maybe BpThreat will return identifier + title as getTitle later like Safeguard does
+            bpThreat.setTitel(g.getId() + " "+ g.getTitel()); //$NON-NLS-1$
             String description = "";
             try {
                 description = GSScraperUtil.getInstance().getModel().getMassnahmeHtml(g.getUrl(), g.getStand());
@@ -146,7 +172,8 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
          */
         private void transformMaßnahme(Group<?> group, List<CnATreeElement> elements, Massnahme m) {
             Safeguard safeguard = new Safeguard(group);
-            safeguard.setTitle(m.getId() + " " + m.getTitel()); //$NON-NLS-1$
+            safeguard.setIdentifier(m.getId());
+            safeguard.setTitle(m.getTitel());
             String description = "";
             try {
                 description = GSScraperUtil.getInstance().getModel().getMassnahmeHtml(m.getUrl(), m.getStand());
@@ -265,16 +292,15 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
     }
 
     private List<IGSModel> getDraggedElements(Object data) {
-        List<IGSModel> elementList = null;
+        List<IGSModel> elementList = Collections.emptyList();
         if (data instanceof Object[]) {
-            elementList = new LinkedList<>();
-            for (Object o : (Object[]) data) {
+            Object[] objectData = (Object[]) data;
+            elementList = new ArrayList<>(objectData.length);
+            for (Object o : objectData) {
                 if (o instanceof IGSModel) {
                     elementList.add((IGSModel) o);
                 }
             }
-        } else {
-            elementList = Collections.emptyList();
         }
         return elementList;
     }
