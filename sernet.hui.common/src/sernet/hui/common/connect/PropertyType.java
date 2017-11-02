@@ -373,7 +373,7 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 
 	public Map<String, Boolean> validate(String text, String[] params) {
 	    HashMap<String, Boolean> validationResults = new HashMap<String, Boolean>();
-	    for (Iterator iter = validators.iterator(); iter.hasNext();) {
+	    for (Iterator<IValidationRule> iter = validators.iterator(); iter.hasNext();) {
 			final IValidationRule validator = (IValidationRule) iter.next();
 			boolean result = validator.validate(text, params);
 			validationResults.put(validator.getHint(), result);

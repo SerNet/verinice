@@ -253,17 +253,18 @@ public class ValidationService implements IValidationService {
         ArrayList<String> hintsOfFailedValidations = new ArrayList<String>(0);
         for(Entry<String, Boolean> entry : validationMap.entrySet()){
             boolean validationExists = isValidationExistant(elmt.getDbId(), type.getId(), entry.getKey(), elmt.getScopeId());
-            if(!entry.getValue().booleanValue() && !validationExists){
+            boolean elmtIsValid = entry.getValue().booleanValue();
+            if(!elmtIsValid && !validationExists){
                 hintsOfFailedValidations.add(entry.getKey());
                 if(log.isDebugEnabled()){
                     log.debug("Validation:\t(" + type.getId() + ", " + entry.getValue() + ", " + entry.getKey() + ") created");
                 }
-            } else if(entry.getValue().booleanValue() && validationExists){ // validationcondition is fullfilled
+            } else if(elmtIsValid && validationExists){ // validationcondition is fullfilled
                 deleteValidation(elmt.getDbId(), type.getId(), entry.getKey(), elmt.getScopeId());
                 if(log.isDebugEnabled()){
                     log.debug("Validation:\t(" + type.getId() + ", " + entry.getValue() + ", " + entry.getKey() + ") deleted");
                 }
-            } else if(!entry.getValue().booleanValue() && validationExists){
+            } else if(!elmtIsValid && validationExists){
                 updateValidations(elmt.getScopeId(), elmt.getDbId(), elmt.getTitle());
             }
         }
@@ -331,14 +332,14 @@ public class ValidationService implements IValidationService {
         ServerInitializer.inheritVeriniceContextState();
         LoadScopeElementsById command = new LoadScopeElementsById(scope);
         command = getCommandService().executeCommand(command);
-        List<CnATreeElement> filteredList = new ArrayList<CnATreeElement>(0);
+        List<CnATreeElement> elementsToValidate = new ArrayList<CnATreeElement>(0);
         
         for(CnATreeElement elmt : command.getResults()){
-            if(!(elmt instanceof IBSIStrukturKategorie)){ // ibsistrukturcategories does not have any fields to validate
-                filteredList.add(elmt);
+            if(!(elmt instanceof IBSIStrukturKategorie)){ // IBSIStrukturKategorie does not have any fields to validate
+                elementsToValidate.add(elmt);
             }
         }
-        for(CnATreeElement elmt : filteredList){
+        for(CnATreeElement elmt : elementsToValidate){
             createValidationForSingleElement(elmt);
         }
     }
