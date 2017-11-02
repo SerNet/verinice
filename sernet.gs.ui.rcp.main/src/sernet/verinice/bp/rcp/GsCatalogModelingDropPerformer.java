@@ -94,7 +94,7 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
         public void transformElement(Group<?> group, Object item, List<CnATreeElement> elements) {
             if (item instanceof Baustein) {
                 Baustein b = (Baustein) item;
-                String titel = b.getId() + " " + b.getTitel();
+                String titel = b.getId() + " " + b.getTitel();//$NON-NLS-1$
                 if (group instanceof BpThreatGroup) {
                     Group<?> saveGroup = createGroup(group, titel, BpThreatGroup.class, BpThreatGroup.TYPE_ID);
                     for (Gefaehrdung g : b.getGefaehrdungen()) {
