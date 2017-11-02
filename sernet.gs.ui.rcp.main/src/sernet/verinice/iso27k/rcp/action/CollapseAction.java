@@ -32,33 +32,38 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class CollapseAction extends Action implements ISelectionChangedListener {
-	
-	TreeViewer viewer;
-	
-	CnATreeElement selectedElement;
-	
-	public CollapseAction(TreeViewer viewer) {
-		this.viewer = viewer;
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.Action#run()
-	 */
-	@Override
-	public void run() {
-		viewer.setExpandedState(selectedElement, false);
-	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-	 */
-	public void selectionChanged(SelectionChangedEvent event) {
-		ISelection selection = event.getSelection();
-		if(selection instanceof IStructuredSelection ) {
-			Object sel = ((IStructuredSelection) selection).getFirstElement();
-			if(sel instanceof CnATreeElement) {
-				this.selectedElement = (CnATreeElement) sel;
-			}
-		}	
-	}
+    TreeViewer viewer;
+    CnATreeElement selectedElement;
+
+    public CollapseAction(TreeViewer viewer) {
+        this.viewer = viewer;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+        viewer.setExpandedState(selectedElement, false);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.
+     * eclipse.jface.viewers.SelectionChangedEvent)
+     */
+    public void selectionChanged(SelectionChangedEvent event) {
+        ISelection selection = event.getSelection();
+        if (selection instanceof IStructuredSelection) {
+            Object sel = ((IStructuredSelection) selection).getFirstElement();
+            if (sel instanceof CnATreeElement) {
+                this.selectedElement = (CnATreeElement) sel;
+            }
+        }
+    }
 }

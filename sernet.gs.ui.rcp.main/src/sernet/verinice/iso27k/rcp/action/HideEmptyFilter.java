@@ -36,7 +36,6 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
  * @author Daniel Murygin <dm@sernet.de>
  * 
  */
-@SuppressWarnings("restriction")
 public class HideEmptyFilter extends ViewerFilter {
 
     private static final Logger LOG = Logger.getLogger(HideEmptyFilter.class);
@@ -64,11 +63,10 @@ public class HideEmptyFilter extends ViewerFilter {
                             && o instanceof CnATreeElement
                             && !(o instanceof Audit)
                             && !(o instanceof Asset);
-            if (hideEmpty 
-                && (isIsoOrCnaTreeElement || o instanceof IBpGroup)) { 
+            if (hideEmpty && (isIsoOrCnaTreeElement || o instanceof IBpGroup)) {
                 CnATreeElement element = (CnATreeElement) o;
                 Set<CnATreeElement> children = element.getChildren();
-                visible = (children != null && children.size() > 0);
+                visible = (children != null && !children.isEmpty());
             }
         } catch (Exception e) {
             LOG.error("Error", e);
@@ -80,15 +78,14 @@ public class HideEmptyFilter extends ViewerFilter {
      * @param hideEmpty
      */
     public void setHideEmpty(boolean hideEmpty) {
-        if (this.hideEmpty!=hideEmpty) {
+        if (this.hideEmpty != hideEmpty) {
             this.hideEmpty = hideEmpty;
-            if(this.hideEmpty) {
+            if (this.hideEmpty) {
                 viewer.addFilter(this);
             } else {
                 viewer.removeFilter(this);
             }
             viewer.refresh();
-            
         }
     }
     

@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.viewers.IStructuredSelection;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.service.RuntimeCommandException;
@@ -136,9 +137,9 @@ import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateITNetwork;
 import sernet.verinice.service.commands.CreateITVerbund;
 import sernet.verinice.service.commands.UpdateElement;
-import sernet.verinice.service.commands.crud.CreateIsoModel;
 import sernet.verinice.service.commands.crud.CreateBpModel;
 import sernet.verinice.service.commands.crud.CreateCatalogModel;
+import sernet.verinice.service.commands.crud.CreateIsoModel;
 import sernet.verinice.service.commands.crud.UpdateMultipleElements;
 import sernet.verinice.service.model.LoadModel;
 
@@ -1669,4 +1670,20 @@ public final class CnAElementFactory {
 					.databaseChildRemoved(changeLogEntry);
 		}
 	}
+
+    
+    public static boolean selectionOnlyContainsScopes(IStructuredSelection selection) {
+        for (Object selectedEl : selection.toList()) {
+            if (!isScope(selectedEl)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean isScope(Object element) {
+        return element instanceof ItNetwork
+                || element instanceof Organization
+                || element instanceof ITVerbund;
+    }
 }

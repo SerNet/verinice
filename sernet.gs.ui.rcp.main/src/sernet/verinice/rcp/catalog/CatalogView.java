@@ -17,7 +17,9 @@
  * Contributors:
  *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
  *     Urs Zeidler uz[at]sernet.de - initial API and implementation
+ *     Alexander Ben Nasrallah an[at]sernet.de - Implementation
  ******************************************************************************/
+
 package sernet.verinice.rcp.catalog;
 
 import java.util.concurrent.locks.Lock;
@@ -38,15 +40,16 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -59,7 +62,6 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.DrillDownAdapter;
 
-import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -73,7 +75,6 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.bp.rcp.BaseProtectionTreeSorter;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
@@ -81,10 +82,9 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.iso27k.rcp.Messages;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
+import sernet.verinice.iso27k.rcp.action.DeleteSelectionAction;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
-import sernet.verinice.model.bp.elements.BpRequirement;
-import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.catalog.CatalogModel;
@@ -121,6 +121,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
     private CollapseAction collapseAction;
     private ViewFilterAction filterAction;
     private Action linkWithEditorAction;
+    private DeleteSelectionAction deleteAction;
     private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
     private BSIModelViewLabelProvider bsiLableProvider = new BSIModelViewLabelProvider();
 
@@ -179,10 +180,6 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
      * @param parent
      */
     protected void initView(Composite parent) {
-        if (CnAElementFactory.isModernizedBpCatalogLoaded()) {
-            CnAElementFactory.getInstance().reloadModelFromDatabase();
-        }
-
         contentProvider = new TreeContentProvider(elementManager);
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         viewer.setSorter(new BaseProtectionTreeSorter());
@@ -197,7 +194,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
                 }
                 return super.getImage(obj);
             }
-            
+
             @Override
             public String getText(Object obj) {
                 if (obj instanceof IBSIStrukturElement || obj instanceof IBSIStrukturKategorie) {
@@ -208,7 +205,6 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         });
 
         toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
-
         getSite().setSelectionProvider(viewer);
         hookContextMenu();
         makeActions();
@@ -301,27 +297,11 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
     private void hookContextMenu() {
         MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
         menuMgr.setRemoveAllWhenShown(true);
-        menuMgr.addMenuListener(new IMenuListener() {
-            @Override
-            public void menuAboutToShow(IMenuManager manager) {
-                fillContextMenu(manager);
-            }
-        });
+        MenuListener menuListener = new MenuListener();
+        menuMgr.addMenuListener(menuListener);
+        viewer.addSelectionChangedListener(menuListener);
         Menu menu = menuMgr.createContextMenu(viewer.getControl());
-
         viewer.getControl().setMenu(menu);
-    }
-
-    protected void fillContextMenu(IMenuManager manager) {
-        manager.add(new GroupMarker("content")); //$NON-NLS-1$
-        manager.add(new Separator());
-        manager.add(doubleClickAction);
-        manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-        manager.add(new Separator());
-        manager.add(expandAction);
-        manager.add(collapseAction);
-        manager.add(new Separator());
-        drillDownAdapter.addNavigationActions(manager);
     }
 
     private void makeActions() {
@@ -340,15 +320,8 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         };
         doubleClickAction.setText(Messages.CatalogView_open_in_editor);
         doubleClickAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.OPEN_EDIT));
-        
+
         makeExpandAndCollapseActions();
-//        expandAction = new ExpandAction(viewer, contentProvider);
-//        expandAction.setText(Messages.ISMView_7);
-//        expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
-//
-//        collapseAction = new CollapseAction(viewer);
-//        collapseAction.setText(Messages.ISMView_8);
-//        collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 
         HideEmptyFilter hideEmptyFilter = new HideEmptyFilter(viewer);
         hideEmptyFilter.setHideEmpty(true);
@@ -364,17 +337,28 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         };
         linkWithEditorAction.setChecked(isLinkingActive());
         linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
+
+        deleteAction = new DeleteSelectionAction();
+        // We have to bind key for custom actions by hand.
+        viewer.getTree().addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent event) {
+                if (event.keyCode == SWT.DEL && viewer.getTree().getSelectionCount() == 1) {
+                    deleteAction.run();
+                }
+            }
+        });
     }
-    
+
     private void makeExpandAndCollapseActions() {
         expandAction = new ExpandAction(viewer, contentProvider);
         expandAction.setText(Messages.ISMView_7);
         expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
-        
+
         collapseAction = new CollapseAction(viewer);
         collapseAction.setText(Messages.ISMView_8);
         collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
-        
+
         expandAllAction = new Action() {
             @Override
             public void run() {
@@ -393,7 +377,6 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         collapseAllAction.setText(Messages.ISMView_10);
         collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
     }
-
 
     protected void openEditorReadOnly(Object sel) throws PartInitException {
         CnATreeElement element = (CnATreeElement) sel;
@@ -415,6 +398,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
 
         viewer.addSelectionChangedListener(expandAction);
         viewer.addSelectionChangedListener(collapseAction);
+        viewer.addSelectionChangedListener(deleteAction);
     }
 
     protected void fillToolBar() {
@@ -480,6 +464,32 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
         getSite().getPage().removePartListener(linkWithEditorPartListener);
         super.dispose();
+    }
+
+    private class MenuListener implements IMenuListener, ISelectionChangedListener {
+
+        private IStructuredSelection selection;
+
+        @Override
+        public void menuAboutToShow(IMenuManager manager) {
+            manager.add(new GroupMarker("content")); //$NON-NLS-1$
+            manager.add(new Separator());
+            manager.add(doubleClickAction);
+            manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+            manager.add(new Separator());
+            manager.add(expandAction);
+            if (CnAElementFactory.selectionOnlyContainsScopes((IStructuredSelection) selection)) {
+                manager.add(deleteAction);
+            }
+            manager.add(collapseAction);
+            manager.add(new Separator());
+            drillDownAdapter.addNavigationActions(manager);
+        }
+
+        @Override
+        public void selectionChanged(SelectionChangedEvent event) {
+            selection = (IStructuredSelection) event.getSelection();
+        }
     }
 
 }

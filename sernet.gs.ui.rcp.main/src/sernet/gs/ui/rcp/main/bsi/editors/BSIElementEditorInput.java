@@ -109,22 +109,22 @@ public class BSIElementEditorInput implements IEditorInput {
 	 * @param editor An editor
 	 * @return The CnATreeElement from there editor or null
 	 */
-	public static CnATreeElement extractElement(IEditorPart editor) {
-	    if(editor==null) {
-	        return null;
-	    }
+    public static CnATreeElement extractElement(IEditorPart editor) {
+        if (editor == null) {
+            return null;
+        }
         IEditorInput input = editor.getEditorInput();
         if (!(input instanceof BSIElementEditorInput)) {
             // only BSIElementEditorInput will be observed
             return null;
         }
-        
+
         BSIElementEditorInput elementInput = (BSIElementEditorInput) input;
-        if (elementInput.getCnAElement()==null) {
+        if (elementInput.getCnAElement() == null) {
             LOG.warn("Element in editor input is null.");
             return null;
         }
-        
+
         return elementInput.getCnAElement();
     }
 

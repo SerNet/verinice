@@ -619,8 +619,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		PropertyList properties = getEntity().getProperties(
 				getTypeId() + Schutzbedarf.ERGAENZENDEANALYSE);
 		if (properties != null 
-				&& properties.getProperties()!=null 
-				&& properties.getProperties().size() > 0){
+                && properties.getProperties() != null
+				&& !properties.getProperties().isEmpty()){
 			return Schutzbedarf.isMgmtReviewNeeded(properties.getProperty(0)
 					.getPropertyValue());
 		} else {

@@ -128,11 +128,11 @@ public class BaseProtectionTreeSorter extends ViewerSorter {
     }
     
     private int quallifierToValue(String qualifier) {
-        if(BASIC.equals(qualifier)){
+        if (BASIC.equals(qualifier)) {
             return 1;
-        }else if(STANDARD.equals(qualifier)){
+        } else if (STANDARD.equals(qualifier)) {
             return 2;
-        }else if(HIGH.equals(qualifier)){
+        } else if (HIGH.equals(qualifier)) {
             return 3;
         }
         return 0;
