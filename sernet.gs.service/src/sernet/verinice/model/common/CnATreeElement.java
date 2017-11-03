@@ -268,22 +268,22 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		if (getParent() != null) {
 			getParent().removeChild(this);
 		}
-		removeCnLinks();
+		removeAllLinks();
 	}
 
     /**
      * Remove all links from and to this item.
      * 
      */
-    public void removeCnLinks() {
-        CopyOnWriteArrayList<CnALink> list2 = new CopyOnWriteArrayList<CnALink>(getLinksDown());
-		for (CnALink link : list2) {
-			link.remove();
+    public void removeAllLinks() {
+        CopyOnWriteArrayList<CnALink> linksDown = new CopyOnWriteArrayList<CnALink>(getLinksDown());
+        for (CnALink linkDown : linksDown) {
+            linkDown.remove();
 		}
 		
-		list2 = new CopyOnWriteArrayList<CnALink>(getLinksUp());
-		for (CnALink link : list2) {
-			link.remove();
+        CopyOnWriteArrayList<CnALink> linksUp = new CopyOnWriteArrayList<CnALink>(getLinksUp());
+        for (CnALink linkUp : linksUp) {
+            linkUp.remove();
 		}
     }
 

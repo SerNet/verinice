@@ -339,7 +339,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     private void deleteOrphanEntity(CnATreeElement element) {
         if (PropertyLoader.isModelingTemplateActive() && element.getEntity() != null) {
             if (!hasOrphanEntity(element)) {
-                element.removeCnLinks();
+                element.removeAllLinks();
                 element.setEntity(null);
             }
         }
