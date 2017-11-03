@@ -45,6 +45,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.VeriniceElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.views.HtmlWriter;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -64,13 +65,12 @@ import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
-import sernet.verinice.service.parser.GSScraperUtil;
 
 /**
  * This drop performer class transforms the gs types {@link Gefaehrdung} and
  * {@link Massnahme} into {@link BpThreat} and {@link Safeguard} and adds them
- * to the {@link Group}. A {@link Baustein} will transform all child depend on
- * the given target group.
+ * to the {@link Group}. A {@link Baustein} will transform to a group depend on
+ * the given target group with all matching child .
  *
  * @see MetaDropAdapter
  * @author Urs Zeidler - uz[at]sernet.de
@@ -85,6 +85,7 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
      * their counterparts {@link BpThreat} and {@link Safeguard} in the
      * modernized grundschutz.
      *
+     * @see GS2BSITransformService.ItemTransformer
      * @author uz[at]sernet.de
      *
      */
@@ -150,9 +151,8 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
             BpThreat bpThreat = new BpThreat(group);
 //            bpThreat.setIdentifier(g.getId()); // TODO: maybe BpThreat will return identifier + title as getTitle later like Safeguard does
             bpThreat.setTitel(g.getId() + " "+ g.getTitel()); //$NON-NLS-1$
-            String description = "";
             try {
-                description = GSScraperUtil.getInstance().getModel().getMassnahmeHtml(g.getUrl(), g.getStand());
+                String description = HtmlWriter.getHtml(g);
                 bpThreat.setObjectBrowserDescription(description);
             } catch (GSServiceException e) {
                 log.error("Error setting description for safeguard", e); //$NON-NLS-1$
@@ -174,9 +174,8 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
             Safeguard safeguard = new Safeguard(group);
             safeguard.setIdentifier(m.getId());
             safeguard.setTitle(m.getTitel());
-            String description = "";
             try {
-                description = GSScraperUtil.getInstance().getModel().getMassnahmeHtml(m.getUrl(), m.getStand());
+                String description = HtmlWriter.getHtml(m);
                 safeguard.setObjectBrowserDescription(description);
             } catch (GSServiceException e) {
                 log.error("Error setting description for safeguard", e); //$NON-NLS-1$

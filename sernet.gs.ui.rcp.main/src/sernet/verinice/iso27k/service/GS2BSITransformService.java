@@ -78,7 +78,7 @@ public class GS2BSITransformService {
     };
 
     /**
-     * Strategy interface to transform the given item to an target object.
+     * Strategy interface to transform the given item to a target object.
      *
      * @author uz[at]sernet.de
      *
