@@ -22,6 +22,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAccountSearchParameter;
@@ -47,6 +50,8 @@ import sernet.verinice.service.commands.crud.PrepareObjectWithAccountDataForDele
 import sernet.verinice.service.test.helper.util.BFSTravers;
 import sernet.verinice.service.test.helper.util.CnATreeTraverser;
 
+@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
+@Transactional
 public class AccountServiceTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(AccountServiceTest.class);
@@ -87,6 +92,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         Assert.assertTrue(accountGroups.contains(accountGroupB));
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testDeleteAccountGroup() {
 
@@ -96,6 +103,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         validateRemovedAccountGroups();
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testDeleteAccountGroupByName() {
 
@@ -113,6 +122,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         Assert.assertFalse(accountGroups.contains(accountGroupB));
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testAddRole() {
         addRoles();
@@ -142,6 +153,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         Assert.assertTrue(accountGroupNames.contains(accountGroupRandom.getName()));
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testDeleteRole() {
         addRoles();
@@ -164,6 +177,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         }
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void countConnectObjectsForGroup() {
         addRoles();
@@ -182,6 +197,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         return setPermissionsCallback.getSetPermissions();
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testListGroupNames() {
 
@@ -192,6 +209,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         Assert.assertTrue(accountGroupNames.contains(accountGroupRandom.getName()));
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testFindByLogin() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(getLoginName()));
@@ -202,6 +221,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         }
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testFindByFirstName() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createFirstNameParameter(getFirstName()));
@@ -212,6 +233,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         }
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testFindByFamilyName() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createFamilyNameParameter(getFamilyName()));
@@ -222,6 +245,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         }
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testFindByIsAdmin() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createIsAdminParameter(true));
@@ -235,6 +260,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         assertTrue("Testuser not found", testuserFound);
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testFindByIsScopeOnly() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createIsScopeOnlyParameter(true));
@@ -248,12 +275,16 @@ public class AccountServiceTest extends CommandServiceProvider {
         assertTrue("Testuser not found", testuserFound);
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testFindByScopeId() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createScopeParameter(organization.getDbId()));
         assertNumber(configurations, 7);
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testFindByAll() throws Exception {
         IAccountSearchParameter parameter = AccountSearchParameterFactory.createFamilyNameParameter(FAMILY_NAME_B);
@@ -270,6 +301,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         }
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testFindByIsNotAdmin() throws Exception {
         List<Configuration> configurations2 = accountService.findAccounts(AccountSearchParameterFactory.createIsAdminParameter(false));
@@ -279,6 +312,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         }
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testGetById() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(new AccountSearchParameter());
@@ -293,6 +328,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         assertTrue("No user found", userFound);
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testRemove() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(LOGIN_A));
@@ -300,6 +337,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         removeAccountsStartingWith(LOGIN_A);
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testDisable() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(LOGIN_A));
@@ -348,13 +387,13 @@ public class AccountServiceTest extends CommandServiceProvider {
 
     @After
     public void tearDown() throws CommandException {
-        removeAccountsStartingWith(getLoginName());
-        removeAccountsStartingWith(LOGIN_A);
-        removeAccountsStartingWith(LOGIN_B);
-        removeAccountsStartingWith(LOGIN_C);
-        removeAccountsStartingWith(LOGIN_D);
-        removeTestOrganization(organization);
-        removeAccountGroups();
+//        removeAccountsStartingWith(getLoginName());
+//        removeAccountsStartingWith(LOGIN_A);
+//        removeAccountsStartingWith(LOGIN_B);
+//        removeAccountsStartingWith(LOGIN_C);
+//        removeAccountsStartingWith(LOGIN_D);
+//        removeTestOrganization(organization);
+//        removeAccountGroups();
     }
 
     private void removeAccountGroups() {
