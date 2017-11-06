@@ -36,7 +36,7 @@ import sernet.verinice.service.model.LoadModel;
  * $LastChangedBy$
  *
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings("serial")
 public class DbVersion extends GenericCommand  {
 	
     private transient Logger log = Logger.getLogger(DbVersion.class);
@@ -75,38 +75,32 @@ public class DbVersion extends GenericCommand  {
 	        DbMigration migration = new MigrateDbTo0_94();
 	        getCommandService().executeCommand(migration);
 	    }
-
 	    if (dbVersion < 0.95D) {
 	        DbMigration migration = new MigrateDbTo0_95();
 	        getCommandService().executeCommand(migration);
 	    }
-
 	    if (dbVersion < 0.96D) {
-	        // schema update must have been done by SchemaCreator.java, before Hibernate session was started:
+            // schema update must have been done by SchemaCreator.java, before
+            // Hibernate session was started:
 	        getLog().debug("Database schema was not correctly updated to V 0.96.");
 	        throw new CommandException("Datenbank konnte nicht auf V0.96 upgedated werden.");
 	    }
-
 	    if (dbVersion < 0.97D) {
 	        DbMigration migration = new MigrateDbTo0_97();
 	        getCommandService().executeCommand(migration);
 	    }
-
 	    if (dbVersion < 0.98D) {
 	        DbMigration migration = new MigrateDbTo0_98();
 	        getCommandService().executeCommand(migration);
 	    }
-
 	    if (dbVersion < 0.99D) {
 	        DbMigration migration = new MigrateDbTo0_99();
 	        getCommandService().executeCommand(migration);
 	    }
-
 	    if (dbVersion < 1.00D) {
 	        DbMigration migration = new MigrateDbTo1_00D();
 	        getCommandService().executeCommand(migration);
 	    }
-	    
 	    if(dbVersion < 1.01D){
 	        DbMigration migration = new MigrateDbTo1_01D();
 	        getCommandService().executeCommand(migration);
@@ -119,7 +113,10 @@ public class DbVersion extends GenericCommand  {
             DbMigration migration = new MigrateDbTo1_03D();
             getCommandService().executeCommand(migration);
         }
-	   
+        if(dbVersion < 1.04D){
+            DbMigration migration = new MigrateDbTo1_04D();
+            getCommandService().executeCommand(migration);
+        }
 	}
 
 
