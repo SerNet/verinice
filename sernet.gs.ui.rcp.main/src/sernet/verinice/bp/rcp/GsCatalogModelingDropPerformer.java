@@ -98,7 +98,7 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
                     Group<?> saveGroup = createGroup(group, title, 
                             BpThreatGroup.class, BpThreatGroup.TYPE_ID);
                     for (Gefaehrdung g : b.getGefaehrdungen()) {
-                        transformGefaerdung(saveGroup, elements, g);
+                        transformGefaehrdung(saveGroup, elements, g);
                     }
                 } else if (group instanceof SafeguardGroup) {
                     Group<?> saveGroup = createGroup(group, title, 
@@ -112,7 +112,7 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
                 transformMassnahme(group, elements, m);
             } else if (item instanceof Gefaehrdung) {
                 Gefaehrdung g = (Gefaehrdung) item;
-                transformGefaerdung(group, elements, g);
+                transformGefaehrdung(group, elements, g);
             }
         }
 
@@ -150,15 +150,15 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
          *            - the target group
          * @param elements
          *            - the list of transformed objects
-         * @param gefaerdung
+         * @param gefaehrdung
          *            - the source object
          */
-        private void transformGefaerdung(Group<?> group, List<CnATreeElement> elements, Gefaehrdung gefaerdung) {
+        private void transformGefaehrdung(Group<?> group, List<CnATreeElement> elements, Gefaehrdung gefaehrdung) {
             BpThreat bpThreat = new BpThreat(group);
 //            bpThreat.setIdentifier(g.getId()); // TODO: maybe BpThreat will return identifier + title as getTitle later like Safeguard does
-            bpThreat.setTitel(gefaerdung.getId() + " " + gefaerdung.getTitel()); //$NON-NLS-1$
+            bpThreat.setTitel(gefaehrdung.getId() + " " + gefaehrdung.getTitel()); //$NON-NLS-1$
             try {
-                String description = HtmlWriter.getHtml(gefaerdung);
+                String description = HtmlWriter.getHtml(gefaehrdung);
                 bpThreat.setObjectBrowserDescription(description);
             } catch (GSServiceException e) {
                 log.error("Error setting description for safeguard", e); //$NON-NLS-1$
