@@ -132,7 +132,8 @@ public class GS2BSITransformService {
      * @param transformer
      *            - the transformer to transform the item to the target item
      */
-    public GS2BSITransformService(IProgressObserver progressObserver, IModelUpdater modelUpdater, Group<?> selectedGroup, Object data, ItemTransformer transformer) {
+    public GS2BSITransformService(IProgressObserver progressObserver, IModelUpdater modelUpdater,
+            Group<?> selectedGroup, Object data, ItemTransformer transformer) {
         this(progressObserver, modelUpdater, selectedGroup, data);
         this.transformer = transformer;
     }
@@ -141,17 +142,18 @@ public class GS2BSITransformService {
 		return isScenario;
 	}
 
-	public void run(){
-		try{
-			this.numberOfControls = itemList.size();
-			progressObserver.beginTask(Messages.getString("GS2BSITransformService.0", numberOfControls), -1); //$NON-NLS-1$
-			for(Object o : itemList){
-				insertItem(progressObserver, selectedGroup, o);
-			}
-		} catch (Exception e){
-			getLog().error("Error while transforming GS element to ISM element", e);
-		}
-	}
+    public void run() {
+        try {
+            this.numberOfControls = itemList.size();
+            progressObserver.beginTask(
+                    Messages.getString("GS2BSITransformService.0", numberOfControls), -1); //$NON-NLS-1$
+            for (Object o : itemList) {
+                insertItem(progressObserver, selectedGroup, o);
+            }
+        } catch (Exception e) {
+            getLog().error("Error while transforming GS element to ISM element", e);
+        }
+    }
 	
 	/**
 	 * @param monitor
@@ -160,7 +162,8 @@ public class GS2BSITransformService {
 	 */
 	private void insertItem(IProgressObserver monitor, Group<?> group, Object item) {
 		if(monitor.isCanceled()) {
-			getLog().warn("Transforming canceled. " + numberProcessed + " items transformed."); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			getLog().warn("Transforming canceled. " //$NON-NLS-1$ 
+			        + numberProcessed + " items transformed."); //$NON-NLS-2$ //$NON-NLS-3$
 			return;
 		}
 		List<CnATreeElement> elements = new ArrayList<>();
@@ -191,21 +194,25 @@ public class GS2BSITransformService {
                     IncidentScenarioGroup newGroup = new IncidentScenarioGroup(group);
                     newGroup.setTitel(b.getId() + " " + b.getTitel());
                     CnATreeElement saveNew = null;
-                    saveNew = CnAElementFactory.getInstance().saveNew(group, IncidentScenarioGroup.TYPE_ID, new BuildInput<IncidentScenarioGroup>(newGroup),
+                    saveNew = CnAElementFactory.getInstance().saveNew(group,
+                            IncidentScenarioGroup.TYPE_ID,
+                            new BuildInput<IncidentScenarioGroup>(newGroup),
                             false /* do not notify single elements */,
                             false /* do not inherit icon */);
                     saveNew.setTitel(b.getId() + " " + b.getTitel());
                     CnAElementHome.getInstance().updateEntity(saveNew);
                     CnAElementFactory.getLoadedModel().childAdded(group, saveNew);
                     for (Gefaehrdung g : b.getGefaehrdungen()) {
-                        IncidentScenario scen = generateScenario(g, (IncidentScenarioGroup) saveNew);
+                        IncidentScenario scen = generateScenario(g,
+                                (IncidentScenarioGroup) saveNew);
                         elements.add(scen);
                     }
                 } else if (group.canContain(new Control())) {
                     ControlGroup newGroup = new ControlGroup(group);
                     newGroup.setTitel(b.getTitel());
                     CnATreeElement saveNew = null;
-                    saveNew = CnAElementFactory.getInstance().saveNew(group, ControlGroup.TYPE_ID, new BuildInput<ControlGroup>(newGroup),
+                    saveNew = CnAElementFactory.getInstance().saveNew(group, ControlGroup.TYPE_ID,
+                            new BuildInput<ControlGroup>(newGroup),
                             false /* do not notify single elements */,
                             false /* do not inherit icon */);
                     saveNew.setTitel(b.getId() + " " + b.getTitel());
@@ -221,27 +228,30 @@ public class GS2BSITransformService {
         }
     }
 	
-	private void saveItems(List<CnATreeElement> elements, IProgressObserver monitor){
-	    SaveElement<CnATreeElement> command = null;
-	    boolean errorOccured = false;
-        if(elements.size() > 0) {
-            for(CnATreeElement e : elements){
-                monitor.setTaskName(getText(numberProcessed,e.getTitle()));
-                if(e.getParent().canContain(e)){
+    private void saveItems(List<CnATreeElement> elements, IProgressObserver monitor) {
+        SaveElement<CnATreeElement> command = null;
+        boolean errorOccured = false;
+        if (elements.size() > 0) {
+            for (CnATreeElement e : elements) {
+                monitor.setTaskName(getText(numberProcessed, e.getTitle()));
+                if (e.getParent().canContain(e)) {
                     if (getLog().isDebugEnabled()) {
-                        getLog().debug("Creating element,  UUID: " + e.getUuid() + ", title: " + e.getTitle());    //$NON-NLS-1$ //$NON-NLS-2$
+                        getLog().debug("Creating element,  UUID: " + e.getUuid() + ", title: " //$NON-NLS-1$ //$NON-NLS-2$
+                                + e.getTitle());
                     }
                 } else {
-                    getLog().warn("trying to drop an item into a group that is unable to accept this type of items");
+                    getLog().warn(
+                            "trying to drop an item into a group that is unable to accept this type of items");
                     errorOccured = true;
-                }   
-                if(!errorOccured){
+                }
+                if (!errorOccured) {
                     try {
                         HashSet<Permission> newperms = new HashSet<Permission>();
-                        newperms.add(Permission.createPermission(e, getAuthService().getUsername(), true, true));
+                        newperms.add(Permission.createPermission(e, getAuthService().getUsername(),
+                                true, true));
                         e.setPermissions(newperms);
                         command = new SaveElement<>(e);
-                        if(e instanceof IncidentScenario){
+                        if (e instanceof IncidentScenario) {
                             isScenario = true;
                         }
                         command = getCommandService().executeCommand(command);
@@ -250,8 +260,10 @@ public class GS2BSITransformService {
                         throw new RuntimeException("Error while inserting control", ce); //$NON-NLS-1$
                     }
                     e = command.getElement();
-                    RetrieveInfo info = new RetrieveInfo().setParent(true).setChildren(true).setProperties(true);
-                    LoadElementByUuid<CnATreeElement> c2 = new LoadElementByUuid<>(e.getUuid(), info);
+                    RetrieveInfo info = new RetrieveInfo().setParent(true).setChildren(true)
+                            .setProperties(true);
+                    LoadElementByUuid<CnATreeElement> c2 = new LoadElementByUuid<>(e.getUuid(),
+                            info);
                     try {
                         c2 = ServiceFactory.lookupCommandService().executeCommand(c2);
                         e = c2.getElement();
@@ -261,14 +273,14 @@ public class GS2BSITransformService {
                     } catch (CommandException e1) {
                         getLog().error("Error while loading element", e1);
                     }
-                    CnATreeElement parent =  e.getParent();
+                    CnATreeElement parent = e.getParent();
                     parent.addChild(e);
                     e.setParentAndScope(parent);
-                    modelUpdater.childAdded((Group<?>)parent, e);
+                    modelUpdater.childAdded((Group<?>) parent, e);
                     monitor.processed(1);
                     numberProcessed++;
                 }
-            }               
+            }
         }
 	}
 	
@@ -281,15 +293,16 @@ public class GS2BSITransformService {
 	}
 	
 	private Control generateControl(Massnahme m, CnATreeElement parent){
-		Control c = new Control(parent);
-		c.setTitel(m.getId() + " " + m.getTitel());
-		try {
-			String description = GSScraperUtil.getInstance().getModel().getMassnahmeHtml(m.getUrl(), m.getStand());
-			c.setDescription(description);
-		} catch (GSServiceException e) {
-			getLog().error("Error while transforming massnahme into control", e);
-		}
-		return c;
+        Control c = new Control(parent);
+        c.setTitel(m.getId() + " " + m.getTitel());
+        try {
+            String description = GSScraperUtil.getInstance().getModel().getMassnahmeHtml(m.getUrl(),
+                    m.getStand());
+            c.setDescription(description);
+        } catch (GSServiceException e) {
+            getLog().error("Error while transforming massnahme into control", e);
+        }
+        return c;
 	}
 	
 	private IncidentScenario generateScenario(Gefaehrdung g, Group<?> parent){

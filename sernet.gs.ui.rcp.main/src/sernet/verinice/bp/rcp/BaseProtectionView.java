@@ -161,7 +161,7 @@ public class BaseProtectionView extends RightsEnabledView
     
     protected void initView(Composite parent) {
         IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
-        if(CnAElementFactory.isBpModelLoaded()) {
+        if (CnAElementFactory.isBpModelLoaded()) {
             CnAElementFactory.getInstance().reloadModelFromDatabase();
         }
              
@@ -313,13 +313,15 @@ public class BaseProtectionView extends RightsEnabledView
         
         makeExpandAndCollapseActions();
      
-        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), Messages.BaseProtectionView_BulkEdit);
+        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), 
+                Messages.BaseProtectionView_BulkEdit);
               
         BSIModelViewDropListener bsiDropAdapter;
         metaDropAdapter = new MetaDropAdapter(viewer);
         bsiDropAdapter = new BSIModelViewDropListener(viewer);
         BbModelingDropPerformer modelingDropPerformer = new BbModelingDropPerformer();
-        GsCatalogModelingDropPerformer gsCatalogModelingDropPerformer = new GsCatalogModelingDropPerformer();
+        GsCatalogModelingDropPerformer gsCatalogModelingDropPerformer = 
+                new GsCatalogModelingDropPerformer();
         metaDropAdapter.addAdapter(modelingDropPerformer);
         metaDropAdapter.addAdapter(bsiDropAdapter);
         metaDropAdapter.addAdapter(gsCatalogModelingDropPerformer);

@@ -47,6 +47,7 @@ public class MessageDialogWithTogglePreferencePage extends FieldEditorPreference
      */
     @Override
     public void init(IWorkbench arg0) {
+        //nothing to do
     }
 
     /* (non-Javadoc)
@@ -59,52 +60,83 @@ public class MessageDialogWithTogglePreferencePage extends FieldEditorPreference
         boolean isStandalone = opmode
                 .equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
         
-        BooleanFieldEditor infoDialogTransformCatalogItems = new BooleanFieldEditor(PreferenceConstants.INFO_CONTROLS_ADDED, Messages.getString("GeneralSettingsPage.InfoControlsAdded"), //$NON-NLS-1$
+        BooleanFieldEditor infoDialogTransformCatalogItems = new BooleanFieldEditor(
+                PreferenceConstants.INFO_CONTROLS_ADDED, 
+                Messages.getString("GeneralSettingsPage.InfoControlsAdded"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(infoDialogTransformCatalogItems);
 
-        BooleanFieldEditor infoDialogTransformCatalog2ModernizedGsItems = new BooleanFieldEditor(PreferenceConstants.INFO_CONTROLS_TRANSFORMED_TO_MODERNIZED_GS, Messages.getString("GeneralSettingsPage.InfoControlsAdded"), //$NON-NLS-1$
+        BooleanFieldEditor infoDialogTransformCatalog2ModernizedGsItems = new BooleanFieldEditor(
+                PreferenceConstants.INFO_CONTROLS_TRANSFORMED_TO_MODERNIZED_GS, 
+                Messages.getString("GeneralSettingsPage.InfoControlsAdded"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(infoDialogTransformCatalog2ModernizedGsItems);
 
-        BooleanFieldEditor infoDialogCopy = new BooleanFieldEditor(PreferenceConstants.INFO_ELEMENTS_COPIED, Messages.getString("GeneralSettingsPage.InfoCopy"), //$NON-NLS-1$
+        BooleanFieldEditor infoDialogCopy = new BooleanFieldEditor(
+                PreferenceConstants.INFO_ELEMENTS_COPIED, 
+                Messages.getString("GeneralSettingsPage.InfoCopy"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(infoDialogCopy);
 
-        BooleanFieldEditor infoDialogCut = new BooleanFieldEditor(PreferenceConstants.INFO_ELEMENTS_CUT, Messages.getString("GeneralSettingsPage.InfoCut"), //$NON-NLS-1$
+        BooleanFieldEditor infoDialogCut = new BooleanFieldEditor(
+                PreferenceConstants.INFO_ELEMENTS_CUT, 
+                Messages.getString("GeneralSettingsPage.InfoCut"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(infoDialogCut);
         
-        BooleanFieldEditor infoDialogProcess = new BooleanFieldEditor(PreferenceConstants.INFO_PROCESSES_STARTED, Messages.getString("GeneralSettingsPage.InfoProcess"), //$NON-NLS-1$
+        BooleanFieldEditor infoDialogProcess = new BooleanFieldEditor(
+                PreferenceConstants.INFO_PROCESSES_STARTED, 
+                Messages.getString("GeneralSettingsPage.InfoProcess"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(infoDialogProcess);
         
-        BooleanFieldEditor infoDialogLdapImport = new BooleanFieldEditor(PreferenceConstants.INFO_IMPORT_LDAP, Messages.getString("GeneralSettingsPage.InfoLdapImport"), //$NON-NLS-1$
+        BooleanFieldEditor infoDialogLdapImport = new BooleanFieldEditor(
+                PreferenceConstants.INFO_IMPORT_LDAP, 
+                Messages.getString("GeneralSettingsPage.InfoLdapImport"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(infoDialogLdapImport);
         
-        BooleanFieldEditor infoDialogStatusDerivation = new BooleanFieldEditor(PreferenceConstants.INFO_STATUS_DERIVED, Messages.getString("GeneralSettingsPage.InfoDerivationStatus"), getFieldEditorParent()); //$NON-NLS-1$
+        BooleanFieldEditor infoDialogStatusDerivation = new BooleanFieldEditor(
+                PreferenceConstants.INFO_STATUS_DERIVED, 
+                Messages.getString("GeneralSettingsPage.InfoDerivationStatus"),  //$NON-NLS-1$
+                getFieldEditorParent());
         addField(infoDialogStatusDerivation);
         
-        BooleanFieldEditor switchPerspectiveIsmView = new BooleanFieldEditor(PreferenceConstants.getDontAskBeforeSwitch(ISMView.class), Messages.getString("GeneralSettingsPage.SwitchPerspectiveIsm"), //$NON-NLS-1$
+        BooleanFieldEditor switchPerspectiveIsmView = new BooleanFieldEditor(
+                PreferenceConstants.getDontAskBeforeSwitch(ISMView.class), 
+                Messages.getString("GeneralSettingsPage.SwitchPerspectiveIsm"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(switchPerspectiveIsmView);
 
-        BooleanFieldEditor switchPerspectiveCatalogView = new BooleanFieldEditor(PreferenceConstants.getDontAskBeforeSwitch(CatalogView.class), Messages.getString("GeneralSettingsPage.SwitchPerspectiveCatalog"), //$NON-NLS-1$
+        BooleanFieldEditor switchPerspectiveCatalogView = new BooleanFieldEditor(
+                PreferenceConstants.getDontAskBeforeSwitch(CatalogView.class), 
+                Messages.getString("GeneralSettingsPage.SwitchPerspectiveCatalog"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(switchPerspectiveCatalogView);
         
-        BooleanFieldEditor showValidationReportWarning = new BooleanFieldEditor(PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING, Messages.getString("GeneralSettingsPage.ShowValidationReportWarning"), getFieldEditorParent()); //$NON-NLS-1$
+        BooleanFieldEditor showValidationReportWarning = new BooleanFieldEditor(
+                PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING, 
+                Messages.getString("GeneralSettingsPage.ShowValidationReportWarning"), //$NON-NLS-1$ 
+                getFieldEditorParent()); 
         addField(showValidationReportWarning);
         
-        BooleanFieldEditor showValidationGsmProcessWarning = new BooleanFieldEditor(PreferenceConstants.INFO_PROCESS_VALIDATE, Messages.getString("GeneralSettingsPage.ShowValidationProcessWarning"), getFieldEditorParent()); //$NON-NLS-1$
+        BooleanFieldEditor showValidationGsmProcessWarning = new BooleanFieldEditor(
+                PreferenceConstants.INFO_PROCESS_VALIDATE, 
+                Messages.getString("GeneralSettingsPage.ShowValidationProcessWarning"), //$NON-NLS-1$
+                getFieldEditorParent());
         addField(showValidationGsmProcessWarning);
         
-        BooleanFieldEditor infoDialogSearchElementNotFound = new BooleanFieldEditor(PreferenceConstants.INFO_SEARCH_ELEMENT_NOT_FOUND, Messages.getString("GeneralSettingsPage.SearchElementNotFound"), getFieldEditorParent()); //$NON-NLS-1$
+        BooleanFieldEditor infoDialogSearchElementNotFound = new BooleanFieldEditor(
+                PreferenceConstants.INFO_SEARCH_ELEMENT_NOT_FOUND, 
+                Messages.getString("GeneralSettingsPage.SearchElementNotFound"), //$NON-NLS-1$
+                getFieldEditorParent());
         addField(infoDialogSearchElementNotFound);
         
         if(isStandalone){
-            BooleanFieldEditor updateNewsDialog = new BooleanFieldEditor(PreferenceConstants.SHOW_UPDATE_NEWS_DIALOG, Messages.getString("GeneralSettingsPage.ShowUpdateNewsDialog"), getFieldEditorParent()); //$NON-NLS-1$
+            BooleanFieldEditor updateNewsDialog = new BooleanFieldEditor(
+                    PreferenceConstants.SHOW_UPDATE_NEWS_DIALOG, 
+                    Messages.getString("GeneralSettingsPage.ShowUpdateNewsDialog"), //$NON-NLS-1$
+                    getFieldEditorParent()); 
             addField(updateNewsDialog);
         }
     }

@@ -76,8 +76,6 @@ import sernet.verinice.model.iso27k.Group;
  * @author Urs Zeidler - uz[at]sernet.de
  */
 public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabledUserInteraction {
-    // TODO : GsCatalogModelingDropPerformer and BbModelingDropPerformer
-    // share a lot in common could have a common class. Also other DropPerformer.
 
     /**
      * Strategy implementation for the {@link GS2BSITransformOperation}.
@@ -95,21 +93,23 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
         public void transformElement(Group<?> group, Object item, List<CnATreeElement> elements) {
             if (item instanceof Baustein) {
                 Baustein b = (Baustein) item;
-                String titel = b.getId() + " " + b.getTitel();//$NON-NLS-1$
+                String title = b.getId() + " " + b.getTitel();//$NON-NLS-1$
                 if (group instanceof BpThreatGroup) {
-                    Group<?> saveGroup = createGroup(group, titel, BpThreatGroup.class, BpThreatGroup.TYPE_ID);
+                    Group<?> saveGroup = createGroup(group, title, 
+                            BpThreatGroup.class, BpThreatGroup.TYPE_ID);
                     for (Gefaehrdung g : b.getGefaehrdungen()) {
                         transformGefaerdung(saveGroup, elements, g);
                     }
                 } else if (group instanceof SafeguardGroup) {
-                    Group<?> saveGroup = createGroup(group, titel, SafeguardGroup.class, SafeguardGroup.TYPE_ID);
+                    Group<?> saveGroup = createGroup(group, title, 
+                            SafeguardGroup.class, SafeguardGroup.TYPE_ID);
                     for (Massnahme m : b.getMassnahmen()) {
-                        transformMaßnahme(saveGroup, elements, m);
+                        transformMassnahme(saveGroup, elements, m);
                     }
                 }
             } else if (item instanceof Massnahme) {
                 Massnahme m = (Massnahme) item;
-                transformMaßnahme(group, elements, m);
+                transformMassnahme(group, elements, m);
             } else if (item instanceof Gefaehrdung) {
                 Gefaehrdung g = (Gefaehrdung) item;
                 transformGefaerdung(group, elements, g);
@@ -120,20 +120,20 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
          * Create a subgroup for the transformed elements.
          * 
          * @param container - the group the created group is added to
-         * @param titel the title of the created group
+         * @param title the title of the created group
          * @param elementClass - the class of the container 
          * @param typeId - the type id 
          * @return the created container
          */
-        private Group<?> createGroup(Group<?> container, String titel, Class<? extends Group<?>> elementClass, String typeId) {
+        private Group<?> createGroup(Group<?> container, String title, Class<? extends Group<?>> elementClass, String typeId) {
             try {
                 Group<?> saveNew = CnAElementHome.getInstance().save(container, elementClass, typeId);
-                saveNew.setTitel(titel);
+                saveNew.setTitel(title);
                 CnAElementHome.getInstance().updateEntity(saveNew);
                 CnAElementFactory.getModel(container).childAdded(container, saveNew);
                 return saveNew;
             } catch (CommandException e) {
-                throw new RuntimeCommandException("Error while creating/saving Group: " + titel, e);
+                throw new RuntimeCommandException("Error while creating/saving Group: " + title, e);
             }
         }
 
@@ -144,15 +144,15 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
          *            - the target group
          * @param elements
          *            - the list of transformed objects
-         * @param g
+         * @param gefaerdung
          *            - the source object
          */
-        private void transformGefaerdung(Group<?> group, List<CnATreeElement> elements, Gefaehrdung g) {
+        private void transformGefaerdung(Group<?> group, List<CnATreeElement> elements, Gefaehrdung gefaerdung) {
             BpThreat bpThreat = new BpThreat(group);
 //            bpThreat.setIdentifier(g.getId()); // TODO: maybe BpThreat will return identifier + title as getTitle later like Safeguard does
-            bpThreat.setTitel(g.getId() + " "+ g.getTitel()); //$NON-NLS-1$
+            bpThreat.setTitel(gefaerdung.getId() + " " + gefaerdung.getTitel()); //$NON-NLS-1$
             try {
-                String description = HtmlWriter.getHtml(g);
+                String description = HtmlWriter.getHtml(gefaerdung);
                 bpThreat.setObjectBrowserDescription(description);
             } catch (GSServiceException e) {
                 log.error("Error setting description for safeguard", e); //$NON-NLS-1$
@@ -167,15 +167,15 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
          *            - the target group
          * @param elements
          *            - the list of transformed objects
-         * @param m
+         * @param massnahme
          *            - the source object
          */
-        private void transformMaßnahme(Group<?> group, List<CnATreeElement> elements, Massnahme m) {
+        private void transformMassnahme(Group<?> group, List<CnATreeElement> elements, Massnahme massnahme) {
             Safeguard safeguard = new Safeguard(group);
-            safeguard.setIdentifier(m.getId());
-            safeguard.setTitle(m.getTitel());
+            safeguard.setIdentifier(massnahme.getId());
+            safeguard.setTitle(massnahme.getTitel());
             try {
-                String description = HtmlWriter.getHtml(m);
+                String description = HtmlWriter.getHtml(massnahme);
                 safeguard.setObjectBrowserDescription(description);
             } catch (GSServiceException e) {
                 log.error("Error setting description for safeguard", e); //$NON-NLS-1$
@@ -230,15 +230,18 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
             return;
         }
         try {
-            GS2BSITransformOperation operation = new GS2BSITransformOperation(group, draggedModules, new GsItem2BpTransformer());
+            GS2BSITransformOperation operation = new GS2BSITransformOperation(
+                    group, draggedModules, new GsItem2BpTransformer());
 
             IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
             progressService.run(true, true, operation);
             String message = MessageFormat.format(Messages.GsCatalogModelingDropPerformer_finished_dialog_message,
                     operation.getNumberProcessed(), ((Group<?>) target).getTitle());
             IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-            displayToggleDialog(message, Messages.GsCatalogModelingDropPerformer_finished_dialog_title,
-                    Messages.GsCatalogModelingDropPerformer_finished_dialog_toggle_message, preferenceStore,
+            displayToggleDialog(message, 
+                    Messages.GsCatalogModelingDropPerformer_finished_dialog_title,
+                    Messages.GsCatalogModelingDropPerformer_finished_dialog_toggle_message, 
+                    preferenceStore,
                     PreferenceConstants.INFO_CONTROLS_TRANSFORMED_TO_MODERNIZED_GS);
 
             // Restore old selection in tree
@@ -264,7 +267,8 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
 
     private void showException(ItemTransformException e) {
         final String message = Messages.GsCatalogModelingDropPerformer_exception_dialog_message + e.getMessage();
-        MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), Messages.GsCatalogModelingDropPerformer_exception_dialog_title, message);
+        MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), 
+                Messages.GsCatalogModelingDropPerformer_exception_dialog_title, message);
     }
 
 
@@ -273,7 +277,7 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
      *
      * @param message
      *            - the dialog message
-     * @param titel
+     * @param title
      *            - the title of the dialog
      * @param toggleMessage
      *            - the message explain he toggle function
@@ -282,10 +286,13 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
      * @param preferenceConstant
      *            - the preference identifier
      */
-    private void displayToggleDialog(String message, String titel, String toggleMessage, IPreferenceStore preferenceStore, String preferenceConstant) {
+    private void displayToggleDialog(String message, String title, String toggleMessage, 
+            IPreferenceStore preferenceStore, String preferenceConstant) {
         boolean dontShow = preferenceStore.getBoolean(preferenceConstant);
         if (!dontShow) {
-            MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(), titel, message, toggleMessage, dontShow, preferenceStore, preferenceConstant);
+            MessageDialogWithToggle dialog = MessageDialogWithToggle.openInformation(
+                    PlatformUI.getWorkbench().getDisplay().getActiveShell(), title, message, 
+                    toggleMessage, dontShow, preferenceStore, preferenceConstant);
             preferenceStore.setValue(preferenceConstant, dialog.getToggleState());
         }
     }
@@ -313,17 +320,14 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
     public boolean validateDrop(Object rawTarget, int operation, TransferData transferData) {
         if (!checkRights()) {
             log.debug("CheckRights() failed, return false");//$NON-NLS-1$
-            isActive = false;
-
-        } else {
-            if (!getTransfer().isSupportedType(transferData)) {
-                log.debug("Unsupported type of TransferData: " + transferData.type);//$NON-NLS-1$
-                this.targetElement = null;
-            } else {
-                this.targetElement = getTargetElement(rawTarget);
-            }
-            isActive = isTargetElement();
+            return false;
         }
+        if (!getTransfer().isSupportedType(transferData)) {
+            log.debug("Unsupported type of TransferData: " + transferData.type);//$NON-NLS-1$
+            return false;
+        }
+        this.targetElement = getTargetElement(rawTarget);
+        isActive = isTargetElement();
         return isActive;
     }
 
@@ -340,7 +344,8 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
      */
     @Override
     public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext.get(
+                VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 

@@ -60,26 +60,32 @@ public class GS2BSITransformOperation implements IRunnableWithProgress {
         this.data = data;
     }
 
-    @SuppressWarnings("rawtypes")
-    public GS2BSITransformOperation(Group selectedGroup, Object data, ItemTransformer transformer) {
+    public GS2BSITransformOperation(Group<?> selectedGroup, Object data,
+            ItemTransformer transformer) {
         this.selectedGroup = selectedGroup;
         modelUpdater = new RcpModelUpdater();
         this.data = data;
         this.transformer = transformer;
     }
-
 	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	public void run(IProgressMonitor monitor)  {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.
+     * runtime.IProgressMonitor)
+     */
+    public void run(IProgressMonitor monitor) {
         IProgressObserver progressObserver = new RcpProgressObserver(monitor);
-        service = this.transformer == null ? new GS2BSITransformService(progressObserver, modelUpdater, this.selectedGroup, data)
-                : new GS2BSITransformService(progressObserver, modelUpdater, this.selectedGroup, data, transformer);
+        service = this.transformer == null
+                ? new GS2BSITransformService(progressObserver, modelUpdater, this.selectedGroup,
+                        data)
+                : new GS2BSITransformService(progressObserver, modelUpdater, this.selectedGroup,
+                        data, transformer);
         Activator.inheritVeriniceContextState();
         service.run();
         isScenario = service.isScenario();
-	}
+    }
 
 	/**
 	 * @return
