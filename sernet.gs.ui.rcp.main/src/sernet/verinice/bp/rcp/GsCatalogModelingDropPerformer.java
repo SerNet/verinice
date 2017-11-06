@@ -275,11 +275,11 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
     }
 
     private void showException(ItemTransformException e) {
-        final String message = Messages.GsCatalogModelingDropPerformer_exception_dialog_message + e.getMessage();
-        MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(), 
+        final String message = Messages.GsCatalogModelingDropPerformer_exception_dialog_message
+                + e.getMessage();
+        MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
                 Messages.GsCatalogModelingDropPerformer_exception_dialog_title, message);
     }
-
 
     /**
      * Displays a toggle dialog when active after the transform process is done.
