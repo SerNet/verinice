@@ -119,15 +119,21 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
         /**
          * Create a subgroup for the transformed elements.
          * 
-         * @param container - the group the created group is added to
-         * @param title the title of the created group
-         * @param elementClass - the class of the container 
-         * @param typeId - the type id 
+         * @param container
+         *            - the group the created group is added to
+         * @param title
+         *            the title of the created group
+         * @param elementClass
+         *            - the class of the container
+         * @param typeId
+         *            - the type id
          * @return the created container
          */
-        private Group<?> createGroup(Group<?> container, String title, Class<? extends Group<?>> elementClass, String typeId) {
+        private Group<?> createGroup(Group<?> container, String title,
+                Class<? extends Group<?>> elementClass, String typeId) {
             try {
-                Group<?> saveNew = CnAElementHome.getInstance().save(container, elementClass, typeId);
+                Group<?> saveNew = CnAElementHome.getInstance().save(container, elementClass,
+                        typeId);
                 saveNew.setTitel(title);
                 CnAElementHome.getInstance().updateEntity(saveNew);
                 CnAElementFactory.getModel(container).childAdded(container, saveNew);
@@ -212,7 +218,8 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
         return true;
     }
 
-    private void transformDroppedElements(List<IGSModel> draggedModules, CnATreeElement target, Viewer viewer) {
+    private void transformDroppedElements(List<IGSModel> draggedModules, CnATreeElement target,
+            Viewer viewer) {
         if (!isActive()) {
             return;
         }
@@ -230,17 +237,18 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
             return;
         }
         try {
-            GS2BSITransformOperation operation = new GS2BSITransformOperation(
-                    group, draggedModules, new GsItem2BpTransformer());
+            GS2BSITransformOperation operation = new GS2BSITransformOperation(group, draggedModules,
+                    new GsItem2BpTransformer());
 
             IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
             progressService.run(true, true, operation);
-            String message = MessageFormat.format(Messages.GsCatalogModelingDropPerformer_finished_dialog_message,
+            String message = MessageFormat.format(
+                    Messages.GsCatalogModelingDropPerformer_finished_dialog_message,
                     operation.getNumberProcessed(), ((Group<?>) target).getTitle());
             IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-            displayToggleDialog(message, 
+            displayToggleDialog(message,
                     Messages.GsCatalogModelingDropPerformer_finished_dialog_title,
-                    Messages.GsCatalogModelingDropPerformer_finished_dialog_toggle_message, 
+                    Messages.GsCatalogModelingDropPerformer_finished_dialog_toggle_message,
                     preferenceStore,
                     PreferenceConstants.INFO_CONTROLS_TRANSFORMED_TO_MODERNIZED_GS);
 
@@ -257,7 +265,8 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
             if (t instanceof ItemTransformException) {
                 showException((ItemTransformException) t);
             } else {
-                ExceptionUtil.log(e, Messages.GsCatalogModelingDropPerformer_transform_error_message);
+                ExceptionUtil.log(e,
+                        Messages.GsCatalogModelingDropPerformer_transform_error_message);
             }
         } catch (Exception e) {
             log.error(Messages.GsCatalogModelingDropPerformer_transform_error_message, e);
