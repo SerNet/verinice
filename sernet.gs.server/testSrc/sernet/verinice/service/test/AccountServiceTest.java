@@ -3,7 +3,6 @@ package sernet.verinice.service.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.Serializable;
@@ -17,11 +16,9 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,11 +39,8 @@ import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.account.AccountSearchParameter;
 import sernet.verinice.service.account.AccountSearchParameterFactory;
 import sernet.verinice.service.commands.CreateConfiguration;
-import sernet.verinice.service.commands.LoadElementByUuid;
-import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SaveConfiguration;
 import sernet.verinice.service.commands.UpdateElementEntity;
-import sernet.verinice.service.commands.crud.PrepareObjectWithAccountDataForDeletion;
 import sernet.verinice.service.test.helper.util.BFSTravers;
 import sernet.verinice.service.test.helper.util.CnATreeTraverser;
 
@@ -385,31 +379,6 @@ public class AccountServiceTest extends CommandServiceProvider {
         createAccountGroups();
     }
 
-    @After
-    public void tearDown() throws CommandException {
-//        removeAccountsStartingWith(getLoginName());
-//        removeAccountsStartingWith(LOGIN_A);
-//        removeAccountsStartingWith(LOGIN_B);
-//        removeAccountsStartingWith(LOGIN_C);
-//        removeAccountsStartingWith(LOGIN_D);
-//        removeTestOrganization(organization);
-//        removeAccountGroups();
-    }
-
-    private void removeAccountGroups() {
-        tryRemovingAccountGroups(accountGroupA);
-        tryRemovingAccountGroups(accountGroupB);
-        tryRemovingAccountGroups(accountGroupRandom);
-    }
-
-    private void tryRemovingAccountGroups(AccountGroup ag) {
-        try {
-            accountService.deleteAccountGroup(ag);
-        } catch (HibernateOptimisticLockingFailureException ex) {
-            LOG.info("nothing to do, group are already deleted: " + ag.getName());
-        }
-    }
-
     private Organization createTestOrganization() throws CommandException {
         Organization organization = createOrganization();
         uuidList.add(organization.getUuid());
@@ -499,19 +468,6 @@ public class AccountServiceTest extends CommandServiceProvider {
 
     private String getFamilyName() {
         return "Duck";
-    }
-
-    private void removeTestOrganization(Organization organization) throws CommandException {
-        PrepareObjectWithAccountDataForDeletion removeAccount = new PrepareObjectWithAccountDataForDeletion(organization);
-        commandService.executeCommand(removeAccount);
-        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(organization);
-        commandService.executeCommand(removeCommand);
-        for (String uuid : uuidList) {
-            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid);
-            command = commandService.executeCommand(command);
-            CnATreeElement element = command.getElement();
-            assertNull("Organization was not deleted.", element);
-        }
     }
 
     private void createAccountGroups() {
