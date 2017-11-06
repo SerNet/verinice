@@ -22,6 +22,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.iso27k.service.GS2BSITransformService;
+import sernet.verinice.iso27k.service.GS2BSITransformService.ItemTransformer;
 import sernet.verinice.iso27k.service.IModelUpdater;
 import sernet.verinice.iso27k.service.IProgressObserver;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
@@ -49,25 +50,42 @@ public class GS2BSITransformOperation implements IRunnableWithProgress {
 	private boolean isScenario = false;
 	
 	private Object data;
+	
+	private ItemTransformer transformer;
 
-	@SuppressWarnings("rawtypes")
-	public GS2BSITransformOperation(Group selectedGroup, Object data) {
-		this.selectedGroup = selectedGroup;	
-		modelUpdater = new RcpModelUpdater();
-		this.data = data;
-	}
+    @SuppressWarnings("rawtypes")
+    public GS2BSITransformOperation(Group selectedGroup, Object data) {
+        this.selectedGroup = selectedGroup;
+        modelUpdater = new RcpModelUpdater();
+        this.data = data;
+    }
+
+    public GS2BSITransformOperation(Group<?> selectedGroup, Object data,
+            ItemTransformer transformer) {
+        this.selectedGroup = selectedGroup;
+        modelUpdater = new RcpModelUpdater();
+        this.data = data;
+        this.transformer = transformer;
+    }
 	
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	public void run(IProgressMonitor monitor)  {
-	    IProgressObserver progressObserver = new RcpProgressObserver(monitor);
-		service = new GS2BSITransformService(progressObserver,modelUpdater,this.selectedGroup, data);
-		Activator.inheritVeriniceContextState();
-		service.run();
-		isScenario = service.isScenario();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.
+     * runtime.IProgressMonitor)
+     */
+    public void run(IProgressMonitor monitor) {
+        IProgressObserver progressObserver = new RcpProgressObserver(monitor);
+        service = this.transformer == null
+                ? new GS2BSITransformService(progressObserver, modelUpdater, this.selectedGroup,
+                        data)
+                : new GS2BSITransformService(progressObserver, modelUpdater, this.selectedGroup,
+                        data, transformer);
+        Activator.inheritVeriniceContextState();
+        service.run();
+        isScenario = service.isScenario();
+    }
 
 	/**
 	 * @return

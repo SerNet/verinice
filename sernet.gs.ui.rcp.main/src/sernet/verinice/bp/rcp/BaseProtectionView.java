@@ -62,6 +62,7 @@ import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
@@ -160,7 +161,7 @@ public class BaseProtectionView extends RightsEnabledView
     
     protected void initView(Composite parent) {
         IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
-        if(CnAElementFactory.getInstance().isBpModelLoaded()) {
+        if (CnAElementFactory.isBpModelLoaded()) {
             CnAElementFactory.getInstance().reloadModelFromDatabase();
         }
              
@@ -275,12 +276,12 @@ public class BaseProtectionView extends RightsEnabledView
     
     private void hookDndListeners() {
         Transfer[] dragTypes = new Transfer[] { BaseProtectionElementTransfer.getInstance() };
-        Transfer[] dropTypes = new Transfer[] { BaseProtectionElementTransfer.getInstance(),
-                BaseProtectionModelingTransfer.getInstance() };
+        Transfer[] dropTypes = new Transfer[] { IGSModelElementTransfer.getInstance(),
+                BaseProtectionElementTransfer.getInstance(),
+                BaseProtectionModelingTransfer.getInstance()};
 
         viewer.addDragSupport(operations, dragTypes, new BSIModelViewDragListener(viewer));
         viewer.addDropSupport(operations, dropTypes, metaDropAdapter);
-
     }
      
     protected void fillContextMenu(IMenuManager manager) {
@@ -312,14 +313,18 @@ public class BaseProtectionView extends RightsEnabledView
         
         makeExpandAndCollapseActions();
      
-        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), Messages.BaseProtectionView_BulkEdit);
+        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), 
+                Messages.BaseProtectionView_BulkEdit);
               
         BSIModelViewDropListener bsiDropAdapter;
         metaDropAdapter = new MetaDropAdapter(viewer);
         bsiDropAdapter = new BSIModelViewDropListener(viewer);
         BbModelingDropPerformer modelingDropPerformer = new BbModelingDropPerformer();
+        GsCatalogModelingDropPerformer gsCatalogModelingDropPerformer = 
+                new GsCatalogModelingDropPerformer();
         metaDropAdapter.addAdapter(modelingDropPerformer);
         metaDropAdapter.addAdapter(bsiDropAdapter);
+        metaDropAdapter.addAdapter(gsCatalogModelingDropPerformer);
         
         linkWithEditorAction = new Action(Messages.BaseProtectionView_LinkWithEditor, IAction.AS_CHECK_BOX) {
             @Override
