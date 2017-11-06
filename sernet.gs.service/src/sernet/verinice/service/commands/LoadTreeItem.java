@@ -71,27 +71,29 @@ public class LoadTreeItem extends GenericCommand {
 		this.parameter = parameter;
 	}
 
-	@Override
+    @Override
     public void execute() {
-	    IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
-	    // one select with joins specified in RetrieveInfo
-        element = dao.findByUuid(uuid,ri);
+        IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
+        // one select with joins specified in RetrieveInfo
+        element = dao.findByUuid(uuid, ri);
         ElementFilter.filterChildrenOfElement(element, parameter);
-        
+
         hasChildrenMap = new Hashtable<String, Boolean>();
         Set<CnATreeElement> children = element.getChildren();
-        hasChildrenMap.put(element.getUuid(), (children!=null && children.size()>0));
-        if(children!=null) {
+        hasChildrenMap.put(element.getUuid(), (children != null && children.size() > 0));
+        if (children != null) {
             for (CnATreeElement child : children) {
                 Set<CnATreeElement> grandchildren = child.getChildren();
-                // calling grandchildren.size() is starting the hibernate initialization of set grandchildren
-                // if grandchildren is set to false in RetrieveInfo
-                hasChildrenMap.put(child.getUuid(), (grandchildren!=null && grandchildren.size()>0));
+                // calling grandchildren.size() is starting the hibernate
+                // initialization of set grand children
+                // if grand children is set to false in RetrieveInfo
+                hasChildrenMap.put(child.getUuid(),
+                        (grandchildren != null && grandchildren.size() > 0));
             }
         }
-	}
-	
-	/**
+    }
+
+    /**
      * @return the element
      */
     public CnATreeElement getElement() {
@@ -109,7 +111,5 @@ public class LoadTreeItem extends GenericCommand {
     public Map<String, Boolean> getHasChildrenMap() {
         return hasChildrenMap;
     }
-
-	
 
 }

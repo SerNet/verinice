@@ -123,14 +123,14 @@ public class BaseProtectionView extends RightsEnabledView
     private IModelLoadListener modelLoadListener;
     private IBpModelListener modelUpdateListener;
     private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);   
-    
-    private Action doubleClickAction; 
-    private Action linkWithEditorAction; 
-    private ShowBulkEditAction bulkEditAction;     
-    private ExpandAction expandAction; 
-    private Action expandAllAction; 
-    private CollapseAction collapseAction;   
-    private Action collapseAllAction; 
+
+    private Action doubleClickAction;
+    private Action linkWithEditorAction;
+    private ShowBulkEditAction bulkEditAction;
+    private ExpandAction expandAction;
+    private Action expandAllAction;
+    private CollapseAction collapseAction;
+    private Action collapseAllAction;
     private ViewFilterAction filterAction;
     private ShowAccessControlEditAction accessControlEditAction;
     private NaturalizeAction naturalizeAction;
@@ -143,7 +143,7 @@ public class BaseProtectionView extends RightsEnabledView
         super();
         elementManager = new ElementManager();
     }
-   
+
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
      */
@@ -158,7 +158,7 @@ public class BaseProtectionView extends RightsEnabledView
             ExceptionUtil.log(e, Messages.BaseProtectionView_ErrorCreating);
         }
     }
-    
+
     protected void initView(Composite parent) {
         IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
         if (CnAElementFactory.isBpModelLoaded()) {
@@ -205,7 +205,7 @@ public class BaseProtectionView extends RightsEnabledView
                 return status;
             }
         };
-        JobScheduler.scheduleInitJob(initDataJob);      
+        JobScheduler.scheduleInitJob(initDataJob);
     }
 
     protected void initData() { 
@@ -254,11 +254,11 @@ public class BaseProtectionView extends RightsEnabledView
             }
         }
     }
-    
+
     public void setInput(BpModel model) {
         viewer.setInput(model);
     }
-    
+
     private void hookContextMenu() {
         MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
         menuMgr.setRemoveAllWhenShown(true);
@@ -305,7 +305,7 @@ public class BaseProtectionView extends RightsEnabledView
             @Override
             public void run() {
                 if(viewer.getSelection() instanceof IStructuredSelection) {
-                    Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();      
+                    Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
                     EditorFactory.getInstance().updateAndOpenObject(sel);
                 }
             }
@@ -346,7 +346,7 @@ public class BaseProtectionView extends RightsEnabledView
         TypeParameter typeParameter = createTypeParameter();
         TagParameter tagParameter = new TagParameter();
         filterAction = new ViewFilterAction(viewer,
-                "Filter...",
+                "Filter...", //  //$NON-NLS-1$
                 tagParameter,
                 hideEmptyFilter,
                 typeParameter);
