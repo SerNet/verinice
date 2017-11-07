@@ -50,7 +50,6 @@ import sernet.verinice.model.bp.groups.NetworkGroup;
 import sernet.verinice.model.bp.groups.RoomGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.bp.importer.Messages;
 
 /**
  * This tree sorter sorts groups in IT networks regardless of
