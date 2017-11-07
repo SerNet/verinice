@@ -50,6 +50,7 @@ import sernet.verinice.model.bp.groups.NetworkGroup;
 import sernet.verinice.model.bp.groups.RoomGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.bp.importer.Messages;
 
 /**
  * This tree sorter sorts groups in IT networks regardless of
@@ -63,11 +64,14 @@ import sernet.verinice.model.common.CnATreeElement;
 public class BaseProtectionTreeSorter extends ViewerSorter {
     private static Map<String, Integer> typeSortCategoryMap = new HashMap<>();
 
+    //TODO: when the qualifier will be a number (an option) we do not need this anymore
     private static final String HIGH = "HIGH";
+    private static final String HIGH_DE = "HOCH";
     private static final String STANDARD = "STANDARD";
+    private static final String STANDARD_DE = "STANDART";
     private static final String BASIC = "BASIC";
+    private static final String BASIC_DE = "BASIS";
 
-    
     static {
         // Sort order of groups in IT network
         typeSortCategoryMap.put(BusinessProcessGroup.TYPE_ID,10);
@@ -103,9 +107,9 @@ public class BaseProtectionTreeSorter extends ViewerSorter {
     @Override
     public int category(Object element) {
         int category = 0;
-        if(element instanceof CnATreeElement) {
-            Integer mapValue = typeSortCategoryMap.get(((CnATreeElement)element).getTypeId());
-            if(mapValue!=null) {
+        if (element instanceof CnATreeElement) {
+            Integer mapValue = typeSortCategoryMap.get(((CnATreeElement) element).getTypeId());
+            if (mapValue != null) {
                 category = mapValue;
             }
         }
@@ -114,25 +118,28 @@ public class BaseProtectionTreeSorter extends ViewerSorter {
     
     @Override
     public int compare(Viewer viewer, Object o1, Object o2) {
-        int result = super.compare(viewer, o1, o2);
-        if (o1 instanceof Safeguard  && o2 instanceof Safeguard) {
+        int result = 0;
+        if (o1 instanceof Safeguard && o2 instanceof Safeguard) {
             Safeguard sg1 = (Safeguard) o1;
             Safeguard sg2 = (Safeguard) o2;
-            result = quallifierToValue(sg1.getQualifier())-quallifierToValue(sg2.getQualifier());
-        }else if (o1 instanceof BpRequirement && o2 instanceof BpRequirement) {
+            result = quallifierToValue(sg1.getQualifier()) - quallifierToValue(sg2.getQualifier());
+        } else if (o1 instanceof BpRequirement && o2 instanceof BpRequirement) {
             BpRequirement br1 = (BpRequirement) o1;
             BpRequirement br2 = (BpRequirement) o2;
-            result = quallifierToValue(br1.getQualifier())-quallifierToValue(br2.getQualifier());
+            result = quallifierToValue(br1.getQualifier()) - quallifierToValue(br2.getQualifier());
+        }
+        if (result == 0) {
+            result = super.compare(viewer, o1, o2);
         }
         return result;
     }
     
     private int quallifierToValue(String qualifier) {
-        if (BASIC.equals(qualifier)) {
+        if (BASIC.equals(qualifier) || BASIC_DE.equals(qualifier)) {
             return 1;
-        } else if (STANDARD.equals(qualifier)) {
+        } else if (STANDARD.equals(qualifier) || STANDARD_DE.equals(qualifier)) {
             return 2;
-        } else if (HIGH.equals(qualifier)) {
+        } else if (HIGH.equals(qualifier) || HIGH_DE.equals(qualifier)) {
             return 3;
         }
         return 0;
