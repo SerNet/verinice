@@ -19,18 +19,25 @@
  ******************************************************************************/
 package sernet.verinice.rcp.templates;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 
+import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.ApplicationActionBarAdvisor;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnATreeElement.TemplateType;
+import sernet.verinice.service.commands.LoadModelingTemplateSettings;
 
 /**
  * <p>
@@ -70,6 +77,9 @@ import sernet.verinice.model.common.CnATreeElement.TemplateType;
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
  */
 public abstract class MarkTemplateActionDelegate implements IObjectActionDelegate, RightEnabledUserInteraction {
+
+    private static final Logger LOG = Logger.getLogger(ApplicationActionBarAdvisor.class);
+
     /*
      * (non-Javadoc)
      * 
@@ -80,6 +90,9 @@ public abstract class MarkTemplateActionDelegate implements IObjectActionDelegat
     @Override
     public final void selectionChanged(IAction action, ISelection selection) {
         action.setEnabled(checkRights());
+        if (!isModelingTemplateActive()) {
+            return;
+        }
         // Realizes that the action to mark a element as template is greyed out,
         // if it is already template or implementation.
         Object sel = ((IStructuredSelection) selection).getFirstElement();
@@ -107,7 +120,7 @@ public abstract class MarkTemplateActionDelegate implements IObjectActionDelegat
     @Override
     public boolean checkRights() {
         RightsServiceClient service = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
-        return service.isEnabled(getRightID());
+        return isModelingTemplateActive() && service.isEnabled(getRightID());
     }
 
     /*
@@ -120,5 +133,23 @@ public abstract class MarkTemplateActionDelegate implements IObjectActionDelegat
     @Override
     public void setRightID(String rightID) {
         // do nothing
+    }
+
+    private static ICommandService getCommandService() {
+        return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
+    }
+
+    private boolean isModelingTemplateActive() {
+        boolean standalone = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+        if (standalone) {
+            return false;
+        }
+        LoadModelingTemplateSettings modelingTemplateSettings = new LoadModelingTemplateSettings();
+        try {
+            modelingTemplateSettings = getCommandService().executeCommand(modelingTemplateSettings);
+        } catch (CommandException e) {
+            LOG.error("Error while loading modeling template settings", e); //$NON-NLS-1$
+        }
+        return modelingTemplateSettings.isModelingTemplateActive();
     }
 }

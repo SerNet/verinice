@@ -31,7 +31,6 @@ import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.SecurityException;
-import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
@@ -141,33 +140,14 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
                 GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) element;
                 removeFromLists(element.getParent().getDbId(), gef);
             }   
-            
-            /*
-             * Special case the deletion of FinishedRiskAnalysis instances:
-             * Before the instance is deleted itself their children must be
-             * removed manually (otherwise referential integrity is violated and
-             * Hibernate reports an error).
-             * 
-             * Using the children as an array ensure that there won't be a
-             * ConcurrentModificationException while deleting the elements.
-             */
-            for (int i = 0; i < children.length; i++) {
-                if (children[i] instanceof FinishedRiskAnalysis) {
-                    removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
-                } else if (children[i].getEntity() != null && isOrphanEntity(children[i].getEntity())) {
-                    deleteOrphanEntity(children[i].getEntity());
-                    children[i].setEntity(null);
-                }
-            }
-            if (element.getEntity() != null && isOrphanEntity(element.getEntity())) {
-                deleteOrphanEntity(element.getEntity());
-                element.setEntity(null);
-            }
-            
+
+            deleteChildren(children);
+
             if (element instanceof ITVerbund) {
                 removeAllGefaehrdungsUmsetzungen();
             }
 
+            deleteOrphanEntity(element);
             element.remove();
             dao.delete(element);
         } catch (SecurityException e) {
@@ -182,6 +162,28 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         }
     }
 
+    /*
+     * The deletion of children instances: Before the instance is deleted itself
+     * their children must be removed manually (otherwise referential integrity
+     * is violated and Hibernate reports an error).
+     * 
+     * @see CnATreeElement.hbm.xml
+     * 
+     * Using the children as an array ensure that there won't be a
+     * ConcurrentModificationException while deleting the elements.
+     */
+    private void deleteChildren(CnATreeElement[] children) throws CommandException {
+        for (int i = 0; i < children.length; i++) {
+            if (children[i] instanceof FinishedRiskAnalysis) {
+                removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
+            } else if (PropertyLoader.isModelingTemplateActive()) {
+                // deletion of children instances of this children instance
+                deleteChildren(children[i].getChildrenAsArray());
+                deleteOrphanEntity(children[i]);
+            }
+        }
+    }
+
     /**
      * Check the rights for the given elements in the list, which is a recursive
      * call, as children can have children.
@@ -193,8 +195,9 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
             IBaseDao<? super CnATreeElement, Serializable> dao = getDaoFactory().getDAOforTypedElement(cnATreeElement);
             dao.checkRights(cnATreeElement);
             CnATreeElement[] childrenAsArray = cnATreeElement.getChildrenAsArray();
-            if (childrenAsArray.length > 0)
+            if (childrenAsArray.length > 0) {
                 checkRightForSubElements(childrenAsArray);
+            }
         }
     }
 
@@ -274,8 +277,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
 
     private void removeRiskAnalysis(FinishedRiskAnalysis finishedRiskAnalysis) throws CommandException {
         removeChildren(finishedRiskAnalysis);
-        List<FinishedRiskAnalysisLists> list = getRaListDao().
-                findByFinishedRiskAnalysisId(finishedRiskAnalysis.getDbId());
+        List<FinishedRiskAnalysisLists> list = getRaListDao().findByFinishedRiskAnalysisId(finishedRiskAnalysis.getDbId());
         for (FinishedRiskAnalysisLists ra : list) {
             getRaListDao().delete(ra);
         }
@@ -320,22 +322,27 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         }
     }
     
-    private boolean isOrphanEntity(Entity entity) {
-        DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
-        crit.setFetchMode("entity", FetchMode.JOIN);
-        crit.add(Restrictions.eq("entity.dbId", entity.getDbId()));
-        
-        IBaseDao dao = getDaoFactory().getDAOforTypedElement(element);
-        List<CnATreeElement> entities = dao.findByCriteria(crit);
-        return entities.size() > 1 ? false : true;
+    private boolean hasOrphanEntity(CnATreeElement element) {
+        if (PropertyLoader.isModelingTemplateActive()) {
+            if (element.isTemplateOrImplementation()) {
+                DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
+                crit.setFetchMode("entity", FetchMode.JOIN);
+                crit.add(Restrictions.eq("entity.dbId", element.getEntity().getDbId()));
+                IBaseDao<?, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
+                List<?> entities = dao.findByCriteria(crit);
+                return entities.size() > 1 ? false : true;
+            }
+        }
+        return true;
     }
 
-    private void deleteOrphanEntity(Entity entity) {
-        IBaseDao<Entity, Serializable> entityDao = getDaoFactory().getDAO(Entity.class);
-        if (getLog().isInfoEnabled()) {
-            getLog().info("Found and deleted orpahn entity with dbId: " + entity.getDbId());
+    private void deleteOrphanEntity(CnATreeElement element) {
+        if (PropertyLoader.isModelingTemplateActive()) {
+            if (!hasOrphanEntity(element)) {
+                element.removeAllLinks();
+                element.setEntity(null);
+            }
         }
-        entityDao.delete(entity);
     }
 
     /* (non-Javadoc)
