@@ -52,41 +52,6 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.Messages;
 import sernet.verinice.model.common.ElementFilter;
-import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.AssetGroup;
-import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.AuditGroup;
-import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.ControlGroup;
-import sernet.verinice.model.iso27k.Document;
-import sernet.verinice.model.iso27k.DocumentGroup;
-import sernet.verinice.model.iso27k.Evidence;
-import sernet.verinice.model.iso27k.EvidenceGroup;
-import sernet.verinice.model.iso27k.Exception;
-import sernet.verinice.model.iso27k.ExceptionGroup;
-import sernet.verinice.model.iso27k.Finding;
-import sernet.verinice.model.iso27k.FindingGroup;
-import sernet.verinice.model.iso27k.Incident;
-import sernet.verinice.model.iso27k.IncidentGroup;
-import sernet.verinice.model.iso27k.IncidentScenario;
-import sernet.verinice.model.iso27k.IncidentScenarioGroup;
-import sernet.verinice.model.iso27k.Interview;
-import sernet.verinice.model.iso27k.InterviewGroup;
-import sernet.verinice.model.iso27k.PersonGroup;
-import sernet.verinice.model.iso27k.PersonIso;
-import sernet.verinice.model.iso27k.Process;
-import sernet.verinice.model.iso27k.ProcessGroup;
-import sernet.verinice.model.iso27k.Record;
-import sernet.verinice.model.iso27k.RecordGroup;
-import sernet.verinice.model.iso27k.Requirement;
-import sernet.verinice.model.iso27k.RequirementGroup;
-import sernet.verinice.model.iso27k.Response;
-import sernet.verinice.model.iso27k.ResponseGroup;
-import sernet.verinice.model.iso27k.Threat;
-import sernet.verinice.model.iso27k.ThreatGroup;
-import sernet.verinice.model.iso27k.Vulnerability;
-import sernet.verinice.model.iso27k.VulnerabilityGroup;
-import sernet.verinice.model.samt.SamtTopic;
 
 /**
  * A dialog with a form for filtering elements in the views ISMView
@@ -327,11 +292,11 @@ public class ViewFilterDialog extends Dialog {
         this.hideEmpty = hideEmptyCheckbox.getSelection();
         visibleTypes.clear();
         List<Object> typeList = Arrays.asList(viewerType.getCheckedElements());
-        if(typeList.size()>=getTypes().length) {
+        if (typeList.size() >= getTypes().length) {
             visibleTypes.add(ElementFilter.ALL_TYPES);
         } else {
             for (Object object : typeList) {
-                visibleTypes.add((String[]) object);        
+                visibleTypes.add((String[]) object);
             }
         }
         return super.close();
@@ -359,9 +324,6 @@ public class ViewFilterDialog extends Dialog {
     public void setTypes(String[][] types) {
         this.types = types;
     }
-    
-    
-
 }
 
 class CheckStateProvider implements ICheckStateProvider  {
@@ -398,5 +360,4 @@ class CheckStateProvider implements ICheckStateProvider  {
     public boolean isGrayed(Object element) {
         return false;
     }
-    
 }
