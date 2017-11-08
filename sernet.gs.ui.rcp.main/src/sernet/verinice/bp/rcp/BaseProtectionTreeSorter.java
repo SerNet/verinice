@@ -67,7 +67,7 @@ public class BaseProtectionTreeSorter extends ViewerSorter {
     private static final String HIGH = "HIGH";
     private static final String HIGH_DE = "HOCH";
     private static final String STANDARD = "STANDARD";
-    private static final String STANDARD_DE = "STANDART";
+    private static final String STANDARD_DE = "STANDARD";
     private static final String BASIC = "BASIC";
     private static final String BASIC_DE = "BASIS";
 
