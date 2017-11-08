@@ -323,7 +323,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     }
     
     private boolean hasOrphanEntity(CnATreeElement element) {
-        if (element.getEntity() != null) {
+        if (PropertyLoader.isModelingTemplateActive()) {
             if (element.isTemplateOrImplementation()) {
                 DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
                 crit.setFetchMode("entity", FetchMode.JOIN);
@@ -337,7 +337,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     }
 
     private void deleteOrphanEntity(CnATreeElement element) {
-        if (PropertyLoader.isModelingTemplateActive() && element.getEntity() != null) {
+        if (PropertyLoader.isModelingTemplateActive()) {
             if (!hasOrphanEntity(element)) {
                 element.removeAllLinks();
                 element.setEntity(null);
