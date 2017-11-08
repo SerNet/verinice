@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -900,6 +901,7 @@ public class BpImporter {
         if (parent != null) {
             Safeguard safeguard = (Safeguard) createElement(Safeguard.TYPE_ID, 
                     parent, bsiSafeguard.getTitle());
+            updateElement(safeguard);
             safeguard = setSafeguardProperties(bsiSafeguard, 
                     qualifier, lastChange, safeguard);
             
@@ -926,15 +928,7 @@ public class BpImporter {
             ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard, 
             String qualifier, String lastChange, Safeguard safeguard)
                     throws CreateBPElementException {
-        safeguard.setAbbreviation(bsiSafeguard.getIdentifier());
         safeguard.setIdentifier(bsiSafeguard.getIdentifier());
-        String plainDescription = HtmlHelper.getAnyObjectDescription(bsiSafeguard.getTitle(), 1,
-                bsiSafeguard.getDescription().getContent());
-        if (StringUtils.isNotEmpty(plainDescription)) {
-            safeguard.setObjectBrowserDescription(plainDescription);
-        } else {
-            LOG.debug("No description found for:\t" + bsiSafeguard.getTitle());
-        }
         safeguard.setQualifier(qualifier);
         safeguard.setTitle(bsiSafeguard.getTitle());
         safeguard.setLastChange(getBSIDate(lastChange));
@@ -950,6 +944,26 @@ public class BpImporter {
                 safeguard.addResponsibleRole(role);
             }
         }
+        
+        String descriptionTitle = extendTitleForObjectBrowser(
+                safeguard.getTitle(),
+                safeguard.getIdentifier(),
+                safeguard.getResponsibleRoles().iterator(),
+                new CIAWrapper(
+                        safeguard.IsAffectsConfidentiality(),
+                        safeguard.IsAffectsIntegrity(),
+                        safeguard.IsAffectsAvailability()));
+        
+        String plainDescription = HtmlHelper.getAnyObjectDescription(
+                descriptionTitle, 1,
+                bsiSafeguard.getDescription().getContent());
+        if (StringUtils.isNotEmpty(plainDescription)) {
+            safeguard.setObjectBrowserDescription(plainDescription);
+        } else {
+            LOG.debug("No description found for:\t" + bsiSafeguard.getTitle());
+        }
+        
+        
         return safeguard;
     }
 
@@ -1070,10 +1084,6 @@ public class BpImporter {
             veriniceRequirement = (BpRequirement) createElement(
                     BpRequirement.TYPE_ID, parent, bsiRequirement.getTitle());
             veriniceRequirement.setIdentifier(bsiRequirement.getIdentifier());
-            veriniceRequirement.setObjectBrowserDescription(
-                    HtmlHelper.getAnyElementDescription(
-                    bsiRequirement.getTitle(), -1, -1 ,-1 ,
-                    bsiRequirement.getDescription().getAny()));
             veriniceRequirement.setTitle(bsiRequirement.getTitle());
             veriniceRequirement.setLastChange(parent.getLastChange());
             veriniceRequirement.setIsAffectsConfidentiality(
@@ -1088,12 +1098,67 @@ public class BpImporter {
                     veriniceRequirement.addResponsibleRole(role);
                 }
             }
+            
+            String title = extendTitleForObjectBrowser(
+                    bsiRequirement.getTitle(),
+                    bsiRequirement.getIdentifier(),
+                    veriniceRequirement.getResponsibleRoles().iterator(),
+                    new CIAWrapper(
+                            veriniceRequirement.IsAffectsConfidentiality(),
+                            veriniceRequirement.IsAffectsIntegrity(),
+                            veriniceRequirement.IsAffectsAvailability()));
+            
+            veriniceRequirement.setObjectBrowserDescription(
+                    HtmlHelper.getAnyElementDescription(
+                            title.trim(), -1, -1 ,-1 ,
+                            bsiRequirement.getDescription().getAny()));
             veriniceRequirement.setQualifier(qualifier);
             addedReqs.put(bsiRequirement.getIdentifier(), veriniceRequirement);
             return (BpRequirement) updateElement(veriniceRequirement);
         } else {
             return addedReqs.get(bsiRequirement.getIdentifier());
         }
+    }
+
+    /**
+     * creates the title for an {@link BpRequirement} / {@link Safeguard}
+     * to be shown in the objectBrowser-Description
+     * 
+     * adds the identifier as a prefix 
+     * 
+     * adds the responsible roles and affecting CIA as a suffix
+     * 
+     * @param bsiRequirement
+     * @param veriniceRequirement
+     * @return
+     */
+    private String extendTitleForObjectBrowser(
+            String title,
+            String identifier,
+            Iterator<String> rolesIterator,
+            CIAWrapper cia) {
+        StringBuilder rolesInTitle = new StringBuilder();
+        rolesInTitle.append(rolesIterator.hasNext() ? "["  : "");
+        while (rolesIterator.hasNext()) {
+            rolesInTitle.append(rolesIterator.next());
+            rolesInTitle.append(rolesIterator.hasNext() ? ", " : "");
+        }
+        rolesInTitle.append(rolesInTitle.length() > 0 ? "]" : "");
+                
+        String titleBuilder = identifier 
+                + " " + title;
+        StringBuilder ciaBuilder = new StringBuilder();
+        ciaBuilder.append(cia.isConfidentiality() ? "C" : "" );
+        ciaBuilder.append(cia.isIntegrity() ? "I" : "" );
+        ciaBuilder.append(cia.isAvailability() ? "A" : "" );
+        ciaBuilder.append(ciaBuilder.length() > 0 ? ")" : "");
+        String ciaTitle = ciaBuilder.toString();
+        if ( ciaTitle.length() > 0) {
+            ciaTitle = "(" + ciaTitle;
+        }
+        
+        titleBuilder = titleBuilder + " " + rolesInTitle + " " + ciaTitle;
+        return titleBuilder;
     }
     
     
