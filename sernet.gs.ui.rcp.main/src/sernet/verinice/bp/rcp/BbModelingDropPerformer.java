@@ -22,9 +22,11 @@ package sernet.verinice.bp.rcp;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -130,7 +132,7 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
 
     private void modelModulesAndElement(List<CnATreeElement> draggedModules,
             CnATreeElement element) throws CommandException {
-        List<String> compendiumUuids = new LinkedList<>();
+        Set<String> compendiumUuids = new HashSet<>();
         for (CnATreeElement module : draggedModules) {
             compendiumUuids.add(module.getUuid());
         }

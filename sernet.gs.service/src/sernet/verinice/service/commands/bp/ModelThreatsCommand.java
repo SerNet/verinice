@@ -41,7 +41,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
-import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.bp.exceptions.GroupNotFoundInScopeException;
@@ -83,7 +82,7 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
             "join fetch threat.parent as p1 " +
             "where threat.uuid in (:uuids)"; //$NON-NLS-1$
     
-    private List<String> moduleUuids;
+    private Set<String> moduleUuids;
     private Integer targetScopeId;
     private transient List<BpThreat> compendiumThreats;
     private transient List<BpThreat> scopeThreats;
@@ -93,7 +92,7 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
 
     private String stationId;
 
-    public ModelThreatsCommand(List<String> moduleUuids, Integer targetScopeId) {
+    public ModelThreatsCommand(Set<String> moduleUuids, Integer targetScopeId) {
         super();
         this.stationId = ChangeLogEntry.STATION_ID;
         this.moduleUuids = moduleUuids;

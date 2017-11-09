@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
@@ -77,8 +78,8 @@ public class ModelLinksCommand extends GenericCommand {
             "where safeguard.objectType in (:typeIds) " +
             "and requirement.uuid = :uuid"; //$NON-NLS-1$
     
-    private transient List<String> moduleUuidsCompendium;
-    private transient List<String> moduleUuidsScope;
+    private transient Set<String> moduleUuidsCompendium;
+    private transient Set<String> moduleUuidsScope;
     private Integer scopeId;
 
     private transient List<BpRequirement> requirementsCompendium;
@@ -86,7 +87,7 @@ public class ModelLinksCommand extends GenericCommand {
     private transient Map<String,Safeguard> safeguardsScope;
     private transient Map<String,BpThreat> threatsScope;
     
-    public ModelLinksCommand(List<String> moduleUuidsCompendium, List<String> moduleUuidsScope,
+    public ModelLinksCommand(Set<String> moduleUuidsCompendium, Set<String> moduleUuidsScope,
             Integer scopeId) {
         super();
         this.moduleUuidsCompendium = moduleUuidsCompendium;
@@ -177,7 +178,7 @@ public class ModelLinksCommand extends GenericCommand {
     }
     
     @SuppressWarnings("unchecked")
-    private List<BpRequirement> loadRequirements(final List<String> moduleUuids) {
+    private List<BpRequirement> loadRequirements(final Set<String> moduleUuids) {
          return getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {

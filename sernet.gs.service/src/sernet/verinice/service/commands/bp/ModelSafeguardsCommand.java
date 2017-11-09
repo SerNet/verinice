@@ -75,16 +75,7 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
             "where safeguard.objectType = '" + Safeguard.TYPE_ID + "' " +
             "and module.uuid in (:uuids)"; //$NON-NLS-1$
     
-    /**
-     * HQL query to load the linked safeguards of a module
-     */
-    private static final String HQL_LOAD_PARENT_IDS = "select distinct safeguard from CnATreeElement safeguard " +
-            "join fetch safeguard.parent as p1 " +
-            "join fetch p1.parent as p2 " +
-            "join fetch p2.parent as p3 " +
-            "where safeguard.uuid in (:uuids)"; //$NON-NLS-1$
-    
-    private List<String> moduleUuids;
+    private Set<String> moduleUuids;
     private Integer targetScopeId;
     private transient List<Safeguard> compendiumSafeguards;
     private transient List<Safeguard> scopeSafeguards;
@@ -94,7 +85,7 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
 
     private String stationId;
 
-    public ModelSafeguardsCommand(List<String> moduleUuids, Integer targetScopeId) {
+    public ModelSafeguardsCommand(Set<String> moduleUuids, Integer targetScopeId) {
         super();
         this.stationId = ChangeLogEntry.STATION_ID;
         this.moduleUuids = moduleUuids;
@@ -233,6 +224,23 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
                 query.setReadOnly(true);
                 return query.list();
             }
+
+            @SuppressWarnings("unchecked")
+            private void loadCompendiumSafeguards() {
+                compendiumSafeguards = getDao().findByCallback(new HibernateCallback() {
+                    @Override
+                    public Object doInHibernate(Session session) throws SQLException {
+                        Query query = session.createQuery(HQL_LINKED_SAFEGUARDS).setParameterList("uuids",
+                                moduleUuids);
+                        query.setReadOnly(true);
+                        return query.list();
+                    }
+                });
+                if (getLog().isDebugEnabled()) {
+                    getLog().debug("Safeguards linked to modules: ");
+                    logElements(compendiumSafeguards);
+                }
+            }
         });
         if (getLog().isDebugEnabled()) {
             getLog().debug("Safeguards linked to modules: ");
@@ -259,10 +267,11 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
 
     @SuppressWarnings("unchecked")
     private void loadParents() {
+        // Load the parents (predecessors) of all missing safeguards 
         List<Safeguard> safeguards = getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(HQL_LOAD_PARENT_IDS).setParameterList("uuids",
+                Query query = session.createQuery(ModelCommand.HQL_LOAD_PARENT_IDS).setParameterList("uuids",
                         missingSafeguards.keySet());
                 query.setReadOnly(true);
                 return query.list();
@@ -275,6 +284,7 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
             parentUuids.add(safeguard.getParent().getParent().getUuid());
             parentUuids.add(safeguard.getParent().getParent().getParent().getUuid());
         }
+        // Load the properties of the parents (predecessors)
         List<CnATreeElement> groupsWithProperties = getDao()
                 .findByCallback(new HibernateCallback() {
                     @Override
