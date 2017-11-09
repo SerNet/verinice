@@ -69,7 +69,7 @@ public class ModelLinksCommand extends GenericCommand {
     /**
      * HQL query to load the linked safeguards of a module
      */
-    private static final String HQL_LINKED_SAFEGUARDS = "select distinct safeguard from CnATreeElement safeguard " +
+    private static final String HQL_LINKED_ELEMENTS = "select distinct safeguard from CnATreeElement safeguard " +
             "join safeguard.linksUp as linksUp " +
             "join linksUp.dependant as requirement " +
             "join fetch safeguard.entity as entity " +
@@ -82,17 +82,19 @@ public class ModelLinksCommand extends GenericCommand {
     private transient Set<String> moduleUuidsScope;
     private Integer scopeId;
 
+    private transient List<CnATreeElement> targetElements;
     private transient List<BpRequirement> requirementsCompendium;
     private transient Map<String,BpRequirement> requirementsScope;
     private transient Map<String,Safeguard> safeguardsScope;
     private transient Map<String,BpThreat> threatsScope;
     
     public ModelLinksCommand(Set<String> moduleUuidsCompendium, Set<String> moduleUuidsScope,
-            Integer scopeId) {
+            Integer scopeId, List<CnATreeElement> targetElements) {
         super();
         this.moduleUuidsCompendium = moduleUuidsCompendium;
         this.moduleUuidsScope = moduleUuidsScope;
         this.scopeId = scopeId;
+        this.targetElements = targetElements;
     }
 
     /* (non-Javadoc)
@@ -123,9 +125,28 @@ public class ModelLinksCommand extends GenericCommand {
 
     protected List<Link> createLinks(BpRequirement requirementCompendium) {
         List<Link> linkList = new LinkedList<>();
+        for (CnATreeElement targetScope : targetElements) {
+            linkList.add(createLinksToTarget(requirementCompendium,targetScope));
+        }
         List<CnATreeElement> linkedElements = loadLinkedElements(requirementCompendium.getUuid());
-        Safeguard safeguardScope = null;
-        BpThreat threatScope = null;
+        linkList.addAll(createLinksToSafeguardAndThreat(requirementCompendium, linkedElements));
+        return linkList;
+    }
+
+    private Link createLinksToTarget(BpRequirement requirementCompendium,
+            CnATreeElement targetScope) {
+        BpRequirement requirementScope = requirementsScope.get(requirementCompendium.getIdentifier());
+        if(validate(requirementScope, targetScope))  {
+            return new Link(requirementScope, targetScope);
+        } else {
+            return null;
+        }
+        
+    }
+
+    private List<Link> createLinksToSafeguardAndThreat(BpRequirement requirementCompendium,
+            List<CnATreeElement> linkedElements) {
+        List<Link> linkList = new LinkedList<>();
         for (CnATreeElement element : linkedElements) {
             if(element instanceof Safeguard) {
                 Safeguard safeguardCompendium = (Safeguard) element;
@@ -133,18 +154,13 @@ public class ModelLinksCommand extends GenericCommand {
                 if(link!=null) {
                     linkList.add(link);
                 }
-                safeguardScope = safeguardsScope.get(safeguardCompendium.getIdentifier());
             }
             if(element instanceof BpThreat) {
                 BpThreat threatCompendium = (BpThreat) element;
                 Link link = createLink(requirementCompendium,threatCompendium);
                 if(link!=null) {
                     linkList.add(link);
-                }
-                threatScope = threatsScope.get(threatCompendium.getIdentifier());        
-            }
-            if(safeguardScope!=null && threatScope!=null) {
-                linkList.add(new Link(safeguardScope, threatScope, Safeguard.REL_BP_SAFEGUARD_BP_THREAT));
+                }        
             }
         }
         return linkList;
@@ -195,7 +211,7 @@ public class ModelLinksCommand extends GenericCommand {
          return getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(HQL_LINKED_SAFEGUARDS).setParameter("uuid",
+                Query query = session.createQuery(HQL_LINKED_ELEMENTS).setParameter("uuid",
                         requirementUuid).setParameterList("typeIds", new String[]{Safeguard.TYPE_ID,BpThreat.TYPE_ID});
                 query.setReadOnly(true);
                 return query.list();

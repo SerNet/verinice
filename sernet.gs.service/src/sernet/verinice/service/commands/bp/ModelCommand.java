@@ -159,13 +159,11 @@ public class ModelCommand extends ChangeLoggingCommand {
         modelThreatsCommand = getCommandService().executeCommand(modelThreatsCommand);
     }
     
-
     private void createLinks() throws CommandException {
-       ModelLinksCommand modelLinksCommand = new ModelLinksCommand(compendiumModuleUuids, newModuleUuidsScope, getTargetScopeId());
-       modelLinksCommand = getCommandService().executeCommand(modelLinksCommand);
+        ModelLinksCommand modelLinksCommand = new ModelLinksCommand(compendiumModuleUuids,
+                newModuleUuidsScope, getTargetScopeId(), targetElements);
+        modelLinksCommand = getCommandService().executeCommand(modelLinksCommand);
     }
-
-
     
     private Integer getTargetScopeId() {
         return targetElements.get(0).getScopeId();
