@@ -283,45 +283,41 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
             ITreeSelection treeSelection = (ITreeSelection) selection;
             Object selectedElement = treeSelection.getFirstElement();
             Iterator<Object> iter = treeSelection.iterator();
-            while(iter.hasNext()){
+            while (iter.hasNext()) {
                 Object obj = iter.next();
-                if(obj instanceof CnATreeElement) {
-                    if(!isScope(obj)){
-                        if(this.selection != null){
+                if (obj instanceof CnATreeElement) {
+                    if (!isScopeElement(obj)) {
+                        if (this.selection != null) {
                             this.selection = null;
                         }
                         return;
                     }
                 }
             }
-            if (isScope(selectedElement)) {
+            if (isScopeElement(selectedElement)) {
                 this.selection = treeSelection;
             }
         }
     }
 
-    protected boolean isScope(Object selectedElement) {
+    protected boolean isScopeElement(Object selectedElement) {
         return selectedElement instanceof Organization 
                 || selectedElement instanceof ITVerbund
                 || selectedElement instanceof ItNetwork;
     }
-    
-    public static String addExtension(String exportPath,String extension) {
-        String returnedPath = null;
-        if(exportPath!=null 
-           && !exportPath.isEmpty()
-           && !exportPath.endsWith(extension)) {
-            returnedPath = exportPath + extension;
+
+    public static String addExtension(String exportPath, String extension) {
+        if (exportPath != null && !exportPath.isEmpty() && !exportPath.endsWith(extension)) {
+            return exportPath + extension;
         } else {
-            returnedPath = exportPath;
+            return exportPath;
         }
-        return returnedPath;
     }
-    
+
     private Set<CnATreeElement> getElementSet() {
         return dialog.getSelectedElementSet();
     }
-    
+
     private boolean isReImport() {
         return dialog.getReImport();
     }
@@ -329,7 +325,7 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
     private boolean isEncryption() {
         return dialog.getEncryptOutput();
     }
-    
+
     private String getSourceId() {
         return dialog.getSourceId();
     }

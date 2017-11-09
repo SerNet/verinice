@@ -1133,16 +1133,17 @@
          </action>
       </objectContribution>
       <objectContribution 
-      		adaptable="false"
-      		id="sernet.verinice.validation.CnAValidationAction"
-      		objectClass="sernet.verinice.model.common.CnATreeElement">
-      		<visibility>
-		    		<or>
-		   	     		<objectClass name="sernet.verinice.model.bsi.ITVerbund"/>
-		         		<objectClass name="sernet.verinice.model.iso27k.Organization"/>
-		      		</or>
-		   	</visibility>
-      		<action
+              adaptable="false"
+              id="sernet.verinice.validation.CnAValidationAction"
+              objectClass="sernet.verinice.model.common.CnATreeElement">
+              <visibility>
+                 <or>
+                    <objectClass name="sernet.verinice.model.bsi.ITVerbund"/>
+                    <objectClass name="sernet.verinice.model.iso27k.Organization"/>
+                    <objectClass name="sernet.verinice.model.bp.elements.ItNetwork"/>
+                  </or>
+               </visibility>
+              <action
                class="sernet.verinice.validation.CnAValidationAction"
                enablesFor="+"
                icon="icons/quickfix_warning_obj.gif"
