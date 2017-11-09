@@ -43,6 +43,7 @@ import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.bp.exceptions.GroupNotFoundInScopeException;
 import sernet.verinice.service.commands.CopyCommand;
 
 /**
@@ -125,13 +126,13 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
     }
 
     private void insertMissingSafeguards() throws CommandException {
-        SafeguardGroup safeguardGroup = getSafeguardRootGroup();
+        CnATreeElement safeguardGroup = getSafeguardRootGroup();
         for (Safeguard safeguard : safeguardsWithParents.values()) {
             insertSafeguard(safeguardGroup, safeguard);
         }
     }
 
-    protected void insertSafeguard(SafeguardGroup safeguardGroup, Safeguard safeguard)
+    protected void insertSafeguard(CnATreeElement safeguardGroup, Safeguard safeguard)
             throws CommandException {
         CnATreeElement group = safeguard.getParent().getParent().getParent();
         CnATreeElement parent = getOrCreateGroup(safeguardGroup,
@@ -206,15 +207,19 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
         return group;
     }
 
-    protected SafeguardGroup getSafeguardRootGroup() {
-        SafeguardGroup safeguardGroup = null;
+    protected CnATreeElement getSafeguardRootGroup() {
+        CnATreeElement safeguardGroup = null;
         CnATreeElement scope = getDao().retrieve(targetScopeId, RetrieveInfo.getChildrenInstance());
-        for (CnATreeElement group : scope.getChildren()) {
+        Set<CnATreeElement> children = scope.getChildren();
+        for (CnATreeElement group : children) {
             if (group.getTypeId().equals(SafeguardGroup.TYPE_ID)) {
-                safeguardGroup = (SafeguardGroup) group;
+                safeguardGroup = group;
             }
         }
-        return (SafeguardGroup) getDao().retrieve(safeguardGroup.getDbId(),
+        if(safeguardGroup==null) {
+            throw new GroupNotFoundInScopeException(targetScopeId, SafeguardGroup.TYPE_ID);
+        }
+        return getDao().retrieve(safeguardGroup.getDbId(),
                 RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
     }
 

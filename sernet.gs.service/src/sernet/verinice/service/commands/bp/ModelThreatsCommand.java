@@ -41,8 +41,10 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.bp.exceptions.GroupNotFoundInScopeException;
 import sernet.verinice.service.commands.CopyCommand;
 
 /**
@@ -123,7 +125,7 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
     }
 
     private void insertMissingThreats() throws CommandException {
-        BpThreatGroup threatGroup = getThreatRootGroup();
+        CnATreeElement threatGroup = getThreatRootGroup();
         for (BpThreat threat : threatsWithParents.values()) {
             insertThreat(threatGroup, threat);
         }
@@ -198,15 +200,19 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
         return group;
     }
 
-    protected BpThreatGroup getThreatRootGroup() {
-        BpThreatGroup threatGroup = null;
+    protected CnATreeElement getThreatRootGroup() {
+        CnATreeElement threatGroup = null;
         CnATreeElement scope = getDao().retrieve(targetScopeId, RetrieveInfo.getChildrenInstance());
-        for (CnATreeElement group : scope.getChildren()) {
+        Set<CnATreeElement> children = scope.getChildren();
+        for (CnATreeElement group : children) {
             if (group.getTypeId().equals(BpThreatGroup.TYPE_ID)) {
-                threatGroup = (BpThreatGroup) group;
+                threatGroup = group;
             }
         }
-        return (BpThreatGroup) getDao().retrieve(threatGroup.getDbId(),
+        if(threatGroup==null) {
+            throw new GroupNotFoundInScopeException(targetScopeId, BpThreatGroup.TYPE_ID);
+        }
+        return getDao().retrieve(threatGroup.getDbId(),
                 RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
     }
 
