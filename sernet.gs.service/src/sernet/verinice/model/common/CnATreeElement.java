@@ -601,6 +601,12 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 				// do nothing
 				
 			}
+
+            @Override
+            public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
+                // TODO Auto-generated method stub
+                
+            }
 		};
 	}
 
@@ -746,6 +752,16 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		}
 	}
 
+    public void fireValueChanged(CascadingTransaction ta) {
+        if (isSchutzbedarfProvider()) {
+            if(LOG_INHERIT.isInfo()) {
+                LOG_INHERIT.info(this.getTypeId() + " is provider, update integrity of: " + this.getTitle());
+            }
+            getSchutzbedarfProvider().updateValue(ta);
+        }
+    }
+
+	
 	/**
 	 * Replace a displayed item in tree with another one. Used to replace 
 	 * displaed objects with reloaded ones from thje database.

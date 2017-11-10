@@ -25,8 +25,16 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bsi.ISchutzbedarfProvider;
+import sernet.verinice.model.common.CascadingTransaction;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.ILinkChangeListener;
+import sernet.verinice.model.common.TransactionAbortedException;
+import sernet.verinice.model.iso27k.AssetValueAdapter;
+import sernet.verinice.model.iso27k.MaximumAssetValueListener;
 
 /**
  * @author Daniel Murygin dm[at]sernet.de
@@ -54,6 +62,48 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     public static final String REL_BP_SAFEGUARD_BP_THREAT = "rel_bp_safeguard_bp_threat"; //$NON-NLS-1$
 
     protected Safeguard() {}
+    
+    private final ISchutzbedarfProvider schutzbedarfProvider = new AssetValueAdapter(this);
+    private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this){
+ 
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 608299901188559815L;
+
+        @Override
+        public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
+            Set<CnALink> linksUp = sbTarget.getLinksUp();
+            for (CnALink cnALink : linksUp) {
+                CnATreeElement dependant = cnALink.getDependant();
+                String typeId = dependant.getTypeId();
+                if (BpRequirement.TYPE_ID.equals(typeId)) {
+                    String propertyValue = dependant
+                            .getPropertyValue("bp_requirement_implementation_deduce");
+                    if ("1".equals(propertyValue)) {
+                        Entity entity = sbTarget.getEntity();
+                        String optionValue = entity
+                                .getOptionValue("bp_safeguard_implementation_status");
+                        optionValue = optionValue.replaceFirst(Safeguard.TYPE_ID,
+                                BpRequirement.TYPE_ID);
+
+                        dependant.setPropertyValue("bp_requirement_implementation_status",
+                                optionValue);
+                    }
+                }
+            }
+        }
+    };
+    
+    @Override
+    public ILinkChangeListener getLinkChangeListener() {
+        return linkChangeListener;
+    }
+    @Override
+    public ISchutzbedarfProvider getSchutzbedarfProvider() {
+        return schutzbedarfProvider;
+    }
+
     
     public Safeguard(CnATreeElement parent) {
         super(parent);

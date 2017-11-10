@@ -35,7 +35,7 @@ public class MaximumAssetValueListener implements ILinkChangeListener, Serializa
 
     private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(MaximumAssetValueListener.class);
     
-    private CnATreeElement sbTarget;
+    protected CnATreeElement sbTarget;
     
     private static final String STRING_CONNECTOR_FOR = " for ";
      
@@ -181,6 +181,12 @@ public class MaximumAssetValueListener implements ILinkChangeListener, Serializa
             return true; // we have already been down this path
         }
         return false;
+    }
+
+    @Override
+    public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
+        // TODO Auto-generated method stub
+        
     }
 
 }

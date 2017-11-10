@@ -332,6 +332,7 @@ public class CnALink implements Serializable, ITypedElement {
             dependency.fireIntegritaetChanged(new CascadingTransaction());
             dependency.fireVerfuegbarkeitChanged(new CascadingTransaction());
             dependency.fireVertraulichkeitChanged(new CascadingTransaction());
+            dependency.fireValueChanged(new CascadingTransaction());
         }
     }
 
