@@ -116,6 +116,9 @@ public class AccountView extends RightsEnabledView {
     private static final int TEXT_COLUMN_WIDTH = 150;
     private static final int BOOLEAN_COLUMN_WIDTH = 70;
     private static final int MIN_WIDTH_TEXT = 100;
+    
+    private static final int MAX_LMCOLUMN_HEADER_LENGTH = 8;
+    private static final String LMCOLUM_HEADER_EXTENSION = "...";
 
     private IAccountSearchParameter parameter = new AccountSearchParameter();
 
@@ -466,8 +469,9 @@ public class AccountView extends RightsEnabledView {
         StringBuilder sb = new StringBuilder();
         sb.append(String.valueOf(index));
         sb.append(". ");
-        if (contentId.length() > 2){
-            sb.append(contentId.substring(0, 3));
+        if (contentId.length() >= MAX_LMCOLUMN_HEADER_LENGTH){
+            sb.append(contentId.substring(0, MAX_LMCOLUMN_HEADER_LENGTH));
+            sb.append(LMCOLUM_HEADER_EXTENSION);
         } else {
             sb.append(contentId);
         }
@@ -489,6 +493,7 @@ public class AccountView extends RightsEnabledView {
             scopeColumn.setToolTipText(tooltip);
         }
         scopeColumn.addSelectionListener(new AccountSortSelectionAdapter(this, scopeColumn, index));
+        scopeColumn.pack();
     }
 
     private void makeActions() {
