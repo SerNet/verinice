@@ -22,8 +22,12 @@ package sernet.verinice.model.bp.elements;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bsi.ISchutzbedarfProvider;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementWithChilds;
+import sernet.verinice.model.common.ILinkChangeListener;
+import sernet.verinice.model.iso27k.AssetValueAdapter;
+import sernet.verinice.model.iso27k.MaximumAssetValueListener;
 
 /**
  * 
@@ -43,6 +47,19 @@ public class Application extends ElementWithChilds implements IBpElement, IBpGro
     public Application(CnATreeElement parent) {
         super(parent);
         init();
+    }
+   
+    private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this);
+    private final ISchutzbedarfProvider schutzbedarfProvider = new AssetValueAdapter(this);
+
+    @Override
+    public ILinkChangeListener getLinkChangeListener() {
+        return linkChangeListener;
+    }
+
+    @Override
+    public ISchutzbedarfProvider getSchutzbedarfProvider() {
+        return schutzbedarfProvider;
     }
     
     @Override

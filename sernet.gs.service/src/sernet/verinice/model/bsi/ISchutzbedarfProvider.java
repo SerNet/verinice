@@ -43,4 +43,7 @@ public interface ISchutzbedarfProvider {
 	void updateVertraulichkeit(CascadingTransaction ta);
 	void updateIntegritaet(CascadingTransaction ta);
 	void updateVerfuegbarkeit(CascadingTransaction ta);
+	
+	void updateValue(CascadingTransaction ta);
+	void setValue(CascadingTransaction ta, String properyName, Object value);
 }

@@ -153,4 +153,10 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 
 	}
 
+    @Override
+    public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
+        // TODO Auto-generated method stub
+        
+    }
+
 }
