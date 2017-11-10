@@ -25,7 +25,9 @@ import org.apache.log4j.Logger;
 
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
+import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.bsi.ISchutzbedarfProvider;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
@@ -88,7 +90,10 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
             LOG.debug("set integrity for " + cnaTreeElement); //$NON-NLS-1$
         }
         EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
-        cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.INTEGRITY), Integer.toString(i));
+        String id = cnaTreeElement.getTypeId() + AssetValueService.INTEGRITY;
+        PropertyType propertyType = entityType.getPropertyType(id);
+        if(propertyType!=null)
+        cnaTreeElement.getEntity().setSimpleValue(propertyType, Integer.toString(i));
     }
 
     public void setVerfuegbarkeit(int i) {
@@ -96,7 +101,9 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
             LOG.debug("set avail. for " + cnaTreeElement); //$NON-NLS-1$
         }
         EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
-        cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.AVAILABILITY), Integer.toString(i));
+        PropertyType propertyType = entityType.getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.AVAILABILITY);
+        if(propertyType!=null)
+        cnaTreeElement.getEntity().setSimpleValue(propertyType, Integer.toString(i));
     }
 
     public void setVertraulichkeit(int i) {
@@ -104,7 +111,9 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
             LOG.debug("set confd. for " + cnaTreeElement); //$NON-NLS-1$
         }
         EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
-        cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.CONFIDENTIALITY), Integer.toString(i));  
+        PropertyType propertyType = entityType.getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.CONFIDENTIALITY);
+        if(propertyType!=null)
+        cnaTreeElement.getEntity().setSimpleValue(propertyType, Integer.toString(i));
     }
 
     /**
@@ -356,6 +365,37 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public void updateValue(CascadingTransaction ta) {
+        try {
+            // 1st step: traverse down:
+            // find bottom nodes from which to start:
+            CascadingTransaction downwardsTA = new CascadingTransaction();
+            Set<CnATreeElement> bottomNodes = new HashSet<CnATreeElement>();
+            findBottomNodes(cnaTreeElement, bottomNodes, downwardsTA);
+
+            // 2nd step: traverse up:
+            for (CnATreeElement bottomNode : bottomNodes) {
+                // determine protection level from parents (or keep own
+                // depending on description):
+                bottomNode.getLinkChangeListener().determineValue(ta);
+            }
+        } catch (TransactionAbortedException tae) {
+            LOG.debug("Wertänderung abgebrochen."); //$NON-NLS-1$
+            throw new RuntimeException(tae);
+        } catch (RuntimeException e) {
+            ta.abort();
+            throw e;
+        } catch (java.lang.Exception e) {
+            ta.abort();
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void setValue(CascadingTransaction ta, String properyName, Object value) {
     }
 
 }

@@ -306,4 +306,16 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
         return false;
     }
 
+    @Override
+    public void updateValue(CascadingTransaction ta) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void setValue(CascadingTransaction ta, String properyName, Object value) {
+        // TODO Auto-generated method stub
+
+    }
+
 }

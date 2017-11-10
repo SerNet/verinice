@@ -47,5 +47,5 @@ public interface ILinkChangeListener {
 	 */
 	public void determineVerfuegbarkeit(CascadingTransaction ta) throws TransactionAbortedException ;
 	
-	
+	public void determineValue(CascadingTransaction ta) throws TransactionAbortedException ;
 }
