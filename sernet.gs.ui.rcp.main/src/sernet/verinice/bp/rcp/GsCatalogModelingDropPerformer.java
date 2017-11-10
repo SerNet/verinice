@@ -353,6 +353,7 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
      */
     @Override
     public boolean checkRights() {
+        Activator.inheritVeriniceContextState();
         RightsServiceClient service = (RightsServiceClient) VeriniceContext.get(
                 VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());

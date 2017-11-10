@@ -22,8 +22,10 @@ package sernet.verinice.service.commands.bp;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
@@ -39,19 +41,19 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * This command models modules (requirements groups) from the ITBP compendium
- * with certain target object types of an IT network. Supported types are: IT
+ * This command models modules (requirements groups) with objects 
+ * of different types  from an information network. Supported types are: IT
  * networks, business processes, other/IoT systems, ICS systems, IT systems,
  * networks and rooms.
  * 
  * Modeling process:
  * 
- * Requirements
+ * Modules / Requirements
  * 
- * The module is created as a child object below the target object. All
- * requirements in the module are copied as well. Modules and requirements are
- * only created once per target object but can occur multiple times in different
- * target objects.
+ * The module and all requirements in the module are copied from the ITBP 
+ * Compendium to the IT network. The groups in which the module is located 
+ * are also copied. The modules and groups are created only once per IT 
+ * network.
  * 
  * Safeguards
  * 
@@ -64,11 +66,6 @@ import sernet.verinice.model.common.CnATreeElement;
  * 
  * Elemental threat groups and the elemental threats are created as objects in
  * the IT network. They are only created once in the IT network.
- *
- * Specific threats
- * 
- * Specific threats groups and specific threats are created as objects in the IT
- * network. They are only created once in the IT network.
  * 
  * Links
  * 
@@ -89,7 +86,7 @@ public class ModelCommand extends ChangeLoggingCommand {
      * HQL query to load the elements. The entity and the properties
      * are loaded by a single statement with joins.
      */
-    public static final String HQL_ELEMENT_WITH_PROPERTIES = "select distinct element from CnATreeElement element " +
+    public static final String HQL_ELEMENT_WITH_PROPERTIES = "select element from CnATreeElement element " +
             "join fetch element.entity as entity " +
             "join fetch entity.typedPropertyLists as propertyList " +
             "join fetch propertyList.properties as props " +
@@ -98,26 +95,35 @@ public class ModelCommand extends ChangeLoggingCommand {
     /**
      * HQL query to load all safeguards of a scope
      */
-    public static final String HQL_SCOPE_ELEMENTS = "select distinct safeguard from CnATreeElement safeguard " +
+    public static final String HQL_SCOPE_ELEMENTS = "select  safeguard from CnATreeElement safeguard " +
             "join fetch safeguard.entity as entity " +
             "join fetch entity.typedPropertyLists as propertyList " +
             "join fetch propertyList.properties as props " +
             "where safeguard.objectType = :typeId " +
             "and safeguard.scopeId = :scopeId"; //$NON-NLS-1$
     
-    private List<String> compendiumUuids;
+    /**
+     * HQL query to load the linked safeguards of a module
+     */
+    public static final String HQL_LOAD_PARENT_IDS = "select distinct element from CnATreeElement element " +
+            "join fetch element.parent as p1 " +
+            "join fetch p1.parent as p2 " +
+            "join fetch p2.parent as p3 " +
+            "where element.uuid in (:uuids)"; //$NON-NLS-1$
+    
+    private Set<String> compendiumModuleUuids;
     private List<String> targetUuids;
-    private transient List<BpRequirementGroup> requirementGroups;
-    private transient List<CnATreeElement> targetElements;
-    private transient List<String> newModuleUuidsScope = Collections.emptyList();
+    private transient Set<BpRequirementGroup> requirementGroups;
+    private transient Set<CnATreeElement> targetElements;
+    private transient Set<String> newModuleUuidsScope = Collections.emptySet();
     
     private String stationId;
     
-    public ModelCommand(List<String> compendiumUuids, List<String> targetUuids) {
+    public ModelCommand(Set<String> compendiumUuids, List<String> targetUuids) {
         super();
         this.stationId = ChangeLogEntry.STATION_ID;
         validateParameter(compendiumUuids, targetUuids);
-        this.compendiumUuids = compendiumUuids;
+        this.compendiumModuleUuids = compendiumUuids;
         this.targetUuids = targetUuids;
     }
 
@@ -129,8 +135,8 @@ public class ModelCommand extends ChangeLoggingCommand {
             if(!newModuleUuidsScope.isEmpty()) {
                 handleSafeguards();
                 handleThreats();
-                createLinks();
             }
+            createLinks();
         } catch (CommandException e) {
             getLog().error("Error while modeling.", e);
             throw new RuntimeCommandException("Error while modeling.", e);
@@ -138,32 +144,32 @@ public class ModelCommand extends ChangeLoggingCommand {
     }
 
     private void handleModules() throws CommandException {
-        ModelModulesCommand modelModulesCommand = new ModelModulesCommand(requirementGroups, targetUuids);
+        ModelModulesCommand modelModulesCommand = new ModelModulesCommand(requirementGroups, getTargetScopeId());
         modelModulesCommand = getCommandService().executeCommand(modelModulesCommand);
-        newModuleUuidsScope = modelModulesCommand.getNewModuleUuids();
+        newModuleUuidsScope = modelModulesCommand.getModulesInScopeUuids();
     }
     
     private void handleSafeguards() throws CommandException {
-        ModelSafeguardsCommand modelSafeguardsCommand = new ModelSafeguardsCommand(compendiumUuids,getTargetScopeId());
-        modelSafeguardsCommand = getCommandService().executeCommand(modelSafeguardsCommand);
-        
+        ModelSafeguardsCommand modelSafeguardsCommand = new ModelSafeguardsCommand(compendiumModuleUuids,getTargetScopeId());
+        getCommandService().executeCommand(modelSafeguardsCommand);       
     }
 
     private void handleThreats() throws CommandException {
-        ModelThreatsCommand modelThreatsCommand = new ModelThreatsCommand(compendiumUuids,getTargetScopeId());
-        modelThreatsCommand = getCommandService().executeCommand(modelThreatsCommand);
+        ModelThreatsCommand modelThreatsCommand = new ModelThreatsCommand(compendiumModuleUuids,getTargetScopeId());
+        getCommandService().executeCommand(modelThreatsCommand);
     }
     
-
     private void createLinks() throws CommandException {
-       ModelLinksCommand modelLinksCommand = new ModelLinksCommand(compendiumUuids, newModuleUuidsScope, getTargetScopeId());
-       modelLinksCommand = getCommandService().executeCommand(modelLinksCommand);
+        ModelLinksCommand modelLinksCommand = new ModelLinksCommand(compendiumModuleUuids,
+                newModuleUuidsScope, getTargetScopeId(), targetElements);
+        getCommandService().executeCommand(modelLinksCommand);
     }
-
-
     
     private Integer getTargetScopeId() {
-        return targetElements.get(0).getScopeId();
+        if(targetElements==null || targetElements.isEmpty()) {
+            return null;
+        }
+        return targetElements.iterator().next().getScopeId();
     }
     
     @SuppressWarnings("unchecked")
@@ -182,10 +188,10 @@ public class ModelCommand extends ChangeLoggingCommand {
     }
 
     protected void distributeElements(List<CnATreeElement> elements) {
-        requirementGroups = new LinkedList<>();
-        targetElements = new LinkedList<>();
+        requirementGroups = new HashSet<>();
+        targetElements = new HashSet<>();
         for (CnATreeElement element : elements) {
-            if (compendiumUuids.contains(element.getUuid())
+            if (compendiumModuleUuids.contains(element.getUuid())
                     && element instanceof BpRequirementGroup) {
                 requirementGroups.add((BpRequirementGroup) element);
             }
@@ -197,7 +203,7 @@ public class ModelCommand extends ChangeLoggingCommand {
     
     private List<String> getAllUuids() {
         List<String> allUuids = new LinkedList<>();
-        allUuids.addAll(compendiumUuids);
+        allUuids.addAll(compendiumModuleUuids);
         allUuids.addAll(targetUuids);
         return allUuids;
     }
@@ -207,7 +213,7 @@ public class ModelCommand extends ChangeLoggingCommand {
         return getDaoFactory().getDAO(CnATreeElement.class);
     }
 
-    private void validateParameter(List<String> compendiumUuids, List<String> targetUuids) {
+    private void validateParameter(Set<String> compendiumUuids, List<String> targetUuids) {
         if(compendiumUuids==null) {
             throw new IllegalArgumentException("Compedium ids must not be null.");
         }

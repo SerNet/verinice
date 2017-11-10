@@ -38,13 +38,13 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     
     public static final String TYPE_ID = "bp_requirement"; //$NON-NLS-1$
     
-    private static final String PROP_ABBR = "bp_requirement_abbr"; //$NON-NLS-1$
-    private static final String PROP_OBJECTBROWSER = "bp_requirement_objectbrowser_content"; //$NON-NLS-1$
-    private static final String PROP_NAME = "bp_requirement_name"; //$NON-NLS-1$
-    private static final String PROP_ID = "bp_requirement_id"; //$NON-NLS-1$
-    private static final String PROP_QUALIFIER = "bp_requirement_qualifier"; //$NON-NLS-1$
-    private static final String PROP_LAST_CHANGE = "bp_requirement_last_change"; //$NON-NLS-1$
-    private static final String PROP_RESPONSIBLE_ROLES = "bp_requirement_responsibleroles"; //$NON-NLS-1$
+    public static final String PROP_ABBR = "bp_requirement_abbr"; //$NON-NLS-1$
+    public static final String PROP_OBJECTBROWSER = "bp_requirement_objectbrowser_content"; //$NON-NLS-1$
+    public static final String PROP_NAME = "bp_requirement_name"; //$NON-NLS-1$
+    public static final String PROP_ID = "bp_requirement_id"; //$NON-NLS-1$
+    public static final String PROP_QUALIFIER = "bp_requirement_qualifier"; //$NON-NLS-1$
+    public static final String PROP_LAST_CHANGE = "bp_requirement_last_change"; //$NON-NLS-1$
+    public static final String PROP_RESPONSIBLE_ROLES = "bp_requirement_responsibleroles"; //$NON-NLS-1$
     public static final String PROP_CONFIDENTIALITY = "bp_requirement_value_method_confidentiality";//$NON-NLS-1$
     public static final String PROP_INTEGRITY = "bp_requirement_value_method_integrity";//$NON-NLS-1$
     public static final String PROP_AVAILABILITY = "bp_requirement_value_method_availability";//$NON-NLS-1$  
