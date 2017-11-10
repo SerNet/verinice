@@ -43,6 +43,7 @@ public class MaximumAssetValueListener implements ILinkChangeListener, Serializa
         this.sbTarget = item;
     }
 
+    @Override
     public void determineIntegritaet(CascadingTransaction ta) throws TransactionAbortedException {
         if (hasBeenVisited(ta)) {
             return;
@@ -84,6 +85,7 @@ public class MaximumAssetValueListener implements ILinkChangeListener, Serializa
         sbTarget.getSchutzbedarfProvider().setIntegritaet(highestValue);
     }
 
+    @Override
     public void determineVerfuegbarkeit(CascadingTransaction ta) throws TransactionAbortedException {
         if (hasBeenVisited(ta)) {
             return;
@@ -126,6 +128,7 @@ public class MaximumAssetValueListener implements ILinkChangeListener, Serializa
         sbTarget.getSchutzbedarfProvider().setVerfuegbarkeit(highestValue);
     }
 
+    @Override
     public void determineVertraulichkeit(CascadingTransaction ta)
             throws TransactionAbortedException {
 
@@ -186,7 +189,5 @@ public class MaximumAssetValueListener implements ILinkChangeListener, Serializa
     @Override
     public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
         // override when introduce a new behavior
-
     }
-
 }

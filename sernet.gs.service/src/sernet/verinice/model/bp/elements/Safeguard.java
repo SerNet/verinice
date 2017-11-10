@@ -99,7 +99,6 @@ public class Safeguard extends CnATreeElement implements IBpElement {
         return schutzbedarfProvider;
     }
 
-
     public Safeguard(CnATreeElement parent) {
         super(parent);
         init();

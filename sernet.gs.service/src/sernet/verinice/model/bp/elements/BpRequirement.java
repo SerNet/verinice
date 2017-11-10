@@ -105,7 +105,6 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         return schutzbedarfProvider;
     }
 
-
     protected BpRequirement() {}
 
     public BpRequirement(CnATreeElement parent) {
@@ -139,6 +138,7 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
     }
     
+    @Override
     public String getTitle() {
         StringBuilder titleBuilder = new StringBuilder();
         titleBuilder.append(getIdentifier()).append(" ");
