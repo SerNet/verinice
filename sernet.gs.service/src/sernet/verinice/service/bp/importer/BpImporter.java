@@ -929,7 +929,11 @@ public class BpImporter {
             String qualifier, String lastChange, Safeguard safeguard)
                     throws CreateBPElementException {
         safeguard.setIdentifier(bsiSafeguard.getIdentifier());
-        safeguard.setQualifier(qualifier);
+        
+        String qualifierOptionValue = 
+                getSafeguardQualifierOptionValue(qualifier);
+        
+        safeguard.setQualifier(qualifierOptionValue);
         safeguard.setTitle(bsiSafeguard.getTitle());
         safeguard.setLastChange(getBSIDate(lastChange));
         safeguard.setIsAffectsConfidentiality(Boolean.parseBoolean(
@@ -967,6 +971,27 @@ public class BpImporter {
         return safeguard;
     }
 
+    private String getSafeguardQualifierOptionValue(String qualifier) {
+        if ("BASIC".equals(qualifier)) {
+            return Safeguard.PROP_QUALIFIER_BASIC;
+        } else if ("STANDARD".equals(qualifier)) {
+            return Safeguard.PROP_QUALIFIER_STANDARD;
+        } else if ("HIGH".equals(qualifier) || "HOCH".equals(qualifier)) {
+            return Safeguard.PROP_QUALIFIER_HIGH;
+        }
+        return "";
+    }
+    
+    private String getRequirementQualifierOptionValue(String qualifier) {
+        if ("BASIC".equals(qualifier)) {
+            return BpRequirement.PROP_QUALIFIER_BASIC;
+        } else if ("STANDARD".equals(qualifier)) {
+            return BpRequirement.PROP_QUALIFIER_STANDARD;
+        } else if ("HIGH".equals(qualifier) || "HOCH".equals(qualifier)) {
+            return BpRequirement.PROP_QUALIFIER_HIGH;
+        }
+        return "";
+    }
 
     /**
      * {@link Safeguard} are related to {@link BpRequirement} which are related
@@ -1112,7 +1137,11 @@ public class BpImporter {
                     HtmlHelper.getAnyElementDescription(
                             title.trim(), -1, -1 ,-1 ,
                             bsiRequirement.getDescription().getAny()));
-            veriniceRequirement.setQualifier(qualifier);
+            
+            String qualifierOptionValue = 
+                    getRequirementQualifierOptionValue(qualifier);
+
+            veriniceRequirement.setQualifier(qualifierOptionValue);
             addedReqs.put(bsiRequirement.getIdentifier(), veriniceRequirement);
             return (BpRequirement) updateElement(veriniceRequirement);
         } else {
