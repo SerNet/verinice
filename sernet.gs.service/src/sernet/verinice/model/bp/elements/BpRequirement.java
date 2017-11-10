@@ -48,7 +48,11 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     public static final String PROP_CONFIDENTIALITY = "bp_requirement_value_method_confidentiality";//$NON-NLS-1$
     public static final String PROP_INTEGRITY = "bp_requirement_value_method_integrity";//$NON-NLS-1$
     public static final String PROP_AVAILABILITY = "bp_requirement_value_method_availability";//$NON-NLS-1$  
+    public static final String PROP_QUALIFIER_BASIC = "bp_requirement_qualifier_basic"; //$NON-NLS-1$
+    public static final String PROP_QUALIFIER_STANDARD = "bp_requirement_qualifier_standard"; //$NON-NLS-1$
+    public static final String PROP_QUALIFIER_HIGH = "bp_requirement_qualifier_high"; //$NON-NLS-1$
 
+    
     public static final String REL_BP_REQUIREMENT_BP_THREAT = "rel_bp_requirement_bp_threat"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_SAFEGUARD = "rel_bp_requirement_bp_safeguard"; //$NON-NLS-1$
     
