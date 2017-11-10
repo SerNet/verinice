@@ -22,6 +22,7 @@ package sernet.verinice.service.commands.bp;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -85,7 +86,7 @@ public class ModelCommand extends ChangeLoggingCommand {
      * HQL query to load the elements. The entity and the properties
      * are loaded by a single statement with joins.
      */
-    public static final String HQL_ELEMENT_WITH_PROPERTIES = "select distinct element from CnATreeElement element " +
+    public static final String HQL_ELEMENT_WITH_PROPERTIES = "select element from CnATreeElement element " +
             "join fetch element.entity as entity " +
             "join fetch entity.typedPropertyLists as propertyList " +
             "join fetch propertyList.properties as props " +
@@ -94,7 +95,7 @@ public class ModelCommand extends ChangeLoggingCommand {
     /**
      * HQL query to load all safeguards of a scope
      */
-    public static final String HQL_SCOPE_ELEMENTS = "select distinct safeguard from CnATreeElement safeguard " +
+    public static final String HQL_SCOPE_ELEMENTS = "select  safeguard from CnATreeElement safeguard " +
             "join fetch safeguard.entity as entity " +
             "join fetch entity.typedPropertyLists as propertyList " +
             "join fetch propertyList.properties as props " +
@@ -112,8 +113,8 @@ public class ModelCommand extends ChangeLoggingCommand {
     
     private Set<String> compendiumModuleUuids;
     private List<String> targetUuids;
-    private transient List<BpRequirementGroup> requirementGroups;
-    private transient List<CnATreeElement> targetElements;
+    private transient Set<BpRequirementGroup> requirementGroups;
+    private transient Set<CnATreeElement> targetElements;
     private transient Set<String> newModuleUuidsScope = Collections.emptySet();
     
     private String stationId;
@@ -145,28 +146,30 @@ public class ModelCommand extends ChangeLoggingCommand {
     private void handleModules() throws CommandException {
         ModelModulesCommand modelModulesCommand = new ModelModulesCommand(requirementGroups, getTargetScopeId());
         modelModulesCommand = getCommandService().executeCommand(modelModulesCommand);
-        newModuleUuidsScope = modelModulesCommand.getNewModuleUuids();
+        newModuleUuidsScope = modelModulesCommand.getModulesInScopeUuids();
     }
     
     private void handleSafeguards() throws CommandException {
         ModelSafeguardsCommand modelSafeguardsCommand = new ModelSafeguardsCommand(compendiumModuleUuids,getTargetScopeId());
-        modelSafeguardsCommand = getCommandService().executeCommand(modelSafeguardsCommand);
-        
+        getCommandService().executeCommand(modelSafeguardsCommand);       
     }
 
     private void handleThreats() throws CommandException {
         ModelThreatsCommand modelThreatsCommand = new ModelThreatsCommand(compendiumModuleUuids,getTargetScopeId());
-        modelThreatsCommand = getCommandService().executeCommand(modelThreatsCommand);
+        getCommandService().executeCommand(modelThreatsCommand);
     }
     
     private void createLinks() throws CommandException {
         ModelLinksCommand modelLinksCommand = new ModelLinksCommand(compendiumModuleUuids,
                 newModuleUuidsScope, getTargetScopeId(), targetElements);
-        modelLinksCommand = getCommandService().executeCommand(modelLinksCommand);
+        getCommandService().executeCommand(modelLinksCommand);
     }
     
     private Integer getTargetScopeId() {
-        return targetElements.get(0).getScopeId();
+        if(targetElements==null || targetElements.isEmpty()) {
+            return null;
+        }
+        return targetElements.iterator().next().getScopeId();
     }
     
     @SuppressWarnings("unchecked")
@@ -185,8 +188,8 @@ public class ModelCommand extends ChangeLoggingCommand {
     }
 
     protected void distributeElements(List<CnATreeElement> elements) {
-        requirementGroups = new LinkedList<>();
-        targetElements = new LinkedList<>();
+        requirementGroups = new HashSet<>();
+        targetElements = new HashSet<>();
         for (CnATreeElement element : elements) {
             if (compendiumModuleUuids.contains(element.getUuid())
                     && element instanceof BpRequirementGroup) {

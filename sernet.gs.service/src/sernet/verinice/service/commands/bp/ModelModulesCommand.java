@@ -23,7 +23,6 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -61,21 +60,21 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     private transient Logger log = Logger.getLogger(ModelModulesCommand.class);
 
     private Integer targetScopeId;
-    private transient List<BpRequirementGroup> compendiumModules;
+    private transient Set<BpRequirementGroup> compendiumModules;
     private transient Set<CnATreeElement> compendiumRequirements;
-    private transient List<BpRequirement> scopeRequirements;
+    private transient Set<CnATreeElement> scopeRequirements;
     private transient Map<String, CnATreeElement> missingRequirements;
     private transient Map<String, BpRequirement> missingRequirementsWithParents;
     private transient Map<String, CnATreeElement> requirementParentsWithProperties;
-    private Set<String> newModuleUuids = new HashSet<>();
+    private Set<String> moduleUuids = new HashSet<>();
     
     private String stationId;
     
-    public ModelModulesCommand(List<BpRequirementGroup> modules, Integer targetScopeId) {
+    public ModelModulesCommand(Set<BpRequirementGroup> requirementGroups, Integer targetScopeId) {
         super();
         this.stationId = ChangeLogEntry.STATION_ID;
         this.targetScopeId = targetScopeId;
-        this.compendiumModules = modules;
+        this.compendiumModules = requirementGroups;
         compendiumRequirements = new HashSet<>();
         missingRequirements = new HashMap<>();
         missingRequirementsWithParents = new HashMap<>();
@@ -117,23 +116,23 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         group = requirement.getParent();
         parent = getOrCreateGroup(parent, requirementParentsWithProperties.get(group.getUuid()));
         
-        if (!isSafeguardInChildrenSet(parent.getChildren(),
+        if (!isRequirementInChildrenSet(parent.getChildren(),
                 missingRequirements.get(requirement.getUuid()))) {
             CopyCommand copyCommand = new CopyCommand(parent.getUuid(),
                     Arrays.asList(requirement.getUuid()));
             getCommandService().executeCommand(copyCommand);
-            newModuleUuids.add(parent.getUuid());
+            moduleUuids.add(parent.getUuid());
             if (getLog().isDebugEnabled()) {
                 getLog().debug("Requirement: " + requirement.getTitle() + " created in group: "
                         + parent.getTitle());
             }
         } else if (getLog().isDebugEnabled()) {
-            getLog().debug("Safeguard: " + requirement.getTitle() + " already exists in group: "
+            getLog().debug("Requirement: " + requirement.getTitle() + " already exists in group: "
                     + parent.getTitle());
         }
     }
-    
-    private boolean isSafeguardInChildrenSet(Set<CnATreeElement> targetChildren, CnATreeElement requirement) {
+
+    private boolean isRequirementInChildrenSet(Set<CnATreeElement> targetChildren, CnATreeElement requirement) {
         for (CnATreeElement targetSafeguardElement : targetChildren) {
             CnATreeElement targetSafeguard = targetSafeguardElement;
             String targetIdentifier = getIdentifierOfRequirement(targetSafeguard);
@@ -155,9 +154,21 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         }
     }
     
-    @SuppressWarnings("unchecked")
+    /**
+     * Loads the safeguards and transforms the result list to a set
+     * to avoid duplicate entries.
+     */
     private void loadScopeRequirements() {
-        scopeRequirements = getDao().findByCallback(new HibernateCallback() {
+        scopeRequirements = new HashSet<>(loadRequirementsByDao());
+        if (getLog().isDebugEnabled()) {
+            getLog().debug("Requirements in target scope: ");
+            logElements(scopeRequirements);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<CnATreeElement> loadRequirementsByDao() {
+        return getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
                 Query query = session.createQuery(ModelCommand.HQL_SCOPE_ELEMENTS).setParameter("scopeId",
@@ -166,10 +177,6 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
                 return query.list();
             }
         });
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Requirements in target scope: ");
-            logElements(scopeRequirements);
-        }
     }
     
     private void createListOfMissingRequirements() {
@@ -224,8 +231,9 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     }
     
     private boolean isRequirementInScope(CnATreeElement compendiumRequirement) {
-        for (BpRequirement scopeRequirement : scopeRequirements) {
-            if (ModelCommand.nullSafeEquals(scopeRequirement.getIdentifier(),
+        for (CnATreeElement scopeRequirement : scopeRequirements) {
+            if (ModelCommand.nullSafeEquals(
+                    getIdentifierOfRequirement(scopeRequirement),
                     getIdentifierOfRequirement(compendiumRequirement))) {
                 return true;
             }
@@ -292,8 +300,8 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         return compendiumRequirement.getEntity().getPropertyValue(BpRequirement.PROP_ID);
     }
 
-    public Set<String> getNewModuleUuids() {
-        return newModuleUuids;
+    public Set<String> getModulesInScopeUuids() {
+        return moduleUuids;
     }
 
     private IBaseDao<CnATreeElement, Serializable> getDao() {

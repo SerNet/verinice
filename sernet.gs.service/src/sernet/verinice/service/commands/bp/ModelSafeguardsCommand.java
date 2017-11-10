@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +66,7 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
     /**
      * HQL query to load the linked safeguards of a module
      */
-    private static final String HQL_LINKED_SAFEGUARDS = "select distinct safeguard from CnATreeElement safeguard " +
+    private static final String HQL_LINKED_SAFEGUARDS = "select safeguard from CnATreeElement safeguard " +
             "join safeguard.linksUp as linksUp " +
             "join linksUp.dependant as requirement " +
             "join requirement.parent as module " +
@@ -77,8 +78,8 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
     
     private Set<String> moduleUuids;
     private Integer targetScopeId;
-    private transient List<Safeguard> compendiumSafeguards;
-    private transient List<Safeguard> scopeSafeguards;
+    private transient Set<Safeguard> compendiumSafeguards;
+    private transient Set<Safeguard> scopeSafeguards;
     private transient Map<String, Safeguard> missingSafeguards;
     private transient Map<String, Safeguard> safeguardsWithParents;
     private transient Map<String, CnATreeElement> safeguardParentsWithProperties;
@@ -214,34 +215,9 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
                 RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
     }
 
-    @SuppressWarnings("unchecked")
+    
     private void loadCompendiumSafeguards() {
-        compendiumSafeguards = getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(HQL_LINKED_SAFEGUARDS).setParameterList("uuids",
-                        moduleUuids);
-                query.setReadOnly(true);
-                return query.list();
-            }
-
-            @SuppressWarnings("unchecked")
-            private void loadCompendiumSafeguards() {
-                compendiumSafeguards = getDao().findByCallback(new HibernateCallback() {
-                    @Override
-                    public Object doInHibernate(Session session) throws SQLException {
-                        Query query = session.createQuery(HQL_LINKED_SAFEGUARDS).setParameterList("uuids",
-                                moduleUuids);
-                        query.setReadOnly(true);
-                        return query.list();
-                    }
-                });
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Safeguards linked to modules: ");
-                    logElements(compendiumSafeguards);
-                }
-            }
-        });
+        compendiumSafeguards = new HashSet<>(findSafeguardsByModuleUuids());
         if (getLog().isDebugEnabled()) {
             getLog().debug("Safeguards linked to modules: ");
             logElements(compendiumSafeguards);
@@ -249,8 +225,33 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
     }
 
     @SuppressWarnings("unchecked")
+    private List<Safeguard> findSafeguardsByModuleUuids() {
+        return getDao().findByCallback(new HibernateCallback() {
+            @Override
+            public Object doInHibernate(Session session) throws SQLException {
+                Query query = session.createQuery(HQL_LINKED_SAFEGUARDS).setParameterList("uuids",
+                        moduleUuids);
+                query.setReadOnly(true);
+                return query.list();
+            }
+        });
+    }
+    
+    /**
+     * Loads the safeguards and transforms the result list to a set
+     * to avoid duplicate entries.
+     */
     private void loadScopeSafeguards() {
-        scopeSafeguards = getDao().findByCallback(new HibernateCallback() {
+        scopeSafeguards = new HashSet<>(loadSafeguardsByDao());
+        if (getLog().isDebugEnabled()) {
+            getLog().debug("Safeguards in target scope: ");
+            logElements(scopeSafeguards);
+        }
+    }
+    
+    @SuppressWarnings("unchecked")
+    private List<Safeguard> loadSafeguardsByDao() {
+        return getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
                 Query query = session.createQuery(ModelCommand.HQL_SCOPE_ELEMENTS).setParameter("scopeId",
@@ -259,10 +260,6 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
                 return query.list();
             }
         });
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Safeguards in target scope: ");
-            logElements(scopeSafeguards);
-        }
     }
 
     @SuppressWarnings("unchecked")
