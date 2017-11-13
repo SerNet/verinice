@@ -97,8 +97,7 @@ public class SearchViewDropListener extends ViewerDropAdapter
     public boolean validateDrop(Object target, int operation, TransferData transferType) {
         if (getLog().isDebugEnabled()) {
             getLog().debug(
-                    "validateDrop, \n\t transfer type class: " + transferType.getClass().getName() +
-                            ", \n\t transfer-type-id: " + transferType.type);
+                    "validateDrop, \n\t transfer type class: " + transferType.getClass().getName());
         }
         if (!checkRights()) {
             return false;

@@ -196,7 +196,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
     @Override
     public boolean validateDrop(Object target, int operation, TransferData transferData) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("validateDrop, target: " + target + ", transferType: " + transferData.type) ;
+            LOG.debug("validateDrop, target: " + target) ;
         }
         if (!checkRights()) {
             if (LOG.isDebugEnabled()) {

@@ -332,7 +332,7 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
             return false;
         }
         if (!getTransfer().isSupportedType(transferData)) {
-            log.debug("Unsupported type of TransferData: " + transferData.type);//$NON-NLS-1$
+            log.debug("Unsupported type of TransferData");//$NON-NLS-1$
             return false;
         }
         this.targetElement = getTargetElement(rawTarget);
