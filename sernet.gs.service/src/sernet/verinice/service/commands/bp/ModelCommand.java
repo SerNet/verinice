@@ -41,8 +41,8 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * This command models modules (requirements groups) with objects 
- * of different types  from an information network. Supported types are: IT
+ * This command models modules from the compendium with target objects 
+ * from an information group. Supported types of target objects are: IT
  * networks, business processes, other/IoT systems, ICS systems, IT systems,
  * networks and rooms.
  * 
@@ -51,30 +51,29 @@ import sernet.verinice.model.common.CnATreeElement;
  * Modules / Requirements
  * 
  * The module and all requirements in the module are copied from the ITBP 
- * Compendium to the IT network. The groups in which the module is located 
- * are also copied. The modules and groups are created only once per IT 
- * network.
+ * Compendium to the information network. The group structure of the modules 
+ * from the compendium is retained in the information network. The modules and 
+ * groups are created only once per IT network.
  * 
  * Safeguards
  * 
- * If an implementation hint (safeguard group) is available for the module in
- * the ITBP Compendium all safeguards and all applicable safeguard groups are
- * created in the IT network. Safeguards and groups are only created once in the
- * IT network.
+ * If there is a safeguard for a requirement in the compendium, the safeguard 
+ * is copied to the information network. The group structure of the modules 
+ * from the compendium is retained in the information network. Safeguards and 
+ * groups are only created once in the IT network.
  * 
  * Elemental threats
  * 
- * Elemental threat groups and the elemental threats are created as objects in
- * the IT network. They are only created once in the IT network.
+ * If there is a elemental threats for a requirement in the compendium, the 
+ * threat is copied to the information network. The group structure of the threats 
+ * from the compendium is retained in the information network. Threats and 
+ * groups are only created once in the IT network.
  * 
  * Links
  * 
- * Links from newly created requirements to elemental threats are created
- * according to the cross reference tables in the ITBP compendium modules If
- * safeguards (in an implementation hint) for an module in the ITBP compendium
- * exist two links are created: Requirement to safeguard and safeguard to
- * elemental threat. According to the definition in compendium a link from a
- * module to the specific threat group is created.
+ * Links of modeled requirements are created according to the links in the 
+ * compendium. Two links are created: Requirement to safeguard and requirement 
+ * to elemental threat if the relevant objects exist.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
@@ -111,11 +110,11 @@ public class ModelCommand extends ChangeLoggingCommand {
             "join fetch p2.parent as p3 " +
             "where element.uuid in (:uuids)"; //$NON-NLS-1$
     
-    private Set<String> compendiumModuleUuids;
+    private Set<String> moduleUuidsFromCompendium;
+    private transient Set<String> newModuleUuidsFromScope = Collections.emptySet();
     private List<String> targetUuids;
     private transient Set<BpRequirementGroup> requirementGroups;
     private transient Set<CnATreeElement> targetElements;
-    private transient Set<String> newModuleUuidsScope = Collections.emptySet();
     
     private String stationId;
     
@@ -123,7 +122,7 @@ public class ModelCommand extends ChangeLoggingCommand {
         super();
         this.stationId = ChangeLogEntry.STATION_ID;
         validateParameter(compendiumUuids, targetUuids);
-        this.compendiumModuleUuids = compendiumUuids;
+        this.moduleUuidsFromCompendium = compendiumUuids;
         this.targetUuids = targetUuids;
     }
 
@@ -132,7 +131,7 @@ public class ModelCommand extends ChangeLoggingCommand {
         try {
             loadElements();
             handleModules();     
-            if(!newModuleUuidsScope.isEmpty()) {
+            if(!newModuleUuidsFromScope.isEmpty()) {
                 handleSafeguards();
                 handleThreats();
             }
@@ -146,22 +145,22 @@ public class ModelCommand extends ChangeLoggingCommand {
     private void handleModules() throws CommandException {
         ModelModulesCommand modelModulesCommand = new ModelModulesCommand(requirementGroups, getTargetScopeId());
         modelModulesCommand = getCommandService().executeCommand(modelModulesCommand);
-        newModuleUuidsScope = modelModulesCommand.getModulesInScopeUuids();
+        newModuleUuidsFromScope = modelModulesCommand.getModuleUuidsFromScope();
     }
     
     private void handleSafeguards() throws CommandException {
-        ModelSafeguardsCommand modelSafeguardsCommand = new ModelSafeguardsCommand(compendiumModuleUuids,getTargetScopeId());
+        ModelSafeguardsCommand modelSafeguardsCommand = new ModelSafeguardsCommand(moduleUuidsFromCompendium,getTargetScopeId());
         getCommandService().executeCommand(modelSafeguardsCommand);       
     }
 
     private void handleThreats() throws CommandException {
-        ModelThreatsCommand modelThreatsCommand = new ModelThreatsCommand(compendiumModuleUuids,getTargetScopeId());
+        ModelThreatsCommand modelThreatsCommand = new ModelThreatsCommand(moduleUuidsFromCompendium,getTargetScopeId());
         getCommandService().executeCommand(modelThreatsCommand);
     }
     
     private void createLinks() throws CommandException {
-        ModelLinksCommand modelLinksCommand = new ModelLinksCommand(compendiumModuleUuids,
-                newModuleUuidsScope, getTargetScopeId(), targetElements);
+        ModelLinksCommand modelLinksCommand = new ModelLinksCommand(moduleUuidsFromCompendium,
+                newModuleUuidsFromScope, getTargetScopeId(), targetElements);
         getCommandService().executeCommand(modelLinksCommand);
     }
     
@@ -191,7 +190,7 @@ public class ModelCommand extends ChangeLoggingCommand {
         requirementGroups = new HashSet<>();
         targetElements = new HashSet<>();
         for (CnATreeElement element : elements) {
-            if (compendiumModuleUuids.contains(element.getUuid())
+            if (moduleUuidsFromCompendium.contains(element.getUuid())
                     && element instanceof BpRequirementGroup) {
                 requirementGroups.add((BpRequirementGroup) element);
             }
@@ -203,7 +202,7 @@ public class ModelCommand extends ChangeLoggingCommand {
     
     private List<String> getAllUuids() {
         List<String> allUuids = new LinkedList<>();
-        allUuids.addAll(compendiumModuleUuids);
+        allUuids.addAll(moduleUuidsFromCompendium);
         allUuids.addAll(targetUuids);
         return allUuids;
     }
