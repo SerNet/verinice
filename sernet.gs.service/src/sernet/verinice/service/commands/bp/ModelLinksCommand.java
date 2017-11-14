@@ -107,6 +107,7 @@ public class ModelLinksCommand extends GenericCommand {
     public void execute() {
         try {
             requirementsFromCompendium = loadRequirements(moduleUuidsFromCompendium);
+            loadAllRequirementsFromScope();
             if(isNewModuleInScope()) {
                 loadNewRequirementsFromScope();
                 loadAllSafeguardsFromScope();
@@ -148,7 +149,7 @@ public class ModelLinksCommand extends GenericCommand {
 
     private Link createLinksToTarget(BpRequirement requirementCompendium,
             CnATreeElement targetScope) {
-        BpRequirement requirementScope = newRequirementsFromScope.get(requirementCompendium.getIdentifier());
+        BpRequirement requirementScope = allRequirementsFromScope.get(requirementCompendium.getIdentifier());
         if(validate(requirementScope, targetScope))  {
             return new Link(requirementScope, targetScope);
         } else {
