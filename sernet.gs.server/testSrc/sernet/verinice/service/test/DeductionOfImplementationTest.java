@@ -115,7 +115,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         Dou<Safeguard, BpRequirement> dou = createTestElements();
         Safeguard safeguard = dou.a;
         BpRequirement requirement = dou.b;
-        requirement = prepareRequirement(requirement);
 
         CreateLink<CnALink, CnATreeElement, CnATreeElement> createLink = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(
                 safeguard, requirement, null, null);
@@ -135,7 +134,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         Dou<Safeguard, BpRequirement> dou = createTestElements();
         Safeguard safeguard = dou.a;
         BpRequirement requirement = dou.b;
-        requirement = prepareRequirement(requirement);
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Change the safeguard implementation status to: "
@@ -180,7 +178,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         Dou<Safeguard, BpRequirement> dou = createTestElements();
         Safeguard safeguard = dou.a;
         BpRequirement requirement = dou.b;
-        requirement = prepareRequirement(requirement);
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Change the safeguard implementation status to: "
@@ -223,7 +220,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         Dou<Safeguard, BpRequirement> dou = createTestElements();
         Safeguard safeguard = dou.a;
         BpRequirement requirement = dou.b;
-        requirement = prepareRequirement(requirement);
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Change the safeguard implementation status to: "
@@ -249,7 +245,6 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         Dou<Safeguard, BpRequirement> dou = createTestElements();
         Safeguard safeguard = dou.a;
         BpRequirement requirement = dou.b;
-        requirement = prepareRequirement(requirement);
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Change the safeguard implementation status to: "
