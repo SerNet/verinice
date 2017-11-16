@@ -310,7 +310,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
     public void updateValue(CascadingTransaction ta) {
         // do nothing
     }
-
+    
     @Override
     public void setValue(CascadingTransaction ta, String properyName, Object value) {
         // do nothing
