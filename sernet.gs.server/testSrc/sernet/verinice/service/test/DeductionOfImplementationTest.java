@@ -409,7 +409,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
                 getImplementationStatus(requirement));
 
         assertTrue("Deduction should be enabled.",
-                DeductionImplementationUtil.isDeduciveImplementationEnabled(requirement));
+                DeductionImplementationUtil.isDeductiveImplementationEnabled(requirement));
         return requirement;
     }
 

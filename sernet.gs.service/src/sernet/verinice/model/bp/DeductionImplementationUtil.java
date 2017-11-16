@@ -49,7 +49,7 @@ public class DeductionImplementationUtil {
         return element.getTypeId() + IMPLEMENTATION_STATUS;
     }
 
-    public static boolean isDeduciveImplementationEnabled(CnATreeElement element) {
+    public static boolean isDeductiveImplementationEnabled(CnATreeElement element) {
         String value = element.getPropertyValue(element.getTypeId() + IMPLEMENTATION_DEDUCE);
         return isSelected(value);
     }
