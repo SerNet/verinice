@@ -19,13 +19,16 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
+import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatus;
+import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatusId;
+import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeduciveImplementationEnabled;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bsi.ISchutzbedarfProvider;
 import sernet.verinice.model.common.CascadingTransaction;
@@ -60,54 +63,44 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     public static final String REL_BP_REQUIREMENT_BP_THREAT = "rel_bp_requirement_bp_threat"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_SAFEGUARD = "rel_bp_requirement_bp_safeguard"; //$NON-NLS-1$
     
-//    private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this){
-//        /**
-//         * 
-//         */
-//        private static final long serialVersionUID = 608299901188559815L;
-//
-//        @Override
-//        public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
-//            String value = sbTarget.getPropertyValue("bp_requirement_implementation_deduce");
-//            System.out.println(
-//                    "|------>" + sbTarget.getPropertyValue("bp_requirement_implementation_status"));
-//            if (!isSelected(value)) {
-//                return;
-//            }
-//            Set<CnALink> linksUp = sbTarget.getLinksDown();
-//            for (CnALink cnALink : linksUp) {
-//                CnATreeElement d = cnALink.getDependency();
-//                String typeId = d.getTypeId();
-//
-//                if ("bp_safeguard".equals(typeId)) {
-//                    Entity entity = d.getEntity();
-//                    String optionValue = entity
-//                            .getOptionValue("bp_safeguard_implementation_status");
-//                    optionValue = optionValue.replaceFirst("bp_safeguard", "bp_requirement");
-//
-//                    System.out.println("---->" + optionValue);
-//                    sbTarget.setPropertyValue("bp_requirement_implementation_status", optionValue);
-//                    System.out.println("------>"
-//                            + sbTarget.getPropertyValue("bp_requirement_implementation_status"));
-//                }
-//            }
-//        }
-//
-//        private boolean isSelected(String value) {
-//            return "1".equals(value);
-//        }
-//    };
-//    private final ISchutzbedarfProvider schutzbedarfProvider = new AssetValueAdapter(this);
-//    
-//    @Override
-//    public ILinkChangeListener getLinkChangeListener() {
-//        return linkChangeListener;
-//    }
-//    @Override
-//    public ISchutzbedarfProvider getSchutzbedarfProvider() {
-//        return schutzbedarfProvider;
-//    }
-//
+    private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this){
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 608299901188559815L;
+
+        @Override
+        public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
+            if(!isDeduciveImplementationEnabled(sbTarget)){
+                return;
+            }
+            
+            for (CnALink cnALink : sbTarget.getLinksUp()) {
+                CnATreeElement dependant = cnALink.getDependant();
+                if (Safeguard.TYPE_ID.equals(dependant.getTypeId())) {
+                    String optionValue = getImplementationStatus(dependant);
+                    if (optionValue != null) {
+                        optionValue = optionValue.replaceFirst(Safeguard.TYPE_ID,
+                                BpRequirement.TYPE_ID);
+                        sbTarget.setPropertyValue(getImplementationStatusId(sbTarget),
+                                optionValue);
+                    }
+                }
+            }
+        }
+
+    };
+    private final ISchutzbedarfProvider schutzbedarfProvider = new AssetValueAdapter(this);
+    
+    @Override
+    public ILinkChangeListener getLinkChangeListener() {
+        return linkChangeListener;
+    }
+    @Override
+    public ISchutzbedarfProvider getSchutzbedarfProvider() {
+        return schutzbedarfProvider;
+    }
+
     
     protected BpRequirement() {}
 

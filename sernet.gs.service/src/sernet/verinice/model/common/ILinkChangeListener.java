@@ -23,7 +23,7 @@ public interface ILinkChangeListener {
 	/**
 	 * Determine protection level, either by going upwards through <code>CnALinks</code> for
 	 * maximum protection level or by just sticking with the current one, depending
-	 * on the description and tehreby the rules set by the user.
+	 * on the description and thereby the rules set by the user.
 	 * 
 	 * @param ta
 	 */
@@ -32,7 +32,7 @@ public interface ILinkChangeListener {
 	/**
 	 * Determine protection level, either by going upwards through <code>CnALinks</code> for
 	 * maximum protection level or by just sticking with the current one, depending
-	 * on the description and tehreby the rules set by the user.
+	 * on the description and thereby the rules set by the user.
 	 * 
 	 * @param ta
 	 */
@@ -41,11 +41,14 @@ public interface ILinkChangeListener {
 	/**
 	 * Determine protection level, either by going upwards through <code>CnALinks</code> for
 	 * maximum protection level or by just sticking with the current one, depending
-	 * on the description and tehreby the rules set by the user.
+	 * on the description and thereby the rules set by the user.
 	 * 
 	 * @param ta
 	 */
 	public void determineVerfuegbarkeit(CascadingTransaction ta) throws TransactionAbortedException ;
 	
+	/**
+	 * Determine an arbitrate value by going upwards through <code>CnALinks</code>.
+	 */
 	public void determineValue(CascadingTransaction ta) throws TransactionAbortedException ;
 }
