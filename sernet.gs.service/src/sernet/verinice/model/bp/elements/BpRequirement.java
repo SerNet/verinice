@@ -21,7 +21,7 @@ package sernet.verinice.model.bp.elements;
 
 import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatus;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatusId;
-import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeduciveImplementationEnabled;
+import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeductiveImplementationEnabled;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -75,7 +75,7 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
 
         @Override
         public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
-            if(!isDeduciveImplementationEnabled(sbTarget)){
+            if(!isDeductiveImplementationEnabled(sbTarget)){
                 return;
             }
             

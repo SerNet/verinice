@@ -21,7 +21,7 @@ package sernet.verinice.model.bp.elements;
 
 import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatus;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatusId;
-import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeduciveImplementationEnabled;
+import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeductiveImplementationEnabled;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -79,7 +79,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
             for (CnALink cnALink : sbTarget.getLinksUp()) {
                 CnATreeElement dependant = cnALink.getDependant();
                 if (BpRequirement.TYPE_ID.equals(dependant.getTypeId())
-                        && isDeduciveImplementationEnabled(dependant)) {
+                        && isDeductiveImplementationEnabled(dependant)) {
                     String optionValue = getImplementationStatus(sbTarget);
                     if (optionValue != null) {
                         optionValue = optionValue.replaceFirst(Safeguard.TYPE_ID,
