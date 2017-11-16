@@ -31,10 +31,12 @@ import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateITNetwork;
+import sernet.verinice.service.commands.crud.CreateBpModel;
 import sernet.verinice.service.model.LoadModel;
 
 /**
  * Basis methods for mbp tests.
+ * 
  * @author uz[at]sernet.de
  *
  */
@@ -104,6 +106,11 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
         LoadModel<BpModel> loadModel = new LoadModel<>(BpModel.class);
         loadModel = commandService.executeCommand(loadModel);
         BpModel model = loadModel.getModel();
+        if (model == null) {
+            CreateBpModel createBpModel = new CreateBpModel();
+            createBpModel = commandService.executeCommand(createBpModel);
+            model = createBpModel.getElement();
+        }
 
         assertNotNull("BP model is null.", model);
         CreateITNetwork saveCommand = new CreateITNetwork(model, ItNetwork.class, true);
