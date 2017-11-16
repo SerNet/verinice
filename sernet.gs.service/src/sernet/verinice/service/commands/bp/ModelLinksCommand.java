@@ -37,8 +37,16 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.elements.BusinessProcess;
+import sernet.verinice.model.bp.elements.Device;
+import sernet.verinice.model.bp.elements.IcsSystem;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.ItSystem;
+import sernet.verinice.model.bp.elements.Network;
+import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Link;
@@ -79,25 +87,38 @@ public class ModelLinksCommand extends GenericCommand {
             "join fetch propertyList.properties as props " +
             "where element.objectType in (:typeIds) " +
             "and requirement.uuid = :uuid"; //$NON-NLS-1$
+
+    private static final Map<String, String> ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS = new HashMap<>();
+    
+    static {
+        ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.put(Application.TYPE_ID, BpRequirement.REL_BP_REQUIREMENT_BP_APPLICATION);
+        ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.put(BusinessProcess.TYPE_ID, BpRequirement.REL_BP_REQUIREMENT_BP_BUSINESSPROCESS);
+        ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.put(Device.TYPE_ID, BpRequirement.REL_BP_REQUIREMENT_BP_DEVICE);
+        ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.put(IcsSystem.TYPE_ID, BpRequirement.REL_BP_REQUIREMENT_BP_ICSSYSTEM);
+        ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.put(ItNetwork.TYPE_ID, BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
+        ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.put(ItSystem.TYPE_ID, BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
+        ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.put(Network.TYPE_ID, BpRequirement.REL_BP_REQUIREMENT_BP_NETWORK);
+        ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.put(Room.TYPE_ID, BpRequirement.REL_BP_REQUIREMENT_BP_ROOM);
+    }
     
     private transient Set<String> moduleUuidsFromCompendium;
     private transient Set<String> newModuleUuidsFromScope;
     private Integer scopeId;
 
-    private transient Set<CnATreeElement> targetElements;
+    private transient Set<CnATreeElement> elementsFromScope;
     private transient Set<BpRequirement> requirementsFromCompendium;
     private transient Map<String,BpRequirement> newRequirementsFromScope;
-    private transient Map<String,BpRequirement> allRequirementsFromScope;
-    private transient Map<String,Safeguard> allSafeguardsFromScope;
-    private transient Map<String,BpThreat> allThreatsFromScope;
+    private transient Map<String,CnATreeElement> allRequirementsFromScope;
+    private transient Map<String,CnATreeElement> allSafeguardsFromScope;
+    private transient Map<String,CnATreeElement> allThreatsFromScope;
     
-    public ModelLinksCommand(Set<String> moduleUuidsCompendium, Set<String> newModulesInScopeUuids,
+    public ModelLinksCommand(Set<String> moduleUuidsFromCompendium, Set<String> newModuleUuidsFromScope,
             Integer scopeId, Set<CnATreeElement> targetElements) {
         super();
-        this.moduleUuidsFromCompendium = moduleUuidsCompendium;
-        this.newModuleUuidsFromScope = newModulesInScopeUuids;
+        this.moduleUuidsFromCompendium = moduleUuidsFromCompendium;
+        this.newModuleUuidsFromScope = newModuleUuidsFromScope;
         this.scopeId = scopeId;
-        this.targetElements = targetElements;
+        this.elementsFromScope = targetElements;
     }
 
     /* (non-Javadoc)
@@ -122,56 +143,59 @@ public class ModelLinksCommand extends GenericCommand {
 
     private void createLinks() throws CommandException {
         List<Link> linkList = new LinkedList<>();
-        for (BpRequirement requirementCompendium : requirementsFromCompendium) {
-            linkList.addAll(createLinks(requirementCompendium));
+        for (BpRequirement requirementFromCompendium : requirementsFromCompendium) {
+            linkList.addAll(createLinks(requirementFromCompendium));
         }
         CreateMultipleLinks createMultipleLinks = new CreateMultipleLinks(linkList);
         getCommandService().executeCommand(createMultipleLinks);
     }
 
-    protected List<Link> createLinks(BpRequirement requirementCompendium) {
+    protected List<Link> createLinks(BpRequirement requirementFromCompendium) {
         List<Link> linkList = new LinkedList<>();
-        linkList.addAll(linkRequirementWithTargetElements(requirementCompendium));
+        linkList.addAll(linkRequirementWithTargetElements(requirementFromCompendium));
         if(isNewModuleInScope()) {
-            Set<CnATreeElement> linkedElements = loadLinkedElements(requirementCompendium.getUuid());
-            linkList.addAll(createLinksToSafeguardAndThreat(requirementCompendium, linkedElements));
+            Set<CnATreeElement> linkedElements = loadLinkedElements(requirementFromCompendium.getUuid());
+            linkList.addAll(createLinksToSafeguardAndThreat(requirementFromCompendium, linkedElements));
         }
         return linkList;
     }
 
-    private List<Link> linkRequirementWithTargetElements(BpRequirement requirementCompendium) {
+    private List<Link> linkRequirementWithTargetElements(BpRequirement requirementFromCompendium) {
         List<Link> linkList = new LinkedList<>();
-        for (CnATreeElement targetScope : targetElements) {
-            linkList.add(createLinksToTarget(requirementCompendium,targetScope));
+        for (CnATreeElement elementFromScope : elementsFromScope) {
+            linkList.add(createLinkToElement(requirementFromCompendium,elementFromScope));
         }
         return linkList;
     }
 
-    private Link createLinksToTarget(BpRequirement requirementCompendium,
-            CnATreeElement targetScope) {
-        BpRequirement requirementScope = allRequirementsFromScope.get(requirementCompendium.getIdentifier());
-        if(validate(requirementScope, targetScope))  {
-            return new Link(requirementScope, targetScope);
+    private Link createLinkToElement(BpRequirement requirementFromCompendium,
+            CnATreeElement elementFromScope) {
+        CnATreeElement requirementScope = allRequirementsFromScope.get(requirementFromCompendium.getIdentifier());
+        if(validate(requirementScope, elementFromScope))  {
+            return new Link(requirementScope, elementFromScope, getElementToRequirementLinkTypeId(elementFromScope.getObjectType()));
         } else {
             return null;
-        }
-        
+        }      
     }
 
-    private List<Link> createLinksToSafeguardAndThreat(BpRequirement requirementCompendium,
+    private String getElementToRequirementLinkTypeId(String objectType) {
+        return ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.get(objectType);
+    }
+
+    private List<Link> createLinksToSafeguardAndThreat(BpRequirement requirementFromCompendium,
             Set<CnATreeElement> linkedElements) {
         List<Link> linkList = new LinkedList<>();
         for (CnATreeElement element : linkedElements) {
             if(element instanceof Safeguard) {
-                Safeguard safeguardCompendium = (Safeguard) element;
-                Link link = createLink(requirementCompendium,safeguardCompendium);
+                Safeguard safeguardFromCompendium = (Safeguard) element;
+                Link link = createLink(requirementFromCompendium,safeguardFromCompendium);
                 if(link!=null) {
                     linkList.add(link);
                 }
             }
             if(element instanceof BpThreat) {
-                BpThreat threatCompendium = (BpThreat) element;
-                Link link = createLink(requirementCompendium,threatCompendium);
+                BpThreat threatFromCompendium = (BpThreat) element;
+                Link link = createLink(requirementFromCompendium,threatFromCompendium);
                 if(link!=null) {
                     linkList.add(link);
                 }        
@@ -180,9 +204,9 @@ public class ModelLinksCommand extends GenericCommand {
         return linkList;
     }
 
-    private Link createLink(BpRequirement requirementCompendium, Safeguard safeguardCompendium) {
-        BpRequirement requirementScope = newRequirementsFromScope.get(requirementCompendium.getIdentifier());
-        Safeguard safeguardScope = allSafeguardsFromScope.get(safeguardCompendium.getIdentifier());
+    private Link createLink(BpRequirement requirementFromCompendium, Safeguard safeguardFromCompendium) {
+        BpRequirement requirementScope = newRequirementsFromScope.get(requirementFromCompendium.getIdentifier());
+        CnATreeElement safeguardScope = allSafeguardsFromScope.get(safeguardFromCompendium.getIdentifier());
         if(validate(requirementScope, safeguardScope))  {
             return new Link(requirementScope, safeguardScope, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
         } else {
@@ -190,9 +214,9 @@ public class ModelLinksCommand extends GenericCommand {
         }
     }
 
-    private Link createLink(BpRequirement requirementCompendium, BpThreat threatCompendium) {
-        BpRequirement requirementScope = newRequirementsFromScope.get(requirementCompendium.getIdentifier());
-        BpThreat threatScope = allThreatsFromScope.get(threatCompendium.getIdentifier());        
+    private Link createLink(BpRequirement requirementFromCompendium, BpThreat threatFromCompendium) {
+        BpRequirement requirementScope = newRequirementsFromScope.get(requirementFromCompendium.getIdentifier());
+        CnATreeElement threatScope = allThreatsFromScope.get(threatFromCompendium.getIdentifier());        
         if(validate(requirementScope, threatScope))  {
             return new Link(requirementScope, threatScope, BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
         } else {
@@ -225,11 +249,11 @@ public class ModelLinksCommand extends GenericCommand {
     }
 
     private Set<CnATreeElement> loadLinkedElements(final String requirementUuid) {
-         return new HashSet<>(findLinkedElements(requirementUuid));
+         return new HashSet<>(loadLinkedElementList(requirementUuid));
     }
     
     @SuppressWarnings("unchecked")
-    private List<CnATreeElement> findLinkedElements(final String requirementUuid) {
+    private List<CnATreeElement> loadLinkedElementList(final String requirementUuid) {
         return getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
@@ -249,61 +273,47 @@ public class ModelLinksCommand extends GenericCommand {
         }
     }
     
-    @SuppressWarnings("unchecked")
     private void loadAllRequirementsFromScope() {
-        List<BpRequirement> requirements = getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(ModelCommand.HQL_SCOPE_ELEMENTS).setParameter("scopeId",
-                        scopeId).setParameter("typeId", BpRequirement.TYPE_ID);
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
+        List<CnATreeElement> requirements = loadElementsFromScope(BpRequirement.TYPE_ID, scopeId);
         allRequirementsFromScope = new HashMap<>();
-        for (BpRequirement requirement : requirements) {
-            allRequirementsFromScope.put(requirement.getIdentifier(), requirement);
+        for (CnATreeElement requirement : requirements) {
+            allRequirementsFromScope.put(BpRequirement.getIdentifierOfRequirement(requirement), requirement);
         }
     }
     
-    @SuppressWarnings("unchecked")
     private void loadAllSafeguardsFromScope() {
-        List<Safeguard> safeguards = getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(ModelCommand.HQL_SCOPE_ELEMENTS).setParameter("scopeId",
-                        scopeId).setParameter("typeId", Safeguard.TYPE_ID);
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
+        List<CnATreeElement> safeguards = loadElementsFromScope(Safeguard.TYPE_ID, scopeId);
         allSafeguardsFromScope = new HashMap<>();
-        for (Safeguard safeguard : safeguards) {
-            allSafeguardsFromScope.put(safeguard.getIdentifier(), safeguard);
+        for (CnATreeElement safeguard : safeguards) {
+            allSafeguardsFromScope.put(Safeguard.getIdentifierOfSafeguard(safeguard), safeguard);
+        }
+    }
+    
+    private void loadAllThreatsFromScope() {
+        List<CnATreeElement> threats = loadElementsFromScope(BpThreat.TYPE_ID, scopeId);
+        allThreatsFromScope = new HashMap<>();
+        for (CnATreeElement threat : threats) {
+            allThreatsFromScope.put(BpThreat.getIdentifierOfThreat(threat), threat);
         }
     }
     
     @SuppressWarnings("unchecked")
-    private void loadAllThreatsFromScope() {
-        List<BpThreat> threats = getDao().findByCallback(new HibernateCallback() {
+    private List<CnATreeElement> loadElementsFromScope(final String typeId, final Integer scopeId) {
+        return getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
                 Query query = session.createQuery(ModelCommand.HQL_SCOPE_ELEMENTS).setParameter("scopeId",
-                        scopeId).setParameter("typeId", BpThreat.TYPE_ID);
+                        scopeId).setParameter("typeId", typeId);
                 query.setReadOnly(true);
                 return query.list();
             }
         });
-        allThreatsFromScope = new HashMap<>();
-        for (BpThreat threat : threats) {
-            allThreatsFromScope.put(threat.getIdentifier(), threat);
-        }
     }
     
     private boolean isNewModuleInScope() {
         return newModuleUuidsFromScope!=null && !newModuleUuidsFromScope.isEmpty();
     }
-
+    
     private IBaseDao<CnATreeElement, Serializable> getDao() {
         return getDaoFactory().getDAO(CnATreeElement.class);
     }

@@ -176,5 +176,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
         return ((this.getNumericProperty(PROP_AVAILABILITY) == 1) ? true : false); 
     }
 
-
+    public static String getIdentifierOfSafeguard(CnATreeElement requirement) {
+        return requirement.getEntity().getPropertyValue(PROP_ID);
+    }
 }

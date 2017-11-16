@@ -115,5 +115,9 @@ public class BpThreat extends CnATreeElement implements IBpElement {
         int value = (isAvailability) ? 1 : 0;
         setNumericProperty(PROP_AVAILABILITY, value);
     }
+    
+    public static String getIdentifierOfThreat(CnATreeElement requirement) {
+        return requirement.getEntity().getPropertyValue(PROP_ID);
+    }
 
 }

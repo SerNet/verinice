@@ -118,7 +118,7 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
     }
 
     private void insertMissingSafeguards() throws CommandException {
-        CnATreeElement safeguardGroup = getSafeguardRootGroup();
+        CnATreeElement safeguardGroup = loadSafeguardRootGroup();
         for (Safeguard safeguard : safeguardsWithParents.values()) {
             insertSafeguard(safeguardGroup, safeguard);
         }
@@ -181,7 +181,7 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
         return group;
     }
 
-    protected CnATreeElement createGroup(CnATreeElement parent, CnATreeElement compendiumGroup)
+    private CnATreeElement createGroup(CnATreeElement parent, CnATreeElement compendiumGroup)
             throws CommandException {
         CnATreeElement group;
         CopyCommand copyCommand = new CopyCommand(parent.getUuid(),
@@ -199,7 +199,7 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
         return group;
     }
 
-    protected CnATreeElement getSafeguardRootGroup() {
+    private CnATreeElement loadSafeguardRootGroup() {
         CnATreeElement safeguardGroup = null;
         CnATreeElement scope = getDao().retrieve(targetScopeId, RetrieveInfo.getChildrenInstance());
         Set<CnATreeElement> children = scope.getChildren();
@@ -217,7 +217,7 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
 
     
     private void loadCompendiumSafeguards() {
-        compendiumSafeguards = new HashSet<>(findSafeguardsByModuleUuids());
+        compendiumSafeguards = new HashSet<>(loadSafeguardsByModuleUuids());
         if (getLog().isDebugEnabled()) {
             getLog().debug("Safeguards linked to modules: ");
             logElements(compendiumSafeguards);
@@ -225,7 +225,7 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
     }
 
     @SuppressWarnings("unchecked")
-    private List<Safeguard> findSafeguardsByModuleUuids() {
+    private List<Safeguard> loadSafeguardsByModuleUuids() {
         return getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {

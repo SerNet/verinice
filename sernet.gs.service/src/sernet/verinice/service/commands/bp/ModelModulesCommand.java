@@ -104,7 +104,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     }
     
     private void insertMissingRequirements() throws CommandException {
-        CnATreeElement requirementGroup = getRequirementRootGroup();
+        CnATreeElement requirementGroup = loadRequirementRootGroup();
         for (CnATreeElement requirement :  missingRequirementsWithParents.values()) {
             insertRequirement(requirementGroup, requirement);
         }
@@ -151,8 +151,8 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     private boolean isRequirementInChildrenSet(Set<CnATreeElement> targetChildren, CnATreeElement requirement) {
         for (CnATreeElement targetSafeguardElement : targetChildren) {
             CnATreeElement targetSafeguard = targetSafeguardElement;
-            String targetIdentifier = getIdentifierOfRequirement(targetSafeguard);
-            String identifier = getIdentifierOfRequirement(requirement);
+            String targetIdentifier = BpRequirement.getIdentifierOfRequirement(targetSafeguard);
+            String identifier = BpRequirement.getIdentifierOfRequirement(requirement);
             if (ModelCommand.nullSafeEquals(targetIdentifier, identifier)) {
                 return true;
             }
@@ -258,8 +258,8 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     private CnATreeElement getRequirementFromScope(CnATreeElement requirementFromCompendium) {
         for (CnATreeElement requirementScope : allRequirementsFromScope) {
             if (ModelCommand.nullSafeEquals(
-                    getIdentifierOfRequirement(requirementScope),
-                    getIdentifierOfRequirement(requirementFromCompendium))) {
+                    BpRequirement.getIdentifierOfRequirement(requirementScope),
+                    BpRequirement.getIdentifierOfRequirement(requirementFromCompendium))) {
                 return requirementScope;
             }
         }
@@ -286,7 +286,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         return group;
     }
 
-    protected CnATreeElement createGroup(CnATreeElement parent, CnATreeElement compendiumGroup)
+    private CnATreeElement createGroup(CnATreeElement parent, CnATreeElement compendiumGroup)
             throws CommandException {
         CnATreeElement group;
         CopyCommand copyCommand = new CopyCommand(parent.getUuid(),
@@ -304,7 +304,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         return group;
     }
 
-    protected CnATreeElement getRequirementRootGroup() {
+    private CnATreeElement loadRequirementRootGroup() {
         CnATreeElement safeguardGroup = null;
         CnATreeElement scope = getDao().retrieve(targetScopeId, RetrieveInfo.getChildrenInstance());
         Set<CnATreeElement> children = scope.getChildren();
@@ -320,10 +320,6 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
                 RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
     }
 
-
-    private String getIdentifierOfRequirement(CnATreeElement compendiumRequirement) {
-        return compendiumRequirement.getEntity().getPropertyValue(BpRequirement.PROP_ID);
-    }
 
     public Set<String> getModuleUuidsFromScope() {
         return moduleUuids;
@@ -354,6 +350,5 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         for (Object element : collection) {
             getLog().debug(element);
         }
-
     }
 }
