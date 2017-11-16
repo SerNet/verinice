@@ -19,8 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
-import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatus;
-import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatusId;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeductiveImplementationEnabled;
 
 import java.util.Date;
@@ -37,7 +35,6 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.common.TransactionAbortedException;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
-import sernet.verinice.model.iso27k.MaximumAssetValueListener;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -67,32 +64,6 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     public static final String REL_BP_REQUIREMENT_BP_THREAT = "rel_bp_requirement_bp_threat"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_SAFEGUARD = "rel_bp_requirement_bp_safeguard"; //$NON-NLS-1$
 
-    private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this){
-        /**
-         *
-         */
-        private static final long serialVersionUID = 608299901188559815L;
-
-        @Override
-        public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
-            if (!isDeductiveImplementationEnabled(sbTarget)) {
-                return;
-            }
-
-            for (CnALink cnALink : sbTarget.getLinksUp()) {
-                CnATreeElement dependant = cnALink.getDependant();
-                if (Safeguard.TYPE_ID.equals(dependant.getTypeId())) {
-                    String optionValue = getImplementationStatus(dependant);
-                    if (optionValue != null) {
-                        optionValue = optionValue.replaceFirst(Safeguard.TYPE_ID,
-                                BpRequirement.TYPE_ID);
-                        sbTarget.setPropertyValue(getImplementationStatusId(sbTarget), optionValue);
-                    }
-                }
-            }
-        }
-
-    };
 
     private final ISchutzbedarfProvider schutzbedarfProvider = new AssetValueAdapter(this);
 
@@ -104,8 +75,28 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     public ISchutzbedarfProvider getSchutzbedarfProvider() {
         return schutzbedarfProvider;
     }
+    
+    private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
+    private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
 
+        private static final long serialVersionUID = -3220319074711927103L;
 
+        @Override
+        public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
+            if (!isDeductiveImplementationEnabled(BpRequirement.this)
+                    || ta.hasBeenVisited(BpRequirement.this)) {
+                return;
+            }
+
+            for (CnALink cnALink : BpRequirement.this.getLinksUp()) {
+                CnATreeElement dependant = cnALink.getDependant();
+                if (dependant instanceof Safeguard) {
+                    setImplementationStausToRequirement((Safeguard) dependant, BpRequirement.this);
+                }
+            }
+        }
+    };
+    
     protected BpRequirement() {}
 
     public BpRequirement(CnATreeElement parent) {
