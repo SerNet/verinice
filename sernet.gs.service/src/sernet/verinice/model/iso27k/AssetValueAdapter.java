@@ -1,17 +1,17 @@
 /*******************************************************************************
  * Copyright (c) 2010 Alexander Koderman <ak@sernet.de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ *     This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *     You should have received a copy of the GNU General Public 
- * License along with this program. 
+ *     You should have received a copy of the GNU General Public
+ * License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
  ******************************************************************************/
@@ -25,7 +25,6 @@ import org.apache.log4j.Logger;
 
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.bsi.ISchutzbedarfProvider;
@@ -37,18 +36,19 @@ import sernet.verinice.model.common.TransactionAbortedException;
 /**
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
- * 
+ *
  */
 public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
 
     private static final Logger LOG = Logger.getLogger(AssetValueAdapter.class);
-    
+
     private CnATreeElement cnaTreeElement;
 
     public AssetValueAdapter(CnATreeElement parent) {
         this.cnaTreeElement = parent;
     }
 
+    @Override
     public int getIntegritaet() {
         if (LOG.isDebugEnabled()) {
             LOG.debug("get Integrity for " + cnaTreeElement); //$NON-NLS-1$
@@ -61,6 +61,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
         }
     }
 
+    @Override
     public int getVerfuegbarkeit() {
         if (LOG.isDebugEnabled()) {
             LOG.debug("get avail. for " + cnaTreeElement); //$NON-NLS-1$
@@ -73,6 +74,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
         }
     }
 
+    @Override
     public int getVertraulichkeit() {
         if (LOG.isDebugEnabled()) {
             LOG.debug("get confid. for " + cnaTreeElement); //$NON-NLS-1$
@@ -85,35 +87,45 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
         }
     }
 
+    @Override
     public void setIntegritaet(int i) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("set integrity for " + cnaTreeElement); //$NON-NLS-1$
         }
-        EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
+        EntityType entityType = HUITypeFactory.getInstance()
+                .getEntityType(cnaTreeElement.getEntity().getEntityType());
         String id = cnaTreeElement.getTypeId() + AssetValueService.INTEGRITY;
         PropertyType propertyType = entityType.getPropertyType(id);
-        if(propertyType!=null)
-        cnaTreeElement.getEntity().setSimpleValue(propertyType, Integer.toString(i));
+        if (propertyType != null) {
+            cnaTreeElement.getEntity().setSimpleValue(propertyType, Integer.toString(i));
+        }
     }
 
+    @Override
     public void setVerfuegbarkeit(int i) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("set avail. for " + cnaTreeElement); //$NON-NLS-1$
         }
-        EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
-        PropertyType propertyType = entityType.getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.AVAILABILITY);
-        if(propertyType!=null)
-        cnaTreeElement.getEntity().setSimpleValue(propertyType, Integer.toString(i));
+        EntityType entityType = HUITypeFactory.getInstance()
+                .getEntityType(cnaTreeElement.getEntity().getEntityType());
+        PropertyType propertyType = entityType
+                .getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.AVAILABILITY);
+        if (propertyType != null) {
+            cnaTreeElement.getEntity().setSimpleValue(propertyType, Integer.toString(i));
+        }
     }
 
+    @Override
     public void setVertraulichkeit(int i) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("set confd. for " + cnaTreeElement); //$NON-NLS-1$
         }
-        EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
-        PropertyType propertyType = entityType.getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.CONFIDENTIALITY);
-        if(propertyType!=null)
-        cnaTreeElement.getEntity().setSimpleValue(propertyType, Integer.toString(i));
+        EntityType entityType = HUITypeFactory.getInstance()
+                .getEntityType(cnaTreeElement.getEntity().getEntityType());
+        PropertyType propertyType = entityType
+                .getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.CONFIDENTIALITY);
+        if (propertyType != null)
+            cnaTreeElement.getEntity().setSimpleValue(propertyType, Integer.toString(i));
     }
 
     /**
@@ -159,6 +171,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
     /* (non-Javadoc)
      * @see sernet.verinice.model.bsi.ISchutzbedarfProvider#updateIntegritaet(sernet.verinice.model.common.CascadingTransaction)
      */
+    @Override
     public void updateIntegritaet(CascadingTransaction ta) {
         try {
             // 1st step: traverse down:
@@ -191,6 +204,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
     /* (non-Javadoc)
      * @see sernet.verinice.model.bsi.ISchutzbedarfProvider#updateVerfuegbarkeit(sernet.verinice.model.common.CascadingTransaction)
      */
+    @Override
     public void updateVerfuegbarkeit(CascadingTransaction ta) {
         try {
             // 1st step: traverse down:
@@ -222,6 +236,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
     /* (non-Javadoc)
      * @see sernet.verinice.model.bsi.ISchutzbedarfProvider#updateVertraulichkeit(sernet.verinice.model.common.CascadingTransaction)
      */
+    @Override
     public void updateVertraulichkeit(CascadingTransaction ta) {
         try {
             // 1st step: traverse down:
@@ -251,20 +266,22 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
      * getIntegritaetDescription()
      */
+    @Override
     public String getIntegritaetDescription() {
         return getDescription();
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
      * getVerfuegbarkeitDescription()
      */
+    @Override
     public String getVerfuegbarkeitDescription() {
         return getDescription();
     }
@@ -283,50 +300,55 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
      * getVertraulichkeitDescription()
      */
+    @Override
     public String getVertraulichkeitDescription() {
         return getDescription();
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
      * setIntegritaetDescription(java.lang.String)
      */
+    @Override
     public void setIntegritaetDescription(String text) {
         setDescription(text);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
      * setVerfuegbarkeitDescription(java.lang.String)
      */
+    @Override
     public void setVerfuegbarkeitDescription(String text) {
         setDescription(text);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
      * setVertraulichkeitDescription(java.lang.String)
      */
+    @Override
     public void setVertraulichkeitDescription(String text) {
         setDescription(text);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
      * isCalculatedAvailability()
      */
+    @Override
     public boolean isCalculatedAvailability() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_AVAILABILITY);
         if (properties != null && properties.getProperties() != null && properties.getProperties().size() > 0){
@@ -338,10 +360,11 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
      * isCalculatedConfidentiality()
      */
+    @Override
     public boolean isCalculatedConfidentiality() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_CONFIDENTIALITY);
         if (properties != null && properties.getProperties() != null && properties.getProperties().size() > 0){
@@ -353,11 +376,12 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#isCalculatedIntegrity
      * ()
      */
+    @Override
     public boolean isCalculatedIntegrity() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_INTEGRITY);
         if (properties != null && properties.getProperties() != null && properties.getProperties().size() > 0){
@@ -396,6 +420,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
 
     @Override
     public void setValue(CascadingTransaction ta, String properyName, Object value) {
+        //override to introduce new behavior
     }
 
 }
