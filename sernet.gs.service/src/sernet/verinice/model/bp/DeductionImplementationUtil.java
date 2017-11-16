@@ -34,6 +34,7 @@ public class DeductionImplementationUtil {
     public static final String IMPLEMENTATION_STATUS_CODE_NO = "_implementation_status_no";
     public static final String IMPLEMENTATION_STATUS_CODE_YES = "_implementation_status_yes";
     public static final String IMPLEMENTATION_STATUS_CODE_PARTIALLY = "_implementation_status_partially";
+    public static final String IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE = "_implementation_status_na";
 
     private DeductionImplementationUtil() {
         super();
