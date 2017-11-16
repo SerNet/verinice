@@ -42,7 +42,8 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 		this.sbTarget = item;
 	}
 
-	public void determineIntegritaet(CascadingTransaction ta)
+	@Override
+    public void determineIntegritaet(CascadingTransaction ta)
 			throws TransactionAbortedException {
 		if (hasBeenVisited(ta)){
 			return;
@@ -85,7 +86,8 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 		return false;
 	}
 
-	public void determineVerfuegbarkeit(CascadingTransaction ta)
+	@Override
+    public void determineVerfuegbarkeit(CascadingTransaction ta)
 			throws TransactionAbortedException {
 		if (hasBeenVisited(ta)){
 			return;
@@ -119,7 +121,8 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 		sbTarget.getSchutzbedarfProvider().setVerfuegbarkeit(highestValue);
 	}
 
-	public void determineVertraulichkeit(CascadingTransaction ta)
+	@Override
+    public void determineVertraulichkeit(CascadingTransaction ta)
 			throws TransactionAbortedException {
 
 		if (hasBeenVisited(ta)){
@@ -150,13 +153,11 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 			return;
 		}
 		sbTarget.getSchutzbedarfProvider().setVertraulichkeit(highestValue);
-
 	}
 
     @Override
     public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
-        // TODO Auto-generated method stub
-
+        // do nothing
     }
 
 }
