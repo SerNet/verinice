@@ -38,9 +38,9 @@ import sernet.verinice.service.model.LoadModel;
  * @author uz[at]sernet.de
  *
  */
-public abstract class AbstractModernizedBaseProtectionTest extends CommandServiceProvider {
+public abstract class AbstractModernizedBaseProtection extends CommandServiceProvider {
 
-    public AbstractModernizedBaseProtectionTest() {
+    public AbstractModernizedBaseProtection() {
         super();
     }
 
