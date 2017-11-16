@@ -19,13 +19,16 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
+import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatus;
+import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatusId;
+import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeduciveImplementationEnabled;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bsi.ISchutzbedarfProvider;
 import sernet.verinice.model.common.CascadingTransaction;
@@ -73,21 +76,15 @@ public class Safeguard extends CnATreeElement implements IBpElement {
 
         @Override
         public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
-            Set<CnALink> linksUp = sbTarget.getLinksUp();
-            for (CnALink cnALink : linksUp) {
+            for (CnALink cnALink : sbTarget.getLinksUp()) {
                 CnATreeElement dependant = cnALink.getDependant();
-                String typeId = dependant.getTypeId();
-                if (BpRequirement.TYPE_ID.equals(typeId)) {
-                    String propertyValue = dependant
-                            .getPropertyValue("bp_requirement_implementation_deduce");
-                    if ("1".equals(propertyValue)) {
-                        Entity entity = sbTarget.getEntity();
-                        String optionValue = entity
-                                .getOptionValue("bp_safeguard_implementation_status");
+                if (BpRequirement.TYPE_ID.equals(dependant.getTypeId())
+                        && isDeduciveImplementationEnabled(dependant)) {
+                    String optionValue = getImplementationStatus(sbTarget);
+                    if (optionValue != null) {
                         optionValue = optionValue.replaceFirst(Safeguard.TYPE_ID,
                                 BpRequirement.TYPE_ID);
-
-                        dependant.setPropertyValue("bp_requirement_implementation_status",
+                        dependant.setPropertyValue(getImplementationStatusId(dependant),
                                 optionValue);
                     }
                 }
@@ -99,6 +96,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     public ILinkChangeListener getLinkChangeListener() {
         return linkChangeListener;
     }
+
     @Override
     public ISchutzbedarfProvider getSchutzbedarfProvider() {
         return schutzbedarfProvider;
