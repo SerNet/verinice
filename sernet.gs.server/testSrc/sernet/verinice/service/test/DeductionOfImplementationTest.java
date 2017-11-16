@@ -28,6 +28,7 @@ import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATIO
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS_CODE_PARTIALLY;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS_CODE_YES;
+import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatus;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatusId;
 
