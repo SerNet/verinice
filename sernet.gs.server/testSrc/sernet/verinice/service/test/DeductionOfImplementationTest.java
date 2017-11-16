@@ -54,7 +54,7 @@ import sernet.verinice.service.commands.UpdateElement;
 /**
  * Test the deduction of the implementation for a requirement. A
  * {@link BpRequirement} can deduce the implementation status from a linked
- * {@link Safeguard} when the property
+ * {@link Safeguard} when the property 'xxx_implementation_deduce' is set.
  *
  * @author uz[at]sernet.de
  *
