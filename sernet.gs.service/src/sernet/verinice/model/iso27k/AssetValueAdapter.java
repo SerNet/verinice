@@ -89,31 +89,39 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
         if (LOG.isDebugEnabled()) {
             LOG.debug("set integrity for " + cnaTreeElement); //$NON-NLS-1$
         }
-        EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
+        EntityType entityType = HUITypeFactory.getInstance()
+                .getEntityType(cnaTreeElement.getEntity().getEntityType());
         String id = cnaTreeElement.getTypeId() + AssetValueService.INTEGRITY;
         PropertyType propertyType = entityType.getPropertyType(id);
-        if(propertyType!=null)
-        cnaTreeElement.getEntity().setSimpleValue(propertyType, Integer.toString(i));
+        if (propertyType != null) {
+            cnaTreeElement.getEntity().setSimpleValue(propertyType, Integer.toString(i));
+        }
     }
 
     public void setVerfuegbarkeit(int i) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("set avail. for " + cnaTreeElement); //$NON-NLS-1$
         }
-        EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
-        PropertyType propertyType = entityType.getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.AVAILABILITY);
-        if(propertyType!=null)
-        cnaTreeElement.getEntity().setSimpleValue(propertyType, Integer.toString(i));
+        EntityType entityType = HUITypeFactory.getInstance()
+                .getEntityType(cnaTreeElement.getEntity().getEntityType());
+        PropertyType propertyType = entityType
+                .getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.AVAILABILITY);
+        if (propertyType != null) {
+            cnaTreeElement.getEntity().setSimpleValue(propertyType, Integer.toString(i));
+        }
     }
 
     public void setVertraulichkeit(int i) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("set confd. for " + cnaTreeElement); //$NON-NLS-1$
         }
-        EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
-        PropertyType propertyType = entityType.getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.CONFIDENTIALITY);
-        if(propertyType!=null)
-        cnaTreeElement.getEntity().setSimpleValue(propertyType, Integer.toString(i));  
+        EntityType entityType = HUITypeFactory.getInstance()
+                .getEntityType(cnaTreeElement.getEntity().getEntityType());
+        PropertyType propertyType = entityType
+                .getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.CONFIDENTIALITY);
+        if (propertyType != null) {
+            cnaTreeElement.getEntity().setSimpleValue(propertyType, Integer.toString(i));
+        }
     }
 
     /**
@@ -396,6 +404,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
 
     @Override
     public void setValue(CascadingTransaction ta, String properyName, Object value) {
+        //override to introduce new behavior
     }
 
 }

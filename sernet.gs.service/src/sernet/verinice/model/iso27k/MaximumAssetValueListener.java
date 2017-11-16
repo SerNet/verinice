@@ -186,7 +186,6 @@ public class MaximumAssetValueListener implements ILinkChangeListener, Serializa
     @Override
     public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
         // override when introduce a new behavior
-        
     }
 
 }
