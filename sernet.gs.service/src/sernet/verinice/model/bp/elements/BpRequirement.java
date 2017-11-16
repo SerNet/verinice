@@ -105,6 +105,7 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         return schutzbedarfProvider;
     }
 
+
     protected BpRequirement() {}
 
     public BpRequirement(CnATreeElement parent) {

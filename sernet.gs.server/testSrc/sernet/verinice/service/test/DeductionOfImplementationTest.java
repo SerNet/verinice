@@ -25,9 +25,9 @@ import static org.junit.Assert.assertTrue;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_DEDUCE;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS_CODE_NO;
+import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS_CODE_PARTIALLY;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS_CODE_YES;
-import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatus;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatusId;
 
