@@ -27,6 +27,7 @@ import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATIO
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS_CODE_NO;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS_CODE_PARTIALLY;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS_CODE_YES;
+import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatus;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatusId;
 
@@ -60,7 +61,7 @@ import sernet.verinice.service.commands.UpdateElement;
  */
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
-public class DeductionOfImplementationTest extends AbstractModernizedBaseProtectionTest {
+public class DeductionOfImplementationTest extends AbstractModernizedBaseProtection {
     private static final Logger LOG = Logger.getLogger(DeductionOfImplementationTest.class);
 
     /**
@@ -156,6 +157,14 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_YES);
         assertEquals("Must be option yes.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_YES,
                 getImplementationStatus(requirement));
+        
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Change the safeguard implementation status to: "
+                    + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        }
+        safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        assertEquals("Must be option not applicable.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
+                getImplementationStatus(requirement));
     }
 
     /**
@@ -192,6 +201,14 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         }
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_YES);
         assertEquals("Must be option yes.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_YES,
+                getImplementationStatus(requirement));
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Change the safeguard implementation status to: "
+                    + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        }
+        safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        assertEquals("Must be option not applicable.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
                 getImplementationStatus(requirement));
     }
 
@@ -314,6 +331,14 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         }
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_YES);
         assertEquals("Must be option yes.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_YES,
+                getImplementationStatus(requirement));
+        
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Change the safeguard implementation status to: "
+                    + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        }
+        safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        assertEquals("Must be option not applicable.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
                 getImplementationStatus(requirement));
     }
 
