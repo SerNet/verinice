@@ -66,10 +66,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     private final ISchutzbedarfProvider schutzbedarfProvider = new AssetValueAdapter(this);
     private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this){
  
-        /**
-         * 
-         */
-        private static final long serialVersionUID = 608299901188559815L;
+        private static final long serialVersionUID = 9205866080876674150L;
 
         @Override
         public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
