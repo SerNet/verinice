@@ -75,10 +75,10 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
 
         @Override
         public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
-            if(!isDeductiveImplementationEnabled(sbTarget)){
+            if (!isDeductiveImplementationEnabled(sbTarget)) {
                 return;
             }
-            
+
             for (CnALink cnALink : sbTarget.getLinksUp()) {
                 CnATreeElement dependant = cnALink.getDependant();
                 if (Safeguard.TYPE_ID.equals(dependant.getTypeId())) {
@@ -86,14 +86,14 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
                     if (optionValue != null) {
                         optionValue = optionValue.replaceFirst(Safeguard.TYPE_ID,
                                 BpRequirement.TYPE_ID);
-                        sbTarget.setPropertyValue(getImplementationStatusId(sbTarget),
-                                optionValue);
+                        sbTarget.setPropertyValue(getImplementationStatusId(sbTarget), optionValue);
                     }
                 }
             }
         }
 
     };
+
     private final ISchutzbedarfProvider schutzbedarfProvider = new AssetValueAdapter(this);
     
     @Override
