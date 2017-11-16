@@ -91,7 +91,6 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
                 }
             }
         }
-
     };
 
     private final ISchutzbedarfProvider schutzbedarfProvider = new AssetValueAdapter(this);

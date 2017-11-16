@@ -150,13 +150,11 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 			return;
 		}
 		sbTarget.getSchutzbedarfProvider().setVertraulichkeit(highestValue);
-
 	}
 
     @Override
     public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
-        // TODO Auto-generated method stub
-        
+        // do nothing
     }
 
 }

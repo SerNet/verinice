@@ -604,7 +604,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
             @Override
             public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
-                // TODO Auto-generated method stub
+                // do nothing
                 
             }
 		};
