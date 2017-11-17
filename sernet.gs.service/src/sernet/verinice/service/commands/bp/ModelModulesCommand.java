@@ -20,7 +20,6 @@
 package sernet.verinice.service.commands.bp;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -30,11 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
@@ -60,14 +55,18 @@ import sernet.verinice.service.commands.CopyCommand;
  */
 public class ModelModulesCommand extends ChangeLoggingCommand {
 
+    private static final long serialVersionUID = -6698388849147857588L;
+
     private transient Logger log = Logger.getLogger(ModelModulesCommand.class);
 
+    private transient ModelingMetaDao metaDao;
+    
     private Integer targetScopeId;
     private transient Set<BpRequirementGroup> modulesFromCompendium;
     private transient Set<CnATreeElement> requirementsFromCompendium;
     private transient Set<CnATreeElement> allRequirementsFromScope;
     private transient Map<String, CnATreeElement> missingRequirementsFromCompendium;
-    private transient Map<String, BpRequirement> missingRequirementsWithParents;
+    private transient Map<String, CnATreeElement> missingRequirementsWithParents;
     private transient Map<String, CnATreeElement> requirementParentsWithProperties;
     private Set<String> moduleUuids = new HashSet<>();
     
@@ -163,10 +162,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     private void loadRequirementsFromCompendium() {
         requirementsFromCompendium.clear();
         for (CnATreeElement module : modulesFromCompendium) {
-            RetrieveInfo ri = RetrieveInfo.getChildrenInstance();
-            ri.setChildrenProperties(true);
-            CnATreeElement moduleWithChildren = getDao().findByUuid(module.getUuid(), ri);
-            requirementsFromCompendium.addAll(moduleWithChildren.getChildren());
+            requirementsFromCompendium.addAll(getMetaDao().loadChildrenOfElement(module.getUuid()));
         }
     }
     
@@ -175,24 +171,11 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
      * to avoid duplicate entries.
      */
     private void loadAllRequirementsFromScope() {
-        allRequirementsFromScope = new HashSet<>(loadRequirementsByDao());
+        allRequirementsFromScope = new HashSet<>(getMetaDao().loadElementsFromScope(BpRequirement.TYPE_ID, targetScopeId));
         if (getLog().isDebugEnabled()) {
             getLog().debug("missingRequirementsFromCompendium in target scope: ");
             logElements(allRequirementsFromScope);
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<CnATreeElement> loadRequirementsByDao() {
-        return getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(ModelCommand.HQL_SCOPE_ELEMENTS).setParameter("scopeId",
-                        targetScopeId).setParameter("typeId", BpRequirement.TYPE_ID);
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
     }
     
     private void rememberMissingRequirements() {
@@ -210,7 +193,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     
     private void loadParents() {
         final Set<String> parentUuids = loadParentUuidsOfMissingRequirements();
-        List<CnATreeElement> parentsWithProperties = loadElementsWithProperties(parentUuids);
+        List<CnATreeElement> parentsWithProperties = getMetaDao().loadElementsWithProperties(parentUuids);
         for (CnATreeElement group : parentsWithProperties) {
             requirementParentsWithProperties.put(group.getUuid(), group);
         }
@@ -220,39 +203,18 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private Set<String> loadParentUuidsOfMissingRequirements() {
         // Load the parents (predecessors) of all missing requirements 
-        List<BpRequirement> requirements = getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(ModelCommand.HQL_LOAD_PARENT_IDS).setParameterList("uuids",
-                        missingRequirementsFromCompendium.keySet());
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
+        List<CnATreeElement> requirements = getMetaDao().loadElementsWith3Parents(missingRequirementsFromCompendium.keySet());
+                
         final Set<String> parentUuids = new HashSet<>();
-        for (BpRequirement requirement : requirements) {
+        for (CnATreeElement requirement : requirements) {
             missingRequirementsWithParents.put(requirement.getUuid(), requirement);
             parentUuids.add(requirement.getParent().getUuid());
             parentUuids.add(requirement.getParent().getParent().getUuid());
             parentUuids.add(requirement.getParent().getParent().getParent().getUuid());
         }
         return parentUuids;
-    }
-    
-    @SuppressWarnings("unchecked")
-    private List<CnATreeElement> loadElementsWithProperties(final Set<String> uuids) {
-        return getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(ModelCommand.HQL_ELEMENT_WITH_PROPERTIES)
-                        .setParameterList("uuids", uuids);
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
     }
     
     private CnATreeElement getRequirementFromScope(CnATreeElement requirementFromCompendium) {
@@ -294,8 +256,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         copyCommand.setCopyChildren(false);
         copyCommand = getCommandService().executeCommand(copyCommand);
         String groupUuid = copyCommand.getNewElements().get(0);
-        group = getDao().findByUuid(groupUuid,
-                RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
+        group = getMetaDao().loadElementWithPropertiesAndChildren(groupUuid);
         parent.addChild(group);
         if (getLog().isDebugEnabled()) {
             getLog().debug("Requirement group: " + compendiumGroup.getTitle() + " created in group: "
@@ -306,7 +267,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
 
     private CnATreeElement loadRequirementRootGroup() {
         CnATreeElement safeguardGroup = null;
-        CnATreeElement scope = getDao().retrieve(targetScopeId, RetrieveInfo.getChildrenInstance());
+        CnATreeElement scope = getMetaDao().loadElementWithChildren(targetScopeId);
         Set<CnATreeElement> children = scope.getChildren();
         for (CnATreeElement group : children) {
             if (group.getTypeId().equals(BpRequirementGroup.TYPE_ID)) {
@@ -316,13 +277,19 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         if(safeguardGroup==null) {
             throw new GroupNotFoundInScopeException(targetScopeId, BpRequirementGroup.TYPE_ID);
         }
-        return getDao().retrieve(safeguardGroup.getDbId(),
-                RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
+        return getMetaDao().loadElementWithPropertiesAndChildren(safeguardGroup.getDbId());
     }
 
 
     public Set<String> getModuleUuidsFromScope() {
         return moduleUuids;
+    }
+    
+    public ModelingMetaDao getMetaDao() {
+        if(metaDao==null) {
+            metaDao = new ModelingMetaDao(getDao());
+        }
+        return metaDao;
     }
 
     private IBaseDao<CnATreeElement, Serializable> getDao() {

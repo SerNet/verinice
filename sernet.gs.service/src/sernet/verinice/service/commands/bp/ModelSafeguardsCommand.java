@@ -20,7 +20,6 @@
 package sernet.verinice.service.commands.bp;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,11 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
@@ -61,27 +56,18 @@ import sernet.verinice.service.commands.CopyCommand;
  */
 public class ModelSafeguardsCommand extends ChangeLoggingCommand {
 
+    private static final long serialVersionUID = 1058543062083240202L;
+
     private transient Logger log = Logger.getLogger(ModelSafeguardsCommand.class);
 
-    /**
-     * HQL query to load the linked safeguards of a module
-     */
-    private static final String HQL_LINKED_SAFEGUARDS = "select safeguard from CnATreeElement safeguard " +
-            "join safeguard.linksUp as linksUp " +
-            "join linksUp.dependant as requirement " +
-            "join requirement.parent as module " +
-            "join fetch safeguard.entity as entity " +
-            "join fetch entity.typedPropertyLists as propertyList " +
-            "join fetch propertyList.properties as props " +
-            "where safeguard.objectType = '" + Safeguard.TYPE_ID + "' " +
-            "and module.uuid in (:uuids)"; //$NON-NLS-1$
+    private transient ModelingMetaDao metaDao;
     
     private Set<String> moduleUuids;
     private Integer targetScopeId;
-    private transient Set<Safeguard> compendiumSafeguards;
-    private transient Set<Safeguard> scopeSafeguards;
-    private transient Map<String, Safeguard> missingSafeguards;
-    private transient Map<String, Safeguard> safeguardsWithParents;
+    private transient Set<CnATreeElement> safeguardsFromCompendium;
+    private transient Set<CnATreeElement> safeguardsFromScope;
+    private transient Map<String, CnATreeElement> missingSafeguardsFromCompendium;
+    private transient Map<String, CnATreeElement> safeguardsWithParents;
     private transient Map<String, CnATreeElement> safeguardParentsWithProperties;
 
     private String stationId;
@@ -91,7 +77,7 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
         this.stationId = ChangeLogEntry.STATION_ID;
         this.moduleUuids = moduleUuids;
         this.targetScopeId = targetScopeId;
-        missingSafeguards = new HashMap<>();
+        missingSafeguardsFromCompendium = new HashMap<>();
         safeguardsWithParents = new HashMap<>();
         safeguardParentsWithProperties = new HashMap<>();
     }
@@ -105,9 +91,9 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
     public void execute() {
         try {
             loadCompendiumSafeguards();
-            loadScopeSafeguards();
+            loadSafeguardsFromScope();
             createListOfMissingSafeguards();
-            if(!missingSafeguards.isEmpty()) {
+            if(!missingSafeguardsFromCompendium.isEmpty()) {
                 loadParents();
                 insertMissingSafeguards();
             }
@@ -119,12 +105,12 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
 
     private void insertMissingSafeguards() throws CommandException {
         CnATreeElement safeguardGroup = loadSafeguardRootGroup();
-        for (Safeguard safeguard : safeguardsWithParents.values()) {
+        for (CnATreeElement safeguard : safeguardsWithParents.values()) {
             insertSafeguard(safeguardGroup, safeguard);
         }
     }
 
-    protected void insertSafeguard(CnATreeElement safeguardGroup, Safeguard safeguard)
+    protected void insertSafeguard(CnATreeElement safeguardGroup, CnATreeElement safeguard)
             throws CommandException {
         CnATreeElement group = safeguard.getParent().getParent().getParent();
         CnATreeElement parent = getOrCreateGroup(safeguardGroup,
@@ -137,7 +123,7 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
         parent = getOrCreateGroup(parent, safeguardParentsWithProperties.get(group.getUuid()));
 
         if (!isSafeguardInChildrenSet(parent.getChildren(),
-                missingSafeguards.get(safeguard.getUuid()))) {
+                missingSafeguardsFromCompendium.get(safeguard.getUuid()))) {
             CopyCommand copyCommand = new CopyCommand(parent.getUuid(),
                     Arrays.asList(safeguard.getUuid()));
             getCommandService().executeCommand(copyCommand);
@@ -151,10 +137,12 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
         }
     }
 
-    private boolean isSafeguardInChildrenSet(Set<CnATreeElement> targetChildren, Safeguard safeguard) {
+    private boolean isSafeguardInChildrenSet(Set<CnATreeElement> targetChildren, CnATreeElement safeguard) {
         for (CnATreeElement targetSafeguardElement : targetChildren) {
             Safeguard targetSafeguard = (Safeguard) targetSafeguardElement;
-            if (ModelCommand.nullSafeEquals(targetSafeguard.getIdentifier(), safeguard.getIdentifier())) {
+            if (ModelCommand.nullSafeEquals(
+                    targetSafeguard.getIdentifier(), 
+                    Safeguard.getIdentifierOfSafeguard(safeguard))) {
                 return true;
             }
         }
@@ -189,8 +177,7 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
         copyCommand.setCopyChildren(false);
         copyCommand = getCommandService().executeCommand(copyCommand);
         String groupUuid = copyCommand.getNewElements().get(0);
-        group = getDao().findByUuid(groupUuid,
-                RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
+        group = getMetaDao().loadElementWithPropertiesAndChildren(groupUuid);
         parent.addChild(group);
         if (getLog().isDebugEnabled()) {
             getLog().debug("Safeguard group: " + compendiumGroup.getTitle() + " created in group: "
@@ -201,7 +188,7 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
 
     private CnATreeElement loadSafeguardRootGroup() {
         CnATreeElement safeguardGroup = null;
-        CnATreeElement scope = getDao().retrieve(targetScopeId, RetrieveInfo.getChildrenInstance());
+        CnATreeElement scope = getMetaDao().loadElementWithChildren(targetScopeId);
         Set<CnATreeElement> children = scope.getChildren();
         for (CnATreeElement group : children) {
             if (group.getTypeId().equals(SafeguardGroup.TYPE_ID)) {
@@ -211,87 +198,48 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
         if(safeguardGroup==null) {
             throw new GroupNotFoundInScopeException(targetScopeId, SafeguardGroup.TYPE_ID);
         }
-        return getDao().retrieve(safeguardGroup.getDbId(),
-                RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
+        return getMetaDao().loadElementWithPropertiesAndChildren(safeguardGroup.getDbId());
     }
 
     
     private void loadCompendiumSafeguards() {
-        compendiumSafeguards = new HashSet<>(loadSafeguardsByModuleUuids());
+        safeguardsFromCompendium = new HashSet<>(loadSafeguardsByModuleUuids());
         if (getLog().isDebugEnabled()) {
             getLog().debug("Safeguards linked to modules: ");
-            logElements(compendiumSafeguards);
+            logElements(safeguardsFromCompendium);
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private List<Safeguard> loadSafeguardsByModuleUuids() {
-        return getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(HQL_LINKED_SAFEGUARDS).setParameterList("uuids",
-                        moduleUuids);
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
+    private List<CnATreeElement> loadSafeguardsByModuleUuids() {
+        return getMetaDao().loadLinkedElementsOfParents(moduleUuids, Safeguard.TYPE_ID);
     }
     
     /**
      * Loads the safeguards and transforms the result list to a set
      * to avoid duplicate entries.
      */
-    private void loadScopeSafeguards() {
-        scopeSafeguards = new HashSet<>(loadSafeguardsByDao());
+    private void loadSafeguardsFromScope() {
+        safeguardsFromScope = new HashSet<>(getMetaDao().loadElementsFromScope(Safeguard.TYPE_ID, targetScopeId));
         if (getLog().isDebugEnabled()) {
             getLog().debug("Safeguards in target scope: ");
-            logElements(scopeSafeguards);
+            logElements(safeguardsFromScope);
         }
     }
-    
-    @SuppressWarnings("unchecked")
-    private List<Safeguard> loadSafeguardsByDao() {
-        return getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(ModelCommand.HQL_SCOPE_ELEMENTS).setParameter("scopeId",
-                        targetScopeId).setParameter("typeId", Safeguard.TYPE_ID);
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
-    }
 
-    @SuppressWarnings("unchecked")
     private void loadParents() {
         // Load the parents (predecessors) of all missing safeguards 
-        List<Safeguard> safeguards = getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(ModelCommand.HQL_LOAD_PARENT_IDS).setParameterList("uuids",
-                        missingSafeguards.keySet());
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
+        List<CnATreeElement> safeguards = metaDao.loadElementsWith3Parents(missingSafeguardsFromCompendium.keySet());
+        
         final List<String> parentUuids = new LinkedList<>();
-        for (Safeguard safeguard : safeguards) {
+        for (CnATreeElement safeguard : safeguards) {
             safeguardsWithParents.put(safeguard.getUuid(), safeguard);
             parentUuids.add(safeguard.getParent().getUuid());
             parentUuids.add(safeguard.getParent().getParent().getUuid());
             parentUuids.add(safeguard.getParent().getParent().getParent().getUuid());
         }
         // Load the properties of the parents (predecessors)
-        List<CnATreeElement> groupsWithProperties = getDao()
-                .findByCallback(new HibernateCallback() {
-                    @Override
-                    public Object doInHibernate(Session session) throws SQLException {
-                        Query query = session.createQuery(ModelCommand.HQL_ELEMENT_WITH_PROPERTIES)
-                                .setParameterList("uuids", parentUuids);
-                        query.setReadOnly(true);
-                        return query.list();
-                    }
-                });
+        List<CnATreeElement> groupsWithProperties = getMetaDao().loadElementsWithProperties(parentUuids);
+        
         for (CnATreeElement group : groupsWithProperties) {
             safeguardParentsWithProperties.put(group.getUuid(), group);
         }
@@ -302,21 +250,22 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
     }
 
     private void createListOfMissingSafeguards() {
-        missingSafeguards.clear();
-        for (Safeguard safeguard : compendiumSafeguards) {
+        missingSafeguardsFromCompendium.clear();
+        for (CnATreeElement safeguard : safeguardsFromCompendium) {
             if (!isSafeguardInScope(safeguard)) {
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Safeguard is not in scope yet: " + safeguard);
                 }
-                missingSafeguards.put(safeguard.getUuid(), safeguard);
+                missingSafeguardsFromCompendium.put(safeguard.getUuid(), safeguard);
             }
         }
     }
 
-    private boolean isSafeguardInScope(Safeguard compendiumSafeguard) {
-        for (Safeguard scopeSafeguard : scopeSafeguards) {
-            if (ModelCommand.nullSafeEquals(scopeSafeguard.getIdentifier(),
-                    compendiumSafeguard.getIdentifier())) {
+    private boolean isSafeguardInScope(CnATreeElement compendiumSafeguard) {
+        for (CnATreeElement scopeSafeguard : safeguardsFromScope) {
+            if (ModelCommand.nullSafeEquals(
+                    Safeguard.getIdentifierOfSafeguard(scopeSafeguard),
+                    Safeguard.getIdentifierOfSafeguard(compendiumSafeguard))) {
                 return true;
             }
         }
@@ -328,6 +277,13 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
             getLog().debug(element);
         }
 
+    }
+    
+    public ModelingMetaDao getMetaDao() {
+        if(metaDao==null) {
+            metaDao = new ModelingMetaDao(getDao());
+        }
+        return metaDao;
     }
 
     private IBaseDao<CnATreeElement, Serializable> getDao() {

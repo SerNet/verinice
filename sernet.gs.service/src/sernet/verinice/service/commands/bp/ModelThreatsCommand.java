@@ -20,7 +20,6 @@
 package sernet.verinice.service.commands.bp;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,11 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
@@ -61,34 +56,18 @@ import sernet.verinice.service.commands.CopyCommand;
  */
 public class ModelThreatsCommand extends ChangeLoggingCommand {
 
-    private transient Logger log = Logger.getLogger(ModelThreatsCommand.class);
+    private static final long serialVersionUID = -4075156601968217297L;
 
-    /**
-     * HQL query to load the linked threats of a module
-     */
-    private static final String HQL_LINKED_THREAT = "select threat from CnATreeElement threat " +
-            "join threat.linksUp as linksUp " +
-            "join linksUp.dependant as requirement " +
-            "join requirement.parent as module " +
-            "join fetch threat.entity as entity " +
-            "join fetch entity.typedPropertyLists as propertyList " +
-            "join fetch propertyList.properties as props " +
-            "where threat.objectType = '" + BpThreat.TYPE_ID + "' " +
-            "and module.uuid in (:uuids)"; //$NON-NLS-1$
+    private transient Logger log = Logger.getLogger(ModelThreatsCommand.class);
     
-    /**
-     * HQL query to load the linked threats of a module
-     */
-    private static final String HQL_LOAD_PARENT_IDS = "select distinct threat from CnATreeElement threat " +
-            "join fetch threat.parent as p1 " +
-            "where threat.uuid in (:uuids)"; //$NON-NLS-1$
+    private transient ModelingMetaDao metaDao;
     
     private Set<String> moduleUuids;
     private Integer targetScopeId;
-    private transient Set<BpThreat> compendiumThreats;
-    private transient Set<BpThreat> scopeThreats;
-    private transient Map<String, BpThreat> missingThreats;
-    private transient Map<String, BpThreat> threatsWithParents;
+    private transient Set<CnATreeElement> compendiumThreats;
+    private transient Set<CnATreeElement> scopeThreats;
+    private transient Map<String, CnATreeElement> missingThreats;
+    private transient Map<String, CnATreeElement> threatsWithParents;
     private transient Map<String, CnATreeElement> threatParentsWithProperties;
 
     private String stationId;
@@ -126,7 +105,7 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
 
     private void insertMissingThreats() throws CommandException {
         CnATreeElement threatGroup = getThreatRootGroup();
-        for (BpThreat threat : threatsWithParents.values()) {
+        for (CnATreeElement threat : threatsWithParents.values()) {
             insertThreat(threatGroup, threat);
         }
     }
@@ -152,10 +131,12 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
         }
     }
 
-    private boolean isThreatInChildrenSet(Set<CnATreeElement> targetChildren, BpThreat threat) {
+    private boolean isThreatInChildrenSet(Set<CnATreeElement> targetChildren, CnATreeElement threat) {
         for (CnATreeElement targetThreatElement : targetChildren) {
             BpThreat targetThreat = (BpThreat) targetThreatElement;
-            if (ModelCommand.nullSafeEquals(targetThreat.getIdentifier(), threat.getIdentifier())) {
+            if (ModelCommand.nullSafeEquals(
+                    targetThreat.getIdentifier(), 
+                    BpThreat.getIdentifierOfThreat(threat))) {
                 return true;
             }
         }
@@ -190,8 +171,7 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
         copyCommand.setCopyChildren(false);
         copyCommand = getCommandService().executeCommand(copyCommand);
         String groupUuid = copyCommand.getNewElements().get(0);
-        group = getDao().findByUuid(groupUuid,
-                RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
+        group = getMetaDao().loadElementWithPropertiesAndChildren(groupUuid);
         parent.addChild(group);
         if (getLog().isDebugEnabled()) {
             getLog().debug("Threat group: " + compendiumGroup.getTitle() + " created in group: "
@@ -202,7 +182,7 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
 
     protected CnATreeElement getThreatRootGroup() {
         CnATreeElement threatGroup = null;
-        CnATreeElement scope = getDao().retrieve(targetScopeId, RetrieveInfo.getChildrenInstance());
+        CnATreeElement scope = getMetaDao().loadElementWithChildren(targetScopeId);
         Set<CnATreeElement> children = scope.getChildren();
         for (CnATreeElement group : children) {
             if (group.getTypeId().equals(BpThreatGroup.TYPE_ID)) {
@@ -212,8 +192,7 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
         if(threatGroup==null) {
             throw new GroupNotFoundInScopeException(targetScopeId, BpThreatGroup.TYPE_ID);
         }
-        return getDao().retrieve(threatGroup.getDbId(),
-                RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
+        return getMetaDao().loadElementWithPropertiesAndChildren(threatGroup.getDbId());
     }
 
     private void loadCompendiumThreats() {
@@ -224,17 +203,8 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
         }
     }
     
-    @SuppressWarnings("unchecked")
-    private List<BpThreat> findThreatsByModuleUuids() {
-        return getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(HQL_LINKED_THREAT).setParameterList("uuids",
-                        moduleUuids);
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
+    private List<CnATreeElement> findThreatsByModuleUuids() {
+        return getMetaDao().loadLinkedElementsOfParents(moduleUuids, BpThreat.TYPE_ID);
     }
 
     /**
@@ -242,52 +212,24 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
      * to avoid duplicate entries.
      */
     private void loadScopeThreats() {
-        scopeThreats = new HashSet<>(loadThreatsByDao());
+        scopeThreats = new HashSet<>(getMetaDao().loadElementsFromScope(BpThreat.TYPE_ID, targetScopeId));
         if (getLog().isDebugEnabled()) {
             getLog().debug("Threats in target scope: ");
             logElements(scopeThreats);
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private List<BpThreat> loadThreatsByDao() {
-        return getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(ModelCommand.HQL_SCOPE_ELEMENTS).setParameter("scopeId",
-                        targetScopeId).setParameter("typeId", BpThreat.TYPE_ID);
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
-    }
-
-    @SuppressWarnings("unchecked")
-    private void loadParents() {
-        List<BpThreat> threats = getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(HQL_LOAD_PARENT_IDS).setParameterList("uuids",
-                        missingThreats.keySet());
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
+    private void loadParents() {       
+        List<CnATreeElement> threats = getMetaDao().loadElementsWithParent(missingThreats.keySet());
+        
         final List<String> parentUuids = new LinkedList<>();
-        for (BpThreat threat : threats) {
+        for (CnATreeElement threat : threats) {
             threatsWithParents.put(threat.getUuid(), threat);
             parentUuids.add(threat.getParent().getUuid());
         }
-        List<CnATreeElement> groupsWithProperties = getDao()
-                .findByCallback(new HibernateCallback() {
-                    @Override
-                    public Object doInHibernate(Session session) throws SQLException {
-                        Query query = session.createQuery(ModelCommand.HQL_ELEMENT_WITH_PROPERTIES)
-                                .setParameterList("uuids", parentUuids);
-                        query.setReadOnly(true);
-                        return query.list();
-                    }
-                });
+
+        List<CnATreeElement> groupsWithProperties = getMetaDao().loadElementsWithProperties(parentUuids);
+        
         for (CnATreeElement group : groupsWithProperties) {
             threatParentsWithProperties.put(group.getUuid(), group);
         }
@@ -299,7 +241,7 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
 
     private void createListOfMissingThreats() {
         missingThreats.clear();
-        for (BpThreat threat : compendiumThreats) {
+        for (CnATreeElement threat : compendiumThreats) {
             if (!isThreatInScope(threat)) {
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Threat is not in scope yet: " + threat);
@@ -309,10 +251,11 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
         }
     }
 
-    private boolean isThreatInScope(BpThreat compendiumThreat) {
-        for (BpThreat scopeThreat : scopeThreats) {
-            if (ModelCommand.nullSafeEquals(scopeThreat.getIdentifier(),
-                    compendiumThreat.getIdentifier())) {
+    private boolean isThreatInScope(CnATreeElement compendiumThreat) {
+        for (CnATreeElement scopeThreat : scopeThreats) {
+            if (ModelCommand.nullSafeEquals(
+                    BpThreat.getIdentifierOfThreat(scopeThreat),
+                    BpThreat.getIdentifierOfThreat(compendiumThreat))) {
                 return true;
             }
         }
@@ -324,6 +267,13 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
             getLog().debug(element);
         }
 
+    }
+    
+    public ModelingMetaDao getMetaDao() {
+        if(metaDao==null) {
+            metaDao = new ModelingMetaDao(getDao());
+        }
+        return metaDao;
     }
 
     private IBaseDao<CnATreeElement, Serializable> getDao() {

@@ -20,7 +20,6 @@
 package sernet.verinice.service.commands.bp;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -28,9 +27,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
@@ -79,36 +75,11 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class ModelCommand extends ChangeLoggingCommand {
 
+    private static final long serialVersionUID = -4024742735347303204L;
+
     private transient Logger log = Logger.getLogger(ModelCommand.class);
 
-    /**
-     * HQL query to load the elements. The entity and the properties
-     * are loaded by a single statement with joins.
-     */
-    public static final String HQL_ELEMENT_WITH_PROPERTIES = "select element from CnATreeElement element " +
-            "join fetch element.entity as entity " +
-            "join fetch entity.typedPropertyLists as propertyList " +
-            "join fetch propertyList.properties as props " +
-            "where element.uuid in (:uuids)"; //$NON-NLS-1$
-    
-    /**
-     * HQL query to load all safeguards of a scope
-     */
-    public static final String HQL_SCOPE_ELEMENTS = "select  safeguard from CnATreeElement safeguard " +
-            "join fetch safeguard.entity as entity " +
-            "join fetch entity.typedPropertyLists as propertyList " +
-            "join fetch propertyList.properties as props " +
-            "where safeguard.objectType = :typeId " +
-            "and safeguard.scopeId = :scopeId"; //$NON-NLS-1$
-    
-    /**
-     * HQL query to load the linked safeguards of a module
-     */
-    public static final String HQL_LOAD_PARENT_IDS = "select distinct element from CnATreeElement element " +
-            "join fetch element.parent as p1 " +
-            "join fetch p1.parent as p2 " +
-            "join fetch p2.parent as p3 " +
-            "where element.uuid in (:uuids)"; //$NON-NLS-1$
+    private transient ModelingMetaDao metaDao;
     
     private Set<String> moduleUuidsFromCompendium;
     private transient Set<String> newModuleUuidsFromScope = Collections.emptySet();
@@ -171,18 +142,8 @@ public class ModelCommand extends ChangeLoggingCommand {
         return targetElements.iterator().next().getScopeId();
     }
     
-    @SuppressWarnings("unchecked")
     private void loadElements() {
-        final List<String> allUuids = getAllUuids();
-        List<CnATreeElement> elements = getDao().findByCallback(new HibernateCallback() {
-            @Override       
-            public Object doInHibernate( Session session) throws SQLException {
-                Query query = session.createQuery(HQL_ELEMENT_WITH_PROPERTIES)
-                        .setParameterList("uuids", allUuids);
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
+        List<CnATreeElement> elements = getMetaDao().loadElementsWithProperties(getAllUuids());
         distributeElements(elements);
     }
 
@@ -234,17 +195,18 @@ public class ModelCommand extends ChangeLoggingCommand {
         return targetModuleId.equals(moduleId);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IChangeLoggingCommand#getStationId()
-     */
+    public ModelingMetaDao getMetaDao() {
+        if(metaDao==null) {
+            metaDao = new ModelingMetaDao(getDao());
+        }
+        return metaDao;
+    }
+
     @Override
     public String getStationId() {
         return stationId;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangeType()
-     */
     @Override
     public int getChangeType() {
         return ChangeLogEntry.TYPE_INSERT;
@@ -256,6 +218,4 @@ public class ModelCommand extends ChangeLoggingCommand {
         }
         return log;
     }
-
-
 }
