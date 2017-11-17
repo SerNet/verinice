@@ -22,8 +22,12 @@ package sernet.verinice.model.bp.elements;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bsi.ISchutzbedarfProvider;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementWithChilds;
+import sernet.verinice.model.common.ILinkChangeListener;
+import sernet.verinice.model.iso27k.AssetValueAdapter;
+import sernet.verinice.model.iso27k.MaximumAssetValueListener;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -45,6 +49,20 @@ public class ItSystem extends ElementWithChilds implements IBpElement, IBpGroup 
         init();
     }
     
+    private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this);
+    private final ISchutzbedarfProvider schutzbedarfProvider = new AssetValueAdapter(this);
+
+    @Override
+    public ILinkChangeListener getLinkChangeListener() {
+        return linkChangeListener;
+    }
+
+    @Override
+    public ISchutzbedarfProvider getSchutzbedarfProvider() {
+        return schutzbedarfProvider;
+    }
+
+
     @Override
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);

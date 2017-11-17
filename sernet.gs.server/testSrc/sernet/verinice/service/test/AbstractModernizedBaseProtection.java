@@ -29,8 +29,10 @@ import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateITNetwork;
+import sernet.verinice.service.commands.UpdateElement;
 import sernet.verinice.service.commands.crud.CreateBpModel;
 import sernet.verinice.service.model.LoadModel;
 
@@ -47,54 +49,31 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
     }
 
     /**
-     * Create a {@link Safeguard} in the given container.
+     * Update the given element in the database.
      */
-    protected Safeguard createSafeguard(CnATreeElement container) throws CommandException {
-        CreateElement<Safeguard> saveCommand1 = new CreateElement<>(container, Safeguard.class, "");
-        saveCommand1.setInheritAuditPermissions(true);
-        saveCommand1 = commandService.executeCommand(saveCommand1);
-        Safeguard requirment = saveCommand1.getNewElement();
-
-        return requirment;
+    protected <T extends CnATreeElement> T update(T element) throws CommandException {
+        UpdateElement<T> command = new UpdateElement<>(element, true, null);
+        commandService.executeCommand(command);
+        return command.getElement();
     }
 
     /**
-     * Create a {@link SafeguardGroup} in the given container.
+     * Create a {@link Group} in the given container.
      */
-    protected SafeguardGroup createSafeguardGroup(CnATreeElement container)
+    protected <T extends Group<?>> T createGroup(CnATreeElement container, Class<T> type)
             throws CommandException {
-        CreateElement<SafeguardGroup> saveCommand = new CreateElement<>(container,
-                SafeguardGroup.class, "");
-        saveCommand.setInheritAuditPermissions(true);
-        saveCommand = commandService.executeCommand(saveCommand);
-        SafeguardGroup group = saveCommand.getNewElement();
-        return group;
+        return createElement(container, type);
     }
 
     /**
-     * Create a {@link SafeguardGroup} in the given container.
+     * Create a {@link CnATreeElement} in the given container.
      */
-    protected BpRequirement createBpRequirement(CnATreeElement container) throws CommandException {
-        CreateElement<BpRequirement> saveCommand = new CreateElement<>(container,
-                BpRequirement.class, "");
-        saveCommand.setInheritAuditPermissions(true);
-        saveCommand = commandService.executeCommand(saveCommand);
-        BpRequirement requirement = saveCommand.getNewElement();
-
-        return requirement;
-    }
-
-    /**
-     * Create a {@link BpRequirementGroup} in the given container.
-     */
-    protected BpRequirementGroup createRequirementGroup(CnATreeElement container)
+    protected <T extends CnATreeElement> T createElement(CnATreeElement container, Class<T> type)
             throws CommandException {
-        CreateElement<BpRequirementGroup> saveCommand = new CreateElement<>(container,
-                BpRequirementGroup.class, "");
+        CreateElement<T> saveCommand = new CreateElement<>(container, type, "");
         saveCommand.setInheritAuditPermissions(true);
         saveCommand = commandService.executeCommand(saveCommand);
-        BpRequirementGroup group = saveCommand.getNewElement();
-        return group;
+        return saveCommand.getNewElement();
     }
 
     /**
@@ -116,9 +95,37 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
         CreateITNetwork saveCommand = new CreateITNetwork(model, ItNetwork.class, true);
         saveCommand.setInheritAuditPermissions(true);
         saveCommand = commandService.executeCommand(saveCommand);
-        ItNetwork organization = saveCommand.getNewElement();
+        return saveCommand.getNewElement();
+    }
 
-        return organization;
+    /**
+     * Create a {@link SafeguardGroup} in the given container.
+     */
+    protected SafeguardGroup createSafeguardGroup(CnATreeElement container)
+            throws CommandException {
+        return createGroup(container, SafeguardGroup.class);// saveCommand.getNewElement();
+    }
+
+    /**
+     * Create a {@link Safeguard} in the given container.
+     */
+    protected Safeguard createSafeguard(CnATreeElement container) throws CommandException {
+        return createElement(container, Safeguard.class);
+    }
+
+    /**
+     * Create a {@link BpRequirementGroup} in the given container.
+     */
+    protected BpRequirementGroup createRequirementGroup(CnATreeElement container)
+            throws CommandException {
+        return createGroup(container, BpRequirementGroup.class);
+    }
+
+    /**
+     * Create a {@link SafeguardGroup} in the given container.
+     */
+    protected BpRequirement createBpRequirement(CnATreeElement container) throws CommandException {
+        return createElement(container, BpRequirement.class);
     }
 
 }
