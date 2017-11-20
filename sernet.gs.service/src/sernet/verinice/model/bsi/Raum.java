@@ -43,12 +43,12 @@ public class Raum extends CnATreeElement
     public static final String PROP_ESA_ENTSCHEIDUNG_AM = "raum_ergaenzendeanalyse_entscheidung_am"; //$NON-NLS-1$
     public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "raum_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
 
-	private  ISchutzbedarfProvider schutzbedarfProvider 
-	= new SchutzbedarfAdapter(this);
+	private  IProtectionRequirementsProvider schutzbedarfProvider 
+	= new ProtectionRequirementsAdapter(this);
 
 
 	private  ILinkChangeListener linkChangeListener
-	= new MaximumSchutzbedarfListener(this);
+	= new MaximumProtectionRequirementsListener(this);
 
 	/**
 	 * Create new BSIElement.
@@ -107,7 +107,7 @@ public class Raum extends CnATreeElement
 	}
 
 	@Override
-	public ISchutzbedarfProvider getSchutzbedarfProvider() {
+	public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
 		return schutzbedarfProvider;
 	}
 

@@ -19,30 +19,30 @@ package sernet.verinice.model.bsi;
 
 import sernet.verinice.model.common.CascadingTransaction;
 
-public interface ISchutzbedarfProvider {
-	int getVertraulichkeit();
-	int getVerfuegbarkeit();
-	int getIntegritaet();
+public interface IProtectionRequirementsProvider {
+	int getConfidentiality();
+	int getAvailability();
+	int getIntegrity();
 	
-	void setVertraulichkeit(int i);
-	void setIntegritaet(int i);
-	void setVerfuegbarkeit(int i);
+	void setConfidentiality(int i);
+	void setIntegrity(int i);
+	void setAvailability(int i);
 	
-	String getVertraulichkeitDescription();
-	String getIntegritaetDescription();
-	String getVerfuegbarkeitDescription();
+	String getConfidentialityDescription();
+	String getIntegrityDescription();
+	String getAvailabilityDescription();
 	
 	boolean isCalculatedConfidentiality();
 	boolean isCalculatedIntegrity();
 	boolean isCalculatedAvailability();
 
-	void setVertraulichkeitDescription(String text);
-	void setIntegritaetDescription(String text);
-	void setVerfuegbarkeitDescription(String text);
+	void setConfidentialityDescription(String text);
+	void setIntegrityDescription(String text);
+	void setAvailabilityDescription(String text);
 	
-	void updateVertraulichkeit(CascadingTransaction ta);
-	void updateIntegritaet(CascadingTransaction ta);
-	void updateVerfuegbarkeit(CascadingTransaction ta);
+	void updateConfidentiality(CascadingTransaction ta);
+	void updateIntegrity(CascadingTransaction ta);
+	void updateAvailability(CascadingTransaction ta);
 	
 	void updateValue(CascadingTransaction ta);
 	void setValue(CascadingTransaction ta, String properyName, Object value);

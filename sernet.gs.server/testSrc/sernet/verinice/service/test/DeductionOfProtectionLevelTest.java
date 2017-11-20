@@ -128,20 +128,20 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
             dependend = enableAllCIADeduction(dependend);
             createLink(source, dependend, null);
 
-            assertNotNull(dependend.getSchutzbedarfProvider());
-            assertTrue(dependend.getSchutzbedarfProvider().isCalculatedConfidentiality());
-            assertTrue(dependend.getSchutzbedarfProvider().isCalculatedIntegrity());
-            assertTrue(dependend.getSchutzbedarfProvider().isCalculatedAvailability());
+            assertNotNull(dependend.getProtectionRequirementsProvider());
+            assertTrue(dependend.getProtectionRequirementsProvider().isCalculatedConfidentiality());
+            assertTrue(dependend.getProtectionRequirementsProvider().isCalculatedIntegrity());
+            assertTrue(dependend.getProtectionRequirementsProvider().isCalculatedAvailability());
 
             disableCIADeduction(dependend, CiaType.C);
             source = update(source);
-            assertFalse(dependend.getSchutzbedarfProvider().isCalculatedConfidentiality());
+            assertFalse(dependend.getProtectionRequirementsProvider().isCalculatedConfidentiality());
             disableCIADeduction(dependend, CiaType.I);
             source = update(source);
-            assertFalse(dependend.getSchutzbedarfProvider().isCalculatedIntegrity());
+            assertFalse(dependend.getProtectionRequirementsProvider().isCalculatedIntegrity());
             disableCIADeduction(dependend, CiaType.A);
             source = update(source);
-            assertFalse(dependend.getSchutzbedarfProvider().isCalculatedAvailability());
+            assertFalse(dependend.getProtectionRequirementsProvider().isCalculatedAvailability());
         }
     }
 

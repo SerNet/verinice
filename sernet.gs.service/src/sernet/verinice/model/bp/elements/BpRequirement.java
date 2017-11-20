@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import sernet.verinice.model.bp.IBpElement;
-import sernet.verinice.model.bsi.ISchutzbedarfProvider;
+import sernet.verinice.model.bsi.IProtectionRequirementsProvider;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -93,14 +93,14 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         }
     };
 
-    private final ISchutzbedarfProvider schutzbedarfProvider = new AssetValueAdapter(this);
+    private final IProtectionRequirementsProvider schutzbedarfProvider = new AssetValueAdapter(this);
     
     @Override
     public ILinkChangeListener getLinkChangeListener() {
         return linkChangeListener;
     }
     @Override
-    public ISchutzbedarfProvider getSchutzbedarfProvider() {
+    public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
         return schutzbedarfProvider;
     }
 

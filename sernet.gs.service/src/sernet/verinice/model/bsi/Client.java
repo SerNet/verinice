@@ -54,12 +54,12 @@ public class Client extends CnATreeElement
     public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "client_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
 	
 
-	private final ISchutzbedarfProvider schutzbedarfProvider 
-	= new SchutzbedarfAdapter(this);
+	private final IProtectionRequirementsProvider schutzbedarfProvider 
+	= new ProtectionRequirementsAdapter(this);
 
 
 	private final ILinkChangeListener linkChangeListener
-	= new MaximumSchutzbedarfListener(this);
+	= new MaximumProtectionRequirementsListener(this);
 	
 	
 	/**
@@ -118,7 +118,7 @@ public class Client extends CnATreeElement
 	}
 
 	@Override
-	public ISchutzbedarfProvider getSchutzbedarfProvider() {
+	public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
 		return schutzbedarfProvider;
 	}
 	public void setErlaeuterung(String name) {

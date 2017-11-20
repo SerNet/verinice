@@ -552,7 +552,7 @@ public class ImportTask extends AbstractGstoolImportTask {
     }
 
     private void handleSchutzBedarfForSingleElement(Entry<NZielobjekt, CnATreeElement> entry) throws CommandException {
-        if (entry.getValue().getSchutzbedarfProvider() != null) {
+        if (entry.getValue().getProtectionRequirementsProvider() != null) {
             List<NZobSb> internalSchutzbedarf = getGstoolDao().findSchutzbedarfByZielobjekt(entry.getKey());
             for (NZobSb schubeda : internalSchutzbedarf) {
                 transferSchutzBedarfGeneral(entry, schubeda);

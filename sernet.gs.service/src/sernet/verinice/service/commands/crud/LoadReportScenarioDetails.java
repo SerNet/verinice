@@ -248,9 +248,9 @@ public class LoadReportScenarioDetails extends GenericCommand implements ICached
         AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
         RiskAnalysisHelperImpl ras = new RiskAnalysisHelperImpl();
 
-        impactC = valueAdapter.getVertraulichkeit();
-        impactI = valueAdapter.getIntegritaet();
-        impactA = valueAdapter.getVerfuegbarkeit();
+        impactC = valueAdapter.getConfidentiality();
+        impactI = valueAdapter.getIntegrity();
+        impactA = valueAdapter.getAvailability();
 
         Integer[] reducedImpact = ras.applyControlsToImpact(riskType, asset, impactC, impactI, impactA);
         if (reducedImpact != null) {

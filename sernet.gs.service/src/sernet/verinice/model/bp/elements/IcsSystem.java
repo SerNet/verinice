@@ -22,7 +22,7 @@ package sernet.verinice.model.bp.elements;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
-import sernet.verinice.model.bsi.ISchutzbedarfProvider;
+import sernet.verinice.model.bsi.IProtectionRequirementsProvider;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementWithChilds;
 import sernet.verinice.model.common.ILinkChangeListener;
@@ -43,7 +43,7 @@ public class IcsSystem extends ElementWithChilds implements IBpElement, IBpGroup
     public static final String[] CHILD_TYPES = new String[] {BpRequirementGroup.TYPE_ID};
     
     private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this);
-    private final ISchutzbedarfProvider schutzbedarfProvider = new AssetValueAdapter(this);
+    private final IProtectionRequirementsProvider schutzbedarfProvider = new AssetValueAdapter(this);
 
     protected IcsSystem() {}
     
@@ -58,7 +58,7 @@ public class IcsSystem extends ElementWithChilds implements IBpElement, IBpGroup
     }
 
     @Override
-    public ISchutzbedarfProvider getSchutzbedarfProvider() {
+    public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
         return schutzbedarfProvider;
     }
     

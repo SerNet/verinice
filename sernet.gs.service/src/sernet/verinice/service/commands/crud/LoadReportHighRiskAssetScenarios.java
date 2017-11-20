@@ -90,9 +90,9 @@ public class LoadReportHighRiskAssetScenarios extends GenericCommand implements 
                             AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
                             RiskAnalysisHelperImpl raService = new RiskAnalysisHelperImpl();
 
-                            Integer impactC = valueAdapter.getVertraulichkeit();
-                            Integer impactI = valueAdapter.getIntegritaet();
-                            Integer impactA = valueAdapter.getVerfuegbarkeit();
+                            Integer impactC = valueAdapter.getConfidentiality();
+                            Integer impactI = valueAdapter.getIntegrity();
+                            Integer impactA = valueAdapter.getAvailability();
                             Integer[] reducedImpact = raService.applyControlsToImpact(riskType, (CnATreeElement)asset, impactC, impactI, impactA);
                             if (reducedImpact != null) {
                                 impactC = reducedImpact[0];

@@ -47,11 +47,11 @@ public class Anwendung extends CnATreeElement
         return log;
     }
     
-	private final ISchutzbedarfProvider schutzbedarfProvider 
-		= new SchutzbedarfAdapter(this);
+	private final IProtectionRequirementsProvider schutzbedarfProvider 
+		= new ProtectionRequirementsAdapter(this);
 	
 	private final ILinkChangeListener linkChangeListener
-		= new MaximumSchutzbedarfListener(this);
+		= new MaximumProtectionRequirementsListener(this);
 
 	// ID must correspond to entity definition in XML description
 	public static final String TYPE_ID = "anwendung"; //$NON-NLS-1$
@@ -179,7 +179,7 @@ public class Anwendung extends CnATreeElement
 	}
 
 	@Override
-	public ISchutzbedarfProvider getSchutzbedarfProvider() {
+	public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
 		return schutzbedarfProvider;
 	}
 

@@ -39,25 +39,25 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * 
  */
 @SuppressWarnings("serial")
-public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable {
+public class ProtectionRequirementsAdapter implements IProtectionRequirementsProvider, Serializable {
 
     
-    private transient Logger log = Logger.getLogger(SchutzbedarfAdapter.class);
+    private transient Logger log = Logger.getLogger(ProtectionRequirementsAdapter.class);
 
     public Logger getLog() {
         if (log == null) {
-            log = Logger.getLogger(SchutzbedarfAdapter.class);
+            log = Logger.getLogger(ProtectionRequirementsAdapter.class);
         }
         return log;
     }
     
     private CnATreeElement cnaTreeElement;
 
-    public SchutzbedarfAdapter(CnATreeElement parent) {
+    public ProtectionRequirementsAdapter(CnATreeElement parent) {
         this.cnaTreeElement = parent;
     }
 
-    public int getIntegritaet() {
+    public int getIntegrity() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + Schutzbedarf.INTEGRITAET);
         if (hasValue(properties)){
             return Schutzbedarf.toInt(properties.getProperty(0).getPropertyValue());
@@ -66,7 +66,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
         }
     }
     
-    public int getVerfuegbarkeit() {
+    public int getAvailability() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + Schutzbedarf.VERFUEGBARKEIT);
         if (hasValue(properties)){
             return Schutzbedarf.toInt(properties.getProperty(0).getPropertyValue());
@@ -75,7 +75,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
         }
     }
 
-    public int getVertraulichkeit() {
+    public int getConfidentiality() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + Schutzbedarf.VERTRAULICHKEIT);
         if (hasValue(properties)){
             return Schutzbedarf.toInt(properties.getProperty(0).getPropertyValue());
@@ -90,48 +90,48 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
                properties.getProperty(0).getPropertyValue() !=null;
     }
 
-    public void setIntegritaet(int i) {
+    public void setIntegrity(int i) {
         EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
         String option = Schutzbedarf.toOption(cnaTreeElement.getTypeId(), Schutzbedarf.INTEGRITAET, i);
 
         cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + Schutzbedarf.INTEGRITAET), option);
     }
 
-    public void setVerfuegbarkeit(int i) {
+    public void setAvailability(int i) {
         EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
         String option = Schutzbedarf.toOption(cnaTreeElement.getTypeId(), Schutzbedarf.VERFUEGBARKEIT, i);
         cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + Schutzbedarf.VERFUEGBARKEIT), option);
     }
 
-    public void setVertraulichkeit(int i) {
+    public void setConfidentiality(int i) {
         EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
         String option = Schutzbedarf.toOption(cnaTreeElement.getTypeId(), Schutzbedarf.VERTRAULICHKEIT, i);
         cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + Schutzbedarf.VERTRAULICHKEIT), option);
     }
 
-    public String getIntegritaetDescription() {
+    public String getIntegrityDescription() {
         return cnaTreeElement.getEntity().getSimpleValue(cnaTreeElement.getTypeId() + Schutzbedarf.INTEGRITAET_BEGRUENDUNG);
     }
 
-    public String getVerfuegbarkeitDescription() {
+    public String getAvailabilityDescription() {
         return cnaTreeElement.getEntity().getSimpleValue(cnaTreeElement.getTypeId() + Schutzbedarf.VERFUEGBARKEIT_BEGRUENDUNG);
     }
 
-    public String getVertraulichkeitDescription() {
+    public String getConfidentialityDescription() {
         return cnaTreeElement.getEntity().getSimpleValue(cnaTreeElement.getTypeId() + Schutzbedarf.VERTRAULICHKEIT_BEGRUENDUNG);
     }
 
-    public void setIntegritaetDescription(String text) {
+    public void setIntegrityDescription(String text) {
         EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
         cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + Schutzbedarf.INTEGRITAET_BEGRUENDUNG), text);
     }
 
-    public void setVerfuegbarkeitDescription(String text) {
+    public void setAvailabilityDescription(String text) {
         EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
         cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + Schutzbedarf.VERFUEGBARKEIT_BEGRUENDUNG), text);
     }
 
-    public void setVertraulichkeitDescription(String text) {
+    public void setConfidentialityDescription(String text) {
         EntityType entityType = HUITypeFactory.getInstance().getEntityType(cnaTreeElement.getEntity().getEntityType());
         cnaTreeElement.getEntity().setSimpleValue(entityType.getPropertyType(cnaTreeElement.getTypeId() + Schutzbedarf.VERTRAULICHKEIT_BEGRUENDUNG), text);
     }
@@ -149,7 +149,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
             for (CnATreeElement bottomNode : bottomNodes) {
                 // determine protection level from parents (or keep own
                 // depending on description):
-                bottomNode.getLinkChangeListener().determineVerfuegbarkeit(ta);
+                bottomNode.getLinkChangeListener().determineAvailability(ta);
 
             }
 
@@ -178,7 +178,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
             for (CnATreeElement bottomNode : bottomNodes) {
                 // determine protection level from parents (or keep own
                 // depending on description):
-                bottomNode.getLinkChangeListener().determineVertraulichkeit(ta);
+                bottomNode.getLinkChangeListener().determineConfidentiality(ta);
 
             }
 
@@ -207,7 +207,7 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
             for (CnATreeElement bottomNode : bottomNodes) {
                 // determine protection level from parents (or keep own
                 // depending on description):
-                bottomNode.getLinkChangeListener().determineIntegritaet(ta);
+                bottomNode.getLinkChangeListener().determineIntegrity(ta);
 
             }
 
@@ -263,15 +263,15 @@ public class SchutzbedarfAdapter implements ISchutzbedarfProvider, Serializable 
         this.cnaTreeElement = parent;
     }
 
-    public void updateIntegritaet(CascadingTransaction ta) {
+    public void updateIntegrity(CascadingTransaction ta) {
         fireIntegritaetChanged(ta);
     }
 
-    public void updateVerfuegbarkeit(CascadingTransaction ta) {
+    public void updateAvailability(CascadingTransaction ta) {
         fireVerfuegbarkeitChanged(ta);
     }
 
-    public void updateVertraulichkeit(CascadingTransaction ta) {
+    public void updateConfidentiality(CascadingTransaction ta) {
         fireVertraulichkeitChanged(ta);
     }
 

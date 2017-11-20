@@ -125,9 +125,9 @@ public class RiskAnalysisHelperImpl implements RiskAnalysisHelper {
             riskControlState = RiskAnalysisHelper.RISK_PRE_CONTROLS;
         }
 
-        int impactC = valueAdapter.getVertraulichkeit();
-        int impactI = valueAdapter.getIntegritaet();
-        int impactA = valueAdapter.getVerfuegbarkeit();
+        int impactC = valueAdapter.getConfidentiality();
+        int impactI = valueAdapter.getIntegrity();
+        int impactA = valueAdapter.getAvailability();
         Integer[] reducedImpact = applyControlsToImpact(riskControlState, asset, impactC, impactI, impactA);
         if (reducedImpact != null) {
             impactC = reducedImpact[0];
