@@ -60,11 +60,11 @@ public class Server extends CnATreeElement
     public static final String PROP_ESA_ENTSCHEIDUNG_AM = "server_ergaenzendeanalyse_entscheidung_am"; //$NON-NLS-1$
     public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "server_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
 	
-	private final ISchutzbedarfProvider schutzbedarfProvider 
-				= new SchutzbedarfAdapter(this);
+	private final IProtectionRequirementsProvider schutzbedarfProvider
+				= new ProtectionRequirementsAdapter(this);
 				
 	private final ILinkChangeListener linkChangeListener
-				= new MaximumSchutzbedarfListener(this);
+				= new MaximumProtectionRequirementsListener(this);
 
 	/**
 	 * Create new BSIElement.
@@ -122,7 +122,7 @@ public class Server extends CnATreeElement
 	}
 
 	@Override
-	public ISchutzbedarfProvider getSchutzbedarfProvider() {
+	public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
 		return schutzbedarfProvider;
 	}
 

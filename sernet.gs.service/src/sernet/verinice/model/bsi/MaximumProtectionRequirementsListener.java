@@ -1,17 +1,17 @@
 /*******************************************************************************
  * Copyright (c) 2009 Alexander Koderman <ak[at]sernet[dot]de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ *     This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
+ *     You should have received a copy of the GNU Lesser General Public
+ * License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
@@ -28,22 +28,22 @@ import sernet.verinice.model.common.TransactionAbortedException;
 /**
  * On a change event, iterates through all linked items, searching for the
  * maximum protection level to apply.
- * 
+ *
  * @author koderman[at]sernet[dot]de
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
- * 
+ *
  */
-public class MaximumSchutzbedarfListener implements ILinkChangeListener,
+public class MaximumProtectionRequirementsListener implements ILinkChangeListener,
 		Serializable {
 
 	private CnATreeElement sbTarget;
 
-	public MaximumSchutzbedarfListener(CnATreeElement item) {
+	public MaximumProtectionRequirementsListener(CnATreeElement item) {
 		this.sbTarget = item;
 	}
 
 	@Override
-    public void determineIntegritaet(CascadingTransaction ta)
+    public void determineIntegrity(CascadingTransaction ta)
 			throws TransactionAbortedException {
 		if (hasBeenVisited(ta)){
 			return;
@@ -57,22 +57,22 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 			if (upwardElmt.isSchutzbedarfProvider()) {
 				// upwardElement might depend on maximum level itself, so
 				// recurse up:
-				upwardElmt.getLinkChangeListener().determineIntegritaet(ta);
+				upwardElmt.getLinkChangeListener().determineIntegrity(ta);
 
-				int value = upwardElmt.getSchutzbedarfProvider()
-						.getIntegritaet();
+				int value = upwardElmt.getProtectionRequirementsProvider()
+						.getIntegrity();
 				if (value > highestValue){
 					highestValue = value;
 				}
 			}
 		}
-		
+
 		// if we dont use the maximum principle, keep current level:
-		if (!Schutzbedarf.isMaximumPrinzip(sbTarget.getSchutzbedarfProvider()
-				.getIntegritaetDescription())){
+		if (!Schutzbedarf.isMaximumPrinzip(sbTarget.getProtectionRequirementsProvider()
+				.getIntegrityDescription())){
 			return;
 		}
-		sbTarget.getSchutzbedarfProvider().setIntegritaet(highestValue);
+		sbTarget.getProtectionRequirementsProvider().setIntegrity(highestValue);
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 	}
 
 	@Override
-    public void determineVerfuegbarkeit(CascadingTransaction ta)
+    public void determineAvailability(CascadingTransaction ta)
 			throws TransactionAbortedException {
 		if (hasBeenVisited(ta)){
 			return;
@@ -103,10 +103,10 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 
 				// upwardElement might depend on maximum level itself, so
 				// recurse up:
-				upwardElmt.getLinkChangeListener().determineVerfuegbarkeit(ta);
+				upwardElmt.getLinkChangeListener().determineAvailability(ta);
 
-				int value = upwardElmt.getSchutzbedarfProvider()
-						.getVerfuegbarkeit();
+				int value = upwardElmt.getProtectionRequirementsProvider()
+						.getAvailability();
 				if (value > highestValue){
 					highestValue = value;
 				}
@@ -114,15 +114,15 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 		}
 
 		// if we dont use the maximum principle, keep current level:
-		if (!Schutzbedarf.isMaximumPrinzip(sbTarget.getSchutzbedarfProvider()
-				.getVerfuegbarkeitDescription())){
+		if (!Schutzbedarf.isMaximumPrinzip(sbTarget.getProtectionRequirementsProvider()
+				.getAvailabilityDescription())){
 			return;
 		}
-		sbTarget.getSchutzbedarfProvider().setVerfuegbarkeit(highestValue);
+		sbTarget.getProtectionRequirementsProvider().setAvailability(highestValue);
 	}
 
 	@Override
-    public void determineVertraulichkeit(CascadingTransaction ta)
+    public void determineConfidentiality(CascadingTransaction ta)
 			throws TransactionAbortedException {
 
 		if (hasBeenVisited(ta)){
@@ -138,21 +138,21 @@ public class MaximumSchutzbedarfListener implements ILinkChangeListener,
 
 				// upwardElement might depend on maximum level itself, so
 				// recurse up:
-				upwardElmt.getLinkChangeListener().determineVertraulichkeit(ta);
+				upwardElmt.getLinkChangeListener().determineConfidentiality(ta);
 
-				int value = upwardElmt.getSchutzbedarfProvider()
-						.getVertraulichkeit();
+				int value = upwardElmt.getProtectionRequirementsProvider()
+						.getConfidentiality();
 				if (value > highestValue){
 					highestValue = value;
 				}
 			}
 		}
 		// if we dont use the maximum principle, keep current level:
-		if (!Schutzbedarf.isMaximumPrinzip(sbTarget.getSchutzbedarfProvider()
-				.getVertraulichkeitDescription())){
+		if (!Schutzbedarf.isMaximumPrinzip(sbTarget.getProtectionRequirementsProvider()
+				.getConfidentialityDescription())){
 			return;
 		}
-		sbTarget.getSchutzbedarfProvider().setVertraulichkeit(highestValue);
+		sbTarget.getProtectionRequirementsProvider().setConfidentiality(highestValue);
 	}
 
     @Override

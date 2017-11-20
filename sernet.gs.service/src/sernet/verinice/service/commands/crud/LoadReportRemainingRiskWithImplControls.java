@@ -104,9 +104,9 @@ public class LoadReportRemainingRiskWithImplControls extends GenericCommand impl
                         // reload asset
                         LoadElementByUuid<CnATreeElement> assetReloader = new LoadElementByUuid<CnATreeElement>(asset.getUuid(), new RetrieveInfo().setLinksDown(true).setLinksUp(true).setLinksDownProperties(true).setLinksUpProperties(true));
                         asset = getCommandService().executeCommand(assetReloader).getElement();
-                        int impactC = valueAdapter.getVertraulichkeit();
-                        int impactI = valueAdapter.getIntegritaet();
-                        int impactA = valueAdapter.getVerfuegbarkeit();
+                        int impactC = valueAdapter.getConfidentiality();
+                        int impactI = valueAdapter.getIntegrity();
+                        int impactA = valueAdapter.getAvailability();
                         Integer[] reducedImpact = raService.applyControlsToImpact(RiskAnalysisHelper.RISK_WITH_IMPLEMENTED_CONTROLS, asset, impactC, impactI, impactA);
                         if(reducedImpact != null){
                             impactC = reducedImpact[0];

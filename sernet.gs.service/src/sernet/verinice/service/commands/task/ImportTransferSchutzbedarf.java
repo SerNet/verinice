@@ -23,7 +23,7 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.Anwendung;
-import sernet.verinice.model.bsi.ISchutzbedarfProvider;
+import sernet.verinice.model.bsi.IProtectionRequirementsProvider;
 import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -64,7 +64,7 @@ public class ImportTransferSchutzbedarf extends GenericCommand {
      * object of type {@link Netzkomponente} which equals "Netz" in gstools
      * busines logic Schutzbedarfproperties for instances of
      * {@link Netzkomponente} are called "Kritikalität" and are not provided via
-     * a {@link ISchutzbedarfProvider} which causes this special handling of
+     * a {@link IProtectionRequirementsProvider} which causes this special handling of
      * that type of objects
      * 
      * @param element
@@ -92,22 +92,22 @@ public class ImportTransferSchutzbedarf extends GenericCommand {
 	}
 
     private boolean transferSchutzbedarf() {
-		if (element.getSchutzbedarfProvider() == null){
+		if (element.getProtectionRequirementsProvider() == null){
 			return false;
 		}
-		ISchutzbedarfProvider zielElmt = element.getSchutzbedarfProvider();
+		IProtectionRequirementsProvider zielElmt = element.getProtectionRequirementsProvider();
 
-		zielElmt.setVertraulichkeit(vertraulichkeit);
+		zielElmt.setConfidentiality(vertraulichkeit);
 	
-		zielElmt.setVertraulichkeitDescription(vertrBegruendung);
+		zielElmt.setConfidentialityDescription(vertrBegruendung);
 
-		zielElmt.setVerfuegbarkeit(verfuegbarkeit);
+		zielElmt.setAvailability(verfuegbarkeit);
 
-		zielElmt.setVerfuegbarkeitDescription(verfuBegruendung);
+		zielElmt.setAvailabilityDescription(verfuBegruendung);
 
-		zielElmt.setIntegritaet(integritaet);
+		zielElmt.setIntegrity(integritaet);
 		
-		zielElmt.setIntegritaetDescription(integBegruendung);
+		zielElmt.setIntegrityDescription(integBegruendung);
 
 		if (isPersonenbezogen == 1 && element instanceof Anwendung) {
 			Anwendung anwendung = (Anwendung) element;

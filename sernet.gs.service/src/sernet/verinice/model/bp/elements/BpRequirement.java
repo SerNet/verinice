@@ -28,13 +28,11 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import sernet.verinice.model.bp.IBpElement;
-import sernet.verinice.model.bsi.ISchutzbedarfProvider;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.common.TransactionAbortedException;
-import sernet.verinice.model.iso27k.AssetValueAdapter;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -64,16 +62,6 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     public static final String REL_BP_REQUIREMENT_BP_THREAT = "rel_bp_requirement_bp_threat"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_SAFEGUARD = "rel_bp_requirement_bp_safeguard"; //$NON-NLS-1$
 
-    private final ISchutzbedarfProvider schutzbedarfProvider = new AssetValueAdapter(this);
-
-    @Override
-    public ILinkChangeListener getLinkChangeListener() {
-        return linkChangeListener;
-    }
-    @Override
-    public ISchutzbedarfProvider getSchutzbedarfProvider() {
-        return schutzbedarfProvider;
-    }
     
     private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
     private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {

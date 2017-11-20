@@ -196,9 +196,9 @@ public class LoadReportAllRisksForScope extends GenericCommand implements ICache
         Integer impactC = 0;
         Integer impactI = 0;
         Integer impactA = 0;
-        impactC = valueAdapter.getVertraulichkeit();
-        impactI = valueAdapter.getIntegritaet();
-        impactA = valueAdapter.getVerfuegbarkeit();
+        impactC = valueAdapter.getConfidentiality();
+        impactI = valueAdapter.getIntegrity();
+        impactA = valueAdapter.getAvailability();
         
         boolean isCRelevant = false;
         boolean isIRelevant = false;

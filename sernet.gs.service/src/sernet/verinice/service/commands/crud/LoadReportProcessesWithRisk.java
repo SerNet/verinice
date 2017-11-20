@@ -154,9 +154,9 @@ public class LoadReportProcessesWithRisk extends GenericCommand implements ICach
                 row.add(Integer.toString(cnATreeElement.getDbId()));
                 row.add(cnATreeElement.getEntity().getSimpleValue(Process.PROP_ABBR));
                 row.add(cnATreeElement.getEntity().getSimpleValue(Process.PROP_NAME));
-                row.add(Integer.toString(process.getVertraulichkeit()));
-                row.add(Integer.toString(process.getIntegritaet()));
-                row.add(Integer.toString(process.getVerfuegbarkeit()));
+                row.add(Integer.toString(process.getConfidentiality()));
+                row.add(Integer.toString(process.getIntegrity()));
+                row.add(Integer.toString(process.getAvailability()));
                 row.add(Integer.toString(totalRisk));
                 result.add(row);
             }

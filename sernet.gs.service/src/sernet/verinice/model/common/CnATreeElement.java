@@ -36,7 +36,7 @@ import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIModelListener;
-import sernet.verinice.model.bsi.ISchutzbedarfProvider;
+import sernet.verinice.model.bsi.IProtectionRequirementsProvider;
 import sernet.verinice.model.bsi.LinkKategorie;
 import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.iso27k.IISO27kGroup;
@@ -582,19 +582,19 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	public ILinkChangeListener getLinkChangeListener() {
 		return new ILinkChangeListener() {
 			@Override
-            public void determineIntegritaet(CascadingTransaction ta)
+            public void determineIntegrity(CascadingTransaction ta)
 					throws TransactionAbortedException {
 				// do nothing
 			}
 
 			@Override
-            public void determineVerfuegbarkeit(CascadingTransaction ta)
+            public void determineAvailability(CascadingTransaction ta)
 					throws TransactionAbortedException {
 				// do nothing
 			}
 
 			@Override
-            public void determineVertraulichkeit(CascadingTransaction ta)
+            public void determineConfidentiality(CascadingTransaction ta)
 					throws TransactionAbortedException {
 				// do nothing
 			}
@@ -606,12 +606,12 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		};
 	}
 
-	public ISchutzbedarfProvider getSchutzbedarfProvider() { // NOPMD by dm on 07.02.12 12:38
+	public IProtectionRequirementsProvider getProtectionRequirementsProvider() { // NOPMD by dm on 07.02.12 12:38
 		return null;
 	}
 
 	public boolean isSchutzbedarfProvider() {
-		return getSchutzbedarfProvider() != null;
+		return getProtectionRequirementsProvider() != null;
 	}
 
 	public boolean isAdditionalMgmtReviewNeeded() {
@@ -728,7 +728,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		    if(LOG_INHERIT.isInfo()) {
 	            LOG_INHERIT.info(this.getTypeId() + " is provider, update confidentiality");
 	        }
-			getSchutzbedarfProvider().updateVertraulichkeit(ta);
+			getProtectionRequirementsProvider().updateConfidentiality(ta);
 		}
 	}
 	public void fireVerfuegbarkeitChanged(CascadingTransaction ta) {
@@ -736,7 +736,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
             if(LOG_INHERIT.isInfo()) {
                 LOG_INHERIT.info(this.getTypeId() + " is provider, update availability");
             }
-			getSchutzbedarfProvider().updateVerfuegbarkeit(ta);
+			getProtectionRequirementsProvider().updateAvailability(ta);
 		}
 	}
 	public void fireIntegritaetChanged(CascadingTransaction ta) {
@@ -744,7 +744,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
             if(LOG_INHERIT.isInfo()) {
                 LOG_INHERIT.info(this.getTypeId() + " is provider, update integrity of: " + this.getTitle());
             }
-			getSchutzbedarfProvider().updateIntegritaet(ta);
+			getProtectionRequirementsProvider().updateIntegrity(ta);
 		}
 	}
 
@@ -753,7 +753,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
             if(LOG_INHERIT.isInfo()) {
                 LOG_INHERIT.info(this.getTypeId() + " is provider, update integrity of: " + this.getTitle());
             }
-            getSchutzbedarfProvider().updateValue(ta);
+            getProtectionRequirementsProvider().updateValue(ta);
         }
     }
 

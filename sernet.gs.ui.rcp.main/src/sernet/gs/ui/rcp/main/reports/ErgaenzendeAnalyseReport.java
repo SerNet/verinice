@@ -81,12 +81,12 @@ public class ErgaenzendeAnalyseReport extends BsiReport
 		}
 		
 		if (child.isSchutzbedarfProvider()) {
-			boolean integritaet = child.getSchutzbedarfProvider()
-				.getIntegritaet() > Schutzbedarf.NORMAL;
-			boolean verfuegbarkeit = child.getSchutzbedarfProvider()
-				.getVerfuegbarkeit() > Schutzbedarf.NORMAL;
-			boolean vertraulichkeit = child.getSchutzbedarfProvider()
-				.getVertraulichkeit() > Schutzbedarf.NORMAL;
+			boolean integritaet = child.getProtectionRequirementsProvider()
+				.getIntegrity() > Schutzbedarf.NORMAL;
+			boolean verfuegbarkeit = child.getProtectionRequirementsProvider()
+				.getAvailability() > Schutzbedarf.NORMAL;
+			boolean vertraulichkeit = child.getProtectionRequirementsProvider()
+				.getConfidentiality() > Schutzbedarf.NORMAL;
 				
 			return (integritaet || verfuegbarkeit || vertraulichkeit);
 			

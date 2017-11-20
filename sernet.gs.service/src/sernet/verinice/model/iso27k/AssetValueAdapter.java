@@ -27,7 +27,7 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
-import sernet.verinice.model.bsi.ISchutzbedarfProvider;
+import sernet.verinice.model.bsi.IProtectionRequirementsProvider;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -38,7 +38,7 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
-public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
+public class AssetValueAdapter implements IProtectionRequirementsProvider, Serializable {
 
     private static final Logger LOG = Logger.getLogger(AssetValueAdapter.class);
 
@@ -49,7 +49,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
     }
 
     @Override
-    public int getIntegritaet() {
+    public int getIntegrity() {
         if (LOG.isDebugEnabled()) {
             LOG.debug("get Integrity for " + cnaTreeElement); //$NON-NLS-1$
         }
@@ -62,7 +62,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
     }
 
     @Override
-    public int getVerfuegbarkeit() {
+    public int getAvailability() {
         if (LOG.isDebugEnabled()) {
             LOG.debug("get avail. for " + cnaTreeElement); //$NON-NLS-1$
         }
@@ -75,7 +75,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
     }
 
     @Override
-    public int getVertraulichkeit() {
+    public int getConfidentiality() {
         if (LOG.isDebugEnabled()) {
             LOG.debug("get confid. for " + cnaTreeElement); //$NON-NLS-1$
         }
@@ -88,7 +88,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
     }
 
     @Override
-    public void setIntegritaet(int i) {
+    public void setIntegrity(int i) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("set integrity for " + cnaTreeElement); //$NON-NLS-1$
         }
@@ -102,7 +102,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
     }
 
     @Override
-    public void setVerfuegbarkeit(int i) {
+    public void setAvailability(int i) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("set avail. for " + cnaTreeElement); //$NON-NLS-1$
         }
@@ -116,7 +116,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
     }
 
     @Override
-    public void setVertraulichkeit(int i) {
+    public void setConfidentiality(int i) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("set confd. for " + cnaTreeElement); //$NON-NLS-1$
         }
@@ -172,7 +172,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
      * @see sernet.verinice.model.bsi.ISchutzbedarfProvider#updateIntegritaet(sernet.verinice.model.common.CascadingTransaction)
      */
     @Override
-    public void updateIntegritaet(CascadingTransaction ta) {
+    public void updateIntegrity(CascadingTransaction ta) {
         try {
             // 1st step: traverse down:
             // find bottom nodes from which to start:
@@ -184,7 +184,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
             for (CnATreeElement bottomNode : bottomNodes) {
                 // determine protection level from parents (or keep own
                 // depending on description):
-                bottomNode.getLinkChangeListener().determineIntegritaet(ta);
+                bottomNode.getLinkChangeListener().determineIntegrity(ta);
 
             }
 
@@ -205,7 +205,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
      * @see sernet.verinice.model.bsi.ISchutzbedarfProvider#updateVerfuegbarkeit(sernet.verinice.model.common.CascadingTransaction)
      */
     @Override
-    public void updateVerfuegbarkeit(CascadingTransaction ta) {
+    public void updateAvailability(CascadingTransaction ta) {
         try {
             // 1st step: traverse down:
             // find bottom nodes from which to start:
@@ -217,7 +217,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
             for (CnATreeElement bottomNode : bottomNodes) {
                 // determine protection level from parents (or keep own
                 // depending on settings):
-                bottomNode.getLinkChangeListener().determineVerfuegbarkeit(ta);
+                bottomNode.getLinkChangeListener().determineAvailability(ta);
             }
 
         } catch (TransactionAbortedException tae) {
@@ -237,7 +237,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
      * @see sernet.verinice.model.bsi.ISchutzbedarfProvider#updateVertraulichkeit(sernet.verinice.model.common.CascadingTransaction)
      */
     @Override
-    public void updateVertraulichkeit(CascadingTransaction ta) {
+    public void updateConfidentiality(CascadingTransaction ta) {
         try {
             // 1st step: traverse down:
             // find bottom nodes from which to start:
@@ -249,7 +249,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
             for (CnATreeElement bottomNode : bottomNodes) {
                 // determine protection level from parents (or keep own
                 // depending on description):
-                bottomNode.getLinkChangeListener().determineVertraulichkeit(ta);
+                bottomNode.getLinkChangeListener().determineConfidentiality(ta);
             }
         } catch (TransactionAbortedException tae) {
             LOG.debug("Vertraulichkeitsänderung abgebrochen."); //$NON-NLS-1$
@@ -271,7 +271,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
      * getIntegritaetDescription()
      */
     @Override
-    public String getIntegritaetDescription() {
+    public String getIntegrityDescription() {
         return getDescription();
     }
 
@@ -282,7 +282,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
      * getVerfuegbarkeitDescription()
      */
     @Override
-    public String getVerfuegbarkeitDescription() {
+    public String getAvailabilityDescription() {
         return getDescription();
     }
 
@@ -305,7 +305,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
      * getVertraulichkeitDescription()
      */
     @Override
-    public String getVertraulichkeitDescription() {
+    public String getConfidentialityDescription() {
         return getDescription();
     }
 
@@ -316,7 +316,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
      * setIntegritaetDescription(java.lang.String)
      */
     @Override
-    public void setIntegritaetDescription(String text) {
+    public void setIntegrityDescription(String text) {
         setDescription(text);
     }
 
@@ -327,7 +327,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
      * setVerfuegbarkeitDescription(java.lang.String)
      */
     @Override
-    public void setVerfuegbarkeitDescription(String text) {
+    public void setAvailabilityDescription(String text) {
         setDescription(text);
     }
 
@@ -338,7 +338,7 @@ public class AssetValueAdapter implements ISchutzbedarfProvider, Serializable {
      * setVertraulichkeitDescription(java.lang.String)
      */
     @Override
-    public void setVertraulichkeitDescription(String text) {
+    public void setConfidentialityDescription(String text) {
         setDescription(text);
     }
 

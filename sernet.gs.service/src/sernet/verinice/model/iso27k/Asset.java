@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import sernet.hui.common.connect.Entity;
-import sernet.verinice.model.bsi.ISchutzbedarfProvider;
+import sernet.verinice.model.bsi.IProtectionRequirementsProvider;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
@@ -73,7 +73,7 @@ public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGrou
 	
 	
 	
-    private final ISchutzbedarfProvider schutzbedarfProvider = new AssetValueAdapter(this);
+    private final IProtectionRequirementsProvider schutzbedarfProvider = new AssetValueAdapter(this);
     private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this);
     
     
@@ -82,7 +82,7 @@ public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGrou
         return linkChangeListener;
     }
     @Override
-    public ISchutzbedarfProvider getSchutzbedarfProvider() {
+    public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
         return schutzbedarfProvider;
     }
 

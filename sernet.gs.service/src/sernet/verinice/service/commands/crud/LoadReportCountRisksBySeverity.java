@@ -122,9 +122,9 @@ public class LoadReportCountRisksBySeverity extends GenericCommand implements IC
         int probability = scenario.getNumericProperty(RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY);
         
         // prob. / impact:
-        int riskC = probability + valueAdapter.getVertraulichkeit();
-        int riskI = probability + valueAdapter.getIntegritaet();
-        int riskA = probability + valueAdapter.getVerfuegbarkeit();
+        int riskC = probability + valueAdapter.getConfidentiality();
+        int riskI = probability + valueAdapter.getIntegrity();
+        int riskA = probability + valueAdapter.getAvailability();
         
         // risk values:
         switch (this.riskType) {

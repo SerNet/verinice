@@ -27,7 +27,7 @@ public interface ILinkChangeListener {
 	 * 
 	 * @param ta
 	 */
-	public void determineVertraulichkeit(CascadingTransaction ta) throws TransactionAbortedException ;
+	public void determineConfidentiality(CascadingTransaction ta) throws TransactionAbortedException ;
 	
 	/**
 	 * Determine protection level, either by going upwards through <code>CnALinks</code> for
@@ -36,7 +36,7 @@ public interface ILinkChangeListener {
 	 * 
 	 * @param ta
 	 */
-	public void determineIntegritaet(CascadingTransaction ta) throws TransactionAbortedException ;
+	public void determineIntegrity(CascadingTransaction ta) throws TransactionAbortedException ;
 	
 	/**
 	 * Determine protection level, either by going upwards through <code>CnALinks</code> for
@@ -45,7 +45,7 @@ public interface ILinkChangeListener {
 	 * 
 	 * @param ta
 	 */
-	public void determineVerfuegbarkeit(CascadingTransaction ta) throws TransactionAbortedException ;
+	public void determineAvailability(CascadingTransaction ta) throws TransactionAbortedException ;
 	
 	/**
 	 * Determine an arbitrate value by going upwards through <code>CnALinks</code>.
