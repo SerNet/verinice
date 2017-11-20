@@ -48,7 +48,6 @@ import sernet.verinice.model.bp.groups.NetworkGroup;
 import sernet.verinice.model.bp.groups.RoomGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
-import sernet.verinice.service.commands.UpdateElement;
 
 /**
  * @author uz[at]sernet.de
@@ -109,6 +108,9 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
         groupList.add(RoomGroup.class);
     }
 
+    /**
+     * Checks the basic implementation requirements.
+     */
     @Transactional
     @Rollback(true)
     @Test
@@ -145,6 +147,9 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
 
     /**
      * Test a simple chain of deduction.
+     * <pre>
+     * source -> depend -> depend1
+     * </pre>
      */
     @Transactional
     @Rollback(true)
@@ -156,36 +161,36 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
         BusinessProcess source = createElement(bpGroup, BusinessProcess.class);
         source = prepareDeductionSource(source);
 
-        BusinessProcess dependend = createElement(bpGroup, BusinessProcess.class);
-        dependend = enableAllCIADeduction(dependend);
-        createLink(source, dependend, null);
+        BusinessProcess dependent = createElement(bpGroup, BusinessProcess.class);
+        dependent = enableAllCIADeduction(dependent);
+        createLink(source, dependent, null);
 
-        assertCIAPropertyValue(dependend, CiaType.C, CiaValue.N);
-        assertCIAPropertyValue(dependend, CiaType.I, CiaValue.N);
-        assertCIAPropertyValue(dependend, CiaType.A, CiaValue.N);
+        assertCIAPropertyValue(dependent, CiaType.C, CiaValue.N);
+        assertCIAPropertyValue(dependent, CiaType.I, CiaValue.N);
+        assertCIAPropertyValue(dependent, CiaType.A, CiaValue.N);
 
-        BusinessProcess dependend1 = createElement(bpGroup, BusinessProcess.class);
-        dependend1 = enableAllCIADeduction(dependend1);
-        createLink(dependend, dependend1, null);
+        BusinessProcess dependent1 = createElement(bpGroup, BusinessProcess.class);
+        dependent1 = enableAllCIADeduction(dependent1);
+        createLink(dependent, dependent1, null);
 
-        assertCIAPropertyValue(dependend1, CiaType.C, CiaValue.N);
-        assertCIAPropertyValue(dependend1, CiaType.I, CiaValue.N);
-        assertCIAPropertyValue(dependend1, CiaType.A, CiaValue.N);
+        assertCIAPropertyValue(dependent1, CiaType.C, CiaValue.N);
+        assertCIAPropertyValue(dependent1, CiaType.I, CiaValue.N);
+        assertCIAPropertyValue(dependent1, CiaType.A, CiaValue.N);
 
         setCIAProperty(source, CiaType.C, CiaValue.V);
         source = update(source);
-        assertCIAPropertyValue(dependend, CiaType.C, CiaValue.V);
-        assertCIAPropertyValue(dependend1, CiaType.C, CiaValue.V);
+        assertCIAPropertyValue(dependent, CiaType.C, CiaValue.V);
+        assertCIAPropertyValue(dependent1, CiaType.C, CiaValue.V);
 
         setCIAProperty(source, CiaType.I, CiaValue.V);
         source = update(source);
-        assertCIAPropertyValue(dependend, CiaType.I, CiaValue.V);
-        assertCIAPropertyValue(dependend1, CiaType.I, CiaValue.V);
+        assertCIAPropertyValue(dependent, CiaType.I, CiaValue.V);
+        assertCIAPropertyValue(dependent1, CiaType.I, CiaValue.V);
 
         setCIAProperty(source, CiaType.A, CiaValue.V);
         source = update(source);
-        assertCIAPropertyValue(dependend, CiaType.A, CiaValue.V);
-        assertCIAPropertyValue(dependend1, CiaType.A, CiaValue.V);
+        assertCIAPropertyValue(dependent, CiaType.A, CiaValue.V);
+        assertCIAPropertyValue(dependent1, CiaType.A, CiaValue.V);
     }
 
     /**
@@ -206,28 +211,32 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
             source = prepareDeductionSource(source);
             for (int j = 0; j < groupList.size(); j++) {
                 Group<?> dGroup = createGroup(network, groupList.get(j));
-                CnATreeElement dependend = createElement(dGroup, elementList.get(j));
-                enableAllCIADeduction(dependend);
+                CnATreeElement dependent = createElement(dGroup, elementList.get(j));
+                enableAllCIADeduction(dependent);
 
-                createLink(source, dependend, null);
+                createLink(source, dependent, null);
 
-                assertCIAPropertyValue(dependend, CiaType.C, CiaValue.N);
-                assertCIAPropertyValue(dependend, CiaType.I, CiaValue.N);
-                assertCIAPropertyValue(dependend, CiaType.A, CiaValue.N);
+                assertCIAPropertyValue(dependent, CiaType.C, CiaValue.N);
+                assertCIAPropertyValue(dependent, CiaType.I, CiaValue.N);
+                assertCIAPropertyValue(dependent, CiaType.A, CiaValue.N);
 
                 setCIAProperty(source, CiaType.I, CiaValue.V);
                 source = update(source);
-                assertCIAPropertyValue(dependend, CiaType.I, CiaValue.V);
+                assertCIAPropertyValue(dependent, CiaType.I, CiaValue.V);
 
                 setCIAProperty(source, CiaType.I, CiaValue.N);
                 source = update(source);
-                assertCIAPropertyValue(dependend, CiaType.I, CiaValue.N);
+                assertCIAPropertyValue(dependent, CiaType.I, CiaValue.N);
             }
         }
     }
 
     /**
      * Two source for one dependent the value is always the highest one.
+     * <pre>
+     * source  -> dependent
+     * source1 ---^
+     * </pre>
      *
      * @throws Exception
      */
@@ -241,13 +250,13 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
         BusinessProcess source = createElement(bpGroup, BusinessProcess.class);
         source = prepareDeductionSource(source);
 
-        BusinessProcess dependend = createElement(bpGroup, BusinessProcess.class);
-        dependend = enableAllCIADeduction(dependend);
-        createLink(source, dependend, null);
+        BusinessProcess dependent = createElement(bpGroup, BusinessProcess.class);
+        dependent = enableAllCIADeduction(dependent);
+        createLink(source, dependent, null);
 
-        assertCIAPropertyValue(dependend, CiaType.C, CiaValue.N);
-        assertCIAPropertyValue(dependend, CiaType.I, CiaValue.N);
-        assertCIAPropertyValue(dependend, CiaType.A, CiaValue.N);
+        assertCIAPropertyValue(dependent, CiaType.C, CiaValue.N);
+        assertCIAPropertyValue(dependent, CiaType.I, CiaValue.N);
+        assertCIAPropertyValue(dependent, CiaType.A, CiaValue.N);
 
         BusinessProcess source1 = createElement(bpGroup, BusinessProcess.class);
         source1 = prepareDeductionSource(source1);
@@ -256,23 +265,27 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
         setCIAProperty(source1, CiaType.A, CiaValue.V);
         source1 = update(source1);
 
-        createLink(source1, dependend, null);
+        createLink(source1, dependent, null);
 
-        assertCIAPropertyValue(dependend, CiaType.C, CiaValue.N);
-        assertCIAPropertyValue(dependend, CiaType.I, CiaValue.H);
-        assertCIAPropertyValue(dependend, CiaType.A, CiaValue.V);
+        assertCIAPropertyValue(dependent, CiaType.C, CiaValue.N);
+        assertCIAPropertyValue(dependent, CiaType.I, CiaValue.H);
+        assertCIAPropertyValue(dependent, CiaType.A, CiaValue.V);
 
         setCIAProperty(source1, CiaType.I, CiaValue.V);
         source1 = update(source1);
-        assertCIAPropertyValue(dependend, CiaType.I, CiaValue.V);
+        assertCIAPropertyValue(dependent, CiaType.I, CiaValue.V);
 
         setCIAProperty(source1, CiaType.I, CiaValue.L);
         source1 = update(source1);
-        assertCIAPropertyValue(dependend, CiaType.I, CiaValue.N);
+        assertCIAPropertyValue(dependent, CiaType.I, CiaValue.N);
     }
 
     /**
      * Test a cycle in the deduction.
+     * <pre>
+     * source -> dependent -> dependend1 -> dependent2 -> dependent3
+     *               ^---------------------------------------|
+     * </pre>
      *
      * @throws Exception
      */
@@ -287,25 +300,25 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
         BusinessProcess source = createElement(bpGroup, BusinessProcess.class);
         source = prepareDeductionSource(source);
 
-        BusinessProcess dependend = createElement(bpGroup, BusinessProcess.class);
-        dependend = enableAllCIADeduction(dependend);
-        createLink(source, dependend, null);
-        elements.add(dependend);
+        BusinessProcess dependent = createElement(bpGroup, BusinessProcess.class);
+        dependent = enableAllCIADeduction(dependent);
+        createLink(source, dependent, null);
+        elements.add(dependent);
 
-        BusinessProcess dependend1 = createElement(bpGroup, BusinessProcess.class);
-        dependend1 = enableAllCIADeduction(dependend1);
-        createLink(dependend, dependend1, null);
-        elements.add(dependend1);
+        BusinessProcess dependent1 = createElement(bpGroup, BusinessProcess.class);
+        dependent1 = enableAllCIADeduction(dependent1);
+        createLink(dependent, dependent1, null);
+        elements.add(dependent1);
 
-        BusinessProcess dependend2 = createElement(bpGroup, BusinessProcess.class);
-        dependend2 = enableAllCIADeduction(dependend2);
-        createLink(dependend1, dependend2, null);
-        elements.add(dependend2);
+        BusinessProcess dependent2 = createElement(bpGroup, BusinessProcess.class);
+        dependent2 = enableAllCIADeduction(dependent2);
+        createLink(dependent1, dependent2, null);
+        elements.add(dependent2);
 
-        BusinessProcess dependend3 = createElement(bpGroup, BusinessProcess.class);
-        dependend3 = enableAllCIADeduction(dependend3);
-        createLink(dependend, dependend3, null);
-        elements.add(dependend3);
+        BusinessProcess dependent3 = createElement(bpGroup, BusinessProcess.class);
+        dependent3 = enableAllCIADeduction(dependent3);
+        createLink(dependent, dependent3, null);
+        elements.add(dependent3);
 
         for (BusinessProcess element : elements) {
             assertCIAPropertyValue(element, CiaType.C, CiaValue.N);
@@ -347,38 +360,36 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
         BusinessProcess source = createElement(bpGroup, BusinessProcess.class);
         source = prepareDeductionSource(source);
 
-        BusinessProcess dependend = createElement(bpGroup, BusinessProcess.class);
-        dependend = enableAllCIADeduction(dependend);
-        createLink(source, dependend, null);
+        BusinessProcess dependent = createElement(bpGroup, BusinessProcess.class);
+        dependent = enableAllCIADeduction(dependent);
+        createLink(source, dependent, null);
 
-        BusinessProcess dependend1 = createElement(bpGroup, BusinessProcess.class);
-        dependend1 = enableAllCIADeduction(dependend1);
-        createLink(dependend, dependend1, null);
+        BusinessProcess dependent1 = createElement(bpGroup, BusinessProcess.class);
+        dependent1 = enableAllCIADeduction(dependent1);
+        createLink(dependent, dependent1, null);
 
-        assertCIAPropertyValue(dependend, CiaType.C, CiaValue.N);
-        assertCIAPropertyValue(dependend, CiaType.I, CiaValue.N);
-        assertCIAPropertyValue(dependend, CiaType.A, CiaValue.N);
-        assertCIAPropertyValue(dependend1, CiaType.C, CiaValue.N);
-        assertCIAPropertyValue(dependend1, CiaType.I, CiaValue.N);
-        assertCIAPropertyValue(dependend1, CiaType.A, CiaValue.N);
+        assertCIAPropertyValue(dependent, CiaType.C, CiaValue.N);
+        assertCIAPropertyValue(dependent, CiaType.I, CiaValue.N);
+        assertCIAPropertyValue(dependent, CiaType.A, CiaValue.N);
+        assertCIAPropertyValue(dependent1, CiaType.C, CiaValue.N);
+        assertCIAPropertyValue(dependent1, CiaType.I, CiaValue.N);
+        assertCIAPropertyValue(dependent1, CiaType.A, CiaValue.N);
 
-        disableCIADeduction(dependend1, CiaType.A);
+        disableCIADeduction(dependent1, CiaType.A);
 
         setCIAProperty(source, CiaType.A, CiaValue.L);
         source = update(source);
-        assertCIAPropertyValue(dependend, CiaType.A, CiaValue.L);
-        assertCIAPropertyValue(dependend1, CiaType.A, CiaValue.N);
+        assertCIAPropertyValue(dependent, CiaType.A, CiaValue.L);
+        assertCIAPropertyValue(dependent1, CiaType.A, CiaValue.N);
 
         setCIAProperty(source, CiaType.C, CiaValue.H);
         source = update(source);
-        assertCIAPropertyValue(dependend, CiaType.C, CiaValue.H);
-        assertCIAPropertyValue(dependend1, CiaType.C, CiaValue.H);
+        assertCIAPropertyValue(dependent, CiaType.C, CiaValue.H);
+        assertCIAPropertyValue(dependent1, CiaType.C, CiaValue.H);
     }
 
     /**
-     * @param dependend
-     * @return
-     * @throws CommandException
+     * Enables the deduction for all cases {@link CiaType}.
      */
     private <T extends CnATreeElement> T enableAllCIADeduction(T dependend)
             throws CommandException {
@@ -393,9 +404,6 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
      * Prepares a deduction source by disable the deduction and set the values
      * for all {@link CiaType} to CiaValue.N.
      *
-     * @param element
-     * @return
-     * @throws CommandException
      */
     private <T extends CnATreeElement> T prepareDeductionSource(T element) throws CommandException {
         for (CiaType ct : CiaType.values()) {
