@@ -243,7 +243,7 @@ public class ProtectionRequirementsAdapter implements IProtectionRequirementsPro
 
         int countLinks = 0;
         for (CnALink link : downwardElement.getLinksDown()) {
-            if (link.getDependency().isSchutzbedarfProvider()) {
+            if (link.getDependency().isProtectionRequirementsProvider()) {
                 countLinks++;
                 findBottomNodes(link.getDependency(), bottomNodes, downwardsTA);
             }

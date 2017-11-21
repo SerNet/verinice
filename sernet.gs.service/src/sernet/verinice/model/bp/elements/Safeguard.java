@@ -63,13 +63,11 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     public static final String PROP_QUALIFIER_HIGH = "bp_safeguard_qualifier_high";//$NON-NLS-1$
     public static final String REL_BP_SAFEGUARD_BP_THREAT = "rel_bp_safeguard_bp_threat"; //$NON-NLS-1$
 
-    protected Safeguard() {}
-    
-    private final IProtectionRequirementsProvider schutzbedarfProvider = new AssetValueAdapter(this);
+    private final IProtectionRequirementsProvider protectionRequirementsProvider = new AssetValueAdapter(this);
     private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this){
- 
+    
         private static final long serialVersionUID = 9205866080876674150L;
-
+    
         @Override
         public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
             for (CnALink cnALink : sbTarget.getLinksUp()) {
@@ -87,6 +85,8 @@ public class Safeguard extends CnATreeElement implements IBpElement {
             }
         }
     };
+
+    protected Safeguard() {}
     
     @Override
     public ILinkChangeListener getLinkChangeListener() {
@@ -95,7 +95,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
 
     @Override
     public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
-        return schutzbedarfProvider;
+        return protectionRequirementsProvider;
     }
 
     

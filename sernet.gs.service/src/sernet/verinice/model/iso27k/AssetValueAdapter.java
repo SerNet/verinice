@@ -39,6 +39,18 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
+/**
+ * @author uz[at]sernet.de
+ *
+ */
+/**
+ * @author uz[at]sernet.de
+ *
+ */
+/**
+ * @author uz[at]sernet.de
+ *
+ */
 public class AssetValueAdapter implements IProtectionRequirementsProvider, Serializable {
 
     private static final Logger LOG = Logger.getLogger(AssetValueAdapter.class);
@@ -144,7 +156,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
 
         int countLinks = 0;
         for (CnALink link : downwardElement.getLinksDown()) {
-            if (link.getDependency().isSchutzbedarfProvider()) {
+            if (link.getDependency().isProtectionRequirementsProvider()) {
                 countLinks++;
                 findBottomNodes(link.getDependency(), bottomNodes, downwardsTA);
             }
@@ -165,7 +177,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
     }
 
     /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.ISchutzbedarfProvider#updateIntegritaet(sernet.verinice.model.common.CascadingTransaction)
+     * @see sernet.verinice.model.bsi.IProtectionRequirementsProvider#updateIntegritaet(sernet.verinice.model.common.CascadingTransaction)
      */
     public void updateIntegrity(CascadingTransaction ta) {
         try {
@@ -197,7 +209,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
     }
 
     /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.ISchutzbedarfProvider#updateVerfuegbarkeit(sernet.verinice.model.common.CascadingTransaction)
+     * @see sernet.verinice.model.bsi.IProtectionRequirementsProvider#updateVerfuegbarkeit(sernet.verinice.model.common.CascadingTransaction)
      */
     public void updateAvailability(CascadingTransaction ta) {
         try {
@@ -228,7 +240,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
     }
 
     /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.ISchutzbedarfProvider#updateVertraulichkeit(sernet.verinice.model.common.CascadingTransaction)
+     * @see sernet.verinice.model.bsi.IProtectionRequirementsProvider#updateVertraulichkeit(sernet.verinice.model.common.CascadingTransaction)
      */
     public void updateConfidentiality(CascadingTransaction ta) {
         try {
@@ -260,7 +272,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
     /*
      * (non-Javadoc)
      * 
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
      * getIntegritaetDescription()
      */
     public String getIntegrityDescription() {
@@ -270,7 +282,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
     /*
      * (non-Javadoc)
      * 
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
      * getVerfuegbarkeitDescription()
      */
     public String getAvailabilityDescription() {
@@ -292,7 +304,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
     /*
      * (non-Javadoc)
      * 
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
      * getVertraulichkeitDescription()
      */
     public String getConfidentialityDescription() {
@@ -302,7 +314,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
     /*
      * (non-Javadoc)
      * 
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
      * setIntegritaetDescription(java.lang.String)
      */
     public void setIntegrityDescription(String text) {
@@ -312,7 +324,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
     /*
      * (non-Javadoc)
      * 
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
      * setVerfuegbarkeitDescription(java.lang.String)
      */
     public void setAvailabilityDescription(String text) {
@@ -322,7 +334,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
     /*
      * (non-Javadoc)
      * 
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
      * setVertraulichkeitDescription(java.lang.String)
      */
     public void setConfidentialityDescription(String text) {
@@ -332,7 +344,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
     /*
      * (non-Javadoc)
      * 
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
      * isCalculatedAvailability()
      */
     public boolean isCalculatedAvailability() {
@@ -347,7 +359,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
     /*
      * (non-Javadoc)
      * 
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
      * isCalculatedConfidentiality()
      */
     public boolean isCalculatedConfidentiality() {
@@ -363,7 +375,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
      * (non-Javadoc)
      * 
      * @see
-     * sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#isCalculatedIntegrity
+     * sernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#isCalculatedIntegrity
      * ()
      */
     public boolean isCalculatedIntegrity() {
@@ -375,6 +387,14 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
         }
     }
 
+    
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.model.bsi.IProtectionRequirementsProvider#updateValue(
+     * sernet.verinice.model.common.CascadingTransaction)
+     */
     @Override
     public void updateValue(CascadingTransaction ta) {
         try {

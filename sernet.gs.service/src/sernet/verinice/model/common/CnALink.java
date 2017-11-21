@@ -328,7 +328,7 @@ public class CnALink implements Serializable, ITypedElement {
         dependant.removeLinkDown(this);
         dependency.removeLinkUp(this);
 
-        if (dependency.isSchutzbedarfProvider()) {
+        if (dependency.isProtectionRequirementsProvider()) {
             dependency.fireIntegritaetChanged(new CascadingTransaction());
             dependency.fireVerfuegbarkeitChanged(new CascadingTransaction());
             dependency.fireVertraulichkeitChanged(new CascadingTransaction());

@@ -93,17 +93,7 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         }
     };
 
-    private final IProtectionRequirementsProvider schutzbedarfProvider = new AssetValueAdapter(this);
-    
-    @Override
-    public ILinkChangeListener getLinkChangeListener() {
-        return linkChangeListener;
-    }
-    @Override
-    public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
-        return schutzbedarfProvider;
-    }
-
+    private final IProtectionRequirementsProvider protectionRequirementsProvider = new AssetValueAdapter(this);
     
     protected BpRequirement() {}
 
@@ -112,6 +102,14 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         init();
     }
     
+    @Override
+    public ILinkChangeListener getLinkChangeListener() {
+        return linkChangeListener;
+    }
+    @Override
+    public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
+        return protectionRequirementsProvider;
+    }
     @Override
     public String getTypeId() {
         return TYPE_ID;

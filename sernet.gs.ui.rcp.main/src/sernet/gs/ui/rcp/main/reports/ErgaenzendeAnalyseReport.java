@@ -80,7 +80,7 @@ public class ErgaenzendeAnalyseReport extends BsiReport
 			return true;
 		}
 		
-		if (child.isSchutzbedarfProvider()) {
+		if (child.isProtectionRequirementsProvider()) {
 			boolean integritaet = child.getProtectionRequirementsProvider()
 				.getIntegrity() > Schutzbedarf.NORMAL;
 			boolean verfuegbarkeit = child.getProtectionRequirementsProvider()

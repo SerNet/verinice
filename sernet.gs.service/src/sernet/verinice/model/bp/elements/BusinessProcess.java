@@ -43,7 +43,7 @@ public class BusinessProcess extends ElementWithChilds implements IBpElement, IB
     public static final String[] CHILD_TYPES = new String[] {BpRequirementGroup.TYPE_ID};
 
     private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this);
-    private final IProtectionRequirementsProvider schutzbedarfProvider = new AssetValueAdapter(this);
+    private final IProtectionRequirementsProvider protectionRequirementsProvider = new AssetValueAdapter(this);
 
     protected BusinessProcess() {}
     
@@ -59,7 +59,7 @@ public class BusinessProcess extends ElementWithChilds implements IBpElement, IB
 
     @Override
     public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
-        return schutzbedarfProvider;
+        return protectionRequirementsProvider;
     }
 
     @Override

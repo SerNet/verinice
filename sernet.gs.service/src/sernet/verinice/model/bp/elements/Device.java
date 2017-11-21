@@ -43,7 +43,7 @@ public class Device extends ElementWithChilds implements IBpElement, IBpGroup {
     public static final String[] CHILD_TYPES = new String[] {BpRequirementGroup.TYPE_ID};
 
     private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this);
-    private final IProtectionRequirementsProvider schutzbedarfProvider = new AssetValueAdapter(this);
+    private final IProtectionRequirementsProvider protectionRequirementsProvider = new AssetValueAdapter(this);
 
     protected Device() {}
     
@@ -58,7 +58,7 @@ public class Device extends ElementWithChilds implements IBpElement, IBpGroup {
 
     @Override
     public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
-        return schutzbedarfProvider;
+        return protectionRequirementsProvider;
     }
 
     @Override
