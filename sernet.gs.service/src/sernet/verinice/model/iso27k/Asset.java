@@ -73,7 +73,7 @@ public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGrou
 	
 	
 	
-    private final IProtectionRequirementsProvider schutzbedarfProvider = new AssetValueAdapter(this);
+    private final IProtectionRequirementsProvider protectionRequirementsProvider = new AssetValueAdapter(this);
     private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this);
     
     
@@ -83,7 +83,7 @@ public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGrou
     }
     @Override
     public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
-        return schutzbedarfProvider;
+        return protectionRequirementsProvider;
     }
 
 	/**

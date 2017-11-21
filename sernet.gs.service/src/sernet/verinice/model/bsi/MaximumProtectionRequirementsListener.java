@@ -54,7 +54,7 @@ public class MaximumProtectionRequirementsListener implements ILinkChangeListene
 		int highestValue = 0;
 		allLinks: for (CnALink link : sbTarget.getLinksUp()) {
 			CnATreeElement upwardElmt = link.getDependant();
-			if (upwardElmt.isSchutzbedarfProvider()) {
+			if (upwardElmt.isProtectionRequirementsProvider()) {
 				// upwardElement might depend on maximum level itself, so
 				// recurse up:
 				upwardElmt.getLinkChangeListener().determineIntegrity(ta);
@@ -99,7 +99,7 @@ public class MaximumProtectionRequirementsListener implements ILinkChangeListene
 		int highestValue = 0;
 		allLinks: for (CnALink link : sbTarget.getLinksUp()) {
 			CnATreeElement upwardElmt = link.getDependant();
-			if (upwardElmt.isSchutzbedarfProvider()) {
+			if (upwardElmt.isProtectionRequirementsProvider()) {
 
 				// upwardElement might depend on maximum level itself, so
 				// recurse up:
@@ -134,7 +134,7 @@ public class MaximumProtectionRequirementsListener implements ILinkChangeListene
 		int highestValue = 0;
 		allLinks: for (CnALink link : sbTarget.getLinksUp()) {
 			CnATreeElement upwardElmt = link.getDependant();
-			if (upwardElmt.isSchutzbedarfProvider()) {
+			if (upwardElmt.isProtectionRequirementsProvider()) {
 
 				// upwardElement might depend on maximum level itself, so
 				// recurse up:

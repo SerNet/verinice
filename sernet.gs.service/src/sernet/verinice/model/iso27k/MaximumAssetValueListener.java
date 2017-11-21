@@ -59,7 +59,7 @@ public class MaximumAssetValueListener implements ILinkChangeListener, Serializa
         int highestValue = 0;
         for (CnALink link : sbTarget.getLinksUp()) {
             CnATreeElement upwardElmt = link.getDependant();
-            if (upwardElmt.isSchutzbedarfProvider()) {
+            if (upwardElmt.isProtectionRequirementsProvider()) {
                 // upwardElement might depend on maximum level itself, so
                 // recurse up:
                 upwardElmt.getLinkChangeListener().determineIntegrity(ta);
@@ -101,7 +101,7 @@ public class MaximumAssetValueListener implements ILinkChangeListener, Serializa
         int highestValue = 0;
         for (CnALink link : sbTarget.getLinksUp()) {
             CnATreeElement upwardElmt = link.getDependant();
-            if (upwardElmt.isSchutzbedarfProvider()) {
+            if (upwardElmt.isProtectionRequirementsProvider()) {
 
                 // upwardElement might depend on maximum level itself, so
                 // recurse up:
@@ -145,7 +145,7 @@ public class MaximumAssetValueListener implements ILinkChangeListener, Serializa
         int highestValue = 0;
         for (CnALink link : sbTarget.getLinksUp()) {
             CnATreeElement upwardElmt = link.getDependant();
-            if (upwardElmt.isSchutzbedarfProvider()) {
+            if (upwardElmt.isProtectionRequirementsProvider()) {
 
                 // upwardElement might depend on maximum level itself, so
                 // recurse up:

@@ -38,6 +38,18 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
+/**
+ * @author uz[at]sernet.de
+ *
+ */
+/**
+ * @author uz[at]sernet.de
+ *
+ */
+/**
+ * @author uz[at]sernet.de
+ *
+ */
 public class AssetValueAdapter implements IProtectionRequirementsProvider, Serializable {
 
     private static final Logger LOG = Logger.getLogger(AssetValueAdapter.class);
@@ -148,7 +160,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
 
         int countLinks = 0;
         for (CnALink link : downwardElement.getLinksDown()) {
-            if (link.getDependency().isSchutzbedarfProvider()) {
+            if (link.getDependency().isProtectionRequirementsProvider()) {
                 countLinks++;
                 findBottomNodes(link.getDependency(), bottomNodes, downwardsTA);
             }
@@ -169,7 +181,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
     }
 
     /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.ISchutzbedarfProvider#updateIntegritaet(sernet.verinice.model.common.CascadingTransaction)
+     * @see sernet.verinice.model.bsi.IProtectionRequirementsProvider#updateIntegritaet(sernet.verinice.model.common.CascadingTransaction)
      */
     @Override
     public void updateIntegrity(CascadingTransaction ta) {
@@ -202,7 +214,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
     }
 
     /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.ISchutzbedarfProvider#updateVerfuegbarkeit(sernet.verinice.model.common.CascadingTransaction)
+     * @see sernet.verinice.model.bsi.IProtectionRequirementsProvider#updateVerfuegbarkeit(sernet.verinice.model.common.CascadingTransaction)
      */
     @Override
     public void updateAvailability(CascadingTransaction ta) {
@@ -234,7 +246,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
     }
 
     /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.ISchutzbedarfProvider#updateVertraulichkeit(sernet.verinice.model.common.CascadingTransaction)
+     * @see sernet.verinice.model.bsi.IProtectionRequirementsProvider#updateVertraulichkeit(sernet.verinice.model.common.CascadingTransaction)
      */
     @Override
     public void updateConfidentiality(CascadingTransaction ta) {
@@ -266,8 +278,6 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
 
     /*
      * (non-Javadoc)
-     *
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
      * getIntegritaetDescription()
      */
     @Override
@@ -277,8 +287,6 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
 
     /*
      * (non-Javadoc)
-     *
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
      * getVerfuegbarkeitDescription()
      */
     @Override
@@ -300,8 +308,16 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
 
     /*
      * (non-Javadoc)
+<<<<<<< HEAD
      *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+||||||| merged common ancestors
+     * 
+     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+=======
+     * 
+     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
+>>>>>>> Rename Schutzbedarf to ProtectionRequirements
      * getVertraulichkeitDescription()
      */
     @Override
@@ -311,8 +327,16 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
 
     /*
      * (non-Javadoc)
+<<<<<<< HEAD
      *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+||||||| merged common ancestors
+     * 
+     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+=======
+     * 
+     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
+>>>>>>> Rename Schutzbedarf to ProtectionRequirements
      * setIntegritaetDescription(java.lang.String)
      */
     @Override
@@ -322,8 +346,16 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
 
     /*
      * (non-Javadoc)
+<<<<<<< HEAD
      *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+||||||| merged common ancestors
+     * 
+     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+=======
+     * 
+     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
+>>>>>>> Rename Schutzbedarf to ProtectionRequirements
      * setVerfuegbarkeitDescription(java.lang.String)
      */
     @Override
@@ -333,8 +365,16 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
 
     /*
      * (non-Javadoc)
+<<<<<<< HEAD
      *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+||||||| merged common ancestors
+     * 
+     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+=======
+     * 
+     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
+>>>>>>> Rename Schutzbedarf to ProtectionRequirements
      * setVertraulichkeitDescription(java.lang.String)
      */
     @Override
@@ -344,8 +384,16 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
 
     /*
      * (non-Javadoc)
+<<<<<<< HEAD
      *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+||||||| merged common ancestors
+     * 
+     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+=======
+     * 
+     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
+>>>>>>> Rename Schutzbedarf to ProtectionRequirements
      * isCalculatedAvailability()
      */
     @Override
@@ -360,8 +408,16 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
 
     /*
      * (non-Javadoc)
+<<<<<<< HEAD
      *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+||||||| merged common ancestors
+     * 
+     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
+=======
+     * 
+     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
+>>>>>>> Rename Schutzbedarf to ProtectionRequirements
      * isCalculatedConfidentiality()
      */
     @Override
@@ -378,7 +434,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
      * (non-Javadoc)
      *
      * @see
-     * sernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#isCalculatedIntegrity
+     * sernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#isCalculatedIntegrity
      * ()
      */
     @Override
@@ -391,6 +447,14 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
         }
     }
 
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * sernet.verinice.model.bsi.IProtectionRequirementsProvider#updateValue(
+     * sernet.verinice.model.common.CascadingTransaction)
+     */
     @Override
     public void updateValue(CascadingTransaction ta) {
         try {

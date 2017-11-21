@@ -28,11 +28,13 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bsi.IProtectionRequirementsProvider;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.common.TransactionAbortedException;
+import sernet.verinice.model.iso27k.AssetValueAdapter;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -83,6 +85,8 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
             }
         }
     };
+
+    private final IProtectionRequirementsProvider protectionRequirementsProvider = new AssetValueAdapter(this);
     
     protected BpRequirement() {}
 
@@ -91,6 +95,14 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         init();
     }
     
+    @Override
+    public ILinkChangeListener getLinkChangeListener() {
+        return linkChangeListener;
+    }
+    @Override
+    public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
+        return protectionRequirementsProvider;
+    }
     @Override
     public String getTypeId() {
         return TYPE_ID;

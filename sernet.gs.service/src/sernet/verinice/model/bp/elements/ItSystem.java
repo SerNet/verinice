@@ -42,6 +42,9 @@ public class ItSystem extends ElementWithChilds implements IBpElement, IBpGroup 
     
     public static final String[] CHILD_TYPES = new String[] {BpRequirementGroup.TYPE_ID};
     
+    private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this);
+    private final IProtectionRequirementsProvider protectionRequirementsProvider = new AssetValueAdapter(this);
+
     protected ItSystem() {}
     
     public ItSystem(CnATreeElement parent) {
@@ -49,9 +52,6 @@ public class ItSystem extends ElementWithChilds implements IBpElement, IBpGroup 
         init();
     }
     
-    private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this);
-    private final IProtectionRequirementsProvider schutzbedarfProvider = new AssetValueAdapter(this);
-
     @Override
     public ILinkChangeListener getLinkChangeListener() {
         return linkChangeListener;
@@ -59,7 +59,7 @@ public class ItSystem extends ElementWithChilds implements IBpElement, IBpGroup 
 
     @Override
     public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
-        return schutzbedarfProvider;
+        return protectionRequirementsProvider;
     }
 
 

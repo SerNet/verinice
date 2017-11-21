@@ -610,7 +610,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		return null;
 	}
 
-	public boolean isSchutzbedarfProvider() {
+	public boolean isProtectionRequirementsProvider() {
 		return getProtectionRequirementsProvider() != null;
 	}
 
@@ -724,7 +724,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     }
 
 	public void fireVertraulichkeitChanged(CascadingTransaction ta) {
-		if (isSchutzbedarfProvider()) {
+		if (isProtectionRequirementsProvider()) {
 		    if(LOG_INHERIT.isInfo()) {
 	            LOG_INHERIT.info(this.getTypeId() + " is provider, update confidentiality");
 	        }
@@ -732,7 +732,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		}
 	}
 	public void fireVerfuegbarkeitChanged(CascadingTransaction ta) {
-		if (isSchutzbedarfProvider()) {
+		if (isProtectionRequirementsProvider()) {
             if(LOG_INHERIT.isInfo()) {
                 LOG_INHERIT.info(this.getTypeId() + " is provider, update availability");
             }
@@ -740,7 +740,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		}
 	}
 	public void fireIntegritaetChanged(CascadingTransaction ta) {
-		if (isSchutzbedarfProvider()) {
+		if (isProtectionRequirementsProvider()) {
             if(LOG_INHERIT.isInfo()) {
                 LOG_INHERIT.info(this.getTypeId() + " is provider, update integrity of: " + this.getTitle());
             }
@@ -749,7 +749,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	}
 
     public void fireValueChanged(CascadingTransaction ta) {
-        if (isSchutzbedarfProvider()) {
+        if (isProtectionRequirementsProvider()) {
             if(LOG_INHERIT.isInfo()) {
                 LOG_INHERIT.info(this.getTypeId() + " is provider, update integrity of: " + this.getTitle());
             }
