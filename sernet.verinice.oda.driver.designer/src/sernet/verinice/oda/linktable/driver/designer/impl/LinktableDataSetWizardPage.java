@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.springframework.remoting.RemoteConnectFailureException;
 
 import sernet.verinice.oda.driver.designer.Activator;
@@ -68,7 +69,6 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
     private static final String DEFAULT_MESSAGE = Messages.LinktableDataSetWizardPage_0;
 
     Composite composite;
-
     LinkTableComposite linkTableComposite;
 
     public LinktableDataSetWizardPage(String pageName) {
@@ -94,14 +94,32 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
     private Control createPageControl(Composite parent) {
         composite = new Composite(parent, SWT.NONE);
         composite.setLayout(new GridLayout(1, false));
-        GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | 
-                GridData.VERTICAL_ALIGN_FILL);
+        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         composite.setLayoutData(gridData);
 
-        addButtonComposite(composite);      
-        Composite ltComposite = addLinkTableComposite(composite);
+        Composite btnComposite = new Composite(composite, SWT.NONE);
+        btnComposite.setLayout(new GridLayout(1, false));
+        GridData gridData1 = new GridData(SWT.RIGHT, SWT.TOP, false, false);
+        btnComposite.setLayoutData(gridData1);
+
+        Composite linkTableComposite = new Composite(composite, SWT.NONE);
+        linkTableComposite.setLayout(new GridLayout(1, false));
+        GridData gridData2 = new GridData(SWT.FILL, SWT.FILL, true, true);
+        linkTableComposite.setLayoutData(gridData2);
         
-        GridData data = new GridData(GridData.FILL_BOTH); 
+        Composite ltComposite = addLinkTableComposite(linkTableComposite);
+        if (isSNCANotLoaded()) {
+            if (isEditDataset()) {
+                Label label = new Label(linkTableComposite, SWT.WRAP | SWT.LEFT);
+                GridData gridData3 = new GridData(SWT.BEGINNING, SWT.TOP, true, false, 1, 1);
+                label.setLayoutData(gridData3);
+                label.setText(getErrorMessage());
+            }
+        } else {        
+            addButtonComposite(btnComposite);      
+        }
+        
+        GridData data = new GridData(SWT.FILL, SWT.FILL, true, true); 
         data.heightHint = 100; 
         ltComposite.setLayoutData(data);
         
@@ -116,13 +134,14 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
     private Composite addLinkTableComposite(Composite composite) { 
         VeriniceLinkTable linkTable;
         String query = getQueryFromDataSet();
-        if(query!=null) {
+        if (query != null) {
             linkTable = VeriniceLinkTableIO.readContent(query);
         } else {
             linkTable = new VeriniceLinkTable.Builder().build();
         }
         try {
-            linkTableComposite = new LinkTableComposite(linkTable, getObjectModelService(), composite, false);
+            linkTableComposite = new LinkTableComposite(linkTable, getObjectModelService(),
+                    composite, false);
         } catch (OdaException e) {
             log.error("Error while opening the server connection.", e);
         } catch (RemoteConnectFailureException exception) {
@@ -131,13 +150,13 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
             setPageComplete(false);
             return composite;
         }
-        GridLayoutFactory.fillDefaults().generateLayout(linkTableComposite); 
+        GridLayoutFactory.fillDefaults().generateLayout(linkTableComposite);
         return linkTableComposite;
     }
 
     private IObjectModelService getObjectModelService() throws OdaException {
         createSpringContext();
-        return ((IObjectModelService) Activator.getDefault().getObjectModelService());
+        return Activator.getDefault().getObjectModelService();
     }
 
     private void createSpringContext() throws OdaException {
@@ -202,11 +221,6 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
     }
     
     private void addButtonComposite(Composite composite) {
-        
-        if(isSNCALoaded()) {
-            return;
-        }
-
         Composite buttonComposite = new Composite(composite, SWT.NONE);
         buttonComposite.setLayout(new GridLayout(2, false));
         GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | 
@@ -242,9 +256,24 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
             }    
         });
     }
-
-    private boolean isSNCALoaded() {
+    
+    /**
+     * Indicate a problem while loading the SNCA. When no SNCA is loaded the
+     * dataset is not functional.
+     */
+    private boolean isSNCANotLoaded() {
         return linkTableComposite == null;
+    }
+
+    /**
+     * Discriminator for the two entry points. First as new DatasetWizard and
+     * second when editing an existing dataset.
+     * 
+     * @return true when an existing dataset is edited, false when a new Dataset
+     *         is created via wizard
+     */
+    private boolean isEditDataset() {
+        return getEditorContainer() != null;
     }
     
     public void loadVltFile() {
@@ -285,8 +314,7 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
      * blank text. Set page message accordingly.
      */
     private void validateData() {
-
-        if(isSNCALoaded()){
+        if(isSNCANotLoaded()){
             setPageComplete(false);
             return;
         }
