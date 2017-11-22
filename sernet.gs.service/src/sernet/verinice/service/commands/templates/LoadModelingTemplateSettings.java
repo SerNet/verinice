@@ -17,11 +17,12 @@
  * Contributors:  
  *     Viktor Schmidt <vschmidt[at]ckc[dot]de> - initial API and implementation  
  ******************************************************************************/
-package sernet.verinice.service.commands;
+package sernet.verinice.service.commands.templates;
 
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.service.commands.PropertyLoader;
 
 /**
  * Load the modeling template settings from file veriniceserver-plain.properties

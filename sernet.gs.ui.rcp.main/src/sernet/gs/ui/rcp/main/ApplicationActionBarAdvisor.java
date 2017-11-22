@@ -94,7 +94,7 @@ import sernet.verinice.rcp.accountgroup.AccountGroupView;
 import sernet.verinice.rcp.risk.RiskAnalysisAction;
 import sernet.verinice.rcp.templates.TemplateView;
 import sernet.verinice.report.rcp.ReportDepositView;
-import sernet.verinice.service.commands.LoadModelingTemplateSettings;
+import sernet.verinice.service.commands.templates.LoadModelingTemplateSettings;
 import sernet.verinice.validation.CnAValidationView;
 
 /**

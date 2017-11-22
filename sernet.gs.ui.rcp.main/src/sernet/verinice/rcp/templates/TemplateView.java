@@ -75,7 +75,7 @@ import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IProgressRunnable;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.templates.TemplateTableViewer.PathCellLabelProvider;
-import sernet.verinice.service.commands.LoadTemplatesOrImplementations;
+import sernet.verinice.service.commands.templates.LoadTemplatesOrImplementations;
 
 /**
  * This view shows for given ({@link CnATreeElement}) all modeling templates

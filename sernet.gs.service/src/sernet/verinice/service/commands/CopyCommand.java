@@ -48,6 +48,7 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnATreeElement.TemplateType;
 import sernet.verinice.model.iso27k.IISO27kGroup;
+import sernet.verinice.service.commands.templates.CreateTaskWhileApplyingTemplateCommand;
 
 /**
  * Copies a list of elements with all children to a group.

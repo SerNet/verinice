@@ -17,7 +17,7 @@
  * Contributors:  
  *     Viktor Schmidt <vschmidt[at]ckc[dot]de> - initial API and implementation  
  ******************************************************************************/
-package sernet.verinice.service.commands;
+package sernet.verinice.service.commands.templates;
 
 import java.io.Serializable;
 import java.util.HashSet;

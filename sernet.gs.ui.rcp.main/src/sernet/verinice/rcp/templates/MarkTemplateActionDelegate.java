@@ -37,7 +37,7 @@ import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnATreeElement.TemplateType;
-import sernet.verinice.service.commands.LoadModelingTemplateSettings;
+import sernet.verinice.service.commands.templates.LoadModelingTemplateSettings;
 
 /**
  * <p>
