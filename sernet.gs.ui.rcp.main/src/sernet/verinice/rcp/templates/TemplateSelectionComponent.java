@@ -34,7 +34,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.ElementSelectionComponent;
-import sernet.verinice.service.commands.LoadTemplateCandidates;
+import sernet.verinice.service.commands.templates.LoadTemplateCandidates;
 
 /**
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
