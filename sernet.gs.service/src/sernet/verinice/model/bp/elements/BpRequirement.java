@@ -192,5 +192,12 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     public static String getIdentifierOfRequirement(CnATreeElement requirement) {
         return requirement.getEntity().getPropertyValue(PROP_ID);
     }
+    
+    public static boolean isBpRequirement(CnATreeElement element) {
+        if(element==null) {
+            return false;
+        }
+        return TYPE_ID.equals(element.getTypeId());
+    }
 
 }

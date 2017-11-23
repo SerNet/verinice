@@ -162,7 +162,13 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     private void loadRequirementsFromCompendium() {
         requirementsFromCompendium.clear();
         for (CnATreeElement module : modulesFromCompendium) {
-            requirementsFromCompendium.addAll(getMetaDao().loadChildrenOfElement(module.getUuid()));
+            Set<CnATreeElement> children = getMetaDao().loadChildrenOfElement(module.getUuid());
+            for (CnATreeElement child : children) {
+                if(BpRequirement.isBpRequirement(child)) {
+                    requirementsFromCompendium.add(child);
+                }
+            }
+            
         }
     }
     
