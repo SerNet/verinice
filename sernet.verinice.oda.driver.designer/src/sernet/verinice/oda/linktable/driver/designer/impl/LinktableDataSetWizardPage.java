@@ -106,7 +106,7 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
         linkTableComposite.setLayout(new GridLayout(1, false));
         GridData gridData2 = new GridData(SWT.FILL, SWT.FILL, true, true);
         linkTableComposite.setLayoutData(gridData2);
-        
+
         Composite ltComposite = addLinkTableComposite(linkTableComposite);
         if (isSNCANotLoaded()) {
             if (isEditDataset()) {
@@ -115,14 +115,14 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
                 label.setLayoutData(gridData3);
                 label.setText(getErrorMessage());
             }
-        } else {        
-            addButtonComposite(btnComposite);      
+        } else {
+            addButtonComposite(btnComposite);
         }
-        
-        GridData data = new GridData(SWT.FILL, SWT.FILL, true, true); 
-        data.heightHint = 100; 
+
+        GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+        data.heightHint = 100;
         ltComposite.setLayoutData(data);
-        
+
         return composite;
     }
 
@@ -130,7 +130,7 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
         validateData();
         setMessage(DEFAULT_MESSAGE);
     }
-    
+
     private Composite addLinkTableComposite(Composite composite) { 
         VeriniceLinkTable linkTable;
         String query = getQueryFromDataSet();
@@ -168,14 +168,14 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
                         .getDataSourceDesign());
         customConn.open(connProps);
     }
-    
+
     private String getQueryFromDataSet() {
         DataSetDesign dataSetDesign = getInitializationDesign();
         if (dataSetDesign == null) {
             return null;
         }
         String query = dataSetDesign.getQueryText();
-        if(query!=null && query.isEmpty()) {
+        if (query != null && query.isEmpty()) {
             query = null;
         }
         return query;
@@ -199,8 +199,6 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
 
     /**
      * Updates the specified dataSetDesign with the latest design definition.
-     * 
-     * @throws OdaException
      */
     private void updateDesign(DataSetDesign dataSetDesign) throws OdaException {
         String vlt = VeriniceLinkTableIO.getContent(linkTableComposite.getVeriniceLinkTable());
@@ -223,40 +221,40 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
     private void addButtonComposite(Composite composite) {
         Composite buttonComposite = new Composite(composite, SWT.NONE);
         buttonComposite.setLayout(new GridLayout(2, false));
-        GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | 
-                GridData.VERTICAL_ALIGN_FILL);
-        buttonComposite.setLayoutData(gridData); 
-        
-        Button loadButton = createButton(buttonComposite, Messages.LinktableDataSetWizardPage_2, 
-                Messages.LinktableDataSetWizardPage_3, true);  
-        
+        GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL
+                | GridData.VERTICAL_ALIGN_FILL);
+        buttonComposite.setLayoutData(gridData);
+
+        Button loadButton = createButton(buttonComposite, Messages.LinktableDataSetWizardPage_2,
+                Messages.LinktableDataSetWizardPage_3, true);
+
         loadButton.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent event) {
                 loadVltFile();
             }
-            
+
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
             }
         });
-        
-        Button saveButton = createButton(buttonComposite, Messages.LinktableDataSetWizardPage_4, 
+
+        Button saveButton = createButton(buttonComposite, Messages.LinktableDataSetWizardPage_4,
                 Messages.LinktableDataSetWizardPage_5, false);
         saveButton.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent event) {
                 saveVltFile();
-            }    
+            }
 
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
-            }    
+            }
         });
     }
-    
+
     /**
      * Indicate a problem while loading the SNCA. When no SNCA is loaded the
      * dataset is not functional.
@@ -314,7 +312,7 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
      * blank text. Set page message accordingly.
      */
     private void validateData() {
-        if(isSNCANotLoaded()){
+        if (isSNCANotLoaded()) {
             setPageComplete(false);
             return;
         }
