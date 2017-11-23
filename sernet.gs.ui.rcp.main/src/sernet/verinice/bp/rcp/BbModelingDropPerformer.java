@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.PlatformUI;
 import org.springframework.jmx.access.InvocationFailureException;
@@ -104,7 +105,11 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
             final List<CnATreeElement> draggedModules = getDraggedElements(data);
             if (log.isDebugEnabled()) {
                 logParameter(draggedModules, targetElement);
-            }                
+            }
+            if(draggedModules==null || draggedModules.isEmpty()) {
+                log.warn("List of dragged modules is empty. Can not model element."); //$NON-NLS-1$
+                return false;
+            }
             PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {  
                 @Override
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -113,19 +118,19 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
                         modelModulesAndElement(draggedModules,targetElement);
                         monitor.done();
                     } catch (CommandException e) {
-                        throw new InvocationFailureException("Error while model module and element", e);
+                        throw new InvocationTargetException(e, "Error while model module and element"); //$NON-NLS-1$
                     }
                 }
             });
             return true;
         } catch (InvocationTargetException e) {
             log.error(e);
-            showErrorMessage(e, "Error while modeling modules.");
+            showErrorMessage(e, Messages.BbModelingDropPerformer_Error0);
             return false;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();  // set interrupt flag
-            log.error("InterruptedException occured while model module and element",e);
-            showErrorMessage(e, "Error while modeling modules.");
+            log.error("InterruptedException occured while model module and element",e); //$NON-NLS-1$
+            showErrorMessage(e, Messages.BbModelingDropPerformer_Error1);
             return false;
         }
     }
@@ -161,15 +166,34 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
     
     protected String getTaskMessage(List<CnATreeElement> draggedModules,
             CnATreeElement targetElement) {
+        if(draggedModules==null || draggedModules.isEmpty()) {
+            return(Messages.BbModelingDropPerformer_NoModules);
+        }
         int number = draggedModules.size();
-        StringBuilder sb  = new StringBuilder();      
         if(number==1) {
-            sb.append("Model module ");
+            return getMessageForOneModule(draggedModules.get(0), targetElement);
         } else {
-            sb.append("Model ").append(number).append(" modules ");
-        }       
-        sb.append("with object ").append(targetElement.getTitle()).append(".");
-        return sb.toString();
+            return getMessageForMoreThanOneModule(draggedModules, targetElement);
+        }    
+    }
+
+    @SuppressWarnings("restriction")
+    private String getMessageForMoreThanOneModule(List<CnATreeElement> draggedModules,
+            CnATreeElement targetElement) {
+        String firstModuleTitle = draggedModules.get(0).getTitle();
+        String targetTitle = targetElement.getTitle();
+        int numberMinusOne = draggedModules.size()-1;
+        if(numberMinusOne==1) {
+            return NLS.bind(Messages.BbModelingDropPerformer_TwoModules, new Object[]{targetTitle, firstModuleTitle}); 
+        } else {
+            return NLS.bind(Messages.BbModelingDropPerformer_MultipleModules, new Object[]{targetTitle, firstModuleTitle, numberMinusOne}); 
+        }
+    }
+
+    @SuppressWarnings("restriction")
+    private String getMessageForOneModule(CnATreeElement module,
+            CnATreeElement target) {
+        return NLS.bind(Messages.BbModelingDropPerformer_OneModule, target.getTitle(), module.getTitle()); 
     }
 
     /* 
@@ -180,11 +204,11 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
     @Override
     public boolean validateDrop(Object rawTarget, int operation, TransferData transferData) {
         if (!checkRights()) {
-            log.debug("ChechRights() failed, return false");
+            log.debug("ChechRights() failed, return false"); //$NON-NLS-1$
             isActive = false;
         } else {
             if (!getTransfer().isSupportedType(transferData)) {
-                log.debug("Unsupported type of TransferData");
+                log.debug("Unsupported type of TransferData"); //$NON-NLS-1$
                 this.targetElement = null;
             } else {
                 this.targetElement = getTargetElement(rawTarget);
@@ -231,14 +255,14 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
     
     private CnATreeElement getTargetElement(Object target) {
         if (log.isDebugEnabled()) {
-            log.debug("Target: " + target);
+            log.debug("Target: " + target); //$NON-NLS-1$
         }
         CnATreeElement element = null;
         if (target instanceof CnATreeElement) {
             element = (CnATreeElement) target;
             if(!supportedDropTypeIds.contains(element.getTypeId())) {
                 if (log.isDebugEnabled()) {
-                    log.debug("Unsupported type of target element: " + element.getTypeId());
+                    log.debug("Unsupported type of target element: " + element.getTypeId()); //$NON-NLS-1$
                 }
                 element = null;
             }
@@ -259,11 +283,11 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
     }
     
     private void logParameter(List<CnATreeElement> draggedElements, CnATreeElement targetElementParam) {
-        log.debug("Module(s):");
+        log.debug("Module(s):"); //$NON-NLS-1$
         for (CnATreeElement module : draggedElements) {
             log.debug(module);
         }
-        log.debug("is/are modeled with: " + targetElementParam + "...");
+        log.debug("is/are modeled with: " + targetElementParam + "..."); //$NON-NLS-1$ //$NON-NLS-2$
     }
     
     private ICommandService getCommandService() {

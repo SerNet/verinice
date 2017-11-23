@@ -44,6 +44,12 @@ public class Messages extends NLS {
     public static String BaseProtectionView_LinkWithEditor;
     public static String BaseProtectionView_Loading_1;
     public static String BaseProtectionView_Loading_2;
+    public static String BbModelingDropPerformer_Error0;
+    public static String BbModelingDropPerformer_Error1;
+    public static String BbModelingDropPerformer_TwoModules;
+    public static String BbModelingDropPerformer_MultipleModules;
+    public static String BbModelingDropPerformer_NoModules;
+    public static String BbModelingDropPerformer_OneModule;
     
     static {
         // initialize resource bundle
