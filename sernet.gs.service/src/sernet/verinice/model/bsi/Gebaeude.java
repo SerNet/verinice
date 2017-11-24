@@ -56,7 +56,7 @@ implements IBSIStrukturElement {
     public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "gebaeude_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
 	
 	
-	private final IProtectionRequirementsProvider schutzbedarfProvider 
+	private final IReevaluator schutzbedarfProvider 
 	= new ProtectionRequirementsAdapter(this);
 
 
@@ -120,7 +120,7 @@ implements IBSIStrukturElement {
 	}
 
 	@Override
-	public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
+	public IReevaluator getProtectionRequirementsProvider() {
 		return schutzbedarfProvider;
 	}
 

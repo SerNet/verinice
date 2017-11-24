@@ -43,7 +43,7 @@ public class SonstIT extends CnATreeElement
     public static final String PROP_ESA_ENTSCHEIDUNG_AM = "sonstit_ergaenzendeanalyse_entscheidung_am"; //$NON-NLS-1$
     public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "sonstit_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
 	
-	private final IProtectionRequirementsProvider schutzbedarfProvider 
+	private final IReevaluator schutzbedarfProvider 
 	= new ProtectionRequirementsAdapter(this);
 
 
@@ -104,7 +104,7 @@ public class SonstIT extends CnATreeElement
 	}
 
 	@Override
-	public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
+	public IReevaluator getProtectionRequirementsProvider() {
 		return schutzbedarfProvider;
 	}
 

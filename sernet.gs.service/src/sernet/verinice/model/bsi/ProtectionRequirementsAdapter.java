@@ -39,7 +39,7 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * 
  */
 @SuppressWarnings("serial")
-public class ProtectionRequirementsAdapter implements IProtectionRequirementsProvider, Serializable {
+public class ProtectionRequirementsAdapter implements IReevaluator, Serializable {
 
     
     private transient Logger log = Logger.getLogger(ProtectionRequirementsAdapter.class);

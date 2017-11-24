@@ -44,7 +44,7 @@ public class TelefonKomponente extends CnATreeElement
     public static final String PROP_ESA_ENTSCHEIDUNG_AM = "tkkomponente_ergaenzendeanalyse_entscheidung_am"; //$NON-NLS-1$
     public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "tkkomponente_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
 	
-	private final IProtectionRequirementsProvider schutzbedarfProvider 
+	private final IReevaluator schutzbedarfProvider 
 		= new ProtectionRequirementsAdapter(this);
 
 
@@ -104,7 +104,7 @@ public class TelefonKomponente extends CnATreeElement
 	}
 
 	@Override
-	public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
+	public IReevaluator getProtectionRequirementsProvider() {
 		return schutzbedarfProvider;
 	}
 	public void setErlaeuterung(String name) {

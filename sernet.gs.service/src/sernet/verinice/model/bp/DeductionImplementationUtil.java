@@ -20,9 +20,14 @@
 package sernet.verinice.model.bp;
 
 import sernet.hui.common.connect.Entity;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
+ * A collection of helper methods and constants for the deduction of the
+ * implementation status of the modernized base protection.
+ * 
  * @author uz[at]sernet.de
  *
  */
@@ -30,7 +35,7 @@ public class DeductionImplementationUtil {
 
     public static final String IMPLEMENTATION_STATUS = "_implementation_status";
     public static final String IMPLEMENTATION_DEDUCE = "_implementation_deduce";
-    
+
     public static final String IMPLEMENTATION_STATUS_CODE_NO = "_implementation_status_no";
     public static final String IMPLEMENTATION_STATUS_CODE_YES = "_implementation_status_yes";
     public static final String IMPLEMENTATION_STATUS_CODE_PARTIALLY = "_implementation_status_partially";
@@ -40,25 +45,60 @@ public class DeductionImplementationUtil {
         super();
     }
 
+    /**
+     * Set the implementation status of the {@link Safeguard} to the
+     * {@link BpRequirement} when the deduction of the implementation status
+     * is enabled for this {@link BpRequirement}.
+     */
+    public static void setImplementationStausToRequirement(Safeguard safeguard, BpRequirement requirement) {
+        if (isDeductiveImplementationEnabled(requirement)) {
+            String optionValue = getImplementationStatus(safeguard);
+            if (optionValue != null) {
+                optionValue = optionValue.replaceFirst(Safeguard.TYPE_ID,
+                        BpRequirement.TYPE_ID);
+                requirement.setPropertyValue(getImplementationStatusId(requirement),
+                        optionValue);
+            }
+        }
+    }
+
+    
+    /**
+     * Return the implementation status of the given {@link CnATreeElement}.
+     * 
+     * @param element
+     *            - must not be null
+     */
     public static String getImplementationStatus(CnATreeElement element) {
         Entity entity = element.getEntity();
         return entity.getOptionValue(getImplementationStatusId(element));
     }
 
+    /**
+     * Return the property name of the implementation status for a given
+     * {@link CnATreeElement}.
+     * 
+     * @param element
+     *            - must not be null
+     */
     public static String getImplementationStatusId(CnATreeElement element) {
         return element.getTypeId() + IMPLEMENTATION_STATUS;
     }
 
+    /**
+     * Return true when the implementation status is deducted from another
+     * {@link CnATreeElement}.
+     * 
+     * @param element
+     *            - must not be null
+     */
     public static boolean isDeductiveImplementationEnabled(CnATreeElement element) {
         String value = element.getPropertyValue(element.getTypeId() + IMPLEMENTATION_DEDUCE);
         return isSelected(value);
     }
 
     /**
-     * Is the property selected
-     * 
-     * @param value
-     * @return
+     * Is the property selected.
      */
     private static boolean isSelected(String value) {
         return "1".equals(value);
