@@ -20,7 +20,7 @@ package sernet.verinice.model.iso27k;
 import java.util.Collection;
 
 import sernet.hui.common.connect.Entity;
-import sernet.verinice.model.bsi.IProtectionRequirementsProvider;
+import sernet.verinice.model.bsi.IReevaluator;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
@@ -40,7 +40,7 @@ public class Process extends CnATreeElement implements IISO27kElement {
 	public static final String PROCESS_VALUE_AVAILABILITY = "process_value_availability"; //$NON-NLS-1$
 	public static final String REL_PROCESS_ASSET = "rel_process_asset"; //$NON-NLS-1$
 	
-    private final IProtectionRequirementsProvider protectionRequirementsProvider = new AssetValueAdapter(this);
+    private final IReevaluator protectionRequirementsProvider = new AssetValueAdapter(this);
     private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this);
 
     @Override
@@ -49,7 +49,7 @@ public class Process extends CnATreeElement implements IISO27kElement {
     }
 
     @Override
-    public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
+    public IReevaluator getProtectionRequirementsProvider() {
         return protectionRequirementsProvider;
     }
 

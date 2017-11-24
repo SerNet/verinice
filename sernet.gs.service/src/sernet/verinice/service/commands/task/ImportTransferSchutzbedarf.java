@@ -23,7 +23,7 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.Anwendung;
-import sernet.verinice.model.bsi.IProtectionRequirementsProvider;
+import sernet.verinice.model.bsi.IReevaluator;
 import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -64,7 +64,7 @@ public class ImportTransferSchutzbedarf extends GenericCommand {
      * object of type {@link Netzkomponente} which equals "Netz" in gstools
      * busines logic Schutzbedarfproperties for instances of
      * {@link Netzkomponente} are called "Kritikalität" and are not provided via
-     * a {@link IProtectionRequirementsProvider} which causes this special handling of
+     * a {@link IReevaluator} which causes this special handling of
      * that type of objects
      * 
      * @param element
@@ -95,7 +95,7 @@ public class ImportTransferSchutzbedarf extends GenericCommand {
 		if (element.getProtectionRequirementsProvider() == null){
 			return false;
 		}
-		IProtectionRequirementsProvider zielElmt = element.getProtectionRequirementsProvider();
+		IReevaluator zielElmt = element.getProtectionRequirementsProvider();
 
 		zielElmt.setConfidentiality(vertraulichkeit);
 	

@@ -65,8 +65,8 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     private static final Logger LOG = Logger.getLogger(DeductionOfImplementationTest.class);
 
     /**
-     * Dataholder.
-     *
+     * Generic dataholder.
+     * 
      * @author uz[at]sernet.de
      *
      * @param <A>
@@ -85,8 +85,15 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
 
     /**
      * Change the implementation_status after the link is created.
+<<<<<<< HEAD
      *
      * @throws CommandException
+||||||| merged common ancestors
+     * 
+     * @throws CommandException
+=======
+     * 
+>>>>>>> address the code review issues from VN-1893
      */
     @Transactional
     @Rollback(true)
@@ -105,8 +112,15 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     /**
      * Change the implementation_status after the link is created. Opposite link
      * direction.
+<<<<<<< HEAD
      *
      * @throws CommandException
+||||||| merged common ancestors
+     * 
+     * @throws CommandException
+=======
+     * 
+>>>>>>> address the code review issues from VN-1893
      */
     @Transactional
     @Rollback(true)
@@ -124,8 +138,15 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
 
     /**
      * Change the implementation_status before the link is created.
+<<<<<<< HEAD
      *
      * @throws CommandException
+||||||| merged common ancestors
+     * 
+     * @throws CommandException
+=======
+     * 
+>>>>>>> address the code review issues from VN-1893
      */
     @Transactional
     @Rollback(true)
@@ -168,8 +189,15 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     /**
      * Change the implementation_status before the link is created. Opposite
      * link direction.
+<<<<<<< HEAD
      *
      * @throws CommandException
+||||||| merged common ancestors
+     * 
+     * @throws CommandException
+=======
+     * 
+>>>>>>> address the code review issues from VN-1893
      */
     @Transactional
     @Rollback(true)
@@ -235,8 +263,15 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
 
     /**
      * Switch the deduction off. Opposite link direction.
+<<<<<<< HEAD
      *
      * @throws CommandException
+||||||| merged common ancestors
+     * 
+     * @throws CommandException
+=======
+     * 
+>>>>>>> address the code review issues from VN-1893
      */
     @Transactional
     @Rollback(true)
@@ -287,6 +322,56 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         assertEquals("Must be option yes.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_YES,
                 getImplementationStatus(requirement));
 
+    }
+
+    /**
+     * Two requirements linked to one safeguard. Opposite link direction.
+     */
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void testOneSafeGuardTwoRequirements() throws Exception {
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
+        BpRequirement requirement1 = createBpRequirement(requirementGroup);
+        BpRequirement requirement2 = createBpRequirement(requirementGroup);
+        SafeguardGroup safeguardGroup = createSafeguardGroup(itNetwork);
+        Safeguard safeguard = createSafeguard(safeguardGroup);
+        requirement1 = prepareRequirement(requirement1);
+        requirement2 = prepareRequirement(requirement2);
+
+        createLink(requirement1, safeguard, null);
+        createLink(requirement2, safeguard, null);
+
+        safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
+        assertDeduction(safeguard, requirement1);
+        assertDeduction(safeguard, requirement2);
+    }
+
+    /**
+     * Two requirements linked to one safeguard .
+     */
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void testOneSafeGuardTwoRequirementsOppositeDirection() throws Exception {
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
+        BpRequirement requirement1 = createBpRequirement(requirementGroup);
+        BpRequirement requirement2 = createBpRequirement(requirementGroup);
+        SafeguardGroup safeguardGroup = createSafeguardGroup(itNetwork);
+        Safeguard safeguard = createSafeguard(safeguardGroup);
+        requirement1 = prepareRequirement(requirement1);
+        requirement2 = prepareRequirement(requirement2);
+
+        createLink(safeguard, requirement1, null);
+        createLink(safeguard, requirement2, null);
+
+        safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
+        assertDeduction(safeguard, requirement1);
+        assertDeduction(safeguard, requirement2);
     }
 
     /**

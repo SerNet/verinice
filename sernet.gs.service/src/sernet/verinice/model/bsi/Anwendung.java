@@ -47,7 +47,7 @@ public class Anwendung extends CnATreeElement
         return log;
     }
     
-	private final IProtectionRequirementsProvider schutzbedarfProvider
+	private final IReevaluator schutzbedarfProvider
 		= new ProtectionRequirementsAdapter(this);
 	
 	private final ILinkChangeListener linkChangeListener
@@ -179,7 +179,7 @@ public class Anwendung extends CnATreeElement
 	}
 
 	@Override
-	public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
+	public IReevaluator getProtectionRequirementsProvider() {
 		return schutzbedarfProvider;
 	}
 

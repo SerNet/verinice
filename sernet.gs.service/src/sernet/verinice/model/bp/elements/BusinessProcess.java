@@ -22,7 +22,7 @@ package sernet.verinice.model.bp.elements;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
-import sernet.verinice.model.bsi.IProtectionRequirementsProvider;
+import sernet.verinice.model.bsi.IReevaluator;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementWithChilds;
 import sernet.verinice.model.common.ILinkChangeListener;
@@ -43,7 +43,7 @@ public class BusinessProcess extends ElementWithChilds implements IBpElement, IB
     public static final String[] CHILD_TYPES = new String[] {BpRequirementGroup.TYPE_ID};
 
     private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this);
-    private final IProtectionRequirementsProvider protectionRequirementsProvider = new AssetValueAdapter(this);
+    private final IReevaluator protectionRequirementsProvider = new AssetValueAdapter(this);
 
     protected BusinessProcess() {}
     
@@ -58,7 +58,7 @@ public class BusinessProcess extends ElementWithChilds implements IBpElement, IB
     }
 
     @Override
-    public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
+    public IReevaluator getProtectionRequirementsProvider() {
         return protectionRequirementsProvider;
     }
 

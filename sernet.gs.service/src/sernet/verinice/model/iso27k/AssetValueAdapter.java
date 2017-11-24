@@ -27,7 +27,7 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
-import sernet.verinice.model.bsi.IProtectionRequirementsProvider;
+import sernet.verinice.model.bsi.IReevaluator;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -38,19 +38,7 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
-/**
- * @author uz[at]sernet.de
- *
- */
-/**
- * @author uz[at]sernet.de
- *
- */
-/**
- * @author uz[at]sernet.de
- *
- */
-public class AssetValueAdapter implements IProtectionRequirementsProvider, Serializable {
+public class AssetValueAdapter implements IReevaluator, Serializable {
 
     private static final Logger LOG = Logger.getLogger(AssetValueAdapter.class);
 
@@ -457,29 +445,7 @@ public class AssetValueAdapter implements IProtectionRequirementsProvider, Seria
      */
     @Override
     public void updateValue(CascadingTransaction ta) {
-        try {
-            // 1st step: traverse down:
-            // find bottom nodes from which to start:
-            CascadingTransaction downwardsTA = new CascadingTransaction();
-            Set<CnATreeElement> bottomNodes = new HashSet<CnATreeElement>();
-            findBottomNodes(cnaTreeElement, bottomNodes, downwardsTA);
-
-            // 2nd step: traverse up:
-            for (CnATreeElement bottomNode : bottomNodes) {
-                // determine protection level from parents (or keep own
-                // depending on description):
-                bottomNode.getLinkChangeListener().determineValue(ta);
-            }
-        } catch (TransactionAbortedException tae) {
-            LOG.debug("Wertänderung abgebrochen."); //$NON-NLS-1$
-            throw new RuntimeException(tae);
-        } catch (RuntimeException e) {
-            ta.abort();
-            throw e;
-        } catch (java.lang.Exception e) {
-            ta.abort();
-            throw new RuntimeException(e);
-        }
+      //override to introduce new behavior
     }
 
     @Override

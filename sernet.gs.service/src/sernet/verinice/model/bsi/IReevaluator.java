@@ -19,7 +19,7 @@ package sernet.verinice.model.bsi;
 
 import sernet.verinice.model.common.CascadingTransaction;
 
-public interface IProtectionRequirementsProvider {
+public interface IReevaluator {
 	int getConfidentiality();
 	int getAvailability();
 	int getIntegrity();

@@ -20,6 +20,7 @@
 package sernet.verinice.model.bp.elements;
 
 import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeductiveImplementationEnabled;
+import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementationStausToRequirement;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -28,13 +29,14 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import sernet.verinice.model.bp.IBpElement;
-import sernet.verinice.model.bsi.IProtectionRequirementsProvider;
+import sernet.verinice.model.bp.Reevaluator;
+import sernet.verinice.model.bsi.IReevaluator;
+import sernet.verinice.model.common.AbstractLinkChangeListener;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.common.TransactionAbortedException;
-import sernet.verinice.model.iso27k.AssetValueAdapter;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -66,7 +68,7 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
 
     
     private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
-    private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
+    private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener(){
 
         private static final long serialVersionUID = -3220319074711927103L;
 
@@ -86,7 +88,6 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         }
     };
 
-    private final IProtectionRequirementsProvider protectionRequirementsProvider = new AssetValueAdapter(this);
     
     protected BpRequirement() {}
 
@@ -100,7 +101,7 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         return linkChangeListener;
     }
     @Override
-    public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
+    public IReevaluator getProtectionRequirementsProvider() {
         return protectionRequirementsProvider;
     }
     @Override

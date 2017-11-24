@@ -36,7 +36,7 @@ import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIModelListener;
-import sernet.verinice.model.bsi.IProtectionRequirementsProvider;
+import sernet.verinice.model.bsi.IReevaluator;
 import sernet.verinice.model.bsi.LinkKategorie;
 import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.iso27k.IISO27kGroup;
@@ -580,33 +580,12 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	}
 
 	public ILinkChangeListener getLinkChangeListener() {
-		return new ILinkChangeListener() {
-			@Override
-            public void determineIntegrity(CascadingTransaction ta)
-					throws TransactionAbortedException {
-				// do nothing
-			}
-
-			@Override
-            public void determineAvailability(CascadingTransaction ta)
-					throws TransactionAbortedException {
-				// do nothing
-			}
-
-			@Override
-            public void determineConfidentiality(CascadingTransaction ta)
-					throws TransactionAbortedException {
-				// do nothing
-			}
-
-            @Override
-            public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
-                // do nothing
-            }
-		};
+		return new AbstractLinkChangeListener(){
+		        // empty implementation
+		    };
 	}
 
-	public IProtectionRequirementsProvider getProtectionRequirementsProvider() { // NOPMD by dm on 07.02.12 12:38
+	public IReevaluator getProtectionRequirementsProvider() { // NOPMD by dm on 07.02.12 12:38
 		return null;
 	}
 

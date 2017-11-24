@@ -19,9 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
-import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatus;
-import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatusId;
-import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeductiveImplementationEnabled;
+import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementationStausToRequirement;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -30,14 +28,14 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import sernet.verinice.model.bp.IBpElement;
-import sernet.verinice.model.bsi.IProtectionRequirementsProvider;
+import sernet.verinice.model.bp.Reevaluator;
+import sernet.verinice.model.bsi.IReevaluator;
+import sernet.verinice.model.common.AbstractLinkChangeListener;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.common.TransactionAbortedException;
-import sernet.verinice.model.iso27k.AssetValueAdapter;
-import sernet.verinice.model.iso27k.MaximumAssetValueListener;
 
 /**
  * @author Daniel Murygin dm[at]sernet.de
@@ -64,24 +62,21 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     
     public static final String REL_BP_SAFEGUARD_BP_THREAT = "rel_bp_safeguard_bp_threat"; //$NON-NLS-1$
 
-    private final IProtectionRequirementsProvider protectionRequirementsProvider = new AssetValueAdapter(this);
-    private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this){
+    private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
+    private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener(){
 
         private static final long serialVersionUID = 9205866080876674150L;
 
         @Override
         public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
-            for (CnALink cnALink : sbTarget.getLinksUp()) {
+            if (ta.hasBeenVisited(Safeguard.this)) {
+                return;
+            }
+
+            for (CnALink cnALink : Safeguard.this.getLinksUp()) {
                 CnATreeElement dependant = cnALink.getDependant();
-                if (BpRequirement.TYPE_ID.equals(dependant.getTypeId())
-                        && isDeductiveImplementationEnabled(dependant)) {
-                    String optionValue = getImplementationStatus(sbTarget);
-                    if (optionValue != null) {
-                        optionValue = optionValue.replaceFirst(Safeguard.TYPE_ID,
-                                BpRequirement.TYPE_ID);
-                        dependant.setPropertyValue(getImplementationStatusId(dependant),
-                                optionValue);
-                    }
+                if (dependant instanceof BpRequirement) {
+                    setImplementationStausToRequirement(Safeguard.this, (BpRequirement) dependant);
                 }
             }
         }
@@ -95,7 +90,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     }
 
     @Override
-    public IProtectionRequirementsProvider getProtectionRequirementsProvider() {
+    public IReevaluator getProtectionRequirementsProvider() {
         return protectionRequirementsProvider;
     }
 
