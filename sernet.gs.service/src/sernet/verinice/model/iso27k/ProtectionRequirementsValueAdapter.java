@@ -27,24 +27,39 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
-import sernet.verinice.model.bsi.IReevaluator;
+import sernet.verinice.interfaces.AbstractReevaluator;
 import sernet.verinice.model.common.CascadingTransaction;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TransactionAbortedException;
 
 /**
+ * Let the contained {@link CnATreeElement} reeavluate the values for the protection requirements.
+ * By convention property identifiers for the protection requirements are build by the following rules:
+ * <pre>
+ * CnATreeElement.getTypeId()+ '_value_confidentiality'
+ * CnATreeElement.getTypeId()+ '_value_integrity'
+ * CnATreeElement.getTypeId()+ '_value_availability'
+ * </pre>
+ * for the value and
+ * <pre>
+ * CnATreeElement.getTypeId()+ '_value_method_confidentiality'
+ * CnATreeElement.getTypeId()+ '_value_method_integrity'
+ * CnATreeElement.getTypeId()+ '_value_method_availability'
+ * </pre>
+ * for the flag, indication the deduction.<br/>
+ *
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
-public class AssetValueAdapter implements IReevaluator, Serializable {
+@SuppressWarnings("serial")
+public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator implements Serializable {
 
-    private static final Logger LOG = Logger.getLogger(AssetValueAdapter.class);
+    private static final Logger LOG = Logger.getLogger(ProtectionRequirementsValueAdapter.class);
 
     private CnATreeElement cnaTreeElement;
 
-    public AssetValueAdapter(CnATreeElement parent) {
+    public ProtectionRequirementsValueAdapter(CnATreeElement parent) {
         this.cnaTreeElement = parent;
     }
 
@@ -126,38 +141,6 @@ public class AssetValueAdapter implements IReevaluator, Serializable {
                 .getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.CONFIDENTIALITY);
         if (propertyType != null)
             cnaTreeElement.getEntity().setSimpleValue(propertyType, Integer.toString(i));
-    }
-
-    /**
-     * @param downwardElement
-     * @param downwardsTA
-     * @param bottomNodes
-     * @return
-     */
-    private void findBottomNodes(CnATreeElement downwardElement, Set<CnATreeElement> bottomNodes, CascadingTransaction downwardsTA) {
-        if (downwardsTA.hasBeenVisited(downwardElement)) {
-            return;
-        }
-
-        try {
-            downwardsTA.enter(downwardElement);
-        } catch (TransactionAbortedException e) {
-            LOG.error("Aborted while determining bottom node for protection requirements on object: " + downwardElement.getTitle(), e); //$NON-NLS-1$
-            return;
-        }
-
-        int countLinks = 0;
-        for (CnALink link : downwardElement.getLinksDown()) {
-            if (link.getDependency().isProtectionRequirementsProvider()) {
-                countLinks++;
-                findBottomNodes(link.getDependency(), bottomNodes, downwardsTA);
-            }
-        }
-
-        // could not go further down, so add this node:
-        if (countLinks == 0){
-            bottomNodes.add(downwardElement);
-        }
     }
 
     public CnATreeElement getParent() {
@@ -266,6 +249,14 @@ public class AssetValueAdapter implements IReevaluator, Serializable {
 
     /*
      * (non-Javadoc)
+<<<<<<< HEAD:sernet.gs.service/src/sernet/verinice/model/iso27k/AssetValueAdapter.java
+||||||| merged common ancestors
+     * 
+     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
+=======
+     *
+     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
+>>>>>>> rename AssetValueAdapter and MaximumAssetValueListner:sernet.gs.service/src/sernet/verinice/model/iso27k/ProtectionRequirementsValueAdapter.java
      * getIntegritaetDescription()
      */
     @Override
@@ -275,6 +266,14 @@ public class AssetValueAdapter implements IReevaluator, Serializable {
 
     /*
      * (non-Javadoc)
+<<<<<<< HEAD:sernet.gs.service/src/sernet/verinice/model/iso27k/AssetValueAdapter.java
+||||||| merged common ancestors
+     * 
+     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
+=======
+     *
+     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
+>>>>>>> rename AssetValueAdapter and MaximumAssetValueListner:sernet.gs.service/src/sernet/verinice/model/iso27k/ProtectionRequirementsValueAdapter.java
      * getVerfuegbarkeitDescription()
      */
     @Override
@@ -296,6 +295,7 @@ public class AssetValueAdapter implements IReevaluator, Serializable {
 
     /*
      * (non-Javadoc)
+<<<<<<< HEAD:sernet.gs.service/src/sernet/verinice/model/iso27k/AssetValueAdapter.java
 <<<<<<< HEAD
      *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
@@ -304,6 +304,11 @@ public class AssetValueAdapter implements IReevaluator, Serializable {
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
 =======
      * 
+||||||| merged common ancestors
+     * 
+=======
+     *
+>>>>>>> rename AssetValueAdapter and MaximumAssetValueListner:sernet.gs.service/src/sernet/verinice/model/iso27k/ProtectionRequirementsValueAdapter.java
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
 >>>>>>> Rename Schutzbedarf to ProtectionRequirements
      * getVertraulichkeitDescription()
@@ -315,6 +320,7 @@ public class AssetValueAdapter implements IReevaluator, Serializable {
 
     /*
      * (non-Javadoc)
+<<<<<<< HEAD:sernet.gs.service/src/sernet/verinice/model/iso27k/AssetValueAdapter.java
 <<<<<<< HEAD
      *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
@@ -323,6 +329,11 @@ public class AssetValueAdapter implements IReevaluator, Serializable {
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
 =======
      * 
+||||||| merged common ancestors
+     * 
+=======
+     *
+>>>>>>> rename AssetValueAdapter and MaximumAssetValueListner:sernet.gs.service/src/sernet/verinice/model/iso27k/ProtectionRequirementsValueAdapter.java
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
 >>>>>>> Rename Schutzbedarf to ProtectionRequirements
      * setIntegritaetDescription(java.lang.String)
@@ -334,6 +345,7 @@ public class AssetValueAdapter implements IReevaluator, Serializable {
 
     /*
      * (non-Javadoc)
+<<<<<<< HEAD:sernet.gs.service/src/sernet/verinice/model/iso27k/AssetValueAdapter.java
 <<<<<<< HEAD
      *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
@@ -342,6 +354,11 @@ public class AssetValueAdapter implements IReevaluator, Serializable {
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
 =======
      * 
+||||||| merged common ancestors
+     * 
+=======
+     *
+>>>>>>> rename AssetValueAdapter and MaximumAssetValueListner:sernet.gs.service/src/sernet/verinice/model/iso27k/ProtectionRequirementsValueAdapter.java
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
 >>>>>>> Rename Schutzbedarf to ProtectionRequirements
      * setVerfuegbarkeitDescription(java.lang.String)
@@ -353,6 +370,7 @@ public class AssetValueAdapter implements IReevaluator, Serializable {
 
     /*
      * (non-Javadoc)
+<<<<<<< HEAD:sernet.gs.service/src/sernet/verinice/model/iso27k/AssetValueAdapter.java
 <<<<<<< HEAD
      *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
@@ -361,6 +379,11 @@ public class AssetValueAdapter implements IReevaluator, Serializable {
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
 =======
      * 
+||||||| merged common ancestors
+     * 
+=======
+     *
+>>>>>>> rename AssetValueAdapter and MaximumAssetValueListner:sernet.gs.service/src/sernet/verinice/model/iso27k/ProtectionRequirementsValueAdapter.java
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
 >>>>>>> Rename Schutzbedarf to ProtectionRequirements
      * setVertraulichkeitDescription(java.lang.String)
@@ -372,6 +395,7 @@ public class AssetValueAdapter implements IReevaluator, Serializable {
 
     /*
      * (non-Javadoc)
+<<<<<<< HEAD:sernet.gs.service/src/sernet/verinice/model/iso27k/AssetValueAdapter.java
 <<<<<<< HEAD
      *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
@@ -380,6 +404,11 @@ public class AssetValueAdapter implements IReevaluator, Serializable {
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
 =======
      * 
+||||||| merged common ancestors
+     * 
+=======
+     *
+>>>>>>> rename AssetValueAdapter and MaximumAssetValueListner:sernet.gs.service/src/sernet/verinice/model/iso27k/ProtectionRequirementsValueAdapter.java
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
 >>>>>>> Rename Schutzbedarf to ProtectionRequirements
      * isCalculatedAvailability()
@@ -396,6 +425,7 @@ public class AssetValueAdapter implements IReevaluator, Serializable {
 
     /*
      * (non-Javadoc)
+<<<<<<< HEAD:sernet.gs.service/src/sernet/verinice/model/iso27k/AssetValueAdapter.java
 <<<<<<< HEAD
      *
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
@@ -404,6 +434,11 @@ public class AssetValueAdapter implements IReevaluator, Serializable {
      * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
 =======
      * 
+||||||| merged common ancestors
+     * 
+=======
+     *
+>>>>>>> rename AssetValueAdapter and MaximumAssetValueListner:sernet.gs.service/src/sernet/verinice/model/iso27k/ProtectionRequirementsValueAdapter.java
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
 >>>>>>> Rename Schutzbedarf to ProtectionRequirements
      * isCalculatedConfidentiality()
@@ -435,10 +470,10 @@ public class AssetValueAdapter implements IReevaluator, Serializable {
         }
     }
 
-
+    
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * sernet.verinice.model.bsi.IProtectionRequirementsProvider#updateValue(
      * sernet.verinice.model.common.CascadingTransaction)

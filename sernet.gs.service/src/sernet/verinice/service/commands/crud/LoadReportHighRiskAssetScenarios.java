@@ -29,7 +29,7 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.AssetValueAdapter;
+import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.service.risk.RiskAnalysisHelper;
@@ -87,7 +87,7 @@ public class LoadReportHighRiskAssetScenarios extends GenericCommand implements 
                         scenarioLoader = getCommandService().executeCommand(scenarioLoader);
                         for(CnATreeElement se : scenarioLoader.getElements()){
                             IncidentScenario scenario = (IncidentScenario)Retriever.retrieveElement(se, new RetrieveInfo().setProperties(true));
-                            AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
+                            ProtectionRequirementsValueAdapter valueAdapter = new ProtectionRequirementsValueAdapter(asset);
                             RiskAnalysisHelperImpl raService = new RiskAnalysisHelperImpl();
 
                             Integer impactC = valueAdapter.getConfidentiality();

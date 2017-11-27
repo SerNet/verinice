@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import sernet.hui.common.connect.Entity;
-import sernet.verinice.model.bsi.IReevaluator;
+import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
@@ -73,8 +73,8 @@ public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGrou
 	
 	
 	
-    private final IReevaluator protectionRequirementsProvider = new AssetValueAdapter(this);
-    private final ILinkChangeListener linkChangeListener = new MaximumAssetValueListener(this);
+    private final IReevaluator protectionRequirementsProvider = new ProtectionRequirementsValueAdapter(this);
+    private final ILinkChangeListener linkChangeListener = new MaximumProtectionRequirementsValueListener(this);
     
     
     @Override

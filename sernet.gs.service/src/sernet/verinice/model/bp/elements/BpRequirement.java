@@ -28,9 +28,9 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.Reevaluator;
-import sernet.verinice.model.bsi.IReevaluator;
 import sernet.verinice.model.common.AbstractLinkChangeListener;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
@@ -68,7 +68,7 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
 
     
     private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
-    private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener(){
+    private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
 
         private static final long serialVersionUID = -3220319074711927103L;
 
@@ -87,7 +87,6 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
             }
         }
     };
-
     
     protected BpRequirement() {}
 
