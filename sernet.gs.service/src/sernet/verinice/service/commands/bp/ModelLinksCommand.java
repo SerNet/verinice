@@ -20,6 +20,7 @@
 package sernet.verinice.service.commands.bp;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -63,6 +64,7 @@ public class ModelLinksCommand extends GenericCommand {
     private transient Logger log = Logger.getLogger(ModelLinksCommand.class);
 
     private static final Map<String, String> ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS = new HashMap<>();
+    private static final Map<String, String> ELEMENT_TO_THREAT_LINK_TYPE_IDS = new HashMap<>();
 
     static {
         ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.put(Application.TYPE_ID,
@@ -81,6 +83,21 @@ public class ModelLinksCommand extends GenericCommand {
                 BpRequirement.REL_BP_REQUIREMENT_BP_NETWORK);
         ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.put(Room.TYPE_ID,
                 BpRequirement.REL_BP_REQUIREMENT_BP_ROOM);
+
+        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(Application.TYPE_ID,
+                BpThreat.REL_BP_REQUIREMENT_BP_APPLICATION);
+        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(BusinessProcess.TYPE_ID,
+                BpThreat.REL_BP_REQUIREMENT_BP_BUSINESSPROCESS);
+        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(Device.TYPE_ID, BpThreat.REL_BP_REQUIREMENT_BP_DEVICE);
+        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(IcsSystem.TYPE_ID,
+                BpThreat.REL_BP_REQUIREMENT_BP_ICSSYSTEM);
+        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(ItNetwork.TYPE_ID,
+                BpThreat.REL_BP_REQUIREMENT_BP_ITNETWORK);
+        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(ItSystem.TYPE_ID,
+                BpThreat.REL_BP_REQUIREMENT_BP_ITSYSTEM);
+        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(Network.TYPE_ID,
+                BpThreat.REL_BP_REQUIREMENT_BP_NETWORK);
+        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(Room.TYPE_ID, BpThreat.REL_BP_REQUIREMENT_BP_ROOM);
     }
 
     private transient ModelingMetaDao metaDao;
@@ -111,10 +128,10 @@ public class ModelLinksCommand extends GenericCommand {
         try {
             requirementsFromCompendium = loadRequirements(moduleUuidsFromCompendium);
             loadAllRequirementsFromScope();
+            loadAllThreatsFromScope();
             if (isNewModuleInScope()) {
                 loadNewRequirementsFromScope();
                 loadAllSafeguardsFromScope();
-                loadAllThreatsFromScope();
             }
             createLinks();
         } catch (CommandException e) {
@@ -135,9 +152,10 @@ public class ModelLinksCommand extends GenericCommand {
     protected List<Link> createLinks(CnATreeElement requirementFromCompendium) {
         List<Link> linkList = new LinkedList<>();
         linkList.addAll(linkRequirementWithTargetElements(requirementFromCompendium));
+        Set<CnATreeElement> linkedElements = loadLinkedElements(
+                requirementFromCompendium.getUuid());
+        linkList.addAll(linkThreatsWithTargetElements(linkedElements));
         if (isNewModuleInScope()) {
-            Set<CnATreeElement> linkedElements = loadLinkedElements(
-                    requirementFromCompendium.getUuid());
             linkList.addAll(
                     createLinksToSafeguardAndThreat(requirementFromCompendium, linkedElements));
         }
@@ -147,12 +165,13 @@ public class ModelLinksCommand extends GenericCommand {
     private List<Link> linkRequirementWithTargetElements(CnATreeElement requirementFromCompendium) {
         List<Link> linkList = new LinkedList<>();
         for (CnATreeElement elementFromScope : elementsFromScope) {
-            linkList.add(createLinkToElement(requirementFromCompendium, elementFromScope));
+            linkList.add(createLinkFromRequirementToElement(requirementFromCompendium,
+                    elementFromScope));
         }
         return linkList;
     }
 
-    private Link createLinkToElement(CnATreeElement requirementFromCompendium,
+    private Link createLinkFromRequirementToElement(CnATreeElement requirementFromCompendium,
             CnATreeElement elementFromScope) {
         CnATreeElement requirementScope = allRequirementsFromScope
                 .get(BpRequirement.getIdentifierOfRequirement(requirementFromCompendium));
@@ -166,6 +185,37 @@ public class ModelLinksCommand extends GenericCommand {
 
     private String getElementToRequirementLinkTypeId(String objectType) {
         return ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS.get(objectType);
+    }
+
+    private Collection<? extends Link> linkThreatsWithTargetElements(
+            Set<CnATreeElement> linkedElements) {
+        List<Link> linkList = new LinkedList<>();
+        for (CnATreeElement element : linkedElements) {
+            if (element instanceof BpThreat) {
+                BpThreat threatFromCompendium = (BpThreat) element;
+                for (CnATreeElement elementFromScope : elementsFromScope) {
+                    linkList.add(
+                            createLinkFromThreatToElement(threatFromCompendium, elementFromScope));
+                }
+            }
+        }
+        return linkList;
+    }
+
+    private Link createLinkFromThreatToElement(CnATreeElement threatFromCompendium,
+            CnATreeElement elementFromScope) {
+        CnATreeElement threatFromScope = allThreatsFromScope
+                .get(BpThreat.getIdentifierOfThreat(threatFromCompendium));
+        if (validate(threatFromScope, elementFromScope)) {
+            return new Link(threatFromScope, elementFromScope,
+                    getElementToThreatLinkTypeId(elementFromScope.getObjectType()));
+        } else {
+            return null;
+        }
+    }
+
+    private String getElementToThreatLinkTypeId(String objectType) {
+        return ELEMENT_TO_THREAT_LINK_TYPE_IDS.get(objectType);
     }
 
     private List<Link> createLinksToSafeguardAndThreat(CnATreeElement requirementFromCompendium,

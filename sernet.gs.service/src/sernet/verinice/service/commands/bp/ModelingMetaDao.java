@@ -192,6 +192,16 @@ public class ModelingMetaDao {
         });
     }
     
+    /**
+     * Loads the linked elements of an element with the given uuid. The type IDs
+     * of the linked elements are passed as parameter typeIds.
+     * 
+     * @param uuid
+     *            The UUID of an element
+     * @param typeIds
+     *            An array of type ids.
+     * @return A list with linked elements and their properties
+     */
     @SuppressWarnings("unchecked")
     public List<CnATreeElement> loadLinkedElementsWithProperties(final String uuid, final String[] typeIds) {
         return getDao().findByCallback(new HibernateCallback() {
