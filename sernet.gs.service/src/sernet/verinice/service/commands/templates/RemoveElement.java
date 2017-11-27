@@ -50,7 +50,6 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.PersonIso;
-import sernet.verinice.service.commands.CopyCommand;
 import sernet.verinice.service.commands.FindRiskAnalysisListsByParentID;
 import sernet.verinice.service.commands.LoadConfiguration;
 import sernet.verinice.service.commands.LoadRiskAnalyses;
@@ -65,7 +64,8 @@ import sernet.verinice.service.commands.PropertyLoader;
  * CnATreeElement.hbm.xml)
  * 
  * @see sernet.verinice.service.commands.RemoveCommand
- * @see CopyCommand
+ * @see sernet.verinice.service.commands.CopyCommand
+ * @see sernet.verinice.service.commands.templates.CopyCommand
  * 
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
  *

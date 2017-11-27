@@ -26,9 +26,11 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
-import sernet.verinice.service.commands.CopyCommand;
+import sernet.verinice.service.commands.templates.LoadModelingTemplateSettings;
 
 /**
  * A CopyService is a job, which
@@ -98,13 +100,21 @@ public class CopyService extends PasteService implements IProgressTask {
             numberOfElements = uuidList.size();
             // -1 means unknown runtime
             progressObserver.beginTask(Messages.getString("CopyService.1", numberOfElements), -1); //$NON-NLS-1$
-            CopyCommand cc = new CopyCommand(this.selectedGroup.getUuid(), uuidList, getPostProcessorList(), this.copyLinks);
-            cc.setCopyAttachments(isCopyAttachments());
-            cc = getCommandService().executeCommand(cc);
-            numberOfElements = cc.getNumber();
+            if (isModelingTemplateActive()) {
+                sernet.verinice.service.commands.templates.CopyCommand cc = new sernet.verinice.service.commands.templates.CopyCommand(this.selectedGroup.getUuid(), uuidList, getPostProcessorList(), this.copyLinks);
+                cc.setCopyAttachments(isCopyAttachments());
+                cc = getCommandService().executeCommand(cc);
+                numberOfElements = cc.getNumber();
+                newElements = cc.getNewElements();
+            } else {
+                sernet.verinice.service.commands.CopyCommand cc = new sernet.verinice.service.commands.CopyCommand(this.selectedGroup.getUuid(), uuidList, getPostProcessorList(), this.copyLinks);
+                cc.setCopyAttachments(isCopyAttachments());
+                cc = getCommandService().executeCommand(cc);
+                numberOfElements = cc.getNumber();
+                newElements = cc.getNewElements();
+            }
             progressObserver.setTaskName(Messages.getString("CopyService.4")); //$NON-NLS-1$
             CnAElementFactory.getInstance().reloadModelFromDatabase();
-            newElements = cc.getNewElements();
         } catch (final Exception e) {
             log.error("Error while copying element", e); //$NON-NLS-1$
             throw new RuntimeException("Error while copying element", e); //$NON-NLS-1$
@@ -131,4 +141,17 @@ public class CopyService extends PasteService implements IProgressTask {
         this.copyAttachments = copyAttachments;
     }
 	
+    private boolean isModelingTemplateActive() {
+        boolean standalone = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+        if (standalone) {
+            return false;
+        }
+        LoadModelingTemplateSettings modelingTemplateSettings = new LoadModelingTemplateSettings();
+        try {
+            modelingTemplateSettings = getCommandService().executeCommand(modelingTemplateSettings);
+        } catch (CommandException e) {
+            log.error("Error while loading modeling template settings", e); //$NON-NLS-1$
+        }
+        return modelingTemplateSettings.isModelingTemplateActive();
+    }
 }
