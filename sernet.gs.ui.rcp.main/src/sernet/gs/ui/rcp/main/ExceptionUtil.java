@@ -38,9 +38,7 @@ public final class ExceptionUtil {
     private ExceptionUtil() {
     }
 
-    @SuppressWarnings({ "restriction", "deprecation" })
     public static void log(Throwable e, final String exceptionTitle) {
-        // log the error with log4j
         LOG.error(exceptionTitle, e);
 
         if (e instanceof SecurityException || e.getCause() instanceof SecurityException) {
@@ -53,12 +51,12 @@ public final class ExceptionUtil {
             return;
         }
 
-        if (Activator.getDefault().getPluginPreferences()
+        if (Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.ERRORPOPUPS)) {
             Display.getDefault().syncExec(new Runnable() {
                 public void run() {
                     MessageDialog.openError(Display.getDefault().getActiveShell(), exceptionTitle,
-                            "An error has occurred. Information about the cause of the error can be found in the log files.");
+                            Messages.ExceptionUtilErrorMessage);
                 }
             });
         }
