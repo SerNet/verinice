@@ -97,8 +97,8 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
                 insertMissingRequirements();
             }
         } catch (CommandException e) {
-            getLog().error("Error while modeling safeguards.", e);
-            throw new RuntimeCommandException("Error while modeling safeguards.", e);
+            getLog().error("Error while modeling safeguards.", e); //$NON-NLS-1$
+            throw new RuntimeCommandException("Error while modeling safeguards.", e); //$NON-NLS-1$
         }
     }
     
@@ -120,11 +120,11 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
             getCommandService().executeCommand(copyCommand);
             moduleUuids.add(parent.getUuid());
             if (getLog().isDebugEnabled()) {
-                getLog().debug("Requirement: " + requirement.getTitle() + " created in group: "
+                getLog().debug("Requirement: " + requirement.getTitle() + " created in group: " //$NON-NLS-1$ //$NON-NLS-2$
                         + parent.getTitle());
             }
         } else if (getLog().isDebugEnabled()) {
-            getLog().debug("Requirement: " + requirement.getTitle() + " already exists in group: "
+            getLog().debug("Requirement: " + requirement.getTitle() + " already exists in group: " //$NON-NLS-1$ //$NON-NLS-2$
                     + parent.getTitle());
         }
     }
@@ -179,7 +179,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     private void loadAllRequirementsFromScope() {
         allRequirementsFromScope = new HashSet<>(getMetaDao().loadElementsFromScope(BpRequirement.TYPE_ID, targetScopeId));
         if (getLog().isDebugEnabled()) {
-            getLog().debug("missingRequirementsFromCompendium in target scope: ");
+            getLog().debug("missingRequirementsFromCompendium in target scope: "); //$NON-NLS-1$
             logElements(allRequirementsFromScope);
         }
     }
@@ -190,7 +190,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
             CnATreeElement requirementScope = getRequirementFromScope(requirementCompendium);
             if (requirementScope==null) {
                 if (getLog().isDebugEnabled()) {
-                    getLog().debug("Requirement is not in scope yet: " + requirementCompendium);
+                    getLog().debug("Requirement is not in scope yet: " + requirementCompendium); //$NON-NLS-1$
                 }
                 missingRequirementsFromCompendium.put(requirementCompendium.getUuid(), requirementCompendium);
             } 
@@ -204,7 +204,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
             requirementParentsWithProperties.put(group.getUuid(), group);
         }
         if (getLog().isDebugEnabled()) {
-            getLog().debug("missingRequirementsFromCompendium parents: ");
+            getLog().debug("missingRequirementsFromCompendium parents: "); //$NON-NLS-1$
             logElements(requirementParentsWithProperties.values());
         }
     }
@@ -248,8 +248,8 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         if (!groupFound) {
             group = createGroup(parent, compendiumGroup);
         } else if (getLog().isDebugEnabled()) {
-            getLog().debug("Requirement group: " + compendiumGroup.getTitle()
-                    + " already exists in group: " + parent.getTitle());
+            getLog().debug("Requirement group: " + compendiumGroup.getTitle() //$NON-NLS-1$
+                    + " already exists in group: " + parent.getTitle()); //$NON-NLS-1$
         }
         return group;
     }
@@ -265,25 +265,34 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         group = getMetaDao().loadElementWithPropertiesAndChildren(groupUuid);
         parent.addChild(group);
         if (getLog().isDebugEnabled()) {
-            getLog().debug("Requirement group: " + compendiumGroup.getTitle() + " created in group: "
+            getLog().debug("Requirement group: " + compendiumGroup.getTitle() + " created in group: " //$NON-NLS-1$ //$NON-NLS-2$
                     + parent.getTitle());
         }
         return group;
     }
 
     private CnATreeElement loadRequirementRootGroup() {
-        CnATreeElement safeguardGroup = null;
+        CnATreeElement requirementGroup = null;
         CnATreeElement scope = getMetaDao().loadElementWithChildren(targetScopeId);
         Set<CnATreeElement> children = scope.getChildren();
         for (CnATreeElement group : children) {
             if (group.getTypeId().equals(BpRequirementGroup.TYPE_ID)) {
-                safeguardGroup = group;
+                requirementGroup = group;
             }
         }
-        if(safeguardGroup==null) {
-            throw new GroupNotFoundInScopeException(targetScopeId, BpRequirementGroup.TYPE_ID);
+        if(requirementGroup==null) {
+            throw createException();
         }
-        return getMetaDao().loadElementWithPropertiesAndChildren(safeguardGroup.getDbId());
+        return getMetaDao().loadElementWithPropertiesAndChildren(requirementGroup.getDbId());
+    }
+
+    private GroupNotFoundInScopeException createException() {
+        CnATreeElement scopeWithProperties = getMetaDao()
+                .loadElementWithProperties(targetScopeId);
+        String titleOfScope = scopeWithProperties.getTitle();
+        String message = Messages.getString("ModelModulesCommand.NoGroupFound", //$NON-NLS-1$
+                titleOfScope);
+        return new GroupNotFoundInScopeException(message);
     }
 
 

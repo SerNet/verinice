@@ -196,9 +196,17 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
             }
         }
         if(safeguardGroup==null) {
-            throw new GroupNotFoundInScopeException(targetScopeId, SafeguardGroup.TYPE_ID);
+            throw createException();
         }
         return getMetaDao().loadElementWithPropertiesAndChildren(safeguardGroup.getDbId());
+    }
+
+    private GroupNotFoundInScopeException createException() {
+        CnATreeElement scopeWithProperties = getMetaDao().loadElementWithProperties(targetScopeId);
+        String titleOfScope = scopeWithProperties.getTitle();
+        String message = Messages.getString("ModelSafeguardsCommand.NoGroupFound", //$NON-NLS-1$
+                titleOfScope);
+        return new GroupNotFoundInScopeException(message);
     }
 
     

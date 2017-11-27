@@ -53,7 +53,7 @@ public final class ExceptionUtil {
 
         if (Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.ERRORPOPUPS)) {
-            Display.getDefault().syncExec(new Runnable() {
+            Display.getDefault().asyncExec(new Runnable() {
                 public void run() {
                     MessageDialog.openError(Display.getDefault().getActiveShell(), exceptionTitle,
                             Messages.ExceptionUtilErrorMessage);

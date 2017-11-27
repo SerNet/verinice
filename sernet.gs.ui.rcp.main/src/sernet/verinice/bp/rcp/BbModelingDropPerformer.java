@@ -23,19 +23,20 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.dnd.TransferData;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.springframework.jmx.access.InvocationFailureException;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
@@ -59,6 +60,7 @@ import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.catalog.CatalogDragListener;
+import sernet.verinice.service.bp.exceptions.GroupNotFoundInScopeException;
 import sernet.verinice.service.commands.bp.ModelCommand;
 
 /**
@@ -118,19 +120,19 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
                         modelModulesAndElement(draggedModules,targetElement);
                         monitor.done();
                     } catch (CommandException e) {
-                        throw new InvocationTargetException(e, "Error while model module and element"); //$NON-NLS-1$
+                        showError(e, Messages.BbModelingDropPerformer_Error0);
                     }
                 }
             });
             return true;
         } catch (InvocationTargetException e) {
             log.error(e);
-            showErrorMessage(e, Messages.BbModelingDropPerformer_Error0);
+            showError(e, Messages.BbModelingDropPerformer_Error0);
             return false;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();  // set interrupt flag
             log.error("InterruptedException occured while model module and element",e); //$NON-NLS-1$
-            showErrorMessage(e, Messages.BbModelingDropPerformer_Error1);
+            showError(e, Messages.BbModelingDropPerformer_Error1);
             return false;
         }
     }
@@ -274,8 +276,25 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         return this.targetElement!=null;
     }
 
-    private void showErrorMessage(Exception e, String message) {
-        ExceptionUtil.log(e, message);       
+    private void showError(Exception e, String message) {
+        final Throwable rootCause = ExceptionUtils.getRootCause(e);
+        if (rootCause instanceof GroupNotFoundInScopeException) {
+            showGroupNotFoundError(rootCause);
+        } else {
+            ExceptionUtil.log(e, message);
+        }
+    }
+
+    private void showGroupNotFoundError(final Throwable rootCause) {
+        final String message = NLS.bind(Messages.BbModelingDropPerformer_ModelingAborted,
+                rootCause.getMessage());
+        Display.getDefault().asyncExec(new Runnable() {
+            public void run() {
+                MessageDialog.openError(Display.getDefault().getActiveShell(),
+                        Messages.BbModelingDropPerformer_GroupNotAvailable,
+                        message);
+            }
+        });
     }
     
     protected VeriniceElementTransfer getTransfer() {

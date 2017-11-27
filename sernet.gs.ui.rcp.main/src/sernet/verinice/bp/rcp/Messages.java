@@ -22,10 +22,9 @@ package sernet.verinice.bp.rcp;
 import org.eclipse.osgi.util.NLS;
 
 /**
- *
- *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
+@SuppressWarnings("restriction")
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.bp.rcp.messages"; //$NON-NLS-1$
     public static String GsCatalogModelingDropPerformer_exception_dialog_message;
@@ -46,7 +45,9 @@ public class Messages extends NLS {
     public static String BaseProtectionView_Loading_2;
     public static String BbModelingDropPerformer_Error0;
     public static String BbModelingDropPerformer_Error1;
+    public static String BbModelingDropPerformer_GroupNotAvailable;
     public static String BbModelingDropPerformer_TwoModules;
+    public static String BbModelingDropPerformer_ModelingAborted;
     public static String BbModelingDropPerformer_MultipleModules;
     public static String BbModelingDropPerformer_NoModules;
     public static String BbModelingDropPerformer_OneModule;

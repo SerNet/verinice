@@ -223,6 +223,10 @@ public class ModelingMetaDao {
         return getDao().retrieve(dbid, RetrieveInfo.getChildrenInstance());
     }
     
+    public CnATreeElement loadElementWithProperties(Integer dbid) {
+        return getDao().retrieve(dbid, RetrieveInfo.getPropertyInstance());
+    }
+
     public IBaseDao<CnATreeElement, Serializable> getDao() {
         return dao;
     }

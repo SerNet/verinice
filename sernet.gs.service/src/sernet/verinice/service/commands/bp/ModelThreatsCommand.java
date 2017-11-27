@@ -190,9 +190,17 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
             }
         }
         if(threatGroup==null) {
-            throw new GroupNotFoundInScopeException(targetScopeId, BpThreatGroup.TYPE_ID);
+            throw createException();
         }
         return getMetaDao().loadElementWithPropertiesAndChildren(threatGroup.getDbId());
+    }
+
+    private GroupNotFoundInScopeException createException() {
+        CnATreeElement scopeWithProperties = getMetaDao().loadElementWithProperties(targetScopeId);
+        String titleOfScope = scopeWithProperties.getTitle();
+        String message = Messages.getString("ModelThreatsCommand.NoGroupFound", //$NON-NLS-1$
+                titleOfScope);
+        return new GroupNotFoundInScopeException(message);
     }
 
     private void loadCompendiumThreats() {

@@ -17,23 +17,38 @@
  * Contributors:
  *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.service.bp.exceptions;
+package sernet.verinice.service.commands.bp;
+
+import java.text.MessageFormat;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
- * This exception is thrown if a group could not be found in a scope. 
- *
+ * This class is used to access a resource (message) bundle.
+ * 
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class GroupNotFoundInScopeException extends RuntimeException {
+public class Messages {
+    private static final String BUNDLE_NAME = "sernet.verinice.service.commands.bp.messages"; //$NON-NLS-1$
 
-    private static final long serialVersionUID = -227094558820619528L;
+    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
-    public GroupNotFoundInScopeException() {
-        super("A group could not be found in a scope.");
-    }
-    
-    public GroupNotFoundInScopeException(String message) {
-        super(message);
+    private Messages() {
     }
 
+    public static String getString(String key) {
+        try {
+            return RESOURCE_BUNDLE.getString(key);
+        } catch (MissingResourceException e) {
+            return '!' + key + '!';
+        }
+    }
+
+    public static String getString(String key, Object... params) {
+        try {
+            return MessageFormat.format(RESOURCE_BUNDLE.getString(key), params);
+        } catch (MissingResourceException e) {
+            return '!' + key + '!';
+        }
+    }
 }
