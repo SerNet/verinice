@@ -22,8 +22,8 @@ import java.io.Serializable;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bsi.Anwendung;
-import sernet.verinice.model.bsi.IReevaluator;
 import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.common.CnATreeElement;
 

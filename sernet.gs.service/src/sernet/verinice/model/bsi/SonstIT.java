@@ -20,6 +20,7 @@ package sernet.verinice.model.bsi;
 import java.util.Collection;
 
 import sernet.hui.common.connect.Entity;
+import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 

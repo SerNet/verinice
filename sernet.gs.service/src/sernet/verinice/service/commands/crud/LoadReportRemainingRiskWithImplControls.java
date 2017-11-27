@@ -28,7 +28,7 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.AssetValueAdapter;
+import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.service.commands.LoadElementByUuid;
@@ -80,7 +80,7 @@ public class LoadReportRemainingRiskWithImplControls extends GenericCommand impl
                 List<CnATreeElement> processes = getCommandService().executeCommand(processLoader).getElements();
                 List<CnATreeElement> assets = null;
                 List<CnATreeElement> scenarios = null;
-                AssetValueAdapter valueAdapter = null;
+                ProtectionRequirementsValueAdapter valueAdapter = null;
                 RiskAnalysisHelperImpl raService = null;
                 results = new ArrayList<List<String>>(0);
 
@@ -98,7 +98,7 @@ public class LoadReportRemainingRiskWithImplControls extends GenericCommand impl
                     LoadReportLinkedElements assetLoader = new LoadReportLinkedElements(Asset.TYPE_ID, process.getDbId(), true, false);
                     assets = getCommandService().executeCommand(assetLoader).getElements();
                     for(CnATreeElement asset : assets){
-                        valueAdapter = new AssetValueAdapter(asset);
+                        valueAdapter = new ProtectionRequirementsValueAdapter(asset);
                         raService = new RiskAnalysisHelperImpl();
 
                         // reload asset

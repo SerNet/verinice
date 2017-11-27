@@ -27,9 +27,9 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.Reevaluator;
-import sernet.verinice.model.bsi.IReevaluator;
 import sernet.verinice.model.common.AbstractLinkChangeListener;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
@@ -62,7 +62,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     public static final String REL_BP_SAFEGUARD_BP_THREAT = "rel_bp_safeguard_bp_threat"; //$NON-NLS-1$
 
     private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
-    private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener(){
+    private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
 
         private static final long serialVersionUID = 9205866080876674150L;
 

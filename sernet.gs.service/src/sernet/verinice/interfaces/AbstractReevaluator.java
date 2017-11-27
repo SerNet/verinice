@@ -23,7 +23,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.verinice.model.bsi.IReevaluator;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;

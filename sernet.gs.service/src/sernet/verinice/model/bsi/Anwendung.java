@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.ds.Datenverarbeitung;

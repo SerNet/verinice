@@ -19,27 +19,31 @@ package sernet.verinice.model.iso27k;
 
 import java.io.Serializable;
 
+import sernet.verinice.model.common.AbstractLinkChangeListener;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.common.TransactionAbortedException;
 
 /**
+ * Calculates the protection requirement level by taking the highest values of
+ * all linked CnATreeElements (maximum principle). This listener works together
+ * with the {@link ProtectionRequirementsValueAdapter} to react to changes in
+ * the value of the linked elements.
+ * 
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
-public class MaximumAssetValueListener implements ILinkChangeListener, Serializable {
+public class MaximumProtectionRequirementsValueListener extends AbstractLinkChangeListener implements Serializable {
 
-    private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(MaximumAssetValueListener.class);
+    private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(MaximumProtectionRequirementsValueListener.class);
     
     protected CnATreeElement sbTarget;
     
     private static final String STRING_CONNECTOR_FOR = " for ";
      
-    public MaximumAssetValueListener(CnATreeElement item) {
+    public MaximumProtectionRequirementsValueListener(CnATreeElement item) {
         this.sbTarget = item;
     }
 
@@ -182,10 +186,4 @@ public class MaximumAssetValueListener implements ILinkChangeListener, Serializa
         }
         return false;
     }
-
-    @Override
-    public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
-        // override when introduce a new behavior
-    }
-
 }

@@ -15,7 +15,7 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.model.bsi;
+package sernet.verinice.interfaces;
 
 import sernet.verinice.model.common.CascadingTransaction;
 
