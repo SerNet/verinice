@@ -55,6 +55,7 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
+import sernet.verinice.model.common.CnATreeElement.TemplateType;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
@@ -452,6 +453,12 @@ public final class CnAElementHome {
             // well.
             if (getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
                 return true;
+            }
+            
+            // Short cut 3: If cte is a implementation, then it is not writable
+            // @see CnATreeElement.TemplateType
+            if (cte.isImplementation()) {
+            	return false;
             }
     
             if (roles == null) {

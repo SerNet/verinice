@@ -300,6 +300,11 @@ public class ConfigurationService implements IConfigurationService {
             if (getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
                 return true;
             }
+            // Short cut 3: If cte is a implementation, then it is not writable
+            // @see CnATreeElement.TemplateType
+            if (cte.isImplementation()) {
+            	return false;
+            }
             Set<String> userRoles = loadRoles();
             for (Permission p : cte.getPermissions()) {
                 if (p != null && p.isWriteAllowed() && userRoles.contains(p.getRole())) {
