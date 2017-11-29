@@ -34,6 +34,9 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.NetzKomponente;
+import sernet.verinice.model.bsi.SonstIT;
+import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnATreeElement.TemplateType;
 
@@ -67,9 +70,14 @@ public class LoadTemplateCandidates extends GenericCommand {
 
         if (MassnahmenUmsetzung.TYPE_ID.equals(typeId)) {
             typeId = MassnahmenUmsetzung.HIBERNATE_TYPE_ID;
-        }
-        if (BausteinUmsetzung.TYPE_ID.equals(typeId)) {
+        } else if (BausteinUmsetzung.TYPE_ID.equals(typeId)) {
             typeId = BausteinUmsetzung.HIBERNATE_TYPE_ID;
+        } else if (SonstIT.TYPE_ID.equals(typeId)) {
+            typeId = SonstIT.TYPE_ID_HIBERNATE;
+        } else if (TelefonKomponente.TYPE_ID.equals(typeId)) {
+            typeId = TelefonKomponente.TYPE_ID_HIBERNATE;
+        } else if (NetzKomponente.TYPE_ID.equals(typeId)) {
+            typeId = NetzKomponente.TYPE_ID_HIBERNATE;
         }
 
         this.typeId = typeId;
