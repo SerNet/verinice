@@ -448,7 +448,7 @@ public class TemplateView extends RightsEnabledView {
      * @throws InterruptedException
      */
     private void addTemplatesChildren(Set<String> templateCandidateUuids, List<CnATreeElement> newChildren) throws InvocationTargetException, InterruptedException {
-            IProgressRunnable operation = new CopyTemplateElements(inputElement, newChildren, templateCandidateUuids);
+            IProgressRunnable operation = new CopyTemplateCandidateChildren(inputElement, newChildren, templateCandidateUuids);
             if (operation != null) {
                 IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
                 progressService.run(true, true, operation);
