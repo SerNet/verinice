@@ -62,7 +62,7 @@ public class TemplateViewContentProvider implements IStructuredContentProvider, 
         if (obj instanceof PlaceHolder) {
             return new Object[] { obj };
         }
-        if (templateView == null || templateView.getInputElement() == null) {
+        if (templateView == null || templateView.getElements() == null) {
             return new Object[] {};
         }
 
