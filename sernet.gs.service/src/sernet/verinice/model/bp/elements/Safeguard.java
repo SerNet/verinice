@@ -195,26 +195,28 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     public void setIsAffectsConfidentiality(boolean affectsConfidentiality) {
         this.setNumericProperty(PROP_CONFIDENTIALITY, (affectsConfidentiality) ? 1 : 0);
     }
-    
-    public boolean IsAffectsConfidentiality() {
-        return ((this.getNumericProperty(PROP_CONFIDENTIALITY) == 1) ? true : false); 
+
+    public boolean isAffectsConfidentiality() {
+        return ((this.getNumericProperty(PROP_CONFIDENTIALITY) == 1) ? true : false);
     }
     
     public void setIsAffectsIntegrity(boolean affectsIntegrity) {
         this.setNumericProperty(PROP_INTEGRITY, (affectsIntegrity) ? 1 : 0);
     }
-    
-    public boolean IsAffectsIntegrity() {
-        return ((this.getNumericProperty(PROP_INTEGRITY) == 1) ? true : false); 
-    }  
-    
+
+    public boolean isAffectsIntegrity() {
+        return ((this.getNumericProperty(PROP_INTEGRITY) == 1) ? true : false);
+    }
+
     public void setIsAffectsAvailability(boolean affectsAvailability) {
         this.setNumericProperty(PROP_AVAILABILITY, (affectsAvailability) ? 1 : 0);
     }
-    
-    public boolean IsAffectsAvailability() {
-        return ((this.getNumericProperty(PROP_AVAILABILITY) == 1) ? true : false); 
+
+    public boolean isAffectsAvailability() {
+        return ((this.getNumericProperty(PROP_AVAILABILITY) == 1) ? true : false);
     }
 
-
+    public static String getIdentifierOfSafeguard(CnATreeElement requirement) {
+        return requirement.getEntity().getPropertyValue(PROP_ID);
+    }
 }

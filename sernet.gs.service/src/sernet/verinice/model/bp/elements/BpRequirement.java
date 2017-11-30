@@ -65,6 +65,14 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     
     public static final String REL_BP_REQUIREMENT_BP_THREAT = "rel_bp_requirement_bp_threat"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_SAFEGUARD = "rel_bp_requirement_bp_safeguard"; //$NON-NLS-1$
+    public static final String REL_BP_REQUIREMENT_BP_ITNETWORK = "rel_bp_requirement_bp_itnetwork"; //$NON-NLS-1$
+    public static final String REL_BP_REQUIREMENT_BP_BUSINESSPROCESS = "rel_bp_requirement_bp_businessprocess"; //$NON-NLS-1$
+    public static final String REL_BP_REQUIREMENT_BP_APPLICATION = "rel_bp_requirement_bp_application"; //$NON-NLS-1$
+    public static final String REL_BP_REQUIREMENT_BP_ITSYSTEM = "rel_bp_requirement_bp_itsystem"; //$NON-NLS-1$
+    public static final String REL_BP_REQUIREMENT_BP_ICSSYSTEM = "rel_bp_requirement_bp_icssystem"; //$NON-NLS-1$
+    public static final String REL_BP_REQUIREMENT_BP_DEVICE = "rel_bp_requirement_bp_device"; //$NON-NLS-1$
+    public static final String REL_BP_REQUIREMENT_BP_NETWORK = "rel_bp_requirement_bp_network"; //$NON-NLS-1$
+    public static final String REL_BP_REQUIREMENT_BP_ROOM = "rel_bp_requirement_bp_room"; //$NON-NLS-1$
 
     
     private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
@@ -222,6 +230,17 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     
     public boolean IsAffectsAvailability() {
         return ((this.getNumericProperty(PROP_AVAILABILITY) == 1) ? true : false); 
+    }
+
+    public static String getIdentifierOfRequirement(CnATreeElement requirement) {
+        return requirement.getEntity().getPropertyValue(PROP_ID);
+    }
+
+    public static boolean isBpRequirement(CnATreeElement element) {
+        if (element == null) {
+            return false;
+        }
+        return TYPE_ID.equals(element.getTypeId());
     }
 
 }

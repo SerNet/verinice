@@ -954,9 +954,9 @@ public class BpImporter {
                 safeguard.getIdentifier(),
                 safeguard.getResponsibleRoles().iterator(),
                 new CIAWrapper(
-                        safeguard.IsAffectsConfidentiality(),
-                        safeguard.IsAffectsIntegrity(),
-                        safeguard.IsAffectsAvailability()));
+                        safeguard.isAffectsConfidentiality(),
+                        safeguard.isAffectsIntegrity(),
+                        safeguard.isAffectsAvailability()));
         
         String plainDescription = HtmlHelper.getAnyObjectDescription(
                 descriptionTitle, 1,

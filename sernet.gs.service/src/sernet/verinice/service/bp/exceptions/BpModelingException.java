@@ -20,19 +20,19 @@
 package sernet.verinice.service.bp.exceptions;
 
 /**
- * This exception is thrown if a group could not be found in a scope. 
+ * This exception is thrown when an error occurs in base protection modeling.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class GroupNotFoundInScopeException extends RuntimeException {
+public class BpModelingException extends RuntimeException {
 
-    private static final long serialVersionUID = -227094558820619528L;
+    private static final long serialVersionUID = 3122333675561409403L;
 
-    public GroupNotFoundInScopeException() {
-        super("A group could not be found in a scope.");
+    public BpModelingException() {
+        super("An error occurs in base protection modeling.");
     }
     
-    public GroupNotFoundInScopeException(String message) {
+    public BpModelingException(String message) {
         super(message);
     }
 

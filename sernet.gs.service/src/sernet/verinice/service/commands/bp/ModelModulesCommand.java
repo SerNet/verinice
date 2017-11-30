@@ -15,27 +15,21 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
+ * Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
@@ -44,12 +38,17 @@ import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.bp.exceptions.BpModelingException;
 import sernet.verinice.service.bp.exceptions.GroupNotFoundInScopeException;
 import sernet.verinice.service.commands.CopyCommand;
 
 /**
- * This command models modules (requirements groups) with objects of different types 
- * from an information network.
+ * This command sorts modules and requirements from the compendium into an
+ * information network. The group structure of the modules from the
+ * compendium is retained in the information network.
+ * 
+ * This command does not create links between requirements and target
+ * objects. Links are created by the {@link ModelLinksCommand}.
  * 
  * See {@link ModelCommand} for more documentation about the modeling process.
  *
@@ -57,55 +56,88 @@ import sernet.verinice.service.commands.CopyCommand;
  */
 public class ModelModulesCommand extends ChangeLoggingCommand {
 
+    private static final long serialVersionUID = -6698388849147857588L;
+
     private transient Logger log = Logger.getLogger(ModelModulesCommand.class);
 
+    private transient ModelingMetaDao metaDao;
+
     private Integer targetScopeId;
-    private transient Set<BpRequirementGroup> compendiumModules;
-    private transient Set<CnATreeElement> compendiumRequirements;
-    private transient Set<CnATreeElement> scopeRequirements;
-    private transient Map<String, CnATreeElement> missingRequirements;
-    private transient Map<String, BpRequirement> missingRequirementsWithParents;
+    private transient Set<BpRequirementGroup> modulesFromCompendium;
+    private transient Set<CnATreeElement> requirementsFromCompendium;
+    private transient Set<CnATreeElement> allRequirementsFromScope;
+    private transient Map<String, CnATreeElement> missingRequirementsFromCompendium;
+    private transient Map<String, CnATreeElement> missingRequirementsWithParents;
     private transient Map<String, CnATreeElement> requirementParentsWithProperties;
     private Set<String> moduleUuids = new HashSet<>();
-    
+
     private String stationId;
-    
-    public ModelModulesCommand(Set<BpRequirementGroup> requirementGroups, Integer targetScopeId) {
+
+    public ModelModulesCommand(Set<BpRequirementGroup> modulesFromCompendium,
+            Integer targetScopeId) {
         super();
-        this.stationId = ChangeLogEntry.STATION_ID;
+
+        this.modulesFromCompendium = modulesFromCompendium;
         this.targetScopeId = targetScopeId;
-        this.compendiumModules = requirementGroups;
-        compendiumRequirements = new HashSet<>();
-        missingRequirements = new HashMap<>();
+
+        requirementsFromCompendium = new HashSet<>();
+        missingRequirementsFromCompendium = new HashMap<>();
         missingRequirementsWithParents = new HashMap<>();
         requirementParentsWithProperties = new HashMap<>();
+
+        this.stationId = ChangeLogEntry.STATION_ID;
     }
-    
+
     @Override
     public void execute() {
         try {
-            loadCompendiumRequirements();
-            loadScopeRequirements();
-            createListOfMissingRequirements();
-            if(!missingRequirements.isEmpty()) {
+            loadRequirementsFromCompendium();
+            loadAllRequirementsFromScope();
+            rememberMissingRequirements();
+            if (!missingRequirementsFromCompendium.isEmpty()) {
                 loadParents();
                 insertMissingRequirements();
             }
         } catch (CommandException e) {
-            getLog().error("Error while modeling safeguards.", e);
-            throw new RuntimeCommandException("Error while modeling safeguards.", e);
+            getLog().error("Error while modeling safeguards.", e); //$NON-NLS-1$
+            throw new RuntimeCommandException("Error while modeling safeguards.", e); //$NON-NLS-1$
         }
     }
-    
+
     private void insertMissingRequirements() throws CommandException {
-        CnATreeElement requirementGroup = getRequirementRootGroup();
-        for (CnATreeElement requirement :  missingRequirementsWithParents.values()) {
+        CnATreeElement requirementGroup = loadRequirementRootGroup();
+        for (CnATreeElement requirement : missingRequirementsWithParents.values()) {
             insertRequirement(requirementGroup, requirement);
         }
     }
-    
+
     protected void insertRequirement(CnATreeElement requirementGroup, CnATreeElement requirement)
             throws CommandException {
+        CnATreeElement parent = insertRequirementGroups(requirementGroup, requirement);
+
+        if (!isRequirementInChildrenSet(parent.getChildren(),
+                missingRequirementsFromCompendium.get(requirement.getUuid()))) {
+            CopyCommand copyCommand = new CopyCommand(parent.getUuid(),
+                    Arrays.asList(requirement.getUuid()));
+            getCommandService().executeCommand(copyCommand);
+            moduleUuids.add(parent.getUuid());
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("Requirement: " + requirement.getTitle() + " created in group: " //$NON-NLS-1$ //$NON-NLS-2$
+                        + parent.getTitle());
+            }
+        } else if (getLog().isDebugEnabled()) {
+            getLog().debug("Requirement: " + requirement.getTitle() + " already exists in group: " //$NON-NLS-1$ //$NON-NLS-2$
+                    + parent.getTitle());
+        }
+    }
+
+    /**
+     * Creates the 3 groups into which a requirement is sorted.
+     * If the groups already exist, they are not created again.
+     */
+    private CnATreeElement insertRequirementGroups(CnATreeElement requirementGroup,
+            CnATreeElement requirement) throws CommandException {
+        validate(requirement);
         CnATreeElement group = requirement.getParent().getParent().getParent();
         CnATreeElement parent = getOrCreateGroup(requirementGroup,
                 requirementParentsWithProperties.get(group.getUuid()));
@@ -115,28 +147,46 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
 
         group = requirement.getParent();
         parent = getOrCreateGroup(parent, requirementParentsWithProperties.get(group.getUuid()));
-        
-        if (!isRequirementInChildrenSet(parent.getChildren(),
-                missingRequirements.get(requirement.getUuid()))) {
-            CopyCommand copyCommand = new CopyCommand(parent.getUuid(),
-                    Arrays.asList(requirement.getUuid()));
-            getCommandService().executeCommand(copyCommand);
-            moduleUuids.add(parent.getUuid());
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Requirement: " + requirement.getTitle() + " created in group: "
-                        + parent.getTitle());
-            }
-        } else if (getLog().isDebugEnabled()) {
-            getLog().debug("Requirement: " + requirement.getTitle() + " already exists in group: "
-                    + parent.getTitle());
+        return parent;
+    }
+
+    /**
+     * Validates the requirement and checks checks whether the requirement has
+     * three predecessors.
+     * 
+     * @param requirement
+     *            A requirement
+     * @throws
+     *             BpModelingException
+     *             if this is the requirement has not three
+     *             predecessors
+     */
+    private void validate(CnATreeElement requirement) {
+        if (!BpRequirement.TYPE_ID.equals(requirement.getTypeId())) {
+            throw createBpModelingException(requirement.getDbId());
+        }
+        if (requirement.getParent() == null || requirement.getParent().getParent() == null
+                || requirement.getParent().getParent().getParent() == null) {
+            throw createBpModelingException(requirement.getDbId());
+        }
+        if (!BpRequirementGroup.TYPE_ID.equals(requirement.getParent().getTypeId())) {
+            throw createBpModelingException(requirement.getDbId());
+        }
+        if (!BpRequirementGroup.TYPE_ID.equals(requirement.getParent().getParent().getTypeId())) {
+            throw createBpModelingException(requirement.getDbId());
+        }
+        if (!BpRequirementGroup.TYPE_ID
+                .equals(requirement.getParent().getParent().getParent().getTypeId())) {
+            throw createBpModelingException(requirement.getDbId());
         }
     }
 
-    private boolean isRequirementInChildrenSet(Set<CnATreeElement> targetChildren, CnATreeElement requirement) {
+    private boolean isRequirementInChildrenSet(Set<CnATreeElement> targetChildren,
+            CnATreeElement requirement) {
         for (CnATreeElement targetSafeguardElement : targetChildren) {
             CnATreeElement targetSafeguard = targetSafeguardElement;
-            String targetIdentifier = getIdentifierOfRequirement(targetSafeguard);
-            String identifier = getIdentifierOfRequirement(requirement);
+            String targetIdentifier = BpRequirement.getIdentifierOfRequirement(targetSafeguard);
+            String identifier = BpRequirement.getIdentifierOfRequirement(requirement);
             if (ModelCommand.nullSafeEquals(targetIdentifier, identifier)) {
                 return true;
             }
@@ -144,103 +194,86 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         return false;
     }
 
-    private void loadCompendiumRequirements() {
-        compendiumRequirements.clear();
-        for (CnATreeElement module : compendiumModules) {
-            RetrieveInfo ri = RetrieveInfo.getChildrenInstance();
-            ri.setChildrenProperties(true);
-            CnATreeElement moduleWithChildren = getDao().findByUuid(module.getUuid(), ri);
-            compendiumRequirements.addAll(moduleWithChildren.getChildren());
+    private void loadRequirementsFromCompendium() {
+        requirementsFromCompendium.clear();
+        for (CnATreeElement module : modulesFromCompendium) {
+            Set<CnATreeElement> children = getMetaDao().loadChildrenOfElement(module.getUuid());
+            for (CnATreeElement child : children) {
+                if (BpRequirement.isBpRequirement(child)) {
+                    requirementsFromCompendium.add(child);
+                }
+            }
+
         }
     }
-    
+
     /**
      * Loads the safeguards and transforms the result list to a set
      * to avoid duplicate entries.
      */
-    private void loadScopeRequirements() {
-        scopeRequirements = new HashSet<>(loadRequirementsByDao());
+    private void loadAllRequirementsFromScope() {
+        allRequirementsFromScope = new HashSet<>(
+                getMetaDao().loadElementsFromScope(BpRequirement.TYPE_ID, targetScopeId));
         if (getLog().isDebugEnabled()) {
-            getLog().debug("Requirements in target scope: ");
-            logElements(scopeRequirements);
+            getLog().debug("missingRequirementsFromCompendium in target scope: "); //$NON-NLS-1$
+            logElements(allRequirementsFromScope);
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private List<CnATreeElement> loadRequirementsByDao() {
-        return getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(ModelCommand.HQL_SCOPE_ELEMENTS).setParameter("scopeId",
-                        targetScopeId).setParameter("typeId", BpRequirement.TYPE_ID);
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
-    }
-    
-    private void createListOfMissingRequirements() {
-        missingRequirements.clear();
-        for (CnATreeElement requirement : compendiumRequirements) {
-            if (!isRequirementInScope(requirement)) {
+    private void rememberMissingRequirements() {
+        missingRequirementsFromCompendium.clear();
+        for (CnATreeElement requirementCompendium : requirementsFromCompendium) {
+            CnATreeElement requirementScope = getRequirementFromScope(requirementCompendium);
+            if (requirementScope == null) {
                 if (getLog().isDebugEnabled()) {
-                    getLog().debug("Requirement is not in scope yet: " + requirement);
+                    getLog().debug("Requirement is not in scope yet: " + requirementCompendium); //$NON-NLS-1$
                 }
-                missingRequirements.put(requirement.getUuid(), requirement);
+                missingRequirementsFromCompendium.put(requirementCompendium.getUuid(),
+                        requirementCompendium);
             }
         }
     }
-    
-    @SuppressWarnings("unchecked")
+
     private void loadParents() {
-        // Load the parents (predecessors) of all missing requirements 
-        List<BpRequirement> requirements = getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(ModelCommand.HQL_LOAD_PARENT_IDS).setParameterList("uuids",
-                        missingRequirements.keySet());
-                query.setReadOnly(true);
-                return query.list();
-            }
-        });
-        final List<String> parentUuids = new LinkedList<>();
-        for (BpRequirement requirement : requirements) {
+        final Set<String> parentUuids = loadParentUuidsOfMissingRequirements();
+        List<CnATreeElement> parentsWithProperties = getMetaDao()
+                .loadElementsWithProperties(parentUuids);
+        for (CnATreeElement group : parentsWithProperties) {
+            requirementParentsWithProperties.put(group.getUuid(), group);
+        }
+        if (getLog().isDebugEnabled()) {
+            getLog().debug("missingRequirementsFromCompendium parents: "); //$NON-NLS-1$
+            logElements(requirementParentsWithProperties.values());
+        }
+    }
+
+    private Set<String> loadParentUuidsOfMissingRequirements() {
+        // Load the parents (predecessors) of all missing requirements
+        List<CnATreeElement> requirements = getMetaDao()
+                .loadElementsWith3Parents(missingRequirementsFromCompendium.keySet());
+
+        final Set<String> parentUuids = new HashSet<>();
+        for (CnATreeElement requirement : requirements) {
+            validate(requirement);
             missingRequirementsWithParents.put(requirement.getUuid(), requirement);
             parentUuids.add(requirement.getParent().getUuid());
             parentUuids.add(requirement.getParent().getParent().getUuid());
             parentUuids.add(requirement.getParent().getParent().getParent().getUuid());
         }
-        // Load the properties of the parents (predecessors)
-        List<CnATreeElement> groupsWithProperties = getDao()
-                .findByCallback(new HibernateCallback() {
-                    @Override
-                    public Object doInHibernate(Session session) throws SQLException {
-                        Query query = session.createQuery(ModelCommand.HQL_ELEMENT_WITH_PROPERTIES)
-                                .setParameterList("uuids", parentUuids);
-                        query.setReadOnly(true);
-                        return query.list();
-                    }
-                });
-        for (CnATreeElement group : groupsWithProperties) {
-            requirementParentsWithProperties.put(group.getUuid(), group);
-        }
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Requirements parents: ");
-            logElements(requirementParentsWithProperties.values());
-        }
+        return parentUuids;
     }
-    
-    private boolean isRequirementInScope(CnATreeElement compendiumRequirement) {
-        for (CnATreeElement scopeRequirement : scopeRequirements) {
+
+    private CnATreeElement getRequirementFromScope(CnATreeElement requirementFromCompendium) {
+        for (CnATreeElement requirementScope : allRequirementsFromScope) {
             if (ModelCommand.nullSafeEquals(
-                    getIdentifierOfRequirement(scopeRequirement),
-                    getIdentifierOfRequirement(compendiumRequirement))) {
-                return true;
+                    BpRequirement.getIdentifierOfRequirement(requirementScope),
+                    BpRequirement.getIdentifierOfRequirement(requirementFromCompendium))) {
+                return requirementScope;
             }
         }
-        return false;
+        return null;
     }
-    
+
     private CnATreeElement getOrCreateGroup(CnATreeElement parent, CnATreeElement compendiumGroup)
             throws CommandException {
         CnATreeElement group = null;
@@ -255,13 +288,13 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         if (!groupFound) {
             group = createGroup(parent, compendiumGroup);
         } else if (getLog().isDebugEnabled()) {
-            getLog().debug("Requirement group: " + compendiumGroup.getTitle()
-                    + " already exists in group: " + parent.getTitle());
+            getLog().debug("Requirement group: " + compendiumGroup.getTitle() //$NON-NLS-1$
+                    + " already exists in group: " + parent.getTitle()); //$NON-NLS-1$
         }
         return group;
     }
 
-    protected CnATreeElement createGroup(CnATreeElement parent, CnATreeElement compendiumGroup)
+    private CnATreeElement createGroup(CnATreeElement parent, CnATreeElement compendiumGroup)
             throws CommandException {
         CnATreeElement group;
         CopyCommand copyCommand = new CopyCommand(parent.getUuid(),
@@ -269,72 +302,83 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         copyCommand.setCopyChildren(false);
         copyCommand = getCommandService().executeCommand(copyCommand);
         String groupUuid = copyCommand.getNewElements().get(0);
-        group = getDao().findByUuid(groupUuid,
-                RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
+        group = getMetaDao().loadElementWithPropertiesAndChildren(groupUuid);
         parent.addChild(group);
         if (getLog().isDebugEnabled()) {
-            getLog().debug("Requirement group: " + compendiumGroup.getTitle() + " created in group: "
-                    + parent.getTitle());
+            getLog().debug(
+                    "Requirement group: " + compendiumGroup.getTitle() + " created in group: " //$NON-NLS-1$ //$NON-NLS-2$
+                            + parent.getTitle());
         }
         return group;
     }
 
-    protected CnATreeElement getRequirementRootGroup() {
-        CnATreeElement safeguardGroup = null;
-        CnATreeElement scope = getDao().retrieve(targetScopeId, RetrieveInfo.getChildrenInstance());
+    private CnATreeElement loadRequirementRootGroup() {
+        CnATreeElement requirementGroup = null;
+        CnATreeElement scope = getMetaDao().loadElementWithChildren(targetScopeId);
         Set<CnATreeElement> children = scope.getChildren();
         for (CnATreeElement group : children) {
             if (group.getTypeId().equals(BpRequirementGroup.TYPE_ID)) {
-                safeguardGroup = group;
+                requirementGroup = group;
+                break;
             }
         }
-        if(safeguardGroup==null) {
-            throw new GroupNotFoundInScopeException(targetScopeId, BpRequirementGroup.TYPE_ID);
+        if (requirementGroup == null) {
+            throw createGroupNotFoundInScopeException();
         }
-        return getDao().retrieve(safeguardGroup.getDbId(),
-                RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
+        return getMetaDao().loadElementWithPropertiesAndChildren(requirementGroup.getDbId());
     }
 
-
-    private String getIdentifierOfRequirement(CnATreeElement compendiumRequirement) {
-        return compendiumRequirement.getEntity().getPropertyValue(BpRequirement.PROP_ID);
+    private GroupNotFoundInScopeException createGroupNotFoundInScopeException() {
+        CnATreeElement scopeWithProperties = getMetaDao().loadElementWithProperties(targetScopeId);
+        String titleOfScope = scopeWithProperties.getTitle();
+        String message = Messages.getString("ModelModulesCommand.NoGroupFound", //$NON-NLS-1$
+                titleOfScope);
+        return new GroupNotFoundInScopeException(message);
     }
 
-    public Set<String> getModulesInScopeUuids() {
+    private BpModelingException createBpModelingException(Integer requirementId) {
+        CnATreeElement requirement = getMetaDao().loadElementWithProperties(requirementId);
+        String title = requirement.getTitle();
+        String message = Messages.getString("ModelModulesCommand.ModelingException", //$NON-NLS-1$
+                title);
+        return new BpModelingException(message);
+    }
+
+    public Set<String> getModuleUuidsFromScope() {
         return moduleUuids;
+    }
+
+    public ModelingMetaDao getMetaDao() {
+        if (metaDao == null) {
+            metaDao = new ModelingMetaDao(getDao());
+        }
+        return metaDao;
     }
 
     private IBaseDao<CnATreeElement, Serializable> getDao() {
         return getDaoFactory().getDAO(CnATreeElement.class);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IChangeLoggingCommand#getStationId()
-     */
     @Override
     public String getStationId() {
         return stationId;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangeType()
-     */
     @Override
     public int getChangeType() {
         return ChangeLogEntry.TYPE_INSERT;
     }
-    
+
     public Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(ModelModulesCommand.class);
         }
         return log;
     }
-    
+
     private void logElements(Collection<?> collection) {
         for (Object element : collection) {
             getLog().debug(element);
         }
-
     }
 }

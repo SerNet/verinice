@@ -34,11 +34,20 @@ public class BpThreat extends CnATreeElement implements IBpElement {
     private static final String PROP_NAME = "bp_threat_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_threat_id"; //$NON-NLS-1$
 
-    private static final String PROP_CONFIDENIALITY = "bp_threat_value_method_confidentiality";
-    private static final String PROP_INTEGRITY ="bp_threat_value_method_integrity";
-    private static final String PROP_AVAILABILITY ="bp_threat_value_method_availability";
+    private static final String PROP_CONFIDENIALITY = "bp_threat_value_method_confidentiality"; //$NON-NLS-1$
+    private static final String PROP_INTEGRITY = "bp_threat_value_method_integrity"; //$NON-NLS-1$
+    private static final String PROP_AVAILABILITY = "bp_threat_value_method_availability"; //$NON-NLS-1$
     
     public static final String TYPE_ID = "bp_threat"; //$NON-NLS-1$
+
+    public static final String REL_BP_REQUIREMENT_BP_APPLICATION = "rel_bp_threat_bp_application"; //$NON-NLS-1$
+    public static final String REL_BP_REQUIREMENT_BP_BUSINESSPROCESS = "rel_bp_threat_bp_businessprocess"; //$NON-NLS-1$
+    public static final String REL_BP_REQUIREMENT_BP_DEVICE = "rel_bp_threat_bp_device"; //$NON-NLS-1$
+    public static final String REL_BP_REQUIREMENT_BP_ICSSYSTEM = "rel_bp_threat_bp_icssystem"; //$NON-NLS-1$
+    public static final String REL_BP_REQUIREMENT_BP_ITNETWORK = "rel_bp_threat_bp_itnetwork"; //$NON-NLS-1$
+    public static final String REL_BP_REQUIREMENT_BP_ITSYSTEM = "rel_bp_threat_bp_itsystem"; //$NON-NLS-1$
+    public static final String REL_BP_REQUIREMENT_BP_NETWORK = "rel_bp_threat_bp_network"; //$NON-NLS-1$
+    public static final String REL_BP_REQUIREMENT_BP_ROOM = "rel_bp_threat_bp_room"; //$NON-NLS-1$
     
     protected BpThreat() {}
     
@@ -114,6 +123,10 @@ public class BpThreat extends CnATreeElement implements IBpElement {
     public void setAvailibility(boolean isAvailability) {
         int value = (isAvailability) ? 1 : 0;
         setNumericProperty(PROP_AVAILABILITY, value);
+    }
+    
+    public static String getIdentifierOfThreat(CnATreeElement requirement) {
+        return requirement.getEntity().getPropertyValue(PROP_ID);
     }
 
 }
