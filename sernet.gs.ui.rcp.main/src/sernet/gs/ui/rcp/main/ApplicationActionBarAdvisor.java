@@ -86,6 +86,7 @@ import sernet.verinice.rcp.ProfileEditAction;
 import sernet.verinice.rcp.ServerConnectionToggleAction;
 import sernet.verinice.rcp.account.AccountView;
 import sernet.verinice.rcp.accountgroup.AccountGroupView;
+import sernet.verinice.rcp.bp.BaseProtectionPerspective;
 import sernet.verinice.rcp.risk.RiskAnalysisAction;
 import sernet.verinice.rcp.templates.TemplateView;
 import sernet.verinice.report.rcp.ReportDepositView;
@@ -431,14 +432,14 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(this.openSearchViewAction);
         viewsMenu.add(this.openGSToolMappingViewAction);
         viewsMenu.add(this.openBpViewAction);
-        
+        viewsMenu.add(new Separator());
         viewsMenu.add(this.openCatalogViewAction);
-
         viewsMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
         MenuManager perspectivesMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_26, VeriniceActionConstants.MENU_PERSPECTIVES);
         addPerspectiveMenu(window, perspectivesMenu, Iso27kPerspective.ID);
         addPerspectiveMenu(window, perspectivesMenu, Perspective.ID);
+        addPerspectiveMenu(window, perspectivesMenu, BaseProtectionPerspective.ID);
         perspectivesMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
         IContributionItem perspectiveList = ContributionItemFactory.PERSPECTIVES_SHORTLIST.create(window);
