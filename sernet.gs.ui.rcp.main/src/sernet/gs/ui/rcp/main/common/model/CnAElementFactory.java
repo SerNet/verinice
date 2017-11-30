@@ -166,7 +166,7 @@ import sernet.verinice.service.model.LoadModel;
  */
 public final class CnAElementFactory {
 
-	private final Logger log = Logger.getLogger(CnAElementFactory.class);
+    private final Logger log = Logger.getLogger(CnAElementFactory.class);
 	
 	private Object mutex = new Object();
 	
@@ -205,8 +205,8 @@ public final class CnAElementFactory {
 	}
 
 	public void addLoadListener(IModelLoadListener listener) {
-		if (log.isDebugEnabled()) {
-			log.debug("Adding model load listener.");
+        if (log.isDebugEnabled()) {
+            log.debug("Adding model load listener.");
 		}
 		if (!listeners.contains(listener)){
 			listeners.add(listener);
@@ -216,14 +216,14 @@ public final class CnAElementFactory {
 		// the process of registering
 		// himself here (race condition):
 		if (loadedModel != null) {
-			if (log.isDebugEnabled()) {
-				log.debug("Firing safety event: bsi model loaded.");
+            if (log.isDebugEnabled()) {
+                log.debug("Firing safety event: bsi model loaded.");
 			}
 			listener.loaded(loadedModel);
 		}
 		if (isoModel != null) {
-			if (log.isDebugEnabled()) {
-				log.debug("Firing safety event: iso27k model");
+            if (log.isDebugEnabled()) {
+                log.debug("Firing safety event: iso27k model");
 			}
 			listener.loaded(isoModel);
 		}
@@ -490,7 +490,7 @@ public final class CnAElementFactory {
 			public CnATreeElement build(CnATreeElement container,
 					BuildInput input) throws CommandException {
 
-				log.debug("Creating new Anwendung in " + container); //$NON-NLS-1$
+                log.debug("Creating new Anwendung in " + container); //$NON-NLS-1$
 				CreateAnwendung saveCommand = new CreateAnwendung(container,
 						Anwendung.class);
 				saveCommand = ServiceFactory.lookupCommandService()
@@ -551,7 +551,7 @@ public final class CnAElementFactory {
 			public ITVerbund build(CnATreeElement container, BuildInput input)
 					throws CommandException {
 
-				log.debug("Creating new ITVerbund in " + container); //$NON-NLS-1$
+                log.debug("Creating new ITVerbund in " + container); //$NON-NLS-1$
 				boolean createChildren = true;
 				if (input != null) {
 					createChildren = (Boolean) input.getInput();
@@ -1264,7 +1264,7 @@ public final class CnAElementFactory {
 			throws CnATreeElementBuildException, CommandException {
 		IElementBuilder builder = elementbuilders.get(buildableTypeId);
 		if (builder == null) {
-			log.error(Messages.getString("CnAElementFactory.0")
+            log.error(Messages.getString("CnAElementFactory.0")
 					+ buildableTypeId);
 			throw new CnATreeElementBuildException(
 					Messages.getString("CnAElementFactory.0") + buildableTypeId); //$NON-NLS-1$
@@ -1292,7 +1292,7 @@ public final class CnAElementFactory {
             Activator.inheritVeriniceContextState();
             UpdateElement<CnATreeElement> updateCommand = new UpdateElement<>(child, false, ChangeLogEntry.STATION_ID);
             getCommandService().executeCommand(updateCommand);
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug("IconPath of containerElement:\t" + iconPath);
                 log.debug("IconPath of child (after setter was called):\t" + child.getIconPath());
             }
@@ -1373,7 +1373,7 @@ public final class CnAElementFactory {
         }	    
 	}
 
-	private void fireLoad(CatalogModel model) {
+    private void fireLoad(CatalogModel model) {
         for (IModelLoadListener listener : listeners) {
             listener.loaded(model);
         }       
@@ -1488,7 +1488,7 @@ public final class CnAElementFactory {
 				fireLoad(model);
 			}
 		} catch (Exception e) {
-			log.error(Messages.getString("CnAElementFactory.1"), e); //$NON-NLS-1$
+            log.error(Messages.getString("CnAElementFactory.1"), e); //$NON-NLS-1$
 			throw new RuntimeException(
 					Messages.getString("CnAElementFactory.1"), e);
 		}
@@ -1503,14 +1503,14 @@ public final class CnAElementFactory {
 			CreateIsoModel command = new CreateIsoModel();
 			command = getCommandService().executeCommand(command);
 			isoModel = command.getElement();
-			if (log.isInfoEnabled()) {
-				log.info("ISO27KModel created"); //$NON-NLS-1$
+            if (log.isInfoEnabled()) {
+                log.info("ISO27KModel created"); //$NON-NLS-1$
 			}
 			if (isoModel != null) {
 				fireLoad(isoModel);
 			}
 		} catch (CommandException e) {
-			log.error(Messages.getString("CnAElementFactory.2"), e); //$NON-NLS-1$
+            log.error(Messages.getString("CnAElementFactory.2"), e); //$NON-NLS-1$
 		}
 	}
 	
@@ -1524,7 +1524,7 @@ public final class CnAElementFactory {
 	            fireLoad(model);
 	        }
 	    } catch (CommandException e) {
-	        log.error("Error loading model for modernized ITBP", e);
+            log.error("Error loading model for modernized ITBP", e);
 	        throw new RuntimeException("Error loading model for modernized ITBP", e);
 	    }
 	    return model;
@@ -1544,7 +1544,7 @@ public final class CnAElementFactory {
             }	        
 	        
 	    } catch (CommandException e) {
-	        log.error(Messages.getString("CnAElementFactory.2"), e); //$NON-NLS-1$
+            log.error(Messages.getString("CnAElementFactory.2"), e); //$NON-NLS-1$
 	    }
 	    
 	}
@@ -1565,7 +1565,7 @@ public final class CnAElementFactory {
 		}
 
 		// none found, create new model:
-		log.debug("Creating new model in DB."); //$NON-NLS-1$
+        log.debug("Creating new model in DB."); //$NON-NLS-1$
 		monitor.setTaskName(Messages.getString("CnAElementFactory.4")); //$NON-NLS-1$
 		loadedModel = new BSIModel();
 
@@ -1592,51 +1592,110 @@ public final class CnAElementFactory {
 		}
 	}
 
-	public void reloadModelFromDatabase() {
-		try {
-			fireClosed();
-			if (isModelLoaded()) {
-				BSIModel newModel = dbHome.loadModel(new NullMonitor());
-				loadedModel.modelReload(newModel);
-				loadedModel.moveListener(newModel);
-				loadedModel = newModel;
-				fireLoad();
-			}
-			if (isIsoModelLoaded()) {
-				ISO27KModel newModel = loadIsoModel();
-				if (log.isDebugEnabled()) {
-					log.debug("reloadModelFromDatabase, ISO-model loaded"); //$NON-NLS-1$
-				}
-				isoModel.modelReload(newModel);
-				isoModel.moveListener(newModel);
-				isoModel = newModel;
-				fireLoad(isoModel);
-			}
-            if (isBpModelLoaded()) {
-                BpModel newModel = loadBpModel();
-                if (log.isDebugEnabled()) {
-                    log.debug("reloadModelFromDatabase, base protection model loaded"); //$NON-NLS-1$
-                }
-                boModel.modelReload(newModel);
-                boModel.moveListener(newModel);
-                boModel = newModel;
-                fireLoad(boModel);
+    /**
+     * @deprecated Use method reloadAllModelsFromDatabase()
+     */
+    public void reloadModelFromDatabase() {
+        reloadAllModelsFromDatabase();
+    }
+
+    public void reloadAllModelsFromDatabase() {
+        try {
+            fireClosed();
+            reloadBsiModelFromDatabasePrivate();
+            reloadIsoModelFromDatabasePrivate();
+            reloadBpModelFromDatabasePrivate();
+            reloadCatalogModelFromDatabasePrivate();
+        } catch (Exception e) {
+            log.error(Messages.getString("CnAElementFactory.5"), e); //$NON-NLS-1$
+        }
+    }
+
+    public void reloadBsiModelFromDatabase() {
+        fireClosed();
+        try {
+            reloadBsiModelFromDatabasePrivate();
+        } catch (Exception e) {
+            log.error("Could not reload BSI (old base protection) model from database", e); //$NON-NLS-1$
+        }
+    }
+
+    private void reloadBsiModelFromDatabasePrivate() throws CommandException {
+        if (isModelLoaded()) {
+            BSIModel newModel = dbHome.loadModel(new NullMonitor());
+            loadedModel.modelReload(newModel);
+            loadedModel.moveListener(newModel);
+            loadedModel = newModel;
+            fireLoad();
+        }
+    }
+
+    public void reloadIsoModelFromDatabase() {
+        fireClosed();
+        try {
+            reloadIsoModelFromDatabasePrivate();
+        } catch (Exception e) {
+            log.error("Could not reload iso model from database", e); //$NON-NLS-1$
+        }
+    }
+
+    private void reloadIsoModelFromDatabasePrivate() {
+        if (isIsoModelLoaded()) {
+            ISO27KModel newModel = loadIsoModel();
+            if (log.isDebugEnabled()) {
+                log.debug("reloadModelFromDatabase, ISO-model loaded"); //$NON-NLS-1$
             }
-            if (isModernizedBpCatalogLoaded()) {
-                CatalogModel newModel = loadCatalogModel();
-                if (log.isDebugEnabled()) {
-                    log.debug("reloadModelFromDatabase, base protection model loaded"); //$NON-NLS-1$
-                }
-                catalogModel.modelReload(newModel);
-                catalogModel.moveListener(newModel);
-                catalogModel = newModel;
-                fireLoad(catalogModel);
+            isoModel.modelReload(newModel);
+            isoModel.moveListener(newModel);
+            isoModel = newModel;
+            fireLoad(isoModel);
+        }
+    }
+
+    public void reloadBpModelFromDatabase() {
+        fireClosed();
+        try {
+            reloadBpModelFromDatabasePrivate();
+        } catch (Exception e) {
+            log.error("Could not reload (renewed) base protection model from database", e); //$NON-NLS-1$
+        }
+    }
+
+    private void reloadBpModelFromDatabasePrivate() {
+        if (isBpModelLoaded()) {
+            BpModel newModel = loadBpModel();
+            if (log.isDebugEnabled()) {
+                log.debug(
+                        "reloadBpModelFromDatabasePrivate, (renewed) base protection model loaded"); //$NON-NLS-1$
             }
-			
-		} catch (Exception e) {
-			log.error(Messages.getString("CnAElementFactory.5"), e); //$NON-NLS-1$
-		}
-	}
+            boModel.modelReload(newModel);
+            boModel.moveListener(newModel);
+            boModel = newModel;
+            fireLoad(boModel);
+        }
+    }
+
+    public void reloadCatalogModelFromDatabase() {
+        fireClosed();
+        try {
+            reloadCatalogModelFromDatabasePrivate();
+        } catch (Exception e) {
+            log.error("Could not reload catalog model from database", e); //$NON-NLS-1$
+        }
+    }
+
+    private void reloadCatalogModelFromDatabasePrivate() {
+        if (isModernizedBpCatalogLoaded()) {
+            CatalogModel newModel = loadCatalogModel();
+            if (log.isDebugEnabled()) {
+                log.debug("reloadCatalogModelFromDatabasePrivate,catalog model loaded"); //$NON-NLS-1$
+            }
+            catalogModel.modelReload(newModel);
+            catalogModel.moveListener(newModel);
+            catalogModel = newModel;
+            fireLoad(catalogModel);
+        }
+    }
 
 	private ICommandService getCommandService() {
 		if (commandService == null) {
@@ -1649,7 +1708,7 @@ public final class CnAElementFactory {
 		try {
 			ServiceFactory.openCommandService();
 		} catch (MalformedURLException e) {
-			log.error(Messages.getString("CnAElementFactory.6"), e); //$NON-NLS-1$
+            log.error(Messages.getString("CnAElementFactory.6"), e); //$NON-NLS-1$
 			throw new RuntimeException(
 					Messages.getString("CnAElementFactory.7"), e); //$NON-NLS-1$
 		}

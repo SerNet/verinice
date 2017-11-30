@@ -15,7 +15,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
+ * Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
@@ -38,15 +38,16 @@ import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.bp.exceptions.BpModelingException;
 import sernet.verinice.service.bp.exceptions.GroupNotFoundInScopeException;
 import sernet.verinice.service.commands.CopyCommand;
 
 /**
- * This command sorts modules and requirements from the compendium into an 
- * information network. The group structure of the modules from the 
+ * This command sorts modules and requirements from the compendium into an
+ * information network. The group structure of the modules from the
  * compendium is retained in the information network.
  * 
- * This command does not create links between requirements and target 
+ * This command does not create links between requirements and target
  * objects. Links are created by the {@link ModelLinksCommand}.
  * 
  * See {@link ModelCommand} for more documentation about the modeling process.
@@ -60,7 +61,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     private transient Logger log = Logger.getLogger(ModelModulesCommand.class);
 
     private transient ModelingMetaDao metaDao;
-    
+
     private Integer targetScopeId;
     private transient Set<BpRequirementGroup> modulesFromCompendium;
     private transient Set<CnATreeElement> requirementsFromCompendium;
@@ -69,30 +70,31 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     private transient Map<String, CnATreeElement> missingRequirementsWithParents;
     private transient Map<String, CnATreeElement> requirementParentsWithProperties;
     private Set<String> moduleUuids = new HashSet<>();
-    
+
     private String stationId;
-    
-    public ModelModulesCommand(Set<BpRequirementGroup> modulesFromCompendium, Integer targetScopeId) {
+
+    public ModelModulesCommand(Set<BpRequirementGroup> modulesFromCompendium,
+            Integer targetScopeId) {
         super();
-        
+
         this.modulesFromCompendium = modulesFromCompendium;
         this.targetScopeId = targetScopeId;
-        
+
         requirementsFromCompendium = new HashSet<>();
         missingRequirementsFromCompendium = new HashMap<>();
         missingRequirementsWithParents = new HashMap<>();
         requirementParentsWithProperties = new HashMap<>();
-        
+
         this.stationId = ChangeLogEntry.STATION_ID;
     }
-    
+
     @Override
     public void execute() {
         try {
             loadRequirementsFromCompendium();
             loadAllRequirementsFromScope();
             rememberMissingRequirements();
-            if(!missingRequirementsFromCompendium.isEmpty()) {
+            if (!missingRequirementsFromCompendium.isEmpty()) {
                 loadParents();
                 insertMissingRequirements();
             }
@@ -101,18 +103,18 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
             throw new RuntimeCommandException("Error while modeling safeguards.", e); //$NON-NLS-1$
         }
     }
-    
+
     private void insertMissingRequirements() throws CommandException {
         CnATreeElement requirementGroup = loadRequirementRootGroup();
-        for (CnATreeElement requirement :  missingRequirementsWithParents.values()) {
+        for (CnATreeElement requirement : missingRequirementsWithParents.values()) {
             insertRequirement(requirementGroup, requirement);
         }
     }
-    
+
     protected void insertRequirement(CnATreeElement requirementGroup, CnATreeElement requirement)
             throws CommandException {
         CnATreeElement parent = insertRequirementGroups(requirementGroup, requirement);
-        
+
         if (!isRequirementInChildrenSet(parent.getChildren(),
                 missingRequirementsFromCompendium.get(requirement.getUuid()))) {
             CopyCommand copyCommand = new CopyCommand(parent.getUuid(),
@@ -130,11 +132,12 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     }
 
     /**
-     * Creates the 3 groups into which a requirement is sorted. 
+     * Creates the 3 groups into which a requirement is sorted.
      * If the groups already exist, they are not created again.
      */
     private CnATreeElement insertRequirementGroups(CnATreeElement requirementGroup,
             CnATreeElement requirement) throws CommandException {
+        validate(requirement);
         CnATreeElement group = requirement.getParent().getParent().getParent();
         CnATreeElement parent = getOrCreateGroup(requirementGroup,
                 requirementParentsWithProperties.get(group.getUuid()));
@@ -147,7 +150,39 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         return parent;
     }
 
-    private boolean isRequirementInChildrenSet(Set<CnATreeElement> targetChildren, CnATreeElement requirement) {
+    /**
+     * Validates the requirement and checks checks whether the requirement has
+     * three predecessors.
+     * 
+     * @param requirement
+     *            A requirement
+     * @throws
+     *             BpModelingException
+     *             if this is the requirement has not three
+     *             predecessors
+     */
+    private void validate(CnATreeElement requirement) {
+        if (!BpRequirement.TYPE_ID.equals(requirement.getTypeId())) {
+            throw createBpModelingException(requirement.getDbId());
+        }
+        if (requirement.getParent() == null || requirement.getParent().getParent() == null
+                || requirement.getParent().getParent().getParent() == null) {
+            throw createBpModelingException(requirement.getDbId());
+        }
+        if (!BpRequirementGroup.TYPE_ID.equals(requirement.getParent().getTypeId())) {
+            throw createBpModelingException(requirement.getDbId());
+        }
+        if (!BpRequirementGroup.TYPE_ID.equals(requirement.getParent().getParent().getTypeId())) {
+            throw createBpModelingException(requirement.getDbId());
+        }
+        if (!BpRequirementGroup.TYPE_ID
+                .equals(requirement.getParent().getParent().getParent().getTypeId())) {
+            throw createBpModelingException(requirement.getDbId());
+        }
+    }
+
+    private boolean isRequirementInChildrenSet(Set<CnATreeElement> targetChildren,
+            CnATreeElement requirement) {
         for (CnATreeElement targetSafeguardElement : targetChildren) {
             CnATreeElement targetSafeguard = targetSafeguardElement;
             String targetIdentifier = BpRequirement.getIdentifierOfRequirement(targetSafeguard);
@@ -164,42 +199,45 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         for (CnATreeElement module : modulesFromCompendium) {
             Set<CnATreeElement> children = getMetaDao().loadChildrenOfElement(module.getUuid());
             for (CnATreeElement child : children) {
-                if(BpRequirement.isBpRequirement(child)) {
+                if (BpRequirement.isBpRequirement(child)) {
                     requirementsFromCompendium.add(child);
                 }
             }
-            
+
         }
     }
-    
+
     /**
      * Loads the safeguards and transforms the result list to a set
      * to avoid duplicate entries.
      */
     private void loadAllRequirementsFromScope() {
-        allRequirementsFromScope = new HashSet<>(getMetaDao().loadElementsFromScope(BpRequirement.TYPE_ID, targetScopeId));
+        allRequirementsFromScope = new HashSet<>(
+                getMetaDao().loadElementsFromScope(BpRequirement.TYPE_ID, targetScopeId));
         if (getLog().isDebugEnabled()) {
             getLog().debug("missingRequirementsFromCompendium in target scope: "); //$NON-NLS-1$
             logElements(allRequirementsFromScope);
         }
     }
-    
+
     private void rememberMissingRequirements() {
         missingRequirementsFromCompendium.clear();
         for (CnATreeElement requirementCompendium : requirementsFromCompendium) {
             CnATreeElement requirementScope = getRequirementFromScope(requirementCompendium);
-            if (requirementScope==null) {
+            if (requirementScope == null) {
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Requirement is not in scope yet: " + requirementCompendium); //$NON-NLS-1$
                 }
-                missingRequirementsFromCompendium.put(requirementCompendium.getUuid(), requirementCompendium);
-            } 
+                missingRequirementsFromCompendium.put(requirementCompendium.getUuid(),
+                        requirementCompendium);
+            }
         }
     }
-    
+
     private void loadParents() {
         final Set<String> parentUuids = loadParentUuidsOfMissingRequirements();
-        List<CnATreeElement> parentsWithProperties = getMetaDao().loadElementsWithProperties(parentUuids);
+        List<CnATreeElement> parentsWithProperties = getMetaDao()
+                .loadElementsWithProperties(parentUuids);
         for (CnATreeElement group : parentsWithProperties) {
             requirementParentsWithProperties.put(group.getUuid(), group);
         }
@@ -210,11 +248,13 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     }
 
     private Set<String> loadParentUuidsOfMissingRequirements() {
-        // Load the parents (predecessors) of all missing requirements 
-        List<CnATreeElement> requirements = getMetaDao().loadElementsWith3Parents(missingRequirementsFromCompendium.keySet());
-                
+        // Load the parents (predecessors) of all missing requirements
+        List<CnATreeElement> requirements = getMetaDao()
+                .loadElementsWith3Parents(missingRequirementsFromCompendium.keySet());
+
         final Set<String> parentUuids = new HashSet<>();
         for (CnATreeElement requirement : requirements) {
+            validate(requirement);
             missingRequirementsWithParents.put(requirement.getUuid(), requirement);
             parentUuids.add(requirement.getParent().getUuid());
             parentUuids.add(requirement.getParent().getParent().getUuid());
@@ -222,7 +262,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         }
         return parentUuids;
     }
-    
+
     private CnATreeElement getRequirementFromScope(CnATreeElement requirementFromCompendium) {
         for (CnATreeElement requirementScope : allRequirementsFromScope) {
             if (ModelCommand.nullSafeEquals(
@@ -233,7 +273,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         }
         return null;
     }
-    
+
     private CnATreeElement getOrCreateGroup(CnATreeElement parent, CnATreeElement compendiumGroup)
             throws CommandException {
         CnATreeElement group = null;
@@ -265,8 +305,9 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         group = getMetaDao().loadElementWithPropertiesAndChildren(groupUuid);
         parent.addChild(group);
         if (getLog().isDebugEnabled()) {
-            getLog().debug("Requirement group: " + compendiumGroup.getTitle() + " created in group: " //$NON-NLS-1$ //$NON-NLS-2$
-                    + parent.getTitle());
+            getLog().debug(
+                    "Requirement group: " + compendiumGroup.getTitle() + " created in group: " //$NON-NLS-1$ //$NON-NLS-2$
+                            + parent.getTitle());
         }
         return group;
     }
@@ -278,30 +319,37 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         for (CnATreeElement group : children) {
             if (group.getTypeId().equals(BpRequirementGroup.TYPE_ID)) {
                 requirementGroup = group;
+                break;
             }
         }
-        if(requirementGroup==null) {
-            throw createException();
+        if (requirementGroup == null) {
+            throw createGroupNotFoundInScopeException();
         }
         return getMetaDao().loadElementWithPropertiesAndChildren(requirementGroup.getDbId());
     }
 
-    private GroupNotFoundInScopeException createException() {
-        CnATreeElement scopeWithProperties = getMetaDao()
-                .loadElementWithProperties(targetScopeId);
+    private GroupNotFoundInScopeException createGroupNotFoundInScopeException() {
+        CnATreeElement scopeWithProperties = getMetaDao().loadElementWithProperties(targetScopeId);
         String titleOfScope = scopeWithProperties.getTitle();
         String message = Messages.getString("ModelModulesCommand.NoGroupFound", //$NON-NLS-1$
                 titleOfScope);
         return new GroupNotFoundInScopeException(message);
     }
 
+    private BpModelingException createBpModelingException(Integer requirementId) {
+        CnATreeElement requirement = getMetaDao().loadElementWithProperties(requirementId);
+        String title = requirement.getTitle();
+        String message = Messages.getString("ModelModulesCommand.ModelingException", //$NON-NLS-1$
+                title);
+        return new BpModelingException(message);
+    }
 
     public Set<String> getModuleUuidsFromScope() {
         return moduleUuids;
     }
-    
+
     public ModelingMetaDao getMetaDao() {
-        if(metaDao==null) {
+        if (metaDao == null) {
             metaDao = new ModelingMetaDao(getDao());
         }
         return metaDao;
@@ -320,14 +368,14 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     public int getChangeType() {
         return ChangeLogEntry.TYPE_INSERT;
     }
-    
+
     public Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(ModelModulesCommand.class);
         }
         return log;
     }
-    
+
     private void logElements(Collection<?> collection) {
         for (Object element : collection) {
             getLog().debug(element);

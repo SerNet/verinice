@@ -15,7 +15,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
+ * Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -40,7 +41,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * base protection (ITBP).
  * 
  * This class is no ordinary verinice DAO. But it uses other DAOs and is
- * therefore called MetaDao.  This class wraps accesses to the ordinary DAOs. 
+ * therefore called MetaDao. This class wraps accesses to the ordinary DAOs.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
@@ -99,30 +100,30 @@ public class ModelingMetaDao {
             + "and requirement.uuid = :uuid"; //$NON-NLS-2$
     
     private IBaseDao<CnATreeElement, Serializable> dao;
-    
+
     public ModelingMetaDao(IBaseDao<CnATreeElement, Serializable> dao) {
         super();
         this.dao = dao;
     }
-    
+
     @SuppressWarnings("unchecked")
     public List<CnATreeElement> loadElementsFromScope(final String typeId, final Integer scopeId) {
         return getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(ModelingMetaDao.HQL_LOAD_ELEMENTS_OF_SCOPE).setParameter("scopeId",
-                        scopeId).setParameter(TYPE_ID, typeId);
+                Query query = session.createQuery(ModelingMetaDao.HQL_LOAD_ELEMENTS_OF_SCOPE)
+                        .setParameter("scopeId", scopeId).setParameter(TYPE_ID, typeId);
                 query.setReadOnly(true);
                 return query.list();
             }
         });
     }
-    
+
     @SuppressWarnings("unchecked")
     public List<CnATreeElement> loadElementsWithProperties(final Collection<String> allUuids) {
         return getDao().findByCallback(new HibernateCallback() {
-            @Override       
-            public Object doInHibernate( Session session) throws SQLException {
+            @Override
+            public Object doInHibernate(Session session) throws SQLException {
                 Query query = session.createQuery(HQL_LOAD_ELEMENTS_WITH_PROPERTIES)
                         .setParameterList(UUIDS, allUuids);
                 query.setReadOnly(true);
@@ -130,7 +131,7 @@ public class ModelingMetaDao {
             }
         });
     }
-    
+
     @SuppressWarnings("unchecked")
     public List<CnATreeElement> loadElementsWithParent(final Collection<String> uuids) {
         return getDao().findByCallback(new HibernateCallback() {
@@ -156,42 +157,46 @@ public class ModelingMetaDao {
             }
         });
     }
-    
+
     public Set<CnATreeElement> loadChildrenOfElement(String uuid) {
         RetrieveInfo ri = RetrieveInfo.getChildrenInstance();
         ri.setChildrenProperties(true);
         CnATreeElement element = getDao().findByUuid(uuid, ri);
-        if(element==null) {
+        if (element == null) {
             return Collections.emptySet();
         }
         return element.getChildren();
     }
-    
+
     @SuppressWarnings("unchecked")
-    public List<CnATreeElement> loadLinkedElementsOfParents(final Set<String> parentUuids, final String typeId) {
+    public List<CnATreeElement> loadLinkedElementsOfParents(final Set<String> parentUuids,
+            final String typeId) {
         return getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(ModelingMetaDao.HQL_LOAD_LINKED_SAFEGUARDS_OF_MODULES).setParameterList(UUIDS,
-                        parentUuids).setParameter(TYPE_ID, typeId);
+                Query query = session
+                        .createQuery(ModelingMetaDao.HQL_LOAD_LINKED_SAFEGUARDS_OF_MODULES)
+                        .setParameterList(UUIDS, parentUuids).setParameter(TYPE_ID, typeId);
                 return query.list();
             }
         });
     }
-    
+
     @SuppressWarnings("unchecked")
-    public List<CnATreeElement> loadChildrenWithProperties(final Set<String> parentUuids, final String typeId) {
-         return getDao().findByCallback(new HibernateCallback() {
+    public Set<CnATreeElement> loadChildrenWithProperties(final Set<String> parentUuids,
+            final String typeId) {
+        final List<CnATreeElement> resultList = getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(HQL_LOAD_CHILDREN_WITH_PROPERTIES).setParameterList(UUIDS,
-                        parentUuids).setParameter(TYPE_ID, typeId);
+                Query query = session.createQuery(HQL_LOAD_CHILDREN_WITH_PROPERTIES)
+                        .setParameterList(UUIDS, parentUuids).setParameter(TYPE_ID, typeId);
                 query.setReadOnly(true);
                 return query.list();
             }
         });
+        return new HashSet<>(resultList);
     }
-    
+
     /**
      * Loads the linked elements of an element with the given uuid. The type IDs
      * of the linked elements are passed as parameter typeIds.
@@ -203,7 +208,8 @@ public class ModelingMetaDao {
      * @return A list with linked elements and their properties
      */
     @SuppressWarnings("unchecked")
-    public List<CnATreeElement> loadLinkedElementsWithProperties(final String uuid, final String[] typeIds) {
+    public List<CnATreeElement> loadLinkedElementsWithProperties(final String uuid,
+            final String[] typeIds) {
         return getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
@@ -214,25 +220,25 @@ public class ModelingMetaDao {
             }
         });
     }
-    
+
     public CnATreeElement loadElementWithPropertiesAndChildren(String uuid) {
         return getDao().findByUuid(uuid,
-            RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
+                RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
     }
-    
+
     public CnATreeElement loadElementWithPropertiesAndChildren(Integer dbid) {
         return getDao().retrieve(dbid,
-            RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
+                RetrieveInfo.getChildrenInstance().setChildrenProperties(true));
     }
-    
+
     public CnATreeElement loadElementWithChildren(String uuid) {
         return getDao().findByUuid(uuid, RetrieveInfo.getChildrenInstance());
     }
-    
+
     public CnATreeElement loadElementWithChildren(Integer dbid) {
         return getDao().retrieve(dbid, RetrieveInfo.getChildrenInstance());
     }
-    
+
     public CnATreeElement loadElementWithProperties(Integer dbid) {
         return getDao().retrieve(dbid, RetrieveInfo.getPropertyInstance());
     }

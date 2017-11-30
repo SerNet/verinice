@@ -15,7 +15,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
+ * Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
@@ -59,9 +59,9 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
     private static final long serialVersionUID = -4075156601968217297L;
 
     private transient Logger log = Logger.getLogger(ModelThreatsCommand.class);
-    
+
     private transient ModelingMetaDao metaDao;
-    
+
     private Set<String> moduleUuids;
     private Integer targetScopeId;
     private transient Set<CnATreeElement> compendiumThreats;
@@ -93,7 +93,7 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
             loadCompendiumThreats();
             loadScopeThreats();
             createListOfMissingThreats();
-            if(!missingThreats.isEmpty()) {
+            if (!missingThreats.isEmpty()) {
                 loadParents();
                 insertMissingThreats();
             }
@@ -104,7 +104,7 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
     }
 
     private void insertMissingThreats() throws CommandException {
-        CnATreeElement threatGroup = getThreatRootGroup();
+        CnATreeElement threatGroup = loadThreatRootGroup();
         for (CnATreeElement threat : threatsWithParents.values()) {
             insertThreat(threatGroup, threat);
         }
@@ -116,14 +116,13 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
         CnATreeElement parent = getOrCreateGroup(threatGroup,
                 threatParentsWithProperties.get(group.getUuid()));
 
-        if (!isThreatInChildrenSet(parent.getChildren(),
-                missingThreats.get(threat.getUuid()))) {
+        if (!isThreatInChildrenSet(parent.getChildren(), missingThreats.get(threat.getUuid()))) {
             CopyCommand copyCommand = new CopyCommand(parent.getUuid(),
                     Arrays.asList(threat.getUuid()));
             getCommandService().executeCommand(copyCommand);
             if (getLog().isDebugEnabled()) {
-                getLog().debug("Threat: " + threat.getTitle() + " created in group: "
-                        + parent.getTitle());
+                getLog().debug(
+                        "Threat: " + threat.getTitle() + " created in group: " + parent.getTitle());
             }
         } else if (getLog().isDebugEnabled()) {
             getLog().debug("Threat: " + threat.getTitle() + " already exists in group: "
@@ -131,11 +130,11 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
         }
     }
 
-    private boolean isThreatInChildrenSet(Set<CnATreeElement> targetChildren, CnATreeElement threat) {
+    private boolean isThreatInChildrenSet(Set<CnATreeElement> targetChildren,
+            CnATreeElement threat) {
         for (CnATreeElement targetThreatElement : targetChildren) {
             BpThreat targetThreat = (BpThreat) targetThreatElement;
-            if (ModelCommand.nullSafeEquals(
-                    targetThreat.getIdentifier(), 
+            if (ModelCommand.nullSafeEquals(targetThreat.getIdentifier(),
                     BpThreat.getIdentifierOfThreat(threat))) {
                 return true;
             }
@@ -180,16 +179,17 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
         return group;
     }
 
-    protected CnATreeElement getThreatRootGroup() {
+    protected CnATreeElement loadThreatRootGroup() {
         CnATreeElement threatGroup = null;
         CnATreeElement scope = getMetaDao().loadElementWithChildren(targetScopeId);
         Set<CnATreeElement> children = scope.getChildren();
         for (CnATreeElement group : children) {
             if (group.getTypeId().equals(BpThreatGroup.TYPE_ID)) {
                 threatGroup = group;
+                break;
             }
         }
-        if(threatGroup==null) {
+        if (threatGroup == null) {
             throw createException();
         }
         return getMetaDao().loadElementWithPropertiesAndChildren(threatGroup.getDbId());
@@ -210,7 +210,7 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
             logElements(compendiumThreats);
         }
     }
-    
+
     private List<CnATreeElement> findThreatsByModuleUuids() {
         return getMetaDao().loadLinkedElementsOfParents(moduleUuids, BpThreat.TYPE_ID);
     }
@@ -220,24 +220,26 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
      * to avoid duplicate entries.
      */
     private void loadScopeThreats() {
-        scopeThreats = new HashSet<>(getMetaDao().loadElementsFromScope(BpThreat.TYPE_ID, targetScopeId));
+        scopeThreats = new HashSet<>(
+                getMetaDao().loadElementsFromScope(BpThreat.TYPE_ID, targetScopeId));
         if (getLog().isDebugEnabled()) {
             getLog().debug("Threats in target scope: ");
             logElements(scopeThreats);
         }
     }
 
-    private void loadParents() {       
+    private void loadParents() {
         List<CnATreeElement> threats = getMetaDao().loadElementsWithParent(missingThreats.keySet());
-        
+
         final List<String> parentUuids = new LinkedList<>();
         for (CnATreeElement threat : threats) {
             threatsWithParents.put(threat.getUuid(), threat);
             parentUuids.add(threat.getParent().getUuid());
         }
 
-        List<CnATreeElement> groupsWithProperties = getMetaDao().loadElementsWithProperties(parentUuids);
-        
+        List<CnATreeElement> groupsWithProperties = getMetaDao()
+                .loadElementsWithProperties(parentUuids);
+
         for (CnATreeElement group : groupsWithProperties) {
             threatParentsWithProperties.put(group.getUuid(), group);
         }
@@ -261,8 +263,7 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
 
     private boolean isThreatInScope(CnATreeElement compendiumThreat) {
         for (CnATreeElement scopeThreat : scopeThreats) {
-            if (ModelCommand.nullSafeEquals(
-                    BpThreat.getIdentifierOfThreat(scopeThreat),
+            if (ModelCommand.nullSafeEquals(BpThreat.getIdentifierOfThreat(scopeThreat),
                     BpThreat.getIdentifierOfThreat(compendiumThreat))) {
                 return true;
             }
@@ -276,9 +277,9 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
         }
 
     }
-    
+
     public ModelingMetaDao getMetaDao() {
-        if(metaDao==null) {
+        if (metaDao == null) {
             metaDao = new ModelingMetaDao(getDao());
         }
         return metaDao;
@@ -288,7 +289,9 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
         return getDaoFactory().getDAO(CnATreeElement.class);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangeType()
      */
     @Override
@@ -296,7 +299,9 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
         return ChangeLogEntry.TYPE_INSERT;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getStationId()
      */
     @Override

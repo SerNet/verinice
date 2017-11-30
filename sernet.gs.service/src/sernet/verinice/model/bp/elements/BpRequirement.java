@@ -15,7 +15,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
+ * Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
@@ -32,11 +32,11 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
 public class BpRequirement extends CnATreeElement implements IBpElement {
-    
+
     private static final long serialVersionUID = 436541703079680979L;
-    
+
     public static final String TYPE_ID = "bp_requirement"; //$NON-NLS-1$
-    
+
     public static final String PROP_ABBR = "bp_requirement_abbr"; //$NON-NLS-1$
     public static final String PROP_OBJECTBROWSER = "bp_requirement_objectbrowser_content"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_requirement_name"; //$NON-NLS-1$
@@ -46,11 +46,11 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     public static final String PROP_RESPONSIBLE_ROLES = "bp_requirement_responsibleroles"; //$NON-NLS-1$
     public static final String PROP_CONFIDENTIALITY = "bp_requirement_value_method_confidentiality";//$NON-NLS-1$
     public static final String PROP_INTEGRITY = "bp_requirement_value_method_integrity";//$NON-NLS-1$
-    public static final String PROP_AVAILABILITY = "bp_requirement_value_method_availability";//$NON-NLS-1$  
+    public static final String PROP_AVAILABILITY = "bp_requirement_value_method_availability";//$NON-NLS-1$
     public static final String PROP_QUALIFIER_BASIC = "bp_requirement_qualifier_basic"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER_STANDARD = "bp_requirement_qualifier_standard"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER_HIGH = "bp_requirement_qualifier_high"; //$NON-NLS-1$
- 
+
     public static final String REL_BP_REQUIREMENT_BP_THREAT = "rel_bp_requirement_bp_threat"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_SAFEGUARD = "rel_bp_requirement_bp_safeguard"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_ITNETWORK = "rel_bp_requirement_bp_itnetwork"; //$NON-NLS-1$
@@ -61,40 +61,42 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     public static final String REL_BP_REQUIREMENT_BP_DEVICE = "rel_bp_requirement_bp_device"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_NETWORK = "rel_bp_requirement_bp_network"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_ROOM = "rel_bp_requirement_bp_room"; //$NON-NLS-1$
-      
-    protected BpRequirement() {}
+
+    protected BpRequirement() {
+    }
 
     public BpRequirement(CnATreeElement parent) {
         super(parent);
         init();
     }
-    
+
     @Override
     public String getTypeId() {
         return TYPE_ID;
     }
-    
+
     @Override
     public boolean canContain(Object object) {
         return object instanceof BpThreat;
     }
-    
+
     public String getObjectBrowserDescription() {
         return getEntity().getPropertyValue(PROP_OBJECTBROWSER);
     }
-    
+
     public void setObjectBrowserDescription(String description) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER), description);
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER),
+                description);
     }
-    
+
     public String getAbbreviation() {
         return getEntity().getPropertyValue(PROP_ABBR);
     }
-    
+
     public void setAbbreviation(String abbreviation) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
     }
-    
+
     public String getTitle() {
         StringBuilder titleBuilder = new StringBuilder();
         titleBuilder.append(getIdentifier()).append(" ");
@@ -103,36 +105,37 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         titleBuilder.append(getEntity().getPropertyValue(PROP_NAME));
         return titleBuilder.toString();
     }
-    
+
     public void setTitle(String title) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
     }
-    
+
     public String getIdentifier() {
         return getEntity().getPropertyValue(PROP_ID);
     }
-    
+
     public void setIdentifier(String id) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), id);
     }
-    
+
     public String getQualifier() {
         return getEntity().getPropertyValue(PROP_QUALIFIER);
     }
-    
+
     public void setQualifier(String qualifier) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
     }
-    
+
     public Date getLastChange() {
         return getEntity().getDate(PROP_LAST_CHANGE);
     }
-    
+
     public void setLastChange(Date date) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE), String.valueOf(date.getTime()));
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE),
+                String.valueOf(date.getTime()));
     }
-    
-    public Set<String> getResponsibleRoles(){
+
+    public Set<String> getResponsibleRoles() {
         String property = getEntity().getPropertyValue(PROP_RESPONSIBLE_ROLES);
         Set<String> roles;
         if (property != null && property.length() > 0) {
@@ -146,11 +149,11 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         }
         return roles;
     }
-    
+
     public void setResponisbleRoles(String roles) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_RESPONSIBLE_ROLES), roles);
     }
-    
+
     public void addResponsibleRole(String role) {
         Set<String> roles = getResponsibleRoles();
         roles.add(role);
@@ -164,37 +167,37 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         }
         setResponisbleRoles(property.toString());
     }
-    
+
     public void setIsAffectsConfidentiality(boolean affectsConfidentiality) {
         this.setNumericProperty(PROP_CONFIDENTIALITY, (affectsConfidentiality) ? 1 : 0);
     }
-    
+
     public boolean IsAffectsConfidentiality() {
-        return ((this.getNumericProperty(PROP_CONFIDENTIALITY) == 1) ? true : false); 
+        return ((this.getNumericProperty(PROP_CONFIDENTIALITY) == 1) ? true : false);
     }
-    
+
     public void setIsAffectsIntegrity(boolean affectsIntegrity) {
         this.setNumericProperty(PROP_INTEGRITY, (affectsIntegrity) ? 1 : 0);
     }
-    
+
     public boolean IsAffectsIntegrity() {
-        return ((this.getNumericProperty(PROP_INTEGRITY) == 1) ? true : false); 
-    }  
-    
+        return ((this.getNumericProperty(PROP_INTEGRITY) == 1) ? true : false);
+    }
+
     public void setIsAffectsAvailability(boolean affectsAvailability) {
         this.setNumericProperty(PROP_AVAILABILITY, (affectsAvailability) ? 1 : 0);
     }
-    
+
     public boolean IsAffectsAvailability() {
-        return ((this.getNumericProperty(PROP_AVAILABILITY) == 1) ? true : false); 
+        return ((this.getNumericProperty(PROP_AVAILABILITY) == 1) ? true : false);
     }
 
     public static String getIdentifierOfRequirement(CnATreeElement requirement) {
         return requirement.getEntity().getPropertyValue(PROP_ID);
     }
-    
+
     public static boolean isBpRequirement(CnATreeElement element) {
-        if(element==null) {
+        if (element == null) {
             return false;
         }
         return TYPE_ID.equals(element.getTypeId());

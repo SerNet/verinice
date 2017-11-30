@@ -15,11 +15,12 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
+ * Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -84,15 +85,15 @@ public class ModelCommand extends ChangeLoggingCommand {
     private transient Logger log = Logger.getLogger(ModelCommand.class);
 
     private transient ModelingMetaDao metaDao;
-    
+
     private Set<String> moduleUuidsFromCompendium;
     private transient Set<String> newModuleUuidsFromScope = Collections.emptySet();
     private List<String> targetUuids;
     private transient Set<BpRequirementGroup> requirementGroups;
     private transient Set<CnATreeElement> targetElements;
-    
+
     private String stationId;
-    
+
     public ModelCommand(Set<String> compendiumUuids, List<String> targetUuids) {
         super();
         this.stationId = ChangeLogEntry.STATION_ID;
@@ -105,8 +106,8 @@ public class ModelCommand extends ChangeLoggingCommand {
     public void execute() {
         try {
             loadElements();
-            handleModules();     
-            if(!newModuleUuidsFromScope.isEmpty()) {
+            handleModules();
+            if (!newModuleUuidsFromScope.isEmpty()) {
                 handleSafeguards();
                 handleThreats();
             }
@@ -118,40 +119,43 @@ public class ModelCommand extends ChangeLoggingCommand {
     }
 
     private void handleModules() throws CommandException {
-        ModelModulesCommand modelModulesCommand = new ModelModulesCommand(requirementGroups, getTargetScopeId());
+        ModelModulesCommand modelModulesCommand = new ModelModulesCommand(requirementGroups,
+                getTargetScopeId());
         modelModulesCommand = getCommandService().executeCommand(modelModulesCommand);
         newModuleUuidsFromScope = modelModulesCommand.getModuleUuidsFromScope();
     }
-    
+
     private void handleSafeguards() throws CommandException {
-        ModelSafeguardsCommand modelSafeguardsCommand = new ModelSafeguardsCommand(moduleUuidsFromCompendium,getTargetScopeId());
-        getCommandService().executeCommand(modelSafeguardsCommand);       
+        ModelSafeguardsCommand modelSafeguardsCommand = new ModelSafeguardsCommand(
+                moduleUuidsFromCompendium, getTargetScopeId());
+        getCommandService().executeCommand(modelSafeguardsCommand);
     }
 
     private void handleThreats() throws CommandException {
-        ModelThreatsCommand modelThreatsCommand = new ModelThreatsCommand(moduleUuidsFromCompendium,getTargetScopeId());
+        ModelThreatsCommand modelThreatsCommand = new ModelThreatsCommand(moduleUuidsFromCompendium,
+                getTargetScopeId());
         getCommandService().executeCommand(modelThreatsCommand);
     }
-    
+
     private void createLinks() throws CommandException {
         ModelLinksCommand modelLinksCommand = new ModelLinksCommand(moduleUuidsFromCompendium,
                 newModuleUuidsFromScope, getTargetScopeId(), targetElements);
         getCommandService().executeCommand(modelLinksCommand);
     }
-    
+
     private Integer getTargetScopeId() {
-        if(targetElements==null || targetElements.isEmpty()) {
+        if (targetElements == null || targetElements.isEmpty()) {
             return null;
         }
         return targetElements.iterator().next().getScopeId();
     }
-    
+
     private void loadElements() {
         List<CnATreeElement> elements = getMetaDao().loadElementsWithProperties(getAllUuids());
-        distributeElements(elements);
+        distributeElements(new HashSet<>(elements));
     }
 
-    protected void distributeElements(List<CnATreeElement> elements) {
+    protected void distributeElements(Collection<CnATreeElement> elements) {
         requirementGroups = new HashSet<>();
         targetElements = new HashSet<>();
         for (CnATreeElement element : elements) {
@@ -164,7 +168,7 @@ public class ModelCommand extends ChangeLoggingCommand {
             }
         }
     }
-    
+
     private List<String> getAllUuids() {
         List<String> allUuids = new LinkedList<>();
         allUuids.addAll(moduleUuidsFromCompendium);
@@ -172,35 +176,34 @@ public class ModelCommand extends ChangeLoggingCommand {
         return allUuids;
     }
 
-
     private IBaseDao<CnATreeElement, Serializable> getDao() {
         return getDaoFactory().getDAO(CnATreeElement.class);
     }
 
     private void validateParameter(Set<String> compendiumUuids, List<String> targetUuids) {
-        if(compendiumUuids==null) {
+        if (compendiumUuids == null) {
             throw new IllegalArgumentException("Compedium ids must not be null.");
         }
-        if(targetUuids==null) {
+        if (targetUuids == null) {
             throw new IllegalArgumentException("Target element ids must not be null.");
         }
-        if(compendiumUuids.isEmpty()) {
+        if (compendiumUuids.isEmpty()) {
             throw new IllegalArgumentException("Compedium uuid list is empty.");
         }
-        if(targetUuids.isEmpty()) {
+        if (targetUuids.isEmpty()) {
             throw new IllegalArgumentException("Target element uuid list is empty.");
         }
     }
-    
+
     public static boolean nullSafeEquals(String targetModuleId, String moduleId) {
-        if(targetModuleId==null || moduleId==null) {
+        if (targetModuleId == null || moduleId == null) {
             return false;
         }
         return targetModuleId.equals(moduleId);
     }
 
     public ModelingMetaDao getMetaDao() {
-        if(metaDao==null) {
+        if (metaDao == null) {
             metaDao = new ModelingMetaDao(getDao());
         }
         return metaDao;
@@ -215,7 +218,7 @@ public class ModelCommand extends ChangeLoggingCommand {
     public int getChangeType() {
         return ChangeLogEntry.TYPE_INSERT;
     }
-    
+
     public Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(ModelCommand.class);

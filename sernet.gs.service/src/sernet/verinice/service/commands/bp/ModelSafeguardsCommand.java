@@ -15,7 +15,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
+ * Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
@@ -50,7 +50,8 @@ import sernet.verinice.service.commands.CopyCommand;
  *
  * If an implementation hint (safeguard group) is available for the module in
  * the ITBP Compendium all safeguards and all applicable groups are created in
- * the IT network. Safeguards and groups are only created once in the IT network.
+ * the IT network. Safeguards and groups are only created once in the IT
+ * network.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
@@ -61,7 +62,7 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
     private transient Logger log = Logger.getLogger(ModelSafeguardsCommand.class);
 
     private transient ModelingMetaDao metaDao;
-    
+
     private Set<String> moduleUuids;
     private Integer targetScopeId;
     private transient Set<CnATreeElement> safeguardsFromCompendium;
@@ -93,7 +94,7 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
             loadCompendiumSafeguards();
             loadSafeguardsFromScope();
             createListOfMissingSafeguards();
-            if(!missingSafeguardsFromCompendium.isEmpty()) {
+            if (!missingSafeguardsFromCompendium.isEmpty()) {
                 loadParents();
                 insertMissingSafeguards();
             }
@@ -137,11 +138,11 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
         }
     }
 
-    private boolean isSafeguardInChildrenSet(Set<CnATreeElement> targetChildren, CnATreeElement safeguard) {
+    private boolean isSafeguardInChildrenSet(Set<CnATreeElement> targetChildren,
+            CnATreeElement safeguard) {
         for (CnATreeElement targetSafeguardElement : targetChildren) {
             Safeguard targetSafeguard = (Safeguard) targetSafeguardElement;
-            if (ModelCommand.nullSafeEquals(
-                    targetSafeguard.getIdentifier(), 
+            if (ModelCommand.nullSafeEquals(targetSafeguard.getIdentifier(),
                     Safeguard.getIdentifierOfSafeguard(safeguard))) {
                 return true;
             }
@@ -193,9 +194,10 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
         for (CnATreeElement group : children) {
             if (group.getTypeId().equals(SafeguardGroup.TYPE_ID)) {
                 safeguardGroup = group;
+                break;
             }
         }
-        if(safeguardGroup==null) {
+        if (safeguardGroup == null) {
             throw createException();
         }
         return getMetaDao().loadElementWithPropertiesAndChildren(safeguardGroup.getDbId());
@@ -209,7 +211,6 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
         return new GroupNotFoundInScopeException(message);
     }
 
-    
     private void loadCompendiumSafeguards() {
         safeguardsFromCompendium = new HashSet<>(loadSafeguardsByModuleUuids());
         if (getLog().isDebugEnabled()) {
@@ -221,13 +222,14 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
     private List<CnATreeElement> loadSafeguardsByModuleUuids() {
         return getMetaDao().loadLinkedElementsOfParents(moduleUuids, Safeguard.TYPE_ID);
     }
-    
+
     /**
      * Loads the safeguards and transforms the result list to a set
      * to avoid duplicate entries.
      */
     private void loadSafeguardsFromScope() {
-        safeguardsFromScope = new HashSet<>(getMetaDao().loadElementsFromScope(Safeguard.TYPE_ID, targetScopeId));
+        safeguardsFromScope = new HashSet<>(
+                getMetaDao().loadElementsFromScope(Safeguard.TYPE_ID, targetScopeId));
         if (getLog().isDebugEnabled()) {
             getLog().debug("Safeguards in target scope: ");
             logElements(safeguardsFromScope);
@@ -235,9 +237,10 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
     }
 
     private void loadParents() {
-        // Load the parents (predecessors) of all missing safeguards 
-        List<CnATreeElement> safeguards = metaDao.loadElementsWith3Parents(missingSafeguardsFromCompendium.keySet());
-        
+        // Load the parents (predecessors) of all missing safeguards
+        List<CnATreeElement> safeguards = metaDao
+                .loadElementsWith3Parents(missingSafeguardsFromCompendium.keySet());
+
         final List<String> parentUuids = new LinkedList<>();
         for (CnATreeElement safeguard : safeguards) {
             safeguardsWithParents.put(safeguard.getUuid(), safeguard);
@@ -246,8 +249,9 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
             parentUuids.add(safeguard.getParent().getParent().getParent().getUuid());
         }
         // Load the properties of the parents (predecessors)
-        List<CnATreeElement> groupsWithProperties = getMetaDao().loadElementsWithProperties(parentUuids);
-        
+        List<CnATreeElement> groupsWithProperties = getMetaDao()
+                .loadElementsWithProperties(parentUuids);
+
         for (CnATreeElement group : groupsWithProperties) {
             safeguardParentsWithProperties.put(group.getUuid(), group);
         }
@@ -271,8 +275,7 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
 
     private boolean isSafeguardInScope(CnATreeElement compendiumSafeguard) {
         for (CnATreeElement scopeSafeguard : safeguardsFromScope) {
-            if (ModelCommand.nullSafeEquals(
-                    Safeguard.getIdentifierOfSafeguard(scopeSafeguard),
+            if (ModelCommand.nullSafeEquals(Safeguard.getIdentifierOfSafeguard(scopeSafeguard),
                     Safeguard.getIdentifierOfSafeguard(compendiumSafeguard))) {
                 return true;
             }
@@ -286,9 +289,9 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
         }
 
     }
-    
+
     public ModelingMetaDao getMetaDao() {
-        if(metaDao==null) {
+        if (metaDao == null) {
             metaDao = new ModelingMetaDao(getDao());
         }
         return metaDao;
@@ -298,7 +301,9 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
         return getDaoFactory().getDAO(CnATreeElement.class);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getChangeType()
      */
     @Override
@@ -306,7 +311,9 @@ public class ModelSafeguardsCommand extends ChangeLoggingCommand {
         return ChangeLogEntry.TYPE_INSERT;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.IChangeLoggingCommand#getStationId()
      */
     @Override

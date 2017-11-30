@@ -15,7 +15,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
+ * Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
@@ -61,7 +61,7 @@ public class ModelLinksCommand extends GenericCommand {
 
     private static final long serialVersionUID = 4422466491907527613L;
 
-    private transient Logger log = Logger.getLogger(ModelLinksCommand.class);
+    private static final Logger LOG = Logger.getLogger(ModelLinksCommand.class);
 
     private static final Map<String, String> ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS = new HashMap<>();
     private static final Map<String, String> ELEMENT_TO_THREAT_LINK_TYPE_IDS = new HashMap<>();
@@ -135,7 +135,7 @@ public class ModelLinksCommand extends GenericCommand {
             }
             createLinks();
         } catch (CommandException e) {
-            getLog().error("Error while creating links", e);
+            LOG.error("Error while creating links", e);
             throw new RuntimeCommandException("Error while creating links", e);
         }
     }
@@ -165,8 +165,11 @@ public class ModelLinksCommand extends GenericCommand {
     private List<Link> linkRequirementWithTargetElements(CnATreeElement requirementFromCompendium) {
         List<Link> linkList = new LinkedList<>();
         for (CnATreeElement elementFromScope : elementsFromScope) {
-            linkList.add(createLinkFromRequirementToElement(requirementFromCompendium,
-                    elementFromScope));
+            Link link = createLinkFromRequirementToElement(requirementFromCompendium,
+                    elementFromScope);
+            if (link != null) {
+                linkList.add(link);
+            }
         }
         return linkList;
     }
@@ -178,9 +181,8 @@ public class ModelLinksCommand extends GenericCommand {
         if (validate(requirementScope, elementFromScope)) {
             return new Link(requirementScope, elementFromScope,
                     getElementToRequirementLinkTypeId(elementFromScope.getObjectType()));
-        } else {
-            return null;
         }
+        return null;
     }
 
     private String getElementToRequirementLinkTypeId(String objectType) {
@@ -194,8 +196,11 @@ public class ModelLinksCommand extends GenericCommand {
             if (element instanceof BpThreat) {
                 BpThreat threatFromCompendium = (BpThreat) element;
                 for (CnATreeElement elementFromScope : elementsFromScope) {
-                    linkList.add(
-                            createLinkFromThreatToElement(threatFromCompendium, elementFromScope));
+                    Link link = createLinkFromThreatToElement(threatFromCompendium,
+                            elementFromScope);
+                    if (link != null) {
+                        linkList.add(link);
+                    }
                 }
             }
         }
@@ -209,9 +214,8 @@ public class ModelLinksCommand extends GenericCommand {
         if (validate(threatFromScope, elementFromScope)) {
             return new Link(threatFromScope, elementFromScope,
                     getElementToThreatLinkTypeId(elementFromScope.getObjectType()));
-        } else {
-            return null;
         }
+        return null;
     }
 
     private String getElementToThreatLinkTypeId(String objectType) {
@@ -249,9 +253,9 @@ public class ModelLinksCommand extends GenericCommand {
         if (validate(requirementScope, safeguardScope)) {
             return new Link(requirementScope, safeguardScope,
                     BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
-        } else {
-            return null;
         }
+        return null;
+
     }
 
     private Link createLink(CnATreeElement requirementFromCompendium,
@@ -269,7 +273,7 @@ public class ModelLinksCommand extends GenericCommand {
 
     private boolean validate(CnATreeElement elementA, CnATreeElement elementB) {
         if (elementA == null || elementB == null) {
-            getLog().warn("Element is null. Can not create link.");
+            LOG.warn("Element is null. Can not create link.");
         }
         return elementA != null && elementB != null;
     }
@@ -278,7 +282,7 @@ public class ModelLinksCommand extends GenericCommand {
         return new HashSet<>(findRequirementsByModuleUuid(moduleUuids));
     }
 
-    private List<CnATreeElement> findRequirementsByModuleUuid(final Set<String> moduleUuids) {
+    private Set<CnATreeElement> findRequirementsByModuleUuid(final Set<String> moduleUuids) {
         return getMetaDao().loadChildrenWithProperties(moduleUuids, BpRequirement.TYPE_ID);
     }
 
@@ -293,8 +297,7 @@ public class ModelLinksCommand extends GenericCommand {
 
     protected void loadNewRequirementsFromScope() {
         newRequirementsFromScope = new HashMap<>();
-        List<CnATreeElement> requirementList = findRequirementsByModuleUuid(
-                newModuleUuidsFromScope);
+        Set<CnATreeElement> requirementList = findRequirementsByModuleUuid(newModuleUuidsFromScope);
         for (CnATreeElement requirement : requirementList) {
             newRequirementsFromScope.put(BpRequirement.getIdentifierOfRequirement(requirement),
                     requirement);
@@ -334,7 +337,7 @@ public class ModelLinksCommand extends GenericCommand {
     }
 
     public ModelingMetaDao getMetaDao() {
-        if(metaDao==null) {
+        if (metaDao == null) {
             metaDao = new ModelingMetaDao(getDao());
         }
         return metaDao;
@@ -342,13 +345,6 @@ public class ModelLinksCommand extends GenericCommand {
 
     private IBaseDao<CnATreeElement, Serializable> getDao() {
         return getDaoFactory().getDAO(CnATreeElement.class);
-    }
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(ModelLinksCommand.class);
-        }
-        return log;
     }
 
 }
