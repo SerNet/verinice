@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.model.bp;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,15 +33,18 @@ import sernet.verinice.model.common.TransactionAbortedException;
 /**
  * Request linked bottom nodes to redetermine values. @see
  * ILinkChangeListener#determineValue(CascadingTransaction)
- * 
- * @author uz[at]sernet.de
+ *
+ * @author Urs Zeidler uz[at]sernet.de
  *
  */
-public class Reevaluator extends AbstractReevaluator {
+public class Reevaluator extends AbstractReevaluator implements Serializable {
+
+    private static final long serialVersionUID = 1396555841881922883L;
+
     private static final Logger LOG = Logger.getLogger(Reevaluator.class);
-    
+
     private CnATreeElement cnaTreeElement;
-    
+
     public Reevaluator(CnATreeElement cnaTreeElement) {
         super();
         this.cnaTreeElement = cnaTreeElement;
