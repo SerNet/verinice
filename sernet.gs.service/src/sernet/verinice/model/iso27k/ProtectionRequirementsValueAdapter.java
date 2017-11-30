@@ -69,7 +69,8 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
             LOG.debug("get Integrity for " + cnaTreeElement); //$NON-NLS-1$
         }
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.INTEGRITY);
-        if (properties != null && properties.getProperties() != null && properties.getProperties().size() > 0){
+        if (properties != null && properties.getProperties() != null
+                && !properties.getProperties().isEmpty()) {
             return properties.getProperty(0).getNumericPropertyValue();
         } else {
             return AssetValueService.VALUE_UNDEF;
@@ -82,7 +83,8 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
             LOG.debug("get avail. for " + cnaTreeElement); //$NON-NLS-1$
         }
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.AVAILABILITY);
-        if (properties != null && properties.getProperties() != null && properties.getProperties().size() > 0){
+        if (properties != null && properties.getProperties() != null
+                && !properties.getProperties().isEmpty()) {
             return properties.getProperty(0).getNumericPropertyValue();
         } else {
             return AssetValueService.VALUE_UNDEF;
@@ -95,7 +97,8 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
             LOG.debug("get confid. for " + cnaTreeElement); //$NON-NLS-1$
         }
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.CONFIDENTIALITY);
-        if (properties != null && properties.getProperties() != null && properties.getProperties().size() > 0){
+        if (properties != null && properties.getProperties() != null
+                && !properties.getProperties().isEmpty()) {
             return properties.getProperty(0).getNumericPropertyValue();
         } else {
             return AssetValueService.VALUE_UNDEF;
@@ -160,7 +163,7 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
             // 1st step: traverse down:
             // find bottom nodes from which to start:
             CascadingTransaction downwardsTA = new CascadingTransaction();
-            Set<CnATreeElement> bottomNodes = new HashSet<CnATreeElement>();
+            Set<CnATreeElement> bottomNodes = new HashSet<>();
             findBottomNodes(cnaTreeElement, bottomNodes, downwardsTA);
 
             // 2nd step: traverse up:
@@ -172,7 +175,7 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
             }
 
         } catch (TransactionAbortedException tae) {
-            LOG.debug("Integritätsänderung abgebrochen."); //$NON-NLS-1$
+            LOG.debug("Reevaluation of integrity aborted."); //$NON-NLS-1$
         } catch (RuntimeException e) {
             LOG.error(Messages.AssetValueAdapter_11, e);
             ta.abort();
@@ -193,7 +196,7 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
             // 1st step: traverse down:
             // find bottom nodes from which to start:
             CascadingTransaction downwardsTA = new CascadingTransaction();
-            Set<CnATreeElement> bottomNodes = new HashSet<CnATreeElement>();
+            Set<CnATreeElement> bottomNodes = new HashSet<>();
             findBottomNodes(cnaTreeElement, bottomNodes, downwardsTA);
 
             // 2nd step: traverse up:
@@ -204,7 +207,7 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
             }
 
         } catch (TransactionAbortedException tae) {
-            LOG.debug("Verfügbarkeitsänderung abgebrochen."); //$NON-NLS-1$
+            LOG.debug("Reevaluation of availability aborted."); //$NON-NLS-1$
         } catch (RuntimeException e) {
             LOG.error(Messages.AssetValueAdapter_7, e);
             ta.abort();
@@ -225,7 +228,7 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
             // 1st step: traverse down:
             // find bottom nodes from which to start:
             CascadingTransaction downwardsTA = new CascadingTransaction();
-            Set<CnATreeElement> bottomNodes = new HashSet<CnATreeElement>();
+            Set<CnATreeElement> bottomNodes = new HashSet<>();
             findBottomNodes(cnaTreeElement, bottomNodes, downwardsTA);
 
             // 2nd step: traverse up:
@@ -235,7 +238,7 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
                 bottomNode.getLinkChangeListener().determineConfidentiality(ta);
             }
         } catch (TransactionAbortedException tae) {
-            LOG.debug("Vertraulichkeitsänderung abgebrochen."); //$NON-NLS-1$
+            LOG.debug("Reevaluation of confidentiality aborted."); //$NON-NLS-1$
         } catch (RuntimeException e) {
             LOG.error(Messages.AssetValueAdapter_9, e);
             ta.abort();
@@ -249,14 +252,7 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
 
     /*
      * (non-Javadoc)
-<<<<<<< HEAD:sernet.gs.service/src/sernet/verinice/model/iso27k/AssetValueAdapter.java
-||||||| merged common ancestors
-     * 
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
-=======
-     *
-     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
->>>>>>> rename AssetValueAdapter and MaximumAssetValueListner:sernet.gs.service/src/sernet/verinice/model/iso27k/ProtectionRequirementsValueAdapter.java
      * getIntegritaetDescription()
      */
     @Override
@@ -266,14 +262,8 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
 
     /*
      * (non-Javadoc)
-<<<<<<< HEAD:sernet.gs.service/src/sernet/verinice/model/iso27k/AssetValueAdapter.java
-||||||| merged common ancestors
-     * 
-     * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
-=======
      *
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
->>>>>>> rename AssetValueAdapter and MaximumAssetValueListner:sernet.gs.service/src/sernet/verinice/model/iso27k/ProtectionRequirementsValueAdapter.java
      * getVerfuegbarkeitDescription()
      */
     @Override
@@ -295,22 +285,7 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
 
     /*
      * (non-Javadoc)
-<<<<<<< HEAD:sernet.gs.service/src/sernet/verinice/model/iso27k/AssetValueAdapter.java
-<<<<<<< HEAD
-     *
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
-||||||| merged common ancestors
-     * 
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
-=======
-     * 
-||||||| merged common ancestors
-     * 
-=======
-     *
->>>>>>> rename AssetValueAdapter and MaximumAssetValueListner:sernet.gs.service/src/sernet/verinice/model/iso27k/ProtectionRequirementsValueAdapter.java
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
->>>>>>> Rename Schutzbedarf to ProtectionRequirements
      * getVertraulichkeitDescription()
      */
     @Override
@@ -320,22 +295,7 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
 
     /*
      * (non-Javadoc)
-<<<<<<< HEAD:sernet.gs.service/src/sernet/verinice/model/iso27k/AssetValueAdapter.java
-<<<<<<< HEAD
-     *
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
-||||||| merged common ancestors
-     * 
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
-=======
-     * 
-||||||| merged common ancestors
-     * 
-=======
-     *
->>>>>>> rename AssetValueAdapter and MaximumAssetValueListner:sernet.gs.service/src/sernet/verinice/model/iso27k/ProtectionRequirementsValueAdapter.java
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
->>>>>>> Rename Schutzbedarf to ProtectionRequirements
      * setIntegritaetDescription(java.lang.String)
      */
     @Override
@@ -345,22 +305,7 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
 
     /*
      * (non-Javadoc)
-<<<<<<< HEAD:sernet.gs.service/src/sernet/verinice/model/iso27k/AssetValueAdapter.java
-<<<<<<< HEAD
-     *
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
-||||||| merged common ancestors
-     * 
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
-=======
-     * 
-||||||| merged common ancestors
-     * 
-=======
-     *
->>>>>>> rename AssetValueAdapter and MaximumAssetValueListner:sernet.gs.service/src/sernet/verinice/model/iso27k/ProtectionRequirementsValueAdapter.java
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
->>>>>>> Rename Schutzbedarf to ProtectionRequirements
      * setVerfuegbarkeitDescription(java.lang.String)
      */
     @Override
@@ -370,22 +315,7 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
 
     /*
      * (non-Javadoc)
-<<<<<<< HEAD:sernet.gs.service/src/sernet/verinice/model/iso27k/AssetValueAdapter.java
-<<<<<<< HEAD
-     *
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
-||||||| merged common ancestors
-     * 
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
-=======
-     * 
-||||||| merged common ancestors
-     * 
-=======
-     *
->>>>>>> rename AssetValueAdapter and MaximumAssetValueListner:sernet.gs.service/src/sernet/verinice/model/iso27k/ProtectionRequirementsValueAdapter.java
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
->>>>>>> Rename Schutzbedarf to ProtectionRequirements
      * setVertraulichkeitDescription(java.lang.String)
      */
     @Override
@@ -395,28 +325,14 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
 
     /*
      * (non-Javadoc)
-<<<<<<< HEAD:sernet.gs.service/src/sernet/verinice/model/iso27k/AssetValueAdapter.java
-<<<<<<< HEAD
-     *
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
-||||||| merged common ancestors
-     * 
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
-=======
-     * 
-||||||| merged common ancestors
-     * 
-=======
-     *
->>>>>>> rename AssetValueAdapter and MaximumAssetValueListner:sernet.gs.service/src/sernet/verinice/model/iso27k/ProtectionRequirementsValueAdapter.java
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
->>>>>>> Rename Schutzbedarf to ProtectionRequirements
      * isCalculatedAvailability()
      */
     @Override
     public boolean isCalculatedAvailability() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_AVAILABILITY);
-        if (properties != null && properties.getProperties() != null && properties.getProperties().size() > 0){
+        if (properties != null && properties.getProperties() != null
+                && !properties.getProperties().isEmpty()) {
             return properties.getProperty(0).getNumericPropertyValue() == AssetValueService.METHOD_AUTO;
         } else {
             return false;
@@ -425,28 +341,14 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
 
     /*
      * (non-Javadoc)
-<<<<<<< HEAD:sernet.gs.service/src/sernet/verinice/model/iso27k/AssetValueAdapter.java
-<<<<<<< HEAD
-     *
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
-||||||| merged common ancestors
-     * 
-     * @seesernet.gs.ui.rcp.main.bsi.model.ISchutzbedarfProvider#
-=======
-     * 
-||||||| merged common ancestors
-     * 
-=======
-     *
->>>>>>> rename AssetValueAdapter and MaximumAssetValueListner:sernet.gs.service/src/sernet/verinice/model/iso27k/ProtectionRequirementsValueAdapter.java
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
->>>>>>> Rename Schutzbedarf to ProtectionRequirements
      * isCalculatedConfidentiality()
      */
     @Override
     public boolean isCalculatedConfidentiality() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_CONFIDENTIALITY);
-        if (properties != null && properties.getProperties() != null && properties.getProperties().size() > 0){
+        if (properties != null && properties.getProperties() != null
+                && !properties.getProperties().isEmpty()) {
             return properties.getProperty(0).getNumericPropertyValue() == AssetValueService.METHOD_AUTO;
         } else {
             return false;
@@ -463,7 +365,8 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
     @Override
     public boolean isCalculatedIntegrity() {
         PropertyList properties = cnaTreeElement.getEntity().getProperties(cnaTreeElement.getTypeId() + AssetValueService.METHOD_INTEGRITY);
-        if (properties != null && properties.getProperties() != null && properties.getProperties().size() > 0){
+        if (properties != null && properties.getProperties() != null
+                && !properties.getProperties().isEmpty()) {
             return properties.getProperty(0).getNumericPropertyValue() == AssetValueService.METHOD_AUTO;
         } else {
             return false;

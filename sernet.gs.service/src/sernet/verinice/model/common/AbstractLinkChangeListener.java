@@ -24,15 +24,20 @@ import java.io.Serializable;
 /**
  * Convenient class to implement a {@link ILinkChangeListener} to spare the
  * override of methods.
+<<<<<<< HEAD
  *
  * @author uz[at]sernet.de
+||||||| merged common ancestors
+ *  
+ * @author uz[at]sernet.de
+=======
+ *
+ * @author Urs Zeidler uz[at]sernet.de
+>>>>>>> address the code review issues
  *
  */
 public abstract class AbstractLinkChangeListener implements ILinkChangeListener, Serializable {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = -7008559663534040013L;
 
     /* (non-Javadoc)

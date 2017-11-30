@@ -155,7 +155,7 @@ public class ProtectionRequirementsAdapter implements IReevaluator, Serializable
             // 1st step: traverse down:
             // find bottom nodes from which to start:
             CascadingTransaction downwardsTA = new CascadingTransaction();
-            Set<CnATreeElement> bottomNodes = new HashSet<CnATreeElement>();
+            Set<CnATreeElement> bottomNodes = new HashSet<>();
             findBottomNodes(cnaTreeElement, bottomNodes, downwardsTA);
 
             // 2nd step: traverse up:
@@ -167,7 +167,7 @@ public class ProtectionRequirementsAdapter implements IReevaluator, Serializable
             }
 
         } catch (TransactionAbortedException tae) {
-            getLog().debug("Verfügbarkeitsänderung abgebrochen."); //$NON-NLS-1$
+            getLog().debug("Reeavluation of availability aborted."); //$NON-NLS-1$
             throw new RuntimeException(tae);
         } catch (RuntimeException e) {
             ta.abort();
@@ -184,7 +184,7 @@ public class ProtectionRequirementsAdapter implements IReevaluator, Serializable
             // 1st step: traverse down:
             // find bottom nodes from which to start:
             CascadingTransaction downwardsTA = new CascadingTransaction();
-            Set<CnATreeElement> bottomNodes = new HashSet<CnATreeElement>();
+            Set<CnATreeElement> bottomNodes = new HashSet<>();
             findBottomNodes(cnaTreeElement, bottomNodes, downwardsTA);
 
             // 2nd step: traverse up:
@@ -196,7 +196,7 @@ public class ProtectionRequirementsAdapter implements IReevaluator, Serializable
             }
 
         } catch (TransactionAbortedException tae) {
-            getLog().debug("Vertraulichkeitsänderung abgebrochen."); //$NON-NLS-1$
+            getLog().debug("Reeavluation of confidentiality aborted."); //$NON-NLS-1$
             throw new RuntimeException(tae);
         } catch (RuntimeException e) {
             ta.abort();
@@ -213,7 +213,7 @@ public class ProtectionRequirementsAdapter implements IReevaluator, Serializable
             // 1st step: traverse down:
             // find bottom nodes from which to start:
             CascadingTransaction downwardsTA = new CascadingTransaction();
-            Set<CnATreeElement> bottomNodes = new HashSet<CnATreeElement>();
+            Set<CnATreeElement> bottomNodes = new HashSet<>();
             findBottomNodes(cnaTreeElement, bottomNodes, downwardsTA);
 
             // 2nd step: traverse up:
@@ -225,7 +225,7 @@ public class ProtectionRequirementsAdapter implements IReevaluator, Serializable
             }
 
         } catch (TransactionAbortedException tae) {
-            getLog().debug("Integritätsänderung abgebrochen."); //$NON-NLS-1$
+            getLog().debug("Reeavluation of integrity aborted."); //$NON-NLS-1$
             throw new RuntimeException(tae);
         } catch (RuntimeException e) {
             ta.abort();

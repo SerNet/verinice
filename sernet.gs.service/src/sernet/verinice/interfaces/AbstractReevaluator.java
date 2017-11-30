@@ -29,20 +29,18 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TransactionAbortedException;
 
 /**
- * Convenient class to implement a {@link IReevaluator} to spare the
- * override of methods.
+ * Convenient class to implement a {@link IReevaluator} to spare the override of
+ * methods.
  *
- * @author uz[at]sernet.de
+ * @author Urs Zeidler uz[at]sernet.de
  *
  */
 public abstract class AbstractReevaluator implements IReevaluator {
     private static final Logger LOG = Logger.getLogger(AbstractReevaluator.class);
 
     /**
-     * @param downwardElement
-     * @param downwardsTA
-     * @param bottomNodes
-     * @return
+     * Collects all downwards linked {@link CnATreeElement} which don't have any
+     * further links in the given bottomNodes Set.
      */
     protected void findBottomNodes(CnATreeElement downwardElement, Set<CnATreeElement> bottomNodes, CascadingTransaction downwardsTA) {
         if (downwardsTA.hasBeenVisited(downwardElement)) {
