@@ -38,7 +38,7 @@ import sernet.verinice.service.model.LoadModel;
 
 /**
  * Basis methods for mbp tests.
- *
+ * 
  * @author uz[at]sernet.de
  *
  */
@@ -78,7 +78,7 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
 
     /**
      * Create a new root network for the modernized base protection.
-     *
+     * 
      * @return the itnetwork
      */
     protected ItNetwork createNewBPOrganization() throws CommandException {

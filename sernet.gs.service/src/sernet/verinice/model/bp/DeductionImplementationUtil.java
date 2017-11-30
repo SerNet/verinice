@@ -27,7 +27,7 @@ import sernet.verinice.model.common.CnATreeElement;
 /**
  * A collection of helper methods and constants for the deduction of the
  * implementation status of the modernized base protection.
- *
+ * 
  * @author uz[at]sernet.de
  *
  */
@@ -62,10 +62,10 @@ public class DeductionImplementationUtil {
         }
     }
 
-
+    
     /**
      * Return the implementation status of the given {@link CnATreeElement}.
-     *
+     * 
      * @param element
      *            - must not be null
      */
@@ -77,7 +77,7 @@ public class DeductionImplementationUtil {
     /**
      * Return the property name of the implementation status for a given
      * {@link CnATreeElement}.
-     *
+     * 
      * @param element
      *            - must not be null
      */
@@ -88,7 +88,7 @@ public class DeductionImplementationUtil {
     /**
      * Return true when the implementation status is deducted from another
      * {@link CnATreeElement}.
-     *
+     * 
      * @param element
      *            - must not be null
      */

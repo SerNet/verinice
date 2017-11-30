@@ -59,7 +59,6 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     public static final String PROP_QUALIFIER_BASIC = "bp_safeguard_qualifier_basic";//$NON-NLS-1$
     public static final String PROP_QUALIFIER_STANDARD = "bp_safeguard_qualifier_standard";//$NON-NLS-1$
     public static final String PROP_QUALIFIER_HIGH = "bp_safeguard_qualifier_high";//$NON-NLS-1$
-    
     public static final String REL_BP_SAFEGUARD_BP_THREAT = "rel_bp_safeguard_bp_threat"; //$NON-NLS-1$
 
     private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
@@ -94,6 +93,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
         return protectionRequirementsProvider;
     }
 
+    
     public Safeguard(CnATreeElement parent) {
         super(parent);
         init();

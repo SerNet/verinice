@@ -44,7 +44,7 @@ public class Raum extends CnATreeElement
     public static final String PROP_ESA_ENTSCHEIDUNG_AM = "raum_ergaenzendeanalyse_entscheidung_am"; //$NON-NLS-1$
     public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "raum_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
 
-	private  IReevaluator schutzbedarfProvider
+	private  IReevaluator schutzbedarfProvider 
 	= new ProtectionRequirementsAdapter(this);
 
 

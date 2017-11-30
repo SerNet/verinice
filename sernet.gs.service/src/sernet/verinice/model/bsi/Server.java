@@ -61,7 +61,7 @@ public class Server extends CnATreeElement
     public static final String PROP_ESA_ENTSCHEIDUNG_AM = "server_ergaenzendeanalyse_entscheidung_am"; //$NON-NLS-1$
     public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "server_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
 	
-	private final IReevaluator schutzbedarfProvider
+	private final IReevaluator schutzbedarfProvider 
 				= new ProtectionRequirementsAdapter(this);
 				
 	private final ILinkChangeListener linkChangeListener

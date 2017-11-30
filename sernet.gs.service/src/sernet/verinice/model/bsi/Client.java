@@ -55,7 +55,7 @@ public class Client extends CnATreeElement
     public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "client_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
 	
 
-	private final IReevaluator schutzbedarfProvider
+	private final IReevaluator schutzbedarfProvider 
 	= new ProtectionRequirementsAdapter(this);
 
 

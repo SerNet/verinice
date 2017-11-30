@@ -26,8 +26,8 @@ import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementWithChilds;
 import sernet.verinice.model.common.ILinkChangeListener;
-import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
 import sernet.verinice.model.iso27k.MaximumProtectionRequirementsValueListener;
+import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -61,7 +61,7 @@ public class Network extends ElementWithChilds implements IBpElement, IBpGroup {
     public IReevaluator getProtectionRequirementsProvider() {
         return protectionRequirementsProvider;
     }
-
+   
     @Override
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);

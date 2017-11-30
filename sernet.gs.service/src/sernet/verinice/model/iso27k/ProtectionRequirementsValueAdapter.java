@@ -142,8 +142,9 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
                 .getEntityType(cnaTreeElement.getEntity().getEntityType());
         PropertyType propertyType = entityType
                 .getPropertyType(cnaTreeElement.getTypeId() + AssetValueService.CONFIDENTIALITY);
-        if (propertyType != null)
+        if (propertyType != null) {
             cnaTreeElement.getEntity().setSimpleValue(propertyType, Integer.toString(i));
+        }
     }
 
     public CnATreeElement getParent() {
@@ -252,6 +253,7 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
 
     /*
      * (non-Javadoc)
+     *
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
      * getIntegritaetDescription()
      */
@@ -285,6 +287,7 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
 
     /*
      * (non-Javadoc)
+     *
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
      * getVertraulichkeitDescription()
      */
@@ -295,6 +298,7 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
 
     /*
      * (non-Javadoc)
+     *
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
      * setIntegritaetDescription(java.lang.String)
      */
@@ -305,6 +309,7 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
 
     /*
      * (non-Javadoc)
+     *
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
      * setVerfuegbarkeitDescription(java.lang.String)
      */
@@ -315,6 +320,7 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
 
     /*
      * (non-Javadoc)
+     *
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
      * setVertraulichkeitDescription(java.lang.String)
      */
@@ -325,6 +331,7 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
 
     /*
      * (non-Javadoc)
+     *
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
      * isCalculatedAvailability()
      */
@@ -341,6 +348,7 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
 
     /*
      * (non-Javadoc)
+     *
      * @seesernet.gs.ui.rcp.main.bsi.model.IProtectionRequirementsProvider#
      * isCalculatedConfidentiality()
      */
@@ -372,23 +380,4 @@ public class ProtectionRequirementsValueAdapter  extends AbstractReevaluator imp
             return false;
         }
     }
-
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.model.bsi.IProtectionRequirementsProvider#updateValue(
-     * sernet.verinice.model.common.CascadingTransaction)
-     */
-    @Override
-    public void updateValue(CascadingTransaction ta) {
-      //override to introduce new behavior
-    }
-
-    @Override
-    public void setValue(CascadingTransaction ta, String properyName, Object value) {
-        //override to introduce new behavior
-    }
-
 }

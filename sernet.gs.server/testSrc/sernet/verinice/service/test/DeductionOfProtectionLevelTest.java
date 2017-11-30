@@ -108,6 +108,7 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
         groupList.add(RoomGroup.class);
     }
 
+    
     /**
      * Checks the basic implementation requirements.
      */
@@ -195,7 +196,7 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
 
     /**
      * Test the deduction for all types as sources and as dependent.
-     *
+     * 
      * @throws Exception
      */
     @Transactional
@@ -237,7 +238,7 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
      * source  -> dependent
      * source1 ---^
      * </pre>
-     *
+     * 
      * @throws Exception
      */
     @Transactional
@@ -286,7 +287,7 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
      * source -> dependent -> dependend1 -> dependent2 -> dependent3
      *               ^---------------------------------------|
      * </pre>
-     *
+     * 
      * @throws Exception
      */
     @Transactional
@@ -347,7 +348,7 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
 
     /**
      * Test for switching the deduction off.
-     *
+     * 
      * @throws CommandException
      */
     @Transactional
@@ -403,7 +404,7 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
     /**
      * Prepares a deduction source by disable the deduction and set the values
      * for all {@link CiaType} to CiaValue.N.
-     *
+     * 
      */
     private <T extends CnATreeElement> T prepareDeductionSource(T element) throws CommandException {
         for (CiaType ct : CiaType.values()) {
@@ -419,7 +420,8 @@ public class DeductionOfProtectionLevelTest extends AbstractModernizedBaseProtec
 
     /**
      * Assert the numeric value of the property is the given {@link CiaValue}.
-     *
+     * 
+>>>>>>> branch 'feature/vn-1889-implement-deduction-of-protection-level' of ssh://git@git.verinice.org:7999/isms/verinice.git
      * @param element
      *            - the element to test
      * @param type

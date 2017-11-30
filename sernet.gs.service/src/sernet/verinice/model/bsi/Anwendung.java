@@ -48,7 +48,7 @@ public class Anwendung extends CnATreeElement
         return log;
     }
     
-	private final IReevaluator schutzbedarfProvider
+	private final IReevaluator schutzbedarfProvider 
 		= new ProtectionRequirementsAdapter(this);
 	
 	private final ILinkChangeListener linkChangeListener
