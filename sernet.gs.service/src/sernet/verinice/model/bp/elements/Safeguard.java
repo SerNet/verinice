@@ -42,9 +42,9 @@ import sernet.verinice.model.common.TransactionAbortedException;
  *
  */
 public class Safeguard extends CnATreeElement implements IBpElement {
-    
+
     private static final long serialVersionUID = -2117441377311538326L;
-    
+
     public static final String TYPE_ID = "bp_safeguard"; //$NON-NLS-1$
     private static final String PROP_ABBR = "bp_safeguard_abbr"; //$NON-NLS-1$
     private static final String PROP_OBJECTBROWSER_DESC = "bp_safeguard_objectbrowser_content"; //$NON-NLS-1$
@@ -55,7 +55,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     private static final String PROP_RESP_ROLES = "bp_safeguard_responsibleroles";//$NON-NLS-1$
     public static final String PROP_CONFIDENTIALITY = "bp_safeguard_value_method_confidentiality";//$NON-NLS-1$
     public static final String PROP_INTEGRITY = "bp_safeguard_value_method_integrity";//$NON-NLS-1$
-    public static final String PROP_AVAILABILITY = "bp_safeguard_value_method_availability";//$NON-NLS-1$  
+    public static final String PROP_AVAILABILITY = "bp_safeguard_value_method_availability";//$NON-NLS-1$
     public static final String PROP_QUALIFIER_BASIC = "bp_safeguard_qualifier_basic";//$NON-NLS-1$
     public static final String PROP_QUALIFIER_STANDARD = "bp_safeguard_qualifier_standard";//$NON-NLS-1$
     public static final String PROP_QUALIFIER_HIGH = "bp_safeguard_qualifier_high";//$NON-NLS-1$
@@ -74,15 +74,15 @@ public class Safeguard extends CnATreeElement implements IBpElement {
 
             for (CnALink cnALink : Safeguard.this.getLinksUp()) {
                 CnATreeElement dependant = cnALink.getDependant();
-                if (dependant instanceof BpRequirement) {
-                    setImplementationStausToRequirement(Safeguard.this, (BpRequirement) dependant);
+                if ((BpRequirement.TYPE_ID.equals(dependant.getTypeId()))) {
+                    setImplementationStausToRequirement(Safeguard.this, dependant);
                 }
             }
         }
     };
 
     protected Safeguard() {}
-    
+
     @Override
     public ILinkChangeListener getLinkChangeListener() {
         return linkChangeListener;
@@ -93,7 +93,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
         return protectionRequirementsProvider;
     }
 
-    
+
     public Safeguard(CnATreeElement parent) {
         super(parent);
         init();
@@ -103,23 +103,23 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     public String getTypeId() {
         return TYPE_ID;
     }
-    
+
     public String getObjectBrowserDescription() {
         return getEntity().getPropertyValue(PROP_OBJECTBROWSER_DESC);
     }
-    
+
     public void setObjectBrowserDescription(String description) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER_DESC), description);
     }
-    
+
     public String getAbbreviation() {
         return getEntity().getPropertyValue(PROP_ABBR);
     }
-    
+
     public void setAbbreviation(String abbreviation) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
     }
-    
+
     @Override
     public String getTitle() {
         StringBuilder titleBuilder = new StringBuilder();
@@ -130,35 +130,35 @@ public class Safeguard extends CnATreeElement implements IBpElement {
         return titleBuilder.toString();
 
     }
-    
+
     public void setTitle(String title) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
     }
-    
+
     public String getQualifier() {
         return getEntity().getPropertyValue(PROP_QUALIFIER);
     }
-    
+
     public void setQualifier(String qualifier) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
     }
-    
+
     public String getIdentifier() {
         return getEntity().getPropertyValue(PROP_ID);
     }
-    
+
     public void setIdentifier(String id) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), id);
     }
-    
+
     public Date getLastChange() {
         return getEntity().getDate(PROP_LAST_CHANGE);
     }
-    
+
     public void setLastChange(Date date) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE), String.valueOf(date.getTime()));
     }
-    
+
     public Set<String> getResponsibleRoles(){
         String property = getEntity().getPropertyValue(PROP_RESP_ROLES);
         Set<String> roles;
@@ -173,11 +173,11 @@ public class Safeguard extends CnATreeElement implements IBpElement {
         }
         return roles;
     }
-    
+
     public void setResponisbleRoles(String roles) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_RESP_ROLES), roles);
     }
-    
+
     public void addResponsibleRole(String role) {
         Set<String> roles = getResponsibleRoles();
         roles.add(role);
@@ -191,7 +191,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
         }
         setResponisbleRoles(property.toString());
     }
-    
+
     public void setIsAffectsConfidentiality(boolean affectsConfidentiality) {
         this.setNumericProperty(PROP_CONFIDENTIALITY, (affectsConfidentiality) ? 1 : 0);
     }
@@ -199,7 +199,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     public boolean isAffectsConfidentiality() {
         return ((this.getNumericProperty(PROP_CONFIDENTIALITY) == 1) ? true : false);
     }
-    
+
     public void setIsAffectsIntegrity(boolean affectsIntegrity) {
         this.setNumericProperty(PROP_INTEGRITY, (affectsIntegrity) ? 1 : 0);
     }
