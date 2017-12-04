@@ -8866,8 +8866,9 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_itnetwork_employee_number" name="Number of employees" />
         <huiproperty id="bp_itnetwork_description" name="Description" />
         <huiproperty id="bp_itnetwork_qualifier" name="Qualifier" required="true" inputtype="singleoption" >
-                <option id="bp_itnetwork_qualifier_basic" name="BASIC" />
-                <option id="bp_itnetwork_qualifier_standard" name="STANDARD" />
+                <option id="bp_itnetwork_qualifier_basic" name="BASIC" value="0"/>
+                <option id="bp_itnetwork_qualifier_standard" name="STANDARD" value="1"/>
+                <option id="bp_itnetwork_qualifier_high" name="HIGH" value="2"/>
         </huiproperty>
         <huiproperty id="bp_itnetwork_document" isURL="true" name="Document" />
         <huipropertygroup id="bp_itnetwork_report" name="Reporting" tags="Dok.mgmt.">
@@ -9250,7 +9251,6 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_businessprocess_name" name="Title" required="true" />
         <huiproperty id="bp_businessprocess_description" inputtype="text" name="Description" />
         <huiproperty id="bp_businessprocess_tag" name="Tags" tooltip="List of tags, separated by comma or space" />
-        <huiproperty defaultValue="0" id="bp_businessprocess_approach" inputtype="booleanoption" name="Approach: Core securing" > </huiproperty>
         <huiproperty id="bp_businessprocess_type" inputtype="singleoption" name="Type of Process">
             <option id="bp_businessprocess_type_core" name="Core Business" />
             <option id="bp_businessprocess_type_support" name="Supporting Process" />
@@ -9728,9 +9728,9 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_requirement_id" name="Identifier" />
         <huiproperty id="bp_requirement_name" name="Title" required="true" />
         <huiproperty id="bp_requirement_qualifier" name="Qualifier" required="true" inputtype="singleoption" >
-                <option id="bp_requirement_qualifier_basic" name="BASIC" />
-                <option id="bp_requirement_qualifier_standard" name="STANDARD" />
-                <option id="bp_requirement_qualifier_high" name="HIGH" />
+                <option id="bp_requirement_qualifier_basic" name="BASIC" value="0"/>
+                <option id="bp_requirement_qualifier_standard" name="STANDARD" value="1"/>
+                <option id="bp_requirement_qualifier_high" name="HIGH" value="2"/>
         </huiproperty>
         <huiproperty editable="false" id="bp_requirement_objectbrowser_content"
             inputtype="text" name="Requirement Content" showInObjectBrowser="true" visible="false" />
@@ -9819,11 +9819,6 @@ Wurden bereits weitere Stellen informiert?
     <huientity id="bp_requirement_group" name="Module">
         <huiproperty id="bp_requirement_group_id" name="Identifier" />
         <huiproperty id="bp_requirement_group_name" name="Title" required="true" />
-        <huiproperty id="bp_requirement_group_is" name="Implementation Sequenz" required="true" inputtype="singleoption" >
-                <option id="bp_requirement_group_is_r1" name="R1" />
-                <option id="bp_requirement_group_is_r2" name="R2" />
-                <option id="bp_requirement_group_is_r3" name="R3" />
-        </huiproperty>
         <huiproperty editable="false" id="bp_requirement_group_objectbrowser_content"
             inputtype="text" name="Module Content" showInObjectBrowser="true" visible="false" />
         <huiproperty id="bp_requirement_group_desc" inputtype="text" name="Description" />
@@ -10311,9 +10306,9 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_safeguard_id" name="Identifier" />
         <huiproperty id="bp_safeguard_name" name="Title" required="true" />
         <huiproperty id="bp_safeguard_qualifier" name="Qualifier" required="true" inputtype="singleoption" >
-                <option id="bp_safeguard_qualifier_basic" name="BASIC" />
-                <option id="bp_safeguard_qualifier_standard" name="STANDARD" />
-                <option id="bp_safeguard_qualifier_high" name="HIGH" />
+                <option id="bp_safeguard_qualifier_basic" name="BASIC" value="0"/>
+                <option id="bp_safeguard_qualifier_standard" name="STANDARD" value="1"/>
+                <option id="bp_safeguard_qualifier_high" name="HIGH" value="2"/>
         </huiproperty>
         <huiproperty editable="false" id="bp_safeguard_objectbrowser_content" inputtype="text"
             name="Safeguard Content" showInObjectBrowser="true" textrows="4" visible="false" />
