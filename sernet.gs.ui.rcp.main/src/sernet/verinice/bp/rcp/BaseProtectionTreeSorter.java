@@ -55,8 +55,8 @@ import sernet.verinice.model.common.CnATreeElement;
  * This tree sorter sorts groups in IT networks regardless of
  * of there names. Instead of sorting by name a static order
  * based on the type is used. See Map typeSortCategoryMap
- * for the order. Elements with a smaller category id are 
- * preceded by elements with a higher category id. 
+ * for the order. Elements with a smaller category id are
+ * preceded by elements with a higher category id.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
@@ -64,12 +64,9 @@ public class BaseProtectionTreeSorter extends ViewerSorter {
     private static Map<String, Integer> typeSortCategoryMap = new HashMap<>();
 
     //TODO: when the qualifier will be a number (an option) we do not need this anymore
-    private static final String HIGH = "HIGH";
-    private static final String HIGH_DE = "HOCH";
-    private static final String STANDARD = "STANDARD";
-    private static final String STANDARD_DE = "STANDARD";
-    private static final String BASIC = "BASIC";
-    private static final String BASIC_DE = "BASIS";
+    private static final String HIGH = "high";
+    private static final String STANDARD = "standard";
+    private static final String BASIC = "basic";
 
     static {
         // Sort order of groups in IT network
@@ -96,9 +93,9 @@ public class BaseProtectionTreeSorter extends ViewerSorter {
         typeSortCategoryMap.put(SafeguardGroup.TYPE_ID,110);
         typeSortCategoryMap.put(Safeguard.TYPE_ID,110);
     }
-    
+
     static final Collator numericStringCollator = new NumericStringCollator();
-    
+
     public BaseProtectionTreeSorter() {
         super(numericStringCollator);
     }
@@ -114,34 +111,39 @@ public class BaseProtectionTreeSorter extends ViewerSorter {
         }
         return category;
     }
-    
+
     @Override
     public int compare(Viewer viewer, Object o1, Object o2) {
         int result = 0;
         if (o1 instanceof Safeguard && o2 instanceof Safeguard) {
             Safeguard sg1 = (Safeguard) o1;
             Safeguard sg2 = (Safeguard) o2;
-            result = quallifierToValue(sg1.getQualifier()) - quallifierToValue(sg2.getQualifier());
+            result = quallifierToValue(Safeguard.PROP_QUALIFIER, sg1)
+                    - quallifierToValue(Safeguard.PROP_QUALIFIER, sg2);
         } else if (o1 instanceof BpRequirement && o2 instanceof BpRequirement) {
             BpRequirement br1 = (BpRequirement) o1;
             BpRequirement br2 = (BpRequirement) o2;
-            result = quallifierToValue(br1.getQualifier()) - quallifierToValue(br2.getQualifier());
+            result = quallifierToValue(BpRequirement.PROP_QUALIFIER, br1)
+                    - quallifierToValue(BpRequirement.PROP_QUALIFIER, br2);
         }
         if (result == 0) {
             result = super.compare(viewer, o1, o2);
         }
         return result;
     }
-    
-    private int quallifierToValue(String qualifier) {
-        if (BASIC.equals(qualifier) || BASIC_DE.equals(qualifier)) {
+
+    private int quallifierToValue(String qualifier, CnATreeElement e) {
+        String propertyValue = e.getEntity().getRawPropertyValue(qualifier);
+        if (propertyValue == null) {
+            return 0;
+        }
+        if (propertyValue.contains(BASIC)) {
             return 1;
-        } else if (STANDARD.equals(qualifier) || STANDARD_DE.equals(qualifier)) {
+        } else if (propertyValue.contains(STANDARD)) {
             return 2;
-        } else if (HIGH.equals(qualifier) || HIGH_DE.equals(qualifier)) {
+        } else if (propertyValue.contains(HIGH)) {
             return 3;
         }
         return 0;
     }
-
 }

@@ -50,7 +50,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     private static final String PROP_OBJECTBROWSER_DESC = "bp_safeguard_objectbrowser_content"; //$NON-NLS-1$
     private static final String PROP_NAME = "bp_safeguard_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_safeguard_id"; //$NON-NLS-1$
-    private static final String PROP_QUALIFIER = "bp_safeguard_qualifier"; //$NON-NLS-1$
+    public static final String PROP_QUALIFIER = "bp_safeguard_qualifier"; //$NON-NLS-1$
     private static final String PROP_LAST_CHANGE = "bp_safeguard_last_change"; //$NON-NLS-1$
     private static final String PROP_RESP_ROLES = "bp_safeguard_responsibleroles";//$NON-NLS-1$
     public static final String PROP_CONFIDENTIALITY = "bp_safeguard_value_method_confidentiality";//$NON-NLS-1$
