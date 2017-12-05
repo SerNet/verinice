@@ -104,7 +104,7 @@ public class Messages extends NLS {
     public static String CnAWorkspace_4;
     public static String ExceptionUtil_2;
     public static String ExceptionUtil_3;
-    public static String ExceptionUtilErrorMessage;
+    public static String ExceptionUtilErrorMessageStandalone;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
