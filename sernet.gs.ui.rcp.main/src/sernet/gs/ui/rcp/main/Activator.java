@@ -110,7 +110,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     private static final String LOCAL_UPDATE_SITE_URL = "/Verinice-Update-Site-2010"; //$NON-NLS-1$
 
-    public static final String UPDATE_SITE_URL = "https://update.verinice.org/pub/verinice/update/1.14"; //$NON-NLS-1$
+    public static final String UPDATE_SITE_URL = "https://update.verinice.org/pub/verinice/update/1.15"; //$NON-NLS-1$
 
     public static final String DERBY_LOG_FILE_PROPERTY = "derby.stream.error.file"; //$NON-NLS-1$
 
