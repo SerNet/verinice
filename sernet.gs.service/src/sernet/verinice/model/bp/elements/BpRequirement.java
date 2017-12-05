@@ -146,6 +146,11 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         titleBuilder.append(getEntity().getPropertyValue(PROP_NAME));
         return titleBuilder.toString();
     }
+    
+    @Override
+    public void setTitel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
+    }
 
     public void setTitle(String title) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
