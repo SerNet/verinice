@@ -4,5 +4,5 @@ Bundle-Name: Fragment Fragment
 Bundle-SymbolicName: sernet.gs.log4j.fragment
 Bundle-Version: 1.1.2
 Fragment-Host: com.springsource.org.apache.log4j
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .

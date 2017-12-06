@@ -22,6 +22,7 @@ Export-Package: com.heatonresearch.datamover;uses:="com.heatonresearch.datamover
  sernet.gs.ui.rcp.main.common.model,
  sernet.gs.ui.rcp.main.service,
  sernet.verinice.iso27k.rcp,
+ sernet.verinice.iso27k.rcp.action,
  sernet.verinice.iso27k.service,
  sernet.verinice.rcp,
  sernet.verinice.rcp.linktable,
