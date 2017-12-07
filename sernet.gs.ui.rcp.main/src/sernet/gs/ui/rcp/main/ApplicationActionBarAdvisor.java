@@ -413,6 +413,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(this.openDocumentViewAction);
         viewsMenu.add(new Separator());
 
+        viewsMenu.add(this.openBpViewAction);
+        viewsMenu.add(new Separator());
+
         viewsMenu.add(this.openISMViewAction);
         viewsMenu.add(this.openCatalogAction);
         viewsMenu.add(this.openAccountViewAction);
@@ -431,7 +434,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(this.openValidationViewAction);
         viewsMenu.add(this.openSearchViewAction);
         viewsMenu.add(this.openGSToolMappingViewAction);
-        viewsMenu.add(this.openBpViewAction);
         viewsMenu.add(new Separator());
         viewsMenu.add(this.openCatalogViewAction);
         viewsMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
