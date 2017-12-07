@@ -226,7 +226,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         // set service factory location to local / remote according to
         // preferences:
-        standalone = prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+        standalone = sernet.verinice.rcp.Preferences.isStandalone();
 
         initializeInternalServer();
 
@@ -474,8 +474,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
     private void setProxy() {
         try {
             Preferences prefs = Activator.getDefault().getPluginPreferences();
-            String operationMode = prefs.getString(PreferenceConstants.OPERATION_MODE);
-            if (operationMode != null && operationMode.equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER)) {
+            if (sernet.verinice.rcp.Preferences.isServerMode()) {
                 URI serverUri = new URI(prefs.getString(PreferenceConstants.VNSERVER_URI));
                 IProxyService proxyService = getProxyService();
                 IProxyData[] proxyDataForHost = proxyService.select(serverUri);
@@ -672,7 +671,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
                 // Do not show dialog if remote server is configured instead of
                 // internal server.
-                if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER)) {
+                if (sernet.verinice.rcp.Preferences.isServerMode()) {
                     return;
                 }
 
@@ -686,7 +685,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
         Preferences prefs = Activator.getDefault().getPluginPreferences();
         URI repoUri = null;
         String name = null;
-        if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER)) {
+        if (sernet.verinice.rcp.Preferences.isServerMode()) {
             repoUri = new URI(createUpdateSiteUrl(prefs.getString(PreferenceConstants.VNSERVER_URI)));
             name = Messages.Activator_4;
         } else {
