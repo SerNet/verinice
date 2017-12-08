@@ -35,6 +35,7 @@ import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
@@ -58,11 +59,12 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
 
     private static final long serialVersionUID = -6698388849147857588L;
 
-    private transient Logger log = Logger.getLogger(ModelModulesCommand.class);
+    private static final Logger LOG = Logger.getLogger(ModelModulesCommand.class);
 
     private transient ModelingMetaDao metaDao;
 
     private Integer targetScopeId;
+    private transient ItNetwork itNetwork;
     private transient Set<BpRequirementGroup> modulesFromCompendium;
     private transient Set<CnATreeElement> requirementsFromCompendium;
     private transient Set<CnATreeElement> allRequirementsFromScope;
@@ -91,6 +93,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     @Override
     public void execute() {
         try {
+            loadItNetwork();
             loadRequirementsFromCompendium();
             loadAllRequirementsFromScope();
             rememberMissingRequirements();
@@ -99,7 +102,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
                 insertMissingRequirements();
             }
         } catch (CommandException e) {
-            getLog().error("Error while modeling safeguards.", e); //$NON-NLS-1$
+            LOG.error("Error while modeling safeguards.", e); //$NON-NLS-1$
             throw new RuntimeCommandException("Error while modeling safeguards.", e); //$NON-NLS-1$
         }
     }
@@ -121,12 +124,12 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
                     Arrays.asList(requirement.getUuid()));
             getCommandService().executeCommand(copyCommand);
             moduleUuids.add(parent.getUuid());
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Requirement: " + requirement.getTitle() + " created in group: " //$NON-NLS-1$ //$NON-NLS-2$
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Requirement: " + requirement.getTitle() + " created in group: " //$NON-NLS-1$ //$NON-NLS-2$
                         + parent.getTitle());
             }
-        } else if (getLog().isDebugEnabled()) {
-            getLog().debug("Requirement: " + requirement.getTitle() + " already exists in group: " //$NON-NLS-1$ //$NON-NLS-2$
+        } else if (LOG.isDebugEnabled()) {
+            LOG.debug("Requirement: " + requirement.getTitle() + " already exists in group: " //$NON-NLS-1$ //$NON-NLS-2$
                     + parent.getTitle());
         }
     }
@@ -199,7 +202,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         for (CnATreeElement module : modulesFromCompendium) {
             Set<CnATreeElement> children = getMetaDao().loadChildrenOfElement(module.getUuid());
             for (CnATreeElement child : children) {
-                if (BpRequirement.isBpRequirement(child)) {
+                if (ModelingValidator.isRequirementValidInItNetwork(child, itNetwork)) {
                     requirementsFromCompendium.add(child);
                 }
             }
@@ -214,8 +217,8 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     private void loadAllRequirementsFromScope() {
         allRequirementsFromScope = new HashSet<>(
                 getMetaDao().loadElementsFromScope(BpRequirement.TYPE_ID, targetScopeId));
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("missingRequirementsFromCompendium in target scope: "); //$NON-NLS-1$
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("missingRequirementsFromCompendium in target scope: "); //$NON-NLS-1$
             logElements(allRequirementsFromScope);
         }
     }
@@ -225,8 +228,8 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         for (CnATreeElement requirementCompendium : requirementsFromCompendium) {
             CnATreeElement requirementScope = getRequirementFromScope(requirementCompendium);
             if (requirementScope == null) {
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Requirement is not in scope yet: " + requirementCompendium); //$NON-NLS-1$
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Requirement is not in scope yet: " + requirementCompendium); //$NON-NLS-1$
                 }
                 missingRequirementsFromCompendium.put(requirementCompendium.getUuid(),
                         requirementCompendium);
@@ -241,8 +244,8 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         for (CnATreeElement group : parentsWithProperties) {
             requirementParentsWithProperties.put(group.getUuid(), group);
         }
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("missingRequirementsFromCompendium parents: "); //$NON-NLS-1$
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("missingRequirementsFromCompendium parents: "); //$NON-NLS-1$
             logElements(requirementParentsWithProperties.values());
         }
     }
@@ -287,8 +290,8 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         }
         if (!groupFound) {
             group = createGroup(parent, compendiumGroup);
-        } else if (getLog().isDebugEnabled()) {
-            getLog().debug("Requirement group: " + compendiumGroup.getTitle() //$NON-NLS-1$
+        } else if (LOG.isDebugEnabled()) {
+            LOG.debug("Requirement group: " + compendiumGroup.getTitle() //$NON-NLS-1$
                     + " already exists in group: " + parent.getTitle()); //$NON-NLS-1$
         }
         return group;
@@ -304,8 +307,8 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         String groupUuid = copyCommand.getNewElements().get(0);
         group = getMetaDao().loadElementWithPropertiesAndChildren(groupUuid);
         parent.addChild(group);
-        if (getLog().isDebugEnabled()) {
-            getLog().debug(
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(
                     "Requirement group: " + compendiumGroup.getTitle() + " created in group: " //$NON-NLS-1$ //$NON-NLS-2$
                             + parent.getTitle());
         }
@@ -329,11 +332,22 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     }
 
     private GroupNotFoundInScopeException createGroupNotFoundInScopeException() {
-        CnATreeElement scopeWithProperties = getMetaDao().loadElementWithProperties(targetScopeId);
-        String titleOfScope = scopeWithProperties.getTitle();
+        String titleOfScope = itNetwork.getTitle();
         String message = Messages.getString("ModelModulesCommand.NoGroupFound", //$NON-NLS-1$
                 titleOfScope);
         return new GroupNotFoundInScopeException(message);
+    }
+
+    private void loadItNetwork() {
+        CnATreeElement element = getMetaDao()
+                .loadElementWithProperties(targetScopeId);
+        if (element == null) {
+            throw new BpModelingException("No it network found with db id: " + targetScopeId);
+        }
+        if (!ItNetwork.isItNetwork(element)) {
+            throw new BpModelingException("Elmenent is not an it network, db id: " + targetScopeId);
+        }
+        itNetwork = (ItNetwork) element;
     }
 
     private BpModelingException createBpModelingException(Integer requirementId) {
@@ -369,16 +383,9 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         return ChangeLogEntry.TYPE_INSERT;
     }
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(ModelModulesCommand.class);
-        }
-        return log;
-    }
-
     private void logElements(Collection<?> collection) {
         for (Object element : collection) {
-            getLog().debug(element);
+            LOG.debug(element);
         }
     }
 }

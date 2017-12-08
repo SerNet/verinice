@@ -172,6 +172,25 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
     }
 
+    /**
+     * @return The approach of securing. The approach is stored in the property
+     *         PROP_QUALIFIER.
+     */
+    public String getApproach() {
+        return getQualifier();
+    }
+
+    /**
+     * Sets the approach of securing. The approach is stored in the property
+     * PROP_QUALIFIER.
+     * 
+     * @param approach
+     *            The approach of securing or qualifier
+     */
+    public void setApproach(String approach) {
+        setQualifier(approach);
+    }
+
     public Date getLastChange() {
         return getEntity().getDate(PROP_LAST_CHANGE);
     }
