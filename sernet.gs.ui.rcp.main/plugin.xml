@@ -913,6 +913,22 @@
       </objectContribution>
       <objectContribution
             adaptable="false"
+            id="sernet.gs.ui.rcp.main.itnetworkreport"
+            objectClass="sernet.verinice.model.bp.elements.ItNetwork">
+         <action
+               class="sernet.verinice.report.actions.GenerateSpecificReportAction"
+               enablesFor="+"
+               icon="icons/report.png"
+               id="sernet.verinice.report.rcp.GenerateITNetworkReportAction.action"
+               label="%action.label.40"
+               menubarPath="special"
+               style="push"
+               tooltip="%action.tooltip.40">
+         </action>
+      </objectContribution>
+      
+      <objectContribution
+            adaptable="false"
             id="sernet.gs.ui.rcp.main.organisationreport"
             objectClass="sernet.verinice.model.iso27k.Organization">
          <action
