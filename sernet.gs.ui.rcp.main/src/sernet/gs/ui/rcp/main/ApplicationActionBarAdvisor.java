@@ -404,38 +404,59 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         MenuManager windowMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_24, IWorkbenchActionConstants.M_WINDOW);
 
         MenuManager viewsMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_25, VeriniceActionConstants.MENU_VIEWS);
+        
+        // old IT-Baseline protection
 
-        viewsMenu.add(this.openBSIViewAction);
         viewsMenu.add(this.openBSIModelViewAction);
+        viewsMenu.add(this.openBSIViewAction);
         viewsMenu.add(this.openTodoViewAction);
         viewsMenu.add(this.openAuditViewAction);
-        viewsMenu.add(this.openDSViewAction);
-        viewsMenu.add(this.openDocumentViewAction);
+        viewsMenu.add(this.openGSToolMappingViewAction);
         viewsMenu.add(new Separator());
 
+        // modernized IT-Baseline protection
+        
+        viewsMenu.add(this.openBpViewAction);
+        viewsMenu.add(this.openCatalogViewAction);
+        viewsMenu.add(new Separator());
+
+        // ISM
+        
         viewsMenu.add(this.openISMViewAction);
         viewsMenu.add(this.openCatalogAction);
-        viewsMenu.add(this.openAccountViewAction);
-        viewsMenu.add(this.openGroupViewAction);
-        viewsMenu.add(this.openReportdepositViewAction);
-        viewsMenu.add(this.openTaskViewAction);
+        viewsMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+        // marker for including views from samt-plugin
+        
+        // VDA - done by samt-plugin
         viewsMenu.add(new Separator());
-
+        
+        // deprecated data-protection view
+        viewsMenu.add(this.openDSViewAction);
+        viewsMenu.add(new Separator());
+        
+        // global
+        viewsMenu.add(this.openDocumentViewAction);
         viewsMenu.add(this.openBSIBrowserAction);
         viewsMenu.add(this.openNoteAction);
         viewsMenu.add(this.openFileAction);
         viewsMenu.add(this.openRelationViewAction);
+        viewsMenu.add(this.openValidationViewAction);
+        viewsMenu.add(this.openSearchViewAction);
+        viewsMenu.add(new Separator());
+        
+        viewsMenu.add(this.openAccountViewAction);
+        viewsMenu.add(this.openGroupViewAction);
+        viewsMenu.add(this.openTaskViewAction);
+        viewsMenu.add(this.openReportdepositViewAction);
+        viewsMenu.add(new Separator());
+
         if (getRightsService().isEnabled(ActionRightIDs.TEMPLATES)) {
             viewsMenu.add(this.openTemplateViewAction);
         }
-        viewsMenu.add(this.openValidationViewAction);
-        viewsMenu.add(this.openSearchViewAction);
-        viewsMenu.add(this.openGSToolMappingViewAction);
-        viewsMenu.add(this.openBpViewAction);
         viewsMenu.add(new Separator());
-        viewsMenu.add(this.openCatalogViewAction);
-        viewsMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
+
+        
         MenuManager perspectivesMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_26, VeriniceActionConstants.MENU_PERSPECTIVES);
         addPerspectiveMenu(window, perspectivesMenu, Iso27kPerspective.ID);
         addPerspectiveMenu(window, perspectivesMenu, Perspective.ID);
