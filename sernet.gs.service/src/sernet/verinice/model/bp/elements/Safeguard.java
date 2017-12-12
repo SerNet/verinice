@@ -131,6 +131,11 @@ public class Safeguard extends CnATreeElement implements IBpElement {
 
     }
 
+    @Override
+    public void setTitel(String name) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
+    }
+    
     public void setTitle(String title) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
     }
