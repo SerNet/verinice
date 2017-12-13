@@ -169,20 +169,6 @@ public class ModelingMetaDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List<CnATreeElement> loadLinkedElementsOfParents(final Set<String> parentUuids,
-            final String typeId) {
-        return getDao().findByCallback(new HibernateCallback() {
-            @Override
-            public Object doInHibernate(Session session) throws SQLException {
-                Query query = session
-                        .createQuery(ModelingMetaDao.HQL_LOAD_LINKED_SAFEGUARDS_OF_MODULES)
-                        .setParameterList(UUIDS, parentUuids).setParameter(TYPE_ID, typeId);
-                return query.list();
-            }
-        });
-    }
-
-    @SuppressWarnings("unchecked")
     public Set<CnATreeElement> loadChildrenWithProperties(final Set<String> parentUuids,
             final String typeId) {
         final List<CnATreeElement> resultList = getDao().findByCallback(new HibernateCallback() {
@@ -195,6 +181,20 @@ public class ModelingMetaDao {
             }
         });
         return new HashSet<>(resultList);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<CnATreeElement> loadLinkedElementsOfParents(final Set<String> parentUuids,
+            final String typeId) {
+        return getDao().findByCallback(new HibernateCallback() {
+            @Override
+            public Object doInHibernate(Session session) throws SQLException {
+                Query query = session
+                        .createQuery(ModelingMetaDao.HQL_LOAD_LINKED_SAFEGUARDS_OF_MODULES)
+                        .setParameterList(UUIDS, parentUuids).setParameter(TYPE_ID, typeId);
+                return query.list();
+            }
+        });
     }
 
     /**

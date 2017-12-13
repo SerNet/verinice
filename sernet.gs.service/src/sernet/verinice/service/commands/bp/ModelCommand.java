@@ -33,9 +33,11 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.bp.exceptions.BpModelingException;
 
 /**
  * This command models modules from the compendium with target objects from an
@@ -91,6 +93,7 @@ public class ModelCommand extends ChangeLoggingCommand {
     private List<String> targetUuids;
     private transient Set<BpRequirementGroup> requirementGroups;
     private transient Set<CnATreeElement> targetElements;
+    private transient ItNetwork itNetwork;
 
     private String stationId;
 
@@ -120,7 +123,7 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     private void handleModules() throws CommandException {
         ModelModulesCommand modelModulesCommand = new ModelModulesCommand(requirementGroups,
-                getTargetScopeId());
+                itNetwork);
         modelModulesCommand = getCommandService().executeCommand(modelModulesCommand);
         newModuleUuidsFromScope = modelModulesCommand.getModuleUuidsFromScope();
     }
@@ -139,7 +142,7 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     private void createLinks() throws CommandException {
         ModelLinksCommand modelLinksCommand = new ModelLinksCommand(moduleUuidsFromCompendium,
-                newModuleUuidsFromScope, getTargetScopeId(), targetElements);
+                newModuleUuidsFromScope, itNetwork, targetElements);
         getCommandService().executeCommand(modelLinksCommand);
     }
 
@@ -153,6 +156,7 @@ public class ModelCommand extends ChangeLoggingCommand {
     private void loadElements() {
         List<CnATreeElement> elements = getMetaDao().loadElementsWithProperties(getAllUuids());
         distributeElements(new HashSet<>(elements));
+        loadItNetwork();
     }
 
     protected void distributeElements(Collection<CnATreeElement> elements) {
@@ -167,6 +171,18 @@ public class ModelCommand extends ChangeLoggingCommand {
                 targetElements.add(element);
             }
         }
+    }
+
+    private void loadItNetwork() {
+        Integer targetScopeId = getTargetScopeId();
+        CnATreeElement element = getMetaDao().loadElementWithProperties(targetScopeId);
+        if (element == null) {
+            throw new BpModelingException("No it network found with db id: " + targetScopeId);
+        }
+        if (!ItNetwork.isItNetwork(element)) {
+            throw new BpModelingException("Elmenent is not an it network, db id: " + targetScopeId);
+        }
+        itNetwork = (ItNetwork) element;
     }
 
     private List<String> getAllUuids() {

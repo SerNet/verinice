@@ -104,7 +104,7 @@ public class ModelLinksCommand extends GenericCommand {
 
     private transient Set<String> moduleUuidsFromCompendium;
     private transient Set<String> newModuleUuidsFromScope;
-    private Integer scopeId;
+    private transient ItNetwork itNetwork;
 
     private transient Set<CnATreeElement> elementsFromScope;
     private transient Set<CnATreeElement> requirementsFromCompendium;
@@ -114,19 +114,19 @@ public class ModelLinksCommand extends GenericCommand {
     private transient Map<String, CnATreeElement> allThreatsFromScope;
 
     public ModelLinksCommand(Set<String> moduleUuidsFromCompendium,
-            Set<String> newModuleUuidsFromScope, Integer scopeId,
+            Set<String> newModuleUuidsFromScope, ItNetwork itNetwork,
             Set<CnATreeElement> targetElements) {
         super();
         this.moduleUuidsFromCompendium = moduleUuidsFromCompendium;
         this.newModuleUuidsFromScope = newModuleUuidsFromScope;
-        this.scopeId = scopeId;
+        this.itNetwork = itNetwork;
         this.elementsFromScope = targetElements;
     }
 
     @Override
     public void execute() {
         try {
-            requirementsFromCompendium = loadRequirements(moduleUuidsFromCompendium);
+            requirementsFromCompendium = loadRequirementsFromCompendium(moduleUuidsFromCompendium);
             loadAllRequirementsFromScope();
             loadAllThreatsFromScope();
             if (isNewModuleInScope()) {
@@ -278,8 +278,15 @@ public class ModelLinksCommand extends GenericCommand {
         return elementA != null && elementB != null;
     }
 
-    private Set<CnATreeElement> loadRequirements(final Set<String> moduleUuids) {
-        return new HashSet<>(findRequirementsByModuleUuid(moduleUuids));
+    private Set<CnATreeElement> loadRequirementsFromCompendium(final Set<String> moduleUuids) {
+        Set<CnATreeElement> allRequirements = findRequirementsByModuleUuid(moduleUuids);
+        Set<CnATreeElement> validRequirements = new HashSet<>(allRequirements.size());
+        for (CnATreeElement requirement : allRequirements) {
+            if (ModelingValidator.isRequirementValidInItNetwork(requirement, itNetwork)) {
+                validRequirements.add(requirement);
+            }
+        }
+        return validRequirements;
     }
 
     private Set<CnATreeElement> findRequirementsByModuleUuid(final Set<String> moduleUuids) {
@@ -306,7 +313,7 @@ public class ModelLinksCommand extends GenericCommand {
 
     private void loadAllRequirementsFromScope() {
         List<CnATreeElement> requirements = getMetaDao()
-                .loadElementsFromScope(BpRequirement.TYPE_ID, scopeId);
+                .loadElementsFromScope(BpRequirement.TYPE_ID, itNetwork.getDbId());
         allRequirementsFromScope = new HashMap<>();
         for (CnATreeElement requirement : requirements) {
             allRequirementsFromScope.put(BpRequirement.getIdentifierOfRequirement(requirement),
@@ -316,7 +323,7 @@ public class ModelLinksCommand extends GenericCommand {
 
     private void loadAllSafeguardsFromScope() {
         List<CnATreeElement> safeguards = getMetaDao().loadElementsFromScope(Safeguard.TYPE_ID,
-                scopeId);
+                itNetwork.getDbId());
         allSafeguardsFromScope = new HashMap<>();
         for (CnATreeElement safeguard : safeguards) {
             allSafeguardsFromScope.put(Safeguard.getIdentifierOfSafeguard(safeguard), safeguard);
@@ -325,7 +332,7 @@ public class ModelLinksCommand extends GenericCommand {
 
     private void loadAllThreatsFromScope() {
         List<CnATreeElement> threats = getMetaDao().loadElementsFromScope(BpThreat.TYPE_ID,
-                scopeId);
+                itNetwork.getDbId());
         allThreatsFromScope = new HashMap<>();
         for (CnATreeElement threat : threats) {
             allThreatsFromScope.put(BpThreat.getIdentifierOfThreat(threat), threat);

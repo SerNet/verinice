@@ -63,7 +63,6 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
 
     private transient ModelingMetaDao metaDao;
 
-    private Integer targetScopeId;
     private transient ItNetwork itNetwork;
     private transient Set<BpRequirementGroup> modulesFromCompendium;
     private transient Set<CnATreeElement> requirementsFromCompendium;
@@ -76,11 +75,11 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     private String stationId;
 
     public ModelModulesCommand(Set<BpRequirementGroup> modulesFromCompendium,
-            Integer targetScopeId) {
+            ItNetwork itNetwork) {
         super();
 
         this.modulesFromCompendium = modulesFromCompendium;
-        this.targetScopeId = targetScopeId;
+        this.itNetwork = itNetwork;
 
         requirementsFromCompendium = new HashSet<>();
         missingRequirementsFromCompendium = new HashMap<>();
@@ -93,7 +92,6 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
     @Override
     public void execute() {
         try {
-            loadItNetwork();
             loadRequirementsFromCompendium();
             loadAllRequirementsFromScope();
             rememberMissingRequirements();
@@ -216,7 +214,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
      */
     private void loadAllRequirementsFromScope() {
         allRequirementsFromScope = new HashSet<>(
-                getMetaDao().loadElementsFromScope(BpRequirement.TYPE_ID, targetScopeId));
+                getMetaDao().loadElementsFromScope(BpRequirement.TYPE_ID, itNetwork.getDbId()));
         if (LOG.isDebugEnabled()) {
             LOG.debug("missingRequirementsFromCompendium in target scope: "); //$NON-NLS-1$
             logElements(allRequirementsFromScope);
@@ -317,7 +315,7 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
 
     private CnATreeElement loadRequirementRootGroup() {
         CnATreeElement requirementGroup = null;
-        CnATreeElement scope = getMetaDao().loadElementWithChildren(targetScopeId);
+        CnATreeElement scope = getMetaDao().loadElementWithChildren(itNetwork.getDbId());
         Set<CnATreeElement> children = scope.getChildren();
         for (CnATreeElement group : children) {
             if (group.getTypeId().equals(BpRequirementGroup.TYPE_ID)) {
@@ -336,18 +334,6 @@ public class ModelModulesCommand extends ChangeLoggingCommand {
         String message = Messages.getString("ModelModulesCommand.NoGroupFound", //$NON-NLS-1$
                 titleOfScope);
         return new GroupNotFoundInScopeException(message);
-    }
-
-    private void loadItNetwork() {
-        CnATreeElement element = getMetaDao()
-                .loadElementWithProperties(targetScopeId);
-        if (element == null) {
-            throw new BpModelingException("No it network found with db id: " + targetScopeId);
-        }
-        if (!ItNetwork.isItNetwork(element)) {
-            throw new BpModelingException("Elmenent is not an it network, db id: " + targetScopeId);
-        }
-        itNetwork = (ItNetwork) element;
     }
 
     private BpModelingException createBpModelingException(Integer requirementId) {
