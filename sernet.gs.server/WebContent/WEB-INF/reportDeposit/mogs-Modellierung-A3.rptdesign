@@ -6053,6 +6053,277 @@ columns(cols);</value>
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
+        <oda-data-set extensionID="verinice.oda.linktable.driver.dataSet.id" name="Bausteine" id="5293">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">Titel__(Bausteine)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Titel__(Bausteine)</text-property>
+                    <text-property name="heading">Titel__(Bausteine)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Identifier__(Bausteine)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Identifier__(Bausteine)</text-property>
+                    <text-property name="heading">Identifier__(Bausteine)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Datenbank-Id__(Baustein-Anforderung)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Datenbank-Id__(Baustein-Anforderung)</text-property>
+                    <text-property name="heading">Datenbank-Id__(Baustein-Anforderung)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Datenbank-Id__(AnderesIOT-System)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Datenbank-Id__(AnderesIOT-System)</text-property>
+                    <text-property name="heading">Datenbank-Id__(AnderesIOT-System)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Datenbank-Id__(Anwendung__(mod))</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Datenbank-Id__(Anwendung__(mod))</text-property>
+                    <text-property name="heading">Datenbank-Id__(Anwendung__(mod))</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Datenbank-Id__(Geschäftsprozess)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Datenbank-Id__(Geschäftsprozess)</text-property>
+                    <text-property name="heading">Datenbank-Id__(Geschäftsprozess)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Datenbank-Id__(ICS-System)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Datenbank-Id__(ICS-System)</text-property>
+                    <text-property name="heading">Datenbank-Id__(ICS-System)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Datenbank-Id__(IT-System)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Datenbank-Id__(IT-System)</text-property>
+                    <text-property name="heading">Datenbank-Id__(IT-System)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Datenbank-Id__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Datenbank-Id__(Informationsverbund)</text-property>
+                    <text-property name="heading">Datenbank-Id__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Datenbank-Id__(Kommunikationsverbindung)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Datenbank-Id__(Kommunikationsverbindung)</text-property>
+                    <text-property name="heading">Datenbank-Id__(Kommunikationsverbindung)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Datenbank-Id__(Raum__(mod))</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Datenbank-Id__(Raum__(mod))</text-property>
+                    <text-property name="heading">Datenbank-Id__(Raum__(mod))</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">Titel__(Bausteine)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">Identifier__(Bausteine)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">Datenbank-Id__(Baustein-Anforderung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">Datenbank-Id__(AnderesIOT-System)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">Datenbank-Id__(Anwendung__(mod))</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">Datenbank-Id__(Geschäftsprozess)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">Datenbank-Id__(ICS-System)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">Datenbank-Id__(IT-System)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">Datenbank-Id__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">Datenbank-Id__(Kommunikationsverbindung)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">Datenbank-Id__(Raum__(mod))</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">Titel__(Bausteine)</property>
+                    <property name="nativeName">Titel__(Bausteine)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">Identifier__(Bausteine)</property>
+                    <property name="nativeName">Identifier__(Bausteine)</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">Datenbank-Id__(Baustein-Anforderung)</property>
+                    <property name="nativeName">Datenbank-Id__(Baustein-Anforderung)</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">Datenbank-Id__(AnderesIOT-System)</property>
+                    <property name="nativeName">Datenbank-Id__(AnderesIOT-System)</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">Datenbank-Id__(Anwendung__(mod))</property>
+                    <property name="nativeName">Datenbank-Id__(Anwendung__(mod))</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">Datenbank-Id__(Geschäftsprozess)</property>
+                    <property name="nativeName">Datenbank-Id__(Geschäftsprozess)</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">Datenbank-Id__(ICS-System)</property>
+                    <property name="nativeName">Datenbank-Id__(ICS-System)</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">Datenbank-Id__(IT-System)</property>
+                    <property name="nativeName">Datenbank-Id__(IT-System)</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">Datenbank-Id__(Informationsverbund)</property>
+                    <property name="nativeName">Datenbank-Id__(Informationsverbund)</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">Datenbank-Id__(Kommunikationsverbindung)</property>
+                    <property name="nativeName">Datenbank-Id__(Kommunikationsverbindung)</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">Datenbank-Id__(Raum__(mod))</property>
+                    <property name="nativeName">Datenbank-Id__(Raum__(mod))</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{
+  "useAllScopes": false,
+  "scopeIds": [],
+  "columnPaths": [
+    "bp_requirement_group.bp_requirement_group_name AS Titel__(Bausteine)",
+    "bp_requirement_group.bp_requirement_group_id AS Identifier__(Bausteine)",
+    "bp_requirement_group>bp_requirement.dbid AS Datenbank-Id__(Baustein-Anforderung)",
+    "bp_requirement_group>bp_requirement/bp_device.dbid AS Datenbank-Id__(AnderesIOT-System)",
+    "bp_requirement_group>bp_requirement/bp_application.dbid AS Datenbank-Id__(Anwendung__(mod))",
+    "bp_requirement_group>bp_requirement/bp_businessprocess.dbid AS Datenbank-Id__(Geschäftsprozess)",
+    "bp_requirement_group>bp_requirement/bp_icssystem.dbid AS Datenbank-Id__(ICS-System)",
+    "bp_requirement_group>bp_requirement/bp_itsystem.dbid AS Datenbank-Id__(IT-System)",
+    "bp_requirement_group>bp_requirement/bp_itnetwork.dbid AS Datenbank-Id__(Informationsverbund)",
+    "bp_requirement_group>bp_requirement/bp_network.dbid AS Datenbank-Id__(Kommunikationsverbindung)",
+    "bp_requirement_group>bp_requirement/bp_room.dbid AS Datenbank-Id__(Raum__(mod))"
+  ],
+  "relationIds": []
+}]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>Titel__(Bausteine)</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>Titel__(Bausteine)</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>Titel__(Bausteine)</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>__(!)</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>__(!)</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>__(!)</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
     </data-sets>
     <styles>
         <style name="report" id="4">
@@ -6174,7 +6445,7 @@ columns(cols);</value>
                         <property name="fontSize">14pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <text-property name="text">modernisierter BSI IT-Grundschutz: Infomartions-Sicherheitscheck</text-property>
+                        <text-property name="text">modernisierter BSI IT-Grundschutz:  Modellierung</text-property>
                     </label>
                 </cell>
                 <cell id="1423">
@@ -6565,6 +6836,163 @@ columns(cols);</value>
                 </cell>
             </row>
         </grid>
+        <label id="5291">
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">bold</property>
+            <property name="paddingTop">20pt</property>
+            <text-property name="text">Übersicht: Liste verwendeter Bausteine </text-property>
+        </label>
+        <table id="5294">
+            <property name="dataSet">Bausteine</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">Titel__(Bausteine)</property>
+                    <text-property name="displayName">Titel__(Bausteine)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Titel__(Bausteine)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Identifier__(Bausteine)</property>
+                    <text-property name="displayName">Identifier__(Bausteine)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Identifier__(Bausteine)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Datenbank-Id__(Baustein-Anforderung)</property>
+                    <text-property name="displayName">Datenbank-Id__(Baustein-Anforderung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Datenbank-Id__(Baustein-Anforderung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Datenbank-Id__(AnderesIOT-System)</property>
+                    <text-property name="displayName">Datenbank-Id__(AnderesIOT-System)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Datenbank-Id__(AnderesIOT-System)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Datenbank-Id__(Anwendung__(mod))</property>
+                    <text-property name="displayName">Datenbank-Id__(Anwendung__(mod))</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Datenbank-Id__(Anwendung__(mod))"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Datenbank-Id__(Geschäftsprozess)</property>
+                    <text-property name="displayName">Datenbank-Id__(Geschäftsprozess)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Datenbank-Id__(Geschäftsprozess)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Datenbank-Id__(ICS-System)</property>
+                    <text-property name="displayName">Datenbank-Id__(ICS-System)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Datenbank-Id__(ICS-System)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Datenbank-Id__(IT-System)</property>
+                    <text-property name="displayName">Datenbank-Id__(IT-System)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Datenbank-Id__(IT-System)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Datenbank-Id__(Informationsverbund)</property>
+                    <text-property name="displayName">Datenbank-Id__(Informationsverbund)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Datenbank-Id__(Informationsverbund)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Datenbank-Id__(Kommunikationsverbindung)</property>
+                    <text-property name="displayName">Datenbank-Id__(Kommunikationsverbindung)</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Datenbank-Id__(Kommunikationsverbindung)"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Datenbank-Id__(Raum__(mod))</property>
+                    <text-property name="displayName">Datenbank-Id__(Raum__(mod))</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Datenbank-Id__(Raum__(mod))"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">BausteinUsageCount</property>
+                    <property name="dataType">integer</property>
+                    <simple-property-list name="aggregateOn">
+                        <value>BausteinGroup</value>
+                    </simple-property-list>
+                    <property name="aggregateFunction">COUNT</property>
+                    <list-property name="arguments">
+                        <structure>
+                            <property name="name">Expression</property>
+                            <expression name="value" type="javascript">row["Titel__(Bausteine)"]</expression>
+                        </structure>
+                    </list-property>
+                </structure>
+                <structure>
+                    <property name="name">Column Binding</property>
+                    <expression name="expression" type="javascript">row["BausteinUsageCount"]</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">BausteinUsageCount_CB</property>
+                    <text-property name="displayName">BausteinUsageCount</text-property>
+                    <expression name="expression" type="javascript">row["BausteinUsageCount"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <column id="5307">
+                <property name="width">1.165in</property>
+            </column>
+            <column id="5308">
+                <property name="width">4.182in</property>
+            </column>
+            <column id="5309">
+                <property name="width">2.355in</property>
+            </column>
+            <header>
+                <row id="5295">
+                    <cell id="5296">
+                        <label id="1725">
+                            <text-property name="text">Baustein</text-property>
+                        </label>
+                    </cell>
+                    <cell id="5297">
+                        <label id="1727">
+                            <text-property name="text">Name</text-property>
+                        </label>
+                    </cell>
+                    <cell id="5298">
+                        <label id="1756">
+                            <text-property name="text">Anzahl Zuordnungen</text-property>
+                        </label>
+                    </cell>
+                </row>
+            </header>
+            <group id="5310">
+                <property name="groupName">BausteinGroup</property>
+                <expression name="keyExpr" type="javascript">row["Titel__(Bausteine)"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["Titel__(Bausteine)"]</expression>
+                </structure>
+                <property name="hideDetail">false</property>
+                <header>
+                    <row id="5311">
+                        <cell id="5312">
+                            <data id="5320">
+                                <property name="resultSetColumn">Identifier__(Bausteine)</property>
+                            </data>
+                        </cell>
+                        <cell id="5313">
+                            <data id="5319">
+                                <property name="resultSetColumn">Titel__(Bausteine)</property>
+                            </data>
+                        </cell>
+                        <cell id="5314">
+                            <data id="5322">
+                                <property name="resultSetColumn">BausteinUsageCount_CB</property>
+                            </data>
+                        </cell>
+                    </row>
+                </header>
+            </group>
+        </table>
         <label id="3679">
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>
@@ -6739,80 +7167,6 @@ columns(cols);</value>
                                 <property name="resultSetColumn">Weitere__Verantwortliche__(Bausteine)</property>
                             </data>
                         </cell>
-                    </row>
-                </header>
-            </group>
-            <group id="4443">
-                <property name="groupName">AnforderungenGroup</property>
-                <expression name="keyExpr" type="javascript">row["Titel__(Baustein-Anforderung)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Titel__(Baustein-Anforderung)"]</expression>
-                </structure>
-                <property name="hideDetail">false</property>
-                <header>
-                    <row id="4444">
-                        <property name="backgroundColor">#BFBFBF</property>
-                        <cell id="4445">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4461">
-                                <property name="resultSetColumn">Identifier__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="4447">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4460">
-                                <property name="resultSetColumn">Titel__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="4449">
-                            <property name="colSpan">3</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4462">
-                                <property name="resultSetColumn">Beschreibung__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                    </row>
-                    <row id="4463">
-                        <cell id="4464">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <label id="4479">
-                                <property name="fontWeight">bold</property>
-                                <text-property name="text">Verantwortlicher:</text-property>
-                            </label>
-                        </cell>
-                        <cell id="4466">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4481">
-                                <property name="resultSetColumn">Verantwortliche__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="4468"/>
-                        <cell id="4469"/>
-                        <cell id="4470"/>
-                    </row>
-                    <row id="4471">
-                        <cell id="4472">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <label id="4480">
-                                <property name="fontWeight">bold</property>
-                                <text-property name="text">Umsetzungstatus:</text-property>
-                            </label>
-                        </cell>
-                        <cell id="4474">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4482">
-                                <property name="resultSetColumn">Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="4476"/>
-                        <cell id="4477"/>
-                        <cell id="4478"/>
                     </row>
                 </header>
             </group>
@@ -7033,80 +7387,6 @@ columns(cols);</value>
                         <cell id="4567"/>
                         <cell id="4568"/>
                         <cell id="4569"/>
-                    </row>
-                </header>
-            </group>
-            <group id="4585">
-                <property name="groupName">AnforderungenGroup</property>
-                <expression name="keyExpr" type="javascript">row["Titel__(Baustein-Anforderung)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Titel__(Baustein-Anforderung)"]</expression>
-                </structure>
-                <property name="hideDetail">false</property>
-                <header>
-                    <row id="4586">
-                        <property name="backgroundColor">#BFBFBF</property>
-                        <cell id="4587">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4604">
-                                <property name="resultSetColumn">Identifier__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="4589">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4602">
-                                <property name="resultSetColumn">Titel__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="4591">
-                            <property name="colSpan">3</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4605">
-                                <property name="resultSetColumn">Beschreibung__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                    </row>
-                    <row id="4614">
-                        <cell id="4615">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <label id="4622">
-                                <property name="fontWeight">bold</property>
-                                <text-property name="text">Verantwortlicher:</text-property>
-                            </label>
-                        </cell>
-                        <cell id="4617">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4624">
-                                <property name="resultSetColumn">Verantwortliche__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="4619"/>
-                        <cell id="4620"/>
-                        <cell id="4621"/>
-                    </row>
-                    <row id="4606">
-                        <cell id="4607">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <label id="4623">
-                                <property name="fontWeight">bold</property>
-                                <text-property name="text">Umsetzungstatus:</text-property>
-                            </label>
-                        </cell>
-                        <cell id="4609">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4625">
-                                <property name="resultSetColumn">Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="4611"/>
-                        <cell id="4612"/>
-                        <cell id="4613"/>
                     </row>
                 </header>
             </group>
@@ -7333,80 +7613,6 @@ columns(cols);</value>
                     </row>
                 </header>
             </group>
-            <group id="4762">
-                <property name="groupName">AnforderungenGroup</property>
-                <expression name="keyExpr" type="javascript">row["Titel__(Anforderung)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Titel__(Anforderung)"]</expression>
-                </structure>
-                <property name="hideDetail">false</property>
-                <header>
-                    <row id="4763">
-                        <property name="backgroundColor">#BFBFBF</property>
-                        <cell id="4764">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4780">
-                                <property name="resultSetColumn">Identifier__(Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="4766">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4779">
-                                <property name="resultSetColumn">Titel__(Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="4768">
-                            <property name="colSpan">3</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4781">
-                                <property name="resultSetColumn">Beschreibung__(Anforderung)</property>
-                            </data>
-                        </cell>
-                    </row>
-                    <row id="4790">
-                        <cell id="4791">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <label id="4798">
-                                <property name="fontWeight">bold</property>
-                                <text-property name="text">Verantwortlicher:</text-property>
-                            </label>
-                        </cell>
-                        <cell id="4793">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4800">
-                                <property name="resultSetColumn">Verantwortliche__(Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="4795"/>
-                        <cell id="4796"/>
-                        <cell id="4797"/>
-                    </row>
-                    <row id="4782">
-                        <cell id="4783">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <label id="4799">
-                                <property name="fontWeight">bold</property>
-                                <text-property name="text">Umsetzungstatus:</text-property>
-                            </label>
-                        </cell>
-                        <cell id="4785">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4801">
-                                <property name="resultSetColumn">Umsetzung__-__Umsetzungsstatus__(Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="4787"/>
-                        <cell id="4788"/>
-                        <cell id="4789"/>
-                    </row>
-                </header>
-            </group>
         </table>
         <label id="4802">
             <property name="fontSize">12pt</property>
@@ -7627,80 +7833,6 @@ columns(cols);</value>
                         <cell id="4878"/>
                         <cell id="4879"/>
                         <cell id="4880"/>
-                    </row>
-                </header>
-            </group>
-            <group id="4903">
-                <property name="groupName">AnforderungenGroup</property>
-                <expression name="keyExpr" type="javascript">row["Titel__(Baustein-Anforderung)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Titel__(Baustein-Anforderung)"]</expression>
-                </structure>
-                <property name="hideDetail">false</property>
-                <header>
-                    <row id="4904">
-                        <property name="backgroundColor">#BFBFBF</property>
-                        <cell id="4905">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4921">
-                                <property name="resultSetColumn">Identifier__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="4907">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4920">
-                                <property name="resultSetColumn">Titel__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="4909">
-                            <property name="colSpan">3</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4922">
-                                <property name="resultSetColumn">Beschreibung__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                    </row>
-                    <row id="4931">
-                        <cell id="4932">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <label id="4939">
-                                <property name="fontWeight">bold</property>
-                                <text-property name="text">Verantwortlicher:</text-property>
-                            </label>
-                        </cell>
-                        <cell id="4934">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4941">
-                                <property name="resultSetColumn">Verantwortliche__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="4936"/>
-                        <cell id="4937"/>
-                        <cell id="4938"/>
-                    </row>
-                    <row id="4923">
-                        <cell id="4924">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <label id="4940">
-                                <property name="fontWeight">bold</property>
-                                <text-property name="text">Umsetzungstatus:</text-property>
-                            </label>
-                        </cell>
-                        <cell id="4926">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="4942">
-                                <property name="resultSetColumn">Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="4928"/>
-                        <cell id="4929"/>
-                        <cell id="4930"/>
                     </row>
                 </header>
             </group>
@@ -7927,80 +8059,6 @@ columns(cols);</value>
                     </row>
                 </header>
             </group>
-            <group id="4997">
-                <property name="groupName">AnforderungenGroup</property>
-                <expression name="keyExpr" type="javascript">row["Titel__(Baustein-Anforderung)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Titel__(Baustein-Anforderung)"]</expression>
-                </structure>
-                <property name="hideDetail">false</property>
-                <header>
-                    <row id="4998">
-                        <property name="backgroundColor">#BFBFBF</property>
-                        <cell id="4999">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5000">
-                                <property name="resultSetColumn">Identifier__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="5001">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5002">
-                                <property name="resultSetColumn">Titel__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="5003">
-                            <property name="colSpan">3</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5004">
-                                <property name="resultSetColumn">Beschreibung__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                    </row>
-                    <row id="5005">
-                        <cell id="5006">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <label id="5007">
-                                <property name="fontWeight">bold</property>
-                                <text-property name="text">Verantwortlicher:</text-property>
-                            </label>
-                        </cell>
-                        <cell id="5008">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5009">
-                                <property name="resultSetColumn">Verantwortliche__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="5010"/>
-                        <cell id="5011"/>
-                        <cell id="5012"/>
-                    </row>
-                    <row id="5013">
-                        <cell id="5014">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <label id="5015">
-                                <property name="fontWeight">bold</property>
-                                <text-property name="text">Umsetzungstatus:</text-property>
-                            </label>
-                        </cell>
-                        <cell id="5016">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5017">
-                                <property name="resultSetColumn">Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="5018"/>
-                        <cell id="5019"/>
-                        <cell id="5020"/>
-                    </row>
-                </header>
-            </group>
         </table>
         <label id="5030">
             <property name="fontSize">12pt</property>
@@ -8221,80 +8279,6 @@ columns(cols);</value>
                         <cell id="5081"/>
                         <cell id="5082"/>
                         <cell id="5083"/>
-                    </row>
-                </header>
-            </group>
-            <group id="5084">
-                <property name="groupName">AnforderungenGroup</property>
-                <expression name="keyExpr" type="javascript">row["Titel__(Baustein-Anforderung)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Titel__(Baustein-Anforderung)"]</expression>
-                </structure>
-                <property name="hideDetail">false</property>
-                <header>
-                    <row id="5085">
-                        <property name="backgroundColor">#BFBFBF</property>
-                        <cell id="5086">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5087">
-                                <property name="resultSetColumn">Identifier__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="5088">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5089">
-                                <property name="resultSetColumn">Titel__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="5090">
-                            <property name="colSpan">3</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5091">
-                                <property name="resultSetColumn">Beschreibung__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                    </row>
-                    <row id="5092">
-                        <cell id="5093">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <label id="5094">
-                                <property name="fontWeight">bold</property>
-                                <text-property name="text">Verantwortlicher:</text-property>
-                            </label>
-                        </cell>
-                        <cell id="5095">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5096">
-                                <property name="resultSetColumn">Verantwortliche__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="5097"/>
-                        <cell id="5098"/>
-                        <cell id="5099"/>
-                    </row>
-                    <row id="5100">
-                        <cell id="5101">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <label id="5102">
-                                <property name="fontWeight">bold</property>
-                                <text-property name="text">Umsetzungstatus:</text-property>
-                            </label>
-                        </cell>
-                        <cell id="5103">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5104">
-                                <property name="resultSetColumn">Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="5105"/>
-                        <cell id="5106"/>
-                        <cell id="5107"/>
                     </row>
                 </header>
             </group>
@@ -8521,80 +8505,6 @@ columns(cols);</value>
                     </row>
                 </header>
             </group>
-            <group id="5171">
-                <property name="groupName">AnforderungenGroup</property>
-                <expression name="keyExpr" type="javascript">row["Titel__(Baustein-Anforderung)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Titel__(Baustein-Anforderung)"]</expression>
-                </structure>
-                <property name="hideDetail">false</property>
-                <header>
-                    <row id="5172">
-                        <property name="backgroundColor">#BFBFBF</property>
-                        <cell id="5173">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5174">
-                                <property name="resultSetColumn">Identifier__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="5175">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5176">
-                                <property name="resultSetColumn">Titel__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="5177">
-                            <property name="colSpan">3</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5178">
-                                <property name="resultSetColumn">Beschreibung__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                    </row>
-                    <row id="5179">
-                        <cell id="5180">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <label id="5181">
-                                <property name="fontWeight">bold</property>
-                                <text-property name="text">Verantwortlicher:</text-property>
-                            </label>
-                        </cell>
-                        <cell id="5182">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5183">
-                                <property name="resultSetColumn">Verantwortliche__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="5184"/>
-                        <cell id="5185"/>
-                        <cell id="5186"/>
-                    </row>
-                    <row id="5187">
-                        <cell id="5188">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <label id="5189">
-                                <property name="fontWeight">bold</property>
-                                <text-property name="text">Umsetzungstatus:</text-property>
-                            </label>
-                        </cell>
-                        <cell id="5190">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5191">
-                                <property name="resultSetColumn">Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="5192"/>
-                        <cell id="5193"/>
-                        <cell id="5194"/>
-                    </row>
-                </header>
-            </group>
         </table>
         <label id="5204">
             <property name="fontSize">12pt</property>
@@ -8815,80 +8725,6 @@ columns(cols);</value>
                         <cell id="5255"/>
                         <cell id="5256"/>
                         <cell id="5257"/>
-                    </row>
-                </header>
-            </group>
-            <group id="5258">
-                <property name="groupName">AnforderungenGroup</property>
-                <expression name="keyExpr" type="javascript">row["Titel__(Baustein-Anforderung)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Titel__(Baustein-Anforderung)"]</expression>
-                </structure>
-                <property name="hideDetail">false</property>
-                <header>
-                    <row id="5259">
-                        <property name="backgroundColor">#BFBFBF</property>
-                        <cell id="5260">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5261">
-                                <property name="resultSetColumn">Identifier__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="5262">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5263">
-                                <property name="resultSetColumn">Titel__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="5264">
-                            <property name="colSpan">3</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5265">
-                                <property name="resultSetColumn">Beschreibung__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                    </row>
-                    <row id="5266">
-                        <cell id="5267">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <label id="5268">
-                                <property name="fontWeight">bold</property>
-                                <text-property name="text">Verantwortlicher:</text-property>
-                            </label>
-                        </cell>
-                        <cell id="5269">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5270">
-                                <property name="resultSetColumn">Verantwortliche__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="5271"/>
-                        <cell id="5272"/>
-                        <cell id="5273"/>
-                    </row>
-                    <row id="5274">
-                        <cell id="5275">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <label id="5276">
-                                <property name="fontWeight">bold</property>
-                                <text-property name="text">Umsetzungstatus:</text-property>
-                            </label>
-                        </cell>
-                        <cell id="5277">
-                            <property name="colSpan">2</property>
-                            <property name="rowSpan">1</property>
-                            <data id="5278">
-                                <property name="resultSetColumn">Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
-                            </data>
-                        </cell>
-                        <cell id="5279"/>
-                        <cell id="5280"/>
-                        <cell id="5281"/>
                     </row>
                 </header>
             </group>
