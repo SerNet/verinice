@@ -95,6 +95,9 @@ public class ModelCommand extends ChangeLoggingCommand {
     private transient Set<CnATreeElement> targetElements;
     private transient ItNetwork itNetwork;
 
+    // Return values
+    private String proceedingLable;
+
     private String stationId;
 
     public ModelCommand(Set<String> compendiumUuids, List<String> targetUuids) {
@@ -115,6 +118,7 @@ public class ModelCommand extends ChangeLoggingCommand {
                 handleThreats();
             }
             createLinks();
+            saveReturnValues();
         } catch (CommandException e) {
             getLog().error("Error while modeling.", e);
             throw new RuntimeCommandException("Error while modeling.", e);
@@ -144,6 +148,10 @@ public class ModelCommand extends ChangeLoggingCommand {
         ModelLinksCommand modelLinksCommand = new ModelLinksCommand(moduleUuidsFromCompendium,
                 newModuleUuidsFromScope, itNetwork, targetElements);
         getCommandService().executeCommand(modelLinksCommand);
+    }
+
+    private void saveReturnValues() {
+        proceedingLable = itNetwork.getProceeding();
     }
 
     private Integer getTargetScopeId() {
@@ -216,6 +224,14 @@ public class ModelCommand extends ChangeLoggingCommand {
             return false;
         }
         return targetModuleId.equals(moduleId);
+    }
+
+    public String getProceedingLable() {
+        return proceedingLable;
+    }
+
+    public void setProceedingLable(String proceedingLable) {
+        this.proceedingLable = proceedingLable;
     }
 
     public ModelingMetaDao getMetaDao() {

@@ -103,22 +103,22 @@ public class ItNetwork extends CnATreeElement implements IBpElement  {
     }
 
     /**
-     * @return The approach of securing. The approach is stored in the property
-     *         PROP_QUALIFIER.
+     * @return The proceeding of securing. The proceeding is stored in the
+     *         property PROP_QUALIFIER.
      */
-    public String getApproach() {
+    public String getProceeding() {
         return getQualifier();
     }
 
     /**
-     * Sets the approach of securing. The approach is stored in the property
+     * Sets the proceeding of securing. The proceeding is stored in the property
      * PROP_QUALIFIER.
      * 
-     * @param approach
-     *            The approach of securing or qualifier
+     * @param proceeding
+     *            The proceeding of securing or qualifier
      */
-    public void setApproach(String approach) {
-        setQualifier(approach);
+    public void setProceeding(String proceeding) {
+        setQualifier(proceeding);
     }
     
     public static boolean isItNetwork(CnATreeElement element) {

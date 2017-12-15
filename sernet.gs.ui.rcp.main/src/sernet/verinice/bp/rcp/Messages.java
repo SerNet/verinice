@@ -51,6 +51,10 @@ public class Messages extends NLS {
     public static String BbModelingDropPerformer_MultipleModules;
     public static String BbModelingDropPerformer_NoModules;
     public static String BbModelingDropPerformer_OneModule;
+    public static String BbModelingDropPerformerConfirmationNoProceeding;
+    public static String BbModelingDropPerformerConfirmation;
+    public static String BbModelingDropPerformerConfirmationTitle;
+    public static String BbModelingDropPerformerConfirmationToggleMessage;
     
     static {
         // initialize resource bundle
