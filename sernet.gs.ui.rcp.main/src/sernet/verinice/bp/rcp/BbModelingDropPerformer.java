@@ -36,11 +36,14 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.VeriniceElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
@@ -102,7 +105,7 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * sernet.verinice.iso27k.rcp.action.DropPerformer#performDrop(java.lang.
      * Object, java.lang.Object, org.eclipse.jface.viewers.Viewer)
@@ -154,6 +157,7 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
 
     private void startModelingByProgressService(final List<CnATreeElement> draggedModules)
             throws InvocationTargetException, InterruptedException {
+        closeEditors();
         PlatformUI.getWorkbench().getProgressService()
                 .busyCursorWhile(new IRunnableWithProgress() {
                     @Override
@@ -184,6 +188,23 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         modelCommand = getCommandService().executeCommand(modelCommand);
         CnAElementFactory.getInstance().reloadBpModelFromDatabase();
         CnAElementFactory.getInstance().reloadCatalogModelFromDatabase();
+    }
+
+    private void closeEditors() {
+        IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                .getActivePage().getEditorReferences();
+        for (IEditorReference er : editorReferences) {
+            try {
+                if (er.isPinned() || er.isDirty()) {
+                    continue;
+                }
+                if (er.getEditorInput() instanceof BSIElementEditorInput) {
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(er.getEditor(true), true);
+                }
+            } catch (PartInitException e) {
+                ExceptionUtil.log(e, "Error closing editors");
+            }
+        }
     }
 
     private List<CnATreeElement> getDraggedElements(Object data) {
@@ -326,6 +347,7 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         final String message = NLS.bind(Messages.BbModelingDropPerformer_ModelingAborted,
                 rootCause.getMessage());
         Display.getDefault().asyncExec(new Runnable() {
+            @Override
             public void run() {
                 MessageDialog.openError(Display.getDefault().getActiveShell(),
                         Messages.BbModelingDropPerformerModelingError, message);
