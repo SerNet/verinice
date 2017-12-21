@@ -2,7 +2,7 @@
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
     <property name="author">Urs Zeidler</property>
     <property name="createdBy">Eclipse BIRT Designer Version 3.7.0.v20110602 Build &lt;3.7.0.v20110607-1526></property>
-    <text-property name="title">verinice - BSI A2 Schutzbedarfszuordnung</text-property>
+    <text-property name="title">verinice - BSI A.2 Schutzbedarfszuordnung</text-property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">fixed layout</property>
@@ -1536,6 +1536,12 @@
                     <text-property name="displayName">Schutzbedarfskategorie__Sehr__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)</text-property>
                     <text-property name="heading">Schutzbedarfskategorie__Sehr__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Vorgehensweise__der__Absicherung__(Informationsverbund)</text-property>
+                    <text-property name="heading">Vorgehensweise__der__Absicherung__(Informationsverbund)</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters"/>
             <structure name="cachedMetaData">
@@ -1693,6 +1699,11 @@
                     <structure>
                         <property name="position">31</property>
                         <property name="name">Schutzbedarfskategorie__Sehr__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">32</property>
+                        <property name="name">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
                         <property name="dataType">string</property>
                     </structure>
                 </list-property>
@@ -1916,6 +1927,12 @@
                     <property name="dataType">string</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
+                <structure>
+                    <property name="position">32</property>
+                    <property name="name">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
+                    <property name="nativeName">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[{
   "useAllScopes": false,
@@ -1951,7 +1968,8 @@
     "bp_itnetwork.bp_itnetwork_pl_very_high_injury AS Schutzbedarfskategorie__Sehr__Hoch__-__Unversehrtheit__(Informationsverbund)",
     "bp_itnetwork.bp_itnetwork_pl_very_high_service AS Schutzbedarfskategorie__Sehr__Hoch__-__Aufgabenerfüllung__(Informationsverbund)",
     "bp_itnetwork.bp_itnetwork_pl_very_high_publicity AS Schutzbedarfskategorie__Sehr__Hoch__-__Innen-____Außenwirkung__(Informationsverbund)",
-    "bp_itnetwork.bp_itnetwork_pl_very_high_financial AS Schutzbedarfskategorie__Sehr__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)"
+    "bp_itnetwork.bp_itnetwork_pl_very_high_financial AS Schutzbedarfskategorie__Sehr__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_qualifier AS Vorgehensweise__der__Absicherung__(Informationsverbund)"
   ],
   "relationIds": []
 }]]></xml-property>
@@ -2657,37 +2675,65 @@
                     <column id="927"/>
                     <row id="928">
                         <cell id="929">
+                            <property name="verticalAlign">bottom</property>
                             <grid id="930">
                                 <property name="fontSize">9pt</property>
-                                <property name="width">1.8677685950413223in</property>
+                                <property name="width">1.8541666666666667in</property>
                                 <column id="931">
-                                    <property name="width">0.2975206611570248in</property>
+                                    <property name="width">0.3in</property>
+                                    <property name="verticalAlign">bottom</property>
                                 </column>
                                 <column id="932">
-                                    <property name="width">0.2066115702479339in</property>
+                                    <property name="width">0.3in</property>
                                 </column>
                                 <column id="933">
-                                    <property name="width">1.3636363636363635in</property>
+                                    <property name="width">1.1458333333333333in</property>
                                 </column>
                                 <row id="934">
+                                    <property name="verticalAlign">bottom</property>
                                     <cell id="935">
+                                        <property name="paddingTop">0pt</property>
+                                        <property name="paddingLeft">0pt</property>
+                                        <property name="paddingBottom">0pt</property>
+                                        <property name="paddingRight">0pt</property>
                                         <property name="verticalAlign">bottom</property>
                                         <auto-text id="936">
-                                            <property name="textAlign">right</property>
+                                            <property name="paddingTop">0pt</property>
+                                            <property name="paddingLeft">0pt</property>
+                                            <property name="paddingBottom">0pt</property>
+                                            <property name="paddingRight">0pt</property>
+                                            <property name="textAlign">left</property>
                                             <property name="type">page-number</property>
                                         </auto-text>
                                     </cell>
                                     <cell id="937">
+                                        <property name="paddingTop">0pt</property>
+                                        <property name="paddingLeft">0pt</property>
+                                        <property name="paddingBottom">0pt</property>
+                                        <property name="paddingRight">0pt</property>
                                         <property name="verticalAlign">bottom</property>
                                         <text id="938">
-                                            <property name="textAlign">center</property>
+                                            <property name="paddingTop">0pt</property>
+                                            <property name="paddingLeft">0pt</property>
+                                            <property name="paddingBottom">0pt</property>
+                                            <property name="paddingRight">0pt</property>
+                                            <property name="textAlign">left</property>
                                             <property name="contentType">plain</property>
                                             <text-property name="content"><![CDATA[/]]></text-property>
                                         </text>
                                     </cell>
                                     <cell id="939">
+                                        <property name="paddingTop">0pt</property>
+                                        <property name="paddingLeft">0pt</property>
+                                        <property name="paddingBottom">0pt</property>
+                                        <property name="paddingRight">0pt</property>
                                         <property name="verticalAlign">bottom</property>
                                         <auto-text id="940">
+                                            <property name="paddingTop">0pt</property>
+                                            <property name="paddingLeft">0pt</property>
+                                            <property name="paddingBottom">0pt</property>
+                                            <property name="paddingRight">0pt</property>
+                                            <property name="textAlign">left</property>
                                             <property name="type">total-page</property>
                                         </auto-text>
                                     </cell>
@@ -2697,9 +2743,18 @@
                         <cell id="1953"/>
                         <cell id="942"/>
                         <cell id="1954">
+                            <property name="paddingTop">0pt</property>
+                            <property name="paddingLeft">0pt</property>
+                            <property name="paddingBottom">0pt</property>
+                            <property name="paddingRight">0pt</property>
                             <property name="verticalAlign">bottom</property>
                             <text id="1955">
                                 <property name="fontSize">9pt</property>
+                                <property name="paddingTop">0pt</property>
+                                <property name="paddingLeft">0pt</property>
+                                <property name="paddingBottom">0pt</property>
+                                <property name="paddingRight">0pt</property>
+                                <property name="textAlign">right</property>
                                 <property name="contentType">html</property>
                                 <text-property name="content"><![CDATA[printed on <value-of>new Date()</value-of>]]></text-property>
                             </text>
@@ -2711,6 +2766,7 @@
     </page-setup>
     <body>
         <grid name="titel" id="1418">
+            <structure name="toc"/>
             <column id="1419"/>
             <column id="1420"/>
             <row id="1421">
@@ -2720,7 +2776,7 @@
                         <property name="fontSize">14pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <text-property name="text">modernisierter IT-Grundschutz: Schutzbedarfszuordnung</text-property>
+                        <text-property name="text">BSI IT-Grundschutz A.2 Schutzbedarfsfeststellung</text-property>
                     </label>
                 </cell>
                 <cell id="1423">
@@ -2747,14 +2803,17 @@
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">medium</property>
-            <property name="width">7.75206611570248in</property>
+            <property name="width">7.75in</property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Übersicht"</expression>
+            </structure>
             <column id="1067">
-                <property name="width">2.4242424242424243in</property>
+                <property name="width">2.5729166666666665in</property>
                 <property name="backgroundColor">#9AC3D6</property>
                 <property name="fontWeight">bold</property>
             </column>
             <column id="1068">
-                <property name="width">5.330578512396694in</property>
+                <property name="width">5.177083333333333in</property>
             </column>
             <row id="1069">
                 <property name="backgroundColor">#9AC3D6</property>
@@ -3110,6 +3169,51 @@
                     </data>
                 </cell>
             </row>
+            <row id="2602">
+                <cell id="2603">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label id="2605">
+                        <text-property name="text">Vorgehensweise der Absicherung:</text-property>
+                    </label>
+                </cell>
+                <cell id="2604">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data id="2607">
+                        <property name="dataSet">bp_Informationsverbund</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
+                                <text-property name="displayName">Vorgehensweise__der__Absicherung__(Informationsverbund)</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Vorgehensweise__der__Absicherung__(Informationsverbund)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
+                    </data>
+                </cell>
+            </row>
         </grid>
         <label id="136">
             <property name="fontSize">12pt</property>
@@ -3117,6 +3221,298 @@
             <property name="paddingTop">20pt</property>
             <text-property name="text">Definition der Schutzbedarfsstufen</text-property>
         </label>
+        <label id="2641">
+            <property name="fontSize">12pt</property>
+            <property name="fontWeight">normal</property>
+            <property name="textUnderline">underline</property>
+            <property name="paddingTop">20pt</property>
+            <text-property name="text">Stufe: Normal</text-property>
+        </label>
+        <grid name="Unkritisch" id="2608">
+            <property name="width">11.148760330578513in</property>
+            <column id="2609">
+                <property name="width">2.4049586776859506in</property>
+            </column>
+            <column id="2610">
+                <property name="width">8.743801652892563in</property>
+            </column>
+            <row id="2611">
+                <cell id="2612">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label id="2613">
+                        <property name="fontStyle">italic</property>
+                        <text-property name="text">Gesetze</text-property>
+                    </label>
+                </cell>
+                <cell id="2614">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data id="2615">
+                        <property name="dataSet">bp_Informationsverbund</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">itverbund_normal_gesetze</property>
+                                <text-property name="displayName">itverbund_unkritisch_gesetze</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Schutzbedarfskategorie__unkritisch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">itverbund_normal_gesetze</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="2616">
+                <cell id="2617">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label id="2618">
+                        <property name="fontStyle">italic</property>
+                        <text-property name="text">Datenschutz</text-property>
+                    </label>
+                </cell>
+                <cell id="2619">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data id="2620">
+                        <property name="dataSet">bp_Informationsverbund</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">itverbund_normal_datenschutz</property>
+                                <text-property name="displayName">itverbund_unkritisch_datenschutz</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Schutzbedarfskategorie__unkritisch__-__Selbstbestimmungsrecht__(Informationsverbund)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">itverbund_normal_datenschutz</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="2621">
+                <cell id="2622">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label id="2623">
+                        <property name="fontStyle">italic</property>
+                        <text-property name="text">Gefahr für Leib und Leben</text-property>
+                    </label>
+                </cell>
+                <cell id="2624">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data id="2625">
+                        <property name="dataSet">bp_Informationsverbund</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">itverbund_normal_leib</property>
+                                <text-property name="displayName">itverbund_unkritisch_leib</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Schutzbedarfskategorie__unkritisch__-__Unversehrtheit__(Informationsverbund)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">itverbund_normal_leib</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="2626">
+                <cell id="2627">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label id="2628">
+                        <property name="fontStyle">italic</property>
+                        <text-property name="text">Aufgabenerfüllung</text-property>
+                    </label>
+                </cell>
+                <cell id="2629">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data id="2630">
+                        <property name="dataSet">bp_Informationsverbund</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">itverbund_normal_aufgaben</property>
+                                <text-property name="displayName">itverbund_unkritisch_aufgaben</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Schutzbedarfskategorie__unkritisch__-__Aufgabenerfüllung__(Informationsverbund)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">itverbund_normal_aufgaben</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="2631">
+                <cell id="2632">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label id="2633">
+                        <property name="fontStyle">italic</property>
+                        <text-property name="text">Außenwirkung</text-property>
+                    </label>
+                </cell>
+                <cell id="2634">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data id="2635">
+                        <property name="dataSet">bp_Informationsverbund</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">itverbund_normal_wirkung</property>
+                                <text-property name="displayName">itverbund_unkritisch_wirkung</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Schutzbedarfskategorie__unkritisch__-__Innen-____Außenwirkung__(Informationsverbund)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">itverbund_normal_wirkung</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="2636">
+                <cell id="2637">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label id="2638">
+                        <property name="fontStyle">italic</property>
+                        <text-property name="text">Finanzielle Auswirkungen</text-property>
+                    </label>
+                </cell>
+                <cell id="2639">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data id="2640">
+                        <property name="dataSet">bp_Informationsverbund</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">itverbund_normal_finanzen</property>
+                                <text-property name="displayName">itverbund_unkritisch_finanzen</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Schutzbedarfskategorie__unkritisch__-__Finanzielle__Auswirkungen__(Informationsverbund)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">itverbund_normal_finanzen</property>
+                    </data>
+                </cell>
+            </row>
+        </grid>
         <label id="1524">
             <property name="fontSize">12pt</property>
             <property name="fontWeight">normal</property>
@@ -3124,7 +3520,7 @@
             <property name="paddingTop">20pt</property>
             <text-property name="text">Stufe: Normal</text-property>
         </label>
-        <grid id="1554">
+        <grid name="normal" id="1554">
             <property name="width">11.148760330578513in</property>
             <column id="1555">
                 <property name="width">2.4049586776859506in</property>
@@ -3416,7 +3812,7 @@
             <property name="paddingTop">20pt</property>
             <text-property name="text">Stufe: Hoch</text-property>
         </label>
-        <grid id="1581">
+        <grid name="hoch" id="1581">
             <property name="width">11.148760330578513in</property>
             <column id="1582">
                 <property name="width">2.4049586776859506in</property>
@@ -3708,7 +4104,7 @@
             <property name="paddingTop">20pt</property>
             <text-property name="text">Stufe: Sehr Hoch</text-property>
         </label>
-        <grid id="1608">
+        <grid name="sehr hock" id="1608">
             <property name="width">11.148760330578513in</property>
             <column id="1609">
                 <property name="width">2.4049586776859506in</property>
@@ -3996,6 +4392,9 @@
         <grid name="Prozesse" id="1958">
             <property name="pageBreakInside">avoid</property>
             <property name="height">1.6770833333333333in</property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Prozesse"</expression>
+            </structure>
             <column id="1959"/>
             <row id="2590">
                 <property name="height">0.4in</property>
@@ -4016,6 +4415,8 @@
             </row>
             <row id="1962">
                 <cell id="1963">
+                    <property name="paddingLeft">0pt</property>
+                    <property name="paddingRight">0pt</property>
                     <table id="1964">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -4029,7 +4430,7 @@
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <property name="width">11.0625in</property>
+                        <property name="width">100%</property>
                         <property name="dataSet">bp_process</property>
                         <list-property name="boundDataColumns">
                             <structure>
@@ -4252,6 +4653,9 @@
         <grid name="Anwendung" id="300">
             <property name="pageBreakInside">avoid</property>
             <property name="height">1.8854166666666667in</property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Anwendungen"</expression>
+            </structure>
             <column id="2537"/>
             <row id="2592">
                 <property name="height">0.4in</property>
@@ -4271,6 +4675,8 @@
             </row>
             <row id="2541">
                 <cell id="2542">
+                    <property name="paddingLeft">0pt</property>
+                    <property name="paddingRight">0pt</property>
                     <table id="2543">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -4284,7 +4690,7 @@
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <property name="width">11.0625in</property>
+                        <property name="width">100%</property>
                         <property name="dataSet">bp_application</property>
                         <list-property name="boundDataColumns">
                             <structure>
@@ -4507,6 +4913,9 @@
         <grid name="Ics_system" id="2035">
             <property name="pageBreakInside">avoid</property>
             <property name="height">2.0208333333333335in</property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"ICS-Systeme"</expression>
+            </structure>
             <column id="2036"/>
             <row id="2594">
                 <property name="height">0.4in</property>
@@ -4526,6 +4935,8 @@
             </row>
             <row id="2033">
                 <cell id="2040">
+                    <property name="paddingLeft">0pt</property>
+                    <property name="paddingRight">0pt</property>
                     <table id="2041">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -4539,7 +4950,7 @@
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <property name="width">11.0625in</property>
+                        <property name="width">100%</property>
                         <property name="dataSet">bp_ics-system</property>
                         <list-property name="boundDataColumns">
                             <structure>
@@ -4827,6 +5238,9 @@
         <grid name="Iot_system" id="2134">
             <property name="pageBreakInside">avoid</property>
             <property name="height">1.7083333333333333in</property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"IOT Systeme"</expression>
+            </structure>
             <column id="2135"/>
             <row id="2596">
                 <property name="height">0.4in</property>
@@ -4846,6 +5260,8 @@
             </row>
             <row id="2139">
                 <cell id="2140">
+                    <property name="paddingLeft">0pt</property>
+                    <property name="paddingRight">0pt</property>
                     <table id="2141">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -4859,7 +5275,7 @@
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <property name="width">11.0625in</property>
+                        <property name="width">100%</property>
                         <property name="dataSet">bp_ics-system</property>
                         <list-property name="boundDataColumns">
                             <structure>
@@ -5147,6 +5563,9 @@
         <grid name="netzwerk" id="2184">
             <property name="pageBreakInside">avoid</property>
             <property name="height">1.7083333333333333in</property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Netzwerk"</expression>
+            </structure>
             <column id="2185"/>
             <row id="2598">
                 <property name="height">0.4in</property>
@@ -5166,6 +5585,8 @@
             </row>
             <row id="2189">
                 <cell id="2190">
+                    <property name="paddingLeft">0pt</property>
+                    <property name="paddingRight">0pt</property>
                     <table id="2191">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -5179,7 +5600,7 @@
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <property name="width">11.0625in</property>
+                        <property name="width">100%</property>
                         <property name="dataSet">bp_net</property>
                         <list-property name="boundDataColumns">
                             <structure>
@@ -5479,7 +5900,9 @@
         <grid name="raum" id="2235">
             <property name="pageBreakInside">avoid</property>
             <property name="height">1.7083333333333333in</property>
-            <structure name="toc"/>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Raum"</expression>
+            </structure>
             <column id="2236"/>
             <row id="2600">
                 <property name="height">0.4in</property>
@@ -5499,6 +5922,8 @@
             </row>
             <row id="2240">
                 <cell id="2241">
+                    <property name="paddingLeft">0pt</property>
+                    <property name="paddingRight">0pt</property>
                     <table id="2242">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -5512,7 +5937,7 @@
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <property name="width">11.0625in</property>
+                        <property name="width">100%</property>
                         <property name="dataSet">bp_room</property>
                         <list-property name="boundDataColumns">
                             <structure>
