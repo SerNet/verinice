@@ -5054,37 +5054,65 @@
                     <column id="927"/>
                     <row id="928">
                         <cell id="929">
+                            <property name="verticalAlign">bottom</property>
                             <grid id="930">
                                 <property name="fontSize">9pt</property>
-                                <property name="width">1.8677685950413223in</property>
+                                <property name="width">1.8541666666666667in</property>
                                 <column id="931">
-                                    <property name="width">0.2975206611570248in</property>
+                                    <property name="width">0.3in</property>
+                                    <property name="verticalAlign">bottom</property>
                                 </column>
                                 <column id="932">
-                                    <property name="width">0.2066115702479339in</property>
+                                    <property name="width">0.3in</property>
                                 </column>
                                 <column id="933">
-                                    <property name="width">1.3636363636363635in</property>
+                                    <property name="width">1.1458333333333333in</property>
                                 </column>
                                 <row id="934">
+                                    <property name="verticalAlign">bottom</property>
                                     <cell id="935">
+                                        <property name="paddingTop">0pt</property>
+                                        <property name="paddingLeft">0pt</property>
+                                        <property name="paddingBottom">0pt</property>
+                                        <property name="paddingRight">0pt</property>
                                         <property name="verticalAlign">bottom</property>
                                         <auto-text id="936">
-                                            <property name="textAlign">right</property>
+                                            <property name="paddingTop">0pt</property>
+                                            <property name="paddingLeft">0pt</property>
+                                            <property name="paddingBottom">0pt</property>
+                                            <property name="paddingRight">0pt</property>
+                                            <property name="textAlign">left</property>
                                             <property name="type">page-number</property>
                                         </auto-text>
                                     </cell>
                                     <cell id="937">
+                                        <property name="paddingTop">0pt</property>
+                                        <property name="paddingLeft">0pt</property>
+                                        <property name="paddingBottom">0pt</property>
+                                        <property name="paddingRight">0pt</property>
                                         <property name="verticalAlign">bottom</property>
                                         <text id="938">
-                                            <property name="textAlign">center</property>
+                                            <property name="paddingTop">0pt</property>
+                                            <property name="paddingLeft">0pt</property>
+                                            <property name="paddingBottom">0pt</property>
+                                            <property name="paddingRight">0pt</property>
+                                            <property name="textAlign">left</property>
                                             <property name="contentType">plain</property>
                                             <text-property name="content"><![CDATA[/]]></text-property>
                                         </text>
                                     </cell>
                                     <cell id="939">
+                                        <property name="paddingTop">0pt</property>
+                                        <property name="paddingLeft">0pt</property>
+                                        <property name="paddingBottom">0pt</property>
+                                        <property name="paddingRight">0pt</property>
                                         <property name="verticalAlign">bottom</property>
                                         <auto-text id="940">
+                                            <property name="paddingTop">0pt</property>
+                                            <property name="paddingLeft">0pt</property>
+                                            <property name="paddingBottom">0pt</property>
+                                            <property name="paddingRight">0pt</property>
+                                            <property name="textAlign">left</property>
                                             <property name="type">total-page</property>
                                         </auto-text>
                                     </cell>
@@ -5094,9 +5122,18 @@
                         <cell id="1953"/>
                         <cell id="942"/>
                         <cell id="1954">
+                            <property name="paddingTop">0pt</property>
+                            <property name="paddingLeft">0pt</property>
+                            <property name="paddingBottom">0pt</property>
+                            <property name="paddingRight">0pt</property>
                             <property name="verticalAlign">bottom</property>
                             <text id="1955">
                                 <property name="fontSize">9pt</property>
+                                <property name="paddingTop">0pt</property>
+                                <property name="paddingLeft">0pt</property>
+                                <property name="paddingBottom">0pt</property>
+                                <property name="paddingRight">0pt</property>
+                                <property name="textAlign">right</property>
                                 <property name="contentType">html</property>
                                 <text-property name="content"><![CDATA[printed on <value-of>new Date()</value-of>]]></text-property>
                             </text>
@@ -5118,7 +5155,7 @@
                         <property name="fontSize">14pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <text-property name="text">modernisierter BSI IT-Grundschutz: Informations-Sicherheitscheck</text-property>
+                        <text-property name="text">BSI IT-Grundschutz A.4 Sicherheitscheck</text-property>
                     </label>
                 </cell>
                 <cell id="1423">
@@ -5145,14 +5182,17 @@
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">medium</property>
-            <property name="width">100%</property>
+            <property name="width">7.739583333333333in</property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Übersicht"</expression>
+            </structure>
             <column id="1067">
-                <property name="width">2.4242424242424243in</property>
+                <property name="width">2.5416666666666665in</property>
                 <property name="backgroundColor">#9AC3D6</property>
                 <property name="fontWeight">bold</property>
             </column>
             <column id="1068">
-                <property name="width">5.330578512396694in</property>
+                <property name="width">5.197916666666667in</property>
             </column>
             <row id="1069">
                 <property name="backgroundColor">#9AC3D6</property>
@@ -5478,7 +5518,7 @@
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
                     <label id="3983">
-                        <text-property name="text">Absicherung:</text-property>
+                        <text-property name="text">Vorgehensweise der Absicherung:</text-property>
                     </label>
                 </cell>
                 <cell id="3981">
@@ -5518,6 +5558,7 @@
             <text-property name="text">IT-Verbund</text-property>
         </label>
         <table id="4362">
+            <property name="width">7.739583333333333in</property>
             <property name="dataSet">ITNetwork_Anforderungen_Bausteine</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -5605,13 +5646,31 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
-            <column id="4387"/>
-            <column id="4388"/>
-            <column id="4389"/>
-            <column id="4390"/>
-            <column id="4391"/>
-            <column id="4392"/>
-            <column id="4393"/>
+            <expression name="bookmark" type="javascript">"IT-Verbund"</expression>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"IT-Verbund"</expression>
+            </structure>
+            <column id="4387">
+                <property name="width">1.90625in</property>
+            </column>
+            <column id="4388">
+                <property name="width">0.010416666666666666in</property>
+            </column>
+            <column id="4389">
+                <property name="width">1.40625in</property>
+            </column>
+            <column id="4390">
+                <property name="width">1.1041666666666667in</property>
+            </column>
+            <column id="4391">
+                <property name="width">1.1041666666666667in</property>
+            </column>
+            <column id="4392">
+                <property name="width">1.1041666666666667in</property>
+            </column>
+            <column id="4393">
+                <property name="width">1.1041666666666667in</property>
+            </column>
             <group id="4394">
                 <property name="groupName">BausteinGroup</property>
                 <expression name="keyExpr" type="javascript">row["Titel__(Bausteine)"]</expression>
@@ -5629,15 +5688,12 @@
                             </data>
                         </cell>
                         <cell id="4397">
-                            <property name="colSpan">3</property>
+                            <property name="colSpan">6</property>
                             <property name="rowSpan">1</property>
                             <data id="4411">
                                 <property name="resultSetColumn">Titel__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="4400"/>
-                        <cell id="4401"/>
-                        <cell id="4402"/>
                     </row>
                     <row id="4412">
                         <cell id="4413">
@@ -5751,6 +5807,41 @@
                             <property name="colSpan">2</property>
                             <property name="rowSpan">1</property>
                             <data id="4482">
+                                <list-property name="highlightRules">
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#008000</property>
+                                        <property name="fontSize">10pt</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Ja"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#FF0000</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Nein"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#FFFF00</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Teilweise"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#008080</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Entbehrlich"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                </list-property>
                                 <property name="resultSetColumn">Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
                             </data>
                         </cell>
@@ -5760,6 +5851,18 @@
                     </row>
                 </header>
             </group>
+            <footer>
+                <row id="5299">
+                    <property name="height">0.20833333333333334in</property>
+                    <cell id="5300"/>
+                    <cell id="5301"/>
+                    <cell id="5302"/>
+                    <cell id="5303"/>
+                    <cell id="5304"/>
+                    <cell id="5305"/>
+                    <cell id="5306"/>
+                </row>
+            </footer>
         </table>
         <label id="4361">
             <property name="fontSize">12pt</property>
@@ -5770,6 +5873,7 @@
             <text-property name="text">Geschäftsprozesse</text-property>
         </label>
         <table id="4484">
+            <property name="width">7.739583333333333in</property>
             <property name="dataSet">BusinessProcess_Anforderungen_Bausteine</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -5857,13 +5961,31 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
-            <column id="4509"/>
-            <column id="4510"/>
-            <column id="4511"/>
-            <column id="4512"/>
-            <column id="4513"/>
-            <column id="4514"/>
-            <column id="4515"/>
+            <expression name="bookmark" type="javascript">"Geschäftsprozesse"</expression>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Geschäftsprozesse"</expression>
+            </structure>
+            <column id="4509">
+                <property name="width">1.906in</property>
+            </column>
+            <column id="4510">
+                <property name="width">0.010416666666666666in</property>
+            </column>
+            <column id="4511">
+                <property name="width">1.9479166666666667in</property>
+            </column>
+            <column id="4512">
+                <property name="width">0.9791666666666666in</property>
+            </column>
+            <column id="4513">
+                <property name="width">0.96875in</property>
+            </column>
+            <column id="4514">
+                <property name="width">0.96875in</property>
+            </column>
+            <column id="4515">
+                <property name="width">0.96875in</property>
+            </column>
             <group id="4516">
                 <property name="groupName">BusinessprocessesGroup</property>
                 <expression name="keyExpr" type="javascript">row["Titel__(Geschäftsprozess)"]</expression>
@@ -5882,15 +6004,12 @@
                             </data>
                         </cell>
                         <cell id="4519">
-                            <property name="colSpan">3</property>
+                            <property name="colSpan">6</property>
                             <property name="rowSpan">1</property>
                             <data id="4533">
                                 <property name="resultSetColumn">Titel__(Geschäftsprozess)</property>
                             </data>
                         </cell>
-                        <cell id="4522"/>
-                        <cell id="4523"/>
-                        <cell id="4524"/>
                     </row>
                 </header>
             </group>
@@ -5911,15 +6030,12 @@
                             </data>
                         </cell>
                         <cell id="4538">
-                            <property name="colSpan">3</property>
+                            <property name="colSpan">6</property>
                             <property name="rowSpan">1</property>
                             <data id="4552">
                                 <property name="resultSetColumn">Titel__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="4541"/>
-                        <cell id="4542"/>
-                        <cell id="4543"/>
                     </row>
                     <row id="4554">
                         <property name="fontWeight">bold</property>
@@ -5930,15 +6046,12 @@
                             </label>
                         </cell>
                         <cell id="4556">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="4582">
                                 <property name="resultSetColumn">Beschreibung__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="4557"/>
-                        <cell id="4558"/>
-                        <cell id="4559"/>
-                        <cell id="4560"/>
-                        <cell id="4561"/>
                     </row>
                     <row id="4570">
                         <property name="fontWeight">bold</property>
@@ -5949,15 +6062,12 @@
                             </label>
                         </cell>
                         <cell id="4572">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="4583">
                                 <property name="resultSetColumn">Hauptverantwortlicher__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="4573"/>
-                        <cell id="4574"/>
-                        <cell id="4575"/>
-                        <cell id="4576"/>
-                        <cell id="4577"/>
                     </row>
                     <row id="4562">
                         <property name="fontWeight">bold</property>
@@ -5968,15 +6078,12 @@
                             </label>
                         </cell>
                         <cell id="4564">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="4584">
                                 <property name="resultSetColumn">Weitere__Verantwortliche__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="4565"/>
-                        <cell id="4566"/>
-                        <cell id="4567"/>
-                        <cell id="4568"/>
-                        <cell id="4569"/>
                     </row>
                 </header>
             </group>
@@ -6045,6 +6152,41 @@
                             <property name="colSpan">2</property>
                             <property name="rowSpan">1</property>
                             <data id="4625">
+                                <list-property name="highlightRules">
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#008000</property>
+                                        <property name="fontSize">10pt</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Ja"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#FF0000</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Nein"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#FFFF00</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Teilweise"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#008080</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Entbehrlich"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                </list-property>
                                 <property name="resultSetColumn">Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
                             </data>
                         </cell>
@@ -6053,6 +6195,18 @@
                         <cell id="4613"/>
                     </row>
                 </header>
+                <footer>
+                    <row id="5315">
+                        <property name="height">0.28125in</property>
+                        <cell id="5316"/>
+                        <cell id="5317"/>
+                        <cell id="5318"/>
+                        <cell id="5319"/>
+                        <cell id="5320"/>
+                        <cell id="5321"/>
+                        <cell id="5322"/>
+                    </row>
+                </footer>
             </group>
         </table>
         <label id="4483">
@@ -6064,6 +6218,7 @@
             <text-property name="text">Anwendungen (mod.)</text-property>
         </label>
         <table id="4645">
+            <property name="width">7.739583333333333in</property>
             <property name="dataSet">Anwendungen_Anforderungen_Bausteine</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -6157,13 +6312,31 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
-            <column id="4670"/>
-            <column id="4671"/>
-            <column id="4672"/>
-            <column id="4673"/>
-            <column id="4674"/>
-            <column id="4675"/>
-            <column id="4676"/>
+            <expression name="bookmark" type="javascript">"Anwendungen (mod.)"</expression>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Anwendungen"</expression>
+            </structure>
+            <column id="4670">
+                <property name="width">1.906in</property>
+            </column>
+            <column id="4671">
+                <property name="width">0.010416666666666666in</property>
+            </column>
+            <column id="4672">
+                <property name="width">1.9479166666666667in</property>
+            </column>
+            <column id="4673">
+                <property name="width">0.9791666666666666in</property>
+            </column>
+            <column id="4674">
+                <property name="width">0.96875in</property>
+            </column>
+            <column id="4675">
+                <property name="width">0.96875in</property>
+            </column>
+            <column id="4676">
+                <property name="width">0.96875in</property>
+            </column>
             <group id="4677">
                 <property name="groupName">AnwendungenGroup</property>
                 <expression name="keyExpr" type="javascript">row["Titel__(Anwendung__(mod))"]</expression>
@@ -6182,15 +6355,12 @@
                             </data>
                         </cell>
                         <cell id="4680">
-                            <property name="colSpan">3</property>
+                            <property name="colSpan">6</property>
                             <property name="rowSpan">1</property>
                             <data id="4694">
                                 <property name="resultSetColumn">Titel__(Anwendung__(mod))</property>
                             </data>
                         </cell>
-                        <cell id="4683"/>
-                        <cell id="4684"/>
-                        <cell id="4685"/>
                     </row>
                 </header>
             </group>
@@ -6211,15 +6381,12 @@
                             </data>
                         </cell>
                         <cell id="4699">
-                            <property name="colSpan">3</property>
+                            <property name="colSpan">6</property>
                             <property name="rowSpan">1</property>
                             <data id="4713">
                                 <property name="resultSetColumn">Titel__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="4702"/>
-                        <cell id="4703"/>
-                        <cell id="4704"/>
                     </row>
                     <row id="4730">
                         <cell id="4731">
@@ -6229,15 +6396,12 @@
                             </label>
                         </cell>
                         <cell id="4732">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="4759">
                                 <property name="resultSetColumn">Beschreibung__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="4733"/>
-                        <cell id="4734"/>
-                        <cell id="4735"/>
-                        <cell id="4736"/>
-                        <cell id="4737"/>
                     </row>
                     <row id="4722">
                         <cell id="4723">
@@ -6247,15 +6411,12 @@
                             </label>
                         </cell>
                         <cell id="4724">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="4760">
                                 <property name="resultSetColumn">Hauptverantwortlicher__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="4725"/>
-                        <cell id="4726"/>
-                        <cell id="4727"/>
-                        <cell id="4728"/>
-                        <cell id="4729"/>
                     </row>
                     <row id="4714">
                         <cell id="4715">
@@ -6265,15 +6426,12 @@
                             </label>
                         </cell>
                         <cell id="4716">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="4761">
                                 <property name="resultSetColumn">Weitere__Verantwortliche__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="4717"/>
-                        <cell id="4718"/>
-                        <cell id="4719"/>
-                        <cell id="4720"/>
-                        <cell id="4721"/>
                     </row>
                 </header>
             </group>
@@ -6342,6 +6500,44 @@
                             <property name="colSpan">2</property>
                             <property name="rowSpan">1</property>
                             <data id="4801">
+                                <list-property name="highlightRules">
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#008000</property>
+                                        <property name="fontSize">10pt</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Ja"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#FF0000</property>
+                                        <property name="fontSize">10pt</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Nein"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#FFFF00</property>
+                                        <property name="fontSize">10pt</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Teilweise"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#008080</property>
+                                        <property name="fontSize">10pt</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Entbehrlich"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                </list-property>
                                 <property name="resultSetColumn">Umsetzung__-__Umsetzungsstatus__(Anforderung)</property>
                             </data>
                         </cell>
@@ -6361,6 +6557,7 @@
             <text-property name="text">IT-Systeme</text-property>
         </label>
         <table id="4803">
+            <property name="width">7.739583333333333in</property>
             <property name="dataSet">IT-Systeme_Anforderungen_Bausteine</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -6454,13 +6651,30 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
-            <column id="4828"/>
-            <column id="4829"/>
-            <column id="4830"/>
-            <column id="4831"/>
-            <column id="4832"/>
-            <column id="4833"/>
-            <column id="4834"/>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"IT-Systeme"</expression>
+            </structure>
+            <column id="4828">
+                <property name="width">1.906in</property>
+            </column>
+            <column id="4829">
+                <property name="width">0.010416666666666666in</property>
+            </column>
+            <column id="4830">
+                <property name="width">1.9479166666666667in</property>
+            </column>
+            <column id="4831">
+                <property name="width">0.9791666666666666in</property>
+            </column>
+            <column id="4832">
+                <property name="width">0.96875in</property>
+            </column>
+            <column id="4833">
+                <property name="width">0.96875in</property>
+            </column>
+            <column id="4834">
+                <property name="width">0.96875in</property>
+            </column>
             <group id="4835">
                 <property name="groupName">ITSystemGroup</property>
                 <expression name="keyExpr" type="javascript">row["Titel__(IT-System)"]</expression>
@@ -6479,15 +6693,12 @@
                             </data>
                         </cell>
                         <cell id="4838">
-                            <property name="colSpan">3</property>
+                            <property name="colSpan">6</property>
                             <property name="rowSpan">1</property>
                             <data id="4852">
                                 <property name="resultSetColumn">Titel__(IT-System)</property>
                             </data>
                         </cell>
-                        <cell id="4841"/>
-                        <cell id="4842"/>
-                        <cell id="4843"/>
                     </row>
                 </header>
             </group>
@@ -6508,15 +6719,12 @@
                             </data>
                         </cell>
                         <cell id="4857">
-                            <property name="colSpan">3</property>
+                            <property name="colSpan">6</property>
                             <property name="rowSpan">1</property>
                             <data id="4871">
                                 <property name="resultSetColumn">Titel__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="4860"/>
-                        <cell id="4861"/>
-                        <cell id="4862"/>
                     </row>
                     <row id="4889">
                         <cell id="4890">
@@ -6526,15 +6734,12 @@
                             </label>
                         </cell>
                         <cell id="4891">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="4902">
                                 <property name="resultSetColumn">Beschreibung__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="4892"/>
-                        <cell id="4893"/>
-                        <cell id="4894"/>
-                        <cell id="4895"/>
-                        <cell id="4896"/>
                     </row>
                     <row id="4881">
                         <cell id="4882">
@@ -6544,15 +6749,12 @@
                             </label>
                         </cell>
                         <cell id="4883">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="4900">
                                 <property name="resultSetColumn">Hauptverantwortlicher__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="4884"/>
-                        <cell id="4885"/>
-                        <cell id="4886"/>
-                        <cell id="4887"/>
-                        <cell id="4888"/>
                     </row>
                     <row id="4873">
                         <cell id="4874">
@@ -6562,15 +6764,12 @@
                             </label>
                         </cell>
                         <cell id="4875">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="4901">
                                 <property name="resultSetColumn">Weitere__Verantwortliche__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="4876"/>
-                        <cell id="4877"/>
-                        <cell id="4878"/>
-                        <cell id="4879"/>
-                        <cell id="4880"/>
                     </row>
                 </header>
             </group>
@@ -6639,6 +6838,41 @@
                             <property name="colSpan">2</property>
                             <property name="rowSpan">1</property>
                             <data id="4942">
+                                <list-property name="highlightRules">
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#008000</property>
+                                        <property name="fontSize">10pt</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Ja"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#FF0000</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Nein"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#FFFF00</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Teilweise"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#008080</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Entbehrlich"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                </list-property>
                                 <property name="resultSetColumn">Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
                             </data>
                         </cell>
@@ -6658,6 +6892,7 @@
             <text-property name="text">ICS-Systeme</text-property>
         </label>
         <table id="4944">
+            <property name="width">7.739583333333333in</property>
             <property name="dataSet">ICS-Systeme_Anforderungen_Bausteine</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -6751,13 +6986,30 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
-            <column id="5021"/>
-            <column id="5022"/>
-            <column id="5023"/>
-            <column id="5024"/>
-            <column id="5025"/>
-            <column id="5026"/>
-            <column id="5027"/>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"ICS-Systeme"</expression>
+            </structure>
+            <column id="5021">
+                <property name="width">1.906in</property>
+            </column>
+            <column id="5022">
+                <property name="width">0.010416666666666666in</property>
+            </column>
+            <column id="5023">
+                <property name="width">1.9479166666666667in</property>
+            </column>
+            <column id="5024">
+                <property name="width">0.9791666666666666in</property>
+            </column>
+            <column id="5025">
+                <property name="width">0.96875in</property>
+            </column>
+            <column id="5026">
+                <property name="width">0.96875in</property>
+            </column>
+            <column id="5027">
+                <property name="width">0.96875in</property>
+            </column>
             <group id="4945">
                 <property name="groupName">ICSSystemGroup</property>
                 <expression name="keyExpr" type="javascript">row["Titel__(ICS-System)"]</expression>
@@ -6776,15 +7028,12 @@
                             </data>
                         </cell>
                         <cell id="4949">
-                            <property name="colSpan">3</property>
+                            <property name="colSpan">6</property>
                             <property name="rowSpan">1</property>
                             <data id="5029">
                                 <property name="resultSetColumn">Titel__(ICS-System)</property>
                             </data>
                         </cell>
-                        <cell id="4953"/>
-                        <cell id="4954"/>
-                        <cell id="4955"/>
                     </row>
                 </header>
             </group>
@@ -6805,15 +7054,12 @@
                             </data>
                         </cell>
                         <cell id="4960">
-                            <property name="colSpan">3</property>
+                            <property name="colSpan">6</property>
                             <property name="rowSpan">1</property>
                             <data id="4961">
                                 <property name="resultSetColumn">Titel__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="4964"/>
-                        <cell id="4965"/>
-                        <cell id="4966"/>
                     </row>
                     <row id="4967">
                         <cell id="4968">
@@ -6823,15 +7069,12 @@
                             </label>
                         </cell>
                         <cell id="4970">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="4971">
                                 <property name="resultSetColumn">Beschreibung__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="4972"/>
-                        <cell id="4973"/>
-                        <cell id="4974"/>
-                        <cell id="4975"/>
-                        <cell id="4976"/>
                     </row>
                     <row id="4977">
                         <cell id="4978">
@@ -6841,15 +7084,12 @@
                             </label>
                         </cell>
                         <cell id="4980">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="4981">
                                 <property name="resultSetColumn">Hauptverantwortlicher__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="4982"/>
-                        <cell id="4983"/>
-                        <cell id="4984"/>
-                        <cell id="4985"/>
-                        <cell id="4986"/>
                     </row>
                     <row id="4987">
                         <cell id="4988">
@@ -6859,15 +7099,12 @@
                             </label>
                         </cell>
                         <cell id="4990">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="4991">
                                 <property name="resultSetColumn">Weitere__Verantwortliche__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="4992"/>
-                        <cell id="4993"/>
-                        <cell id="4994"/>
-                        <cell id="4995"/>
-                        <cell id="4996"/>
                     </row>
                 </header>
             </group>
@@ -6936,6 +7173,41 @@
                             <property name="colSpan">2</property>
                             <property name="rowSpan">1</property>
                             <data id="5017">
+                                <list-property name="highlightRules">
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#008000</property>
+                                        <property name="fontSize">10pt</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Ja"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#FF0000</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Nein"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#FFFF00</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Teilweise"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#008080</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Entbehrlich"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                </list-property>
                                 <property name="resultSetColumn">Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
                             </data>
                         </cell>
@@ -6955,6 +7227,7 @@
             <text-property name="text">Andere/IOT-Systeme</text-property>
         </label>
         <table id="5031">
+            <property name="width">7.739583333333333in</property>
             <property name="dataSet">IOT-System_Anforderungen_Bausteine</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -7048,13 +7321,30 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
-            <column id="5108"/>
-            <column id="5109"/>
-            <column id="5110"/>
-            <column id="5111"/>
-            <column id="5112"/>
-            <column id="5113"/>
-            <column id="5114"/>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Andere/IOT-Systeme"</expression>
+            </structure>
+            <column id="5108">
+                <property name="width">1.906in</property>
+            </column>
+            <column id="5109">
+                <property name="width">0.010416666666666666in</property>
+            </column>
+            <column id="5110">
+                <property name="width">1.9479166666666667in</property>
+            </column>
+            <column id="5111">
+                <property name="width">0.9791666666666666in</property>
+            </column>
+            <column id="5112">
+                <property name="width">0.96875in</property>
+            </column>
+            <column id="5113">
+                <property name="width">0.96875in</property>
+            </column>
+            <column id="5114">
+                <property name="width">0.96875in</property>
+            </column>
             <group id="5032">
                 <property name="groupName">IOTSystemGroup</property>
                 <expression name="keyExpr" type="javascript">row["Titel__(AnderesIOT-System)"]</expression>
@@ -7073,15 +7363,12 @@
                             </data>
                         </cell>
                         <cell id="5036">
-                            <property name="colSpan">3</property>
+                            <property name="colSpan">6</property>
                             <property name="rowSpan">1</property>
                             <data id="5116">
                                 <property name="resultSetColumn">Titel__(AnderesIOT-System)</property>
                             </data>
                         </cell>
-                        <cell id="5040"/>
-                        <cell id="5041"/>
-                        <cell id="5042"/>
                     </row>
                 </header>
             </group>
@@ -7102,15 +7389,12 @@
                             </data>
                         </cell>
                         <cell id="5047">
-                            <property name="colSpan">3</property>
+                            <property name="colSpan">6</property>
                             <property name="rowSpan">1</property>
                             <data id="5048">
                                 <property name="resultSetColumn">Titel__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="5051"/>
-                        <cell id="5052"/>
-                        <cell id="5053"/>
                     </row>
                     <row id="5054">
                         <cell id="5055">
@@ -7120,15 +7404,12 @@
                             </label>
                         </cell>
                         <cell id="5057">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="5058">
                                 <property name="resultSetColumn">Beschreibung__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="5059"/>
-                        <cell id="5060"/>
-                        <cell id="5061"/>
-                        <cell id="5062"/>
-                        <cell id="5063"/>
                     </row>
                     <row id="5064">
                         <cell id="5065">
@@ -7138,15 +7419,12 @@
                             </label>
                         </cell>
                         <cell id="5067">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="5068">
                                 <property name="resultSetColumn">Hauptverantwortlicher__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="5069"/>
-                        <cell id="5070"/>
-                        <cell id="5071"/>
-                        <cell id="5072"/>
-                        <cell id="5073"/>
                     </row>
                     <row id="5074">
                         <cell id="5075">
@@ -7156,15 +7434,12 @@
                             </label>
                         </cell>
                         <cell id="5077">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="5078">
                                 <property name="resultSetColumn">Weitere__Verantwortliche__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="5079"/>
-                        <cell id="5080"/>
-                        <cell id="5081"/>
-                        <cell id="5082"/>
-                        <cell id="5083"/>
                     </row>
                 </header>
             </group>
@@ -7233,6 +7508,41 @@
                             <property name="colSpan">2</property>
                             <property name="rowSpan">1</property>
                             <data id="5104">
+                                <list-property name="highlightRules">
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#008000</property>
+                                        <property name="fontSize">10pt</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Ja"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#FF0000</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Nein"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#FFFF00</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Teilweise"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#008080</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Entbehrlich"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                </list-property>
                                 <property name="resultSetColumn">Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
                             </data>
                         </cell>
@@ -7252,6 +7562,7 @@
             <text-property name="text">Kommunikationsverbindungen</text-property>
         </label>
         <table id="5118">
+            <property name="width">7.739583333333333in</property>
             <property name="dataSet">Kommunikationsverbindungen_Anforderungen_Bausteine</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -7345,13 +7656,30 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
-            <column id="5195"/>
-            <column id="5196"/>
-            <column id="5197"/>
-            <column id="5198"/>
-            <column id="5199"/>
-            <column id="5200"/>
-            <column id="5201"/>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Kommunikationsverbindungen"</expression>
+            </structure>
+            <column id="5195">
+                <property name="width">1.906in</property>
+            </column>
+            <column id="5196">
+                <property name="width">0.010416666666666666in</property>
+            </column>
+            <column id="5197">
+                <property name="width">1.9479166666666667in</property>
+            </column>
+            <column id="5198">
+                <property name="width">0.9791666666666666in</property>
+            </column>
+            <column id="5199">
+                <property name="width">0.96875in</property>
+            </column>
+            <column id="5200">
+                <property name="width">0.96875in</property>
+            </column>
+            <column id="5201">
+                <property name="width">0.96875in</property>
+            </column>
             <group id="5119">
                 <property name="groupName">KV-Group</property>
                 <expression name="keyExpr" type="javascript">row["Titel__(Kommunikationsverbindung)"]</expression>
@@ -7370,15 +7698,12 @@
                             </data>
                         </cell>
                         <cell id="5123">
-                            <property name="colSpan">3</property>
+                            <property name="colSpan">6</property>
                             <property name="rowSpan">1</property>
                             <data id="5202">
                                 <property name="resultSetColumn">Titel__(Kommunikationsverbindung)</property>
                             </data>
                         </cell>
-                        <cell id="5127"/>
-                        <cell id="5128"/>
-                        <cell id="5129"/>
                     </row>
                 </header>
             </group>
@@ -7399,15 +7724,12 @@
                             </data>
                         </cell>
                         <cell id="5134">
-                            <property name="colSpan">3</property>
+                            <property name="colSpan">6</property>
                             <property name="rowSpan">1</property>
                             <data id="5135">
                                 <property name="resultSetColumn">Titel__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="5138"/>
-                        <cell id="5139"/>
-                        <cell id="5140"/>
                     </row>
                     <row id="5141">
                         <cell id="5142">
@@ -7417,15 +7739,12 @@
                             </label>
                         </cell>
                         <cell id="5144">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="5145">
                                 <property name="resultSetColumn">Beschreibung__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="5146"/>
-                        <cell id="5147"/>
-                        <cell id="5148"/>
-                        <cell id="5149"/>
-                        <cell id="5150"/>
                     </row>
                     <row id="5151">
                         <cell id="5152">
@@ -7435,15 +7754,12 @@
                             </label>
                         </cell>
                         <cell id="5154">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="5155">
                                 <property name="resultSetColumn">Hauptverantwortlicher__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="5156"/>
-                        <cell id="5157"/>
-                        <cell id="5158"/>
-                        <cell id="5159"/>
-                        <cell id="5160"/>
                     </row>
                     <row id="5161">
                         <cell id="5162">
@@ -7453,15 +7769,12 @@
                             </label>
                         </cell>
                         <cell id="5164">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="5165">
                                 <property name="resultSetColumn">Weitere__Verantwortliche__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="5166"/>
-                        <cell id="5167"/>
-                        <cell id="5168"/>
-                        <cell id="5169"/>
-                        <cell id="5170"/>
                     </row>
                 </header>
             </group>
@@ -7530,6 +7843,41 @@
                             <property name="colSpan">2</property>
                             <property name="rowSpan">1</property>
                             <data id="5191">
+                                <list-property name="highlightRules">
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#008000</property>
+                                        <property name="fontSize">10pt</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Ja"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#FF0000</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Nein"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#FFFF00</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Teilweise"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#008080</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Entbehrlich"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                </list-property>
                                 <property name="resultSetColumn">Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
                             </data>
                         </cell>
@@ -7549,6 +7897,7 @@
             <text-property name="text">Räume (mod.)</text-property>
         </label>
         <table id="5205">
+            <property name="width">7.739583333333333in</property>
             <property name="dataSet">RaumMod_Anforderungen_Bausteine</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -7642,13 +7991,30 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
-            <column id="5282"/>
-            <column id="5283"/>
-            <column id="5284"/>
-            <column id="5285"/>
-            <column id="5286"/>
-            <column id="5287"/>
-            <column id="5288"/>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Räume"</expression>
+            </structure>
+            <column id="5282">
+                <property name="width">1.906in</property>
+            </column>
+            <column id="5283">
+                <property name="width">0.010416666666666666in</property>
+            </column>
+            <column id="5284">
+                <property name="width">1.9479166666666667in</property>
+            </column>
+            <column id="5285">
+                <property name="width">0.9791666666666666in</property>
+            </column>
+            <column id="5286">
+                <property name="width">0.96875in</property>
+            </column>
+            <column id="5287">
+                <property name="width">0.96875in</property>
+            </column>
+            <column id="5288">
+                <property name="width">0.96875in</property>
+            </column>
             <group id="5206">
                 <property name="groupName">RaumGroup</property>
                 <expression name="keyExpr" type="javascript">row["Titel__(Raum__(mod))"]</expression>
@@ -7667,15 +8033,12 @@
                             </data>
                         </cell>
                         <cell id="5210">
-                            <property name="colSpan">3</property>
+                            <property name="colSpan">6</property>
                             <property name="rowSpan">1</property>
                             <data id="5289">
                                 <property name="resultSetColumn">Titel__(Raum__(mod))</property>
                             </data>
                         </cell>
-                        <cell id="5214"/>
-                        <cell id="5215"/>
-                        <cell id="5216"/>
                     </row>
                 </header>
             </group>
@@ -7696,15 +8059,12 @@
                             </data>
                         </cell>
                         <cell id="5221">
-                            <property name="colSpan">3</property>
+                            <property name="colSpan">6</property>
                             <property name="rowSpan">1</property>
                             <data id="5222">
                                 <property name="resultSetColumn">Titel__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="5225"/>
-                        <cell id="5226"/>
-                        <cell id="5227"/>
                     </row>
                     <row id="5228">
                         <cell id="5229">
@@ -7714,15 +8074,12 @@
                             </label>
                         </cell>
                         <cell id="5231">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="5232">
                                 <property name="resultSetColumn">Beschreibung__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="5233"/>
-                        <cell id="5234"/>
-                        <cell id="5235"/>
-                        <cell id="5236"/>
-                        <cell id="5237"/>
                     </row>
                     <row id="5238">
                         <cell id="5239">
@@ -7732,15 +8089,12 @@
                             </label>
                         </cell>
                         <cell id="5241">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="5242">
                                 <property name="resultSetColumn">Hauptverantwortlicher__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="5243"/>
-                        <cell id="5244"/>
-                        <cell id="5245"/>
-                        <cell id="5246"/>
-                        <cell id="5247"/>
                     </row>
                     <row id="5248">
                         <cell id="5249">
@@ -7750,15 +8104,12 @@
                             </label>
                         </cell>
                         <cell id="5251">
+                            <property name="colSpan">6</property>
+                            <property name="rowSpan">1</property>
                             <data id="5252">
                                 <property name="resultSetColumn">Weitere__Verantwortliche__(Bausteine)</property>
                             </data>
                         </cell>
-                        <cell id="5253"/>
-                        <cell id="5254"/>
-                        <cell id="5255"/>
-                        <cell id="5256"/>
-                        <cell id="5257"/>
                     </row>
                 </header>
             </group>
@@ -7827,6 +8178,41 @@
                             <property name="colSpan">2</property>
                             <property name="rowSpan">1</property>
                             <data id="5278">
+                                <list-property name="highlightRules">
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#008000</property>
+                                        <property name="fontSize">10pt</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Ja"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#FF0000</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Nein"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#FFFF00</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Teilweise"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                    <structure>
+                                        <property name="operator">eq</property>
+                                        <property name="backgroundColor">#008080</property>
+                                        <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                        <simple-property-list name="value1">
+                                            <value type="javascript">"Entbehrlich"</value>
+                                        </simple-property-list>
+                                    </structure>
+                                </list-property>
                                 <property name="resultSetColumn">Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)</property>
                             </data>
                         </cell>
