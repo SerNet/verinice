@@ -3226,7 +3226,7 @@
             <property name="fontWeight">normal</property>
             <property name="textUnderline">underline</property>
             <property name="paddingTop">20pt</property>
-            <text-property name="text">Stufe: Normal</text-property>
+            <text-property name="text">Stufe: Unkritisch</text-property>
         </label>
         <grid name="Unkritisch" id="2608">
             <property name="width">11.148760330578513in</property>
