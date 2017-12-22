@@ -1862,8 +1862,27 @@
               id="sernet.verinice.greenbone.cheatsheets.ism"
               name="%CheatSheets.Greenbone.Ism.Name">
            <description>
-              
            </description>
+        </cheatsheet>
+        <category
+           id="sernet.verinice.cheatsheets.mogs"
+           name="%cheatsheets.mogs.category">
+        </category>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.intro"
+            composite="false"
+            contentFile="%cheatsheets.mogs.intro.file"
+            name="%cheatsheets.mogs.intro.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.200-2"
+            composite="false"
+            contentFile="%cheatsheets.mogs.200-2.file"
+            name="%cheatsheets.mogs.200-2.name">
+            <description></description>
         </cheatsheet>
    </extension>
    <extension
