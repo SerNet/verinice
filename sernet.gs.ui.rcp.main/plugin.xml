@@ -1878,10 +1878,50 @@
         </cheatsheet>
         <cheatsheet
             category="sernet.verinice.cheatsheets.mogs"
-            id="sernet.verinice.cheatsheets.mogs.200-2"
+            id="sernet.verinice.cheatsheets.mogs.analysis"
             composite="false"
-            contentFile="%cheatsheets.mogs.200-2.file"
-            name="%cheatsheets.mogs.200-2.name">
+            contentFile="%cheatsheets.mogs.analysis.file"
+            name="%cheatsheets.mogs.analysis.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.detection"
+            composite="false"
+            contentFile="%cheatsheets.mogs.detection.file"
+            name="%cheatsheets.mogs.detection.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.modelling"
+            composite="false"
+            contentFile="%cheatsheets.mogs.modelling.file"
+            name="%cheatsheets.mogs.modelling.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.check"
+            composite="false"
+            contentFile="%cheatsheets.mogs.check.file"
+            name="%cheatsheets.mogs.check.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.documents"
+            composite="false"
+            contentFile="%cheatsheets.mogs.documents.file"
+            name="%cheatsheets.mogs.documents.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.reports"
+            composite="false"
+            contentFile="%cheatsheets.mogs.reports.file"
+            name="%cheatsheets.mogs.reports.name">
             <description></description>
         </cheatsheet>
    </extension>

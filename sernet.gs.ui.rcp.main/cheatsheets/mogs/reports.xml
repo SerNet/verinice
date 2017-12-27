@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<cheatsheet title="Berichterstellung">
+
+  <intro>
+    <description>
+      <b>Willkommen bei verinice.</b>
+      <br/>
+      <br/>
+      Mit verinice können Sie alle nötigen Referenzdokumente (A.1 bis A.7) erzeugen, die benötigt
+      werden. Die Dokumente können in den Formaten PDF, HTML, Microsoft Office oder OpenOffice/LibreOffice
+      erzeugt werden.
+    </description>
+  </intro>
+
+  <item title="Ausgabe der Referenzdokumente">
+     <description>
+        Rufen Sie über das Menü Datei &gt; <b>Report erzeugen</b> … auf. Alternativ kann in der
+        oberen Leiste der Button Bericht (<b>Report erzeugen…</b>) oder über einen <b>Informationsverbund
+        &gt; rechte Maustaste &gt; Kontextmenü &gt; Erzeuge Report …</b> ausgewählt werden. Wählen
+        Sie nun im Feld „Report auswählen“ eines der Referenzdokumente vom BSI aus. Wählen Sie
+        anschließend den Geltungsbereich (Ihren Informationsverbund), das Ausgabeformat und den
+        Ablageort für die Ausgabedatei aus. Mit Klick auf <b>OK</b> starten Sie die Berichtserzeugung. Der
+        Bericht wird erzeugt, was üblicherweise je nach Größe der Datenbank einige Sekunden bis
+        mehrere Minuten dauern kann. Nachdem der Bericht vollständig erzeugt wurde können Sie
+        diesen an dem Ablageort einsehen.
+     </description>
+  </item>
+
+  <item title="Verwendung des Abfrageassistenten">
+     <description>
+        Mit dem Abfrageassistenten können Sie eigene Berichte im .CSV-Format ausgeben lassen.
+        Um den Abfrageassistenten zu starten wählen Sie im Menü Datei &gt; Report-Abfrage &gt;
+        Neue Abfrage aus. Nun können Sie Ihren individuellen Bericht erzeugen indem Sie die einzelnen
+        Spalten definieren. Wählen Sie dazu einen Startpunkt (erste Dropdownbox), auf den Sie Ihren
+        Bericht aufbauen wollen. In der zweiten Dropdownbox können Sie bestimmen, ob es sich um eine
+        Eigenschaft (.), Verknüpftes Objekt (/), Verknüpfung (:), Übergeordnetes (&lt;) oder Untergeordnetes
+        Objekt handelt. Die weiteren Dropdownboxen werden je nach Komplexität der Abfrage erweitert.
+        Nicht mehr benötigte Spalten können mit Klick auf Entfernen gelöscht werden. Um weitere Spalten
+        zu erzeugen wählen Sie Leere Spalte hinzufügen oder Letzte Spalte kopieren. Des Weiteren haben
+        Sie die Möglichkeit die Spaltenreihenfolge zu ändern indem Sie eine Spalte auswählen und anschließend
+        auf Nach oben oder Nach unten klicken. Darüber hinaus können Sie bestimmen ob Sie Alle Scopes
+        einbeziehen wollen oder Nur ausgewählte Scopes berücksichtigen wollen. Auch die Auswahl der
+        Verknüpfungen kann durch Klick auf Ändern bestimmt werden. Mit dem Button Abfrage ausführen
+        (CSV) starten Sie die Berichtserzeugung.
+        <br/>
+        Der erstellte Bericht kann als .VLT-Datei abgespeichert und immer wieder geöffnet
+        (Datei &gt; Report-Abfrage &gt; Abfrage öffnen...) werden.
+        <br/>
+        Eine umfangreiche Präsentation der Funktionen des Abfrageassistenten erhalten Sie
+        auf dem verinice YouTube Channel unter:
+        <br/>
+        <b>https://www.youtube.com/watch?v=CL8-1sC_ZSw&amp;list=PLYG8Ez-PzQxt3MVLvnFFRXS59YWzDlbGN&amp;index=6</b>
+     </description>
+  </item>
+
+
+
+</cheatsheet>
