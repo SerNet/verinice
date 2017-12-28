@@ -69,15 +69,18 @@ public final class ModelingValidator {
         if (proceedingOfItNetwork == null || proceedingOfItNetwork.isEmpty()) {
             return true;
         }
-        if (isItNetworkProceedingBasis(proceedingOfItNetwork)) {
-            return isRequirementValidForProceedingBasis(proceedingOfRequirement);
-        }
-        if (isItNetworkProceedingStandard(proceedingOfItNetwork)) {
-            return isRequirementValidForProceedingStandard(proceedingOfRequirement);
-        }
-        if (isItNetworkProceedingHigh(proceedingOfItNetwork)) {
+
+        // with ENUMs one simply could
+        // return proceedingOfRequirement <= proceedingOfItNetwork;
+        switch (proceedingOfItNetwork) {
+        case ItNetwork.PROP_QUALIFIER_BASIC:
+            return BpRequirement.PROP_QUALIFIER_BASIC.equals(proceedingOfRequirement);
+        case ItNetwork.PROP_QUALIFIER_STANDARD:
+            return !BpRequirement.PROP_QUALIFIER_HIGH.equals(proceedingOfRequirement);
+        case ItNetwork.PROP_QUALIFIER_HIGH:
             return true;
         }
+
         // Proceeding is unknown, accept the requirement anyway
         if (LOG.isInfoEnabled()) {
             LOG.info("It network " + itNetwork.getTitle()
@@ -85,26 +88,4 @@ public final class ModelingValidator {
         }
         return true;
     }
-
-    private static boolean isRequirementValidForProceedingBasis(String proceedingOfRequirement) {
-        return !BpRequirement.PROP_QUALIFIER_STANDARD.equals(proceedingOfRequirement)
-                && !BpRequirement.PROP_QUALIFIER_HIGH.equals(proceedingOfRequirement);
-    }
-
-    private static boolean isRequirementValidForProceedingStandard(String proceedingOfRequirement) {
-        return !BpRequirement.PROP_QUALIFIER_HIGH.equals(proceedingOfRequirement);
-    }
-
-    private static boolean isItNetworkProceedingBasis(String proceedingOfItNetwork) {
-        return ItNetwork.PROP_QUALIFIER_BASIC.equals(proceedingOfItNetwork);
-    }
-
-    private static boolean isItNetworkProceedingStandard(String proceedingOfItNetwork) {
-        return ItNetwork.PROP_QUALIFIER_STANDARD.equals(proceedingOfItNetwork);
-    }
-
-    private static boolean isItNetworkProceedingHigh(String proceedingOfItNetwork) {
-        return ItNetwork.PROP_QUALIFIER_HIGH.equals(proceedingOfItNetwork);
-    }
-
 }
