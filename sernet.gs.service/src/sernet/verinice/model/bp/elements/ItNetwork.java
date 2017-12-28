@@ -43,6 +43,10 @@ public class ItNetwork extends CnATreeElement implements IBpElement  {
        
     public static final String TYPE_ID = "bp_itnetwork"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_itnetwork_name"; //$NON-NLS-1$
+    public static final String PROP_QUALIFIER = "bp_itnetwork_qualifier"; //$NON-NLS-1$
+    public static final String PROP_QUALIFIER_BASIC = "bp_itnetwork_qualifier_basic"; //$NON-NLS-1$
+    public static final String PROP_QUALIFIER_STANDARD = "bp_itnetwork_qualifier_standard"; //$NON-NLS-1$
+    public static final String PROP_QUALIFIER_HIGH = "bp_itnetwork_qualifier_high"; //$NON-NLS-1$
     
     protected ItNetwork() {}
     
@@ -66,6 +70,16 @@ public class ItNetwork extends CnATreeElement implements IBpElement  {
     }
     
     @Override
+    public boolean canContain(Object object) {
+        return object instanceof BpRequirement || object instanceof ApplicationGroup
+                || object instanceof BpPersonGroup || object instanceof BpRequirementGroup
+                || object instanceof BpThreatGroup || object instanceof BusinessProcessGroup
+                || object instanceof DeviceGroup || object instanceof IcsSystemGroup
+                || object instanceof ItSystemGroup || object instanceof NetworkGroup
+                || object instanceof RoomGroup || object instanceof SafeguardGroup;
+    }
+
+    @Override
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);
     }
@@ -80,21 +94,38 @@ public class ItNetwork extends CnATreeElement implements IBpElement  {
         return TYPE_ID;
     }
     
-    @Override
-    public boolean canContain(Object object) {
-        return object instanceof BpRequirement ||
-               object instanceof ApplicationGroup ||
-               object instanceof BpPersonGroup ||
-               object instanceof BpRequirementGroup ||
-               object instanceof BpThreatGroup ||
-               object instanceof BusinessProcessGroup ||
-               object instanceof DeviceGroup ||
-               object instanceof IcsSystemGroup ||
-               object instanceof ItSystemGroup ||
-               object instanceof NetworkGroup ||
-               object instanceof RoomGroup ||
-               object instanceof SafeguardGroup;
+    public String getQualifier() {
+        return getEntity().getPropertyValue(PROP_QUALIFIER);
+    }
+
+    public void setQualifier(String qualifier) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
+    }
+
+    /**
+     * @return The proceeding of securing. The proceeding is stored in the
+     *         property PROP_QUALIFIER.
+     */
+    public String getProceeding() {
+        return getQualifier();
+    }
+
+    /**
+     * Sets the proceeding of securing. The proceeding is stored in the property
+     * PROP_QUALIFIER.
+     * 
+     * @param proceeding
+     *            The proceeding of securing or qualifier
+     */
+    public void setProceeding(String proceeding) {
+        setQualifier(proceeding);
     }
     
+    public static boolean isItNetwork(CnATreeElement element) {
+        if (element == null) {
+            return false;
+        }
+        return TYPE_ID.equals(element.getTypeId());
+    }
 
 }

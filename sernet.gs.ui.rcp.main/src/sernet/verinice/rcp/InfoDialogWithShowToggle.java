@@ -29,11 +29,11 @@ import org.eclipse.ui.PlatformUI;
 import sernet.gs.ui.rcp.main.Activator;
 
 /**
- * Opens an information and a toggle "Don't show this information again".
+ * Information dialog that offers the option of no longer displaying the dialog
+ * in the same use case.
  * 
- * Toggle state is stored in the preference store if store and preference key is not null.
- * 
- * If toggle state is true dialog is not shown if InfoDialogWithShowToggle.openInformation is called.
+ * The user's choice of whether to display the dialog is stored in the RCP
+ * PreferenceStore.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */

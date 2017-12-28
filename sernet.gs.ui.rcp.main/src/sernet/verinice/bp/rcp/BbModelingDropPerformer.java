@@ -36,12 +36,16 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.VeriniceElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -59,6 +63,7 @@ import sernet.verinice.model.bp.elements.ItSystem;
 import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.rcp.catalog.CatalogDragListener;
 import sernet.verinice.service.bp.exceptions.BpModelingException;
 import sernet.verinice.service.bp.exceptions.GroupNotFoundInScopeException;
@@ -91,6 +96,8 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         supportedDropTypeIds.add(Room.TYPE_ID);
     }
 
+    private ModelCommand modelCommand;
+
     private ICommandService commandService;
 
     private boolean isActive = false;
@@ -98,7 +105,7 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * sernet.verinice.iso27k.rcp.action.DropPerformer#performDrop(java.lang.
      * Object, java.lang.Object, org.eclipse.jface.viewers.Viewer)
@@ -114,21 +121,8 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
                 log.warn("List of dragged modules is empty. Can not model element."); //$NON-NLS-1$
                 return false;
             }
-            PlatformUI.getWorkbench().getProgressService()
-                    .busyCursorWhile(new IRunnableWithProgress() {
-                        @Override
-                        public void run(IProgressMonitor monitor)
-                                throws InvocationTargetException, InterruptedException {
-                            try {
-                                monitor.beginTask(getTaskMessage(draggedModules, targetElement),
-                                        IProgressMonitor.UNKNOWN);
-                                modelModulesAndElement(draggedModules, targetElement);
-                                monitor.done();
-                            } catch (CommandException e) {
-                                showError(e, Messages.BbModelingDropPerformer_Error0);
-                            }
-                        }
-                    });
+            startModelingByProgressService(draggedModules);
+            showConfirmationDialog();
             return true;
         } catch (InvocationTargetException e) {
             log.error(e);
@@ -142,6 +136,45 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         }
     }
 
+    private void showConfirmationDialog() {
+        InfoDialogWithShowToggle.openInformation(Messages.BbModelingDropPerformerConfirmationTitle,
+                getConfirmationDialogMessage(),
+                Messages.BbModelingDropPerformerConfirmationToggleMessage,
+                PreferenceConstants.INFO_BP_MODELING_CONFIRMATION);
+    }
+
+    private String getConfirmationDialogMessage() {
+        String message = Messages.BbModelingDropPerformerConfirmationNoProceeding;
+        String proceedingLabel = null;
+        if (modelCommand != null) {
+            proceedingLabel = modelCommand.getProceedingLable();
+        }
+        if (proceedingLabel != null && !proceedingLabel.isEmpty()) {
+            message = NLS.bind(Messages.BbModelingDropPerformerConfirmation, proceedingLabel);
+        }
+        return message;
+    }
+
+    private void startModelingByProgressService(final List<CnATreeElement> draggedModules)
+            throws InvocationTargetException, InterruptedException {
+        closeEditors();
+        PlatformUI.getWorkbench().getProgressService()
+                .busyCursorWhile(new IRunnableWithProgress() {
+                    @Override
+                    public void run(IProgressMonitor monitor)
+                            throws InvocationTargetException, InterruptedException {
+                        try {
+                            monitor.beginTask(getTaskMessage(draggedModules, targetElement),
+                                    IProgressMonitor.UNKNOWN);
+                            modelModulesAndElement(draggedModules, targetElement);
+                            monitor.done();
+                        } catch (CommandException e) {
+                            showError(e, Messages.BbModelingDropPerformer_Error0);
+                        }
+                    }
+                });
+    }
+
     private void modelModulesAndElement(List<CnATreeElement> draggedModules, CnATreeElement element)
             throws CommandException {
         Set<String> compendiumUuids = new HashSet<>();
@@ -151,9 +184,27 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         List<String> targetUuids = new LinkedList<>();
         targetUuids.add(element.getUuid());
 
-        ModelCommand modelCommand = new ModelCommand(compendiumUuids, targetUuids);
-        getCommandService().executeCommand(modelCommand);
-        CnAElementFactory.getInstance().reloadModelFromDatabase();
+        modelCommand = new ModelCommand(compendiumUuids, targetUuids);
+        modelCommand = getCommandService().executeCommand(modelCommand);
+        CnAElementFactory.getInstance().reloadBpModelFromDatabase();
+        CnAElementFactory.getInstance().reloadCatalogModelFromDatabase();
+    }
+
+    private void closeEditors() {
+        IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                .getActivePage().getEditorReferences();
+        for (IEditorReference er : editorReferences) {
+            try {
+                if (er.isPinned() || er.isDirty()) {
+                    continue;
+                }
+                if (er.getEditorInput() instanceof BSIElementEditorInput) {
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(er.getEditor(true), true);
+                }
+            } catch (PartInitException e) {
+                ExceptionUtil.log(e, "Error closing editors");
+            }
+        }
     }
 
     private List<CnATreeElement> getDraggedElements(Object data) {
@@ -296,6 +347,7 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         final String message = NLS.bind(Messages.BbModelingDropPerformer_ModelingAborted,
                 rootCause.getMessage());
         Display.getDefault().asyncExec(new Runnable() {
+            @Override
             public void run() {
                 MessageDialog.openError(Display.getDefault().getActiveShell(),
                         Messages.BbModelingDropPerformerModelingError, message);
