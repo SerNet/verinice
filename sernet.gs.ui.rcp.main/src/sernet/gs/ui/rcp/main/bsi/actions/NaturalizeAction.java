@@ -49,8 +49,8 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
-import sernet.verinice.iso27k.service.commands.NaturalizeCommand;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.NaturalizeCommand;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

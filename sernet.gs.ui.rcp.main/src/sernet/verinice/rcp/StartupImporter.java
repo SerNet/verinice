@@ -42,7 +42,9 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IRightsServiceClient;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
@@ -88,6 +90,17 @@ public abstract class StartupImporter {
                 @Override
                 public void loaded(ISO27KModel model) {
                     startImportJob();
+                }
+
+                @Override
+                public void loaded(BpModel model) {
+                    // nothing to do
+                    
+                }
+
+                @Override
+                public void loaded(CatalogModel model) {
+                    // nothing to do
                 }
             };
             CnAElementFactory.getInstance().addLoadListener(modelLoadListener);

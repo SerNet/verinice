@@ -11,7 +11,7 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
-import sernet.verinice.model.bsi.SchutzbedarfAdapter;
+import sernet.verinice.model.bsi.ProtectionRequirementsAdapter;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
@@ -97,10 +97,10 @@ public class LoadReportRiskAnalysis extends GenericCommand implements ICachedCom
             }
 
             row.add(elmt.getTitle());
-            SchutzbedarfAdapter adapter = new SchutzbedarfAdapter(elmt);
-            row.add(Integer.toString(adapter.getVertraulichkeit()));
-            row.add(Integer.toString(adapter.getIntegritaet()));
-            row.add(Integer.toString(adapter.getVerfuegbarkeit()));
+            ProtectionRequirementsAdapter adapter = new ProtectionRequirementsAdapter(elmt);
+            row.add(Integer.toString(adapter.getConfidentiality()));
+            row.add(Integer.toString(adapter.getIntegrity()));
+            row.add(Integer.toString(adapter.getAvailability()));
             if (getDbId) {
                 row.add(Integer.toString(elmt.getDbId()));
             }

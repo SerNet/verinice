@@ -1,0 +1,116 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:element name="title" type="xs:string"/>
+<!--Für Biography-->
+<xs:element name="shortHand" type="xs:string"/>
+  <xs:element name="bibItem">
+    <xs:complexType>
+      <xs:all>
+        <xs:element ref="shortHand" minOccurs="0"/>
+        <xs:element ref="title" minOccurs="0"/>
+        <xs:element ref="description" minOccurs="0"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+<!--Ende Biography-->
+<!--Für safeguards-->
+  <xs:element name="role" type="xs:string"/>
+  <xs:element name="confidentiality" type="xs:string"/>
+  <xs:element name="integrity" type="xs:string"/>
+  <xs:element name="availability" type="xs:string"/>
+  <xs:element name="identifier" type="xs:string"/>
+  <xs:element name="responsibleRoles">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="role" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="cia">
+    <xs:complexType>
+		<xs:all>
+			<xs:element ref="confidentiality"/>
+			<xs:element ref="integrity"/>
+			<xs:element ref="availability"/>
+		</xs:all>
+    </xs:complexType>
+  </xs:element>
+   
+  <xs:element name="description">
+    <xs:complexType mixed="true">
+		<xs:sequence>
+			<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="safeguard">
+    <xs:complexType>
+      <xs:all>
+        <xs:element ref="identifier" minOccurs="0"/>
+        <xs:element ref="title" minOccurs="0"/>
+        <xs:element ref="responsibleRoles" minOccurs="0"/>
+        <xs:element ref="cia" minOccurs="0"/>
+        <xs:element ref="description" minOccurs="0"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+<!--Ende Requirements-->
+
+
+  <xs:element name="document">
+    <xs:complexType>
+      <xs:all>
+        <xs:element type="xs:string" name="fullTitle"/>
+        <xs:element type="xs:string" name="identifier"/>
+        <xs:element type="xs:string" name="title"/>
+        <xs:element type="xs:date" name="lastChange"/>
+        <xs:element type="xs:string" name="lastCheck"/>
+        <xs:element type="xs:string" name="draftVersion"/>
+        <xs:element type="xs:string" name="headerIcon"/>
+        <xs:element name="description">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="introduction"/>
+              <xs:element type="xs:string" name="lifecycle"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+		
+        <xs:element name="safeguards">
+          <xs:complexType>
+            <xs:all>
+				<xs:element name="basicSafeguards">
+					<xs:complexType>
+						<xs:sequence>  
+							<xs:element ref="safeguard" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="standardSafeguards">
+					<xs:complexType>
+						<xs:sequence>  
+							<xs:element ref="safeguard" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="highLevelSafeguards">
+					<xs:complexType>
+						<xs:sequence> 
+							<xs:element ref="safeguard" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+            </xs:all>
+          </xs:complexType>
+        </xs:element>
+		<xs:element name="advancedInformationText" type="xs:string"/>
+		<xs:element name="bibliography" minOccurs="0">
+			<xs:complexType>
+				<xs:sequence> 
+					<xs:element ref="bibItem" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:complexType>
+		</xs:element>	
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

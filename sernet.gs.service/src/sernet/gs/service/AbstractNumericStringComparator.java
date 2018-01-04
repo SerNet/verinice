@@ -179,7 +179,6 @@ public abstract class AbstractNumericStringComparator<T> implements Comparator<T
 			
 			if (edx1 != -1) {
 				if(edx2 > -1) {
-					// TODO ak the next line sometimes produces an ArrayOutOfBounds exception
 					try {
 						int comp = compareString(string1.substring(edx1), string2.substring(edx2));
 						if (comp != 0) {

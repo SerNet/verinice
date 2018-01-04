@@ -108,7 +108,7 @@ public class AssignAllIsaTopics implements IObjectActionDelegate, RightEnabledUs
                         linkChildren((ControlGroup) child, personList);
                     }
                     if( child instanceof IControl ) {
-                        CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(child, personList,SamtTopic.REL_SAMTTOPIC_PERSON_ISO);
+                        CnAElementHome.getInstance().createLinksAccordingToBusinessLogicAsync(child, personList,SamtTopic.REL_SAMTTOPIC_PERSON_ISO);
                         numberOfTopics++;
                     }
                 }

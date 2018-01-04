@@ -48,6 +48,8 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
+import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bpm.TodoViewItem;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
@@ -99,9 +101,16 @@ public abstract class HtmlWriter {
             html = handleRequestStatic(element);
         }
         
+        if (element instanceof IBpElement || element instanceof IBpGroup) {
+            StringBuilder buf = new StringBuilder();
+            writeHtml(buf, "", html, VeriniceCharset.CHARSET_UTF_8.name());
+            html = buf.toString();
+        }
+        
         return html;
   
     }
+    
     /**
      * Tries to determine get HTML-text for {@link BrowserView}
      *  via dynamic SNCA-approach 
@@ -484,7 +493,8 @@ public abstract class HtmlWriter {
     
     private static String toHtml(RisikoMassnahmenUmsetzung ums) {
         StringBuilder buf = new StringBuilder();
-        writeHtml(buf, ums.getNumber() + " " + ums.getName(), ums.getDescription(), ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$
+        writeHtml(buf, ums.getNumber() + " " + ums.getName(),
+                ums.getDescription(), ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$
         return buf.toString();
     }
     
@@ -495,8 +505,11 @@ public abstract class HtmlWriter {
     }
     
     private static void writeHtml(StringBuilder buf, String headline, String bodytext, String encoding) {
+        
+        String cssFile = "screen.css";
+        
         String cssDir = CnAWorkspace.getInstance().getWorkdir()+ 
-                File.separator + "html" + File.separator + "screen.css"; //$NON-NLS-1$ //$NON-NLS-2$
+                File.separator + "html" + File.separator + cssFile; //$NON-NLS-1$ //$NON-NLS-2$
         buf.append("<html><head>"); //$NON-NLS-1$
         buf.append("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=").
         append(encoding).append("\"/>\n"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -561,11 +574,23 @@ public abstract class HtmlWriter {
            return null;
        }
    }
+//   
+//   private String htmlizeDescription(String plainDescription) {
+//       StringBuilder htmlDescriptionBuilder = new StringBuilder();
+//       
+//       htmlDescriptionBuilder.append(HTML_DESCRIPTION_PREAMBEL);
+//       htmlDescriptionBuilder.append(plainDescription);
+//       htmlDescriptionBuilder.append(HTML_DESCRIPTION_SUFFIX);
+//       String htmlDescription = htmlDescriptionBuilder.toString();
+//       return htmlDescription;
+//   }
 
    private static String removeUnsupportedHtmlPattern(String line) {
        line = line.replaceAll("<a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
        line = line.replaceAll("</a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
        line = line.replaceAll("<img.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
+       line = line.replaceAll("<em>", ""); //$NON-NLS-1$ //$NON-NLS-2$
+       line = line.replaceAll("</em>", ""); //$NON-NLS-1$ //$NON-NLS-2$
        return line;
    }
 

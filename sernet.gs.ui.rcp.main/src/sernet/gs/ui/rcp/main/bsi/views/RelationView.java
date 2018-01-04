@@ -52,11 +52,14 @@ import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.RightsEnabledView;
+import sernet.verinice.rcp.catalog.CatalogView;
 import sernet.verinice.service.commands.task.FindRelationsFor;
 
 /**
@@ -88,6 +91,9 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
     private Action linkWithEditorAction;
 
     private boolean linkingActive = false;
+    
+    private boolean readOnly = false;
+
 
     /**
      * The constructor.
@@ -243,6 +249,18 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
                 }
             }
 
+            @Override
+            public void loaded(BpModel model) {
+                synchronized (loadListener) {
+                    addBpModelListeners();
+                }                
+            }
+
+            @Override
+            public void loaded(CatalogModel model) {
+                // nothing to do
+            }
+
         };
         CnAElementFactory.getInstance().addLoadListener(loadListener);
     }
@@ -272,6 +290,28 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         JobScheduler.scheduleInitJob(initDataJob);
     }
 
+    protected void addBpModelListeners() {
+        WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+            @Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                IStatus status = Status.OK_STATUS;
+                try {
+                    monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+                    if (CnAElementFactory.isModelLoaded()) {
+                        CnAElementFactory.getInstance().getBpModel().addModITBOModelListener(contentProvider);
+                    }
+                } catch (Exception e) {
+                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.RelationView_7, e); //$NON-NLS-1$
+                } finally {
+                    monitor.done();
+                }
+                return status;
+            }
+        };
+        JobScheduler.scheduleInitJob(initDataJob);
+    }
+    
     /**
 	 * 
 	 */
@@ -306,6 +346,9 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         }
         if (CnAElementFactory.isIsoModelLoaded()) {
             CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
+        }
+        if(CnAElementFactory.isBpModelLoaded()) {
+            CnAElementFactory.getInstance().getBpModel().removeBpModelListener(contentProvider);
         }
     }
 
@@ -377,6 +420,7 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         }
         Object element = ((IStructuredSelection) selection).getFirstElement();
         if (element instanceof CnATreeElement) {
+            readOnly =  part instanceof CatalogView ? true : false;
             setNewInput((CnATreeElement) element);
         }
     }
@@ -431,6 +475,7 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         jumpToAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ARROW_IN));
 
         doubleClickAction = new Action() {
+
             @Override
             public void run() {
                 ISelection selection = viewer.getSelection();
@@ -439,9 +484,9 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
 
                 // open the object on the other side of the link:
                 if (CnALink.isDownwardLink(inputElmt, link))
-                    EditorFactory.getInstance().updateAndOpenObject(link.getDependency());
+                    EditorFactory.getInstance().updateAndOpenObject(link.getDependency(), readOnly);
                 else
-                    EditorFactory.getInstance().updateAndOpenObject(link.getDependant());
+                    EditorFactory.getInstance().updateAndOpenObject(link.getDependant(), readOnly);
             }
         };
 
@@ -562,6 +607,10 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         CnATreeElement element = BSIElementEditorInput.extractElement(activeEditor);
         if (element == null) {
             return;
+        }
+        if (activeEditor.getEditorInput() instanceof BSIElementEditorInput) {
+            BSIElementEditorInput editorInput = (BSIElementEditorInput) activeEditor.getEditorInput();
+            readOnly = editorInput.isReadOnly();
         }
         setNewInput(element);
     }

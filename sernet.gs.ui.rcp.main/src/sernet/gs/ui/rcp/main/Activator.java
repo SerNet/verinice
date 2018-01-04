@@ -81,7 +81,9 @@ import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.ReportTemplateSync;
 import sernet.verinice.rcp.StartupImporter;
@@ -224,7 +226,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         // set service factory location to local / remote according to
         // preferences:
-        standalone = prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+        standalone = sernet.verinice.rcp.Preferences.isStandalone();
 
         initializeInternalServer();
 
@@ -316,6 +318,16 @@ public class Activator extends AbstractUIPlugin implements IMain {
                 public void closed(BSIModel model) {
                     // do nothing
 
+                }
+
+                @Override
+                public void loaded(BpModel model) {
+                    // do nothing
+                }
+
+                @Override
+                public void loaded(CatalogModel model) {
+                    // do nothing
                 }
             };
             CnAElementFactory.getInstance().addLoadListener(loadListener);
@@ -462,8 +474,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
     private void setProxy() {
         try {
             Preferences prefs = Activator.getDefault().getPluginPreferences();
-            String operationMode = prefs.getString(PreferenceConstants.OPERATION_MODE);
-            if (operationMode != null && operationMode.equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER)) {
+            if (sernet.verinice.rcp.Preferences.isServerMode()) {
                 URI serverUri = new URI(prefs.getString(PreferenceConstants.VNSERVER_URI));
                 IProxyService proxyService = getProxyService();
                 IProxyData[] proxyDataForHost = proxyService.select(serverUri);
@@ -598,6 +609,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
                     monitor.setTaskName(Messages.Activator_LoadModel);
                     CnAElementFactory.getInstance().loadOrCreateModel(new ProgressAdapter(monitor));
                     CnAElementFactory.getInstance().getISO27kModel();
+                    CnAElementFactory.getInstance().getBpModel();
+                    CnAElementFactory.getInstance().getCatalogModel();
                 } catch (Exception e) {
                     LOG.error("Error while loading model.", e); //$NON-NLS-1$
                     if (e.getCause() != null && e.getCause().getLocalizedMessage() != null) {
@@ -658,7 +671,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
                 // Do not show dialog if remote server is configured instead of
                 // internal server.
-                if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER)) {
+                if (sernet.verinice.rcp.Preferences.isServerMode()) {
                     return;
                 }
 
@@ -672,7 +685,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
         Preferences prefs = Activator.getDefault().getPluginPreferences();
         URI repoUri = null;
         String name = null;
-        if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER)) {
+        if (sernet.verinice.rcp.Preferences.isServerMode()) {
             repoUri = new URI(createUpdateSiteUrl(prefs.getString(PreferenceConstants.VNSERVER_URI)));
             name = Messages.Activator_4;
         } else {

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="%importer.preferences"
+            class="sernet.verinice.bp.importer.preferences.BpImporterPreferencePage"
+            id="sernet.verinice.bp.importer.preferences.BpImporterPreferencePage">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="sernet.verinice.bp.importer.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+
+   <extension point="org.eclipse.ui.commands">
+      <command
+            name="CompendiumImportCommand"
+            categoryId="sernet.gs.ui.rcp.commands"
+            id="sernet.verinice.bp.importer.actions.ImportBPCompendiumHandler">
+      </command>
+   </extension>
+   
+   <extension point="org.eclipse.ui.handlers">
+         <handler class="sernet.verinice.bp.importer.actions.ImportBPCompendiumHandler"
+          commandId="sernet.verinice.bp.importer.actions.ImportBPCompendiumHandler" />
+   </extension>
+   
+	<extension point="org.eclipse.ui.menus">        
+		<menuContribution
+		  locationURI="menu:file?after=sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap">
+			<menu id="BPImporter"
+			    label="%importer.menu.name">
+			    <command commandId="sernet.verinice.bp.importer.actions.ImportBPCompendiumHandler"
+                  label="%importer.label"
+                  style="push"
+                  tooltip="%importer.tooltip">
+            	</command>
+			</menu>
+		</menuContribution>
+   </extension>   
+
+</plugin>

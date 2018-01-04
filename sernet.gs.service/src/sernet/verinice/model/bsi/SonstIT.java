@@ -20,6 +20,7 @@ package sernet.verinice.model.bsi;
 import java.util.Collection;
 
 import sernet.hui.common.connect.Entity;
+import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 
@@ -43,12 +44,12 @@ public class SonstIT extends CnATreeElement
     public static final String PROP_ESA_ENTSCHEIDUNG_AM = "sonstit_ergaenzendeanalyse_entscheidung_am"; //$NON-NLS-1$
     public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "sonstit_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
 	
-	private final ISchutzbedarfProvider schutzbedarfProvider 
-	= new SchutzbedarfAdapter(this);
+	private final IReevaluator schutzbedarfProvider 
+	= new ProtectionRequirementsAdapter(this);
 
 
 	private final ILinkChangeListener linkChangeListener
-	= new MaximumSchutzbedarfListener(this);
+	= new MaximumProtectionRequirementsListener(this);
 	
 
 	/**
@@ -63,14 +64,17 @@ public class SonstIT extends CnATreeElement
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
 	
-	public String getKuerzel() {
+	@Override
+    public String getKuerzel() {
 		return getEntity().getSimpleValue(PROP_KUERZEL);
 	}
-	public Collection<? extends String> getTags() {
+	@Override
+    public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	
-	public int getSchicht() {
+	@Override
+    public int getSchicht() {
 		return 3;
 	}
 	
@@ -78,7 +82,8 @@ public class SonstIT extends CnATreeElement
 		
 	}
 	
-	public void setTitel(String name) {
+	@Override
+    public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 	
@@ -104,7 +109,7 @@ public class SonstIT extends CnATreeElement
 	}
 
 	@Override
-	public ISchutzbedarfProvider getSchutzbedarfProvider() {
+	public IReevaluator getProtectionRequirementsProvider() {
 		return schutzbedarfProvider;
 	}
 

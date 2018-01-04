@@ -24,8 +24,10 @@ import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27Scope;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 
@@ -35,6 +37,7 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
  *  <li>{@link IISO27Scope}s</li>
  *  <li>{@link Audit}s</li>
  *  <li>{@link Asset}s</li>
+ *  <li>{@link ImportBpGroup}s</li>
  *  </ul>
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -48,9 +51,10 @@ public class GroupDecorator extends LabelProvider implements ILightweightLabelDe
      */
     @Override
     public void decorate(Object o, IDecoration decoration) {
-        if(o instanceof IISO27kGroup 
+        if(o instanceof Group<?> 
            && !(o instanceof IISO27Scope)
-           && !(o instanceof Asset)) {
+           && !(o instanceof Asset)
+           && !(o instanceof ImportBpGroup)) {
             decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(IMAGE_PATH));
         }
     }

@@ -30,7 +30,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.AssetValueAdapter;
+import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.RetrieveCnATreeElement;
@@ -113,7 +113,7 @@ public class RiskAnalysisHelperImpl implements RiskAnalysisHelper {
      */
     @Override
     public int getRiskColor(CnATreeElement asset, CnATreeElement scenario, char riskType, int numOfYellowFields, String probType) {
-        AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
+        ProtectionRequirementsValueAdapter valueAdapter = new ProtectionRequirementsValueAdapter(asset);
 
         int probability = scenario.getNumericProperty(probType);
         int riskControlState;
@@ -125,9 +125,9 @@ public class RiskAnalysisHelperImpl implements RiskAnalysisHelper {
             riskControlState = RiskAnalysisHelper.RISK_PRE_CONTROLS;
         }
 
-        int impactC = valueAdapter.getVertraulichkeit();
-        int impactI = valueAdapter.getIntegritaet();
-        int impactA = valueAdapter.getVerfuegbarkeit();
+        int impactC = valueAdapter.getConfidentiality();
+        int impactI = valueAdapter.getIntegrity();
+        int impactA = valueAdapter.getAvailability();
         Integer[] reducedImpact = applyControlsToImpact(riskControlState, asset, impactC, impactI, impactA);
         if (reducedImpact != null) {
             impactC = reducedImpact[0];

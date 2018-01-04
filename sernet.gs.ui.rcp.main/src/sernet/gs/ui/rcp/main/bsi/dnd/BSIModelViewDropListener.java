@@ -39,6 +39,7 @@ import sernet.gs.model.IGSModel;
 import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.dialogs.SanityCheckDialog;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinUmsetzungTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
@@ -61,6 +62,7 @@ import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.RcpModelUpdater;
 import sernet.verinice.iso27k.rcp.action.DropPerformer;
 import sernet.verinice.iso27k.service.IModelUpdater;
+import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
@@ -155,7 +157,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
                     }
                 }
                 return dropScenarios((BausteinUmsetzung) target, viewer, scenarios) && dropControls((BausteinUmsetzung) target, viewer, controls);
-            } else if (firstOne != null && (firstOne instanceof IBSIStrukturElement || firstOne instanceof BausteinUmsetzung || firstOne instanceof IISO27kElement || firstOne instanceof IMassnahmeUmsetzung)) {
+            } else if (firstOne != null && isLinkableElement(firstOne)) {
                 CnATreeElement element = (CnATreeElement) target;
                 LinkDropper dropper = new LinkDropper();
                 ArrayList<CnATreeElement> list = new ArrayList<CnATreeElement>();
@@ -168,6 +170,14 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
             }
         }
         return false;
+    }
+
+    protected boolean isLinkableElement(Object element) {
+        return element instanceof IBSIStrukturElement 
+            || element instanceof BausteinUmsetzung 
+            || element instanceof IISO27kElement 
+            || element instanceof IMassnahmeUmsetzung 
+            || element instanceof IBpElement;
     }
 
     @Override
@@ -184,20 +194,23 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
      * Object, int, org.eclipse.swt.dnd.TransferData)
      */
     @Override
-    public boolean validateDrop(Object target, int operation, TransferData transferType) {
+    public boolean validateDrop(Object target, int operation, TransferData transferData) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("validateDrop, \n\t target: " + (target != null ? target.toString()
-                    : "no target set" + ", \n\t transfer type class: ")
-                    + transferType == null ? "null"
-                            : (transferType.getClass().getName()
-                                    + ", \n\t transfer-type-id: "
-                                    + transferType.type));
+            LOG.debug("validateDrop, target: " + target) ;
         }
         if (!checkRights()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("ChechRights() failed  ... return false");
             }
             return false;
+        }
+        if(BaseProtectionModelingTransfer.getInstance().isSupportedType(transferData)) {
+            // do not handle elements which are dragged from base protection catalog view
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Elements dragged from base protection catalog view return false");
+            }
+            isActive=false;
+            return isActive;
         }
         if (target == null){
             if (LOG.isDebugEnabled()) {
@@ -224,20 +237,20 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         }
 
         if (target instanceof BausteinUmsetzung
-                && ISO27kElementTransfer.getInstance().isSupportedType(transferType)) {
+                && ISO27kElementTransfer.getInstance().isSupportedType(transferData)) {
             isActive = true;
             return isActive;
         }
 
-        if (target instanceof BausteinUmsetzung && !(IBSIStrukturElementTransfer.getInstance().isSupportedType(transferType))) {
-            if (IGSModelElementTransfer.getInstance().isSupportedType(transferType) && ((BausteinUmsetzung) target).isOwnModule()) {
+        if (target instanceof BausteinUmsetzung && !(IBSIStrukturElementTransfer.getInstance().isSupportedType(transferData))) {
+            if (IGSModelElementTransfer.getInstance().isSupportedType(transferData) && ((BausteinUmsetzung) target).isOwnModule()) {
                 isActive = true;
             } else {
                 isActive = false;
                 LOG.debug("target is BausteinUmsetzung, transferType not supported; return false");
             }
             return isActive;
-        } else if (target instanceof IBSIStrukturElement && isSupportedData(transferType)) {
+        } else if (target instanceof IBSIStrukturElement && isSupportedData(transferData)) {
             isActive = true;
             if (LOG.isDebugEnabled()) {
                 LOG.debug("target is IBSIStrukturElement,  isSupportedData return false");
@@ -245,14 +258,14 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
             return isActive;
         }
 
-        if (target instanceof IISO27kGroup && BausteinElementTransfer.getInstance().isSupportedType(transferType)) {
+        if (target instanceof IISO27kGroup && BausteinElementTransfer.getInstance().isSupportedType(transferData)) {
             isActive = false;
             if (LOG.isDebugEnabled()) {
                 LOG.debug("target is IISO27kGroup,  IISO27kGroup return true");
             }
             return isActive;
         }
-        if (IGSModelElementTransfer.getInstance().isSupportedType(transferType)) {
+        if (IGSModelElementTransfer.getInstance().isSupportedType(transferData)) {
             isActive = false;
             if (LOG.isDebugEnabled()) {
                 LOG.debug("IGSModelElementTransfer.getInstance().isSupportedType(..) return true");
@@ -261,7 +274,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         }
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("return true");
+            LOG.debug("validateDrop, returning default: true");
         }
         isActive = true;
         return isActive;

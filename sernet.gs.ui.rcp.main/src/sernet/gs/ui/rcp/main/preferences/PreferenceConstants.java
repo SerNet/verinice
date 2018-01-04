@@ -38,6 +38,7 @@ public class PreferenceConstants {
     public static final String ERRORPOPUPS = "cna_errorpopups"; //$NON-NLS-1$
     public static final String INPUTHINTS = "cna_inputhelperhints"; //$NON-NLS-1$
     public static final String INFO_CONTROLS_ADDED = "info_controls_added"; //$NON-NLS-1$
+    public static final String INFO_CONTROLS_TRANSFORMED_TO_MODERNIZED_GS = "info_controls_transformed_to_modernized_gs"; //$NON-NLS-1$
     public static final String INFO_ELEMENTS_COPIED = "info_elements_copied"; //$NON-NLS-1$
     public static final String INFO_ELEMENTS_CUT = "info_elements_cut"; //$NON-NLS-1$
     public static final String INFO_IMPORT_LDAP = "info_import_ldap"; //$NON-NLS-1$v
@@ -45,6 +46,7 @@ public class PreferenceConstants {
     public static final String INFO_PROCESS_VALIDATE = "info_processes_validate"; //$NON-NLS-1$
     public static final String INFO_STATUS_DERIVED = "info_status_derived"; //$NON-NLS-1$
     public static final String INFO_SEARCH_ELEMENT_NOT_FOUND = "search_element_not_found"; //$NON-NLS-1$
+    public static final String INFO_BP_MODELING_CONFIRMATION = "info_bp_modeling_confirmation"; //$NON-NLS-1$
     public static final String SHOW_ALIEN_DECORATOR = "show_alien_decorator"; //$NON-NLS-1$
     public static final String SHOW_DBID_DECORATOR = "show_dbid_decorator"; //$NON-NLS-1$
     public static final String SHOW_GSMISM_DECORATOR = "show_gsmism_decorator"; //$NON-NLS-1$

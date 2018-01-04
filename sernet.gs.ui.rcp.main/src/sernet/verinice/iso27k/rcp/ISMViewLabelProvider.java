@@ -24,6 +24,7 @@ import org.eclipse.swt.graphics.Image;
 import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
@@ -63,10 +64,10 @@ public class ISMViewLabelProvider extends LabelProvider  {
 		if (!(obj instanceof IISO27kElement)){
 			return image;
 		
-		} else if (obj instanceof Group && !(obj instanceof ImportIsoGroup)) {
+		} else if (obj instanceof Group && !(obj instanceof ImportIsoGroup) && !(obj instanceof ImportBpGroup)) {
 			Group group = (Group) obj;
 			// TODO - getChildTypes()[0] might be a problem for more than one type
-            image = ImageCache.getInstance().getISO27kTypeImage(group.getChildTypes()[0]);
+            image = ImageCache.getInstance().getImageForTypeId(group.getChildTypes()[0]);
 			return image;
 		} else if (obj instanceof SamtTopic) {
 	          SamtTopic topic = (SamtTopic) obj;
@@ -81,7 +82,7 @@ public class ISMViewLabelProvider extends LabelProvider  {
 		} else {
 			// else return type icon:
 			IISO27kElement elmt = (IISO27kElement) obj;
-			image = ImageCache.getInstance().getISO27kTypeImage(elmt.getTypeId());
+			image = ImageCache.getInstance().getImageForTypeId(elmt.getTypeId());
 		}
 		
 		return image;

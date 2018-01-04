@@ -41,9 +41,11 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.KeyMessage;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Audit;
@@ -110,6 +112,16 @@ public class TaskViewDataLoader {
                 @Override
                 public void loaded(ISO27KModel model) {
                     // work is done in loaded(BSIModel model)
+                }
+
+                @Override
+                public void loaded(BpModel model) {
+                    // work is done in loaded(BSIModel model)
+                }
+
+                @Override
+                public void loaded(CatalogModel model) {
+                    // nothing to do
                 }
             };
             CnAElementFactory.getInstance().addLoadListener(modelLoadListener);

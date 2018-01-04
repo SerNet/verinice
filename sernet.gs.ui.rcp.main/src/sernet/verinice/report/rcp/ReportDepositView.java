@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.report.rcp;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -68,13 +67,14 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IReportDepositService;
-import sernet.verinice.interfaces.ReportDepositException;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
+import sernet.verinice.interfaces.ReportDepositException;
 import sernet.verinice.interfaces.ReportTemplateServiceException;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.rcp.ReportTemplateSync;
 import sernet.verinice.rcp.RightsEnabledView;
@@ -316,6 +316,16 @@ public class ReportDepositView extends RightsEnabledView {
         @Override
         public void closed(BSIModel model) {
 
+        }
+
+        @Override
+        public void loaded(BpModel model) {
+            // nothing to do
+        }
+
+        @Override
+        public void loaded(CatalogModel model) {
+            // nothing to do
         }
     }
 

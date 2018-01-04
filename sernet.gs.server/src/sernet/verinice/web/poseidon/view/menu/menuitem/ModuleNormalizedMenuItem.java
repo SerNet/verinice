@@ -23,7 +23,7 @@ import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategyNormalized;
 
 /**
- * Provides menu item for IT Baseline Protection Module for normalized charts.
+ * Provides menu item for IT Baseline Protection BpRequirement for normalized charts.
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *

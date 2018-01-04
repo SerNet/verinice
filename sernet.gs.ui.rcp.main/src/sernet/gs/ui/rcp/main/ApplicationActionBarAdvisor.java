@@ -42,6 +42,9 @@ import sernet.gs.ui.rcp.main.bsi.actions.GSMBausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.views.*;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
+import sernet.verinice.bp.rcp.BaseProtectionView;
 import sernet.verinice.bpm.rcp.OpenTaskViewAction;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.*;
@@ -50,6 +53,7 @@ import sernet.verinice.rcp.ProfileEditAction;
 import sernet.verinice.rcp.ServerConnectionToggleAction;
 import sernet.verinice.rcp.account.AccountView;
 import sernet.verinice.rcp.accountgroup.AccountGroupView;
+import sernet.verinice.rcp.bp.BaseProtectionPerspective;
 import sernet.verinice.rcp.risk.RiskAnalysisAction;
 import sernet.verinice.report.rcp.ReportDepositView;
 import sernet.verinice.validation.CnAValidationView;
@@ -159,7 +163,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private OpenViewAction openGSToolMappingViewAction;
     
+    private OpenViewAction openBpViewAction;
+
     private TestAction testAction;
+
+    private OpenViewAction openCatalogViewAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -222,7 +230,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.openReportdepositViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_41, ReportDepositView.ID, ImageCache.REPORT_DEPOSIT, ActionRightIDs.REPORTDEPOSIT);
         this.openSearchViewAction = new OpenSearchViewAction(window, Messages.ApplicationActionBarAdvisor_42);
         this.openGSToolMappingViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_43, GstoolImportMappingView.ID, ImageCache.VIEW_GSMAPPING, ActionRightIDs.GSTOOLIMPORT);
-
+        this.openBpViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_45, BaseProtectionView.ID, ImageCache.VIEW_BASE_PROTECTION, ActionRightIDs.BASEPROTECTIONVIEW);
         this.reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         this.importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
         this.importCSVAction = new ImportCSVAction(window, Messages.ApplicationActionBarAdvisor_30);
@@ -243,8 +251,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         this.serverConnectionToggleAction = new ServerConnectionToggleAction();
 
-        this.testAction = new TestAction(window, "test command", "asset", 152); //$NON-NLS-1$ //$NON-NLS-2$
+        this.testAction = new TestAction(window, "Import BSI-Compendium", "asset", 152); //$NON-NLS-1$ //$NON-NLS-2$
         this.introAction = ActionFactory.INTRO.create(window);
+        
+        this.openCatalogViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_CatalogView, 
+                sernet.verinice.rcp.catalog.CatalogView.ID, ImageCache.VIEW_CATALOG, ActionRightIDs.CATALOGVIEW);
 
         IAction actions[] = new IAction[]{this.exitAction, this.copyAction, this.pasteAction,
                 this.aboutAction, this.newWindowAction, this.saveAction, this.saveAsAction,
@@ -260,8 +271,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 gsmbasicsecuritycheckAction,bausteinZuordnungAction,
                 gsmbausteinZuordnungAction, this.openDocumentViewAction,
                 this.introAction, this.openGroupViewAction, this.openReportdepositViewAction,
-                this.openSearchViewAction, this.openGSToolMappingViewAction
-        };
+                this.openSearchViewAction, this.openGSToolMappingViewAction, this.openBpViewAction,
+                this.openCatalogViewAction,
+                this.testAction
+         };
         registerActions(actions);
 
     }
@@ -363,36 +376,60 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         MenuManager windowMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_24, IWorkbenchActionConstants.M_WINDOW);
 
         MenuManager viewsMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_25, VeriniceActionConstants.MENU_VIEWS);
+        
+        // old IT-Baseline protection
 
-        viewsMenu.add(this.openBSIViewAction);
         viewsMenu.add(this.openBSIModelViewAction);
+        viewsMenu.add(this.openBSIViewAction);
         viewsMenu.add(this.openTodoViewAction);
         viewsMenu.add(this.openAuditViewAction);
-        viewsMenu.add(this.openDSViewAction);
-        viewsMenu.add(this.openDocumentViewAction);
+        viewsMenu.add(this.openGSToolMappingViewAction);
         viewsMenu.add(new Separator());
 
+        // modernized IT-Baseline protection
+        
+        viewsMenu.add(this.openBpViewAction);
+        viewsMenu.add(this.openCatalogViewAction);
+        viewsMenu.add(new Separator());
+
+        // ISM
+        
         viewsMenu.add(this.openISMViewAction);
         viewsMenu.add(this.openCatalogAction);
-        viewsMenu.add(this.openAccountViewAction);
-        viewsMenu.add(this.openGroupViewAction);
-        viewsMenu.add(this.openReportdepositViewAction);
-        viewsMenu.add(this.openTaskViewAction);
+        viewsMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+        // marker for including views from samt-plugin
+        
+        // VDA - done by samt-plugin
         viewsMenu.add(new Separator());
-
+        
+        // deprecated data-protection view
+        viewsMenu.add(this.openDSViewAction);
+        viewsMenu.add(new Separator());
+        
+        // global
+        viewsMenu.add(this.openDocumentViewAction);
         viewsMenu.add(this.openBSIBrowserAction);
         viewsMenu.add(this.openNoteAction);
         viewsMenu.add(this.openFileAction);
         viewsMenu.add(this.openRelationViewAction);
         viewsMenu.add(this.openValidationViewAction);
         viewsMenu.add(this.openSearchViewAction);
-        viewsMenu.add(this.openGSToolMappingViewAction);
+        viewsMenu.add(new Separator());
+        
+        viewsMenu.add(this.openAccountViewAction);
+        viewsMenu.add(this.openGroupViewAction);
+        viewsMenu.add(this.openTaskViewAction);
+        viewsMenu.add(this.openReportdepositViewAction);
+        viewsMenu.add(new Separator());
 
-        viewsMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+        viewsMenu.add(new Separator());
 
+
+        
         MenuManager perspectivesMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_26, VeriniceActionConstants.MENU_PERSPECTIVES);
         addPerspectiveMenu(window, perspectivesMenu, Iso27kPerspective.ID);
         addPerspectiveMenu(window, perspectivesMenu, Perspective.ID);
+        addPerspectiveMenu(window, perspectivesMenu, BaseProtectionPerspective.ID);
         perspectivesMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
         IContributionItem perspectiveList = ContributionItemFactory.PERSPECTIVES_SHORTLIST.create(window);

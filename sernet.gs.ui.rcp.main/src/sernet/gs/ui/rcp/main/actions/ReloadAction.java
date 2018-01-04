@@ -31,7 +31,9 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 
 public class ReloadAction extends Action {
@@ -56,6 +58,14 @@ public class ReloadAction extends Action {
             @Override
             public void loaded(ISO27KModel model) {
                 setEnabled(true);
+            }
+            @Override
+            public void loaded(BpModel model) {
+                setEnabled(true);
+            }
+            @Override
+            public void loaded(CatalogModel model) {
+                // nothing to do
             }
         });
     }

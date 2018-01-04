@@ -17,10 +17,10 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
-import org.apache.log4j.Logger;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+
+import org.apache.log4j.Logger;
 
 /**
  * List of all possible actions that should be controlable by right-management
@@ -29,23 +29,29 @@ public final class ActionRightIDs {
 
     public static final String ACCESSCONTROL = "accesscontrol";
     public static final String ACCOUNTSETTINGS = "accountsettings";
+    public static final String ADDBPGROUP = "addbpgroup";
     public static final String ADDBSIELEMENT = "addbsielement";
     public static final String ADDCATALOG = "addcatalog";
     public static final String ADDFILE = "addfile";
     public static final String ADDISMELEMENT = "addismelement";
     public static final String ADDISMGROUP = "addismgroup";
     public static final String ADDISMORG = "addismorg";
+    public static final String ADDITNETWORK = "additnetwork";
     public static final String ADDITVERBUND = "additverbund";
+    public static final String ADDBPELEMENT = "addbpelement";
     public static final String ADDNOTE = "addnote";
     public static final String ADDSECURITYASSESSMENT = "addsecurityassessment";
     public static final String ADDOWNMODUL = "addownmodul";
     public static final String ASSIGNALLISATOPICS = "assignallisatopics";
     public static final String AUDITVIEW = "auditview";
+    public static final String BASEPROTECTIONMODELING = "baseprotectionmodeling";
     public static final String BAUSTEINZUORDNUNG = "bausteinzuordnung";
+    public static final String BPIMPORTER = "bpimporter";
     public static final String BSIBROWSER = "bsibrowser";
     public static final String BSIMASSNAHMEN = "bsimassnahmen";
     public static final String BSIMODELVIEW = "bsimodelview";
     public static final String BULKEDIT = "bulkedit";
+    public static final String CATALOGVIEW = "catalogview";
     public static final String CHANGEICON = "changeicon";
     public static final String CNAVALIDATION = "cnavalidation";
     public static final String CREATE_GREENBONE_TASKS = "creategreenbonetasks";
@@ -74,6 +80,8 @@ public final class ActionRightIDs {
     public static final String ISMVIEW = "ismview";
     public static final String ISMVIEWWEB = "ismviewweb";
     public static final String KONSOLIDATOR = "konsolidator";
+    public static final String MARKTEMPLATE = "marktemplate";
+    public static final String BASEPROTECTIONVIEW = "baseprotectionview";
     public static final String NATURALIZE = "naturalize";
     public static final String NOTES = "notes";
     public static final String CHANGEOWNPASSWORD = "changeownpassword";
@@ -98,6 +106,7 @@ public final class ActionRightIDs {
     public static final String TASKCHANGEASSIGNEE = "taskchangeassignee";
     public static final String TASKCHANGEDUEDATE = "taskchangeduedate";
     public static final String TASKWITHRELEASEPROCESS = "taskwithreleaseprocess";
+    public static final String TEMPLATES = "templates";
     // value "bsidnd" kept due to historical reasons
     public static final String TREEDND = "bsidnd";
     public static final String UNIFY = "unify";

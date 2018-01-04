@@ -32,6 +32,17 @@ import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.hui.common.connect.PropertyGroup;
+import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bp.groups.BpThreatGroup;
+import sernet.verinice.model.bp.groups.BusinessProcessGroup;
+import sernet.verinice.model.bp.groups.DeviceGroup;
+import sernet.verinice.model.bp.groups.IcsSystemGroup;
+import sernet.verinice.model.bp.groups.ItSystemGroup;
+import sernet.verinice.model.bp.groups.NetworkGroup;
+import sernet.verinice.model.bp.groups.RoomGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.ClientsKategorie;
 import sernet.verinice.model.bsi.GebaeudeKategorie;
@@ -68,6 +79,7 @@ public class HUIObjectModelService implements IObjectModelService {
     private Set<String> allTypeIds = null;
     private Set<String> allBSICategories = null;
     private Set<String> allStaticProperties = null;
+    private Set<String> allBpCategories = null;
 
     private Map<String, Set<String>> possibleChildren = null;
     private Map<String, Set<String>> possibleParents = null;
@@ -107,6 +119,9 @@ public class HUIObjectModelService implements IObjectModelService {
             clazz = CnATypeMapper.getClassFromTypeId(typeId);
             if (clazz != null) {
                 try {
+                    if("moditbp_room".equals(typeId)) {
+                        "".hashCode();
+                    }
                     parentInstance = createInstance(clazz, typeId);
                 } catch (InstantiationException | IllegalAccessException
                         | InvocationTargetException | NoSuchMethodException e) {
@@ -132,6 +147,7 @@ public class HUIObjectModelService implements IObjectModelService {
         allTypeIds = new HashSet<>(getHuiTypeFactory().getAllTypeIds());
         removeNonCnaTreeElementTypeIDs();
         addAllBSIElements();
+        addBpCategories();
         addAllStaticProperties();
     }
 
@@ -159,6 +175,24 @@ public class HUIObjectModelService implements IObjectModelService {
 
         allTypeIds.addAll(allBSICategories);    
     }
+    
+    private void addBpCategories () {
+        allBpCategories = new HashSet<>(8);
+        allBpCategories.add(ApplicationGroup.TYPE_ID);
+        allBpCategories.add(BpPersonGroup.TYPE_ID);
+        allBpCategories.add(BpRequirementGroup.TYPE_ID);
+        allBpCategories.add(BpThreatGroup.TYPE_ID);
+        allBpCategories.add(BusinessProcessGroup.TYPE_ID);
+        allBpCategories.add(DeviceGroup.TYPE_ID);
+        allBpCategories.add(IcsSystemGroup.TYPE_ID);
+        allBpCategories.add(ItSystemGroup.TYPE_ID);
+        allBpCategories.add(NetworkGroup.TYPE_ID);
+        allBpCategories.add(RoomGroup.TYPE_ID);
+        allBpCategories.add(SafeguardGroup.TYPE_ID);
+        
+        allTypeIds.addAll(allBpCategories);
+    }
+    
     
     private void addAllStaticProperties() {
         allStaticProperties = new HashSet<>();
@@ -212,7 +246,7 @@ public class HUIObjectModelService implements IObjectModelService {
     @Override
     public Set<String> getPossibleRelationPartners(String typeID) {
         ServerInitializer.inheritVeriniceContextState();
-        if (getHuiTypeFactory().getEntityType(typeID) == null || isBSICategory(typeID)) {
+        if (getHuiTypeFactory().getEntityType(typeID) == null || isBSICategory(typeID) || isBpCategory(typeID)) {
             return new HashSet<>();
         }
         HashSet<String> possiblePartners = new HashSet<>();
@@ -231,6 +265,10 @@ public class HUIObjectModelService implements IObjectModelService {
     private boolean isBSICategory(String typeID) {
         return allBSICategories.contains(typeID);
 
+    }
+    
+    private boolean isBpCategory(String typeId) {
+        return allBpCategories.contains(typeId);
     }
 
     public Set<String> getAllTypeIDs() {
@@ -493,7 +531,7 @@ public class HUIObjectModelService implements IObjectModelService {
             allRelationLabels = new HashMap<>();
             Set<HuiRelation> allRelationIDs = new HashSet<>();
             for(String typeId : getAllTypeIDs()){
-                if (!isBSICategory(typeId)) {
+                if (!isBSICategory(typeId) && !isBpCategory(typeId)) {
                     allRelationIDs.addAll(huiTypeFactory.getPossibleRelationsFrom(typeId));
                 }
                 

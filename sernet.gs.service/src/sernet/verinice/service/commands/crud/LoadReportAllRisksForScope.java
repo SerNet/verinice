@@ -14,7 +14,7 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.AssetValueAdapter;
+import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
 import sernet.verinice.model.iso27k.AssetValueService;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Organization;
@@ -171,7 +171,7 @@ public class LoadReportAllRisksForScope extends GenericCommand implements ICache
         seenAssets.add(asset.getDbId());
 
         ArrayList<String> row = new ArrayList<String>();
-        AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
+        ProtectionRequirementsValueAdapter valueAdapter = new ProtectionRequirementsValueAdapter(asset);
         RiskAnalysisHelperImpl raService = new RiskAnalysisHelperImpl();
         
         int probability = 0;
@@ -196,9 +196,9 @@ public class LoadReportAllRisksForScope extends GenericCommand implements ICache
         Integer impactC = 0;
         Integer impactI = 0;
         Integer impactA = 0;
-        impactC = valueAdapter.getVertraulichkeit();
-        impactI = valueAdapter.getIntegritaet();
-        impactA = valueAdapter.getVerfuegbarkeit();
+        impactC = valueAdapter.getConfidentiality();
+        impactI = valueAdapter.getIntegrity();
+        impactA = valueAdapter.getAvailability();
         
         boolean isCRelevant = false;
         boolean isIRelevant = false;

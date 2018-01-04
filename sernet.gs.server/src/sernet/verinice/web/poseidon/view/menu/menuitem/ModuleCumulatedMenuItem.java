@@ -23,7 +23,7 @@ import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
 
 /**
- * Provides menu item for IT Baseline Protection Module charts.
+ * Provides menu item for IT Baseline Protection BpRequirement charts.
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *

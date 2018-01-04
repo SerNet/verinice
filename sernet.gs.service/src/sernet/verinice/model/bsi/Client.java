@@ -22,6 +22,7 @@ import java.util.Collection;
 import org.apache.log4j.Logger;
 
 import sernet.hui.common.connect.Entity;
+import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 
@@ -54,12 +55,12 @@ public class Client extends CnATreeElement
     public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "client_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
 	
 
-	private final ISchutzbedarfProvider schutzbedarfProvider 
-	= new SchutzbedarfAdapter(this);
+	private final IReevaluator schutzbedarfProvider 
+	= new ProtectionRequirementsAdapter(this);
 
 
 	private final ILinkChangeListener linkChangeListener
-	= new MaximumSchutzbedarfListener(this);
+	= new MaximumProtectionRequirementsListener(this);
 	
 	
 	/**
@@ -76,15 +77,18 @@ public class Client extends CnATreeElement
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
     }
-	public Collection<? extends String> getTags() {
+	@Override
+    public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	
-	public String getKuerzel() {
+	@Override
+    public String getKuerzel() {
 		return getEntity().getSimpleValue(PROP_KUERZEL);
 	}
 	
-	public int getSchicht() {
+	@Override
+    public int getSchicht() {
 		return 3;
 	}
 	
@@ -97,7 +101,8 @@ public class Client extends CnATreeElement
 		return getEntity().getProperties(PROP_NAME).getProperty(0).getPropertyValue();
 	}
 	
-	public void setTitel(String name) {
+	@Override
+    public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
 
@@ -118,7 +123,7 @@ public class Client extends CnATreeElement
 	}
 
 	@Override
-	public ISchutzbedarfProvider getSchutzbedarfProvider() {
+	public IReevaluator getProtectionRequirementsProvider() {
 		return schutzbedarfProvider;
 	}
 	public void setErlaeuterung(String name) {

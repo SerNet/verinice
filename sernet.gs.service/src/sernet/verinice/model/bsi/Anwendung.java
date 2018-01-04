@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.ds.Datenverarbeitung;
@@ -47,11 +48,11 @@ public class Anwendung extends CnATreeElement
         return log;
     }
     
-	private final ISchutzbedarfProvider schutzbedarfProvider 
-		= new SchutzbedarfAdapter(this);
+	private final IReevaluator schutzbedarfProvider 
+		= new ProtectionRequirementsAdapter(this);
 	
 	private final ILinkChangeListener linkChangeListener
-		= new MaximumSchutzbedarfListener(this);
+		= new MaximumProtectionRequirementsListener(this);
 
 	// ID must correspond to entity definition in XML description
 	public static final String TYPE_ID = "anwendung"; //$NON-NLS-1$
@@ -179,7 +180,7 @@ public class Anwendung extends CnATreeElement
 	}
 
 	@Override
-	public ISchutzbedarfProvider getSchutzbedarfProvider() {
+	public IReevaluator getProtectionRequirementsProvider() {
 		return schutzbedarfProvider;
 	}
 

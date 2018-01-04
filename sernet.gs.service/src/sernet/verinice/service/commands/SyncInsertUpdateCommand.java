@@ -50,6 +50,10 @@ import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IRightsService;
+import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BSIModel;
@@ -63,14 +67,16 @@ import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.service.bp.LoadBpModel;
 import sernet.verinice.service.iso27k.LoadImportObjectsHolder;
-import sernet.verinice.service.iso27k.LoadModel;
+import sernet.verinice.service.model.LoadModel;
 import sernet.verinice.service.sync.IVeriniceArchive;
 
 /**
@@ -296,8 +302,7 @@ public class SyncInsertUpdateCommand extends GenericCommand
                     elementInDB.setExtId(extId);
                 }
 
-                if (elementInDB instanceof Organization 
-                        || elementInDB instanceof ITVerbund) {
+                if (isScope(elementInDB)) {
                     addElement(elementInDB);
                 }
 
@@ -359,9 +364,8 @@ public class SyncInsertUpdateCommand extends GenericCommand
             parent.addChild(elementInDB);
             elementInDB.setParentAndScope(parent);
 
-            // set the scope id of orgs. and it-verbunds.
-            if (elementInDB instanceof Organization 
-                    || elementInDB instanceof ITVerbund) {
+            // set the scope id of scopes 
+            if (isScope(elementInDB)) {
                 elementInDB.setScopeId(elementInDB.getDbId());
             }
 
@@ -858,25 +862,31 @@ public class SyncInsertUpdateCommand extends GenericCommand
      * not used later on the user would see an object node in the object tree.
      * </p>
      * 
-     * @param clazz
+     * <p>
+     * If the parameter isImportAsCatalog is true, the {@link CatalogModel} is
+     * returned.
+     * </p>
+     *
+     * @throws CommandException If loading of {@link CatalogModel} fails.
      * 
-     * @return
      */
-    private CnATreeElement accessContainer(Class clazz) {
+    private CnATreeElement accessContainer(Class clazz) throws CommandException {
+
+        if (parameter.isImportAsCatalog()) {
+            return getCatalogModel();
+        }
+
         // Create the importRootObject if it does not exist yet
         // and set the 'importRootObject' variable.
         CnATreeElement container = containerMap.get(clazz);
         if (container == null) {
-            LoadImportObjectsHolder cmdLoadContainer 
-                = new LoadImportObjectsHolder(clazz);
+            LoadImportObjectsHolder cmdLoadContainer = new LoadImportObjectsHolder(clazz);
             try {
-                cmdLoadContainer = getCommandService().
-                        executeCommand(cmdLoadContainer);
+                cmdLoadContainer = getCommandService().executeCommand(cmdLoadContainer);
             } catch (CommandException e) {
                 getLog().error("Error while accessinf container.", e);
                 errorList.add("Fehler beim Ausführen von LoadBSIModel.");
-                throw new RuntimeCommandException("Fehler beim Anlegen des "
-                        + "Behälters für importierte Objekte.", e);
+                throw new RuntimeCommandException("Fehler beim Anlegen des " + "Behälters für importierte Objekte.", e);
             }
             container = cmdLoadContainer.getHolder();
             if (container == null) {
@@ -889,19 +899,26 @@ public class SyncInsertUpdateCommand extends GenericCommand
         return container;
     }
 
+    private CnATreeElement getCatalogModel() throws CommandException {
+        LoadModel<CatalogModel> loadModel = new LoadModel<>(CatalogModel.class);
+        loadModel = getCommandService().executeCommand(loadModel);
+        return loadModel.getModel();
+    }
+
     private CnATreeElement createContainer(Class clazz) {
-        if (LoadImportObjectsHolder.isImplementation(clazz, 
-                IBSIStrukturElement.class, IMassnahmeUmsetzung.class)) {
+        if (LoadImportObjectsHolder.isImplementation(clazz, IBSIStrukturElement.class, IMassnahmeUmsetzung.class)) {
             return createBsiContainer();
         } else if (BausteinUmsetzung.class.equals(clazz)) {
             return createBsiContainer();
+        } else if (LoadImportObjectsHolder.isImplementation(clazz, IBpElement.class)) {
+            return createBaseProtectionContainer();
         } else {
             return createIsoContainer();
         }
     }
 
     private CnATreeElement createBsiContainer() {
-        LoadBSIModel cmdLoadModel = new LoadBSIModel();
+        LoadModel<BSIModel> cmdLoadModel = new LoadModel<>(BSIModel.class);
         try {
             cmdLoadModel = getCommandService().executeCommand(cmdLoadModel);
         } catch (CommandException e) {
@@ -921,7 +938,7 @@ public class SyncInsertUpdateCommand extends GenericCommand
     }
 
     private CnATreeElement createIsoContainer() {
-        LoadModel cmdLoadModel = new LoadModel();
+        LoadModel<ISO27KModel> cmdLoadModel = new LoadModel<>(ISO27KModel.class);
         try {
             cmdLoadModel = getCommandService().executeCommand(cmdLoadModel);
         } catch (CommandException e) {
@@ -934,6 +951,26 @@ public class SyncInsertUpdateCommand extends GenericCommand
             addPermissions(importGroup);
             addPermissions(importGroup, IRightsService.USERDEFAULTGROUPNAME);
             getDao(ImportIsoGroup.class).saveOrUpdate(importGroup);
+        } catch (Exception e1) {
+            handleCreateContainerException(e1);
+        }
+        return importGroup;
+    }
+    
+    private CnATreeElement createBaseProtectionContainer() {
+        LoadBpModel cmdLoadModel = new LoadBpModel();
+        try {
+            cmdLoadModel = getCommandService().executeCommand(cmdLoadModel);
+        } catch (CommandException e) {
+            handleCreateContainerException(e);
+        }
+        BpModel model = cmdLoadModel.getModel();
+        ImportBpGroup importGroup = null;
+        try {
+            importGroup = new ImportBpGroup(model);
+            addPermissions(importGroup);
+            addPermissions(importGroup, IRightsService.USERDEFAULTGROUPNAME);
+            getDao(ImportBpGroup.class).saveOrUpdate(importGroup);
         } catch (Exception e1) {
             handleCreateContainerException(e1);
         }
@@ -953,6 +990,12 @@ public class SyncInsertUpdateCommand extends GenericCommand
             elementSet = new HashSet<>();
         }
         elementSet.add(element);
+    }
+    
+    protected boolean isScope(CnATreeElement element) {
+        return element instanceof Organization 
+                || element instanceof ITVerbund
+                || element instanceof ItNetwork;
     }
 
     public Risk getSyncRisk() {

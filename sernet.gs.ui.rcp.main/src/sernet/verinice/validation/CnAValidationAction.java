@@ -32,6 +32,7 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.validation.IValidationService;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
@@ -52,7 +53,7 @@ public class CnAValidationAction extends RightsEnabledActionDelegate implements 
     public void doRun(IAction action) {
         try {
             for (Object rootObject : rootObjects) {
-                if (rootObject instanceof Organization || rootObject instanceof ITVerbund) {
+                if (rootObject instanceof Organization || rootObject instanceof ITVerbund || rootObject instanceof ItNetwork) {
                     CnATreeElement cnATreeElement = (CnATreeElement) rootObject;
                     int scopeID = cnATreeElement.getScopeId();
                     final CreateValidationsJob validationJob = new CreateValidationsJob(scopeID);

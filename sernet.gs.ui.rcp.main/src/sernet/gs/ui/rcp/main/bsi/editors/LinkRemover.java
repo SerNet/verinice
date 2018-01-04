@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.editors;
 
+import sernet.verinice.model.bp.IBpModelListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -32,7 +34,7 @@ import sernet.verinice.model.validation.CnAValidation;
  * $LastChangedBy$
  *
  */
-public class LinkRemover implements IBSIModelListener, IISO27KModelListener {
+public class LinkRemover implements IBSIModelListener, IISO27KModelListener, IBpModelListener {
 
     private LinkMaker linkMaker;
 
@@ -164,7 +166,15 @@ public class LinkRemover implements IBSIModelListener, IISO27KModelListener {
     public void validationRemoved(Integer scopeId){};
     
     @Override
-    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IBpModelListener#modelReload(sernet.verinice.model.bp.elements.BpModel)
+     */
+    @Override
+    public void modelReload(BpModel newModel) {
+        
+    };
 
 }
 

@@ -85,10 +85,10 @@ public class ServerConnectionToggleAction extends RightsEnabledAction {
     private ServerConnectionToggleDialog dialog;
     
     public ServerConnectionToggleAction() {
-        if(ServerConnectionToggleDialog.isServerMode()) {
+        if (Preferences.isServerMode()) {
             setText(Messages.ServerConnectionToggleAction_0);
         }
-        if(ServerConnectionToggleDialog.isStandalone()) {
+        if (Preferences.isStandalone()) {
             setText(Messages.ServerConnectionToggleAction_1);
         }
         setId(ID);
@@ -120,7 +120,7 @@ public class ServerConnectionToggleAction extends RightsEnabledAction {
         dialog = new ServerConnectionToggleDialog(Display.getCurrent().getActiveShell());    
         if( dialog.open() == Dialog.OK ) {
             String title = Messages.ServerConnectionToggleAction_2;
-            if(ServerConnectionToggleDialog.isStandalone()) {
+            if (Preferences.isStandalone()) {
                 title = Messages.ServerConnectionToggleAction_3;
             }
             WorkspaceJob exportJob = new WorkspaceJob(title) {
@@ -241,7 +241,7 @@ public class ServerConnectionToggleAction extends RightsEnabledAction {
             public void run() {
                 IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();    
                 
-                if(ServerConnectionToggleDialog.isStandalone()) {
+                if (Preferences.isStandalone()) {
                     prefs.setValue(PreferenceConstants.VNSERVER_URI, dialog.getServerUrl());
                 }       
                 

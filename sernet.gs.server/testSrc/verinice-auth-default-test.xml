@@ -32,11 +32,13 @@
             "searchreindex"
             "showallfiles" -->
             <action id="addbsielement" />
+            <action id="addbpelement"/>
             <action id="addcatalog" />
             <action id="addfile" />
             <action id="addismelement" />
             <action id="addismgroup" />
             <action id="addismorg"/>
+            <action id="additnetwork" />
             <action id="additverbund" />
             <action id="addnote" />
             <action id="addsecurityassessment" />
@@ -44,9 +46,11 @@
             <action id="addownmodul"/>
             <action id="auditview" />
             <action id="bausteinzuordnung" />
+            <action id="bpimporter" />
             <action id="bsidnd" />
             <action id="bsibrowser" />
-            <action id="bsimassnahmen" />
+            <action id="bsimassnahmen" />            
+            <action id="catalogview" />
             <action id="bsimodelview" />
             <action id="bulkedit" />
             <action id="changeicon" />
@@ -102,6 +106,7 @@
             "accountsettings"
             "accesscontrol"
             "addismorg"
+            "additnetwork"
             "additverbund"
             "addsecurityassessment"
             "editprofile"
@@ -113,6 +118,7 @@
             "taskshowall"
             "xmlimport" -->
             <action id="addbsielement" />
+            <action id="addbpelement"/>
             <action id="addcatalog" />
             <action id="addfile" />
             <action id="addismelement" />
@@ -122,11 +128,13 @@
             <action id="assignallisatopics" />
             <action id="auditview" />
             <action id="bausteinzuordnung" />
+            <action id="bpimporter" />
             <action id="bsidnd" />
             <action id="bsibrowser" />
             <action id="bsimassnahmen" />
             <action id="bsimodelview" />
             <action id="bulkedit" />
+            <action id="catalogview" />
             <action id="changeicon" />
             <action id="changeownpassword" />
             <action id="cnavalidation" />
@@ -179,6 +187,7 @@
         <profile name="admin-scope-default-profile" origin="default">
         <!-- missing actions:
             "addismorg"
+            "additnetwork"
             "additverbund"
             "addsecurityassessment"
             "editprofile"
@@ -189,6 +198,7 @@
             "xmlimport" -->
             <action id="accesscontrol" />
             <action id="addbsielement" />
+            <action id="addbpelement"/>
             <action id="addcatalog" />
             <action id="addfile" />
             <action id="addismelement" />
@@ -198,11 +208,13 @@
             <action id="assignallisatopics" />
             <action id="auditview" />
             <action id="bausteinzuordnung" />
+            <action id="bpimporter" />
             <action id="bsidnd" />
             <action id="bsibrowser" />
             <action id="bsimassnahmen" />
             <action id="bsimodelview" />
             <action id="bulkedit" />
+            <action id="catalogview" />
             <action id="changeicon" />
             <action id="changeownpassword" />
             <action id="cnavalidation" />
@@ -259,11 +271,13 @@
             <action id="accesscontrol" />
             <action id="accountsettings" />
             <action id="addbsielement" />
+            <action id="addbpelement"/>
             <action id="addcatalog" />
             <action id="addfile" />
             <action id="addismelement" />
             <action id="addismgroup" />
             <action id="addismorg" />
+            <action id="additnetwork" />
             <action id="additverbund" />
             <action id="addnote" />
             <action id="addsecurityassessment" />
@@ -271,11 +285,13 @@
             <action id="assignallisatopics" />
             <action id="auditview" />
             <action id="bausteinzuordnung" />
+            <action id="bpimporter" />
             <action id="bsidnd" />
             <action id="bsibrowser" />
             <action id="bsimassnahmen" />
             <action id="bsimodelview" />
             <action id="bulkedit" />
+            <action id="catalogview" />
             <action id="changeicon" />
             <action id="changeownpassword" />
             <action id="cnavalidation" />
