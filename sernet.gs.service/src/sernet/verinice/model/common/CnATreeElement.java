@@ -279,12 +279,12 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         CopyOnWriteArrayList<CnALink> linksDown = new CopyOnWriteArrayList<CnALink>(getLinksDown());
         for (CnALink linkDown : linksDown) {
             linkDown.remove();
-		}
-		
+        }
+
         CopyOnWriteArrayList<CnALink> linksUp = new CopyOnWriteArrayList<CnALink>(getLinksUp());
         for (CnALink linkUp : linksUp) {
             linkUp.remove();
-		}
+        }
     }
 
 	public CnATreeElement[] getChildrenAsArray() {

@@ -311,8 +311,6 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
      */
     @Override
@@ -321,8 +319,6 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
      * getChangeType()
      */
@@ -332,8 +328,6 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @seesernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
      * getChangedElements()
      */
@@ -345,8 +339,6 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId
      * ()

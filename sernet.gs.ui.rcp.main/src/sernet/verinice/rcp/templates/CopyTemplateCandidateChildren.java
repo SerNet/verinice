@@ -50,11 +50,6 @@ public class CopyTemplateCandidateChildren extends CopyTreeElements {
 
     private Set<String> templateCandidateUuids = new HashSet<String>();
 
-    /**
-     * @param selectedGroup
-     * @param elements
-     * @param copyLinks
-     */
     public CopyTemplateCandidateChildren(CnATreeElement selectedGroup, List<CnATreeElement> elements, Set<String> templateCandidateUuids) {
         super(selectedGroup, elements, false);
         this.templateCandidateUuids = templateCandidateUuids;

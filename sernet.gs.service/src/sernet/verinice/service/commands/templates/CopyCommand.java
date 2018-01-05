@@ -103,30 +103,14 @@ public class CopyCommand extends GenericCommand {
 
     private List<String> newElements;
 
-    /**
-     * @param uuidGroup
-     *            Uuid of an group
-     * @param uuidList
-     *            Uuids of the elements to copy
-     */
     public CopyCommand(final String uuidGroup, final List<String> uuidList) {
         this(uuidGroup, uuidList, new ArrayList<IPostProcessor>());
     }
 
-    /**
-     * @param uuid
-     * @param uuidList2
-     * @param postProcessorList2
-     */
     public CopyCommand(final String uuidGroup, final List<String> uuidList, final List<IPostProcessor> postProcessorList) {
         this(uuidGroup, uuidList, postProcessorList, false);
     }
 
-    /**
-     * @param uuid
-     * @param uuidList2
-     * @param postProcessorList2
-     */
     public CopyCommand(final String uuidGroup, final List<String> uuidList, final List<IPostProcessor> postProcessorList, final boolean copyLinks) {
         super();
         this.uuidGroup = uuidGroup;
@@ -205,16 +189,12 @@ public class CopyCommand extends GenericCommand {
     }
 
     private void copyFinishedRiskAnalysisLists(FinishedRiskAnalysis oldFinishedRiskAnalysis, FinishedRiskAnalysis copyOfFinishedRiskAnalysis, Map<String, String> sourceDestMap) throws CommandException, IOException {
-
         FindRiskAnalysisListsByParentID command = new FindRiskAnalysisListsByParentID(oldFinishedRiskAnalysis.getDbId());
         command = getCommandService().executeCommand(command);
         FinishedRiskAnalysisLists listsToCopy = command.getFoundLists();
-
         FinishedRiskAnalysisLists newLists = new FinishedRiskAnalysisLists();
         newLists.setFinishedRiskAnalysisId(copyOfFinishedRiskAnalysis.getDbId());
-
         copyAssociatedGefaehrdungen(copyOfFinishedRiskAnalysis, sourceDestMap, listsToCopy, newLists);
-
         saveFinishedRiskAnalysisLists(newLists);
 
     }
@@ -222,11 +202,9 @@ public class CopyCommand extends GenericCommand {
     private void copyAssociatedGefaehrdungen(FinishedRiskAnalysis copyOfFinishedRiskAnalysis, Map<String, String> sourceDestMap, FinishedRiskAnalysisLists listsToCopy, FinishedRiskAnalysisLists newLists) throws CommandException, IOException {
 
         for (GefaehrdungsUmsetzung gefaehrdung : listsToCopy.getAssociatedGefaehrdungen()) {
-
             GefaehrdungsUmsetzung newGefaehrdung = (GefaehrdungsUmsetzung) copy(copyOfFinishedRiskAnalysis, gefaehrdung, sourceDestMap);
             newLists.getAssociatedGefaehrdungen().add(newGefaehrdung);
             addToRAWizardListsIfNeccessary(listsToCopy, newLists, gefaehrdung, newGefaehrdung);
-
             SaveElement<GefaehrdungsUmsetzung> saveCommand = new SaveElement<>(newGefaehrdung);
             getCommandService().executeCommand(saveCommand);
             number++;
@@ -252,7 +230,6 @@ public class CopyCommand extends GenericCommand {
     }
 
     private void afterCopy(CnATreeElement original, CnATreeElement copy, Map<String, String> sourceDestMap) {
-
         sourceDestMap.put(original.getUuid(), copy.getUuid());
         if (number % FLUSH_LEVEL == 0) {
             getDao().flush();
@@ -357,7 +334,7 @@ public class CopyCommand extends GenericCommand {
             CreateTemplateImplementationElement<CnATreeElement> saveCommand = new CreateTemplateImplementationElement<CnATreeElement>(container, (Class<CnATreeElement>) element.getClass(), title, true, false);
             saveCommand.setInheritAuditPermissions(true);
             saveCommand = getCommandService().executeCommand(saveCommand);
-            child = saveCommand.getNewElement();
+            child = saveCommand.getCreatedElement();
         } else {
             CreateElement<CnATreeElement> saveCommand = new CreateElement<CnATreeElement>(container, (Class<CnATreeElement>) element.getClass(), title, true, false);
             saveCommand.setInheritAuditPermissions(true);
@@ -418,7 +395,7 @@ public class CopyCommand extends GenericCommand {
     }
 
     /**
-     * Returns a unique title compared to titles of all siblings siblings
+     * Returns a unique title compared to titles of all siblings
      *
      * @param Title
      *            A title of an element
@@ -531,17 +508,10 @@ public class CopyCommand extends GenericCommand {
         }
     }
 
-    /**
-     * @return the copyAttachments
-     */
     public boolean isCopyAttachments() {
         return copyAttachments;
     }
 
-    /**
-     * @param copyAttachments
-     *            the copyAttachments to set
-     */
     public void setCopyAttachments(final boolean copyAttachments) {
         this.copyAttachments = copyAttachments;
     }

@@ -100,6 +100,7 @@ public class CopyService extends PasteService implements IProgressTask {
             numberOfElements = uuidList.size();
             // -1 means unknown runtime
             progressObserver.beginTask(Messages.getString("CopyService.1", numberOfElements), -1); //$NON-NLS-1$
+
             if (isModelingTemplateActive()) {
                 sernet.verinice.service.commands.templates.CopyCommand cc = new sernet.verinice.service.commands.templates.CopyCommand(this.selectedGroup.getUuid(), uuidList, getPostProcessorList(), this.copyLinks);
                 cc.setCopyAttachments(isCopyAttachments());

@@ -67,22 +67,30 @@ public class LoadTemplateCandidates extends GenericCommand {
     public LoadTemplateCandidates(String uuid, String typeId, Integer scopeId, Integer groupId) {
         super();
         this.uuid = uuid;
-
-        if (MassnahmenUmsetzung.TYPE_ID.equals(typeId)) {
-            typeId = MassnahmenUmsetzung.HIBERNATE_TYPE_ID;
-        } else if (BausteinUmsetzung.TYPE_ID.equals(typeId)) {
-            typeId = BausteinUmsetzung.HIBERNATE_TYPE_ID;
-        } else if (SonstIT.TYPE_ID.equals(typeId)) {
-            typeId = SonstIT.TYPE_ID_HIBERNATE;
-        } else if (TelefonKomponente.TYPE_ID.equals(typeId)) {
-            typeId = TelefonKomponente.TYPE_ID_HIBERNATE;
-        } else if (NetzKomponente.TYPE_ID.equals(typeId)) {
-            typeId = NetzKomponente.TYPE_ID_HIBERNATE;
-        }
-
-        this.typeId = typeId;
+        this.typeId = checkTypeId(typeId);
         this.scopeId = scopeId;
         this.groupId = groupId;
+    }
+
+    private String checkTypeId(String typeId) {
+        switch (typeId) {
+        case MassnahmenUmsetzung.TYPE_ID:
+            typeId = MassnahmenUmsetzung.HIBERNATE_TYPE_ID;
+            break;
+        case BausteinUmsetzung.TYPE_ID:
+            typeId = BausteinUmsetzung.HIBERNATE_TYPE_ID;
+            break;
+        case SonstIT.TYPE_ID:
+            typeId = SonstIT.TYPE_ID_HIBERNATE;
+            break;
+        case TelefonKomponente.TYPE_ID:
+            typeId = TelefonKomponente.TYPE_ID_HIBERNATE;
+            break;
+        case NetzKomponente.TYPE_ID:
+            typeId = NetzKomponente.TYPE_ID_HIBERNATE;
+            break;
+        }
+        return typeId;
     }
 
     public LoadTemplateCandidates(String uuid, String typeId) {

@@ -19,8 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.templates;
 
-import org.apache.log4j.Logger;
-
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.service.commands.PropertyLoader;
 
@@ -34,20 +32,11 @@ import sernet.verinice.service.commands.PropertyLoader;
 public class LoadModelingTemplateSettings extends GenericCommand {
 
     private static final long serialVersionUID = 3380045738570923175L;
-
-    private transient Logger log = Logger.getLogger(LoadModelingTemplateSettings.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(LoadModelingTemplateSettings.class);
-        }
-        return log;
-    }
     
     private boolean modelingTemplateActive = false;
     private String modelingTemplateMaster = "admin";
     
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override

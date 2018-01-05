@@ -354,7 +354,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         }
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
      */
     @Override
@@ -362,16 +362,18 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         element = null;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType()
+    /*
+     * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
+     * getChangeType()
      */
     @Override
     public int getChangeType() {
         return ChangeLogEntry.TYPE_DELETE;
     }
 
-    /* (non-Javadoc)
-     * @seesernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangedElements()
+    /*
+     * @seesernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
+     * getChangedElements()
      */
     @Override
     public List<CnATreeElement> getChangedElements() {
@@ -380,8 +382,10 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId()
+    /*
+     * @see
+     * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId
+     * ()
      */
     @Override
     public String getStationId() {

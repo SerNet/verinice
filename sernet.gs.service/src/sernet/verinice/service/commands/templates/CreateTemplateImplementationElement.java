@@ -43,13 +43,10 @@ import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.CnATypeMapper;
 
 /**
- * Create and save new template implementation element of clazz clazz to the
+ * Create and save new template implementation element of Class<T> to the
  * database using its class to lookup the DAO from the factory.
  * 
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
- * @version $Rev$ $LastChangedDate$ $LastChangedBy$
- * 
- * @param <T>
  */
 @SuppressWarnings("serial")
 public class CreateTemplateImplementationElement<T extends CnATreeElement> extends ChangeLoggingCommand implements IChangeLoggingCommand, IAuthAwareCommand {
@@ -59,7 +56,6 @@ public class CreateTemplateImplementationElement<T extends CnATreeElement> exten
     protected CnATreeElement container;
     private Class<T> clazz;
     private String typeId;
-    // may be null
     private String title;
     protected T element;
     private String stationId;
@@ -163,13 +159,12 @@ public class CreateTemplateImplementationElement<T extends CnATreeElement> exten
         }
     }
 
-    public T getNewElement() {
+    public T getCreatedElement() {
         return element;
     }
 
     /*
-     * (non-Javadoc) @see
-     * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
+     * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
      * getChangeType()
      */
     @Override
@@ -178,7 +173,7 @@ public class CreateTemplateImplementationElement<T extends CnATreeElement> exten
     }
 
     /*
-     * (non-Javadoc) @see
+     * @see
      * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId
      * ()
      */
@@ -196,8 +191,7 @@ public class CreateTemplateImplementationElement<T extends CnATreeElement> exten
     }
 
     /*
-     * (non-Javadoc) @see
-     * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
+     * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
      * getChangedElements()
      */
     @Override

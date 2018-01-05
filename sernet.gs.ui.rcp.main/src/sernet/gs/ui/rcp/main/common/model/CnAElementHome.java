@@ -39,6 +39,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.ApplicationRoles;
+import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
@@ -55,7 +56,6 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
-import sernet.verinice.model.common.CnATreeElement.TemplateType;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
@@ -258,16 +258,14 @@ public final class CnAElementHome {
             log.debug("Are Module templates active?: " + isModelingTemplateActive()); //$NON-NLS-1$
         }
 
+        ChangeLoggingCommand command;
         if (isModelingTemplateActive()) {
-            sernet.verinice.service.commands.templates.RemoveElement command = new sernet.verinice.service.commands.templates.RemoveElement(element);
-            deleteValidations(element);
-            getCommandService().executeCommand(command);
+            command = new sernet.verinice.service.commands.templates.RemoveElement(element);
         } else {
-            sernet.verinice.service.commands.RemoveElement command = new sernet.verinice.service.commands.RemoveElement(element);
-            deleteValidations(element);
-            getCommandService().executeCommand(command);
+            command = new sernet.verinice.service.commands.RemoveElement(element);
         }
-        
+        deleteValidations(element);
+        getCommandService().executeCommand(command);
     }
 
     public void remove(CnALink element) throws CommandException {
