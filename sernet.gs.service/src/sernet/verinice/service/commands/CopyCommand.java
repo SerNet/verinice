@@ -178,7 +178,7 @@ public class CopyCommand extends GenericCommand {
                 number++;
                 afterCopy(elementToCopy, elementCopy, sourceDestMap);
                 if(isCopyChildren()) {
-                    copyChildrenIfExistant(element, sourceDestMap, elementCopy);
+                    copyChildrenIfExistant(elementToCopy, sourceDestMap, elementCopy);
                 }
             }
         } else if (elementToCopy != null) {
