@@ -177,7 +177,9 @@ public class CopyCommand extends GenericCommand {
                 elementCopy = saveCopy(groupToCopyTo, elementToCopy);
                 number++;
                 afterCopy(elementToCopy, elementCopy, sourceDestMap);
-                copyChildrenIfExistant(elementToCopy, sourceDestMap, elementCopy);
+                if(isCopyChildren()) {
+                    copyChildrenIfExistant(element, sourceDestMap, elementCopy);
+                }
             }
         } else if (elementToCopy != null) {
             getLog().warn("Can not copy element with pk: " + elementToCopy.getDbId() + " to group with pk: " + groupToPasteTo.getDbId()); //$NON-NLS-1$ //$NON-NLS-2$
