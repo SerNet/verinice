@@ -24,7 +24,6 @@ import org.eclipse.ui.IPerspectiveFactory;
 import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
 import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
-import sernet.verinice.bp.rcp.BaseProtectionView;
 import sernet.verinice.iso27k.rcp.CatalogView;
 import sernet.verinice.iso27k.rcp.ISMView;
 
@@ -52,7 +51,6 @@ public class Perspective implements IPerspectiveFactory {
 		
 		IFolderLayout modelFolder = layout.createFolder("model", IPageLayout.LEFT, RATIO_MODEL_FOLDER, editorArea);
 		modelFolder.addView(BsiModelView.ID);
-		modelFolder.addView(BaseProtectionView.ID);
 		modelFolder.addPlaceholder(ISMView.ID + ":*");
 		layout.getViewLayout(BSIMassnahmenView.ID).setCloseable(true);
 		layout.getViewLayout(ISMView.ID).setCloseable(true);
