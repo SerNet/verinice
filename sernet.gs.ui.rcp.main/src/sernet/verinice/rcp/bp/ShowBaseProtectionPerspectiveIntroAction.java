@@ -22,15 +22,22 @@ package sernet.verinice.rcp.bp;
 import sernet.gs.ui.rcp.main.actions.ShowPerspectiveIntroAction;
 
 /**
+ * This action is performed when the user clicks the "Modernized BSI IT-Baseline
+ * Protection" link on the welcome page:
+ * sernet.gs.ui.rcp.main/intro/root[_ln].xhtml.
+ * 
  * @author uz[at]sernet.de
- *
  */
 public class ShowBaseProtectionPerspectiveIntroAction extends ShowPerspectiveIntroAction {
 
+    /**
+     * Returns a cheat sheet id from pulgin.xml.
+     * 
+     * @see sernet.gs.ui.rcp.main.actions.ShowPerspectiveIntroAction#getCheatSheetId()
+     */
     @Override
     public String getCheatSheetId() {
-        // TODO: urs we need a new cheat_sheet
-        return "sernet.gs.ui.rcp.main.cheatsheet1";
+        return "sernet.verinice.cheatsheets.mogs.intro";
     }
 
     @Override

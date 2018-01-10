@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<cheatsheet title="Dokumente &amp; Nachweise">
+
+  <intro>
+    <description>
+      <b>Willkommen bei verinice.</b>
+      <br/>
+      <br/>
+        Dieses Tutorial beschäftigt sich mit der Dokumentenablage in verinice.
+        <br/>
+        Sie haben zwei Möglichkeiten Ihre Dokumente und Nachweise in verinice
+        einzupflegen. Die Dokumente werden entweder direkt einem Objekt mit Hilfe
+        eines Dateianhanges angehängt oder es wird mit Hilfe der externen Links auf ein
+        Dokument, welches z.B. in Ihrem Dokumentenmanagementsystem vorhanden ist,
+        verwiesen.
+    </description>
+  </intro>
+
+  <item title="Sinnvolle Dokumentenablage: Dateianhänge in Dateien-View">
+     <description>
+        Mit Hilfe der Dateien-View können Dokumente direkt einem Objekt angehängt werden.
+        Den View Dateien können Sie öffnen, indem Sie den Button <b>Büroklammer</b> (Dateien) in der
+        oberen Leiste anklicken oder über <b>Ansicht &gt; Zeige View &gt; Dateien</b>. Nun können Sie Ihr Dokument
+        per Drag&amp;Drop in den View Dateien ziehen. Vervollständigen Sie die Daten und speichern <b>(Strg+S)</b>
+        Sie diese. Nun kann das Dokument eingesehen werden (Klick auf das <b>Blatt Papier mit Lupe</b> am
+        rechten oberen Rand).
+     </description>
+  </item>
+
+  <item title="Sinnvolle Dokumentenablage: Verweis auf Dokumente durch externe Links">
+     <description>
+        Durch externe Links kann in jedem Objekt auf ein Dokument verwiesen werden. Öffnen Sie dazu
+        durch Doppelklick den Editorbereich einem Objektes. Wählen Sie <b>Ändern...</b> beim Feld Dokument.
+        Nun kann ein Name und der Link eingetragen werden. Eine Übersicht aller externen Links in verinice
+        erhalten Sie in der entsprechenden View. Zu dieser gelangen Sie über <b>Ansicht &gt; Zeige View &gt;
+        Externe Links View (Dokumentenansicht)</b> oder mit Klick auf den Button <b>Blatt Papier</b> in der oberen Leiste.
+     </description>
+  </item>
+
+</cheatsheet>

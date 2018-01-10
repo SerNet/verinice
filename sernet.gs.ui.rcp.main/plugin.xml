@@ -1808,8 +1808,67 @@
               id="sernet.verinice.greenbone.cheatsheets.ism"
               name="%CheatSheets.Greenbone.Ism.Name">
            <description>
-              
            </description>
+        </cheatsheet>
+        <category
+           id="sernet.verinice.cheatsheets.mogs"
+           name="%cheatsheets.mogs.category">
+        </category>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.intro"
+            composite="false"
+            contentFile="%cheatsheets.mogs.intro.file"
+            name="%cheatsheets.mogs.intro.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.analysis"
+            composite="false"
+            contentFile="%cheatsheets.mogs.analysis.file"
+            name="%cheatsheets.mogs.analysis.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.detection"
+            composite="false"
+            contentFile="%cheatsheets.mogs.detection.file"
+            name="%cheatsheets.mogs.detection.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.modelling"
+            composite="false"
+            contentFile="%cheatsheets.mogs.modelling.file"
+            name="%cheatsheets.mogs.modelling.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.check"
+            composite="false"
+            contentFile="%cheatsheets.mogs.check.file"
+            name="%cheatsheets.mogs.check.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.documents"
+            composite="false"
+            contentFile="%cheatsheets.mogs.documents.file"
+            name="%cheatsheets.mogs.documents.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.reports"
+            composite="false"
+            contentFile="%cheatsheets.mogs.reports.file"
+            name="%cheatsheets.mogs.reports.name">
+            <description></description>
         </cheatsheet>
    </extension>
    <extension
