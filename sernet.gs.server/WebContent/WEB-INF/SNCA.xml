@@ -656,7 +656,7 @@ the value between <param></param> will be used directly if no string is found fo
             </huiproperty>      
       </huipropertygroup>
       
-      <huipropertygroup name="KIX" id="server_kix_group" tags="kix" >
+      <huipropertygroup name="KIX" id="server_kix_group" tags="KIX" >
         <huiproperty name="KIX ticket 1" id="server_kix_ticket1" isURL="true"/>
         <huiproperty name="KIX ticket 2" id="server_kix_ticket2" isURL="true"/>
         <huiproperty name="KIX ticket 3" id="server_kix_ticket3" isURL="true"/>
@@ -1842,7 +1842,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             </huiproperty>
             </huipropertygroup>
         
-      <huipropertygroup name="KIX" id="client_kix_group" tags="kix" >
+      <huipropertygroup name="KIX" id="client_kix_group" tags="KIX" >
         <huiproperty name="KIX ticket 1" id="client_kix_ticket1" isURL="true"/>
         <huiproperty name="KIX ticket 2" id="client_kix_ticket2" isURL="true"/>
         <huiproperty name="KIX ticket 3" id="client_kix_ticket3" isURL="true"/>
@@ -2096,7 +2096,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                                 
             </huipropertygroup>
       
-      <huipropertygroup name="KIX" id="sonstit_kix_group" tags="kix" >
+      <huipropertygroup name="KIX" id="sonstit_kix_group" tags="KIX" >
         <huiproperty name="KIX ticket 1" id="sonstit_kix_ticket1" isURL="true"/>
         <huiproperty name="KIX ticket 2" id="sonstit_kix_ticket2" isURL="true"/>
         <huiproperty name="KIX ticket 3" id="sonstit_kix_ticket3" isURL="true"/>
@@ -3047,7 +3047,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             </huiproperty>
         </huipropertygroup>
     
-    <huipropertygroup name="KIX" id="mnums_kix_group" tags="kix" >
+    <huipropertygroup name="KIX" id="mnums_kix_group" tags="KIX" >
       <huiproperty name="KIX ticket 1" id="mnums_kix_ticket1" isURL="true"/>
       <huiproperty name="KIX ticket 2" id="mnums_kix_ticket2" isURL="true"/>
       <huiproperty name="KIX ticket 3" id="mnums_kix_ticket3" isURL="true"/>
@@ -5289,7 +5289,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             <huiproperty id="gsm_scan_ended" name="Scan end" inputtype="line" tags="Greenbone_GSM" editable="false" />
         </huipropertygroup>     
 
-        <huipropertygroup name="KIX" id="asset_kix_group" tags="kix" >
+        <huipropertygroup name="KIX" id="asset_kix_group" tags="KIX" >
             <huiproperty name="KIX ticket 1" id="asset_kix_ticket1" isURL="true"/>
             <huiproperty name="KIX ticket 2" id="asset_kix_ticket2" isURL="true"/>
             <huiproperty name="KIX ticket 3" id="asset_kix_ticket3" isURL="true"/>
@@ -6194,7 +6194,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                 <huiproperty id="gsm_ism_control_cpe" name="GSM CPE" tags="Greenbone_GSM" editable="false" />
             </huipropertygroup>
 
-        <huipropertygroup name="KIX" id="control_kix_group" tags="kix" >
+        <huipropertygroup name="KIX" id="control_kix_group" tags="KIX" >
             <huiproperty name="KIX ticket 1" id="control_kix_ticket1" isURL="true"/>
             <huiproperty name="KIX ticket 2" id="control_kix_ticket2" isURL="true"/>
             <huiproperty name="KIX ticket 3" id="control_kix_ticket3" isURL="true"/>
