@@ -172,8 +172,8 @@ public abstract class HtmlWriter {
     private static String getProperty(CnATreeElement cnATreeElement, 
             PropertyType propertyType){
         String value = "";
-        if (RisikoMassnahmenUmsetzung.TYPE_ID.equals(
-                cnATreeElement.getTypeId())){
+        if (RisikoMassnahmenUmsetzung.HIBERNATE_TYPE_ID.equals(
+                cnATreeElement.getObjectType())){
             value = getOwnRiskSafeguardText(cnATreeElement);
         }
         if (StringUtils.isEmpty(value)){
