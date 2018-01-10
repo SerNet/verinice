@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<cheatsheet title="Si prega di consultare le istruzioni ISO 27000">
+
+   <intro>
+     <description>
+       Dato che state leggendo questo in Italiano, supponiamo che si desideri utilizzare la prospettiva ISM.
+       Questo tutorial ? stato progettato appositamente per la norma "IT Baseline Protection (IT-Grundschutz)"
+       della BSI tedesca che di solito non viene utilizzata in Italiano.
+       <br /> <br />
+       Si prega di procedere con i tutorial della sezione "3 ISO 27000 Istruzioni" che sono progettati per
+       spiegare l'uso di verinice per lo standard ISO 27001.
+     </description>
+   </intro>
+
+   <item title = "Tutorial">
+     <description>
+       Per procedere con la parte rilevante per l'Italiano, fai clic sul menu <b> Aiuto> Tutorial ... </b>.
+     </description>
+   </item>
+
+</cheatsheet>
