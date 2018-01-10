@@ -39,6 +39,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.ApplicationRoles;
+import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
@@ -63,11 +64,9 @@ import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
-import sernet.verinice.service.auth.AuthenticationHelper;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
-import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.RemoveLink;
 import sernet.verinice.service.commands.SaveElement;
 import sernet.verinice.service.commands.UpdateElement;
@@ -80,6 +79,7 @@ import sernet.verinice.service.commands.crud.RefreshElement;
 import sernet.verinice.service.commands.crud.UpdateMultipleElements;
 import sernet.verinice.service.commands.task.CreateScenario;
 import sernet.verinice.service.commands.task.FindAllTags;
+import sernet.verinice.service.commands.templates.LoadModelingTemplateSettings;
 
 /**
  * DAO class for model objects. Uses Hibernate as persistence framework.
@@ -255,9 +255,15 @@ public final class CnAElementHome {
     public void remove(CnATreeElement element) throws CommandException {
         if (log.isDebugEnabled()) {
             log.debug("Deleting element, uuid: " + element.getUuid()); //$NON-NLS-1$
+            log.debug("Are Module templates active?: " + isModelingTemplateActive()); //$NON-NLS-1$
         }
-        
-        RemoveElement command = new RemoveElement(element);
+
+        ChangeLoggingCommand command;
+        if (isModelingTemplateActive()) {
+            command = new sernet.verinice.service.commands.templates.RemoveElement(element);
+        } else {
+            command = new sernet.verinice.service.commands.RemoveElement(element);
+        }
         deleteValidations(element);
         getCommandService().executeCommand(command);
     }
@@ -445,6 +451,12 @@ public final class CnAElementHome {
             // well.
             if (getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
                 return true;
+            }
+            
+            // Short cut 3: If cte is a implementation, then it is not writable
+            // @see CnATreeElement.TemplateType
+            if (cte.isImplementation()) {
+            	return false;
             }
     
             if (roles == null) {
@@ -694,5 +706,19 @@ public final class CnAElementHome {
 
     private IAuthService getAuthService() {
         return ServiceFactory.lookupAuthService();
+    }
+
+    private boolean isModelingTemplateActive() {
+        boolean standalone = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+        if (standalone) {
+            return false;
+        }
+        LoadModelingTemplateSettings modelingTemplateSettings = new LoadModelingTemplateSettings();
+        try {
+            modelingTemplateSettings = getCommandService().executeCommand(modelingTemplateSettings);
+        } catch (CommandException e) {
+            log.error("Error while loading modeling template settings", e); //$NON-NLS-1$
+        }
+        return modelingTemplateSettings.isModelingTemplateActive();
     }
 }

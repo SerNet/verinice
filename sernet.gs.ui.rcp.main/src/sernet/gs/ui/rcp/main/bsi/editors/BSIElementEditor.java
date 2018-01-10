@@ -428,7 +428,7 @@ public class BSIElementEditor extends EditorPart {
     }
 
     public Boolean createIsWriteAllowed() {
-        isWriteAllowed = CnAElementHome.getInstance().isWriteAllowed(cnAElement) && !cnAElement.isImplementation();
+        isWriteAllowed = CnAElementHome.getInstance().isWriteAllowed(cnAElement);
         return isWriteAllowed;
     }
 

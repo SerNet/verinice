@@ -75,7 +75,7 @@ import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IProgressRunnable;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.templates.TemplateTableViewer.PathCellLabelProvider;
-import sernet.verinice.service.commands.LoadTemplatesOrImplementations;
+import sernet.verinice.service.commands.templates.LoadTemplatesOrImplementations;
 
 /**
  * This view shows for given ({@link CnATreeElement}) all modeling templates
@@ -448,7 +448,7 @@ public class TemplateView extends RightsEnabledView {
      * @throws InterruptedException
      */
     private void addTemplatesChildren(Set<String> templateCandidateUuids, List<CnATreeElement> newChildren) throws InvocationTargetException, InterruptedException {
-            IProgressRunnable operation = new CopyTemplateElements(inputElement, newChildren, templateCandidateUuids);
+            IProgressRunnable operation = new CopyTemplateCandidateChildren(inputElement, newChildren, templateCandidateUuids);
             if (operation != null) {
                 IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
                 progressService.run(true, true, operation);

@@ -17,7 +17,7 @@
  * Contributors:  
  *     Viktor Schmidt <vschmidt[at]ckc[dot]de> - initial API and implementation  
  ******************************************************************************/
-package sernet.verinice.service.commands;
+package sernet.verinice.service.commands.templates;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -40,6 +40,10 @@ import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnATreeElement.TemplateType;
+import sernet.verinice.service.commands.CopyCommand;
+import sernet.verinice.service.commands.LoadElementTitles;
+import sernet.verinice.service.commands.Messages;
+import sernet.verinice.service.commands.PropertyLoader;
 import sernet.verinice.model.common.Permission;
 
 /**

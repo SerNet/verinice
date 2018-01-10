@@ -17,7 +17,7 @@
  * Contributors:  
  *     Viktor Schmidt <vschmidt[at]ckc[dot]de> - initial API and implementation  
  ******************************************************************************/
-package sernet.verinice.service.commands;
+package sernet.verinice.service.commands.templates;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -34,6 +34,9 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.NetzKomponente;
+import sernet.verinice.model.bsi.SonstIT;
+import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnATreeElement.TemplateType;
 
@@ -64,17 +67,30 @@ public class LoadTemplateCandidates extends GenericCommand {
     public LoadTemplateCandidates(String uuid, String typeId, Integer scopeId, Integer groupId) {
         super();
         this.uuid = uuid;
-
-        if (MassnahmenUmsetzung.TYPE_ID.equals(typeId)) {
-            typeId = MassnahmenUmsetzung.HIBERNATE_TYPE_ID;
-        }
-        if (BausteinUmsetzung.TYPE_ID.equals(typeId)) {
-            typeId = BausteinUmsetzung.HIBERNATE_TYPE_ID;
-        }
-
-        this.typeId = typeId;
+        this.typeId = checkTypeId(typeId);
         this.scopeId = scopeId;
         this.groupId = groupId;
+    }
+
+    private String checkTypeId(String typeId) {
+        switch (typeId) {
+        case MassnahmenUmsetzung.TYPE_ID:
+            typeId = MassnahmenUmsetzung.HIBERNATE_TYPE_ID;
+            break;
+        case BausteinUmsetzung.TYPE_ID:
+            typeId = BausteinUmsetzung.HIBERNATE_TYPE_ID;
+            break;
+        case SonstIT.TYPE_ID:
+            typeId = SonstIT.TYPE_ID_HIBERNATE;
+            break;
+        case TelefonKomponente.TYPE_ID:
+            typeId = TelefonKomponente.TYPE_ID_HIBERNATE;
+            break;
+        case NetzKomponente.TYPE_ID:
+            typeId = NetzKomponente.TYPE_ID_HIBERNATE;
+            break;
+        }
+        return typeId;
     }
 
     public LoadTemplateCandidates(String uuid, String typeId) {

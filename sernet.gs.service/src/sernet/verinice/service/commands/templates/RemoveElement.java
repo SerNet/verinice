@@ -1,23 +1,23 @@
-/*******************************************************************************
- * Copyright (c) 2009 Alexander Koderman <ak[at]sernet[dot]de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
- * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
- * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
- * If not, see <http://www.gnu.org/licenses/>.
- * 
- * Contributors:
- *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
- *     Henning Heinold <h.heinold@tarent.de> - cascade when deleting CnATreeElement with
- *     FinishedRiskAnalysis
+/*******************************************************************************  
+ * Copyright (c) 2017 Viktor Schmidt.  
+ *  
+ * This program is free software: you can redistribute it and/or   
+ * modify it under the terms of the GNU Lesser General Public License   
+ * as published by the Free Software Foundation, either version 3   
+ * of the License, or (at your option) any later version.  
+ * This program is distributed in the hope that it will be useful,      
+ * but WITHOUT ANY WARRANTY; without even the implied warranty   
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    
+ * See the GNU Lesser General Public License for more details.  
+ *  
+ * You should have received a copy of the GNU Lesser General Public License  
+ * along with this program.   
+ * If not, see <http://www.gnu.org/licenses/>.  
+ *   
+ * Contributors:  
+ *     Viktor Schmidt <vschmidt[at]ckc[dot]de> - initial API and implementation  
  ******************************************************************************/
-package sernet.verinice.service.commands;
+package sernet.verinice.service.commands.templates;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -25,6 +25,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.FetchMode;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.SecurityException;
@@ -47,20 +50,24 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.service.commands.FindRiskAnalysisListsByParentID;
+import sernet.verinice.service.commands.LoadConfiguration;
+import sernet.verinice.service.commands.LoadRiskAnalyses;
+import sernet.verinice.service.commands.PropertyLoader;
 
 /**
- * Removes tree-elements.
+ * A duplicate of {@link sernet.verinice.service.commands.RemoveCommand}, used
+ * when property module.templates.active in
+ * {@link veriniceserver-plain.properties} is true. Removes tree-elements.
  * 
- * Children, links and attachments are deleted by hibernate cascading (see
+ * Children, links and attachments are deleted by hibernate cascading (@see
  * CnATreeElement.hbm.xml)
  * 
- * Use duplicate command
- * {@link sernet.verinice.service.commands.templates.RemoveCommand} when
- * property module.templates.active in {@link veriniceserver-plain.properties}
- * is true.
+ * @see sernet.verinice.service.commands.RemoveCommand
+ * @see sernet.verinice.service.commands.CopyCommand
+ * @see sernet.verinice.service.commands.templates.CopyCommand
  * 
- * @author Alexander Koderman <ak[at]sernet[dot]de>.
- * @author Daniel Murygin <dm[at]sernet[dot]de>
+ * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
  *
  * @param <T>
  */
@@ -68,20 +75,21 @@ import sernet.verinice.model.iso27k.PersonIso;
 public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingCommand implements IChangeLoggingCommand, INoAccessControl {
 
     private transient Logger log = Logger.getLogger(RemoveElement.class);
-
     public Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(RemoveElement.class);
         }
         return log;
     }
-
+    
     private transient IFinishedRiskAnalysisListsDao raListDao;
-
+    
     private T element;
     private String stationId;
     private Integer elementId;
     private String typeId;
+    
+   
 
     public RemoveElement(T element) {
         // only transfer id of element to keep footprint small:
@@ -97,24 +105,23 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
             // load element from DB:
             this.element = (T) getDaoFactory().getDAO(typeId).findById(elementId);
 
-            if (this.element == null) {
+            if(this.element==null) {
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Element was not found in db. Type-Id: " + typeId + ", Db-Id: " + elementId);
                 }
                 return;
             }
-            IBaseDao<T, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
-            // first we check if the operation is allowed for the element and
-            // the children
+            IBaseDao<T,Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
+            //first we check if the operation is allowed for the element and the children
             dao.checkRights(element);
             CnATreeElement[] children = element.getChildrenAsArray();
             checkRightForSubElements(children);
-
-            if (element instanceof Person || element instanceof PersonIso) {
+            
+            if (element instanceof Person || element instanceof PersonIso){
                 removeConfiguration(element);
             }
-
-            if (element instanceof IBSIStrukturElement || element instanceof IBSIStrukturKategorie) {
+            
+            if (element instanceof IBSIStrukturElement || element instanceof IBSIStrukturKategorie){
                 removeAllRiskAnalyses();
             }
 
@@ -141,27 +148,15 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
             if (element instanceof GefaehrdungsUmsetzung && element.getParent() != null) {
                 GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) element;
                 removeFromLists(element.getParent().getDbId(), gef);
-            }
+            }   
 
-            /*
-             * Special case the deletion of FinishedRiskAnalysis instances:
-             * Before the instance is deleted itself their children must be
-             * removed manually (otherwise referential integrity is violated and
-             * Hibernate reports an error).
-             * 
-             * Using the children as an array ensure that there won't be a
-             * ConcurrentModificationException while deleting the elements.
-             */
-            for (int i = 0; i < children.length; i++) {
-                if (children[i] instanceof FinishedRiskAnalysis) {
-                    removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
-                }
-            }
+            deleteChildren(children);
 
             if (element instanceof ITVerbund) {
                 removeAllGefaehrdungsUmsetzungen();
             }
 
+            deleteOrphanEntity(element);
             element.remove();
             dao.delete(element);
         } catch (SecurityException e) {
@@ -176,12 +171,33 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         }
     }
 
+    /*
+     * The deletion of children instances: Before the instance is deleted itself
+     * their children must be removed manually (otherwise referential integrity
+     * is violated and Hibernate reports an error).
+     * 
+     * @see CnATreeElement.hbm.xml
+     * 
+     * Using the children as an array ensure that there won't be a
+     * ConcurrentModificationException while deleting the elements.
+     */
+    private void deleteChildren(CnATreeElement[] children) throws CommandException {
+        for (int i = 0; i < children.length; i++) {
+            if (children[i] instanceof FinishedRiskAnalysis) {
+                removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
+            } else if (PropertyLoader.isModelingTemplateActive()) {
+                // deletion of children instances of this children instance
+                deleteChildren(children[i].getChildrenAsArray());
+                deleteOrphanEntity(children[i]);
+            }
+        }
+    }
+
     /**
      * Check the rights for the given elements in the list, which is a recursive
      * call, as children can have children.
      * 
-     * @param children
-     *            the elements to check in this method call
+     * @param children the elements to check in this method call
      */
     private void checkRightForSubElements(CnATreeElement[] children) {
         for (CnATreeElement cnATreeElement : children) {
@@ -213,13 +229,13 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     }
 
     private void removeAllRiskAnalyses() throws CommandException {
-        if (ImportBsiGroup.TYPE_ID.equals(element.getTypeId())) {
+        if (ImportBsiGroup.TYPE_ID.equals(element.getTypeId())){
             removeRiskAnalysisFromBSIImportGroup(element.getDbId());
-        } else if (ITVerbund.TYPE_ID.equals(element.getTypeId())) {
+        } else if (ITVerbund.TYPE_ID.equals(element.getTypeId())){
             removeRiskAnalysisForScope(element.getScopeId());
-        } else if (element instanceof IBSIStrukturKategorie) {
+        } else if (element instanceof IBSIStrukturKategorie){
             removeRiskAnalysesFromBSICategory();
-
+            
         }
         // handling for instances of ISBSIStrukturElement not necessary
     }
@@ -230,13 +246,15 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         sb.append("element.scopeId = :scopeId and element.parentId = :parentId");
         String hql = sb.toString();
 
-        // since the values of the list will be ints, we can't parameterize the
-        // list
-        List<CnATreeElement> deleteList = getDaoFactory().getDAO(CnATreeElement.class).findByQuery(hql, new String[] { "scopeId", "parentId" }, new Object[] { element.getScopeId(), element.getDbId() });
+        // since the values of the list will be ints, we can't parameterize the list 
+        List<CnATreeElement> deleteList = getDaoFactory().getDAO(CnATreeElement.class)
+                .findByQuery(hql, new String[]{"scopeId", "parentId"}, 
+                        new Object[]{element.getScopeId(), element.getDbId()});
         for (Object o : deleteList) {
             if (o instanceof Integer) {
-                LoadRiskAnalyses loadRiskAnalyses = new LoadRiskAnalyses((Integer) o, true);
-                List<FinishedRiskAnalysis> riskAnalysesList = getCommandService().executeCommand(loadRiskAnalyses).getRaList();
+                LoadRiskAnalyses loadRiskAnalyses = new LoadRiskAnalyses((Integer)o, true);
+                List<FinishedRiskAnalysis> riskAnalysesList = getCommandService().
+                        executeCommand(loadRiskAnalyses).getRaList();
                 for (FinishedRiskAnalysis finishedRiskAnalysis : riskAnalysesList) {
                     removeRiskAnalysis(finishedRiskAnalysis);
                 }
@@ -244,12 +262,15 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         }
     }
 
-    private void removeRiskAnalysisFromBSIImportGroup(Integer groupDbId) throws CommandException {
-        String hql = "from CnATreeElement itv where itv.objectType = 'it-verbund' and itv.parentId = (" + " select importbsigroup.dbId from CnATreeElement importbsigroup where " + "importbsigroup.objectType = 'import-bsi' and importbsigroup.dbId = :dbId)";
-        List<CnATreeElement> deleteList = getDaoFactory().getDAO(CnATreeElement.class).findByQuery(hql, new String[] { "dbId" }, new Object[] { groupDbId });
-        for (Object o : deleteList) {
-            if (o instanceof ITVerbund) {
-                removeRiskAnalysisForScope(((ITVerbund) o).getScopeId());
+    private void removeRiskAnalysisFromBSIImportGroup(Integer groupDbId ) throws CommandException {
+        String hql = "from CnATreeElement itv where itv.objectType = 'it-verbund' and itv.parentId = (" +
+                " select importbsigroup.dbId from CnATreeElement importbsigroup where "
+                + "importbsigroup.objectType = 'import-bsi' and importbsigroup.dbId = :dbId)";
+        List<CnATreeElement> deleteList = getDaoFactory().getDAO(CnATreeElement.class).findByQuery(
+                hql, new String[]{"dbId"}, new Object[]{groupDbId});
+        for(Object o : deleteList){
+            if(o instanceof ITVerbund){
+                removeRiskAnalysisForScope(((ITVerbund)o).getScopeId());
             }
         }
     }
@@ -309,6 +330,29 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
             getCommandService().discardUserData();
         }
     }
+    
+    private boolean hasOrphanEntity(CnATreeElement element) {
+        if (PropertyLoader.isModelingTemplateActive()) {
+            if (element.isTemplateOrImplementation()) {
+                DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
+                crit.setFetchMode("entity", FetchMode.JOIN);
+                crit.add(Restrictions.eq("entity.dbId", element.getEntity().getDbId()));
+                IBaseDao<?, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
+                List<?> entities = dao.findByCriteria(crit);
+                return entities.size() > 1 ? false : true;
+            }
+        }
+        return true;
+    }
+
+    private void deleteOrphanEntity(CnATreeElement element) {
+        if (PropertyLoader.isModelingTemplateActive()) {
+            if (!hasOrphanEntity(element)) {
+                element.removeAllLinks();
+                element.setEntity(null);
+            }
+        }
+    }
 
     /*
      * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
@@ -348,9 +392,10 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         return stationId;
     }
 
+    
     public IFinishedRiskAnalysisListsDao getRaListDao() {
-        if (raListDao == null) {
-            raListDao = getDaoFactory().getFinishedRiskAnalysisListsDao();
+        if(raListDao==null) {
+            raListDao = getDaoFactory().getFinishedRiskAnalysisListsDao();      
         }
         return raListDao;
     }

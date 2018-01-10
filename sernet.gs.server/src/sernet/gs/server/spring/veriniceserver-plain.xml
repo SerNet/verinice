@@ -145,6 +145,7 @@ See hibernate mapping for CnATreeElement.implementedTemplateUuids in CnATreeElem
 
 <bean class="sernet.verinice.service.commands.PropertyLoader">
     <property name="fileSizeMax" value="${veriniceserver.filesize.max}" />
+    <property name="modelingTemplateActive" value="${modeling.template.active}" />
     <property name="modelingTemplateMaster" value="${modeling.template.master}" />
 </bean>
     

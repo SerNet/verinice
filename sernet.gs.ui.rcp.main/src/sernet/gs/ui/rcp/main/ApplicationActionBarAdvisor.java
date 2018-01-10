@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
@@ -80,6 +81,8 @@ import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.bpm.rcp.OpenTaskViewAction;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.rcp.CatalogView;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
@@ -91,6 +94,7 @@ import sernet.verinice.rcp.accountgroup.AccountGroupView;
 import sernet.verinice.rcp.risk.RiskAnalysisAction;
 import sernet.verinice.rcp.templates.TemplateView;
 import sernet.verinice.report.rcp.ReportDepositView;
+import sernet.verinice.service.commands.templates.LoadModelingTemplateSettings;
 import sernet.verinice.validation.CnAValidationView;
 
 /**
@@ -103,6 +107,8 @@ import sernet.verinice.validation.CnAValidationView;
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private static final String WARNING_RESTRICTION = "restriction"; //$NON-NLS-1$
+
+    private static final Logger LOG = Logger.getLogger(ApplicationActionBarAdvisor.class);
 
     // Actions - important to allocate these only in makeActions, and then use
     // them
@@ -263,7 +269,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.openReportdepositViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_41, ReportDepositView.ID, ImageCache.REPORT_DEPOSIT, ActionRightIDs.REPORTDEPOSIT);
         this.openSearchViewAction = new OpenSearchViewAction(window, Messages.ApplicationActionBarAdvisor_42);
         this.openGSToolMappingViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_43, GstoolImportMappingView.ID, ImageCache.VIEW_GSMAPPING, ActionRightIDs.GSTOOLIMPORT);
-        this.openTemplateViewAction = getRightsService().isEnabled(ActionRightIDs.TEMPLATES) ? new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_44, TemplateView.ID, ImageCache.TEMPLATES, ActionRightIDs.TEMPLATES) : null;
+        this.openTemplateViewAction = isModelingTemplateActive() && getRightsService().isEnabled(ActionRightIDs.TEMPLATES) ? new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_44, TemplateView.ID, ImageCache.TEMPLATES, ActionRightIDs.TEMPLATES) : null;
         this.reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         this.importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
         this.importCSVAction = new ImportCSVAction(window, Messages.ApplicationActionBarAdvisor_30);
@@ -425,7 +431,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(this.openNoteAction);
         viewsMenu.add(this.openFileAction);
         viewsMenu.add(this.openRelationViewAction);
-        if (getRightsService().isEnabled(ActionRightIDs.TEMPLATES)) {
+        if (isModelingTemplateActive() && getRightsService().isEnabled(ActionRightIDs.TEMPLATES)) {
             viewsMenu.add(this.openTemplateViewAction);
         }
         viewsMenu.add(this.openValidationViewAction);
@@ -482,7 +488,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         myToolbar.add(this.openTodoViewAction);
         myToolbar.add(this.openAuditViewAction);
         myToolbar.add(this.openDocumentViewAction);
-        if (getRightsService().isEnabled(ActionRightIDs.TEMPLATES)) {
+        if (isModelingTemplateActive() && getRightsService().isEnabled(ActionRightIDs.TEMPLATES)) {
             myToolbar.add(this.openTemplateViewAction);
         }
         myToolbar.add(new Separator());
@@ -560,5 +566,23 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private RightsServiceClient getRightsService() {
         RightsServiceClient service = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         return service;
+    }
+
+    private static ICommandService getCommandService() {
+        return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
+    }
+
+    private boolean isModelingTemplateActive() {
+        boolean standalone = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+        if (standalone) {
+            return false;
+        }
+        LoadModelingTemplateSettings modelingTemplateSettings = new LoadModelingTemplateSettings();
+        try {
+            modelingTemplateSettings = getCommandService().executeCommand(modelingTemplateSettings);
+        } catch (CommandException e) {
+            LOG.error("Error while loading modeling template settings", e); //$NON-NLS-1$
+        }
+        return modelingTemplateSettings.isModelingTemplateActive();
     }
 }

@@ -44,18 +44,13 @@ import sernet.verinice.service.commands.SaveElement;
  * 
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
  */
-public class CopyTemplateElements extends CopyTreeElements {
+public class CopyTemplateCandidateChildren extends CopyTreeElements {
 
-    private static final Logger LOG = Logger.getLogger(CopyTemplateElements.class);
+    private static final Logger LOG = Logger.getLogger(CopyTemplateCandidateChildren.class);
 
     private Set<String> templateCandidateUuids = new HashSet<String>();
 
-    /**
-     * @param selectedGroup
-     * @param elements
-     * @param copyLinks
-     */
-    public CopyTemplateElements(CnATreeElement selectedGroup, List<CnATreeElement> elements, Set<String> templateCandidateUuids) {
+    public CopyTemplateCandidateChildren(CnATreeElement selectedGroup, List<CnATreeElement> elements, Set<String> templateCandidateUuids) {
         super(selectedGroup, elements, false);
         this.templateCandidateUuids = templateCandidateUuids;
     }

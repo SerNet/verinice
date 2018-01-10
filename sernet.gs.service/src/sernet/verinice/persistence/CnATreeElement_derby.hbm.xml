@@ -51,7 +51,7 @@
 			name="entity"
 			column="entity_id"
 			class="sernet.hui.common.connect.Entity"
-			cascade="persist,merge,save-update"
+			cascade="all"
 			fetch="join"
 			/>
 			
