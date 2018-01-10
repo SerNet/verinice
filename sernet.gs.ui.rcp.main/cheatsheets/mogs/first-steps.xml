@@ -19,7 +19,7 @@
         <b>https://verinice.com/produkt/#_download</b>
         <br/>
         <br/>
-        Wechseln Sie dort in den Abschnitt "Kataloge und mehr" und laden Sie
+        Wechseln Sie dort in den Abschnitt <b>Kataloge und mehr</b> und laden Sie
         die Datei <b>IT-Grundschutz-Kompendium</b> herunter.
         <br/>
         <br/>
@@ -29,7 +29,7 @@
 
   <item title="Grundschutz-Kompendium importieren">
      <description>
-        Nun muss das heruntergeladene BSI IT Grundschutz-Kompendium in verinice
+        Nun muss das heruntergeladene Grundschutz-Kompendium in verinice
         eingebunden werden. Öffnen Sie hierfür den Kataloge-View in der
         Perspektive Modernisierter BSI Grundschutz.
      </description>
@@ -42,15 +42,15 @@
         Icon (blaues Eingangskörbchen mit Pfeil nach innen). Wählen Sie nun
         Ihre zuvor heruntergeladene .VNA-Datei aus und bestätigen Sie
         anschließend mit <b>OK</b>. Das Grundschutz-Kompendium wird nun
-        geladen. Sobald der Parser mit seiner Arbeit fertig ist, erscheinen
-        alle Bausteine in der Kataloge-View.
+        geladen. Sobald der Import beendet ist, erscheinen
+        alle Bausteine im Kataloge-View.
      </description>
   </item>
 
   <item title="Anzeige der Inhalte im Objektbrowser">
      <description>
-        Wenn Sie nun einen Baustein, Anforderung, Gefährdung oder Maßnahme
-        anklicken, so wird deren Inhalt schreibgeschützt im Objektbrowser
+        Wenn Sie nun einen Baustein, eine Anforderung, Gefährdung oder Maßnahme
+        anklicken, so wird der Inhalt im Objektbrowser
         angezeigt.
      </description>
   </item>

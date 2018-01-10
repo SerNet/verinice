@@ -24,8 +24,8 @@
 
   <item title="Vererbung des Umsetzungsstatus der Maßnahmen auf Anforderungen">
      <description>
-        Nachdem Sie den Umsetzungsstatus einer Maßnahme geändert und gespeichert haben können Sie in die
-        dazugehörige Anforderung springen indem Sie im Link-Maker auf die verknüpfte Anforderung doppelklicken.
+        Nachdem Sie den Umsetzungsstatus einer Maßnahme geändert und gespeichert haben, können Sie in die
+        dazugehörige Anforderung springen, indem Sie im Link-Maker auf die verknüpfte Anforderung doppelklicken.
         Die Maßnahmen sollten bereits mit den dazugehörigen Anforderungen verknüpft sein. Ist das nicht der Fall,
         so können Sie die Verknüpfungen nachträglich hinzufügen. Nun können Sie den Umsetzungsstatus der Maßnahme
         auf die Anforderung ableiten. Standardmäßig ist die dafür vorgesehene Checkbox bereits selektiert. Ist eine Ableitung
