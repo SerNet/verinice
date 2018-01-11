@@ -2,7 +2,7 @@
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
     <property name="author">A. Koderman</property>
     <property name="createdBy">Eclipse BIRT Designer Version 3.7.0.v20110602 Build &lt;3.7.0.v20110607-1526></property>
-    <text-property name="title">verinice - BSI Strukturanalyse</text-property>
+    <text-property name="title">BSI A.1 Strukturanalyse</text-property>
     <html-property name="description">Das Template ist eine Draft-Version, da die Spezifikation seitens BSI noch nicht bekannt sind.</html-property>
     <property name="units">in</property>
     <text-property name="displayName">Strukturanalyse für modernisierten IT-Grundschutz</text-property>
@@ -36,230 +36,6 @@
         </oda-data-source>
     </data-sources>
     <data-sets>
-        <oda-data-set extensionID="verinice.oda.linktable.driver.dataSet.id" name="Informationsverbund" id="1959">
-            <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">Titel__(Informationsverbund)</property>
-                    <text-property name="displayName">Titel__(Informationsverbund)</text-property>
-                    <text-property name="heading">Titel__(Informationsverbund)</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Abkürzung__(Informationsverbund)</property>
-                    <text-property name="displayName">Abkürzung__(Informationsverbund)</text-property>
-                    <text-property name="heading">Abkürzung__(Informationsverbund)</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Anzahl__Mitarbeiter__(Informationsverbund)</property>
-                    <text-property name="displayName">Anzahl__Mitarbeiter__(Informationsverbund)</text-property>
-                    <text-property name="heading">Anzahl__Mitarbeiter__(Informationsverbund)</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Geltungsbereich__(Informationsverbund)</property>
-                    <text-property name="displayName">Geltungsbereich__(Informationsverbund)</text-property>
-                    <text-property name="heading">Geltungsbereich__(Informationsverbund)</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
-                    <text-property name="displayName">Vorgehensweise__der__Absicherung__(Informationsverbund)</text-property>
-                    <text-property name="heading">Vorgehensweise__der__Absicherung__(Informationsverbund)</text-property>
-                </structure>
-            </list-property>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">Titel__(Informationsverbund)</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
-                        <property name="name">Abkürzung__(Informationsverbund)</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">3</property>
-                        <property name="name">Anzahl__Mitarbeiter__(Informationsverbund)</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
-                        <property name="name">Geltungsbereich__(Informationsverbund)</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
-                        <property name="name">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">verinice</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">Titel__(Informationsverbund)</property>
-                    <property name="nativeName">Titel__(Informationsverbund)</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
-                    <property name="name">Abkürzung__(Informationsverbund)</property>
-                    <property name="nativeName">Abkürzung__(Informationsverbund)</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">3</property>
-                    <property name="name">Anzahl__Mitarbeiter__(Informationsverbund)</property>
-                    <property name="nativeName">Anzahl__Mitarbeiter__(Informationsverbund)</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
-                    <property name="name">Geltungsbereich__(Informationsverbund)</property>
-                    <property name="nativeName">Geltungsbereich__(Informationsverbund)</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">5</property>
-                    <property name="name">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
-                    <property name="nativeName">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-            </list-property>
-            <xml-property name="queryText"><![CDATA[{
-  "useAllScopes": false,
-  "scopeIds": [],
-  "columnPaths": [
-    "bp_itnetwork.bp_itnetwork_name AS Titel__(Informationsverbund)",
-    "bp_itnetwork.bp_itnetwork_abbr AS Abkürzung__(Informationsverbund)",
-    "bp_itnetwork.bp_itnetwork_employee_number AS Anzahl__Mitarbeiter__(Informationsverbund)",
-    "bp_itnetwork.bp_itnetwork_description AS Geltungsbereich__(Informationsverbund)",
-    "bp_itnetwork.bp_itnetwork_qualifier AS Vorgehensweise__der__Absicherung__(Informationsverbund)"
-  ],
-  "relationIds": []
-}]]></xml-property>
-            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>2.0</Version>
-  <design:ResultSets derivedMetaData="true">
-    <design:resultSetDefinitions>
-      <design:resultSetColumns>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>Titel__(Informationsverbund)</design:name>
-              <design:position>1</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
-            <design:precision>-1</design:precision>
-            <design:scale>-1</design:scale>
-            <design:nullability>Unknown</design:nullability>
-            <design:uiHints>
-              <design:displayName>Titel__(Informationsverbund)</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>Titel__(Informationsverbund)</design:label>
-            <design:formattingHints>
-              <design:displaySize>8</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>Abkürzung__(Informationsverbund)</design:name>
-              <design:position>2</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
-            <design:precision>-1</design:precision>
-            <design:scale>-1</design:scale>
-            <design:nullability>Unknown</design:nullability>
-            <design:uiHints>
-              <design:displayName>Abkürzung__(Informationsverbund)</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>Abkürzung__(Informationsverbund)</design:label>
-            <design:formattingHints>
-              <design:displaySize>8</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>Anzahl__Mitarbeiter__(Informationsverbund)</design:name>
-              <design:position>3</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
-            <design:precision>-1</design:precision>
-            <design:scale>-1</design:scale>
-            <design:nullability>Unknown</design:nullability>
-            <design:uiHints>
-              <design:displayName>Anzahl__Mitarbeiter__(Informationsverbund)</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>Anzahl__Mitarbeiter__(Informationsverbund)</design:label>
-            <design:formattingHints>
-              <design:displaySize>8</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>Geltungsbereich__(Informationsverbund)</design:name>
-              <design:position>4</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
-            <design:precision>-1</design:precision>
-            <design:scale>-1</design:scale>
-            <design:nullability>Unknown</design:nullability>
-            <design:uiHints>
-              <design:displayName>Geltungsbereich__(Informationsverbund)</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>Geltungsbereich__(Informationsverbund)</design:label>
-            <design:formattingHints>
-              <design:displaySize>8</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>Vorgehensweise__der__Absicherung__(Informationsverbund)</design:name>
-              <design:position>5</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
-            <design:precision>-1</design:precision>
-            <design:scale>-1</design:scale>
-            <design:nullability>Unknown</design:nullability>
-            <design:uiHints>
-              <design:displayName>Vorgehensweise__der__Absicherung__(Informationsverbund)</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>Vorgehensweise__der__Absicherung__(Informationsverbund)</design:label>
-            <design:formattingHints>
-              <design:displaySize>8</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-      </design:resultSetColumns>
-      <design:criteria/>
-    </design:resultSetDefinitions>
-  </design:ResultSets>
-</model:DesignValues>]]></xml-property>
-        </oda-data-set>
         <oda-data-set extensionID="verinice.oda.linktable.driver.dataSet.id" name="Geschaeftsprozesse" id="2031">
             <list-property name="columnHints">
                 <structure>
@@ -2343,6 +2119,685 @@
   </design:ResultSets>
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
+        <oda-data-set extensionID="verinice.oda.linktable.driver.dataSet.id" name="bp_Informationsverbund" id="1956">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">Titel__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Titel__(Informationsverbund)</text-property>
+                    <text-property name="heading">Titel__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Abkürzung__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Abkürzung__(Informationsverbund)</text-property>
+                    <text-property name="heading">Abkürzung__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Anzahl__Mitarbeiter__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Anzahl__Mitarbeiter__(Informationsverbund)</text-property>
+                    <text-property name="heading">Anzahl__Mitarbeiter__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Geltungsbereich__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Geltungsbereich__(Informationsverbund)</text-property>
+                    <text-property name="heading">Geltungsbereich__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Reporting__-__Author__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Reporting__-__Author__(Informationsverbund)</text-property>
+                    <text-property name="heading">Reporting__-__Author__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Reporting__-__Version__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Reporting__-__Version__(Informationsverbund)</text-property>
+                    <text-property name="heading">Reporting__-__Version__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Reporting__-__Freigabe__durch__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Reporting__-__Freigabe__durch__(Informationsverbund)</text-property>
+                    <text-property name="heading">Reporting__-__Freigabe__durch__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__unkritisch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__unkritisch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__unkritisch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__unkritisch__-__Selbstbestimmungsrecht__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__unkritisch__-__Selbstbestimmungsrecht__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__unkritisch__-__Selbstbestimmungsrecht__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__unkritisch__-__Unversehrtheit__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__unkritisch__-__Unversehrtheit__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__unkritisch__-__Unversehrtheit__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__unkritisch__-__Aufgabenerfüllung__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__unkritisch__-__Aufgabenerfüllung__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__unkritisch__-__Aufgabenerfüllung__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__unkritisch__-__Innen-____Außenwirkung__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__unkritisch__-__Innen-____Außenwirkung__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__unkritisch__-__Innen-____Außenwirkung__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__unkritisch__-__Finanzielle__Auswirkungen__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__unkritisch__-__Finanzielle__Auswirkungen__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__unkritisch__-__Finanzielle__Auswirkungen__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__Normal__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__Normal__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__Normal__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__Normal__-__Selbstbestimmungsrecht__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__Normal__-__Selbstbestimmungsrecht__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__Normal__-__Selbstbestimmungsrecht__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__Normal__-__Unversehrtheit__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__Normal__-__Unversehrtheit__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__Normal__-__Unversehrtheit__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__Normal__-__Aufgabenerfüllung__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__Normal__-__Aufgabenerfüllung__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__Normal__-__Aufgabenerfüllung__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__Normal__-__Innen-____Außenwirkung__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__Normal__-__Innen-____Außenwirkung__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__Normal__-__Innen-____Außenwirkung__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__Normal__-__Finanzielle__Auswirkungen__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__Normal__-__Finanzielle__Auswirkungen__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__Normal__-__Finanzielle__Auswirkungen__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__Hoch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__Hoch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__Hoch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__Hoch__-__Selbstbestimmungsrecht__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__Hoch__-__Selbstbestimmungsrecht__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__Hoch__-__Selbstbestimmungsrecht__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__Hoch__-__Unversehrtheit__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__Hoch__-__Unversehrtheit__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__Hoch__-__Unversehrtheit__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__Hoch__-__Aufgabenerfüllung__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__Hoch__-__Aufgabenerfüllung__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__Hoch__-__Aufgabenerfüllung__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__Hoch__-__Innen-____Außenwirkung__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__Hoch__-__Innen-____Außenwirkung__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__Hoch__-__Innen-____Außenwirkung__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__Sehr__Hoch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__Sehr__Hoch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__Sehr__Hoch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__Sehr__Hoch__-__Selbstbestimmungsrecht__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__Sehr__Hoch__-__Selbstbestimmungsrecht__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__Sehr__Hoch__-__Selbstbestimmungsrecht__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__Sehr__Hoch__-__Unversehrtheit__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__Sehr__Hoch__-__Unversehrtheit__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__Sehr__Hoch__-__Unversehrtheit__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__Sehr__Hoch__-__Aufgabenerfüllung__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__Sehr__Hoch__-__Aufgabenerfüllung__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__Sehr__Hoch__-__Aufgabenerfüllung__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__Sehr__Hoch__-__Innen-____Außenwirkung__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__Sehr__Hoch__-__Innen-____Außenwirkung__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__Sehr__Hoch__-__Innen-____Außenwirkung__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Schutzbedarfskategorie__Sehr__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Schutzbedarfskategorie__Sehr__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)</text-property>
+                    <text-property name="heading">Schutzbedarfskategorie__Sehr__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
+                    <property name="analysis">attribute</property>
+                    <text-property name="displayName">Vorgehensweise__der__Absicherung__(Informationsverbund)</text-property>
+                    <text-property name="heading">Vorgehensweise__der__Absicherung__(Informationsverbund)</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">Titel__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">Abkürzung__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">Anzahl__Mitarbeiter__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">Geltungsbereich__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">Reporting__-__Author__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">Reporting__-__Version__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">Reporting__-__Freigabe__durch__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">Schutzbedarfskategorie__unkritisch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">Schutzbedarfskategorie__unkritisch__-__Selbstbestimmungsrecht__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">Schutzbedarfskategorie__unkritisch__-__Unversehrtheit__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">Schutzbedarfskategorie__unkritisch__-__Aufgabenerfüllung__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">Schutzbedarfskategorie__unkritisch__-__Innen-____Außenwirkung__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">Schutzbedarfskategorie__unkritisch__-__Finanzielle__Auswirkungen__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">Schutzbedarfskategorie__Normal__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">Schutzbedarfskategorie__Normal__-__Selbstbestimmungsrecht__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">Schutzbedarfskategorie__Normal__-__Unversehrtheit__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">Schutzbedarfskategorie__Normal__-__Aufgabenerfüllung__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">Schutzbedarfskategorie__Normal__-__Innen-____Außenwirkung__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">19</property>
+                        <property name="name">Schutzbedarfskategorie__Normal__-__Finanzielle__Auswirkungen__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">20</property>
+                        <property name="name">Schutzbedarfskategorie__Hoch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">21</property>
+                        <property name="name">Schutzbedarfskategorie__Hoch__-__Selbstbestimmungsrecht__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">22</property>
+                        <property name="name">Schutzbedarfskategorie__Hoch__-__Unversehrtheit__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">Schutzbedarfskategorie__Hoch__-__Aufgabenerfüllung__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">24</property>
+                        <property name="name">Schutzbedarfskategorie__Hoch__-__Innen-____Außenwirkung__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">25</property>
+                        <property name="name">Schutzbedarfskategorie__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">26</property>
+                        <property name="name">Schutzbedarfskategorie__Sehr__Hoch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">27</property>
+                        <property name="name">Schutzbedarfskategorie__Sehr__Hoch__-__Selbstbestimmungsrecht__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">28</property>
+                        <property name="name">Schutzbedarfskategorie__Sehr__Hoch__-__Unversehrtheit__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">29</property>
+                        <property name="name">Schutzbedarfskategorie__Sehr__Hoch__-__Aufgabenerfüllung__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">30</property>
+                        <property name="name">Schutzbedarfskategorie__Sehr__Hoch__-__Innen-____Außenwirkung__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">31</property>
+                        <property name="name">Schutzbedarfskategorie__Sehr__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">32</property>
+                        <property name="name">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">Titel__(Informationsverbund)</property>
+                    <property name="nativeName">Titel__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">Abkürzung__(Informationsverbund)</property>
+                    <property name="nativeName">Abkürzung__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">Anzahl__Mitarbeiter__(Informationsverbund)</property>
+                    <property name="nativeName">Anzahl__Mitarbeiter__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">Geltungsbereich__(Informationsverbund)</property>
+                    <property name="nativeName">Geltungsbereich__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">Reporting__-__Author__(Informationsverbund)</property>
+                    <property name="nativeName">Reporting__-__Author__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">Reporting__-__Version__(Informationsverbund)</property>
+                    <property name="nativeName">Reporting__-__Version__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">Reporting__-__Freigabe__durch__(Informationsverbund)</property>
+                    <property name="nativeName">Reporting__-__Freigabe__durch__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">Schutzbedarfskategorie__unkritisch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__unkritisch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">Schutzbedarfskategorie__unkritisch__-__Selbstbestimmungsrecht__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__unkritisch__-__Selbstbestimmungsrecht__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">Schutzbedarfskategorie__unkritisch__-__Unversehrtheit__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__unkritisch__-__Unversehrtheit__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">Schutzbedarfskategorie__unkritisch__-__Aufgabenerfüllung__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__unkritisch__-__Aufgabenerfüllung__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">Schutzbedarfskategorie__unkritisch__-__Innen-____Außenwirkung__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__unkritisch__-__Innen-____Außenwirkung__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">Schutzbedarfskategorie__unkritisch__-__Finanzielle__Auswirkungen__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__unkritisch__-__Finanzielle__Auswirkungen__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">Schutzbedarfskategorie__Normal__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__Normal__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">Schutzbedarfskategorie__Normal__-__Selbstbestimmungsrecht__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__Normal__-__Selbstbestimmungsrecht__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">Schutzbedarfskategorie__Normal__-__Unversehrtheit__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__Normal__-__Unversehrtheit__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">Schutzbedarfskategorie__Normal__-__Aufgabenerfüllung__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__Normal__-__Aufgabenerfüllung__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">Schutzbedarfskategorie__Normal__-__Innen-____Außenwirkung__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__Normal__-__Innen-____Außenwirkung__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
+                    <property name="name">Schutzbedarfskategorie__Normal__-__Finanzielle__Auswirkungen__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__Normal__-__Finanzielle__Auswirkungen__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">20</property>
+                    <property name="name">Schutzbedarfskategorie__Hoch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__Hoch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">21</property>
+                    <property name="name">Schutzbedarfskategorie__Hoch__-__Selbstbestimmungsrecht__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__Hoch__-__Selbstbestimmungsrecht__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">22</property>
+                    <property name="name">Schutzbedarfskategorie__Hoch__-__Unversehrtheit__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__Hoch__-__Unversehrtheit__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">23</property>
+                    <property name="name">Schutzbedarfskategorie__Hoch__-__Aufgabenerfüllung__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__Hoch__-__Aufgabenerfüllung__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">24</property>
+                    <property name="name">Schutzbedarfskategorie__Hoch__-__Innen-____Außenwirkung__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__Hoch__-__Innen-____Außenwirkung__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">25</property>
+                    <property name="name">Schutzbedarfskategorie__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">26</property>
+                    <property name="name">Schutzbedarfskategorie__Sehr__Hoch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__Sehr__Hoch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">27</property>
+                    <property name="name">Schutzbedarfskategorie__Sehr__Hoch__-__Selbstbestimmungsrecht__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__Sehr__Hoch__-__Selbstbestimmungsrecht__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">28</property>
+                    <property name="name">Schutzbedarfskategorie__Sehr__Hoch__-__Unversehrtheit__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__Sehr__Hoch__-__Unversehrtheit__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">29</property>
+                    <property name="name">Schutzbedarfskategorie__Sehr__Hoch__-__Aufgabenerfüllung__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__Sehr__Hoch__-__Aufgabenerfüllung__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">30</property>
+                    <property name="name">Schutzbedarfskategorie__Sehr__Hoch__-__Innen-____Außenwirkung__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__Sehr__Hoch__-__Innen-____Außenwirkung__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">31</property>
+                    <property name="name">Schutzbedarfskategorie__Sehr__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)</property>
+                    <property name="nativeName">Schutzbedarfskategorie__Sehr__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">32</property>
+                    <property name="name">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
+                    <property name="nativeName">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[{
+  "useAllScopes": false,
+  "scopeIds": [],
+  "columnPaths": [
+    "bp_itnetwork.bp_itnetwork_name AS Titel__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_abbr AS Abkürzung__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_employee_number AS Anzahl__Mitarbeiter__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_description AS Geltungsbereich__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_author AS Reporting__-__Author__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_version AS Reporting__-__Version__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_approved AS Reporting__-__Freigabe__durch__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_insignificant_laws AS Schutzbedarfskategorie__unkritisch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_insignificant_privacy AS Schutzbedarfskategorie__unkritisch__-__Selbstbestimmungsrecht__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_insignificant_injury AS Schutzbedarfskategorie__unkritisch__-__Unversehrtheit__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_insignificant_service AS Schutzbedarfskategorie__unkritisch__-__Aufgabenerfüllung__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_insignificant_publicity AS Schutzbedarfskategorie__unkritisch__-__Innen-____Außenwirkung__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_insignificant_financial AS Schutzbedarfskategorie__unkritisch__-__Finanzielle__Auswirkungen__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_normal_laws AS Schutzbedarfskategorie__Normal__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_normal_privacy AS Schutzbedarfskategorie__Normal__-__Selbstbestimmungsrecht__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_normal_injury AS Schutzbedarfskategorie__Normal__-__Unversehrtheit__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_normal_service AS Schutzbedarfskategorie__Normal__-__Aufgabenerfüllung__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_normal_publicity AS Schutzbedarfskategorie__Normal__-__Innen-____Außenwirkung__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_normal_financial AS Schutzbedarfskategorie__Normal__-__Finanzielle__Auswirkungen__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_high_laws AS Schutzbedarfskategorie__Hoch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_high_privacy AS Schutzbedarfskategorie__Hoch__-__Selbstbestimmungsrecht__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_high_injury AS Schutzbedarfskategorie__Hoch__-__Unversehrtheit__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_high_service AS Schutzbedarfskategorie__Hoch__-__Aufgabenerfüllung__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_high_publicity AS Schutzbedarfskategorie__Hoch__-__Innen-____Außenwirkung__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_high_financial AS Schutzbedarfskategorie__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_very_high_laws AS Schutzbedarfskategorie__Sehr__Hoch__-__Gesetze____Vorschriften____Verträge__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_very_high_privacy AS Schutzbedarfskategorie__Sehr__Hoch__-__Selbstbestimmungsrecht__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_very_high_injury AS Schutzbedarfskategorie__Sehr__Hoch__-__Unversehrtheit__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_very_high_service AS Schutzbedarfskategorie__Sehr__Hoch__-__Aufgabenerfüllung__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_very_high_publicity AS Schutzbedarfskategorie__Sehr__Hoch__-__Innen-____Außenwirkung__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_pl_very_high_financial AS Schutzbedarfskategorie__Sehr__Hoch__-__Finanzielle__Auswirkungen__(Informationsverbund)",
+    "bp_itnetwork.bp_itnetwork_qualifier AS Vorgehensweise__der__Absicherung__(Informationsverbund)"
+  ],
+  "relationIds": []
+}]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>Titel__(Informationsverbund)</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>Titel__(Informationsverbund)</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>Titel__(Informationsverbund)</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>Abkürzung__(Informationsverbund)</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>Abkürzung__(Informationsverbund)</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>Abkürzung__(Informationsverbund)</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
     </data-sets>
     <styles>
         <style name="report" id="4">
@@ -2481,7 +2936,7 @@
                                 <property name="paddingRight">0pt</property>
                                 <property name="textAlign">right</property>
                                 <property name="contentType">html</property>
-                                <text-property name="content"><![CDATA[printed on <value-of>new Date()</value-of>]]></text-property>
+                                <text-property name="content"><![CDATA[gedruckt am <value-of>new Date()</value-of>]]></text-property>
                             </text>
                         </cell>
                     </row>
@@ -2514,7 +2969,7 @@
                 </cell>
             </row>
         </grid>
-        <grid id="1066">
+        <grid name="info" id="2135">
             <property name="borderBottomColor">#000000</property>
             <property name="borderBottomStyle">solid</property>
             <property name="borderBottomWidth">medium</property>
@@ -2527,19 +2982,22 @@
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">medium</property>
-            <property name="width">7.75in</property>
-            <column id="1067">
-                <property name="width">2.625in</property>
+            <property name="width">100%</property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Übersicht"</expression>
+            </structure>
+            <column id="2136">
+                <property name="width">2.5729166666666665in</property>
                 <property name="backgroundColor">#9AC3D6</property>
                 <property name="fontWeight">bold</property>
             </column>
-            <column id="1068">
-                <property name="width">5.125in</property>
+            <column id="2137">
+                <property name="width">6.760416666666667in</property>
             </column>
-            <row id="1069">
+            <row id="2138">
                 <property name="backgroundColor">#9AC3D6</property>
                 <property name="fontSize">12pt</property>
-                <cell id="1070">
+                <cell id="2139">
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
                     <property name="borderBottomWidth">thin</property>
@@ -2552,11 +3010,11 @@
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
-                    <label id="1084">
+                    <label id="2140">
                         <text-property name="text">Informationsverbund:</text-property>
                     </label>
                 </cell>
-                <cell id="1071">
+                <cell id="2141">
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
                     <property name="borderBottomWidth">thin</property>
@@ -2569,22 +3027,22 @@
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
-                    <data id="1960">
-                        <property name="dataSet">Informationsverbund</property>
+                    <data id="1085">
+                        <property name="dataSet">bp_Informationsverbund</property>
                         <list-property name="boundDataColumns">
                             <structure>
-                                <property name="name">Titel__(Informationsverbund)</property>
-                                <text-property name="displayName">Titel__(Informationsverbund)</text-property>
+                                <property name="name">itverbund_name</property>
+                                <text-property name="displayName">itverbund_name</text-property>
                                 <expression name="expression" type="javascript">dataSetRow["Titel__(Informationsverbund)"]</expression>
-                                <property name="dataType">string</property>
+                                <property name="dataType">javaObject</property>
                             </structure>
                         </list-property>
-                        <property name="resultSetColumn">Titel__(Informationsverbund)</property>
+                        <property name="resultSetColumn">itverbund_name</property>
                     </data>
                 </cell>
             </row>
-            <row id="1072">
-                <cell id="1073">
+            <row id="2142">
+                <cell id="2143">
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
                     <property name="borderBottomWidth">thin</property>
@@ -2597,56 +3055,11 @@
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
-                    <label id="1089">
-                        <text-property name="text">Geltungsbereich:</text-property>
-                    </label>
-                </cell>
-                <cell id="1074">
-                    <property name="borderBottomColor">#000000</property>
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">thin</property>
-                    <property name="borderLeftColor">#000000</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">thin</property>
-                    <property name="borderRightColor">#000000</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                    <property name="borderTopColor">#000000</property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">thin</property>
-                    <data id="1963">
-                        <property name="dataSet">Informationsverbund</property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">Geltungsbereich__(Informationsverbund)</property>
-                                <text-property name="displayName">Geltungsbereich__(Informationsverbund)</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["Geltungsbereich__(Informationsverbund)"]</expression>
-                                <property name="dataType">string</property>
-                            </structure>
-                        </list-property>
-                        <property name="resultSetColumn">Geltungsbereich__(Informationsverbund)</property>
-                    </data>
-                </cell>
-            </row>
-            <row id="1075">
-                <cell id="1076">
-                    <property name="borderBottomColor">#000000</property>
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">thin</property>
-                    <property name="borderLeftColor">#000000</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">thin</property>
-                    <property name="borderRightColor">#000000</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                    <property name="borderTopColor">#000000</property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">thin</property>
-                    <label id="1090">
+                    <label id="2144">
                         <text-property name="text">Abkürzung:</text-property>
                     </label>
                 </cell>
-                <cell id="1077">
+                <cell id="2145">
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
                     <property name="borderBottomWidth">thin</property>
@@ -2659,22 +3072,22 @@
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
-                    <data id="1961">
-                        <property name="dataSet">Informationsverbund</property>
+                    <data id="1086">
+                        <property name="dataSet">bp_Informationsverbund</property>
                         <list-property name="boundDataColumns">
                             <structure>
-                                <property name="name">Abkürzung__(Informationsverbund)</property>
-                                <text-property name="displayName">Abkürzung__(Informationsverbund)</text-property>
+                                <property name="name">itverbund_organisation</property>
+                                <text-property name="displayName">itverbund_organisation</text-property>
                                 <expression name="expression" type="javascript">dataSetRow["Abkürzung__(Informationsverbund)"]</expression>
                                 <property name="dataType">string</property>
                             </structure>
                         </list-property>
-                        <property name="resultSetColumn">Abkürzung__(Informationsverbund)</property>
+                        <property name="resultSetColumn">itverbund_organisation</property>
                     </data>
                 </cell>
             </row>
-            <row id="1078">
-                <cell id="1079">
+            <row id="2146">
+                <cell id="2147">
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
                     <property name="borderBottomWidth">thin</property>
@@ -2687,11 +3100,11 @@
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
-                    <label id="1091">
-                        <text-property name="text">Anzahl Mitarbeiter:</text-property>
+                    <label id="2148">
+                        <text-property name="text">Mitarbeiter:</text-property>
                     </label>
                 </cell>
-                <cell id="1080">
+                <cell id="2149">
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
                     <property name="borderBottomWidth">thin</property>
@@ -2704,22 +3117,22 @@
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
-                    <data id="1962">
-                        <property name="dataSet">Informationsverbund</property>
+                    <data id="1088">
+                        <property name="dataSet">bp_Informationsverbund</property>
                         <list-property name="boundDataColumns">
                             <structure>
-                                <property name="name">Anzahl__Mitarbeiter__(Informationsverbund)</property>
-                                <text-property name="displayName">Anzahl__Mitarbeiter__(Informationsverbund)</text-property>
+                                <property name="name">itverbund_mitarbeiter</property>
+                                <text-property name="displayName">itverbund_mitarbeiter</text-property>
                                 <expression name="expression" type="javascript">dataSetRow["Anzahl__Mitarbeiter__(Informationsverbund)"]</expression>
                                 <property name="dataType">string</property>
                             </structure>
                         </list-property>
-                        <property name="resultSetColumn">Anzahl__Mitarbeiter__(Informationsverbund)</property>
+                        <property name="resultSetColumn">itverbund_mitarbeiter</property>
                     </data>
                 </cell>
             </row>
-            <row id="1081">
-                <cell id="1082">
+            <row id="2150">
+                <cell id="2151">
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
                     <property name="borderBottomWidth">thin</property>
@@ -2732,11 +3145,228 @@
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
-                    <label id="1092">
+                    <label id="2152">
+                        <text-property name="text">Geltungsbereich:</text-property>
+                    </label>
+                </cell>
+                <cell id="2153">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data id="1087">
+                        <property name="dataSet">bp_Informationsverbund</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">itverbund_geltungsbereich</property>
+                                <text-property name="displayName">itverbund_geltungsbereich</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Geltungsbereich__(Informationsverbund)"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">itverbund_geltungsbereich</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="2154">
+                <cell id="2155">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label id="2156">
+                        <text-property name="text">Datum:</text-property>
+                    </label>
+                </cell>
+                <cell id="2157">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <text-data id="1093">
+                        <expression name="valueExpr">new Date()</expression>
+                        <property name="contentType">html</property>
+                    </text-data>
+                </cell>
+            </row>
+            <row id="1941">
+                <cell id="1942">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label id="1944">
+                        <text-property name="text">Autor:</text-property>
+                    </label>
+                </cell>
+                <cell id="1943">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data id="1950">
+                        <property name="dataSet">bp_Informationsverbund</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">itverbund_autor</property>
+                                <text-property name="displayName">itverbund_autor</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Reporting__-__Author__(Informationsverbund)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">itverbund_autor</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="1938">
+                <cell id="1939">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label id="1945">
+                        <text-property name="text">Version:</text-property>
+                    </label>
+                </cell>
+                <cell id="1940">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data id="1951">
+                        <property name="dataSet">bp_Informationsverbund</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">itverbund_version</property>
+                                <text-property name="displayName">itverbund_version</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Reporting__-__Version__(Informationsverbund)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">itverbund_version</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="1946">
+                <cell id="1947">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label id="1949">
+                        <text-property name="text">Freigabe:</text-property>
+                    </label>
+                </cell>
+                <cell id="1948">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <data id="1952">
+                        <property name="dataSet">bp_Informationsverbund</property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">itverbund_freigabe</property>
+                                <text-property name="displayName">itverbund_freigabe</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["Reporting__-__Freigabe__durch__(Informationsverbund)"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">itverbund_freigabe</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="2602">
+                <cell id="2603">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <label id="2605">
                         <text-property name="text">Vorgehensweise der Absicherung:</text-property>
                     </label>
                 </cell>
-                <cell id="1083">
+                <cell id="2604">
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
                     <property name="borderBottomWidth">thin</property>
@@ -2749,8 +3379,8 @@
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
-                    <data id="1964">
-                        <property name="dataSet">Informationsverbund</property>
+                    <data id="2607">
+                        <property name="dataSet">bp_Informationsverbund</property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">Vorgehensweise__der__Absicherung__(Informationsverbund)</property>
@@ -2783,7 +3413,7 @@
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">medium</property>
-            <property name="width">11.13888888888889in</property>
+            <property name="width">100%</property>
             <property name="dataSet">Geschaeftsprozesse</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -2817,6 +3447,9 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">'Geschäftsprozesse'</expression>
+            </structure>
             <list-property name="sort">
                 <structure>
                     <expression name="key" type="javascript">row["Kürzel__(Geschäftsprozess)"]</expression>
@@ -3048,7 +3681,7 @@
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">medium</property>
-            <property name="width">11.151515151515152in</property>
+            <property name="width">100%</property>
             <property name="dataSet">Anwendungen</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -3094,6 +3727,9 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">'Anwendungen'</expression>
+            </structure>
             <column id="965">
                 <property name="width">0.7373737373737373in</property>
             </column>
@@ -3404,7 +4040,7 @@
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">medium</property>
-            <property name="width">11.151515151515152in</property>
+            <property name="width">100%</property>
             <property name="dataSet">IT-Systeme</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -3450,6 +4086,9 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">'IT-Systeme'</expression>
+            </structure>
             <column id="1013">
                 <property name="width">0.7272727272727273in</property>
             </column>
@@ -3826,7 +4465,7 @@
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">medium</property>
-            <property name="width">11.151515151515152in</property>
+            <property name="width">100%</property>
             <property name="dataSet">ICS-Systeme</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -3872,6 +4511,9 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">'ICS-Systeme'</expression>
+            </structure>
             <column id="1143">
                 <property name="width">0.7373737373737373in</property>
             </column>
@@ -4248,7 +4890,7 @@
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">medium</property>
-            <property name="width">11.151515151515152in</property>
+            <property name="width">100%</property>
             <property name="dataSet">Anderes_IOT-System</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -4294,6 +4936,9 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">'Anderes/IOT-Systeme'</expression>
+            </structure>
             <column id="1213">
                 <property name="width">0.7272727272727273in</property>
             </column>
@@ -4670,7 +5315,7 @@
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">medium</property>
-            <property name="width">11.13888888888889in</property>
+            <property name="width">100%</property>
             <property name="dataSet">Netzwerk</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -4722,6 +5367,9 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">'Netzwerke'</expression>
+            </structure>
             <column id="1248">
                 <property name="width">0.696969696969697in</property>
             </column>
@@ -5149,7 +5797,7 @@
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">medium</property>
-            <property name="width">11.151515151515152in</property>
+            <property name="width">100%</property>
             <property name="dataSet">Raume</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -5195,6 +5843,9 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">'Räume'</expression>
+            </structure>
             <column id="1283">
                 <property name="width">0.7070707070707071in</property>
             </column>
