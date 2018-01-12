@@ -24,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 /**
- * Class to parse different user text inputs like dates, curencies or simple
+ * Class to parse different user text inputs like dates, currencies or simple
  * number formats.
  * 
  * @author prack
@@ -32,28 +32,21 @@ import java.util.Locale;
  */
 public abstract class FormInputParser {
 
-    public static final SimpleDateFormat DATE_FORMAT_DEFAULT = new SimpleDateFormat("EEE, dd.MM.yyyy"); //$NON-NLS-1$
-
+    /**
+     * @deprecated This instance is not thread-safe and should not be used
+     *             outside of this class. It is being kept for API compatibility
+     *             reasons only.
+     */
+    @Deprecated
+    public static final SimpleDateFormat DATE_FORMAT_DEFAULT = createDateFormat();
     private static final boolean GROUPING = true;
-    private static NumberFormat numFmt;
-    private static NumberFormat priceFmt;
-
-    static {
-        numFmt = NumberFormat.getNumberInstance(Locale.GERMANY);
-        numFmt.setGroupingUsed(GROUPING);
-        priceFmt = NumberFormat.getCurrencyInstance(Locale.GERMANY);
-        priceFmt.setGroupingUsed(GROUPING);
-        DATE_FORMAT_DEFAULT.setLenient(true);
-    }
 
     public static float stringToCurrency(String fieldName, String s) throws DBException {
         try {
-            priceFmt.setGroupingUsed(GROUPING);
-            return priceFmt.parse(s).floatValue();
+            return createPriceFormat().parse(s).floatValue();
         } catch (ParseException e) {
-            numFmt.setGroupingUsed(GROUPING);
             try {
-                return numFmt.parse(s).floatValue();
+                return createNumberFormat().parse(s).floatValue();
             } catch (ParseException e1) {
                 throw new DBException("Falsches Format f�r " + fieldName + "."); //$NON-NLS-1$ //$NON-NLS-2$
             }
@@ -61,14 +54,13 @@ public abstract class FormInputParser {
     }
 
     public static String currencyToString(float value) {
-        priceFmt.setGroupingUsed(GROUPING);
-        return priceFmt.format(value);
+        return createPriceFormat().format(value);
     }
 
     public static float stringToFloat(String fieldName, String s) throws DBException {
         try {
-            numFmt.setGroupingUsed(GROUPING);
-            return numFmt.parse(s).floatValue();
+
+            return createNumberFormat().parse(s).floatValue();
         } catch (ParseException e) {
             throw new DBException("Falsches Format f�r " + fieldName + "."); //$NON-NLS-1$ //$NON-NLS-2$
         }
@@ -76,8 +68,7 @@ public abstract class FormInputParser {
 
     public static short stringToShort(String fieldName, String s) throws DBException {
         try {
-            numFmt.setGroupingUsed(GROUPING);
-            return numFmt.parse(s).shortValue();
+            return createNumberFormat().parse(s).shortValue();
         } catch (ParseException e) {
             throw new DBException("Falsches Format f�r " + fieldName + "."); //$NON-NLS-1$ //$NON-NLS-2$
         }
@@ -88,7 +79,7 @@ public abstract class FormInputParser {
             if (date == null) {
                 return ""; //$NON-NLS-1$
             }
-            return DATE_FORMAT_DEFAULT.format(date);
+            return createDateFormat().format(date);
         } catch (IllegalArgumentException e) {
             throw new AssertException("Falsches / fehlendes Datum: " + date.toString()); //$NON-NLS-1$
         }
@@ -96,7 +87,7 @@ public abstract class FormInputParser {
 
     public static Date stringToDate(String string) throws AssertException {
         try {
-            return new Date(DATE_FORMAT_DEFAULT.parse(string).getTime());
+            return new Date(createDateFormat().parse(string).getTime());
         } catch (IllegalArgumentException e) {
             throw new AssertException("Falsches / fehlendes Datum: " + string); //$NON-NLS-1$
         } catch (ParseException e) {
@@ -121,7 +112,24 @@ public abstract class FormInputParser {
      * @return
      */
     public static String floatToString(float f) {
-        return numFmt.format(f);
+        return createNumberFormat().format(f);
     }
 
+    private static SimpleDateFormat createDateFormat() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd.MM.yyyy"); //$NON-NLS-1$
+        dateFormat.setLenient(true);
+        return dateFormat;
+    }
+
+    private static NumberFormat createNumberFormat() {
+        NumberFormat numFmt = NumberFormat.getNumberInstance(Locale.GERMANY);
+        numFmt.setGroupingUsed(GROUPING);
+        return numFmt;
+    }
+
+    private static NumberFormat createPriceFormat() {
+        NumberFormat priceFmt = NumberFormat.getCurrencyInstance(Locale.GERMANY);
+        priceFmt.setGroupingUsed(GROUPING);
+        return priceFmt;
+    }
 }
