@@ -466,7 +466,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 		        getLog().warn("Property-type was not found in SNCA.xml: " + propertyTypeId + ", entity type: " + this.entityType);
 		    }
 		    
-		    if(propertyType!=null && propertyType.isSingleSelect() && value!=null) {
+            if (propertyType != null && propertyType.isSingleSelect() && value != null
+                    && !value.isEmpty()) {
 		        List<IMLPropertyOption> optionList = propertyType.getOptions();
 		        boolean found = false;
 		        for (IMLPropertyOption option : optionList) {
