@@ -16,6 +16,7 @@
  *
  * Contributors:
  *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
+ *     Alexander Ben Nasrallah <an@sernet.de> - contributor
  ******************************************************************************/
 package sernet.verinice.service.commands;
 
@@ -26,18 +27,20 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class CreateITNetwork extends CreateElement {
+public class CreateITNetwork extends CreateElement<ItNetwork> {
 
-    public CreateITNetwork(CnATreeElement container, Class type, boolean createChildren) {
+    private static final long serialVersionUID = 1L;
+
+    public CreateITNetwork(CnATreeElement container, Class<ItNetwork> type, boolean createChildren) {
         super(container, type, true, createChildren);
     }
-    
+
     @Override
     public void execute() {
         super.execute();
         if (super.element instanceof ItNetwork) {
-            ItNetwork network = (ItNetwork) element;
-            if(createChildren) {
+            ItNetwork network = element;
+            if (createChildren) {
                 network.createNewCategories();
             }
             addPermissionsForScope(network);
@@ -46,11 +49,5 @@ public class CreateITNetwork extends CreateElement {
                 group.setScopeId(element.getDbId());
             }
         }
-        
-    }
-    
-    @Override
-    public ItNetwork getNewElement() {
-        return (ItNetwork) super.getNewElement();
     }
 }
