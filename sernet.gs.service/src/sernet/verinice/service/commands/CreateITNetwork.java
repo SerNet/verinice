@@ -19,8 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.service.commands;
 
-import java.util.Set;
-
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -42,10 +40,7 @@ public class CreateITNetwork extends CreateElement {
             if(createChildren) {
                 network.createNewCategories();
             }
-            Set<CnATreeElement> children = network.getChildren();
-            for (CnATreeElement child : children) {
-                addPermissionsForScope(child);
-            }
+            addPermissionsForScope(network);
             element.setScopeId(element.getDbId());
             for (CnATreeElement group : element.getChildren()) {
                 group.setScopeId(element.getDbId());
