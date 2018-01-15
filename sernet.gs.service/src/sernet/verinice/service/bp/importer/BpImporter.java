@@ -1227,10 +1227,10 @@ public class BpImporter {
                 rootNetwork = command.getNewElement();
                 StringBuilder titleBuilder = new StringBuilder();
                 titleBuilder.append(Messages.IT_Network_Name);
-                titleBuilder.append(" (");
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                titleBuilder.append("_");
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
                 String dateInISO = df.format(new Date());
-                titleBuilder.append(dateInISO).append(" )");
+                titleBuilder.append(dateInISO);
                 rootNetwork.setTitel(titleBuilder.toString());
                 updateElement(rootNetwork);
             } 
