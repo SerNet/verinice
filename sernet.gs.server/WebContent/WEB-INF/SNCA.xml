@@ -9809,7 +9809,7 @@ Wurden bereits weitere Stellen informiert?
             editable="false">
             <defaultRule class="Today" />
         </huiproperty>
-        <huiproperty id="bp_requirement_responsibleroles" name="Responsible Roles" />
+        <huiproperty id="bp_requirement_responsibleroles" visible="false" name="Responsible Roles" />
         <huiproperty defaultValue="1" id="bp_requirement_value_method_confidentiality"
             inputtype="booleanoption" name="Affects Confidentiality" tags="Risk" />
         <huiproperty defaultValue="1" id="bp_requirement_value_method_integrity"
@@ -9900,8 +9900,8 @@ Wurden bereits weitere Stellen informiert?
             editable="false">
             <defaultRule class="Today" />
         </huiproperty>
-        <huiproperty id="bp_requirement_group_mainresponsible" name="Main Responsible Role" />
-        <huiproperty id="bp_requirement_group_furtherresponsible" name="Further Responsible Roles" />
+        <huiproperty id="bp_requirement_group_mainresponsible" visible="false" name="Main Responsible Role" />
+        <huiproperty id="bp_requirement_group_furtherresponsible" visible="false" name="Further Responsible Roles" />
     </huientity>
 
     <huientity id="bp_threat" name="Threat">
@@ -10420,7 +10420,7 @@ Wurden bereits weitere Stellen informiert?
             editable="false">
             <defaultRule class="Today" />
         </huiproperty>
-        <huiproperty id="bp_safeguard_responsibleroles" name="Responsible Roles" />
+        <huiproperty id="bp_safeguard_responsibleroles" visible="false" name="Responsible Roles" />
         <huiproperty defaultValue="1" id="bp_safeguard_value_method_confidentiality"
             inputtype="booleanoption" name="Affects Confidentiality" tags="Risk" />
         <huiproperty defaultValue="1" id="bp_safeguard_value_method_integrity"
