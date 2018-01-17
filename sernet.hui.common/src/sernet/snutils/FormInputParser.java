@@ -32,13 +32,15 @@ import java.util.Locale;
  */
 public abstract class FormInputParser {
 
+    private static final String DEFAULT_DATE_PATTERN = "EEE, dd.MM.yyyy"; //$NON-NLS-1$
+
     /**
      * @deprecated This instance is not thread-safe and should not be used
      *             outside of this class. It is being kept for API compatibility
      *             reasons only.
      */
     @Deprecated
-    public static final SimpleDateFormat DATE_FORMAT_DEFAULT = createDateFormat();
+    public static final SimpleDateFormat DATE_FORMAT_DEFAULT = createDateFormat(DEFAULT_DATE_PATTERN);
     private static final boolean GROUPING = true;
 
     public static float stringToCurrency(String fieldName, String s) throws DBException {
@@ -79,31 +81,28 @@ public abstract class FormInputParser {
             if (date == null) {
                 return ""; //$NON-NLS-1$
             }
-            return createDateFormat().format(date);
+            return createDateFormat(DEFAULT_DATE_PATTERN).format(date);
         } catch (IllegalArgumentException e) {
             throw new AssertException("Wrong / missing date: " + date.toString()); //$NON-NLS-1$
         }
     }
 
     public static Date stringToDate(String string) throws AssertException {
+        if (string == null || string.length() < 5) {
+            throw new AssertException("Wrong / missing date: " + string);
+        }
+        String datePattern;
+        if (string.charAt(2) == '.') {
+            datePattern = "dd.MM.yyyy"; //$NON-NLS-1$
+        } else if (string.charAt(4) == '-') {
+            datePattern = "yyyy-MM-dd"; //$NON-NLS-1$
+        } else {
+            datePattern = DEFAULT_DATE_PATTERN;
+        }
         try {
-            return new Date(createDateFormat().parse(string).getTime());
-        } catch (IllegalArgumentException e) {
-            throw new AssertException("Wrong / missing date: " + string); //$NON-NLS-1$
+            return new Date(createDateFormat(datePattern).parse(string).getTime());
         } catch (ParseException e) {
-            SimpleDateFormat dateFormat2 = new SimpleDateFormat("dd.MM.yyyy"); //$NON-NLS-1$
-            dateFormat2.setLenient(true);
-            try {
-                return new Date(dateFormat2.parse(string).getTime());
-            } catch (ParseException e1) {
-                SimpleDateFormat dateFormat3 = new SimpleDateFormat("yyyy-MM-dd"); //$NON-NLS-1$
-                dateFormat3.setLenient(true);
-                try {
-                    return new Date(dateFormat3.parse(string).getTime());
-                } catch (ParseException e2) {
-                    throw new AssertException("Wrong / missing date: " + string); //$NON-NLS-1$
-                }
-            }
+            throw new AssertException("Wrong / missing date: " + string); //$NON-NLS-1$
         }
     }
 
@@ -115,8 +114,8 @@ public abstract class FormInputParser {
         return createNumberFormat().format(f);
     }
 
-    private static SimpleDateFormat createDateFormat() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd.MM.yyyy"); //$NON-NLS-1$
+    private static SimpleDateFormat createDateFormat(String pattern) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern); // $NON-NLS-1$
         dateFormat.setLenient(true);
         return dateFormat;
     }
