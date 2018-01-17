@@ -38,16 +38,14 @@ public class CreateITNetwork extends CreateElement<ItNetwork> {
     @Override
     public void execute() {
         super.execute();
-        if (super.element instanceof ItNetwork) {
-            ItNetwork network = element;
-            if (createChildren) {
-                network.createNewCategories();
-            }
-            addPermissionsForScope(network);
-            element.setScopeId(element.getDbId());
-            for (CnATreeElement group : element.getChildren()) {
-                group.setScopeId(element.getDbId());
-            }
+        ItNetwork network = element;
+        if (createChildren) {
+            network.createNewCategories();
+        }
+        addPermissionsForScope(network);
+        element.setScopeId(element.getDbId());
+        for (CnATreeElement group : element.getChildren()) {
+            group.setScopeId(element.getDbId());
         }
     }
 }
