@@ -16,10 +16,9 @@
  *
  * Contributors:
  *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
+ *     Alexander Ben Nasrallah <an@sernet.de> - contributor
  ******************************************************************************/
 package sernet.verinice.service.commands;
-
-import java.util.Set;
 
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.common.CnATreeElement;
@@ -28,34 +27,25 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class CreateITNetwork extends CreateElement {
+public class CreateITNetwork extends CreateElement<ItNetwork> {
 
-    public CreateITNetwork(CnATreeElement container, Class type, boolean createChildren) {
+    private static final long serialVersionUID = 1L;
+
+    public CreateITNetwork(CnATreeElement container, Class<ItNetwork> type, boolean createChildren) {
         super(container, type, true, createChildren);
     }
-    
+
     @Override
     public void execute() {
         super.execute();
-        if (super.element instanceof ItNetwork) {
-            ItNetwork network = (ItNetwork) element;
-            if(createChildren) {
-                network.createNewCategories();
-            }
-            Set<CnATreeElement> children = network.getChildren();
-            for (CnATreeElement child : children) {
-                addPermissionsForScope(child);
-            }
-            element.setScopeId(element.getDbId());
-            for (CnATreeElement group : element.getChildren()) {
-                group.setScopeId(element.getDbId());
-            }
+        ItNetwork network = element;
+        if (createChildren) {
+            network.createNewCategories();
         }
-        
-    }
-    
-    @Override
-    public ItNetwork getNewElement() {
-        return (ItNetwork) super.getNewElement();
+        addPermissionsForScope(network);
+        element.setScopeId(element.getDbId());
+        for (CnATreeElement group : element.getChildren()) {
+            group.setScopeId(element.getDbId());
+        }
     }
 }
