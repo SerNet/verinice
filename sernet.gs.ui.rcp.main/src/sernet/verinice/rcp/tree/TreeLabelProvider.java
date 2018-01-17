@@ -25,6 +25,7 @@ import org.eclipse.swt.graphics.Image;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
 import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.common.CnATreeElement;
@@ -141,6 +142,10 @@ public class TreeLabelProvider extends LabelProvider  {
             return String.format("%s [%s] ",
                     requirement.getIdentifier(),
                     requirement.getQualifier());
+        }
+        else if (element instanceof BpThreat) {
+            BpThreat requirement = (BpThreat) element;
+            return String.format("%s ", requirement.getIdentifier());
         }
         return "";
     }
