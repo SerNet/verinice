@@ -48,7 +48,7 @@ public abstract class FormInputParser {
             try {
                 return createNumberFormat().parse(s).floatValue();
             } catch (ParseException e1) {
-                throw new DBException("Falsches Format f�r " + fieldName + "."); //$NON-NLS-1$ //$NON-NLS-2$
+                throw new DBException("Wrong format for " + fieldName + "."); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
     }
@@ -62,7 +62,7 @@ public abstract class FormInputParser {
 
             return createNumberFormat().parse(s).floatValue();
         } catch (ParseException e) {
-            throw new DBException("Falsches Format f�r " + fieldName + "."); //$NON-NLS-1$ //$NON-NLS-2$
+            throw new DBException("Wrong format for " + fieldName + "."); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -70,7 +70,7 @@ public abstract class FormInputParser {
         try {
             return createNumberFormat().parse(s).shortValue();
         } catch (ParseException e) {
-            throw new DBException("Falsches Format f�r " + fieldName + "."); //$NON-NLS-1$ //$NON-NLS-2$
+            throw new DBException("Wrong format for " + fieldName + "."); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -81,7 +81,7 @@ public abstract class FormInputParser {
             }
             return createDateFormat().format(date);
         } catch (IllegalArgumentException e) {
-            throw new AssertException("Falsches / fehlendes Datum: " + date.toString()); //$NON-NLS-1$
+            throw new AssertException("Wrong / missing date: " + date.toString()); //$NON-NLS-1$
         }
     }
 
@@ -89,7 +89,7 @@ public abstract class FormInputParser {
         try {
             return new Date(createDateFormat().parse(string).getTime());
         } catch (IllegalArgumentException e) {
-            throw new AssertException("Falsches / fehlendes Datum: " + string); //$NON-NLS-1$
+            throw new AssertException("Wrong / missing date: " + string); //$NON-NLS-1$
         } catch (ParseException e) {
             SimpleDateFormat dateFormat2 = new SimpleDateFormat("dd.MM.yyyy"); //$NON-NLS-1$
             dateFormat2.setLenient(true);
@@ -101,7 +101,7 @@ public abstract class FormInputParser {
                 try {
                     return new Date(dateFormat3.parse(string).getTime());
                 } catch (ParseException e2) {
-                    throw new AssertException("Falsches / fehlendes Datum: " + string); //$NON-NLS-1$
+                    throw new AssertException("Wrong / missing date: " + string); //$NON-NLS-1$
                 }
             }
         }
