@@ -9754,7 +9754,20 @@ Wurden bereits weitere Stellen informiert?
             reversename="Person responsible" />
         <huirelation to="bp_safeguard" id="rel_bp_person_bp_safeguard" name="Responsible for"
             reversename="Person responsible" />
-
+        <huirelation to="bp_businessprocess" id="rel_bp_person_bp_businessprocess_primarily" name="primarily Responsible for"
+            reversename="Person primarily responsible" />
+        <huirelation to="bp_application" id="rel_bp_person_bp_application_primarily" name="primarily Responsible for"
+            reversename="Person primarily responsible" />
+        <huirelation to="bp_itsystem" id="rel_bp_person_bp_itsystem_primarily" name="primarily Responsible for"
+            reversename="Person primarily responsible" />
+        <huirelation to="bp_icssystem" id="rel_bp_person_bp_icssystem_primarily" name="primarily Responsible for"
+            reversename="Person primarily responsible" />
+        <huirelation to="bp_device" id="rel_bp_person_bp_device_primarily" name="primarily Responsible for"
+            reversename="Person primarily responsible" />
+        <huirelation to="bp_network" id="rel_bp_person_bp_network_primarily" name="primarily Responsible for"
+            reversename="Person primarily responsible" />
+        <huirelation to="bp_room" id="rel_bp_person_bp_room_primarily" name="primarily Responsible for"
+            reversename="Person primarily responsible" />
         <huiproperty id="bp_person_abbr" name="Abbreviation" required="true" />
         <huiproperty id="bp_person_title" inputtype="singleoption" name="Anrede">
             <option id="bp_person_title_none" name="" />
