@@ -126,10 +126,7 @@ public class TreeLabelProvider extends LabelProvider  {
     private String getPrefix(CnATreeElement element) {
         if (element instanceof IISO27kElement) {
             String abbreviation = ((IISO27kElement)element).getAbbreviation();
-            if (StringUtils.isEmpty(abbreviation)) {
-                return "";
-            }
-            return String.format("%s ", abbreviation);
+            return StringUtils.isEmpty(abbreviation) ? "" : abbreviation.concat(" ");
         }
         else if (element instanceof Safeguard) {
             Safeguard safeguard = (Safeguard) element;
@@ -145,7 +142,7 @@ public class TreeLabelProvider extends LabelProvider  {
         }
         else if (element instanceof BpThreat) {
             BpThreat requirement = (BpThreat) element;
-            return String.format("%s ", requirement.getIdentifier());
+            return requirement.getIdentifier().concat(" ");
         }
         return "";
     }
