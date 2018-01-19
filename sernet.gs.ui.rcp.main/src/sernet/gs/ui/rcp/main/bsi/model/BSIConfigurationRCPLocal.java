@@ -60,18 +60,42 @@ public class BSIConfigurationRCPLocal implements IBSIConfig, Serializable {
 		cacheDir = CnAWorkspace.getInstance().getWorkdir() + File.separator + "gscache";
 	}
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.IBSIConfig#getDsPath()
+     */
+    @Override
 	public String getDsPath() {
 		return dsPath;
 	}
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.IBSIConfig#getGsPath()
+     */
+    @Override
 	public String getGsPath() {
 		return gsPath;
 	}
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.IBSIConfig#isFromZipFile()
+     */
+    @Override
 	public boolean isFromZipFile() {
 		return fromZipFile;
 	}
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.IBSIConfig#getCacheDir()
+     */
+    @Override
 	public String getCacheDir() {
 		return cacheDir;
 	}
