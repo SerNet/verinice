@@ -114,7 +114,7 @@
      <description>
        Fare clic con il pulsante destro del mouse sul gruppo "Controlli" nell'albero ISM, selezionare <b> Aggiungi controllo ... </b>.
        Modificare il nome in "I dati del cliente devono essere crittografati" nella vista dell'editor. Salva premendo
-       <B> Ctrl + S </b>. Link trascinando il controllo con il requisito "Crittografia".
+       <b> Ctrl + S </b>. Link trascinando il controllo con il requisito "Crittografia".
        La visualizzazione relazioni indica che questo requisito ? ora soddisfatto dal controllo.
      </description>
    </item>
