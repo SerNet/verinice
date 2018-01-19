@@ -21,6 +21,8 @@ package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
@@ -28,6 +30,8 @@ import java.io.Serializable;
 public class SyncParameter implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    private static final Logger LOG = Logger.getLogger(SyncParameter.class);
 
     private boolean insert;
     private boolean update;
@@ -105,8 +109,14 @@ public class SyncParameter implements Serializable {
     }
     
     private void validateParameter() throws SyncParameterException {
-        if ((this.insert || this.update || this.delete || this.integrate) == false)
+        if (!(this.insert || this.update || this.delete || this.integrate)) {
             throw new SyncParameterException();
+        }
+        if (importAsCatalog && !integrate) {
+            LOG.warn(
+                    "Invalid combination: parameters importAsCatalog is true and integrate is false. Setting parameter integrate to true automatically.");
+            integrate = true;
+        }
     }
 
     public boolean isImportAsCatalog() {

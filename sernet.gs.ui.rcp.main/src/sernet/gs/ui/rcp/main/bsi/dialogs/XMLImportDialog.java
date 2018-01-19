@@ -359,7 +359,6 @@ public class XMLImportDialog extends Dialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 update = (e.getSource() instanceof Button) ? ((Button) (e.getSource())).getSelection() : update;
-                integrateButton.setEnabled(insert || update);
             }
         };
         updateButton = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_26, true, updateCheckListener);
@@ -683,7 +682,7 @@ public class XMLImportDialog extends Dialog {
             public void widgetSelected(SelectionEvent e) {
                 importAsCatalog = (e.getSource() instanceof Button) ? ((Button) (e.getSource())).getSelection() : importAsCatalog;
                 if (importAsCatalog) {
-                    setCheckboxesForCatalogImport();
+                            setParameterForCatalogImport();
                 } 
             }
 
@@ -698,23 +697,28 @@ public class XMLImportDialog extends Dialog {
         importAsCatalogText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
         importAsCatalogText.setEnabled(false);
         if (importAsCatalog) {
-            setCheckboxesForCatalogImport();
+            setParameterForCatalogImport();
         }
     }
 
     /**
-     * set checkbox values due to catalog import usecase
+     * Set import parameter and check box selection due to catalog import use
+     * case.
      */
-    private void setCheckboxesForCatalogImport() {
+    private void setParameterForCatalogImport() {
+        integrate = true;
         integrateButton.setSelection(true);
         integrateButton.setEnabled(false);
-        
+
+        insert = true;
         insertButton.setSelection(true);
         insertButton.setEnabled(false);
-        
+
+        update = false;
         updateButton.setSelection(false);
         updateButton.setEnabled(false);
-        
+
+        delete = false;
         deleteCheck.setSelection(false);
         deleteCheck.setEnabled(false);
     }

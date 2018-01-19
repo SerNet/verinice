@@ -189,12 +189,7 @@ public class SyncInsertUpdateCommand extends GenericCommand
                 globalStart = System.currentTimeMillis();
             }
             merged = 0;
-            CheckSourceId checkSourceId = new CheckSourceId(sourceId);
-            checkSourceId = getCommandService().executeCommand(checkSourceId);
-            sourceIdExists = checkSourceId.exists();
-            if (sourceIdExists && getLog().isDebugEnabled()) {
-                getLog().debug("Source-Id exists in DB: " + sourceId);
-            }
+            checkSourceId();
             List<SyncObject> soList = syncData.getSyncObject();
 
             for (SyncObject so : soList) {
@@ -220,6 +215,18 @@ public class SyncInsertUpdateCommand extends GenericCommand
         } catch (Exception e) {
             getLog().error("Exception while importing", e);
             throw new RuntimeCommandException(e);
+        }
+    }
+
+    private void checkSourceId() throws CommandException {
+        sourceIdExists = false;
+        if (!parameter.isImportAsCatalog()) {
+            CheckSourceId checkSourceId = new CheckSourceId(sourceId);
+            checkSourceId = getCommandService().executeCommand(checkSourceId);
+            sourceIdExists = checkSourceId.exists();
+            if (sourceIdExists && getLog().isDebugEnabled()) {
+                getLog().debug("Source-Id exists in DB: " + sourceId);
+            }
         }
     }
 
@@ -254,7 +261,7 @@ public class SyncInsertUpdateCommand extends GenericCommand
         String veriniceObjectType = mot.getIntId();
 
         CnATreeElement elementInDB = null;
-        if (sourceIdExists) {
+        if (sourceIdExists && !parameter.isImportAsCatalog()) {
             elementInDB = findDbElement(sourceId, extId, true, true);
         }
 
