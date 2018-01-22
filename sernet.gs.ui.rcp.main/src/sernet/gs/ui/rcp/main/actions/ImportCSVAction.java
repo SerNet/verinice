@@ -1,6 +1,6 @@
+
 package sernet.gs.ui.rcp.main.actions;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import de.sernet.sync.sync.SyncRequest;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.wizards.ImportCSVWizard;
@@ -27,7 +28,6 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
-import de.sernet.sync.sync.SyncRequest;
 
 public class ImportCSVAction extends RightsEnabledAction {
 
@@ -103,7 +103,7 @@ public class ImportCSVAction extends RightsEnabledAction {
         }
     }
 
-    protected void doImport() throws IOException, CommandException, SyncParameterException {
+    protected void doImport() throws CommandException, SyncParameterException {
         SyncCommand command = new SyncCommand(new SyncParameter(insert, update, delete, false, SyncParameter.EXPORT_FORMAT_XML_PURE), sr);
 
         command = ServiceFactory.lookupCommandService().executeCommand(command);
@@ -117,7 +117,7 @@ public class ImportCSVAction extends RightsEnabledAction {
     }
 
     private void updateModel(Set<CnATreeElement> importRootObjectSet, Set<CnATreeElement> changedElement) {
-        if (importRootObjectSet != null && importRootObjectSet.size() > 0) {
+        if (importRootObjectSet != null && !importRootObjectSet.isEmpty()) {
             for (CnATreeElement importRootObject : importRootObjectSet) {
                 CnAElementFactory.getModel(importRootObject).childAdded(importRootObject.getParent(), importRootObject);
                 CnAElementFactory.getModel(importRootObject).databaseChildAdded(importRootObject);
@@ -142,7 +142,7 @@ public class ImportCSVAction extends RightsEnabledAction {
         for (CnATreeElement elmt : elmts) {
             ServiceFactory.lookupValidationService().createValidationForSingleElement(elmt);
         }
-        if (elmts.size() > 0) {
+        if (!elmts.isEmpty()) {
             CnAElementFactory.getModel(((CnATreeElement) elmts.toArray()[0])).validationAdded(((CnATreeElement) elmts.toArray()[0]).getScopeId());
         }
     }
