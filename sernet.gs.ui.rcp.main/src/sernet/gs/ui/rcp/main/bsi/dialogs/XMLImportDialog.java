@@ -343,7 +343,6 @@ public class XMLImportDialog extends Dialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 insert = (e.getSource() instanceof Button) ? ((Button) (e.getSource())).getSelection() : insert;
-                integrateButton.setEnabled(insert || update);
             }
         };
 
