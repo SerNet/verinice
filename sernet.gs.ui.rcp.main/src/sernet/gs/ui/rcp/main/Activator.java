@@ -55,7 +55,7 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRCPLocal;
+import sernet.gs.ui.rcp.main.bsi.model.BSIConfigFactory;
 import sernet.gs.ui.rcp.main.bsi.model.BSIEntityResolverFactory;
 import sernet.gs.ui.rcp.main.bsi.model.RcpLayoutConfig;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -91,6 +91,7 @@ import sernet.verinice.rcp.StatusResult;
 import sernet.verinice.rcp.jobs.VeriniceWorkspaceJob;
 import sernet.verinice.service.commands.migration.DbVersion;
 import sernet.verinice.service.model.IObjectModelService;
+import sernet.verinice.service.parser.BSIConfigurationRemoteSource;
 import sernet.verinice.service.parser.GSScraperUtil;
 
 /**
@@ -262,7 +263,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
         // Make command service available as an OSGi service
         context.registerService(ICommandService.class.getName(), VeriniceContext.get(VeriniceContext.COMMAND_SERVICE), null);
         
-        GSScraperUtil.getInstance().getModel().setBSIConfig(new BSIConfigurationRCPLocal());
+        configureItbpCatalogLoader();
+
         GSScraperUtil.getInstance().getModel().setLayoutConfig(new RcpLayoutConfig());
         ResolverFactoryRegistry.setResolverFactory(new BSIEntityResolverFactory());
         
@@ -333,6 +335,15 @@ public class Activator extends AbstractUIPlugin implements IMain {
             CnAElementFactory.getInstance().addLoadListener(loadListener);
         }
 
+    }
+
+    private void configureItbpCatalogLoader() {
+        if (isStandalone()) {
+            GSScraperUtil.getInstance().getModel()
+                    .setBSIConfig(BSIConfigFactory.createStandaloneConfig());
+        } else {
+            GSScraperUtil.getInstance().getModel().setBSIConfig(new BSIConfigurationRemoteSource());
+        }
     }
 
     private void initObjectModelService() {
