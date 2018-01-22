@@ -5,7 +5,7 @@
     <description>
       <b> Benvenuti in verinice! </b>
       <br /> <br />
-      Questo tutorial vi aiuterà a configurare verinice e a orientarvi lungo i primi passi.
+      Questo tutorial vi aiuter? a configurare verinice e a orientarvi lungo i primi passi.
     </description>
   </intro>
 
@@ -21,7 +21,7 @@
 
   <item title = "Catalogo controllo importazione">
     <description>
-      Innanzitutto è necessario importare un catalogo di controllo. Devi importare un file di catalogo. Sul lato sinistro della scrivania di lavoro verinice troverete la vista "Cataloghi". Fai clic sul pulsante più a sinistra ("Importa catalogo ...").
+      Innanzitutto ? necessario importare un catalogo di controllo. Devi importare un file di catalogo. Sul lato sinistro della scrivania di lavoro verinice troverete la vista "Cataloghi". Fai clic sul pulsante pi? a sinistra ("Importa catalogo ...").
       <br /> <br />
       Scegli il file di catalogo scaricato da internet o creato manualmente (ad esempio utilizzando Excel o OpenOffice) e fai clic su <b> OK </b>.
     </description>
@@ -29,15 +29,15 @@
 
   <item title = "Crea un ambito">
     <description>
-      Il catalogo è ora caricato. Dopo che il parser ha finito, vedrete i contenuti nel pannello di
+      Il catalogo ? ora caricato. Dopo che il parser ha finito, vedrete i contenuti nel pannello di
       visualizzazione del catalogo.
       <br /> <br />
       Apri la visualizzazione del browser (<b> Visualizza> Mostra vista ...> Browser oggetti </b>). Fai clic su un controllo per mostrare
       il suo contenuto nel pannello del browser.
       <br /> <br />
-      Per funzionare effettivamente con i controlli importati, è necessario creare l'organizzazione nel database.
+      Per funzionare effettivamente con i controlli importati, ? necessario creare l'organizzazione nel database.
       Vai alla vista "ISM - Schema di Sicurezza". Dovrebbe essere visualizzato nel mezzo della scrivania di lavoro di verinice.
-      Fai clic sul pulsante più a destra ("Aggiungi nuova organizzazione").
+      Fai clic sul pulsante pi? a destra ("Aggiungi nuova organizzazione").
       <br /> <br />
       Trascina alcuni controlli dalla visualizzazione del catalogo al gruppo "Controlli" sotto la nuova organizzazione.
       I controlli verranno creati. Fare doppio clic su di essi per aprire l'editor per ogni controllo.
