@@ -30,7 +30,6 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.util.Assert;
 
@@ -54,7 +53,6 @@ import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@Ignore
 @SuppressWarnings("unchecked")
 public class ElasticsearchTest extends BeforeEachVNAImportHelper {
 
