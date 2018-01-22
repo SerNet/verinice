@@ -1,4 +1,3 @@
-
 package sernet.gs.ui.rcp.main.actions;
 
 import java.lang.reflect.InvocationTargetException;
@@ -71,7 +70,10 @@ public class ImportCSVAction extends RightsEnabledAction {
         // Display.getCurrent().getActiveShell()
         ImportCSVWizard wizard = new ImportCSVWizard();
         final WizardDialog wizardDialog = new WizardDialog(Display.getCurrent().getActiveShell(), wizard);
-        wizardDialog.open();
+        int resultFromWizardDialog = wizardDialog.open();
+        if (resultFromWizardDialog == WizardDialog.CANCEL) {
+            return;
+        }
         sr = wizard.getSyncRequest();
         insert = wizard.getInsertState();
         update = wizard.getUpdateState();
