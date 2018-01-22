@@ -55,7 +55,7 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRCPLocal;
+import sernet.gs.ui.rcp.main.bsi.model.BSIConfigFactory;
 import sernet.gs.ui.rcp.main.bsi.model.BSIEntityResolverFactory;
 import sernet.gs.ui.rcp.main.bsi.model.RcpLayoutConfig;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -339,7 +339,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     private void configureItbpCatalogLoader() {
         if (isStandalone()) {
-            GSScraperUtil.getInstance().getModel().setBSIConfig(new BSIConfigurationRCPLocal());
+            GSScraperUtil.getInstance().getModel()
+                    .setBSIConfig(BSIConfigFactory.createStandaloneConfig());
         } else {
             GSScraperUtil.getInstance().getModel().setBSIConfig(new BSIConfigurationRemoteSource());
         }

@@ -61,7 +61,7 @@ import sernet.gs.service.TimeFormatter;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRCPLocal;
+import sernet.gs.ui.rcp.main.bsi.model.BSIConfigFactory;
 import sernet.gs.ui.rcp.main.bsi.model.CnAElementBuilder;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
@@ -877,7 +877,7 @@ public class ImportTask extends AbstractGstoolImportTask {
     private List<Baustein> loadCatalogueBausteine() throws CommandException, IOException, GSServiceException{
         IBSIConfig bsiConfig = null;
         if (!ServiceFactory.isPermissionHandlingNeeded()) {
-            bsiConfig = new BSIConfigurationRCPLocal();
+            bsiConfig = BSIConfigFactory.createStandaloneConfig();
         }
         List<Baustein> bausteine;
         if (bsiConfig == null) {

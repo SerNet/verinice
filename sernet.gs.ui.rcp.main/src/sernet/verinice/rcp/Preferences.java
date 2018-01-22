@@ -19,6 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.rcp;
 
+import java.io.File;
+import java.net.MalformedURLException;
+
+import org.apache.log4j.Logger;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import sernet.gs.ui.rcp.main.Activator;
@@ -33,6 +37,8 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
  */
 public final class Preferences {
 
+    private static final Logger LOG = Logger.getLogger(Preferences.class);
+
     private Preferences() {
         super();
     }
@@ -45,6 +51,30 @@ public final class Preferences {
     public static boolean isServerMode() {
         return PreferenceConstants.OPERATION_MODE_REMOTE_SERVER
                 .equals(getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE));
+    }
+
+    public static boolean isBpCatalogLoadedFromZipFile() {
+        return getPreferenceStore().getString(PreferenceConstants.GSACCESS)
+                .equals(PreferenceConstants.GSACCESS_ZIP);
+    }
+
+    public static String getBpCatalogFilePath() {
+        String bpCatalogFilePath = null;
+        if (isBpCatalogLoadedFromZipFile()) {
+            bpCatalogFilePath = getPreferenceStore().getString(PreferenceConstants.BSIZIPFILE);
+        } else {
+            bpCatalogFilePath = getPreferenceStore().getString(PreferenceConstants.BSIDIR);
+            try {
+                bpCatalogFilePath = (new File(bpCatalogFilePath)).toURI().toURL().toString();
+            } catch (MalformedURLException e) {
+                LOG.error("Error while getting base protection catalog file path.", e);
+            }
+        }
+        return bpCatalogFilePath;
+    }
+
+    public static String getPrivacyCatalogFilePath() {
+        return getPreferenceStore().getString(PreferenceConstants.DSZIPFILE);
     }
 
     public static String getServerUrl() {

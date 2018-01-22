@@ -15,50 +15,36 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.bsi.model;
+package sernet.verinice.service.parser;
 
-import java.io.File;
 import java.io.Serializable;
-import java.net.MalformedURLException;
 
-import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.Preferences;
-
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.CnAWorkspace;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.IBSIConfig;
 
-public class BSIConfigurationRCPLocal implements IBSIConfig, Serializable {
+/**
+ * A IBSIConfig for operating mode standalone.
+ * On the client you can use sernet.gs.ui.rcp.main.bsi.model.BSIConfigFactory
+ * to create instances of this class.
+ *
+ * @author Daniel Murygin <dm{a}sernet{dot}de>
+ */
+public class BSIConfigurationStandalone implements IBSIConfig, Serializable {
 	
-	private String gsPath;
-	private String dsPath;
+    private static final long serialVersionUID = 4369805673754690041L;
+
+    private String bpCatalogFilePath;
+	private String privacyCatalogFilePath;
 	private boolean fromZipFile;
 	private String cacheDir;
 
-	public BSIConfigurationRCPLocal() {
-		
-		gsPath = null;
-		Preferences preferences = Activator.getDefault().getPluginPreferences();
-		fromZipFile = preferences.getString(
-				PreferenceConstants.GSACCESS).equals(
-				PreferenceConstants.GSACCESS_ZIP);
-
-		if (fromZipFile) {
-			gsPath = preferences.getString(PreferenceConstants.BSIZIPFILE);
-		} else {
-			gsPath = preferences.getString(PreferenceConstants.BSIDIR);
-			try {
-				gsPath = (new File(gsPath)).toURI().toURL().toString();
-			} catch (MalformedURLException e) {
-				Logger.getLogger(this.getClass()).debug(e);
-			}
-		}
-		
-		dsPath = preferences.getString(PreferenceConstants.DSZIPFILE);
-		
-		cacheDir = CnAWorkspace.getInstance().getWorkdir() + File.separator + "gscache";
-	}
+    public BSIConfigurationStandalone(String gsPath, String dsPath, boolean fromZipFile,
+            String cacheDir) {
+        super();
+        this.bpCatalogFilePath = gsPath;
+        this.privacyCatalogFilePath = dsPath;
+        this.fromZipFile = fromZipFile;
+        this.cacheDir = cacheDir;
+    }   
 
     /*
      * (non-Javadoc)
@@ -66,8 +52,8 @@ public class BSIConfigurationRCPLocal implements IBSIConfig, Serializable {
      * @see sernet.verinice.interfaces.IBSIConfig#getDsPath()
      */
     @Override
-	public String getDsPath() {
-		return dsPath;
+    public String getDsPath() {
+		return privacyCatalogFilePath;
 	}
 
     /*
@@ -76,8 +62,8 @@ public class BSIConfigurationRCPLocal implements IBSIConfig, Serializable {
      * @see sernet.verinice.interfaces.IBSIConfig#getGsPath()
      */
     @Override
-	public String getGsPath() {
-		return gsPath;
+    public String getGsPath() {
+		return bpCatalogFilePath;
 	}
 
     /*
