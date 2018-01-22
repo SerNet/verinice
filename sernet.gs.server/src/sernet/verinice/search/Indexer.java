@@ -26,6 +26,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.ObjectFactory;
@@ -97,7 +98,7 @@ public class Indexer {
         exeService.shutdown();
     }
 
-    private ClosableCompletionService<CnATreeElement> doIndex(){
+    private ClosableCompletionService<CnATreeElement> doIndex() {
 
         indexingStart = System.currentTimeMillis();
 
@@ -192,10 +193,17 @@ public class Indexer {
     private static void awaitIndexingTermination(ClosableCompletionService<CnATreeElement> completionService) {
         while (!completionService.isClosed()) {
             try {
-                Future<CnATreeElement> future = completionService.take();
-                CnATreeElement element = future.get();
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("element was indexed " + element.getTitle() + " - uuid " + element.getUuid());
+                Future<CnATreeElement> future = completionService.poll(500l, TimeUnit.MILLISECONDS);
+                if (future != null) {
+                    // if the last element was removed from the queue in the
+                    // previous iteration and the current iteration started
+                    // before the executor could properly terminate, the queue
+                    // will be empty. We should be able to exit from the loop
+                    // after the current iteration.
+                    CnATreeElement element = future.get();
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("element was indexed " + element.getTitle() + " - uuid " + element.getUuid());
+                    }
                 }
             } catch (Exception e) {
                 LOG.error("Indexing failed for an element", e);
