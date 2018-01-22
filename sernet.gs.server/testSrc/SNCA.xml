@@ -656,7 +656,7 @@ the value between <param></param> will be used directly if no string is found fo
             </huiproperty>      
       </huipropertygroup>
       
-      <huipropertygroup name="KIX" id="server_kix_group" tags="kix" >
+      <huipropertygroup name="KIX" id="server_kix_group" tags="KIX" >
         <huiproperty name="KIX ticket 1" id="server_kix_ticket1" isURL="true"/>
         <huiproperty name="KIX ticket 2" id="server_kix_ticket2" isURL="true"/>
         <huiproperty name="KIX ticket 3" id="server_kix_ticket3" isURL="true"/>
@@ -1842,7 +1842,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             </huiproperty>
             </huipropertygroup>
         
-      <huipropertygroup name="KIX" id="client_kix_group" tags="kix" >
+      <huipropertygroup name="KIX" id="client_kix_group" tags="KIX" >
         <huiproperty name="KIX ticket 1" id="client_kix_ticket1" isURL="true"/>
         <huiproperty name="KIX ticket 2" id="client_kix_ticket2" isURL="true"/>
         <huiproperty name="KIX ticket 3" id="client_kix_ticket3" isURL="true"/>
@@ -2096,7 +2096,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                                 
             </huipropertygroup>
       
-      <huipropertygroup name="KIX" id="sonstit_kix_group" tags="kix" >
+      <huipropertygroup name="KIX" id="sonstit_kix_group" tags="KIX" >
         <huiproperty name="KIX ticket 1" id="sonstit_kix_ticket1" isURL="true"/>
         <huiproperty name="KIX ticket 2" id="sonstit_kix_ticket2" isURL="true"/>
         <huiproperty name="KIX ticket 3" id="sonstit_kix_ticket3" isURL="true"/>
@@ -3047,7 +3047,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             </huiproperty>
         </huipropertygroup>
     
-    <huipropertygroup name="KIX" id="mnums_kix_group" tags="kix" >
+    <huipropertygroup name="KIX" id="mnums_kix_group" tags="KIX" >
       <huiproperty name="KIX ticket 1" id="mnums_kix_ticket1" isURL="true"/>
       <huiproperty name="KIX ticket 2" id="mnums_kix_ticket2" isURL="true"/>
       <huiproperty name="KIX ticket 3" id="mnums_kix_ticket3" isURL="true"/>
@@ -4839,7 +4839,8 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <huiproperty
             name="Description" 
             id="assetgroup_desc" 
-            inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true" />   
         
     </huientity>
     
@@ -5288,7 +5289,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             <huiproperty id="gsm_scan_ended" name="Scan end" inputtype="line" tags="Greenbone_GSM" editable="false" />
         </huipropertygroup>     
 
-        <huipropertygroup name="KIX" id="asset_kix_group" tags="kix" >
+        <huipropertygroup name="KIX" id="asset_kix_group" tags="KIX" >
             <huiproperty name="KIX ticket 1" id="asset_kix_ticket1" isURL="true"/>
             <huiproperty name="KIX ticket 2" id="asset_kix_ticket2" isURL="true"/>
             <huiproperty name="KIX ticket 3" id="asset_kix_ticket3" isURL="true"/>
@@ -5365,9 +5366,10 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             required="true" />
             
              <huiproperty
-            name="Description" 
-            id="persongroup_desc" 
-            inputtype="text" />   
+		name="Description" 
+		id="persongroup_desc" 
+		inputtype="text"
+                showInObjectBrowser="true" />   
         
     </huientity>
     
@@ -5740,9 +5742,10 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             required="true" />
             
          <huiproperty
-            name="Description" 
-            id="auditgroup_desc" 
-            inputtype="text" />   
+	    name="Description" 
+	    id="auditgroup_desc" 
+	    inputtype="text"
+            showInObjectBrowser="true" />   
         
         <huirelation to="asset" id="rel_auditgroup_asset"/>
     </huientity>
@@ -6044,15 +6047,24 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Title"
             id="controlgroup_name"
             required="true"/>
-       
+
+        <!-- The Object-Browser Description shall be above the
+            Desciption. I.e. this propery has to come first -->
         <huiproperty
-            name="Description" 
-            id="controlgroup_desc" 
-            inputtype="text" />
+            name="Object-Browser Description"
+            id="controlgroup_objectbrowser_description"
+            visible="false"
+            editable="false"
+            showInObjectBrowser="true"/>
+
+        <huiproperty
+	    name="Description" 
+	    id="controlgroup_desc" 
+	    inputtype="text"
+            showInObjectBrowser="true" />
 
         <!-- Flag to define a root a catalog, which is used in dashboard -->
         <huiproperty
-            tags="Catalog"
             id="samt_topic_is_catalog"
             defaultValue="0"
             name="Is Catalog"
@@ -6064,14 +6076,6 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             id="controlgroup_is_NoIso_group"
             inputtype="booleanoption" defaultValue="0"
             tags="VDA_ISA_Audit" />
-            
-        <huiproperty 
-            name="Object-Browser Description"
-            id="controlgroup_objectbrowser_description"
-            inputtype="text"
-            visible="true"
-            editable="true"
-            showInObjectBrowser="true"/>
     </huientity>
 
     <huientity
@@ -6189,7 +6193,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                 <huiproperty id="gsm_ism_control_cpe" name="GSM CPE" tags="Greenbone_GSM" editable="false" />
             </huipropertygroup>
 
-        <huipropertygroup name="KIX" id="control_kix_group" tags="kix" >
+        <huipropertygroup name="KIX" id="control_kix_group" tags="KIX" >
             <huiproperty name="KIX ticket 1" id="control_kix_ticket1" isURL="true"/>
             <huiproperty name="KIX ticket 2" id="control_kix_ticket2" isURL="true"/>
             <huiproperty name="KIX ticket 3" id="control_kix_ticket3" isURL="true"/>
@@ -6568,7 +6572,8 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <huiproperty
             name="Description" 
             id="exceptiongroup_desc" 
-            inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true" />   
         
     </huientity>
     
@@ -6607,7 +6612,10 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             id="exception_document"
             isURL="true" />
         <huiproperty 
-            name="Reason" id="exception_reason" inputtype="text"/>
+            name="Reason"
+            id="exception_reason"
+            inputtype="text"
+            showInObjectBrowser="true"/>
         <huiproperty
             name="Approved" id="exception_approved" inputtype="singleoption">
             <option name="Yes" id="exception_approved_yes" />           
@@ -6639,9 +6647,10 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             required="true" />
             
         <huiproperty
-            name="Description" 
-            id="requirementgroup_desc" 
-            inputtype="text" />   
+	    name="Description" 
+	    id="requirementgroup_desc" 
+	    inputtype="text"
+            showInObjectBrowser="true" />   
     </huientity>
     
     <huientity
@@ -6668,8 +6677,11 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty
-            name="Description" id="requirement_desc" inputtype="text"/>
-        <huiproperty
+            name="Description"
+            id="requirement_desc"
+            inputtype="text"
+            showInObjectBrowser="true"/>
+	<huiproperty
             name="Document"
             id="requirement_document"
             isURL="true" />
@@ -6711,11 +6723,14 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty
-            name="Event(s)" id="incident_desc" inputtype="text"/>
-        <huiproperty 
-            name="Date"
-            id="incident_date"
-            inputtype="date">
+            name="Event(s)"
+            id="incident_desc"
+            inputtype="text"
+            showInObjectBrowser="true"/>
+	<huiproperty 
+	    name="Date"
+	    id="incident_date"
+	    inputtype="date">
             <defaultRule class="Today" />
         </huiproperty>
         <huiproperty
@@ -6893,9 +6908,10 @@ Wurden bereits weitere Stellen informiert?
             required="true" />
             
         <huiproperty
-            name="Description" 
-            id="incident_group_desc" 
-            inputtype="text" />   
+	    name="Description" 
+	    id="incident_group_desc" 
+	    inputtype="text"
+            showInObjectBrowser="true" />   
     </huientity>
     
     <huientity
@@ -6926,8 +6942,12 @@ Wurden bereits weitere Stellen informiert?
             name="Tags,Basic"
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty 
-            name="Explanation" id="incscen_explanation" inputtype="text" tags="Risk"/>
-        <huiproperty
+            name="Explanation"
+            id="incscen_explanation"
+            inputtype="text"
+            tags="Risk"
+            showInObjectBrowser="true"/>
+	<huiproperty
             name="Document"
             id="incident_scenario_document"
             isURL="true" />
@@ -7058,9 +7078,10 @@ Wurden bereits weitere Stellen informiert?
             required="true" />
             
         <huiproperty
-            name="Description" 
-            id="incident_scenario_group_desc" 
-            inputtype="text" />   
+	    name="Description" 
+	    id="incident_scenario_group_desc" 
+            inputtype="text"
+            showInObjectBrowser="true"/>
     </huientity>
     
     <huientity
@@ -7078,8 +7099,11 @@ Wurden bereits weitere Stellen informiert?
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
         <huiproperty
-            name="Corrective Action" id="response_corract" inputtype="text" />
-        <huiproperty
+            name="Corrective Action"
+            id="response_corract"
+            inputtype="text"
+            showInObjectBrowser="true"/>
+	<huiproperty
             name="Document"
             id="response_document"
             isURL="true" />
@@ -7096,7 +7120,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
             name="Description" 
             id="response_group_desc" 
-            inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true" />   
     </huientity>
     
     <huientity
@@ -7162,7 +7187,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
             name="Description" 
             id="threat_group_desc" 
-            inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true"/>   
     </huientity>
     
     <huientity
@@ -7216,7 +7242,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
             name="Description" 
             id="vulnerability_group_desc" 
-            inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true" />   
     </huientity>
     
     <huientity
@@ -7334,7 +7361,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
             name="Description" 
             id="document_group_desc" 
-            inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true" />
     </huientity>
     
     <huientity
@@ -7405,7 +7433,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
             name="Description" 
             id="interview_group_desc" 
-            inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true" />   
     </huientity>
     
     <huientity
@@ -7446,7 +7475,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
             name="Description" 
             id="evidence_group_desc" 
-            inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true" />   
     </huientity>
     
     <huientity
@@ -7480,8 +7510,11 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
             name="Description" id="finding_desc" inputtype="text" tags="VDA_ISA_Audit"/>
         <huiproperty
-            name="Root cause" id="finding_cause" inputtype="text"/>
-        <huiproperty
+            name="Root cause"
+            id="finding_cause"
+            inputtype="text"
+            showInObjectBrowser="true"/>
+		<huiproperty
             name="Document"
             id="finding_document"
             isURL="true" />
@@ -7523,7 +7556,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
             name="Description" 
             id="finding_group_desc" 
-            inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true"/>   
     </huientity>
     
     <huientity name="Process" id="process" >
@@ -8472,7 +8506,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
             name="Description" 
             id="process_group_desc" 
-            inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true" />   
     </huientity>
     
     <huientity
@@ -8635,7 +8670,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
             name="Description" 
             id="record_group_desc" 
-            inputtype="text" />   
+            inputtype="text"
+            showInObjectBrowser="true" />   
     </huientity>
     
     <huientity
@@ -8866,8 +8902,9 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_itnetwork_employee_number" name="Number of employees" />
         <huiproperty id="bp_itnetwork_description" name="Description" />
         <huiproperty id="bp_itnetwork_qualifier" name="Qualifier" required="true" inputtype="singleoption" >
-                <option id="bp_itnetwork_qualifier_basic" name="BASIC" />
-                <option id="bp_itnetwork_qualifier_standard" name="STANDARD" />
+                <option id="bp_itnetwork_qualifier_basic" name="BASIC" value="0"/>
+                <option id="bp_itnetwork_qualifier_standard" name="STANDARD" value="1"/>
+                <option id="bp_itnetwork_qualifier_high" name="HIGH" value="2"/>
         </huiproperty>
         <huiproperty id="bp_itnetwork_document" isURL="true" name="Document" />
         <huipropertygroup id="bp_itnetwork_report" name="Reporting" tags="Dok.mgmt.">
@@ -9135,46 +9172,54 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_application_document" isURL="true" name="Document" />
         <huipropertygroup id="bp_application_group_business_impact" name="Protection Requirement"
             tags="Risk">
-            <huiproperty defaultValue="1" id="bp_application_value_method_confidentiality"
-                inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk" />
-            <huiproperty defaultValue="1" id="bp_application_value_method_integrity"
-                inputtype="booleanoption" name="Deduce Integrity" tags="Risk" />
-            <huiproperty defaultValue="1" id="bp_application_value_method_availability"
-                inputtype="booleanoption" name="Deduce Availability" tags="Risk" />
-            <huiproperty id="bp_application_value_confidentiality" inputtype="numericoption"
-                max="3" min="0" name="Confidentiality" tags="Risk">
-                <depends option="bp_application_value_method_confidentiality" value="0" />
-                <option id="bp_application_value_confidentiality_low" name="Insignificant"
-                    value="0" />
-                <option id="bp_application_value_confidentiality_normal" name="Normal" value="1" />
-                <option id="bp_application_value_confidentiality_high" name="High" value="2" />
-                <option id="bp_application_value_confidentiality_very_high" name="Very High"
-                    value="3" />
-            </huiproperty>
-            <huiproperty defaultValue="0" id="bp_application_value_integrity" inputtype="numericoption"
-                max="3" min="0" name="Integrity" tags="Risk">
-                <depends option="bp_application_value_method_integrity" value="0" />
-                <option id="bp_application_value_integrity_low" name="Insignificant" value="0" />
-                <option id="bp_application_value_integrity_normal" name="Normal" value="1" />
-                <option id="bp_application_value_integrity_high" name="High" value="2" />
-                <option id="bp_application_value_integrity_very_high" name="Very High" value="3" />
-            </huiproperty>
-            <huiproperty id="bp_application_value_availability" inputtype="numericoption"
-                max="3" min="0" name="Availability" tags="Risk">
-                <depends option="bp_application_value_method_availability" value="0" />
-                <option id="bp_application_value_availability_low" name="Insignificant"
-                    value="0" />
-                <option id="bp_application_value_availability_normal" name="Normal" value="1" />
-                <option id="bp_application_value_availability_high" name="High" value="2" />
-                <option id="bp_application_value_availability_very_high" name="Very High"
-                    value="3" />
-            </huiproperty>
-            <huiproperty id="bp_application_value_comment_c" inputtype="text"
-                name="Explanation Confidentiality" tags="Risk" />
-            <huiproperty id="bp_application_value_comment_i" inputtype="text"
-                name="Explanation Integrity" tags="Risk" />
-            <huiproperty id="bp_application_value_comment_a" inputtype="text"
-                name="Explanation Availability" tags="Risk" />
+	    <huiproperty defaultValue="0" id="bp_application_value_method_confidentiality" inputtype="booleanoption" name="Deduce confidentiality with maximumpriciple" tags="Risk"/>
+	    <huiproperty defaultValue="0" id="bp_application_method_confidentiality" inputtype="numericoption" max="2" min="0" name="Deduce confidentiality (other)" tags="Risk">
+	      <depends option="bp_application_value_method_confidentiality" value="0"/>
+	      <option id="bp_application_value_method_confidentiality_none" name="unedited" value="0"/>
+	      <option id="bp_application_value_method_confidentiality_dist" name="distribution effect" value="1"/>
+	      <option id="bp_application_value_method_confidentiality_acc" name="accumulation effect" value="2"/>
+	    </huiproperty>
+	    <huiproperty id="bp_application_value_confidentiality" inputtype="numericoption" max="4" min="0" name="confidentiality" tags="Risk">
+	      <depends option="bp_application_value_method_confidentiality" value="0"/>
+	      <option id="bp_application_value_confidentiality_unedited" name="Unedited" value="0"/>
+	      <option id="bp_application_value_confidentiality_low" name="Insignificant" value="1"/>
+	      <option id="bp_application_value_confidentiality_normal" name="Normal" value="2"/>
+	      <option id="bp_application_value_confidentiality_high" name="High" value="3"/>
+	      <option id="bp_application_value_confidentiality_very_high" name="Very High" value="4"/>
+	    </huiproperty>
+	    <huiproperty id="bp_application_value_comment_c" inputtype="text" name="Explanation Confidentiality" tags="Risk"/>
+	    <huiproperty defaultValue="0" id="bp_application_value_method_integrity" inputtype="booleanoption" name="Deduce integrity with maximumpriciple" tags="Risk"/>
+	    <huiproperty defaultValue="0" id="bp_application_method_integrity" inputtype="numericoption" max="2" min="0" name="Deduce integrity (other)" tags="Risk">
+	      <depends option="bp_application_value_method_integrity" value="0"/>
+	      <option id="bp_application_value_method_integrity_none" name="unedited" value="0"/>
+	      <option id="bp_application_value_method_integrity_dist" name="distribution effect" value="1"/>
+	      <option id="bp_application_value_method_integrity_acc" name="accumulation effect" value="2"/>
+	    </huiproperty>
+	    <huiproperty id="bp_application_value_integrity" inputtype="numericoption" max="4" min="0" name="integrity" tags="Risk">
+	      <depends option="bp_application_value_method_integrity" value="0"/>
+	      <option id="bp_application_value_integrity_unedited" name="Unedited" value="0"/>
+	      <option id="bp_application_value_integrity_low" name="Insignificant" value="1"/>
+	      <option id="bp_application_value_integrity_normal" name="Normal" value="2"/>
+	      <option id="bp_application_value_integrity_high" name="High" value="3"/>
+	      <option id="bp_application_value_integrity_very_high" name="Very High" value="4"/>
+	    </huiproperty>
+	    <huiproperty id="bp_application_value_comment_i" inputtype="text" name="Explanation integrity" tags="Risk"/>
+	    <huiproperty defaultValue="0" id="bp_application_value_method_availability" inputtype="booleanoption" name="Deduce availability with maximumpriciple" tags="Risk"/>
+	    <huiproperty defaultValue="0" id="bp_application_method_availability" inputtype="numericoption" max="2" min="0" name="Deduce availability (other)" tags="Risk">
+	      <depends option="bp_application_value_method_availability" value="0"/>
+	      <option id="bp_application_value_method_availability_none" name="unedited" value="0"/>
+	      <option id="bp_application_value_method_availability_dist" name="distribution effect" value="1"/>
+	      <option id="bp_application_value_method_availability_acc" name="accumulation effect" value="2"/>
+	    </huiproperty>
+	    <huiproperty id="bp_application_value_availability" inputtype="numericoption" max="4" min="0" name="availability" tags="Risk">
+	      <depends option="bp_application_value_method_availability" value="0"/>
+	      <option id="bp_application_value_availability_unedited" name="Unedited" value="0"/>
+	      <option id="bp_application_value_availability_low" name="Insignificant" value="1"/>
+	      <option id="bp_application_value_availability_normal" name="Normal" value="2"/>
+	      <option id="bp_application_value_availability_high" name="High" value="3"/>
+	      <option id="bp_application_value_availability_very_high" name="Very High" value="4"/>
+	    </huiproperty>
+	    <huiproperty id="bp_application_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
             <huiproperty id="bp_application_replacementcost" name="Replacement Cost"
                 tags="Finance" />
             <huiproperty id="bp_application_replcost_currency" inputtype="singleoption"
@@ -9250,7 +9295,6 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_businessprocess_name" name="Title" required="true" />
         <huiproperty id="bp_businessprocess_description" inputtype="text" name="Description" />
         <huiproperty id="bp_businessprocess_tag" name="Tags" tooltip="List of tags, separated by comma or space" />
-        <huiproperty defaultValue="0" id="bp_businessprocess_approach" inputtype="booleanoption" name="Approach: Core securing" > </huiproperty>
         <huiproperty id="bp_businessprocess_type" inputtype="singleoption" name="Type of Process">
             <option id="bp_businessprocess_type_core" name="Core Business" />
             <option id="bp_businessprocess_type_support" name="Supporting Process" />
@@ -9278,50 +9322,54 @@ Wurden bereits weitere Stellen informiert?
 		</huiproperty>
         <huiproperty id="bp_businessprocess_document" isURL="true" name="Document" />
         <huipropertygroup id="bp_businessprocess_group_business_impact" name="Protection Requirement" tags="Risk">
-            <huiproperty defaultValue="0" id="bp_businessprocess_value_method_confidentiality"
-                inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk" />
-            <huiproperty defaultValue="0" id="bp_businessprocess_value_method_integrity"
-                inputtype="booleanoption" name="Deduce Integrity" tags="Risk" />
-            <huiproperty defaultValue="0" id="bp_businessprocess_value_method_availability"
-                inputtype="booleanoption" name="Deduce Availability" tags="Risk" />
-            <huiproperty id="bp_businessprocess_value_confidentiality" inputtype="numericoption"
-                max="3" min="0" name="Confidentiality" tags="Risk">
-                <depends option="bp_businessprocess_value_method_confidentiality" value="0" />
-                <option id="bp_businessprocess_value_confidentiality_low" name="Insignificant"
-                    value="0" />
-                <option id="bp_businessprocess_value_confidentiality_normal" name="Normal"
-                    value="1" />
-                <option id="bp_businessprocess_value_confidentiality_high" name="High" value="2" />
-                <option id="bp_businessprocess_value_confidentiality_very_high" name="Very High"
-                    value="3" />
-            </huiproperty>
-            <huiproperty id="bp_businessprocess_value_integrity" inputtype="numericoption"
-                max="3" min="0" name="Integrity" tags="Risk">
-                <depends option="bp_businessprocess_value_method_integrity" value="0" />
-                <option id="bp_businessprocess_value_integrity_low" name="Insignificant"
-                    value="0" />
-                <option id="bp_businessprocess_value_integrity_normal" name="Normal" value="1" />
-                <option id="bp_businessprocess_value_integrity_high" name="High" value="2" />
-                <option id="bp_businessprocess_value_integrity_very_high" name="Very High"
-                    value="3" />
-            </huiproperty>
-            <huiproperty id="bp_businessprocess_value_availability" inputtype="numericoption"
-                max="3" min="0" name="Availability" tags="Risk">
-                <depends option="bp_businessprocess_value_method_availability" value="0" />
-                <option id="bp_businessprocess_value_availability_low" name="Insignificant"
-                    value="0" />
-                <option id="bp_businessprocess_value_availability_normal" name="Normal"
-                    value="1" />
-                <option id="bp_businessprocess_value_availability_high" name="High" value="2" />
-                <option id="bp_businessprocess_value_availability_very_high" name="Very High"
-                    value="3" />
-            </huiproperty>
-            <huiproperty id="bp_businessprocess_value_comment_c" inputtype="text"
-                name="Explanation Confidentiality" tags="Risk" />
-            <huiproperty id="bp_businessprocess_value_comment_i" inputtype="text"
-                name="Explanation Integrity" tags="Risk" />
-            <huiproperty id="bp_businessprocess_value_comment_a" inputtype="text"
-                name="Explanation Availability" tags="Risk" />
+		    <huiproperty defaultValue="0" id="bp_businessprocess_value_method_confidentiality" inputtype="booleanoption" name="Deduce confidentiality with maximumpriciple" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_businessprocess_method_confidentiality" inputtype="numericoption" max="2" min="0" name="Deduce confidentiality (other)" tags="Risk">
+		      <depends option="bp_businessprocess_value_method_confidentiality" value="0"/>
+		      <option id="bp_businessprocess_value_method_confidentiality_none" name="keine ableitung" value="0"/>
+		      <option id="bp_businessprocess_value_method_confidentiality_dist" name="distribution" value="1"/>
+		      <option id="bp_businessprocess_value_method_confidentiality_acc" name="accumulation" value="2"/>
+		    </huiproperty>
+		    <huiproperty id="bp_businessprocess_value_confidentiality" inputtype="numericoption" max="4" min="0" name="confidentiality" tags="Risk">
+		      <depends option="bp_businessprocess_value_method_confidentiality" value="0"/>
+		      <option id="bp_businessprocess_value_confidentiality_unedited" name="Unedited" value="0"/>
+		      <option id="bp_businessprocess_value_confidentiality_low" name="Insignificant" value="1"/>
+		      <option id="bp_businessprocess_value_confidentiality_normal" name="Normal" value="2"/>
+		      <option id="bp_businessprocess_value_confidentiality_high" name="High" value="3"/>
+		      <option id="bp_businessprocess_value_confidentiality_very_high" name="Very High" value="4"/>
+		    </huiproperty>
+		    <huiproperty id="bp_businessprocess_value_comment_c" inputtype="text" name="Explanation Confidentiality" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_businessprocess_value_method_integrity" inputtype="booleanoption" name="Deduce integrity with maximumpriciple" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_businessprocess_method_integrity" inputtype="numericoption" max="2" min="0" name="Deduce integrity (other)" tags="Risk">
+		      <depends option="bp_businessprocess_value_method_integrity" value="0"/>
+		      <option id="bp_businessprocess_value_method_integrity_none" name="keine ableitung" value="0"/>
+		      <option id="bp_businessprocess_value_method_integrity_dist" name="distribution" value="1"/>
+		      <option id="bp_businessprocess_value_method_integrity_acc" name="accumulation" value="2"/>
+		    </huiproperty>
+		    <huiproperty id="bp_businessprocess_value_integrity" inputtype="numericoption" max="4" min="0" name="integrity" tags="Risk">
+		      <depends option="bp_businessprocess_value_method_integrity" value="0"/>
+		      <option id="bp_businessprocess_value_integrity_unedited" name="Unedited" value="0"/>
+		      <option id="bp_businessprocess_value_integrity_low" name="Insignificant" value="1"/>
+		      <option id="bp_businessprocess_value_integrity_normal" name="Normal" value="2"/>
+		      <option id="bp_businessprocess_value_integrity_high" name="High" value="3"/>
+		      <option id="bp_businessprocess_value_integrity_very_high" name="Very High" value="4"/>
+		    </huiproperty>
+		    <huiproperty id="bp_businessprocess_value_comment_i" inputtype="text" name="Explanation integrity" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_businessprocess_value_method_availability" inputtype="booleanoption" name="Deduce availability with maximumpriciple" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_businessprocess_method_availability" inputtype="numericoption" max="2" min="0" name="Deduce availability (other)" tags="Risk">
+		      <depends option="bp_businessprocess_value_method_availability" value="0"/>
+		      <option id="bp_businessprocess_value_method_availability_none" name="keine ableitung" value="0"/>
+		      <option id="bp_businessprocess_value_method_availability_dist" name="distribution" value="1"/>
+		      <option id="bp_businessprocess_value_method_availability_acc" name="accumulation" value="2"/>
+		    </huiproperty>
+		    <huiproperty id="bp_businessprocess_value_availability" inputtype="numericoption" max="4" min="0" name="availability" tags="Risk">
+		      <depends option="bp_businessprocess_value_method_availability" value="0"/>
+		      <option id="bp_businessprocess_value_availability_unedited" name="Unedited" value="0"/>
+		      <option id="bp_businessprocess_value_availability_low" name="Insignificant" value="1"/>
+		      <option id="bp_businessprocess_value_availability_normal" name="Normal" value="2"/>
+		      <option id="bp_businessprocess_value_availability_high" name="High" value="3"/>
+		      <option id="bp_businessprocess_value_availability_very_high" name="Very High" value="4"/>
+		    </huiproperty>
+		    <huiproperty id="bp_businessprocess_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
             <huiproperty id="bp_businessprocess_replacementcost" name="Replacement Cost"
                 tags="Finance" />
             <huiproperty id="bp_businessprocess_replcost_currency" inputtype="singleoption"
@@ -9332,7 +9380,6 @@ Wurden bereits weitere Stellen informiert?
                 <option id="bp_businessprocess_replcost_currency_yen" name="¥" />
             </huiproperty>
         </huipropertygroup>
-
         <huipropertygroup id="bp_businessprocess_risk_group" name="Risk Management"
             tags="Risk">
             <huiproperty editable="false" id="bp_businessprocess_risk_c" name="Confidentiality risk value"
@@ -9427,45 +9474,54 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_icssystem_document" isURL="true" name="Document" />
         <huipropertygroup id="bp_icssystem_group_business_impact" name="Protection Requirement"
             tags="Risk">
-            <huiproperty defaultValue="1" id="bp_icssystem_value_method_confidentiality"
-                inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk" />
-            <huiproperty defaultValue="1" id="bp_icssystem_value_method_integrity"
-                inputtype="booleanoption" name="Deduce Integrity" tags="Risk" />
-            <huiproperty defaultValue="1" id="bp_icssystem_value_method_availability"
-                inputtype="booleanoption" name="Deduce Availability" tags="Risk" />
-            <huiproperty id="bp_icssystem_value_confidentiality" inputtype="numericoption"
-                max="3" min="0" name="Confidentiality" tags="Risk">
-                <depends option="bp_icssystem_value_method_confidentiality" value="0" />
-                <option id="bp_icssystem_value_confidentiality_low" name="Insignificant"
-                    value="0" />
-                <option id="bp_icssystem_value_confidentiality_normal" name="Normal" value="1" />
-                <option id="bp_icssystem_value_confidentiality_high" name="High" value="2" />
-                <option id="bp_icssystem_value_confidentiality_very_high" name="Very High"
-                    value="3" />
-            </huiproperty>
-            <huiproperty id="bp_icssystem_value_integrity" inputtype="numericoption"
-                max="3" min="0" name="Integrity" tags="Risk">
-                <depends option="bp_icssystem_value_method_integrity" value="0" />
-                <option id="bp_icssystem_value_integrity_low" name="Insignificant" value="0" />
-                <option id="bp_icssystem_value_integrity_normal" name="Normal" value="1" />
-                <option id="bp_icssystem_value_integrity_high" name="High" value="2" />
-                <option id="bp_icssystem_value_integrity_very_high" name="Very High" value="3" />
-            </huiproperty>
-            <huiproperty id="bp_icssystem_value_availability" inputtype="numericoption"
-                max="3" min="0" name="Availability" tags="Risk">
-                <depends option="bp_icssystem_value_method_availability" value="0" />
-                <option id="bp_icssystem_value_availability_low" name="Insignificant" value="0" />
-                <option id="bp_icssystem_value_availability_normal" name="Normal" value="1" />
-                <option id="bp_icssystem_value_availability_high" name="High" value="2" />
-                <option id="bp_icssystem_value_availability_very_high" name="Very High"
-                    value="3" />
-            </huiproperty>
-            <huiproperty id="bp_icssystem_value_comment_c" inputtype="text"
-                name="Explanation Confidentiality" tags="Risk" />
-            <huiproperty id="bp_icssystem_value_comment_i" inputtype="text"
-                name="Explanation Integrity" tags="Risk" />
-            <huiproperty id="bp_icssystem_value_comment_a" inputtype="text"
-                name="Explanation Availability" tags="Risk" />
+		    <huiproperty defaultValue="0" id="bp_icssystem_value_method_confidentiality" inputtype="booleanoption" name="Deduce confidentiality with maximumpriciple" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_icssystem_method_confidentiality" inputtype="numericoption" max="2" min="0" name="Deduce confidentiality (other)" tags="Risk">
+		      <depends option="bp_icssystem_value_method_confidentiality" value="0"/>
+		      <option id="bp_icssystem_value_method_confidentiality_none" name="unedited" value="0"/>
+		      <option id="bp_icssystem_value_method_confidentiality_dist" name="distribution effect" value="1"/>
+		      <option id="bp_icssystem_value_method_confidentiality_acc" name="accumulation effect" value="2"/>
+		    </huiproperty>
+		    <huiproperty id="bp_icssystem_value_confidentiality" inputtype="numericoption" max="4" min="0" name="confidentiality" tags="Risk">
+		      <depends option="bp_icssystem_value_method_confidentiality" value="0"/>
+		      <option id="bp_icssystem_value_confidentiality_unedited" name="Unedited" value="0"/>
+		      <option id="bp_icssystem_value_confidentiality_low" name="Insignificant" value="1"/>
+		      <option id="bp_icssystem_value_confidentiality_normal" name="Normal" value="2"/>
+		      <option id="bp_icssystem_value_confidentiality_high" name="High" value="3"/>
+		      <option id="bp_icssystem_value_confidentiality_very_high" name="Very High" value="4"/>
+		    </huiproperty>
+		    <huiproperty id="bp_icssystem_value_comment_c" inputtype="text" name="Explanation Confidentiality" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_icssystem_value_method_integrity" inputtype="booleanoption" name="Deduce integrity with maximumpriciple" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_icssystem_method_integrity" inputtype="numericoption" max="2" min="0" name="Deduce integrity (other)" tags="Risk">
+		      <depends option="bp_icssystem_value_method_integrity" value="0"/>
+		      <option id="bp_icssystem_value_method_integrity_none" name="unedited" value="0"/>
+		      <option id="bp_icssystem_value_method_integrity_dist" name="distribution effect" value="1"/>
+		      <option id="bp_icssystem_value_method_integrity_acc" name="accumulation effect" value="2"/>
+		    </huiproperty>
+		    <huiproperty id="bp_icssystem_value_integrity" inputtype="numericoption" max="4" min="0" name="integrity" tags="Risk">
+		      <depends option="bp_icssystem_value_method_integrity" value="0"/>
+		      <option id="bp_icssystem_value_integrity_unedited" name="Unedited" value="0"/>
+		      <option id="bp_icssystem_value_integrity_low" name="Insignificant" value="1"/>
+		      <option id="bp_icssystem_value_integrity_normal" name="Normal" value="2"/>
+		      <option id="bp_icssystem_value_integrity_high" name="High" value="3"/>
+		      <option id="bp_icssystem_value_integrity_very_high" name="Very High" value="4"/>
+		    </huiproperty>
+		    <huiproperty id="bp_icssystem_value_comment_i" inputtype="text" name="Explanation integrity" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_icssystem_value_method_availability" inputtype="booleanoption" name="Deduce availability with maximumpriciple" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_icssystem_method_availability" inputtype="numericoption" max="2" min="0" name="Deduce availability (other)" tags="Risk">
+		      <depends option="bp_icssystem_value_method_availability" value="0"/>
+		      <option id="bp_icssystem_value_method_availability_none" name="unedited" value="0"/>
+		      <option id="bp_icssystem_value_method_availability_dist" name="distribution effect" value="1"/>
+		      <option id="bp_icssystem_value_method_availability_acc" name="accumulation effect" value="2"/>
+		    </huiproperty>
+		    <huiproperty id="bp_icssystem_value_availability" inputtype="numericoption" max="4" min="0" name="availability" tags="Risk">
+		      <depends option="bp_icssystem_value_method_availability" value="0"/>
+		      <option id="bp_icssystem_value_availability_unedited" name="Unedited" value="0"/>
+		      <option id="bp_icssystem_value_availability_low" name="Insignificant" value="1"/>
+		      <option id="bp_icssystem_value_availability_normal" name="Normal" value="2"/>
+		      <option id="bp_icssystem_value_availability_high" name="High" value="3"/>
+		      <option id="bp_icssystem_value_availability_very_high" name="Very High" value="4"/>
+		    </huiproperty>
+		    <huiproperty id="bp_icssystem_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
             <huiproperty id="bp_icssystem_replacementcost" name="Replacement Cost" tags="Finance" />
             <huiproperty id="bp_icssystem_replcost_currency" inputtype="singleoption"
                 name="Currency" tags="Finance">
@@ -9570,44 +9626,54 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_itsystem_document" isURL="true" name="Document" />
         <huipropertygroup id="bp_itsystem_group_business_impact" name="Protection Requirement"
             tags="Risk">
-            <huiproperty defaultValue="1" id="bp_itsystem_value_method_confidentiality"
-                inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk" />
-            <huiproperty defaultValue="1" id="bp_itsystem_value_method_integrity"
-                inputtype="booleanoption" name="Deduce Integrity" tags="Risk" />
-            <huiproperty defaultValue="1" id="bp_itsystem_value_method_availability"
-                inputtype="booleanoption" name="Deduce Availability" tags="Risk" />
-            <huiproperty id="bp_itsystem_value_confidentiality" inputtype="numericoption"
-                max="3" min="0" name="Confidentiality" tags="Risk">
-                <depends option="bp_itsystem_value_method_confidentiality" value="0" />
-                <option id="bp_itsystem_value_confidentiality_low" name="Insignificant"
-                    value="0" />
-                <option id="bp_itsystem_value_confidentiality_normal" name="Normal" value="1" />
-                <option id="bp_itsystem_value_confidentiality_high" name="High" value="2" />
-                <option id="bp_itsystem_value_confidentiality_very_high" name="Very High"
-                    value="3" />
-            </huiproperty>
-            <huiproperty id="bp_itsystem_value_integrity" inputtype="numericoption" max="3"
-                min="0" name="Integrity" tags="Risk">
-                <depends option="bp_itsystem_value_method_integrity" value="0" />
-                <option id="bp_itsystem_value_integrity_low" name="Insignificant" value="0" />
-                <option id="bp_itsystem_value_integrity_normal" name="Normal" value="1" />
-                <option id="bp_itsystem_value_integrity_high" name="High" value="2" />
-                <option id="bp_itsystem_value_integrity_very_high" name="Very High" value="3" />
-            </huiproperty>
-            <huiproperty id="bp_itsystem_value_availability" inputtype="numericoption"
-                max="3" min="0" name="Availability" tags="Risk">
-                <depends option="bp_itsystem_value_method_availability" value="0" />
-                <option id="bp_itsystem_value_availability_low" name="Insignificant" value="0" />
-                <option id="bp_itsystem_value_availability_normal" name="Normal" value="1" />
-                <option id="bp_itsystem_value_availability_high" name="High" value="2" />
-                <option id="bp_itsystem_value_availability_very_high" name="Very High" value="3" />
-            </huiproperty>
-            <huiproperty id="bp_itsystem_value_comment_c" inputtype="text"
-                name="Explanation Confidentiality" tags="Risk" />
-            <huiproperty id="bp_itsystem_value_comment_i" inputtype="text"
-                name="Explanation Integrity" tags="Risk" />
-            <huiproperty id="bp_itsystem_value_comment_a" inputtype="text"
-                name="Explanation Availability" tags="Risk" />
+		    <huiproperty defaultValue="0" id="bp_itsystem_value_method_confidentiality" inputtype="booleanoption" name="Deduce confidentiality with maximumpriciple" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_itsystem_method_confidentiality" inputtype="numericoption" max="2" min="0" name="Deduce confidentiality (other)" tags="Risk">
+		      <depends option="bp_itsystem_value_method_confidentiality" value="0"/>
+		      <option id="bp_itsystem_value_method_confidentiality_none" name="unedited" value="0"/>
+		      <option id="bp_itsystem_value_method_confidentiality_dist" name="distribution effect" value="1"/>
+		      <option id="bp_itsystem_value_method_confidentiality_acc" name="accumulation effect" value="2"/>
+		    </huiproperty>
+		    <huiproperty id="bp_itsystem_value_confidentiality" inputtype="numericoption" max="4" min="0" name="confidentiality" tags="Risk">
+		      <depends option="bp_itsystem_value_method_confidentiality" value="0"/>
+		      <option id="bp_itsystem_value_confidentiality_unedited" name="Unedited" value="0"/>
+		      <option id="bp_itsystem_value_confidentiality_low" name="Insignificant" value="1"/>
+		      <option id="bp_itsystem_value_confidentiality_normal" name="Normal" value="2"/>
+		      <option id="bp_itsystem_value_confidentiality_high" name="High" value="3"/>
+		      <option id="bp_itsystem_value_confidentiality_very_high" name="Very High" value="4"/>
+		    </huiproperty>
+		    <huiproperty id="bp_itsystem_value_comment_c" inputtype="text" name="Explanation Confidentiality" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_itsystem_value_method_integrity" inputtype="booleanoption" name="Deduce integrity with maximumpriciple" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_itsystem_method_integrity" inputtype="numericoption" max="2" min="0" name="Deduce integrity (other)" tags="Risk">
+		      <depends option="bp_itsystem_value_method_integrity" value="0"/>
+		      <option id="bp_itsystem_value_method_integrity_none" name="unedited" value="0"/>
+		      <option id="bp_itsystem_value_method_integrity_dist" name="distribution effect" value="1"/>
+		      <option id="bp_itsystem_value_method_integrity_acc" name="accumulation effect" value="2"/>
+		    </huiproperty>
+		    <huiproperty id="bp_itsystem_value_integrity" inputtype="numericoption" max="4" min="0" name="integrity" tags="Risk">
+		      <depends option="bp_itsystem_value_method_integrity" value="0"/>
+		      <option id="bp_itsystem_value_integrity_unedited" name="Unedited" value="0"/>
+		      <option id="bp_itsystem_value_integrity_low" name="Insignificant" value="1"/>
+		      <option id="bp_itsystem_value_integrity_normal" name="Normal" value="2"/>
+		      <option id="bp_itsystem_value_integrity_high" name="High" value="3"/>
+		      <option id="bp_itsystem_value_integrity_very_high" name="Very High" value="4"/>
+		    </huiproperty>
+		    <huiproperty id="bp_itsystem_value_comment_i" inputtype="text" name="Explanation integrity" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_itsystem_value_method_availability" inputtype="booleanoption" name="Deduce availability with maximumpriciple" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_itsystem_method_availability" inputtype="numericoption" max="2" min="0" name="Deduce availability (other)" tags="Risk">
+		      <depends option="bp_itsystem_value_method_availability" value="0"/>
+		      <option id="bp_itsystem_value_method_availability_none" name="unedited" value="0"/>
+		      <option id="bp_itsystem_value_method_availability_dist" name="distribution effect" value="1"/>
+		      <option id="bp_itsystem_value_method_availability_acc" name="accumulation effect" value="2"/>
+		    </huiproperty>
+		    <huiproperty id="bp_itsystem_value_availability" inputtype="numericoption" max="4" min="0" name="availability" tags="Risk">
+		      <depends option="bp_itsystem_value_method_availability" value="0"/>
+		      <option id="bp_itsystem_value_availability_unedited" name="Unedited" value="0"/>
+		      <option id="bp_itsystem_value_availability_low" name="Insignificant" value="1"/>
+		      <option id="bp_itsystem_value_availability_normal" name="Normal" value="2"/>
+		      <option id="bp_itsystem_value_availability_high" name="High" value="3"/>
+		      <option id="bp_itsystem_value_availability_very_high" name="Very High" value="4"/>
+		    </huiproperty>
+		    <huiproperty id="bp_itsystem_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
             <huiproperty id="bp_itsystem_replacementcost" name="Replacement Cost" tags="Finance" />
             <huiproperty id="bp_itsystem_replcost_currency" inputtype="singleoption"
                 name="Currency" tags="Finance">
@@ -9728,9 +9794,9 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_requirement_id" name="Identifier" />
         <huiproperty id="bp_requirement_name" name="Title" required="true" />
         <huiproperty id="bp_requirement_qualifier" name="Qualifier" required="true" inputtype="singleoption" >
-                <option id="bp_requirement_qualifier_basic" name="BASIC" />
-                <option id="bp_requirement_qualifier_standard" name="STANDARD" />
-                <option id="bp_requirement_qualifier_high" name="HIGH" />
+                <option id="bp_requirement_qualifier_basic" name="BASIC" value="0"/>
+                <option id="bp_requirement_qualifier_standard" name="STANDARD" value="1"/>
+                <option id="bp_requirement_qualifier_high" name="HIGH" value="2"/>
         </huiproperty>
         <huiproperty editable="false" id="bp_requirement_objectbrowser_content"
             inputtype="text" name="Requirement Content" showInObjectBrowser="true" visible="false" />
@@ -9819,11 +9885,6 @@ Wurden bereits weitere Stellen informiert?
     <huientity id="bp_requirement_group" name="Module">
         <huiproperty id="bp_requirement_group_id" name="Identifier" />
         <huiproperty id="bp_requirement_group_name" name="Title" required="true" />
-        <huiproperty id="bp_requirement_group_is" name="Implementation Sequenz" required="true" inputtype="singleoption" >
-                <option id="bp_requirement_group_is_r1" name="R1" />
-                <option id="bp_requirement_group_is_r2" name="R2" />
-                <option id="bp_requirement_group_is_r3" name="R3" />
-        </huiproperty>
         <huiproperty editable="false" id="bp_requirement_group_objectbrowser_content"
             inputtype="text" name="Module Content" showInObjectBrowser="true" visible="false" />
         <huiproperty id="bp_requirement_group_desc" inputtype="text" name="Description" />
@@ -9875,11 +9936,12 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty defaultValue="1" id="bp_threat_value_method_availability"
             inputtype="booleanoption" name="Affects Availability" tags="Risk" />
         <huiproperty defaultValue="0" id="bp_threat_probability" inputtype="numericoption"
-            max="3" min="0" name="Threat Probability" tags="Risk">
-            <option id="bp_threat_probability_0" name="Rare" value="0" />
-            <option id="bp_threat_probability_1" name="Medium" value="1" />
-            <option id="bp_threat_probability_2" name="Frequently" value="2" />
-            <option id="bp_threat_probability_3" name="Very Often" value="3" />
+            max="4" min="0" name="Threat Probability" tags="Risk">
+            <option id="bp_threat_probability_0" name="Unedited" value="0" />
+            <option id="bp_threat_probability_1" name="Rare" value="1" />
+            <option id="bp_threat_probability_2" name="Medium" value="2" />
+            <option id="bp_threat_probability_3" name="Frequently" value="3" />
+            <option id="bp_threat_probability_4" name="Very Often" value="4" />
         </huiproperty>
     </huientity>
 
@@ -9949,43 +10011,54 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_network_document" isURL="true" name="Document" />
         <huipropertygroup id="bp_network_group_business_impact" name="Protection Requirement"
             tags="Risk">
-            <huiproperty defaultValue="1" id="bp_network_value_method_confidentiality"
-                inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk" />
-            <huiproperty defaultValue="1" id="bp_network_value_method_integrity"
-                inputtype="booleanoption" name="Deduce Integrity" tags="Risk" />
-            <huiproperty defaultValue="1" id="bp_network_value_method_availability"
-                inputtype="booleanoption" name="Deduce Availability" tags="Risk" />
-            <huiproperty id="bp_network_value_confidentiality" inputtype="numericoption"
-                max="3" min="0" name="Confidentiality" tags="Risk">
-                <depends option="bp_network_value_method_confidentiality" value="0" />
-                <option id="bp_network_value_confidentiality_low" name="Insignificant" value="0" />
-                <option id="bp_network_value_confidentiality_normal" name="Normal" value="1" />
-                <option id="bp_network_value_confidentiality_high" name="High" value="2" />
-                <option id="bp_network_value_confidentiality_very_high" name="Very High"
-                    value="3" />
-            </huiproperty>
-            <huiproperty id="bp_network_value_integrity" inputtype="numericoption" max="3"
-                min="0" name="Integrity" tags="Risk">
-                <depends option="bp_network_value_method_integrity" value="0" />
-                <option id="bp_network_value_integrity_low" name="Insignificant" value="0" />
-                <option id="bp_network_value_integrity_normal" name="Normal" value="1" />
-                <option id="bp_network_value_integrity_high" name="High" value="2" />
-                <option id="bp_network_value_integrity_very_high" name="Very High" value="3" />
-            </huiproperty>
-            <huiproperty id="bp_network_value_availability" inputtype="numericoption"
-                max="3" min="0" name="Availability" tags="Risk">
-                <depends option="bp_network_value_method_availability" value="0" />
-                <option id="bp_network_value_availability_low" name="Insignificant" value="0" />
-                <option id="bp_network_value_availability_normal" name="Normal" value="1" />
-                <option id="bp_network_value_availability_high" name="High" value="2" />
-                <option id="bp_network_value_availability_very_high" name="Very High" value="3" />
-            </huiproperty>
-            <huiproperty id="bp_network_value_comment_c" inputtype="text"
-                name="Explanation Confidentiality" tags="Risk" />
-            <huiproperty id="bp_network_value_comment_i" inputtype="text"
-                name="Explanation Integrity" tags="Risk" />
-            <huiproperty id="bp_network_value_comment_a" inputtype="text"
-                name="Explanation Availability" tags="Risk" />
+		    <huiproperty defaultValue="0" id="bp_network_value_method_confidentiality" inputtype="booleanoption" name="Deduce confidentiality with maximumpriciple" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_network_method_confidentiality" inputtype="numericoption" max="2" min="0" name="Deduce confidentiality (other)" tags="Risk">
+		      <depends option="bp_network_value_method_confidentiality" value="0"/>
+		      <option id="bp_network_value_method_confidentiality_none" name="unedited" value="0"/>
+		      <option id="bp_network_value_method_confidentiality_dist" name="distribution effect" value="1"/>
+		      <option id="bp_network_value_method_confidentiality_acc" name="accumulation effect" value="2"/>
+		    </huiproperty>
+		    <huiproperty id="bp_network_value_confidentiality" inputtype="numericoption" max="4" min="0" name="confidentiality" tags="Risk">
+		      <depends option="bp_network_value_method_confidentiality" value="0"/>
+		      <option id="bp_network_value_confidentiality_unedited" name="Unedited" value="0"/>
+		      <option id="bp_network_value_confidentiality_low" name="Insignificant" value="1"/>
+		      <option id="bp_network_value_confidentiality_normal" name="Normal" value="2"/>
+		      <option id="bp_network_value_confidentiality_high" name="High" value="3"/>
+		      <option id="bp_network_value_confidentiality_very_high" name="Very High" value="4"/>
+		    </huiproperty>
+		    <huiproperty id="bp_network_value_comment_c" inputtype="text" name="Explanation Confidentiality" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_network_value_method_integrity" inputtype="booleanoption" name="Deduce integrity with maximumpriciple" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_network_method_integrity" inputtype="numericoption" max="2" min="0" name="Deduce integrity (other)" tags="Risk">
+		      <depends option="bp_network_value_method_integrity" value="0"/>
+		      <option id="bp_network_value_method_integrity_none" name="unedited" value="0"/>
+		      <option id="bp_network_value_method_integrity_dist" name="distribution effect" value="1"/>
+		      <option id="bp_network_value_method_integrity_acc" name="accumulation effect" value="2"/>
+		    </huiproperty>
+		    <huiproperty id="bp_network_value_integrity" inputtype="numericoption" max="4" min="0" name="integrity" tags="Risk">
+		      <depends option="bp_network_value_method_integrity" value="0"/>
+		      <option id="bp_network_value_integrity_unedited" name="Unedited" value="0"/>
+		      <option id="bp_network_value_integrity_low" name="Insignificant" value="1"/>
+		      <option id="bp_network_value_integrity_normal" name="Normal" value="2"/>
+		      <option id="bp_network_value_integrity_high" name="High" value="3"/>
+		      <option id="bp_network_value_integrity_very_high" name="Very High" value="4"/>
+		    </huiproperty>
+		    <huiproperty id="bp_network_value_comment_i" inputtype="text" name="Explanation integrity" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_network_value_method_availability" inputtype="booleanoption" name="Deduce availability with maximumpriciple" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_network_method_availability" inputtype="numericoption" max="2" min="0" name="Deduce availability (other)" tags="Risk">
+		      <depends option="bp_network_value_method_availability" value="0"/>
+		      <option id="bp_network_value_method_availability_none" name="unedited" value="0"/>
+		      <option id="bp_network_value_method_availability_dist" name="distribution effect" value="1"/>
+		      <option id="bp_network_value_method_availability_acc" name="accumulation effect" value="2"/>
+		    </huiproperty>
+		    <huiproperty id="bp_network_value_availability" inputtype="numericoption" max="4" min="0" name="availability" tags="Risk">
+		      <depends option="bp_network_value_method_availability" value="0"/>
+		      <option id="bp_network_value_availability_unedited" name="Unedited" value="0"/>
+		      <option id="bp_network_value_availability_low" name="Insignificant" value="1"/>
+		      <option id="bp_network_value_availability_normal" name="Normal" value="2"/>
+		      <option id="bp_network_value_availability_high" name="High" value="3"/>
+		      <option id="bp_network_value_availability_very_high" name="Very High" value="4"/>
+		    </huiproperty>
+		    <huiproperty id="bp_network_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
             <huiproperty id="bp_network_replacementcost" name="Replacement Cost" tags="Finance" />
             <huiproperty id="bp_network_replcost_currency" inputtype="singleoption"
                 name="Currency" tags="Finance">
@@ -9995,7 +10068,6 @@ Wurden bereits weitere Stellen informiert?
                 <option id="bp_network_replcost_currency_yen" name="¥" />
             </huiproperty>
         </huipropertygroup>
-
         <huipropertygroup id="bp_network_risk_group" name="Risk Management" tags="Risk">
             <huiproperty editable="false" id="bp_network_risk_c" name="Confidentiality risk value"
                 tags="Risk" />
@@ -10085,43 +10157,54 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_device_document" isURL="true" name="Document" />
         <huipropertygroup id="bp_device_group_business_impact" name="Protection Requirement"
             tags="Risk">
-            <huiproperty defaultValue="1" id="bp_device_value_method_confidentiality"
-                inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk" />
-            <huiproperty defaultValue="1" id="bp_device_value_method_integrity"
-                inputtype="booleanoption" name="Deduce Integrity" tags="Risk" />
-            <huiproperty defaultValue="1" id="bp_device_value_method_availability"
-                inputtype="booleanoption" name="Deduce Availability" tags="Risk" />
-            <huiproperty id="bp_device_value_confidentiality" inputtype="numericoption"
-                max="3" min="0" name="Confidentiality" tags="Risk">
-                <depends option="bp_device_value_method_confidentiality" value="0" />
-                <option id="bp_device_value_confidentiality_low" name="Insignificant" value="0" />
-                <option id="bp_device_value_confidentiality_normal" name="Normal" value="1" />
-                <option id="bp_device_value_confidentiality_high" name="High" value="2" />
-                <option id="bp_device_value_confidentiality_very_high" name="Very High"
-                    value="3" />
-            </huiproperty>
-            <huiproperty id="bp_device_value_integrity" inputtype="numericoption" max="3"
-                min="0" name="Integrity" tags="Risk">
-                <depends option="bp_device_value_method_integrity" value="0" />
-                <option id="bp_device_value_integrity_low" name="Insignificant" value="0" />
-                <option id="bp_device_value_integrity_normal" name="Normal" value="1" />
-                <option id="bp_device_value_integrity_high" name="High" value="2" />
-                <option id="bp_device_value_integrity_very_high" name="Very High" value="3" />
-            </huiproperty>
-            <huiproperty id="bp_device_value_availability" inputtype="numericoption"
-                max="3" min="0" name="Availability" tags="Risk">
-                <depends option="bp_device_value_method_availability" value="0" />
-                <option id="bp_device_value_availability_low" name="Insignificant" value="0" />
-                <option id="bp_device_value_availability_normal" name="Normal" value="1" />
-                <option id="bp_device_value_availability_high" name="High" value="2" />
-                <option id="bp_device_value_availability_very_high" name="Very High" value="3" />
-            </huiproperty>
-            <huiproperty id="bp_device_value_comment_c" inputtype="text"
-                name="Explanation Confidentiality" tags="Risk" />
-            <huiproperty id="bp_device_value_comment_i" inputtype="text"
-                name="Explanation Integrity" tags="Risk" />
-            <huiproperty id="bp_device_value_comment_a" inputtype="text"
-                name="Explanation Availability" tags="Risk" />
+		    <huiproperty defaultValue="0" id="bp_device_value_method_confidentiality" inputtype="booleanoption" name="Deduce confidentiality with maximumpriciple" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_device_method_confidentiality" inputtype="numericoption" max="2" min="0" name="Deduce confidentiality (other)" tags="Risk">
+		      <depends option="bp_device_value_method_confidentiality" value="0"/>
+		      <option id="bp_device_value_method_confidentiality_none" name="unedited" value="0"/>
+		      <option id="bp_device_value_method_confidentiality_dist" name="distribution effect" value="1"/>
+		      <option id="bp_device_value_method_confidentiality_acc" name="accumulation effect" value="2"/>
+		    </huiproperty>
+		    <huiproperty id="bp_device_value_confidentiality" inputtype="numericoption" max="4" min="0" name="confidentiality" tags="Risk">
+		      <depends option="bp_device_value_method_confidentiality" value="0"/>
+		      <option id="bp_device_value_confidentiality_unedited" name="Unedited" value="0"/>
+		      <option id="bp_device_value_confidentiality_low" name="Insignificant" value="1"/>
+		      <option id="bp_device_value_confidentiality_normal" name="Normal" value="2"/>
+		      <option id="bp_device_value_confidentiality_high" name="High" value="3"/>
+		      <option id="bp_device_value_confidentiality_very_high" name="Very High" value="4"/>
+		    </huiproperty>
+		    <huiproperty id="bp_device_value_comment_c" inputtype="text" name="Explanation Confidentiality" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_device_value_method_integrity" inputtype="booleanoption" name="Deduce integrity with maximumpriciple" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_device_method_integrity" inputtype="numericoption" max="2" min="0" name="Deduce integrity (other)" tags="Risk">
+		      <depends option="bp_device_value_method_integrity" value="0"/>
+		      <option id="bp_device_value_method_integrity_none" name="unedited" value="0"/>
+		      <option id="bp_device_value_method_integrity_dist" name="distribution effect" value="1"/>
+		      <option id="bp_device_value_method_integrity_acc" name="accumulation effect" value="2"/>
+		    </huiproperty>
+		    <huiproperty id="bp_device_value_integrity" inputtype="numericoption" max="4" min="0" name="integrity" tags="Risk">
+		      <depends option="bp_device_value_method_integrity" value="0"/>
+		      <option id="bp_device_value_integrity_unedited" name="Unedited" value="0"/>
+		      <option id="bp_device_value_integrity_low" name="Insignificant" value="1"/>
+		      <option id="bp_device_value_integrity_normal" name="Normal" value="2"/>
+		      <option id="bp_device_value_integrity_high" name="High" value="3"/>
+		      <option id="bp_device_value_integrity_very_high" name="Very High" value="4"/>
+		    </huiproperty>
+		    <huiproperty id="bp_device_value_comment_i" inputtype="text" name="Explanation integrity" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_device_value_method_availability" inputtype="booleanoption" name="Deduce availability with maximumpriciple" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_device_method_availability" inputtype="numericoption" max="2" min="0" name="Deduce availability (other)" tags="Risk">
+		      <depends option="bp_device_value_method_availability" value="0"/>
+		      <option id="bp_device_value_method_availability_none" name="unedited" value="0"/>
+		      <option id="bp_device_value_method_availability_dist" name="distribution effect" value="1"/>
+		      <option id="bp_device_value_method_availability_acc" name="accumulation effect" value="2"/>
+		    </huiproperty>
+		    <huiproperty id="bp_device_value_availability" inputtype="numericoption" max="4" min="0" name="availability" tags="Risk">
+		      <depends option="bp_device_value_method_availability" value="0"/>
+		      <option id="bp_device_value_availability_unedited" name="Unedited" value="0"/>
+		      <option id="bp_device_value_availability_low" name="Insignificant" value="1"/>
+		      <option id="bp_device_value_availability_normal" name="Normal" value="2"/>
+		      <option id="bp_device_value_availability_high" name="High" value="3"/>
+		      <option id="bp_device_value_availability_very_high" name="Very High" value="4"/>
+		    </huiproperty>
+		    <huiproperty id="bp_device_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
             <huiproperty id="bp_device_replacementcost" name="Replacement Cost" tags="Finance" />
             <huiproperty id="bp_device_replcost_currency" inputtype="singleoption" name="Currency"
                 tags="Finance">
@@ -10216,42 +10299,54 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_room_document" isURL="true" name="Document" />
         <huipropertygroup id="bp_room_group_business_impact" name="Protection Requirement"
             tags="Risk">
-            <huiproperty defaultValue="1" id="bp_room_value_method_confidentiality"
-                inputtype="booleanoption" name="Deduce Confidentiality" tags="Risk" />
-            <huiproperty defaultValue="1" id="bp_room_value_method_integrity" inputtype="booleanoption"
-                name="Deduce Integrity" tags="Risk" />
-            <huiproperty defaultValue="1" id="bp_room_value_method_availability"
-                inputtype="booleanoption" name="Deduce Availability" tags="Risk" />
-            <huiproperty id="bp_room_value_confidentiality" inputtype="numericoption"
-                max="3" min="0" name="Confidentiality" tags="Risk">
-                <depends option="bp_room_value_method_confidentiality" value="0" />
-                <option id="bp_room_value_confidentiality_low" name="Insignificant" value="0" />
-                <option id="bp_room_value_confidentiality_normal" name="Normal" value="1" />
-                <option id="bp_room_value_confidentiality_high" name="High" value="2" />
-                <option id="bp_room_value_confidentiality_very_high" name="Very High" value="3" />
-            </huiproperty>
-            <huiproperty id="bp_room_value_integrity" inputtype="numericoption" max="3"
-                min="0" name="Integrity" tags="Risk">
-                <depends option="bp_room_value_method_integrity" value="0" />
-                <option id="bp_room_value_integrity_low" name="Insignificant" value="0" />
-                <option id="bp_room_value_integrity_normal" name="Normal" value="1" />
-                <option id="bp_room_value_integrity_high" name="High" value="2" />
-                <option id="bp_room_value_integrity_very_high" name="Very High" value="3" />
-            </huiproperty>
-            <huiproperty id="bp_room_value_availability" inputtype="numericoption" max="3"
-                min="0" name="Availability" tags="Risk">
-                <depends option="bp_room_value_method_availability" value="0" />
-                <option id="bp_room_value_availability_low" name="Insignificant" value="0" />
-                <option id="bp_room_value_availability_normal" name="Normal" value="1" />
-                <option id="bp_room_value_availability_high" name="High" value="2" />
-                <option id="bp_room_value_availability_very_high" name="Very High" value="3" />
-            </huiproperty>
-            <huiproperty id="bp_room_value_comment_c" inputtype="text"
-                name="Explanation Confidentiality" tags="Risk" />
-            <huiproperty id="bp_room_value_comment_i" inputtype="text" name="Explanation Integrity"
-                tags="Risk" />
-            <huiproperty id="bp_room_value_comment_a" inputtype="text"
-                name="Explanation Availability" tags="Risk" />
+		    <huiproperty defaultValue="0" id="bp_room_value_method_confidentiality" inputtype="booleanoption" name="Deduce confidentiality with maximumpriciple" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_room_method_confidentiality" inputtype="numericoption" max="2" min="0" name="Deduce confidentiality (other)" tags="Risk">
+		      <depends option="bp_room_value_method_confidentiality" value="0"/>
+		      <option id="bp_room_value_method_confidentiality_none" name="unedited" value="0"/>
+		      <option id="bp_room_value_method_confidentiality_dist" name="distribution effect" value="1"/>
+		      <option id="bp_room_value_method_confidentiality_acc" name="accumulation effect" value="2"/>
+		    </huiproperty>
+		    <huiproperty id="bp_room_value_confidentiality" inputtype="numericoption" max="4" min="0" name="confidentiality" tags="Risk">
+		      <depends option="bp_room_value_method_confidentiality" value="0"/>
+		      <option id="bp_room_value_confidentiality_unedited" name="Unedited" value="0"/>
+		      <option id="bp_room_value_confidentiality_low" name="Insignificant" value="1"/>
+		      <option id="bp_room_value_confidentiality_normal" name="Normal" value="2"/>
+		      <option id="bp_room_value_confidentiality_high" name="High" value="3"/>
+		      <option id="bp_room_value_confidentiality_very_high" name="Very High" value="4"/>
+		    </huiproperty>
+		    <huiproperty id="bp_room_value_comment_c" inputtype="text" name="Explanation Confidentiality" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_room_value_method_integrity" inputtype="booleanoption" name="Deduce integrity with maximumpriciple" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_room_method_integrity" inputtype="numericoption" max="2" min="0" name="Deduce integrity (other)" tags="Risk">
+		      <depends option="bp_room_value_method_integrity" value="0"/>
+		      <option id="bp_room_value_method_integrity_none" name="unedited" value="0"/>
+		      <option id="bp_room_value_method_integrity_dist" name="distribution effect" value="1"/>
+		      <option id="bp_room_value_method_integrity_acc" name="accumulation effect" value="2"/>
+		    </huiproperty>
+		    <huiproperty id="bp_room_value_integrity" inputtype="numericoption" max="4" min="0" name="integrity" tags="Risk">
+		      <depends option="bp_room_value_method_integrity" value="0"/>
+		      <option id="bp_room_value_integrity_unedited" name="Unedited" value="0"/>
+		      <option id="bp_room_value_integrity_low" name="Insignificant" value="1"/>
+		      <option id="bp_room_value_integrity_normal" name="Normal" value="2"/>
+		      <option id="bp_room_value_integrity_high" name="High" value="3"/>
+		      <option id="bp_room_value_integrity_very_high" name="Very High" value="4"/>
+		    </huiproperty>
+		    <huiproperty id="bp_room_value_comment_i" inputtype="text" name="Explanation integrity" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_room_value_method_availability" inputtype="booleanoption" name="Deduce availability with maximumpriciple" tags="Risk"/>
+		    <huiproperty defaultValue="0" id="bp_room_method_availability" inputtype="numericoption" max="2" min="0" name="Deduce availability (other)" tags="Risk">
+		      <depends option="bp_room_value_method_availability" value="0"/>
+		      <option id="bp_room_value_method_availability_none" name="unedited" value="0"/>
+		      <option id="bp_room_value_method_availability_dist" name="distribution effect" value="1"/>
+		      <option id="bp_room_value_method_availability_acc" name="accumulation effect" value="2"/>
+		    </huiproperty>
+		    <huiproperty id="bp_room_value_availability" inputtype="numericoption" max="4" min="0" name="availability" tags="Risk">
+		      <depends option="bp_room_value_method_availability" value="0"/>
+		      <option id="bp_room_value_availability_unedited" name="Unedited" value="0"/>
+		      <option id="bp_room_value_availability_low" name="Insignificant" value="1"/>
+		      <option id="bp_room_value_availability_normal" name="Normal" value="2"/>
+		      <option id="bp_room_value_availability_high" name="High" value="3"/>
+		      <option id="bp_room_value_availability_very_high" name="Very High" value="4"/>
+		    </huiproperty>
+		    <huiproperty id="bp_room_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
             <huiproperty id="bp_room_replacementcost" name="Replacement Cost" tags="Finance" />
             <huiproperty id="bp_room_replcost_currency" inputtype="singleoption" name="Currency"
                 tags="Finance">
@@ -10261,7 +10356,6 @@ Wurden bereits weitere Stellen informiert?
                 <option id="bp_room_replcost_currency_yen" name="¥" />
             </huiproperty>
         </huipropertygroup>
-
         <huipropertygroup id="bp_room_risk_group" name="Risk Management" tags="Risk">
             <huiproperty editable="false" id="bp_room_risk_c" name="Confidentiality risk value"
                 tags="Risk" />
@@ -10311,9 +10405,9 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_safeguard_id" name="Identifier" />
         <huiproperty id="bp_safeguard_name" name="Title" required="true" />
         <huiproperty id="bp_safeguard_qualifier" name="Qualifier" required="true" inputtype="singleoption" >
-                <option id="bp_safeguard_qualifier_basic" name="BASIC" />
-                <option id="bp_safeguard_qualifier_standard" name="STANDARD" />
-                <option id="bp_safeguard_qualifier_high" name="HIGH" />
+                <option id="bp_safeguard_qualifier_basic" name="BASIC" value="0"/>
+                <option id="bp_safeguard_qualifier_standard" name="STANDARD" value="1"/>
+                <option id="bp_safeguard_qualifier_high" name="HIGH" value="2"/>
         </huiproperty>
         <huiproperty editable="false" id="bp_safeguard_objectbrowser_content" inputtype="text"
             name="Safeguard Content" showInObjectBrowser="true" textrows="4" visible="false" />

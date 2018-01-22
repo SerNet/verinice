@@ -93,8 +93,8 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TagParameter;
 import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.rcp.IAttachedToPerspective;
-import sernet.verinice.rcp.ViewFilterAction;
 import sernet.verinice.rcp.RightsEnabledView;
+import sernet.verinice.rcp.ViewFilterAction;
 import sernet.verinice.rcp.bp.BaseProtectionPerspective;
 import sernet.verinice.rcp.tree.TreeContentProvider;
 import sernet.verinice.rcp.tree.TreeLabelProvider;
@@ -102,8 +102,11 @@ import sernet.verinice.rcp.tree.TreeUpdateListener;
 import sernet.verinice.service.tree.ElementManager;
 
 /**
+ * The CatalogView shows catalog elements in a tree view. A catalog consists of
+ * any elements. All elements in a catalog are immutable. Elements in a
+ * catalog are templates for the elements in other views.
+ * 
  * @author Urs Zeidler uz[at]sernet.de
- *
  */
 public class CatalogView extends RightsEnabledView implements IAttachedToPerspective, ILinkedWithEditorView {
 

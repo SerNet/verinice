@@ -30,11 +30,13 @@ import sernet.verinice.model.bp.IBpModelListener;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * The root {@link CnATreeElement} for all catalogs displayed by the Compendium
- * View.
+ * The root {@link CnATreeElement} for all catalogs displayed by the
+ * CatalogView.
+ * 
+ * A catalog consists of any elements. All elements in a catalog are immutable.
+ * Elements in a catalog are templates for the elements in other views.
  * 
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
- *
  */
 public class CatalogModel extends CnATreeElement {
     private static final Logger LOG = Logger.getLogger(CatalogModel.class);
