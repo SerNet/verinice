@@ -105,7 +105,7 @@ public class Indexer {
     private ClosableCompletionService<CnATreeElement> doIndex() throws InterruptedException, ExecutionException {
 
         indexingStart = System.currentTimeMillis();
-        
+
         ClosableCompletionService<CnATreeElement> completionService = TrackableCompletionService.newInstance();
         List<String> allUuids = new ArrayList<String>();
 
@@ -121,7 +121,7 @@ public class Indexer {
         for (IndexThread indexThread : indexThreads) {
             completionService.submit(indexThread);
         }
-        
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("All threads created ans submitted to completion service.");
         }
@@ -150,7 +150,7 @@ public class Indexer {
                     awaitIndexingTermination(completionService);
                     printIndexingTimeConsumption();
                 }
-            });            
+            });
             executor.shutdown();
         }
     }
@@ -200,7 +200,7 @@ public class Indexer {
         while (!completionService.isClosed()) {
             try {
                 Future<CnATreeElement> future = completionService.take();
-                CnATreeElement element = future.get();           
+                CnATreeElement element = future.get();
                 LOG.debug("element was indexed " + element.getTitle() + " - uuid " + element.getUuid());
             } catch (Exception e) {
                 LOG.error("Indexing failed for an element", e);
