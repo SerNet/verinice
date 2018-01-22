@@ -682,7 +682,7 @@ public class XMLImportDialog extends Dialog {
             public void widgetSelected(SelectionEvent e) {
                 importAsCatalog = (e.getSource() instanceof Button) ? ((Button) (e.getSource())).getSelection() : importAsCatalog;
                 if (importAsCatalog) {
-                            setParameterForCatalogImport();
+                            setParametersForCatalogImport();
                 } 
             }
 
@@ -697,15 +697,15 @@ public class XMLImportDialog extends Dialog {
         importAsCatalogText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
         importAsCatalogText.setEnabled(false);
         if (importAsCatalog) {
-            setParameterForCatalogImport();
+            setParametersForCatalogImport();
         }
     }
 
     /**
-     * Set import parameter and check box selection due to catalog import use
+     * Set import parameters and check box selection due to catalog import use
      * case.
      */
-    private void setParameterForCatalogImport() {
+    private void setParametersForCatalogImport() {
         integrate = true;
         integrateButton.setSelection(true);
         integrateButton.setEnabled(false);

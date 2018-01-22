@@ -57,7 +57,7 @@ public class SyncParameter implements Serializable {
             this.format = format;
         }
         
-        validateParameter();
+        validateAndCorrectParameters();
     }
 
     public SyncParameter(boolean insert, boolean update, boolean delete, boolean integrate, Integer format) throws SyncParameterException {
@@ -108,7 +108,7 @@ public class SyncParameter implements Serializable {
         this.format = format;
     }
     
-    private void validateParameter() throws SyncParameterException {
+    private void validateAndCorrectParameters() throws SyncParameterException {
         if (!(this.insert || this.update || this.delete || this.integrate)) {
             throw new SyncParameterException();
         }

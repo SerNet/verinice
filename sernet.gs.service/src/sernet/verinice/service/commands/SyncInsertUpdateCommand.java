@@ -189,7 +189,10 @@ public class SyncInsertUpdateCommand extends GenericCommand
                 globalStart = System.currentTimeMillis();
             }
             merged = 0;
-            checkSourceId();
+            sourceIdExists = false;
+            if (!parameter.isImportAsCatalog()) {
+                sourceIdExists = isSourceIdInDatabase(sourceId);
+            }
             List<SyncObject> soList = syncData.getSyncObject();
 
             for (SyncObject so : soList) {
@@ -218,16 +221,14 @@ public class SyncInsertUpdateCommand extends GenericCommand
         }
     }
 
-    private void checkSourceId() throws CommandException {
-        sourceIdExists = false;
-        if (!parameter.isImportAsCatalog()) {
-            CheckSourceId checkSourceId = new CheckSourceId(sourceId);
-            checkSourceId = getCommandService().executeCommand(checkSourceId);
-            sourceIdExists = checkSourceId.exists();
-            if (sourceIdExists && getLog().isDebugEnabled()) {
-                getLog().debug("Source-Id exists in DB: " + sourceId);
-            }
+    private boolean isSourceIdInDatabase(String id) throws CommandException {
+        CheckSourceId checkSourceIdCommand = new CheckSourceId(id);
+        checkSourceIdCommand = getCommandService().executeCommand(checkSourceIdCommand);
+        boolean isSourceIdInDatabase = checkSourceIdCommand.exists();
+        if (isSourceIdInDatabase && getLog().isDebugEnabled()) {
+            getLog().debug("Source-Id exists in DB: " + id);
         }
+        return isSourceIdInDatabase;
     }
 
 
