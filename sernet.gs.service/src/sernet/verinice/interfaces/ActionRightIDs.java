@@ -51,6 +51,8 @@ public final class ActionRightIDs {
     public static final String BSIMASSNAHMEN = "bsimassnahmen";
     public static final String BSIMODELVIEW = "bsimodelview";
     public static final String BULKEDIT = "bulkedit";
+    public static final String CATALOGDELETE = "catalogdelete";
+    public static final String CATALOGIMPORT = "catalogimport";
     public static final String CATALOGVIEW = "catalogview";
     public static final String CHANGEICON = "changeicon";
     public static final String CNAVALIDATION = "cnavalidation";
