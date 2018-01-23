@@ -98,18 +98,16 @@ public class ItemControlTransformer {
 	
 	/**
 	 * Truncates a text if it is longer than maxWidth.
-	 * If text is truncated three dots ("...") are added in the end.
-	 * 
-	 * @param text
-	 * @param maxWidth
-	 * @return truncated text (if text is longer than maxWidth) and three dots ("...") 
+	 * If text is truncated ellipses ("…") are added in the end.
+	 * @return the truncated text
 	 */
 	public static String truncate(String text, int maxWidth) {
-	    String truncatedText = text;
-	    if(text!=null && text.length()>maxWidth) {
-	        truncatedText = new StringBuilder(text.substring(0, (maxWidth-3))).append("...").toString();
-	    }
-	    return truncatedText;
+        String truncatedText = text;
+        if (text != null && text.length() > maxWidth) {
+            truncatedText = new StringBuilder(text.substring(0, (maxWidth - 1))).append("…")
+                    .toString();
+        }
+        return truncatedText;
 	}
 	
 	/**
