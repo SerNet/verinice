@@ -149,17 +149,6 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
         }
     }
 
-    protected T saveElement() {
-        element = getDao().merge(element, false);
-        container.addChild(element);
-        element.setParentAndScope(container);
-
-        if (isOrganization() || isItVerbund()) {
-            setScopeOfScope(element);
-        }
-        return element;
-    }
-
     @SuppressWarnings("unchecked")
     protected T createInstance() throws InstantiationException, IllegalAccessException,
             InvocationTargetException, NoSuchMethodException {
@@ -181,12 +170,30 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
         return instance;
     }
 
+    protected T saveElement() {
+        element = getDao().merge(element, false);
+        container.addChild(element);
+        element.setParentAndScope(container);
+        if (isScope()) {
+            setScopeOfScope(element);
+        }
+        return element;
+    }
+
+    private boolean isScope() {
+        return isOrganization() || isItVerbund() || isItNetwork();
+    }
+
     private boolean isOrganization() {
         return Organization.class.equals(clazz) || Organization.TYPE_ID.equals(typeId);
     }
 
     private boolean isItVerbund() {
         return ITVerbund.class.equals(clazz) || ITVerbund.TYPE_ID.equals(typeId);
+    }
+
+    private boolean isItNetwork() {
+        return ItNetwork.class.equals(clazz) || ItNetwork.TYPE_ID.equals(typeId);
     }
 
     private boolean isAudit() {
@@ -202,12 +209,12 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
     }
 
     protected T addPermissions(/* not final */ T pElement) {
-        // By default, inherit permissions from parent element but ITVerbund
-        // instances cannot do this, as its parents (BSIModel) is not visible
+        // By default, inherit permissions from parent element but scope
+        // instances cannot do this, as its parents (a model) is not visible
         // and has no permissions. Therefore we use the name of the currently
         // logged in user as a role which has read and write permissions for
-        // the new ITVerbund.
-        if (pElement instanceof ITVerbund || pElement instanceof Organization) {
+        // the new scope.
+        if (isScope()) {
             addPermissionsForScope(pElement);
         } else if (pElement instanceof Audit && isInheritAuditPermissions()) {
             addPermissionsForAudit((Audit) pElement);
