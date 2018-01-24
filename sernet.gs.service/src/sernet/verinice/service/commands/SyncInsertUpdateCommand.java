@@ -662,7 +662,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      * which makes them some kind of an orphan element (and leads to the
      * invisibility in the treeview)
      * 
-     * @return filtered set of elements that needs to be resetted
+     * @return filtered set of elements that needs to be reset
      */
     private Set<String> filterOrphanElements() {
         Set<String> extIdsToOrphanize = new HashSet<>();
@@ -781,7 +781,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      * should be used.
      * 
      * <p>
-     * This method should <em>onl</em> be called when the 'rootImportObject' is
+     * This method should <em>only</em> be called when the 'rootImportObject' is
      * definitely needed and going to be used because the root object is not
      * only created but also automatically persisted in the database. If it were
      * not used later on the user would see an object node in the object tree.
@@ -810,7 +810,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             try {
                 cmdLoadContainer = getCommandService().executeCommand(cmdLoadContainer);
             } catch (CommandException e) {
-                getLog().error("Error while accessinf container.", e);
+                getLog().error("Error while accessing container.", e);
                 errorList.add("Fehler beim Ausführen von LoadBSIModel.");
                 throw new RuntimeCommandException("Fehler beim Anlegen des " + "Behälters für importierte Objekte.", e);
             }
@@ -991,7 +991,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         long time = cur - start;
         long globalTime = cur - globalStart;
         long a = Math.round((globalTime * 1.0) / merged);
-        getLogrt().debug("Element " + merged + ": " + time + "ms, ave.: " + a);
+        getLogrt().debug("Element " + merged + ": " + time + "ms, avg.: " + a);
     }
 
     /**
