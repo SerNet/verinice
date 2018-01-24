@@ -33,7 +33,7 @@
       The catalog is now being loaded. After the parser has finished, you will see the contents in the
       catalog view.
       <br /><br />
-      Open the browser view (<b>View > Show view ... > Object Browser</b>). Click a control to show
+      Open the browser view (<b>View > Show View > Object Browser</b>). Click a control to show
       its contents in the browser view.
       <br /><br />
       To actually work with the imported controls, you have to create your organization in the database.
