@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -126,17 +127,17 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
     private long globalStart = 0;
 
-    private Map<Class, CnATreeElement> containerMap = new HashMap<Class, CnATreeElement>(2);
+    private Map<Class<?>, CnATreeElement> containerMap = new HashMap<>(2);
 
-    private Set<CnATreeElement> elementSet = new HashSet<CnATreeElement>();
+    private Set<CnATreeElement> elementSet = new HashSet<>();
 
-    private transient Map<String, CnATreeElement> idElementMap = new HashMap<String, CnATreeElement>();
+    private transient Map<String, CnATreeElement> idElementMap = new HashMap<>();
 
     private transient Map<String, Attachment> attachmentMap;
 
     private transient IAuthService authService;
 
-    private transient Map<Class, IBaseDao> daoMap = new HashMap<Class, IBaseDao>();
+    private transient Map<Class<?>, IBaseDao> daoMap = new HashMap<>();
 
     private ImportReferenceTypes importReferenceTypes;
 
@@ -148,7 +149,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         this.userName = userName;
         this.parameter = parameter;
         this.errorList = errorList;
-        attachmentMap = new HashMap<String, Attachment>();
+        attachmentMap = new HashMap<>();
     }
 
     /**
@@ -272,7 +273,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             }
         }
 
-        Class clazz = CnATypeMapper.getClassFromTypeId(veriniceObjectType);
+        Class<?> clazz = CnATypeMapper.getClassFromTypeId(veriniceObjectType);
         IBaseDao<CnATreeElement, Serializable> dao = getDao(clazz);
 
         parent = (parent == null) ? accessContainer(clazz) : parent;
@@ -385,7 +386,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      */
     private boolean validateInformation(boolean licenseManagement, SyncAttribute sa) {
         boolean licenseListCardinality = checkEqualCardinalityOfLists(sa);
-        if (sa.getLicenseContentId().size() == 0 && sa.getLimitedLicense().size() == 0) {
+        if (sa.getLicenseContentId().isEmpty() && sa.getLimitedLicense().isEmpty()) {
             return true;
         }
         boolean licenseManagementValid = licenseManagement && licenseListCardinality;
@@ -417,7 +418,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      */
     private boolean isLicenseManagementSupported(SyncObject syncObject) {
         for (SyncAttribute syncAttribute : syncObject.getSyncAttribute()) {
-            if (syncAttribute.getLicenseContentId() != null && syncAttribute.getLicenseContentId().size() > 0) {
+            if (syncAttribute.getLicenseContentId() != null && !syncAttribute.getLicenseContentId().isEmpty()) {
                 return true;
             }
         }
@@ -462,7 +463,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     private void addPermissions(CnATreeElement element, String userName) {
         Set<Permission> permission = element.getPermissions();
         if (permission == null) {
-            permission = new HashSet<Permission>();
+            permission = new HashSet<>();
         }
         permission.add(Permission.createPermission(element, userName, true, true));
         element.setPermissions(permission);
@@ -541,11 +542,12 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      * @throws IOException
      * @throws CommandException
      */
-    public void importFileData(IVeriniceArchive veriniceArchive) throws IOException, CommandException {
+    public void importFileData(IVeriniceArchive veriniceArchive) throws CommandException {
         SaveAttachment saveFileCommand = new SaveAttachment();
         IBaseDao<AttachmentFile, Serializable> dao = getDao(AttachmentFile.class);
-        for (String fileName : attachmentMap.keySet()) {
-            Attachment attachment = attachmentMap.get(fileName);
+        for (Entry<String, Attachment> entry : attachmentMap.entrySet()) {
+            String fileName = entry.getKey();
+            Attachment attachment = entry.getValue();
             AttachmentFile attachmentFile = dao.findById(attachment.getDbId());
             attachmentFile.setFileData(veriniceArchive.getFileData(fileName));
             if (attachmentFile.getFileData() != null) {
@@ -625,7 +627,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             relationId2 = CnALink.Id.NO_TYPE;
         }
         Object[] paramArray = new Object[] { link.getDependant().getDbId(), link.getDependency().getDbId(), relationId, relationId2 };
-        List result = getDao(CnALink.class).findByQuery(hql, paramArray);
+        List<?> result = getDao(CnALink.class).findByQuery(hql, paramArray);
         return result == null || result.isEmpty();
     }
 
@@ -688,7 +690,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      * leads to this behaviour
      */
     private void reOrphanizeAssociatedGefaehrdungen(Set<String> orphanList) {
-        if (orphanList.size() > 0) {
+        if (!orphanList.isEmpty()) {
             for (String extId : orphanList) {
                 if (idElementMap.containsKey(extId)) {
                     setScopeIdAndParentNull(idElementMap.get(extId));
@@ -794,7 +796,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      *             If loading of {@link CatalogModel} fails.
      * 
      */
-    private CnATreeElement accessContainer(Class clazz) throws CommandException {
+    private CnATreeElement accessContainer(Class<?> clazz) throws CommandException {
 
         if (parameter.isImportAsCatalog()) {
             return getCatalogModel();
@@ -829,7 +831,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         return loadModel.getModel();
     }
 
-    private CnATreeElement createContainer(Class clazz) {
+    private CnATreeElement createContainer(Class<?> clazz) {
         if (LoadImportObjectsHolder.isImplementation(clazz, IBSIStrukturElement.class, IMassnahmeUmsetzung.class)) {
             return createBsiContainer();
         } else if (BausteinUmsetzung.class.equals(clazz)) {
@@ -915,7 +917,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         elementSet.add(element);
     }
 
-    protected boolean isScope(CnATreeElement element) {
+    protected static boolean isScope(CnATreeElement element) {
         return element instanceof Organization || element instanceof ITVerbund || element instanceof ItNetwork;
     }
 
@@ -939,7 +941,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         return errorList;
     }
 
-    public Map<Class, CnATreeElement> getContainerMap() {
+    public Map<Class<?>, CnATreeElement> getContainerMap() {
         return containerMap;
     }
 
@@ -1009,7 +1011,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         this.authService = authService;
     }
 
-    private HUITypeFactory getHuiTypeFactory() {
+    private static HUITypeFactory getHuiTypeFactory() {
         return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
     }
 
