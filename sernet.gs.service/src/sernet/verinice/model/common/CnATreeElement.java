@@ -33,14 +33,17 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.IReevaluator;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIModelListener;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.LinkKategorie;
 import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.InheritLogger;
+import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.validation.CnAValidation;
 
 /**
@@ -948,6 +951,22 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
      */
     public boolean isTemplateOrImplementation() {
         return TemplateType.TEMPLATE.equals(this.getTemplateType()) || TemplateType.IMPLEMENTATION.equals(this.getTemplateType());
+    }
+
+    public boolean isScope() {
+        return isOrganization() || isItVerbund() || isItNetwork();
+    }
+
+    private boolean isOrganization() {
+        return Organization.class.equals(getClass()) || Organization.TYPE_ID.equals(getTypeId());
+    }
+
+    private boolean isItVerbund() {
+        return ITVerbund.class.equals(getClass()) || ITVerbund.TYPE_ID.equals(getTypeId());
+    }
+
+    private boolean isItNetwork() {
+        return ItNetwork.class.equals(getClass()) || ItNetwork.TYPE_ID.equals(getTypeId());
     }
 
     /**

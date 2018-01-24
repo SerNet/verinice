@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -32,12 +31,10 @@ import org.apache.commons.lang.ArrayUtils;
 
 import sernet.verinice.interfaces.IFilter;
 import sernet.verinice.interfaces.IParameter;
-import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27Scope;
 import sernet.verinice.model.iso27k.IISO27kElement;
-import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
@@ -152,18 +149,13 @@ public abstract class ElementFilter {
 
         @Override
         public boolean check(CnATreeElement element) {
-            return contains(visibleTypeSet,element.getTypeId());
+            return element.isScope() || contains(visibleTypeSet,element.getTypeId());
         }
         
         private boolean contains(Set<String[]> visibleTypeSet, String typeId) {
-            boolean result = Organization.TYPE_ID.equals(typeId) || ItNetwork.TYPE_ID.equals(typeId) || ISO27KModel.TYPE_ID.equals(typeId);
-            if(!result) {
-                Iterator<String[]> iterator = visibleTypeSet.iterator();
-                while (iterator.hasNext()) {
-                    String[] strings = iterator.next();
-                    if (strings[0].equals(ALL_TYPES[0]) || strings[0].equals(typeId) || strings[1].equals(typeId)) {
-                        return true;
-                    }
+            for (String[] strings : visibleTypeSet) {
+                if (strings[0].equals(ALL_TYPES[0]) || strings[0].equals(typeId) || strings[1].equals(typeId)) {
+                    return true;
                 }
             }
             return false;
