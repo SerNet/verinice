@@ -450,7 +450,12 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         }
 
         if (authService.isPermissionHandlingNeeded()) {
-            child.setPermissions(Permission.clonePermissionSet(child, parent.getPermissions()));
+            if (isScope(child)) {
+              // VN-1969, grant read/write permissions to the default user group when importing a new scope
+              addPermissions(child, IRightsService.USERDEFAULTGROUPNAME);
+            } else {
+              child.setPermissions(Permission.clonePermissionSet(child, parent.getPermissions()));
+            }
         }
 
         return child;
