@@ -127,7 +127,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
     private long globalStart = 0;
 
-    private Map<Class<?>, CnATreeElement> containerMap = new HashMap<>(2);
+    private Map<Class<?>, CnATreeElement> containerMap = new HashMap<>(3);
 
     private Set<CnATreeElement> elementSet = new HashSet<>();
 
