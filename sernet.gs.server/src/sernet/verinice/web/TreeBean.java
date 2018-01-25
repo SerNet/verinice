@@ -39,10 +39,8 @@ import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bp.elements.BpModel;
-import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
@@ -53,7 +51,6 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.IISO27kRoot;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.model.LoadModel;
@@ -144,10 +141,10 @@ public class TreeBean implements IElementListener {
                 handlerList.add(handler);
             }
         }
-        if(getAuthBean().getAddElement() && !(getElement() instanceof Organization)) {
+        if(getAuthBean().getAddElement() && !(getElement().isOrganization())) {
             handlerList.addAll(HandlerFactory.getElementHandler(getElement()));
         }
-        if(getAuthBean().getAddGroup() && getElement() instanceof Organization) {
+        if(getAuthBean().getAddGroup() && getElement().isOrganization()) {
             handlerList.addAll(HandlerFactory.getElementHandler(getElement()));
         }
         if(getAuthBean().getAddOrg() && getElement() instanceof ISO27KModel) {
@@ -356,9 +353,9 @@ public class TreeBean implements IElementListener {
         if(element.getParent()!=null) {
             parentTypeId = element.getParent().getTypeId();
         }
-        return ((typeId.equals(Organization.TYPE_ID) && !parentTypeId.equals(ImportIsoGroup.TYPE_ID)) 
-               || (typeId.equals(ITVerbund.TYPE_ID)&& !parentTypeId.equals(ImportBsiGroup.TYPE_ID))
-                || (typeId.equals(ItNetwork.TYPE_ID) && !parentTypeId.equals(ImportBpGroup.TYPE_ID))
+        return ((element.isOrganization() && !parentTypeId.equals(ImportIsoGroup.TYPE_ID)) 
+               || (element.isItVerbund() && !parentTypeId.equals(ImportBsiGroup.TYPE_ID))
+               || (element.isItNetwork() && !parentTypeId.equals(ImportBpGroup.TYPE_ID))
                || typeId.equals(ImportBsiGroup.TYPE_ID)
                || typeId.equals(ImportIsoGroup.TYPE_ID));
     }

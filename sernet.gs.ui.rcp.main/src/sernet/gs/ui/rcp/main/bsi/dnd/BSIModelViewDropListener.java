@@ -364,8 +364,10 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
                     false /* do not notify single elements */,
                     false /* do not inherit icon */);
         }
-        // notifying for the last element is sufficient to update all views:
-        CnAElementFactory.getLoadedModel().childAdded(target, saveNew);
+        if (saveNew != null) {
+            // notifying for the last element is sufficient to update all views:
+            CnAElementFactory.getLoadedModel().childAdded(target, saveNew);
+        }
     }
 
     private boolean dropControls(final BausteinUmsetzung targetModule, Viewer viewer, final List<Massnahme> controls) {

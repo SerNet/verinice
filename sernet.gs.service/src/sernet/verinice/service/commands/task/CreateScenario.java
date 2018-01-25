@@ -61,7 +61,7 @@ public class CreateScenario extends GenericCommand {
      * @return
      */
     private Organization findOrganization(CnATreeElement elmt) {
-        if (elmt.getParent().getTypeId().equals(Organization.TYPE_ID)) {
+        if (elmt.getParent().isOrganization()) {
             return getDaoFactory().getDAO(Organization.class).findById(elmt.getParent().getDbId());
         }
         return findOrganization(elmt.getParent());

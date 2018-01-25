@@ -26,6 +26,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
@@ -218,7 +219,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	}
 
 	@Override
-    public void childAdded(CnATreeElement category, CnATreeElement child) {
+    public void childAdded(CnATreeElement category, @NonNull CnATreeElement child) {
 			getModelChangeListener().childAdded(category, child);
 	}
 

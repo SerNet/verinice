@@ -165,7 +165,7 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
      * @return
      */
     private CnATreeElement loadOrganization(CnATreeElement element) {
-        if(Organization.TYPE_ID.equals(element.getTypeId())) {
+        if(element.isOrganization()) {
             return element;
         } else {
             element = getElementDao().findByUuid(element.getUuid(), RetrieveInfo.getPropertyInstance().setParent(true));

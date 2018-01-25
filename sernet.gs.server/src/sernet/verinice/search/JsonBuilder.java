@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 
@@ -69,9 +70,9 @@ public class JsonBuilder implements IJsonBuilder {
         return getJson(element, title);
     }
 
-    private String getScopeTitle(CnATreeElement element) {
+    private String getScopeTitle(@NonNull CnATreeElement element) {
         String title = null;
-        if(isScope(element)) {
+        if(element.isScope()) {
             title = element.getTitle();
         } else {
             title = getTitleCache().get(element.getScopeId());
@@ -84,10 +85,6 @@ public class JsonBuilder implements IJsonBuilder {
         return title;
     }
 
-    private boolean isScope(CnATreeElement element) {
-        return element instanceof ITVerbund || element instanceof Organization || element instanceof ItNetwork;
-    }
-    
     public final String getJson(CnATreeElement element, String scopeTitle) {
         try {
             String json = null;
