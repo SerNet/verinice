@@ -71,7 +71,7 @@ public abstract class RightsEnabledAction extends Action implements RightEnabled
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
-    public void run() {
+    public final void run() {
         if (checkRights()) {
             doRun();
         } else {
@@ -92,7 +92,7 @@ public abstract class RightsEnabledAction extends Action implements RightEnabled
             // no right management should be used
             return true;
         }
-        else if (getRightID().equals("")) {
+        else if (getRightID().isEmpty()) {
             // id set but empty, right not granted, action disabled
             return false;
         } else {
