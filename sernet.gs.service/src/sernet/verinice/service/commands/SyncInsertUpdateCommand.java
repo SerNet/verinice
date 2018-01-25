@@ -442,10 +442,10 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private CnATreeElement createElement(CnATreeElement parent, Class clazz) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         CnATreeElement child;
-        // get constructor with parent-parameter and create new object:
         if (clazz.equals(Organization.class)) {
-            child = (CnATreeElement) clazz.getConstructor(CnATreeElement.class, boolean.class).newInstance(parent, false);
+            child = new Organization(parent, false);
         } else {
+            // get constructor with parent-parameter and create new object:
             child = (CnATreeElement) clazz.getConstructor(CnATreeElement.class).newInstance(parent);
         }
 
