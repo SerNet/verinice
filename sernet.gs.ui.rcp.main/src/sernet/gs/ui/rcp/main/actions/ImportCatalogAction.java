@@ -15,7 +15,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
+ * Sebastian Hagedorn - initial API and implementation
+ * Daniel Murygin - Implementation
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.actions;
 
@@ -23,10 +24,15 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.ui.rcp.main.bsi.dialogs.XMLImportDialog;
+import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
- * @author Sebastian Hagedorn sh[at]sernet.de
- *
+ * This action opens the import dialog for VNA files as catalogs.
+ * This action is executed when the import button is pressed in the tool bar of
+ * the Catalog View. The action is configured in the plugin.xml file.
+ * 
+ * @author Sebastian Hagedorn
+ * @author Daniel Murygin
  */
 public class ImportCatalogAction extends ImportXMLAction {
     
@@ -37,6 +43,11 @@ public class ImportCatalogAction extends ImportXMLAction {
         if (dialog.open() != Window.OK) {
             return;
         }
+    }
+
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.CATALOGIMPORT;
     }
 
 }
