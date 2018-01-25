@@ -81,15 +81,15 @@ public class ViewFilterDialog extends Dialog {
     private CheckboxTableViewer viewerType;
     private Set<String[]> visibleTypes = new HashSet<String[]>();
 
-    public ViewFilterDialog(Shell parent, ViewFilterAction ismViewFilter) {
+    public ViewFilterDialog(Shell parent, ViewFilterAction viewFilter) {
         super(parent);
         int style = SWT.CLOSE | SWT.TITLE | SWT.BORDER;
         style = style | SWT.APPLICATION_MODAL | SWT.RESIZE;
         setShellStyle(style);
-        this.tagPattern = ismViewFilter.getTagParameter().getPattern();
-        this.filterOrg = ismViewFilter.getTagParameter().isFilterOrg();
-        this.hideEmpty = ismViewFilter.getHideEmptyFilter().isHideEmpty();
-        this.visibleTypes = ismViewFilter.getTypeParameter().getVisibleTypeSet();
+        this.tagPattern = viewFilter.getTagParameter().getPattern();
+        this.filterOrg = viewFilter.getTagParameter().isFilterOrg();
+        this.hideEmpty = viewFilter.getHideEmptyFilter().isHideEmpty();
+        this.visibleTypes = viewFilter.getTypeParameter().getVisibleTypeSet();
     }
 
     @Override
@@ -330,32 +330,23 @@ class CheckStateProvider implements ICheckStateProvider  {
 
     private Set<String[]> visibleTypes;
     
-    /**
-     * @param visibleTypes
-     */
     public CheckStateProvider(Set<String[]> visibleTypes) {
         this.visibleTypes = visibleTypes;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ICheckStateProvider#isChecked(java.lang.Object)
-     */
     @Override
     public boolean isChecked(Object o) {
-        boolean result = false;
         String[] element = (String[]) o;
         for (String[] type : visibleTypes) {
-            if(Arrays.hashCode(type)==Arrays.hashCode(element) || Arrays.hashCode(type)==Arrays.hashCode(ElementFilter.ALL_TYPES)) {
-                result=true;
-                break;
-            } 
-        } 
-        return result;
+            int typeHash = Arrays.hashCode(type);
+            if (typeHash == Arrays.hashCode(element)
+                    || typeHash == Arrays.hashCode(ElementFilter.ALL_TYPES)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ICheckStateProvider#isGrayed(java.lang.Object)
-     */
     @Override
     public boolean isGrayed(Object element) {
         return false;

@@ -143,9 +143,6 @@ public class BaseProtectionView extends RightsEnabledView
         elementManager = new ElementManager();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-     */
     @Override
     public void createPartControl(final Composite parent) {
         super.createPartControl(parent);
@@ -235,9 +232,9 @@ public class BaseProtectionView extends RightsEnabledView
                 // model is not loaded yet: add a listener to load data when it's loaded
                 modelLoadListener = new IModelLoadListener() {                  
                     @Override
-                    public void closed(BSIModel model) { /* nothing to do*/  }                 
+                    public void closed(BSIModel model) { /* nothing to do*/ }
                     @Override
-                    public void loaded(BSIModel model) { /* nothing to do*/  }                 
+                    public void loaded(BSIModel model) { /* nothing to do*/ }
                     @Override
                     public void loaded(ISO27KModel model) { /* nothing to do*/  }
 
@@ -249,7 +246,7 @@ public class BaseProtectionView extends RightsEnabledView
                     @Override
                     public void loaded(CatalogModel model) { /* nothing to do */ }
                 };
-                CnAElementFactory.getInstance().addLoadListener(modelLoadListener);             
+                CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
             }
         }
     }
@@ -409,9 +406,6 @@ public class BaseProtectionView extends RightsEnabledView
         manager.add(linkWithEditorAction);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.eclipse.ui.IEditorPart)
-     */
     @Override
     public void editorActivated(IEditorPart editor) {
         if (!isLinkingActive() || !getViewSite().getPage().isPartVisible(this)) {
@@ -457,17 +451,12 @@ public class BaseProtectionView extends RightsEnabledView
         super.dispose();
     }
     
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.RightsEnabledView#getRightID()
-     */
+
     @Override
     public String getRightID() {
         return ActionRightIDs.BASEPROTECTIONVIEW;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
-     */
     @Override
     public String getViewId() {
         return ID;

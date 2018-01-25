@@ -149,11 +149,6 @@ public class CatalogView extends RightsEnabledView
         elementManager = new ElementManager();
     }
 
-    /*
-     * 
-     * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
-     * widgets.Composite)
-     */
     @Override
     public void createPartControl(final Composite parent) {
         super.createPartControl(parent);
@@ -166,27 +161,16 @@ public class CatalogView extends RightsEnabledView
         }
     }
 
-    /*
-     * 
-     * @see sernet.verinice.rcp.RightsEnabledView#getRightID()
-     */
     @Override
     public String getRightID() {
         return ActionRightIDs.CATALOGVIEW;
     }
 
-    /*
-     * 
-     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
-     */
     @Override
     public String getViewId() {
         return ID;
     }
 
-    /**
-     * @param parent
-     */
     protected void initView(Composite parent) {
         contentProvider = new TreeContentProvider(elementManager);
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
@@ -440,12 +424,6 @@ public class CatalogView extends RightsEnabledView
         return linkingActive;
     }
 
-    /*
-     * 
-     * @see
-     * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.
-     * eclipse.ui.IEditorPart)
-     */
     @Override
     public void editorActivated(IEditorPart activeEditor) {
         if (!isLinkingActive() || !getViewSite().getPage().isPartVisible(this)) {

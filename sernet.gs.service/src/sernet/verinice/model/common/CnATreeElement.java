@@ -86,7 +86,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
 	public int getNumericProperty(String propertyTypeId) {
 	    PropertyList properties = getEntity().getProperties(propertyTypeId);
-	    if (properties == null || properties.getProperties().size()==0){
+        if (properties == null || properties.getProperties().size() == 0) {
 	        return 0;
 	    } else {
 	        return properties.getProperty(0).getNumericPropertyValue();
@@ -111,22 +111,22 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	/**
 	 * dependant in linksDown is this {@link CnATreeElement}
 	 */
-	private Set<CnALink> linksDown = new HashSet<CnALink>(1);
+	private Set<CnALink> linksDown = new HashSet<>(1);
 
 	/**
 	 * dependency in linksUp is this {@link CnATreeElement}
 	 */
-	private Set<CnALink> linksUp = new HashSet<CnALink>(1);
+	private Set<CnALink> linksUp = new HashSet<>(1);
 
 	private LinkKategorie links = new LinkKategorie(this);
 
 	private Set<CnATreeElement> children;
 
-	private Set<Permission> permissions = new HashSet<Permission>();
+	private Set<Permission> permissions = new HashSet<>();
 
 	private boolean childrenLoaded = false;
 
-	private Set<Attachment> files = new HashSet<Attachment>(1);
+	private Set<Attachment> files = new HashSet<>(1);
 
 	@Override
 	public boolean equals(Object obj) {
@@ -195,12 +195,12 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 			getParent().removeChild(this);
 		}
 
-		CopyOnWriteArrayList<CnALink> list2 = new CopyOnWriteArrayList<CnALink>(getLinksDown());
+		CopyOnWriteArrayList<CnALink> list2 = new CopyOnWriteArrayList<>(getLinksDown());
 		for (CnALink link : list2) {
 			link.remove();
 		}
 
-		list2 = new CopyOnWriteArrayList<CnALink>(getLinksUp());
+		list2 = new CopyOnWriteArrayList<>(getLinksUp());
 		for (CnALink link : list2) {
 			link.remove();
 		}
@@ -263,7 +263,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 			uuid = randomUUID.toString();
 		}
 
-		children = new HashSet<CnATreeElement>();
+		children = new HashSet<>();
 	}
 
     protected void init() {
@@ -579,8 +579,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
             if(cnATreeElement instanceof IISO27kGroup &&
                 // true if: group can contain childTypeId
                 // or group.typeId == childTypeId
-                ((Arrays.binarySearch(((IISO27kGroup)cnATreeElement).getChildTypes(), childTypeId)>-1
-                   || ((IISO27kGroup)cnATreeElement).getTypeId().equals(childTypeId)))) {
+                    (Arrays.binarySearch(((IISO27kGroup) cnATreeElement).getChildTypes(), childTypeId) > -1
+                            || ((IISO27kGroup) cnATreeElement).getTypeId().equals(childTypeId))) {
                     group = cnATreeElement;
                     break;
             }
@@ -781,9 +781,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         this.sourceId = sourceId;
     }
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 	    return new StringBuilder("type: ").append(getTypeId())
@@ -797,7 +794,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     public void validationRemoved(Integer scopeId){};
 
     @Override
-    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){}
 
     /**
      * Indicates whether the instance is a scope element (short: scope).

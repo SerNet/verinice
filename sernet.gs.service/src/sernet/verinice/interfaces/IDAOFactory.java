@@ -598,15 +598,6 @@ public interface IDAOFactory {
 	 *  want to get a DAO for an instantiated object.
 	 */
 	<T> IBaseDao<T, Serializable> getDAO(Class<T> daotype);
-
 	IBaseDao getDAOforTypedElement(ITypedElement object);
-
-	/**
-	 * @param typeId
-	 * @return
-	 */
 	IBaseDao getDAO(String typeId);
-
-
-
 }
