@@ -38,6 +38,8 @@ import sernet.gs.service.SecurityException;
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
@@ -352,6 +354,7 @@ public class TreeBean implements IElementListener {
         }
         return ((typeId.equals(Organization.TYPE_ID) && !parentTypeId.equals(ImportIsoGroup.TYPE_ID)) 
                || (typeId.equals(ITVerbund.TYPE_ID)&& !parentTypeId.equals(ImportBsiGroup.TYPE_ID))
+                || (typeId.equals(ItNetwork.TYPE_ID) && !parentTypeId.equals(ImportBpGroup.TYPE_ID))
                || typeId.equals(ImportBsiGroup.TYPE_ID)
                || typeId.equals(ImportIsoGroup.TYPE_ID));
     }

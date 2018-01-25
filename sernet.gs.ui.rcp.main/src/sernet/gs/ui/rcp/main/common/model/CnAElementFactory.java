@@ -1287,6 +1287,8 @@ public final class CnAElementFactory {
     private CnATreeElement inheritIcon(String iconPath, String containerTypeId, boolean inheritIcon, CnATreeElement child) throws CommandException {
         if(inheritIcon && !(ITVerbund.TYPE_ID.equals(containerTypeId) ||
 		        Organization.TYPE_ID.equals(containerTypeId) ||
+                ItNetwork.TYPE_ID.equals(containerTypeId)
+                ||
 		        Audit.TYPE_ID.equals(containerTypeId))){
             child.setIconPath(iconPath);
             Activator.inheritVeriniceContextState();

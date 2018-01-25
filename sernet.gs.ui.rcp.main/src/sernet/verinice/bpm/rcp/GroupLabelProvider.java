@@ -23,6 +23,7 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
@@ -40,6 +41,7 @@ public class GroupLabelProvider implements IComboModelLabelProvider<CnATreeEleme
     static {
         TYPE_SUFFIX_MAP.put(Organization.TYPE_ID, Messages.GroupLabelProvider_0);
         TYPE_SUFFIX_MAP.put(ITVerbund.TYPE_ID, Messages.GroupLabelProvider_2);
+        TYPE_SUFFIX_MAP.put(ItNetwork.TYPE_ID, Messages.GroupLabelProvider_2);
     }
     
     @Override
