@@ -30,13 +30,11 @@ import org.apache.log4j.Logger;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.model.bsi.ImportBsiGroup;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.iso27k.ImportIsoGroup;
-import sernet.verinice.model.iso27k.Organization;
 
 /**
  * Loads all parent titles of elements with UUIDs in uuidList recursively.
@@ -54,6 +52,7 @@ public class LoadParentTitles extends GenericCommand {
     
     private static final List<String> TOP_LEVEL_TYPE_LIST = Arrays.asList(
             ISO27KModel.TYPE_ID,
+            BpModel.TYPE_ID, CatalogModel.TYPE_ID, 
             BSIModel.TYPE_ID);
     
     private List<String> uuidList;
