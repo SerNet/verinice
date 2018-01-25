@@ -962,15 +962,15 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         return isOrganization() || isItVerbund() || isItNetwork();
     }
 
-    private boolean isOrganization() {
+    public boolean isOrganization() {
         return Organization.class.equals(getClass()) || Organization.TYPE_ID.equals(getTypeId());
     }
 
-    private boolean isItVerbund() {
+    public boolean isItVerbund() {
         return ITVerbund.class.equals(getClass()) || ITVerbund.TYPE_ID.equals(getTypeId());
     }
 
-    private boolean isItNetwork() {
+    public boolean isItNetwork() {
         return ItNetwork.class.equals(getClass()) || ItNetwork.TYPE_ID.equals(getTypeId());
     }
 
