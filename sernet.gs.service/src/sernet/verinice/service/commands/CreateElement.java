@@ -153,18 +153,16 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
     protected T createInstance() throws InstantiationException, IllegalAccessException,
             InvocationTargetException, NoSuchMethodException {
         T instance = null;
-        // get constructor with parent-parameter and create new object:
         if (isOrganization()) {
-            instance = (T) Organization.class.getConstructor(CnATreeElement.class, boolean.class)
-                    .newInstance(container, createChildren);
+            instance = (T) new Organization(container, createChildren);
+        } else if (isItNetwork()) {
+            instance = (T) new ItNetwork(container, createChildren);
         } else if (isAudit()) {
-            instance = (T) Audit.class.getConstructor(CnATreeElement.class, boolean.class)
-                    .newInstance(container, createChildren);
+            instance = (T) new Audit(container, createChildren);
         } else {
             instance = clazz.getConstructor(CnATreeElement.class).newInstance(container);
         }
         if (title != null) {
-            // override the default title
             instance.setTitel(title);
         }
         return instance;

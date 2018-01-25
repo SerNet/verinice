@@ -1222,7 +1222,7 @@ public class BpImporter {
             BpModel model = modelLoader.getModel();
 
             if (rootNetwork == null && model != null) {
-                CreateITNetwork command = new CreateITNetwork(model, ItNetwork.class, true);
+                CreateITNetwork command = new CreateITNetwork(model, true);
                 command = getCommandService().executeCommand(command);
                 rootNetwork = command.getNewElement();
                 StringBuilder titleBuilder = new StringBuilder();

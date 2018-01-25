@@ -931,8 +931,7 @@ public final class CnAElementFactory {
                 if (input != null) {
                     createChildren = (Boolean) input.getInput();
                 }
-                CreateITNetwork saveCommand = new CreateITNetwork(container,
-                        ItNetwork.class, createChildren);
+                CreateITNetwork saveCommand = new CreateITNetwork(container, createChildren);
                 saveCommand = ServiceFactory.lookupCommandService()
                         .executeCommand(saveCommand);
                 ItNetwork itnetwork = saveCommand.getNewElement();
