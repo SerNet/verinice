@@ -25,16 +25,21 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.ui.actions.ActionFactory;
 
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.bsi.actions.DeleteHandler;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.iso27k.rcp.Messages;
 
+/**
+ * This action deletes scopes.
+ * It checks the currently selected element. When a scope is selected, the
+ * action is active, it is not active if not.
+ *
+ * @author Alexander Ben Nasrallah
+ * @author Daniel Murygin
+ */
 public class DeleteSelectionAction extends RightsEnabledAction
         implements ISelectionChangedListener {
 
@@ -43,27 +48,9 @@ public class DeleteSelectionAction extends RightsEnabledAction
     private ISelection selection;
 
     public DeleteSelectionAction() {
-        setText(Messages.CatalogView_delete);
-        setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.CROSS));
+        super(ActionRightIDs.CATALOGDELETE, Messages.CatalogView_delete);
         setId(ID);
-        setRightID(ActionRightIDs.CATALOGDELETE);
-        if (Activator.getDefault().isStandalone()
-                && !Activator.getDefault().getInternalServer().isRunning()) {
-            IInternalServerStartListener listener = new IInternalServerStartListener() {
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if (e.isStarted()) {
-                        setEnabled(checkRights());
-                    }
-                }
-
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            setEnabled(checkRights());
-        }
-
-        setDisabledImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.CROSS));
+        setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.CROSS));
         setActionDefinitionId(ActionFactory.DELETE.getCommandId());
     }
 
@@ -74,12 +61,6 @@ public class DeleteSelectionAction extends RightsEnabledAction
                 && checkRights());
     }
 
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
-     */
     @Override
     public void doRun() {
         new DeleteHandler().execute((IStructuredSelection) selection);

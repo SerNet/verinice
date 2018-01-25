@@ -48,6 +48,12 @@ public abstract class RightsEnabledAction extends Action implements RightEnabled
         setEnabledViaRightID();
     }
 
+    public RightsEnabledAction(String rightID, String text) {
+        super(text);
+        this.setRightID(rightID);
+        setEnabledViaRightID();
+    }
+
     public RightsEnabledAction(String rightID, String text, int style) {
         super(text, style);
         this.setRightID(rightID);
