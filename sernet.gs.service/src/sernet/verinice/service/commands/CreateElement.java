@@ -157,6 +157,9 @@ public class CreateElement<T extends CnATreeElement> extends ChangeLoggingComman
         if (isOrganization()) {
             instance = (T) Organization.class.getConstructor(CnATreeElement.class, boolean.class)
                     .newInstance(container, createChildren);
+        } else if (isItNetwork()) {
+            instance = (T) ItNetwork.class.getConstructor(CnATreeElement.class, boolean.class)
+                    .newInstance(container, createChildren);
         } else if (isAudit()) {
             instance = (T) Audit.class.getConstructor(CnATreeElement.class, boolean.class)
                     .newInstance(container, createChildren);

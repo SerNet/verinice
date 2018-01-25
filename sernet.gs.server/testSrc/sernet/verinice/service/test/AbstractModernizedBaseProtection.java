@@ -92,7 +92,7 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
         }
 
         assertNotNull("BP model is null.", model);
-        CreateITNetwork saveCommand = new CreateITNetwork(model, ItNetwork.class, true);
+        CreateITNetwork saveCommand = new CreateITNetwork(model, true);
         saveCommand.setInheritAuditPermissions(true);
         saveCommand = commandService.executeCommand(saveCommand);
         return saveCommand.getNewElement();
