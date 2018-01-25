@@ -953,6 +953,11 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         return TemplateType.TEMPLATE.equals(this.getTemplateType()) || TemplateType.IMPLEMENTATION.equals(this.getTemplateType());
     }
 
+    /**
+     * Indicates whether the instance is a scope element (short: scope).
+     *
+     * Scopes are top level elements representing a modeled institute.
+     */
     public boolean isScope() {
         return isOrganization() || isItVerbund() || isItNetwork();
     }
