@@ -152,9 +152,11 @@ public abstract class ElementFilter {
             return element.isScope() || contains(visibleTypeSet,element.getTypeId());
         }
         
-        private boolean contains(Set<String[]> visibleTypeSet, String typeId) {
-            for (String[] strings : visibleTypeSet) {
-                if (strings[0].equals(ALL_TYPES[0]) || strings[0].equals(typeId) || strings[1].equals(typeId)) {
+        private boolean contains(Set<String[]> visibleTypePairs, String typeId) {
+            for (String[] visibleTypePair : visibleTypePairs) {
+                String visibleElementType = visibleTypePair[0];
+                String visibleGroupType = visibleTypePair[1];
+                if (visibleElementType.equals(ALL_TYPES[0]) || visibleElementType.equals(typeId) || visibleGroupType.equals(typeId)) {
                     return true;
                 }
             }
