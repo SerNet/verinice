@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<site>
-   <feature url="features/sernet.gs.ui.rcp.main.feature_1.1.1.qualifier.jar" id="sernet.gs.ui.rcp.main.feature" version="1.1.1.qualifier">
-      <category name="verinice_client"/>
-   </feature>
-   <category-def name="verinice_client" label="Verinice Client"/>
-</site>
