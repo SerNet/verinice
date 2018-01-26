@@ -238,12 +238,6 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
         return ActionRightIDs.ACCOUNTSETTINGS;
     }
 
-
-    @Override
-    public void setRightID(String rightID) {
-        // DO nothing
-    }
-    
     IRightsServiceClient getRightService() {
         if (rightsService == null) {
             rightsService = (IRightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);

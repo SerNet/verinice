@@ -367,16 +367,6 @@ public class GsCatalogModelingDropPerformer implements DropPerformer, RightEnabl
         return ActionRightIDs.BASEPROTECTIONMODELING;
     }
 
-    /*
-     * @see
-     * sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.
-     * lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // nothing to do
-    }
-
     private CnATreeElement getTargetElement(Object target) {
         if (log.isDebugEnabled()) {
             log.debug("Target: " + target); //$NON-NLS-1$

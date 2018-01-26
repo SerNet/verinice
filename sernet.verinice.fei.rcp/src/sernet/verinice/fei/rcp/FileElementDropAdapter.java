@@ -209,13 +209,4 @@ public class FileElementDropAdapter implements IDropActionDelegate, RightEnabled
         return ActionRightIDs.ADDFILE;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // TODO Auto-generated method stub
-        
-    }
-
 }

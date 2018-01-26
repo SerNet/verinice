@@ -100,17 +100,6 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java
-     * .lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.
      * IWorkbenchWindow)
      */

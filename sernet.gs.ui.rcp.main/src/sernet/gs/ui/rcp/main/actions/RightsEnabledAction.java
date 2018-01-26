@@ -41,24 +41,24 @@ import sernet.verinice.interfaces.RightEnabledUserInteraction;
  */
 public abstract class RightsEnabledAction extends Action implements RightEnabledUserInteraction {
 
-    private String rightID = null;
+    private final String rightID;
     
     private boolean serverRunning = true;
 
     public RightsEnabledAction(String rightID) {
-        this.setRightID(rightID);
+        this.rightID = rightID;
         setEnabledViaRightID();
     }
 
     public RightsEnabledAction(String rightID, String text) {
         super(text);
-        this.setRightID(rightID);
+        this.rightID = rightID;
         setEnabledViaRightID();
     }
 
     public RightsEnabledAction(String rightID, String text, int style) {
         super(text, style);
-        this.setRightID(rightID);
+        this.rightID = rightID;
         setEnabledViaRightID();
     }
 
@@ -86,7 +86,7 @@ public abstract class RightsEnabledAction extends Action implements RightEnabled
     public abstract void doRun();
 
     @Override
-    public boolean checkRights() {
+    public final boolean checkRights() {
         if (getRightID() == null) {
             // no right management should be used
             return true;
@@ -106,17 +106,6 @@ public abstract class RightsEnabledAction extends Action implements RightEnabled
     @Override
     public final String getRightID() {
         return rightID;
-    }
-
-    /**
-     * Overwrite/call this, to enable right-management for the action
-     * this class implements
-     * 
-     * @param rightID
-     */
-    @Override
-    public final void setRightID(String rightID) {
-        this.rightID = rightID;
     }
 
     private void setEnabledViaRightID() {

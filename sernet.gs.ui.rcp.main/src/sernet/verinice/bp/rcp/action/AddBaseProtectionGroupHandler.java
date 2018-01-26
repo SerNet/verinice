@@ -37,11 +37,4 @@ public class AddBaseProtectionGroupHandler extends sernet.verinice.rcp.AddGroupH
         return ActionRightIDs.ADDBPGROUP;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // DO NOTHING
-    }
 }

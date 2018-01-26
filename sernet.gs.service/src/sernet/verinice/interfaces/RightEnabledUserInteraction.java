@@ -37,9 +37,4 @@ public interface RightEnabledUserInteraction {
      */
     public String getRightID();
     
-    /**
-     * Set the rightID of the interaction
-     */
-    public void setRightID(String rightID);
-    
 }

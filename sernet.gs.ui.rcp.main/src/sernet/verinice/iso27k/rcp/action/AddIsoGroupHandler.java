@@ -38,11 +38,4 @@ public class AddIsoGroupHandler extends sernet.verinice.rcp.AddGroupHandler {
         return ActionRightIDs.ADDISMGROUP;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // DO NOTHING
-    }
 }

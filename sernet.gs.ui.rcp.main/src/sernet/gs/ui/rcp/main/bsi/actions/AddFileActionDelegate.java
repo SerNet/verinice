@@ -131,15 +131,6 @@ public class AddFileActionDelegate implements IObjectActionDelegate, RightEnable
         return ActionRightIDs.ADDFILE;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // Do nothing
-        
-    }
-
     private boolean isCnATreeElementEditable(ISelection selection) {
         if (selection instanceof IStructuredSelection) {
             IStructuredSelection structuredSelection = (IStructuredSelection) selection;

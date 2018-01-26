@@ -213,11 +213,4 @@ public class AddElementHandler extends RightsEnabledHandler implements IElementU
         return ActionRightIDs.ADDISMELEMENT;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // DO NOTHING
-    }
 }

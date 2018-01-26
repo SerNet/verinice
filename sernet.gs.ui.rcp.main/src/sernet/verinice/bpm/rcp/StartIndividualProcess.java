@@ -261,12 +261,6 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
         return ActionRightIDs.CREATE_INDIVIDUAL_TASKS;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-    }
 }
 
 
