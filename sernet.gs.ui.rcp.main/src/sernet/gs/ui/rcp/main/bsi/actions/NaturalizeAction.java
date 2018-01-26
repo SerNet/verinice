@@ -47,8 +47,6 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.NaturalizeCommand;
 
@@ -69,26 +67,11 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
     private ICommandService commandService;
 
     public NaturalizeAction(IWorkbenchWindow window) {
-        setText(Messages.NaturalizeAction_0);
+        super(ActionRightIDs.NATURALIZE, Messages.NaturalizeAction_0);
         setId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOALIENS));
         setToolTipText(Messages.NaturalizeAction_1);
         window.getSelectionService().addSelectionListener(this);
-        setRightID(ActionRightIDs.NATURALIZE);
-        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-            IInternalServerStartListener listener = new IInternalServerStartListener(){
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if(e.isStarted()){
-                        setEnabled(checkRights());
-                    }
-                }
-
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            setEnabled(checkRights());
-        }
     }
     
 

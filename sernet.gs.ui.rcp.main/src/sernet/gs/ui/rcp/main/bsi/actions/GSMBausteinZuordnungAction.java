@@ -55,8 +55,6 @@ import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.Server;
 
@@ -74,35 +72,17 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
 
     private final IWorkbenchWindow window;
 
-    private boolean serverIsRunning = true;
-
     private static final String GSMTYP_MAPPING_FILE = "gsm_baustein.properties"; //$NON-NLS-1$
     private static final String SUBTYP_MAPPING_FILE = "subtyp-baustein.properties"; //$NON-NLS-1$
     private Properties gsmtypproperties;
     private Properties subtypproperties;
 
     public GSMBausteinZuordnungAction(IWorkbenchWindow window) {
+        super(ActionRightIDs.BAUSTEINZUORDNUNG, Messages.GSMBausteinZuordnungAction_1);
         this.window = window;
-        setText(Messages.GSMBausteinZuordnungAction_1);
         setId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.AUTOBAUSTEIN));
         window.getSelectionService().addSelectionListener(this);
-        setRightID(ActionRightIDs.BAUSTEINZUORDNUNG);
-        if (Activator.getDefault().isStandalone() && !Activator.getDefault().getInternalServer().isRunning()) {
-            serverIsRunning = false;
-            IInternalServerStartListener listener = new IInternalServerStartListener() {
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if (e.isStarted()) {
-                        serverIsRunning = true;
-                        setEnabled(checkRights());
-                    }
-                }
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            setEnabled(checkRights());
-        }
     }
 
     /* (non-Javadoc)
@@ -260,7 +240,7 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
 
     @Override
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
-        if (serverIsRunning) {
+        if (isServerRunning()) {
             setEnabled(checkRights());      
             if (input instanceof IStructuredSelection) {
                 IStructuredSelection selection = (IStructuredSelection) input;

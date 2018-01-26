@@ -29,6 +29,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -104,9 +105,9 @@ public class ReportDepositView extends RightsEnabledView {
 
     private RightsEnabledAction editTemplateAction;
 
-    private RightsEnabledAction doubleclickAction;
+    private Action doubleclickAction;
 
-    private RightsEnabledAction refreshAction;
+    private Action refreshAction;
 
     private WorkspaceJob loadDataJob;
 
@@ -269,10 +270,10 @@ public class ReportDepositView extends RightsEnabledView {
         editTemplateAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
         editTemplateAction.setEnabled(false);
 
-        refreshAction = new RightsEnabledAction() {
+        refreshAction = new Action() {
 
             @Override
-            public void doRun() {
+            public void run() {
                 JobScheduler.scheduleInitJob(loadDataJob);
             }
         };
@@ -282,10 +283,10 @@ public class ReportDepositView extends RightsEnabledView {
         refreshAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
         refreshAction.setEnabled(true);
 
-        doubleclickAction = new RightsEnabledAction() {
+        doubleclickAction = new Action() {
 
             @Override
-            public void doRun() {
+            public void run() {
                 editTemplateAction.run();
             }
         };

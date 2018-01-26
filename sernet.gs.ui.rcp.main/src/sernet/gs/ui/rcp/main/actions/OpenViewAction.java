@@ -20,11 +20,8 @@ package sernet.gs.ui.rcp.main.actions;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 
 public class OpenViewAction extends RightsEnabledAction {
 
@@ -32,9 +29,13 @@ public class OpenViewAction extends RightsEnabledAction {
     private final String viewId;
 
     public OpenViewAction(IWorkbenchWindow window, String label, String viewId, String imageDesc) {
+        this(window, label, viewId, imageDesc, null);
+    }
+    
+    public OpenViewAction(IWorkbenchWindow window, String label, String viewId, String imageDesc, String rightID){
+        super(rightID, label);
         this.window = window;
         this.viewId = viewId;
-        setText(label);
         // The id is used to refer to the action in a menu or toolbar
 
         setId("ACTION_" + viewId); //$NON-NLS-1$
@@ -43,25 +44,6 @@ public class OpenViewAction extends RightsEnabledAction {
         // TODO add command ids for each view opened using this action
         // setActionDefinitionId(ICommandIds.CMD_OPEN);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(imageDesc));
-    }
-    
-    public OpenViewAction(IWorkbenchWindow window, String label, String viewId, String imageDesc, String rightID){
-        this(window, label, viewId, imageDesc);
-        setRightID(rightID);
-        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-            IInternalServerStartListener listener = new IInternalServerStartListener(){
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if(e.isStarted()){
-                        setEnabled(checkRights());
-                    }
-                }
-                
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            setEnabled(checkRights());
-        }
     }
 
 

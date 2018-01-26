@@ -42,6 +42,8 @@ import sernet.verinice.interfaces.RightEnabledUserInteraction;
 public abstract class RightsEnabledAction extends Action implements RightEnabledUserInteraction {
 
     private String rightID = null;
+    
+    private boolean serverRunning = true;
 
     public RightsEnabledAction(String rightID) {
         this.setRightID(rightID);
@@ -58,9 +60,6 @@ public abstract class RightsEnabledAction extends Action implements RightEnabled
         super(text, style);
         this.setRightID(rightID);
         setEnabledViaRightID();
-    }
-
-    public RightsEnabledAction() {
     }
 
     /**
@@ -105,7 +104,7 @@ public abstract class RightsEnabledAction extends Action implements RightEnabled
     }
 
     @Override
-    public String getRightID() {
+    public final String getRightID() {
         return rightID;
     }
 
@@ -116,13 +115,14 @@ public abstract class RightsEnabledAction extends Action implements RightEnabled
      * @param rightID
      */
     @Override
-    public void setRightID(String rightID) {
+    public final void setRightID(String rightID) {
         this.rightID = rightID;
     }
 
     private void setEnabledViaRightID() {
         if (Activator.getDefault().isStandalone()
                 && !Activator.getDefault().getInternalServer().isRunning()) {
+            serverRunning = false;
             addInternalServerStartListener();
         } else {
             setEnabled(checkRights());
@@ -134,11 +134,16 @@ public abstract class RightsEnabledAction extends Action implements RightEnabled
             @Override
             public void statusChanged(InternalServerEvent e) {
                 if (e.isStarted()) {
+                    serverRunning = true;
                     setEnabled(checkRights());
                 }
             }
         };
         Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+    }
+    
+    public final boolean isServerRunning() {
+        return serverRunning;
     }
 
 }

@@ -49,8 +49,6 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.model.common.CnATreeElement;
@@ -85,31 +83,11 @@ public class ServerConnectionToggleAction extends RightsEnabledAction {
     private ServerConnectionToggleDialog dialog;
     
     public ServerConnectionToggleAction() {
-        if (Preferences.isServerMode()) {
-            setText(Messages.ServerConnectionToggleAction_0);
-        }
-        if (Preferences.isStandalone()) {
-            setText(Messages.ServerConnectionToggleAction_1);
-        }
+        super(ActionRightIDs.XMLEXPORT, Preferences.isServerMode() ? Messages.ServerConnectionToggleAction_0 : Messages.ServerConnectionToggleAction_1);
         setId(ID);
-        setRightID(ActionRightIDs.XMLEXPORT);
         StringBuilder sb = new StringBuilder();
         sb.append(CnAWorkspace.getInstance().getConfDir()).append(File.separatorChar).append(StartupImporter.SERVER_TRANSPORT_BASENAME);
         filePathBase = sb.toString();
-        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-            IInternalServerStartListener listener = new IInternalServerStartListener(){
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if(e.isStarted()){
-                        setEnabled(checkRights());
-                    }
-                }
-
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            setEnabled(checkRights());
-        }
     }
 
     /* (non-Javadoc)
