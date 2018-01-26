@@ -2,7 +2,7 @@
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
     <property name="author">A. Ben Nasrallah</property>
     <property name="createdBy">Eclipse BIRT Designer Version 3.7.0.v20110602 Build &lt;3.7.0.v20110607-1526></property>
-    <text-property name="title">verinice -  BSI Zuordnung von Anwendungen zu IT-Systemen</text-property>
+    <text-property name="title">BSI IT-Grundschutz: A.1 Strukturanalyse-Abhängigkeiten</text-property>
     <property name="units">in</property>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="layoutPreference">fixed layout</property>
@@ -14047,57 +14047,95 @@
                     <column id="927"/>
                     <row id="928">
                         <cell id="929">
+                            <property name="verticalAlign">bottom</property>
                             <grid id="930">
                                 <property name="fontSize">9pt</property>
-                                <property name="width">1.8677685950413223in</property>
-                                <list-property name="visibility">
-                                    <structure>
-                                        <property name="format">ods</property>
-                                        <expression name="valueExpr" type="javascript">true</expression>
-                                    </structure>
-                                </list-property>
+                                <property name="width">1.8541666666666667in</property>
                                 <column id="931">
-                                    <property name="width">0.2975206611570248in</property>
+                                    <property name="width">0.3in</property>
+                                    <property name="verticalAlign">bottom</property>
                                 </column>
                                 <column id="932">
-                                    <property name="width">0.2066115702479339in</property>
+                                    <property name="width">0.3in</property>
                                 </column>
                                 <column id="933">
-                                    <property name="width">1.3636363636363635in</property>
+                                    <property name="width">1.1458333333333333in</property>
                                 </column>
                                 <row id="934">
+                                    <property name="verticalAlign">bottom</property>
                                     <cell id="935">
+                                        <property name="paddingTop">0pt</property>
+                                        <property name="paddingLeft">0pt</property>
+                                        <property name="paddingBottom">0pt</property>
+                                        <property name="paddingRight">0pt</property>
                                         <property name="verticalAlign">bottom</property>
                                         <auto-text id="936">
-                                            <property name="textAlign">right</property>
+                                            <property name="paddingTop">0pt</property>
+                                            <property name="paddingLeft">0pt</property>
+                                            <property name="paddingBottom">0pt</property>
+                                            <property name="paddingRight">0pt</property>
+                                            <property name="textAlign">left</property>
                                             <property name="type">page-number</property>
                                         </auto-text>
                                     </cell>
                                     <cell id="937">
+                                        <property name="paddingTop">0pt</property>
+                                        <property name="paddingLeft">0pt</property>
+                                        <property name="paddingBottom">0pt</property>
+                                        <property name="paddingRight">0pt</property>
                                         <property name="verticalAlign">bottom</property>
                                         <text id="938">
-                                            <property name="textAlign">center</property>
+                                            <property name="paddingTop">0pt</property>
+                                            <property name="paddingLeft">0pt</property>
+                                            <property name="paddingBottom">0pt</property>
+                                            <property name="paddingRight">0pt</property>
+                                            <property name="textAlign">left</property>
                                             <property name="contentType">plain</property>
                                             <text-property name="content"><![CDATA[/]]></text-property>
                                         </text>
                                     </cell>
                                     <cell id="939">
+                                        <property name="paddingTop">0pt</property>
+                                        <property name="paddingLeft">0pt</property>
+                                        <property name="paddingBottom">0pt</property>
+                                        <property name="paddingRight">0pt</property>
                                         <property name="verticalAlign">bottom</property>
                                         <auto-text id="940">
+                                            <property name="paddingTop">0pt</property>
+                                            <property name="paddingLeft">0pt</property>
+                                            <property name="paddingBottom">0pt</property>
+                                            <property name="paddingRight">0pt</property>
+                                            <property name="textAlign">left</property>
                                             <property name="type">total-page</property>
                                         </auto-text>
                                     </cell>
                                 </row>
                             </grid>
                         </cell>
-                        <cell id="2093"/>
-                        <cell id="942"/>
-                        <cell id="2094">
+                        <cell id="1953">
+                            <property name="colSpan">2</property>
+                            <property name="rowSpan">1</property>
                             <property name="verticalAlign">bottom</property>
-                            <text id="2095">
+                            <label id="2687">
+                                <property name="textAlign">center</property>
+                                <text-property name="text">BSI IT-Grundschutz: A.1 Strukturanalyse-Abhängigkeiten</text-property>
+                            </label>
+                        </cell>
+                        <cell id="1954">
+                            <property name="paddingTop">0pt</property>
+                            <property name="paddingLeft">0pt</property>
+                            <property name="paddingBottom">0pt</property>
+                            <property name="paddingRight">0pt</property>
+                            <property name="verticalAlign">bottom</property>
+                            <text id="1955">
                                 <property name="fontSize">9pt</property>
+                                <property name="paddingTop">0pt</property>
+                                <property name="paddingLeft">0pt</property>
+                                <property name="paddingBottom">0pt</property>
+                                <property name="paddingRight">0pt</property>
+                                <property name="textAlign">right</property>
                                 <property name="contentType">html</property>
-                                <text-property name="content"><![CDATA[printed on <value-of>new Date()</value-of>]]></text-property>
+                                <text-property name="content"><![CDATA[gedruckt am <value-of>new Date()</value-of>]]></text-property>
                             </text>
                         </cell>
                     </row>
@@ -14107,6 +14145,9 @@
     </page-setup>
     <body>
         <grid id="1418">
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Übersicht"</expression>
+            </structure>
             <column id="1419"/>
             <column id="1420"/>
             <row id="1421">
@@ -14854,13 +14895,17 @@
         <table id="4500">
             <property name="borderBottomColor">#000000</property>
             <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
             <property name="borderLeftColor">#000000</property>
             <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
             <property name="borderRightColor">#000000</property>
             <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
-            <property name="width">11.135416666666666in</property>
+            <property name="borderTopWidth">thin</property>
+            <property name="width">100%</property>
             <property name="dataSet">Business Process</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -15290,20 +15335,20 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Geschäftsprozesse"</expression>
+            </structure>
             <column id="4519">
-                <property name="width">0.7604166666666666in</property>
+                <property name="width">0.9583333333333334in</property>
             </column>
             <column id="4520">
-                <property name="width">2.5104166666666665in</property>
+                <property name="width">3.2604166666666665in</property>
             </column>
             <column id="4521">
-                <property name="width">0.6458333333333334in</property>
+                <property name="width">2.1666666666666665in</property>
             </column>
             <column id="4522">
-                <property name="width">2.4375in</property>
-            </column>
-            <column id="4523">
-                <property name="width">4.78125in</property>
+                <property name="width">4.145833333333333in</property>
             </column>
             <header>
                 <row id="4501">
@@ -15311,19 +15356,15 @@
                     <property name="textAlign">left</property>
                     <cell id="4502">
                         <label id="4552">
+                            <structure name="toc"/>
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
                     <cell id="4503">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
                         <label id="4553">
                             <text-property name="text">Name</text-property>
-                        </label>
-                    </cell>
-                    <cell id="4504"/>
-                    <cell id="4505"/>
-                    <cell id="4506">
-                        <label id="4554">
-                            <text-property name="text">Beschreibung</text-property>
                         </label>
                     </cell>
                 </row>
@@ -15332,7 +15373,7 @@
                 <property name="groupName">Processes</property>
                 <expression name="keyExpr" type="javascript">row["Database__Id__(Business__Process)"]</expression>
                 <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Database__Id__(Business__Process)"]</expression>
+                    <expression name="expressionValue" type="javascript">row["Title__(Business__Process)"]</expression>
                 </structure>
                 <property name="hideDetail">false</property>
                 <header>
@@ -15340,21 +15381,17 @@
                         <property name="backgroundColor">#BFBFBF</property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <cell id="4539">
                             <data id="4555">
                                 <property name="resultSetColumn">Column Binding_1</property>
                             </data>
                         </cell>
                         <cell id="4540">
+                            <property name="colSpan">3</property>
+                            <property name="rowSpan">1</property>
                             <data id="4551">
                                 <property name="resultSetColumn">Column Binding</property>
-                            </data>
-                        </cell>
-                        <cell id="4541"/>
-                        <cell id="4542"/>
-                        <cell id="4543">
-                            <data id="4556">
-                                <property name="resultSetColumn">Column Binding_2</property>
                             </data>
                         </cell>
                     </row>
@@ -15379,21 +15416,12 @@
                                 <text-property name="text">Name</text-property>
                             </label>
                         </cell>
-                        <cell id="4562">
-                            <property name="backgroundColor">#E5E5E5</property>
-                            <label id="4566">
-                                <text-property name="text">Beschreibung</text-property>
-                            </label>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4567">
                 <property name="groupName">Devices</property>
                 <expression name="keyExpr" type="javascript">row["Database__Id__(OtherIOT-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Database__Id__(OtherIOT-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4568">
@@ -15419,20 +15447,12 @@
                                 <property name="resultSetColumn">Column Binding_5</property>
                             </data>
                         </cell>
-                        <cell id="4573">
-                            <data id="4668">
-                                <property name="resultSetColumn">Column Binding_6</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4581">
                 <property name="groupName">Applications</property>
                 <expression name="keyExpr" type="javascript">row["Database__Id__(Application__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Database__Id__(Application__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4582">
@@ -15458,20 +15478,12 @@
                                 <property name="resultSetColumn">Column Binding_9</property>
                             </data>
                         </cell>
-                        <cell id="4587">
-                            <data id="4672">
-                                <property name="resultSetColumn">Column Binding_10</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4595">
                 <property name="groupName">Linked Process</property>
                 <expression name="keyExpr" type="javascript">row["Database__Id__(Business__Process)_15"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Database__Id__(Business__Process)_15"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4596">
@@ -15497,20 +15509,12 @@
                                 <property name="resultSetColumn">Column Binding_13</property>
                             </data>
                         </cell>
-                        <cell id="4601">
-                            <data id="4676">
-                                <property name="resultSetColumn">Column Binding_14</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4609">
                 <property name="groupName">ICS-System</property>
                 <expression name="keyExpr" type="javascript">row["Database__Id__(ICS__System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Database__Id__(ICS__System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4610">
@@ -15536,20 +15540,12 @@
                                 <property name="resultSetColumn">Column Binding_16</property>
                             </data>
                         </cell>
-                        <cell id="4615">
-                            <data id="4681">
-                                <property name="resultSetColumn">Column Binding_18</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4623">
                 <property name="groupName">IT-System</property>
                 <expression name="keyExpr" type="javascript">row["Database__Id__(IT__System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Database__Id__(IT__System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4624">
@@ -15575,20 +15571,12 @@
                                 <property name="resultSetColumn">Column Binding_21</property>
                             </data>
                         </cell>
-                        <cell id="4629">
-                            <data id="4685">
-                                <property name="resultSetColumn">Column Binding_22</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4637">
                 <property name="groupName">Network</property>
                 <expression name="keyExpr" type="javascript">row["Database__Id__(Network)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Database__Id__(Network)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4638">
@@ -15614,20 +15602,12 @@
                                 <property name="resultSetColumn">Column Binding_25</property>
                             </data>
                         </cell>
-                        <cell id="4643">
-                            <data id="4689">
-                                <property name="resultSetColumn">Column Binding_26</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4651">
                 <property name="groupName">Person</property>
                 <expression name="keyExpr" type="javascript">row["Database__Id__(Person__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Database__Id__(Person__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4652">
@@ -15653,11 +15633,6 @@
                                 <property name="resultSetColumn">Column Binding_28</property>
                             </data>
                         </cell>
-                        <cell id="4657">
-                            <data id="4693">
-                                <property name="resultSetColumn">Column Binding_30</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
@@ -15674,13 +15649,17 @@
         <table id="2472">
             <property name="borderBottomColor">#000000</property>
             <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
             <property name="borderLeftColor">#000000</property>
             <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
             <property name="borderRightColor">#000000</property>
             <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
-            <property name="width">11.135416666666666in</property>
+            <property name="borderTopWidth">thin</property>
+            <property name="width">100%</property>
             <property name="dataSet">Application</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -16116,20 +16095,20 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Anwendungen"</expression>
+            </structure>
             <column id="2633">
-                <property name="width">0.75in</property>
+                <property name="width">1.1354166666666667in</property>
             </column>
             <column id="2634">
-                <property name="width">2.5416666666666665in</property>
+                <property name="width">2.8020833333333335in</property>
             </column>
             <column id="2635">
-                <property name="width">0.625in</property>
+                <property name="width">2.3020833333333335in</property>
             </column>
             <column id="2636">
-                <property name="width">2.4270833333333335in</property>
-            </column>
-            <column id="2637">
-                <property name="width">4.791666666666667in</property>
+                <property name="width">4.291666666666667in</property>
             </column>
             <header>
                 <row id="2473">
@@ -16141,15 +16120,10 @@
                         </label>
                     </cell>
                     <cell id="2476">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
                         <label id="2477">
                             <text-property name="text">Name</text-property>
-                        </label>
-                    </cell>
-                    <cell id="2478"/>
-                    <cell id="2479"/>
-                    <cell id="2480">
-                        <label id="2481">
-                            <text-property name="text">Beschreibung</text-property>
                         </label>
                     </cell>
                 </row>
@@ -16158,7 +16132,7 @@
                 <property name="groupName">Application</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Anwendung__(mod))"]</expression>
                 <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Anwendung__(mod))"]</expression>
+                    <expression name="expressionValue" type="javascript">row["Titel__(Anwendung__(mod))"]</expression>
                 </structure>
                 <property name="hideDetail">false</property>
                 <header>
@@ -16166,21 +16140,17 @@
                         <property name="backgroundColor">#BFBFBF</property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <cell id="2484">
                             <data id="2487">
                                 <property name="resultSetColumn">Column Binding</property>
                             </data>
                         </cell>
                         <cell id="2486">
+                            <property name="colSpan">3</property>
+                            <property name="rowSpan">1</property>
                             <data id="3114">
                                 <property name="resultSetColumn">Column Binding_26</property>
-                            </data>
-                        </cell>
-                        <cell id="2488"/>
-                        <cell id="2489"/>
-                        <cell id="2490">
-                            <data id="2491">
-                                <property name="resultSetColumn">Column Binding_1</property>
                             </data>
                         </cell>
                     </row>
@@ -16205,21 +16175,12 @@
                                 <text-property name="text">Name</text-property>
                             </label>
                         </cell>
-                        <cell id="2500">
-                            <property name="backgroundColor">#E5E5E5</property>
-                            <label id="2501">
-                                <text-property name="text">Beschreibung</text-property>
-                            </label>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="2652">
                 <property name="groupName">IoT-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(AnderesIOT-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(AnderesIOT-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="2653">
@@ -16245,20 +16206,12 @@
                                 <property name="resultSetColumn">Column Binding_2</property>
                             </data>
                         </cell>
-                        <cell id="2658">
-                            <data id="2766">
-                                <property name="resultSetColumn">Column Binding_4</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="2666">
                 <property name="groupName">Linked Application</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Anwendung__(mod))_10"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Anwendung__(mod))_10"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="2667">
@@ -16284,20 +16237,12 @@
                                 <property name="resultSetColumn">Column Binding_6</property>
                             </data>
                         </cell>
-                        <cell id="2672">
-                            <data id="2769">
-                                <property name="resultSetColumn">Column Binding_7</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="2680">
                 <property name="groupName">Process</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Geschäftsprozess)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Geschäftsprozess)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="2681">
@@ -16323,20 +16268,12 @@
                                 <property name="resultSetColumn">Column Binding_9</property>
                             </data>
                         </cell>
-                        <cell id="2686">
-                            <data id="2772">
-                                <property name="resultSetColumn">Column Binding_10</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="2694">
                 <property name="groupName">ICS-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(ICS-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(ICS-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="2695">
@@ -16362,20 +16299,12 @@
                                 <property name="resultSetColumn">Column Binding_12</property>
                             </data>
                         </cell>
-                        <cell id="2700">
-                            <data id="2775">
-                                <property name="resultSetColumn">Column Binding_13</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="2708">
                 <property name="groupName">IT-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(IT-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(IT-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="2709">
@@ -16401,20 +16330,12 @@
                                 <property name="resultSetColumn">Column Binding_15</property>
                             </data>
                         </cell>
-                        <cell id="2714">
-                            <data id="2779">
-                                <property name="resultSetColumn">Column Binding_16</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="2722">
                 <property name="groupName">Network</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Kommunikationsverbindung)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Kommunikationsverbindung)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="2723">
@@ -16440,20 +16361,12 @@
                                 <property name="resultSetColumn">Column Binding_18</property>
                             </data>
                         </cell>
-                        <cell id="2728">
-                            <data id="2782">
-                                <property name="resultSetColumn">Column Binding_19</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="2736">
                 <property name="groupName">Person</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Person__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Person__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="2737">
@@ -16479,20 +16392,12 @@
                                 <property name="resultSetColumn">Column Binding_20</property>
                             </data>
                         </cell>
-                        <cell id="2742">
-                            <data id="2785">
-                                <property name="resultSetColumn">Column Binding_22</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="2750">
                 <property name="groupName">Room</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Raum__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Raum__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="2751">
@@ -16518,11 +16423,6 @@
                                 <property name="resultSetColumn">Column Binding_24</property>
                             </data>
                         </cell>
-                        <cell id="2756">
-                            <data id="2788">
-                                <property name="resultSetColumn">Column Binding_25</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
@@ -16534,18 +16434,25 @@
             <property name="pageBreakAfter">auto</property>
             <property name="pageBreakBefore">auto</property>
             <property name="pageBreakInside">avoid</property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"IT-System"</expression>
+            </structure>
             <text-property name="text">IT-System</text-property>
         </label>
         <table id="2815">
             <property name="borderBottomColor">#000000</property>
             <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
             <property name="borderLeftColor">#000000</property>
             <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
             <property name="borderRightColor">#000000</property>
             <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
-            <property name="width">11.135416666666666in</property>
+            <property name="borderTopWidth">thin</property>
+            <property name="width">100%</property>
             <property name="dataSet">IT-System</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -17017,20 +16924,20 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"IT-System"</expression>
+            </structure>
             <column id="2993">
-                <property name="width">0.75in</property>
+                <property name="width">1.28125in</property>
             </column>
             <column id="2994">
-                <property name="width">2.5416666666666665in</property>
+                <property name="width">2.9479166666666665in</property>
             </column>
             <column id="2995">
-                <property name="width">0.625in</property>
+                <property name="width">2.4583333333333335in</property>
             </column>
             <column id="2996">
-                <property name="width">2.4270833333333335in</property>
-            </column>
-            <column id="2997">
-                <property name="width">4.791666666666667in</property>
+                <property name="width">4.40625in</property>
             </column>
             <header>
                 <row id="2816">
@@ -17048,18 +16955,13 @@
                     </cell>
                     <cell id="2821"/>
                     <cell id="2822"/>
-                    <cell id="2823">
-                        <label id="2824">
-                            <text-property name="text">Beschreibung</text-property>
-                        </label>
-                    </cell>
                 </row>
             </header>
             <group id="2825">
                 <property name="groupName">IT-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(IT-System)"]</expression>
                 <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(IT-System)"]</expression>
+                    <expression name="expressionValue" type="javascript">row["Titel__(IT-System)"]</expression>
                 </structure>
                 <property name="hideDetail">false</property>
                 <header>
@@ -17067,6 +16969,7 @@
                         <property name="backgroundColor">#BFBFBF</property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <cell id="2827">
                             <data id="2828">
                                 <property name="resultSetColumn">Column Binding</property>
@@ -17079,11 +16982,6 @@
                         </cell>
                         <cell id="2831"/>
                         <cell id="2832"/>
-                        <cell id="2833">
-                            <data id="2834">
-                                <property name="resultSetColumn">Column Binding_1</property>
-                            </data>
-                        </cell>
                     </row>
                     <row id="2835">
                         <property name="fontStyle">italic</property>
@@ -17106,21 +17004,12 @@
                                 <text-property name="text">Name</text-property>
                             </label>
                         </cell>
-                        <cell id="2843">
-                            <property name="backgroundColor">#E5E5E5</property>
-                            <label id="2844">
-                                <text-property name="text">Beschreibung</text-property>
-                            </label>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="2998">
                 <property name="groupName">IoT_System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(AnderesIOT-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(AnderesIOT-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="2999">
@@ -17146,20 +17035,12 @@
                                 <property name="resultSetColumn">Column Binding_3</property>
                             </data>
                         </cell>
-                        <cell id="3004">
-                            <data id="3112">
-                                <property name="resultSetColumn">Column Binding_4</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3012">
                 <property name="groupName">Application</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Anwendung__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Anwendung__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3013">
@@ -17185,20 +17066,12 @@
                                 <property name="resultSetColumn">Column Binding_6</property>
                             </data>
                         </cell>
-                        <cell id="3018">
-                            <data id="3117">
-                                <property name="resultSetColumn">Column Binding_7</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3026">
                 <property name="groupName">Process</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Geschäftsprozess)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Geschäftsprozess)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3027">
@@ -17224,20 +17097,12 @@
                                 <property name="resultSetColumn">Column Binding_10</property>
                             </data>
                         </cell>
-                        <cell id="3032">
-                            <data id="3121">
-                                <property name="resultSetColumn">Column Binding_11</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3040">
                 <property name="groupName">ICS-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(ICS-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(ICS-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3041">
@@ -17263,20 +17128,12 @@
                                 <property name="resultSetColumn">Column Binding_14</property>
                             </data>
                         </cell>
-                        <cell id="3046">
-                            <data id="3125">
-                                <property name="resultSetColumn">Column Binding_15</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3054">
                 <property name="groupName">LInked IT-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(IT-System)_25"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(IT-System)_25"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3055">
@@ -17302,20 +17159,12 @@
                                 <property name="resultSetColumn">Column Binding_18</property>
                             </data>
                         </cell>
-                        <cell id="3060">
-                            <data id="3130">
-                                <property name="resultSetColumn">Column Binding_19</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3068">
                 <property name="groupName">Network</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Kommunikationsverbindung)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Kommunikationsverbindung)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3069">
@@ -17341,20 +17190,12 @@
                                 <property name="resultSetColumn">Column Binding_22</property>
                             </data>
                         </cell>
-                        <cell id="3074">
-                            <data id="3134">
-                                <property name="resultSetColumn">Column Binding_23</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3082">
                 <property name="groupName">Person</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Person__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Person__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3083">
@@ -17380,20 +17221,12 @@
                                 <property name="resultSetColumn">Column Binding_26</property>
                             </data>
                         </cell>
-                        <cell id="3088">
-                            <data id="3139">
-                                <property name="resultSetColumn">Column Binding_27</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3096">
                 <property name="groupName">Room</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Raum__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Raum__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3097">
@@ -17419,11 +17252,6 @@
                                 <property name="resultSetColumn">Column Binding_30</property>
                             </data>
                         </cell>
-                        <cell id="3102">
-                            <data id="3143">
-                                <property name="resultSetColumn">Column Binding_31</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
@@ -17440,13 +17268,17 @@
         <table id="3148">
             <property name="borderBottomColor">#000000</property>
             <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
             <property name="borderLeftColor">#000000</property>
             <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
             <property name="borderRightColor">#000000</property>
             <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
-            <property name="width">11.135416666666666in</property>
+            <property name="borderTopWidth">thin</property>
+            <property name="width">100%</property>
             <property name="dataSet">ICS System</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -17930,20 +17762,20 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"ICS-System"</expression>
+            </structure>
             <column id="3266">
-                <property name="width">0.75in</property>
+                <property name="width">1.1145833333333333in</property>
             </column>
             <column id="3267">
-                <property name="width">2.5416666666666665in</property>
+                <property name="width">2.9791666666666665in</property>
             </column>
             <column id="3268">
-                <property name="width">0.625in</property>
+                <property name="width">2.4895833333333335in</property>
             </column>
             <column id="3269">
-                <property name="width">2.4270833333333335in</property>
-            </column>
-            <column id="3270">
-                <property name="width">4.791666666666667in</property>
+                <property name="width">4.40625in</property>
             </column>
             <header>
                 <row id="3149">
@@ -17961,18 +17793,13 @@
                     </cell>
                     <cell id="3154"/>
                     <cell id="3155"/>
-                    <cell id="3156">
-                        <label id="3157">
-                            <text-property name="text">Beschreibung</text-property>
-                        </label>
-                    </cell>
                 </row>
             </header>
             <group id="3158">
                 <property name="groupName">ICS-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(ICS-System)"]</expression>
                 <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(ICS-System)"]</expression>
+                    <expression name="expressionValue" type="javascript">row["Titel__(ICS-System)"]</expression>
                 </structure>
                 <property name="hideDetail">false</property>
                 <header>
@@ -17980,6 +17807,7 @@
                         <property name="backgroundColor">#BFBFBF</property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <cell id="3160">
                             <data id="3161">
                                 <property name="resultSetColumn">Column Binding</property>
@@ -17992,11 +17820,6 @@
                         </cell>
                         <cell id="3164"/>
                         <cell id="3165"/>
-                        <cell id="3166">
-                            <data id="3272">
-                                <property name="resultSetColumn">Column Binding_2</property>
-                            </data>
-                        </cell>
                     </row>
                     <row id="3168">
                         <property name="fontStyle">italic</property>
@@ -18019,21 +17842,12 @@
                                 <text-property name="text">Name</text-property>
                             </label>
                         </cell>
-                        <cell id="3176">
-                            <property name="backgroundColor">#E5E5E5</property>
-                            <label id="3177">
-                                <text-property name="text">Beschreibung</text-property>
-                            </label>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3273">
                 <property name="groupName">IoT-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(AnderesIOT-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(AnderesIOT-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3274">
@@ -18059,20 +17873,12 @@
                                 <property name="resultSetColumn">Column Binding_5</property>
                             </data>
                         </cell>
-                        <cell id="3279">
-                            <data id="3402">
-                                <property name="resultSetColumn">Column Binding_6</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3287">
                 <property name="groupName">Application</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Anwendung__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Anwendung__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3288">
@@ -18098,20 +17904,12 @@
                                 <property name="resultSetColumn">Column Binding_9</property>
                             </data>
                         </cell>
-                        <cell id="3293">
-                            <data id="3406">
-                                <property name="resultSetColumn">Column Binding_10</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3301">
                 <property name="groupName">Process</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Geschäftsprozess)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Geschäftsprozess)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3302">
@@ -18137,20 +17935,12 @@
                                 <property name="resultSetColumn">Column Binding_13</property>
                             </data>
                         </cell>
-                        <cell id="3307">
-                            <data id="3412">
-                                <property name="resultSetColumn">Column Binding_14</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3315">
                 <property name="groupName">Linked ICS-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(ICS-System)_20"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(ICS-System)_20"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3316">
@@ -18176,20 +17966,12 @@
                                 <property name="resultSetColumn">Column Binding_17</property>
                             </data>
                         </cell>
-                        <cell id="3321">
-                            <data id="3416">
-                                <property name="resultSetColumn">Column Binding_18</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3342">
                 <property name="groupName">IT-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(IT-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(IT-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3343">
@@ -18215,20 +17997,12 @@
                                 <property name="resultSetColumn">Column Binding_21</property>
                             </data>
                         </cell>
-                        <cell id="3348">
-                            <data id="3420">
-                                <property name="resultSetColumn">Column Binding_22</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3356">
                 <property name="groupName">Network</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Kommunikationsverbindung)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Kommunikationsverbindung)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3357">
@@ -18254,20 +18028,12 @@
                                 <property name="resultSetColumn">Column Binding_25</property>
                             </data>
                         </cell>
-                        <cell id="3362">
-                            <data id="3424">
-                                <property name="resultSetColumn">Column Binding_26</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3370">
                 <property name="groupName">Person</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Person__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Person__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3371">
@@ -18293,20 +18059,12 @@
                                 <property name="resultSetColumn">Column Binding_29</property>
                             </data>
                         </cell>
-                        <cell id="3376">
-                            <data id="3429">
-                                <property name="resultSetColumn">Column Binding_30</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3384">
                 <property name="groupName">Room</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Raum__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Raum__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3385">
@@ -18332,11 +18090,6 @@
                                 <property name="resultSetColumn">Column Binding_33</property>
                             </data>
                         </cell>
-                        <cell id="3390">
-                            <data id="3433">
-                                <property name="resultSetColumn">Column Binding_34</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
@@ -18353,13 +18106,17 @@
         <table id="3435">
             <property name="borderBottomColor">#000000</property>
             <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
             <property name="borderLeftColor">#000000</property>
             <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
             <property name="borderRightColor">#000000</property>
             <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
-            <property name="width">11.135416666666666in</property>
+            <property name="borderTopWidth">thin</property>
+            <property name="width">100%</property>
             <property name="dataSet">Device</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -18843,20 +18600,20 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Anderes/IoT-System"</expression>
+            </structure>
             <column id="3553">
-                <property name="width">0.75in</property>
+                <property name="width">1.1145833333333333in</property>
             </column>
             <column id="3554">
-                <property name="width">2.5416666666666665in</property>
+                <property name="width">3in</property>
             </column>
             <column id="3555">
-                <property name="width">0.625in</property>
+                <property name="width">2.53125in</property>
             </column>
             <column id="3556">
-                <property name="width">2.4270833333333335in</property>
-            </column>
-            <column id="3557">
-                <property name="width">4.791666666666667in</property>
+                <property name="width">4.40625in</property>
             </column>
             <header>
                 <row id="3436">
@@ -18868,15 +18625,10 @@
                         </label>
                     </cell>
                     <cell id="3439">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
                         <label id="3440">
                             <text-property name="text">Name</text-property>
-                        </label>
-                    </cell>
-                    <cell id="3441"/>
-                    <cell id="3442"/>
-                    <cell id="3443">
-                        <label id="3444">
-                            <text-property name="text">Beschreibung</text-property>
                         </label>
                     </cell>
                 </row>
@@ -18885,7 +18637,7 @@
                 <property name="groupName">Device</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(AnderesIOT-System)"]</expression>
                 <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(AnderesIOT-System)"]</expression>
+                    <expression name="expressionValue" type="javascript">row["Titel__(AnderesIOT-System)"]</expression>
                 </structure>
                 <property name="hideDetail">false</property>
                 <header>
@@ -18893,21 +18645,17 @@
                         <property name="backgroundColor">#BFBFBF</property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <cell id="3447">
                             <data id="3559">
                                 <property name="resultSetColumn">Column Binding</property>
                             </data>
                         </cell>
                         <cell id="3449">
+                            <property name="colSpan">3</property>
+                            <property name="rowSpan">1</property>
                             <data id="3560">
                                 <property name="resultSetColumn">Column Binding_1</property>
-                            </data>
-                        </cell>
-                        <cell id="3451"/>
-                        <cell id="3452"/>
-                        <cell id="3453">
-                            <data id="3561">
-                                <property name="resultSetColumn">Column Binding_2</property>
                             </data>
                         </cell>
                     </row>
@@ -18932,21 +18680,12 @@
                                 <text-property name="text">Name</text-property>
                             </label>
                         </cell>
-                        <cell id="3463">
-                            <property name="backgroundColor">#E5E5E5</property>
-                            <label id="3464">
-                                <text-property name="text">Beschreibung</text-property>
-                            </label>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3562">
                 <property name="groupName">IoT-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(AnderesIOT-System)_5"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(AnderesIOT-System)_5"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3563">
@@ -18972,20 +18711,12 @@
                                 <property name="resultSetColumn">Column Binding_5</property>
                             </data>
                         </cell>
-                        <cell id="3568">
-                            <data id="3677">
-                                <property name="resultSetColumn">Column Binding_6</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3576">
                 <property name="groupName">Application</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Anwendung__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Anwendung__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3577">
@@ -19011,20 +18742,12 @@
                                 <property name="resultSetColumn">Column Binding_9</property>
                             </data>
                         </cell>
-                        <cell id="3582">
-                            <data id="3681">
-                                <property name="resultSetColumn">Column Binding_10</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3590">
                 <property name="groupName">ICS-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(ICS-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(ICS-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3591">
@@ -19050,20 +18773,12 @@
                                 <property name="resultSetColumn">Column Binding_13</property>
                             </data>
                         </cell>
-                        <cell id="3596">
-                            <data id="3686">
-                                <property name="resultSetColumn">Column Binding_14</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3604">
                 <property name="groupName">Process</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Geschäftsprozess)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Geschäftsprozess)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3605">
@@ -19089,20 +18804,12 @@
                                 <property name="resultSetColumn">Column Binding_17</property>
                             </data>
                         </cell>
-                        <cell id="3610">
-                            <data id="3691">
-                                <property name="resultSetColumn">Column Binding_18</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3618">
                 <property name="groupName">IT-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(IT-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(IT-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3619">
@@ -19128,20 +18835,12 @@
                                 <property name="resultSetColumn">Column Binding_21</property>
                             </data>
                         </cell>
-                        <cell id="3624">
-                            <data id="3695">
-                                <property name="resultSetColumn">Column Binding_22</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3632">
                 <property name="groupName">Network</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Kommunikationsverbindung)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Kommunikationsverbindung)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3633">
@@ -19167,20 +18866,12 @@
                                 <property name="resultSetColumn">Column Binding_24</property>
                             </data>
                         </cell>
-                        <cell id="3638">
-                            <data id="3699">
-                                <property name="resultSetColumn">Column Binding_26</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3646">
                 <property name="groupName">Person</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Person__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Person__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3647">
@@ -19206,20 +18897,12 @@
                                 <property name="resultSetColumn">Column Binding_29</property>
                             </data>
                         </cell>
-                        <cell id="3652">
-                            <data id="3703">
-                                <property name="resultSetColumn">Column Binding_30</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3660">
                 <property name="groupName">Room</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Raum__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Raum__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3661">
@@ -19245,11 +18928,6 @@
                                 <property name="resultSetColumn">Column Binding_33</property>
                             </data>
                         </cell>
-                        <cell id="3666">
-                            <data id="3707">
-                                <property name="resultSetColumn">Column Binding_34</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
@@ -19266,13 +18944,17 @@
         <table id="3709">
             <property name="borderBottomColor">#000000</property>
             <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
             <property name="borderLeftColor">#000000</property>
             <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
             <property name="borderRightColor">#000000</property>
             <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
-            <property name="width">11.135416666666666in</property>
+            <property name="borderTopWidth">thin</property>
+            <property name="width">100%</property>
             <property name="dataSet">Network</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -19756,20 +19438,20 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Kommunikationsverbindungen"</expression>
+            </structure>
             <column id="3827">
-                <property name="width">0.75in</property>
+                <property name="width">1.0208333333333333in</property>
             </column>
             <column id="3828">
-                <property name="width">2.5416666666666665in</property>
+                <property name="width">2.9583333333333335in</property>
             </column>
             <column id="3829">
-                <property name="width">0.625in</property>
+                <property name="width">2.5729166666666665in</property>
             </column>
             <column id="3830">
-                <property name="width">2.4270833333333335in</property>
-            </column>
-            <column id="3831">
-                <property name="width">4.791666666666667in</property>
+                <property name="width">4.4375in</property>
             </column>
             <header>
                 <row id="3710">
@@ -19781,15 +19463,10 @@
                         </label>
                     </cell>
                     <cell id="3713">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
                         <label id="3714">
                             <text-property name="text">Name</text-property>
-                        </label>
-                    </cell>
-                    <cell id="3715"/>
-                    <cell id="3716"/>
-                    <cell id="3717">
-                        <label id="3718">
-                            <text-property name="text">Beschreibung</text-property>
                         </label>
                     </cell>
                 </row>
@@ -19798,7 +19475,7 @@
                 <property name="groupName">Network</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Kommunikationsverbindung)"]</expression>
                 <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Kommunikationsverbindung)"]</expression>
+                    <expression name="expressionValue" type="javascript">row["Titel__(Kommunikationsverbindung)"]</expression>
                 </structure>
                 <property name="hideDetail">false</property>
                 <header>
@@ -19806,21 +19483,17 @@
                         <property name="backgroundColor">#BFBFBF</property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <cell id="3721">
                             <data id="3833">
                                 <property name="resultSetColumn">Column Binding</property>
                             </data>
                         </cell>
                         <cell id="3723">
+                            <property name="colSpan">3</property>
+                            <property name="rowSpan">1</property>
                             <data id="3834">
                                 <property name="resultSetColumn">Column Binding_1</property>
-                            </data>
-                        </cell>
-                        <cell id="3725"/>
-                        <cell id="3726"/>
-                        <cell id="3727">
-                            <data id="3835">
-                                <property name="resultSetColumn">Column Binding_2</property>
                             </data>
                         </cell>
                     </row>
@@ -19845,21 +19518,12 @@
                                 <text-property name="text">Name</text-property>
                             </label>
                         </cell>
-                        <cell id="3737">
-                            <property name="backgroundColor">#E5E5E5</property>
-                            <label id="3738">
-                                <text-property name="text">Beschreibung</text-property>
-                            </label>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3836">
                 <property name="groupName">IOT-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(AnderesIOT-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(AnderesIOT-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3837">
@@ -19885,20 +19549,12 @@
                                 <property name="resultSetColumn">Column Binding_5</property>
                             </data>
                         </cell>
-                        <cell id="3842">
-                            <data id="3951">
-                                <property name="resultSetColumn">Column Binding_6</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3850">
                 <property name="groupName">Application</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Anwendung__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Anwendung__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3851">
@@ -19924,20 +19580,12 @@
                                 <property name="resultSetColumn">Column Binding_9</property>
                             </data>
                         </cell>
-                        <cell id="3856">
-                            <data id="3955">
-                                <property name="resultSetColumn">Column Binding_10</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3864">
                 <property name="groupName">Process</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Geschäftsprozess)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Geschäftsprozess)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3865">
@@ -19963,20 +19611,12 @@
                                 <property name="resultSetColumn">Column Binding_13</property>
                             </data>
                         </cell>
-                        <cell id="3870">
-                            <data id="3959">
-                                <property name="resultSetColumn">Column Binding_14</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3878">
                 <property name="groupName">ICS-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(ICS-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(ICS-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3879">
@@ -20002,20 +19642,12 @@
                                 <property name="resultSetColumn">Column Binding_17</property>
                             </data>
                         </cell>
-                        <cell id="3884">
-                            <data id="3963">
-                                <property name="resultSetColumn">Column Binding_18</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3892">
                 <property name="groupName">IT-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(IT-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(IT-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3893">
@@ -20041,20 +19673,12 @@
                                 <property name="resultSetColumn">Column Binding_21</property>
                             </data>
                         </cell>
-                        <cell id="3898">
-                            <data id="3967">
-                                <property name="resultSetColumn">Column Binding_22</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3906">
                 <property name="groupName">Linked Network</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Kommunikationsverbindung)_30"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Kommunikationsverbindung)_30"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3907">
@@ -20080,20 +19704,12 @@
                                 <property name="resultSetColumn">Column Binding_25</property>
                             </data>
                         </cell>
-                        <cell id="3912">
-                            <data id="3971">
-                                <property name="resultSetColumn">Column Binding_26</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3920">
                 <property name="groupName">Person</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Person__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Person__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3921">
@@ -20119,20 +19735,12 @@
                                 <property name="resultSetColumn">Column Binding_29</property>
                             </data>
                         </cell>
-                        <cell id="3926">
-                            <data id="3975">
-                                <property name="resultSetColumn">Column Binding_30</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="3934">
                 <property name="groupName">Room</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Raum__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Raum__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="3935">
@@ -20158,11 +19766,6 @@
                                 <property name="resultSetColumn">Column Binding_33</property>
                             </data>
                         </cell>
-                        <cell id="3940">
-                            <data id="3979">
-                                <property name="resultSetColumn">Column Binding_34</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
@@ -20179,13 +19782,17 @@
         <table id="3987">
             <property name="borderBottomColor">#000000</property>
             <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
             <property name="borderLeftColor">#000000</property>
             <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
             <property name="borderRightColor">#000000</property>
             <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
-            <property name="width">11.135416666666666in</property>
+            <property name="borderTopWidth">thin</property>
+            <property name="width">100%</property>
             <property name="dataSet">Person</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -20620,20 +20227,20 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Personen"</expression>
+            </structure>
             <column id="4105">
-                <property name="width">0.75in</property>
+                <property name="width">0.8229166666666666in</property>
             </column>
             <column id="4106">
-                <property name="width">2.5416666666666665in</property>
+                <property name="width">3.0520833333333335in</property>
             </column>
             <column id="4107">
-                <property name="width">0.625in</property>
+                <property name="width">2.6979166666666665in</property>
             </column>
             <column id="4108">
-                <property name="width">2.4270833333333335in</property>
-            </column>
-            <column id="4109">
-                <property name="width">4.791666666666667in</property>
+                <property name="width">4.416666666666667in</property>
             </column>
             <header>
                 <row id="3988">
@@ -20645,15 +20252,10 @@
                         </label>
                     </cell>
                     <cell id="3991">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
                         <label id="3992">
                             <text-property name="text">Name</text-property>
-                        </label>
-                    </cell>
-                    <cell id="3993"/>
-                    <cell id="3994"/>
-                    <cell id="3995">
-                        <label id="3996">
-                            <text-property name="text">Beschreibung</text-property>
                         </label>
                     </cell>
                 </row>
@@ -20662,7 +20264,7 @@
                 <property name="groupName">Person</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Person__(mod))"]</expression>
                 <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Person__(mod))"]</expression>
+                    <expression name="expressionValue" type="javascript">row["Nachname__(Person__(mod))"] + ' ,'+ row["Vorname__(Person__(mod))"]</expression>
                 </structure>
                 <property name="hideDetail">false</property>
                 <header>
@@ -20670,21 +20272,17 @@
                         <property name="backgroundColor">#BFBFBF</property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <cell id="3999">
                             <data id="4112">
                                 <property name="resultSetColumn">Column Binding</property>
                             </data>
                         </cell>
                         <cell id="4001">
+                            <property name="colSpan">3</property>
+                            <property name="rowSpan">1</property>
                             <data id="4113">
                                 <property name="resultSetColumn">Column Binding_1</property>
-                            </data>
-                        </cell>
-                        <cell id="4003"/>
-                        <cell id="4004"/>
-                        <cell id="4005">
-                            <data id="4114">
-                                <property name="resultSetColumn">Column Binding_2</property>
                             </data>
                         </cell>
                     </row>
@@ -20709,21 +20307,12 @@
                                 <text-property name="text">Name</text-property>
                             </label>
                         </cell>
-                        <cell id="4015">
-                            <property name="backgroundColor">#E5E5E5</property>
-                            <label id="4016">
-                                <text-property name="text">Beschreibung</text-property>
-                            </label>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4117">
                 <property name="groupName">IoT-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(AnderesIOT-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(AnderesIOT-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4118">
@@ -20749,20 +20338,12 @@
                                 <property name="resultSetColumn">Column Binding_6</property>
                             </data>
                         </cell>
-                        <cell id="4123">
-                            <data id="4231">
-                                <property name="resultSetColumn">Column Binding_7</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4131">
                 <property name="groupName">Application</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Anwendung__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Anwendung__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4132">
@@ -20788,20 +20369,12 @@
                                 <property name="resultSetColumn">Column Binding_10</property>
                             </data>
                         </cell>
-                        <cell id="4137">
-                            <data id="4235">
-                                <property name="resultSetColumn">Column Binding_11</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4145">
                 <property name="groupName">Process</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Geschäftsprozess)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Geschäftsprozess)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4146">
@@ -20827,20 +20400,12 @@
                                 <property name="resultSetColumn">Column Binding_14</property>
                             </data>
                         </cell>
-                        <cell id="4151">
-                            <data id="4239">
-                                <property name="resultSetColumn">Column Binding_15</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4159">
                 <property name="groupName">ICS-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(ICS-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(ICS-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4160">
@@ -20866,20 +20431,12 @@
                                 <property name="resultSetColumn">Column Binding_18</property>
                             </data>
                         </cell>
-                        <cell id="4165">
-                            <data id="4243">
-                                <property name="resultSetColumn">Column Binding_19</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4173">
                 <property name="groupName">IT-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(IT-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(IT-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4174">
@@ -20905,20 +20462,12 @@
                                 <property name="resultSetColumn">Column Binding_22</property>
                             </data>
                         </cell>
-                        <cell id="4179">
-                            <data id="4247">
-                                <property name="resultSetColumn">Column Binding_23</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4187">
                 <property name="groupName">Network</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Kommunikationsverbindung)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Kommunikationsverbindung)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4188">
@@ -20944,20 +20493,12 @@
                                 <property name="resultSetColumn">Column Binding_26</property>
                             </data>
                         </cell>
-                        <cell id="4193">
-                            <data id="4251">
-                                <property name="resultSetColumn">Column Binding_27</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4201">
                 <property name="groupName">Room</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Raum__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Raum__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4202">
@@ -20983,11 +20524,6 @@
                                 <property name="resultSetColumn">Column Binding_30</property>
                             </data>
                         </cell>
-                        <cell id="4207">
-                            <data id="4256">
-                                <property name="resultSetColumn">Column Binding_31</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
@@ -21004,13 +20540,17 @@
         <table id="4258">
             <property name="borderBottomColor">#000000</property>
             <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">thin</property>
             <property name="borderLeftColor">#000000</property>
             <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">thin</property>
             <property name="borderRightColor">#000000</property>
             <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">thin</property>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
-            <property name="width">11.135416666666666in</property>
+            <property name="borderTopWidth">thin</property>
+            <property name="width">100%</property>
             <property name="dataSet">Room</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -21440,20 +20980,20 @@
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
+            <structure name="toc">
+                <expression name="expressionValue" type="javascript">"Räume"</expression>
+            </structure>
             <column id="4365">
-                <property name="width">0.75in</property>
+                <property name="width">0.84375in</property>
             </column>
             <column id="4366">
-                <property name="width">2.5416666666666665in</property>
+                <property name="width">3.1041666666666665in</property>
             </column>
             <column id="4367">
-                <property name="width">0.625in</property>
+                <property name="width">2.75in</property>
             </column>
             <column id="4368">
-                <property name="width">2.4270833333333335in</property>
-            </column>
-            <column id="4369">
-                <property name="width">4.791666666666667in</property>
+                <property name="width">4.395833333333333in</property>
             </column>
             <header>
                 <row id="4259">
@@ -21465,15 +21005,10 @@
                         </label>
                     </cell>
                     <cell id="4262">
+                        <property name="colSpan">3</property>
+                        <property name="rowSpan">1</property>
                         <label id="4263">
                             <text-property name="text">Name</text-property>
-                        </label>
-                    </cell>
-                    <cell id="4264"/>
-                    <cell id="4265"/>
-                    <cell id="4266">
-                        <label id="4267">
-                            <text-property name="text">Beschreibung</text-property>
                         </label>
                     </cell>
                 </row>
@@ -21482,7 +21017,7 @@
                 <property name="groupName">Room</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Raum__(mod))"]</expression>
                 <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Raum__(mod))"]</expression>
+                    <expression name="expressionValue" type="javascript">row["Titel__(Raum__(mod))"]</expression>
                 </structure>
                 <property name="hideDetail">false</property>
                 <header>
@@ -21490,21 +21025,17 @@
                         <property name="backgroundColor">#BFBFBF</property>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
                         <cell id="4270">
                             <data id="4370">
                                 <property name="resultSetColumn">Column Binding</property>
                             </data>
                         </cell>
                         <cell id="4272">
+                            <property name="colSpan">3</property>
+                            <property name="rowSpan">1</property>
                             <data id="4371">
                                 <property name="resultSetColumn">Column Binding_1</property>
-                            </data>
-                        </cell>
-                        <cell id="4274"/>
-                        <cell id="4275"/>
-                        <cell id="4276">
-                            <data id="4372">
-                                <property name="resultSetColumn">Column Binding_2</property>
                             </data>
                         </cell>
                     </row>
@@ -21529,21 +21060,12 @@
                                 <text-property name="text">Name</text-property>
                             </label>
                         </cell>
-                        <cell id="4286">
-                            <property name="backgroundColor">#E5E5E5</property>
-                            <label id="4287">
-                                <text-property name="text">Beschreibung</text-property>
-                            </label>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4373">
                 <property name="groupName">IoT-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(AnderesIOT-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(AnderesIOT-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4374">
@@ -21569,20 +21091,12 @@
                                 <property name="resultSetColumn">Column Binding_5</property>
                             </data>
                         </cell>
-                        <cell id="4379">
-                            <data id="4475">
-                                <property name="resultSetColumn">Column Binding_6</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4387">
                 <property name="groupName">Application</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Anwendung__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Anwendung__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4388">
@@ -21608,20 +21122,12 @@
                                 <property name="resultSetColumn">Column Binding_9</property>
                             </data>
                         </cell>
-                        <cell id="4393">
-                            <data id="4479">
-                                <property name="resultSetColumn">Column Binding_10</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4401">
                 <property name="groupName">ICS-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(ICS-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(ICS-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4402">
@@ -21647,20 +21153,12 @@
                                 <property name="resultSetColumn">Column Binding_13</property>
                             </data>
                         </cell>
-                        <cell id="4407">
-                            <data id="4483">
-                                <property name="resultSetColumn">Column Binding_14</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4415">
                 <property name="groupName">IT-System</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(IT-System)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(IT-System)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4416">
@@ -21686,20 +21184,12 @@
                                 <property name="resultSetColumn">Column Binding_17</property>
                             </data>
                         </cell>
-                        <cell id="4421">
-                            <data id="4487">
-                                <property name="resultSetColumn">Column Binding_18</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4429">
                 <property name="groupName">Network</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Kommunikationsverbindung)"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Kommunikationsverbindung)"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4430">
@@ -21725,20 +21215,12 @@
                                 <property name="resultSetColumn">Column Binding_21</property>
                             </data>
                         </cell>
-                        <cell id="4435">
-                            <data id="4491">
-                                <property name="resultSetColumn">Column Binding_22</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4443">
                 <property name="groupName">Person</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Person__(mod))"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Person__(mod))"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4444">
@@ -21764,20 +21246,12 @@
                                 <property name="resultSetColumn">Column Binding_25</property>
                             </data>
                         </cell>
-                        <cell id="4449">
-                            <data id="4495">
-                                <property name="resultSetColumn">Column Binding_26</property>
-                            </data>
-                        </cell>
                     </row>
                 </header>
             </group>
             <group id="4457">
                 <property name="groupName">Linked Room</property>
                 <expression name="keyExpr" type="javascript">row["Datenbank-Id__(Raum__(mod))_36"]</expression>
-                <structure name="toc">
-                    <expression name="expressionValue" type="javascript">row["Datenbank-Id__(Raum__(mod))_36"]</expression>
-                </structure>
                 <property name="hideDetail">false</property>
                 <header>
                     <row id="4458">
@@ -21801,11 +21275,6 @@
                         <cell id="4462">
                             <data id="4498">
                                 <property name="resultSetColumn">Column Binding_29</property>
-                            </data>
-                        </cell>
-                        <cell id="4463">
-                            <data id="4499">
-                                <property name="resultSetColumn">Column Binding_30</property>
                             </data>
                         </cell>
                     </row>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.22" id="1">
-    <property name="author">A. Koderman</property>
+    <property name="author">Stanislav Strigunov</property>
     <property name="createdBy">Eclipse BIRT Designer Version 3.7.0.v20110602 Build &lt;3.7.0.v20110607-1526></property>
     <text-property name="title">BSI A.1 Strukturanalyse</text-property>
     <html-property name="description">Das Template ist eine Draft-Version, da die Spezifikation seitens BSI noch nicht bekannt sind.</html-property>
@@ -31,8 +31,8 @@
     </parameters>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:8800/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:8800/</property>
+            <property name="sncaUrl">http://localhost:8080/veriniceserver/GetHitroConfig</property>
+            <property name="serverURI">http://localhost:8080/veriniceserver</property>
         </oda-data-source>
     </data-sources>
     <data-sets>
@@ -1178,36 +1178,43 @@
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">Kürzel__(AnderesIOT-System)</property>
+                    <property name="analysis">attribute</property>
                     <text-property name="displayName">Kürzel__(AnderesIOT-System)</text-property>
                     <text-property name="heading">Kürzel__(AnderesIOT-System)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Titel__(AnderesIOT-System)</property>
+                    <property name="analysis">attribute</property>
                     <text-property name="displayName">Titel__(AnderesIOT-System)</text-property>
                     <text-property name="heading">Titel__(AnderesIOT-System)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Beschreibung__(AnderesIOT-System)</property>
+                    <property name="analysis">attribute</property>
                     <text-property name="displayName">Beschreibung__(AnderesIOT-System)</text-property>
                     <text-property name="heading">Beschreibung__(AnderesIOT-System)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Plattform____Baustein__(AnderesIOT-System)</property>
+                    <property name="analysis">attribute</property>
                     <text-property name="displayName">Plattform____Baustein__(AnderesIOT-System)</text-property>
                     <text-property name="heading">Plattform____Baustein__(AnderesIOT-System)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Anzahl__(AnderesIOT-System)</property>
+                    <property name="analysis">attribute</property>
                     <text-property name="displayName">Anzahl__(AnderesIOT-System)</text-property>
                     <text-property name="heading">Anzahl__(AnderesIOT-System)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Status__(AnderesIOT-System)</property>
+                    <property name="analysis">attribute</property>
                     <text-property name="displayName">Status__(AnderesIOT-System)</text-property>
                     <text-property name="heading">Status__(AnderesIOT-System)</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">Benutzer__(AnderesIOT-System)</property>
+                    <property name="analysis">attribute</property>
                     <text-property name="displayName">Benutzer__(AnderesIOT-System)</text-property>
                     <text-property name="heading">Benutzer__(AnderesIOT-System)</text-property>
                 </structure>
@@ -2920,8 +2927,15 @@
                                 </row>
                             </grid>
                         </cell>
-                        <cell id="1953"/>
-                        <cell id="942"/>
+                        <cell id="1953">
+                            <property name="colSpan">2</property>
+                            <property name="rowSpan">1</property>
+                            <property name="verticalAlign">bottom</property>
+                            <label id="2608">
+                                <property name="textAlign">center</property>
+                                <text-property name="text">BSI IT-Grundschutz A.1 Strukturanalyse</text-property>
+                            </label>
+                        </cell>
                         <cell id="1954">
                             <property name="paddingTop">0pt</property>
                             <property name="paddingLeft">0pt</property>
@@ -2972,16 +2986,12 @@
         <grid name="info" id="2135">
             <property name="borderBottomColor">#000000</property>
             <property name="borderBottomStyle">solid</property>
-            <property name="borderBottomWidth">medium</property>
             <property name="borderLeftColor">#000000</property>
             <property name="borderLeftStyle">solid</property>
-            <property name="borderLeftWidth">medium</property>
             <property name="borderRightColor">#000000</property>
             <property name="borderRightStyle">solid</property>
-            <property name="borderRightWidth">medium</property>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
-            <property name="borderTopWidth">medium</property>
             <property name="width">100%</property>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">"Übersicht"</expression>
@@ -3403,16 +3413,16 @@
         <table id="1968">
             <property name="borderBottomColor">#000000</property>
             <property name="borderBottomStyle">solid</property>
-            <property name="borderBottomWidth">medium</property>
+            <property name="borderBottomWidth">thin</property>
             <property name="borderLeftColor">#000000</property>
             <property name="borderLeftStyle">solid</property>
-            <property name="borderLeftWidth">medium</property>
+            <property name="borderLeftWidth">thin</property>
             <property name="borderRightColor">#000000</property>
             <property name="borderRightStyle">solid</property>
-            <property name="borderRightWidth">medium</property>
+            <property name="borderRightWidth">thin</property>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
-            <property name="borderTopWidth">medium</property>
+            <property name="borderTopWidth">thin</property>
             <property name="width">100%</property>
             <property name="dataSet">Geschaeftsprozesse</property>
             <list-property name="boundDataColumns">
@@ -3671,16 +3681,16 @@
         <table id="943">
             <property name="borderBottomColor">#000000</property>
             <property name="borderBottomStyle">solid</property>
-            <property name="borderBottomWidth">medium</property>
+            <property name="borderBottomWidth">thin</property>
             <property name="borderLeftColor">#000000</property>
             <property name="borderLeftStyle">solid</property>
-            <property name="borderLeftWidth">medium</property>
+            <property name="borderLeftWidth">thin</property>
             <property name="borderRightColor">#000000</property>
             <property name="borderRightStyle">solid</property>
-            <property name="borderRightWidth">medium</property>
+            <property name="borderRightWidth">thin</property>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
-            <property name="borderTopWidth">medium</property>
+            <property name="borderTopWidth">thin</property>
             <property name="width">100%</property>
             <property name="dataSet">Anwendungen</property>
             <list-property name="boundDataColumns">
@@ -4030,16 +4040,16 @@
         <table id="984">
             <property name="borderBottomColor">#000000</property>
             <property name="borderBottomStyle">solid</property>
-            <property name="borderBottomWidth">medium</property>
+            <property name="borderBottomWidth">thin</property>
             <property name="borderLeftColor">#000000</property>
             <property name="borderLeftStyle">solid</property>
-            <property name="borderLeftWidth">medium</property>
+            <property name="borderLeftWidth">thin</property>
             <property name="borderRightColor">#000000</property>
             <property name="borderRightStyle">solid</property>
-            <property name="borderRightWidth">medium</property>
+            <property name="borderRightWidth">thin</property>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
-            <property name="borderTopWidth">medium</property>
+            <property name="borderTopWidth">thin</property>
             <property name="width">100%</property>
             <property name="dataSet">IT-Systeme</property>
             <list-property name="boundDataColumns">
@@ -4112,113 +4122,47 @@
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
                     <property name="borderBottomWidth">thin</property>
-                    <property name="borderLeftColor">#000000</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">thin</property>
-                    <property name="borderRightColor">#000000</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                    <property name="borderTopColor">#000000</property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">thin</property>
                     <cell id="986">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="1019">
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
                     <cell id="987">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="1021">
                             <text-property name="text">Name</text-property>
                         </label>
                     </cell>
                     <cell id="988">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="1025">
                             <text-property name="text">Erläuterung</text-property>
                         </label>
                     </cell>
                     <cell id="989">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="1434">
                             <text-property name="text">Anzahl</text-property>
                         </label>
                     </cell>
                     <cell id="990">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="1446">
                             <text-property name="text">Status</text-property>
                         </label>
                     </cell>
                     <cell id="991">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="1438">
                             <text-property name="text">Plattform</text-property>
                         </label>
@@ -4229,113 +4173,50 @@
                 <row id="992">
                     <property name="backgroundColor">#E6E6FA</property>
                     <property name="fontWeight">normal</property>
-                    <property name="borderLeftColor">#000000</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">medium</property>
-                    <property name="borderRightColor">#000000</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">medium</property>
-                    <property name="borderTopColor">#000000</property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">medium</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
                     <cell id="993">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2046">
                             <property name="resultSetColumn">Kürzel__(IT-System)</property>
                         </data>
                     </cell>
                     <cell id="994">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2047">
                             <property name="resultSetColumn">Titel__(IT-System)</property>
                         </data>
                     </cell>
                     <cell id="995">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2048">
                             <property name="resultSetColumn">Beschreibung__(IT-System)</property>
                         </data>
                     </cell>
                     <cell id="996">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2049">
                             <property name="resultSetColumn">Anzahl__(IT-System)</property>
                         </data>
                     </cell>
                     <cell id="997">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2050">
                             <property name="resultSetColumn">Status__(IT-System)</property>
                         </data>
                     </cell>
                     <cell id="998">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2051">
                             <property name="resultSetColumn">Plattform____Baustein__(IT-System)</property>
                         </data>
@@ -4343,106 +4224,39 @@
                 </row>
                 <row id="2052">
                     <property name="fontWeight">normal</property>
-                    <property name="borderLeftColor">#000000</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">medium</property>
-                    <property name="borderRightColor">#000000</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">medium</property>
-                    <property name="borderTopColor">#000000</property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">medium</property>
                     <cell id="2053">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                     </cell>
                     <cell id="2054">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="2059">
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Benutzer:</text-property>
                         </label>
                     </cell>
                     <cell id="2055">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2060">
                             <property name="resultSetColumn">Benutzer__(IT-System)</property>
                         </data>
                     </cell>
                     <cell id="2056">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                     </cell>
                     <cell id="2057">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                     </cell>
-                    <cell id="2058">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                    </cell>
+                    <cell id="2058"/>
                 </row>
             </detail>
         </table>
@@ -4455,16 +4269,16 @@
         <table id="1099">
             <property name="borderBottomColor">#000000</property>
             <property name="borderBottomStyle">solid</property>
-            <property name="borderBottomWidth">medium</property>
+            <property name="borderBottomWidth">thin</property>
             <property name="borderLeftColor">#000000</property>
             <property name="borderLeftStyle">solid</property>
-            <property name="borderLeftWidth">medium</property>
+            <property name="borderLeftWidth">thin</property>
             <property name="borderRightColor">#000000</property>
             <property name="borderRightStyle">solid</property>
-            <property name="borderRightWidth">medium</property>
+            <property name="borderRightWidth">thin</property>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
-            <property name="borderTopWidth">medium</property>
+            <property name="borderTopWidth">thin</property>
             <property name="width">100%</property>
             <property name="dataSet">ICS-Systeme</property>
             <list-property name="boundDataColumns">
@@ -4537,113 +4351,50 @@
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
                     <property name="borderBottomWidth">thin</property>
-                    <property name="borderLeftColor">#000000</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">thin</property>
-                    <property name="borderRightColor">#000000</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                    <property name="borderTopColor">#000000</property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">thin</property>
                     <cell id="1101">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="1325">
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
                     <cell id="1103">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="1327">
                             <text-property name="text">Name</text-property>
                         </label>
                     </cell>
                     <cell id="1105">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="1329">
                             <text-property name="text">Erläuterung</text-property>
                         </label>
                     </cell>
                     <cell id="1107">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="1440">
                             <text-property name="text">Anzahl</text-property>
                         </label>
                     </cell>
                     <cell id="1109">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="1444">
                             <text-property name="text">Status</text-property>
                         </label>
                     </cell>
                     <cell id="1111">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="1442">
                             <text-property name="text">Plattform</text-property>
                         </label>
@@ -4654,113 +4405,53 @@
                 <row id="1113">
                     <property name="backgroundColor">#E6E6FA</property>
                     <property name="fontWeight">normal</property>
-                    <property name="borderLeftColor">#000000</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">medium</property>
-                    <property name="borderRightColor">#000000</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">medium</property>
-                    <property name="borderTopColor">#000000</property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">medium</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
                     <cell id="1114">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2062">
                             <property name="resultSetColumn">Kürzel__(ICS-System)</property>
                         </data>
                     </cell>
                     <cell id="1116">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2063">
                             <property name="resultSetColumn">Titel__(ICS-System)</property>
                         </data>
                     </cell>
                     <cell id="1118">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2064">
                             <property name="resultSetColumn">Beschreibung__(ICS-System)</property>
                         </data>
                     </cell>
                     <cell id="1120">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2065">
                             <property name="resultSetColumn">Anzahl__(ICS-System)</property>
                         </data>
                     </cell>
                     <cell id="1122">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2066">
                             <property name="resultSetColumn">Status__(ICS-System)</property>
                         </data>
                     </cell>
                     <cell id="1124">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2067">
                             <property name="resultSetColumn">Plattform____Baustein__(ICS-System)</property>
                         </data>
@@ -4768,105 +4459,42 @@
                 </row>
                 <row id="2068">
                     <property name="fontWeight">normal</property>
-                    <property name="borderLeftColor">#000000</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">medium</property>
-                    <property name="borderRightColor">#000000</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">medium</property>
-                    <property name="borderTopColor">#000000</property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">medium</property>
                     <cell id="2069">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                     </cell>
                     <cell id="2070">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="2075">
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Benutzer:</text-property>
                         </label>
                     </cell>
                     <cell id="2071">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2076">
                             <property name="resultSetColumn">Benutzer__(ICS-System)</property>
                         </data>
                     </cell>
                     <cell id="2072">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                     </cell>
                     <cell id="2073">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                     </cell>
                     <cell id="2074">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                     </cell>
                 </row>
             </detail>
@@ -4880,16 +4508,16 @@
         <table id="1184">
             <property name="borderBottomColor">#000000</property>
             <property name="borderBottomStyle">solid</property>
-            <property name="borderBottomWidth">medium</property>
+            <property name="borderBottomWidth">thin</property>
             <property name="borderLeftColor">#000000</property>
             <property name="borderLeftStyle">solid</property>
-            <property name="borderLeftWidth">medium</property>
+            <property name="borderLeftWidth">thin</property>
             <property name="borderRightColor">#000000</property>
             <property name="borderRightStyle">solid</property>
-            <property name="borderRightWidth">medium</property>
+            <property name="borderRightWidth">thin</property>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
-            <property name="borderTopWidth">medium</property>
+            <property name="borderTopWidth">thin</property>
             <property name="width">100%</property>
             <property name="dataSet">Anderes_IOT-System</property>
             <list-property name="boundDataColumns">
@@ -4962,113 +4590,50 @@
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
                     <property name="borderBottomWidth">thin</property>
-                    <property name="borderLeftColor">#000000</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">thin</property>
-                    <property name="borderRightColor">#000000</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                    <property name="borderTopColor">#000000</property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">thin</property>
                     <cell id="1186">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="1354">
                             <text-property name="text">Kürzel</text-property>
                         </label>
                     </cell>
                     <cell id="1187">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="1356">
                             <text-property name="text">Name</text-property>
                         </label>
                     </cell>
                     <cell id="1188">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="1358">
                             <text-property name="text">Erläuterung</text-property>
                         </label>
                     </cell>
                     <cell id="1189">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="1448">
                             <text-property name="text">Anzahl</text-property>
                         </label>
                     </cell>
                     <cell id="1190">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="1452">
                             <text-property name="text">Status</text-property>
                         </label>
                     </cell>
                     <cell id="1191">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="1450">
                             <text-property name="text">Plattform</text-property>
                         </label>
@@ -5079,113 +4644,50 @@
                 <row id="1192">
                     <property name="backgroundColor">#E6E6FA</property>
                     <property name="fontWeight">normal</property>
-                    <property name="borderLeftColor">#000000</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">medium</property>
-                    <property name="borderRightColor">#000000</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">medium</property>
-                    <property name="borderTopColor">#000000</property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">medium</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
                     <cell id="1193">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2078">
                             <property name="resultSetColumn">Kürzel__(AnderesIOT-System)</property>
                         </data>
                     </cell>
                     <cell id="1194">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2079">
                             <property name="resultSetColumn">Titel__(AnderesIOT-System)</property>
                         </data>
                     </cell>
                     <cell id="1195">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2080">
                             <property name="resultSetColumn">Beschreibung__(AnderesIOT-System)</property>
                         </data>
                     </cell>
                     <cell id="1196">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2081">
                             <property name="resultSetColumn">Anzahl__(AnderesIOT-System)</property>
                         </data>
                     </cell>
                     <cell id="1197">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2082">
                             <property name="resultSetColumn">Status__(AnderesIOT-System)</property>
                         </data>
                     </cell>
                     <cell id="1198">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2083">
                             <property name="resultSetColumn">Plattform____Baustein__(AnderesIOT-System)</property>
                         </data>
@@ -5193,106 +4695,42 @@
                 </row>
                 <row id="2084">
                     <property name="fontWeight">normal</property>
-                    <property name="borderLeftColor">#000000</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">medium</property>
-                    <property name="borderRightColor">#000000</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">medium</property>
-                    <property name="borderTopColor">#000000</property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">medium</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
                     <cell id="2085">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                     </cell>
                     <cell id="2086">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <label id="2091">
                             <property name="fontWeight">bold</property>
                             <text-property name="text">Benutzer:</text-property>
                         </label>
                     </cell>
                     <cell id="2087">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                         <data id="2092">
                             <property name="resultSetColumn">Benutzer__(AnderesIOT-System)</property>
                         </data>
                     </cell>
                     <cell id="2088">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                     </cell>
                     <cell id="2089">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
                         <property name="borderRightColor">#000000</property>
                         <property name="borderRightStyle">solid</property>
                         <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
                     </cell>
-                    <cell id="2090">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                    </cell>
+                    <cell id="2090"/>
                 </row>
             </detail>
         </table>
@@ -5305,16 +4743,16 @@
         <table id="1219">
             <property name="borderBottomColor">#000000</property>
             <property name="borderBottomStyle">solid</property>
-            <property name="borderBottomWidth">medium</property>
+            <property name="borderBottomWidth">thin</property>
             <property name="borderLeftColor">#000000</property>
             <property name="borderLeftStyle">solid</property>
-            <property name="borderLeftWidth">medium</property>
+            <property name="borderLeftWidth">thin</property>
             <property name="borderRightColor">#000000</property>
             <property name="borderRightStyle">solid</property>
-            <property name="borderRightWidth">medium</property>
+            <property name="borderRightWidth">thin</property>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
-            <property name="borderTopWidth">medium</property>
+            <property name="borderTopWidth">thin</property>
             <property name="width">100%</property>
             <property name="dataSet">Netzwerk</property>
             <list-property name="boundDataColumns">
@@ -5532,13 +4970,13 @@
                     <property name="fontWeight">normal</property>
                     <property name="borderLeftColor">#000000</property>
                     <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">medium</property>
+                    <property name="borderLeftWidth">thin</property>
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">medium</property>
+                    <property name="borderRightWidth">thin</property>
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">medium</property>
+                    <property name="borderTopWidth">thin</property>
                     <cell id="1228">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -5663,13 +5101,13 @@
                     <property name="fontWeight">normal</property>
                     <property name="borderLeftColor">#000000</property>
                     <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">medium</property>
+                    <property name="borderLeftWidth">thin</property>
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">medium</property>
+                    <property name="borderRightWidth">thin</property>
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">medium</property>
+                    <property name="borderTopWidth">thin</property>
                     <cell id="2107">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -5787,16 +5225,16 @@
         <table id="1254">
             <property name="borderBottomColor">#000000</property>
             <property name="borderBottomStyle">solid</property>
-            <property name="borderBottomWidth">medium</property>
+            <property name="borderBottomWidth">thin</property>
             <property name="borderLeftColor">#000000</property>
             <property name="borderLeftStyle">solid</property>
-            <property name="borderLeftWidth">medium</property>
+            <property name="borderLeftWidth">thin</property>
             <property name="borderRightColor">#000000</property>
             <property name="borderRightStyle">solid</property>
-            <property name="borderRightWidth">medium</property>
+            <property name="borderRightWidth">thin</property>
             <property name="borderTopColor">#000000</property>
             <property name="borderTopStyle">solid</property>
-            <property name="borderTopWidth">medium</property>
+            <property name="borderTopWidth">thin</property>
             <property name="width">100%</property>
             <property name="dataSet">Raume</property>
             <list-property name="boundDataColumns">
@@ -5988,13 +5426,13 @@
                     <property name="fontWeight">normal</property>
                     <property name="borderLeftColor">#000000</property>
                     <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">medium</property>
+                    <property name="borderLeftWidth">thin</property>
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">medium</property>
+                    <property name="borderRightWidth">thin</property>
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">medium</property>
+                    <property name="borderTopWidth">thin</property>
                     <cell id="1263">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -6102,13 +5540,13 @@
                     <property name="fontWeight">normal</property>
                     <property name="borderLeftColor">#000000</property>
                     <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">medium</property>
+                    <property name="borderLeftWidth">thin</property>
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">medium</property>
+                    <property name="borderRightWidth">thin</property>
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">medium</property>
+                    <property name="borderTopWidth">thin</property>
                     <cell id="2117">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
