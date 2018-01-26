@@ -2011,7 +2011,7 @@
          </action>
       </viewContribution>
       <viewContribution
-            id="sernet.verinice.samt.exportOrganization"
+            id="sernet.verinice.bp.rcp.action.exportItNetwork"
             targetID="sernet.verinice.bp.rcp.BaseProtectionView">
          <action
                class="sernet.verinice.iso27k.rcp.action.ExportAction"
@@ -2031,11 +2031,11 @@
                class="sernet.verinice.bp.rcp.action.AddItNetworkActionDelegate"
                icon="icons/note-new.png"
                id="sernet.verinice.bp.rcp.action.AddItNetworkActionDelegate"
-               label="%action.label.11"
+               label="%action.label.addItNetwork"
                state="true"
                style="push"
                toolbarPath="additions"
-               tooltip="%action.tooltip.11">
+               tooltip="%action.tooltip.addItNetwork">
          </action>
       </viewContribution>
       
