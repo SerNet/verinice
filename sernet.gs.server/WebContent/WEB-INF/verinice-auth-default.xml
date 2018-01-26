@@ -24,13 +24,11 @@
             "accountsettings"
             "accesscontrol"
             "editprofile"
-            "marktemplate"
             "taskdelete"
             "taskshowall"
             "taskchangeassignee"
             "taskchangeduedate"
             "taskwithreleaseprocess"
-            "templates"
             "searchreindex"
             "showallfiles" -->
             <action id="addbsielement" />
@@ -117,7 +115,6 @@
             "additnetwork"
             "addsecurityassessment"
             "editprofile"
-            "marktemplate"
             "showallfiles"
             "searchreindex"
             "taskchangeassignee"
@@ -127,7 +124,6 @@
             "taskchangeassignee"
             "taskchangeduedate"
             "taskwithreleaseprocess"
-            "templates"
             "addismorg"
             "xmlimport" 
             "searchreindex
@@ -275,7 +271,6 @@
 	        <action id="addismgroup" />
 	        <action id="addnote" />
 	        <action id="addownmodul"/>
-	        <action id="marktemplate"/>
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
           <action id="baseprotectionmodeling" />
@@ -334,7 +329,6 @@
           <action id="taskwithreleaseprocess" />
 	        <action id="taskdelete" />
 	        <action id="taskview" />
-	        <action id="templates" />
 	        <action id="todo"/>
           <action id="unify" />
 	        <action id="xmlexport"/>
@@ -444,7 +438,6 @@
 	        <action id="addnote" />
 	        <action id="addsecurityassessment" />
 	        <action id="addownmodul"/>
-	        <action id="marktemplate"/>
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
           <action id="baseprotectionmodeling" />
@@ -508,7 +501,6 @@
 	        <action id="taskdelete" />
 	        <action id="taskshowall" />
 	        <action id="taskview" />
-	        <action id="templates" />
 	        <action id="todo"/>
           <action id="unify" />
 	        <action id="xmlexport"/>
