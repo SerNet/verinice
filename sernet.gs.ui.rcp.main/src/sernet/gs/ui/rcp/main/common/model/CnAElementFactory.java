@@ -304,7 +304,7 @@ public final class CnAElementFactory {
 					}
 				});
 
-		// BSI Grundschutz elements
+		// BSI-Grundschutz elements
 
 		elementbuilders.put(NKKategorie.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,

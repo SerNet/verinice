@@ -935,13 +935,13 @@ public class ImportTask extends AbstractGstoolImportTask {
             mover.exportDatabse();
         } catch (Exception e) {
             LOG.error("Error: ", e);
-            ExceptionUtil.log(e, "Fehler beim Import aus MDB Datei über temporäre Derby-DB.");
+            ExceptionUtil.log(e, "Fehler beim Import aus MDB-Datei über temporäre Derby-DB.");
         } finally {
             try {
                 source.close();
                 target.close();
             } catch (Exception e) {
-                LOG.debug("Konnte temporäre Import DB nicht schließen.", e);
+                LOG.debug("Konnte temporäre Import-DB nicht schließen.", e);
             }
         }
     }

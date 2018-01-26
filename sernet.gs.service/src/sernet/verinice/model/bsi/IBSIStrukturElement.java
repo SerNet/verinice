@@ -22,7 +22,7 @@ import java.util.Collection;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Marker interface for BSI Grundschutz Elements created
+ * Marker interface for BSI-Grundschutz Elements created
  * as part of the initial inventory ("Strukturanalyse").
  * 
  * 

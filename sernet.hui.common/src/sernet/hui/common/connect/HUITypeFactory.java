@@ -176,9 +176,9 @@ public class HUITypeFactory {
 
         } catch (IOException ie) {
             LOG.error(ie);
-            throw new DBException("Die XML Datei mit der Definition der Formularfelder konnte nicht geladen werden! Bitte Pfad und Erreichbarkeit laut Konfigurationsfile überprüfen.", ie);
+            throw new DBException("Die XML-Datei mit der Definition der Formularfelder konnte nicht geladen werden! Bitte Pfad und Erreichbarkeit laut Konfigurationsfile überprüfen.", ie);
         } catch (SAXException e) {
-            throw new DBException("Die XML Datei mit der Definition der Formularfelder ist defekt!", e);
+            throw new DBException("Die XML-Datei mit der Definition der Formularfelder ist defekt!", e);
         }
     }
 
