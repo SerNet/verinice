@@ -67,7 +67,7 @@
       <b>Achtung!</b> Damit der GSTOOL-Import erfolgreich ablaufen kann, müssen die Grundtschutzkataloge
       in verinice geladen sein!
       <br /><br />
-      Zusätzlich müssen Sie im Fenster "Grundschutz Modell" eine Datenbank in verinice geöffnet haben
+      Zusätzlich müssen Sie im Fenster "Grundschutzmodell" eine Datenbank in verinice geöffnet haben
       - andernfalls wird der Import nicht funktionieren.
     </description>
     <onCompletion>
