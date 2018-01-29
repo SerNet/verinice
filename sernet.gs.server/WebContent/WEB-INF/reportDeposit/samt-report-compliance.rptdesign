@@ -127,7 +127,6 @@ import sernet.verinice.samt.service.TotalSecurityFigureISA2Command;
 import sernet.verinice.service.commands.crud.ExecuteHQLInReportCommand;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.report.service.impl.TocHelper2;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -3547,7 +3546,6 @@ import java.util.Set;
 import java.util.Map.Entry;
 import java.util.Collections;
 import java.util.Comparator;
-import sernet.verinice.report.service.impl.TocHelper2;
 
 
 maturity = new HashMap(0);
@@ -3687,7 +3685,7 @@ double getAverageTargetMaturity(ControlGroup group){
 					targetMatCount +=  (double)Integer.valueOf(child.getThreshold2());
 					topicCount += Double.valueOf(1.0);
 				} catch (e){
-					TocHelper2.log("Error occurred computing infos for:\t" + child.getTitle());
+
 				}
 		}
 	}
