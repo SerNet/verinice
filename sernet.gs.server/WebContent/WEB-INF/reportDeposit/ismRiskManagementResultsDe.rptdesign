@@ -6915,9 +6915,9 @@ for (CnATreeElement process : processes) {
 			assetReloader = new LoadElementByUuid(asset.getUuid(), new RetrieveInfo().setLinksDown(true).setLinksUp(true).setLinksDownProperties(true).setLinksUpProperties(true));
 			asset = helper.execute(assetReloader).getElement();
 
-        		impactC = valueAdapter.getVertraulichkeit();
-        		impactI = valueAdapter.getIntegritaet();
-		        impactA = valueAdapter.getVerfuegbarkeit();
+			impactC = valueAdapter.getConfidentiality();
+			impactI = valueAdapter.getIntegrity();
+		        impactA = valueAdapter.getAvailability();
        			Integer[] reducedImpact = raService.applyControlsToImpact(riskType, asset, impactC, impactI, impactA);
         		if (reducedImpact != null) {
             			impactC = reducedImpact[0];
@@ -6936,9 +6936,9 @@ for (CnATreeElement process : processes) {
        				isIRelevant = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue().equals("1");
        				isARelevant = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue().equals("1");
 			        // prob. / impact:
-        			riskC = probability + valueAdapter.getVertraulichkeit();
-        			riskI = probability + valueAdapter.getIntegritaet();
-        			riskA = probability + valueAdapter.getVerfuegbarkeit();
+				riskC = probability + valueAdapter.getConfidentiality();
+				riskI = probability + valueAdapter.getIntegrity();
+				riskA = probability + valueAdapter.getAvailability();
 				yellowCompareValueC = 3;
 				yellowCompareValueI = 4;
 				yellowCompareValueA = 3;
@@ -7243,9 +7243,9 @@ for (CnATreeElement process : processes) {
        				isIRelevant = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue().equals("1");
        				isARelevant = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue().equals("1");
 			        // prob. / impact:
-        			riskC = probability + valueAdapter.getVertraulichkeit();
-        			riskI = probability + valueAdapter.getIntegritaet();
-        			riskA = probability + valueAdapter.getVerfuegbarkeit();
+				riskC = probability + valueAdapter.getConfidentiality();
+				riskI = probability + valueAdapter.getIntegrity();
+				riskA = probability + valueAdapter.getAvailability();
 				yellowCompareValueC = 3;
 				yellowCompareValueI = 4;
 				yellowCompareValueA = 3;
@@ -9286,9 +9286,9 @@ for (CnATreeElement process : processes) {
        				isIRelevant = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue().equals("1");
        				isARelevant = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue().equals("1");
 			        // prob. / impact:
-	        		impactC = valueAdapter.getVertraulichkeit();
-       		 		impactI = valueAdapter.getIntegritaet();
-			        impactA = valueAdapter.getVerfuegbarkeit();
+				impactC = valueAdapter.getConfidentiality();
+				impactI = valueAdapter.getIntegrity();
+			        impactA = valueAdapter.getAvailability();
        				Integer[] reducedImpact = raService.applyControlsToImpact(riskType, asset, impactC, impactI, impactA);
         			if (reducedImpact != null) {
             				impactC = reducedImpact[0];
