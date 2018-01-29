@@ -330,9 +330,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
                 openNewsDialog(newsEntry);
             }
         } catch (UpdateNewsException e){
-            LOG.error("Problem occured during loading the verinice-update-news", e);
+            LOG.error("Problem occurred during loading the verinice-update-news", e);
         } catch (Exception t){
-            LOG.error("Problem occured", t);
+            LOG.error("Problem occurred", t);
         }
     }
 

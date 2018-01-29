@@ -120,7 +120,7 @@ public class MigrateDbTo1_03D extends DbMigration {
                     // delete broken link
                     linkDao.delete(link);
                 } catch (CommandException e) {
-                    getLog().error("Error occured while trying to repair a broken (wrong relationId) link", e);
+                    getLog().error("Error occurred while trying to repair a broken (wrong relationId) link", e);
                 }
 
             } else {

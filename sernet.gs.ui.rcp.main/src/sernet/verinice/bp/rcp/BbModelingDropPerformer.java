@@ -130,7 +130,7 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
             return false;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt(); // set interrupt flag
-            log.error("InterruptedException occured while model module and element", e); //$NON-NLS-1$
+            log.error("InterruptedException occurred while model module and element", e); //$NON-NLS-1$
             showError(e, Messages.BbModelingDropPerformer_Error1);
             return false;
         }

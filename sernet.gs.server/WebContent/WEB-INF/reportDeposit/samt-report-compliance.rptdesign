@@ -3687,7 +3687,7 @@ double getAverageTargetMaturity(ControlGroup group){
 					targetMatCount +=  (double)Integer.valueOf(child.getThreshold2());
 					topicCount += Double.valueOf(1.0);
 				} catch (e){
-					TocHelper2.log("Error occured computing infos for:\t" + child.getTitle());
+					TocHelper2.log("Error occurred computing infos for:\t" + child.getTitle());
 				}
 		}
 	}
