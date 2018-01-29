@@ -6865,7 +6865,7 @@ import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import java.util.*;
 import sernet.verinice.model.iso27k.Process;
-import sernet.verinice.model.iso27k.AssetValueAdapter;
+import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
 import sernet.verinice.service.risk.RiskAnalysisHelperImpl;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.service.commands.LoadElementByUuid;
@@ -6907,15 +6907,15 @@ for (CnATreeElement process : processes) {
 		assets = helper.execute(assetLoader).getElements();
 		for (CnATreeElement asset : assets) {
 			// risk matrices
-			  valueAdapter = new AssetValueAdapter(asset);
+			  valueAdapter = new ProtectionRequirementsValueAdapter(asset);
         		  raService = new RiskAnalysisHelperImpl();
 			// reload asset
 			assetReloader = new LoadElementByUuid(asset.getUuid(), new RetrieveInfo().setLinksDown(true).setLinksUp(true).setLinksDownProperties(true).setLinksUpProperties(true));
 			asset = helper.execute(assetReloader).getElement();
 
-        		impactC = valueAdapter.getVertraulichkeit();
-        		impactI = valueAdapter.getIntegritaet();
-		        impactA = valueAdapter.getVerfuegbarkeit();
+			impactC = valueAdapter.getConfidentiality()();
+			impactI = valueAdapter.getIntegrity()();
+		        impactA = valueAdapter.getAvailability()();
        			Integer[] reducedImpact = raService.applyControlsToImpact(riskType, asset, impactC, impactI, impactA);
         		if (reducedImpact != null) {
             			impactC = reducedImpact[0];
@@ -6934,9 +6934,9 @@ for (CnATreeElement process : processes) {
        				isIRelevant = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue().equals("1");
        				isARelevant = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue().equals("1");
 			        // prob. / impact:
-        			riskC = probability + valueAdapter.getVertraulichkeit();
-        			riskI = probability + valueAdapter.getIntegritaet();
-        			riskA = probability + valueAdapter.getVerfuegbarkeit();
+				riskC = probability + valueAdapter.getConfidentiality()();
+				riskI = probability + valueAdapter.getIntegrity()();
+				riskA = probability + valueAdapter.getAvailability()();
 				yellowCompareValueC = 3;
 				yellowCompareValueI = 4;
 				yellowCompareValueA = 3;
@@ -7188,7 +7188,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.service.risk.RiskAnalysisHelper;
-import sernet.verinice.model.iso27k.AssetValueAdapter;
+import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
 import sernet.verinice.service.risk.RiskAnalysisHelperImpl;
 import sernet.verinice.service.commands.crud.RiskMatrix;
 import java.util.*;
@@ -7227,7 +7227,7 @@ for (CnATreeElement process : processes) {
 			amountRedScens = 0;
 			amountYellowScens = 0;
 			// risk matrices
-			  valueAdapter = new AssetValueAdapter(asset);
+			  valueAdapter = new ProtectionRequirementsValueAdapter(asset);
         		  raService = new RiskAnalysisHelperImpl();
 			
 			// load all scenarios for each asset
@@ -7241,9 +7241,9 @@ for (CnATreeElement process : processes) {
        				isIRelevant = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue().equals("1");
        				isARelevant = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue().equals("1");
 			        // prob. / impact:
-        			riskC = probability + valueAdapter.getVertraulichkeit();
-        			riskI = probability + valueAdapter.getIntegritaet();
-        			riskA = probability + valueAdapter.getVerfuegbarkeit();
+				riskC = probability + valueAdapter.getConfidentiality()();
+				riskI = probability + valueAdapter.getIntegrity()();
+				riskA = probability + valueAdapter.getAvailability()();
 				yellowCompareValueC = 3;
 				yellowCompareValueI = 4;
 				yellowCompareValueA = 3;
@@ -9230,7 +9230,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.service.risk.RiskAnalysisHelper;
-import sernet.verinice.model.iso27k.AssetValueAdapter;
+import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
 import sernet.verinice.service.risk.RiskAnalysisHelperImpl;
 import sernet.verinice.service.commands.crud.RiskMatrix;
 import sernet.gs.service.RetrieveInfo;
@@ -9270,7 +9270,7 @@ for (CnATreeElement process : processes) {
 			amountRedScens = 0;
 			amountYellowScens = 0;
 			// risk matrices
-			  valueAdapter = new AssetValueAdapter(asset);
+			  valueAdapter = new ProtectionRequirementsValueAdapter(asset);
         		  raService = new RiskAnalysisHelperImpl();
 			
 			// load all scenarios for each asset
@@ -9284,9 +9284,9 @@ for (CnATreeElement process : processes) {
        				isIRelevant = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue().equals("1");
        				isARelevant = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue().equals("1");
 			        // prob. / impact:
-	        		impactC = valueAdapter.getVertraulichkeit();
-       		 		impactI = valueAdapter.getIntegritaet();
-			        impactA = valueAdapter.getVerfuegbarkeit();
+				impactC = valueAdapter.getConfidentiality();
+				impactI = valueAdapter.getIntegrity();
+			        impactA = valueAdapter.getAvailability();
        				Integer[] reducedImpact = raService.applyControlsToImpact(riskType, asset, impactC, impactI, impactA);
         			if (reducedImpact != null) {
             				impactC = reducedImpact[0];
