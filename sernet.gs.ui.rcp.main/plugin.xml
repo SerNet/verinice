@@ -2046,11 +2046,11 @@
                class="sernet.gs.ui.rcp.main.actions.ImportCatalogAction"
                icon="icons/import.gif"
                id="sernet.gs.ui.rcp.main.actions.ImportCatalogAction"
-               label="%action.label.21"
+               label="%action.label.import_catalog"
                state="true"
                style="push"
                toolbarPath="additions"
-               tooltip="%action.tooltip.21">
+               tooltip="%action.tooltip.import_catalog">
          </action>
       </viewContribution>
             
