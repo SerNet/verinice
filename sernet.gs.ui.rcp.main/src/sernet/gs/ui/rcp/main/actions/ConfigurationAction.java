@@ -187,7 +187,7 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
     }
 
     public IAuthService getAuthService() {
-        return (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
+        return ServiceFactory.lookupAuthService();
     }
 
 	@Override

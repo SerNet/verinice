@@ -114,6 +114,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(PreferenceConstants.SHOW_UPDATE_NEWS_DIALOG, false);
         
         store.setDefault(PreferenceConstants.STANDALONE_UPDATENEWS_URL, STANDALONE_UPDATENEWS_URL_DEFAULT);
+        store.setDefault(PreferenceConstants.INFO_CONTROLS_TRANSFORMED_TO_MODERNIZED_GS, true);
 	}
-
 }

@@ -112,7 +112,7 @@ public class AddGroup extends Action implements IObjectActionDelegate, RightEnab
 		super();
 		this.parent = element;
 		this.typeId = typeId;
-		this.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(childTypeId)));	
+		this.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getImageForTypeId(childTypeId)));	
 		this.setText( TITLE_FOR_TYPE.get(typeId)!=null ? TITLE_FOR_TYPE.get(typeId) : Messages.getString("AddGroup.19") ); //$NON-NLS-1$
 	}
 
@@ -193,7 +193,7 @@ public class AddGroup extends Action implements IObjectActionDelegate, RightEnab
                 if(group instanceof Asset) {
                     typeId0 = Control.TYPE_ID;
                 }
-				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(typeId0)));	
+				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getImageForTypeId(typeId0)));	
 				action.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.getString("AddGroup.19") ); //$NON-NLS-1$
 			}
 			// Only change state when it is enabled, since we do not want to

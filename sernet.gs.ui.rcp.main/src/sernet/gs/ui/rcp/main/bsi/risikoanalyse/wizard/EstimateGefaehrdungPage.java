@@ -34,9 +34,9 @@ import org.eclipse.swt.widgets.Composite;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.NegativeEstimateGefaehrdung;
-import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.PositiveEstimateGefaehrdung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.service.commands.risk.NegativeEstimateGefaehrdung;
+import sernet.verinice.service.commands.risk.PositiveEstimateGefaehrdung;
 
 /**
  * WizardPage lists all previously selected Gefaehrdungen for the user to decide

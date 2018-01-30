@@ -25,10 +25,10 @@ import org.springframework.security.userdetails.UserDetails;
 import org.springframework.security.userdetails.UserDetailsService;
 import org.springframework.security.userdetails.UsernameNotFoundException;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
@@ -58,7 +58,8 @@ public class DbUserDetailsService extends UserLoader implements UserDetailsServi
 	/* (non-Javadoc)
 	 * @see org.springframework.security.userdetails.UserDetailsService#loadUserByUsername(java.lang.String)
 	 */
-	public UserDetails loadUserByUsername(String username)
+	@Override
+    public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException, DataAccessException {
 		if (adminuser.length() > 0 && adminpass.length() > 0 && username.equals(adminuser)) {
 			return defaultUser();
@@ -117,8 +118,13 @@ public class DbUserDetailsService extends UserLoader implements UserDetailsServi
 		if (entity.isSelected(Configuration.PROP_ISADMIN, Configuration.PROP_ISADMIN_YES)) {
 			userDetails.addRole(ApplicationRoles.ROLE_ADMIN);
 		}
+
+        // if set in the entity, the user may also have the local admin role:
+        if (entity.isSelected(Configuration.PROP_ISLOCALADMIN, Configuration.PROP_ISLOCALADMIN_YES)) {
+            userDetails.addRole(ApplicationRoles.ROLE_LOCAL_ADMIN);
+        }
 			
-		// if set in the entity, the user may also have the admin role:
+        // if set in the entity, the user may also have the web role:
         if (!entity.isSelected(Configuration.PROP_WEB, Configuration.PROP_WEB_NO)) {
             userDetails.addRole(ApplicationRoles.ROLE_WEB);
         }

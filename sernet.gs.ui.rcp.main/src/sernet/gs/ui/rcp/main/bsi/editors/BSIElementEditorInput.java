@@ -41,6 +41,7 @@ public class BSIElementEditorInput implements IEditorInput {
     
 	private CnATreeElement element;
 	private TaskInformation task;
+    private boolean readOnly = false;
 	
 
 	public BSIElementEditorInput(CnATreeElement element) {
@@ -52,7 +53,12 @@ public class BSIElementEditorInput implements IEditorInput {
         this.task = task;
     }
 	
-	public boolean exists() {
+	public BSIElementEditorInput(CnATreeElement element, boolean isReadOnly) {
+	    this.element = element;
+	    this.readOnly = isReadOnly;
+    }
+
+    public boolean exists() {
 		return true;
 	}
 	
@@ -103,22 +109,22 @@ public class BSIElementEditorInput implements IEditorInput {
 	 * @param editor An editor
 	 * @return The CnATreeElement from there editor or null
 	 */
-	public static CnATreeElement extractElement(IEditorPart editor) {
-	    if(editor==null) {
-	        return null;
-	    }
+    public static CnATreeElement extractElement(IEditorPart editor) {
+        if (editor == null) {
+            return null;
+        }
         IEditorInput input = editor.getEditorInput();
         if (!(input instanceof BSIElementEditorInput)) {
             // only BSIElementEditorInput will be observed
             return null;
         }
-        
+
         BSIElementEditorInput elementInput = (BSIElementEditorInput) input;
-        if (elementInput.getCnAElement()==null) {
+        if (elementInput.getCnAElement() == null) {
             LOG.warn("Element in editor input is null.");
             return null;
         }
-        
+
         return elementInput.getCnAElement();
     }
 
@@ -127,5 +133,9 @@ public class BSIElementEditorInput implements IEditorInput {
      */
     public TaskInformation getTask() {
         return task;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
     }
 }

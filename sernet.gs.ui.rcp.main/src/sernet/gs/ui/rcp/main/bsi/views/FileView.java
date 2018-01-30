@@ -19,8 +19,6 @@ package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Hashtable;
@@ -82,11 +80,11 @@ import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.DeleteNote;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
@@ -94,9 +92,11 @@ import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.RightsEnabledView;
@@ -104,6 +104,7 @@ import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachments;
 import sernet.verinice.service.commands.LoadAttachmentsUserFiltered;
 import sernet.verinice.service.commands.LoadFileSizeLimit;
+import sernet.verinice.service.commands.crud.DeleteNote;
 
 /**
  * Lists files {@link Attachment} attached to a CnATreeElement. User can view,
@@ -364,6 +365,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
             public void selectionChanged(SelectionChangedEvent event) {
                 saveCopyAction.setEnabled(true);
                 openAction.setEnabled(true);
+                deleteFileAction.setEnabled(isCnATreeElementEditable());
             }
         });
     }
@@ -383,7 +385,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         if (part == this) {
             openAction.setEnabled(element != null);
             saveCopyAction.setEnabled(element != null);
-            deleteFileAction.setEnabled(element != null && deleteFileAction.checkRights());
+            deleteFileAction.setEnabled(element != null && deleteFileAction.checkRights() && isCnATreeElementEditable());
             return;
         }
 
@@ -402,8 +404,8 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
     protected void elementSelected(Object element) {
         try {
             if (element instanceof CnATreeElement) {
-                addFileAction.setEnabled(addFileAction.checkRights());
                 setCurrentCnaElement((CnATreeElement) element);
+                addFileAction.setEnabled(addFileAction.checkRights() && isCnATreeElementEditable());
                 loadFiles();
             } else {
                 addFileAction.setEnabled(false);
@@ -414,11 +416,15 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
                 Attachment att = (Attachment) selectedElement;
                 openAction.setEnabled(att != null);
                 saveCopyAction.setEnabled(att != null);
-                deleteFileAction.setEnabled(att != null && deleteFileAction.checkRights());
+                deleteFileAction.setEnabled(att != null && deleteFileAction.checkRights() && isCnATreeElementEditable());
             }
         } catch (Exception e) {
             LOG.error("Error while loading notes", e); //$NON-NLS-1$
         }
+    }
+
+    private boolean isCnATreeElementEditable() {
+        return currentCnaElement != null && CnAElementHome.getInstance().isNewChildAllowed(currentCnaElement);
     }
 
     protected void startInitDataJob() {
@@ -1022,16 +1028,21 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
                 public void loaded(ISO27KModel model) {
                     // work is done in loaded(BSIModel model)
                 }
+                @Override
+                public void loaded(BpModel model) {
+                 // work is done in loaded(BSIModel model)
+                    
+                }
+
+                @Override
+                public void loaded(CatalogModel model) {
+                    // nothing to do
+                }
             };
             CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
         }
     }
     
-    private static double round (double value){
-        BigDecimal bd = new BigDecimal(value);
-        return bd.setScale(3, RoundingMode.HALF_UP).doubleValue();
-    }
-        
     /**
      * @param bytes
      * @param si

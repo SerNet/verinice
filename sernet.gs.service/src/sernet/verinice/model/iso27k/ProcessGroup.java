@@ -26,7 +26,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class ProcessGroup extends Group<Process> {
+public class ProcessGroup extends Group<Process> implements IISO27kGroup {
 
 	public static final String TYPE_ID = "process_group"; //$NON-NLS-1$
 	public static final String PROP_NAME = "process_group_name"; //$NON-NLS-1$

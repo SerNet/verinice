@@ -26,11 +26,12 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.hibernate.mapping.Set;
 
+import sernet.gs.service.Retriever;
 import sernet.verinice.iso27k.rcp.ISMView;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementComparator;
 import sernet.verinice.model.common.ITitleAdaptor;
+import sernet.verinice.service.tree.ElementManager;
 
 /**
  * TreeContentProvider provides the TreeViewer in {@link ISMView} with information on 

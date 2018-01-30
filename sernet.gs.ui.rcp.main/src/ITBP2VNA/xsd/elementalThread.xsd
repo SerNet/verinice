@@ -1,0 +1,21 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="document">
+    <xs:complexType>
+      <xs:all>
+        <xs:element type="xs:string" name="fullTitle"/>
+        <xs:element type="xs:string" name="identifier"/>
+        <xs:element type="xs:string" name="title"/>
+		<xs:element name="cia">
+			<xs:complexType>
+				<xs:all>		
+					<xs:element type="xs:string" name="confidentiality"/>
+					<xs:element type="xs:string" name="integrity"/>
+					<xs:element type="xs:string" name="availability"/>
+				</xs:all>
+			</xs:complexType>
+		</xs:element>
+		<xs:element type="xs:string" name="description"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

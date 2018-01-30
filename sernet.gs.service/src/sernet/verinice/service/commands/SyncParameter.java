@@ -19,14 +19,19 @@
  ******************************************************************************/
 package sernet.verinice.service.commands;
 
-import java.io.IOException;
 import java.io.Serializable;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
 public class SyncParameter implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private static final Logger LOG = Logger.getLogger(SyncParameter.class);
 
     private boolean insert;
     private boolean update;
@@ -39,27 +44,28 @@ public class SyncParameter implements Serializable {
     
     private Integer format = EXPORT_FORMAT_DEFAULT;
 
-    public SyncParameter(boolean insert, boolean update, boolean delete, boolean integrate, Integer format) throws SyncParameterException {
+    private boolean importAsCatalog;
+
+    public SyncParameter(boolean insert, boolean update, boolean delete, boolean integrate, boolean importAsCatalog, Integer format) throws SyncParameterException {
         super();
         this.insert = insert;
         this.update = update;
         this.delete = delete;
         this.integrate = integrate;
+        this.importAsCatalog = importAsCatalog;
         if(format!=null) {
             this.format = format;
         }
         
-        validateParameter();
+        validateAndCorrectParameters();
     }
 
-    /**
-     * @param insertState
-     * @param updateState
-     * @param deleteState
-     * @throws SyncParameterException 
-     */
-    public SyncParameter(boolean insertState, boolean updateState, boolean deleteState) throws SyncParameterException {
-        this(insertState, updateState, deleteState, true, SyncParameter.EXPORT_FORMAT_DEFAULT);
+    public SyncParameter(boolean insert, boolean update, boolean delete, boolean integrate, Integer format) throws SyncParameterException {
+        this(insert, update, delete, integrate, false, format);
+      }
+
+    public SyncParameter(boolean insertState, boolean updateState, boolean deleteState, boolean integrate ) throws SyncParameterException {
+        this(insertState, updateState, deleteState, true, false, SyncParameter.EXPORT_FORMAT_DEFAULT);
     }
 
     public boolean isInsert() {
@@ -102,8 +108,22 @@ public class SyncParameter implements Serializable {
         this.format = format;
     }
     
-    private void validateParameter() throws SyncParameterException {
-        if ((this.insert || this.update || this.delete || this.integrate) == false)
+    private void validateAndCorrectParameters() throws SyncParameterException {
+        if (!(this.insert || this.update || this.delete || this.integrate)) {
             throw new SyncParameterException();
+        }
+        if (importAsCatalog && !integrate) {
+            LOG.warn(
+                    "Invalid combination: parameters importAsCatalog is true and integrate is false. Setting parameter integrate to true automatically.");
+            integrate = true;
+        }
+    }
+
+    public boolean isImportAsCatalog() {
+        return importAsCatalog;
+    }
+
+    public void setImportAsCatalog(boolean importAsCatalog) {
+        this.importAsCatalog = importAsCatalog;
     }
 }

@@ -21,8 +21,6 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.net.URL;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -34,17 +32,13 @@ import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.Raum;
 import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.bsi.Server;
-import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateLink;
-import sernet.verinice.service.commands.LoadCnAElementByExternalID;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.RemoveLink;
-import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
-import sernet.verinice.service.commands.UpdateElementEntity;
 import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
 
 /**

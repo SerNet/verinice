@@ -40,11 +40,6 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzungFa
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
-import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.AssociateGefaehrdungsUmsetzung;
-import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.DisassociateGefaehrdungsUmsetzung;
-import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.LoadAssociatedGefaehrdungen;
-import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.StartNewRiskAnalysis;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
@@ -55,6 +50,11 @@ import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.crud.LoadChildrenForExpansion;
+import sernet.verinice.service.commands.risk.AssociateGefaehrdungsUmsetzung;
+import sernet.verinice.service.commands.risk.DisassociateGefaehrdungsUmsetzung;
+import sernet.verinice.service.commands.risk.LoadAssociatedGefaehrdungen;
+import sernet.verinice.service.commands.risk.StartNewRiskAnalysis;
 import sernet.verinice.service.gstoolimport.MassnahmenFactory;
 
 /**

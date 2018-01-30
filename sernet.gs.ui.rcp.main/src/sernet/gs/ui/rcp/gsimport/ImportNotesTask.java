@@ -28,9 +28,10 @@ import sernet.gs.reveng.importData.ZielobjektTypeResult;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.taskcommands.ImportNotesForZielobjekt;
 import sernet.snutils.DBException;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.service.commands.task.ImportNotesForZielobjekt;
+import sernet.verinice.service.gstoolimport.TransferData;
 
 /**
  * @author koderman@sernet.de
@@ -47,7 +48,7 @@ public class ImportNotesTask extends AbstractGstoolImportTask  {
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
 		String sourceDbUrl = prefs.getString(PreferenceConstants.GS_DB_URL);
 		if (sourceDbUrl.indexOf("odbc") > -1) {
-			throw new DBException("Kann nicht direkt aus MDB Datei importieren. Datenbank vorher anhängen in Menü \"Bearbeiten, Einstellungen\".");
+			throw new DBException("Kann nicht direkt aus MDB-Datei importieren. Datenbank vorher anhängen in Menü \"Bearbeiten, Einstellungen\".");
 		}
 		this.monitor = monitor;	
 		transferData = new TransferData(getGstoolDao(), false);

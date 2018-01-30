@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.14.0.full" useFeatures="true" includeLaunchers="true">
+<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.15.0.full" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/sernet.gs.ui.rcp.main/verinice_icons/about_img.png"/>
       <text>
-         SerNet verinice 1.14.0 - Codename &apos;Acapulco&apos;
+         SerNet verinice 1.15.0 - Codename &apos;Miyazaki&apos;
 
 (c) SerNet Service Network GmbH and others
-1996-2017
+1996-2018
 
 Contact the authors:
 verinice@sernet.de
@@ -23,26 +23,29 @@ Contributors:
 Alexander Koderman 		
 Anne Hanekop 			
 Marek Seeger			
-Andreas Becker			&lt;andreas.r.becker@ruhr-uni-bochum.de&gt;
-Robert Schuster			&lt;r.schuster@tarent.de&gt;
-Daniel Murygin			&lt;dm@sernet.de&gt;
-Sebastian Engel 		&lt;s.engel@tarent.de&gt;
-Markus Joos				&lt;markus.joos@t-online.de&gt;
-Gregorio Levano			&lt;GregorioMagno.LevanoHuaman@hs-furtwangen.de&gt;
-Christian Ganzmann 		&lt;christian.ganzmann@hs-furtwangen.de&gt;
-Carmen Probst 			&lt;carmen.probst@hs-furtwangen.de&gt;
-Sebastian Hagedorn 		&lt;sh@sernet.de&gt;
+Andreas Becker
+Robert Schuster
+Daniel Murygin
+Sebastian Engel
+Markus Joos
+Gregorio Levano
+Christian Ganzmann
+Carmen Probst
+Sebastian Hagedorn
 Johannes Stillig 			
-Christian Eschenlohr 		&lt;christian.eschenlohr@leoni.com&gt;
-Benjamin Weißenfels         &lt;bw@sernet.de&gt;
-Joachim Seifert				&lt;Joachim.Seifert@rbt-nbg.de&gt;
+Christian Eschenlohr
+Benjamin Weißenfels
+Joachim Seifert
 Moritz Reiter         
-Alexander von Ossowski &lt;avo@it-infosec.de&gt;
+Alexander von Ossowski
 Ruth Motza         
-Viktor Schmidt         &lt;vschmidt@ckc.de&gt;
-Tatjana Anisow         &lt;ta@sernet.de&gt;
-Michael Flürenbrock         &lt;mf@sernet.de&gt;
-Urs Zeidler         &lt;uz@sernet.de&gt;
+Viktor Schmidt
+Tatjana Anisow
+Michael Flürenbrock
+Urs Zeidler
+Alexander Nasrallah
+Jochen Kemnade
+Antonio Marino
 
 Artwork:
 Blackbit						www.blackbit.de

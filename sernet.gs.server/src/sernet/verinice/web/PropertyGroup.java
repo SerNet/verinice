@@ -31,9 +31,11 @@ import java.util.List;
  */
 public class PropertyGroup implements Serializable {
     
+    private static final long serialVersionUID = 1L;
+
     private String id;
     private String name;
-    private List<HuiProperty<String, String>> propertyList = new ArrayList<HuiProperty<String, String>>();
+    private List<HuiProperty> propertyList = new ArrayList<HuiProperty>();
     
     public PropertyGroup(String id, String name) {
         super();
@@ -52,15 +54,15 @@ public class PropertyGroup implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
-    public void addPropertyType(HuiProperty<String, String> prop) {
+    public void addPropertyType(HuiProperty prop) {
         propertyList.add(prop);
     }
-    public List<HuiProperty<String, String>> getLabelPropertyList() {
-        List<HuiProperty<String, String>> labelList = Collections.emptyList();
-        List<HuiProperty<String, String>> list = getPropertyList();
+    public List<HuiProperty> getLabelPropertyList() {
+        List<HuiProperty> labelList = Collections.emptyList();
+        List<HuiProperty> list = getPropertyList();
         if(list!=null) {
-            labelList = new LinkedList<HuiProperty<String,String>>();
-            for (HuiProperty<String, String> property : getPropertyList()) {
+            labelList = new LinkedList<HuiProperty>();
+            for (HuiProperty property : getPropertyList()) {
                 if(property.isShowLabel()) {
                     labelList.add(property);
                 }
@@ -68,12 +70,12 @@ public class PropertyGroup implements Serializable {
         }
         return labelList;
     }
-    public List<HuiProperty<String, String>> getNoLabelPropertyList() {
-        List<HuiProperty<String, String>> noLabelList = Collections.emptyList();
-        List<HuiProperty<String, String>> list = getPropertyList();
+    public List<HuiProperty> getNoLabelPropertyList() {
+        List<HuiProperty> noLabelList = Collections.emptyList();
+        List<HuiProperty> list = getPropertyList();
         if(list!=null) {
-            noLabelList = new LinkedList<HuiProperty<String,String>>();
-            for (HuiProperty<String, String> property : getPropertyList()) {
+            noLabelList = new LinkedList<HuiProperty>();
+            for (HuiProperty property : getPropertyList()) {
                 if(!property.isShowLabel()) {
                     noLabelList.add(property);
                 }
@@ -81,10 +83,10 @@ public class PropertyGroup implements Serializable {
         }
         return noLabelList;
     }
-    public List<HuiProperty<String, String>> getPropertyList() {
+    public List<HuiProperty> getPropertyList() {
         return propertyList;
     }
-    public void setPropertyList(List<HuiProperty<String, String>> propertyTypes) {
+    public void setPropertyList(List<HuiProperty> propertyTypes) {
         this.propertyList = propertyTypes;
     }
 

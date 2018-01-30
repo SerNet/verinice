@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns="http://www.verinice.org/auth" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xs:schema xmlns="http://www.verinice.org/auth" 
+		   xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+		   xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+           xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+           jaxb:extensionBindingPrefixes="xjc"
+           jaxb:version="1.0"
     elementFormDefault="qualified" targetNamespace="http://www.verinice.org/auth">
+    
+    <xs:annotation>
+	   <xs:appinfo>
+	      <jaxb:globalBindings generateIsSetMethod="true">
+	          <xjc:serializable uid="20111102155657" />
+	      </jaxb:globalBindings>
+	   </xs:appinfo>
+	</xs:annotation>
+
     <xs:annotation>
         <xs:documentation><![CDATA[
         verinice authorization Schema
@@ -127,8 +141,8 @@
                     ref="action" />
             </xs:sequence>
             <xs:attribute name="name" use="required" type="xs:string" />
-            <xs:attribute name="origin" type="originType"
-                default="modification" />
+            <xs:attribute name="origin" type="originType" default="modification" />
+            <xs:attribute name="creator" type="xs:string" />
         </xs:complexType>
         <xs:unique name="uniqueAction">
             <xs:selector xpath="action" />

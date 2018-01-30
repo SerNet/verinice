@@ -235,7 +235,7 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
 
         if(mergedElement instanceof CnATreeElement) {
             CnATreeElement element = (CnATreeElement) mergedElement;
-            index(element);   
+            index(element);
         }
         return mergedElement;
     }
@@ -316,7 +316,8 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         }
         elmt.fireIntegritaetChanged(new CascadingTransaction());
         elmt.fireVerfuegbarkeitChanged(new CascadingTransaction());
-        elmt.fireVertraulichkeitChanged(new CascadingTransaction());   
+        elmt.fireVertraulichkeitChanged(new CascadingTransaction());  
+        elmt.fireValueChanged(new CascadingTransaction());
     }
 
     public Class<T> getType() {

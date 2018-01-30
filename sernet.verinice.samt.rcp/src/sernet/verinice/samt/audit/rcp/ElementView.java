@@ -52,6 +52,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
@@ -66,8 +67,9 @@ import sernet.verinice.iso27k.rcp.ISMViewContentProvider;
 import sernet.verinice.iso27k.rcp.ISMViewLabelProvider;
 import sernet.verinice.iso27k.rcp.ISO27KModelViewUpdate;
 import sernet.verinice.iso27k.rcp.JobScheduler;
-import sernet.verinice.iso27k.service.Retriever;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
@@ -249,6 +251,15 @@ public abstract class ElementView extends ViewPart {
                     synchronized (modelLoadListener) {
                         startInitDataJob();
                     }
+                }
+                @Override
+                public void loaded(BpModel model) {
+                    // nothing to do
+                    
+                }
+                @Override
+                public void loaded(CatalogModel model) {
+                    // nothing to do
                 }          
             };
             CnAElementFactory.getInstance().addLoadListener(modelLoadListener);

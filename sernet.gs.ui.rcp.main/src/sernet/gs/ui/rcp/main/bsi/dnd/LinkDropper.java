@@ -39,6 +39,7 @@ public class LinkDropper {
 
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("dropLink...");
+			logParameter(toDrop,target);
 		}
 		// Prevent creation of new link when parent is not allowed to be
 		// modified.
@@ -69,6 +70,15 @@ public class LinkDropper {
 		}
 		return true;
 	}
+
+
+    private void logParameter(List<CnATreeElement> droppedElements, CnATreeElement target) {
+        LOG.debug("Dropped elements:");
+        for (CnATreeElement element : droppedElements) {
+            LOG.debug(element);
+        }
+        LOG.debug("Drop target: " + target);
+    }
 
 	
 

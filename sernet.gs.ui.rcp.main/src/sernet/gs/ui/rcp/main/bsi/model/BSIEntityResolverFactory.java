@@ -34,11 +34,6 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.PersonEntityOptionWrapper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByEntityUuid;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindAllRoles;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindHuiUrls;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindRelationsFor;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -59,6 +54,11 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.commands.LoadEntitiesByIds;
 import sernet.verinice.service.commands.SaveElement;
+import sernet.verinice.service.commands.crud.LoadCnAElementByEntityUuid;
+import sernet.verinice.service.commands.crud.LoadCnAElementByType;
+import sernet.verinice.service.commands.task.FindAllRoles;
+import sernet.verinice.service.commands.task.FindHuiUrls;
+import sernet.verinice.service.commands.task.FindRelationsFor;
 
 /**
  * The HUI framework has no knowledge about the database, so this factory
@@ -245,7 +245,7 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                         List<CnATreeElement> linkTargets = dialog.getSelectedElements();
                         
                         // this method also fires events for added links:
-                        CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(inputElmt, linkTargets, linkType);
+                        CnAElementHome.getInstance().createLinksAccordingToBusinessLogicAsync(inputElmt, linkTargets, linkType);
                     } catch (CommandException e) {
                         ExceptionUtil.log(e, "Error while creating links.");
                     }

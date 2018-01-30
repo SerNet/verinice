@@ -1,5 +1,6 @@
 {
 	"element":{
+	    "date_detection" : false,
 		"index_analyzer" : "verinice_analyzer",
 		"search_analyzer": "verinice_analyzer",
 		"properties":{

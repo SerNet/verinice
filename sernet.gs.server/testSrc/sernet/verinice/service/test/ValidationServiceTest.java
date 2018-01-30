@@ -33,8 +33,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementForEditor;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -52,6 +50,7 @@ import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.service.commands.UpdateElementEntity;
+import sernet.verinice.service.commands.crud.LoadElementForEditor;
 
 /**
  *
@@ -258,7 +257,7 @@ public class ValidationServiceTest extends CommandServiceProvider {
         assertNotNull("Children of element are null, uuid: " + uuid, elementWithChildren.getChildren());
         
         LoadElementForEditor loadForEditor = new LoadElementForEditor(element,false);
-        loadForEditor = ServiceFactory.lookupCommandService().executeCommand(loadForEditor);
+        loadForEditor = commandService.executeCommand(loadForEditor);
         element = loadForEditor.getElement();
         assertNotNull("Element for editor is null, uuid: " + uuid, element);
         element.setChildren(elementWithChildren.getChildren());

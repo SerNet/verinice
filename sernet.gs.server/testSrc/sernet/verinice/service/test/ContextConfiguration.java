@@ -31,9 +31,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @org.springframework.test.context.ContextConfiguration(locations={
         "classpath:/sernet/gs/server/spring/veriniceserver-plain.xml",
         "classpath:/sernet/gs/server/spring/veriniceserver-common.xml", //$NON-NLS-1$
+        "classpath:/sernet/gs/server/spring/command-actionid-mapping.xml", //$NON-NLS-1$
         "classpath:/sernet/gs/server/spring/veriniceserver-daos-common.xml", //$NON-NLS-1$
         "classpath:/sernet/gs/server/spring/veriniceserver-daos-osgi.xml", //$NON-NLS-1$
-        "classpath:/sernet/gs/server/spring/veriniceserver-security-osgi.xml", //$NON-NLS-1$
+        "classpath:/sernet/verinice/service/test/spring/veriniceserver-security-osgi-test.xml", //$NON-NLS-1$
         "classpath:/sernet/gs/server/spring/veriniceserver-ldap.xml", //$NON-NLS-1$
         "classpath:/sernet/verinice/service/test/spring/veriniceserver-jbpm.xml", //$NON-NLS-1$
         "classpath:/sernet/verinice/service/test/spring/veriniceserver-rightmanagement.xml", //NON-NLS-1$

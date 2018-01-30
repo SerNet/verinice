@@ -40,8 +40,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementForEditor;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -65,6 +63,7 @@ import sernet.verinice.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.UpdateElementEntity;
+import sernet.verinice.service.commands.crud.LoadElementForEditor;
 
 /**
  * Tests executing several commands.
@@ -227,8 +226,8 @@ public class CommandServiceTest extends CommandServiceProvider {
         assertNotNull("Element with children is null, uuid: " + uuid, elementWithChildren);
         assertNotNull("Children of element are null, uuid: " + uuid, elementWithChildren.getChildren());
         
-        LoadElementForEditor loadForEditor = new LoadElementForEditor(element,false);
-        loadForEditor = ServiceFactory.lookupCommandService().executeCommand(loadForEditor);
+        LoadElementForEditor loadForEditor = new LoadElementForEditor(element,false);       
+        loadForEditor = commandService.executeCommand(loadForEditor);
         element = loadForEditor.getElement();
         assertNotNull("Element for editor is null, uuid: " + uuid, element);
         element.setChildren(elementWithChildren.getChildren());
@@ -323,7 +322,7 @@ public class CommandServiceTest extends CommandServiceProvider {
         
         // Elemente 29
         // Links 40 / 20
-        // Dateien 2 
+        // Dateien 2
         
         removeImport();
     }

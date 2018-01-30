@@ -475,7 +475,7 @@
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 
 // set top level element for report:
@@ -655,7 +655,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // get current elmt:
 elmtid = inpv("elmt_id");
@@ -694,7 +694,7 @@ return elements;
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 inParameters(new String[] { "elmt_id" });
 columns(LoadReportElementWithLinks.COLUMNS);</value>
@@ -805,7 +805,7 @@ columns(LoadReportElementWithLinks.COLUMNS);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 
 // get current elmt:
@@ -845,7 +845,7 @@ return c3.getZielObjekt();]]></xml-property>
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 
 inParameters(new String[] { "elmt_id" });
@@ -1116,7 +1116,7 @@ columns(LoadReportRiskAnalysis.ZIELOBJEKT_COLUMNS);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 import sernet.gs.service.NumericStringComparator;
 import java.util.Comparator;
@@ -1180,7 +1180,7 @@ return helper.map(
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 
 inParameters(new String[] { "elmt_id" });
@@ -1453,7 +1453,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 import sernet.gs.service.NumericStringComparator;
 import java.util.Comparator;
@@ -1518,7 +1518,7 @@ return helper.map(
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 
 inParameters(new String[] { "elmt_id" });
@@ -1775,7 +1775,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 
 // get current elmt:
@@ -1818,7 +1818,7 @@ return helper.map(
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 
 inParameters(new String[] { "elmt_id" });
@@ -2534,11 +2534,11 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.gs.service.NumericStringComparator;
 import java.util.Comparator;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.iso27k.service.Retriever;
+import sernet.gs.service.Retriever;
 
 // get current elmt:
 elmtid = inpv("elmt_id");
@@ -2602,7 +2602,7 @@ return helper.map(
                 <ex-property>
                     <name>setupQueryText</name>
                     <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 inParameters(new String[] { "elmt_id" });
 
@@ -2654,14 +2654,13 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 import sernet.verinice.model.bsi.risikoanalyse.*;
 import sernet.verinice.model.common.*;
 import sernet.gs.service.NumericStringComparator;
 import java.util.Comparator;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.report.service.impl.TocHelper2;
-import sernet.verinice.iso27k.service.Retriever;
+import sernet.gs.service.Retriever;
 import sernet.gs.service.RetrieveInfo;
 
 objects = "riskanalysis";
@@ -2679,7 +2678,6 @@ c2 = new LoadReportElements(objects, root);
 elements = helper.execute(c2).getElements();
 
 
-TocHelper2.log("Loaded Analyses from db:\t" + elements.size());
 
 comparator = new NumericStringComparator();
 sb = new StringBuilder();
@@ -2697,7 +2695,6 @@ Collections.sort(elements, new Comparator() {
 	}
 });
 
-TocHelper2.log("Elements after sort:\t" + elements.size());
 result = new ArrayList();
 for (CnATreeElement elmt : elements) {
 	result.add(elmt.getDbId().toString());

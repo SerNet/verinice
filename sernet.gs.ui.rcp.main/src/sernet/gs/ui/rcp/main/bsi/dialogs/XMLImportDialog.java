@@ -89,8 +89,13 @@ public class XMLImportDialog extends Dialog {
     private boolean delete;
     private boolean integrate;
     
-    private Button integrateButton;
+    private boolean importAsCatalog;
 
+    private Button integrateButton;
+    private Button insertButton;
+    private Button updateButton;
+    private Button deleteCheck;
+    
     private Text dataPathText;
     private boolean dataPathFlag;
 
@@ -122,9 +127,14 @@ public class XMLImportDialog extends Dialog {
     private static final int NOCRYPT_INDEX = 0;
 
     private SyncCommand syncCommand;
-    
+
     public XMLImportDialog(Shell shell) {
         super(shell);
+    }
+    
+    public XMLImportDialog(Shell shell, boolean catalogImport) {
+        super(shell);
+        this.importAsCatalog = catalogImport;
     }
 
     @Override
@@ -232,7 +242,7 @@ public class XMLImportDialog extends Dialog {
 
     private SyncParameter tryCreateSyncParameter() {
         try {
-            return new SyncParameter(insert, update, delete, integrate, this.format);
+            return new SyncParameter(insert, update, delete, integrate, importAsCatalog, this.format);
         } catch (SyncParameterException ex) {
             LOG.debug(ex.getLocalizedMessage());
         }
@@ -333,12 +343,11 @@ public class XMLImportDialog extends Dialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 insert = (e.getSource() instanceof Button) ? ((Button) (e.getSource())).getSelection() : insert;
-                integrateButton.setEnabled(insert || update);
             }
         };
 
-        Button insertCheck = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_25, true, insertListener);
-        insertCheck.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+        insertButton = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_25, true, insertListener);
+        insertButton.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
 
         Label insertText = new Label(operationGroup, SWT.LEFT);
         insertText.setText(Messages.XMLImportDialog_8);
@@ -349,11 +358,10 @@ public class XMLImportDialog extends Dialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 update = (e.getSource() instanceof Button) ? ((Button) (e.getSource())).getSelection() : update;
-                integrateButton.setEnabled(insert || update);
             }
         };
-        Button updateCheck = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_26, true, updateCheckListener);
-        updateCheck.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+        updateButton = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_26, true, updateCheckListener);
+        updateButton.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
 
         Label updateText = new Label(operationGroup, SWT.LEFT);
         updateText.setText(Messages.XMLImportDialog_9);
@@ -366,7 +374,7 @@ public class XMLImportDialog extends Dialog {
                 delete = (e.getSource() instanceof Button) ? ((Button) (e.getSource())).getSelection() : delete;
             }
         };
-        Button deleteCheck = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_27, false, deleteCheckListener);
+        deleteCheck = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_27, false, deleteCheckListener);
         deleteCheck.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
 
         Label deleteText = new Label(operationGroup, SWT.LEFT);
@@ -389,8 +397,9 @@ public class XMLImportDialog extends Dialog {
         integrateText.setText(Messages.XMLImportDialog_37);
         integrateText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
 
-        // decryption
+        createImportAsCatalogOption(container);
 
+        // decryption
         final Group cryptGroup = new Group(container, SWT.NULL);
         cryptGroup.setText(Messages.XMLImportDialog_15);
         cryptGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, cryptGroupHorizontalSpan, 1));
@@ -651,6 +660,66 @@ public class XMLImportDialog extends Dialog {
         // (bug 341)
         dataPathText.setFocus();
         return container;
+    }
+
+    private void createImportAsCatalogOption(final Composite container) {
+
+        final int importAsCatalogHorizontalSpan = 5;
+        final int importAsCatalogVerticalSpan = 3;
+
+        GridLayout layout;
+        Group importAsCatalogGroup = new Group(container, SWT.NULL);
+        importAsCatalogGroup.setText(Messages.XMLImportDialog_Import_As_Catalog_Model);
+        importAsCatalogGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, importAsCatalogHorizontalSpan, importAsCatalogVerticalSpan));
+
+        layout = new GridLayout();
+        layout.numColumns = 2;
+        importAsCatalogGroup.setLayout(layout);
+
+        final Button importAsCatalogButton = SWTElementFactory.generateCheckboxButton(importAsCatalogGroup, Messages.XMLImportDialog_Import_As_Catalog_Option, false, new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                importAsCatalog = (e.getSource() instanceof Button) ? ((Button) (e.getSource())).getSelection() : importAsCatalog;
+                if (importAsCatalog) {
+                            setParametersForCatalogImport();
+                } 
+            }
+
+        });
+        importAsCatalogButton.setEnabled(false);
+        importAsCatalogButton.setSelection(importAsCatalog);
+
+        importAsCatalogButton.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
+
+        Label importAsCatalogText = new Label(importAsCatalogGroup, SWT.LEFT);
+        importAsCatalogText.setText(Messages.XMLImportDialog_Import_As_Catalog_Option_Description);
+        importAsCatalogText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
+        importAsCatalogText.setEnabled(false);
+        if (importAsCatalog) {
+            setParametersForCatalogImport();
+        }
+    }
+
+    /**
+     * Set import parameters and check box selection due to catalog import use
+     * case.
+     */
+    private void setParametersForCatalogImport() {
+        integrate = true;
+        integrateButton.setSelection(true);
+        integrateButton.setEnabled(false);
+
+        insert = true;
+        insertButton.setSelection(true);
+        insertButton.setEnabled(false);
+
+        update = false;
+        updateButton.setSelection(false);
+        updateButton.setEnabled(false);
+
+        delete = false;
+        deleteCheck.setSelection(false);
+        deleteCheck.setEnabled(false);
     }
 
     private void displayFiles(Shell shell, Text pathText, File file) {

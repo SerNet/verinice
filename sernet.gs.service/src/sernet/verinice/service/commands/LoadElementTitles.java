@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
@@ -56,7 +57,7 @@ public class LoadElementTitles extends GenericCommand {
     private HashMap<String, String> selectedElementsUuid = new HashMap<>();
 
     public LoadElementTitles() {
-        this(new String[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID});
+        this(new String[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID, ItNetwork.TYPE_ID});
     }       
      
     public LoadElementTitles(String[] typeIds) {

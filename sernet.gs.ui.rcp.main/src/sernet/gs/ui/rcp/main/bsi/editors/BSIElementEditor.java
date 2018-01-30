@@ -45,6 +45,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.EditorPart;
 import org.hibernate.StaleObjectStateException;
 
+import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -53,7 +54,6 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementForEditor;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
@@ -70,8 +70,7 @@ import sernet.snutils.AssertException;
 import sernet.snutils.FormInputParser;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
-import sernet.verinice.iso27k.service.Retriever;
-import sernet.verinice.model.bpm.TaskInformation;
+import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
@@ -79,6 +78,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.service.commands.crud.LoadElementForEditor;
 
 /**
  * Editor for all BSI elements with attached HUI entities.
@@ -102,8 +102,6 @@ public class BSIElementEditor extends EditorPart {
 
     private Boolean isWriteAllowed = null;
 
-    // TODO the editor needs another way to determine whether or not to show the
-    // linkmaker so we can remove this reference to the SAMT bundle:
     public static final String SAMT_PERSPECTIVE_ID = "sernet.verinice.samt.rcp.SamtPerspective";
     // limit display in SAMT perspective to properties tagged as "VDA-ISA"
     // (simplified view):
@@ -132,9 +130,13 @@ public class BSIElementEditor extends EditorPart {
         if (!(input instanceof BSIElementEditorInput)) {
             throw new PartInitException("invalid input"); //$NON-NLS-1$
         }
+        
         setSite(site);
         setInput(input);
         setPartName(input.getName());
+        if (((BSIElementEditorInput) input).isReadOnly()) {
+            isWriteAllowed = false;
+        }
     }
 
     private void initContent() {
@@ -224,13 +226,6 @@ public class BSIElementEditor extends EditorPart {
                 Job job = new RefreshJob("Refresh application...");
                 job.setRule(new RefreshJobRule());
                 job.schedule();
-
-                // TODO akoderman we need a way to close (with save dialog) or
-                // update editors of objects that have been changed in the
-                // database,
-                // i.e. by triggers (protection level)
-                // // close all other open editors on save (but only the ones
-                // without changes):
 
                 IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
                 ArrayList<IEditorReference> closeOthers = new ArrayList<IEditorReference>();
@@ -389,21 +384,26 @@ public class BSIElementEditor extends EditorPart {
     private Image getDefaultIcon() {
         Image icon;
         if (cnAElement instanceof Organization) {
-            icon = ImageCache.getInstance().getISO27kTypeImage(Organization.TYPE_ID);
+            icon = ImageCache.getInstance().getImageForTypeId(Organization.TYPE_ID);
         } else if (cnAElement instanceof Group) {
-            // TODO - getChildTypes()[0] might be a problem for more than
-            // one type
-            icon = ImageCache.getInstance().getISO27kTypeImage(((Group) cnAElement).getChildTypes()[0]);
-        } else if (cnAElement instanceof IISO27kElement) {
-            icon = ImageCache.getInstance().getISO27kTypeImage(cnAElement.getTypeId());
+            icon = ImageCache.getInstance().getImageForTypeId(((Group) cnAElement).getChildTypes()[0]);
+        } else if (cnAElement instanceof IISO27kElement || cnAElement instanceof IBpElement) {
+            icon = ImageCache.getInstance().getImageForTypeId(cnAElement.getTypeId());
         } else if (cnAElement instanceof IBSIStrukturElement || cnAElement instanceof IBSIStrukturKategorie) {
             icon = ImageCache.getInstance().getBSITypeImage(cnAElement.getTypeId());
         } else if (cnAElement instanceof BausteinUmsetzung) {
             icon = ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG);
+        } else if (isBpElement(cnAElement)) {
+            icon = ImageCache.getInstance().getImageForTypeId(cnAElement.getTypeId());
         } else {
             icon = CnAImageProvider.getImage(cnAElement);
         }
         return icon;
+    }
+
+    private boolean isBpElement(CnATreeElement element) {
+        return element instanceof IBpElement;
+                
     }
 
     @Override

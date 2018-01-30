@@ -3,7 +3,7 @@
 
   <intro>
     <description>
-      Jetzt wird es langsam interessant: Modellierung nach BSI Grundschutz.
+      Jetzt wird es langsam interessant: Modellierung nach BSI-Grundschutz.
     </description>
   </intro>
 
@@ -19,9 +19,9 @@
 
   <item title="Zuordnen eines Bausteins">
     <description>
-      Suchen Sie im IT-Grundschutz Katalog den Baustein 3.101 "Allgemeiner Server".
+      Suchen Sie im IT-Grundschutzkatalog den Baustein 3.101 "Allgemeiner Server".
       <br /><br />
-      Klicken und ziehen Sie den Baustein mit der linken Maustaste in das Grundschutz Modell
+      Klicken und ziehen Sie den Baustein mit der linken Maustaste in das Grundschutzmodell
       und lassen Sie ihn auf dem Server-Objekt "Buchhaltungssystem" fallen.
     </description>
   </item>

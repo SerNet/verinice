@@ -20,6 +20,8 @@ package sernet.gs.ui.rcp.main.bsi.model;
 import java.io.File;
 
 import sernet.gs.ui.rcp.main.CnAWorkspace;
+import sernet.verinice.interfaces.ILayoutConfig;
+import sernet.verinice.service.parser.BSIMassnahmenModel;
 
 /**
  * Layout configuration for {@link BSIMassnahmenModel} in a RCP environment

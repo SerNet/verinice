@@ -36,9 +36,10 @@ public interface IRightsService {
     public static String USERDEFAULTGROUPNAME = "user-default-group";
     public static String USERSCOPEDEFAULTGROUPNAME = "user-scope-default-group";
     public static String ADMINSCOPEDEFAULTGROUPNAME = "admin-scope-default-group";
+    public static String ADMINLOCALDEFAULTGROUPNAME = "admin-local-default-group";
     public static String ADMINDEFAULTGROUPNAME = "admin-default-group";
 
-    public static final String[] STANDARD_GROUPS = { USERDEFAULTGROUPNAME, USERSCOPEDEFAULTGROUPNAME, ADMINDEFAULTGROUPNAME, ADMINSCOPEDEFAULTGROUPNAME };
+    public static final String[] STANDARD_GROUPS = { USERDEFAULTGROUPNAME, USERSCOPEDEFAULTGROUPNAME, ADMINDEFAULTGROUPNAME, ADMINLOCALDEFAULTGROUPNAME, ADMINSCOPEDEFAULTGROUPNAME };
 
     /**
      * Returns the authorization configuration which is defined in one or more

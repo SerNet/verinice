@@ -21,8 +21,8 @@ package sernet.verinice.samt.audit.rcp;
 
 import java.util.Arrays;
 
-import sernet.verinice.iso27k.service.commands.LoadLinkedElements;
 import sernet.verinice.service.commands.LoadElementByTypeId;
+import sernet.verinice.service.commands.crud.LoadLinkedElements;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

@@ -32,90 +32,109 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
+ * This action expands all elements in a tree below the selectedElement.
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
  */
 public class ExpandAction extends Action implements ISelectionChangedListener {
 
-	private static final Logger LOG = Logger.getLogger(ExpandAction.class);
-	
-	private TreeViewer viewer;
-	
-	private CnATreeElement selectedElement;
-	
-	private ITreeContentProvider contentProvider;
-	
-	public ExpandAction(TreeViewer viewer, ITreeContentProvider contentProvider) {
-		this.viewer = viewer;
-		this.contentProvider = contentProvider;
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.action.Action#run()
-	 */
-	@Override
-	public void run() {
-		List<Object> expandedElements = new ArrayList<Object>();
-		
-		// add all elements form selection to organization
-		CnATreeElement element = selectedElement;
-		expandedElements.add(element);
-		if(!(element instanceof Organization) && !(element instanceof ImportIsoGroup)) {
-			while(element.getParent()!=null && !(element.getParent() instanceof Organization) && !(element.getParent() instanceof ImportIsoGroup)) {
-				element = element.getParent();
-				expandedElements.add(element);
-			}
-			expandedElements.add(element.getParent());
-		}
-		
-		// add all children
-		element = selectedElement;
-		addChildren(element,expandedElements);
-		
+    private static final Logger LOG = Logger.getLogger(ExpandAction.class);
 
-		viewer.setExpandedElements(expandedElements.toArray());
-	}
+    private TreeViewer viewer;
+    private CnATreeElement selectedElement;
+    private ITreeContentProvider contentProvider;
 
-	/**
-	 * @param element
-	 * @param expandedElements
-	 */
-	private void addChildren(CnATreeElement element, List<Object> expandedElements) {
-		Object[] children = contentProvider.getChildren(element);
-		if(children!=null && children.length>0) {
-			expandedElements.addAll(Arrays.asList(children));
-			for (Object child : children) {
-			    if(child instanceof CnATreeElement) {
-    				if (LOG.isDebugEnabled()) {
-    					LOG.debug("child: " + ((CnATreeElement)child).getTitle());
-    				}
-    				
-    				addChildren((CnATreeElement) child, expandedElements);
-			    }
-			}
-		}
-		
-	}
+    public ExpandAction(TreeViewer viewer, ITreeContentProvider contentProvider) {
+        this.viewer = viewer;
+        this.contentProvider = contentProvider;
+    }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    @Override
+    public void run() {
+        List<Object> expandedElements = new ArrayList<>();
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
-	 */
-	public void selectionChanged(SelectionChangedEvent event) {
-		ISelection selection = event.getSelection();
-		if(selection instanceof IStructuredSelection ) {
-			Object sel = ((IStructuredSelection) selection).getFirstElement();
-			if(sel instanceof CnATreeElement) {
-				this.selectedElement = (CnATreeElement) sel;
-			}
-		}
-		
-	}
+        // add all elements form selection to organization
+        CnATreeElement element = selectedElement;
+        expandedElements.add(element);
+        if (!isScope(element)) {
+            while (element.getParent() != null && !(parentIsScope(element))) {
+                element = element.getParent();
+                expandedElements.add(element);
+            }
+            expandedElements.add(element.getParent());
+        }
+
+        // add all children
+        element = selectedElement;
+        addChildren(element, expandedElements);
+
+        viewer.setExpandedElements(expandedElements.toArray());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.
+     * eclipse.jface.viewers.SelectionChangedEvent)
+     */
+    public void selectionChanged(SelectionChangedEvent event) {
+        ISelection selection = event.getSelection();
+        if (selection instanceof IStructuredSelection) {
+            Object sel = ((IStructuredSelection) selection).getFirstElement();
+            if (sel instanceof CnATreeElement) {
+                this.selectedElement = (CnATreeElement) sel;
+            }
+        }
+    }
+
+    private void addChildren(CnATreeElement element, List<Object> expandedElements) {
+        Object[] children = contentProvider.getChildren(element);
+        if (children != null && children.length > 0) {
+            expandedElements.addAll(Arrays.asList(children));
+            for (Object child : children) {
+                if (child instanceof CnATreeElement) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("child: " + ((CnATreeElement) child).getTitle());
+                    }
+                    addChildren((CnATreeElement) child, expandedElements);
+                }
+            }
+        }
+    }
+
+    private boolean parentIsScope(CnATreeElement element) {
+        if (element == null || element.getParent() == null) {
+            return false;
+        }
+        CnATreeElement parent = element.getParent();
+        return isScope(parent);
+    }
+
+    /**
+     * Checks if the given element is a scope. Aka root node.
+     */
+    private boolean isScope(CnATreeElement element) {
+        return element instanceof Organization 
+                || element instanceof ItNetwork 
+                || element instanceof ITVerbund 
+                || element instanceof ImportBsiGroup 
+                || element instanceof ImportIsoGroup 
+                || element instanceof ImportBpGroup;
+    }
 
 }

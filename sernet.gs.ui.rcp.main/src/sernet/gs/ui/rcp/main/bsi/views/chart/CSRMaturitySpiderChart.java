@@ -27,8 +27,8 @@ import java.util.Set;
 
 import org.jfree.data.category.DefaultCategoryDataset;
 
-import sernet.gs.ui.rcp.main.common.model.CSRMassnahmenSummaryHome;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.service.commands.stats.CSRMassnahmenSummaryHome;
 
 /**
  *

@@ -27,6 +27,8 @@ import sernet.verinice.model.iso27k.IISO27kElement;
  */
 public final class ISO27kElementTransfer extends VeriniceElementTransfer {
     
+    private static final Logger log = Logger.getLogger(ISO27kElementTransfer.class);
+    
     private static final String TYPENAME_ISOELEMENT = "isoElement";
     private static final int TYPEID_ISOELEMENT = registerType(TYPENAME_ISOELEMENT);
     
@@ -51,19 +53,14 @@ public final class ISO27kElementTransfer extends VeriniceElementTransfer {
      */
     @Override
     protected int[] getTypeIds() {
+        if (log.isDebugEnabled()) {
+            log.debug(TYPEID_ISOELEMENT + "=" + TYPENAME_ISOELEMENT);
+        }
         return new int[]{TYPEID_ISOELEMENT};
     }
     
     public void javaToNative (Object data, TransferData transferData){
         TransferUtil.iSO27KtoNative(getInstance(), data, transferData);
-    }
-    
-    @Override
-    protected Logger getLog() {
-        if(log == null){
-            log = Logger.getLogger(ISO27kElementTransfer.class);
-        }
-        return log;
     }
 
     /*

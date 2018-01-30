@@ -1986,14 +1986,6 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="org.eclipse.equinox.p2.director.app.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.eclipse.equinox.p2.director.nl_de"
          download-size="0"
          install-size="0"
@@ -2237,7 +2229,7 @@ Library.
          id="org.eclipse.ui.net"
          download-size="0"
          install-size="0"
-         version="1.2.1.r35x_20090812-1200_FIX_FOR_VERINICE"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
@@ -2668,12 +2660,6 @@ Library.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="org.junit4"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="org.ops4j.pax.web.pax-web-bundle"

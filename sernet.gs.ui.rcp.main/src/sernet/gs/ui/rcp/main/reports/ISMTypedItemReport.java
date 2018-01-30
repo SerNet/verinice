@@ -22,7 +22,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-import sernet.gs.ui.rcp.office.IOOTableRow;
+import sernet.verinice.interfaces.IBSIReport;
+import sernet.verinice.interfaces.IOOTableRow;
+import sernet.verinice.interfaces.PropertySelection;
+import sernet.verinice.interfaces.iso27k.ISMReport;
+import sernet.verinice.model.bsi.BsiReport;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;

@@ -37,19 +37,20 @@ import org.eclipse.ui.part.DrillDownAdapter;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAPlaceholder;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
-import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelForTreeView;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.CnAPlaceholder;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.NullModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -57,8 +58,9 @@ import sernet.verinice.model.ds.IDatenschutzElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.validation.CnAValidation;
 import sernet.verinice.rcp.RightsEnabledView;
-import sernet.verinice.rcp.tree.ElementManager;
 import sernet.verinice.rcp.tree.TreeContentProvider;
+import sernet.verinice.service.commands.crud.LoadBSIModelForTreeView;
+import sernet.verinice.service.tree.ElementManager;
 
 /**
  * View that allows editing of applications' privacy ("Datenschutz") properties.
@@ -104,6 +106,17 @@ public class DSModelView extends RightsEnabledView {
         @Override
         public void loaded(ISO27KModel model) {
             // work is done in loaded( BSIModel model)    
+        }
+
+        @Override
+        public void loaded(BpModel model) {
+         // work is done in loaded( BSIModel model)   
+            
+        }
+
+        @Override
+        public void loaded(CatalogModel model) {
+            // nothing to do
         }
 	};
 

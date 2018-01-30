@@ -87,6 +87,10 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	public static final String PROP_ISADMIN = "configuration_isadmin"; //$NON-NLS-1$
 	public static final String PROP_ISADMIN_YES = "configuration_isadmin_yes"; //$NON-NLS-1$
 	public static final String PROP_ISADMIN_NO = "configuration_isadmin_no"; //$NON-NLS-1$
+
+    public static final String PROP_ISLOCALADMIN = "configuration_islocaladmin"; //$NON-NLS-1$
+    public static final String PROP_ISLOCALADMIN_YES = "configuration_islocaladmin_yes"; //$NON-NLS-1$
+    public static final String PROP_ISLOCALADMIN_NO = "configuration_islocaladmin_no"; //$NON-NLS-1$
 		
 	public static final String PROP_WEB = "configuration_web"; //$NON-NLS-1$
     public static final String PROP_WEB_YES = "configuration_web_yes"; //$NON-NLS-1$
@@ -273,7 +277,11 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	}
 	
 	public boolean isAdminUser() {
-		return isRawPropertyValueEqual(PROP_ISADMIN, PROP_ISADMIN_YES);
+        return isRawPropertyValueEqual(PROP_ISADMIN, PROP_ISADMIN_YES);
+    }
+
+    public boolean isLocalAdminUser() {
+        return isRawPropertyValueEqual(PROP_ISLOCALADMIN, PROP_ISLOCALADMIN_YES);
 	}
 	
     public boolean isDeactivatedUser() {
@@ -342,6 +350,15 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 		}
 	}
 	
+    public void setLocalAdminUser(boolean isLocalAdmin) {
+        PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_ISLOCALADMIN);
+        if (isLocalAdmin) {
+            entity.setSimpleValue(type, PROP_ISLOCALADMIN_YES);
+        } else {
+            entity.setSimpleValue(type, PROP_ISLOCALADMIN_NO);
+        }
+    }
+
 	public void setNotificationExpirationEnabled(boolean b) {
 		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_NOTIFICATION_EXPIRATION);
 		entity.setSimpleValue(type, (b ? "configuration_mailing_expiring_yes" : "configuration_mailing_expiring_no"));

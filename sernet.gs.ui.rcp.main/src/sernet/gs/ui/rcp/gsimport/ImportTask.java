@@ -61,22 +61,15 @@ import sernet.gs.service.TimeFormatter;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRCPLocal;
-import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
+import sernet.gs.ui.rcp.main.bsi.model.BSIConfigFactory;
 import sernet.gs.ui.rcp.main.bsi.model.CnAElementBuilder;
-import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
-import sernet.gs.ui.rcp.main.bsi.model.IBSIConfig;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.CnATreeElementBuildException;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
-import sernet.gs.ui.rcp.main.service.taskcommands.ImportCreateBausteinReferences2;
-import sernet.gs.ui.rcp.main.service.taskcommands.ImportCreateBausteine;
-import sernet.gs.ui.rcp.main.service.taskcommands.ImportIndividualMassnahmen;
-import sernet.gs.ui.rcp.main.service.taskcommands.ImportTransferSchutzbedarf;
+import sernet.verinice.interfaces.CnATreeElementBuildException;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IBSIConfig;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
@@ -85,6 +78,14 @@ import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Link;
+import sernet.verinice.service.commands.task.ImportCreateBausteinReferences2;
+import sernet.verinice.service.commands.task.ImportCreateBausteine;
+import sernet.verinice.service.commands.task.ImportIndividualMassnahmen;
+import sernet.verinice.service.commands.task.ImportTransferSchutzbedarf;
+import sernet.verinice.service.gstoolimport.TransferData;
+import sernet.verinice.service.parser.BSIMassnahmenModel;
+import sernet.verinice.service.parser.GSScraperUtil;
+import sernet.verinice.service.parser.LoadBausteine;
 
 /**
  * Import GSTOOL(tm) databases using the GSVampire. Maps GStool-database objects
@@ -365,7 +366,7 @@ public class ImportTask extends AbstractGstoolImportTask {
                     LOG.debug("Saving Zuordnung from ZO" + nZielobjekt.getName() + "(GUID " + nZielobjekt.getGuid() + ") to ITVerbund " + zielobjekt.zielobjekt.getName());
                     itverbundZuordnung.put(nZielobjekt.getGuid(), zielobjekt.zielobjekt);
                 }
-            }      
+            }
         }
         return neueVerbuende;
     }
@@ -551,7 +552,7 @@ public class ImportTask extends AbstractGstoolImportTask {
     }
 
     private void handleSchutzBedarfForSingleElement(Entry<NZielobjekt, CnATreeElement> entry) throws CommandException {
-        if (entry.getValue().getSchutzbedarfProvider() != null) {
+        if (entry.getValue().getProtectionRequirementsProvider() != null) {
             List<NZobSb> internalSchutzbedarf = getGstoolDao().findSchutzbedarfByZielobjekt(entry.getKey());
             for (NZobSb schubeda : internalSchutzbedarf) {
                 transferSchutzBedarfGeneral(entry, schubeda);
@@ -876,7 +877,7 @@ public class ImportTask extends AbstractGstoolImportTask {
     private List<Baustein> loadCatalogueBausteine() throws CommandException, IOException, GSServiceException{
         IBSIConfig bsiConfig = null;
         if (!ServiceFactory.isPermissionHandlingNeeded()) {
-            bsiConfig = new BSIConfigurationRCPLocal();
+            bsiConfig = BSIConfigFactory.createStandaloneConfig();
         }
         List<Baustein> bausteine;
         if (bsiConfig == null) {
@@ -888,7 +889,7 @@ public class ImportTask extends AbstractGstoolImportTask {
             // load bausteine from given config:
             BSIMassnahmenModel model = GSScraperUtil.getInstance().getModel();
             model.setBSIConfig(bsiConfig);
-            bausteine = model.loadBausteine(new sernet.gs.ui.rcp.main.common.model.IProgress() {
+            bausteine = model.loadBausteine(new sernet.verinice.interfaces.IProgress() {
 
                 @Override
                 public void beginTask(String name, int totalWork) {
@@ -934,13 +935,13 @@ public class ImportTask extends AbstractGstoolImportTask {
             mover.exportDatabse();
         } catch (Exception e) {
             LOG.error("Error: ", e);
-            ExceptionUtil.log(e, "Fehler beim Import aus MDB Datei über temporäre Derby-DB.");
+            ExceptionUtil.log(e, "Fehler beim Import aus MDB-Datei über temporäre Derby-DB.");
         } finally {
             try {
                 source.close();
                 target.close();
             } catch (Exception e) {
-                LOG.debug("Konnte temporäre Import DB nicht schließen.", e);
+                LOG.debug("Konnte temporäre Import-DB nicht schließen.", e);
             }
         }
     }

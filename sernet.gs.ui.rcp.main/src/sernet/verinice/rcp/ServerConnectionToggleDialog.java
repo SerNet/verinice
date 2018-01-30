@@ -25,7 +25,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -40,8 +39,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.ScopeMultiselectWidget;
 import sernet.verinice.model.common.CnATreeElement;
@@ -79,7 +76,7 @@ public class ServerConnectionToggleDialog extends TitleAreaDialog {
         final int layoutVerticalSpacing = layoutMarginHeight;
         final int urlTextMinimumWidth = 150;
         
-        if(isServerMode()) {
+        if (Preferences.isServerMode()) {
             setTitle(Messages.ServerConnectionToggleDialog_0);
             setMessage(Messages.ServerConnectionToggleDialog_1, IMessageProvider.INFORMATION);
         } else {
@@ -108,11 +105,11 @@ public class ServerConnectionToggleDialog extends TitleAreaDialog {
                 serverUrl = urlText.getText();          
             }
         });
-        String url = getServerUrlPreference();
+        String url = Preferences.getServerUrl();
         if(url!=null) {
             urlText.setText(url);
         }
-        if(isServerMode()) {
+        if (Preferences.isServerMode()) {
             urlText.setEnabled(false);
         }
         
@@ -136,27 +133,12 @@ public class ServerConnectionToggleDialog extends TitleAreaDialog {
         composite.pack();     
         return composite;
     }
-    
-    public static boolean isStandalone() {
-        return PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER.equals(getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE));
-    }
-    
-    public static boolean isServerMode() {
-        return PreferenceConstants.OPERATION_MODE_REMOTE_SERVER.equals(getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE));
-    }
 
-    private String getServerUrlPreference() {        
-        return getPreferenceStore().getString(PreferenceConstants.VNSERVER_URI);
-    }
-
-    private static IPreferenceStore getPreferenceStore() {
-        return Activator.getDefault().getPreferenceStore();
-    }
     
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        if(isServerMode()) {
+        if (Preferences.isServerMode()) {
             newShell.setText(Messages.ServerConnectionToggleDialog_7);
         } else {
             newShell.setText(Messages.ServerConnectionToggleDialog_8);

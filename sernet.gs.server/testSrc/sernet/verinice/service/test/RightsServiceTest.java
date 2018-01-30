@@ -57,7 +57,7 @@ public class RightsServiceTest extends ContextConfiguration {
         ActionRightIDs.SHOWALLFILES,
         ActionRightIDs.TASKCHANGEASSIGNEE,
         ActionRightIDs.TASKCHANGEDUEDATE,
-        ActionRightIDs.TASKWITHRELEASEPROCESS
+        ActionRightIDs.TASKWITHRELEASEPROCESS,
     };
     
     public static final String[] newProfileActionIds = {
@@ -106,7 +106,7 @@ public class RightsServiceTest extends ContextConfiguration {
             }
         }
         rightsService.updateConfiguration(clone(conf));
-        rightsServerHandler.discardData();
+//        rightsServerHandler.discardData();
         assertFalse( "Action: " + NEW_ACTION_ID + " is enabled after removal.", rightsServerHandler.isEnabled(USER_NAME, NEW_ACTION_ID));       
     }
     

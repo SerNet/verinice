@@ -123,7 +123,7 @@ public class KerberosPreferencePage extends FieldEditorPreferencePage implements
                 try {
                     Thread.sleep(50L);
                 } catch (InterruptedException e) {
-                    LOG.error("error while storing ad sso configuration occured.", e);
+                    LOG.error("error while storing ad sso configuration occurred.", e);
                 }
                 getDisplay().syncExec(new Runnable() {
                     @Override

@@ -26,7 +26,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class ExceptionGroup extends Group<Exception> {
+public class ExceptionGroup extends Group<Exception> implements IISO27kGroup {
 
 	public static final String TYPE_ID = "exceptiongroup"; //$NON-NLS-1$
 	public static final String PROP_NAME = "exceptiongroup_name"; //$NON-NLS-1$

@@ -41,7 +41,7 @@ import sernet.verinice.rcp.RightsEnabledHandler;
  */
 public class CutHandler extends RightsEnabledHandler {
 
-private static final Logger LOG = Logger.getLogger(CopyHandler.class);
+    private static final Logger LOG = Logger.getLogger(CutHandler.class);
 	
 	private List<CnATreeElement> selectedElementList = new ArrayList<CnATreeElement>();
 	

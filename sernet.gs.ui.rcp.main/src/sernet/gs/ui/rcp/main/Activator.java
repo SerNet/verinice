@@ -55,6 +55,9 @@ import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 
+import sernet.gs.ui.rcp.main.bsi.model.BSIConfigFactory;
+import sernet.gs.ui.rcp.main.bsi.model.BSIEntityResolverFactory;
+import sernet.gs.ui.rcp.main.bsi.model.RcpLayoutConfig;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
@@ -63,8 +66,8 @@ import sernet.gs.ui.rcp.main.logging.LoggerInitializer;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.security.VeriniceSecurityProvider;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.connect.ResolverFactoryRegistry;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IInternalServer;
@@ -78,13 +81,18 @@ import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.ReportTemplateSync;
 import sernet.verinice.rcp.StartupImporter;
 import sernet.verinice.rcp.StatusResult;
 import sernet.verinice.rcp.jobs.VeriniceWorkspaceJob;
+import sernet.verinice.service.commands.migration.DbVersion;
 import sernet.verinice.service.model.IObjectModelService;
+import sernet.verinice.service.parser.BSIConfigurationRemoteSource;
+import sernet.verinice.service.parser.GSScraperUtil;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -105,7 +113,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     private static final String LOCAL_UPDATE_SITE_URL = "/Verinice-Update-Site-2010"; //$NON-NLS-1$
 
-    public static final String UPDATE_SITE_URL = "https://update.verinice.org/pub/verinice/update/1.14"; //$NON-NLS-1$
+    public static final String UPDATE_SITE_URL = "https://update.verinice.org/pub/verinice/update/subscription"; //$NON-NLS-1$
 
     public static final String DERBY_LOG_FILE_PROPERTY = "derby.stream.error.file"; //$NON-NLS-1$
 
@@ -219,7 +227,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         // set service factory location to local / remote according to
         // preferences:
-        standalone = prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+        standalone = sernet.verinice.rcp.Preferences.isStandalone();
 
         initializeInternalServer();
 
@@ -244,7 +252,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
             // if this fails, try rewriting config:
             LOG.error("Exception while connection to command service, forcing recreation of " + "service factory configuration from preferences.", e); //$NON-NLS-1$ //$NON-NLS-2$
             CnAWorkspace.getInstance().prepare(true);
-        }
+        }       
 
         // When the service factory is initialized the client's work objects can
         // be accessed.
@@ -254,6 +262,11 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         // Make command service available as an OSGi service
         context.registerService(ICommandService.class.getName(), VeriniceContext.get(VeriniceContext.COMMAND_SERVICE), null);
+        
+        configureItbpCatalogLoader();
+
+        GSScraperUtil.getInstance().getModel().setLayoutConfig(new RcpLayoutConfig());
+        ResolverFactoryRegistry.setResolverFactory(new BSIEntityResolverFactory());
         
         Job repositoryJob = new Job("add-repository") { //$NON-NLS-1$
             /*
@@ -308,10 +321,29 @@ public class Activator extends AbstractUIPlugin implements IMain {
                     // do nothing
 
                 }
+
+                @Override
+                public void loaded(BpModel model) {
+                    // do nothing
+                }
+
+                @Override
+                public void loaded(CatalogModel model) {
+                    // do nothing
+                }
             };
             CnAElementFactory.getInstance().addLoadListener(loadListener);
         }
 
+    }
+
+    private void configureItbpCatalogLoader() {
+        if (isStandalone()) {
+            GSScraperUtil.getInstance().getModel()
+                    .setBSIConfig(BSIConfigFactory.createStandaloneConfig());
+        } else {
+            GSScraperUtil.getInstance().getModel().setBSIConfig(new BSIConfigurationRemoteSource());
+        }
     }
 
     private void initObjectModelService() {
@@ -453,8 +485,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
     private void setProxy() {
         try {
             Preferences prefs = Activator.getDefault().getPluginPreferences();
-            String operationMode = prefs.getString(PreferenceConstants.OPERATION_MODE);
-            if (operationMode != null && operationMode.equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER)) {
+            if (sernet.verinice.rcp.Preferences.isServerMode()) {
                 URI serverUri = new URI(prefs.getString(PreferenceConstants.VNSERVER_URI));
                 IProxyService proxyService = getProxyService();
                 IProxyData[] proxyDataForHost = proxyService.select(serverUri);
@@ -589,6 +620,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
                     monitor.setTaskName(Messages.Activator_LoadModel);
                     CnAElementFactory.getInstance().loadOrCreateModel(new ProgressAdapter(monitor));
                     CnAElementFactory.getInstance().getISO27kModel();
+                    CnAElementFactory.getInstance().getBpModel();
+                    CnAElementFactory.getInstance().getCatalogModel();
                 } catch (Exception e) {
                     LOG.error("Error while loading model.", e); //$NON-NLS-1$
                     if (e.getCause() != null && e.getCause().getLocalizedMessage() != null) {
@@ -649,7 +682,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
                 // Do not show dialog if remote server is configured instead of
                 // internal server.
-                if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER)) {
+                if (sernet.verinice.rcp.Preferences.isServerMode()) {
                     return;
                 }
 
@@ -663,7 +696,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
         Preferences prefs = Activator.getDefault().getPluginPreferences();
         URI repoUri = null;
         String name = null;
-        if (prefs.getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER)) {
+        if (sernet.verinice.rcp.Preferences.isServerMode()) {
             repoUri = new URI(createUpdateSiteUrl(prefs.getString(PreferenceConstants.VNSERVER_URI)));
             name = Messages.Activator_4;
         } else {

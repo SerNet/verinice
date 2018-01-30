@@ -67,7 +67,6 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.DeleteNote;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
@@ -75,19 +74,22 @@ import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.iso27k.rcp.action.ControlDragListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.AttachmentFileCreationFactory;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachmentsUserFiltered;
-import sernet.verinice.service.commands.LoadBSIModel;
 import sernet.verinice.service.commands.SaveNote;
+import sernet.verinice.service.commands.crud.DeleteNote;
 import sernet.verinice.service.iso27k.ImportCatalog;
 import sernet.verinice.service.iso27k.Item;
 import sernet.verinice.service.iso27k.ItemControlTransformer;
+import sernet.verinice.service.model.LoadModel;
 
 /**
  * @author Daniel <dm[at]sernet[dot]de>
@@ -284,6 +286,17 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
                     @Override
                     public void loaded(ISO27KModel model) {
                         startInitDataJob();
+                    }
+
+                    @Override
+                    public void loaded(BpModel model) {
+                     // work is done in loaded(ISO27KModel model)
+                        
+                    }
+
+                    @Override
+                    public void loaded(CatalogModel model) {
+                        // nothing to do
                     }
 					
 				};
@@ -518,7 +531,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
 	}
 	
 	public BSIModel loadBsiModel() {
-		LoadBSIModel loadBSIModel = new LoadBSIModel();
+		LoadModel<BSIModel> loadBSIModel = new LoadModel<>(BSIModel.class);
 		try {
 			loadBSIModel = getCommandService().executeCommand(loadBSIModel);
 		} catch (CommandException e) {

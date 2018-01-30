@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.actions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -41,7 +42,9 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.AccessControlEditDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.common.CnATreeElement;
@@ -165,9 +168,45 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
         // method will be called before the server connection is enabled.)
         // - permission handling is needed by IAuthService implementation
         // - user has administrator privileges
-        boolean b = ((IStructuredSelection) selection).getFirstElement() instanceof CnATreeElement
+        boolean statisfiedConditions = ((IStructuredSelection) selection).getFirstElement() instanceof CnATreeElement
         && CnAElementHome.getInstance().isOpen();
-        setEnabled(b && checkRights());
+
+        if (!statisfiedConditions) {
+            setEnabled(false);
+            return;
+        }
+        if (!checkRights()) {
+            setEnabled(false);
+            return;
+        }
+
+        boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        if (isLocalAdmin) {
+            boolean isWriteAllowed = isWriteAllowed(selection);
+            setEnabled(isLocalAdmin && isWriteAllowed);
+        } else {
+            setEnabled(true);
+        }
     }
 
+
+    private boolean isWriteAllowed(ISelection selection) {
+        boolean isWriteAllowed = false;
+        IStructuredSelection sel = (IStructuredSelection) selection;
+        for (Iterator<?> iter = sel.iterator(); iter.hasNext();) {
+            Object o = iter.next();
+            if (o instanceof CnATreeElement) {
+                CnATreeElement element = (CnATreeElement) o;
+                isWriteAllowed = CnAElementHome.getInstance().isWriteAllowed(element);
+                if (!isWriteAllowed) {
+                    break;
+                }
+            }
+        }
+        return isWriteAllowed;
+    }
+
+    private IAuthService getAuthService() {
+        return ServiceFactory.lookupAuthService();
+    }
 }

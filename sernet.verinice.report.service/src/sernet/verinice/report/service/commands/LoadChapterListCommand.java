@@ -33,14 +33,14 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.service.commands.crud.LoadChildrenForExpansion;
+import sernet.verinice.service.commands.crud.LoadCnAElementById;
 
 /**
  * Loads the ids and names of various elements of {@link CnATreeElement} (?)

@@ -76,7 +76,7 @@ public class TableImageProvider {
         }
 
         else if (imgCache.isISO27kTypeElement(typeId)) {
-            return imgCache.getISO27kTypeImage(typeId);
+            return imgCache.getImageForTypeId(typeId);
         }
 
         return imgCache.getImage(ImageCache.UNKNOWN);

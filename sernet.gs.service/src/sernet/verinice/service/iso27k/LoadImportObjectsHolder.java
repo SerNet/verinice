@@ -22,6 +22,8 @@ import java.util.List;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.INoAccessControl;
+import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
@@ -47,7 +49,7 @@ public class LoadImportObjectsHolder extends GenericCommand implements INoAccess
 		List<CnATreeElement> resultList = getDaoFactory().getDAO(typeId).findAll(ri);
 		if(resultList != null) {
 			if(resultList.size()>1) {
-				throw new RuntimeException("More than one ImportIsoGroup found.");
+				throw new RuntimeException("More than one import group found for type: " + typeId);
 			} else if(resultList.size()==1) {			
 			    holder = resultList.get(0);
 			}
@@ -66,6 +68,9 @@ public class LoadImportObjectsHolder extends GenericCommand implements INoAccess
         }
         if(BausteinUmsetzung.class.equals(clazz)) {
             typeId = ImportBsiGroup.TYPE_ID;
+        }
+        if(isImplementation(clazz,IBpElement.class)) {
+            typeId = ImportBpGroup.TYPE_ID;
         }
         return typeId;
     }

@@ -17,19 +17,19 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import static sernet.gs.ui.rcp.main.preferences.PreferenceConstants.VNSERVER_HOST_INTERNAL;
+import static sernet.gs.ui.rcp.main.preferences.PreferenceConstants.VNSERVER_SCHEME_INTERNAL;
+import static sernet.gs.ui.rcp.main.preferences.PreferenceConstants.VNSERVER_URI_INTERNAL_PORT;
+
 import java.io.File;
+import java.net.URI;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Preferences;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
-import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRCPLocal;
-import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRemoteSource;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import static sernet.gs.ui.rcp.main.preferences.PreferenceConstants.*;
 import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 
@@ -76,27 +76,6 @@ public class ClientPropertyPlaceholderConfigurer extends
 				server = correctServerURI(getServerURI());
 			}
 			return server;
-		}
-		else if (placeholder.equals("verinice.model.configuration.class"))
-		{
-			String configurationClass;
-			
-			if (isInternalServerMode())
-			{
-				// When the internal server is in use, the catalogues should be
-				// read from the local filesystem.
-				configurationClass = BSIConfigurationRCPLocal.class.getName();
-			}
-			else
-			{
-				// When a remote server is in use, the catalogues will be retrieved
-				// from it.
-				configurationClass = BSIConfigurationRemoteSource.class.getName();
-			}
-			
-			LOG.debug("using configuration class: " + configurationClass);
-			
-			return configurationClass;
 		} else if(placeholder.equals(ILicenseManagementService.VNL_STORAGE_FOLDER)){
 		    
 		    // in standalone mode, vnl-files are stored in workspace

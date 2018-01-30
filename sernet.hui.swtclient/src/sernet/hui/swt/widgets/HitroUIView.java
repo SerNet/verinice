@@ -470,8 +470,7 @@ public class HitroUIView implements IEntityChangedListener   {
 		}
 		fields.put(type.getId(), textControl);
 		textControl.validate();
-		setFirstField(textControl);
-		setFirstField(textControl);
+        setFirstField(textControl);
 	}
 
 	/**

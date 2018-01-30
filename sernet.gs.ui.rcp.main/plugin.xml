@@ -23,7 +23,6 @@
       <perspective
             class="sernet.gs.ui.rcp.main.PerspectiveDS"
             icon="icons/shield.png"
-            id="sernet.gs.ui.rcp.main.dsperspective"
             name="%perspective.name.0"/>
       <perspective
             class="sernet.verinice.iso27k.rcp.Iso27kPerspective"
@@ -37,6 +36,15 @@
             id="sernet.verinice.iso27k.rcp.GreenbonePerspective"
             name="%perspective.name.2">
       </perspective>
+            <perspective
+            class="sernet.verinice.rcp.bp.BaseProtectionPerspective"
+            icon="icons/base-protection/base_protection_perspective.png"
+            id="sernet.verinice.rcp.bp.BaseProtectionPerspective"
+            name="%perspective.name.bp">
+      </perspective>
+      
+      
+      
    </extension>
    <extension
          point="org.eclipse.ui.views">
@@ -205,6 +213,26 @@
       		name="%view.name.18"
       		restorable="true">
       </view>
+      <view
+            allowMultiple="false"
+            category="sernet.verinice.bp.rcp"
+            class="sernet.verinice.bp.rcp.BaseProtectionView"
+            icon="icons/base-protection/base_protection_view.png"
+            id="sernet.verinice.bp.rcp.BaseProtectionView"
+            name="%view.name.20"
+            restorable="true">
+      </view>      
+      
+     <view
+            allowMultiple="false"
+            category="sernet.verinice.rcp.catalog"
+            class="sernet.verinice.rcp.catalog.CatalogView"
+            icon="icons/catalog-view.png"
+            id="sernet.verinice.rcp.catalog.CatalogView"
+            name="%view.name.catalog"
+            restorable="true">
+      </view>      
+      
       
    </extension>
    <extension point="org.eclipse.ui.commands">
@@ -271,6 +299,12 @@
             categoryId="sernet.gs.ui.rcp.commands"
             description="%command.description.newGroup"
             id="sernet.verinice.iso27k.rcp.commands.newGroup"
+            name="%command.name.newGroup">
+      </command>
+      <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="%command.description.newGroup"
+            id="sernet.verinice.bp.rcp.commands.newGroup"
             name="%command.name.newGroup">
       </command>
       <command
@@ -364,6 +398,10 @@
             commandId="sernet.verinice.iso27k.rcp.commands.newGroup"
             schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
             sequence="CTRL+SHIFT+N" />
+       <key
+            commandId="sernet.verinice.bp.rcp.commands.newGroup"
+            schemeId="org.eclipse.ui.defaultAcceleratorConfiguration"
+            sequence="CTRL+SHIFT+N" />
    </extension>
    <extension
          id="product"
@@ -373,7 +411,7 @@
             name="verinice">
          <property
                name="aboutText"
-               value="SerNet verinice 1.14.0 - Codename &apos;Acapulco&apos;&#x0A;&#x0A;(c) SerNet Service Network GmbH and others&#x0A;1996-2017&#x0A;&#x0A;Contact the authors:&#x0A;verinice@sernet.de&#x0A;&#x0A;or&#x0A;&#x0A;Visit our homepage:&#x0A;http://www.verinice.com/en&#x0A;&#x0A;Contributors:&#x0A;Alexander Koderman 		&#x0A;Anne Hanekop 			&#x0A;Marek Seeger&#x0A;Andreas Becker			&lt;andreas.r.becker@ruhr-uni-bochum.de&gt;&#x0A;Robert Schuster			&lt;r.schuster@tarent.de&gt;&#x0A;Daniel Murygin			&lt;dm@sernet.de&gt;&#x0A;Sebastian Engel 		&lt;s.engel@tarent.de&gt;&#x0A;Markus Joos				&lt;markus.joos@t-online.de&gt;&#x0A;Gregorio Levano			&lt;GregorioMagno.LevanoHuaman@hs-furtwangen.de&gt;&#x0A;Christian Ganzmann 		&lt;christian.ganzmann@hs-furtwangen.de&gt;&#x0A;Carmen Probst 			&lt;carmen.probst@hs-furtwangen.de&gt;&#x0A;Sebastian Hagedorn 		&lt;sh@sernet.de&gt;&#x0A;Johannes Stillig 			&#x0A;Christian Eschenlohr 		&lt;christian.eschenlohr@leoni.com&gt;&#x0A;Julia Haas  	&lt;jh@sernet.de&gt;&#x0A;Sirin Torun  	&lt;st@sernet.de&gt;&#x0A;Benjamin Weißenfels         &lt;bw@sernet.de&gt;&#x0A;Stanislav Strigunov  	&lt;sstrigunov@sernet.de&gt;&#x0A;Joachim Seifert				&lt;Joachim.Seifert@rbt-nbg.de&gt;&#x0A;Moritz Reiter&#x0A;Alexander von Ossowski &lt;avo@it-infosec.de&gt;&#x0A;Ruth Motza&#x0A;Viktor Schmidt         &lt;vschmidt@ckc.de&gt;&#x0A;Tatjana Anisow         &lt;ta@sernet.de&gt;&#x0A;Michael Flürenbrock         &lt;mf@sernet.de&gt;&#x0A;Urs Zeidler         &lt;uz@sernet.de&gt;&#x0A;&#x0A;&#x0A;Artwork:&#x0A;Blackbit						www.blackbit.de&#x0A;Icons by Axialis Team		    http://www.axialis.com&#x0A;Icons by Yusuke Kamiyamane      http://p.yusukekamiyamane.com&#x0A;Icons by FAMFAMFAM              http://www.famfamfam.com&#x0A;Joseph North					&lt;north@sublink.ca&gt;&#x0A;Agentur Roeder					www.agentur-roeder.de&#x0A;&#x0A;&#x0A;This program comes with ABSOLUTELY NO WARRANTY.&#x0A;This is free software, and you are welcome to redistribute it under certain conditions.&#x0A;Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.&#x0A;See the LICENSE.txt contained in the program folder, the verinice Plugin-Details in the help menu and the copyright and license header in each source file for details.&#x0A;&#x0A;VDA Information Security Assessment&#x0A;(c) Arbeitskreis Informationsschutz des Verband der Automobilindustrie e. V. (VDA)&#x0A;Lizenz: http://creativecommons.org/licenses/by-nd/3.0/de/&#x0A;VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilindustrie e. V. (VDA), die zur Nutzung in verinice lizenziert sind. Alle Rechte vorbehalten. "/>
+               value="SerNet verinice 1.15.0 - Codename &apos;Miyazaki&apos;&#x0A;&#x0A;(c) SerNet Service Network GmbH and others 1996-2018&#x0A;&#x0A;Contact the authors: verinice@sernet.de&#x0A;&#x0A;or&#x0A;&#x0A;Visit our homepage: http://www.verinice.com/en&#x0A;&#x0A;Contributors:&#x0A;Alexander Koderman 		&#x0A;Anne Hanekop 			&#x0A;Marek Seeger&#x0A;Andreas Becker			&#x0A;Robert Schuster			&#x0A;Daniel Murygin			&#x0A;Sebastian Engel 		&#x0A;Markus Joos				&#x0A;Gregorio Levano			&#x0A;Christian Ganzmann 		&#x0A;Carmen Probst 			&#x0A;Sebastian Hagedorn 		&#x0A;Johannes Stillig 			&#x0A;Christian Eschenlohr 		&#x0A;Julia Haas  	&#x0A;Sirin Torun  	&#x0A;Benjamin Weißenfels         &#x0A;Stanislav Strigunov  	&#x0A;Joachim Seifert				&#x0A;Moritz Reiter&#x0A;Alexander von Ossowski &#x0A;Ruth Motza&#x0A;Viktor Schmidt         &#x0A;Tatjana Anisow         &#x0A;Michael Flürenbrock         &#x0A;Urs Zeidler         &#x0A;Alexander Nasrallah &#x0A;Jochen Kemnade &#x0A;Antonio Marino &#x0A;&#x0A;&#x0A;Artwork:&#x0A;Blackbit						www.blackbit.de&#x0A;Icons by Axialis Team		    http://www.axialis.com&#x0A;Icons by Yusuke Kamiyamane      http://p.yusukekamiyamane.com&#x0A;Icons by FAMFAMFAM              http://www.famfamfam.com&#x0A;Joseph North					&lt;north@sublink.ca&gt;&#x0A;Agentur Roeder					www.agentur-roeder.de&#x0A;&#x0A;&#x0A;This program comes with ABSOLUTELY NO WARRANTY.&#x0A;This is free software, and you are welcome to redistribute it under certain conditions.&#x0A;Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.&#x0A;See the LICENSE.txt contained in the program folder, the verinice Plugin-Details in the help menu and the copyright and license header in each source file for details.&#x0A;&#x0A;VDA Information Security Assessment&#x0A;(c) Arbeitskreis Informationsschutz des Verband der Automobilindustrie e. V. (VDA)&#x0A;Lizenz: http://creativecommons.org/licenses/by-nd/3.0/de/&#x0A;VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilindustrie e. V. (VDA), die zur Nutzung in verinice lizenziert sind. Alle Rechte vorbehalten. "/>
          <property
                name="windowImages"
                value="verinice_icons/v-16.png,verinice_icons/v-32.png,verinice_icons/v-48.png,verinice_icons/v-64.png,verinice_icons/v-128.png"/>
@@ -419,6 +457,7 @@
 		   	     <objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>
 		         <objectClass name="sernet.verinice.model.bsi.MassnahmenUmsetzung"/>
 		   	     <objectClass name="sernet.verinice.model.iso27k.IISO27kElement"/>
+		   	     <objectClass name="sernet.verinice.model.bp.IBpElement"/>
 		      </or>
 		   </enablement>
 		</action>
@@ -741,7 +780,22 @@
                style="push"
                tooltip="%action.tooltip.20">
          </action>
-      </objectContribution>      
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.model.bp.exportItNetwork"
+            objectClass="sernet.verinice.model.bp.elements.ItNetwork">
+         <action
+               class="sernet.verinice.iso27k.rcp.action.ExportAction"
+               enablesFor="1"
+               icon="icons/export.gif"
+               id="sernet.verinice.model.iso27k.ExportOrganization.menu"
+               label="%action.label.exportItNetwork"
+               menubarPath="additions"
+               style="push"
+               tooltip="%action.tooltip.exportItNetwork">
+         </action>
+      </objectContribution>     
       <objectContribution
             adaptable="false"
             id="sernet.verinice.model.iso27k.Person"
@@ -803,6 +857,22 @@
                tooltip="%action.tooltip.34">
          </action>
       </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.itnetworkreport"
+            objectClass="sernet.verinice.model.bp.elements.ItNetwork">
+         <action
+               class="sernet.verinice.report.actions.GenerateSpecificReportAction"
+               enablesFor="+"
+               icon="icons/report.png"
+               id="sernet.verinice.report.rcp.GenerateITNetworkReportAction.action"
+               label="%action.label.40"
+               menubarPath="special"
+               style="push"
+               tooltip="%action.tooltip.40">
+         </action>
+      </objectContribution>
+      
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.organisationreport"
@@ -1025,16 +1095,17 @@
          </action>
       </objectContribution>
       <objectContribution 
-      		adaptable="false"
-      		id="sernet.verinice.validation.CnAValidationAction"
-      		objectClass="sernet.verinice.model.common.CnATreeElement">
-      		<visibility>
-		    		<or>
-		   	     		<objectClass name="sernet.verinice.model.bsi.ITVerbund"/>
-		         		<objectClass name="sernet.verinice.model.iso27k.Organization"/>
-		      		</or>
-		   	</visibility>
-      		<action
+              adaptable="false"
+              id="sernet.verinice.validation.CnAValidationAction"
+              objectClass="sernet.verinice.model.common.CnATreeElement">
+              <visibility>
+                 <or>
+                    <objectClass name="sernet.verinice.model.bsi.ITVerbund"/>
+                    <objectClass name="sernet.verinice.model.iso27k.Organization"/>
+                    <objectClass name="sernet.verinice.model.bp.elements.ItNetwork"/>
+                  </or>
+               </visibility>
+              <action
                class="sernet.verinice.validation.CnAValidationAction"
                enablesFor="+"
                icon="icons/quickfix_warning_obj.gif"
@@ -1044,8 +1115,162 @@
                style="push"
                tooltip="%action.tooltip.36">
 			</action>
-		</objectContribution>  
-   </extension>
+		</objectContribution> 
+	<objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.applicationContrib"
+            objectClass="sernet.verinice.model.bp.groups.ApplicationGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddApplicationActionDelegate"
+               enablesFor="+"
+               icon="icons/base-protection/application.png"
+               id="sernet.gs.ui.rcp.main.bp.application"
+               label="%action.label.addApplication"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addApplication"/>
+      </objectContribution>              
+	    <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.bpPersonContrib"
+            objectClass="sernet.verinice.model.bp.groups.BpPersonGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddBpPersonActionDelegate"
+               enablesFor="+"
+               icon="icons/base-protection/bp_person.png"
+               id="sernet.gs.ui.rcp.main.bp.bpperson"
+               label="%action.label.addBpPerson"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addBpPerson"/>
+      </objectContribution>           
+	    <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.BpRequirementContrib"
+            objectClass="sernet.verinice.model.bp.groups.BpRequirementGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddBpRequirementActionDelegate"
+               enablesFor="+"
+               icon="icons/base-protection/bp_requirement.png"
+               id="sernet.gs.ui.rcp.main.bp.BpRequirement"
+               label="%action.label.addBpRequirement"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addBpRequirement"/>
+      </objectContribution>              
+	    <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.BpThreatContrib"
+            objectClass="sernet.verinice.model.bp.groups.BpThreatGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddBpThreatActionDelegate"
+               enablesFor="+"
+               icon="icons/base-protection/bp_threat.png"
+               id="sernet.gs.ui.rcp.main.bp.BpThreat"
+               label="%action.label.addBpThreat"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addBpThreat"/>
+      </objectContribution>
+	    <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.businessProcessContrib"
+            objectClass="sernet.verinice.model.bp.groups.BusinessProcessGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddBusinessProcessActionDelegate"
+               enablesFor="+"
+               icon="icons/base-protection/business_process.png"
+               id="sernet.gs.ui.rcp.main.bp.businessprocess"
+               label="%action.label.addBusinessProcess"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addBusinessProcess"/>
+      </objectContribution>
+	    <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.otherSystemContrib"
+            objectClass="sernet.verinice.model.bp.groups.DeviceGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddDeviceActionDelegate"
+               enablesFor="+"
+               icon="icons/base-protection/device.png"
+               id="sernet.gs.ui.rcp.main.bp.othersystem"
+               label="%action.label.addOtherSystem"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addOtherSystem"/>
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.icsSystemContrib"
+            objectClass="sernet.verinice.model.bp.groups.IcsSystemGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddIcsSystemActionDelegate"
+               enablesFor="+"
+               icon="icons/base-protection/ics_system.png"
+               id="sernet.gs.ui.rcp.main.bp.icssystem"
+               label="%action.label.addICSSystem"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addICSSystem"/>
+      </objectContribution>
+	<objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.itSystemContrib"
+            objectClass="sernet.verinice.model.bp.groups.ItSystemGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddItSystemActionDelegate"
+               enablesFor="+"
+               icon="icons/base-protection/it_system.png"
+               id="sernet.gs.ui.rcp.main.bp.itsystem"
+               label="%action.label.addITSystem"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addITSystem"/>
+      </objectContribution> 
+	    <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.networkContrib"
+            objectClass="sernet.verinice.model.bp.groups.NetworkGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddNetworkActionDelegate"
+               enablesFor="+"
+               icon="icons/base-protection/network.png"
+               id="sernet.gs.ui.rcp.main.bp.network"
+               label="%action.label.addNetwork"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addNetwork"/>
+      </objectContribution>
+	    <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.roomContrib"
+            objectClass="sernet.verinice.model.bp.groups.RoomGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddRoomActionDelegate"
+               enablesFor="+"
+               icon="icons/base-protection/room.png"
+               id="sernet.gs.ui.rcp.main.bp.room"
+               label="%action.label.addRoom"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addRoom"/>
+      </objectContribution>
+	    <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.safeguardContrib"
+            objectClass="sernet.verinice.model.bp.groups.SafeguardGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddSafeguardActionDelegate"
+               enablesFor="+"
+               icon="icons/base-protection/safeguard.png"
+               id="sernet.gs.ui.rcp.main.bp.safeguard"
+               label="%action.label.addSafeguard"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addSafeguard"/>
+      </objectContribution>
+   </extension>                               
    <extension point="org.eclipse.ui.menus">
       <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=content">	  
    	  	 <command
@@ -1057,9 +1282,9 @@
          	    <with variable="activeMenuSelection">
          	    	<and>
 	         	    	<count value="1" />
-	         	    	<iterate operator="and">	         	    		
-	                    	<instanceof value="sernet.verinice.model.iso27k.IISO27kGroup" />
-	                    	<not>
+	         	    	<iterate operator="and">
+	                    <instanceof value="sernet.verinice.model.iso27k.IISO27kGroup" />
+	                    <not>
 		                		<instanceof value="sernet.verinice.model.iso27k.Asset" />
 		               		</not>
 		               		<not>
@@ -1103,6 +1328,27 @@
 			               	</not>            
 	                    </iterate>
                     </and>            
+		        </with> 
+         	</visibleWhen>
+         </command>
+      </menuContribution>
+   	  <menuContribution locationURI="popup:sernet.verinice.bp.rcp.BaseProtectionView?after=content">	  
+   	  	 <command
+               commandId="sernet.verinice.bp.rcp.commands.newGroup"
+               disabledIcon="icons/generic_element_new.png"
+               icon="icons/generic_element_new.png"
+               label="New base protection group...">
+         	<visibleWhen>
+         		<with variable="activeMenuSelection">
+         	    	<and>
+	         	    	<count value="1" />
+	         	    	<iterate operator="and">	         	    		
+	                    <instanceof value="sernet.verinice.model.iso27k.Group" />                  
+			                <not>
+			                	<instanceof value="sernet.verinice.model.bp.groups.ImportBpGroup" />
+			               	</not>                    
+	                </iterate>
+               </and>            
 		        </with>
          	</visibleWhen>
          </command>
@@ -1133,6 +1379,34 @@
                disabledIcon="icons/16-em-cross.png"
                icon="icons/16-em-cross.png"
                label="%command.label.delete"/>
+      </menuContribution>
+      <menuContribution locationURI="popup:sernet.verinice.bp.rcp.BaseProtectionView?after=additions">
+         <command
+               commandId="org.eclipse.ui.edit.cut"
+               disabledIcon="icons/cut.png"
+               icon="icons/cut.png"
+               label="%command.label.2"/>
+         <command
+               commandId="org.eclipse.ui.edit.copy"
+               disabledIcon="icons/copy.png"
+               icon="icons/copy.png"
+               label="%command.label.0"/>
+         <command
+               commandId="sernet.verinice.iso27k.rcp.commands.copywithlinks"
+               disabledIcon="icons/copy.png"
+               icon="icons/copy.png"
+               label="%command.label.copywithlinks"
+               tooltip="%command.tooltip.copywithlinks"/>
+         <command
+               commandId="org.eclipse.ui.edit.paste"
+               disabledIcon="icons/copy.png"
+               icon="icons/paste.png"
+               label="%command.label.1"/>
+         <command
+               commandId="org.eclipse.ui.edit.delete"
+               disabledIcon="icons/16-em-cross.png"
+               icon="icons/16-em-cross.png"
+               label="%command.label.delete"/>      
       </menuContribution>
       <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=special">
          <command
@@ -1534,8 +1808,67 @@
               id="sernet.verinice.greenbone.cheatsheets.ism"
               name="%CheatSheets.Greenbone.Ism.Name">
            <description>
-              
            </description>
+        </cheatsheet>
+        <category
+           id="sernet.verinice.cheatsheets.mogs"
+           name="%cheatsheets.mogs.category">
+        </category>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.intro"
+            composite="false"
+            contentFile="%cheatsheets.mogs.intro.file"
+            name="%cheatsheets.mogs.intro.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.analysis"
+            composite="false"
+            contentFile="%cheatsheets.mogs.analysis.file"
+            name="%cheatsheets.mogs.analysis.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.detection"
+            composite="false"
+            contentFile="%cheatsheets.mogs.detection.file"
+            name="%cheatsheets.mogs.detection.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.modelling"
+            composite="false"
+            contentFile="%cheatsheets.mogs.modelling.file"
+            name="%cheatsheets.mogs.modelling.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.check"
+            composite="false"
+            contentFile="%cheatsheets.mogs.check.file"
+            name="%cheatsheets.mogs.check.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.documents"
+            composite="false"
+            contentFile="%cheatsheets.mogs.documents.file"
+            name="%cheatsheets.mogs.documents.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.reports"
+            composite="false"
+            contentFile="%cheatsheets.mogs.reports.file"
+            name="%cheatsheets.mogs.reports.name">
+            <description></description>
         </cheatsheet>
    </extension>
    <extension
@@ -1636,6 +1969,20 @@
          </action>
       </viewContribution>
       <viewContribution
+            id="sernet.verinice.iso27k.rcp.action.importItNetwork"
+            targetID="sernet.verinice.bp.rcp.BaseProtectionView">
+         <action
+               class="sernet.gs.ui.rcp.main.actions.ImportXMLAction"
+               icon="icons/import.gif"
+               id="sernet.gs.ui.rcp.main.actions.ImportXMLAction"
+               label="%action.label.import_it_network"
+               state="true"
+               style="push"
+               toolbarPath="additions"
+               tooltip="%action.tooltip.import_it_network">
+         </action>
+      </viewContribution>
+      <viewContribution
             id="sernet.verinice.samt.exportOrganization"
             targetID="sernet.verinice.iso27k.rcp.ISMView">
          <action
@@ -1663,6 +2010,50 @@
                tooltip="%action.tooltip.24">
          </action>
       </viewContribution>
+      <viewContribution
+            id="sernet.verinice.bp.rcp.action.exportItNetwork"
+            targetID="sernet.verinice.bp.rcp.BaseProtectionView">
+         <action
+               class="sernet.verinice.iso27k.rcp.action.ExportAction"
+               icon="icons/export.gif"
+               id="sernet.verinice.iso27k.rcp.action.ExportAction"
+               label="%action.label.export_it_network"
+               state="true"
+               style="push"
+               toolbarPath="additions"
+               tooltip="%action.tooltip.export_it_network">
+         </action>
+      </viewContribution>
+       <viewContribution
+      		id="sernet.verinice.bp.rcp.action.AddItNetworkActionDelegate"
+      		targetID="sernet.verinice.bp.rcp.BaseProtectionView">
+             <action
+               class="sernet.verinice.bp.rcp.action.AddItNetworkActionDelegate"
+               icon="icons/note-new.png"
+               id="sernet.verinice.bp.rcp.action.AddItNetworkActionDelegate"
+               label="%action.label.addItNetwork"
+               state="true"
+               style="push"
+               toolbarPath="additions"
+               tooltip="%action.tooltip.addItNetwork">
+         </action>
+      </viewContribution>
+      
+      <viewContribution
+            id="sernet.verinice.rcp.catalog.action.importOrganization"
+            targetID="sernet.verinice.rcp.catalog.CatalogView">
+         <action
+               class="sernet.gs.ui.rcp.main.actions.ImportCatalogAction"
+               icon="icons/import.gif"
+               id="sernet.gs.ui.rcp.main.actions.ImportCatalogAction"
+               label="%action.label.import_catalog"
+               state="true"
+               style="push"
+               toolbarPath="additions"
+               tooltip="%action.tooltip.import_catalog">
+         </action>
+      </viewContribution>
+            
    </extension>
    <extension point="org.eclipse.ui.handlers">
       <handler class="sernet.verinice.iso27k.rcp.action.CopyHandler"
@@ -1673,6 +2064,7 @@
 	     			<or>
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+	       				<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -1690,6 +2082,9 @@
 	                    </not>
 	                    <not>
 	                    	<instanceof value="sernet.verinice.model.iso27k.ImportIsoGroup"/>
+	                    </not>
+	                    <not>
+	                    	<instanceof value="sernet.verinice.model.bp.groups.ImportBpGroup"/>
 	                    </not>
 	                </iterate>
             	</with>
@@ -1705,6 +2100,7 @@
 	     			<or>
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+	       				<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -1723,6 +2119,9 @@
 	                    <not>
 	                    	<instanceof value="sernet.verinice.model.iso27k.ImportIsoGroup"/>
 	                    </not>
+	                    <not>
+	                    	<instanceof value="sernet.verinice.model.bp.groups.ImportBpGroup"/>
+	                    </not>
 	                </iterate>
             	</with>
 		 </enabledWhen>
@@ -1735,6 +2134,7 @@
 	     			<or>
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+	       				<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -1764,6 +2164,7 @@
 	     			<or>
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+	       				<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -1798,7 +2199,7 @@
         	</with>
 		 </enabledWhen>
       </handler>  
-      <handler class="sernet.verinice.iso27k.rcp.action.AddGroupHandler"
+      <handler class="sernet.verinice.iso27k.rcp.action.AddIsoGroupHandler"
             commandId="sernet.verinice.iso27k.rcp.commands.newGroup">
          <activeWhen>
          	<with variable="activePartId">
@@ -1816,6 +2217,24 @@
         	</with>
 		 </enabledWhen>
       </handler>
+      <handler class="sernet.verinice.bp.rcp.action.AddBaseProtectionGroupHandler"
+            commandId="sernet.verinice.bp.rcp.commands.newGroup">
+				<activeWhen>
+					<with variable="activePartId">
+						<or>
+							<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
+						</or>
+					</with>
+				</activeWhen> 
+				<enabledWhen>
+					<with variable="selection">
+						<iterate operator="and">
+							<instanceof value="sernet.verinice.model.common.CnATreeElement"/>
+							<test property="sernet.verinice.iso27k.model.isWritable"/>            
+						</iterate>
+					</with>
+				</enabledWhen>
+      </handler>
       <handler class="sernet.verinice.iso27k.rcp.action.PasteHandler"
             commandId="org.eclipse.ui.edit.paste">
          <activeWhen>
@@ -1823,6 +2242,7 @@
      			<or>
        				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
        				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
+       				<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
        			</or>
     		</with>
          </activeWhen> 
@@ -1966,7 +2386,7 @@
 	            location="BOTTOM_RIGHT"
 	            state="true">
 	         <enablement>
-	         	<objectClass name="sernet.verinice.model.iso27k.IISO27kGroup"/>        
+	         	<objectClass name="sernet.verinice.model.iso27k.Group"/>        
 	         </enablement>
 	      </decorator>
 	      <decorator

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<cheatsheet title="IT-Grundschutz-Check">
+
+  <intro>
+    <description>
+      <b>Willkommen bei verinice.</b>
+      <br/>
+      <br/>
+      Im Rahmen des IT-Grundschutz-Checks bestimmen Sie, inwieweit Sie die Anforderungen
+      und ihre Maßnahmen des IT-Grundschutz-Kompendiums des BSI bereits umgesetzt haben.
+    </description>
+  </intro>
+
+  <item title="Umsetzung der Maßnahmen">
+     <description>
+         Klappen Sie Maßnahmen in der Modernisierter IT-Grundschutz View auf und öffnen Sie
+         die erste Maßnahme durch Doppelklick. Der Text der Maßnahme erscheint im Browserfenster,
+         damit Sie die Umsetzungshinweise nachlesen können.
+        <br/>
+        Setzen Sie den Umsetzungsstatus auf „Ja“. Schließen und Speichern Sie die Maßnahme
+        <b>(Strg+W)</b>.
+     </description>
+  </item>
+
+  <item title="Vererbung des Umsetzungsstatus der Maßnahmen auf Anforderungen">
+     <description>
+        Nachdem Sie den Umsetzungsstatus einer Maßnahme geändert und gespeichert haben, können Sie in die
+        dazugehörige Anforderung springen, indem Sie im Link-Maker auf die verknüpfte Anforderung doppelklicken.
+        Die Maßnahmen sollten bereits mit den dazugehörigen Anforderungen verknüpft sein. Ist das nicht der Fall,
+        so können Sie die Verknüpfungen nachträglich hinzufügen. Nun können Sie den Umsetzungsstatus der Maßnahme
+        auf die Anforderung ableiten. Standardmäßig ist die dafür vorgesehene Checkbox bereits selektiert. Ist eine Ableitung
+        nicht gewünscht kann diese wieder entfernt werden und somit haben Sie dann die Möglichkeit den Umsetzungsstatus
+        der Anforderung manuell zu setzen. Andernfalls wird der Umsetzungsstatus der Maßnahme direkt in der
+        Anforderung übernommen.
+     </description>
+  </item>
+
+  <item title="Umsetzung durch Masseneditor">
+     <description>
+        Durch den Einsatz des Masseneditors können Sie mehrere gleichartige Objekte auf einmal
+        editieren. Markieren Sie dazu mehrere Objekte auf einmal und klicken Sie dann mit der rechten
+        Maustaste. Wählen Sie im Kontextmenü <b>Masseneditor…</b> und es wird ein neues Fenster geöffnet.
+        Dieses beinhaltet alle Felder, die üblicherweise im Editorbereich zu finden sind. Eine Abweichung
+        ist, dass alle Felder leer sind. Nun können Sie die einzelnen Felder bearbeiten. Achten Sie darauf,
+        dass Sie nur die Felder, die bei allen Objekten überschrieben werden sollen bearbeiten. Die
+        Inhalte der nicht geänderten Felder bleiben weiterhin bestehen. Mit dem <b>OK</b> Button speichern
+        Sie Ihre Änderungen.
+     </description>
+  </item>
+
+</cheatsheet>

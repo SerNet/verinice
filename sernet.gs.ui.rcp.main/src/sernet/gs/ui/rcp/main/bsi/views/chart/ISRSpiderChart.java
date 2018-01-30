@@ -37,14 +37,14 @@ import org.jfree.ui.RectangleEdge;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.common.model.MassnahmenSummaryHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithChildren;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.service.commands.crud.LoadCnAElementById;
+import sernet.verinice.service.commands.crud.LoadReportElementWithChildren;
+import sernet.verinice.service.commands.stats.MassnahmenSummaryHome;
 
 /**
  * Creates a spider chart based on values from fileds tagged with ISR (information

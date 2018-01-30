@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
+import sernet.verinice.model.common.CnATreeElement;
+
 /**
  * User configuration service to load information about users. 
  * 
@@ -27,17 +29,18 @@ package sernet.verinice.interfaces;
 public interface IConfigurationService {
 
     boolean isScopeOnly(String user);
-    
+
     void setScopeOnly(String user, boolean isScopeOnly);
 
     Integer getScopeId(String user);
 
     String[] getRoles(String user);
-    
+
     void setRoles(String user, String[] roles);
 
     String getName(String user);
-    
+
     void discardUserData();
-    
+
+    boolean isWriteAllowed(CnATreeElement cte);
 }

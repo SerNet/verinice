@@ -79,4 +79,5 @@ public interface IAuthService {
 	
 	public boolean isDeactivated();
 
+    public boolean currentUserHasRole(String[] allowedRoles);
 }

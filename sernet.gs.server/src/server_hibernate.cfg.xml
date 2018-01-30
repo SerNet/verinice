@@ -32,22 +32,22 @@
          <property name="hbm2ddl.auto">update</property>
  
 		<!-- Optimized mappings for real DBMS, not for derby -->
-        <mapping resource="sernet/gs/ui/rcp/hibernate/Entity.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/CnALink.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/PropertyList.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/Property.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/CnATreeElement.hbm.xml"/> 
-        <mapping resource="sernet/gs/ui/rcp/hibernate/ChangeLogEntry.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/Gefaehrdung.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/Risikomassnahme.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/FinishedRiskAnalysisLists.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/AccountGroup.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/Configuration.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/Permission.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/BausteinVorschlag.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/Addition.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/AttachmentFile.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/CnAValidation.hbm.xml"/>
+        <mapping resource="sernet/verinice/persistence/Entity.hbm.xml"/>
+        <mapping resource="sernet/verinice/persistence/CnALink.hbm.xml"/>
+        <mapping resource="sernet/verinice/persistence/PropertyList.hbm.xml"/>
+        <mapping resource="sernet/verinice/persistence/Property.hbm.xml"/>
+        <mapping resource="sernet/verinice/persistence/CnATreeElement.hbm.xml"/> 
+        <mapping resource="sernet/verinice/persistence/ChangeLogEntry.hbm.xml"/>
+        <mapping resource="sernet/verinice/persistence/Gefaehrdung.hbm.xml"/>
+        <mapping resource="sernet/verinice/persistence/Risikomassnahme.hbm.xml"/>
+        <mapping resource="sernet/verinice/persistence/FinishedRiskAnalysisLists.hbm.xml"/>
+        <mapping resource="sernet/verinice/persistence/AccountGroup.hbm.xml"/>
+        <mapping resource="sernet/verinice/persistence/Configuration.hbm.xml"/>
+        <mapping resource="sernet/verinice/persistence/Permission.hbm.xml"/>
+        <mapping resource="sernet/verinice/persistence/BausteinVorschlag.hbm.xml"/>
+        <mapping resource="sernet/verinice/persistence/Addition.hbm.xml"/>
+        <mapping resource="sernet/verinice/persistence/AttachmentFile.hbm.xml"/>
+        <mapping resource="sernet/verinice/persistence/CnAValidation.hbm.xml"/>
         
         <mapping resource="jbpm.repository.hbm.xml" />
         <mapping resource="jbpm.execution.hbm.xml" />
@@ -58,7 +58,7 @@
         <!-- Workaround for Hibernate bug HHH-2146
         Will be fixed in hibernate release 3.3.2, until then we use this: -->
     	<event type="delete">
-      		<listener class="sernet.gs.ui.rcp.main.connect.HibernateBugFixDeleteEventListener"/>
+      		<listener class="sernet.verinice.persistence.HibernateBugFixDeleteEventListener"/>
     	</event>
 
     </session-factory>

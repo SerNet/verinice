@@ -54,8 +54,8 @@ import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.UsernameExistsException;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.UsernameExistsException;
 import sernet.verinice.interfaces.ldap.PersonParameter;
 import sernet.verinice.interfaces.ldap.SizeLimitExceededException;
 import sernet.verinice.model.bsi.Person;
@@ -83,14 +83,13 @@ public class LdapImportDialog extends TitleAreaDialog {
 	
 	private Button[] radioButtonTargetPerspective = new Button[2];
 	
-	private HashMap<List<Object>, List<PersonInfo>> ldapQueryCache;
+	private HashMap<PersonParameter, List<PersonInfo>> ldapQueryCache;
 
-	@SuppressWarnings("unchecked")
 	public LdapImportDialog(Shell parent) {
 		super(parent);
 		setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
-		personSet = new HashSet<PersonInfo>();
-		ldapQueryCache = new HashMap<List<Object>, List<PersonInfo>>();
+        personSet = new HashSet<>();
+        ldapQueryCache = new HashMap<>();
 	}
 
 	@Override
@@ -189,9 +188,8 @@ public class LdapImportDialog extends TitleAreaDialog {
 
 		Label targetLabel = new Label(targetComposite, SWT.LEFT);
 		targetLabel.setText(Messages.LdapImportDialog_47);
-		radioButtonTargetPerspective[0] = generateButton(targetComposite, SWT.RADIO, Messages.LdapImportDialog_48, Boolean.FALSE, getRadioButtonListener());
-        radioButtonTargetPerspective[1] = generateButton(targetComposite, SWT.RADIO, Messages.LdapImportDialog_49, Boolean.TRUE, getRadioButtonListener());
-		
+        radioButtonTargetPerspective[0] = generateButton(targetComposite, SWT.RADIO, Messages.LdapImportDialog_48, Boolean.FALSE);
+        radioButtonTargetPerspective[1] = generateButton(targetComposite, SWT.RADIO, Messages.LdapImportDialog_49, Boolean.TRUE);		
 		
 		Button buttonAdd = new Button(containerRoles, SWT.PUSH | SWT.BORDER);
 		buttonAdd.setText(Messages.LdapImportDialog_35);
@@ -203,7 +201,13 @@ public class LdapImportDialog extends TitleAreaDialog {
 		buttonAdd.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                loadLdapUser();
+                if (ldapQueryCache.containsKey(getParameter())) {
+                    personSet.clear();
+                    personSet.addAll(getFromCache(getParameter()));
+                    refreshTable();
+                } else {
+                    loadLdapUser();
+                }
             }
 
             @Override
@@ -233,13 +237,10 @@ public class LdapImportDialog extends TitleAreaDialog {
 		return containerRoles;
 	}
 	
-    private Button generateButton(Composite composite, Integer style, String text, Boolean selection, SelectionListener listener) {
+    private Button generateButton(Composite composite, Integer style, String text, Boolean selection) {
         Button button = new Button(composite, style);
         button.setText((text != null) ? text : button.getText());
         button.setSelection((selection != null) ? selection.booleanValue() : button.getSelection());
-        if (listener != null) {
-            button.addSelectionListener(listener);
-        }
         return button;
     }
 	
@@ -291,7 +292,7 @@ public class LdapImportDialog extends TitleAreaDialog {
 			if(personList!=null) {
     			List<PersonInfo> accountList  = new ArrayList<PersonInfo>(personList);
     			personSet.addAll(accountList);
-    			putOnCache(radioButtonTargetPerspective[0].getSelection(), getParameter(), accountList);
+    			ldapQueryCache.put(getParameter(), accountList);
 			}
 			// Get the content for the viewer, setInput will call getElements in the
 			// contentProvider
@@ -313,12 +314,12 @@ public class LdapImportDialog extends TitleAreaDialog {
 	}
 
 	private void refreshTable() {
-		Object[] personArray = personSet.toArray();
-		Arrays.sort(personArray, new Comparator() {
+		PersonInfo[] personArray = personSet.toArray(new PersonInfo[personSet.size()]);
+		Arrays.sort(personArray, new Comparator<PersonInfo>() {
 		    NumericStringComparator comparator = new NumericStringComparator();
             @Override
-            public int compare(Object o1, Object o2) {
-                return comparator.compare(((PersonInfo)o1).getLoginName(), ((PersonInfo)o2).getLoginName());
+            public int compare(PersonInfo o1, PersonInfo o2) {
+                return comparator.compare(o1.getLoginName(), o2.getLoginName());
             }
         });	
 		viewer.setInput(personArray);
@@ -494,56 +495,10 @@ public class LdapImportDialog extends TitleAreaDialog {
         }
     }
 	
-	private SelectionListener getRadioButtonListener(){
-	    return new SelectionListener() {
-            
-            @Override
-            public void widgetSelected(SelectionEvent event) {
-                if(event.getSource() instanceof Button){
-                    if(((Button)event.getSource()).getSelection()){
-                        personSet.clear();
-                        boolean itgs = false;
-                        if(((Button)event.getSource()).equals(radioButtonTargetPerspective[0])){
-                            itgs = true;
-                        }
-                        if(viewer.getTable().getItemCount() > 0){
-                            if(existsInCache(itgs, getParameter())){
-                                personSet.addAll(getFromCache(itgs, getParameter()));
-                                refreshTable();
-                            } else {
-                                loadLdapUser();
-                            }
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-                widgetSelected(e);
-            }
-        };
-	    
-	}
-	
-
-
-	
-	
-	private boolean existsInCache(boolean importToITGS, PersonParameter parameter){
-	    Object[] o = new Object[]{parameter, importToITGS};
-	    return ldapQueryCache.containsKey(Arrays.asList(o));
-	}
-	
-	private List<PersonInfo> getFromCache(boolean importToITGS, PersonParameter parameter){
-	    if(existsInCache(importToITGS, parameter)){
-	        return ldapQueryCache.get(Arrays.asList(new Object[]{importToITGS, parameter}));
+	private List<PersonInfo> getFromCache(PersonParameter parameter){
+	    if(ldapQueryCache.containsKey(parameter)){
+	        return ldapQueryCache.get(parameter);
 	    }
 	    return Arrays.asList(new PersonInfo[]{});
 	}
-	
-	private void putOnCache(boolean importToITGS, PersonParameter parameter, List<PersonInfo> values){
-	    ldapQueryCache.put(Arrays.asList(new Object[]{importToITGS, parameter}), values);
-	}
-
 }

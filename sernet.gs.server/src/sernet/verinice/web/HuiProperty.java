@@ -25,304 +25,339 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
+import javax.faces.model.SelectItem;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import sernet.hui.common.connect.DependsType;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 
 /**
+ * Represents a huiproperty of the hitro framework for JSF.
+ *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class HuiProperty<K,V> implements Serializable{
-    
+public class HuiProperty implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     private static final Logger LOG = Logger.getLogger(HuiProperty.class);
-    
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat();
-    
-    private K key;
-    
-    private V value;
-    
-    private PropertyType type;
-    
+
+    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat();
+
+    private String key;
+
+    private String value;
+
+    private PropertyType propertyType;
+
     private boolean showLabel = true;
-    
-    public HuiProperty(PropertyType type, K key, V value) {
+
+    private boolean isEnabled = true;
+
+    private final List<ValueChangeListener> valueChangeListeners = new LinkedList<>();
+
+    private List<SelectItem> options;
+
+    public HuiProperty(PropertyType type, String key, String value) {
         super();
-        this.type = type;
+        this.propertyType = type;
         this.key = key;
         this.value = value;
     }
-    
+
     public String getName() {
-        return type.getName();
+        return propertyType.getName();
     }
-    
+
     public String getInputName() {
-        return type.getInputName();
+        return propertyType.getInputName();
     }
-    
+
     public boolean getIsLine() {
-        return type.isLine();
+        return propertyType.isLine();
     }
-    
+
     public boolean getIsText() {
-        return type.isText();
+        return propertyType.isText();
     }
-    
+
     public boolean isEditable() {
-        return type.isEditable();
+        return propertyType.isEditable();
     }
-    
+
     public boolean getIsEditable() {
         return isEditable();
     }
-    
+
     public boolean isVisible() {
-        return type.isVisible();
+        return propertyType.isVisible();
     }
-    
-    public boolean getIsURL(){
-        return type.isURL();
+
+    public boolean getIsURL() {
+        return propertyType.isURL();
     }
-    
-    public String getURLValue(){
-        if(getIsURL() && getValue() != null && !((String)getValue()).isEmpty()){
-            try{
-                int n = getIndexOf((String)getValue(), '"', 0);
-                String[] a = ((String)getValue()).substring(n).split(">");
+
+    public String getURLValue() {
+        if (getIsURL() && getValue() != null && !getValue().isEmpty()) {
+            try {
+                int n = getIndexOf((String) getValue(), '"', 0);
+                String[] a = ((String) getValue()).substring(n).split(">");
                 return a[0].replaceAll("\"", "");
-            } catch (Exception e){
+            } catch (Exception e) {
                 LOG.warn("Something went wrong on reading the URLValue", e);
             }
         }
         return "";
     }
-    
-    public String getURLText(){
-        if(getIsURL() && getValue() != null && !((String)getValue()).isEmpty()){
-            try{
-                int n = getIndexOf((String)getValue(), '"', 0);
-                String[] a = ((String)getValue()).substring(n).split(">");
+
+    public String getURLText() {
+        if (getIsURL() && getValue() != null && !((String) getValue()).isEmpty()) {
+            try {
+                int n = getIndexOf((String) getValue(), '"', 0);
+                String[] a = ((String) getValue()).substring(n).split(">");
                 String value = a[1].replaceAll("</a", "");
                 return value;
-            } catch (Exception e){
+            } catch (Exception e) {
                 LOG.warn("Something went wrong on reading the URLText", e);
             }
+        }
+        return "";
     }
-    return "";
-    }
-    
-    public void setURLText(String urlText){
-        if(getIsURL()){
+
+    public void setURLText(String urlText) {
+        if (getIsURL()) {
             StringBuilder sb = new StringBuilder();
             sb.append("<a href=\"").append(getURLValue()).append("\">").append(urlText).append("</a>");
-            setValue((V)(sb.toString()));
+            setValue(sb.toString());
         }
     }
-    
-    public void setURLValue(String urlValue){
-        if(getIsURL()){
+
+    public void setURLValue(String urlValue) {
+        if (getIsURL()) {
             StringBuilder sb = new StringBuilder();
             sb.append("<a href=\"").append(urlValue).append("\">").append(getURLText()).append("</a>");
-            setValue((V)(sb.toString()));
+            setValue(sb.toString());
         }
-        
+
     }
-    
-    private static int getIndexOf(String str, char c, int n)
-    {
-      int pos = str.indexOf(c, 0);
-      while (n-- > 0 && pos != -1)
-      {
-        pos = str.indexOf(c, pos + 1);
-      }
-      return pos;
+
+    private static int getIndexOf(String str, char c, int n) {
+        int pos = str.indexOf(c, 0);
+        while (n-- > 0 && pos != -1) {
+            pos = str.indexOf(c, pos + 1);
+        }
+        return pos;
     }
-    
+
     public boolean getIsVisible() {
         return isVisible();
     }
-    
+
     public boolean getIsSingleSelect() {
-        return type.isSingleSelect();
+        return propertyType.isSingleSelect();
     }
-    
+
     public boolean getIsNumericSelect() {
-        return type.isNumericSelect();
+        return propertyType.isNumericSelect();
     }
-    
+
     public boolean getIsDate() {
-        return type.isDate();
+        return propertyType.isDate();
     }
-    
+
     public boolean getIsBooleanSelect() {
-        return type.isBooleanSelect();
+        return propertyType.isBooleanSelect();
     }
-    
-    public boolean isShowInObjectBrowser(){
-        return type.isShowInObjectBrowser();
+
+    public boolean getIsReference() {
+        return propertyType.isReference();
     }
-    
+
+    public boolean getIsMultiselect() {
+        return propertyType.isMultiselect();
+    }
+
+    public boolean isShowInObjectBrowser() {
+        return propertyType.isShowInObjectBrowser();
+    }
+
     public Date getDate() {
-        if(!getIsDate()) {
+        if (!getIsDate()) {
             return null;
         }
         Date date = null;
-        if(value instanceof String && !((String)value).isEmpty()) {
-                date = new Date(Long.valueOf((String)value));
+        if (!value.isEmpty()) {
+            date = new Date(Long.valueOf(value));
         }
         return date;
     }
-    
+
     public void setDate(Date date) {
-        if(!getIsDate()) {
+        if (!getIsDate()) {
             return;
         }
-        if(date!=null) {
-            value = (V) Long.valueOf(date.getTime()).toString();
+        if (date != null) {
+            value = Long.toString(date.getTime());
         } else {
             value = null;
         }
     }
-    
-    public boolean getBoolean() {
+
+    public boolean getSingleSelect() {
         boolean result = false;
-        if(getValue()!=null) {
-            result = Integer.valueOf((String) getValue())==1;
+        if (getValue() != null) {
+            result = Integer.valueOf(getValue()) == 1;
         }
         return result;
     }
-    
-    public void setBoolean(boolean b) {
-        setValue((b) ? (V)"1" : (V)"0");
+
+    public void setSingleSelect(boolean b) {
+        setValue(b ? "1" : "0");
     }
-    
+
     public List<String> getOptionList() {
-        if(!getIsSingleSelect() && !getIsNumericSelect()) {
-            return null;
+        if (!getIsSingleSelect() && !getIsNumericSelect()) {
+            return Collections.emptyList();
         }
         List<String> itemList = Collections.emptyList();
-        if(type.getOptions()!=null) {
-            itemList = new ArrayList<String>(type.getOptions().size());
-            if(getIsSingleSelect()){
+        if (propertyType.getOptions() != null) {
+            itemList = new ArrayList<>(propertyType.getOptions().size());
+            if (getIsSingleSelect()) {
                 itemList.add(Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE));
             }
-            for (IMLPropertyOption option : type.getOptions()) {
+            for (IMLPropertyOption option : propertyType.getOptions()) {
                 itemList.add(option.getName());
-            }   
+            }
         }
         return itemList;
     }
-    
-    public String getSelectedOption() {    
+
+    public String getSelectedOption() {
         IMLPropertyOption option = null;
-        if(!getIsSingleSelect() && !getIsNumericSelect()) {
+        if (!getIsSingleSelect() && !getIsNumericSelect()) {
             return null;
         }
         String item = null;
-        if(getIsSingleSelect() && getValue()!=null) {
-            option = type.getOption((String)getValue());
+
+        if (getIsSingleSelect() && getValue() != null) {
+            option = propertyType.getOption((String) getValue());
         }
-        if(getIsNumericSelect() && getValue()!=null) {
-            option = type.getOption(Integer.valueOf((String)getValue()));           
+        if (getIsNumericSelect() && getValue() != null && !getValue().equals("")) {
+            option = propertyType.getOption(Integer.valueOf(getValue()));
         }
-        if(option!=null) {
+
+        if (option != null) {
             item = option.getName();
         }
+
         return item;
     }
-  
+
     public void setSelectedOption(String item) {
-        if(!getIsSingleSelect() && !getIsNumericSelect()) {
-            return;
-        }
-        if(item==null) {
-            value = null;
-            return;
-        }
-        if(getIsSingleSelect() && item.equals(Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE))){
-            value = null;
-            return;
-        }      
-        for (IMLPropertyOption option : type.getOptions()) {
-            if(item.equals(option.getName())) {
-                value = getSelectionValue(option);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Set option value: "+ value + " for label: " + item);
-                }
-                break;
-            }          
-        }      
+        getSelectionValue(item);
     }
 
-    private V getSelectionValue(IMLPropertyOption option) {
-        if(getIsSingleSelect()) {
-            return (V) option.getId();                    
+    public String getSelectionValue(String item) {
+        if (!getIsSingleSelect() && !getIsNumericSelect()) {
+            return null;
         }
-        if(getIsNumericSelect()) {
-            PropertyOption propertyOption = (PropertyOption)option;
-            if(propertyOption.getValue()!=null) {
-                return (V) propertyOption.getValue().toString(); 
+        if (item == null) {
+            setValue(null);
+            return null;
+        }
+        if (getIsSingleSelect() && item.equals(Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE))) {
+            setValue(null);
+            return null;
+        }
+        for (IMLPropertyOption option : propertyType.getOptions()) {
+            if (item.equals(option.getName())) {
+                setValue(getSelectionValue(option));
+
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Set option value: " + value + " for label: " + item);
+                }
+
+                return getValue();
+            }
+        }
+
+        return null;
+    }
+
+    private String getSelectionValue(IMLPropertyOption option) {
+        if (getIsSingleSelect()) {
+            return option.getId();
+        }
+        if (getIsNumericSelect()) {
+            PropertyOption propertyOption = (PropertyOption) option;
+            if (propertyOption.getValue() != null) {
+                return propertyOption.getValue().toString();
             } else {
                 return null;
             }
         }
         return null;
     }
-    
+
     public int getMax() {
-        if(!type.isNumericSelect()) {
+        if (!propertyType.isNumericSelect()) {
             return 0;
         }
-        return type.getMaxValue();
+        return propertyType.getMaxValue();
     }
-    
+
     public int getMin() {
-        if(!type.isNumericSelect()) {
+        if (!propertyType.isNumericSelect()) {
             return 0;
         }
-        return type.getMinValue();
+        return propertyType.getMinValue();
     }
-    
-    public K getId() {
+
+    public String getId() {
         return getKey();
     }
 
-    public K getKey() {
+    public String getKey() {
         return key;
     }
 
-    public void setKey(K key) {
+    public void setKey(String key) {
         this.key = key;
     }
 
-    public V getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(V value) {
-        this.value = value;
+    public void setValue(String value) {
+        if(!Objects.equals(this.value, value)) {
+            this.value = value;
+            fireChangeListeners();
+        }
     }
 
     public PropertyType getType() {
-        return type;
+        return propertyType;
     }
 
     public void setType(PropertyType type) {
-        this.type = type;
+        this.propertyType = type;
     }
-    
+
     public boolean isShowLabel() {
         return showLabel;
     }
-    
+
     public boolean getShowLabel() {
         return isShowLabel();
     }
@@ -339,6 +374,9 @@ public class HuiProperty<K,V> implements Serializable{
         return DATE_FORMAT;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -348,28 +386,148 @@ public class HuiProperty<K,V> implements Serializable{
         return result;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public boolean equals(Object obj) {
-        if (this == obj){
+        if (this == obj)
             return true;
-        }
-        if (obj == null || (getClass() != obj.getClass())){
+        if (obj == null)
             return false;
-        }
+        if (getClass() != obj.getClass())
+            return false;
         HuiProperty other = (HuiProperty) obj;
-        if (key == null && other.key != null){
+        if (key == null) {
+            if (other.key != null)
+                return false;
+        } else if (!key.equals(other.key))
             return false;
-        } else if (key!=null && !key.equals(other.key)){
+        if (value == null) {
+            if (other.value != null)
+                return false;
+        } else if (!value.equals(other.value))
             return false;
-        }
-        if (value == null && other.value != null){
-            return false;
-        } else if (value != null && !value.equals(other.value)){
-            return false;
-        }
         return true;
     }
 
-    
+
+
+    /**
+     * According to the {@link DependsType} this property is enabled. This
+     * additional getter is necessary for JSF and is delegated to
+     * {@link #isEnabled()}.
+     *
+     * @return true if all dependencies are satisfied.
+     */
+    public boolean getIsEnabled() {
+        return isEnabled();
+    }
+
+    /**
+     * This uses {@link #setEnabled(boolean)} and is necessary for JSF
+     * respectively for EL.
+     *
+     * @param isEnabled
+     *            Indicates if the property satisfied all dependency, defined by
+     *            {@link DependsType}.
+     */
+    public void setIsEnabled(boolean isEnabled) {
+        this.setEnabled(isEnabled);
+    }
+
+    /**
+     * According to the {@link DependsType} this property is enabled.
+     *
+     * @return true if all dependencies are satisfied.
+     */
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean isEnabled) {
+        this.isEnabled = isEnabled;
+    }
+
+    /**
+     * Indicates if a {@link HuiProperty} is disabled through editable property
+     * or a depend definition in the SNCA.xml.
+     *
+     * @return false If editable or depends is false.
+     */
+    public boolean isDisabled() {
+        return !(getIsEditable() && getIsEnabled());
+    }
+
+    /**
+     * Calls every registered {@link ValueChangeListener} manually.
+     */
+    public void fireChangeListeners() {
+        for (ValueChangeListener valueChangeListener : valueChangeListeners) {
+            valueChangeListener.processChangedValue(this);
+        }
+    }
+
+    /**
+     * Registers a {@link ValueChangeListener}.
+     *
+     * @param valueChangeListener
+     *            The {@link ValueChangeListener} which is registered.
+     */
+    public void addValueChangeListener(ValueChangeListener valueChangeListener) {
+        valueChangeListeners.add(valueChangeListener);
+    }
+
+    /**
+     * Listener is called whenever the {@value is changed}.
+     *
+     * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+     *
+     */
+    public interface ValueChangeListener  extends Serializable {
+
+        /**
+         * Called whenever the value of the {@link HuiProperty} is changed.
+         *
+         * @param huiProperty
+         *            The {@link HuiProperty} which experienced a change of its
+         *            {@link #value};
+         */
+        void processChangedValue(HuiProperty huiProperty);
+    }
+
+    @Override
+    public String toString() {
+        return "HuiProperty [key=" + key + ", value=" + value + ", propertyType=" + propertyType + ", showLabel=" + showLabel + ", isEnabled=" + isEnabled + "]";
+    }
+
+
+    public List<SelectItem> getOptions() {
+
+        if (propertyType.isMultiselect() && options == null) {
+            options = new ArrayList<>(propertyType.getOptions().size());
+            for (IMLPropertyOption imlPropertyOption : propertyType.getOptions()) {
+                SelectItem selectItem = new SelectItem(imlPropertyOption.getId(), imlPropertyOption.getName());
+                options.add(selectItem);
+            }
+        }
+
+        return options;
+    }
+
+    public List<String> getSelectedOptions() {
+        if (!getIsMultiselect()) {
+            return Collections.emptyList();
+        }
+
+        String[] split = getValue() != null ? getValue().split(",s*") : new String[]{};
+        List<String> selectedOptions = new ArrayList<>(split.length);
+        for (int i = 0; i < split.length; i++) {
+            selectedOptions.add(split[i].trim());
+
+        }
+
+        return selectedOptions;
+    }
+
+    public void setSelectedOptions(List<String> selectedOptions) {
+        setValue(StringUtils.join(selectedOptions, ","));
+    }
 }

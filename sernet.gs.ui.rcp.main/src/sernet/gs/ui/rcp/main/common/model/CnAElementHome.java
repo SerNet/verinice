@@ -27,30 +27,25 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.hibernate.StaleObjectStateException;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.gs.model.Baustein;
+import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.CreateBaustein;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelForTreeView;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
-import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
-import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
-import sernet.gs.ui.rcp.main.service.taskcommands.CreateScenario;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindAllTags;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IProgress;
 import sernet.verinice.interfaces.validation.IValidationService;
-import sernet.verinice.iso27k.service.Retriever;
+import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
@@ -58,6 +53,7 @@ import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -78,6 +74,14 @@ import sernet.verinice.service.commands.RemoveLink;
 import sernet.verinice.service.commands.SaveElement;
 import sernet.verinice.service.commands.UpdateElement;
 import sernet.verinice.service.commands.UpdateElementEntity;
+import sernet.verinice.service.commands.crud.CreateBaustein;
+import sernet.verinice.service.commands.crud.LoadBSIModelForTreeView;
+import sernet.verinice.service.commands.crud.LoadCnAElementById;
+import sernet.verinice.service.commands.crud.LoadCnAElementByType;
+import sernet.verinice.service.commands.crud.RefreshElement;
+import sernet.verinice.service.commands.crud.UpdateMultipleElements;
+import sernet.verinice.service.commands.task.CreateScenario;
+import sernet.verinice.service.commands.task.FindAllTags;
 
 /**
  * DAO class for model objects. Uses Hibernate as persistence framework.
@@ -420,7 +424,9 @@ public final class CnAElementHome {
      * @return
      */
     public boolean isNewChildAllowed(CnATreeElement cte) {
-        return cte instanceof BSIModel || cte instanceof ISO27KModel || isWriteAllowed(cte);
+        return cte instanceof BSIModel || cte instanceof ISO27KModel || cte instanceof BpModel
+                || cte instanceof CatalogModel
+                || isWriteAllowed(cte);
     }
 
     /**
@@ -441,7 +447,7 @@ public final class CnAElementHome {
     
             // Short cut 2: If we are the admin, then everything is writable as
             // well.
-            if (AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
+            if (getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
                 return true;
             }
     
@@ -470,12 +476,12 @@ public final class CnAElementHome {
         }
         return false;
     }
-    
+
     public void createLinksAccordingToBusinessLogic(final CnATreeElement dropTarget, final List<CnATreeElement> toDrop) {
-        createLinksAccordingToBusinessLogic(dropTarget, toDrop, null);
+        createLinksAccordingToBusinessLogicAsync(dropTarget, toDrop, null);
     }
     
-    public void createLinksAccordingToBusinessLogic(final CnATreeElement dropTarget, final List<CnATreeElement> toDrop, final String linkId) {
+    public void createLinksAccordingToBusinessLogicAsync(final CnATreeElement dropTarget, final List<CnATreeElement> toDrop, final String linkId) {
         if (log.isDebugEnabled()) {
             log.debug("createLink..."); //$NON-NLS-1$
         }
@@ -484,131 +490,136 @@ public final class CnAElementHome {
             @Override
             public void run() {
                 Activator.inheritVeriniceContextState();
-                List<CnALink> newLinks = new ArrayList<CnALink>();
-                allDragged: for (CnATreeElement dragged : toDrop) {
-                    try {
-                        // ISO 27k elements are only linked using XML-defined relations:
-                        if (dropTarget instanceof IISO27kElement && dragged instanceof IISO27kElement) {
-
-                            // special case: threats and vulnerabilities can create a new scenario when dropped:
-                            specialISO27kDndHandling(dropTarget, dragged);
-                            String linkIdParam = linkId;
-                            if(linkIdParam==null) {
-                                // use first relation type since param linkId is null
-                                linkIdParam = getFirstLinkdId(dragged, dropTarget);
-                            }
-                            
-                            // try to link from target to dragged elements first:                            
-                            if (linkIdParam!=null) {
-                                boolean linkCreated = createTypedLink(newLinks, dropTarget, dragged, linkIdParam, LINK_NO_COMMENT);
-                                if (linkCreated){
-                                    continue allDragged;
-                                }
-                            }
-                                                   
-                            if(linkIdParam==null) {
-                                linkIdParam = getFirstLinkdId(dropTarget, dragged);
-                            }
-                            if ( linkIdParam!=null ) {
-                                // use first relation type (user can change it later):
-                                boolean linkCreated = createTypedLink(newLinks, dragged, dropTarget, linkIdParam, LINK_NO_COMMENT);
-                                if (linkCreated){
-                                    continue allDragged;
-                                }
-                            }
-                        } // end for ISO 27k elements
-                        
-                        // backwards compatibility: BSI elements can be linked without a defined relation type, but we use one if present:
-                        boolean bsiHandlingNeeded = dropTarget instanceof IBSIStrukturElement || dragged instanceof IBSIStrukturElement || dropTarget instanceof BausteinUmsetzung;
-                        bsiHandlingNeeded = bsiHandlingNeeded || dragged instanceof BausteinUmsetzung || dropTarget instanceof MassnahmenUmsetzung;
-                        bsiHandlingNeeded = bsiHandlingNeeded || dragged instanceof MassnahmenUmsetzung;
-                        if ( bsiHandlingNeeded ) {
-                            bsiElementLinkHandling(dropTarget, linkId, newLinks, dragged);
-                        }
-                    } catch (Exception e) {
-                        log.debug("Saving link failed.", e); //$NON-NLS-1$
-                    }
-                }
-        
-                // fire model changed events:        
-                for (CnALink link : newLinks) {
-                    if (link.getDependant() instanceof ITVerbund) {
-                        CnAElementFactory.getInstance().reloadModelFromDatabase();
-                        return;
-                    }
-                }
-                
-                // calling linkAdded for one link reloads all changed links
-                if(newLinks!=null && !newLinks.isEmpty()) {
-                    CnALink link = newLinks.get(newLinks.size()-1);
-                    if ((link.getDependant() instanceof IBSIStrukturElement || link.getDependant() instanceof MassnahmenUmsetzung)  || (link.getDependency() instanceof IBSIStrukturElement || link.getDependency() instanceof MassnahmenUmsetzung)) {
-                        CnAElementFactory.getLoadedModel().linkAdded(link);
-                    }
-                    if (link.getDependant() instanceof IISO27kElement || link.getDependency() instanceof IISO27kElement) {
-                        CnAElementFactory.getInstance().getISO27kModel().linkAdded(link);
-                    }                 
-                }
-                DNDItems.clear();
+                createLinksAccordingToBusinessLogic(dropTarget, toDrop, linkId);
             }
-
-            private void bsiElementLinkHandling(final CnATreeElement dropTarget, final String linkId, List<CnALink> newLinks, CnATreeElement dragged) throws CommandException {
-                CnATreeElement from = dropTarget;
-                CnATreeElement to = dragged;
-                String linkIdParam = linkId;
-                if(linkIdParam==null) {
-                    linkIdParam = getFirstLinkdId(to, from);
-                }
-                if (linkIdParam==null) {
-                    // try again for reverse direction:
-                    from = dragged;
-                    to = dropTarget;
-                    linkIdParam = getFirstLinkdId(to, from);
-                }
-                if (linkIdParam==null) {
-                    //still nothing found, create untyped link:
-                    CnALink link = CnAElementHome.getInstance().createLink(dropTarget, dragged);
-                    newLinks.add(link);
-                }
-                else {
-                    // create link with type:
-                    createTypedLink(newLinks, from, to, linkIdParam, LINK_NO_COMMENT);
-                }
-            }
-
-            private void specialISO27kDndHandling(final CnATreeElement dropTarget, CnATreeElement dragged) {
-                if (dropTarget instanceof Threat && dragged instanceof Vulnerability) {
-                    Threat threat;
-                    Vulnerability vuln;
-                    threat = (Threat) dropTarget;
-                    vuln = (Vulnerability) dragged;
-                    createScenario(threat, vuln);
-                } 
-                else if (dropTarget instanceof Vulnerability && dragged instanceof Threat) {
-                    Threat threat;
-                    Vulnerability vuln;
-                    vuln = (Vulnerability) dropTarget;
-                    threat = (Threat) dragged;
-                    createScenario(threat, vuln);
-                }
-            }
-
-            /**
-             * @param dropTarget
-             * @param dragged
-             * @param linkIdParam
-             * @return
-             */
-            private String getFirstLinkdId(final CnATreeElement dropTarget, CnATreeElement dragged) {
-                String linkIdParam = null;
-                // if none found: try reverse direction from dragged element to target (link is always modelled from one side only)
-                Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory()
-                    .getPossibleRelations(dragged.getEntityType().getId(), dropTarget.getEntityType().getId());
-                if ( !possibleRelations.isEmpty()) {
-                    linkIdParam = possibleRelations.iterator().next().getId();
-                }
-                return linkIdParam;
-            }
+  
         });
+    }
+    
+    protected void createLinksAccordingToBusinessLogic(final CnATreeElement dropTarget,
+            final List<CnATreeElement> droppedElements, final String linkId) {
+        List<CnALink> newLinks = new ArrayList<CnALink>();
+        allDragged: for (CnATreeElement droppedElement : droppedElements) {
+            try {
+                if (linksAreConfiguredInSnca(dropTarget, droppedElement)) {
+
+                    // special case: threats and vulnerabilities can create a new scenario when dropped:
+                    specialISO27kDndHandling(dropTarget, droppedElement);
+                    String linkIdParam = linkId;
+                    if(linkIdParam==null) {
+                        // use first relation type since param linkId is null
+                        linkIdParam = getFirstLinkdId(droppedElement, dropTarget);
+                    }
+                    
+                    // try to link from target to dragged elements first:                            
+                    if (linkIdParam!=null) {
+                        boolean linkCreated = createTypedLink(newLinks, dropTarget, droppedElement, linkIdParam, LINK_NO_COMMENT);
+                        if (linkCreated){
+                            continue allDragged;
+                        }
+                    }
+                                           
+                    if(linkIdParam==null) {
+                        linkIdParam = getFirstLinkdId(dropTarget, droppedElement);
+                    }
+                    if ( linkIdParam!=null ) {
+                        // use first relation type (user can change it later):
+                        boolean linkCreated = createTypedLink(newLinks, droppedElement, dropTarget, linkIdParam, LINK_NO_COMMENT);
+                        if (linkCreated){
+                            continue allDragged;
+                        }
+                    }
+                } // end for ISO 27k elements
+                
+                // backwards compatibility: BSI elements can be linked without a defined relation type, but we use one if present:
+                boolean bsiHandlingNeeded = dropTarget instanceof IBSIStrukturElement || droppedElement instanceof IBSIStrukturElement || dropTarget instanceof BausteinUmsetzung;
+                bsiHandlingNeeded = bsiHandlingNeeded || droppedElement instanceof BausteinUmsetzung || dropTarget instanceof MassnahmenUmsetzung;
+                bsiHandlingNeeded = bsiHandlingNeeded || droppedElement instanceof MassnahmenUmsetzung;
+                if ( bsiHandlingNeeded ) {
+                    bsiElementLinkHandling(dropTarget, linkId, newLinks, droppedElement);
+                }
+            } catch (Exception e) {
+                log.debug("Saving link failed.", e); //$NON-NLS-1$
+            }
+        }
+
+        // fire model changed events:        
+        for (CnALink link : newLinks) {
+            if (link.getDependant() instanceof ITVerbund) {
+                CnAElementFactory.getInstance().reloadModelFromDatabase();
+                return;
+            }
+        }
+        
+        // calling linkAdded for one link reloads all changed links
+        if(newLinks!=null && !newLinks.isEmpty()) {
+            CnALink link = newLinks.get(newLinks.size()-1);
+            if ((link.getDependant() instanceof IBSIStrukturElement || link.getDependant() instanceof MassnahmenUmsetzung)  || (link.getDependency() instanceof IBSIStrukturElement || link.getDependency() instanceof MassnahmenUmsetzung)) {
+                CnAElementFactory.getLoadedModel().linkAdded(link);
+            }
+            if (link.getDependant() instanceof IISO27kElement || link.getDependency() instanceof IISO27kElement) {
+                CnAElementFactory.getInstance().getISO27kModel().linkAdded(link);
+            }                 
+        }
+        DNDItems.clear();
+    }
+
+    protected boolean linksAreConfiguredInSnca(final CnATreeElement dropTarget,
+            CnATreeElement dragged) {
+        return (dropTarget instanceof IISO27kElement || dropTarget instanceof IBpElement)
+            && (dragged instanceof IISO27kElement || dragged instanceof IBpElement);
+    }
+    
+    private void bsiElementLinkHandling(final CnATreeElement dropTarget, final String linkId, List<CnALink> newLinks, CnATreeElement dragged) throws CommandException {
+        CnATreeElement from = dropTarget;
+        CnATreeElement to = dragged;
+        String linkIdParam = linkId;
+        if(linkIdParam==null) {
+            linkIdParam = getFirstLinkdId(to, from);
+        }
+        if (linkIdParam==null) {
+            // try again for reverse direction:
+            from = dragged;
+            to = dropTarget;
+            linkIdParam = getFirstLinkdId(to, from);
+        }
+        if (linkIdParam==null) {
+            //still nothing found, create untyped link:
+            CnALink link = CnAElementHome.getInstance().createLink(dropTarget, dragged);
+            newLinks.add(link);
+        }
+        else {
+            // create link with type:
+            createTypedLink(newLinks, from, to, linkIdParam, LINK_NO_COMMENT);
+        }
+    }
+    
+    private String getFirstLinkdId(final CnATreeElement dropTarget, CnATreeElement dragged) {
+        String linkIdParam = null;
+        // if none found: try reverse direction from dragged element to target (link is always modelled from one side only)
+        Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory()
+            .getPossibleRelations(dragged.getEntityType().getId(), dropTarget.getEntityType().getId());
+        if ( !possibleRelations.isEmpty()) {
+            linkIdParam = possibleRelations.iterator().next().getId();
+        }
+        return linkIdParam;
+    }
+
+    private void specialISO27kDndHandling(final CnATreeElement dropTarget, CnATreeElement dragged) {
+        if (dropTarget instanceof Threat && dragged instanceof Vulnerability) {
+            Threat threat;
+            Vulnerability vuln;
+            threat = (Threat) dropTarget;
+            vuln = (Vulnerability) dragged;
+            createScenario(threat, vuln);
+        } 
+        else if (dropTarget instanceof Vulnerability && dragged instanceof Threat) {
+            Threat threat;
+            Vulnerability vuln;
+            vuln = (Vulnerability) dropTarget;
+            threat = (Threat) dragged;
+            createScenario(threat, vuln);
+        }
     }
 
     /**
@@ -690,4 +701,7 @@ public final class CnAElementHome {
         }
     }
 
+    private IAuthService getAuthService() {
+        return ServiceFactory.lookupAuthService();
+    }
 }

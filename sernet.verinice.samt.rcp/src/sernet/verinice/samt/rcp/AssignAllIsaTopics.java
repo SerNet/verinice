@@ -19,6 +19,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
+import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
@@ -27,7 +28,6 @@ import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.ControlGroup;
@@ -108,7 +108,7 @@ public class AssignAllIsaTopics implements IObjectActionDelegate, RightEnabledUs
                         linkChildren((ControlGroup) child, personList);
                     }
                     if( child instanceof IControl ) {
-                        CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(child, personList,SamtTopic.REL_SAMTTOPIC_PERSON_ISO);
+                        CnAElementHome.getInstance().createLinksAccordingToBusinessLogicAsync(child, personList,SamtTopic.REL_SAMTTOPIC_PERSON_ISO);
                         numberOfTopics++;
                     }
                 }

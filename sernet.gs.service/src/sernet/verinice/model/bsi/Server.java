@@ -22,6 +22,7 @@ import java.util.Collection;
 import org.apache.log4j.Logger;
 
 import sernet.hui.common.connect.Entity;
+import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 
@@ -60,11 +61,11 @@ public class Server extends CnATreeElement
     public static final String PROP_ESA_ENTSCHEIDUNG_AM = "server_ergaenzendeanalyse_entscheidung_am"; //$NON-NLS-1$
     public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "server_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
 	
-	private final ISchutzbedarfProvider schutzbedarfProvider 
-				= new SchutzbedarfAdapter(this);
+	private final IReevaluator schutzbedarfProvider 
+				= new ProtectionRequirementsAdapter(this);
 				
 	private final ILinkChangeListener linkChangeListener
-				= new MaximumSchutzbedarfListener(this);
+				= new MaximumProtectionRequirementsListener(this);
 
 	/**
 	 * Create new BSIElement.
@@ -122,7 +123,7 @@ public class Server extends CnATreeElement
 	}
 
 	@Override
-	public ISchutzbedarfProvider getSchutzbedarfProvider() {
+	public IReevaluator getProtectionRequirementsProvider() {
 		return schutzbedarfProvider;
 	}
 

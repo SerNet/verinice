@@ -87,10 +87,11 @@ import sernet.verinice.iso27k.rcp.action.ControlDropPerformer;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.FileDropPerformer;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
-import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TagParameter;
 import sernet.verinice.model.common.TypeParameter;
@@ -130,11 +131,12 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
+import sernet.verinice.rcp.ViewFilterAction;
 import sernet.verinice.rcp.RightsEnabledView;
-import sernet.verinice.rcp.tree.ElementManager;
 import sernet.verinice.rcp.tree.TreeContentProvider;
 import sernet.verinice.rcp.tree.TreeLabelProvider;
 import sernet.verinice.rcp.tree.TreeUpdateListener;
+import sernet.verinice.service.tree.ElementManager;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -171,7 +173,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 	
 	private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
 	
-	private ISMViewFilter filterAction;
+	private ViewFilterAction filterAction;
 	
 	private MetaDropAdapter metaDropAdapter;
 
@@ -317,6 +319,16 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 	                public void loaded(ISO27KModel model) {
 	                    startInitDataJob();
 	                }
+
+                    @Override
+                    public void loaded(BpModel model) {
+                        // nothing to do
+                    }
+
+                    @Override
+                    public void loaded(CatalogModel model) {
+                        // nothing to do
+                    }
 	                
 	            };
 	            CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
@@ -366,7 +378,6 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 		
 		bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_6);
 	
-		// TODO: remove comments
 		expandAction = new ExpandAction(viewer, contentProvider);
 		expandAction.setText(Messages.ISMView_7);
 		expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
@@ -396,7 +407,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 		HideEmptyFilter hideEmptyFilter = createHideEmptyFilter();
 		TypeParameter typeParameter = createTypeParameter();
 		TagParameter tagParameter = new TagParameter();
-        filterAction = new ISMViewFilter(viewer,
+        filterAction = new ViewFilterAction(viewer,
 				Messages.ISMView_12,
 				tagParameter,
 				hideEmptyFilter,

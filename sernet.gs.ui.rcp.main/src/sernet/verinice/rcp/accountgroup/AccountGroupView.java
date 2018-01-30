@@ -78,13 +78,18 @@ import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAccountService;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.account.AccountWizard;
+import sernet.verinice.service.account.AccountLoader;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -166,6 +171,16 @@ public class AccountGroupView extends RightsEnabledView
 
                 initDataService();
                 CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
+            }
+
+            @Override
+            public void loaded(BpModel model) {
+                // nothing to do
+            }
+
+            @Override
+            public void loaded(CatalogModel model) {
+                // nothing to do
             }
         };
         CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
@@ -561,8 +576,14 @@ public class AccountGroupView extends RightsEnabledView
     }
 
     private void applyFilterToAccountGroups(String text) {
-
-        String[] allAccountGroups = accountGroupDataService.getAccountGroups();
+        String[] allAccountGroups;
+        boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        if (isLocalAdmin) {
+            List<String> groupNamesForLocalAdmin = AccountLoader.loadGroupNamesForLocalAdmin();
+            allAccountGroups = groupNamesForLocalAdmin.toArray(new String[groupNamesForLocalAdmin.size()]);
+        } else {
+            allAccountGroups = accountGroupDataService.getAccountGroups();
+        }
 
         if (text == null || text.isEmpty()) {
             accountGroups = allAccountGroups;
@@ -812,6 +833,14 @@ public class AccountGroupView extends RightsEnabledView
         initDataService();
     }
 
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.main.common.model.IModelLoadListener#loaded(sernet.verinice.model.bp.elements.BpModel)
+     */
+    @Override
+    public void loaded(BpModel model) {
+        // do nothing
+    }
+
     @Override
     public void closed(BSIModel model) {
         // do nothing
@@ -843,4 +872,14 @@ public class AccountGroupView extends RightsEnabledView
         deleteGroup.setEnabled(enabled);
         editGroup.setEnabled(enabled);
     }
+
+    private IAuthService getAuthService() {
+        return ServiceFactory.lookupAuthService();
+    }
+
+    @Override
+    public void loaded(CatalogModel model) {
+        // nothing to do
+    }
+
 }

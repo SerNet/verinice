@@ -27,8 +27,8 @@ import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.ui.basicauth.BasicProcessingFilterEntryPoint;
 
-import sernet.gs.common.ApplicationRoles;
 import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IConfigurationService;
@@ -235,6 +235,36 @@ public class BasicAuthenticationService implements IAuthService {
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.IAuthService#currentUserHasRole(java.lang.
+     * String[])
+     */
+    @Override
+    public boolean currentUserHasRole(String[] allowedRoles) {
+        String[] currentRoles = null;
+        try {
+            currentRoles = getRoles();
+        } catch (Exception e) {
+            // no auth service available
+        }
+
+        // roles might still be uninitialized (authservice can also return
+        // null):
+        if (currentRoles == null) {
+            return false;
+        }
+        for (String role : allowedRoles) {
+            for (String userRole : currentRoles) {
+                if (role.equals(userRole)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
 
 

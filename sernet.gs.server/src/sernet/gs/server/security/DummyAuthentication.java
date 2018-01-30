@@ -23,7 +23,7 @@ import org.springframework.security.GrantedAuthority;
 import org.springframework.security.GrantedAuthorityImpl;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 
-import sernet.gs.common.ApplicationRoles;
+import sernet.verinice.interfaces.ApplicationRoles;
 
 @SuppressWarnings("serial")
 public final class DummyAuthentication extends UsernamePasswordAuthenticationToken {

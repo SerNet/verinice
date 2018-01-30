@@ -25,7 +25,9 @@ import sernet.verinice.model.bsi.Person;
 
 public class PersonEntityOptionWrapper implements IMLPropertyOption {
 
-	private Entity person;
+    private static final long serialVersionUID = 1L;
+
+    private Entity person;
 
 	public PersonEntityOptionWrapper(Entity entity) {
 		this.person = entity;

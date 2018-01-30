@@ -26,7 +26,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class AuditGroup extends Group<Audit> {
+public class AuditGroup extends Group<Audit> implements IISO27kGroup {
 
 	public static final String TYPE_ID = "auditgroup"; //$NON-NLS-1$
 	public static final String PROP_NAME = "auditgroup_name"; //$NON-NLS-1$

@@ -26,7 +26,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class ThreatGroup extends Group<Asset> {
+public class ThreatGroup extends Group<Threat> implements IISO27kGroup {
 
 	public static final String TYPE_ID = "threat_group"; //$NON-NLS-1$
 	public static final String PROP_NAME = "threat_group_name"; //$NON-NLS-1$

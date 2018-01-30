@@ -29,10 +29,33 @@ import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.elements.Application;
+import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.elements.BusinessProcess;
+import sernet.verinice.model.bp.elements.Device;
+import sernet.verinice.model.bp.elements.IcsSystem;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.ItSystem;
+import sernet.verinice.model.bp.elements.Network;
+import sernet.verinice.model.bp.elements.Room;
+import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bp.groups.BpThreatGroup;
+import sernet.verinice.model.bp.groups.BusinessProcessGroup;
+import sernet.verinice.model.bp.groups.DeviceGroup;
+import sernet.verinice.model.bp.groups.IcsSystemGroup;
+import sernet.verinice.model.bp.groups.ItSystemGroup;
+import sernet.verinice.model.bp.groups.NetworkGroup;
+import sernet.verinice.model.bp.groups.RoomGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
+import sernet.verinice.model.bpm.TodoViewItem;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -95,7 +118,7 @@ import sernet.verinice.rcp.linktable.LinkTableEditorInput;
 /**
  * This class is a singleton and maps editors for different ressources and
  * either opens a new editor or looks them up in the EditorRegistry and shows an
- * already open editor for an object
+ * already open editor for an object.
  * 
  * @author koderman[at]sernet[dot]de
  * @author dm[at]sernet[dot]de
@@ -163,6 +186,25 @@ public final class EditorFactory {
      */
     public void updateAndOpenObject(Object o) {
         EditorFactory.getInstance().openEditor(o);
+    }
+
+    /**
+     * Checks if an editor factory is registered for the given object type and
+     * opens a new editor for it. Also updates the object.
+     * 
+     * @param element
+     *            Object which is opened in the editor
+     * @param readOnly
+     *            should the editor opened in readOnly mode
+     */
+    public void updateAndOpenObject(CnATreeElement element, boolean readOnly) {
+        BSIElementEditorInput input = new BSIElementEditorInput(element, readOnly);
+        try {
+            openEditor(input.getId(), input, BSIElementEditor.EDITOR_ID);
+        } catch (Exception e) {
+            log.error("Error while opening editor.", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.EditorFactory_2);
+        }
     }
 
     private void registerNote() {
@@ -294,6 +336,31 @@ public final class EditorFactory {
         typedFactories.put(ProcessGroup.class, bsiEditorFactory);
         typedFactories.put(Record.class, bsiEditorFactory);
         typedFactories.put(RecordGroup.class, bsiEditorFactory);
+        // Modernized ITBP elements
+        typedFactories.put(ItNetwork.class, bsiEditorFactory);
+        typedFactories.put(Application.class, bsiEditorFactory);
+        typedFactories.put(ApplicationGroup.class, bsiEditorFactory);
+        typedFactories.put(BpPerson.class, bsiEditorFactory);
+        typedFactories.put(BpPersonGroup.class, bsiEditorFactory);
+        typedFactories.put(BpRequirement.class, bsiEditorFactory);
+        typedFactories.put(BpRequirementGroup.class, bsiEditorFactory);
+        typedFactories.put(BpThreat.class, bsiEditorFactory);
+        typedFactories.put(BpThreatGroup.class, bsiEditorFactory);
+        typedFactories.put(BusinessProcess.class, bsiEditorFactory);
+        typedFactories.put(BusinessProcessGroup.class, bsiEditorFactory);
+        typedFactories.put(Device.class, bsiEditorFactory);
+        typedFactories.put(DeviceGroup.class, bsiEditorFactory);
+        typedFactories.put(IcsSystem.class, bsiEditorFactory);
+        typedFactories.put(IcsSystemGroup.class, bsiEditorFactory);
+        typedFactories.put(ItSystem.class, bsiEditorFactory);
+        typedFactories.put(ItSystemGroup.class, bsiEditorFactory);
+        typedFactories.put(Network.class, bsiEditorFactory);
+        typedFactories.put(NetworkGroup.class, bsiEditorFactory);
+        typedFactories.put(Room.class, bsiEditorFactory);
+        typedFactories.put(RoomGroup.class, bsiEditorFactory);
+        typedFactories.put(Safeguard.class, bsiEditorFactory);
+        typedFactories.put(SafeguardGroup.class, bsiEditorFactory);
+        
         // Self Assessment (SAMT) elements
         typedFactories.put(SamtTopic.class, bsiEditorFactory);
         // for task context
@@ -308,7 +375,7 @@ public final class EditorFactory {
             EditorRegistry.getInstance().registerOpenEditor(id, editor);
         } else {
             // show existing editor:
-            getPage().openEditor(editor.getEditorInput(), editorId);
+            editor = getPage().openEditor(editor.getEditorInput(), editorId);
         }
         return editor;
     }

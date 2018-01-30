@@ -21,10 +21,11 @@ package sernet.verinice.web;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.web.Util;
+import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HitroUtil;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateElement;
 
@@ -66,7 +67,7 @@ public class CreateElementHandler implements IActionHandler {
                 Set<CnATreeElement> children = parent.getChildren();
                 CnATreeElement grandParent = parent.getParent();
                 CreateElement<CnATreeElement> saveCommand = new CreateElement<CnATreeElement>(parent, newElementType, title);
-                saveCommand = ServiceFactory.lookupCommandService().executeCommand(saveCommand);
+                saveCommand = getCommandService().executeCommand(saveCommand);
                 CnATreeElement newElement = saveCommand.getNewElement();
                 children.add(newElement);
                 parent.setChildren(children);
@@ -131,6 +132,10 @@ public class CreateElementHandler implements IActionHandler {
 
     public void setElementListeners(List<IElementListener> elementListeners) {
         this.elementListeners = elementListeners;
+    }
+    
+    private ICommandService getCommandService() {
+        return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
     }
     
 }

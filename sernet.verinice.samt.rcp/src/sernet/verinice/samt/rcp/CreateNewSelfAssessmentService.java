@@ -33,7 +33,7 @@ import sernet.verinice.model.iso27k.AuditGroup;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.samt.service.CreateSelfAssessment;
-import sernet.verinice.service.iso27k.LoadModel;
+import sernet.verinice.service.model.LoadModel;
 
 /**
  * @author koderman@sernet.de
@@ -114,7 +114,7 @@ public class CreateNewSelfAssessmentService {
         ISO27KModel model = null;
         if(parent==null) {
             // load the model to create a new organization first
-            LoadModel loadModel = new LoadModel();
+            LoadModel<ISO27KModel> loadModel = new LoadModel<>(ISO27KModel.class);
             loadModel = getCommandService().executeCommand(loadModel);
             model = loadModel.getModel();
             command = new CreateSelfAssessment(model, AddSelfAssessment.TITEL_ORGANIZATION, AddSelfAssessment.TITEL);

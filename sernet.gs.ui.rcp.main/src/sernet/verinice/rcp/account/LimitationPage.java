@@ -29,6 +29,9 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.ApplicationRoles;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.rcp.SelectionAdapter;
@@ -46,12 +49,14 @@ public class LimitationPage extends BaseWizardPage {
     private Configuration account;
     
     private boolean isAdmin = false;
+    private boolean isLocalAdmin = false;
     private boolean isScopeOnly = false;
     private boolean isDesktop = true;
     private boolean isWeb = true;
     private boolean isDeactivated = false;
     
     private Button cbAdmin;
+    private Button cbLocalAdmin;
     private Button cbScopeOnly;
     private Button cbDesktop;
     private Button cbWeb;
@@ -67,20 +72,42 @@ public class LimitationPage extends BaseWizardPage {
         setTitle(Messages.LimitationPage_1);
         setMessage(Messages.LimitationPage_2);
         
+        final boolean currentUserIsLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+
         cbAdmin = createCheckbox(composite, Messages.LimitationPage_3, isAdmin);
+        cbAdmin.setEnabled(!currentUserIsLocalAdmin && !isLocalAdmin);
         cbAdmin.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isAdmin = cbAdmin.getSelection();
+                cbLocalAdmin.setEnabled(!isAdmin && !isScopeOnly);
                 configureStandartGroup();
                 changeGroupPage();
             } 
         });
+        cbLocalAdmin = createCheckbox(composite, Messages.LimitationPage_8, isLocalAdmin);
+        cbLocalAdmin.setEnabled(!isAdmin && !isScopeOnly);
+        cbLocalAdmin.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                isLocalAdmin = cbLocalAdmin.getSelection();
+                cbAdmin.setEnabled(!currentUserIsLocalAdmin && !isLocalAdmin);
+                cbScopeOnly.setEnabled(!isLocalAdmin);
+                configureStandartGroup();
+                changeGroupPage();
+            }
+        });
         cbScopeOnly = createCheckbox(composite, Messages.LimitationPage_4, isScopeOnly);
+        if (currentUserIsLocalAdmin) {
+            cbScopeOnly.setEnabled(!isAdmin && !isLocalAdmin);
+        } else {
+            cbScopeOnly.setEnabled(!isLocalAdmin);
+        }
         cbScopeOnly.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isScopeOnly = cbScopeOnly.getSelection();
+                cbLocalAdmin.setEnabled(!isAdmin && !isScopeOnly);
                 configureStandartGroup();
                 changeGroupPage();
             } 
@@ -116,10 +143,12 @@ public class LimitationPage extends BaseWizardPage {
 
     private void configureStandartGroup() {
         deleteStandartGroups();
-        if(isAdmin()) {
-           configureAdminGroup();
+        if (isAdmin()) {
+            configureAdminGroup();
+        } else if (isLocalAdmin()) {
+            configureLocalAdminGroup();
         } else {
-           configureUserGroup();
+            configureUserGroup();
         }
     }
 
@@ -131,6 +160,10 @@ public class LimitationPage extends BaseWizardPage {
         }
     }
     
+    private void configureLocalAdminGroup() {
+        account.addRole(IRightsService.ADMINLOCALDEFAULTGROUPNAME);
+    }
+
     private void configureUserGroup() {
         if(isScopeOnly()) {
             account.addRole(IRightsService.USERSCOPEDEFAULTGROUPNAME);    
@@ -177,6 +210,14 @@ public class LimitationPage extends BaseWizardPage {
         this.isAdmin = isAdmin;
     }
 
+    public boolean isLocalAdmin() {
+        return isLocalAdmin;
+    }
+
+    public void setLocalAdmin(boolean isLocalAdmin) {
+        this.isLocalAdmin = isLocalAdmin;
+    }
+
     public boolean isScopeOnly() {
         return isScopeOnly;
     }
@@ -209,4 +250,7 @@ public class LimitationPage extends BaseWizardPage {
         this.isWeb = isWeb;
     }
 
+    private IAuthService getAuthService() {
+        return ServiceFactory.lookupAuthService();
+    }
 }

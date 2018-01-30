@@ -30,10 +30,9 @@ public final class ExceptionHandlerFactory {
 	private static IExceptionHandler defaultHandler = new IExceptionHandler()
 			{
 				public void handleException(Exception e) {
-				    Logger.getLogger(ExceptionHandlerFactory.class).error("Exception occured", e);
+				    Logger.getLogger(ExceptionHandlerFactory.class).error("Exception occurred", e);
 				}
 			}; 
-	
 	public static IExceptionHandler getDefaultHandler() {
 		return defaultHandler;
 	}

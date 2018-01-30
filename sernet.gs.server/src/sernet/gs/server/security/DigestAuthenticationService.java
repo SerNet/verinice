@@ -27,7 +27,6 @@ import org.springframework.security.ui.digestauth.DigestProcessingFilterEntryPoi
 
 import sernet.gs.service.SecurityException;
 import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IRightsServerHandler;
 
@@ -47,7 +46,8 @@ public final class DigestAuthenticationService implements IAuthService {
 	private DigestProcessingFilterEntryPoint entryPoint;
     private String adminUsername;
 	
-	public String[] getRoles() {
+	@Override
+    public String[] getRoles() {
 	    if (log.isDebugEnabled()) {
 	        log.debug("getRoles()...");
         }
@@ -59,7 +59,8 @@ public final class DigestAuthenticationService implements IAuthService {
 		 return roles;
 	}
 
-	public String getAdminUsername() {
+	@Override
+    public String getAdminUsername() {
         return adminUsername;
     }
 
@@ -71,7 +72,8 @@ public final class DigestAuthenticationService implements IAuthService {
 	 * Create a password hash for given user and password string.
 	 * Protected by Spring's security config, must have ROLE_ADMIN to use.
 	 */
-	public String hashPassword(String username, String pass) {
+	@Override
+    public String hashPassword(String username, String pass) {
 		return DigestProcessingFilter.encodePasswordInA1Format(username,
 		        entryPoint.getRealmName(), pass);
 	}
@@ -86,7 +88,8 @@ public final class DigestAuthenticationService implements IAuthService {
 	 * @param pass
 	 * @return
 	 */
-	public String hashOwnPassword(String username, String pass) throws SecurityException {
+	@Override
+    public String hashOwnPassword(String username, String pass) throws SecurityException {
 	    if (!getUsername().equals(username)) {
 	        throw new SecurityException(Messages.getString("AuthenticationService.0")); //$NON-NLS-1$
 	    }
@@ -102,7 +105,8 @@ public final class DigestAuthenticationService implements IAuthService {
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.service.IAuthService#getUsername()
 	 */
-	public String getUsername() {
+	@Override
+    public String getUsername() {
 		try {
 			return getUserDetails().getUsername();
 		} catch (Exception e) {
@@ -132,7 +136,8 @@ public final class DigestAuthenticationService implements IAuthService {
         return details;
 	}
 
-	public boolean isPermissionHandlingNeeded()
+	@Override
+    public boolean isPermissionHandlingNeeded()
 	{
 		return true;
 	}
@@ -177,5 +182,34 @@ public final class DigestAuthenticationService implements IAuthService {
         return false;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.IAuthService#currentUserHasRole(java.lang.
+     * String[])
+     */
+    @Override
+    public boolean currentUserHasRole(String[] allowedRoles) {
+        String[] currentRoles = null;
+        try {
+            currentRoles = getRoles();
+        } catch (Exception e) {
+            // no auth service available
+        }
 
+        // roles might still be uninitialized (authservice can also return
+        // null):
+        if (currentRoles == null) {
+            return false;
+        }
+        for (String role : allowedRoles) {
+            for (String userRole : currentRoles) {
+                if (role.equals(userRole)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

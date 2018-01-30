@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<cheatsheet title="Primi passi">
+
+  <intro>
+    <description>
+      <b> Benvenuti in verinice! </b>
+      <br /> <br />
+      Questo tutorial vi aiuter? a configurare verinice e a orientarvi lungo i primi passi.
+    </description>
+  </intro>
+
+  <item title = "Passare alla prospettiva ISM">
+    <description>
+      Dato che state leggendo questo in Italiano, supponiamo che si desideri utilizzare la prospettiva ISM.
+      Questa prospettiva consente di modellare i requisiti e i controlli, per calcolare il rischio e generare report.
+      <br /> <br />
+      Aprire la prospettiva ISM facendo clic sulla voce di menu <b> Visualizza> Mostra prospettiva ...>
+      Prospettiva ISM </b>.
+    </description>
+  </item>
+
+  <item title = "Catalogo controllo importazione">
+    <description>
+      Innanzitutto ? necessario importare un catalogo di controllo. Devi importare un file di catalogo. Sul lato sinistro della scrivania di lavoro verinice troverete la vista "Cataloghi". Fai clic sul pulsante pi? a sinistra ("Importa catalogo ...").
+      <br /> <br />
+      Scegli il file di catalogo scaricato da internet o creato manualmente (ad esempio utilizzando Excel o OpenOffice) e fai clic su <b> OK </b>.
+    </description>
+  </item>
+
+  <item title = "Crea un ambito">
+    <description>
+      Il catalogo ? ora caricato. Dopo che il parser ha finito, vedrete i contenuti nel pannello di
+      visualizzazione del catalogo.
+      <br /> <br />
+      Apri la visualizzazione del browser (<b> Visualizza> Mostra vista ...> Browser oggetti </b>). Fai clic su un controllo per mostrare
+      il suo contenuto nel pannello del browser.
+      <br /> <br />
+      Per funzionare effettivamente con i controlli importati, ? necessario creare l'organizzazione nel database.
+      Vai alla vista "ISM - Schema di Sicurezza". Dovrebbe essere visualizzato nel mezzo della scrivania di lavoro di verinice.
+      Fai clic sul pulsante pi? a destra ("Aggiungi nuova organizzazione").
+      <br /> <br />
+      Trascina alcuni controlli dalla visualizzazione del catalogo al gruppo "Controlli" sotto la nuova organizzazione.
+      I controlli verranno creati. Fare doppio clic su di essi per aprire l'editor per ogni controllo.
+    </description>
+    <onCompletion>
+      Eccellente! Se si desidera continuare, troverai ulteriori tutorial nel menu Guida.
+    </onCompletion>
+
+  </item>
+</cheatsheet>

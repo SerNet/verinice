@@ -39,6 +39,7 @@ public class EntityType {
 
 	private String id;
 	private String name;
+	private String inheritingEntity;
 	
 	private List<IEntityElement> elements = new ArrayList<>();
 	private List<PropertyGroup> propertyGroups = new ArrayList<>();
@@ -293,6 +294,24 @@ public class EntityType {
     }
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * @return the inheritingEntity
+     */
+    public String getInheritingEntity() {
+        return inheritingEntity;
+    }
+
+    /**
+     * @param inheritingEntity the inheritingEntity to set
+     */
+    public void setInheritingEntity(String inheritingEntity) {
+        this.inheritingEntity = inheritingEntity;
+    }
+    
+    public boolean isInheritingEntity() {
+        return this.inheritingEntity != null;
     }
 	
 }

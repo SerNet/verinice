@@ -43,8 +43,11 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.model.bp.IBpModelListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -333,6 +336,20 @@ public class ChartView extends ViewPart {
                 });
                 
             }
+
+            @Override
+            public void loaded(BpModel model) {
+                Display.getDefault().asyncExec(new Runnable() {
+                    public void run() {
+                        CnAElementFactory.getInstance().getBpModel().addModITBOModelListener(changeListener);
+                    }
+                });
+            }
+
+            @Override
+            public void loaded(CatalogModel model) {
+                // nothing to do
+            }
 		};
 
 		changeListener = createChangeListener();
@@ -431,7 +448,7 @@ public class ChartView extends ViewPart {
         return null;
     }
 	
-	protected class ChangeListener implements IBSIModelListener,IISO27KModelListener {
+	protected class ChangeListener implements IBSIModelListener,IISO27KModelListener, IBpModelListener {
 	    public void childAdded(CnATreeElement category, CnATreeElement child) {
             // do nothing
         }
@@ -490,7 +507,16 @@ public class ChartView extends ViewPart {
         public void validationRemoved(Integer scopeId){};
         
         @Override
-        public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
+        public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){}
+
+        /* (non-Javadoc)
+         * @see sernet.verinice.model.iso27k.IBpModelListener#modelReload(sernet.verinice.model.bp.elements.BpModel)
+         */
+        @Override
+        public void modelReload(BpModel newModel) {
+            // TODO Auto-generated method stub
+            
+        };
 	}
 
 }

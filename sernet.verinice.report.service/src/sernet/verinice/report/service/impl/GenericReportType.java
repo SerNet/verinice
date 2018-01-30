@@ -34,10 +34,10 @@ import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
+import sernet.verinice.interfaces.report.ReportTypeException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.report.service.impl.security.ReportSecurityManager;
 import sernet.verinice.security.report.ReportSecurityContext;
-import sernet.verinice.security.report.ReportSecurityException;
 
 /**
  *
@@ -118,7 +118,7 @@ public class GenericReportType implements IReportType {
      * @see sernet.verinice.interfaces.report.IReportType#createReport(sernet.verinice.model.report.ReportTemplateMetaData)
      */
     @Override
-    public void createReport(ReportTemplateMetaData metadata) throws ReportSecurityException {
+    public void createReport(ReportTemplateMetaData metadata) {
         BIRTReportService brs = new BIRTReportService();
         URL rptURL = null;
         try {
@@ -139,42 +139,28 @@ public class GenericReportType implements IReportType {
                     LOG.debug("Default Charset:\t" + Charset.defaultCharset().displayName(Locale.getDefault()));
                     LOG.debug("Default Locale:\t" + Locale.getDefault().getLanguage());
                 }
-                File f1 = new File(URIUtil.toUnencodedString(u));
 
+                File f1 = new File(URIUtil.toUnencodedString(u));
                 rptURL = f1.toURI().toURL();
             }
         } catch (MalformedURLException e) {
-            LOG.error("Error reading" +
-                    " rptdesign", e);
+            LOG.error("Error reading" + " rptdesign", e);
+            throw new ReportTypeException(e);
         } catch (URISyntaxException e) {
             LOG.error("Unable to parse URL of template location", e);
+            throw new ReportTypeException(e);
         }
-
 
         if(LOG.isDebugEnabled()){
             LOG.debug("Trying to open report from template at:\t" + rptURL.toString());
         }
 
-        try{
-            ReportSecurityContext reportSecurityContext = new ReportSecurityContext(options, rptURL, brs.getLogfile(), metadata);
-            ReportSecurityManager secureReportExecutionManager = new ReportSecurityManager(reportSecurityContext);
-            IRunAndRenderTask task = brs.createTask(reportSecurityContext.getRptDesignUrl());
-            task = brs.prepareTaskForRendering(task, options);
-            brs.performRenderTask(task, secureReportExecutionManager);
-        } catch (ReportSecurityException t){
-            throw t;
-        } catch (Exception e){
-            LOG.error("Something went wrong on executing Report", e);
-        }
-        // could be enhancement in logging
-        // List errors = task.getErrors(); // returns list of engineexceptions
+        ReportSecurityContext reportSecurityContext = new ReportSecurityContext(options, rptURL, brs.getLogfile(), metadata);
+        ReportSecurityManager secureReportExecutionManager = new ReportSecurityManager(reportSecurityContext);
+        IRunAndRenderTask task = brs.createTask(reportSecurityContext.getRptDesignUrl());
+        task = brs.prepareTaskForRendering(task, options);
+        brs.performRenderTask(task, secureReportExecutionManager);
     }
-    
-    /**
-     * only use 
-     * @param locationConstant
-     * @return
-     */
     
     private String getDepositPath(String locationConstant){
         StringBuilder sb = new StringBuilder();

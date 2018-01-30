@@ -17,7 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.reports;
 
-import sernet.gs.ui.rcp.office.IOOTableRow;
+import sernet.verinice.interfaces.IOOTableRow;
 
 /**
  * Row for a single String in one column.

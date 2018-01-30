@@ -56,15 +56,6 @@ public final class IBSIStrukturElementTransfer extends VeriniceElementTransfer {
     public void javaToNative (Object data, TransferData transferData){
         TransferUtil.bSIStrukturElementToNative(getInstance(), data, transferData);
     }
-    
-    
-    @Override
-    protected Logger getLog() {
-        if(log == null){
-            log = Logger.getLogger(IBSIStrukturElementTransfer.class);
-        }
-        return log;
-    }
 
     /*
      * (non-Javadoc)

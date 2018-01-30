@@ -5,7 +5,7 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 
-import sernet.verinice.iso27k.service.Retriever;
+import sernet.gs.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.samt.rcp.IsaDecoratorUtil.DecoratorColor;

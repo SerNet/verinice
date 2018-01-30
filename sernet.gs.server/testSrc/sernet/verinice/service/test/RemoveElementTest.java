@@ -50,7 +50,6 @@ import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.CreateConfiguration;
 import sernet.verinice.service.commands.CreateElement;
-import sernet.verinice.service.commands.LoadBSIModel;
 import sernet.verinice.service.commands.LoadConfiguration;
 import sernet.verinice.service.commands.LoadElementByTypeId;
 import sernet.verinice.service.commands.LoadElementByUuid;
@@ -58,7 +57,7 @@ import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
-import sernet.verinice.service.iso27k.LoadModel;
+import sernet.verinice.service.model.LoadModel;
 import sernet.verinice.service.sync.VeriniceArchive;
 
 /**
@@ -76,11 +75,11 @@ public class RemoveElementTest extends CommandServiceProvider {
     @Before
     public void setUp() throws CommandException {
 
-        LoadBSIModel loadBSIModel = new LoadBSIModel();
+        LoadModel<BSIModel> loadBSIModel = new LoadModel<>(BSIModel.class);
         BSIModel bSIModel = commandService.executeCommand(loadBSIModel).getModel();
         itVerbund = createElement(ITVerbund.class, bSIModel);
 
-        LoadModel loadISO27Model = new LoadModel();
+        LoadModel<ISO27KModel> loadISO27Model = new LoadModel<>(ISO27KModel.class);
         ISO27KModel iSO27Model = commandService.executeCommand(loadISO27Model).getModel();
         organization = createElement(Organization.class, iSO27Model);
     }
@@ -164,7 +163,7 @@ public class RemoveElementTest extends CommandServiceProvider {
 
     @Test
     public void removeVerbundFromImportedBSIVerbund() throws CommandException {
-        LoadBSIModel loadBSIModel = new LoadBSIModel();
+        LoadModel<BSIModel> loadBSIModel = new LoadModel<>(BSIModel.class);
         BSIModel bSIModel = commandService.executeCommand(loadBSIModel).getModel();
 
         ImportBsiGroup importBsiGroup = createElement(ImportBsiGroup.class, bSIModel);

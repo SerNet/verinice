@@ -12,14 +12,22 @@
 	<security:authentication-manager alias="authenticationManager" />
     
     <!-- The filter chain that all HTTP requests go through: -->
-	<bean id="springSecurityFilterChain" class="org.springframework.security.util.FilterChainProxy">
-		<security:filter-chain-map path-type="ant">
-			<security:filter-chain pattern="/edit/**" filters="httpSessionContextIntegrationFilter,preAuthFilter,filterSecurityInterceptor" />
-			<security:filter-chain pattern="/todo/**" filters="httpSessionContextIntegrationFilter,preAuthFilter,filterSecurityInterceptor" />
-            <security:filter-chain pattern="/sync/**" filters="httpSessionContextIntegrationFilter,preAuthFilter,filterSecurityInterceptor" /> 
-			<security:filter-chain pattern="/service/**" filters="httpSessionContextIntegrationFilter,preAuthFilter,filterSecurityInterceptor" />
-		</security:filter-chain-map>
-	</bean>
+    <bean id="springSecurityFilterChain" class="org.springframework.security.util.FilterChainProxy">
+        <security:filter-chain-map path-type="ant">
+            <security:filter-chain pattern="/auth/**"
+				   filters="httpSessionContextIntegrationFilter,preAuthFilter,filterSecurityInterceptor" />
+            <security:filter-chain pattern="/dashboard/**"
+				   filters="httpSessionContextIntegrationFilter,preAuthFilter,filterSecurityInterceptor" />
+            <security:filter-chain pattern="/misc/**"
+				   filters="httpSessionContextIntegrationFilter,preAuthFilter,filterSecurityInterceptor" />
+            <security:filter-chain pattern="/edit/**"
+				   filters="httpSessionContextIntegrationFilter,preAuthFilter,filterSecurityInterceptor" />
+            <security:filter-chain pattern="/sync/**"
+				   filters="httpSessionContextIntegrationFilter,preAuthFilter,filterSecurityInterceptor" />
+	    <security:filter-chain pattern="/service/**"
+				   filters="httpSessionContextIntegrationFilter,preAuthFilter,filterSecurityInterceptor" />
+        </security:filter-chain-map>
+    </bean>
 
     <!-- HTTP Header pre authentication: -->
     <!-- User has already been reliably authenticated by some external system. -->
@@ -74,16 +82,27 @@
 
 	<bean id="httpSessionContextIntegrationFilter" class="org.springframework.security.context.HttpSessionContextIntegrationFilter" />
 
-    <!-- Protect HTTP access to these paths: -->
-	<bean id="filterSecurityInterceptor" class="org.springframework.security.intercept.web.FilterSecurityInterceptor">
+	<!-- Protect HTTP access to these paths: -->
+	<bean id="filterSecurityInterceptor"
+		class="org.springframework.security.intercept.web.FilterSecurityInterceptor">
 		<property name="authenticationManager" ref="authenticationManager" />
 		<property name="accessDecisionManager" ref="accessDecisionManager" />
 		<property name="objectDefinitionSource">
 			<security:filter-invocation-definition-source>
-				<security:intercept-url pattern="/edit/**" access="ROLE_WEB" />
-				<security:intercept-url pattern="/todo/**" access="ROLE_WEB" />
-                <security:intercept-url pattern="/service/**" access="ROLE_USER" />
-				<security:intercept-url pattern="/sync/**" access="ROLE_USER" />
+				<security:intercept-url pattern="/auth/j_verinice_security_check"
+					access="ROLE_ANONYMOUS" />
+				<security:intercept-url pattern="/auth/login.xhtml"
+					access="ROLE_ANONYMOUS" />
+				<security:intercept-url pattern="/edit/**"
+					access="ROLE_WEB" />
+				<security:intercept-url pattern="/dashboard/**"
+					access="ROLE_WEB" />
+				<security:intercept-url pattern="/misc/**"
+					access="ROLE_WEB" />
+				<security:intercept-url pattern="/service/**"
+					access="ROLE_USER" />
+				<security:intercept-url pattern="/sync/**"
+					access="ROLE_USER" />
 			</security:filter-invocation-definition-source>
 		</property>
 	</bean>

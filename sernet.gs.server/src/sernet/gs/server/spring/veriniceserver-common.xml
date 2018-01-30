@@ -43,11 +43,11 @@ This variant:
  	available via the VeriniceContext class (look it up for further details).
     -->
 
-	<bean id="gsScraperUtil" class="sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil" >
+	<bean id="gsScraperUtil" class="sernet.verinice.service.parser.GSScraperUtil" >
 		<property name="model">
-			<bean class="sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel">
+			<bean class="sernet.verinice.service.parser.BSIMassnahmenModel">
 				<constructor-arg>
-					<bean class="sernet.gs.ui.rcp.main.connect.BSIConfigurationServer">
+					<bean class="sernet.verinice.service.gstoolimport.BSIConfigurationServer">
 						<property name="grundschutzKataloge" value="${veriniceserver.grundschutzKataloge}" />
 						<property name="datenschutzBaustein" value="${veriniceserver.datenschutzBaustein}" />
 					</bean>
@@ -59,42 +59,51 @@ This variant:
 	<bean id="huiTypeFactory" class="sernet.hui.common.connect.HUITypeFactory">
 		<constructor-arg value="${snca.resource}" />
 	</bean>
-
+    
+  <!-- 
 	<bean id="hitroUtil" class="sernet.hui.common.connect.HitroUtil"
 		init-method="initForServer">
+  -->
+  <bean id="hitroUtil" class="sernet.hui.common.connect.HitroUtil">
 		<property name="typeFactory" ref="huiTypeFactory" />
+    <!--
 		<property name="entityResolverFactory">
 			<bean class="sernet.gs.ui.rcp.main.bsi.model.BSIEntityResolverFactory"/>
 		</property>
+    -->
 	</bean>
+    
+  <bean id="layoutConfig" class="sernet.verinice.service.model.WebLayoutConfig"/>
 
 	<bean id="workObjects" class="sernet.hui.common.VeriniceContext$State">
-	<property name="map">
-			<map>
-				<entry key="gsScraperUtil" value-ref="gsScraperUtil" />
-				<entry key="hitroUtil" value-ref="hitroUtil" />
-				<entry key="huiTypeFactory" value-ref="huiTypeFactory" />
-				<entry key="commandService" value-ref="commandService" />
-				<entry key="authService" value-ref="authService" />
-                <entry key="taskService" value-ref="taskService" />
-                <entry key="rightsServerHandler" value-ref="rightsServerHandler" />
-                <entry key="remindService" value-ref="remindService" />
-                <entry key="isaQmService" value-ref="isaQmService" />
-                <entry key="gsmService" value-ref="gsmService" />
-                <entry key="processEngine" value-ref="processEngine" />
-                <entry key="validationService" value-ref="validationService" />
-                <entry key="accountService" value-ref="accountService" />
-                <entry key="reportdepositService" value-ref="reportdepositService" />
-                <entry key="reportHQLService" value-ref="reportHQLService"/>
-                <entry key="configurationService" value-ref="configurationService"/>
-				<entry key="objectModelService" value-ref="objectModelService" />
-                <entry key="updateNewsService" value-ref="updateNewsService" />
-                <entry key="licenseManagementService" value-ref="licenseManagementService"/>
-                <entry key="encryptionService" value-ref="encryptionService" />
-				<entry key="graphService" value-ref="graphService" />
-        		<entry key="countService" value-ref="countService" />
-			</map>
-		</property>
+    <property name="map">
+        <map>
+            <entry key="gsScraperUtil" value-ref="gsScraperUtil" />
+            <entry key="hitroUtil" value-ref="hitroUtil" />
+            <entry key="huiTypeFactory" value-ref="huiTypeFactory" />
+            <entry key="commandService" value-ref="commandService" />
+            <entry key="authService" value-ref="authService" />
+            <entry key="taskService" value-ref="taskService" />
+            <entry key="rightsServerHandler" value-ref="rightsServerHandler" />
+            <entry key="remindService" value-ref="remindService" />
+            <entry key="isaQmService" value-ref="isaQmService" />
+            <entry key="gsmService" value-ref="gsmService" />
+            <entry key="processEngine" value-ref="processEngine" />
+            <entry key="validationService" value-ref="validationService" />
+            <entry key="accountService" value-ref="accountService" />
+            <entry key="reportdepositService" value-ref="reportdepositService" />
+            <entry key="reportHQLService" value-ref="reportHQLService" />
+            <entry key="configurationService" value-ref="configurationService" />
+            <entry key="objectModelService" value-ref="objectModelService" />
+            <entry key="updateNewsService" value-ref="updateNewsService" />
+            <entry key="licenseManagementService" value-ref="licenseManagementService" />
+            <entry key="encryptionService" value-ref="encryptionService" />
+            <entry key="graphService" value-ref="graphService" />
+            <entry key="countService" value-ref="countService" />
+            <entry key="individualService" value-ref="individualService" />
+            <entry key="layoutConfig" value-ref="layoutConfig" />
+        </map>
+    </property>
 	</bean>
 
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
@@ -149,7 +158,7 @@ This variant:
 		<property name="propertyDao" ref="propertyDao" />
 		<property name="entityDao" ref="entityDao" />
 		<property name="cnaLinkDao" ref="cnaLinkDao" />
-        <property name="cnaTreeElementDao" ref="cnaTreeElementDao" />
+    <property name="cnaTreeElementDao" ref="cnaTreeElementDao" />
 		<property name="finishedRiskAnalysisListsDAO" ref="finishedRiskAnalysisListsDAO" />
 		<property name="gefaehrdungDao" ref="gefaehrdungDao" />
 		<property name="ownGefaehrdungDao" ref="ownGefaehrdungDao" />
@@ -233,12 +242,38 @@ This variant:
 		<property name="processDAO" ref="processDAO" />
 		<property name="recordGroupDAO" ref="recordGroupDAO" />
 		<property name="recordDAO" ref="recordDAO" />
-        <!-- Self Assessment (SAMT) Daos -->
-        <property name="samtTopicDAO" ref="samtTopicDAO" />   
+    <!-- Self Assessment (SAMT) Daos -->
+    <property name="samtTopicDAO" ref="samtTopicDAO" />   
+		<!-- Modernized ITBP DAOs -->
+		<property name="applicationDAO" ref="applicationDAO" />
+    <property name="bpPersonDAO" ref="bpPersonDAO" />
+    <property name="bpRequirementDAO" ref="bpRequirementDAO" />
+    <property name="bpThreatDAO" ref="bpThreatDAO" />
+		<property name="businessProcessDAO" ref="businessProcessDAO" />
+    <property name="deviceDAO" ref="deviceDAO" />
+		<property name="icsSystemDAO" ref="icsSystemDAO" />
+		<property name="itNetworkDAO" ref="itNetworkDAO" />
+		<property name="itSystemDAO" ref="itSystemDAO" />
+		<property name="networkDAO" ref="networkDAO" />
+		<property name="roomDAO" ref="roomDAO" />
+    <property name="safeguardDAO" ref="safeguardDAO" />
+		<property name="bpModelDAO" ref="bpModelDAO" />
+		<property name="applicationGroupDAO" ref="applicationGroupDAO" />
+    <property name="bpPersonGroupDAO" ref="bpPersonGroupDAO" />
+    <property name="bpRequirementGroupDAO" ref="bpRequirementGroupDAO" />
+    <property name="bpThreatGroupDAO" ref="bpThreatGroupDAO" />
+		<property name="businessProcessGroupDAO" ref="businessProcessGroupDAO" />
+    <property name="deviceGroupDAO" ref="deviceGroupDAO" />
+		<property name="icsSystemGroupDAO" ref="icsSystemGroupDAO" />
+		<property name="itSystemGroupDAO" ref="itSystemGroupDAO" />
+		<property name="networkGroupDAO" ref="networkGroupDAO" />
+		<property name="roomGroupDAO" ref="roomGroupDAO" />
+    <property name="safeguardGroupDAO" ref="safeguardGroupDAO" />
 
         <!-- Miscellaneous DAOs -->
         <property name="importIsoDAO" ref="importIsoDAO" /> 
-        <property name="importBsiDAO" ref="importBsiDAO" />   
+        <property name="importBsiDAO" ref="importBsiDAO" />  
+        <property name="importBpDAO" ref="importBpDAO" />   
         <property name="elementEntityDao" ref="elementEntityDao" /> 
         
         <!-- unsecure daos (does not respect access rights or scope only restrictions -->
@@ -247,6 +282,7 @@ This variant:
         
         
         <property name="finishedRiskAnalysisListsDao" ref="finishedRiskAnalysisListsDao" />
+        <property name="catalogModelDAO" ref="catalogModelDao" />
 	</bean>
 
 	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
@@ -276,9 +312,10 @@ This variant:
         <property name="rightsServerHandler" ref="rightsServerHandler" />
         <property name="graphService" ref="graphService" />
         <property name="vnaSchemaVersion" ref="vnaSchemaVersion" />
+        <property name="commandActionIds" ref="command-actionid-mapping"/>
 	</bean>
     
-	<bean id="commandService" parent="baseTxProxy">
+	<bean id="commandService" parent="baseTxProxy" depends-on="hibernateCommandService">
 		<property name="target" ref="hibernateCommandService" />
 		<property name="transactionAttributes">
 			<props merge="true">
@@ -291,6 +328,7 @@ This variant:
     <bean id="configurationServiceImpl" class="sernet.verinice.service.ConfigurationService">
         <property name="configurationDao" ref="configurationDao" />
 		<property name="authService" ref="authService" />
+		<property name="commandService" ref="commandService" />
         <property name="cnaTreeElementDao" ref="cnaTreeElementDao" />
     </bean>
     
@@ -352,7 +390,7 @@ This variant:
     </bean>
      
      <bean name="loadScopeTitlesCommand" class="sernet.verinice.service.commands.LoadElementTitles">
-        <property name="typeIds" value="it-verbund,org"/>
+        <property name="typeIds" value="it-verbund,org,bp_itnetwork"/>
      </bean>
 
 	<!-- Stores the verinice archive version. This schema is written into the

@@ -81,6 +81,7 @@ public class AccountWizard extends Wizard {
             authenticationPage.setLogin(account.getUser());
             authenticationPage.setEmail(account.getNotificationEmail());
             limitationPage.setAdmin(account.isAdminUser());
+            limitationPage.setLocalAdmin(account.isLocalAdminUser());
             limitationPage.setScopeOnly(account.isScopeOnly());
             limitationPage.setWeb(account.isWebUser());
             limitationPage.setDesktop(account.isRcpUser());
@@ -112,6 +113,7 @@ public class AccountWizard extends Wizard {
         getAccount().setPassNew(authenticationPage.getPassword());
         getAccount().setNotificationEmail(authenticationPage.getEmail());
         getAccount().setAdminUser(limitationPage.isAdmin());
+        getAccount().setLocalAdminUser(limitationPage.isLocalAdmin());
         getAccount().setScopeOnly(limitationPage.isScopeOnly());
         getAccount().setWebUser(limitationPage.isWeb());
         getAccount().setRcpUser(limitationPage.isDesktop());

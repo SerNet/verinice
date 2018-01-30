@@ -561,9 +561,11 @@ public class LinkMaker extends Composite implements IRelationTable {
     public void dispose() {
         CnAElementFactory.getLoadedModel().removeBSIModelListener(relationViewContentProvider);
         CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(relationViewContentProvider);
+        CnAElementFactory.getInstance().getBpModel().removeBpModelListener(relationViewContentProvider);
 
         CnAElementFactory.getLoadedModel().removeBSIModelListener(linkRemover);
         CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(linkRemover);
+        CnAElementFactory.getInstance().getBpModel().removeBpModelListener(linkRemover);
 
         super.dispose();
     }

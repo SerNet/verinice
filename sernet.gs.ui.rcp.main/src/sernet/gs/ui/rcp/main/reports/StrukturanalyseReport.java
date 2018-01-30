@@ -23,9 +23,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 
-import sernet.gs.ui.rcp.office.IOOTableRow;
+import sernet.verinice.interfaces.IBSIReport;
+import sernet.verinice.interfaces.IOOTableRow;
+import sernet.verinice.interfaces.PropertySelection;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.BsiReport;
 import sernet.verinice.model.bsi.Client;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.ITVerbund;

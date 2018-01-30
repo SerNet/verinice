@@ -59,7 +59,7 @@ public class GSVampire {
 
 	List<MSchutzbedarfkategTxt> allSchutzbedarf;
 
-	private static final String QUERY_ZIELOBJEKT_TYP = "select zo, txt.name, subtxt.name "
+	private static final String QUERY_ZIELOBJEKT_TYP = "select distinct zo, txt.name, subtxt.name "
 			+ "			from NZielobjekt zo, MbZielobjTypTxt txt, MbZielobjSubtypTxt subtxt "
 			+ "			where zo.mbZielobjSubtyp.id.zotId = txt.id.zotId "
 			+ "			and (txt.id.sprId = 0 or txt.id.sprId = 1)"
@@ -933,6 +933,11 @@ public class GSVampire {
         sb.append("-");
         sb.append(zobGuid);
         return sb.toString();
+    }
+    
+    public static Object initializeObject(Object object) {
+        Hibernate.initialize(object);
+        return object;
     }
 
 }

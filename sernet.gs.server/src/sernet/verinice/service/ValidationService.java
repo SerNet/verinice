@@ -28,9 +28,9 @@ import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.Retriever;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.ServerInitializer;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadScopeElementsById;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -42,11 +42,11 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.validation.IValidationService;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.validation.CnAValidation;
 import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.commands.crud.LoadScopeElementsById;
 
 /**
  *
@@ -243,41 +243,48 @@ public class ValidationService implements IValidationService {
             hintsOfFailedValidations.addAll(processValidationMap(type.validate(savedProp.getPropertyValue(), null), elmt, type));
         }
         // no property existant yet
-        if(savedProperties.size() == 0){
+        if(savedProperties.isEmpty()){
             hintsOfFailedValidations.addAll(processValidationMap(type.validate(null, null), elmt, type));
         }
         return hintsOfFailedValidations;
     }
-    
-    private List<String> processValidationMap(Map<String, Boolean> validationMap, CnATreeElement elmt, PropertyType type){
-        ArrayList<String> hintsOfFailedValidations = new ArrayList<String>(0);
-        for(Entry<String, Boolean> entry : validationMap.entrySet()){
-            boolean validationExists = isValidationExistant(elmt.getDbId(), type.getId(), entry.getKey(), elmt.getScopeId());
-            if(!entry.getValue().booleanValue() && !validationExists){
+
+    private List<String> processValidationMap(Map<String, Boolean> validationMap,
+            CnATreeElement elmt, PropertyType type) {
+        ArrayList<String> hintsOfFailedValidations = new ArrayList<>();
+        for (Entry<String, Boolean> entry : validationMap.entrySet()) {
+            boolean validationExists = isValidationExistant(elmt.getDbId(), type.getId(),
+                    entry.getKey(), elmt.getScopeId());
+            boolean elmtIsValid = entry.getValue().booleanValue();
+            if (!elmtIsValid && !validationExists) {
                 hintsOfFailedValidations.add(entry.getKey());
-                if(log.isDebugEnabled()){
-                    log.debug("Validation:\t(" + type.getId() + ", " + entry.getValue() + ", " + entry.getKey() + ") created");
+                if (log.isDebugEnabled()) {
+                    log.debug("Validation:\t(" + type.getId() + ", " + entry.getValue() + ", "
+                            + entry.getKey() + ") created");
                 }
-            } else if(entry.getValue().booleanValue() && validationExists){ // validationcondition is fullfilled
+            } else if (elmtIsValid && validationExists) { // validation condition is fullfilled
                 deleteValidation(elmt.getDbId(), type.getId(), entry.getKey(), elmt.getScopeId());
-                if(log.isDebugEnabled()){
-                    log.debug("Validation:\t(" + type.getId() + ", " + entry.getValue() + ", " + entry.getKey() + ") deleted");
+                if (log.isDebugEnabled()) {
+                    log.debug("Validation:\t(" + type.getId() + ", " + entry.getValue() + ", "
+                            + entry.getKey() + ") deleted");
                 }
-            } else if(!entry.getValue().booleanValue() && validationExists){
+            } else if (!elmtIsValid && validationExists) {
                 updateValidations(elmt.getScopeId(), elmt.getDbId(), elmt.getTitle());
             }
         }
-        // if validation for type are existant, but map is empty (no validators defined)
+        // if validation for type are existant, but map is empty (no validators
+        // defined)
         // ===> delete existant validations for type
-        if(validationMap.entrySet().size() == 0){ // no negative validations existant
-            for(CnAValidation validation : getValidations(elmt.getDbId(), type.getId())){
+        if (validationMap.entrySet().isEmpty()) { // no negative validations existant
+            for (CnAValidation validation : getValidations(elmt.getDbId(), type.getId())) {
                 deleteValidation(validation);
             }
         }
         return hintsOfFailedValidations;
     }
-    
-    private Map<PropertyType, List<String>> updateValueMap(Map<PropertyType, List<String>> map, PropertyType type, CnATreeElement elmt){
+
+    private Map<PropertyType, List<String>> updateValueMap(Map<PropertyType, List<String>> map,
+            PropertyType type, CnATreeElement elmt) {
         List<String> invalidHints = getInvalidPropertyHints(type, elmt);
         if(map.containsKey(type)){
             List<String> listWithNewValues = map.get(type);
@@ -327,22 +334,23 @@ public class ValidationService implements IValidationService {
      * @see sernet.verinice.interfaces.validation.IValidationService#createValidationsForScope(sernet.verinice.model.common.CnATreeElement)
      */
     @Override
-    public void createValidationsForScope(Integer scope) throws CommandException{
+    public void createValidationsForScope(Integer scope) throws CommandException {
         ServerInitializer.inheritVeriniceContextState();
         LoadScopeElementsById command = new LoadScopeElementsById(scope);
         command = getCommandService().executeCommand(command);
-        List<CnATreeElement> filteredList = new ArrayList<CnATreeElement>(0);
-        
-        for(CnATreeElement elmt : command.getResults()){
-            if(!(elmt instanceof IBSIStrukturKategorie)){ // ibsistrukturcategories does not have any fields to validate
-                filteredList.add(elmt);
+        List<CnATreeElement> elementsToValidate = new ArrayList<>();
+
+        for (CnATreeElement elmt : command.getResults()) {
+            // IBSIStrukturKategorie does not have any fields to validate
+            if (!(elmt instanceof IBSIStrukturKategorie)) {
+                elementsToValidate.add(elmt);
             }
         }
-        for(CnATreeElement elmt : filteredList){
+        for (CnATreeElement elmt : elementsToValidate) {
             createValidationForSingleElement(elmt);
         }
     }
-    
+
     @Override
     public void createValidationsForSubTree(CnATreeElement elmt) throws CommandException{
         ServerInitializer.inheritVeriniceContextState();

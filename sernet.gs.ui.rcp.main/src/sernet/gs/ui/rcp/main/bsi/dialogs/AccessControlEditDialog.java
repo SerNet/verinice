@@ -64,12 +64,14 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadPermissions;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.rcp.ImageColumnProvider;
-import sernet.verinice.rcp.account.AccountLoader;
+import sernet.verinice.service.account.AccountLoader;
+import sernet.verinice.service.commands.crud.LoadPermissions;
 
 /**
  * Dialog that allows changing the access options for elements.
@@ -473,11 +475,21 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 
     private String[] getRoles() {
         if (roleArray == null) {
-            List<String> accountAndGroupList = AccountLoader.loadLoginAndGroupNames();
-            roleArray = accountAndGroupList.toArray(new String[accountAndGroupList.size()]);       
+            List<String> accountsAndGroups = new ArrayList<String>();
+
+            boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+            if (isLocalAdmin) {
+                accountsAndGroups = AccountLoader.loadAccountsAndGroupNamesForLocalAdmin();
+            } else {
+                accountsAndGroups = AccountLoader.loadLoginAndGroupNames();
+            }
+
+            roleArray = accountsAndGroups.toArray(new String[accountsAndGroups.size()]);
         }
         return roleArray;
     }
+
+
 
     protected void addPermission() {
         CnATreeElement element = null;
@@ -638,4 +650,7 @@ public class AccessControlEditDialog extends TitleAreaDialog {
         }
     };
 
+    private IAuthService getAuthService() {
+        return ServiceFactory.lookupAuthService();
+    }
 }

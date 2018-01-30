@@ -167,7 +167,7 @@ public class AddElement implements IObjectActionDelegate, RightEnabledUserIntera
                 if(group instanceof Asset) {
                     childType = Control.TYPE_ID;
                 }
-				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getISO27kTypeImage(childType)));	
+				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getImageForTypeId(childType)));	
 				action.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.getString("AddElement.20") ); //$NON-NLS-1$
 			}
 			// Only change state when it is enabled, since we do not want to

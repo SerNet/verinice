@@ -14,5 +14,6 @@
 		<property name="configurationService" ref="configurationService" />
 		<property name="rightsServerHandler" ref="rightsServerHandler" />
 		<property name="permissionDao" ref="permissionDAO" />
+		<property name="authService" ref="authService"/>
 	</bean>
 </beans>

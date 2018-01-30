@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<cheatsheet title = "Come iniziare con le valutazioni di sicurezza delle informazioni">
+
+  <intro>
+    <description>
+      <b> Benvenuti nelle valutazioni sulla sicurezza delle informazioni di verinice </b>
+      <br /> <br />
+      Questo tutorial ti aiuterà a condurre la tua prima valutazione della sicurezza dell'informazione!
+    </description>
+  </intro>
+
+  <item title = "Passare alla prospettiva di valutazione della sicurezza">
+    <description>
+      Innanzitutto bisogna creare una nuova valutazione di sicurezza. Dovresti essere nella valutazione della sicurezza
+      prospettiva. In caso contrario, è possibile aprirlo tramite <b> Visualizza -> Mostra prospettiva ... -> Valutazione della sicurezza
+      Prospettiva </b>.
+      <br /> <br />
+      Troverai la valutazione di valutazione della sicurezza sul lato sinistro del banco di lavoro.
+    </description>
+  </item>
+
+  <item title = "Crea una nuova valutazione di sicurezza">
+    <description>
+      Fai clic sul pulsante <b> Nuovo </b> nella vista di valutazione della protezione oppure scegli <b> File> Aggiungi nuovo
+      valutazione di sicurezza </b> dal menu.
+      <br /> <br />
+      La nuova valutazione di sicurezza apparirà nella vista. Fare doppio clic su di esso per visualizzare la vista dell'editor.
+      Cambiare il nome da "[La mia azienda]" al nome della tua azienda.
+      <br /> <br />
+      Salva facendo clic su <b> File> Salva </b> o premendo <b> Ctrl-S </b> sulla tastiera.
+    </description>
+  </item>
+
+  <item title = "Apri la prima categoria">
+    <description>
+      Espandere la valutazione di sicurezza facendo clic sulla freccia piccola a sinistra dell'icona del nodo.
+      Espandere "Controlli" e poi la prima categoria facendo clic sulla piccola freccia a sinistra.
+      <br /> <br />
+      Dovresti essere in grado di vedere una serie di categorie da "Politica di sicurezza" a "Controllo dell'accesso".
+      Queste categorie contengono domande che consentono di valutare la sicurezza dell'informazione corrente
+      livello per i temi più importanti.
+    </description>
+  </item>
+
+<item title = "Rispondi alle domande">
+    <description>
+      Fare doppio clic sulla prima domanda per aprire l'editor. Contemporaneamente, il Browser degli oggetti
+      mostrare la domanda e una selezione di livelli di maturità.
+      <br /> <br />
+      Leggi le descrizioni per decidere quale livello di maturità hai raggiunto nell'organizzazione.
+      Potrebbe essere necessario consultare altri dipendenti o fare alcune ricerche interne per rispondere alla domanda
+      correttamente.
+      <br /> <br />
+      Scegli il livello di maturità corretto nell'editor sotto la visualizzazione del browser. Puoi aggiungere un pubblico e
+      un commento privato. Il commento pubblico sarà incluso in un'esportazione del database.
+      I commenti privati sono solo per te. Non lasciano mai il tuo database locale.
+      <br /> <br />
+      Salvare le modifiche premendo <b> Ctrl-S </b> o scegliendo <b> File -> Salva </b>.
+    </description>
+  </item>
+
+  <item title = "Genera un rapporto">
+    <description>
+      Continuare allo stesso modo con la prossima domanda. Mentre andate avanti, noterete che il grafico
+      nell'angolo in basso a sinistra dello schermo inizia a riflettere le tue risposte.
+      <br /> <br />
+      Quando hai risposto a tutte le domande, puoi generare un report per la gestione o per un altro
+      che potete inviarli via email o altri mezzi. Puoi farlo selezionando
+      <b> File> Generare report ... </b>.
+      <br /> <br />
+      Selezionare "Rapporto di valutazione della sicurezza dell'informazione" e inserire un nome di file sotto il quale
+      il report verrà salvato, quindi fai clic su <b> OK </b>.
+    </description>
+  </item>
+
+  <item title = "Esporta risultati">
+    <description>
+      Quando hai risposto a tutte le domande, puoi esportare i tuoi risultati per inviarli a un'altra parte.
+      Puoi farlo cliccando su <b> Esporta </b>
+      nella visualizzazione valutazione di sicurezza o selezionando <b> File> Valutazione sicurezza> Esporta in
+      file </b>.
+      <br /> <br />
+      Devi scegliere un nome di file in base al quale il report verrà salvato. Il file esportato è sempre
+      criptati, quindi devi anche scegliere una password o un certificato per la crittografia. Una volta terminata,
+      premere <b> OK </b>.
+    </description>
+  </item>
+
+  <item title = "Fine">
+    <description>
+      Complimenti per aver condotto la prima valutazione di sicurezza del tuo stato di sicurezza delle informazioni.
+      Se vuoi andare oltre e stai pensando di realizzare effettivamente una sicurezza dell'informazione
+      sistema di gestione (ISMS) della vostra azienda, potete tornare alla schermata di benvenuto scegliendo
+      <b> Aiuto> Benvenuto </b>.
+      <br /> <br />
+      Questa volta, selezionare l'opzione "Creazione di un sistema di gestione per la sicurezza delle informazioni (ISMS)".
+      Sarai indirizzato alla prospettiva ISM con un altro tutorial per guidarvi.
+    </description>
+    <onCompletion>
+      Questo conclude questo tutorial. Non dimenticate di visitare <b> http://www.verinice.com/it </b> per ulteriori informazioni
+      e notizie!
+    </onCompletion>
+  </item>
+  
+</cheatsheet>

@@ -26,8 +26,11 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.office.IOOTableRow;
+import sernet.verinice.interfaces.IBSIReport;
+import sernet.verinice.interfaces.IOOTableRow;
+import sernet.verinice.interfaces.PropertySelection;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.BsiReport;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;

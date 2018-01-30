@@ -449,7 +449,7 @@ function getOptionValuesForPropertyIDs(propertyTypeIds){
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 objects="incident";
 
@@ -1785,7 +1785,7 @@ columns(cols);</value>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.service.commands.crud.*;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -1889,13 +1889,13 @@ columns(cols);</value>
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
+            <xml-property name="queryText"><![CDATA[import sernet.verinice.service.commands.crud.ExecuteHQLInReportCommand;
 import sernet.verinice.model.iso27k.PersonIso;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.lang.Integer;
 import java.lang.StringBuilder;
-import sernet.verinice.iso27k.service.Retriever;
+import sernet.gs.service.Retriever;
 
 elmtid = inpv("elmtID");
 

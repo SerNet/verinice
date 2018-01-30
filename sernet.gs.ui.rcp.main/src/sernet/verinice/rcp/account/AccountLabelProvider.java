@@ -3,10 +3,13 @@ package sernet.verinice.rcp.account;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.threeten.bp.LocalDate;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
@@ -14,8 +17,9 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
 import sernet.verinice.rcp.ElementTitleCache;
+import sernet.verinice.service.account.AccountLoader;
 
-class AccountLabelProvider extends LabelProvider implements ITableLabelProvider {           
+class AccountLabelProvider extends ColumnLabelProvider implements ITableLabelProvider {
 
     private static final Logger LOG = Logger.getLogger(AccountLabelProvider.class);
     
@@ -44,34 +48,36 @@ class AccountLabelProvider extends LabelProvider implements ITableLabelProvider 
             GenericPerson person = new GenericPerson(account.getPerson());
             Integer scopeId = account.getPerson().getScopeId();
             switch (columnIndex) { 
-                case 0:
-                    return ElementTitleCache.get(scopeId);
-                case 1:               
-                    return person.getParentName();
-                case 2:   
-                    return account.getUser();
-                case 3:
-                    return person.getName();
-                case 4:
-                    return account.getEmail();
-                case 5:
-                    return convertToX(account.isAdminUser());
-                case 6:
-                    return convertToX(account.isScopeOnly()); 
-                case 7:
-                    return convertToX(account.isWebUser());
-                case 8:
-                    return convertToX(account.isRcpUser());
-                case 9:
-                    return convertToX(account.isDeactivatedUser());  
-                case 10:
-                    return getLMColumnLabel(10, account);
-                
-                default:
-                    if(columnIndex > 9){
-                        return getLMColumnLabel(columnIndex, account);
-                    }
-                    return null;
+            case 0:
+                return ElementTitleCache.get(scopeId);
+            case 1:               
+                return person.getParentName();
+            case 2:   
+                return account.getUser();
+            case 3:
+                return person.getName();
+            case 4:
+                return account.getEmail();
+            case 5:
+                return convertToX(account.isAdminUser());
+            case 6:
+                return convertToX(account.isLocalAdminUser());
+            case 7:
+                return convertToX(account.isScopeOnly()); 
+            case 8:
+                return convertToX(account.isWebUser());
+            case 9:
+                return convertToX(account.isRcpUser());
+            case 10:
+                return convertToX(account.isDeactivatedUser());
+            case 11:
+                return getLMColumnLabel(11, account);
+
+            default:
+                if (columnIndex > 10) {
+                    return getLMColumnLabel(columnIndex, account);
+                }
+                return null;
             }
         } catch (Exception e) {
             LOG.error("Error while getting column text", e); //$NON-NLS-1$
@@ -122,7 +128,7 @@ class AccountLabelProvider extends LabelProvider implements ITableLabelProvider 
         }
         return ""; //$NON-NLS-1$
     }
-    
+
     public String convertToX(boolean value) {
         return (value) ? "X" : "";
     }
@@ -131,8 +137,18 @@ class AccountLabelProvider extends LabelProvider implements ITableLabelProvider 
     public Image getColumnImage(Object element, int columnIndex) {
         return null;
     }
-    
-    
 
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
+     */
+    @Override
+    public Color getForeground(Object o) {
+        if (o instanceof Configuration && !AccountLoader.isEditAllowed((Configuration) o)) {
+            return Display.getDefault().getSystemColor(SWT.COLOR_GRAY);
+        }
+        return super.getForeground(o);
+    }
 }

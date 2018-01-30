@@ -17,13 +17,13 @@
  ******************************************************************************/
 package sernet.hui.common.multiselectionlist;
 
-
+import java.io.Serializable;
 
 /**
  * an option to display in the multi selection list
  * @author prack
  */
-public interface IMLPropertyOption {
+public interface IMLPropertyOption extends Serializable {
 
 	/**
 	 * the display name of the option (i.e. "Brown")

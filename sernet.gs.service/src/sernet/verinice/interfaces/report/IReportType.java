@@ -63,7 +63,7 @@ public interface IReportType {
 	
 	void createReport(IReportOptions reportOptions);
 	
-	void createReport(ReportTemplateMetaData metadata) throws ReportSecurityException;
+	void createReport(ReportTemplateMetaData metadata);
 	
 	/**
 	 * Return the selected report file or empty string.

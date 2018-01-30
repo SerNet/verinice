@@ -41,7 +41,6 @@ import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
-import sernet.verinice.iso27k.service.commands.LoadLinkedElements;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
@@ -56,6 +55,7 @@ import sernet.verinice.model.iso27k.FindingGroup;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.service.commands.crud.LoadLinkedElements;
 
 /**
  * View with tree viewer to show {@link CnATreeElement}s of specific types
@@ -166,7 +166,7 @@ public class GenericElementView extends ElementView {
     public void switchElement(String objectTypeId) {
         if (commandMap.get(objectTypeId) != null) {
             setCommandFactory(commandMap.get(objectTypeId));
-            setIcon(ImageCache.getInstance().getISO27kTypeImage(objectTypeId));
+            setIcon(ImageCache.getInstance().getImageForTypeId(objectTypeId));
             reload();
             String title = HitroUtil.getInstance().getTypeFactory().getMessage(objectTypeId);
             setViewTitle(title);

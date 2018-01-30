@@ -20,6 +20,7 @@ package sernet.verinice.model.bsi;
 import java.util.Collection;
 
 import sernet.hui.common.connect.Entity;
+import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 
@@ -43,12 +44,12 @@ public class Raum extends CnATreeElement
     public static final String PROP_ESA_ENTSCHEIDUNG_AM = "raum_ergaenzendeanalyse_entscheidung_am"; //$NON-NLS-1$
     public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "raum_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
 
-	private  ISchutzbedarfProvider schutzbedarfProvider 
-	= new SchutzbedarfAdapter(this);
+	private  IReevaluator schutzbedarfProvider 
+	= new ProtectionRequirementsAdapter(this);
 
 
 	private  ILinkChangeListener linkChangeListener
-	= new MaximumSchutzbedarfListener(this);
+	= new MaximumProtectionRequirementsListener(this);
 
 	/**
 	 * Create new BSIElement.
@@ -107,7 +108,7 @@ public class Raum extends CnATreeElement
 	}
 
 	@Override
-	public ISchutzbedarfProvider getSchutzbedarfProvider() {
+	public IReevaluator getProtectionRequirementsProvider() {
 		return schutzbedarfProvider;
 	}
 

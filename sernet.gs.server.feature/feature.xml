@@ -10,7 +10,7 @@
    </description>
 
    <copyright url="http://www.verinice.com">
-      Copyright 1997 - 2017 SerNet GmbH and others.
+      Copyright 1997 - 2018 SerNet GmbH and others.
    </copyright>
 
    <license url="http://www.gnu.org/licenses/lgpl-3.0-standalone.html">
@@ -378,7 +378,7 @@ Library.
          id="org.apache.commons.collections"
          download-size="0"
          install-size="0"
-         version="3.2.2"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
@@ -553,7 +553,7 @@ Library.
          id="org.eclipse.ui.net"
          download-size="0"
          install-size="0"
-         version="1.2.1.r35x_20090812-1200_FIX_FOR_VERINICE"
+         version="0.0.0"
          unpack="false"/>
 
    <plugin
@@ -568,13 +568,6 @@ Library.
          download-size="0"
          install-size="0"
          version="1.1.1.qualifier"
-         unpack="false"/>
-
-   <plugin
-         id="sernet.gs.ui.rcp.main"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
          unpack="false"/>
 
    <plugin
@@ -711,6 +704,13 @@ Library.
 
    <plugin
          id="com.google.gson"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.apache.servicemix.bundles.commons-beanutils"
          download-size="0"
          install-size="0"
          version="0.0.0"
