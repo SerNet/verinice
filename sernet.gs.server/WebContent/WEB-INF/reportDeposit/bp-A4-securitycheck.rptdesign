@@ -5336,10 +5336,17 @@ row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]
 </model:DesignValues>]]></xml-property>
         </oda-data-set>
         <oda-data-set extensionID="verinice.oda.linktable.driver.dataSet.id" name="a_links" id="10351">
+            <property name="nullsOrdering">nulls lowest</property>
             <list-property name="computedColumns">
                 <structure>
                     <property name="name">p_name</property>
-                    <expression name="expression">row["Nachname__(Person__(mod))"]+', '+row["Vorname__(Person__(mod))"]</expression>
+                    <expression name="expression">if(row["Vorname__(Person__(mod))"]==""){
+row["Nachname__(Person__(mod))"]
+}else if (row["Nachname__(Person__(mod))"]==""){
+row["Vorname__(Person__(mod))"]
+}else{
+row["Nachname__(Person__(mod))"]+', '+row["Vorname__(Person__(mod))"]
+}</expression>
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
@@ -5569,7 +5576,13 @@ row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]
             <list-property name="computedColumns">
                 <structure>
                     <property name="name">p_name</property>
-                    <expression name="expression">row["Nachname__(Person__(mod))"]+', '+row["Vorname__(Person__(mod))"]</expression>
+                    <expression name="expression">if(row["Vorname__(Person__(mod))"]==""){
+row["Nachname__(Person__(mod))"]
+}else if (row["Nachname__(Person__(mod))"]==""){
+row["Vorname__(Person__(mod))"]
+}else{
+row["Nachname__(Person__(mod))"]+', '+row["Vorname__(Person__(mod))"]
+}</expression>
                     <property name="dataType">string</property>
                 </structure>
             </list-property>
@@ -6604,7 +6617,7 @@ row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]
                         <property name="fontSize">14pt</property>
                         <property name="fontWeight">bold</property>
                         <property name="textAlign">center</property>
-                        <text-property name="text">BSI IT-Grundschutz A.4 Grundschutz-Check</text-property>
+                        <text-property name="text">BSI IT-Grundschutz A.4 IT-Grundschutz-Check</text-property>
                     </label>
                 </cell>
                 <cell id="1423">
@@ -9902,7 +9915,7 @@ row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]
                                                     <property name="operator">eq</property>
                                                     <property name="backgroundColor">#008000</property>
                                                     <property name="fontSize">10pt</property>
-                                                    <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                                    <expression name="testExpr" type="javascript">row["status"]</expression>
                                                     <simple-property-list name="value1">
                                                         <value type="javascript">"Ja"</value>
                                                     </simple-property-list>
@@ -9910,7 +9923,8 @@ row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]
                                                 <structure>
                                                     <property name="operator">eq</property>
                                                     <property name="backgroundColor">#FF0000</property>
-                                                    <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                                    <property name="fontSize">10pt</property>
+                                                    <expression name="testExpr" type="javascript">row["status"]</expression>
                                                     <simple-property-list name="value1">
                                                         <value type="javascript">"Nein"</value>
                                                     </simple-property-list>
@@ -9918,7 +9932,8 @@ row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]
                                                 <structure>
                                                     <property name="operator">eq</property>
                                                     <property name="backgroundColor">#FFFF00</property>
-                                                    <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                                    <property name="fontSize">10pt</property>
+                                                    <expression name="testExpr" type="javascript">row["status"]</expression>
                                                     <simple-property-list name="value1">
                                                         <value type="javascript">"Teilweise"</value>
                                                     </simple-property-list>
@@ -9926,7 +9941,8 @@ row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]
                                                 <structure>
                                                     <property name="operator">eq</property>
                                                     <property name="backgroundColor">#008080</property>
-                                                    <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                                    <property name="fontSize">10pt</property>
+                                                    <expression name="testExpr" type="javascript">row["status"]</expression>
                                                     <simple-property-list name="value1">
                                                         <value type="javascript">"Entbehrlich"</value>
                                                     </simple-property-list>
@@ -10393,7 +10409,7 @@ row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]
                                                     <property name="operator">eq</property>
                                                     <property name="backgroundColor">#008000</property>
                                                     <property name="fontSize">10pt</property>
-                                                    <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                                    <expression name="testExpr" type="javascript">row["status"]</expression>
                                                     <simple-property-list name="value1">
                                                         <value type="javascript">"Ja"</value>
                                                     </simple-property-list>
@@ -10401,7 +10417,8 @@ row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]
                                                 <structure>
                                                     <property name="operator">eq</property>
                                                     <property name="backgroundColor">#FF0000</property>
-                                                    <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                                    <property name="fontSize">10pt</property>
+                                                    <expression name="testExpr" type="javascript">row["status"]</expression>
                                                     <simple-property-list name="value1">
                                                         <value type="javascript">"Nein"</value>
                                                     </simple-property-list>
@@ -10409,7 +10426,8 @@ row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]
                                                 <structure>
                                                     <property name="operator">eq</property>
                                                     <property name="backgroundColor">#FFFF00</property>
-                                                    <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                                    <property name="fontSize">10pt</property>
+                                                    <expression name="testExpr" type="javascript">row["status"]</expression>
                                                     <simple-property-list name="value1">
                                                         <value type="javascript">"Teilweise"</value>
                                                     </simple-property-list>
@@ -10417,7 +10435,8 @@ row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]
                                                 <structure>
                                                     <property name="operator">eq</property>
                                                     <property name="backgroundColor">#008080</property>
-                                                    <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                                    <property name="fontSize">10pt</property>
+                                                    <expression name="testExpr" type="javascript">row["status"]</expression>
                                                     <simple-property-list name="value1">
                                                         <value type="javascript">"Entbehrlich"</value>
                                                     </simple-property-list>
@@ -10884,7 +10903,7 @@ row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]
                                                     <property name="operator">eq</property>
                                                     <property name="backgroundColor">#008000</property>
                                                     <property name="fontSize">10pt</property>
-                                                    <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                                    <expression name="testExpr" type="javascript">row["status"]</expression>
                                                     <simple-property-list name="value1">
                                                         <value type="javascript">"Ja"</value>
                                                     </simple-property-list>
@@ -10892,7 +10911,8 @@ row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]
                                                 <structure>
                                                     <property name="operator">eq</property>
                                                     <property name="backgroundColor">#FF0000</property>
-                                                    <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                                    <property name="fontSize">10pt</property>
+                                                    <expression name="testExpr" type="javascript">row["status"]</expression>
                                                     <simple-property-list name="value1">
                                                         <value type="javascript">"Nein"</value>
                                                     </simple-property-list>
@@ -10900,7 +10920,8 @@ row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]
                                                 <structure>
                                                     <property name="operator">eq</property>
                                                     <property name="backgroundColor">#FFFF00</property>
-                                                    <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                                    <property name="fontSize">10pt</property>
+                                                    <expression name="testExpr" type="javascript">row["status"]</expression>
                                                     <simple-property-list name="value1">
                                                         <value type="javascript">"Teilweise"</value>
                                                     </simple-property-list>
@@ -10908,7 +10929,8 @@ row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]
                                                 <structure>
                                                     <property name="operator">eq</property>
                                                     <property name="backgroundColor">#008080</property>
-                                                    <expression name="testExpr" type="javascript">row["Umsetzung__-__Umsetzungsstatus__(Baustein-Anforderung)"]</expression>
+                                                    <property name="fontSize">10pt</property>
+                                                    <expression name="testExpr" type="javascript">row["status"]</expression>
                                                     <simple-property-list name="value1">
                                                         <value type="javascript">"Entbehrlich"</value>
                                                     </simple-property-list>
