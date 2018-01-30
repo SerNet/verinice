@@ -41,6 +41,7 @@ import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
@@ -122,22 +123,25 @@ public abstract class HtmlWriter {
      * empty String if no property is found or element is not instanceof
      * {@link CnATreeElement}
      */
-    private static String handleRequestDynamic(Object element){
-        StringBuilder sb = new StringBuilder();
-        if (element instanceof CnATreeElement){
-            CnATreeElement cnaTreeElement = (CnATreeElement)element;
-            List<PropertyType> htmlProperties = cnaTreeElement
-                    .getEntityType().getObjectBrowserPropertyTypes();
-            Iterator<PropertyType> iterator = htmlProperties.iterator();
-            while (iterator.hasNext()){
-                sb.append(buildObjectBrowserContent(cnaTreeElement,
-                        iterator.next()));
-                if (iterator.hasNext()){
-                    sb.append("<br><br>");
+    private static String handleRequestDynamic(Object element) {
+        if (element instanceof CnATreeElement) {
+            CnATreeElement cnaTreeElement = (CnATreeElement) element;
+            EntityType entityType = cnaTreeElement.getEntityType();
+            if (entityType != null) {
+                StringBuilder sb = new StringBuilder();
+
+                List<PropertyType> htmlProperties = entityType.getObjectBrowserPropertyTypes();
+                Iterator<PropertyType> iterator = htmlProperties.iterator();
+                while (iterator.hasNext()) {
+                    sb.append(buildObjectBrowserContent(cnaTreeElement, iterator.next()));
+                    if (iterator.hasNext()) {
+                        sb.append("<br><br>");
+                    }
                 }
+                return sb.toString();
             }
         }
-        return sb.toString();
+        return StringUtils.EMPTY;
     }
 
     /**
