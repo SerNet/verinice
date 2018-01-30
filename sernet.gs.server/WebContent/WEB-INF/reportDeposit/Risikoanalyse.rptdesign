@@ -2660,7 +2660,6 @@ import sernet.verinice.model.common.*;
 import sernet.gs.service.NumericStringComparator;
 import java.util.Comparator;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.report.service.impl.TocHelper2;
 import sernet.gs.service.Retriever;
 import sernet.gs.service.RetrieveInfo;
 
@@ -2679,7 +2678,6 @@ c2 = new LoadReportElements(objects, root);
 elements = helper.execute(c2).getElements();
 
 
-TocHelper2.log("Loaded Analyses from db:\t" + elements.size());
 
 comparator = new NumericStringComparator();
 sb = new StringBuilder();
@@ -2697,7 +2695,6 @@ Collections.sort(elements, new Comparator() {
 	}
 });
 
-TocHelper2.log("Elements after sort:\t" + elements.size());
 result = new ArrayList();
 for (CnATreeElement elmt : elements) {
 	result.add(elmt.getDbId().toString());

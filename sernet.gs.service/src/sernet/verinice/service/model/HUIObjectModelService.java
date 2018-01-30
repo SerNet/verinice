@@ -390,13 +390,9 @@ public class HUIObjectModelService implements IObjectModelService {
         CnATreeElement element;
         boolean createChildren = false;
         if (isOrganization(clazz, typeId)) {
-            element = (CnATreeElement) Organization.class
-                    .getConstructor(CnATreeElement.class, boolean.class)
-                    .newInstance(container, createChildren);
+            element = new Organization(container, createChildren);
         } else if (isAudit(clazz, typeId)) {
-            element = (CnATreeElement) Audit.class
-                    .getConstructor(CnATreeElement.class, boolean.class)
-                    .newInstance(container, createChildren);
+            element = new Audit(container, createChildren);
         } else {
             element = clazz.getConstructor(CnATreeElement.class).newInstance(container);
         }

@@ -24,13 +24,11 @@
             "accountsettings"
             "accesscontrol"
             "editprofile"
-            "marktemplate"
             "taskdelete"
             "taskshowall"
             "taskchangeassignee"
             "taskchangeduedate"
             "taskwithreleaseprocess"
-            "templates"
             "searchreindex"
             "showallfiles" -->
             <action id="addbsielement" />
@@ -57,7 +55,9 @@
             <action id="bsimassnahmen" />
             <action id="bsimodelview" />
             <action id="bulkedit" />
-            <action id="catalogview" />
+            <action id="catalogdelete" />
+            <action id="catalogimport" />       
+	          <action id="catalogview" />
             <action id="changeicon" />
             <action id="changeownpassword" />
             <action id="cnavalidation" />
@@ -115,7 +115,6 @@
             "additnetwork"
             "addsecurityassessment"
             "editprofile"
-            "marktemplate"
             "showallfiles"
             "searchreindex"
             "taskchangeassignee"
@@ -125,7 +124,6 @@
             "taskchangeassignee"
             "taskchangeduedate"
             "taskwithreleaseprocess"
-            "templates"
             "addismorg"
             "xmlimport" 
             "searchreindex
@@ -151,6 +149,8 @@
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />
 	        <action id="bulkedit" />
+          <action id="catalogdelete" />
+          <action id="catalogimport" />       
 	        <action id="catalogview" />
           <action id="changeicon" />
 	        <action id="cnavalidation" />
@@ -271,7 +271,6 @@
 	        <action id="addismgroup" />
 	        <action id="addnote" />
 	        <action id="addownmodul"/>
-	        <action id="marktemplate"/>
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
           <action id="baseprotectionmodeling" />
@@ -283,6 +282,8 @@
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />
 	        <action id="bulkedit" />
+          <action id="catalogdelete" />
+          <action id="catalogimport" />       
 	        <action id="catalogview" />
           <action id="changeicon" />
 	        <action id="cnavalidation" />
@@ -328,7 +329,6 @@
           <action id="taskwithreleaseprocess" />
 	        <action id="taskdelete" />
 	        <action id="taskview" />
-	        <action id="templates" />
 	        <action id="todo"/>
           <action id="unify" />
 	        <action id="xmlexport"/>
@@ -367,7 +367,9 @@
             <action id="bsimassnahmen" /> 
             <action id="bsimodelview" /> 
             <action id="bulkedit" />
-            <action id="catalogview" /> 
+            <action id="catalogdelete" />
+            <action id="catalogimport" />       
+	          <action id="catalogview" />
           	<action id="changeicon" /> 
             <action id="cnavalidation" /> 
           	<action id="creategreenbonetasks" /> 
@@ -436,7 +438,6 @@
 	        <action id="addnote" />
 	        <action id="addsecurityassessment" />
 	        <action id="addownmodul"/>
-	        <action id="marktemplate"/>
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
           <action id="baseprotectionmodeling" />
@@ -448,6 +449,8 @@
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />
 	        <action id="bulkedit" />
+          <action id="catalogdelete" />
+          <action id="catalogimport" />       
 	        <action id="catalogview" />
           <action id="changeicon" />
 	        <action id="cnavalidation" />
@@ -498,7 +501,6 @@
 	        <action id="taskdelete" />
 	        <action id="taskshowall" />
 	        <action id="taskview" />
-	        <action id="templates" />
 	        <action id="todo"/>
           <action id="unify" />
 	        <action id="xmlexport"/>

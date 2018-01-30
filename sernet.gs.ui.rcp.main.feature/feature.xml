@@ -1985,23 +1985,6 @@ Library.
          fragment="true"
          unpack="false"/>
 
-   <!--
-   
-   This fragment depends on the host bundle org.eclipse.equinox.p2.director.app. This
-   bundle is located in the Indigo repo but it is not found by Maven Tycho. Inside the
-   org.eclipse.equinox.p2.extras.feature.feature.group feature.
-   
-   As a workaround I have disabled this fragment.
-   
-   <plugin
-         id="org.eclipse.equinox.p2.director.app.nl_de"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-   -->
-
    <plugin
          id="org.eclipse.equinox.p2.director.nl_de"
          download-size="0"
@@ -2677,12 +2660,6 @@ Library.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
-   <plugin
-         id="org.junit4"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
 
    <plugin
          id="org.ops4j.pax.web.pax-web-bundle"

@@ -45,7 +45,7 @@
 
   <item title="Schutzbedarf vererben 2">
     <description>
-      Klicken Sie das Server-Objekt "Buchhaltungssystem" im Grundschutz Modell an, um es zu aktivieren.
+      Klicken Sie das Server-Objekt "Buchhaltungssystem" im Grundschutzmodell an, um es zu aktivieren.
       Klicken und ziehen Sie das Server-Objekt (Drag and Drop) mit der linken Maustaste auf die
       Anwendung "Buchhaltung".
     </description>

@@ -51,8 +51,15 @@ public class ItNetwork extends CnATreeElement implements IBpElement  {
     protected ItNetwork() {}
     
     public ItNetwork(CnATreeElement parent) {
+        this(parent, false);
+    }
+
+    public ItNetwork(CnATreeElement parent, boolean createChildren) {
         super(parent);
         init();
+        if (createChildren) {
+            createNewCategories();
+        }
     }     
     
     public void createNewCategories() {

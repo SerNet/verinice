@@ -304,7 +304,7 @@ public final class CnAElementFactory {
 					}
 				});
 
-		// BSI Grundschutz elements
+		// BSI-Grundschutz elements
 
 		elementbuilders.put(NKKategorie.TYPE_ID, new ElementBuilder() {
 			public CnATreeElement build(CnATreeElement container,
@@ -931,8 +931,7 @@ public final class CnAElementFactory {
                 if (input != null) {
                     createChildren = (Boolean) input.getInput();
                 }
-                CreateITNetwork saveCommand = new CreateITNetwork(container,
-                        ItNetwork.class, createChildren);
+                CreateITNetwork saveCommand = new CreateITNetwork(container, createChildren);
                 saveCommand = ServiceFactory.lookupCommandService()
                         .executeCommand(saveCommand);
                 ItNetwork itnetwork = saveCommand.getNewElement();
@@ -1287,6 +1286,8 @@ public final class CnAElementFactory {
     private CnATreeElement inheritIcon(String iconPath, String containerTypeId, boolean inheritIcon, CnATreeElement child) throws CommandException {
         if(inheritIcon && !(ITVerbund.TYPE_ID.equals(containerTypeId) ||
 		        Organization.TYPE_ID.equals(containerTypeId) ||
+                ItNetwork.TYPE_ID.equals(containerTypeId)
+                ||
 		        Audit.TYPE_ID.equals(containerTypeId))){
             child.setIconPath(iconPath);
             Activator.inheritVeriniceContextState();

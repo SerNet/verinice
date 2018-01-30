@@ -45,7 +45,6 @@ import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.CnATreeElement.TemplateType;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 
 /**
@@ -135,9 +134,8 @@ public class CopyCommand extends GenericCommand {
      */
     @Override
     public void execute() {
-        try { 
-            List<CnATreeElement> copyElements;
-            newElements = new ArrayList<String>(0);
+        try {
+            newElements = new ArrayList<>();
             number = 0;
             List<CnATreeElement> rootElementsToCopy = createInsertList(uuidList);
             groupToPasteTo = getDao().findByUuid(uuidGroup, RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));
@@ -145,13 +143,13 @@ public class CopyCommand extends GenericCommand {
             for (final CnATreeElement copyElement : rootElementsToCopy) {
                 final CnATreeElement newElement = copy(groupToPasteTo, copyElement, sourceDestMap);
                 if(newElement != null && newElement.getUuid() != null){
-                    newElements.add(newElement.getUuid());         
+                    newElements.add(newElement.getUuid());
                 }
             }
-            if(getPostProcessorList()!=null && !getPostProcessorList().isEmpty()) {
+            if (getPostProcessorList() != null && !getPostProcessorList().isEmpty()) {
                 getDao().flush();
                 getDao().clear();
-                final List<String> copyElementUuidList = new ArrayList<String>(rootElementsToCopy.size());
+                final List<String> copyElementUuidList = new ArrayList<>(rootElementsToCopy.size());
                 for (final CnATreeElement element : rootElementsToCopy) {
                     copyElementUuidList.add(element.getUuid());
                 }
@@ -159,7 +157,6 @@ public class CopyCommand extends GenericCommand {
                     postProcessor.process(copyElementUuidList,sourceDestMap);
                 }
             }
-           
         } catch (final Exception e) {
             getLog().error("Error while copying element", e); //$NON-NLS-1$
             throw new RuntimeException("Error while copying element", e); //$NON-NLS-1$
@@ -177,7 +174,9 @@ public class CopyCommand extends GenericCommand {
                 elementCopy = saveCopy(groupToCopyTo, elementToCopy);
                 number++;
                 afterCopy(elementToCopy, elementCopy, sourceDestMap);
-                copyChildrenIfExistant(elementToCopy, sourceDestMap, elementCopy);
+                if(isCopyChildren()) {
+                    copyChildrenIfExistant(elementToCopy, sourceDestMap, elementCopy);
+                }
             }
         } else if (elementToCopy != null) {
             getLog().warn("Can not copy element with pk: " + elementToCopy.getDbId() + " to group with pk: " + groupToPasteTo.getDbId()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -280,19 +279,12 @@ public class CopyCommand extends GenericCommand {
         copyElement = getDao().initializeAndUnproxy(copyElement);
         CnATreeElement newElement = saveNew(toGroup, copyElement);
         if(newElement.getEntity()!=null) {
-            if (copyElement.isTemplateOrImplementation()) {
-                newElement.setEntity(copyElement.getEntity());
-                newElement.setTemplateType(TemplateType.IMPLEMENTATION);
-                newElement.getImplementedTemplateUuids().add(copyElement.getUuid());
-            } else {
-                newElement.getEntity().copyEntity(copyElement.getEntity());
-            }
-
+            newElement.getEntity().copyEntity(copyElement.getEntity());
             if(copyElement.getIconPath()!=null) {
                 newElement.setIconPath(copyElement.getIconPath());
             }
             
-            if(toGroup.getChildren()!=null && toGroup.getChildren().size()>0) {
+            if(toGroup.getChildren() != null && !toGroup.getChildren().isEmpty()) {
                if (newElement instanceof GefaehrdungsUmsetzung){
                     final String title = newElement.getTitle();
                     final String copyGefaehrdungtitle = ((GefaehrdungsUmsetzung)newElement).getText();
@@ -307,7 +299,7 @@ public class CopyCommand extends GenericCommand {
                 }
             }
         }     
-        SaveElement<CnATreeElement> saveCommand = new SaveElement<CnATreeElement>(newElement, flush);
+        SaveElement<CnATreeElement> saveCommand = new SaveElement<>(newElement, flush);
         saveCommand = getCommandService().executeCommand(saveCommand);
         newElement = saveCommand.getElement();
         newElement.setParentAndScope(toGroup);

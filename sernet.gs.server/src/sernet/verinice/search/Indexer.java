@@ -19,18 +19,14 @@
  ******************************************************************************/
 package sernet.verinice.search;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.ObjectFactory;
@@ -102,26 +98,24 @@ public class Indexer {
         exeService.shutdown();
     }
 
-    private ClosableCompletionService<CnATreeElement> doIndex() throws InterruptedException, ExecutionException {
+    private ClosableCompletionService<CnATreeElement> doIndex() {
 
         indexingStart = System.currentTimeMillis();
-        
-        ClosableCompletionService<CnATreeElement> completionService = TrackableCompletionService.newInstance();
-        List<String> allUuids = new ArrayList<String>();
 
-        allUuids = geAllCnATreeElementUUIDS();
+        ClosableCompletionService<CnATreeElement> completionService = TrackableCompletionService.newInstance();
+        List<String> allUuids = geAllCnATreeElementUUIDS();
 
         if (LOG.isInfoEnabled()) {
             LOG.info("Elements: " + allUuids.size() + ", start indexing...");
         }
 
-        getTitleCache().load(new String[] { ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID, ItNetwork.TYPE_ID });
+        getTitleCache().load(ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID, ItNetwork.TYPE_ID);
         Collection<IndexThread> indexThreads = createIndexThreadsByUuids(allUuids);
 
         for (IndexThread indexThread : indexThreads) {
             completionService.submit(indexThread);
         }
-        
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("All threads created ans submitted to completion service.");
         }
@@ -150,7 +144,7 @@ public class Indexer {
                     awaitIndexingTermination(completionService);
                     printIndexingTimeConsumption();
                 }
-            });            
+            });
             executor.shutdown();
         }
     }
@@ -184,7 +178,7 @@ public class Indexer {
         }
     }
 
-    private void doBlockingIndexing() throws InterruptedException, ExecutionException {
+    private void doBlockingIndexing() {
 
         ServerInitializer.inheritVeriniceContextState();
         ClosableCompletionService<CnATreeElement> completionService = doIndex();
@@ -196,12 +190,21 @@ public class Indexer {
         printIndexingTimeConsumption();
     }
 
-    private void awaitIndexingTermination(ClosableCompletionService<CnATreeElement> completionService) {
+    private static void awaitIndexingTermination(ClosableCompletionService<CnATreeElement> completionService) {
         while (!completionService.isClosed()) {
             try {
-                Future<CnATreeElement> future = completionService.take();
-                CnATreeElement element = future.get();           
-                LOG.debug("element was indexed " + element.getTitle() + " - uuid " + element.getUuid());
+                Future<CnATreeElement> future = completionService.poll(500l, TimeUnit.MILLISECONDS);
+                if (future != null) {
+                    // if the last element was removed from the queue in the
+                    // previous iteration and the current iteration started
+                    // before the executor could properly terminate, the queue
+                    // will be empty. We should be able to exit from the loop
+                    // after the current iteration.
+                    CnATreeElement element = future.get();
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("element was indexed " + element.getTitle() + " - uuid " + element.getUuid());
+                    }
+                }
             } catch (Exception e) {
                 LOG.error("Indexing failed for an element", e);
             }
@@ -209,7 +212,7 @@ public class Indexer {
     }
 
     private Collection<IndexThread> createIndexThreadsByUuids(List<String> allUuids) {
-        Collection<IndexThread> indexThreads = new LinkedList<IndexThread>();
+        Collection<IndexThread> indexThreads = new LinkedList<>();
         for (String uuid : allUuids) {
             IndexThread indexThread = (IndexThread) indexThreadFactory.getObject();
             indexThread.setUuid(uuid);

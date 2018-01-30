@@ -51,6 +51,8 @@ public final class ActionRightIDs {
     public static final String BSIMASSNAHMEN = "bsimassnahmen";
     public static final String BSIMODELVIEW = "bsimodelview";
     public static final String BULKEDIT = "bulkedit";
+    public static final String CATALOGDELETE = "catalogdelete";
+    public static final String CATALOGIMPORT = "catalogimport";
     public static final String CATALOGVIEW = "catalogview";
     public static final String CHANGEICON = "changeicon";
     public static final String CNAVALIDATION = "cnavalidation";
@@ -80,7 +82,6 @@ public final class ActionRightIDs {
     public static final String ISMVIEW = "ismview";
     public static final String ISMVIEWWEB = "ismviewweb";
     public static final String KONSOLIDATOR = "konsolidator";
-    public static final String MARKTEMPLATE = "marktemplate";
     public static final String BASEPROTECTIONVIEW = "baseprotectionview";
     public static final String NATURALIZE = "naturalize";
     public static final String NOTES = "notes";
@@ -106,7 +107,6 @@ public final class ActionRightIDs {
     public static final String TASKCHANGEASSIGNEE = "taskchangeassignee";
     public static final String TASKCHANGEDUEDATE = "taskchangeduedate";
     public static final String TASKWITHRELEASEPROCESS = "taskwithreleaseprocess";
-    public static final String TEMPLATES = "templates";
     // value "bsidnd" kept due to historical reasons
     public static final String TREEDND = "bsidnd";
     public static final String UNIFY = "unify";

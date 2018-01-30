@@ -15,9 +15,10 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
- *     Urs Zeidler uz[at]sernet.de - initial API and implementation
- *     Alexander Ben Nasrallah an[at]sernet.de - Implementation
+ * Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
+ * Urs Zeidler uz[at]sernet.de - initial API and implementation
+ * Alexander Ben Nasrallah an[at]sernet.de - Implementation
+ * Daniel Murygin - Implementation
  ******************************************************************************/
 
 package sernet.verinice.rcp.catalog;
@@ -65,6 +66,7 @@ import org.eclipse.ui.part.DrillDownAdapter;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
@@ -93,8 +95,8 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TagParameter;
 import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.rcp.IAttachedToPerspective;
-import sernet.verinice.rcp.ViewFilterAction;
 import sernet.verinice.rcp.RightsEnabledView;
+import sernet.verinice.rcp.ViewFilterAction;
 import sernet.verinice.rcp.bp.BaseProtectionPerspective;
 import sernet.verinice.rcp.tree.TreeContentProvider;
 import sernet.verinice.rcp.tree.TreeLabelProvider;
@@ -102,8 +104,12 @@ import sernet.verinice.rcp.tree.TreeUpdateListener;
 import sernet.verinice.service.tree.ElementManager;
 
 /**
+ * The CatalogView shows catalog elements in a tree view. A catalog consists of
+ * any elements. All elements in a catalog are immutable. Elements in a
+ * catalog are templates for the elements in other views.
+ * 
  * @author Urs Zeidler uz[at]sernet.de
- *
+ * @author Daniel Murygin
  */
 public class CatalogView extends RightsEnabledView implements IAttachedToPerspective, ILinkedWithEditorView {
 
@@ -120,6 +126,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
     private ExpandAction expandAction;
     private CollapseAction collapseAction;
     private ViewFilterAction filterAction;
+    private ShowAccessControlEditAction accessControlEditAction;
     private Action linkWithEditorAction;
     private DeleteSelectionAction deleteAction;
     private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
@@ -348,6 +355,9 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
                 }
             }
         });
+
+        accessControlEditAction = new ShowAccessControlEditAction(
+                getViewSite().getWorkbenchWindow(), Messages.CatalogView_AccessControl);
     }
 
     private void makeExpandAndCollapseActions() {
@@ -477,12 +487,13 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
             manager.add(doubleClickAction);
             manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
             manager.add(new Separator());
-            manager.add(expandAction);
             if (CnAElementFactory.selectionOnlyContainsScopes((IStructuredSelection) selection)) {
                 manager.add(deleteAction);
             }
-            manager.add(collapseAction);
+            manager.add(accessControlEditAction);
             manager.add(new Separator());
+            manager.add(expandAction);
+            manager.add(collapseAction);
             drillDownAdapter.addNavigationActions(manager);
         }
 

@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<cheatsheet title="Gestione del rischio secondo ISO 27005">
+
+  <intro>
+    <description>
+      Questo tutorial vi mostrer? come compiere una valutazione del rischio basata sull'interazione internazionale
+      norme ISO 27005 con verinice. Iniziamo.
+    </description>
+  </intro>
+  
+  <item title = "Modifica alla prospettiva ISM">
+    <description>
+      In primo luogo, devi passare alla prospettiva ISM. Se non lo hai gi? fatto, scegli questo
+      prospettiva selezionandola dal menu tramite <b> Visualizza> Mostra prospettiva> Prospettiva ISM </b>.
+    </description>
+  </item>
+  
+  <item title = "Crea un nuovo ambito">
+    <description>
+      Creare un nuovo ambito facendo clic sull'icona "Aggiungi nuova organizzazione" nella visualizzazione ISM. Sembra
+      un foglio vuoto con una stella gialla nell'angolo in alto a destra.
+      <br /> <br />
+      Fare doppio clic sul campo di applicazione. Cambiare il suo nome in "La mia organizzazione".
+      Impostare i livelli di "Risk Acceptance" a "3" per la riservatezza, l'integrit? e la disponibilit?.
+      Salvare le modifiche facendo clic su <b> File> Salva </b> o premendo <b> Ctrl + S </b>.
+      <br /> <br />
+      Scorri verso il basso e leggere le definizioni di impatto, minaccia e vulnerabilit? sul business
+      livelli. Dovrai cambiarli per adattarla pi? tardi alla tua organizzazione.
+    </description>
+  </item>
+  
+  <item title = "Crea una nuova attivit?">
+    <description>
+      Espandere l'oggetto scope. Fare clic con il pulsante destro del mouse sulla categoria "Attivit?". Scegli <b> Aggiungi nuovo asset ... </b>.
+      Immettere "il server di posta" come titolo e modificare il tipo di attivit? a "fisico". Salva premendo
+      <b> Ctrl + S </b>.
+    </description>
+  </item>  
+
+  <item title = "Crea un nuovo processo">
+    <description>
+      Fare clic con il pulsante destro del mouse su "Processi". Scegli <b> Aggiungi processo ... </b>. Inserisci "Marketing" come titolo e imposta l'opzione "Marketing"
+      "Impatto commerciale" a "Riservatezza: Pubblico", "Integrit?: Normale", "Disponibilit?: Alto".
+      Salva con <b> Ctrl + S </b>.
+      <br /> <br />
+      Collegare la tua attivit? al processo. Un modo per farlo si trova nell'editor. Apri il
+      dal menu a discesa accanto all'etichetta "Relazioni a:" e scegli "Asset". Fai clic su <b> Aggiungi ... </b>.
+      Seleziona la tua attivit? e fai clic su <b> OK </b>. La didascalia mostrer? "dipende" ora che significa
+      processo "Marketing" dipende da un "Mail Server" funzionante per funzionare.
+    </description>
+  </item>
+  
+  <item title = "Crea una nuova vulnerabilit?">
+    <description>
+      Fare clic con il pulsante destro del mouse sulla categoria "Vulnerabilities" nella vista ISM. Scegli <b> Aggiungi vulnerabilit? ... </b>.
+      Immettere "Sfruttamento remoto" come titolo e impostare il "livello di vulnerabilit?" su "1: basso". Salva da
+      premendo <b> Ctrl + S </b>.
+    </description>
+  </item>
+  
+  <item title = "Crea una nuova minaccia">
+    <description>
+      Fare clic con il pulsante destro del mouse sulla categoria "Minacce". Scegli <b> Aggiungi minacce ... </b>. Inserisci "Attaccante esterno"
+      come titolo e impostare il livello di "probabilit?" su "4: Daily". Salva con <b> Ctrl + S </b>.
+    </description>
+  </item>
+  
+  <item title = "Crea un nuovo scenario">
+    <description>
+      Finora, hai creato oggetti separati, ma non li hai ancora collegati tra loro
+      rappresentano uno scenario effettivo di rischio. Facciamolo ora. Collegare la minaccia che hai appena creato
+      con la vulnerabilit? per creare un nuovo scenario. Usa il mouse per trascinare e rilasciare la minaccia
+      alla vulnerabilit? nella vista ISM.
+      <br /> <br />
+      Ora verinice ti chiede se vuoi creare un nuovo scenario, fai clic su "S?". Il nuovo oggetto dovrebbe
+      appaiono sotto il gruppo "Scenari". In caso contrario, premere <b> Ctrl + F5 </b> per aggiornare la visualizzazione.
+    </description>
+  </item>
+  
+<item title = "Connetti scenario e asset">
+    <description>
+      Ora dobbiamo collegare il nostro scenario con il nostro server di posta per mostrare che qualcosa potrebbe andare storto
+      esso. O trascinare e rilasciare lo scenario sopra l'asset o aprire il server di posta e utilizzare il file
+      "Relazioni a:" menu a discesa per collegarlo con il tuo scenario.
+    </description>
+  </item>
+  
+  <item title = "Esecuzione del calcolo del rischio">
+    <description>
+      Questo ? importante: i livelli di minacce ei valori di rischio vengono aggiornati solo dopo aver fatto clic sul "Run risk"
+      analisi ". Questo pulsante di azione ? disponibile nella barra dei pulsanti superiore per un accesso pi? veloce.
+      Fai clic sul pulsante ora.
+    </description>
+  </item>
+  
+  <item title = "Controllo dei valori di rischio">
+    <description>
+      Fare doppio clic sull'attivo "Mail server", erediter? l'impatto del business dal "Marketing"
+      processo. Nell'area relazioni dell'editor, ora vedrete i numeri accanto allo scenario (scorri
+      sono a destra se non riesci a vederli). Vuol dire, che lo scenario aggiunge al rischio totale
+      per questo asset. Il rischio viene calcolato separatamente per riservatezza, integrit? e disponibilit? (CIA).
+    </description>
+  </item>
+  
+  <item title = "Crea un secondo scenario (collegamento)">
+    <description>
+      Non ? necessario creare un oggetto reale di vulnerabilit? / minacce per ogni scenario che si desidera
+      a prendersi cura di in verinice. Puoi anche fare clic con il pulsante destro del mouse su "scenari" e scegliere
+      "Aggiungi scenario". Qui puoi inserire valori per la minaccia e la probabilit? di questo scenario.
+      In questo caso, ? necessario disabilitare la casella di controllo "Deduce from threat and vuln". per impedire la tua
+      impostazioni da essere sovrascritto dal calcolo del rischio.
+      <br /> <br />
+      Se si acquista verinice.PRO, avrai un vasto catalogo di scenari comuni basati su
+      minacce e vulnerabilit? contenute nell'allegato della ISO 27005.
+    </description>
+  </item>
+  
+  <item title = "Ottimizzazione dell'analisi dei rischi">
+    <description>
+      Per impostazione predefinita, si presume che uno scenario influisca su tutte e tre le categorie di impatto: riservatezza, integrit?
+      e disponibilit?. ? possibile ottimizzare questa funzione disabilitando alcune delle caselle di controllo nello scenario
+      editor, i. e. un'inondazione influenza la disponibilit?, ma forse non riservatezza.
+    </description>
+  </item>
+  
+  <item title = "Crea un rapporto di valutazione dei rischi">
+    <description>
+      Fai clic su <b> File> Generare rapporto ... </b>. Selezionare il report "ISM: Rischio di gestione dei rischi". Scegli il tuo
+      l'ambito essendo l'elemento di primo livello. Selezionare "PDF" come tipo di output e selezionare una directory e un nome di file
+      per salvare il report. Fai clic su <b> OK </b>. ? possibile aprire il report generato con qualsiasi visualizzatore di PDF.
+    </description>
+  </item>
+  
+  <item title = "Trattamento del rischio">
+    <description>
+      Ora dobbiamo fare qualcosa sui rischi identificati. Crea un nuovo controllo facendo clic con il pulsante destro del mouse
+      su "Controlli" e scegli <b> Aggiungi controllo ... </b>. Immettere "Patch Management" come titolo, impostato
+      "Implementato" a "S?". Scorri verso il basso fino a "Control Strength" e "Probability of scenario".
+      Scegli l? "Modifica 1 livello". Salva con <b> Ctrl + S </b>.
+    </description>
+  </item>
+  
+  <item title = "Applicazione di controlli">
+    <description>
+      Creare una relazione tra il controllo e lo scenario.
+      <br /> <br />
+      I controlli possono essere applicati a uno scenario oa singole attivit?. Il controllo ridurr? quindi il valore
+      l'impatto di un rischio verso singoli beni o per tutte le attivit? che sono influenzate da uno scenario.
+      <br /> <br />
+      Se fai doppio clic sullo scenario nell'elenco, vedrai tutte le relazioni dagli scenari
+      lato. Ad esempio, il collegamento al controllo dovrebbe leggere "probabilit? modificata da" "Gestione patch".
+      Il controllo verr? visualizzato come un segno di spunta verde per mostrare che ? gi? implementato.
+    </description>
+  </item>
+  
+  <item title = "Grazie">
+    <description>
+      Grazie per aver considerato verinice per la valutazione del rischio di informazioni. Se ne hai di pi?
+      domande o bisogno di assistenza professionale, siamo qui per aiutarti! Sono disponibili informazioni di contatto
+      il nostro sito web a <b> http://www.verinice.com </b>.
+    </description>
+  </item>
+  
+</cheatsheet>

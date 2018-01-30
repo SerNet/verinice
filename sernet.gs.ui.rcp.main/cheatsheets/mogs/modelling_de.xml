@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cheatsheet title="Modellierung">
+
+  <intro>
+    <description>
+      <b>Willkommen bei verinice.</b>
+      <br/>
+      <br/>
+      Dieses Tutorial beschäftigt sich mit der Modellierung der Bausteine aus
+      dem Grundschutz-Kompendium.
+    </description>
+  </intro>
+
+  <item title="Einstellung der Vorgehensweise">
+      <description>
+         Öffnen Sie den Informationsverbund durch Doppelklick. Hier finden Sie die <b>Vorgehensweise
+         der Absicherung</b>, die Sie auswählen können. Zur Auswahl steht an dieser Stelle „BASIS“, „STANDARD“
+         oder „KERN“.
+      </description>
+  </item>
+
+  <item title="Zuordnung der Bausteine">
+     <description>
+        Die Bausteine aus dem Grundschutz-Kompendium können den Zielobjekten über die
+        Drag&amp;Drop Funktion zugeordnet werden.
+        <br/>
+        Wählen Sie zunächst einen Baustein im Kataloge-View aus. Nun klicken und ziehen Sie den
+        Baustein mit der linken Maustaste in den View Modernisierter IT-Grundschutz und lassen Sie ihn auf Ihr gewünschtes Zielobjekt fallen.
+        <br/>
+        Durch diese Aktion wird der gewünschte Baustein mit seinen Anforderungen unterhalb des
+        Elementes „Bausteine“ erstellt. Die dazugehörigen Gefährdungen und Maßnahmen werden
+        ebenfalls bei den entsprechenden Elementen erzeugt. Darüber hinaus sind die notwendigen
+        Verknüpfungen zwischen den Objekten bereits angelegt. Durch Doppelklick auf den Baustein
+        öffnet sich der Editorbereich, wo Sie Ihre Daten eintragen können.
+        <br/>
+        Je nachdem welche Vorgehensweise Sie in Ihrem Informationsverbund vorher ausgewählt
+        haben, werden nur die entsprechenden Anforderungen und Maßnahmen für diese Vorgehensweise erstellt.
+     </description>
+  </item>
+
+  <item title="Benutzerdefinierte Bausteine">
+     <description>
+        Sie haben auch die Möglichkeit benutzerdefinierte Bausteine oder Anforderungen zu erstellen.
+        Klicken Sie dazu mit der rechten Maustaste auf das Element Baustein und wählen anschließenden
+        im Kontextmenü <b>Neuer Baustein</b> bzw. <b>Neue Anforderung</b> auf einem erstellten Baustein. Durch
+        einen Doppelklick gelangen Sie in den Editorbereich des Bausteins oder Anforderung, hier können
+        Sie Ihre Daten eintragen.
+     </description>
+  </item>
+
+</cheatsheet>

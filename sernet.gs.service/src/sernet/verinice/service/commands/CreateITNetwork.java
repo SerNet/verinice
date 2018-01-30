@@ -15,47 +15,23 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
+ * Sebastian Hagedorn - initial API and implementation
+ * Alexander Ben Nasrallah <an@sernet.de> - contributor
  ******************************************************************************/
 package sernet.verinice.service.commands;
-
-import java.util.Set;
 
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * @author Sebastian Hagedorn sh[at]sernet.de
- *
+ * @author Sebastian Hagedorn
  */
-public class CreateITNetwork extends CreateElement {
+public class CreateITNetwork extends CreateElement<ItNetwork> {
 
-    public CreateITNetwork(CnATreeElement container, Class type, boolean createChildren) {
-        super(container, type, true, createChildren);
+    private static final long serialVersionUID = 1524831573368593526L;
+
+    public CreateITNetwork(CnATreeElement container, boolean createChildren) {
+        super(container, ItNetwork.class, true, createChildren);
     }
-    
-    @Override
-    public void execute() {
-        super.execute();
-        if (super.element instanceof ItNetwork) {
-            ItNetwork network = (ItNetwork) element;
-            if(createChildren) {
-                network.createNewCategories();
-            }
-            Set<CnATreeElement> children = network.getChildren();
-            for (CnATreeElement child : children) {
-                addPermissionsForScope(child);
-            }
-            element.setScopeId(element.getDbId());
-            for (CnATreeElement group : element.getChildren()) {
-                group.setScopeId(element.getDbId());
-            }
-        }
-        
-    }
-    
-    @Override
-    public ItNetwork getNewElement() {
-        return (ItNetwork) super.getNewElement();
-    }
+
 }

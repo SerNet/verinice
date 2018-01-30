@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<cheatsheet title="Gestione della sicurezza delle informazioni con verinice e Greenbone">
+
+  <intro>
+    <description>
+       In connessione con un <b> Greenbone </b> -vulnerabilityscanner (<b> www.greenbone.net </b>), nonch? un
+       Lo scanner di vulnerabilit? OpenVAS (<b> www.openvas.org </b>) verinice consente una vulnerabilit? efficace
+       gestione. <br />
+       <br />
+       Nella prospettiva ISM, verinice ti supporta nell'esecuzione dell'analisi dei rischi e della gestione delle vulnerabilit?
+       dopo l'importazione dei risultati di una scansione di vulnerabilit?. Esclusivo in verinice.PRO c'? un compito aggiuntivo
+       flusso di lavoro per l'eliminazione delle vulnerabilit? attuate.
+    </description>
+  </intro>
+
+  <item title="Scansione di vulnerabilit? ISM in Greenbone">
+    <description>
+       Con Greenbone Security Manager ? possibile eseguire automaticamente le vulnerabilit? dei tuoi sistemi. <br />
+       <br />
+       Fare riferimento al manuale dell'utente di Greenbone o visitare il sito web di Greenbone <b> www.greenbone.net </b> per un
+       descrizione dettagliata di come eseguire una vulnerabilit? ISM. Troverete una configurazione speciale di scansione e
+       un plugin verinice-ISM report da utilizzare in verinice per il download.    </description>
+  </item>
+
+<item title="Crea note per i risultati della scansione">
+    <description>
+      Per assicurarsi che quelle vulnerabilit? trovate in una scansione di Greenbone verranno create come oggetti in verinice
+      hanno bisogno di creare note per loro in Greenbone. Queste procedure consentono di ottimizzare l'importazione della vulnerabilit?
+      verinice. <br />
+      <br />
+      Nel caso in cui una vulnerabilit? non abbia assegnato una nota, il sistema scansionato verr? creato come un asset in verinice senza
+      la vulnerabilit? corrispondente! <br />
+      <br />
+      Per creare note in Greenbone, fare clic sul pulsante <b> Azioni> Aggiungi nota </b> nell'elenco delle vulnerabilit? trovate. <br />
+      <br />
+      Dovresti creare solo tante note come i tuoi amministratori possono realmente lavorare in un dato
+      lasso di tempo. Dovresti vedere l'elenco di tutte le vulnerabilit? come il tuo backlog, da cui seleziona
+      i pi? importanti per la bonifica immediata. <br />
+      <br />
+      Lo fai aggiungendo note a loro. Nella prima riga di ciascuna descrizione ? possibile aggiungere parole chiave
+      che vengono utilizzati dalla verinice per raggrupparle. Di solito ? consigliabile raggruppare le note per colpite
+      applicazione. Ad esempio puoi impostare un gruppo per tutte le note relative al PDF-Reader. Fare
+      che, inserite i seguenti nella prima riga: <b> + PdfReader </b>. <br />
+      Nella seconda riga e successivamente ? possibile aggiungere la descrizione del proprio operazione per questa particolare nota
+      pu? essere il tempo che vuoi.
+    </description>
+  </item>
+
+  <item title="Esportazione dei risultati della scansione">
+    <description>
+       Seleziona il rapporto di una scansione riuscita nel menu Greenbone <b> Gestione scansione> report </b>. <br />
+       <br />
+       Esportare i risultati della scansione di vulnerabilit? ISM come file vna selezionando <b> verinice ISM </b> come formato in
+       la corrispondente casella di riepilogo e avviare l'esportazione facendo clic sul pulsante <b> Scarica il rapporto filtrato </b>.
+       Greenbone salver? il file vna nella directory di download nell'ambiente di sistema.
+    </description>
+  </item>
+
+  <item title="Importazione della scansione di vulnerabilit? ISM">
+    <description>
+      Passare alla prospettiva ISM in verinice usando il menu <b> Visualizza> Mostra prospettiva> Prospettiva ISM </b>. Inizio
+      l'importazione facendo clic sul pulsante <b> Importa organizzazione dal file ... </b>. Seleziona l'esportazione precedentemente
+      Greenbonen ISM-Report facendo clic sul pulsante <b> Seleziona file ... </b>, mantenere i valori predefiniti per tutti gli altri
+      parametri nel dialogo. <br />
+      <br />
+      I risultati della scansione di vulnerabilit? possono essere trovati nel gruppo <b> Oggetti importati </b> nell'oggetto seguente
+      gruppi: <br />
+      <br />
+      Assets GSM-Scan = tutti i sistemi scansionati <br />
+      Vulnerabilit? GSM-Scan = tutte le vulnerabilit? rilevate <br />
+      Controlli GSM-Scan = controlli per la correzione delle vulnerabilit? rilevate <br />
+      Scenari GSM-Scan = scenari di nuova creazione per l'assegnazione di risorse e vulnerabilit? <br />
+      <br />
+      Con doppio click su qualsiasi asset importata nel capitolo <b> Greenbone GSM </b> dell'editor, visualizza i dettagli
+      per la vulnerabilit? sono mostrati. Si noti che la casella di controllo per il capitolo <b> Greenbone_GSM </b> deve essere impostata
+      nel menu <b> Modifica> Preferenze> Impostazioni dell'editor </b>.    </description>
+  </item>
+
+  <item title = "Analisi del rischio">
+    <description>
+      ? possibile trasferire le risorse, i controlli, gli scenari e le vulnerabilit? importati uno ad uno nel tuo esistente
+      organizzare o organizzare l'organizzazione completa al livello superiore navigando in <b> oggetti importati </b> e
+      chooese l'opzione <b> Taglia </b> dal menu di scelta rapida (mouseclick a destra). <br />
+      <br />
+      Chiudi il gruppo <b> oggetti importati </b> per assicurarsi che non sia attiva un'ulteriore selezione e inserire il file
+      organizzazione con il mouseclick destro e l'opzione <b> Inserisci </b> per inserire l'organizzazione al livello superiore.
+    </description>
+  </item>
+
+  <item title = "Grouping Objcts">
+    <description>
+      Per una visione chiara e per creare attivit?, le attivit? ei controlli importati possono essere raggruppati in base al <b> GSM
+      tag </b>. A tal fine, seleziona il gruppo <b> Assets GSM-Scan </b> o <b> Controlla GSM-Scan </b> e scegli il clic destro
+      opzione <b> Gruppo per tag ... </b>. <br />
+      <br />
+      Inoltre ogni gruppo di risorse pu? essere assegnato a una persona responsabile. Suppone che hai gi? creato persone nel tuo
+      organizzazione ? possibile creare la relazione semplicemente utilizzando il drag and drop con uno o pi? gruppi di asset.
+    </description>
+  </item>
+
+  <item title = "Flusso di lavoro - Riduzione dei Vulnerabilit? (solo verinice.PRO)">
+    <description>
+      verinice fornisce un flusso di lavoro specifico per eliminare le vulnerabilit? e ad effettivamente sostenere in questo modo
+      processo. <br />
+      <br />
+      Per creare le attivit? per l'eliminazione delle vulnerabilit?, selezionare un'organizzazione e scegliere il pulsante destro del mouse
+      opzione <b> Attivit?> Greenbone: avviare il processo di vulnerabilit? ... </b>. <br />
+      <br />
+      Le attivit? create del tipo <b> Recitify vulnerability </b> includono controlli, scenari e asset che sono
+      collegato ad un gruppo di controllo. Ogni persona responsabile pu? ora lavorare a questi compiti nella vista di attivit?, disponibile da
+      il menu <b> Visualizza> Mostra visualizzazione> Attivit? </b> o nella sezione <b> attivit? </b> nel webfrontend. <br />
+      <br />
+      La persona responsabile ricever? un promemoria settimanale tramite posta elettronica.
+    </description>
+  </item>
+
+  <item title = "Recupero delle vulnerabilit?">
+    <description>
+      Dopo aver chiuso un compito del tipo <b> Recitify vulnerability </b> tutte le relazioni tra asset e scenari
+      essere eliminato mentre la vulnerabilit? rimarr? in verit? ma non ha pi? effetto! <br />
+      <br />
+      Lo stato del controllo collegato sar? impostato su <b> Attuato> S? </b> quando non sono associate pi? risorse a
+      scenario. Nel caso in cui esistano collegamenti aggiuntivi tra beni e scenari risultanti da altri compiti, l '
+      lo stato di controllo sar? impostato su <b> Implementato> parzialmente </b>. <br />
+      <br />
+      In questo modo ? garantito che una vulnerabilit? sar? impostata solo allo stato <b> Recitified </b>, se tutti
+      le persone responsabili hanno recitato la vulnerabilit? nel loro campo di responsabilit?.
+    </description>
+  </item>
+
+  <item title = "Attivit? di chiusura per le vulnerabilit? non corretta">
+    <description>
+      Le attivit? per le vulnerabilit? non recitate verranno chiuse nel flusso di lavoro dopo 3 settimane automaticamente per ridurre
+      il numero di attivit? aperte. Questo comportamento ? attuato per riflettere il fatto che nella vita reale non ? sempre
+      ? possibile riciclare immediatamente un enorme numero di vulnerabilit?. A causa del fatto che la scansione della vulnerabilit?
+      vengono eseguiti su una base regolare, le vulnerabilit? non ancora state rettificate verranno nuovamente rilevate e la
+      i compiti corrispondenti saranno creati secondo. Pertanto l'intero processo mira ad ottimizzare la sicurezza mentre
+      mantenendo lo sforzo quanto pi? basso possibile. <br />
+      <br />
+      La scansione di vulnerabilit? di Greenbone pu? essere configurata per trasferire le vulnerabilit? rilevate a <b> verince.PRO </b>
+      automaticamente. In questo caso <b> verinice.PRO </b> confronta il risultato di scansione corrente con lo stato di implementazione
+      in base al flusso di lavoro e effettua le regolazioni necessarie. Vulnerabilit? che sono state impostate
+      <b> recitificato </b> verr? riaperto - <b> verinice.PRO </b> ricrea i collegamenti corretti tra le attivit? e
+      scenari. In questo processo verinice non crea doppie voci, ma riconosce gli asset precedentemente importati e
+      vulnerabilit? e mantiene quelle nell'organizzazione.
+    </description>
+  </item>
+
+</cheatsheet>

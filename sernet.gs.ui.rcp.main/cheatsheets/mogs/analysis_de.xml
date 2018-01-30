@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cheatsheet title="Strukturanalyse">
+
+  <intro>
+    <description>
+      <b>Willkommen bei verinice.</b>
+      <br/>
+      <br/>
+      Mit diesem Tutorial lernen Sie, wie Sie Ihren Informationsverbund mit
+      verinice erfassen.
+      <br/>
+      Welche Daten Sie eingeben müssen und wie Sie dabei am
+      besten vorgehen, beschreibt der BSI Standard 200-2, den Sie auf der
+      Website des BSI finden.
+    </description>
+  </intro>
+
+  <item title="Wechsel zur Perspektive Modernisierter BSI-Grundschutz">
+     <description>
+         Wechseln Sie zur Perspektive Modernisierter BSI-Grundschutz, sofern
+         dies noch nicht geschehen ist. Zur Perspektive gelangen Sie über das
+         Hauptmenü
+         <b>Ansicht &gt; Zeige Perspektive... &gt; Andere &gt; Modernisierter BSI-Grundschutz &gt; OK</b>
+     </description>
+  </item>
+
+  <item title="Neuen Informationsverbund anlegen">
+      <description>
+          Im View Modernisierter Grundschutz finden Sie einen leeren
+          Informationsverbund. (Sollte dies nicht der Fall sein, so können Sie
+          einen neuen leeren Informationsverbund anlegen. Klicken Sie dazu in
+          der oberen Werkzeugleiste das entsprechende Icon: Blatt Papier mit
+          einem Sternchen. Es wird ein neuer Verbund angelegt.) Klicken Sie den
+          neu erzeugten Informationsverbund doppelt an. In dem rechten oberen
+          verinice Bereich öffnet sich der Editor mit den Werten des Objekts
+          Informationsverbund.  Hier können Sie die Angaben und Eigenschaften
+          für den Verbund definieren.  Nachdem Sie Ihre Angaben vervollständigt
+          haben, speichern Sie diese (klick auf Icon: Diskette oder
+          Tastenkombination: <b>Strg+S</b>) und schließen Sie den Editor (klick auf x
+          im Reiter oder Tastenkombination: <b>Strg+W</b>)
+      </description>
+  </item>
+
+  <item title="Zielobjekte anlegen">
+      <description>
+          Klappen Sie den Informationsverbund (mit einem Klick auf den Pfeil
+          links daneben) auf. Wählen Sie das gewünschte Zielobjekt aus und
+          klicken Sie dann mit der rechten Maustaste auf das entsprechende
+          Zielobjekt um das Kontextmenü zu öffnen. Anschließend können Sie im
+          Kontextmenü entscheiden, ob Sie eine neue Gruppe oder ein neues
+          Objekt anlegen wollen. Unterhalb einer Gruppe können Sie über das
+          Kontextmenü weitere Objekte anlegen.  Sofern Sie ein neues Zielobjekt
+          ausgewählt haben öffnet sich der Editor, wo Sie Angaben und
+          Eigenschaften zum Objekt hinterlegen können.  Lassen Sie die Felder
+          für den Schutzbedarf noch frei!  Speichern Sie die Änderungen
+          (<b>Strg+S</b>) und schließen Sie den Editor (<b>Strg+W</b>) Führen Sie diese
+          Aktion so oft aus, bis Sie alle Ihre benötigten Objekte abgebildet
+          haben.
+      </description>
+  </item>
+
+  <item title="CSV-Import">
+      <description>
+          Neben der manuellen Erfassung Ihrer Strukturanalyse besteht noch die
+          Möglichkeit die Daten über den CSV-Import zu importieren. Für den
+          CSV-Import benötigen Sie eine .CSV-Datei mit Inhalt, wobei die erste
+          Spalte mit einer eindeutigen ID versehen sein muss. über das
+          Hauptmenü <b>Datei &gt; CSV-Import</b> gelangen Sie zum Wizard, wo Sie Ihre zu
+          importierende Datei auswählen können. Nach Auswahl der Datei wählen
+          Sie das zu importierende Zielobjekt aus. über die Operationen können
+          Sie des Weiteren bestimmen, ob die Daten eingefügt, aktualisiert
+          und/oder gelöscht werden sollen. Mit Klick auf <b>Weiter &gt;</b> können Sie
+          die Spalten der .CSV-Datei den verinice-Feldern zuordnen. verinice
+          übernimmt die Zuordnung automatisch, sofern die
+          .CSV-Spaltenbezeichnungen mit verinice-Feldern übereinstimmen,
+          andernfalls muss die Zuordnung manuell durchgeführt werden. Nachdem
+          die Zuordnung vorgenommen wurde werden die Daten (nach Klick auf
+          <b>Fertigstellen</b>) in verinice importiert.
+      </description>
+  </item>
+
+  <item title="Abhängigkeiten/Verknüpfungen herstellen">
+      <description>
+          Es gibt zwei Möglichkeiten in verinice wie Sie
+          Abhängigkeiten/Verknüpfungen zwischen Ihren Objekten herstellen
+          können. Bitte beachten Sie, dass die Verknüpfungsrichtung eine
+          entscheidende Rolle spielt, z.B. für die Schutzbedarfsvererbung oder
+          die Berechnung des Risikos. Bei beiden Möglichkeiten kann die
+          Verknüpfungsrichtung, sofern vorgesehen, geändert werden. Ist das
+          nicht der Fall, so muss die Verknüpfung gelöscht und erneut
+          (geändert) angelegt werden.
+          <br/>
+          1. Drag&amp;Drop: Im View Modernisierter IT-Grundschutz kann die
+          Verknüpfung über Drag&amp;Drop hergestellt werden. Dazu wählen Sie ein
+          Objekt aus und ziehen es mit der linken Maustaste auf das
+          jeweilige Objekt mit dem Sie es verknüpfen wollen. Die Verknüpfung
+          wird sofort übernommen und kann in der Verknüpfung-View oder im
+          Link-Maker des Objektes eingesehen werden.
+          <br/>
+          2. Link-Maker: über den sogenannten Link-Maker, der sich im unteren
+          Teil des Editorbereichs eines jeden Objektes befindet, können Sie die
+          Verknüpfung zwischen Objekten herstellen indem Sie zunächst das
+          Element auswählen, welches mit Ihrem Objekt verknüpft werden soll,
+          und anschließend auf <b>Hinzufügen</b> klicken. Nun erscheint ein neues
+          Fenster, in diesem werden Ihnen alle Objekte des Elementes in Ihrem
+          Informationsverbund angezeigt. Wenn Sie verbundübergreifend
+          Verknüpfungen herstellen wollen, so sollte <b>Nur aktueller Scope</b>
+          abgewählt werden. In diesem Auswahlfenster können Sie mit einem
+          einfachen Klick alle Objekte auswählen die mit Ihrem Objekt verknüpft
+          werden sollen. Durch anschließendes betätigen des <b>OK</b> Buttons werden
+          die Verknüpfungen hergestellt.
+      </description>
+  </item>
+
+</cheatsheet>

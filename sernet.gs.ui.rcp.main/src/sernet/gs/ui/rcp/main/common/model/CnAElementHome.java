@@ -45,6 +45,7 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IProgress;
 import sernet.verinice.interfaces.validation.IValidationService;
 import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
@@ -65,7 +66,6 @@ import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
-import sernet.verinice.service.auth.AuthenticationHelper;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
@@ -424,7 +424,9 @@ public final class CnAElementHome {
      * @return
      */
     public boolean isNewChildAllowed(CnATreeElement cte) {
-        return cte instanceof BSIModel || cte instanceof ISO27KModel || isWriteAllowed(cte);
+        return cte instanceof BSIModel || cte instanceof ISO27KModel || cte instanceof BpModel
+                || cte instanceof CatalogModel
+                || isWriteAllowed(cte);
     }
 
     /**

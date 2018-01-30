@@ -68,7 +68,7 @@ public class MessageDialogWithTogglePreferencePage extends FieldEditorPreference
 
         BooleanFieldEditor infoDialogTransformCatalog2ModernizedGsItems = new BooleanFieldEditor(
                 PreferenceConstants.INFO_CONTROLS_TRANSFORMED_TO_MODERNIZED_GS, 
-                Messages.getString("GeneralSettingsPage.InfoControlsAdded"), //$NON-NLS-1$
+                Messages.getString("GeneralSettingsPage.InfoControlsAddedToModernizedGs"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(infoDialogTransformCatalog2ModernizedGsItems);
 

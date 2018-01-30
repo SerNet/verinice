@@ -34,7 +34,7 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import sernet.gs.model.Baustein;
 import sernet.gs.scraper.GSScraper;
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRCPLocal;
+import sernet.gs.ui.rcp.main.bsi.model.BSIConfigFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 public final class BSIKatalogInvisibleRoot {
@@ -66,7 +66,7 @@ public final class BSIKatalogInvisibleRoot {
 					// to local files.
 					WorkspaceJob job = new OpenCataloguesJob(
 							Messages.BSIMassnahmenView_0,
-							new BSIConfigurationRCPLocal());
+                            BSIConfigFactory.createStandaloneConfig());
 					job.setUser(true);
 					job.schedule();
 				} catch (Exception e) {

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<cheatsheet title = "Lavorare con il modello ISO 27001 in verinice.">
+
+   <intro>
+     <description>
+       In questo tutorial imparerai le operazioni di base quando si tratta della prospettiva ISO 27001
+       in verinice.
+     </description>
+   </intro>
+  
+  <item title = "Creazione di asset">
+    <description>
+      Nella vista "Modello di sicurezza delle informazioni" ? possibile creare oggetti e gruppi di oggetti. Il predefinito
+      le categorie per gli oggetti vengono visualizzate quando si crea un nuovo oggetto radice (oggetto organizzazione).
+      Fai clic sul pulsante <b> Aggiungi nuova organizzazione </b> che si trova in alto a destra della vista.
+      Un oggetto organizzativo significa ambito, un reparto o addirittura l'intera organizzazione.
+      <br /> <br />
+      Creare un gruppo di risorse. Per fare questo, fare clic sul pulsante destro del mouse sulla categoria "Assets".
+      Verr? visualizzato un menu di scelta rapida da cui scegliere l'opzione <b> Aggiungi nuovo gruppo di risorse ... </b>.
+      Ora hai creato un oggetto di gruppo per i beni. Un oggetto di gruppo corrisponde a una cartella del file
+      sistema operativo. Questo oggetto pu? contenere altri oggetti di risorse o altri oggetti del gruppo di risorse.
+      In questo modo ? possibile creare gruppi e oggetti gerarchici completamente personalizzati.
+      <br /> <br />
+      Rinominare il gruppo di risorse appena creato inserendo il testo del titolo "PC Client" nell'editor.
+      Salva premendo la combinazione di tasti <b> Ctrl + S </b>.
+      <br /> <br />
+      Ora crea un'attivit? per il gruppo "PC Client" facendo clic con il pulsante destro del mouse e selezionando <b> Aggiungi nuovo elemento
+      ... </b>.
+      <br /> <br />
+      Ora un oggetto di risorse viene creato e associato all'oggetto di gruppo creato. L'editor per
+      l'immissione dei dati per la nuova attivit? appare automaticamente nel sito giusto. Inserisci alcuni
+      fittizie qui e salvarlo con la combinazione di tasti <b> Ctrl + S </b> o chiudendo la vista.
+      Alla chiusura del contenuto della vista non salvata vi verr? automaticamente chiesto se si desidera salvare.
+    </description>
+  </item>
+  
+  <item title = "Controlli di modellazione">
+    <description>
+      Quando si lavora con i cataloghi come ISO / IEC 27001 in
+      verinice, ? necessario importare o creare i corrispondenti controlli innanzitutto.
+
+      Il modo pi? semplice per farlo ? utilizzare il catalogo di rischio di verinice che ?
+      disponibile nel verinice.SHOP:
+      <b> http://shop.verinice.com </b> <br />
+
+      In alternativa ? possibile importare i controlli necessari da un
+      File CSV o semplicemente crearli
+      in verinice manualmente.
+
+      L'importazione CSV ? descritta nel manuale verinice,
+      che ? disponibile anche nel verinice.SHOP. <br/>
+      ? inoltre possibile ottenere informazioni gratuite sui nostri siti web, nel forum verinice
+      e dal nostro canale Youtube.
+      <br/>
+      In questo tutorial supponiamo che utilizzi il catalogo del rischio di verinice.
+      <br /> <br />
+
+      Facendo doppio clic su un controllo puoi ora modificare il comando
+      informazioni per questo controllo in
+      la visualizzazione dell'editor: apri il controllo "8.1.1 Inventario delle risorse".
+
+      Impostare il campo "Attuato" su "s?" selezionando la voce corretta nel campo
+      menu a discesa.
+    </description>
+  </item>
+
+  <item title = "Creazione di relazioni">
+     <description>
+       In verinice sono possibili diverse relazioni tra gli oggetti. Per creare una relazione semplice,
+       basta collegare l'oggetto di asset appena creato con il nuovo controllo inserito tramite drag and drop.
+       Puoi vedere che nella relazione la relazione ? appena creata. Un tipo di relazione corrispondente ?
+       anche visibile. Fare doppio clic sull'oggetto di riferimento nella vista di relazione. L'oggetto di riferimento
+       verr? aperta nella vista dell'editor.
+       <br /> <br />
+       Scopri quali tipi di relazioni sono possibili. Se ci sono tipi di relazioni mancanti, questi possono
+       essere facilmente aggiunti o modificati. Come fare questo ? descritto in <b> http://www.verinice.com/it </b>. Se hai
+       tutte le domande, si prega di utilizzare il nostro forum: <b> http://www.forum.verinice.com </b>.
+     </description>
+   </item>
+
+   <item title = "Inserimento di documenti">
+     <description>
+       Immagina, hai appena firmato un accordo di non divulgazione del cliente (NDA). In esso si impegna a
+       alta penalit? quando i dati devono essere rivelati. Inoltre tutti i dati dei clienti devono essere crittografati.
+       <br /> <br />
+       In primo luogo carichiamo il documento in verinice. Fare clic con il pulsante destro del mouse sul gruppo "Documenti" nella vista
+       "Modello di sicurezza dell'informazione" (ISM). Ora seleziona <b> Aggiungi documento ... </b>.
+       <br /> <br />
+       Inserisci "NDA Customer1" come titolo nella visualizzazione dell'editor. Modificare il "tipo di documento" su
+       "Contrarre". Aprire la vista dei file dal menu di visualizzazione. Selezionare l'oggetto documento nella visualizzazione ISM
+       ancora se non ? gi? stato selezionato. Quindi trascina qualsiasi documento PDF come segnaposto per la nostra NDA
+       la vista dei file.
+       <br /> <br />
+       Ora ? possibile immettere informazioni meta per il file allegato, ad esempio la versione del documento.
+       Quando si preme <b> Ctrl + S </b>, il documento verr? caricato e collegato all'oggetto nell'ISM
+       vista. Puoi aprire il file allegato facendo clic sul pulsante <b> Mostra </b>. Se si utilizza la funzione
+       server verinice.PRO, il documento ? immediatamente disponibile a tutti nella tua organizzazione
+       che ha accesso ad esso.
+     </description>
+   </item>
+
+  
+   <item title = "Requisiti di modellazione">
+     <description>
+       La NDA ha chiesto la crittografia dei dati dei clienti. Quindi fare clic con il pulsante destro del mouse sul gruppo "Requisiti",
+       quindi su <b> Aggiungi requisito ... </b>. Modificare il nome in "Encryption" nell'editor.
+       Ora creare una relazione trascinando l'oggetto requisito sul documento
+       oggetto. Il collegamento viene visualizzato nella vista relazioni.
+     </description>
+   </item>
+  
+   <item title = "Compliance Requisiti Con Controlli">
+     <description>
+       Fare clic con il pulsante destro del mouse sul gruppo "Controlli" nell'albero ISM, selezionare <b> Aggiungi controllo ... </b>.
+       Modificare il nome in "I dati del cliente devono essere crittografati" nella vista dell'editor. Salva premendo
+       <b> Ctrl + S </b>. Link trascinando il controllo con il requisito "Crittografia".
+       La visualizzazione relazioni indica che questo requisito ? ora soddisfatto dal controllo.
+     </description>
+   </item>
+  
+   <item title = "Creazione di pi? relazioni">
+     <description>
+       Allo stesso modo descritto ? possibile creare pi? relazioni. Ad esempio, ? possibile documentare
+       quale persona ? responsabile dell'attuazione delle misure. Dovresti anche creare il cliente
+       dati come oggetto di asset e documentare la persona che accompagna il proprietario.
+       <br /> <br />
+       I tipi di relazione vengono generati automaticamente. Se un tipo non ? corretto, puoi cambiarla nel file
+       rapporti di relazione. Basta cliccare sul tipo di relazione. Se ci
+       sono alternative che saranno elencate adesso.
+     </description>
+   </item>
+
+   <item title = "Grazie!">
+     <description>
+       Questo ? tutto! Questa ? stata una piccola panoramica delle funzioni della verinice per aiutarti a rispettare la
+       ISO 27001 standard. Maggiori informazioni sono disponibili sul nostro sito web <b> http://www.verinice.com/it </b>.
+     </description>
+   </item>
+  
+</cheatsheet>
