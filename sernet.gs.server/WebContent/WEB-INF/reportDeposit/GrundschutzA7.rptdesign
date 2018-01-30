@@ -1048,7 +1048,6 @@ import java.util.ArrayList;
 import sernet.gs.service.Retriever;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.service.commands.crud.ExecuteHQLInReportCommand;
-import sernet.verinice.report.service.impl.TocHelper2;
 
 
 // set top level element for report:
@@ -1124,11 +1123,8 @@ for(CnATreeElement bst : elements){
 	firstHqlExecuter = new ExecuteHQLInReportCommand(countAllHQL, paramNames0, params0, CnATreeElement.class);
 	totalMnumsSum = helper.execute(firstHqlExecuter).getResult();
 	totalCount = 0L;
-	TocHelper2.log("Size of totalSum hqlResult:\t" + totalMnumsSum.size());
 	if(totalMnumsSum.size() == 1){
 		totalCount = totalMnumsSum.get(0);
-	} else {
-		TocHelper2.log("More than one totalCount result for bst:\t" + bst.getDbId());
 	}
 
 	// second query setup
@@ -1137,11 +1133,8 @@ for(CnATreeElement bst : elements){
 	secondHqlExecuter = new ExecuteHQLInReportCommand(bstCountHQL, paramNames, params, CnATreeElement.class);
 	hiddenMnumsCount = helper.execute(secondHqlExecuter).getResult();
 	hiddenCount = 0L;
-	TocHelper2.log("Size of hiddenSum hqlResult:\t" + hiddenMnumsCount.size());
 	if(hiddenMnumsCount.size() == 1){
 		hiddenCount = hiddenMnumsCount.get(0);
-	} else {
-		TocHelper2.log("More than one hiddenCount result for bst:\t" + bst.getDbId());
 	}
 
 	if((totalCount - hiddenCount) > 0){

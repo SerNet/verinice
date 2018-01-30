@@ -5354,7 +5354,19 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                 name="Availability risk without N.A controls" id="asset_risk_without_na_plancontrolvalue_a" editable="false"/>
         </huipropertygroup>
             
-        
+		<huipropertygroup name="Risk Treatment" id="asset_risktreatgroup" tags="Risk">
+			<huiproperty
+             tags="Risk"
+				name="Risk Treatment" id="asset_risktreat" inputtype="singleoption">
+				<option name="Reduction" id="asset_risktreat_reduct" />
+				<option name="Retention" id="asset_risktreat_retent" />
+				<option name="Avoidance" id="asset_risktreat_avoid" />
+				<option name="Transfer" id="asset_risktreat_transf" />
+			</huiproperty>
+			<huiproperty
+             tags="Risk"
+				name="Explanation" id="asset_risktreatexpl" inputtype="text" />
+		</huipropertygroup>
     </huientity>
     
     <huientity
