@@ -46,7 +46,6 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
-import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.bp.IBpElement;
@@ -94,9 +93,7 @@ public abstract class HtmlWriter {
      */
     public static String getHtml(Object element) throws GSServiceException {
         
-        String html = "";
-        
-        html = handleRequestDynamic(element);
+        String html = handleRequestDynamic(element);
         
         if (StringUtils.isEmpty(html)){
             html = handleRequestStatic(element);
@@ -254,7 +251,6 @@ public abstract class HtmlWriter {
      * @param property
      */
     private static String getLicenseRestrictedPropertyValue(Property property) {
-        StringBuilder sb = new StringBuilder();
         String encryptedContentId = property.getLicenseContentId();
         String cypherText = property.getPropertyValue();
         String currentUser = ServiceFactory.lookupAuthService().getUsername();
@@ -387,7 +383,7 @@ public abstract class HtmlWriter {
                             descriptionProperty),
                     VeriniceCharset.CHARSET_UTF_8.name());
             return sb.toString();
-        };
+        }
         
         if (element instanceof SamtTopic){
             StringBuilder sb = new StringBuilder();
@@ -578,16 +574,6 @@ public abstract class HtmlWriter {
            return null;
        }
    }
-//   
-//   private String htmlizeDescription(String plainDescription) {
-//       StringBuilder htmlDescriptionBuilder = new StringBuilder();
-//       
-//       htmlDescriptionBuilder.append(HTML_DESCRIPTION_PREAMBEL);
-//       htmlDescriptionBuilder.append(plainDescription);
-//       htmlDescriptionBuilder.append(HTML_DESCRIPTION_SUFFIX);
-//       String htmlDescription = htmlDescriptionBuilder.toString();
-//       return htmlDescription;
-//   }
 
    private static String removeUnsupportedHtmlPattern(String line) {
        line = line.replaceAll("<a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -610,9 +596,4 @@ public abstract class HtmlWriter {
        return ServiceFactory.lookupLicenseManagementService();
    }
    
-   private static IEncryptionService getCryptoService(){
-       return ServiceFactory.lookupEncryptionService();
-   }
 }
-
-
