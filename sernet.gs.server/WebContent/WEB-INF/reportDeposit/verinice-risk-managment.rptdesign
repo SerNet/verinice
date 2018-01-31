@@ -780,10 +780,9 @@ import sernet.verinice.service.commands.crud.ExecuteHQLInReportCommand;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.service.risk.RiskAnalysisHelper;
-import sernet.verinice.model.iso27k.AssetValueAdapter;
+import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
 import sernet.verinice.service.risk.RiskAnalysisHelperImpl;
 import sernet.gs.service.NumericStringComparator;
-import sernet.verinice.report.service.impl.TocHelper2;
 
 String sumConfidentialityIntegrityAvailability(Asset asset, String confidentialy, String integrity, String availability) {
     
@@ -832,7 +831,6 @@ linkedHql = " from CnATreeElement elmt " +
 
 // now iterate topics and linked persons (if existant)
 for(Asset asset : assetSet){
-    TocHelper2.log(asset.getTitle() + "\n");
     scenariosForAssetList = new ArrayList(0);
     // load linked scenarios
     c2 = new ExecuteHQLInReportCommand(linkedHql, new Object[]{asset.getDbId(), root, IncidentScenario.TYPE_ID }, IncidentScenario.TYPE_ID);
@@ -882,13 +880,13 @@ for(Asset asset : assetSet){
 
 
 	
-	valueAdapter = new AssetValueAdapter(asset);
+	valueAdapter = new ProtectionRequirementsValueAdapter(asset);
 	ras = new RiskAnalysisHelperImpl();
 
 	/** Get risk values for implement controls */	    
-	impactC = valueAdapter.getVertraulichkeit();
-	impactI = valueAdapter.getIntegritaet();
-	impactA = valueAdapter.getVerfuegbarkeit();
+	impactC = valueAdapter.getConfidentiality();
+	impactI = valueAdapter.getIntegrity();
+	impactA = valueAdapter.getAvailability();
 	if(scenario != null &amp;&amp; scenario.getEntity() != null){
 		trueString = "1";
 		propertyValue = scenario.getEntity().getProperties("scenario_value_method_confidentiality");
@@ -930,9 +928,9 @@ for(Asset asset : assetSet){
 
 
 	/** Get risk values for planned controls */
-	impactAllC = valueAdapter.getVertraulichkeit();
-	impactAllI = valueAdapter.getIntegritaet();
-	impactAllA = valueAdapter.getVerfuegbarkeit();
+	impactAllC = valueAdapter.getConfidentiality();
+	impactAllI = valueAdapter.getIntegrity();
+	impactAllA = valueAdapter.getAvailability();
 
 	reducedAllImpact = ras.applyControlsToImpact(RiskAnalysisHelper.RISK_WITH_ALL_CONTROLS, asset, impactAllC, impactAllI, impactAllA);
 	if (reducedAllImpact != null) {
@@ -990,9 +988,9 @@ for(Asset asset : assetSet){
 
 	// plain bsi values without controls but with possible
 	// inheritence from other assets/orgs values
-	assetScenarioResult.add(valueAdapter.getVertraulichkeit());
-	assetScenarioResult.add(valueAdapter.getIntegritaet());
-	assetScenarioResult.add(valueAdapter.getVerfuegbarkeit());
+	assetScenarioResult.add(valueAdapter.getConfidentiality());
+	assetScenarioResult.add(valueAdapter.getIntegrity());
+	assetScenarioResult.add(valueAdapter.getAvailability());
 
 	// CIA values from scenario cna link element
     assetScenarioResult.add(Integer.valueOf(conf));
