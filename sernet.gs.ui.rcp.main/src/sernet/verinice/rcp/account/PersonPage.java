@@ -217,15 +217,16 @@ public class PersonPage extends BaseWizardPage {
         return complete;
     }
 
+    private List<CnATreeElement> loadEntitiesByTypeId(String typeId) throws CommandException {
+        LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(typeId);
+        return getCommandService().executeCommand(command).getElements();
+    }
+
     private void loadScopes() throws CommandException {
         comboModelScope.clear();
-        LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(
-                Organization.TYPE_ID);
-        command = getCommandService().executeCommand(command);
-        comboModelScope.addAll(command.getElements());
-        command = new LoadCnAElementByEntityTypeId(ITVerbund.TYPE_ID_HIBERNATE);
-        command = getCommandService().executeCommand(command);
-        comboModelScope.addAll(command.getElements());
+        comboModelScope.addAll(loadEntitiesByTypeId(Organization.TYPE_ID));
+        comboModelScope.addAll(loadEntitiesByTypeId(ITVerbund.TYPE_ID_HIBERNATE));
+
         comboModelScope.sort();
         comboModelScope.addNoSelectionObject(Messages.PersonPage_8);
         getDisplay().syncExec(new Runnable() {
