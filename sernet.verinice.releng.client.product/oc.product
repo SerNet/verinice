@@ -43,7 +43,7 @@ Viktor Schmidt
 Tatjana Anisow
 Michael Flürenbrock
 Urs Zeidler
-Alexander Nasrallah
+Alexander Ben Nasrallah
 Jochen Kemnade
 Antonio Marino
 
@@ -88,11 +88,11 @@ VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilin
       location="sernet.gs.ui.rcp.main"
       handlerType="extensible" />
    <launcher name="verinice">
-      <linux icon="/sernet.gs.ui.rcp.main/verinice_icons/v.xpm"/>
-      <macosx icon="/sernet.gs.ui.rcp.main/verinice_icons/v.icns"/>
+      <linux icon="verinice_icons/v.xpm"/>
+      <macosx icon="verinice_icons/v.icns"/>
       <solaris/>
       <win useIco="true">
-         <ico path="/sernet.gs.ui.rcp.main/verinice_icons/v-128-16.ico"/>
+         <ico path="verinice_icons/v-128-16.ico"/>
          <bmp/>
       </win>
    </launcher>
@@ -855,7 +855,7 @@ Public License instead of this License.  But first, please read
    <features>
       <feature id="sernet.gs.server.feature" version="1.1.1.qualifier"/>
       <feature id="sernet.gs.ui.rcp.main.feature" version="1.1.1.qualifier"/>
-      <!--<feature id="org.eclipse.equinox.p2.user.ui" version="2.1.1.v20110526-6-Bg9JXOePwKUTU7X0teV1RtDu-e"/>-->
+      <feature id="org.eclipse.equinox.p2.user.ui"/>
    </features>
 
    <configurations>
