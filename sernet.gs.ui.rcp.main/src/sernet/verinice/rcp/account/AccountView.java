@@ -100,9 +100,8 @@ import sernet.verinice.service.account.AccountSearchParameter;
 import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
 
 /**
- * View to find, edit, create and delete accounts.
- * Actions are executed by account Service,
- * see {@link IAccountService}.
+ * View to find, edit, create and delete accounts. Actions are executed by
+ * account Service, see {@link IAccountService}.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -118,7 +117,7 @@ public class AccountView extends RightsEnabledView {
     private static final int TEXT_COLUMN_WIDTH = 150;
     private static final int BOOLEAN_COLUMN_WIDTH = 70;
     private static final int MIN_WIDTH_TEXT = 100;
-    
+
     private static final int MAX_LMCOLUMN_HEADER_LENGTH = 8;
     private static final String LMCOLUM_HEADER_EXTENSION = "...";
 
@@ -133,7 +132,6 @@ public class AccountView extends RightsEnabledView {
     private IModelLoadListener modelLoadListener;
     private IAccountService accountService;
     private ICommandService commandService;
-
 
     private Text textLogin;
     private Text textFirstName;
@@ -151,7 +149,7 @@ public class AccountView extends RightsEnabledView {
     private AccountContentProvider contentProvider = new AccountContentProvider();
     private ISelectionListener selectionListener;
     private WorkspaceJob initDataJob;
-    
+
     private Map<Integer, LicenseMessageInfos> lmColumnsMap;
 
     public AccountView() {
@@ -163,10 +161,11 @@ public class AccountView extends RightsEnabledView {
                 try {
                     monitor.beginTask(Messages.AccountView_0, IProgressMonitor.UNKNOWN);
                     Activator.inheritVeriniceContextState();
-                    init();                 
+                    init();
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.", e); //$NON-NLS-1$ //$NON-NLS-2$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
+                            "Error while loading data.", e); //$NON-NLS-1$
                 } finally {
                     monitor.done();
                 }
@@ -177,14 +176,19 @@ public class AccountView extends RightsEnabledView {
     }
 
     private void init() throws CommandException {
-        ElementTitleCache.load(new String[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID, PersonGroup.TYPE_ID, PersonenKategorie.TYPE_ID_HIBERNATE});                
+        ElementTitleCache.load(new String[] { ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID,
+                PersonGroup.TYPE_ID, PersonenKategorie.TYPE_ID_HIBERNATE });
         findAccounts();
         loadScopes();
         initCombos();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.RightsEnabledView#createPartControl(org.eclipse.swt.widgets.Composite)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.rcp.RightsEnabledView#createPartControl(org.eclipse.swt.
+     * widgets.Composite)
      */
     @Override
     public void createPartControl(Composite parent) {
@@ -198,17 +202,17 @@ public class AccountView extends RightsEnabledView {
         }
     }
 
-    private void initView(Composite parent) {         
+    private void initView(Composite parent) {
         parent.setLayout(new FillLayout());
         createComposite(parent);
         comboModel = new ComboModel<CnATreeElement>(new IComboModelLabelProvider<CnATreeElement>() {
             @Override
             public String getLabel(CnATreeElement element) {
                 return element.getTitle();
-            }       
-        });     
+            }
+        });
         makeActions();
-        fillLocalToolBar();   
+        fillLocalToolBar();
         startInitDataJob();
     }
 
@@ -217,7 +221,7 @@ public class AccountView extends RightsEnabledView {
         Composite searchComposite = createSearchComposite(composite);
         createSearchForm(searchComposite);
         Composite tableComposite = createTableComposite(composite);
-        createTable(tableComposite);      
+        createTable(tableComposite);
         getSite().setSelectionProvider(viewer);
         viewer.setInput(new PlaceHolder(Messages.AccountView_3));
     }
@@ -267,7 +271,7 @@ public class AccountView extends RightsEnabledView {
         label = new Label(searchComposite, SWT.WRAP);
         label.setText(Messages.AccountView_9);
 
-        textLogin= new Text(searchComposite,SWT.BORDER);
+        textLogin = new Text(searchComposite, SWT.BORDER);
         GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
         gridData.minimumWidth = MIN_WIDTH_TEXT;
         textLogin.setLayoutData(gridData);
@@ -280,28 +284,30 @@ public class AccountView extends RightsEnabledView {
             }
         });
 
-        textFirstName= new Text(searchComposite,SWT.BORDER);
+        textFirstName = new Text(searchComposite, SWT.BORDER);
         textFirstName.setLayoutData(gridData);
-        textFirstName.addFocusListener(new FocusListener() {          
+        textFirstName.addFocusListener(new FocusListener() {
             @Override
             public void focusLost(FocusEvent e) {
                 AccountView.this.parameter.setFirstName(getInput(textFirstName));
                 findAccounts();
-            }        
+            }
+
             @Override
             public void focusGained(FocusEvent e) {
                 // nothing to do
             }
         });
 
-        textFamilyName= new Text(searchComposite,SWT.BORDER);
+        textFamilyName = new Text(searchComposite, SWT.BORDER);
         textFamilyName.setLayoutData(gridData);
-        textFamilyName.addFocusListener(new FocusListener() {          
+        textFamilyName.addFocusListener(new FocusListener() {
             @Override
             public void focusLost(FocusEvent e) {
                 AccountView.this.parameter.setFamilyName(getInput(textFamilyName));
                 findAccounts();
-            }          
+            }
+
             @Override
             public void focusGained(FocusEvent e) {
                 // nothing to do
@@ -329,13 +335,13 @@ public class AccountView extends RightsEnabledView {
         comboAdmin.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if(COMBO_INDEX_YES==comboAdmin.getSelectionIndex()) {
+                if (COMBO_INDEX_YES == comboAdmin.getSelectionIndex()) {
                     AccountView.this.parameter.setIsAdmin(true);
                 }
-                if(COMBO_INDEX_NO==comboAdmin.getSelectionIndex()) {
+                if (COMBO_INDEX_NO == comboAdmin.getSelectionIndex()) {
                     AccountView.this.parameter.setIsAdmin(false);
                 }
-                if(COMBO_INDEX_BOTH==comboAdmin.getSelectionIndex()) {
+                if (COMBO_INDEX_BOTH == comboAdmin.getSelectionIndex()) {
                     AccountView.this.parameter.setIsAdmin(null);
                 }
                 findAccounts();
@@ -365,13 +371,13 @@ public class AccountView extends RightsEnabledView {
         comboScopeOnly.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if(COMBO_INDEX_YES==comboScopeOnly.getSelectionIndex()) {
+                if (COMBO_INDEX_YES == comboScopeOnly.getSelectionIndex()) {
                     AccountView.this.parameter.setIsScopeOnly(true);
                 }
-                if(COMBO_INDEX_NO==comboScopeOnly.getSelectionIndex()) {
+                if (COMBO_INDEX_NO == comboScopeOnly.getSelectionIndex()) {
                     AccountView.this.parameter.setIsScopeOnly(false);
                 }
-                if(COMBO_INDEX_BOTH==comboScopeOnly.getSelectionIndex()) {
+                if (COMBO_INDEX_BOTH == comboScopeOnly.getSelectionIndex()) {
                     AccountView.this.parameter.setIsScopeOnly(null);
                 }
                 findAccounts();
@@ -383,45 +389,46 @@ public class AccountView extends RightsEnabledView {
         searchButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                findAccounts();              
+                findAccounts();
             }
         });
 
     }
 
     private void createTable(Composite tableComposite) {
-        viewer = new TableViewer(tableComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
-        GridData gd = new GridData(SWT.FILL, SWT.FILL, true,true);
+        viewer = new TableViewer(tableComposite,
+                SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
+        GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true);
         viewer.getControl().setLayoutData(gd);
 
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(new AccountLabelProvider(lmColumnsMap, viewer));
         Table table = viewer.getTable();
-        
+
         int columnIndex = 0;
-        
+
         createTableColumn(Messages.AccountView_12, TEXT_COLUMN_WIDTH, columnIndex++, "");
         createTableColumn(Messages.AccountView_13, TEXT_COLUMN_WIDTH, columnIndex++, "");
         createTableColumn(Messages.AccountView_14, TEXT_COLUMN_WIDTH, columnIndex++, "");
         createTableColumn(Messages.AccountView_15, TEXT_COLUMN_WIDTH, columnIndex++, "");
         createTableColumn(Messages.AccountView_16, TEXT_COLUMN_WIDTH, columnIndex++, "");
         createTableColumn(Messages.AccountView_17, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
-		createTableColumn(Messages.AccountView_38, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
+        createTableColumn(Messages.AccountView_38, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
         createTableColumn(Messages.AccountView_18, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
         createTableColumn(Messages.AccountView_19, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
         createTableColumn(Messages.AccountView_20, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
         createTableColumn(Messages.AccountView_21, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
-        
+
         Set<String> createdLMColumnIds = new HashSet<>();
-        
+
         try {
             columnIndex = creatLMColumns(columnIndex, createdLMColumnIds);
-        } catch (LicenseManagementException e){
+        } catch (LicenseManagementException e) {
             String msg = "Error creating license-mgmt-Colums";
             ExceptionUtil.log(e, msg);
             LOG.error(msg, e);
         }
-        
+
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
         viewer.setSorter(tableSorter);
@@ -435,7 +442,8 @@ public class AccountView extends RightsEnabledView {
      * @return
      * @throws LicenseManagementException
      */
-    private int creatLMColumns(int columnIndex, Set<String> createdLMColumnIds) throws LicenseManagementException {
+    private int creatLMColumns(int columnIndex, Set<String> createdLMColumnIds)
+            throws LicenseManagementException {
         List<LicenseMessageInfos> licenseInfos = new ArrayList<>();
         licenseInfos.addAll(getLMService().getAllLicenseMessageInfos());
 
@@ -443,53 +451,51 @@ public class AccountView extends RightsEnabledView {
 
             @Override
             public int compare(LicenseMessageInfos infos0, LicenseMessageInfos infos1) {
-                return infos0.getContentId().
-                        compareToIgnoreCase(infos1.getContentId());
+                return infos0.getContentId().compareToIgnoreCase(infos1.getContentId());
             }
 
         });
 
-        for (int index = 0; index < licenseInfos.size() ; index++){
+        for (int index = 0; index < licenseInfos.size(); index++) {
 
             LicenseMessageInfos infos = licenseInfos.get(index);
-            if (infos != null){
-                infos.setAccountWizardLabel(LicenseMgmtPage.getLicenseLabelString(infos.getLicenseId()));
-                infos.setAccountViewColumnHeader(getLMColumnHeader(infos.getContentId(), index + 1));
+            if (infos != null) {
+                infos.setAccountWizardLabel(
+                        LicenseMgmtPage.getLicenseLabelString(infos.getLicenseId()));
+                infos.setAccountViewColumnHeader(
+                        getLMColumnHeader(infos.getContentId(), index + 1));
                 lmColumnsMap.put(columnIndex, infos);
 
-                createTableColumn(
-                        infos.getAccountViewColumnHeader(), 
-                        BOOLEAN_COLUMN_WIDTH, 
-                        columnIndex++,
-                        infos.getAccountWizardLabel());
+                createTableColumn(infos.getAccountViewColumnHeader(), BOOLEAN_COLUMN_WIDTH,
+                        columnIndex++, infos.getAccountWizardLabel());
             }
         }
         return columnIndex;
     }
-    
-    private String getLMColumnHeader(String contentId, int index){
+
+    private String getLMColumnHeader(String contentId, int index) {
         StringBuilder sb = new StringBuilder();
         sb.append(String.valueOf(index));
         sb.append(". ");
-        if (contentId.length() >= MAX_LMCOLUMN_HEADER_LENGTH){
+        if (contentId.length() >= MAX_LMCOLUMN_HEADER_LENGTH) {
             sb.append(contentId.substring(0, MAX_LMCOLUMN_HEADER_LENGTH));
             sb.append(LMCOLUM_HEADER_EXTENSION);
         } else {
             sb.append(contentId);
         }
-        
+
         return sb.toString();
     }
-    
-    private String getUser(){
+
+    private String getUser() {
         return ServiceFactory.lookupAuthService().getUsername();
     }
-    
+
     private void createTableColumn(String title, int width, int index, String tooltip) {
         TableColumn scopeColumn = new TableColumn(viewer.getTable(), SWT.LEFT);
         scopeColumn.setText(title);
         scopeColumn.setWidth(width);
-        if (StringUtils.isEmpty(tooltip)){
+        if (StringUtils.isEmpty(tooltip)) {
             scopeColumn.setToolTipText(title);
         } else {
             scopeColumn.setToolTipText(tooltip);
@@ -505,24 +511,30 @@ public class AccountView extends RightsEnabledView {
         editAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
 
         searchAction = new Action() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
+             * 
              * @see org.eclipse.jface.action.Action#run()
              */
             @Override
-            public void run() {          
-                findAccounts();            
+            public void run() {
+                findAccounts();
             }
         };
         searchAction.setText(Messages.AccountView_26);
         searchAction.setToolTipText(Messages.AccountView_27);
-        searchAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SEARCH));
+        searchAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SEARCH));
 
         runEditAction = new Action() {
             @Override
             public void run() {
-                if (getViewer().getSelection() instanceof IStructuredSelection && ((IStructuredSelection) getViewer().getSelection()).getFirstElement() instanceof Configuration) {
+                if (getViewer().getSelection() instanceof IStructuredSelection
+                        && ((IStructuredSelection) getViewer().getSelection())
+                                .getFirstElement() instanceof Configuration) {
                     try {
-                        Configuration account = (Configuration) ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
+                        Configuration account = (Configuration) ((IStructuredSelection) getViewer()
+                                .getSelection()).getFirstElement();
                         if (AccountLoader.isEditAllowed(account)) {
                             account = getAccountService().getAccountById(account.getDbId());
                             editAction.setConfiguration(account);
@@ -537,15 +549,19 @@ public class AccountView extends RightsEnabledView {
         };
         runEditAction.setText(Messages.AccountView_28);
         runEditAction.setToolTipText(Messages.AccountView_29);
-        runEditAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
+        runEditAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
         runEditAction.setEnabled(false);
 
         removeAction = new Action() {
             @Override
             public void run() {
-                if (getViewer().getSelection() instanceof IStructuredSelection && ((IStructuredSelection) getViewer().getSelection()).getFirstElement() instanceof Configuration) {
+                if (getViewer().getSelection() instanceof IStructuredSelection
+                        && ((IStructuredSelection) getViewer().getSelection())
+                                .getFirstElement() instanceof Configuration) {
                     try {
-                        Configuration account = (Configuration) ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
+                        Configuration account = (Configuration) ((IStructuredSelection) getViewer()
+                                .getSelection()).getFirstElement();
                         if (AccountLoader.isEditAllowed(account)) {
                             deactivateAccount(account);
                             findAccounts();
@@ -558,7 +574,8 @@ public class AccountView extends RightsEnabledView {
         };
         removeAction.setText(Messages.AccountView_30);
         removeAction.setToolTipText(Messages.AccountView_31);
-        removeAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.USER_DISABLED));
+        removeAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.USER_DISABLED));
         removeAction.setEnabled(false);
 
         createAction = new Action() {
@@ -572,24 +589,27 @@ public class AccountView extends RightsEnabledView {
         };
         createAction.setText("New...");
         createAction.setToolTipText("New Account...");
-        createAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.USER_ADD));
+        createAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.USER_ADD));
 
         getViewer().addDoubleClickListener(new IDoubleClickListener() {
             @Override
             public void doubleClick(DoubleClickEvent event) {
-                Configuration account = (Configuration) ((IStructuredSelection) event.getSelection()).getFirstElement();
+                Configuration account = (Configuration) ((IStructuredSelection) event
+                        .getSelection()).getFirstElement();
                 if (AccountLoader.isEditAllowed(account)) {
                     runEditAction.run();
                 }
             }
         });
 
-        textLogin.addKeyListener(new EnterKeylistener(textLogin, IAccountSearchParameter.LOGIN, searchAction));        
-        textFirstName.addKeyListener(new EnterKeylistener(textFirstName, IAccountSearchParameter.FIRST_NAME, searchAction));
-        textFamilyName.addKeyListener(new EnterKeylistener(textFamilyName, IAccountSearchParameter.FAMILY_NAME, searchAction));
+        textLogin.addKeyListener(
+                new EnterKeylistener(textLogin, IAccountSearchParameter.LOGIN, searchAction));
+        textFirstName.addKeyListener(new EnterKeylistener(textFirstName,
+                IAccountSearchParameter.FIRST_NAME, searchAction));
+        textFamilyName.addKeyListener(new EnterKeylistener(textFamilyName,
+                IAccountSearchParameter.FAMILY_NAME, searchAction));
     }
-
-
 
     private void hookPageSelection() {
         selectionListener = new ISelectionListener() {
@@ -612,7 +632,8 @@ public class AccountView extends RightsEnabledView {
             return;
         }
         Object element = ((IStructuredSelection) selection).getFirstElement();
-        if (element instanceof Configuration && AccountLoader.isEditAllowed((Configuration) element)) {
+        if (element instanceof Configuration
+                && AccountLoader.isEditAllowed((Configuration) element)) {
             runEditAction.setEnabled(true);
             removeAction.setEnabled(true);
         } else {
@@ -621,26 +642,24 @@ public class AccountView extends RightsEnabledView {
         }
     }
 
-    protected void findAccounts() { 
+    protected void findAccounts() {
         if (LOG.isDebugEnabled()) {
             LOG.debug("findAccounts called..."); //$NON-NLS-1$
-        }    
+        }
         final List<Configuration> accountList = getAccountService().findAccounts(parameter);
         getDisplay().syncExec(new Runnable() {
             @Override
             public void run() {
                 viewer.setInput(accountList);
             }
-        }); 
+        });
     }
 
     protected void deactivateAccount(Configuration account) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("removeAccount called..."); //$NON-NLS-1$
         }
-        if (MessageDialog.openQuestion(
-                getDisplay().getActiveShell(), 
-                Messages.AccountView_32, 
+        if (MessageDialog.openQuestion(getDisplay().getActiveShell(), Messages.AccountView_32,
                 NLS.bind(Messages.AccountView_33, account.getUser()))) {
             getAccountService().deactivate(account);
         }
@@ -648,7 +667,8 @@ public class AccountView extends RightsEnabledView {
 
     private void loadScopes() throws CommandException {
         comboModel.clear();
-        LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(Organization.TYPE_ID);
+        LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(
+                Organization.TYPE_ID);
         command = getCommandService().executeCommand(command);
         comboModel.addAll(command.getElements());
         command = new LoadCnAElementByEntityTypeId(ITVerbund.TYPE_ID_HIBERNATE);
@@ -656,36 +676,36 @@ public class AccountView extends RightsEnabledView {
         comboModel.addAll(command.getElements());
         comboModel.sort();
         comboModel.addNoSelectionObject(Messages.AccountView_34);
-        getDisplay().syncExec(new Runnable(){
+        getDisplay().syncExec(new Runnable() {
             @Override
             public void run() {
                 comboOrganization.setItems(comboModel.getLabelArray());
                 comboOrganization.select(0);
-                comboModel.setSelectedIndex(comboOrganization.getSelectionIndex()); 
+                comboModel.setSelectedIndex(comboOrganization.getSelectionIndex());
             }
         });
     }
 
     protected void startInitDataJob() {
-        if (CnAElementFactory.isIsoModelLoaded()) {          
-            JobScheduler.scheduleInitJob(initDataJob);    
+        if (CnAElementFactory.isIsoModelLoaded()) {
+            JobScheduler.scheduleInitJob(initDataJob);
         } else if (modelLoadListener == null) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("No model loaded, adding model load listener."); //$NON-NLS-1$
             }
-            createModelLoadListener();         
-        }      
+            createModelLoadListener();
+        }
     }
 
     protected void initCombos() {
-        getDisplay().syncExec(new Runnable(){
+        getDisplay().syncExec(new Runnable() {
             @Override
             public void run() {
                 initYesNoCombo(comboAdmin);
                 initYesNoCombo(comboLocalAdmin);
                 initYesNoCombo(comboScopeOnly);
-            }          
-        });    
+            }
+        });
     }
 
     private void initYesNoCombo(Combo combo) {
@@ -697,20 +717,23 @@ public class AccountView extends RightsEnabledView {
 
     private void createModelLoadListener() {
         // model is not loaded yet: add a listener to load data when it's loaded
-        modelLoadListener = new IModelLoadListener() {           
+        modelLoadListener = new IModelLoadListener() {
             @Override
             public void closed(BSIModel model) {
                 // nothing to do
-            }        
+            }
+
             @Override
             public void loaded(BSIModel model) {
                 // nothing to do
-            }         
+            }
+
             @Override
             public void loaded(ISO27KModel model) {
-                JobScheduler.scheduleInitJob(initDataJob); 
+                JobScheduler.scheduleInitJob(initDataJob);
                 CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
             }
+
             @Override
             public void loaded(BpModel model) {
                 // nothing to do
@@ -719,7 +742,7 @@ public class AccountView extends RightsEnabledView {
             @Override
             public void loaded(CatalogModel model) {
                 // nothing to do
-            }             
+            }
         };
         CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
     }
@@ -743,7 +766,7 @@ public class AccountView extends RightsEnabledView {
             }
         }
         return input;
-    }  
+    }
 
     private void fillLocalToolBar() {
         IActionBars bars = getViewSite().getActionBars();
@@ -763,7 +786,9 @@ public class AccountView extends RightsEnabledView {
         return display;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getRightID()
      */
     @Override
@@ -772,7 +797,8 @@ public class AccountView extends RightsEnabledView {
     }
 
     /*
-     * (non-Javadoc) 
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
@@ -837,7 +863,8 @@ public class AccountView extends RightsEnabledView {
         @Override
         public void keyReleased(KeyEvent e) {
             AccountView.this.parameter.setParameter(this.parameter, this.getInput(textField));
-        }         
+        }
+
         @Override
         public void keyPressed(KeyEvent e) {
             if ('\r' == e.character) {
@@ -857,8 +884,8 @@ public class AccountView extends RightsEnabledView {
             return input;
         }
     }
-    
-    private ILicenseManagementService getLMService(){
+
+    private ILicenseManagementService getLMService() {
         return ServiceFactory.lookupLicenseManagementService();
     }
 }

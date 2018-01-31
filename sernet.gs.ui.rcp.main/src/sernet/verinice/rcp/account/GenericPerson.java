@@ -30,15 +30,14 @@ import sernet.verinice.rcp.ElementTitleCache;
  * GenericPerson is a adapter class to to handle two types of persons:
  * {@link Person} and {@link PersonIso}.
  * 
- * Feel free to extend to this class to adapt
- * more methods.
+ * Feel free to extend to this class to adapt more methods.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class GenericPerson {
-    
+
     CnATreeElement person;
-    
+
     public GenericPerson(CnATreeElement person) {
         super();
         this.person = person;
@@ -46,24 +45,24 @@ public class GenericPerson {
 
     public String getName() {
         String name = null;
-        if(person instanceof PersonIso) {
-            name = ((PersonIso)person).getFullName();
+        if (person instanceof PersonIso) {
+            name = ((PersonIso) person).getFullName();
         }
-        if(person instanceof Person) {
-            name = ((Person)person).getFullName();
+        if (person instanceof Person) {
+            name = ((Person) person).getFullName();
         }
         return name;
     }
-    
+
     public String getParentName() {
         String name = null;
-        if(person instanceof PersonIso) {
+        if (person instanceof PersonIso) {
             name = ElementTitleCache.get(person.getParentId());
         }
-        if(person instanceof Person) {
+        if (person instanceof Person) {
             name = HUITypeFactory.getInstance().getMessage(PersonenKategorie.TYPE_ID);
         }
         return name;
     }
-    
+
 }
