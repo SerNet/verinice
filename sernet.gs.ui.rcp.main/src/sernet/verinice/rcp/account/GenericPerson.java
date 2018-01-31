@@ -20,6 +20,7 @@
 package sernet.verinice.rcp.account;
 
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.PersonenKategorie;
 import sernet.verinice.model.common.CnATreeElement;
@@ -27,8 +28,8 @@ import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.ElementTitleCache;
 
 /**
- * GenericPerson is a adapter class to to handle two types of persons:
- * {@link Person} and {@link PersonIso}.
+ * GenericPerson is a adapter class to to handle three types of persons:
+ * {@link BpPerson}, {@link Person}, and {@link PersonIso}.
  * 
  * Feel free to extend to this class to adapt more methods.
  * 
@@ -45,10 +46,11 @@ public class GenericPerson {
 
     public String getName() {
         String name = null;
-        if (person instanceof PersonIso) {
+        if (person instanceof BpPerson) {
+            name = ((BpPerson) person).getTitle();
+        } else if (person instanceof PersonIso) {
             name = ((PersonIso) person).getFullName();
-        }
-        if (person instanceof Person) {
+        } else if (person instanceof Person) {
             name = ((Person) person).getFullName();
         }
         return name;
@@ -56,7 +58,7 @@ public class GenericPerson {
 
     public String getParentName() {
         String name = null;
-        if (person instanceof PersonIso) {
+        if (person instanceof BpPerson || person instanceof PersonIso) {
             name = ElementTitleCache.get(person.getParentId());
         }
         if (person instanceof Person) {

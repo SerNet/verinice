@@ -21,6 +21,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
+import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.Person;
@@ -308,12 +309,17 @@ public class PersonPage extends BaseWizardPage {
 
     private void loadScope() {
         try {
-            if (getPersonTypeId() == null) {
+            String personTypeId = getPersonTypeId();
+            if (personTypeId == null) {
                 return;
             }
-            String typeId = Organization.TYPE_ID;
-            if (Person.TYPE_ID.equals(getPersonTypeId())) {
+            String typeId;
+            if (BpPerson.TYPE_ID.equals(getPersonTypeId())) {
+                typeId = ItNetwork.TYPE_ID;
+            } else if (Person.TYPE_ID.equals(getPersonTypeId())) {
                 typeId = ITVerbund.TYPE_ID;
+            } else {
+                typeId = Organization.TYPE_ID;
             }
             RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(typeId,
                     getScopeId(), RetrieveInfo.getPropertyInstance());
@@ -347,11 +353,17 @@ public class PersonPage extends BaseWizardPage {
         if (person != null) {
             return person.getTypeId();
         }
-        String typeId = PersonIso.TYPE_ID;
-        if (scope instanceof ITVerbund) {
-            typeId = Person.TYPE_ID;
+        if (scope == null) {
+            return PersonIso.TYPE_ID;
         }
-        return typeId;
+
+        if (scope.isItNetwork()) {
+            return BpPerson.TYPE_ID;
+        } else if (scope.isItVerbund()) {
+            return Person.TYPE_ID;
+        } else {
+            return PersonIso.TYPE_ID;
+        }
     }
 
     private static Display getDisplay() {

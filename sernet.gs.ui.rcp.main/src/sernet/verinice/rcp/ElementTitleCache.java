@@ -1,10 +1,8 @@
 package sernet.verinice.rcp;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -13,10 +11,10 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.IBpModelListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.model.bsi.PersonenKategorie;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -25,7 +23,8 @@ import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.validation.CnAValidation;
 import sernet.verinice.service.commands.LoadElementTitles;
 
-public class ElementTitleCache implements IBSIModelListener, IISO27KModelListener {
+public class ElementTitleCache
+        implements IBSIModelListener, IISO27KModelListener, IBpModelListener {
 
     private static final Logger LOG = Logger.getLogger(ElementTitleCache.class);
 
@@ -46,6 +45,7 @@ public class ElementTitleCache implements IBSIModelListener, IISO27KModelListene
         instance = new ElementTitleCache();
         CnAElementFactory.getLoadedModel().addBSIModelListener(instance);
         CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(instance);
+        CnAElementFactory.getInstance().getBpModel().addModITBOModelListener(instance);
         return instance;
     }
 
@@ -157,5 +157,10 @@ public class ElementTitleCache implements IBSIModelListener, IISO27KModelListene
 
     @Override
     public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation) {
+    }
+
+    @Override
+    public void modelReload(BpModel newModel) {
+        reload();
     }
 }

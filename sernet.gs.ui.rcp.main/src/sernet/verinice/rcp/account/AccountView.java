@@ -81,6 +81,8 @@ import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.groups.BpPersonGroup;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.PersonenKategorie;
@@ -177,7 +179,8 @@ public class AccountView extends RightsEnabledView {
 
     private void init() throws CommandException {
         ElementTitleCache.load(new String[] { ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID,
-                PersonGroup.TYPE_ID, PersonenKategorie.TYPE_ID_HIBERNATE });
+                ItNetwork.TYPE_ID, PersonGroup.TYPE_ID, PersonenKategorie.TYPE_ID_HIBERNATE,
+                BpPersonGroup.TYPE_ID });
         findAccounts();
         loadScopes();
         initCombos();
@@ -665,15 +668,16 @@ public class AccountView extends RightsEnabledView {
         }
     }
 
+    private List<CnATreeElement> loadEntitiesByTypeId(String typeId) throws CommandException {
+        LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(typeId);
+        return getCommandService().executeCommand(command).getElements();
+    }
+
     private void loadScopes() throws CommandException {
         comboModel.clear();
-        LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(
-                Organization.TYPE_ID);
-        command = getCommandService().executeCommand(command);
-        comboModel.addAll(command.getElements());
-        command = new LoadCnAElementByEntityTypeId(ITVerbund.TYPE_ID_HIBERNATE);
-        command = getCommandService().executeCommand(command);
-        comboModel.addAll(command.getElements());
+        comboModel.addAll(loadEntitiesByTypeId(Organization.TYPE_ID));
+        comboModel.addAll(loadEntitiesByTypeId(ITVerbund.TYPE_ID_HIBERNATE));
+        comboModel.addAll(loadEntitiesByTypeId(ItNetwork.TYPE_ID));
         comboModel.sort();
         comboModel.addNoSelectionObject(Messages.AccountView_34);
         getDisplay().syncExec(new Runnable() {
