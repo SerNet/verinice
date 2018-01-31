@@ -21,6 +21,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
@@ -226,6 +227,7 @@ public class PersonPage extends BaseWizardPage {
         comboModelScope.clear();
         comboModelScope.addAll(loadEntitiesByTypeId(Organization.TYPE_ID));
         comboModelScope.addAll(loadEntitiesByTypeId(ITVerbund.TYPE_ID_HIBERNATE));
+        comboModelScope.addAll(loadEntitiesByTypeId(ItNetwork.TYPE_ID));
 
         comboModelScope.sort();
         comboModelScope.addNoSelectionObject(Messages.PersonPage_8);
