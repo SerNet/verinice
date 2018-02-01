@@ -196,7 +196,7 @@ public class ImportTask extends AbstractGstoolImportTask {
         numberOfElements = zielobjekte.size();
         numberImported = 0;
         if (this.importBausteine) {
-            monitor.beginTask("Importiere Zielobjekte, Bausteine und Massnahmen...", numberOfElements);
+            monitor.beginTask("Importiere Zielobjekte, Bausteine und Maßnahmen...", numberOfElements);
         } else {
             monitor.beginTask("Importiere Zielobjekte...", numberOfElements);
         }
@@ -285,7 +285,7 @@ public class ImportTask extends AbstractGstoolImportTask {
         ArrayList<CnATreeElement> toUpdate = new ArrayList<CnATreeElement>();
         toUpdate.addAll(allMnUms);
         LOG.debug("Saving person links to measures.");
-        monitor.beginTask("Verknüpfe Ansprechpartner mit Massnahmen...", toUpdate.size());
+        monitor.beginTask("Verknüpfe Ansprechpartner mit Maßnahmen...", toUpdate.size());
         ElementListUpdater updater = new ElementListUpdater(toUpdate, monitor);
         updater.setMaxNumberPerCommand(500);
         updater.execute();
@@ -332,8 +332,8 @@ public class ImportTask extends AbstractGstoolImportTask {
 
         if(LOG.isDebugEnabled()){
             LOG.debug("Duration of importing zielobjekte:\t" + TimeFormatter.getHumanRedableTime(durationImportZO));
-            LOG.debug("Duration of importing individual massnahmen:\t" + TimeFormatter.getHumanRedableTime(durationImportIndividual));
-            LOG.debug("Duration of importing massnahmen links:\t" + TimeFormatter.getHumanRedableTime(durationImportMnLinks));
+            LOG.debug("Duration of importing individual maßnahmen:\t" + TimeFormatter.getHumanRedableTime(durationImportIndividual));
+            LOG.debug("Duration of importing maßnahmen links:\t" + TimeFormatter.getHumanRedableTime(durationImportMnLinks));
             LOG.debug("Duration of importing links between bausteine and persons:\t" + TimeFormatter.getHumanRedableTime(durationImportBstPrsnLinks));
             LOG.debug("Duration of importing links between zielobjekte:\t" + TimeFormatter.getHumanRedableTime(durationImportZoLinks));
             LOG.debug("Duration of importing schutzbedarf:\t" + TimeFormatter.getHumanRedableTime(durationImportSB));
@@ -664,7 +664,7 @@ public class ImportTask extends AbstractGstoolImportTask {
             return;
         }
 
-        monitor.beginTask("Verknüpfe Ansprechpartner mit Massnahmen...", alleMassnahmen.size());
+        monitor.beginTask("Verknüpfe Ansprechpartner mit Maßnahmen...", alleMassnahmen.size());
         int n = alleMassnahmen.keySet().size();
         int current = 1;
         for (ModZobjBstMass obm : alleMassnahmen.keySet()) {
@@ -760,7 +760,7 @@ public class ImportTask extends AbstractGstoolImportTask {
 
         Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = transferData.convertBausteinMap(findBausteinMassnahmenByZielobjekt);
 
-        this.monitor.subTask(numberImported + "/" + numberOfElements + " - Erstelle " + zielobjekt.getName() + " mit " + bausteineMassnahmenMap.keySet().size() + " Baust. und " + getAnzahlMassnahmen(bausteineMassnahmenMap) + " Massn...");
+        this.monitor.subTask(numberImported + "/" + numberOfElements + " - Erstelle " + zielobjekt.getName() + " mit " + bausteineMassnahmenMap.keySet().size() + " Baust. und " + getAnzahlMassnahmen(bausteineMassnahmenMap) + " Maßn...");
 
         // maps needed for import of userdefined data, storing information retrieved from itgs catalogues in non userdefined case
         Map<MbBaust, BausteinInformationTransfer> udBausteineTxtMap = new HashMap<>();
