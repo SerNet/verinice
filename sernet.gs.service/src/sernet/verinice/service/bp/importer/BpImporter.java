@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -943,16 +942,9 @@ public class BpImporter {
         safeguard.setIsAffectsIntegrity(Boolean.parseBoolean(
                 bsiSafeguard.getCia().getIntegrity()));
         
-        if (bsiSafeguard.getResponsibleRoles() != null) {
-            for (String role : bsiSafeguard.getResponsibleRoles().getRole()) {
-                safeguard.addResponsibleRole(role);
-            }
-        }
-        
         String descriptionTitle = extendTitleForObjectBrowser(
                 safeguard.getTitle(),
                 safeguard.getIdentifier(),
-                safeguard.getResponsibleRoles().iterator(),
                 new CIAWrapper(
                         safeguard.isAffectsConfidentiality(),
                         safeguard.isAffectsIntegrity(),
@@ -1118,16 +1110,9 @@ public class BpImporter {
             veriniceRequirement.setIsAffectsAvailability(
                     Boolean.parseBoolean(bsiRequirement.getCia().getAvailability()));
             
-            if (bsiRequirement.getResponsibleRoles() != null) {
-                for (String role : bsiRequirement.getResponsibleRoles().getRole()) {
-                    veriniceRequirement.addResponsibleRole(role);
-                }
-            }
-            
             String title = extendTitleForObjectBrowser(
                     bsiRequirement.getTitle(),
                     bsiRequirement.getIdentifier(),
-                    veriniceRequirement.getResponsibleRoles().iterator(),
                     new CIAWrapper(
                             veriniceRequirement.IsAffectsConfidentiality(),
                             veriniceRequirement.IsAffectsIntegrity(),
@@ -1164,15 +1149,7 @@ public class BpImporter {
     private String extendTitleForObjectBrowser(
             String title,
             String identifier,
-            Iterator<String> rolesIterator,
             CIAWrapper cia) {
-        StringBuilder rolesInTitle = new StringBuilder();
-        rolesInTitle.append(rolesIterator.hasNext() ? "["  : "");
-        while (rolesIterator.hasNext()) {
-            rolesInTitle.append(rolesIterator.next());
-            rolesInTitle.append(rolesIterator.hasNext() ? ", " : "");
-        }
-        rolesInTitle.append(rolesInTitle.length() > 0 ? "]" : "");
                 
         String titleBuilder = identifier 
                 + " " + title;
@@ -1186,7 +1163,7 @@ public class BpImporter {
             ciaTitle = "(" + ciaTitle;
         }
         
-        titleBuilder = titleBuilder + " " + rolesInTitle + " " + ciaTitle;
+        titleBuilder = titleBuilder + " " + ciaTitle;
         return titleBuilder;
     }
     
