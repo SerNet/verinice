@@ -28,11 +28,11 @@ public class ElementTitleCache
 
     private static final Logger LOG = Logger.getLogger(ElementTitleCache.class);
 
-    private static HashMap<Integer, String> titleMap = new HashMap<Integer, String>();
+    private static HashMap<Integer, String> titleMap = new HashMap<>();
 
     private static ElementTitleCache instance;
 
-    private static Set<String> typeIdSet = new HashSet<String>(30);
+    private static Set<String> typeIdSet = new HashSet<>();
 
     private static ElementTitleCache init() {
         if (instance == null) {
@@ -108,8 +108,6 @@ public class ElementTitleCache
 
     @Override
     public void modelRefresh(Object source) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override

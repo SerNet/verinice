@@ -21,10 +21,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -208,7 +206,7 @@ public class AccountView extends RightsEnabledView {
     private void initView(Composite parent) {
         parent.setLayout(new FillLayout());
         createComposite(parent);
-        comboModel = new ComboModel<CnATreeElement>(new IComboModelLabelProvider<CnATreeElement>() {
+        comboModel = new ComboModel<>(new IComboModelLabelProvider<CnATreeElement>() {
             @Override
             public String getLabel(CnATreeElement element) {
                 return element.getTitle();
@@ -422,10 +420,8 @@ public class AccountView extends RightsEnabledView {
         createTableColumn(Messages.AccountView_20, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
         createTableColumn(Messages.AccountView_21, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
 
-        Set<String> createdLMColumnIds = new HashSet<>();
-
         try {
-            columnIndex = creatLMColumns(columnIndex, createdLMColumnIds);
+            columnIndex = creatLMColumns(columnIndex);
         } catch (LicenseManagementException e) {
             String msg = "Error creating license-mgmt-Colums";
             ExceptionUtil.log(e, msg);
@@ -441,11 +437,10 @@ public class AccountView extends RightsEnabledView {
 
     /**
      * @param columnIndex
-     * @param createdLMColumnIds
      * @return
      * @throws LicenseManagementException
      */
-    private int creatLMColumns(int columnIndex, Set<String> createdLMColumnIds)
+    private int creatLMColumns(int columnIndex)
             throws LicenseManagementException {
         List<LicenseMessageInfos> licenseInfos = new ArrayList<>();
         licenseInfos.addAll(getLMService().getAllLicenseMessageInfos());
@@ -488,10 +483,6 @@ public class AccountView extends RightsEnabledView {
         }
 
         return sb.toString();
-    }
-
-    private String getUser() {
-        return ServiceFactory.lookupAuthService().getUsername();
     }
 
     private void createTableColumn(String title, int width, int index, String tooltip) {
@@ -618,14 +609,14 @@ public class AccountView extends RightsEnabledView {
         selectionListener = new ISelectionListener() {
             @Override
             public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-                pageSelectionChanged(part, selection);
+                pageSelectionChanged(selection);
             }
         };
         getSite().getPage().addPostSelectionListener(selectionListener);
         getSite().setSelectionProvider(viewer);
     }
 
-    protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
+    protected void pageSelectionChanged(ISelection selection) {
         if (!(selection instanceof IStructuredSelection)) {
             return;
         }

@@ -188,14 +188,14 @@ public class PersonPage extends BaseWizardPage {
     }
 
     protected void initData() throws Exception {
-        comboModelScope = new ComboModel<CnATreeElement>(
+        comboModelScope = new ComboModel<>(
                 new IComboModelLabelProvider<CnATreeElement>() {
                     @Override
                     public String getLabel(CnATreeElement element) {
                         return element.getTitle();
                     }
                 });
-        comboModelGroup = new ComboModel<CnATreeElement>(
+        comboModelGroup = new ComboModel<>(
                 new IComboModelLabelProvider<CnATreeElement>() {
                     @Override
                     public String getLabel(CnATreeElement element) {
