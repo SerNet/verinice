@@ -23,6 +23,7 @@ import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.groups.BpPersonGroup;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
@@ -37,7 +38,7 @@ import sernet.verinice.service.commands.RetrieveCnATreeElement;
 
 /**
  * Wizard page of wizard {@link AccountWizard}.
- * 
+ *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class PersonPage extends BaseWizardPage {
@@ -207,7 +208,7 @@ public class PersonPage extends BaseWizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
      */
     @Override
@@ -249,11 +250,23 @@ public class PersonPage extends BaseWizardPage {
         });
     }
 
+    private static String findGroupTypeIdByPersonTypeId(String personTypeId) {
+        switch (personTypeId) {
+        case PersonIso.TYPE_ID:
+            return PersonGroup.TYPE_ID;
+        case BpPerson.TYPE_ID:
+            return BpPersonGroup.TYPE_ID;
+        default:
+            return null;
+        }
+    }
+
     private void loadGroups() {
         try {
             comboModelGroup.clear();
-            if (PersonIso.TYPE_ID.equals(getPersonTypeId())) {
-                loadPersonGroups();
+            String groupTypeId = findGroupTypeIdByPersonTypeId(getPersonTypeId());
+            if (groupTypeId != null) {
+                loadPersonGroups(groupTypeId);
             }
             getDisplay().syncExec(new Runnable() {
                 @Override
@@ -278,8 +291,8 @@ public class PersonPage extends BaseWizardPage {
         }
     }
 
-    private void loadPersonGroups() throws CommandException {
-        LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(PersonGroup.TYPE_ID,
+    private void loadPersonGroups(String typeId) throws CommandException {
+        LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(typeId,
                 getScopeId());
         command = getCommandService().executeCommand(command);
         comboModelGroup.addAll(command.getElements());
@@ -293,12 +306,13 @@ public class PersonPage extends BaseWizardPage {
         }
     }
 
-    private void laodGroup() {
+    private void loadGroup(CnATreeElement person) {
         try {
-            if (PersonIso.TYPE_ID.equals(getPersonTypeId()) && person != null) {
-                RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(
-                        PersonGroup.TYPE_ID, person.getParentId(),
-                        RetrieveInfo.getPropertyInstance());
+            String personTypeId = person.getTypeId();
+            String groupTypeId = findGroupTypeIdByPersonTypeId(personTypeId);
+            if (groupTypeId != null) {
+                RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(groupTypeId,
+                        person.getParentId(), RetrieveInfo.getPropertyInstance());
                 retrieveCommand = getCommandService().executeCommand(retrieveCommand);
                 group = retrieveCommand.getElement();
             }
@@ -381,8 +395,10 @@ public class PersonPage extends BaseWizardPage {
 
     public void setPerson(CnATreeElement person) {
         this.person = person;
-        loadScope();
-        laodGroup();
+        if (person != null) {
+            loadScope();
+            loadGroup(person);
+        }
     }
 
     public boolean isNewAccount() {
