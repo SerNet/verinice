@@ -21,8 +21,6 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
@@ -41,23 +39,8 @@ public class ImportCSVAction extends RightsEnabledAction {
     private boolean delete;
 
     public ImportCSVAction(IWorkbenchWindow window, String label) {
-        setText(label);
+        super(ActionRightIDs.IMPORTCSV, label);
         setId(ID);
-        setRightID(ActionRightIDs.IMPORTCSV);
-        if (Activator.getDefault().isStandalone() && !Activator.getDefault().getInternalServer().isRunning()) {
-            IInternalServerStartListener listener = new IInternalServerStartListener() {
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if (e.isStarted()) {
-                        setEnabled(checkRights());
-                    }
-                }
-
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            setEnabled(checkRights());
-        }
     }
 
     /*

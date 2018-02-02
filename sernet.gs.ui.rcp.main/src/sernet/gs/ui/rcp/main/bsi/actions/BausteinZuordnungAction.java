@@ -32,7 +32,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import sernet.gs.model.Baustein;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.Retriever;
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
@@ -42,8 +41,6 @@ import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.common.CnATreeElement;
@@ -61,32 +58,14 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
 
     private final IWorkbenchWindow window;
     
-    private boolean serverIsRunning = true;
-
     public BausteinZuordnungAction(IWorkbenchWindow window) {
+        super(ActionRightIDs.BAUSTEINZUORDNUNG, Messages.BausteinZuordnungAction_1);
         this.window = window;
-        setText(Messages.BausteinZuordnungAction_1);
         setId(ID);
         setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.AUTOBAUSTEIN));
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.BausteinZuordnungAction_2);
-        setRightID(ActionRightIDs.BAUSTEINZUORDNUNG);
-        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-            serverIsRunning = false;
-            IInternalServerStartListener listener = new IInternalServerStartListener(){
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if(e.isStarted()){
-                        serverIsRunning = true;
-                        setEnabled(checkRights());
-                    }
-                }
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            setEnabled(checkRights());
-        }
     }
 
     /* (non-Javadoc)
@@ -165,7 +144,7 @@ public class BausteinZuordnungAction extends RightsEnabledAction implements ISel
     @Override
     @SuppressWarnings("rawtypes")
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
-        if (serverIsRunning) {
+        if (isServerRunning()) {
             setEnabled(checkRights());
         }
         if (input instanceof IStructuredSelection) {

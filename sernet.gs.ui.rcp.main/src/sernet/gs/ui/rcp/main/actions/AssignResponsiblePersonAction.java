@@ -45,8 +45,6 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.service.commands.AssignResponsiblePersonCommand;
 
@@ -60,32 +58,15 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
 
     private static final Logger LOG = Logger.getLogger(AssignResponsiblePersonAction.class);
     private final IWorkbenchWindow window;
-    private boolean serverIsRunning = true;
     private static final String DEFAULT_ERR_MSG = "Error while creating relation.";
 
     public AssignResponsiblePersonAction(IWorkbenchWindow window, String label) {
+        super(ActionRightIDs.RELATIONS, label);
         this.window = window;
-        setText(label);
         setId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.PERSON));
         window.getSelectionService().addSelectionListener(this);
         setToolTipText("");
-        setRightID(ActionRightIDs.RELATIONS);
-        if (Activator.getDefault().isStandalone() && !Activator.getDefault().getInternalServer().isRunning()) {
-            serverIsRunning = false;
-            IInternalServerStartListener listener = new IInternalServerStartListener() {
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if (e.isStarted()) {
-                        serverIsRunning = true;
-                        setEnabled(checkRights());
-                    }
-                }
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            setEnabled(checkRights());
-        }
     }
 
     /* (non-Javadoc)
@@ -167,7 +148,7 @@ public class AssignResponsiblePersonAction extends RightsEnabledAction implement
      */
     @Override
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
-        if (serverIsRunning) {
+        if (isServerRunning()) {
             setEnabled(checkRights());
             if (input instanceof IStructuredSelection) {
                 IStructuredSelection selection = (IStructuredSelection) input;

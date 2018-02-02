@@ -254,12 +254,5 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
     public String getRightID() {
         return ActionRightIDs.CREATE_GREENBONE_TASKS;
     }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-    }
     
 }

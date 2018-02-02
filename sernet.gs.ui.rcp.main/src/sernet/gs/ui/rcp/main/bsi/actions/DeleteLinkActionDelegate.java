@@ -120,12 +120,4 @@ public class DeleteLinkActionDelegate implements IObjectActionDelegate, RightEna
         return ActionRightIDs.EDITLINKS;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // empty
-    }
-
 }

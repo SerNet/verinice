@@ -342,11 +342,4 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
         return ActionRightIDs.XMLEXPORT;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // DO NOTHING          
-    }
 }

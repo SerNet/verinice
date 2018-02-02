@@ -224,12 +224,4 @@ public class ElementViewDropPerformer extends ViewerDropAdapter implements DropP
         return ActionRightIDs.TREEDND;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // nothing to do
-    }
-
 }

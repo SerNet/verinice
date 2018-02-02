@@ -83,11 +83,4 @@ public class AddNoteActionDelegate implements IObjectActionDelegate, RightEnable
         return ActionRightIDs.ADDNOTE;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-    }
-
 }
