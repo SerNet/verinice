@@ -10,11 +10,11 @@ import sernet.gs.reveng.ModZobjBstMass;
 
 @SuppressWarnings("serial")
 public class BausteineMassnahmenResult implements Serializable {
-	public MbBaust baustein;
-	public MbMassn massnahme;
-	public MUmsetzStatTxt umstxt;
-	public ModZobjBst zoBst;
-	public ModZobjBstMass obm;
+	public final MbBaust baustein;
+	public final MbMassn massnahme;
+	public final MUmsetzStatTxt umstxt;
+	public final ModZobjBst zoBst;
+	public final ModZobjBstMass obm;
 	
 	public BausteineMassnahmenResult(MbBaust baustein, MbMassn massnahme, 
 			MUmsetzStatTxt umstxt, ModZobjBst zoBst, ModZobjBstMass obm) {
