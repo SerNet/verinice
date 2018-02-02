@@ -112,7 +112,7 @@ public class ImportCreateBausteine extends GenericCommand {
 
     private List<MbZeiteinheitenTxt> zeiten;
     private Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
-    private List<Baustein> bausteine;
+    private Map<String, Baustein> bausteineById;
     private final String sourceId;
 
     private static final short BST_BEARBEITET_ENTBEHRLICH = 3;
@@ -134,7 +134,17 @@ public class ImportCreateBausteine extends GenericCommand {
         this.udBstMassTxtMap = udBstMassTxtMap;
         this.udBaustGefMap = udBaustGefMap;
         this.individualMassnahmenMap = new HashMap<>();
-        this.bausteine = bausteine;
+        this.bausteineById = new HashMap<>(bausteine.size());
+        for (Baustein baustein : bausteine) {
+            String bausteinId = baustein.getId();
+            Baustein previousValue = bausteineById.get(bausteinId);
+            if (previousValue != null && previousValue != baustein) {
+                log.warn("Found Baustein " + baustein + " with id " + bausteinId
+                        + ", ignoring in favor of previous value " + previousValue);
+            } else {
+                bausteineById.put(bausteinId, baustein);
+            }
+        }
     }
 
     @Override
@@ -372,12 +382,7 @@ public class ImportCreateBausteine extends GenericCommand {
     }
 
     private Baustein findBausteinForId(String id) {
-        for (Baustein baustein : bausteine) {
-            if (baustein.getId().equals(id)) {
-                return baustein;
-            }
-        }
-        return null;
+        return bausteineById.get(id);
     }
 
     private void transferUserDefinedBaustein(Baustein baustein,
@@ -615,6 +620,6 @@ public class ImportCreateBausteine extends GenericCommand {
         element = null;
         bausteineMassnahmenMap = null;
         zeiten = null;
-        bausteine = null;
+        bausteineById = null;
     }
 }
