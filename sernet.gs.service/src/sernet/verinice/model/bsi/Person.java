@@ -219,5 +219,10 @@ implements IBSIStrukturElement {
 	public void setAnzahl(int anzahl) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ANZAHL), Integer.toString(anzahl));
 	}
-	
+
+    @Override
+    public String toString() {
+        return "Person [getFullName()=" + getFullName() + ", getKuerzel()=" + getKuerzel()
+                + ", getId()=" + getId() + "]";
+    }
 }
