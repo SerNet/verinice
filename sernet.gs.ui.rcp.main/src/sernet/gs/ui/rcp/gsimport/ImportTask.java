@@ -109,7 +109,7 @@ public class ImportTask extends AbstractGstoolImportTask {
     private List<MbZeiteinheitenTxt> zeiten;
     private final Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
     private final Map<NZielobjektId, CnATreeElement> alleZielobjekte = new HashMap<>();
-    private final List<Person> allePersonen = new ArrayList<>();
+    private final Map<NZielobjektId, Person> allePersonenByNZielobjektId = new HashMap<>();
 
     private List<Baustein> allCatalogueBausteine;
 
@@ -219,25 +219,25 @@ public class ImportTask extends AbstractGstoolImportTask {
 
         long startTime = System.currentTimeMillis();
         // create all Zielobjekte in their respective ITVerbund,
-        for (ZielobjektTypeResult zielobjekt : zielobjekte) {
-            String typeId = GstoolTypeMapper.getVeriniceTypeOrDefault(zielobjekt.type,
-                    zielobjekt.subtype);
+        for (ZielobjektTypeResult zielobjektTypeResult : zielobjekte) {
+            String typeId = GstoolTypeMapper.getVeriniceTypeOrDefault(zielobjektTypeResult.type,
+                    zielobjektTypeResult.subtype);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("GSTOOL type id " + zielobjekt.type + " : " + zielobjekt.subtype
-                        + " was translated to: " + typeId);
+                LOG.debug("GSTOOL type id " + zielobjektTypeResult.type + " : "
+                        + zielobjektTypeResult.subtype + " was translated to: " + typeId);
             }
             if (typeId.equals(ITVerbund.TYPE_ID)) {
                 continue;
             }
+            NZielobjekt zielobjekt = zielobjektTypeResult.zielobjekt;
             CnATreeElement element = null;
             if (!neueVerbuende.isEmpty()) {
                 // find correct itverbund for resultZO
-                NZielobjektId origITVerbundZOID = itverbundZuordnung
-                        .get(zielobjekt.zielobjekt.getGuid());
+                NZielobjektId origITVerbundZOID = itverbundZuordnung.get(zielobjekt.getGuid());
                 ITVerbund itverbund = (ITVerbund) alleZielobjekte.get(origITVerbundZOID);
                 if (itverbund == null) {
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("ITVerbund not found for ZO: " + zielobjekt.zielobjekt.getName()
+                        LOG.debug("ITVerbund not found for ZO: " + zielobjekt.getName()
                                 + ". Created in BSI");
                     }
                     if (itverbundForOrphans == null) {
@@ -251,7 +251,7 @@ public class ImportTask extends AbstractGstoolImportTask {
                     itverbund = itverbundForOrphans;
                 }
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Creating ZO " + zielobjekt.zielobjekt.getName() + " in ITVerbund "
+                    LOG.debug("Creating ZO " + zielobjekt.getName() + " in ITVerbund "
                             + itverbund.getTitle());
                 }
                 itverbund.setSourceId(sourceId);
@@ -259,21 +259,29 @@ public class ImportTask extends AbstractGstoolImportTask {
             }
             if (element != null) {
                 // save element for later:
-                NZielobjektId identifier = zielobjekt.zielobjekt.getId();
+                NZielobjektId identifier = zielobjekt.getId();
                 alleZielobjekte.put(identifier, element);
 
                 // separately save persons:
                 if (element instanceof Person) {
-                    allePersonen.add((Person) element);
+                    Person person = (Person) element;
+
+                    Person previousValue = allePersonenByNZielobjektId.get(identifier);
+                    if (previousValue != null && previousValue != person) {
+                        LOG.warn("Found Person " + person + " with NZielobjektId " + identifier
+                                + ", ignoring in favor of previous value " + previousValue);
+                    } else {
+                        allePersonenByNZielobjektId.put(identifier, person);
+                    }
                 }
 
-                transferData.transfer(element, zielobjekt);
-                element = importEsa(zielobjekt, element);
+                transferData.transfer(element, zielobjektTypeResult);
+                element = importEsa(zielobjektTypeResult, element);
                 element.setSourceId(sourceId);
                 monitor.subTask(
                         numberImported + "/" + numberOfElements + " - " + element.getTitle());
 
-                createBausteine(sourceId, element, zielobjekt.zielobjekt);
+                createBausteine(sourceId, element, zielobjekt);
 
                 CnAElementHome.getInstance().update(element);
 
@@ -832,12 +840,10 @@ public class ImportTask extends AbstractGstoolImportTask {
     private List<Person> findPersonen(Set<NZielobjekt> personen) {
         List<Person> result = new ArrayList<>(personen.size());
         for (NZielobjekt nzielobjekt : personen) {
-            for (Person person : allePersonen) {
-                if (person.getKuerzel().equals(nzielobjekt.getKuerzel())
-                        && person.getErlaeuterung().equals(nzielobjekt.getBeschreibung())) {
-                    result.add(person);
-                    break;
-                }
+            NZielobjektId identifier = nzielobjekt.getId();
+            Person person = allePersonenByNZielobjektId.get(identifier);
+            if (person != null) {
+                result.add(person);
             }
         }
         return result;
