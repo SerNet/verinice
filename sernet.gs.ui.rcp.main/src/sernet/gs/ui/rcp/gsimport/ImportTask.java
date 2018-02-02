@@ -170,7 +170,9 @@ public class ImportTask extends AbstractGstoolImportTask {
         List<ZielobjektTypeResult> findZielobjektTypAll = getGstoolDao().findZielobjektTypAll();
         LOG.debug("List of all ZO types in GSTOOL DB: ");
         for (ZielobjektTypeResult zielobjektTypeResult : findZielobjektTypAll) {
-            LOG.debug(zielobjektTypeResult.subtype + "=" + zielobjektTypeResult.type);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(zielobjektTypeResult.subtype + "=" + zielobjektTypeResult.type);
+            }
         }
 
         transferData = new TransferData(getGstoolDao(), importRollen);
@@ -227,7 +229,9 @@ public class ImportTask extends AbstractGstoolImportTask {
                 NZielobjekt origITVerbundZO = itverbundZuordnung.get(zielobjekt.zielobjekt.getGuid());
                 ITVerbund itverbund = (ITVerbund) alleZielobjekte.get(origITVerbundZO);
                 if (itverbund == null) {
-                    LOG.debug("ITVerbund not found for ZO: " + zielobjekt.zielobjekt.getName() + ". Created in BSI");
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("ITVerbund not found for ZO: " + zielobjekt.zielobjekt.getName() + ". Created in BSI");
+                    }
                     if (itverbundForOrphans == null) {
                         itverbundForOrphans = (ITVerbund) CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null, false);
                         itverbundForOrphans.setTitel("---Waisenhaus: Zielobjekte ohne IT-Verbund-Zuordnung");
@@ -236,7 +240,9 @@ public class ImportTask extends AbstractGstoolImportTask {
                     }
                     itverbund = itverbundForOrphans;
                 }
-                LOG.debug("Creating ZO " + zielobjekt.zielobjekt.getName() + " in ITVerbund " + itverbund.getTitle());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Creating ZO " + zielobjekt.zielobjekt.getName() + " in ITVerbund " + itverbund.getTitle());
+                }
                 itverbund.setSourceId(sourceId);
                 element = CnAElementBuilder.getInstance().buildAndSave(itverbund, typeId);
             }
@@ -363,7 +369,9 @@ public class ImportTask extends AbstractGstoolImportTask {
                 // facilitate creating ZOs in their correct IT-Verbund:
                 List<NZielobjekt> itvLinks = getGstoolDao().findLinksByZielobjekt(zielobjekt.zielobjekt);
                 for (NZielobjekt nZielobjekt : itvLinks) {
-                    LOG.debug("Saving Zuordnung from ZO" + nZielobjekt.getName() + "(GUID " + nZielobjekt.getGuid() + ") to ITVerbund " + zielobjekt.zielobjekt.getName());
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Saving Zuordnung from ZO" + nZielobjekt.getName() + "(GUID " + nZielobjekt.getGuid() + ") to ITVerbund " + zielobjekt.zielobjekt.getName());
+                    }
                     itverbundZuordnung.put(nZielobjekt.getGuid(), zielobjekt.zielobjekt);
                 }
             }
