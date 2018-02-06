@@ -24,7 +24,6 @@ Bundle-ClassPath: .,
  WebContent/WEB-INF/lib/javax.faces-2.2.8.jar
 Bundle-Activator: sernet.gs.server.Activator
 Export-Package: sernet.gs.server,
- sernet.gs.server.commands,
  sernet.verinice.graph,
  sernet.verinice.report
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
