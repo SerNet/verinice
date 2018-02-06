@@ -71,6 +71,7 @@ import sernet.snutils.FormInputParser;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
@@ -405,6 +406,8 @@ public class BSIElementEditor extends EditorPart {
         } else if (cnAElement instanceof Group) {
             icon = ImageCache.getInstance()
                     .getImageForTypeId(((Group) cnAElement).getChildTypes()[0]);
+        } else if (cnAElement instanceof Safeguard) {
+            icon = CnAImageProvider.getImage(cnAElement);
         } else if (cnAElement instanceof IISO27kElement || cnAElement instanceof IBpElement) {
             icon = ImageCache.getInstance().getImageForTypeId(cnAElement.getTypeId());
         } else if (cnAElement instanceof IBSIStrukturElement
