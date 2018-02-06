@@ -121,24 +121,26 @@ public abstract class HtmlWriter {
      * {@link CnATreeElement}
      */
     private static String handleRequestDynamic(Object element) {
-        if (element instanceof CnATreeElement) {
-            CnATreeElement cnaTreeElement = (CnATreeElement) element;
-            EntityType entityType = cnaTreeElement.getEntityType();
-            if (entityType != null) {
-                StringBuilder sb = new StringBuilder();
+        if (!(element instanceof CnATreeElement)){
+            return StringUtils.EMPTY;
+        }
 
-                List<PropertyType> htmlProperties = entityType.getObjectBrowserPropertyTypes();
-                Iterator<PropertyType> iterator = htmlProperties.iterator();
-                while (iterator.hasNext()) {
-                    sb.append(buildObjectBrowserContent(cnaTreeElement, iterator.next()));
-                    if (iterator.hasNext()) {
-                        sb.append("<br><br>");
-                    }
-                }
-                return sb.toString();
+        CnATreeElement cnaTreeElement = (CnATreeElement) element;
+        EntityType entityType = cnaTreeElement.getEntityType();
+        if (entityType == null) {
+            return StringUtils.EMPTY;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        List<PropertyType> htmlProperties = entityType.getObjectBrowserPropertyTypes();
+        Iterator<PropertyType> iterator = htmlProperties.iterator();
+        while (iterator.hasNext()) {
+            sb.append(buildObjectBrowserContent(cnaTreeElement, iterator.next()));
+            if (iterator.hasNext()) {
+                sb.append("<br><br>");
             }
         }
-        return StringUtils.EMPTY;
+        return sb.toString();
     }
 
     /**
