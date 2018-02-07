@@ -4822,6 +4822,23 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             <huiproperty name="E-Mail Adresse" id="org_ds_email" />        
         </huipropertygroup>
 
+        <huipropertygroup tags="Privacy" id="org_ds_eu" name="Vertreter innerhalb der Europäischen Union">
+        <huiproperty id="org_ds_eu_ausserh" name="Sitz des Verantwortlichen außerhalb der EU?" inputtype="singleoption">
+            <option id="org_ds_eu_1" name="Ja"  />
+            <option id="org_ds_eu_2" name="Nein" />
+        </huiproperty>
+
+        <huiproperty id="org_ds_eu_Kontaktd" name="Angaben zum Vertreter des Verantwortlichen" />
+        <huiproperty id="org_ds_eu_name" name="Name" />
+        <huiproperty id="org_ds_eu_ansprech" name="Ansprechpartner" />
+        <huiproperty id="org_ds_eu_strass" name="Straße" />
+        <huiproperty id="org_ds_eu_plz" name="Postleitzahl" />
+        <huiproperty id="org_ds_eu_ort" name="Ort" />
+        <huiproperty id="org_ds_eu_tel" name="Telefonnummer" />
+        <huiproperty id="org_ds_eu_email" name="E-Mail-Adresse" />
+    </huipropertygroup>
+
+
     </huientity>
     
     <huientity
@@ -4889,8 +4906,8 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             id="asset_num" />
             
         <huiproperty
-            name="Description" id="asset_description" inputtype="text" />   
-        
+            name="Description" id="asset_description" inputtype="text" />
+
         <huiproperty
             name="Type of Asset"
             id="asset_type"
@@ -4916,7 +4933,9 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             <option
                 name="Virtual system"
                 id="asset_type_virtual" />
-                
+            <option
+                name="Auftragsdatenverarbeitung"
+                id="asset_type_adv" />
         </huiproperty>
         
         <huiproperty
@@ -6688,12 +6707,16 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             id="requirement_tag"
             name="Tags"
             tooltip="List of tags, separated by comma or space"/>
+
         <huiproperty
             name="Description"
             id="requirement_desc"
             inputtype="text"
-            showInObjectBrowser="true"/>
-	<huiproperty
+            showInObjectBrowser="true"
+            visible="true"
+            tags="Web,Basic" />
+
+        <huiproperty
             name="Document"
             id="requirement_document"
             isURL="true" />
@@ -7936,15 +7959,16 @@ Wurden bereits weitere Stellen informiert?
         <huirelation to="samt_topic" id="rel_process_samttopic_Auftragskontrolle" name="Maßnahme zur Auftragskontrolle" reversename="Auftragskontrolle für" />    
         <huirelation to="samt_topic" id="rel_process_samttopic_Verfügbarkeitskontrolle" name="Maßnahme zur Verfügbarkeitskontrolle" reversename="Verfügbarkeitskontrolle für" />   
         <huirelation to="samt_topic" id="rel_process_samttopic_Trennungskontrolle" name="Maßnahme zur Trennungskontrolle" reversename="Trennungskontrolle für" />                 
-        <huiproperty id="process_privacy_yesno" name="Aufnahme in Verfahrensverzeichnis" inputtype="booleanoption" />
+        <huiproperty id="process_privacy_yesno" name="Aufnahme in das Verzeichnis der Verarbeitungstätigkeiten" inputtype="booleanoption" />
 
-        <huipropertygroup tags="Privacy" id="process_va_group" name="Verfahrensangaben">
+        <huipropertygroup tags="Privacy" id="process_va_group" name="Verarbeitungsangaben">
             <depends option="process_privacy_yesno" value="1" />
+
             <huiproperty id="process_va_fachbereich" name="Fachbereich" />
-            <huiproperty tags="Privacy" id="process_va_art" name="Art des Verfahrens" inputtype="singleoption">
+            <huiproperty tags="Privacy" id="process_va_art" name="Art der Verarbeitung" inputtype="singleoption">
                 <option id="process_va_art_ersterhebung" name="Ersterhebung" />
-                <option id="process_va_art_neuesverfahren" name="Neues Verfahren" />
-                <option id="process_va_art_aenderung" name="Änderung eines Verfahrens" />
+                <option id="process_va_art_neuesverfahren" name="Neue Verarbeitung" />
+                <option id="process_va_art_aenderung" name="Änderung einer Verarbeitung" />
             </huiproperty>
             <huiproperty id="process_va_ort" name="Ort der Datenverarb." inputtype="singleoption">
                 <option id="process_va_ort_1" name="Intern" />
@@ -7959,6 +7983,22 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="process_va_anz_ma" name="Anzahl Mitarbeiter" />
             <huiproperty id="process_va_ort_bem" name="Bemerkungen" inputtype="text" />
         </huipropertygroup>
+
+        <huipropertygroup tags="Privacy" id="process_va_gemensemVerantwortliche" name="Gemeinsame Verantwortliche Art.26 DSGVO">
+            <huiproperty id="process_va_gemenVerant" name="Gemeinsam für die Verarbeitung Verantwortliche" inputtype="singleoption">
+                <option id="process_va_gemenVerantwo_1" name="Ja"  />
+                <option id="process_va_gemenVerantwo_2" name="Nein" />
+            </huiproperty>
+
+            <huiproperty id="process_va_gemenVerant_Kontaktd" name="Angaben zum gemeinsam Verantwortlichen"/>
+            <huiproperty id="process_va_gemenVerant_name" name="Name" />
+            <huiproperty id="process_va_gemenVerant_ansprech" name="Ansprechpartner" />
+            <huiproperty id="process_va_gemenVerant_strass" name="Straße" />
+            <huiproperty id="process_va_gemenVerant_plz" name="Postleitzahl" />
+            <huiproperty id="process_va_gemenVerant_ort" name="Ort" />
+            <huiproperty id="process_va_gemenVerant_tel" name="Telefon" />
+            <huiproperty id="process_va_gemenVerant_email" name="E-Mail Adresse" />
+        </huipropertygroup>
      
         <huipropertygroup tags="Privacy" id="process_zb_group" name="Zweckbestimmung">
             <depends option="process_privacy_yesno" value="1" />
@@ -7968,7 +8008,8 @@ Wurden bereits weitere Stellen informiert?
                 <huipropertygroup tags="Privacy" id="process_dv_group_rechtsgrundlage" name="Rechtsgrundlage">
             <depends option="process_privacy_yesno" value="1" />
             <huiproperty tags="Privacy" id="process_dv_rechtsgrundlage" name="Rechtsgrundlage" inputtype="multioption">
-                <option id="process_dv_rechtsgrundlage_1" name="Rechtsvorschriften aus BDSG" />
+                <option id="process_dv_rechtsgrundlage_1" name="Rechtsvorschriften aus DSGVO" />
+		 <option id="process_dv_rechtsgrundlage_5" name="Ergänzende nationale Regelungen" />
                 <option id="process_dv_rechtsgrundlage_2" name="Einwilligung des Betroffenen" />
                 <option id="process_dv_rechtsgrundlage_3" name="Vorrangige Rechtsvorschriften (s.u.)" />
                <option id="process_dv_rechtsgrundlage_4" name="Sonstige Rechtsgrundlagen" />
@@ -8211,12 +8252,22 @@ Wurden bereits weitere Stellen informiert?
                 <option id="process_pg_ausserhalbeu_1" name="Ja" />
                 <option id="process_pg_ausserhalbeu_2" name="Nein" />
             </huiproperty>
-            <huiproperty id="process_pg_sonstempf" name="Liste der Drittstaaten" inputtype="text">
+            <huiproperty id="process_pg_sonstempf" name="Name des Drittstaates" inputtype="text">
                 <depends option="process_pg_ausserhalbeu" value="process_pg_ausserhalbeu_1" />
-            </huiproperty>        
+            </huiproperty>
+
+            <huiproperty id="process_pg_sonstempf_kat" name="Empfänger oder Empfängerkategorie" inputtype="text">
+                <depends option="process_pg_ausserhalbeu" value="process_pg_ausserhalbeu_1" />
+            </huiproperty>
+
             <huiproperty id="process_empf_sonstempf_rechtsgl" name="Rechtsgrundlage">
                 <depends option="process_pg_ausserhalbeu" value="process_pg_ausserhalbeu_1" />
-            </huiproperty>        
+            </huiproperty>
+
+            <huiproperty id="process_empf_sonstempf_garan" name="Angabe geeigneter Garantien">
+                <depends option="process_pg_ausserhalbeu" value="process_pg_ausserhalbeu_1" />
+            </huiproperty>
+
             <huiproperty id="process_empf_sonstempf_art" name="Art der übermitt. Daten" inputtype="multioption">
                 <depends option="process_pg_ausserhalbeu" value="process_pg_ausserhalbeu_1" />        
                 <option id="process_empf_sonstempf_art_1" name="Abrechnungs- und Leistungsdaten" />
@@ -8281,12 +8332,16 @@ Wurden bereits weitere Stellen informiert?
                 <option id="process_dv_kategorie_6" name="Daten zur Gewerkschaftszugehörigkeit" />
                 <option id="process_dv_kategorie_7" name="pers.bez. Daten zu Bank- oder Kreditkartenkonten" />
                 <option id="process_dv_kategorie_8" name="Berufs- und Amtsgeheimnisse" />
-        <option id="process_dv_kategorie_9" name="Daten zu Straftaten, Ordnungswidrigkeiten" />
-        <option id="process_dv_kategorie_10" name="Daten zu einem Verdacht auf strafbare Handlungen oder Ordnungswidrigkeiten" />
+                <option id="process_dv_kategorie_9" name="Daten zu Straftaten, Ordnungswidrigkeiten" />
+                <option id="process_dv_kategorie_10" name="Daten zu einem Verdacht auf strafbare Handlungen oder Ordnungswidrigkeiten" />
+                <option id="process_dv_kategorie_11" name="Genetische Daten" />
+                <option id="process_dv_kategorie_12" name="Biometrischen Daten" />
+                <option id="process_dv_kategorie_13" name="Daten zur sexuellen Orientierung" />
             </huiproperty>
             <huiproperty tags="Privacy" id="process_dv_sens_rechtsgrundl" name="Rechtsgrundlage für die Datenverarbeitung sensitiver Daten" inputtype="multioption">
                 <depends option="process_dv_kategorie_yesno" value="1" />
-                <option id="process_dv_sens_rechtsgrundl_7" name="Rechtsvorschriften aus BDSG" />
+                <option id="process_dv_sens_rechtsgrundl_7" name="Rechtsvorschriften aus DSGVO" />
+                <option id="process_dv_sens_rechtsgrundl_8" name="Ergänzende nationale Regelungen" />
                 <option id="process_dv_sens_rechtsgrundl_2" name="Einwilligung des Betroffenen" />
                 <option id="process_dv_sens_rechtsgrundl_3" name="Vorrangige Rechtsvorschriften" />
                 <option id="process_dv_sens_rechtsgrundl_5" name="Sonstige Rechtsgrundlagen (s.u.)" />
@@ -8301,7 +8356,7 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty tags="Privacy" id="process_dv_kategorie_sonst" name="Bemerkungen">
         <depends option="process_dv_kategorie_yesno" value="1"/>
             </huiproperty>
-            <huiproperty tags="Privacy" id="process_dv_kategorie_42a" name="Daten nach §42a BDSG betroffen?" inputtype="booleanoption" >
+            <huiproperty tags="Privacy" id="process_dv_kategorie_42a" name="Meldeverfahren Art.33,34 DSGVO?" inputtype="booleanoption" >
             </huiproperty>
         <huiproperty tags="Privacy" id="process_dv_kategorie_203" name="Schweigepflichtiger Personenkreis nach §203 StGB?" inputtype="booleanoption" >
             </huiproperty>
@@ -8330,26 +8385,26 @@ Wurden bereits weitere Stellen informiert?
             
         <huipropertygroup tags="Privacy" id="process_dv_group_benachrichtigung" name="Benachrichtigung Betroffener">
             <depends option="process_privacy_yesno" value="1" />
-            <huiproperty id="process_pg_benachrichtigung" name="Benachrichtigung Betroffener §33 BDSG" tags="Privacy" inputtype="singleoption">
+            <huiproperty id="process_pg_benachrichtigung" name="Benachrichtigung Betroffener Art.13, 14 DSGVO" tags="Privacy" inputtype="singleoption">
                 <option id="process_bg_benachrichtigung_erfolgt" name="Erfolgt" />
                 <option id="process_bg_benachrichtigung_nichterfolgt" name="Nicht erfolgt" />
             </huiproperty>
             <huiproperty id="process_pg_benachrichtigung_begruendung" name="Grund für Nichtbenachrichtigung" tags="Privacy" inputtype="multioption">
                 <depends option="process_pg_benachrichtigung" value="process_bg_benachrichtigung_nichterfolgt" />
-                <option id="process_bg_benachrichtigung_begruendung_0" name="§33 I S.1 Keine Erstspeicherung" />
-                <option id="process_bg_benachrichtigung_begruendung_1" name="§33 II S.1 Kenntnis auf andere Weise" />
-                <option id="process_bg_benachrichtigung_begruendung_2" name="§33 II Nr.2 Speicherung aufg. Aufbewahrungsvorschriften / unverh. Aufwand" />
-                <option id="process_bg_benachrichtigung_begruendung_3" name="§33 II Nr.2 Ausschließliche Speicherung zur Datensicherung / unverh. Aufwand" />
-                <option id="process_bg_benachrichtigung_begruendung_4" name="§33 II Nr.2 Ausschließliche Speicherung zur Datenschutzkontrolle / unverh. Aufwand" />
-                <option id="process_bg_benachrichtigung_begruendung_5" name="§33 II Nr.3 Rechtliche Geheimhaltungspflicht" />
-                <option id="process_bg_benachrichtigung_begruendung_6" name="§33 II Nr.4 Speicherung durch Gesetz vorgesehen" />
-                <option id="process_bg_benachrichtigung_begruendung_7" name="§33 II Nr.5 Wissenschaftliche Forschung / unverh. Aufwand" />
-                <option id="process_bg_benachrichtigung_begruendung_8" name="§33 II Nr.6 Gefährdung öff. Sicherheit oder Ordnung" />
-                <option id="process_bg_benachrichtigung_begruendung_9" name="§33 II Nr.7 a) Eig. Zwecke / aus allg. zugänglichen Quellen" />
-                <option id="process_bg_benachrichtigung_begruendung_10" name="§33 II Nr.7 b) Eig. Zwecke / Gefährdung der Geschäftszwecke" />
-                <option id="process_bg_benachrichtigung_begruendung_11" name="§33 II Nr.8 a) Nur zur Übermittlung / allg. zugäng. Quellen" />
-                <option id="process_bg_benachrichtigung_begruendung_12" name="§33 II Nr.8 b) Nur zur Übermittlung / listenmäßig od. zusg. Daten" />
-                <option id="process_bg_benachrichtigung_begruendung_13" name="§33 II Nr.9 Allg. zug. Quellen / Markt- und Meinungsforschung" />
+                <option id="process_bg_benachrichtigung_begruendung_0" name="Keine Erstspeicherung" />
+                <option id="process_bg_benachrichtigung_begruendung_1" name="Kenntnis auf andere Weise" />
+                <option id="process_bg_benachrichtigung_begruendung_2" name="Speicherung aufg. Aufbewahrungsvorschriften / unverh. Aufwand" />
+                <option id="process_bg_benachrichtigung_begruendung_3" name="Ausschließliche Speicherung zur Datensicherung / unverh. Aufwand" />
+                <option id="process_bg_benachrichtigung_begruendung_4" name="Ausschließliche Speicherung zur Datenschutzkontrolle / unverh. Aufwand" />
+                <option id="process_bg_benachrichtigung_begruendung_5" name="Rechtliche Geheimhaltungspflicht" />
+                <option id="process_bg_benachrichtigung_begruendung_6" name="Speicherung durch Gesetz vorgesehen" />
+                <option id="process_bg_benachrichtigung_begruendung_7" name="Wissenschaftliche Forschung / unverh. Aufwand" />
+                <option id="process_bg_benachrichtigung_begruendung_8" name="Gefährdung öff. Sicherheit oder Ordnung" />
+                <option id="process_bg_benachrichtigung_begruendung_9" name="Eig. Zwecke / aus allg. zugänglichen Quellen" />
+                <option id="process_bg_benachrichtigung_begruendung_10" name="Eig. Zwecke / Gefährdung der Geschäftszwecke" />
+                <option id="process_bg_benachrichtigung_begruendung_11" name="Nur zur Übermittlung / allg. zugäng. Quellen" />
+                <option id="process_bg_benachrichtigung_begruendung_12" name="Nur zur Übermittlung / listenmäßig od. zusg. Daten" />
+                <option id="process_bg_benachrichtigung_begruendung_13" name="Allg. zug. Quellen / Markt- und Meinungsforschung" />
             </huiproperty>
         </huipropertygroup>
      
@@ -8386,7 +8441,7 @@ Wurden bereits weitere Stellen informiert?
                 <option id="process_stellungnahmedsb_pbdaten_1" name="Ja" />
                 <option id="process_stellungnahmedsb_pbdaten_2" name="Nein" />
             </huiproperty>
-            <huiproperty tags="Privacy" id="process_stellungnahmedsb_vorpruefung" name="Vorabkontrolle erforderlich?" inputtype="singleoption">
+            <huiproperty tags="Privacy" id="process_stellungnahmedsb_vorpruefung" name="Datenschutzfolgeabschätzung erforderlich?" inputtype="singleoption">
                 <option id="process_stellungnahmedsb_vorpruefung_1" name="Ja" />
                 <option id="process_stellungnahmedsb_vorpruefung_2" name="Nein" />
             </huiproperty>
@@ -8409,6 +8464,13 @@ Wurden bereits weitere Stellen informiert?
                 </huiproperty>
         
 
+		<huiproperty id="process_stellungnahmedsb_sachg_group_itkonzept" name="IT-Sicherheitskonzept liegt vor?" inputtype="singleoption">
+            <option id="process_dsb_schwerw_abw_opt_itkonzept_1" name="Ja" />
+            <option id="process_dsb_schwerw_abw_opt_itkonzept_2" name="Nein" />
+        </huiproperty>
+		<huiproperty tags="Privacy" id="process_itkonzept" name="Bemerkungen" inputtype="text">
+            <depends option="process_stellungnahmedsb_sachg_group_itkonzept" value="process_dsb_schwerw_abw_opt_itkonzept_1" />
+        </huiproperty>
 
          <huiproperty id="process_dsb_schwerw_abw_opt_zutr" name="Zutrittskontrolle" inputtype="singleoption">
                 <option id="process_dsb_schwerw_abw_opt_zutr_1" name="Ja" />
