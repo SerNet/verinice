@@ -23,14 +23,15 @@ package sernet.verinice.service;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchEvent.Kind;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -178,7 +179,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         String decryptedLicenseId = null;
         if (entry != null) {
             validUsers = decrypt(entry, LicenseManagementEntry.COLUMN_VALIDUSERS);
-            decryptedLicenseId = (String) decrypt(entry, LicenseManagementEntry.COLUMN_LICENSEID);
+            decryptedLicenseId = decrypt(entry, LicenseManagementEntry.COLUMN_LICENSEID);
             for (Configuration configuration : getAllConfigurations()) {
                 Set<String> assignedIds = configuration.getAllLicenseIds();
                 if (assignedIds.contains(decryptedLicenseId)) {
@@ -318,8 +319,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         // set
         Set<String> uniqueIds = new HashSet<>();
         for (LicenseManagementEntry entry : getExistingLicenses()) {
-            String plainLicenseId = (String) decrypt(entry,
-                    LicenseManagementEntry.COLUMN_LICENSEID);
+            String plainLicenseId = decrypt(entry, LicenseManagementEntry.COLUMN_LICENSEID);
             if (!decrypted) {
                 if (entry.getContentIdentifier().equals(contentId)) {
                     uniqueIds.add(plainLicenseId);
@@ -460,7 +460,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
                 + "inner join fetch propertyList.properties as props ";
 
         Object[] params = new Object[] {};
-        List hqlResult = getConfigurationDao().findByQuery(hql, params);
+        List<?> hqlResult = getConfigurationDao().findByQuery(hql, params);
         for (Object o : hqlResult) {
             if (o instanceof Configuration) {
                 configurations.add((Configuration) o);
@@ -600,22 +600,29 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
             existingLicenses = Collections.synchronizedSet(new HashSet<LicenseManagementEntry>());
         }
 
-        Collection<File> vnlFiles = FileUtils.listFiles(getVNLRepository(),
-                new String[] { ILicenseManagementService.VNL_FILE_EXTENSION }, false);
-
-        try {
-            for (File vnlFile : vnlFiles) {
-                byte[] fileContent = FileUtils.readFileToByteArray(vnlFile);
-                byte[] decodedContent = getCryptoService().decodeBase64(fileContent);
-                LicenseManagementEntry entry = VNLMapper.getInstance().unmarshalXML(decodedContent);
-                existingLicenses.add(entry);
+        try (DirectoryStream<Path> vlnFilesStream = Files.newDirectoryStream(
+                getVNLRepository().toPath(),
+                "*.".concat(ILicenseManagementService.VNL_FILE_EXTENSION))) {
+            for (Path vnlFile : vlnFilesStream) {
+                addLicenseFromPath(vnlFile);
             }
         } catch (IOException e) {
-            String msg = "Error while reading licensefile";
+            String msg = "Error while reading license files from " + getVNLRepository();
             log.error(msg, e);
             throw new LicenseManagementException(msg);
         }
         return existingLicenses;
+    }
+
+    private void addLicenseFromPath(Path vnlFile) {
+        try {
+            byte[] fileContent = Files.readAllBytes(vnlFile);
+            byte[] decodedContent = getCryptoService().decodeBase64(fileContent);
+            LicenseManagementEntry entry = VNLMapper.getInstance().unmarshalXML(decodedContent);
+            existingLicenses.add(entry);
+        } catch (Exception e) {
+            log.error("Error processing VNL file " + vnlFile, e);
+        }
     }
 
     /**
@@ -800,7 +807,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      * @return
      */
     protected boolean invalidInTheNextMonth(LicenseManagementEntry entry) {
-        LocalDate validUntil = (LocalDate) decrypt(entry, LicenseManagementEntry.COLUMN_VALIDUNTIL);
+        LocalDate validUntil = decrypt(entry, LicenseManagementEntry.COLUMN_VALIDUNTIL);
         LocalDate currentDate = LocalDate.now();
         LocalDate currentPlusOneMonth = currentDate.plusDays(31);
         return validUntil.isBefore(currentPlusOneMonth);
@@ -959,12 +966,11 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
                 LicenseManagementEntry.COLUMN_CONTENTID);
         String entryPlainLicenseId = decrypt(existingEntry,
                 LicenseManagementEntry.COLUMN_LICENSEID);
-        if (StringUtils.isEmpty(plainLicenseId) && plainContentId.equals(entryPlainContentId)) {
-            return existingEntry;
-        } else if (StringUtils.isNotEmpty(plainLicenseId)
-                && plainLicenseId.equals(entryPlainLicenseId)
-                && plainContentId.equals(entryPlainContentId)) {
-            return existingEntry;
+        if (plainContentId.equals(entryPlainContentId)) {
+            boolean plainLicenseIdIsEmpty = StringUtils.isEmpty(plainLicenseId);
+            if (plainLicenseIdIsEmpty || plainLicenseId.equals(entryPlainLicenseId)) {
+                return existingEntry;
+            }
         }
         return null;
     }
@@ -1070,6 +1076,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
 
             } else if (StandardWatchEventKinds.ENTRY_CREATE.equals(event.kind())) {
                 // handle added vnl file
+                @SuppressWarnings("unchecked")
                 WatchEvent<Path> ev = (WatchEvent<Path>) event;
                 Path filename = ev.context();
 
