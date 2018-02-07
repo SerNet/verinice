@@ -677,8 +677,15 @@
         </objectContribution>              
       <objectContribution
             adaptable="false"
-            id="sernet.gs.ui.rcp.main.personContribution1"
-            objectClass="sernet.verinice.model.bsi.Person">
+            id="sernet.verinice.accountSettings"
+            objectClass="sernet.verinice.model.common.CnATreeElement">
+            <visibility>
+                 <or>
+                    <objectClass name="sernet.verinice.model.bsi.Person"/>
+                    <objectClass name="sernet.verinice.model.iso27k.PersonIso"/>
+                    <objectClass name="sernet.verinice.model.bp.elements.BpPerson"/>
+                  </or>
+               </visibility>
          <action
                class="sernet.gs.ui.rcp.main.actions.ConfigurationAction"
                enablesFor="1"
@@ -796,21 +803,6 @@
                tooltip="%action.tooltip.exportItNetwork">
          </action>
       </objectContribution>     
-      <objectContribution
-            adaptable="false"
-            id="sernet.verinice.model.iso27k.Person"
-            objectClass="sernet.verinice.model.iso27k.PersonIso">
-         <action
-               class="sernet.gs.ui.rcp.main.actions.ConfigurationAction"
-               enablesFor="1"
-               icon="icons/user_edit.png"
-               id="sernet.gs.ui.rcp.main.personconfiguration"
-               label="%action.label.12"
-               menubarPath="special"
-               style="push"
-               tooltip="%action.tooltip.12">
-         </action>
-      </objectContribution>
       <objectContribution
             adaptable="false"
             id="sernet.verinice.bpm.rcp.CreateIsaControl.controlgroup"
