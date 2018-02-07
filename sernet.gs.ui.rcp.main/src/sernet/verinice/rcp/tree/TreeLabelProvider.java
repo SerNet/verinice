@@ -89,7 +89,7 @@ public class TreeLabelProvider extends LabelProvider {
             image = ImageCache.getInstance()
                     .getControlImplementationImage(control.getImplementation());
 
-        } else if (element instanceof Safeguard) {
+        } else if (element instanceof Safeguard || element instanceof BpRequirement) {
             image = CnAImageProvider.getImage(element);
         } else {
             // else return type icon:

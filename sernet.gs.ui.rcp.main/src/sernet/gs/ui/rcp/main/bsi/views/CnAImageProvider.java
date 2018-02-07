@@ -25,6 +25,7 @@ import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bpm.TodoViewItem;
 import sernet.verinice.model.bsi.Anwendung;
@@ -69,6 +70,10 @@ public class CnAImageProvider {
         m.put(Safeguard.PROP_IMPLEMENTATION_STATUS_YES, ImageCache.MASSNAHMEN_UMSETZUNG_JA);
         m.put(Safeguard.PROP_IMPLEMENTATION_STATUS_PARTIALLY, ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
         m.put(Safeguard.PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE, ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
+        m.put(BpRequirement.PROP_IMPLEMENTATION_STATUS_NO, ImageCache.MASSNAHMEN_UMSETZUNG_NEIN);
+        m.put(BpRequirement.PROP_IMPLEMENTATION_STATUS_YES, ImageCache.MASSNAHMEN_UMSETZUNG_JA);
+        m.put(BpRequirement.PROP_IMPLEMENTATION_STATUS_PARTIALLY, ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
+        m.put(BpRequirement.PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE, ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
         IMAGE_NAME_BY_STATE = Collections.unmodifiableMap(m);
     }
 
@@ -89,7 +94,12 @@ public class CnAImageProvider {
             String state = safeguard.getImplementationStatus();
             return getImage(state);
         }
-
+        if (elmt instanceof BpRequirement) {
+            BpRequirement requirement = (BpRequirement) elmt;
+            requirement = (BpRequirement) Retriever.checkRetrieveElement(requirement);
+            String state = requirement.getImplementationStatus();
+            return getImage(state);
+        }
         if (elmt instanceof GefaehrdungsUmsetzung) {
             return ImageCache.getInstance().getImage(ImageCache.GEFAEHRDUNG);
         }

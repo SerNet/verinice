@@ -56,6 +56,11 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     public static final String PROP_QUALIFIER_BASIC = "bp_requirement_qualifier_basic"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER_STANDARD = "bp_requirement_qualifier_standard"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER_HIGH = "bp_requirement_qualifier_high"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS = "bp_requirement_implementation_status"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_NO = "bp_requirement_implementation_status_no"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_YES = "bp_requirement_implementation_status_yes"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_PARTIALLY = "bp_requirement_implementation_status_partially"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_requirement_implementation_status_na"; //$NON-NLS-1$
 
     public static final String REL_BP_REQUIREMENT_BP_THREAT = "rel_bp_requirement_bp_threat"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_SAFEGUARD = "rel_bp_requirement_bp_safeguard"; //$NON-NLS-1$
@@ -214,6 +219,10 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
 
     public boolean IsAffectsAvailability() {
         return ((this.getNumericProperty(PROP_AVAILABILITY) == 1) ? true : false);
+    }
+
+    public String getImplementationStatus(){
+        return getEntity().getRawPropertyValue(PROP_IMPLEMENTATION_STATUS);
     }
 
     public static String getIdentifierOfRequirement(CnATreeElement requirement) {
