@@ -35,7 +35,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Executors;
 
 import javax.swing.text.html.HTMLWriter;
 
@@ -994,7 +993,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
                 throw new LicenseManagementException(
                         "Error while initialising file-Watch-Service for vnl-Directory", e);
             }
-            Executors.newSingleThreadExecutor().submit(new Runnable() {
+            Thread vnlDirectoryWatcher = new Thread(new Runnable() {
 
                 @Override
                 public void run() {
@@ -1004,7 +1003,9 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
                         log.error("Something went wrong handling file-Events", e);
                     }
                 }
-            });
+            }, "vnl-directory-watcher");
+            vnlDirectoryWatcher.setDaemon(true);
+            vnlDirectoryWatcher.start();
         }
     }
 
