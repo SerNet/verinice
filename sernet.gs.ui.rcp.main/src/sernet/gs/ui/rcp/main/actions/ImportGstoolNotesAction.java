@@ -42,7 +42,7 @@ import sernet.verinice.model.iso27k.ISO27KModel;
 
 public class ImportGstoolNotesAction extends RightsEnabledAction {
 	
-	public static final String ID = "sernet.gs.ui.rcp.main.importgstoolnotesaction";
+	public static final String ID = "sernet.gs.ui.rcp.main.importgstoolnotesaction"; //$NON-NLS-1$
 	private final IWorkbenchWindow window;
 	
 	private IModelLoadListener loadListener = new IModelLoadListener() {
@@ -101,7 +101,7 @@ public class ImportGstoolNotesAction extends RightsEnabledAction {
 	@Override
     public void doRun() {
 		try {
-			boolean confirm = MessageDialog.openConfirm(window.getShell(), "Nachträglicher Notizimport", "Notizen werden aus der GSTOOL-Datenbank (siehe \"Bearbeiten\" -> \"Einstellungen\") in vorhandene IT-Verbünde angehängt. Fortfahren?");
+			boolean confirm = MessageDialog.openConfirm(window.getShell(), Messages.ImportGstoolNotesAction_0, Messages.ImportGstoolNotesAction_1);
 			if (!confirm){
 				return;
 			}
