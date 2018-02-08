@@ -90,7 +90,7 @@
 # Search properties
 # veriniceserver.search.index.directory=/WEB-INF/elasticsearch/
 # Reindex all elements in database on server startup, default: true
-veriniceserver.search.indexingOnStartup=false
+# veriniceserver.search.indexingOnStartup=true
 
 # Greenbone Security Scanner (GSM) task generator settings
 # true: Automatic generation of GSM tasks is enabled, default: false
