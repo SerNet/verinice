@@ -28,7 +28,10 @@ import org.eclipse.jface.viewers.ViewerSorter;
 
 import sernet.gs.service.NumericStringCollator;
 import sernet.verinice.model.bp.elements.Application;
+import sernet.verinice.model.bp.elements.BpDocument;
+import sernet.verinice.model.bp.elements.BpIncident;
 import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRecord;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.BusinessProcess;
@@ -39,7 +42,10 @@ import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpDocumentGroup;
+import sernet.verinice.model.bp.groups.BpIncidentGroup;
 import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRecordGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.BusinessProcessGroup;
@@ -92,6 +98,12 @@ public class BaseProtectionTreeSorter extends ViewerSorter {
         typeSortCategoryMap.put(BpThreat.TYPE_ID,100);
         typeSortCategoryMap.put(SafeguardGroup.TYPE_ID,110);
         typeSortCategoryMap.put(Safeguard.TYPE_ID,110);
+        typeSortCategoryMap.put(BpDocumentGroup.TYPE_ID,120);
+        typeSortCategoryMap.put(BpDocument.TYPE_ID,120);
+        typeSortCategoryMap.put(BpIncidentGroup.TYPE_ID,130);
+        typeSortCategoryMap.put(BpIncident.TYPE_ID,130);
+        typeSortCategoryMap.put(BpRecordGroup.TYPE_ID,140);
+        typeSortCategoryMap.put(BpRecord.TYPE_ID,140);
     }
 
     static final Collator numericStringCollator = new NumericStringCollator();

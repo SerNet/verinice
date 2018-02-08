@@ -508,6 +508,21 @@
     name="sernet.verinice.model.bp.elements.Safeguard"
     extends="CnATreeElement"
     discriminator-value="bp_safeguard" />
+    
+    <subclass 
+        name="sernet.verinice.model.bp.elements.BpDocument"
+        extends="CnATreeElement"
+        discriminator-value="bp_document" />
+        
+    <subclass 
+        name="sernet.verinice.model.bp.elements.BpIncident"
+        extends="CnATreeElement"
+        discriminator-value="bp_incident" />
+        
+    <subclass 
+        name="sernet.verinice.model.bp.elements.BpRecord"
+        extends="CnATreeElement"
+        discriminator-value="bp_record" />
   
 	<subclass 
 		name="sernet.verinice.model.bp.groups.ApplicationGroup"
@@ -564,6 +579,21 @@
     extends="CnATreeElement"
     discriminator-value="bp_safeguard_group" />
 	
+    <subclass 
+        name="sernet.verinice.model.bp.groups.BpDocumentGroup"
+        extends="CnATreeElement"
+        discriminator-value="bp_document_group" />
+
+    <subclass 
+        name="sernet.verinice.model.bp.groups.BpIncidentGroup"
+        extends="CnATreeElement"
+        discriminator-value="bp_incidentgroup" />
+
+    <subclass 
+        name="sernet.verinice.model.bp.groups.BpRecordGroup"
+        extends="CnATreeElement"
+        discriminator-value="bp_record_group" />
+
   <subclass
     name="sernet.verinice.model.catalog.CatalogModel"
     extends="CnATreeElement"

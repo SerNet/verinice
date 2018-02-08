@@ -37,6 +37,9 @@ public class Messages extends NLS {
 	public static String AddITSystemDelegate_0;
 	public static String AddICSSystemDelegate_0;
 	public static String AddBusinessprocessDelegate_0;
+    public static String AddBpDocumentDelegate_0;
+    public static String AddBpIncidentDelegate_0;
+    public static String AddBpRecordDelegate_0;
 
 	static {
 		// initialize resource bundle

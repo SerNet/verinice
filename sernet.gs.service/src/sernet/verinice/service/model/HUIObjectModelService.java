@@ -33,7 +33,10 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpDocumentGroup;
+import sernet.verinice.model.bp.groups.BpIncidentGroup;
 import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRecordGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.BusinessProcessGroup;
@@ -189,6 +192,9 @@ public class HUIObjectModelService implements IObjectModelService {
         allBpCategories.add(NetworkGroup.TYPE_ID);
         allBpCategories.add(RoomGroup.TYPE_ID);
         allBpCategories.add(SafeguardGroup.TYPE_ID);
+        allBpCategories.add(BpDocumentGroup.TYPE_ID);
+        allBpCategories.add(BpIncidentGroup.TYPE_ID);
+        allBpCategories.add(BpRecordGroup.TYPE_ID);
         
         allTypeIds.addAll(allBpCategories);
     }

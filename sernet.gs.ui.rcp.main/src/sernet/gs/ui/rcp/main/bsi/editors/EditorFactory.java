@@ -33,7 +33,10 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.elements.Application;
+import sernet.verinice.model.bp.elements.BpDocument;
+import sernet.verinice.model.bp.elements.BpIncident;
 import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRecord;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.BusinessProcess;
@@ -45,7 +48,10 @@ import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpDocumentGroup;
+import sernet.verinice.model.bp.groups.BpIncidentGroup;
 import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRecordGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.BusinessProcessGroup;
@@ -360,6 +366,13 @@ public final class EditorFactory {
         typedFactories.put(RoomGroup.class, bsiEditorFactory);
         typedFactories.put(Safeguard.class, bsiEditorFactory);
         typedFactories.put(SafeguardGroup.class, bsiEditorFactory);
+        typedFactories.put(BpDocument.class, bsiEditorFactory);
+        typedFactories.put(BpDocumentGroup.class, bsiEditorFactory);
+        typedFactories.put(BpIncident.class, bsiEditorFactory);
+        typedFactories.put(BpIncidentGroup.class, bsiEditorFactory);
+        typedFactories.put(BpRecord.class, bsiEditorFactory);
+        typedFactories.put(BpRecordGroup.class, bsiEditorFactory);
+
         
         // Self Assessment (SAMT) elements
         typedFactories.put(SamtTopic.class, bsiEditorFactory);

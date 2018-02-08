@@ -257,6 +257,9 @@ This variant:
 		<property name="networkDAO" ref="networkDAO" />
 		<property name="roomDAO" ref="roomDAO" />
     <property name="safeguardDAO" ref="safeguardDAO" />
+    <property name="bpDocumentDAO" ref="bpDocumentDAO" />
+    <property name="bpIncidentDAO" ref="bpIncidentDAO" />
+    <property name="bpRecordDAO" ref="bpRecordDAO" />
 		<property name="bpModelDAO" ref="bpModelDAO" />
 		<property name="applicationGroupDAO" ref="applicationGroupDAO" />
     <property name="bpPersonGroupDAO" ref="bpPersonGroupDAO" />
@@ -269,6 +272,9 @@ This variant:
 		<property name="networkGroupDAO" ref="networkGroupDAO" />
 		<property name="roomGroupDAO" ref="roomGroupDAO" />
     <property name="safeguardGroupDAO" ref="safeguardGroupDAO" />
+    <property name="bpDocumentGroupDAO" ref="bpDocumentGroupDAO" />
+    <property name="bpIncidentGroupDAO" ref="bpIncidentGroupDAO" />
+    <property name="bpRecordGroupDAO" ref="bpRecordGroupDAO" />
 
         <!-- Miscellaneous DAOs -->
         <property name="importIsoDAO" ref="importIsoDAO" /> 

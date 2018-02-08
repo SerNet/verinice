@@ -21,7 +21,10 @@ package sernet.verinice.model.bp.elements;
 
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpDocumentGroup;
+import sernet.verinice.model.bp.groups.BpIncidentGroup;
 import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRecordGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.BusinessProcessGroup;
@@ -74,6 +77,9 @@ public class ItNetwork extends CnATreeElement implements IBpElement  {
         addChild(new NetworkGroup(this));
         addChild(new RoomGroup(this));
         addChild(new SafeguardGroup(this));
+        addChild(new BpDocumentGroup(this));
+        addChild(new BpIncidentGroup(this));
+        addChild(new BpRecordGroup(this));
     }
     
     @Override
@@ -83,7 +89,9 @@ public class ItNetwork extends CnATreeElement implements IBpElement  {
                 || object instanceof BpThreatGroup || object instanceof BusinessProcessGroup
                 || object instanceof DeviceGroup || object instanceof IcsSystemGroup
                 || object instanceof ItSystemGroup || object instanceof NetworkGroup
-                || object instanceof RoomGroup || object instanceof SafeguardGroup;
+                || object instanceof RoomGroup || object instanceof SafeguardGroup
+                || object instanceof BpDocumentGroup || object instanceof BpIncidentGroup
+                || object instanceof BpRecordGroup;
     }
 
     @Override
