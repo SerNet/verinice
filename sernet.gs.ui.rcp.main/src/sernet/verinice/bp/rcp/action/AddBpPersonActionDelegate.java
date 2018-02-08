@@ -19,48 +19,17 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp.action;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbenchPart;
-
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bp.groups.BpPersonGroup;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class AddBpPersonActionDelegate extends AbstractAddBpElementActionDelegate {
-    private IWorkbenchPart targetPart;
+public class AddBpPersonActionDelegate extends AbstractAddBpElementActionDelegate<BpPerson> {
 
-    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-        this.targetPart = targetPart;
-    }
-
-    public void run(IAction action) {
-
-        try {
-            Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
-            CnATreeElement newElement = null;
-            if (sel instanceof BpPersonGroup) {
-                CnATreeElement cont = (CnATreeElement) sel;
-                boolean inheritIcon = Activator.getDefault().getPreferenceStore()
-                        .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);
-                newElement = CnAElementFactory.getInstance().saveNew(cont, BpPerson.TYPE_ID, null, inheritIcon);
-            }
-            if (newElement != null) {
-                EditorFactory.getInstance().openEditor(newElement);
-            }
-        } catch (Exception e) {
-            ExceptionUtil.log(e, Messages.AddPersonDelegate_0);
-        }
-
+    public AddBpPersonActionDelegate() {
+        super(BpPersonGroup.class, BpPerson.TYPE_ID, Messages.AddPersonDelegate_0);
     }
 
 }
