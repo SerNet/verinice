@@ -52,6 +52,7 @@ import sernet.verinice.model.bsi.ClientsKategorie;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.GebaeudeKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.MassnahmeKategorie;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.NKKategorie;
 import sernet.verinice.model.bsi.NetzKomponente;
@@ -149,6 +150,7 @@ public class CnATypeMapper {
         typeIdClass.put(RaeumeKategorie.TYPE_ID, RaeumeKategorie.class);
         typeIdClass.put(BausteinUmsetzung.TYPE_ID, BausteinUmsetzung.class);
         typeIdClass.put(ITVerbund.TYPE_ID, ITVerbund.class);
+        typeIdClass.put(MassnahmeKategorie.TYPE_ID, MassnahmeKategorie.class);
         typeIdClass.put(MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.class);
         typeIdClass.put(Verarbeitungsangaben.TYPE_ID, Verarbeitungsangaben.class);
         typeIdClass.put(Personengruppen.TYPE_ID, Personengruppen.class);

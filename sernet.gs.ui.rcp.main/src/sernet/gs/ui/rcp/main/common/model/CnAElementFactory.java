@@ -132,6 +132,7 @@ import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.bp.LoadBpModel;
+import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.commands.CreateAnwendung;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateITNetwork;
@@ -193,10 +194,29 @@ public final class CnAElementFactory {
     }
 
     @SuppressWarnings(WARNING_RAWTYPES)
-    private abstract class ElementBuilder implements IElementBuilder {
+    private abstract static class ElementBuilder implements IElementBuilder {
         protected void init(CnATreeElement container, CnATreeElement child) {
             container.addChild(child);
             child.setParentAndScope(container);
+        }
+    }
+
+    private final class DefaultElementBuilder extends ElementBuilder {
+
+        private final Class<CnATreeElement> elementClass;
+        private final String typeId;
+
+        DefaultElementBuilder(String typeId) {
+            this.elementClass = CnATypeMapper.getClassFromTypeId(typeId);
+            this.typeId = typeId;
+
+        }
+
+        public CnATreeElement build(CnATreeElement container, BuildInput input)
+                throws CommandException {
+            CnATreeElement child = dbHome.save(container, elementClass, typeId);
+            init(container, child);
+            return child;
         }
     }
 
@@ -247,229 +267,47 @@ public final class CnAElementFactory {
             }
         });
 
-        elementbuilders.put(Personengruppen.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Personengruppen child = dbHome.save(container, Personengruppen.class,
-                        Personengruppen.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(Datenverarbeitung.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Datenverarbeitung child = dbHome.save(container, Datenverarbeitung.class,
-                        Datenverarbeitung.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(Verarbeitungsangaben.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Verarbeitungsangaben child = dbHome.save(container, Verarbeitungsangaben.class,
-                        Verarbeitungsangaben.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(Zweckbestimmung.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Zweckbestimmung child = dbHome.save(container, Zweckbestimmung.class,
-                        Zweckbestimmung.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(VerantwortlicheStelle.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                VerantwortlicheStelle child = dbHome.save(container, VerantwortlicheStelle.class,
-                        VerantwortlicheStelle.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(Personengruppen.TYPE_ID,
+                new DefaultElementBuilder(Personengruppen.TYPE_ID));
+        elementbuilders.put(Datenverarbeitung.TYPE_ID,
+                new DefaultElementBuilder(Datenverarbeitung.TYPE_ID));
+        elementbuilders.put(Verarbeitungsangaben.TYPE_ID,
+                new DefaultElementBuilder(Verarbeitungsangaben.TYPE_ID));
+        elementbuilders.put(Zweckbestimmung.TYPE_ID,
+                new DefaultElementBuilder(Zweckbestimmung.TYPE_ID));
+        elementbuilders.put(VerantwortlicheStelle.TYPE_ID,
+                new DefaultElementBuilder(VerantwortlicheStelle.TYPE_ID));
 
         // BSI-Grundschutz elements
 
-        elementbuilders.put(NKKategorie.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                NKKategorie child = dbHome.save(container, NKKategorie.class, NKKategorie.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(SonstigeITKategorie.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                SonstigeITKategorie child = dbHome.save(container, SonstigeITKategorie.class,
-                        SonstigeITKategorie.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(PersonenKategorie.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                PersonenKategorie child = dbHome.save(container, PersonenKategorie.class,
-                        PersonenKategorie.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(AnwendungenKategorie.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                AnwendungenKategorie child = dbHome.save(container, AnwendungenKategorie.class,
-                        AnwendungenKategorie.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(GebaeudeKategorie.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                GebaeudeKategorie child = dbHome.save(container, GebaeudeKategorie.class,
-                        GebaeudeKategorie.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(RaeumeKategorie.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                RaeumeKategorie child = dbHome.save(container, RaeumeKategorie.class,
-                        RaeumeKategorie.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(TKKategorie.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                TKKategorie child = dbHome.save(container, TKKategorie.class, TKKategorie.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(ServerKategorie.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                ServerKategorie child = dbHome.save(container, ServerKategorie.class,
-                        ServerKategorie.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(ClientsKategorie.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                ClientsKategorie child = dbHome.save(container, ClientsKategorie.class,
-                        ClientsKategorie.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(MassnahmeKategorie.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                MassnahmeKategorie child = dbHome.save(container, MassnahmeKategorie.class,
-                        MassnahmeKategorie.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(Gebaeude.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Gebaeude child = dbHome.save(container, Gebaeude.class, Gebaeude.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(Client.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Client child = dbHome.save(container, Client.class, Client.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(SonstIT.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                SonstIT child = dbHome.save(container, SonstIT.class, SonstIT.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(Server.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Server child = dbHome.save(container, Server.class, Server.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(TelefonKomponente.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                TelefonKomponente child = dbHome.save(container, TelefonKomponente.class,
-                        TelefonKomponente.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(Raum.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Raum child = dbHome.save(container, Raum.class, Raum.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(NetzKomponente.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                NetzKomponente child = dbHome.save(container, NetzKomponente.class,
-                        NetzKomponente.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(Person.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Person child = dbHome.save(container, Person.class, Person.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(NKKategorie.TYPE_ID, new DefaultElementBuilder(NKKategorie.TYPE_ID));
+        elementbuilders.put(SonstigeITKategorie.TYPE_ID,
+                new DefaultElementBuilder(SonstigeITKategorie.TYPE_ID));
+        elementbuilders.put(PersonenKategorie.TYPE_ID,
+                new DefaultElementBuilder(PersonenKategorie.TYPE_ID));
+        elementbuilders.put(AnwendungenKategorie.TYPE_ID,
+                new DefaultElementBuilder(AnwendungenKategorie.TYPE_ID));
+        elementbuilders.put(GebaeudeKategorie.TYPE_ID,
+                new DefaultElementBuilder(GebaeudeKategorie.TYPE_ID));
+        elementbuilders.put(RaeumeKategorie.TYPE_ID,
+                new DefaultElementBuilder(RaeumeKategorie.TYPE_ID));
+        elementbuilders.put(TKKategorie.TYPE_ID, new DefaultElementBuilder(TKKategorie.TYPE_ID));
+        elementbuilders.put(ServerKategorie.TYPE_ID,
+                new DefaultElementBuilder(ServerKategorie.TYPE_ID));
+        elementbuilders.put(ClientsKategorie.TYPE_ID,
+                new DefaultElementBuilder(ClientsKategorie.TYPE_ID));
+        elementbuilders.put(MassnahmeKategorie.TYPE_ID,
+                new DefaultElementBuilder(MassnahmeKategorie.TYPE_ID));
+        elementbuilders.put(Gebaeude.TYPE_ID, new DefaultElementBuilder(Gebaeude.TYPE_ID));
+        elementbuilders.put(Client.TYPE_ID, new DefaultElementBuilder(Client.TYPE_ID));
+        elementbuilders.put(SonstIT.TYPE_ID, new DefaultElementBuilder(SonstIT.TYPE_ID));
+        elementbuilders.put(Server.TYPE_ID, new DefaultElementBuilder(Server.TYPE_ID));
+        elementbuilders.put(TelefonKomponente.TYPE_ID,
+                new DefaultElementBuilder(TelefonKomponente.TYPE_ID));
+        elementbuilders.put(Raum.TYPE_ID, new DefaultElementBuilder(Raum.TYPE_ID));
+        elementbuilders.put(NetzKomponente.TYPE_ID,
+                new DefaultElementBuilder(NetzKomponente.TYPE_ID));
+        elementbuilders.put(Person.TYPE_ID, new DefaultElementBuilder(Person.TYPE_ID));
 
         elementbuilders.put(Anwendung.TYPE_ID, new ElementBuilder() {
             public CnATreeElement build(CnATreeElement container, BuildInput input)
@@ -504,30 +342,15 @@ public final class CnAElementFactory {
 
                 });
 
-        elementbuilders.put(MassnahmenUmsetzung.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                MassnahmenUmsetzung child = dbHome.save(container, MassnahmenUmsetzung.class,
-                        MassnahmenUmsetzung.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(MassnahmenUmsetzung.TYPE_ID,
+                new DefaultElementBuilder(MassnahmenUmsetzung.TYPE_ID));
 
         /*
          * added due to improvements on gstool-import, which could contain user
          * defined gefaehrdungen
          */
-        elementbuilders.put(GefaehrdungsUmsetzung.TYPE_ID, new ElementBuilder() {
-            @Override
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                GefaehrdungsUmsetzung child = dbHome.save(container, GefaehrdungsUmsetzung.class,
-                        GefaehrdungsUmsetzung.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(GefaehrdungsUmsetzung.TYPE_ID,
+                new DefaultElementBuilder(GefaehrdungsUmsetzung.TYPE_ID));
 
         elementbuilders.put(ITVerbund.TYPE_ID, new ElementBuilder() {
             public ITVerbund build(CnATreeElement container, BuildInput input)
@@ -549,333 +372,75 @@ public final class CnAElementFactory {
         });
 
         // ISO 27000 builders
-        elementbuilders.put(Organization.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Organization child = dbHome.save(container, Organization.class,
-                        Organization.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(Organization.TYPE_ID, new DefaultElementBuilder(Organization.TYPE_ID));
 
-        elementbuilders.put(AssetGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                AssetGroup child = dbHome.save(container, AssetGroup.class, AssetGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        elementbuilders.put(Asset.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Asset child = dbHome.save(container, Asset.class, Asset.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(AssetGroup.TYPE_ID, new DefaultElementBuilder(AssetGroup.TYPE_ID));
+        elementbuilders.put(Asset.TYPE_ID, new DefaultElementBuilder(Asset.TYPE_ID));
 
-        elementbuilders.put(PersonGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                PersonGroup child = dbHome.save(container, PersonGroup.class, PersonGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        elementbuilders.put(sernet.verinice.model.iso27k.PersonIso.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                sernet.verinice.model.iso27k.PersonIso child = dbHome.save(container,
-                        sernet.verinice.model.iso27k.PersonIso.class,
-                        sernet.verinice.model.iso27k.PersonIso.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(PersonGroup.TYPE_ID, new DefaultElementBuilder(PersonGroup.TYPE_ID));
+        elementbuilders.put(sernet.verinice.model.iso27k.PersonIso.TYPE_ID,
+                new DefaultElementBuilder(sernet.verinice.model.iso27k.PersonIso.TYPE_ID));
 
-        elementbuilders.put(AuditGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                AuditGroup child = dbHome.save(container, AuditGroup.class, AuditGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        elementbuilders.put(Audit.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Audit child = dbHome.save(container, Audit.class, Audit.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(AuditGroup.TYPE_ID, new DefaultElementBuilder(AuditGroup.TYPE_ID));
+        elementbuilders.put(Audit.TYPE_ID, new DefaultElementBuilder(Audit.TYPE_ID));
 
-        elementbuilders.put(ControlGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                ControlGroup child = dbHome.save(container, ControlGroup.class,
-                        ControlGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        elementbuilders.put(Control.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Control child = dbHome.save(container, Control.class, Control.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(ControlGroup.TYPE_ID, new DefaultElementBuilder(ControlGroup.TYPE_ID));
+        elementbuilders.put(Control.TYPE_ID, new DefaultElementBuilder(Control.TYPE_ID));
 
-        elementbuilders.put(ExceptionGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                ExceptionGroup child = dbHome.save(container, ExceptionGroup.class,
-                        ExceptionGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        elementbuilders.put(sernet.verinice.model.iso27k.Exception.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                sernet.verinice.model.iso27k.Exception child = dbHome.save(container,
-                        sernet.verinice.model.iso27k.Exception.class,
-                        sernet.verinice.model.iso27k.Exception.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(ExceptionGroup.TYPE_ID,
+                new DefaultElementBuilder(ExceptionGroup.TYPE_ID));
+        elementbuilders.put(sernet.verinice.model.iso27k.Exception.TYPE_ID,
+                new DefaultElementBuilder(sernet.verinice.model.iso27k.Exception.TYPE_ID));
 
-        elementbuilders.put(RequirementGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                RequirementGroup child = dbHome.save(container, RequirementGroup.class,
-                        RequirementGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        elementbuilders.put(Requirement.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Requirement child = dbHome.save(container, Requirement.class, Requirement.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(RequirementGroup.TYPE_ID,
+                new DefaultElementBuilder(RequirementGroup.TYPE_ID));
+        elementbuilders.put(Requirement.TYPE_ID, new DefaultElementBuilder(Requirement.TYPE_ID));
 
-        elementbuilders.put(Incident.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Incident child = dbHome.save(container, Incident.class, Incident.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        elementbuilders.put(IncidentGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                IncidentGroup child = dbHome.save(container, IncidentGroup.class,
-                        IncidentGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(Incident.TYPE_ID, new DefaultElementBuilder(Incident.TYPE_ID));
+        elementbuilders.put(IncidentGroup.TYPE_ID,
+                new DefaultElementBuilder(IncidentGroup.TYPE_ID));
 
-        elementbuilders.put(IncidentScenario.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                IncidentScenario child = dbHome.save(container, IncidentScenario.class,
-                        IncidentScenario.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        elementbuilders.put(IncidentScenarioGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                IncidentScenarioGroup child = dbHome.save(container, IncidentScenarioGroup.class,
-                        IncidentScenarioGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(IncidentScenario.TYPE_ID,
+                new DefaultElementBuilder(IncidentScenario.TYPE_ID));
+        elementbuilders.put(IncidentScenarioGroup.TYPE_ID,
+                new DefaultElementBuilder(IncidentScenarioGroup.TYPE_ID));
 
-        elementbuilders.put(Response.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Response child = dbHome.save(container, Response.class, Response.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        elementbuilders.put(ResponseGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                ResponseGroup child = dbHome.save(container, ResponseGroup.class,
-                        ResponseGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(Response.TYPE_ID, new DefaultElementBuilder(Response.TYPE_ID));
+        elementbuilders.put(ResponseGroup.TYPE_ID,
+                new DefaultElementBuilder(ResponseGroup.TYPE_ID));
 
-        elementbuilders.put(Threat.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Threat child = dbHome.save(container, Threat.class, Threat.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        elementbuilders.put(ThreatGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                ThreatGroup child = dbHome.save(container, ThreatGroup.class, ThreatGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(Threat.TYPE_ID, new DefaultElementBuilder(Threat.TYPE_ID));
+        elementbuilders.put(ThreatGroup.TYPE_ID, new DefaultElementBuilder(ThreatGroup.TYPE_ID));
 
-        elementbuilders.put(Vulnerability.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Vulnerability child = dbHome.save(container, Vulnerability.class,
-                        Vulnerability.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        elementbuilders.put(VulnerabilityGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                VulnerabilityGroup child = dbHome.save(container, VulnerabilityGroup.class,
-                        VulnerabilityGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(Vulnerability.TYPE_ID,
+                new DefaultElementBuilder(Vulnerability.TYPE_ID));
+        elementbuilders.put(VulnerabilityGroup.TYPE_ID,
+                new DefaultElementBuilder(VulnerabilityGroup.TYPE_ID));
 
-        elementbuilders.put(DocumentGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                DocumentGroup child = dbHome.save(container, DocumentGroup.class,
-                        DocumentGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        elementbuilders.put(Document.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Document child = dbHome.save(container, Document.class, Document.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(DocumentGroup.TYPE_ID,
+                new DefaultElementBuilder(DocumentGroup.TYPE_ID));
+        elementbuilders.put(Document.TYPE_ID, new DefaultElementBuilder(Document.TYPE_ID));
 
-        elementbuilders.put(InterviewGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                InterviewGroup child = dbHome.save(container, InterviewGroup.class,
-                        InterviewGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        elementbuilders.put(Interview.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Interview child = dbHome.save(container, Interview.class, Interview.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(InterviewGroup.TYPE_ID,
+                new DefaultElementBuilder(InterviewGroup.TYPE_ID));
+        elementbuilders.put(Interview.TYPE_ID, new DefaultElementBuilder(Interview.TYPE_ID));
 
-        elementbuilders.put(FindingGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                FindingGroup child = dbHome.save(container, FindingGroup.class,
-                        FindingGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        elementbuilders.put(Finding.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Finding child = dbHome.save(container, Finding.class, Finding.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(FindingGroup.TYPE_ID, new DefaultElementBuilder(FindingGroup.TYPE_ID));
+        elementbuilders.put(Finding.TYPE_ID, new DefaultElementBuilder(Finding.TYPE_ID));
 
-        elementbuilders.put(EvidenceGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                EvidenceGroup child = dbHome.save(container, EvidenceGroup.class,
-                        EvidenceGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        elementbuilders.put(Evidence.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Evidence child = dbHome.save(container, Evidence.class, Evidence.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(EvidenceGroup.TYPE_ID,
+                new DefaultElementBuilder(EvidenceGroup.TYPE_ID));
+        elementbuilders.put(Evidence.TYPE_ID, new DefaultElementBuilder(Evidence.TYPE_ID));
 
-        elementbuilders.put(ProcessGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                ProcessGroup child = dbHome.save(container, ProcessGroup.class,
-                        ProcessGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        elementbuilders.put(Process.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Process child = dbHome.save(container, Process.class, Process.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(ProcessGroup.TYPE_ID, new DefaultElementBuilder(ProcessGroup.TYPE_ID));
+        elementbuilders.put(Process.TYPE_ID, new DefaultElementBuilder(Process.TYPE_ID));
 
-        elementbuilders.put(RecordGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                RecordGroup child = dbHome.save(container, RecordGroup.class, RecordGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-        elementbuilders.put(Record.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Record child = dbHome.save(container, Record.class, Record.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(RecordGroup.TYPE_ID, new DefaultElementBuilder(RecordGroup.TYPE_ID));
+        elementbuilders.put(Record.TYPE_ID, new DefaultElementBuilder(Record.TYPE_ID));
 
         // Self Assessment (SAMT) builders
 
-        elementbuilders.put(SamtTopic.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                SamtTopic child = dbHome.save(container, SamtTopic.class, SamtTopic.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(SamtTopic.TYPE_ID, new DefaultElementBuilder(SamtTopic.TYPE_ID));
 
         // renewed / modernized ITBP
 
@@ -896,214 +461,39 @@ public final class CnAElementFactory {
             }
         });
 
-        elementbuilders.put(Application.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Application child = dbHome.save(container, Application.class, Application.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(Application.TYPE_ID, new DefaultElementBuilder(Application.TYPE_ID));
+        elementbuilders.put(BpPerson.TYPE_ID, new DefaultElementBuilder(BpPerson.TYPE_ID));
+        elementbuilders.put(BpRequirement.TYPE_ID,
+                new DefaultElementBuilder(BpRequirement.TYPE_ID));
+        elementbuilders.put(BpThreat.TYPE_ID, new DefaultElementBuilder(BpThreat.TYPE_ID));
+        elementbuilders.put(BusinessProcess.TYPE_ID,
+                new DefaultElementBuilder(BusinessProcess.TYPE_ID));
+        elementbuilders.put(Device.TYPE_ID, new DefaultElementBuilder(Device.TYPE_ID));
+        elementbuilders.put(IcsSystem.TYPE_ID, new DefaultElementBuilder(IcsSystem.TYPE_ID));
+        elementbuilders.put(ItSystem.TYPE_ID, new DefaultElementBuilder(ItSystem.TYPE_ID));
+        elementbuilders.put(Network.TYPE_ID, new DefaultElementBuilder(Network.TYPE_ID));
+        elementbuilders.put(Room.TYPE_ID, new DefaultElementBuilder(Room.TYPE_ID));
+        elementbuilders.put(Safeguard.TYPE_ID, new DefaultElementBuilder(Safeguard.TYPE_ID));
 
-        elementbuilders.put(BpPerson.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                BpPerson child = dbHome.save(container, BpPerson.class, BpPerson.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(BpRequirement.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                BpRequirement child = dbHome.save(container, BpRequirement.class,
-                        BpRequirement.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(BpThreat.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                BpThreat child = dbHome.save(container, BpThreat.class, BpThreat.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(BusinessProcess.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                BusinessProcess child = dbHome.save(container, BusinessProcess.class,
-                        BusinessProcess.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(Device.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Device child = dbHome.save(container, Device.class, Device.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(IcsSystem.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                IcsSystem child = dbHome.save(container, IcsSystem.class, IcsSystem.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(ItSystem.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                ItSystem child = dbHome.save(container, ItSystem.class, ItSystem.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(Network.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Network child = dbHome.save(container, Network.class, Network.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(Room.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Room child = dbHome.save(container, Room.class, Room.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(Safeguard.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                Safeguard child = dbHome.save(container, Safeguard.class, Safeguard.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(ApplicationGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                ApplicationGroup child = dbHome.save(container, ApplicationGroup.class,
-                        ApplicationGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(BpPersonGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                BpPersonGroup child = dbHome.save(container, BpPersonGroup.class,
-                        BpPersonGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(BpRequirementGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                BpRequirementGroup child = dbHome.save(container, BpRequirementGroup.class,
-                        BpRequirementGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(BpThreatGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                BpThreatGroup child = dbHome.save(container, BpThreatGroup.class,
-                        BpThreatGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(BusinessProcessGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                BusinessProcessGroup child = dbHome.save(container, BusinessProcessGroup.class,
-                        BusinessProcessGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(DeviceGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                DeviceGroup child = dbHome.save(container, DeviceGroup.class, DeviceGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(IcsSystemGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                IcsSystemGroup child = dbHome.save(container, IcsSystemGroup.class,
-                        IcsSystemGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(ItSystemGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                ItSystemGroup child = dbHome.save(container, ItSystemGroup.class,
-                        ItSystemGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(NetworkGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                NetworkGroup child = dbHome.save(container, NetworkGroup.class,
-                        NetworkGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(RoomGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                RoomGroup child = dbHome.save(container, RoomGroup.class, RoomGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
-
-        elementbuilders.put(SafeguardGroup.TYPE_ID, new ElementBuilder() {
-            public CnATreeElement build(CnATreeElement container, BuildInput input)
-                    throws CommandException {
-                SafeguardGroup child = dbHome.save(container, SafeguardGroup.class,
-                        SafeguardGroup.TYPE_ID);
-                init(container, child);
-                return child;
-            }
-        });
+        elementbuilders.put(ApplicationGroup.TYPE_ID,
+                new DefaultElementBuilder(ApplicationGroup.TYPE_ID));
+        elementbuilders.put(BpPersonGroup.TYPE_ID,
+                new DefaultElementBuilder(BpPersonGroup.TYPE_ID));
+        elementbuilders.put(BpRequirementGroup.TYPE_ID,
+                new DefaultElementBuilder(BpRequirementGroup.TYPE_ID));
+        elementbuilders.put(BpThreatGroup.TYPE_ID,
+                new DefaultElementBuilder(BpThreatGroup.TYPE_ID));
+        elementbuilders.put(BusinessProcessGroup.TYPE_ID,
+                new DefaultElementBuilder(BusinessProcessGroup.TYPE_ID));
+        elementbuilders.put(DeviceGroup.TYPE_ID, new DefaultElementBuilder(DeviceGroup.TYPE_ID));
+        elementbuilders.put(IcsSystemGroup.TYPE_ID,
+                new DefaultElementBuilder(IcsSystemGroup.TYPE_ID));
+        elementbuilders.put(ItSystemGroup.TYPE_ID,
+                new DefaultElementBuilder(ItSystemGroup.TYPE_ID));
+        elementbuilders.put(NetworkGroup.TYPE_ID, new DefaultElementBuilder(NetworkGroup.TYPE_ID));
+        elementbuilders.put(RoomGroup.TYPE_ID, new DefaultElementBuilder(RoomGroup.TYPE_ID));
+        elementbuilders.put(SafeguardGroup.TYPE_ID,
+                new DefaultElementBuilder(SafeguardGroup.TYPE_ID));
     }
 
     public static CnAElementFactory getInstance() {
