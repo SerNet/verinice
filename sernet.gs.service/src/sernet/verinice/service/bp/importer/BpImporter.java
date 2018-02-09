@@ -734,7 +734,7 @@ public class BpImporter {
         for (ITBP2VNA.generated.threat.Document bsiThreat : threats) {
             if (! addedThreats.containsKey(bsiThreat.getIdentifier())) {
                 BpThreat veriniceThreat = (BpThreat) createElement(BpThreat.TYPE_ID, 
-                        elementalThreatGroup, bsiThreat.getFullTitle());
+                        elementalThreatGroup, bsiThreat.getTitle());
                 
                 veriniceThreat.setIdentifier(bsiThreat.getIdentifier());
                 String plainDescription = HtmlHelper.getAnyObjectDescription(
