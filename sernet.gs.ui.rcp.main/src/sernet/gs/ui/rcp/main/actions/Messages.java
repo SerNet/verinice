@@ -47,6 +47,8 @@ public class Messages extends NLS {
     public static String ExportAction_4;
     public static String ImportGstoolAction_1;
     public static String ImportGstoolAction_2;
+    public static String ImportGstoolNotesAction_0;
+    public static String ImportGstoolNotesAction_1;
     public static String ManageUpdatesAction_1;
     public static String ManageUpdatesAction_2;
     public static String OpenMultipleViewAction_2;

@@ -22,7 +22,6 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
@@ -31,68 +30,19 @@ import sernet.gs.ui.rcp.gsimport.ImportNotesTask;
 import sernet.gs.ui.rcp.gsimport.ImportTask;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.model.bp.elements.BpModel;
-import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.catalog.CatalogModel;
-import sernet.verinice.model.iso27k.ISO27KModel;
 
 
 public class ImportGstoolNotesAction extends RightsEnabledAction {
 	
-	public static final String ID = "sernet.gs.ui.rcp.main.importgstoolnotesaction";
+	public static final String ID = "sernet.gs.ui.rcp.main.importgstoolnotesaction"; //$NON-NLS-1$
 	private final IWorkbenchWindow window;
-	
-	private IModelLoadListener loadListener = new IModelLoadListener() {
-		@Override
-        public void closed(BSIModel model) {
-			Display.getDefault().asyncExec(new Runnable() {
-				@Override
-                public void run() {
-//					setEnabled(false);
-				}
-			});
-		}
-		
-		@Override
-        public void loaded(final BSIModel model) {
-			Display.getDefault().asyncExec(new Runnable() {
-				@Override
-                public void run() {
-				    // only enable in server mode:
-//                    ServiceFactory.lookupAuthService();
-//                    if (ServiceFactory.isPermissionHandlingNeeded()) {
-//                        setEnabled(true);
-//                    }
-				}
-			});
-		}
-
-        @Override
-        public void loaded(ISO27KModel model) {
-            // nothing to do
-            
-        }
-
-        @Override
-        public void loaded(BpModel model) {
-            // nothing to do
-        }
-
-        @Override
-        public void loaded(CatalogModel model) {
-            // nothing to do
-        }
-	};
 	
 	public ImportGstoolNotesAction(IWorkbenchWindow window, String label) {
 	    super(ActionRightIDs.GSNOTESIMPORT, label);
 		this.window = window;
 		setId(ID);
 		setEnabled(true); // now works in standalone again
-		CnAElementFactory.getInstance().addLoadListener(loadListener);
 	}
 	
 	/* (non-Javadoc)
@@ -101,7 +51,7 @@ public class ImportGstoolNotesAction extends RightsEnabledAction {
 	@Override
     public void doRun() {
 		try {
-			boolean confirm = MessageDialog.openConfirm(window.getShell(), "Nachträglicher Notizimport", "Notizen werden aus der GSTOOL-Datenbank (siehe \"Bearbeiten\" -> \"Einstellungen\") in vorhandene IT-Verbünde angehängt. Fortfahren?");
+			boolean confirm = MessageDialog.openConfirm(window.getShell(), Messages.ImportGstoolNotesAction_0, Messages.ImportGstoolNotesAction_1);
 			if (!confirm){
 				return;
 			}
