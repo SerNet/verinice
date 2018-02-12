@@ -113,13 +113,9 @@ public class BpImporter {
 
     static {
         processIdentifierPrefixes = new HashSet<>();
-        processIdentifierPrefixes
-                .addAll(Arrays.asList(new String[] { "CON", "DER", "ISMS", "OPS", "ORP"
-
-        }));
+        processIdentifierPrefixes.addAll(Arrays.asList("CON", "DER", "ISMS", "OPS", "ORP"));
         systemIdentifierPrefixes = new HashSet<>();
-        systemIdentifierPrefixes
-                .addAll(Arrays.asList(new String[] { "APP", "IND", "INF", "NET", "SYS" }));
+        systemIdentifierPrefixes.addAll(Arrays.asList("APP", "IND", "INF", "NET", "SYS"));
     }
 
     public BpImporter(String xmlRoot) {
@@ -127,7 +123,7 @@ public class BpImporter {
     }
 
     /**
-     * main BSI-XML to vna tranforming method
+     * main BSI-XML to vna transforming method
      * 
      * @throws CreateBPElementException
      */
