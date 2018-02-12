@@ -17,10 +17,16 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bpm.TodoViewItem;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
@@ -52,6 +58,25 @@ import sernet.verinice.model.ds.IDatenschutzElement;
 
 public class CnAImageProvider {
 
+    private static final Map<String, String> IMAGE_NAME_BY_STATE;
+
+    static {
+        Map<String, String> m = new HashMap<>();
+        m.put(MassnahmenUmsetzung.P_UMSETZUNG_NEIN, ImageCache.MASSNAHMEN_UMSETZUNG_NEIN);
+        m.put(MassnahmenUmsetzung.P_UMSETZUNG_JA, ImageCache.MASSNAHMEN_UMSETZUNG_JA);
+        m.put(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE, ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
+        m.put(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH, ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
+        m.put(Safeguard.PROP_IMPLEMENTATION_STATUS_NO, ImageCache.MASSNAHMEN_UMSETZUNG_NEIN);
+        m.put(Safeguard.PROP_IMPLEMENTATION_STATUS_YES, ImageCache.MASSNAHMEN_UMSETZUNG_JA);
+        m.put(Safeguard.PROP_IMPLEMENTATION_STATUS_PARTIALLY, ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
+        m.put(Safeguard.PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE, ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
+        m.put(BpRequirement.PROP_IMPLEMENTATION_STATUS_NO, ImageCache.MASSNAHMEN_UMSETZUNG_NEIN);
+        m.put(BpRequirement.PROP_IMPLEMENTATION_STATUS_YES, ImageCache.MASSNAHMEN_UMSETZUNG_JA);
+        m.put(BpRequirement.PROP_IMPLEMENTATION_STATUS_PARTIALLY, ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
+        m.put(BpRequirement.PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE, ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
+        IMAGE_NAME_BY_STATE = Collections.unmodifiableMap(m);
+    }
+
     public static Image getImage(TodoViewItem elmt) {
         return getImage(elmt.getUmsetzung());
     }
@@ -63,7 +88,18 @@ public class CnAImageProvider {
             String state = mn.getUmsetzung();
             return getImage(state);
         }
-
+        if (elmt instanceof Safeguard) {
+            Safeguard safeguard = (Safeguard) elmt;
+            safeguard = (Safeguard) Retriever.checkRetrieveElement(safeguard);
+            String state = safeguard.getImplementationStatus();
+            return getImage(state);
+        }
+        if (elmt instanceof BpRequirement) {
+            BpRequirement requirement = (BpRequirement) elmt;
+            requirement = (BpRequirement) Retriever.checkRetrieveElement(requirement);
+            String state = requirement.getImplementationStatus();
+            return getImage(state);
+        }
         if (elmt instanceof GefaehrdungsUmsetzung) {
             return ImageCache.getInstance().getImage(ImageCache.GEFAEHRDUNG);
         }
@@ -129,24 +165,11 @@ public class CnAImageProvider {
     }
 
     private static Image getImage(String state) {
-
-        if (state.equals(MassnahmenUmsetzung.P_UMSETZUNG_NEIN)) {
-            return ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_NEIN);
+        String imageName = IMAGE_NAME_BY_STATE.get(state);
+        if (imageName == null) {
+            imageName = ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET;
         }
-
-        if (state.equals(MassnahmenUmsetzung.P_UMSETZUNG_JA)) {
-            return ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_JA);
-        }
-
-        if (state.equals(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE)) {
-            return ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
-        }
-
-        if (state.equals(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH)) {
-            return ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
-        }
-        // else:
-        return ImageCache.getInstance().getImage(ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET);
+        return ImageCache.getInstance().getImage(imageName);
     }
 
     public static Image getImage(FinishedRiskAnalysis elmt) {

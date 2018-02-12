@@ -54,6 +54,12 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     public static final String PROP_QUALIFIER_BASIC = "bp_safeguard_qualifier_basic";//$NON-NLS-1$
     public static final String PROP_QUALIFIER_STANDARD = "bp_safeguard_qualifier_standard";//$NON-NLS-1$
     public static final String PROP_QUALIFIER_HIGH = "bp_safeguard_qualifier_high";//$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS = "bp_safeguard_implementation_status"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_NO = "bp_safeguard_implementation_status_no"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_YES = "bp_safeguard_implementation_status_yes"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_PARTIALLY = "bp_safeguard_implementation_status_partially"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_safeguard_implementation_status_na"; //$NON-NLS-1$
+
     public static final String REL_BP_SAFEGUARD_BP_THREAT = "rel_bp_safeguard_bp_threat"; //$NON-NLS-1$
 
     private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
@@ -76,7 +82,8 @@ public class Safeguard extends CnATreeElement implements IBpElement {
         }
     };
 
-    protected Safeguard() {}
+    protected Safeguard() {
+    }
 
     @Override
     public ILinkChangeListener getLinkChangeListener() {
@@ -87,7 +94,6 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     public IReevaluator getProtectionRequirementsProvider() {
         return protectionRequirementsProvider;
     }
-
 
     public Safeguard(CnATreeElement parent) {
         super(parent);
@@ -104,7 +110,8 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     }
 
     public void setObjectBrowserDescription(String description) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER_DESC), description);
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER_DESC),
+                description);
     }
 
     public String getAbbreviation() {
@@ -124,7 +131,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
-    
+
     public void setTitle(String title) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
     }
@@ -150,7 +157,8 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     }
 
     public void setLastChange(Date date) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE), String.valueOf(date.getTime()));
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE),
+                String.valueOf(date.getTime()));
     }
 
     public void setIsAffectsConfidentiality(boolean affectsConfidentiality) {
@@ -175,6 +183,10 @@ public class Safeguard extends CnATreeElement implements IBpElement {
 
     public boolean isAffectsAvailability() {
         return ((this.getNumericProperty(PROP_AVAILABILITY) == 1) ? true : false);
+    }
+
+    public String getImplementationStatus(){
+        return getEntity().getRawPropertyValue(PROP_IMPLEMENTATION_STATUS);
     }
 
     public static String getIdentifierOfSafeguard(CnATreeElement requirement) {
