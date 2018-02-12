@@ -10028,7 +10028,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty editable="false" id="bp_requirement_group_objectbrowser_content"
             inputtype="text" name="Module Content" showInObjectBrowser="true" visible="false" />
         <huiproperty id="bp_requirement_group_desc" inputtype="text" name="Description" />
-        <huiproperty id="bp_requirement_group_impl_seq" name="Implementation Sequence" 
+        <huiproperty id="bp_requirement_group_impl_seq" name="Implementation Order" 
             inputtype="singleoption" required="true">
                 <option id="bp_requirement_group_impl_seq_r1" name="R1" />
                 <option id="bp_requirement_group_impl_seq_r2" name="R2" />
