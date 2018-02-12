@@ -76,7 +76,8 @@ public class Safeguard extends CnATreeElement implements IBpElement {
         }
     };
 
-    protected Safeguard() {}
+    protected Safeguard() {
+    }
 
     @Override
     public ILinkChangeListener getLinkChangeListener() {
@@ -87,7 +88,6 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     public IReevaluator getProtectionRequirementsProvider() {
         return protectionRequirementsProvider;
     }
-
 
     public Safeguard(CnATreeElement parent) {
         super(parent);
@@ -104,7 +104,8 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     }
 
     public void setObjectBrowserDescription(String description) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER_DESC), description);
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER_DESC),
+                description);
     }
 
     public String getAbbreviation() {
@@ -124,7 +125,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
-    
+
     public void setTitle(String title) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
     }
@@ -150,7 +151,8 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     }
 
     public void setLastChange(Date date) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE), String.valueOf(date.getTime()));
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE),
+                String.valueOf(date.getTime()));
     }
 
     public void setIsAffectsConfidentiality(boolean affectsConfidentiality) {

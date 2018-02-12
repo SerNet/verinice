@@ -43,55 +43,56 @@ import sernet.verinice.service.iso27k.ItemControlTransformer;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * 
  */
-public class TreeLabelProvider extends LabelProvider  {
+public class TreeLabelProvider extends LabelProvider {
 
     private static final Logger LOG = Logger.getLogger(TreeLabelProvider.class);
     private static final int MAX_TEXT_WIDTH = 80;
-    
-	public TreeLabelProvider() {
-		super();
-	}
 
-	private ControlMaturityService maturityService = new ControlMaturityService();
+    public TreeLabelProvider() {
+        super();
+    }
+
+    private ControlMaturityService maturityService = new ControlMaturityService();
 
     @Override
-	public Image getImage(Object obj) {
-		Image image = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
-		try {
-    		if (!(obj instanceof CnATreeElement)) {
-    			return image;
-    		} else {
-    		    return getImage((CnATreeElement) obj);
-    		}
-    	} catch(Exception e) {
+    public Image getImage(Object obj) {
+        Image image = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
+        try {
+            if (!(obj instanceof CnATreeElement)) {
+                return image;
+            } else {
+                return getImage((CnATreeElement) obj);
+            }
+        } catch (Exception e) {
             LOG.error("Error while getting image for tree item.", e);
             return image;
-        }		
-	}
-    
+        }
+    }
+
     private Image getImage(CnATreeElement element) {
-        Image image = CnAImageProvider.getCustomImage((CnATreeElement)element);
-        if (image!=null) {
+        Image image = CnAImageProvider.getCustomImage((CnATreeElement) element);
+        if (image != null) {
             return image;
         }
-        if (element instanceof Group && !(element instanceof ImportIsoGroup) && !(element instanceof ImportBpGroup)) {
+        if (element instanceof Group && !(element instanceof ImportIsoGroup)
+                && !(element instanceof ImportBpGroup)) {
             Group group = (Group) element;
-            // TODO - getChildTypes()[0] might be a problem for more than one type
+            // TODO - getChildTypes()[0] might be a problem for more than one
+            // type
             image = ImageCache.getInstance().getImageForTypeId(group.getChildTypes()[0]);
         } else if (element instanceof SamtTopic) {
-              SamtTopic topic = (SamtTopic) element;
-              image = ImageCache.getInstance().
-                      getControlImplementationImage(maturityService.getIsaState(topic));
+            SamtTopic topic = (SamtTopic) element;
+            image = ImageCache.getInstance()
+                    .getControlImplementationImage(maturityService.getIsaState(topic));
         } else if (element instanceof Control) {
             Control control = (Control) element;
-            image = ImageCache.getInstance().
-                    getControlImplementationImage(control.getImplementation());
-            
+            image = ImageCache.getInstance()
+                    .getControlImplementationImage(control.getImplementation());
         } else {
             // else return type icon:
             image = ImageCache.getInstance().getImageForTypeId(element.getTypeId());
         }
-        
+
         if (image == null) {
             image = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
         }
@@ -112,35 +113,29 @@ public class TreeLabelProvider extends LabelProvider  {
             if (title != null) {
                 sb.append(title);
             }
-            text = ItemControlTransformer.truncate(sb.toString(), MAX_TEXT_WIDTH) ;
+            text = ItemControlTransformer.truncate(sb.toString(), MAX_TEXT_WIDTH);
             if (LOG.isDebugEnabled()) {
-                text = text + " (scope: " + element.getScopeId() + ","
-                        + " uu: " + element.getUuid() + ", ext: " + element.getExtId() + ")";
+                text = text + " (scope: " + element.getScopeId() + "," + " uu: " + element.getUuid()
+                        + ", ext: " + element.getExtId() + ")";
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOG.error("Error while getting label for tree item.", e);
         }
-		return text;
-	}
+        return text;
+    }
 
     private String getPrefix(CnATreeElement element) {
         if (element instanceof IISO27kElement) {
-            String abbreviation = ((IISO27kElement)element).getAbbreviation();
+            String abbreviation = ((IISO27kElement) element).getAbbreviation();
             return StringUtils.isEmpty(abbreviation) ? "" : abbreviation.concat(" ");
-        }
-        else if (element instanceof Safeguard) {
+        } else if (element instanceof Safeguard) {
             Safeguard safeguard = (Safeguard) element;
-            return String.format("%s [%s] ",
-                    safeguard.getIdentifier(),
-                    safeguard.getQualifier());
-        }
-        else if (element instanceof BpRequirement) {
+            return String.format("%s [%s] ", safeguard.getIdentifier(), safeguard.getQualifier());
+        } else if (element instanceof BpRequirement) {
             BpRequirement requirement = (BpRequirement) element;
-            return String.format("%s [%s] ",
-                    requirement.getIdentifier(),
+            return String.format("%s [%s] ", requirement.getIdentifier(),
                     requirement.getQualifier());
-        }
-        else if (element instanceof BpThreat) {
+        } else if (element instanceof BpThreat) {
             BpThreat requirement = (BpThreat) element;
             return requirement.getIdentifier().concat(" ");
         }

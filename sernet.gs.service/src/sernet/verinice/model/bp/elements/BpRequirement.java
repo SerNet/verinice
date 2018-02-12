@@ -57,7 +57,6 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     public static final String PROP_QUALIFIER_STANDARD = "bp_requirement_qualifier_standard"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER_HIGH = "bp_requirement_qualifier_high"; //$NON-NLS-1$
 
-
     public static final String REL_BP_REQUIREMENT_BP_THREAT = "rel_bp_requirement_bp_threat"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_SAFEGUARD = "rel_bp_requirement_bp_safeguard"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_ITNETWORK = "rel_bp_requirement_bp_itnetwork"; //$NON-NLS-1$
@@ -68,7 +67,6 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     public static final String REL_BP_REQUIREMENT_BP_DEVICE = "rel_bp_requirement_bp_device"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_NETWORK = "rel_bp_requirement_bp_network"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_ROOM = "rel_bp_requirement_bp_room"; //$NON-NLS-1$
-
 
     private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
     private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
@@ -91,7 +89,8 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         }
     };
 
-    protected BpRequirement() {}
+    protected BpRequirement() {
+    }
 
     public BpRequirement(CnATreeElement parent) {
         super(parent);
@@ -102,10 +101,12 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     public ILinkChangeListener getLinkChangeListener() {
         return linkChangeListener;
     }
+
     @Override
     public IReevaluator getProtectionRequirementsProvider() {
         return protectionRequirementsProvider;
     }
+
     @Override
     public String getTypeId() {
         return TYPE_ID;
@@ -121,7 +122,8 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     }
 
     public void setObjectBrowserDescription(String description) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER), description);
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER),
+                description);
     }
 
     public String getAbbreviation() {
@@ -186,7 +188,8 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     }
 
     public void setLastChange(Date date) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE), String.valueOf(date.getTime()));
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE),
+                String.valueOf(date.getTime()));
     }
 
     public void setIsAffectsConfidentiality(boolean affectsConfidentiality) {
