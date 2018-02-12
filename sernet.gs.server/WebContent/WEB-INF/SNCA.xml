@@ -6841,7 +6841,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         id="incident" >
         
         <huirelation to="incident_scenario" id="rel_incident_incscen"
-            name="predicted as" reversename="happened as" tooltip="" />
+            name="predicted as" reversename="occurred as" tooltip="" />
         <huirelation to="asset" id="rel_incident_asset"
             name="affected" reversename="was affected by" tooltip="" />
         <huirelation to="response" id="rel_incident_response"
