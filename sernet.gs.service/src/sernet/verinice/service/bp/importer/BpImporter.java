@@ -675,13 +675,19 @@ public class BpImporter {
             throws CreateBPElementException {
         BpRequirementGroup veriniceModule = null;
         if (parent != null) {
+            String moduleIdentifier = bsiModule.getIdentifier();
             veriniceModule = (BpRequirementGroup) createElement(BpRequirementGroup.TYPE_ID, parent,
                     bsiModule.getFullTitle());
 
-            veriniceModule.setIdentifier(bsiModule.getIdentifier());
+            veriniceModule.setIdentifier(moduleIdentifier);
             veriniceModule
                     .setObjectBrowserDescription(HtmlHelper.getCompleteModuleXMLText(bsiModule));
             veriniceModule.setLastChange(getBSIDate(bsiModule.getLastChange()));
+            String implementationOrder = implementationOrderByModuleIdentifier
+                    .get(moduleIdentifier);
+            if (implementationOrder != null) {
+                veriniceModule.setImplementationOrder(implementationOrder);
+            }
             LOG.debug("Module : \t" + veriniceModule.getTitle() + " created");
             createRequirementsForModule(bsiModule, veriniceModule);
         }
