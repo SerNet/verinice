@@ -369,7 +369,8 @@ public class BpImporter {
                 if (safeguardRootGroup != null) {
                     LOG.warn("Found more than one root-Requirement-Group");
                 }
-                safeguardRootGroup = (SafeguardGroup) child;                
+                safeguardRootGroup = (SafeguardGroup) child;
+                safeguardRootGroup.setTitel(Messages.Root_Safeguard_Group_Name);
             }
         }
 

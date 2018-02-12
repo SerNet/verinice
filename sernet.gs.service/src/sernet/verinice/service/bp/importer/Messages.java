@@ -63,6 +63,7 @@ public class Messages extends NLS {
     public static String Differentiation;
     public static String Threat_Situation;
     public static String Description;
+    public static String Root_Safeguard_Group_Name;
 
     static {
         // initialize resource bundle
