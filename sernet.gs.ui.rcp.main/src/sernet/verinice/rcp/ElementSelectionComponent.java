@@ -81,7 +81,8 @@ import sernet.verinice.service.commands.LoadElementTitles;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class ElementSelectionComponent {
-    private transient Logger log = Logger.getLogger(ElementSelectionComponent.class);
+
+    private static final Logger log = Logger.getLogger(ElementSelectionComponent.class);
 
     private Composite container;
 
@@ -100,9 +101,9 @@ public class ElementSelectionComponent {
     private static final String COLUMN_IMG = "_img"; //$NON-NLS-1$
     private static final String COLUMN_SCOPE_ID = "_scope_id"; //$NON-NLS-1$
     private static final String COLUMN_LABEL = "_label"; //$NON-NLS-1$
-    private static Map<Integer, String> titleMap = new HashMap<Integer, String>();
+    private static Map<Integer, String> titleMap = new HashMap<>();
 
-    private List<CnATreeElement> selectedElements = new ArrayList<CnATreeElement>();
+    private List<CnATreeElement> selectedElements = new ArrayList<>();
 
     private Integer height;
 
@@ -207,110 +208,26 @@ public class ElementSelectionComponent {
         column1.getColumn().setText(""); //$NON-NLS-1$
         column1.getColumn().setWidth(column1Width);
         column1.getColumn().setResizable(false);
-        column1.setLabelProvider(new CellLabelProvider() {
-            @Override
-            public void update(ViewerCell cell) {
-                if (cell.getElement() instanceof PlaceHolder) {
-                    return;
-                }
-                CnATreeElement element = (CnATreeElement) cell.getElement();
-                Image image = CnAImageProvider.getCustomImage(element);
-                if (image == null) {
-                    if (element instanceof Safeguard || element instanceof BpRequirement) {
-                        image = CnAImageProvider.getImage(element);
-                    } else {
-                        String typeId = element.getTypeId();
-                        if (element instanceof Group && !(element instanceof ImportIsoGroup)) {
-                            Group<?> group = (Group<?>) element;
-                            // TODO - getChildTypes()[0] might be a problem for
-                            // more than one type
-                            typeId = group.getChildTypes()[0];
-                        }
-                        image = ImageCache.getInstance().getObjectTypeImage(typeId);
-                    }
-                }
-                cell.setImage(image);
-            }
-        });
+        column1.setLabelProvider(new ImageColumnCellLabelProvider());
 
         // label column
         TableViewerColumn column2 = new TableViewerColumn(viewer, SWT.LEFT);
         column2.getColumn().setText(Messages.CnATreeElementSelectionDialog_9);
         column2.getColumn().setResizable(true);
         column2.getColumn().setWidth(column2Width);
-        column2.setLabelProvider(new CellLabelProvider() {
-            @Override
-            public void update(ViewerCell cell) {
-                if (cell.getElement() instanceof PlaceHolder) {
-                    cell.setText(((PlaceHolder) cell.getElement()).getTitle());
-                    return;
-                }
-                cell.setText(makeTitle((CnATreeElement) cell.getElement()));
-            }
-        });
+        column2.setLabelProvider(new LabelColumnCellLabelProvider());
 
         // scope id column:
         TableViewerColumn column3 = new TableViewerColumn(viewer, SWT.LEFT);
         column3.getColumn().setText(Messages.CnATreeElementSelectionDialog_10);
         column3.getColumn().setWidth(column3Width);
         column3.getColumn().setResizable(true);
-        column3.setLabelProvider(new CellLabelProvider() {
-            @Override
-            public void update(ViewerCell cell) {
-                if (cell.getElement() instanceof PlaceHolder) {
-                    cell.setText(((PlaceHolder) cell.getElement()).getTitle());
-                    return;
-                }
-                String title = "";
-                CnATreeElement elmt = (CnATreeElement) cell.getElement();
-
-                try {
-                    if (!titleMap.containsKey(elmt.getScopeId())) {
-                        title = loadElementsTitles(elmt);
-                    } else {
-                        title = titleMap.get(elmt.getScopeId());
-                    }
-                } catch (CommandException e) {
-                    log.error("Error while getting element", e);
-                }
-                cell.setText(title);
-            }
-        });
+        column3.setLabelProvider(new ScopeIdColumnCellLabelProvider());
 
         viewer.setColumnProperties(new String[] { COLUMN_IMG, COLUMN_SCOPE_ID, COLUMN_LABEL });
         viewer.setContentProvider(new ArrayContentProvider());
         filter = new CnaTreeElementTitleFilter(viewer);
-        viewer.setSorter(new ViewerSorter() {
-            @Override
-            public int compare(Viewer viewer, Object e1, Object e2) {
-                String title1 = "";
-                String title2 = "";
-                CnATreeElement elmt1 = (CnATreeElement) e1;
-                CnATreeElement elmt2 = (CnATreeElement) e2;
-                if (titleMap != null) {
-                    title1 = titleMap.get(elmt1.getScopeId());
-                    title2 = titleMap.get(elmt2.getScopeId());
-                    if (title1 != null && title2 != null) {
-                        int allScopeTitles = title1.compareTo(title2);
-                        if (allScopeTitles == 0) {
-                            return makeTitle(elmt1).compareTo(makeTitle(elmt2));
-                        }
-                        return title1.compareTo(title2);
-                    } else {
-                        if (title1 == null && title2 == null) {
-                            return makeTitle(elmt1).compareTo(makeTitle(elmt2));
-                        }
-                        if (title1 == null) {
-                            return 1;
-                        }
-                        if (title2 == null) {
-                            return -1;
-                        }
-                    }
-                }
-                return makeTitle(elmt1).compareTo(makeTitle(elmt2));
-            }
-        });
+        viewer.setSorter(new ElementTableViewerSorter());
 
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
@@ -368,7 +285,7 @@ public class ElementSelectionComponent {
         }
     }
 
-    private String makeTitle(CnATreeElement elmt) {
+    private static String makeTitle(CnATreeElement elmt) {
         StringBuilder sb = new StringBuilder();
         if (elmt instanceof IISO27kElement) {
             String abbreviation = ((IISO27kElement) elmt).getAbbreviation();
@@ -465,14 +382,6 @@ public class ElementSelectionComponent {
         }
     }
 
-    private String loadElementsTitles(CnATreeElement elmt) throws CommandException {
-        LoadElementTitles scopeCommand;
-        scopeCommand = new LoadElementTitles();
-        scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
-        titleMap = scopeCommand.getElements();
-        return titleMap.get(elmt.getScopeId());
-    }
-
     public Integer getScopeId() {
         return scopeId;
     }
@@ -505,4 +414,107 @@ public class ElementSelectionComponent {
         this.height = height;
     }
 
+    private static final class ElementTableViewerSorter extends ViewerSorter {
+        @Override
+        public int compare(Viewer viewer, Object e1, Object e2) {
+
+            CnATreeElement elmt1 = (CnATreeElement) e1;
+            CnATreeElement elmt2 = (CnATreeElement) e2;
+            if (titleMap != null) {
+                String title1 = titleMap.get(elmt1.getScopeId());
+                String title2 = titleMap.get(elmt2.getScopeId());
+                if (title1 != null && title2 != null) {
+                    int allScopeTitles = title1.compareTo(title2);
+                    if (allScopeTitles == 0) {
+                        return makeTitle(elmt1).compareTo(makeTitle(elmt2));
+                    }
+                    return title1.compareTo(title2);
+                } else {
+                    if (title1 == null && title2 == null) {
+                        return makeTitle(elmt1).compareTo(makeTitle(elmt2));
+                    }
+                    if (title1 == null) {
+                        return 1;
+                    }
+                    // title2 == null
+                    return -1;
+                }
+            }
+            return makeTitle(elmt1).compareTo(makeTitle(elmt2));
+        }
+    }
+
+    private static final class ScopeIdColumnCellLabelProvider extends CellLabelProvider {
+        @Override
+        public void update(ViewerCell cell) {
+            if (cell.getElement() instanceof PlaceHolder) {
+                cell.setText(((PlaceHolder) cell.getElement()).getTitle());
+                return;
+            }
+            String title = "";
+            CnATreeElement elmt = (CnATreeElement) cell.getElement();
+
+            try {
+                if (!titleMap.containsKey(elmt.getScopeId())) {
+                    title = loadElementsTitles(elmt);
+                } else {
+                    title = titleMap.get(elmt.getScopeId());
+                }
+            } catch (CommandException e) {
+                log.error("Error while getting element", e);
+            }
+            cell.setText(title);
+        }
+
+        private static String loadElementsTitles(CnATreeElement elmt) throws CommandException {
+            LoadElementTitles scopeCommand;
+            scopeCommand = new LoadElementTitles();
+            scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
+            titleMap = scopeCommand.getElements();
+            return titleMap.get(elmt.getScopeId());
+        }
+    }
+
+    private static final class LabelColumnCellLabelProvider extends CellLabelProvider {
+        @Override
+        public void update(ViewerCell cell) {
+            if (cell.getElement() instanceof PlaceHolder) {
+                cell.setText(((PlaceHolder) cell.getElement()).getTitle());
+                return;
+            }
+            cell.setText(makeTitle((CnATreeElement) cell.getElement()));
+        }
+    }
+
+    private static final class ImageColumnCellLabelProvider extends CellLabelProvider {
+        @Override
+        public void update(ViewerCell cell) {
+            if (cell.getElement() instanceof PlaceHolder) {
+                return;
+            }
+            CnATreeElement element = (CnATreeElement) cell.getElement();
+            Image image = CnAImageProvider.getCustomImage(element);
+            if (image == null) {
+                image = getDefaultImage(element);
+            }
+            cell.setImage(image);
+        }
+
+        private Image getDefaultImage(CnATreeElement element) {
+            Image image;
+            if (element instanceof Safeguard || element instanceof BpRequirement) {
+                image = CnAImageProvider.getImage(element);
+            } else {
+                String typeId = element.getTypeId();
+                if (element instanceof Group && !(element instanceof ImportIsoGroup)) {
+                    Group<?> group = (Group<?>) element;
+                    // TODO - getChildTypes()[0] might be a problem for
+                    // more than one type
+                    typeId = group.getChildTypes()[0];
+                }
+                image = ImageCache.getInstance().getObjectTypeImage(typeId);
+            }
+            return image;
+        }
+    }
 }
