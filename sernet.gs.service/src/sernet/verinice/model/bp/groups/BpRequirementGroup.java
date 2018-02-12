@@ -40,6 +40,8 @@ public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup
     private static final String PROP_ID = "bp_requirement_group_id"; //$NON-NLS-1$
     private static final String PROP_LAST_CHANGE = "bp_requirement_group_last_change"; //$NON-NLS-1$
 
+    private static final String PROP_IMPLEMENTATION_ORDER = "bp_requirement_group_impl_seq"; //$NON-NLS-1$
+
     public static final String[] CHILD_TYPES = new String[] { BpRequirement.TYPE_ID,
             BpRequirementGroup.TYPE_ID };
 
@@ -96,4 +98,14 @@ public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE),
                 String.valueOf(date.getTime()));
     }
+
+    public String getImplementationOrder() {
+        return getEntity().getPropertyValue(PROP_IMPLEMENTATION_ORDER);
+    }
+
+    public void setImplementationOrder(String implementationSequence) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_IMPLEMENTATION_ORDER),
+                implementationSequence);
+    }
+
 }
