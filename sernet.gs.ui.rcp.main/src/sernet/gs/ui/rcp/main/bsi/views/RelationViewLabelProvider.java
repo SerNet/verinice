@@ -31,6 +31,8 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
@@ -215,6 +217,9 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
         if (typeId.equals(Control.TYPE_ID) || typeId.equals(SamtTopic.TYPE_ID)) {
             String impl = Control.getImplementation(elmt.getEntity());
             return ImageCache.getInstance().getControlImplementationImage(impl);
+        }
+        if (elmt instanceof Safeguard || elmt instanceof BpRequirement) {
+            return CnAImageProvider.getImage(elmt);
         }
         if (elmt instanceof Group && !(elmt instanceof ImportIsoGroup)) {
             Group<?> group = (Group<?>) elmt;

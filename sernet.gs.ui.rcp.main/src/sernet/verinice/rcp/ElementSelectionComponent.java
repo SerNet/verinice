@@ -66,8 +66,12 @@ import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kElement;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
 import sernet.verinice.service.commands.LoadElementTitles;
 
@@ -212,7 +216,18 @@ public class ElementSelectionComponent {
                 CnATreeElement element = (CnATreeElement) cell.getElement();
                 Image image = CnAImageProvider.getCustomImage(element);
                 if (image == null) {
-                    image = ImageCache.getInstance().getObjectTypeImage(element.getTypeId());
+                    if (element instanceof Safeguard || element instanceof BpRequirement) {
+                        image = CnAImageProvider.getImage(element);
+                    } else {
+                        String typeId = element.getTypeId();
+                        if (element instanceof Group && !(element instanceof ImportIsoGroup)) {
+                            Group<?> group = (Group<?>) element;
+                            // TODO - getChildTypes()[0] might be a problem for
+                            // more than one type
+                            typeId = group.getChildTypes()[0];
+                        }
+                        image = ImageCache.getInstance().getObjectTypeImage(typeId);
+                    }
                 }
                 cell.setImage(image);
             }
