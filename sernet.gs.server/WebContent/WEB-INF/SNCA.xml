@@ -4987,7 +4987,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                 name="Virtual system"
                 id="asset_type_virtual" />
             <option
-                name="Auftragsdatenverarbeitung"
+                name="Auftragsverarbeitung"
                 id="asset_type_adv" />
         </huiproperty>
         
@@ -8055,6 +8055,11 @@ Wurden bereits weitere Stellen informiert?
         <huirelation to="control" id="rel_process_control_Auftragskontrolle" name="Maßnahme zur Auftragskontrolle" reversename="Auftragskontrolle für" />    
         <huirelation to="control" id="rel_process_control_Verfügbarkeitskontrolle" name="Maßnahme zur Verfügbarkeitskontrolle" reversename="Verfügbarkeitskontrolle für" />   
         <huirelation to="control" id="rel_process_control_Trennungskontrolle" name="Maßnahme zur Trennungskontrolle" reversename="Trennungskontrolle für" />
+        <huirelation to="control" id="rel_process_control_objectives" name="data protection control objectives" reversename="data protection control objectives for" /> 
+            
+        <huirelation to="mnums" id="rel_process_mnums" name="data protection control objectives" reversename="data protection control objectives for" />              
+        <huirelation to="bp_safeguard" id="rel_process_bp_safeguard" name="data protection control objectives" reversename="data protection control objectives for" /> 
+        
     
         <!-- BDSG Relations to ISA-Controls: -->   
         <huirelation to="samt_topic" id="rel_process_samttopic_Zutrittskontrolle" name="Maßnahme zur Zutrittskontrolle" reversename="Zutrittskontrolle für" /> 
