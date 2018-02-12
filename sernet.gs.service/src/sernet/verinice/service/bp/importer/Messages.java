@@ -25,9 +25,9 @@ import org.eclipse.osgi.util.NLS;
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
  */
 public class Messages extends NLS {
-    
+
     private static final String BUNDLE_NAME = "sernet.verinice.service.bp.importer.messages"; //$NON-NLS-1$
-    
+
     public static String Root_Requirement_Group_Name;
     public static String Process_Requirement_Group_Name;
     public static String System_Requirement_Group_Name;
@@ -63,11 +63,10 @@ public class Messages extends NLS {
     public static String Differentiation;
     public static String Threat_Situation;
     public static String Description;
-    
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }
-
 
 }

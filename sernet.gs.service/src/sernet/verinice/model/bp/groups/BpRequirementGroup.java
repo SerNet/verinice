@@ -31,29 +31,31 @@ import sernet.verinice.model.iso27k.Group;
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
 public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup {
-    
+
     private static final long serialVersionUID = 7752776589962581995L;
-    
+
     public static final String TYPE_ID = "bp_requirement_group";
     public static final String PROP_NAME = "bp_requirement_group_name"; //$NON-NLS-1$
     private static final String PROP_OBJECTBROWSER_DESC = "bp_requirement_group_objectbrowser_content"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_requirement_group_id"; //$NON-NLS-1$
     private static final String PROP_LAST_CHANGE = "bp_requirement_group_last_change"; //$NON-NLS-1$
-    
-    public static final String[] CHILD_TYPES = new String[] {BpRequirement.TYPE_ID, BpRequirementGroup.TYPE_ID};
-    
-    protected BpRequirementGroup() {}
-    
+
+    public static final String[] CHILD_TYPES = new String[] { BpRequirement.TYPE_ID,
+            BpRequirementGroup.TYPE_ID };
+
+    protected BpRequirementGroup() {
+    }
+
     public BpRequirementGroup(CnATreeElement parent) {
         super(parent);
         init();
     }
-    
+
     @Override
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);
     }
-    
+
     @Override
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
@@ -63,34 +65,35 @@ public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup
     public String getTypeId() {
         return TYPE_ID;
     }
-    
+
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;
     }
-    
+
     public String getObjectBrowserDescription() {
         return getEntity().getPropertyValue(PROP_OBJECTBROWSER_DESC);
     }
-    
+
     public void setObjectBrowserDescription(String description) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER_DESC), description);
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER_DESC),
+                description);
     }
-    
+
     public String getIdentifier() {
         return getEntity().getPropertyValue(PROP_ID);
     }
-    
+
     public void setIdentifier(String id) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), id);
     }
-    
+
     public Date getLastChange() {
         return getEntity().getDate(PROP_LAST_CHANGE);
     }
-    
+
     public void setLastChange(Date date) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE), String.valueOf(date.getTime()));
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE),
+                String.valueOf(date.getTime()));
     }
-    
 }
