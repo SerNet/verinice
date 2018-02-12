@@ -2,6 +2,8 @@ package sernet.verinice.service.bp.importer;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,6 +16,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -84,6 +88,7 @@ public class BpImporter {
 
     private static final Set<String> processIdentifierPrefixes;
     private static final Set<String> systemIdentifierPrefixes;
+    private static final Map<String, String> implementationOrderByModuleIdentifier;
 
     private String xmlRootDirectory = null;
 
@@ -116,6 +121,54 @@ public class BpImporter {
         processIdentifierPrefixes.addAll(Arrays.asList("CON", "DER", "ISMS", "OPS", "ORP"));
         systemIdentifierPrefixes = new HashSet<>();
         systemIdentifierPrefixes.addAll(Arrays.asList("APP", "IND", "INF", "NET", "SYS"));
+
+        String propertyValueR1 = "bp_requirement_group_impl_seq_r1";
+        String propertyValueR2 = "bp_requirement_group_impl_seq_r2";
+        String propertyValueR3 = "bp_requirement_group_impl_seq_r3";
+
+        Properties implementationOrder = new Properties();
+        try (InputStream implementationOrderProperties = BpImporter.class
+                .getResourceAsStream("implementation-order.properties")) {
+            implementationOrder.load(implementationOrderProperties);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load implementation order from file", e);
+        }
+
+        Map<String, String> mapForImplementationOrder = new HashMap<>();
+
+        for (Entry<Object, Object> entry : implementationOrder.entrySet()) {
+            String moduleIdentifier = (String) entry.getKey();
+            if (!moduleIdentifier.matches("[A-Z]{3,}\\.(\\d+\\.)*\\d+")) {
+                throw new RuntimeException("Illegal module name: '" + moduleIdentifier + "'.");
+            }
+            String implementationOrderName = (String) entry.getValue();
+            String implementationOrderPropertyValue;
+            switch (implementationOrderName) {
+            case "R1":
+                implementationOrderPropertyValue = propertyValueR1;
+                break;
+            case "R2":
+                implementationOrderPropertyValue = propertyValueR2;
+                break;
+            case "R3":
+                implementationOrderPropertyValue = propertyValueR3;
+                break;
+            default:
+                throw new RuntimeException("Illegal implementation order '"
+                        + implementationOrderName + "' for module '" + moduleIdentifier + "'"
+                        + ", allowed values: R1, R2, R3");
+            }
+            String existingMapping = mapForImplementationOrder.put(moduleIdentifier,
+                    implementationOrderPropertyValue);
+            if (existingMapping != null) {
+                throw new RuntimeException(
+                        "Found duplicate implementation order mapping for module '"
+                                + moduleIdentifier + "'" + ".");
+            }
+        }
+
+        implementationOrderByModuleIdentifier = Collections
+                .unmodifiableMap(mapForImplementationOrder);
     }
 
     public BpImporter(String xmlRoot) {
