@@ -686,8 +686,9 @@ public class BpImporter {
         BpRequirementGroup veriniceModule = null;
         if (parent != null) {
             String moduleIdentifier = bsiModule.getIdentifier();
+            String moduleTitle = bsiModule.getTitle();
             veriniceModule = (BpRequirementGroup) createElement(BpRequirementGroup.TYPE_ID, parent,
-                    bsiModule.getFullTitle());
+                    moduleTitle);
 
             veriniceModule.setIdentifier(moduleIdentifier);
             veriniceModule
