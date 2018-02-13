@@ -2209,7 +2209,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Telefon"
             id="person_telefon" />
         <huiproperty
-            name="Email"
+            name="E-Mail"
             id="person_email" />
         <huiproperty
             name="Org.-Einheit"
@@ -4872,7 +4872,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                 <huiproperty name="Zuständige Behörde" id="org_ds_AB_zust"/>        
             <huiproperty name="Adresse" id="org_ds_AB_adress" />
             <huiproperty name="Telefonnummer" id="org_ds_tel" />
-            <huiproperty name="E-Mail Adresse" id="org_ds_email" />        
+            <huiproperty name="E-Mail-Adresse" id="org_ds_email" />        
         </huipropertygroup>
 
         <huipropertygroup tags="Privacy" id="org_ds_eu" name="Vertreter innerhalb der Europäischen Union">
@@ -5574,7 +5574,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Phone"
             id="person-iso_telefon" />
         <huiproperty
-            name="Email"
+            name="E-Mail"
             id="person-iso_email" />
         <huiproperty
             name="Org.-Unit"
@@ -8108,7 +8108,7 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="process_va_gemenVerant_plz" name="Postleitzahl" />
             <huiproperty id="process_va_gemenVerant_ort" name="Ort" />
             <huiproperty id="process_va_gemenVerant_tel" name="Telefon" />
-            <huiproperty id="process_va_gemenVerant_email" name="E-Mail Adresse" />
+            <huiproperty id="process_va_gemenVerant_email" name="E-Mail-Adresse" />
         </huipropertygroup>
      
         <huipropertygroup tags="Privacy" id="process_zb_group" name="Zweckbestimmung">
@@ -8158,7 +8158,7 @@ Wurden bereits weitere Stellen informiert?
                 <option id="process_art_16" name="Freiwillige Angaben des Betroffenen" />
                 <option id="process_art_17" name="Geschäftliche Adress- und Kontaktdaten" />
                 <option id="process_art_18" name="Geschäfts- und Vertragsdaten" />
-                <option id="process_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, Email)" />
+                <option id="process_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, E-Mail)" />
                 <option id="process_art_20" name="Interessensgebiete" />
                 <option id="process_art_21" name="Leistungsdaten (Bsp.: Akkord ...)" />
                 <option id="process_art_22" name="Personendaten zur Personalauswahl, -beurteilung" />
@@ -8240,7 +8240,7 @@ Wurden bereits weitere Stellen informiert?
                 <option id="process_empf_int_art_16" name="Freiwillige Angaben des Betroffenen" />
                 <option id="process_empf_int_art_17" name="Geschäftliche Adress- und Kontaktdaten" />
                 <option id="process_empf_int_art_18" name="Geschäfts- und Vertragsdaten" />
-                <option id="process_empf_int_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, Email)" />
+                <option id="process_empf_int_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, E-Mail)" />
                 <option id="process_empf_int_art_20" name="Interessensgebiete" />
                 <option id="process_empf_int_art_21" name="Leistungsdaten (Bsp.: Akkord ...)" />
                 <option id="process_empf_int_art_22" name="Personendaten zur Personalauswahl, -beurteilung" />
@@ -8283,7 +8283,7 @@ Wurden bereits weitere Stellen informiert?
                 <option id="process_empf_ext_art_16" name="Freiwillige Angaben des Betroffenen" />
                 <option id="process_empf_ext_art_17" name="Geschäftliche Adress- und Kontaktdaten" />
                 <option id="process_empf_ext_art_18" name="Geschäfts- und Vertragsdaten" />
-                <option id="process_empf_ext_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, Email)" />
+                <option id="process_empf_ext_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, E-Mail)" />
                 <option id="process_empf_ext_art_20" name="Interessensgebiete" />
                 <option id="process_empf_ext_art_21" name="Leistungsdaten (Bsp.: Akkord ...)" />
                 <option id="process_empf_ext_art_22" name="Personendaten zur Personalauswahl, -beurteilung" />
@@ -8331,7 +8331,7 @@ Wurden bereits weitere Stellen informiert?
                 <option id="process_empf_dienstl_art_16" name="Freiwillige Angaben des Betroffenen" />
                 <option id="process_empf_dienstl_art_17" name="Geschäftliche Adress- und Kontaktdaten" />
                 <option id="process_empf_dienstl_art_18" name="Geschäfts- und Vertragsdaten" />
-                <option id="process_empf_dienstl_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, Email)" />
+                <option id="process_empf_dienstl_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, E-Mail)" />
                 <option id="process_empf_dienstl_art_20" name="Interessensgebiete" />
                 <option id="process_empf_dienstl_art_21" name="Leistungsdaten (Bsp.: Akkord ...)" />
                 <option id="process_empf_dienstl_art_22" name="Personendaten zur Personalauswahl, -beurteilung" />
@@ -8399,7 +8399,7 @@ Wurden bereits weitere Stellen informiert?
                 <option id="process_empf_sonstempf_art_16" name="Freiwillige Angaben des Betroffenen" />
                 <option id="process_empf_sonstempf_art_17" name="Geschäftliche Adress- und Kontaktdaten" />
                 <option id="process_empf_sonstempf_art_18" name="Geschäfts- und Vertragsdaten" />
-                <option id="process_empf_sonstempf_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, Email)" />
+                <option id="process_empf_sonstempf_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, E-Mail)" />
                 <option id="process_empf_sonstempf_art_20" name="Interessensgebiete" />
                 <option id="process_empf_sonstempf_art_21" name="Leistungsdaten (Bsp.: Akkord ...)" />
                 <option id="process_empf_sonstempf_art_22" name="Personendaten zur Personalauswahl, -beurteilung" />
@@ -9701,7 +9701,7 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="bp_businessprocess_va_gemenVerant_plz" name="Postleitzahl"/>
             <huiproperty id="bp_businessprocess_va_gemenVerant_ort" name="Ort"/>
             <huiproperty id="bp_businessprocess_va_gemenVerant_tel" name="Telefon"/>
-            <huiproperty id="bp_businessprocess_va_gemenVerant_email" name="E-Mail Adresse"/>
+            <huiproperty id="bp_businessprocess_va_gemenVerant_email" name="E-Mail-Adresse"/>
         </huipropertygroup>
 
         <huipropertygroup tags="Privacy" id="bp_businessprocess_zb_group" name="Zweckbestimmung">
@@ -9745,7 +9745,7 @@ Wurden bereits weitere Stellen informiert?
                 <option id="bp_businessprocess_art_16" name="Freiwillige Angaben des Betroffenen"/>
                 <option id="bp_businessprocess_art_17" name="Geschäftliche Adress- und Kontaktdaten"/>
                 <option id="bp_businessprocess_art_18" name="Geschäfts- und Vertragsdaten"/>
-                <option id="bp_businessprocess_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, Email)"/>
+                <option id="bp_businessprocess_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, E-Mail)"/>
                 <option id="bp_businessprocess_art_20" name="Interessensgebiete"/>
                 <option id="bp_businessprocess_art_21" name="Leistungsdaten (Bsp.: Akkord ...)"/>
                 <option id="bp_businessprocess_art_22" name="Personendaten zur Personalauswahl, -beurteilung"/>
@@ -9801,7 +9801,7 @@ Wurden bereits weitere Stellen informiert?
                 <option id="bp_businessprocess_empf_int_art_16" name="Freiwillige Angaben des Betroffenen"/>
                 <option id="bp_businessprocess_empf_int_art_17" name="Geschäftliche Adress- und Kontaktdaten"/>
                 <option id="bp_businessprocess_empf_int_art_18" name="Geschäfts- und Vertragsdaten"/>
-                <option id="bp_businessprocess_empf_int_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, Email)"/>
+                <option id="bp_businessprocess_empf_int_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, E-Mail)"/>
                 <option id="bp_businessprocess_empf_int_art_20" name="Interessensgebiete"/>
                 <option id="bp_businessprocess_empf_int_art_21" name="Leistungsdaten (Bsp.: Akkord ...)"/>
                 <option id="bp_businessprocess_empf_int_art_22" name="Personendaten zur Personalauswahl, -beurteilung"/>
@@ -9844,7 +9844,7 @@ Wurden bereits weitere Stellen informiert?
                 <option id="bp_businessprocess_empf_ext_art_16" name="Freiwillige Angaben des Betroffenen"/>
                 <option id="bp_businessprocess_empf_ext_art_17" name="Geschäftliche Adress- und Kontaktdaten"/>
                 <option id="bp_businessprocess_empf_ext_art_18" name="Geschäfts- und Vertragsdaten"/>
-                <option id="bp_businessprocess_empf_ext_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, Email)"/>
+                <option id="bp_businessprocess_empf_ext_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, E-Mail)"/>
                 <option id="bp_businessprocess_empf_ext_art_20" name="Interessensgebiete"/>
                 <option id="bp_businessprocess_empf_ext_art_21" name="Leistungsdaten (Bsp.: Akkord ...)"/>
                 <option id="bp_businessprocess_empf_ext_art_22" name="Personendaten zur Personalauswahl, -beurteilung"/>
@@ -9889,7 +9889,7 @@ Wurden bereits weitere Stellen informiert?
                 <option id="bp_businessprocess_empf_dienstl_art_16" name="Freiwillige Angaben des Betroffenen"/>
                 <option id="bp_businessprocess_empf_dienstl_art_17" name="Geschäftliche Adress- und Kontaktdaten"/>
                 <option id="bp_businessprocess_empf_dienstl_art_18" name="Geschäfts- und Vertragsdaten"/>
-                <option id="bp_businessprocess_empf_dienstl_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, Email)"/>
+                <option id="bp_businessprocess_empf_dienstl_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, E-Mail)"/>
                 <option id="bp_businessprocess_empf_dienstl_art_20" name="Interessensgebiete"/>
                 <option id="bp_businessprocess_empf_dienstl_art_21" name="Leistungsdaten (Bsp.: Akkord ...)"/>
                 <option id="bp_businessprocess_empf_dienstl_art_22" name="Personendaten zur Personalauswahl, -beurteilung"/>
@@ -9950,7 +9950,7 @@ Wurden bereits weitere Stellen informiert?
                 <option id="bp_businessprocess_empf_sonstempf_art_16" name="Freiwillige Angaben des Betroffenen"/>
                 <option id="bp_businessprocess_empf_sonstempf_art_17" name="Geschäftliche Adress- und Kontaktdaten"/>
                 <option id="bp_businessprocess_empf_sonstempf_art_18" name="Geschäfts- und Vertragsdaten"/>
-                <option id="bp_businessprocess_empf_sonstempf_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, Email)"/>
+                <option id="bp_businessprocess_empf_sonstempf_art_19" name="Inhaltsdaten Kommunikation (Bsp.: VoIP, E-Mail)"/>
                 <option id="bp_businessprocess_empf_sonstempf_art_20" name="Interessensgebiete"/>
                 <option id="bp_businessprocess_empf_sonstempf_art_21" name="Leistungsdaten (Bsp.: Akkord ...)"/>
                 <option id="bp_businessprocess_empf_sonstempf_art_22" name="Personendaten zur Personalauswahl, -beurteilung"/>
@@ -10537,7 +10537,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_person_first_name" name="First name" />
         <huiproperty id="bp_person_last_name" name="Last name" required="true" />
         <huiproperty id="bp_person_phone" name="Phone" />
-        <huiproperty id="bp_person_email" name="Email" />
+        <huiproperty id="bp_person_email" name="E-Mail" />
         <huiproperty id="bp_person_org_unit" name="=Org. unit" />
         <huiproperty id="bp_person_explanation" name="Explanation" />
         <huiproperty id="bp_person_tag" name="Tags" />
