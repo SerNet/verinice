@@ -10650,6 +10650,60 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty tags="Risk" name="Description" id="bp_requirement_effectiveness_desc"
                 inputtype="text" />
         </huipropertygroup>
+        
+        <huipropertygroup id="bp_requirement_data_protection_objectives_eugdpr" name="Data privacy control objectives according to Art. 32 EU GDPR"
+           tags="Privacy">
+            <huiproperty id="bp_requirement_data_protection_objectives_eugdpr_pseudonymization"
+                inputtype="booleanoption" name="Pseudonymization" defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_eugdpr_encryption"
+                inputtype="booleanoption" name="Encryption" defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_eugdpr_confidentiality"
+                inputtype="booleanoption" name="Ensure confidentiality" defaultValue="0"
+                tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_eugdpr_integrity" inputtype="booleanoption"
+                name="Ensure integrity" defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_eugdpr_availability"
+                inputtype="booleanoption" name="Ensure availability" defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_eugdpr_resilience"
+                inputtype="booleanoption" name="Ensure resilience" defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_eugdpr_recoverability"
+                inputtype="booleanoption" name="Recoverability" defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_eugdpr_effectiveness"
+                inputtype="booleanoption" name="Effectiveness of TOMs" defaultValue="0" tags="Privacy" />
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_requirement_data_protection_objectives_bdsg" name="Data privacy control objectives according to \u00A764 BDSG-new"
+            tags="Privacy">
+            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_access" inputtype="booleanoption" name="Access control"
+                defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_data_media" inputtype="booleanoption"
+                name="Data media control" defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_storage" inputtype="booleanoption" name="Storage control"
+                defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_user" inputtype="booleanoption" name="User control"
+                defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_data_access" inputtype="booleanoption"
+                name="Data access control" defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_transmission" inputtype="booleanoption"
+                name="Control of transmission" defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_input" inputtype="booleanoption" name="Input control"
+                defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_transport" inputtype="booleanoption" name="Transport control"
+                defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_recoverability" inputtype="booleanoption"
+                name="Recoverability" defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_reliability" inputtype="booleanoption"
+                name="Reliability" defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_integrity" inputtype="booleanoption" name="Data integrity"
+                defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_order_control" inputtype="booleanoption"
+                name="Order control" defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_availability" inputtype="booleanoption"
+                name="Availability control" defaultValue="0" tags="Privacy" />
+            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_seperability" inputtype="booleanoption"
+                name="Seperability" defaultValue="0" tags="Privacy" />
+        </huipropertygroup>
+        
     </huientity>
 
     <huientity id="bp_requirement_group" name="Module">
@@ -11204,7 +11258,7 @@ Wurden bereits weitere Stellen informiert?
                 inputtype="booleanoption" name="Effectiveness of TOMs" defaultValue="0" tags="Privacy" />
         </huipropertygroup>
 
-        <huipropertygroup id="bp_safeguard_data_protection_objectives_bdsg" name="Data privacy control objectives according to \u00A764 "Data media control""
+        <huipropertygroup id="bp_safeguard_data_protection_objectives_bdsg" name="Data privacy control objectives according to \u00A764 BDSG-new"
             tags="Privacy">
             <huiproperty id="bp_safeguard_data_protection_objectives_bdsg_access" inputtype="booleanoption" name="Access control"
                 defaultValue="0" tags="Privacy" />
