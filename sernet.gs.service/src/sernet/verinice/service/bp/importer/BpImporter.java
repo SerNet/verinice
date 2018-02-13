@@ -542,10 +542,12 @@ public class BpImporter {
      */
     private Set<Link> linkSafeguardToRequirements(Safeguard safeguard) {
         Set<Link> links = new HashSet<>();
-        LOG.debug("searching Requirement-Links for Safeguard:\t" + safeguard.getTitle()
-                + "\t with Identifier:\t" + safeguard.getIdentifier());
         String groupIdentifier = getIdentifierPrefix(safeguard.getIdentifier());
-        LOG.debug("GroupIdentifier:\t" + groupIdentifier);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("searching Requirement-Links for Safeguard:\t" + safeguard.getTitle()
+                    + "\t with Identifier:\t" + safeguard.getIdentifier());
+            LOG.debug("GroupIdentifier:\t" + groupIdentifier);
+        }
         BpRequirementGroup parent = (BpRequirementGroup) getRequirementParentGroup(groupIdentifier,
                 BpRequirementGroup.TYPE_ID, systemReqGroup, processReqGroup);
         String safeguardIdentifier = safeguard.getIdentifier();
@@ -590,18 +592,26 @@ public class BpImporter {
             String comparableIdentifier, CnATreeElement requirement) {
         Set<Link> links = new HashSet<>();
         if (requirement instanceof BpRequirement) {
-            LOG.debug("Child is Requirement:\t" + requirement.getTitle() + " with identifier:\t"
-                    + ((BpRequirement) requirement).getIdentifier());
+            if (LOG.isDebugEnabled()) {
+
+                LOG.debug("Child is Requirement:\t" + requirement.getTitle() + " with identifier:\t"
+                        + ((BpRequirement) requirement).getIdentifier());
+            }
             if (((BpRequirement) requirement).getIdentifier().equals(comparableIdentifier)) {
                 links.add(new Link((BpRequirement) requirement, safeguard,
                         BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, ""));
             }
         } else if (requirement instanceof BpRequirementGroup) {
-            LOG.debug("child is RequirementGroup :\t" + requirement.getTitle());
+            if (LOG.isDebugEnabled()) {
+
+                LOG.debug("child is RequirementGroup :\t" + requirement.getTitle());
+            }
             for (CnATreeElement child : requirement.getChildren()) {
                 if (child instanceof BpRequirement) {
-                    LOG.debug("child is grandchild:\t" + child.getTitle() + " with identifier:\t"
-                            + ((BpRequirement) child).getIdentifier());
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("child is grandchild:\t" + child.getTitle()
+                                + " with identifier:\t" + ((BpRequirement) child).getIdentifier());
+                    }
                     if (((BpRequirement) child).getIdentifier().equals(comparableIdentifier)) {
                         links.add(new Link(((BpRequirement) child), safeguard,
                                 BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, ""));
@@ -688,7 +698,9 @@ public class BpImporter {
             if (implementationOrder != null) {
                 veriniceModule.setImplementationOrder(implementationOrder);
             }
-            LOG.debug("Module : \t" + veriniceModule.getTitle() + " created");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Module : \t" + veriniceModule.getTitle() + " created");
+            }
             createRequirementsForModule(bsiModule, veriniceModule);
         }
         return veriniceModule;
@@ -784,8 +796,9 @@ public class BpImporter {
                 }
                 veriniceThreat = (BpThreat) updateElement(veriniceThreat);
                 addedThreats.put(bsiThreat.getIdentifier(), veriniceThreat);
-
-                LOG.debug("Threat : \t" + veriniceThreat.getTitle() + " created");
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Threat : \t" + veriniceThreat.getTitle() + " created");
+                }
             }
         }
     }
@@ -927,9 +940,9 @@ public class BpImporter {
                     bsiSafeguard.getTitle());
             updateElement(safeguard);
             safeguard = setSafeguardProperties(bsiSafeguard, qualifier, lastChange, safeguard);
-
-            LOG.debug("Safeguard : \t" + safeguard.getTitle() + "created ");
-
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Safeguard : \t" + safeguard.getTitle() + "created ");
+            }
             return (Safeguard) updateElement(safeguard);
         }
         return null;
@@ -970,7 +983,7 @@ public class BpImporter {
                 bsiSafeguard.getDescription().getContent());
         if (StringUtils.isNotEmpty(plainDescription)) {
             safeguard.setObjectBrowserDescription(plainDescription);
-        } else {
+        } else if (LOG.isDebugEnabled()) {
             LOG.debug("No description found for:\t" + bsiSafeguard.getTitle());
         }
 
