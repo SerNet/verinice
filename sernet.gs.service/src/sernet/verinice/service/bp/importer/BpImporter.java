@@ -199,10 +199,10 @@ public class BpImporter {
         long itnetworkReady = System.currentTimeMillis();
         LOG.debug("ITNetwork prepared, took :\t"
                 + (itnetworkReady - veryBeginning) / MILLIS_PER_SECOND);
-        generateElementalThreads(threats);
-        long elementalThreadsReady = System.currentTimeMillis();
+        generateElementalThreats(threats);
+        long elementalThreatsReady = System.currentTimeMillis();
         LOG.debug("Elementalthreats ready, took :\t"
-                + (elementalThreadsReady - itnetworkReady) / MILLIS_PER_SECOND);
+                + (elementalThreatsReady - itnetworkReady) / MILLIS_PER_SECOND);
         transferModules(modules);
 
         Set<String> moduleIdentifiersStrayImplementationOrder = new HashSet<>();
@@ -217,7 +217,7 @@ public class BpImporter {
 
         long modulesReady = System.currentTimeMillis();
         LOG.debug("Modules ready, took :\t"
-                + (modulesReady - elementalThreadsReady) / MILLIS_PER_SECOND);
+                + (modulesReady - elementalThreatsReady) / MILLIS_PER_SECOND);
         LOG.debug("Transformation of elements complete");
         createSafeguards(implementationHints);
         long safeguardsReady = System.currentTimeMillis();
@@ -287,7 +287,7 @@ public class BpImporter {
             modules.add(ITBPParser.getInstance().parseModule(xmlFile));
         }
         for (File xmlFile : getXMLFiles(threatDir)) {
-            threats.add(ITBPParser.getInstance().parseThread(xmlFile));
+            threats.add(ITBPParser.getInstance().parseThreat(xmlFile));
         }
         for (File xmlFile : getXMLFiles(implHintDir)) {
             implementationHints.add(ITBPParser.getInstance().parseImplementationHint(xmlFile));
@@ -736,7 +736,7 @@ public class BpImporter {
             for (ElementalthreatRef elementalThreatReference : reqRef.getElementalthreatRef()) {
                 String isReferenced = elementalThreatReference.getIsReferenced();
                 String threatIdentifier = elementalThreatReference.getIdentifier();
-                BpThreat threat = getElementalThreadByIdentifier(threatIdentifier);
+                BpThreat threat = getElementalThreatByIdentifier(threatIdentifier);
 
                 if (Boolean.parseBoolean(isReferenced)) {
                     Link link = new Link(requirement, threat,
@@ -759,7 +759,7 @@ public class BpImporter {
      * @param identifier
      * @return
      */
-    private BpThreat getElementalThreadByIdentifier(String identifier) {
+    private BpThreat getElementalThreatByIdentifier(String identifier) {
         if (addedThreats.containsKey(identifier)) {
             return addedThreats.get(identifier);
         } else {
@@ -790,7 +790,7 @@ public class BpImporter {
      * @param threats
      * @throws CreateBPElementException
      */
-    private void generateElementalThreads(Set<ITBP2VNA.generated.threat.Document> threats)
+    private void generateElementalThreats(Set<ITBP2VNA.generated.threat.Document> threats)
             throws CreateBPElementException {
         for (ITBP2VNA.generated.threat.Document bsiThreat : threats) {
             if (!addedThreats.containsKey(bsiThreat.getIdentifier())) {
