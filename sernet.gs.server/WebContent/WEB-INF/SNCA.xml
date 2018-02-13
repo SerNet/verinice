@@ -3049,7 +3049,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
     
         <huipropertygroup id="mnums_data_protection_objectives_eugdpr" name="Datenschutzkontrollziele nach Art. 32 EU-DSGVO"
            tags="Privacy">
-            <huiproperty id="mnums_data_protection_objectives_eugdpr_pseudonymisation"
+            <huiproperty id="mnums_data_protection_objectives_eugdpr_pseudonymization"
                 inputtype="booleanoption" name="Pseudonymisierung" defaultValue="0" tags="Privacy" />
             <huiproperty id="mnums_data_protection_objectives_eugdpr_encryption"
                 inputtype="booleanoption" name="Verschlüsselung" defaultValue="0" tags="Privacy" />
@@ -6273,7 +6273,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
 
         <huipropertygroup id="control_data_protection_objectives_eugdpr" name="Datenschutzkontrollziele nach Art. 32 EU-DSGVO"
             tags="Privacy">
-            <huiproperty id="control_data_protection_objectives_eugdpr_pseudonymisation"
+            <huiproperty id="control_data_protection_objectives_eugdpr_pseudonymization"
                 inputtype="booleanoption" name="Pseudonymisierung" defaultValue="0" tags="Privacy" />
             <huiproperty id="control_data_protection_objectives_eugdpr_encryption"
                 inputtype="booleanoption" name="Verschlüsselung" defaultValue="0" tags="Privacy" />
@@ -11185,7 +11185,7 @@ Wurden bereits weitere Stellen informiert?
         
         <huipropertygroup id="bp_safeguard_data_protection_objectives_eugdpr" name="Datenschutzkontrollziele nach Art. 32 EU-DSGVO"
            tags="Privacy">
-            <huiproperty id="bp_safeguard_data_protection_objectives_eugdpr_pseudonymisation"
+            <huiproperty id="bp_safeguard_data_protection_objectives_eugdpr_pseudonymization"
                 inputtype="booleanoption" name="Pseudonymisierung" defaultValue="0" tags="Privacy" />
             <huiproperty id="bp_safeguard_data_protection_objectives_eugdpr_encryption"
                 inputtype="booleanoption" name="Verschlüsselung" defaultValue="0" tags="Privacy" />
