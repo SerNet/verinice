@@ -4863,9 +4863,9 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <huipropertygroup name="VV BSIG" id="org_vv_bsig">
             <huiproperty name="Authority" id="org_vv_bsig_authority"/>          
             <huiproperty name="Availability Phone" id="org_vv_bsig_availability_phone" />
-            <huiproperty name="Availability E-Mail" id="org_vv_bsig_availability_email" />
+            <huiproperty name="Availability Email" id="org_vv_bsig_availability_email" />
             <huiproperty name="Enquiry Phone" id="org_vv_bsig_enquiry_phone" />
-            <huiproperty name="Enquiry E-Mail" id="org_vv_bsig_equiry_email" />            
+            <huiproperty name="Enquiry Email" id="org_vv_bsig_equiry_email" />            
         </huipropertygroup>
 
         <huipropertygroup name="Datenschutz Aufsichtsbehörde" id="org_ds_AB">
@@ -5574,7 +5574,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="Phone"
             id="person-iso_telefon" />
         <huiproperty
-            name="E-Mail"
+            name="Email"
             id="person-iso_email" />
         <huiproperty
             name="Org.-Unit"
@@ -9380,7 +9380,7 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="bp_itnetwork_data_protection_authority" name="Competent supervisory authority" />
             <huiproperty id="bp_itnetwork_data_protection_adress" name="Address" />
             <huiproperty id="bp_itnetwork_data_protection_telephone" name="Phone" />
-            <huiproperty id="bp_itnetwork_data_protection_email" name="E-Mail" />
+            <huiproperty id="bp_itnetwork_data_protection_email" name="Email" />
         </huipropertygroup>
     </huientity>
 
@@ -10537,7 +10537,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_person_first_name" name="First name" />
         <huiproperty id="bp_person_last_name" name="Last name" required="true" />
         <huiproperty id="bp_person_phone" name="Phone" />
-        <huiproperty id="bp_person_email" name="E-Mail" />
+        <huiproperty id="bp_person_email" name="Email" />
         <huiproperty id="bp_person_org_unit" name="=Org. unit" />
         <huiproperty id="bp_person_explanation" name="Explanation" />
         <huiproperty id="bp_person_tag" name="Tags" />
