@@ -204,6 +204,17 @@ public class BpImporter {
         LOG.debug("Elementalthreats ready, took :\t"
                 + (elementalThreadsReady - itnetworkReady) / MILLIS_PER_SECOND);
         transferModules(modules);
+
+        Set<String> moduleIdentifiersStrayImplementationOrder = new HashSet<>();
+        moduleIdentifiersStrayImplementationOrder
+                .addAll(implementationOrderByModuleIdentifier.keySet());
+        moduleIdentifiersStrayImplementationOrder.removeAll(addedModules.keySet());
+        if (!moduleIdentifiersStrayImplementationOrder.isEmpty()) {
+            LOG.warn("The implementation order mapping file contains an entry for the module(s) "
+                    + moduleIdentifiersStrayImplementationOrder
+                    + ", but those modules do not exist in the import data.");
+        }
+
         long modulesReady = System.currentTimeMillis();
         LOG.debug("Modules ready, took :\t"
                 + (modulesReady - elementalThreadsReady) / MILLIS_PER_SECOND);
@@ -698,6 +709,9 @@ public class BpImporter {
                     .get(moduleIdentifier);
             if (implementationOrder != null) {
                 veriniceModule.setImplementationOrder(implementationOrder);
+            } else {
+                LOG.warn("No implementation order specified for module '" + moduleIdentifier + "' ("
+                        + moduleTitle + ")");
             }
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Module : \t" + veriniceModule.getTitle() + " created");
