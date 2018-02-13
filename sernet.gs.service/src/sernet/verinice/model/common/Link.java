@@ -43,17 +43,15 @@ public class Link implements Serializable {
         this.relationId = relationId;
         this.comment = comment;
     }
-    /**
-     * @param from2
-     * @param to2
-     */
-    public Link(CnATreeElement from, CnATreeElement to) {
-        super();
-        this.from = from;
-        this.to = to;
-        this.relationId = "";
-        this.comment = "";
+    
+    public Link(CnATreeElement from, CnATreeElement to, String relationId) {
+        this(from, to, relationId, "");
     }
+    
+    public Link(CnATreeElement from, CnATreeElement to) {
+        this(from, to, "", "");
+    }
+    
     public CnATreeElement getFrom() {
         return from;
     }

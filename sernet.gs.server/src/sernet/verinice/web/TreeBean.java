@@ -38,9 +38,13 @@ import sernet.gs.service.SecurityException;
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementComparator;
 import sernet.verinice.model.common.ITitleAdaptor;
@@ -52,7 +56,7 @@ import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.RemoveElement;
-import sernet.verinice.service.iso27k.LoadModel;
+import sernet.verinice.service.model.LoadModel;
 import sernet.verinice.service.tree.ElementManager;
 
 /**
@@ -341,7 +345,9 @@ public class TreeBean implements IElementListener {
     
     private boolean isRoot(CnATreeElement element) {
         return element.getTypeId().equals(ISO27KModel.TYPE_ID)
-               || element.getTypeId().equals(BSIModel.TYPE_ID);
+                || element.getTypeId().equals(BSIModel.TYPE_ID)
+                || element.getTypeId().equals(BpModel.TYPE_ID)
+                || element.getTypeId().equals(CatalogModel.TYPE_ID);
     }
     
     private boolean isTopLevel(CnATreeElement element) {
@@ -352,6 +358,7 @@ public class TreeBean implements IElementListener {
         }
         return ((typeId.equals(Organization.TYPE_ID) && !parentTypeId.equals(ImportIsoGroup.TYPE_ID)) 
                || (typeId.equals(ITVerbund.TYPE_ID)&& !parentTypeId.equals(ImportBsiGroup.TYPE_ID))
+                || (typeId.equals(ItNetwork.TYPE_ID) && !parentTypeId.equals(ImportBpGroup.TYPE_ID))
                || typeId.equals(ImportBsiGroup.TYPE_ID)
                || typeId.equals(ImportIsoGroup.TYPE_ID));
     }
@@ -428,7 +435,7 @@ public class TreeBean implements IElementListener {
     private ISO27KModel loadIsoModel() {
         ISO27KModel model = null;
         try {
-            LoadModel loadModel = new LoadModel();
+            LoadModel<ISO27KModel> loadModel = new LoadModel<>(ISO27KModel.class);
             loadModel = getCommandService().executeCommand(loadModel);
             model = loadModel.getModel();
             

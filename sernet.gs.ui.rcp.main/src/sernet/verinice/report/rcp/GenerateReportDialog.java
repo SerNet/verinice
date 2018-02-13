@@ -51,6 +51,7 @@ import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportType;
 import sernet.verinice.interfaces.validation.IValidationService;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
@@ -598,6 +599,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         
         scopes.addAll(loadScopes());
         scopes.addAll(loadITVerbuende());
+        scopes.addAll(loadItNetworks());
 
         List<String> scopeTitles = new ArrayList<String>();
 
@@ -824,9 +826,11 @@ public class GenerateReportDialog extends TitleAreaDialog {
     }
 
     private List<Organization> loadScopes() {
-        LoadCnATreeElementTitles<Organization> compoundLoader = new LoadCnATreeElementTitles<Organization>(Organization.class);
+        LoadCnATreeElementTitles<Organization> compoundLoader = 
+                new LoadCnATreeElementTitles<Organization>(Organization.class);
         try {
-            compoundLoader = ServiceFactory.lookupCommandService().executeCommand(compoundLoader);
+            compoundLoader = 
+                    ServiceFactory.lookupCommandService().executeCommand(compoundLoader);
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.GenerateReportDialog_19);
         }
@@ -835,14 +839,27 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     }
 
+    private List<ItNetwork> loadItNetworks(){
+        LoadCnATreeElementTitles<ItNetwork> compoundLoader = 
+                new LoadCnATreeElementTitles<ItNetwork>(ItNetwork.class);
+        try {
+            compoundLoader = ServiceFactory.lookupCommandService().executeCommand(compoundLoader);
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.GenerateReportDialog_38);
+        }
+        return compoundLoader.getElements();        
+    }
+    
     /**
      * @return
      * 
      */
     private List<ITVerbund> loadITVerbuende() {
-        LoadCnATreeElementTitles<ITVerbund> compoundLoader = new LoadCnATreeElementTitles<ITVerbund>(ITVerbund.class);
+        LoadCnATreeElementTitles<ITVerbund> compoundLoader = 
+                new LoadCnATreeElementTitles<ITVerbund>(ITVerbund.class);
         try {
-            compoundLoader = ServiceFactory.lookupCommandService().executeCommand(compoundLoader);
+            compoundLoader = 
+                    ServiceFactory.lookupCommandService().executeCommand(compoundLoader);
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.GenerateReportDialog_20);
         }

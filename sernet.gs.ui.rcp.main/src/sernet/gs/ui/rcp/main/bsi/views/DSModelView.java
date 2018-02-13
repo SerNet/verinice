@@ -41,6 +41,7 @@ import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.BSIModel;
@@ -49,6 +50,7 @@ import sernet.verinice.model.bsi.CnAPlaceholder;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.NullModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -104,6 +106,17 @@ public class DSModelView extends RightsEnabledView {
         @Override
         public void loaded(ISO27KModel model) {
             // work is done in loaded( BSIModel model)    
+        }
+
+        @Override
+        public void loaded(BpModel model) {
+         // work is done in loaded( BSIModel model)   
+            
+        }
+
+        @Override
+        public void loaded(CatalogModel model) {
+            // nothing to do
         }
 	};
 

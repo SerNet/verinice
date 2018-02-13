@@ -25,6 +25,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
+import sernet.verinice.model.bp.IBpModelListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -37,7 +39,7 @@ import sernet.verinice.model.validation.CnAValidation;
 /**
  *
  */
-public class CnAValidationContentProvider implements IStructuredContentProvider, IBSIModelListener, IISO27KModelListener {
+public class CnAValidationContentProvider implements IStructuredContentProvider, IBSIModelListener, IISO27KModelListener, IBpModelListener {
     
     CnAValidationView validationView;
     
@@ -221,5 +223,16 @@ public class CnAValidationContentProvider implements IStructuredContentProvider,
     @Override
     public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){
         validationView.reloadAll();
+    }
+
+    @Override
+    public void modelReload(BpModel newModel) {
+        Display.getDefault().asyncExec(new Runnable() {
+            
+            @Override
+            public void run() {
+                viewer.refresh();
+            }
+        });
     };
 }

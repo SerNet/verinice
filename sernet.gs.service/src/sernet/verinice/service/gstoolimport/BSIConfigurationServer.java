@@ -28,7 +28,6 @@ import org.springframework.core.io.Resource;
 import sernet.verinice.interfaces.IBSIConfig;
 import sernet.verinice.interfaces.IVeriniceConstants;
 
-@SuppressWarnings("restriction")
 public class BSIConfigurationServer implements IBSIConfig {
 
     private static final Logger LOG = Logger.getLogger(BSIConfigurationServer.class);

@@ -11,7 +11,7 @@
   <item title="Ansicht optimieren">
     <description>
       Den View mit den Grundschutz-Katalogen benötigen Sie nun nicht mehr so oft. Schaffen Sie ein
-      wenig Platz auf dem Bildschirm, indem Sie den View "Grundschutz Modell" an seiner Überschrift
+      wenig Platz auf dem Bildschirm, indem Sie den View "Grundschutzmodell" an seiner Überschrift
       mit der Maus in den View "IT-Grundschutz" ziehen.
       <br /><br />
       Die beiden Fenster teilen sich nun den selben Bereich. Anhand der Reiter können Sie von einem
@@ -29,7 +29,7 @@
       Legen wir los mit der Modellierung!
       <br /><br />
       Öffnen Sie den ersten Baustein B 1.0, den Sie im vorherigen Tutorial Ihrem IT-Verbund im
-      Grundschutz Modell hinzugefügt haben, mit einem Doppelklick. Wählen Sie für das Feld
+      Grundschutzmodell hinzugefügt haben, mit einem Doppelklick. Wählen Sie für das Feld
       "Erfasst durch" sich selbst aus (Klick auf den Button <b>Ändern...</b>). Für das Feld
       "Gesprächspartner" wählen Sie bitte einen Interviewpartner aus, den Sie ggf. erst anlegen.
       Das Datum wird automatisch auf den heutigen Tag gesetzt. Sie können es, falls nötig, ändern.
@@ -43,7 +43,7 @@
 
   <item title="Maßnahmenumsetzung">
     <description>
-      Klappen Sie den Baustein 1.0 im Grundschutz Modell auf und öffnen Sie die erste Maßnahme
+      Klappen Sie den Baustein 1.0 im Grundschutzmodell auf und öffnen Sie die erste Maßnahme
       durch Doppelklick. Der Text der Maßnahme erscheint im Browserfenster, damit Sie die
       Anforderungen nachlesen können.
       <br /><br />
@@ -78,7 +78,7 @@
       Eine weitere Hilfe beim Erfassen der Maßnahmen ist der Konsolidator. Wenn Sie den gleichen
       Baustein auf mehrere Zielobjekte anwenden, ähnelt sich oft der Umsetzungsgrad der Maßnahmen.
       <br /><br />
-      Klappen Sie im Grundschutz Modell das Buchhaltungssystem und den Baustein 3.101 auf. Setzen
+      Klappen Sie im Grundschutzmodell das Buchhaltungssystem und den Baustein 3.101 auf. Setzen
       Sie für die Maßnahme 1.28 "Lokale unterbrechungsfreie Stromversorgung" die Umsetzung auf
       "Ja". Speichern Sie (<b>Strg+S</b>) und klappen Sie den Baustein zu.
       <br />

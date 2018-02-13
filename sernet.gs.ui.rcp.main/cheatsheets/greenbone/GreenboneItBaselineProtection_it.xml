@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<cheatsheet title="Protezione baseline IT con Greenbone e verince">
+
+<intro>
+    <description>
+      In connessione con uno scanner di vulnerabilit? <b> Greenbone </b> (<b> www.greenbone.net </b>), nonch? un OpenVAS
+      scanner di vulnerabilit? (<b> www.openvas.org </b>) verinice consente un'efficace gestione delle vulnerabilit?. <br />
+      <br />
+      L'importazione dei risultati di una scansione di vulnerabilit? in verinice nella BSI Baseline Security fornisce il file
+      analisi strutturale delle funzionalit?, modellazione e controllo automatico del bassista.
+    </description>
+  </intro>
+
+  <item title = "Esecuzione di scansioni di protezione baseline IT in Greenbone">
+    <description>
+      Il gestore di protezione di Greenbone consente controlli automatici in base ai cataloghi di base IT del tedesco
+      autorit? "Bundesamt f?r Sicherheit in der Informationstechnik (BSI)". <br />
+      <br />
+      Per una descrizione dettagliata di come eseguire una scansione baseline IT in Greenbone, si prega di fare riferimento al manuale utente o
+      visita il <b> Centro di apprendimento Greenbone </b> (<b> www.greenbone.net/learningcenter/task_it_grundschutz.de </b>). <br />
+      <br />
+      Troverai una speciale configurazione di scansione e un plugin di report sulla protezione baseline IT da utilizzare in verinice
+      Scaricare.
+    </description>
+  </item>
+
+  <item title = "Esportazione dei risultati della scansione">
+    <description>
+      Selezionare <b> Gestione scansioni> Rapporti </b> dal menu Assistente di protezione di Greenbone per esportare i risultati di a
+      scansione di successo. <br />
+      <br />
+      Esporta i risultati di una scansione baseline IT come file vna scegliendo il formato <b> verinice ITG </b> nel
+      corrispondente casella di riepilogo e avviare l'esportazione premendo il pulsante <b> Scarica il rapporto filtrato </b>.
+      Greenbone salver? il file vna nella directory di download nell'ambiente di sistema.
+    </description>
+  </item>
+
+  <item title = "Importazione della protezione baseline della protezione IT">
+    <description>
+      Passare alla prospettiva baseline IT in verinice utilizzando il menu <b> Visualizza> Mostra prospettiva> BSI IT Baseline
+      Prospettiva </b>. Avviare l'importazione facendo clic sul pulsante <b> Importa organizzazione dal file ... </b>. Seleziona il
+      precedentemente esportato Greenbone ITG-Report facendo clic sul pulsante <b> Seleziona file ... </b>, mantenere i valori predefiniti
+      per tutti gli altri parametri nel dialogo. <br />
+      <br />
+      Gli oggetti importati possono essere trovati nel gruppo <b> Oggetti importati> Importazione di GSM ITGS> Sistemi IT: Server </b>.
+      Tutti i target di scansione sono stati importati come server con una descrizione nel campo <b> Tag </b>. Ognuna delle importazioni
+      gli oggetti hanno un oggetto figlio <b> Risultato GSM </b> con i controlli risultanti della scansione.
+    </description>
+  </item>
+
+  <item title = "Analisi strutturale">
+    <description>
+Trasferisci gli oggetti importati nell'organizzazione passando a <b> oggetti importati> importazione GSM ITGS>
+    Sistemi IT: Server </b>. Seleziona gli oggetti server e scegli <b> Taglia </b> dal menu di scelta rapida. <br />
+    <br />
+Nvaigate adesso alla tua organizzazione, ad esempio <b> Rete IT> Sistemi IT: Server </b> e inserire i sistemi
+    destra mouseclick <b> Inserisci </b>.
+    </description>
+  </item>
+
+  <item title = "Greenbone: aggiunge automaticamente un modulo">
+    <description>
+      Apri la vista <b> BSI Catalogo di protezione baseline </b> nel menu <b> Visualizza> Mostra visualizzazione ...> BSI Baseline
+      Catalogo di protezione </b>. Attenzione - senza Catalogo attivo BSI Baseline Protection l'aggiunta automatica di
+      i moduli non verranno eseguiti! <br />
+      <br />
+      Passare a uno degli oggetti mooviti (server) nell'organizzazione un click destro <b> Greenbone: automaticamente
+      aggiungere modulo ... </b>. Aggiorna la vista facendo clic sul pulsante <b> Visualizzazione aggiornamento (Strg + F5) </b>. <br />
+      <br />
+      I moduli di base BSI verranno assegnati agli oggetti corrispondenti basati sui tag.
+    </description>
+  </item>
+
+  <item title = "Greenbone: controllo di sicurezza automatico di base">
+    <description>
+      Con il mouseclick destro su uno degli oggetti scegliere l'opzione <b> Greenbone: Controllo automatico di base di sicurezza </b>.
+      verinice trasferisce tutti i controlli e lo stato di implementazione dalla scansione GSM importata sul
+      moduli precedentemente aggiunti. <br />
+      <br />
+      Il controllo di sicurezza automatico di base trasferisce solo quei controlli dagli strati dei moduli BSI a 4, a causa del
+      la ragione che i controlli non tecnici non possono essere scansionati dallo scanner di vulnerabilit?.
+    </description>
+  </item>
+
+</cheatsheet>

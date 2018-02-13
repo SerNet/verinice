@@ -24,33 +24,40 @@
             "accountsettings"
             "accesscontrol"
             "editprofile"
-            "marktemplate"
             "taskdelete"
             "taskshowall"
             "taskchangeassignee"
             "taskchangeduedate"
             "taskwithreleaseprocess"
-            "templates"
             "searchreindex"
             "showallfiles" -->
             <action id="addbsielement" />
+            <action id="addbpelement"/>
+            <action id="addbpgroup"/>  
             <action id="addcatalog" />
             <action id="addfile" />
             <action id="addismelement" />
             <action id="addismgroup" />
             <action id="addismorg"/>
+            <action id="additnetwork" />
             <action id="additverbund" />
             <action id="addnote" />
             <action id="addsecurityassessment" />
             <action id="assignallisatopics" />
             <action id="addownmodul"/>
             <action id="auditview" />
+            <action id="baseprotectionmodeling" />
+            <action id="baseprotectionview" />
             <action id="bausteinzuordnung" />
+            <action id="bpimporter" />
             <action id="bsidnd" />
             <action id="bsibrowser" />
             <action id="bsimassnahmen" />
             <action id="bsimodelview" />
             <action id="bulkedit" />
+            <action id="catalogdelete" />
+            <action id="catalogimport" />       
+	          <action id="catalogview" />
             <action id="changeicon" />
             <action id="changeownpassword" />
             <action id="cnavalidation" />
@@ -105,9 +112,9 @@
             "accesscontrol"
             "addismorg"
             "additverbund"
+            "additnetwork"
             "addsecurityassessment"
             "editprofile"
-            "marktemplate"
             "showallfiles"
             "searchreindex"
             "taskchangeassignee"
@@ -117,14 +124,14 @@
             "taskchangeassignee"
             "taskchangeduedate"
             "taskwithreleaseprocess"
-            "templates"
             "addismorg"
-            "additverbund"
             "xmlimport" 
             "searchreindex
             "showallfiles"
             "addsecurityassessment"-->
 	        <action id="addbsielement" />
+	        <action id="addbpelement"/>
+          <action id="addbpgroup"/>  
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
@@ -133,12 +140,18 @@
 	        <action id="addownmodul"/>
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
+          <action id="baseprotectionview" />
+          <action id="baseprotectionmodeling" />
 	        <action id="bausteinzuordnung" />
+	        <action id="bpimporter" />
 	        <action id="bsidnd" />
         	<action id="bsibrowser" />
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />
 	        <action id="bulkedit" />
+          <action id="catalogdelete" />
+          <action id="catalogimport" />       
+	        <action id="catalogview" />
           <action id="changeicon" />
 	        <action id="cnavalidation" />
           <action id="creategreenbonetasks" />
@@ -238,6 +251,7 @@
         <!-- missing actions:
             "accountsettings" 
           	"addismorg" 
+          	"additnetwork"
           	"additverbund" 
           	"addsecurityassessment" 
           	"editprofile" 
@@ -249,21 +263,28 @@
           	"xmlimport"  -->
            	<action id="accesscontrol" />
 	        <action id="addbsielement" />
+	        <action id="addbpelement"/>
+          <action id="addbpgroup"/>  
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
 	        <action id="addismgroup" />
 	        <action id="addnote" />
 	        <action id="addownmodul"/>
-	        <action id="marktemplate"/>
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
+          <action id="baseprotectionmodeling" />
+          <action id="baseprotectionview" />
 	        <action id="bausteinzuordnung" />
+	        <action id="bpimporter" />
 	        <action id="bsidnd" />
         	<action id="bsibrowser" />
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />
 	        <action id="bulkedit" />
+          <action id="catalogdelete" />
+          <action id="catalogimport" />       
+	        <action id="catalogview" />
           <action id="changeicon" />
 	        <action id="cnavalidation" />
           <action id="creategreenbonetasks" />
@@ -308,7 +329,6 @@
           <action id="taskwithreleaseprocess" />
 	        <action id="taskdelete" />
 	        <action id="taskview" />
-	        <action id="templates" />
 	        <action id="todo"/>
           <action id="unify" />
 	        <action id="xmlexport"/>
@@ -317,6 +337,7 @@
         <profile name="admin-local-default-profile" origin="default" > 
          	<!-- missing actions:  
             "addismorg" 
+            "additnetwork"
             "additverbund" 
             "gsnotesimport" 
             "gstoolimport" 
@@ -326,6 +347,8 @@
           	<action id="accesscontrol" /> 
             <action id="accountsettings" /> 
             <action id="addbsielement" /> 
+            <action id="addbpelement"/>
+            <action id="addbpgroup"/>  
             <action id="addcatalog" /> 
             <action id="addfile" /> 
             <action id="addismelement" /> 
@@ -334,13 +357,19 @@
             <action id="addsecurityassessment" /> 
             <action id="addownmodul"/> 
             <action id="assignallisatopics" /> 
-            <action id="auditview" /> 
+            <action id="auditview" />
+            <action id="baseprotectionmodeling" />
+            <action id="baseprotectionview" /> 
             <action id="bausteinzuordnung" /> 
+            <action id="bpimporter" />
             <action id="bsidnd" /> 
             <action id="bsibrowser" /> 
             <action id="bsimassnahmen" /> 
             <action id="bsimodelview" /> 
-            <action id="bulkedit" /> 
+            <action id="bulkedit" />
+            <action id="catalogdelete" />
+            <action id="catalogimport" />       
+	          <action id="catalogview" />
           	<action id="changeicon" /> 
             <action id="cnavalidation" /> 
           	<action id="creategreenbonetasks" /> 
@@ -365,7 +394,7 @@
             <action id="ismcut" /> 
             <action id="ismview" /> 
           	<action id="ismviewweb" /> 
-            <action id="konsolidator" /> 
+            <action id="konsolidator" />
             <action id="naturalize" /> 
             <action id="notes" /> 
             <action id="relations" /> 
@@ -397,24 +426,32 @@
 	      <action id="accesscontrol" />
 	        <action id="accountsettings" />
 	        <action id="addbsielement" />
+	        <action id="addbpelement"/>
+          <action id="addbpgroup"/>  
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
 	        <action id="addismgroup" />
 	        <action id="addismorg" />
+	        <action id="additnetwork" />
 	        <action id="additverbund" />
 	        <action id="addnote" />
 	        <action id="addsecurityassessment" />
 	        <action id="addownmodul"/>
-	        <action id="marktemplate"/>
 	        <action id="assignallisatopics" />
 	        <action id="auditview" />
+          <action id="baseprotectionmodeling" />
+          <action id="baseprotectionview" />
 	        <action id="bausteinzuordnung" />
+	        <action id="bpimporter" />
 	        <action id="bsidnd" />
         	<action id="bsibrowser" />
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />
 	        <action id="bulkedit" />
+          <action id="catalogdelete" />
+          <action id="catalogimport" />       
+	        <action id="catalogview" />
           <action id="changeicon" />
 	        <action id="cnavalidation" />
           <action id="creategreenbonetasks" />
@@ -464,7 +501,6 @@
 	        <action id="taskdelete" />
 	        <action id="taskshowall" />
 	        <action id="taskview" />
-	        <action id="templates" />
 	        <action id="todo"/>
           <action id="unify" />
 	        <action id="xmlexport"/>

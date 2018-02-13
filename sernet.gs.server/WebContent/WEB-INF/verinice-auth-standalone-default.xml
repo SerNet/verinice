@@ -36,24 +36,33 @@
                 "reportdepositdelete"
                 "reportdepositedit" -->
 	        <action id="addbsielement" />
+	        <action id="addbpelement"/>
+          <action id="addbpgroup"/>  
 	        <action id="addcatalog" />
 	        <action id="addfile" />
 	        <action id="addismelement" />
 	        <action id="addismgroup" />
 	        <action id="addismorg" />
+	        <action id="additnetwork" />
 	        <action id="additverbund" />
 	        <action id="addnote" />
 	        <action id="addsecurityassessment" />
 	        <action id="addownmodul"/>
 	        <action id="marktemplate"/>
 	        <action id="assignallisatopics" />
-	        <action id="auditview" />
+	        <action id="auditview" /> 
+          <action id="baseprotectionmodeling" />
+          <action id="baseprotectionview" />
 	        <action id="bausteinzuordnung" />
+	        <action id="bpimporter" />
 	        <action id="bsidnd" />
         	<action id="bsibrowser" />
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />
 	        <action id="bulkedit" />
+          <action id="catalogdelete" />
+          <action id="catalogimport" />       
+	        <action id="catalogview" />
           <action id="changeicon" />
 	        <action id="deletecatalog" />
 	        <action id="deletefile" />
@@ -62,7 +71,7 @@
 	        <action id="documentview" />
 	        <action id="dsmodelview" />
 	        <action id="editlinks" />
-          <action id="exportlinktable" />
+          	<action id="exportlinktable" />
 	        <action id="files" />
 	        <action id="generateauditreport" />
 	        <action id="generateorgreport" />

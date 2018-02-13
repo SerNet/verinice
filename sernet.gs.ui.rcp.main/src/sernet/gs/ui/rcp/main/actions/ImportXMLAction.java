@@ -27,7 +27,7 @@ public class ImportXMLAction extends RightsEnabledActionDelegate implements IVie
 	public static final String ID = "sernet.gs.ui.rcp.main.importxmlaction";
 
 	public void run() {
-		final XMLImportDialog dialog = new XMLImportDialog(Display.getCurrent().getActiveShell());	
+		final XMLImportDialog dialog = new XMLImportDialog(Display.getCurrent().getActiveShell(), false);	
         if (dialog.open() != Window.OK) {
             return;
         }

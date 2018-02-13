@@ -26,7 +26,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class IncidentGroup extends Group<Asset> {
+public class IncidentGroup extends Group<Incident> implements IISO27kGroup {
 
 	public static final String TYPE_ID = "incident_group"; //$NON-NLS-1$
     public static final String TYPE_ID_HIBERNATE = "incidentgroup"; //$NON-NLS-1$

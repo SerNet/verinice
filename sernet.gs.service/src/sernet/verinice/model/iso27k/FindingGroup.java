@@ -26,7 +26,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class FindingGroup extends Group<Asset> {
+public class FindingGroup extends Group<Finding> implements IISO27kGroup {
 
 	public static final String TYPE_ID = "finding_group"; //$NON-NLS-1$
 	public static final String PROP_NAME = "finding_group_name"; //$NON-NLS-1$

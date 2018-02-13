@@ -63,7 +63,9 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
@@ -159,6 +161,16 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
                 @Override
                 public void loaded(ISO27KModel model) {
                     startInitDataJob();
+                }
+
+                @Override
+                public void loaded(BpModel model) {
+                    // work is done in loaded(ISO27KModel model)
+                }
+
+                @Override
+                public void loaded(CatalogModel model) {
+                    // do nothing
                 }
 
             };

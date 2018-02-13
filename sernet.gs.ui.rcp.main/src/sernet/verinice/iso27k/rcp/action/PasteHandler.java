@@ -50,6 +50,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.bp.rcp.BaseProtectionView;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ElementChange;
 import sernet.verinice.iso27k.rcp.CnPItems;
@@ -58,10 +59,12 @@ import sernet.verinice.iso27k.rcp.CutOperation;
 import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.ISO27KModel;
@@ -150,6 +153,8 @@ public class PasteHandler extends AbstractHandler {
             target = (CnATreeElement) sel.getFirstElement();
         } else if(ISMView.ID.equals(id)) {
             target = CnAElementFactory.getInstance().getISO27kModel();
+        } else if(BaseProtectionView.ID.equals(id)) {
+            target = CnAElementFactory.getInstance().getBpModel();
         } else if(BsiModelView.ID.equals(id)) {
             target = CnAElementFactory.getLoadedModel();
         }
@@ -168,50 +173,58 @@ public class PasteHandler extends AbstractHandler {
                         Messages.getString("PasteHandler.0"), //$NON-NLS-1$
                         PreferenceConstants.INFO_ELEMENTS_COPIED);
 				if(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
-				    newCopyElements = ((CopyTreeElements)operation).getNewElements();
-				    if(newCopyElements != null){
-				        final List<String> validationList = newCopyElements;
-				        WorkspaceJob validationCreationJob = new WorkspaceJob(Messages.getString("PasteHandler.5")) {
-				            @Override
-				            public IStatus runInWorkspace(final IProgressMonitor monitor) {
-				                Activator.inheritVeriniceContextState();
-				                IStatus status = Status.OK_STATUS;
-				                CnATreeElement tmpTarget = target;
-				                try {                
-				                    tmpTarget = Retriever.retrieveElement(tmpTarget, new RetrieveInfo().setProperties(true));
-				                    if(!(isRootElement(tmpTarget)) || (validationList.size() == 1 && isSubTreeElement(validationList.get(0))) ){
-				                        String jobDescription = (validationList.size() == 1 && isSubTreeElement(validationList.get(0)) 
-				                                ? (loadElementByUuid(validationList.get(0))).getTitle() : (tmpTarget instanceof CnATreeElement ? 
-				                                        tmpTarget.getTitle() : Messages.getString("PasteHandler.12")));
-				                        monitor.beginTask(NLS.bind(Messages.getString("PasteHandler.11"), new Object[] {jobDescription}), IProgressMonitor.UNKNOWN);
-				                        String uuid = ((!isRootElement(tmpTarget) ? tmpTarget.getUuid() : 
-				                            (validationList.get(0))));
-				                        ServiceFactory.lookupValidationService().createValidationsForSubTreeByUuid(uuid);
-				                        CnAElementFactory.getModel(loadElementByUuid(uuid)).validationAdded(loadElementByUuid(uuid).getScopeId());
-				                    } else {
-				                        for(String uuid : validationList){
-				                                monitor.beginTask(NLS.bind(Messages.getString("PasteHandler.11"), new Object[] {loadElementByUuid(uuid).getTitle()}), IProgressMonitor.UNKNOWN);
-				                                ServiceFactory.lookupValidationService().createValidationByUuid(uuid);
-				                                CnAElementFactory.getModel(loadElementByUuid(uuid)).validationAdded(loadElementByUuid(uuid).getScopeId());
-				                            }
-				                        if(validationList != null && validationList.size() > 0){
-				                            CnAElementFactory.getModel(loadElementByUuid(validationList.get(0))).validationAdded(loadElementByUuid(validationList.get(0)).getScopeId());
-				                        }
-				                    }
-				                } catch (Exception e){
-				                    LOG.error("Exception while executing createValidationsJob", e);
-				                } finally {
-				                    monitor.done();
-				                }
-				                return status;
-				            }
-				        };      
-				        JobScheduler.scheduleJob(validationCreationJob, new Mutex());
-				    }
+				    validate(target, operation);
 				}
 			}
 		}
 	}
+
+    protected void validate(final CnATreeElement target, IProgressRunnable operation) {
+        newCopyElements = ((CopyTreeElements)operation).getNewElements();
+        if(newCopyElements != null){
+            validate(target);
+        }
+    }
+
+    protected void validate(final CnATreeElement target) {
+        final List<String> validationList = newCopyElements;
+        WorkspaceJob validationCreationJob = new WorkspaceJob(Messages.getString("PasteHandler.5")) {
+            @Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                Activator.inheritVeriniceContextState();
+                IStatus status = Status.OK_STATUS;
+                CnATreeElement tmpTarget = target;
+                try {                
+                    tmpTarget = Retriever.retrieveElement(tmpTarget, new RetrieveInfo().setProperties(true));
+                    if(!(isRootElement(tmpTarget)) || (validationList.size() == 1 && isSubTreeElement(validationList.get(0))) ){
+                        String jobDescription = (validationList.size() == 1 && isSubTreeElement(validationList.get(0)) 
+                                ? (loadElementByUuid(validationList.get(0))).getTitle() : (tmpTarget instanceof CnATreeElement ? 
+                                        tmpTarget.getTitle() : Messages.getString("PasteHandler.12")));
+                        monitor.beginTask(NLS.bind(Messages.getString("PasteHandler.11"), new Object[] {jobDescription}), IProgressMonitor.UNKNOWN);
+                        String uuid = ((!isRootElement(tmpTarget) ? tmpTarget.getUuid() : 
+                            (validationList.get(0))));
+                        ServiceFactory.lookupValidationService().createValidationsForSubTreeByUuid(uuid);
+                        CnAElementFactory.getModel(loadElementByUuid(uuid)).validationAdded(loadElementByUuid(uuid).getScopeId());
+                    } else {
+                        for(String uuid : validationList){
+                                monitor.beginTask(NLS.bind(Messages.getString("PasteHandler.11"), new Object[] {loadElementByUuid(uuid).getTitle()}), IProgressMonitor.UNKNOWN);
+                                ServiceFactory.lookupValidationService().createValidationByUuid(uuid);
+                                CnAElementFactory.getModel(loadElementByUuid(uuid)).validationAdded(loadElementByUuid(uuid).getScopeId());
+                            }
+                        if(validationList != null && validationList.size() > 0){
+                            CnAElementFactory.getModel(loadElementByUuid(validationList.get(0))).validationAdded(loadElementByUuid(validationList.get(0)).getScopeId());
+                        }
+                    }
+                } catch (Exception e){
+                    LOG.error("Exception while executing createValidationsJob", e);
+                } finally {
+                    monitor.done();
+                }
+                return status;
+            }
+        };      
+        JobScheduler.scheduleJob(validationCreationJob, new Mutex());
+    }
 	
 	
 	private void cut(final CnATreeElement target, List cutList) throws InvocationTargetException, InterruptedException {
@@ -290,6 +303,7 @@ public class PasteHandler extends AbstractHandler {
     private boolean isRootElement(CnATreeElement elmt){
         return elmt instanceof BSIModel 
                 || elmt instanceof ISO27KModel
+                || elmt instanceof BpModel || elmt instanceof CatalogModel
                 || elmt instanceof ImportBsiGroup
                 || elmt instanceof ImportIsoGroup;
     }

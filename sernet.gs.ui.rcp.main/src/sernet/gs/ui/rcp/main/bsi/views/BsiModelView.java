@@ -98,6 +98,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -105,6 +106,7 @@ import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.NullModel;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.IDatenschutzElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
@@ -328,6 +330,17 @@ public class BsiModelView extends RightsEnabledView
                 @Override
                 public void loaded(ISO27KModel model) {
                     // nothing to do            
+                }
+
+                @Override
+                public void loaded(BpModel model) {
+                 // nothing to do
+                    
+                }
+
+                @Override
+                public void loaded(CatalogModel model) {
+                    // do nothing
                 }
             };
             CnAElementFactory.getInstance().addLoadListener(modelLoadListener);

@@ -24,6 +24,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
+import sernet.verinice.model.bp.IBpModelListener;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -38,7 +40,8 @@ import sernet.verinice.model.validation.CnAValidation;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class RelationViewContentProvider implements IStructuredContentProvider, IBSIModelListener, IISO27KModelListener {
+public class RelationViewContentProvider implements IStructuredContentProvider,
+    IBSIModelListener, IISO27KModelListener, IBpModelListener {
 
 
 	private IRelationTable view;
@@ -186,5 +189,14 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
     public void validationRemoved(Integer scopeId){};
     
     @Override
-    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IBpModelListener#modelReload(sernet.verinice.model.bp.elements.BpModel)
+     */
+    @Override
+    public void modelReload(BpModel newModel) {
+        view.reloadAll();
+        
+    };
 }

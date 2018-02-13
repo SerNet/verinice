@@ -1,0 +1,183 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+<!--Für Threats-->
+  <xs:element name="headline" type="xs:string"/>
+  <xs:element name="specificThreat">
+    <xs:complexType>
+      <xs:all>
+        <xs:element ref="headline"/>
+        <xs:element ref="description"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+<!--Ende Threats-->
+<!--Für Requirements-->
+  <xs:element name="role" type="xs:string"/>
+  <xs:element name="confidentiality" type="xs:string"/>
+  <xs:element name="integrity" type="xs:string"/>
+  <xs:element name="availability" type="xs:string"/>
+  <xs:element name="identifier" type="xs:string"/>
+  <xs:element name="title" type="xs:string"/>
+  <xs:element name="responsibleRoles">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="role" maxOccurs="unbounded" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="cia">
+    <xs:complexType>
+		<xs:all>
+			<xs:element ref="confidentiality"/>
+			<xs:element ref="integrity"/>
+			<xs:element ref="availability"/>
+		</xs:all>
+    </xs:complexType>
+  </xs:element>  
+  
+  <xs:element name="description">
+    <xs:complexType>
+		<xs:sequence>
+				<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <!--überall min =0?-->
+  <xs:element name="requirement">
+    <xs:complexType>
+      <xs:all>
+        <xs:element ref="identifier" minOccurs="0"/>
+        <xs:element ref="title" minOccurs="0"/>
+        <xs:element ref="responsibleRoles" minOccurs="0"/>
+        <xs:element ref="cia" minOccurs="0"/>
+        <xs:element ref="description" minOccurs="0"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+<!--Ende Requirements-->
+<!--Für Biography-->
+  <xs:element name="shortHand" type="xs:string"/>
+  <xs:element name="bibItem">
+    <xs:complexType>
+      <xs:all>
+        <xs:element ref="shortHand" minOccurs="0"/>
+        <xs:element ref="title" minOccurs="0"/>
+        <xs:element ref="description" minOccurs="0"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+<!--Ende Biography-->
+<!--Für Crossreferences-->
+  <xs:element name="elementalthreat-ref">
+	<xs:complexType>
+				<xs:attribute name="identifier" type="xs:string" use="required"/>
+				<xs:attribute name="isReferenced" type="xs:string" use="required"/><!--Booelan oder string?-->
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="requirement-ref">
+    <xs:complexType>
+		<xs:sequence>
+			<xs:element ref="elementalthreat-ref" maxOccurs="unbounded" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="identifier" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+<!--Ende Crossreferences-->
+  
+  
+  <xs:element name="document">
+    <xs:complexType>
+      <xs:all>
+        <xs:element type="xs:string" name="fullTitle"/>
+        <xs:element type="xs:string" name="identifier"/>
+        <xs:element type="xs:string" name="title"/>	
+        <xs:element type="xs:string" name="lastChange"/>	 
+        <xs:element type="xs:string" name="lastCheck"/>	
+        <xs:element type="xs:string" name="draftVersion"/>	
+        <xs:element type="xs:string" name="headerIcon"/>
+		<xs:element name="description">
+			<xs:complexType>
+				<xs:all>
+					<xs:element type="xs:string" name="introduction"/>	
+					<xs:element type="xs:string" name="purpose"/>	
+					<xs:element type="xs:string" name="differentiation"/>	
+				</xs:all>
+			</xs:complexType>
+		</xs:element>
+		<xs:element name="threatScenario">
+			<xs:complexType>
+				<xs:all>
+					<xs:element name="description" type="xs:string"/>
+					<xs:element name="specificThreats">
+						<xs:complexType>
+							<xs:sequence>  <!-- sequence damit max occurs >0 sein kann  min auf 0 oder 1? und unendlich viele davon ok?= -->
+								<xs:element ref="specificThreat" minOccurs="1" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:all>
+			</xs:complexType>
+		</xs:element>		
+		<xs:element name="requirements">
+			<xs:complexType>
+				<xs:all>
+					<xs:element name="description" type="xs:string"/>
+					<xs:element name="mainResponsibleRole" type="xs:string"/>			
+					<xs:element name="furtherResponsibleRoles" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>  <!-- sequence damit max occurs >0 sein kann  min auf 0 oder 1? und unendlich viele davon ok?= -->
+								<xs:element name="role" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>		
+					<xs:element name="basicRequirements">
+						<xs:complexType>
+							<xs:sequence>  <!-- sequence damit max occurs >0 sein kann  min auf 0 oder 1? und unendlich viele davon ok?= -->
+								<xs:element ref="requirement" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="standardRequirements">
+						<xs:complexType>
+							<xs:sequence>  <!-- sequence damit max occurs >0 sein kann  min auf 0 oder 1? und unendlich viele davon ok?= -->
+								<xs:element ref="requirement" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="highLevelRequirements">
+						<xs:complexType>
+							<xs:sequence>  <!-- sequence damit max occurs >0 sein kann  min auf 0 oder 1? und unendlich viele davon ok?= -->
+								<xs:element ref="requirement" minOccurs="0" maxOccurs="unbounded"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:all>
+			</xs:complexType>
+		</xs:element>
+		<xs:element name="advancedInformationText" type="xs:string"/>
+		<!-- Checken ob min occurs =0 ok ist-->
+		<xs:element name="bibliography" minOccurs="0">
+			<xs:complexType>
+				<xs:sequence>  <!-- sequence damit max occurs >0 sein kann  min auf 0 oder 1? und unendlich viele davon ok?= -->
+					<xs:element ref="bibItem" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:complexType>
+		</xs:element>		
+		<xs:element name="elementalThreats">
+			<xs:complexType>
+				<xs:sequence>
+					<xs:element name="elementalThreat" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:complexType>
+		</xs:element>				
+		<xs:element name="crossreferences">
+			<xs:complexType>
+				<xs:sequence>
+					<xs:element ref="requirement-ref" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:complexType>
+		</xs:element>		
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

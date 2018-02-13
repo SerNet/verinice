@@ -1,29 +1,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  
-<!-- 
+
+<!--
 BUILD INSTRUCTIONS
 
 	Build with mvn -Dtycho.disableP2Mirrors=true -X clean verify
-	
-	See https://bugs.eclipse.org/bugs/show_bug.cgi?id=376973 and 
+
+	See https://bugs.eclipse.org/bugs/show_bug.cgi?id=376973 and
 	https://wiki.eclipse.org/Tycho/FAQ#How_do_I_disable_P2_mirrors.3F.
-	
+
 	Otherwise you might get a NullPointerException while fetching the artifacts.
-	
+
 	HOW TO DEAL WITH ECLIPSE?
 -->
-  
+
   <modelVersion>4.0.0</modelVersion>
   <packaging>pom</packaging>
-  
+
   <groupId>sernet.verinice</groupId>
   <artifactId>sernet.verinice.releng.parent</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  
+
     <properties>
         <!-- See http://mvnrepository.com/artifact/org.eclipse.tycho/tycho-maven-plugin/ for latest version. -->
-        <!-- 
+        <!--
 			Failed to execute goal org.eclipse.tycho:tycho-p2-publisher-plugin:1.0.0:publish-products (default-publish-products) on project sernet.verinice.releng.client.product: Detected Luna or older launcher feature org.eclipse.equinox.executable version 3.5.1.v20111216-1653-7P7NFUIFIbaUcU77s0KQWHw5HZTZ.
 			[ERROR] Native product launchers for MacOSX can only be built against Eclipse Mars or newer.
 			[ERROR] To fix this, you can either build against Eclipse Mars or newer (recommended) or go back to Tycho <= 0.22.0
@@ -37,7 +37,7 @@ BUILD INSTRUCTIONS
     <modules>
         <!-- Target platform definition -->
         <module>../sernet.verinice.releng.tp</module>
-        
+
         <module>../sernet.verinice.fei.service</module>
         <module>../sernet.verinice.fei.rcp</module>
         <module>../sernet.verinice.report.service</module>
@@ -57,22 +57,23 @@ BUILD INSTRUCTIONS
         <module>../sernet.gs.service</module>
         <module>../sernet.gs.ui.rcp.main</module>
         <module>../sernet.gs.ui.rcp.main.feature</module>
-        
+
         <module>../sernet.verinice.kerberos</module>
 
         <module>../sernet.gs.pax_web.fragment</module>
         <module>../sernet.gs.server</module>
         <module>../sernet.gs.server.feature</module>
-        
+
         <module>../sernet.verinice.releng.client.product</module>
-        <module>../sernet.verinice.update_site</module>
         <module>../sernet.verinice.releng.server.product</module>
-        
+        <!--  the modernized gs catalog importer -->
+        <module>../sernet.verinice.bp.importer</module>
+
         <!-- Report designer inclusive dependencies only needed by this module -->
-        
+
         <module>../sernet.verinice.oda.driver.designer</module>
         <module>../sernet.verinice.report.designer.tycho</module>
-        
+
     </modules>
 
     <build>
@@ -94,11 +95,11 @@ BUILD INSTRUCTIONS
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>tycho-compiler-plugin</artifactId>
                 <version>${tycho-version}</version>
-                
+
                 <configuration>
                 	<!-- source and target options can be ommited as soon as we upgrade to Tycho 1.0.0 -->
-  					<source>1.7</source>
-  					<target>1.7</target>
+  					<source>1.8</source>
+  					<target>1.8</target>
   					<!-- otherwise you will get numerous API access restriction errors when tycho version < 1.0.0 -->
                 	<compilerArgument>-err:none</compilerArgument>
 				</configuration>
@@ -151,6 +152,6 @@ BUILD INSTRUCTIONS
             </plugin>
 
         </plugins>
-    </build>  
-  
+    </build>
+
 </project>

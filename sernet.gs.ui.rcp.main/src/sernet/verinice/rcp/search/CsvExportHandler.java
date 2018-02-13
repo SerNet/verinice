@@ -73,7 +73,7 @@ public class CsvExportHandler {
                 }
             }
         } catch(Exception e) {
-            String message = "An error occured during export.";
+            String message = "An error occurred during export.";
             LOG.error(message, e);
             ExceptionUtil.log(e, message);
         }

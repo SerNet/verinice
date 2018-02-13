@@ -388,7 +388,7 @@ public abstract class BaseDao implements ISearchDao {
                .actionGet();
 
         } catch (IndexMissingException ex){
-            LOG.error("error occured while deleting index: \"" + getIndex() + "\". This index seems not to exists so it is no problem to ignore this error", ex);
+            LOG.error("error occurred while deleting index: \"" + getIndex() + "\". This index seems not to exists so it is no problem to ignore this error", ex);
         }
 
 

@@ -61,7 +61,7 @@ import sernet.gs.service.TimeFormatter;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRCPLocal;
+import sernet.gs.ui.rcp.main.bsi.model.BSIConfigFactory;
 import sernet.gs.ui.rcp.main.bsi.model.CnAElementBuilder;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
@@ -552,7 +552,7 @@ public class ImportTask extends AbstractGstoolImportTask {
     }
 
     private void handleSchutzBedarfForSingleElement(Entry<NZielobjekt, CnATreeElement> entry) throws CommandException {
-        if (entry.getValue().getSchutzbedarfProvider() != null) {
+        if (entry.getValue().getProtectionRequirementsProvider() != null) {
             List<NZobSb> internalSchutzbedarf = getGstoolDao().findSchutzbedarfByZielobjekt(entry.getKey());
             for (NZobSb schubeda : internalSchutzbedarf) {
                 transferSchutzBedarfGeneral(entry, schubeda);
@@ -877,7 +877,7 @@ public class ImportTask extends AbstractGstoolImportTask {
     private List<Baustein> loadCatalogueBausteine() throws CommandException, IOException, GSServiceException{
         IBSIConfig bsiConfig = null;
         if (!ServiceFactory.isPermissionHandlingNeeded()) {
-            bsiConfig = new BSIConfigurationRCPLocal();
+            bsiConfig = BSIConfigFactory.createStandaloneConfig();
         }
         List<Baustein> bausteine;
         if (bsiConfig == null) {
@@ -935,13 +935,13 @@ public class ImportTask extends AbstractGstoolImportTask {
             mover.exportDatabse();
         } catch (Exception e) {
             LOG.error("Error: ", e);
-            ExceptionUtil.log(e, "Fehler beim Import aus MDB Datei über temporäre Derby-DB.");
+            ExceptionUtil.log(e, "Fehler beim Import aus MDB-Datei über temporäre Derby-DB.");
         } finally {
             try {
                 source.close();
                 target.close();
             } catch (Exception e) {
-                LOG.debug("Konnte temporäre Import DB nicht schließen.", e);
+                LOG.debug("Konnte temporäre Import-DB nicht schließen.", e);
             }
         }
     }

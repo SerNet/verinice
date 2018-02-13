@@ -35,7 +35,7 @@ import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.AssetValueAdapter;
+import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
@@ -167,7 +167,7 @@ public class LoadReportScenarioDetails extends GenericCommand implements ICached
         // get all controls for the asset and reduce the impact of the asset and
         // thereby the risk:
         if (asset != null) {
-            AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
+            ProtectionRequirementsValueAdapter valueAdapter = new ProtectionRequirementsValueAdapter(asset);
 
             treatedRisks = calcRiskWithControls(asset, RISK_WITH_IMPLEMENTED_CONTROLS, valueAdapter, treatedRisks, probabilityWithControls);
             treatedRisksWithoutNAControls = calcRiskWithControls(asset, RISK_WITHOUT_NA_CONTROLS, valueAdapter, treatedRisksWithoutNAControls, probalilityWithoutNAControls);
@@ -240,17 +240,17 @@ public class LoadReportScenarioDetails extends GenericCommand implements ICached
         row.add(scenario.getDbId().toString());
     }
 
-    private Impact calcRiskWithControls(CnATreeElement asset, int riskType, AssetValueAdapter assetValueAdapter, Impact initialImpact, int probalitity){
+    private Impact calcRiskWithControls(CnATreeElement asset, int riskType, ProtectionRequirementsValueAdapter assetValueAdapter, Impact initialImpact, int probalitity){
 
         Integer impactC = 0;
         Integer impactI = 0;
         Integer impactA = 0;
-        AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
+        ProtectionRequirementsValueAdapter valueAdapter = new ProtectionRequirementsValueAdapter(asset);
         RiskAnalysisHelperImpl ras = new RiskAnalysisHelperImpl();
 
-        impactC = valueAdapter.getVertraulichkeit();
-        impactI = valueAdapter.getIntegritaet();
-        impactA = valueAdapter.getVerfuegbarkeit();
+        impactC = valueAdapter.getConfidentiality();
+        impactI = valueAdapter.getIntegrity();
+        impactA = valueAdapter.getAvailability();
 
         Integer[] reducedImpact = ras.applyControlsToImpact(riskType, asset, impactC, impactI, impactA);
         if (reducedImpact != null) {

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<cheatsheet title="Erste Schritte">
+
+  <intro>
+    <description>
+      <b>Willkommen bei verinice.</b>
+      <br/>
+      <br/>
+      <b>Please note:</b> This section is a work in progress and the English versions of these tutorials will be shipped with a future release.
+     <br/>
+      <br/>
+      Dieses Tutorial erleichtert es Ihnen, verinice einzurichten und sich schnell darin zurecht zu finden.
+    </description>
+  </intro>
+
+  <item title="Grundschutz-Kompendium herunterladen">
+     <description>
+        Zunächst müssen Sie die aktuelle Version des IT-Grundschutz-Kompendiums
+        herunterladen. Dieses finden Sie im Download-Bereich der
+        verinice-Website unter:
+        <br/>
+        <b>https://verinice.com/produkt/#_download</b>
+        <br/>
+        <br/>
+        Wechseln Sie dort in den Abschnitt <b>Kataloge und mehr</b> und laden Sie
+        die Datei <b>IT-Grundschutz-Kompendium</b> herunter.
+        <br/>
+        <br/>
+        Speichern Sie die .VNA-Datei auf Ihrer lokalen Festplatte.
+     </description>
+  </item>
+
+  <item title="Grundschutz-Kompendium importieren">
+     <description>
+        Nun muss das heruntergeladene Grundschutz-Kompendium in verinice
+        eingebunden werden. Öffnen Sie hierfür den Kataloge-View in der
+        Perspektive Modernisierter BSI-Grundschutz.
+     </description>
+  </item>
+
+  <item title="Katalog">
+     <description>
+        Im Kataloge-View haben Sie nun die Möglichkeit eine .VNA-Datei zu
+        importieren. Klicken Sie dazu in der Werkzeugleiste das entsprechende
+        Icon (blaues Eingangskörbchen mit Pfeil nach innen). Wählen Sie nun
+        Ihre zuvor heruntergeladene .VNA-Datei aus und bestätigen Sie
+        anschließend mit <b>OK</b>. Das Grundschutz-Kompendium wird nun
+        geladen. Sobald der Import beendet ist, erscheinen
+        alle Bausteine im Kataloge-View.
+     </description>
+  </item>
+
+  <item title="Anzeige der Inhalte im Objektbrowser">
+     <description>
+        Wenn Sie nun einen Baustein, eine Anforderung, Gefährdung oder Maßnahme
+        anklicken, so wird der Inhalt im Objektbrowser
+        angezeigt.
+     </description>
+  </item>
+
+</cheatsheet>

@@ -26,7 +26,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class InterviewGroup extends Group<Asset> {
+public class InterviewGroup extends Group<Interview> implements IISO27kGroup {
 
 	public static final String TYPE_ID = "interview_group"; //$NON-NLS-1$
 	public static final String PROP_NAME = "interview_group_name"; //$NON-NLS-1$

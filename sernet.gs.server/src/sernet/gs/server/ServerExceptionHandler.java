@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 Alexander Koderman <ak[at]sernet[dot]de>.
+ * Copyright (c) 2009 Alexander Koderman.
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -13,38 +13,66 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
+ *     Alexander Koderman - Initial API and implementation
+ *     Daniel Murygin - Refactoring
  ******************************************************************************/
 package sernet.gs.server;
 
 import org.springframework.security.SpringSecurityException;
 
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.service.BaseExceptionHandler;
+import sernet.verinice.interfaces.UsernameExistsException;
+import sernet.verinice.interfaces.ldap.SizeLimitExceededException;
+import sernet.verinice.service.ICommandExceptionHandler;
+import sernet.verinice.service.commands.UsernameExistsRuntimeException;
+import sernet.verinice.service.commands.unify.UnifyValidationException;
+import sernet.verinice.service.sync.VnaSchemaException;
 
 /**
- * Translate certain exceptions before returning them to the client, i.e. to prevent
- * unknown class exceptions for exceptions that are not known to the client. (Packages only available
- * on the server).
+ * This class handles exceptions on the server.
  * 
- * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
- *
+ * The class is configured as an exception handler for the HibernateCommandService in
+ * the spring configuration file 'veriniceserver-common.xml'.
+ * 
+ * @author Alexander Koderman
+ * @author Daniel Murygin
  */
-public class ServerExceptionHandler extends BaseExceptionHandler {
+public class ServerExceptionHandler implements ICommandExceptionHandler {
 
-	@Override
-	public void handle(Exception e) throws CommandException {
-		// logging is done in HibernateCommandService
-		if (e instanceof SpringSecurityException) {
-			throw new CommandException("Sicherheitsverstoß.", new Exception("Sicherheitsüberprüfung fehlgeschlagen. Prüfen Sie, ob Benutzername und Passwort " +
-					"korrekt sind und Sie über die nötige Berechtigung für die Operation verfügen. Details: " + e.getMessage()));
-		}
-		if (e instanceof sernet.gs.service.SecurityException) {
-			throw new CommandException("Sicherheitsverstoß.", new sernet.gs.service.SecurityException("Sicherheitsüberprüfung fehlgeschlagen. Prüfen Sie, ob Sie über die nötige Berechtigung für die Operation verfügen."));
-		}
-		super.handle(e);
-	}
+    @Override
+    public void handle(Exception e) throws CommandException {
+        if (e instanceof SpringSecurityException) {
+            throw new CommandException("Security violation",
+                    new Exception(
+                            "Security check failed. Check user name, password and necessary authorizations for the operation. Details: "
+                                    + e.getMessage()));
+        }
+        if (e instanceof sernet.gs.service.SecurityException) {
+            throw new CommandException("Security violation",
+                    new sernet.gs.service.SecurityException(
+                            "Security check failed. Check necessary authorizations for the operation"));
+        }
+        rethrowKnownException(e);
+    }
+
+    private void rethrowKnownException(Exception e) throws CommandException {
+        if (e instanceof UsernameExistsRuntimeException) {
+            throw new UsernameExistsException(e);
+        } else if (e instanceof SizeLimitExceededException) {
+            throw (SizeLimitExceededException) e;
+        } else if (e instanceof UnifyValidationException) {
+            throw (UnifyValidationException) e;
+        } else if (e instanceof VnaSchemaException) {
+            throw (VnaSchemaException) e;
+        } else {
+            wrapUnknownException(e);
+        }
+    }
+
+    private void wrapUnknownException(Exception e) throws CommandException {
+        throw new CommandException(
+                "An error occurred when calling a function on the verinice server or in the backend of the standalone client.",
+                e);
+    }
 
 }

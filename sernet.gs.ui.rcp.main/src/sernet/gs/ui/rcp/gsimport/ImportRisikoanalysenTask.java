@@ -112,7 +112,7 @@ public class ImportRisikoanalysenTask extends AbstractGstoolImportTask {
         Preferences prefs = Activator.getDefault().getPluginPreferences();
         String sourceDbUrl = prefs.getString(PreferenceConstants.GS_DB_URL);
         if (sourceDbUrl.indexOf("odbc") > -1) {
-            throw new DBException("Kann nicht direkt aus MDB Datei importieren. Datenbank vorher anhängen in Menü \"Bearbeiten, Einstellungen\".");
+            throw new DBException("Kann nicht direkt aus MDB-Datei importieren. Datenbank vorher anhängen in Menü \"Bearbeiten, Einstellungen\".");
         }
 
         this.monitor = monitor;

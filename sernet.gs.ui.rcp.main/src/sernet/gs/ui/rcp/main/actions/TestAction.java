@@ -28,10 +28,11 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.service.commands.crud.LoadReportAllRisksForScope;
+import sernet.verinice.service.bp.importer.BpImporter;
 
 public class TestAction extends Action {
 
@@ -59,6 +60,15 @@ public class TestAction extends Action {
             public void loaded(ISO27KModel model) {
                 setEnabled(true);               
             }
+            @Override
+            public void loaded(BpModel model) {
+                setEnabled(true);
+            }
+
+            @Override
+            public void loaded(CatalogModel model) {
+                // nothing to do
+            }
         });
     }
 
@@ -79,9 +89,9 @@ public class TestAction extends Action {
 //            cmd = ServiceFactory.lookupCommandService().executeCommand(cmd);
 //            List<List<String>> result2 = cmd.getResult();
 //            
-            LoadReportAllRisksForScope command = new LoadReportAllRisksForScope(152);
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            List<List<String>> result2 = command.getResult();
+//            LoadReportAllRisksForScope command = new LoadReportAllRisksForScope(152);
+//            command = ServiceFactory.lookupCommandService().executeCommand(command);
+//            List<List<String>> result2 = command.getResult();
             
             
 //            LoadReportCountRisksBySeverity command = new LoadReportCountRisksBySeverity(152, 'c', 3);
@@ -168,6 +178,9 @@ public class TestAction extends Action {
 //              }
 //              allsb.append("\n");
 //            }
+            
+            BpImporter importer = new BpImporter("/home/sh/Schreibtisch/issues/vn-1795/XML-2017-08-21/DE");
+            importer.run();
             
             if (LOG.isDebugEnabled()) {
                 LOG.debug(allsb.toString());

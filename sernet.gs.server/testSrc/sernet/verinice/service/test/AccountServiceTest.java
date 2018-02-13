@@ -3,7 +3,6 @@ package sernet.verinice.service.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.Serializable;
@@ -17,11 +16,12 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAccountSearchParameter;
@@ -39,14 +39,13 @@ import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.account.AccountSearchParameter;
 import sernet.verinice.service.account.AccountSearchParameterFactory;
 import sernet.verinice.service.commands.CreateConfiguration;
-import sernet.verinice.service.commands.LoadElementByUuid;
-import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SaveConfiguration;
 import sernet.verinice.service.commands.UpdateElementEntity;
-import sernet.verinice.service.commands.crud.PrepareObjectWithAccountDataForDeletion;
 import sernet.verinice.service.test.helper.util.BFSTravers;
 import sernet.verinice.service.test.helper.util.CnATreeTraverser;
 
+@TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
+@Transactional
 public class AccountServiceTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(AccountServiceTest.class);
@@ -87,6 +86,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         Assert.assertTrue(accountGroups.contains(accountGroupB));
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testDeleteAccountGroup() {
 
@@ -96,6 +97,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         validateRemovedAccountGroups();
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testDeleteAccountGroupByName() {
 
@@ -113,6 +116,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         Assert.assertFalse(accountGroups.contains(accountGroupB));
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testAddRole() {
         addRoles();
@@ -142,6 +147,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         Assert.assertTrue(accountGroupNames.contains(accountGroupRandom.getName()));
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testDeleteRole() {
         addRoles();
@@ -164,6 +171,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         }
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void countConnectObjectsForGroup() {
         addRoles();
@@ -182,6 +191,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         return setPermissionsCallback.getSetPermissions();
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testListGroupNames() {
 
@@ -192,6 +203,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         Assert.assertTrue(accountGroupNames.contains(accountGroupRandom.getName()));
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testFindByLogin() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(getLoginName()));
@@ -202,6 +215,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         }
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testFindByFirstName() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createFirstNameParameter(getFirstName()));
@@ -212,6 +227,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         }
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testFindByFamilyName() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createFamilyNameParameter(getFamilyName()));
@@ -222,6 +239,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         }
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testFindByIsAdmin() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createIsAdminParameter(true));
@@ -235,6 +254,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         assertTrue("Testuser not found", testuserFound);
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testFindByIsScopeOnly() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createIsScopeOnlyParameter(true));
@@ -248,12 +269,16 @@ public class AccountServiceTest extends CommandServiceProvider {
         assertTrue("Testuser not found", testuserFound);
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testFindByScopeId() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createScopeParameter(organization.getDbId()));
         assertNumber(configurations, 7);
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testFindByAll() throws Exception {
         IAccountSearchParameter parameter = AccountSearchParameterFactory.createFamilyNameParameter(FAMILY_NAME_B);
@@ -270,6 +295,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         }
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testFindByIsNotAdmin() throws Exception {
         List<Configuration> configurations2 = accountService.findAccounts(AccountSearchParameterFactory.createIsAdminParameter(false));
@@ -279,6 +306,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         }
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testGetById() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(new AccountSearchParameter());
@@ -293,6 +322,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         assertTrue("No user found", userFound);
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testRemove() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(LOGIN_A));
@@ -300,6 +331,8 @@ public class AccountServiceTest extends CommandServiceProvider {
         removeAccountsStartingWith(LOGIN_A);
     }
 
+    @Transactional
+    @Rollback(true)
     @Test
     public void testDisable() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(LOGIN_A));
@@ -344,31 +377,6 @@ public class AccountServiceTest extends CommandServiceProvider {
         organization = createTestOrganization();
 
         createAccountGroups();
-    }
-
-    @After
-    public void tearDown() throws CommandException {
-        removeAccountsStartingWith(getLoginName());
-        removeAccountsStartingWith(LOGIN_A);
-        removeAccountsStartingWith(LOGIN_B);
-        removeAccountsStartingWith(LOGIN_C);
-        removeAccountsStartingWith(LOGIN_D);
-        removeTestOrganization(organization);
-        removeAccountGroups();
-    }
-
-    private void removeAccountGroups() {
-        tryRemovingAccountGroups(accountGroupA);
-        tryRemovingAccountGroups(accountGroupB);
-        tryRemovingAccountGroups(accountGroupRandom);
-    }
-
-    private void tryRemovingAccountGroups(AccountGroup ag) {
-        try {
-            accountService.deleteAccountGroup(ag);
-        } catch (HibernateOptimisticLockingFailureException ex) {
-            LOG.info("nothing to do, group are already deleted: " + ag.getName());
-        }
     }
 
     private Organization createTestOrganization() throws CommandException {
@@ -460,19 +468,6 @@ public class AccountServiceTest extends CommandServiceProvider {
 
     private String getFamilyName() {
         return "Duck";
-    }
-
-    private void removeTestOrganization(Organization organization) throws CommandException {
-        PrepareObjectWithAccountDataForDeletion removeAccount = new PrepareObjectWithAccountDataForDeletion(organization);
-        commandService.executeCommand(removeAccount);
-        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(organization);
-        commandService.executeCommand(removeCommand);
-        for (String uuid : uuidList) {
-            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid);
-            command = commandService.executeCommand(command);
-            CnATreeElement element = command.getElement();
-            assertNull("Organization was not deleted.", element);
-        }
     }
 
     private void createAccountGroups() {

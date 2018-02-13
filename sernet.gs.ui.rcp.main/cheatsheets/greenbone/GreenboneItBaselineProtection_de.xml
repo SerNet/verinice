@@ -39,7 +39,7 @@
 
   <item title="Import des IT-Grundschutz-Scans">
     <description>
-      Wechseln Sie in verinice über das Menü <b>Ansicht > Zeige Perspektive > BSI Grundschutz Perspektive</b> in die
+      Wechseln Sie in verinice über das Menü <b>Ansicht > Zeige Perspektive > BSI-Grundschutz-Perspektive</b> in die
       Grundschutz-Perspektive. Starten Sie den Import durch Klick auf den Button <b>Importiere IT-Verbund aus
       Datei...</b>. Wählen Sie den zuvor aus Greenbone exportierten ITG-Report durch Klick auf den Button <b>Datei
       auswählen...</b>, die restlichen Parameter können auf ihren Default-Einstellungen belassen werden.<br />

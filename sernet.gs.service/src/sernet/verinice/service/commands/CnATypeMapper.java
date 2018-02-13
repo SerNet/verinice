@@ -20,12 +20,94 @@ package sernet.verinice.service.commands;
 import java.util.HashMap;
 import java.util.Map;
 
-import sernet.verinice.model.bsi.*;
+import sernet.verinice.model.bp.elements.Application;
+import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.elements.BusinessProcess;
+import sernet.verinice.model.bp.elements.Device;
+import sernet.verinice.model.bp.elements.IcsSystem;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.ItSystem;
+import sernet.verinice.model.bp.elements.Network;
+import sernet.verinice.model.bp.elements.Room;
+import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bp.groups.BpThreatGroup;
+import sernet.verinice.model.bp.groups.BusinessProcessGroup;
+import sernet.verinice.model.bp.groups.DeviceGroup;
+import sernet.verinice.model.bp.groups.IcsSystemGroup;
+import sernet.verinice.model.bp.groups.ItSystemGroup;
+import sernet.verinice.model.bp.groups.NetworkGroup;
+import sernet.verinice.model.bp.groups.RoomGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
+import sernet.verinice.model.bsi.Anwendung;
+import sernet.verinice.model.bsi.AnwendungenKategorie;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.Client;
+import sernet.verinice.model.bsi.ClientsKategorie;
+import sernet.verinice.model.bsi.Gebaeude;
+import sernet.verinice.model.bsi.GebaeudeKategorie;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.NKKategorie;
+import sernet.verinice.model.bsi.NetzKomponente;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.bsi.PersonenKategorie;
+import sernet.verinice.model.bsi.RaeumeKategorie;
+import sernet.verinice.model.bsi.Raum;
+import sernet.verinice.model.bsi.Server;
+import sernet.verinice.model.bsi.ServerKategorie;
+import sernet.verinice.model.bsi.SonstIT;
+import sernet.verinice.model.bsi.SonstigeITKategorie;
+import sernet.verinice.model.bsi.TKKategorie;
+import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.ds.*;
-import sernet.verinice.model.iso27k.*;
+import sernet.verinice.model.ds.Datenverarbeitung;
+import sernet.verinice.model.ds.Personengruppen;
+import sernet.verinice.model.ds.StellungnahmeDSB;
+import sernet.verinice.model.ds.VerantwortlicheStelle;
+import sernet.verinice.model.ds.Verarbeitungsangaben;
+import sernet.verinice.model.ds.Zweckbestimmung;
+import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.iso27k.AssetGroup;
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.AuditGroup;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.Document;
+import sernet.verinice.model.iso27k.DocumentGroup;
+import sernet.verinice.model.iso27k.Evidence;
+import sernet.verinice.model.iso27k.EvidenceGroup;
+import sernet.verinice.model.iso27k.ExceptionGroup;
+import sernet.verinice.model.iso27k.Finding;
+import sernet.verinice.model.iso27k.FindingGroup;
+import sernet.verinice.model.iso27k.Incident;
+import sernet.verinice.model.iso27k.IncidentGroup;
+import sernet.verinice.model.iso27k.IncidentScenario;
+import sernet.verinice.model.iso27k.IncidentScenarioGroup;
+import sernet.verinice.model.iso27k.Interview;
+import sernet.verinice.model.iso27k.InterviewGroup;
+import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.iso27k.PersonGroup;
+import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.model.iso27k.ProcessGroup;
+import sernet.verinice.model.iso27k.Record;
+import sernet.verinice.model.iso27k.RecordGroup;
+import sernet.verinice.model.iso27k.Requirement;
+import sernet.verinice.model.iso27k.RequirementGroup;
+import sernet.verinice.model.iso27k.Response;
+import sernet.verinice.model.iso27k.ResponseGroup;
+import sernet.verinice.model.iso27k.Threat;
+import sernet.verinice.model.iso27k.ThreatGroup;
+import sernet.verinice.model.iso27k.Vulnerability;
+import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
@@ -116,6 +198,33 @@ public class CnATypeMapper {
         
         typeIdClass.put(GefaehrdungsUmsetzung.TYPE_ID, GefaehrdungsUmsetzung.class);
         typeIdClass.put(FinishedRiskAnalysis.TYPE_ID, FinishedRiskAnalysis.class);
+        
+        typeIdClass.put(ApplicationGroup.TYPE_ID, ApplicationGroup.class);
+        typeIdClass.put(BpPersonGroup.TYPE_ID, BpPersonGroup.class);
+        typeIdClass.put(BpRequirementGroup.TYPE_ID, BpRequirementGroup.class);
+        typeIdClass.put(BpThreatGroup.TYPE_ID, BpThreatGroup.class);
+        typeIdClass.put(BusinessProcessGroup.TYPE_ID, BusinessProcessGroup.class);
+        typeIdClass.put(DeviceGroup.TYPE_ID, DeviceGroup.class);
+        typeIdClass.put(IcsSystemGroup.TYPE_ID, IcsSystemGroup.class);
+        typeIdClass.put(ItSystemGroup.TYPE_ID, ItSystemGroup.class);
+        typeIdClass.put(NetworkGroup.TYPE_ID, NetworkGroup.class);
+        typeIdClass.put(RoomGroup.TYPE_ID, RoomGroup.class);
+        typeIdClass.put(SafeguardGroup.TYPE_ID, SafeguardGroup.class);
+        
+        typeIdClass.put(Application.TYPE_ID, Application.class);
+        typeIdClass.put(BpPerson.TYPE_ID, BpPerson.class);
+        typeIdClass.put(BpThreat.TYPE_ID, BpThreat.class);
+        typeIdClass.put(BpRequirement.TYPE_ID, BpRequirement.class);
+        typeIdClass.put(BusinessProcess.TYPE_ID, BusinessProcess.class);
+        typeIdClass.put(Device.TYPE_ID, Device.class);
+        typeIdClass.put(IcsSystem.TYPE_ID, IcsSystem.class);
+        typeIdClass.put(ItNetwork.TYPE_ID, ItNetwork.class);
+        typeIdClass.put(ItSystem.TYPE_ID, ItSystem.class);
+        typeIdClass.put(Network.TYPE_ID, Network.class);
+        typeIdClass.put(Room.TYPE_ID, Room.class);
+        typeIdClass.put(Safeguard.TYPE_ID, Safeguard.class);
+        typeIdClass.put(CatalogModel.TYPE_ID, CatalogModel.class);
+        
         // typeIdClass.put(RisikoMassnahmenUmsetzung.TYPE_ID,
         // RisikoMassnahmenUmsetzung.class);
 
@@ -169,6 +278,20 @@ public class CnATypeMapper {
         FindingGroup.TYPE_ID
     };
     
+    private static final String[] BP_ELEMENT_TYPES = new String[] {
+        ApplicationGroup.TYPE_ID,
+        BpPersonGroup.TYPE_ID,
+        BpRequirementGroup.TYPE_ID,
+        BpThreatGroup.TYPE_ID,
+        BusinessProcessGroup.TYPE_ID,
+        DeviceGroup.TYPE_ID,
+        IcsSystemGroup.TYPE_ID,
+        ItSystemGroup.TYPE_ID,
+        NetworkGroup.TYPE_ID,
+        RoomGroup.TYPE_ID,
+        SafeguardGroup.TYPE_ID,
+    };
+    
     /**
      * @param child
      * @return
@@ -189,6 +312,15 @@ public class CnATypeMapper {
     public boolean isIiso27kElement(CnATreeElement child) {
         for (String strukturType : IISO27K_ELEMENT_TYPES) {
             if (child.getEntityType() != null && child.getEntityType().getId().equals(strukturType)){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean isBpElement(CnATreeElement child) {
+        for (String strukturType : BP_ELEMENT_TYPES) {
+            if (child.getEntityType() != null && child.getEntityType().getId().equals(strukturType)) {
                 return true;
             }
         }

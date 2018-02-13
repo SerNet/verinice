@@ -15,7 +15,7 @@ import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.AssetValueAdapter;
+import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
 import sernet.verinice.model.iso27k.Process;
 
 /**
@@ -150,13 +150,13 @@ public class LoadReportProcessesWithRisk extends GenericCommand implements ICach
                 getLog().debug("Total risk for process " + cnATreeElement.getDbId() + ": " + totalRisk);
                 
                 ArrayList<String> row = new ArrayList<String>();
-                AssetValueAdapter process = new AssetValueAdapter(cnATreeElement);
+                ProtectionRequirementsValueAdapter process = new ProtectionRequirementsValueAdapter(cnATreeElement);
                 row.add(Integer.toString(cnATreeElement.getDbId()));
                 row.add(cnATreeElement.getEntity().getSimpleValue(Process.PROP_ABBR));
                 row.add(cnATreeElement.getEntity().getSimpleValue(Process.PROP_NAME));
-                row.add(Integer.toString(process.getVertraulichkeit()));
-                row.add(Integer.toString(process.getIntegritaet()));
-                row.add(Integer.toString(process.getVerfuegbarkeit()));
+                row.add(Integer.toString(process.getConfidentiality()));
+                row.add(Integer.toString(process.getIntegrity()));
+                row.add(Integer.toString(process.getAvailability()));
                 row.add(Integer.toString(totalRisk));
                 result.add(row);
             }

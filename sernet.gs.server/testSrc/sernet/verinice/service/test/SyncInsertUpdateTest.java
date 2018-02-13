@@ -259,7 +259,7 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
         victims.addAll(createInOrganisation(organization, GROUP_TYPE_MAP.get(ControlGroup.TYPE_ID), 2));
         setSourceId(organization);
 
-        SyncParameter syncParameter = new SyncParameter(false, false, true);
+        SyncParameter syncParameter = new SyncParameter(false, false, true, false);
         importFile(getAbsoluteFilePath(VNA_FILE_DELETE), syncParameter);
 
         for (String uuid : victims) {

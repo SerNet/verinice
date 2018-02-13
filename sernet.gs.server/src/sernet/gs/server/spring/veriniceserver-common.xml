@@ -158,7 +158,7 @@ This variant:
 		<property name="propertyDao" ref="propertyDao" />
 		<property name="entityDao" ref="entityDao" />
 		<property name="cnaLinkDao" ref="cnaLinkDao" />
-        <property name="cnaTreeElementDao" ref="cnaTreeElementDao" />
+    <property name="cnaTreeElementDao" ref="cnaTreeElementDao" />
 		<property name="finishedRiskAnalysisListsDAO" ref="finishedRiskAnalysisListsDAO" />
 		<property name="gefaehrdungDao" ref="gefaehrdungDao" />
 		<property name="ownGefaehrdungDao" ref="ownGefaehrdungDao" />
@@ -242,12 +242,38 @@ This variant:
 		<property name="processDAO" ref="processDAO" />
 		<property name="recordGroupDAO" ref="recordGroupDAO" />
 		<property name="recordDAO" ref="recordDAO" />
-        <!-- Self Assessment (SAMT) Daos -->
-        <property name="samtTopicDAO" ref="samtTopicDAO" />   
+    <!-- Self Assessment (SAMT) Daos -->
+    <property name="samtTopicDAO" ref="samtTopicDAO" />   
+		<!-- Modernized ITBP DAOs -->
+		<property name="applicationDAO" ref="applicationDAO" />
+    <property name="bpPersonDAO" ref="bpPersonDAO" />
+    <property name="bpRequirementDAO" ref="bpRequirementDAO" />
+    <property name="bpThreatDAO" ref="bpThreatDAO" />
+		<property name="businessProcessDAO" ref="businessProcessDAO" />
+    <property name="deviceDAO" ref="deviceDAO" />
+		<property name="icsSystemDAO" ref="icsSystemDAO" />
+		<property name="itNetworkDAO" ref="itNetworkDAO" />
+		<property name="itSystemDAO" ref="itSystemDAO" />
+		<property name="networkDAO" ref="networkDAO" />
+		<property name="roomDAO" ref="roomDAO" />
+    <property name="safeguardDAO" ref="safeguardDAO" />
+		<property name="bpModelDAO" ref="bpModelDAO" />
+		<property name="applicationGroupDAO" ref="applicationGroupDAO" />
+    <property name="bpPersonGroupDAO" ref="bpPersonGroupDAO" />
+    <property name="bpRequirementGroupDAO" ref="bpRequirementGroupDAO" />
+    <property name="bpThreatGroupDAO" ref="bpThreatGroupDAO" />
+		<property name="businessProcessGroupDAO" ref="businessProcessGroupDAO" />
+    <property name="deviceGroupDAO" ref="deviceGroupDAO" />
+		<property name="icsSystemGroupDAO" ref="icsSystemGroupDAO" />
+		<property name="itSystemGroupDAO" ref="itSystemGroupDAO" />
+		<property name="networkGroupDAO" ref="networkGroupDAO" />
+		<property name="roomGroupDAO" ref="roomGroupDAO" />
+    <property name="safeguardGroupDAO" ref="safeguardGroupDAO" />
 
         <!-- Miscellaneous DAOs -->
         <property name="importIsoDAO" ref="importIsoDAO" /> 
-        <property name="importBsiDAO" ref="importBsiDAO" />   
+        <property name="importBsiDAO" ref="importBsiDAO" />  
+        <property name="importBpDAO" ref="importBpDAO" />   
         <property name="elementEntityDao" ref="elementEntityDao" /> 
         
         <!-- unsecure daos (does not respect access rights or scope only restrictions -->
@@ -256,6 +282,7 @@ This variant:
         
         
         <property name="finishedRiskAnalysisListsDao" ref="finishedRiskAnalysisListsDao" />
+        <property name="catalogModelDAO" ref="catalogModelDao" />
 	</bean>
 
 	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
@@ -363,7 +390,7 @@ This variant:
     </bean>
      
      <bean name="loadScopeTitlesCommand" class="sernet.verinice.service.commands.LoadElementTitles">
-        <property name="typeIds" value="it-verbund,org"/>
+        <property name="typeIds" value="it-verbund,org,bp_itnetwork"/>
      </bean>
 
 	<!-- Stores the verinice archive version. This schema is written into the

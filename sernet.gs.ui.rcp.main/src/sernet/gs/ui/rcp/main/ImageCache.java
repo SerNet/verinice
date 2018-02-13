@@ -24,14 +24,68 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
 
-import sernet.verinice.model.bsi.*;
-import sernet.verinice.model.iso27k.*;
+import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.elements.BusinessProcess;
+import sernet.verinice.model.bp.elements.Device;
+import sernet.verinice.model.bp.elements.IcsSystem;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.ItSystem;
+import sernet.verinice.model.bp.elements.Network;
+import sernet.verinice.model.bp.elements.Room;
+import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
+import sernet.verinice.model.bsi.Anwendung;
+import sernet.verinice.model.bsi.AnwendungenKategorie;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.Client;
+import sernet.verinice.model.bsi.ClientsKategorie;
+import sernet.verinice.model.bsi.Gebaeude;
+import sernet.verinice.model.bsi.GebaeudeKategorie;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.NKKategorie;
+import sernet.verinice.model.bsi.NetzKomponente;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.bsi.PersonenKategorie;
+import sernet.verinice.model.bsi.RaeumeKategorie;
+import sernet.verinice.model.bsi.Raum;
+import sernet.verinice.model.bsi.Server;
+import sernet.verinice.model.bsi.ServerKategorie;
+import sernet.verinice.model.bsi.SonstIT;
+import sernet.verinice.model.bsi.SonstigeITKategorie;
+import sernet.verinice.model.bsi.TKKategorie;
+import sernet.verinice.model.bsi.TelefonKomponente;
+import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.iso27k.AssetGroup;
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.AuditGroup;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.Document;
+import sernet.verinice.model.iso27k.Evidence;
 import sernet.verinice.model.iso27k.Exception;
+import sernet.verinice.model.iso27k.Finding;
+import sernet.verinice.model.iso27k.IControl;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
+import sernet.verinice.model.iso27k.Incident;
+import sernet.verinice.model.iso27k.IncidentScenario;
+import sernet.verinice.model.iso27k.Interview;
+import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.model.iso27k.Record;
+import sernet.verinice.model.iso27k.Requirement;
+import sernet.verinice.model.iso27k.Response;
+import sernet.verinice.model.iso27k.Threat;
+import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
@@ -142,6 +196,8 @@ public final class ImageCache {
     public static final String VIEW_TASK_COMPARE_CHANGES = "history_rep.gif";
     public static final String VIEW_VALIDATION = "quickfix_warning_obj.gif";
     public static final String VIEW_GSMAPPING = "plugin_depend.gif";
+    public static final String VIEW_BASE_PROTECTION = "base-protection/base_protection_view.png";
+    public static final String VIEW_CATALOG = "catalog-view.png";
 
 	public static final String EXPANDALL   = "expandall.gif";
 	public static final String COLLAPSEALL = "collapseall.gif";
@@ -250,6 +306,19 @@ public final class ImageCache {
 	public static final String ISO27K_SAMTTOPIC          = "isa-topic.png";
 	
 	public static final String ISA_TOPIC		        = "isa-topic.png";
+
+    public static final String BP_APPLICATION           = "base-protection/application.png";
+    public static final String BP_PERSON                = "base-protection/bp_person.png";
+    public static final String BP_REQUIREMENT           = "base-protection/bp_requirement.png";
+    public static final String BP_THREAT                = "base-protection/bp_threat.png";
+    public static final String BP_BUSINESS_PROCESS      = "base-protection/business_process.png";
+    public static final String BP_DEVICE                = "base-protection/device.png";
+    public static final String BP_ICS_SYSTEM            = "base-protection/ics_system.png";
+    public static final String BP_IT_NETWORK            = "base-protection/it_network.png";
+    public static final String BP_IT_SYSTEM             = "base-protection/it_system.png";
+    public static final String BP_NETWORK               = "base-protection/network.png";
+    public static final String BP_ROOM                  = "base-protection/room.png";
+    public static final String BP_SAFEGUARD             = "base-protection/safeguard.png";
 	
 	public static final String REPORT_DEPOSIT           = "folder_table.png";
 	
@@ -274,6 +343,7 @@ public final class ImageCache {
     public static final String OK_DISABLED = "ok-disabled.png";
     
     public static final String UPDATE_SITE = "update-site.png";
+    public static final String CROSS = "16-em-cross.png";
 	
 	private static ImageCache instance;
 
@@ -286,38 +356,52 @@ public final class ImageCache {
 	private static final Map<String, String> BSI_ICON_MAP;
 	
 	// for ISO27k elements: map of <element type> : <icon name> 
-	private static final Map<String, String> ISO27K_ICON_MAP;
+	private static final Map<String, String> TYPE_ID_ICON_MAP;
 	
 	private static Bundle bundle;
 
 	
 	static {
-		ISO27K_ICON_MAP = new HashMap<String, String>();
+		TYPE_ID_ICON_MAP = new HashMap<String, String>();
 		
 		// fill type map for iso27k icons:
-		ISO27K_ICON_MAP.put(Organization.TYPE_ID, ImageCache.ISO27K_SCOPE);
-		ISO27K_ICON_MAP.put(Asset.TYPE_ID, ImageCache.ISO27K_ASSET);
-		ISO27K_ICON_MAP.put(AssetGroup.TYPE_ID, ImageCache.ISO27K_ASSETGROUP);
-        ISO27K_ICON_MAP.put(Threat.TYPE_ID, ImageCache.ISO27K_THREAT);
-		ISO27K_ICON_MAP.put(Vulnerability.TYPE_ID, ImageCache.ISO27K_VULNERABILITY);
-		ISO27K_ICON_MAP.put(IncidentScenario.TYPE_ID,ImageCache.ISO27K_INCIDENT_SCENARIO);
-		ISO27K_ICON_MAP.put(Incident.TYPE_ID, ImageCache.ISO27K_INCIDENT);
-		ISO27K_ICON_MAP.put(Requirement.TYPE_ID, ImageCache.ISO27K_REQUIREMENT);
-		ISO27K_ICON_MAP.put(Exception.TYPE_ID, ImageCache.ISO27K_EXCEPTION);
-		ISO27K_ICON_MAP.put(Audit.TYPE_ID, ImageCache.ISO27K_AUDIT);
-		ISO27K_ICON_MAP.put(AuditGroup.TYPE_ID, ImageCache.ISO27K_AUDITGROUP);
-        ISO27K_ICON_MAP.put(Interview.TYPE_ID, ImageCache.ISO27K_INTERVIEW);
-		ISO27K_ICON_MAP.put(Finding.TYPE_ID, ImageCache.ISO27K_IMRPOVEMENT_NOTE);
-		ISO27K_ICON_MAP.put(Evidence.TYPE_ID, ImageCache.ISO27K_EVIDENCE);
-		ISO27K_ICON_MAP.put(Document.TYPE_ID, ImageCache.ISO27K_DOCUMENT);
-		ISO27K_ICON_MAP.put(PersonIso.TYPE_ID, ImageCache.ISO27K_PERSON);
-		ISO27K_ICON_MAP.put(Control.TYPE_ID,   ImageCache.ISO27K_CONTROL);
-		ISO27K_ICON_MAP.put(ControlGroup.TYPE_ID,   ImageCache.ISO27K_CONTROLGROUP);
-        ISO27K_ICON_MAP.put(Response.TYPE_ID,   ImageCache.ISO27K_RESPONSE);
-		ISO27K_ICON_MAP.put(sernet.verinice.model.iso27k.Process.TYPE_ID,   ImageCache.ISO27K_PROCESS);
-		ISO27K_ICON_MAP.put(Record.TYPE_ID,   ImageCache.ISO27K_RECORD);
-		ISO27K_ICON_MAP.put(SamtTopic.TYPE_ID,   ImageCache.ISO27K_SAMTTOPIC);
-		ISO27K_ICON_MAP.put(ImportIsoGroup.TYPE_ID, ImageCache.ISO27K_IMPORT);
+		TYPE_ID_ICON_MAP.put(Organization.TYPE_ID, ImageCache.ISO27K_SCOPE);
+		TYPE_ID_ICON_MAP.put(Asset.TYPE_ID, ImageCache.ISO27K_ASSET);
+		TYPE_ID_ICON_MAP.put(AssetGroup.TYPE_ID, ImageCache.ISO27K_ASSETGROUP);
+        TYPE_ID_ICON_MAP.put(Threat.TYPE_ID, ImageCache.ISO27K_THREAT);
+		TYPE_ID_ICON_MAP.put(Vulnerability.TYPE_ID, ImageCache.ISO27K_VULNERABILITY);
+		TYPE_ID_ICON_MAP.put(IncidentScenario.TYPE_ID,ImageCache.ISO27K_INCIDENT_SCENARIO);
+		TYPE_ID_ICON_MAP.put(Incident.TYPE_ID, ImageCache.ISO27K_INCIDENT);
+		TYPE_ID_ICON_MAP.put(Requirement.TYPE_ID, ImageCache.ISO27K_REQUIREMENT);
+		TYPE_ID_ICON_MAP.put(Exception.TYPE_ID, ImageCache.ISO27K_EXCEPTION);
+		TYPE_ID_ICON_MAP.put(Audit.TYPE_ID, ImageCache.ISO27K_AUDIT);
+		TYPE_ID_ICON_MAP.put(AuditGroup.TYPE_ID, ImageCache.ISO27K_AUDITGROUP);
+        TYPE_ID_ICON_MAP.put(Interview.TYPE_ID, ImageCache.ISO27K_INTERVIEW);
+		TYPE_ID_ICON_MAP.put(Finding.TYPE_ID, ImageCache.ISO27K_IMRPOVEMENT_NOTE);
+		TYPE_ID_ICON_MAP.put(Evidence.TYPE_ID, ImageCache.ISO27K_EVIDENCE);
+		TYPE_ID_ICON_MAP.put(Document.TYPE_ID, ImageCache.ISO27K_DOCUMENT);
+		TYPE_ID_ICON_MAP.put(PersonIso.TYPE_ID, ImageCache.ISO27K_PERSON);
+		TYPE_ID_ICON_MAP.put(Control.TYPE_ID,   ImageCache.ISO27K_CONTROL);
+		TYPE_ID_ICON_MAP.put(ControlGroup.TYPE_ID,   ImageCache.ISO27K_CONTROLGROUP);
+        TYPE_ID_ICON_MAP.put(Response.TYPE_ID,   ImageCache.ISO27K_RESPONSE);
+		TYPE_ID_ICON_MAP.put(sernet.verinice.model.iso27k.Process.TYPE_ID,   ImageCache.ISO27K_PROCESS);
+		TYPE_ID_ICON_MAP.put(Record.TYPE_ID,   ImageCache.ISO27K_RECORD);
+		TYPE_ID_ICON_MAP.put(SamtTopic.TYPE_ID,   ImageCache.ISO27K_SAMTTOPIC);
+		TYPE_ID_ICON_MAP.put(ImportIsoGroup.TYPE_ID, ImageCache.ISO27K_IMPORT);
+		
+		TYPE_ID_ICON_MAP.put(sernet.verinice.model.bp.elements.Application.TYPE_ID, BP_APPLICATION);
+		TYPE_ID_ICON_MAP.put(BpPerson.TYPE_ID, BP_PERSON);
+		TYPE_ID_ICON_MAP.put(BpRequirement.TYPE_ID, BP_REQUIREMENT);
+		TYPE_ID_ICON_MAP.put(BpThreat.TYPE_ID, BP_THREAT);
+		TYPE_ID_ICON_MAP.put(BusinessProcess.TYPE_ID, BP_BUSINESS_PROCESS);
+		TYPE_ID_ICON_MAP.put(Device.TYPE_ID, BP_DEVICE);
+		TYPE_ID_ICON_MAP.put(IcsSystem.TYPE_ID, BP_ICS_SYSTEM);
+		TYPE_ID_ICON_MAP.put(ItNetwork.TYPE_ID, BP_IT_NETWORK );
+		TYPE_ID_ICON_MAP.put(ItSystem.TYPE_ID, BP_IT_SYSTEM);
+		TYPE_ID_ICON_MAP.put(Network.TYPE_ID, BP_NETWORK);
+		TYPE_ID_ICON_MAP.put(Room.TYPE_ID,  BP_ROOM);
+	    TYPE_ID_ICON_MAP.put(Safeguard.TYPE_ID, BP_SAFEGUARD);
+        TYPE_ID_ICON_MAP.put(ImportBpGroup.TYPE_ID, ImageCache.ISO27K_IMPORT);
 		
 		BSI_ICON_MAP = new HashMap<String, String>();
 		
@@ -367,10 +451,10 @@ public final class ImageCache {
 		return image;
 	}
 	
-	public Image getISO27kTypeImage(String typeId) {
+	public Image getImageForTypeId(String typeId) {
 		Image image = getImage(ImageCache.UNKNOWN);
-		if (typeId != null && ISO27K_ICON_MAP.get(typeId) != null) {
-			image = getImage(ISO27K_ICON_MAP.get(typeId));
+		if (typeId != null && TYPE_ID_ICON_MAP.get(typeId) != null) {
+			image = getImage(TYPE_ID_ICON_MAP.get(typeId));
 		}
 		return image;
 	}
@@ -383,14 +467,14 @@ public final class ImageCache {
     }
 
     public String getISO27kTypeImageURL(String typeId) {
-        if (typeId != null && ISO27K_ICON_MAP.get(typeId) != null) {
-            return ISO27K_ICON_MAP.get(typeId);
+        if (typeId != null && TYPE_ID_ICON_MAP.get(typeId) != null) {
+            return TYPE_ID_ICON_MAP.get(typeId);
         }
         return ImageCache.UNKNOWN;
     }
 
 	public Image getObjectTypeImage(String typeId) {
-		Image image = getISO27kTypeImage(typeId);
+		Image image = getImageForTypeId(typeId);
 		if (image == getImage(ImageCache.UNKNOWN)){
 			image = getBSITypeImage(typeId);
 		}
@@ -503,6 +587,6 @@ public final class ImageCache {
     }
 
     public boolean isISO27kTypeElement(String typeID) {
-        return ISO27K_ICON_MAP.containsKey(typeID);
+        return TYPE_ID_ICON_MAP.containsKey(typeID);
     }
 }

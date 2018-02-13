@@ -245,7 +245,7 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                         List<CnATreeElement> linkTargets = dialog.getSelectedElements();
                         
                         // this method also fires events for added links:
-                        CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(inputElmt, linkTargets, linkType);
+                        CnAElementHome.getInstance().createLinksAccordingToBusinessLogicAsync(inputElmt, linkTargets, linkType);
                     } catch (CommandException e) {
                         ExceptionUtil.log(e, "Error while creating links.");
                     }
