@@ -70,17 +70,7 @@ import sernet.snutils.AssertException;
 import sernet.snutils.FormInputParser;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
-import sernet.verinice.model.bp.IBpElement;
-import sernet.verinice.model.bp.elements.BpRequirement;
-import sernet.verinice.model.bp.elements.Safeguard;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.IBSIStrukturElement;
-import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.Group;
-import sernet.verinice.model.iso27k.IISO27kElement;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.crud.LoadElementForEditor;
 
 /**
@@ -381,45 +371,9 @@ public class BSIElementEditor extends EditorPart {
     private void setIcon() {
         Image icon = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
         if (cnAElement != null) {
-            icon = CnAImageProvider.getCustomImage(cnAElement);
-            if (icon == null) {
-                icon = getDefaultIcon();
-            }
+            icon = CnAImageProvider.getImage(cnAElement, true);
         }
         setTitleImage(icon);
-    }
-
-    private Image getDefaultIcon() {
-        Image icon;
-        if (cnAElement instanceof Organization) {
-            icon = ImageCache.getInstance().getImageForTypeId(Organization.TYPE_ID);
-        } else if (cnAElement instanceof Group) {
-            icon = ImageCache.getInstance()
-                    .getImageForTypeId(((Group) cnAElement).getChildTypes()[0]);
-        } else if (cnAElement instanceof Safeguard || cnAElement instanceof BpRequirement) {
-            icon = CnAImageProvider.getImage(cnAElement);
-        } else if (cnAElement instanceof Control) {
-            Control control = (Control) cnAElement;
-            icon = ImageCache.getInstance()
-                    .getControlImplementationImage(control.getImplementation());
-        } else if (cnAElement instanceof IISO27kElement || cnAElement instanceof IBpElement) {
-            icon = ImageCache.getInstance().getImageForTypeId(cnAElement.getTypeId());
-        } else if (cnAElement instanceof IBSIStrukturElement
-                || cnAElement instanceof IBSIStrukturKategorie) {
-            icon = ImageCache.getInstance().getBSITypeImage(cnAElement.getTypeId());
-        } else if (cnAElement instanceof BausteinUmsetzung) {
-            icon = ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG);
-        } else if (isBpElement(cnAElement)) {
-            icon = ImageCache.getInstance().getImageForTypeId(cnAElement.getTypeId());
-        } else {
-            icon = CnAImageProvider.getImage(cnAElement);
-        }
-        return icon;
-    }
-
-    private boolean isBpElement(CnATreeElement element) {
-        return element instanceof IBpElement;
-
     }
 
     @Override

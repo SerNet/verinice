@@ -31,15 +31,8 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.model.bp.elements.BpRequirement;
-import sernet.verinice.model.bp.elements.Safeguard;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.Group;
-import sernet.verinice.model.iso27k.ImportIsoGroup;
-import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.LoadElementTitles;
 
 /**
@@ -208,28 +201,8 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
     }
 
     private Image getObjTypeImage(CnATreeElement elmt) {
-        Image image = CnAImageProvider.getCustomImage(elmt);
-        if (image != null) {
-            return image;
-        }
+        return CnAImageProvider.getImage(elmt);
 
-        String typeId = elmt.getTypeId();
-
-        if (typeId.equals(Control.TYPE_ID) || typeId.equals(SamtTopic.TYPE_ID)) {
-            String impl = Control.getImplementation(elmt.getEntity());
-            return ImageCache.getInstance().getControlImplementationImage(impl);
-        }
-        if (elmt instanceof Safeguard || elmt instanceof BpRequirement
-                || elmt instanceof MassnahmenUmsetzung) {
-            return CnAImageProvider.getImage(elmt);
-        }
-        if (elmt instanceof Group && !(elmt instanceof ImportIsoGroup)) {
-            Group<?> group = (Group<?>) elmt;
-            // TODO - getChildTypes()[0] might be a problem for more than one
-            // type
-            typeId = group.getChildTypes()[0];
-        }
-        return ImageCache.getInstance().getObjectTypeImage(typeId);
     }
 
     private static String loadElementsTitles(CnATreeElement elmt) throws CommandException {

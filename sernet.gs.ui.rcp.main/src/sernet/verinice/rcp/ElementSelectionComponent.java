@@ -59,21 +59,14 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.CnaTreeElementTitleFilter;
 import sernet.gs.ui.rcp.main.bsi.dialogs.Messages;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.model.bp.elements.BpRequirement;
-import sernet.verinice.model.bp.elements.Safeguard;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kElement;
-import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
 import sernet.verinice.service.commands.LoadElementTitles;
 
@@ -495,33 +488,8 @@ public class ElementSelectionComponent {
                 return;
             }
             CnATreeElement element = (CnATreeElement) cell.getElement();
-            Image image = CnAImageProvider.getCustomImage(element);
-            if (image == null) {
-                image = getDefaultImage(element);
-            }
+            Image image = CnAImageProvider.getImage(element);
             cell.setImage(image);
-        }
-
-        private Image getDefaultImage(CnATreeElement element) {
-            Image image;
-            if (element instanceof Safeguard || element instanceof BpRequirement
-                    || element instanceof MassnahmenUmsetzung) {
-                image = CnAImageProvider.getImage(element);
-            } else if (element instanceof Control) {
-                Control control = (Control) element;
-                image = ImageCache.getInstance()
-                        .getControlImplementationImage(control.getImplementation());
-            } else {
-                String typeId = element.getTypeId();
-                if (element instanceof Group && !(element instanceof ImportIsoGroup)) {
-                    Group<?> group = (Group<?>) element;
-                    // TODO - getChildTypes()[0] might be a problem for
-                    // more than one type
-                    typeId = group.getChildTypes()[0];
-                }
-                image = ImageCache.getInstance().getObjectTypeImage(typeId);
-            }
-            return image;
         }
     }
 }
