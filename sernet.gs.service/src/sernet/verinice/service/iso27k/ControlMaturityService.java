@@ -37,7 +37,7 @@ import sernet.verinice.model.iso27k.IISRControl;
  */
 public class ControlMaturityService {
     
-    private int type = 0;
+    private final int type;
     
     public static final int TYPE_MATURITY = 0;
     public static final int TYPE_ISR = 1;
