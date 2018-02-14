@@ -68,6 +68,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kElement;
@@ -502,7 +503,8 @@ public class ElementSelectionComponent {
 
         private Image getDefaultImage(CnATreeElement element) {
             Image image;
-            if (element instanceof Safeguard || element instanceof BpRequirement) {
+            if (element instanceof Safeguard || element instanceof BpRequirement
+                    || element instanceof MassnahmenUmsetzung) {
                 image = CnAImageProvider.getImage(element);
             } else {
                 String typeId = element.getTypeId();

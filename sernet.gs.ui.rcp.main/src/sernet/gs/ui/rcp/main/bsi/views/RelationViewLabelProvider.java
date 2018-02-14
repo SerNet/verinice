@@ -33,6 +33,7 @@ import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
@@ -218,7 +219,8 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
             String impl = Control.getImplementation(elmt.getEntity());
             return ImageCache.getInstance().getControlImplementationImage(impl);
         }
-        if (elmt instanceof Safeguard || elmt instanceof BpRequirement) {
+        if (elmt instanceof Safeguard || elmt instanceof BpRequirement
+                || elmt instanceof MassnahmenUmsetzung) {
             return CnAImageProvider.getImage(elmt);
         }
         if (elmt instanceof Group && !(elmt instanceof ImportIsoGroup)) {
