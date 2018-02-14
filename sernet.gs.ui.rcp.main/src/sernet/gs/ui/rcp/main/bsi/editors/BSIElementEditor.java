@@ -77,6 +77,7 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.Organization;
@@ -409,6 +410,10 @@ public class BSIElementEditor extends EditorPart {
                     .getImageForTypeId(((Group) cnAElement).getChildTypes()[0]);
         } else if (cnAElement instanceof Safeguard || cnAElement instanceof BpRequirement) {
             icon = CnAImageProvider.getImage(cnAElement);
+        } else if (cnAElement instanceof Control) {
+            Control control = (Control) cnAElement;
+            icon = ImageCache.getInstance()
+                    .getControlImplementationImage(control.getImplementation());
         } else if (cnAElement instanceof IISO27kElement || cnAElement instanceof IBpElement) {
             icon = ImageCache.getInstance().getImageForTypeId(cnAElement.getTypeId());
         } else if (cnAElement instanceof IBSIStrukturElement
