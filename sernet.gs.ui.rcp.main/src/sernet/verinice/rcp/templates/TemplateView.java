@@ -66,9 +66,11 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnATreeElement.TemplateType;
 import sernet.verinice.model.iso27k.ISO27KModel;
@@ -267,6 +269,16 @@ public class TemplateView extends RightsEnabledView {
 
             @Override
             public void loaded(ISO27KModel model) {
+                // only BSI view
+            }
+
+            @Override
+            public void loaded(BpModel model) {
+                // only BSI view
+            }
+
+            @Override
+            public void loaded(CatalogModel model) {
                 // only BSI view
             }
         };
