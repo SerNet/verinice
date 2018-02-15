@@ -37,8 +37,11 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IProgress;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.elements.Application;
+import sernet.verinice.model.bp.elements.BpDocument;
+import sernet.verinice.model.bp.elements.BpIncident;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRecord;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.BusinessProcess;
@@ -50,7 +53,10 @@ import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpDocumentGroup;
+import sernet.verinice.model.bp.groups.BpIncidentGroup;
 import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRecordGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.BusinessProcessGroup;
@@ -474,6 +480,9 @@ public final class CnAElementFactory {
         elementbuilders.put(Network.TYPE_ID, new DefaultElementBuilder(Network.TYPE_ID));
         elementbuilders.put(Room.TYPE_ID, new DefaultElementBuilder(Room.TYPE_ID));
         elementbuilders.put(Safeguard.TYPE_ID, new DefaultElementBuilder(Safeguard.TYPE_ID));
+        elementbuilders.put(BpDocument.TYPE_ID, new DefaultElementBuilder(BpDocument.TYPE_ID));
+        elementbuilders.put(BpIncident.TYPE_ID, new DefaultElementBuilder(BpIncident.TYPE_ID));
+        elementbuilders.put(BpRecord.TYPE_ID, new DefaultElementBuilder(BpRecord.TYPE_ID));
 
         elementbuilders.put(ApplicationGroup.TYPE_ID,
                 new DefaultElementBuilder(ApplicationGroup.TYPE_ID));
@@ -494,6 +503,10 @@ public final class CnAElementFactory {
         elementbuilders.put(RoomGroup.TYPE_ID, new DefaultElementBuilder(RoomGroup.TYPE_ID));
         elementbuilders.put(SafeguardGroup.TYPE_ID,
                 new DefaultElementBuilder(SafeguardGroup.TYPE_ID));
+        elementbuilders.put(BpDocumentGroup.TYPE_ID, new DefaultElementBuilder(BpDocumentGroup.TYPE_ID));
+        elementbuilders.put(BpIncidentGroup.TYPE_ID, new DefaultElementBuilder(BpIncidentGroup.TYPE_ID));
+        elementbuilders.put(BpRecordGroup.TYPE_ID, new DefaultElementBuilder(BpRecordGroup.TYPE_ID));
+
     }
 
     public static CnAElementFactory getInstance() {

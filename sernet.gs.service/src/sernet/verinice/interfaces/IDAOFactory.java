@@ -25,8 +25,11 @@ import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.model.bp.elements.Application;
+import sernet.verinice.model.bp.elements.BpDocument;
+import sernet.verinice.model.bp.elements.BpIncident;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRecord;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.BusinessProcess;
@@ -38,7 +41,10 @@ import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpDocumentGroup;
+import sernet.verinice.model.bp.groups.BpIncidentGroup;
 import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRecordGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.BusinessProcessGroup;
@@ -543,6 +549,19 @@ public interface IDAOFactory {
     void setSafeguardGroupDAO(IBaseDao<SafeguardGroup, Integer> daoToSet);
 
     void setCatalogModelDAO(IBaseDao<CatalogModel, Integer> daoToSet);
+    
+    void setBpDocumentDAO(IBaseDao<BpDocument, Integer> daoToSet);
+    
+    void setBpDocumentGroupDAO(IBaseDao<BpDocumentGroup, Integer> daoToSet);
+    
+    void setBpIncidentDAO(IBaseDao<BpIncident, Integer> daoToSet);
+    
+    void setBpIncidentGroupDAO(IBaseDao<BpIncidentGroup, Integer> daoToSet);
+    
+    void setBpRecordDAO(IBaseDao<BpRecord, Integer> daoToSet);
+    
+    void setBpRecordGroupDAO(IBaseDao<BpRecordGroup, Integer> daoToSet);
+
 
 	/**
      * Returns a special Dao for use 

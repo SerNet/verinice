@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Sebastian Hagedorn.
+ * Copyright (c) 2018 Jochen Kemnade.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -14,22 +14,16 @@
  * along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  *
- * Contributors:
- *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.bp.rcp.action;
 
-import sernet.verinice.model.bp.elements.Network;
-import sernet.verinice.model.bp.groups.NetworkGroup;
+import sernet.verinice.model.bp.elements.BpIncident;
+import sernet.verinice.model.bp.groups.BpIncidentGroup;
 
-/**
- * @author Sebastian Hagedorn sh[at]sernet.de
- *
- */
-public class AddNetworkActionDelegate extends AbstractAddBpElementActionDelegate<Network> {
+public class AddBpIncidentActionDelegate extends AbstractAddBpElementActionDelegate<BpIncident> {
 
-    public AddNetworkActionDelegate() {
-        super(NetworkGroup.class, Network.TYPE_ID, Messages.AddNetworkDelegate_0);
+    public AddBpIncidentActionDelegate() {
+        super(BpIncidentGroup.class, BpIncident.TYPE_ID, Messages.AddBpIncidentDelegate_0);
     }
 
 }

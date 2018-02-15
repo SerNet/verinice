@@ -21,7 +21,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import sernet.verinice.model.bp.elements.Application;
+import sernet.verinice.model.bp.elements.BpDocument;
+import sernet.verinice.model.bp.elements.BpIncident;
 import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRecord;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.BusinessProcess;
@@ -33,7 +36,10 @@ import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpDocumentGroup;
+import sernet.verinice.model.bp.groups.BpIncidentGroup;
 import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRecordGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.BusinessProcessGroup;
@@ -212,6 +218,9 @@ public class CnATypeMapper {
         typeIdClass.put(NetworkGroup.TYPE_ID, NetworkGroup.class);
         typeIdClass.put(RoomGroup.TYPE_ID, RoomGroup.class);
         typeIdClass.put(SafeguardGroup.TYPE_ID, SafeguardGroup.class);
+        typeIdClass.put(BpDocumentGroup.TYPE_ID, BpDocumentGroup.class);
+        typeIdClass.put(BpIncidentGroup.TYPE_ID, BpIncidentGroup.class);
+        typeIdClass.put(BpRecordGroup.TYPE_ID, BpRecordGroup.class);
         
         typeIdClass.put(Application.TYPE_ID, Application.class);
         typeIdClass.put(BpPerson.TYPE_ID, BpPerson.class);
@@ -226,6 +235,9 @@ public class CnATypeMapper {
         typeIdClass.put(Room.TYPE_ID, Room.class);
         typeIdClass.put(Safeguard.TYPE_ID, Safeguard.class);
         typeIdClass.put(CatalogModel.TYPE_ID, CatalogModel.class);
+        typeIdClass.put(BpDocument.TYPE_ID, BpDocument.class);
+        typeIdClass.put(BpIncident.TYPE_ID, BpIncident.class);
+        typeIdClass.put(BpRecord.TYPE_ID, BpRecord.class);
         
         // typeIdClass.put(RisikoMassnahmenUmsetzung.TYPE_ID,
         // RisikoMassnahmenUmsetzung.class);
@@ -292,6 +304,9 @@ public class CnATypeMapper {
         NetworkGroup.TYPE_ID,
         RoomGroup.TYPE_ID,
         SafeguardGroup.TYPE_ID,
+        BpDocumentGroup.TYPE_ID,
+        BpIncidentGroup.TYPE_ID,
+        BpRecordGroup.TYPE_ID
     };
     
     /**

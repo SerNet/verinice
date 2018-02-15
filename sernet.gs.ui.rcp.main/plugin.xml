@@ -1262,6 +1262,49 @@
                style="push"
                tooltip="%action.tooltip.addSafeguard"/>
       </objectContribution>
+	  <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.bpDocumentContrib"
+            objectClass="sernet.verinice.model.bp.groups.BpDocumentGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddBpDocumentActionDelegate"
+               enablesFor="+"
+               icon="icons/mime-document.png"
+               id="sernet.gs.ui.rcp.main.bp.bpdocument"
+               label="%action.label.addBpDocument"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addBpDocument"/>
+      </objectContribution>
+               
+	  <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.bpIncidentContrib"
+            objectClass="sernet.verinice.model.bp.groups.BpIncidentGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddBpIncidentActionDelegate"
+               enablesFor="+"
+               icon="icons/sweetie-verinice/png/16-arrow-incident-red.png"
+               id="sernet.gs.ui.rcp.main.bp.bpincident"
+               label="%action.label.addBpIncident"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addBpIncident"/>
+      </objectContribution>
+      	  <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.bpRecordContrib"
+            objectClass="sernet.verinice.model.bp.groups.BpRecordGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddBpRecordActionDelegate"
+               enablesFor="+"
+               icon="icons/mime-text.png"
+               id="sernet.gs.ui.rcp.main.bp.bprecord"
+               label="%action.label.addBpRecord"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addBpRecord"/>
+      </objectContribution>
    </extension>                               
    <extension point="org.eclipse.ui.menus">
       <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=content">	  

@@ -6841,7 +6841,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         id="incident" >
         
         <huirelation to="incident_scenario" id="rel_incident_incscen"
-            name="predicted as" reversename="happened as" tooltip="" />
+            name="predicted as" reversename="occurred as" tooltip="" />
         <huirelation to="asset" id="rel_incident_asset"
             name="affected" reversename="was affected by" tooltip="" />
         <huirelation to="response" id="rel_incident_response"
@@ -10526,6 +10526,9 @@ Wurden bereits weitere Stellen informiert?
             reversename="person primarily responsible" />
         <huirelation to="bp_room" id="rel_bp_person_bp_room_primarily" name="primarily responsible for"
             reversename="person primarily responsible" />
+        <huirelation to="bp_record" id="rel_bp_person_record" name="maintains"
+            reversename="maintained by" />
+
         <huiproperty id="bp_person_abbr" name="Abbreviation" required="true" />
         <huiproperty id="bp_person_title" inputtype="singleoption" name="Anrede">
             <option id="bp_person_title_none" name="" />
@@ -11298,5 +11301,479 @@ Wurden bereits weitere Stellen informiert?
             inputtype="text" name="Safeguardgroup Content" showInObjectBrowser="true" visible="false" />
         <huiproperty id="bp_safeguard_group_desc" inputtype="text" name="Description" />
         <huiproperty id="bp_safeguard_group_tag" name="Tags" />
+    </huientity>
+
+    <huientity
+        name="Document"
+        id="bp_document" >
+        <huirelation to="bp_itnetwork" id="rel_bp_document_itnetwork"
+            name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="bp_application" id="rel_bp_document_application"
+            name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="bp_businessprocess" id="rel_bp_document_businessprocess"
+            name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="bp_icssystem" id="rel_bp_document_icssystem"
+            name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="bp_itsystem" id="rel_bp_document_itsystem"
+            name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="bp_person" id="rel_bp_document_person_owner"
+            name="owned by" reversename="is owner of" tooltip=""/>
+        <huirelation to="bp_person" id="rel_bp_document_person_author"
+            name="authored by" reversename="is author of" tooltip=""/>
+        <huirelation to="bp_person" id="rel_bp_document_person_approved"
+            name="approved by" reversename="approves" tooltip=""/>
+        <huirelation to="bp_person" id="rel_bp_document_person_distributed"
+            name="distributed to" reversename="receives" tooltip=""/>
+        <huirelation to="bp_person" id="rel_bp_document_person_reads"
+            name="actually read by" reversename="actually reads" tooltip=""/>
+        <huirelation to="bp_requirement" id="rel_bp_document_requirement"
+            name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="bp_threat" id="rel_bp_document_threat"
+            name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="bp_network" id="rel_bp_document_network"
+            name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="bp_device" id="rel_bp_document_device"
+            name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="bp_room" id="rel_bp_document_room"
+            name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="bp_safeguard" id="rel_bp_document_safeguard"
+            name="documents" reversename="related document" tooltip=""/>
+        <huirelation to="bp_incident" id="rel_bp_document_incident"
+            name="documents" reversename="related document" tooltip=""/>
+
+        <huiproperty
+            name="Title"
+            id="bp_document_name"
+            required="true"/>
+        <huiproperty
+            name="Abbreviation"
+            id="bp_document_abbr" />
+        <huiproperty
+            id="bp_document_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+        <huiproperty
+            name="Ext. Link"
+            id="bp_document_link"
+            isURL="true" />
+        <huiproperty
+            name="Document Type" id="bp_document_type" inputtype="singleoption">
+            <option name="Policy" id="bp_document_type_policy" />
+            <option name="Documented Procedure" id="bp_document_type_procedure" />
+            <option name="Contract" id="bp_document_type_contract" />
+            <option name="Agreement" id="bp_document_type_agreement" />
+            <option name="System documentation" id="bp_document_type_sysdoc" />
+            <option name="Research information" id="bp_document_type_research" />
+            <option name="Manual" id="bp_document_type_manual" />
+            <option name="Training materials" id="bp_document_type_training" />
+            <option name="Other" id="bp_document_type_other" />
+        </huiproperty>
+        <huiproperty
+            id="bp_document_classfc" name="Classification" inputtype="singleoption" >
+           <option name="Confidential" id="bp_document_classfc_confidential"/>
+           <option name="Internal Use" id="bp_document_classfc_internal"/>
+           <option name="Public" id="bp_document_classfc_public"/>
+        </huiproperty>
+        <huiproperty
+            id="bp_document_description"
+            name="Description"
+            visible="false"
+            editable="false"
+            showInObjectBrowser="true"/>
+    </huientity>
+
+    <huientity
+        name="Document Group"
+        id="bp_document_group" >
+        <huiproperty
+            name="Title"
+            id="bp_document_group_name"
+            required="true" />
+
+        <huiproperty
+            name="Description"
+            id="bp_document_group_desc"
+            inputtype="text"
+            showInObjectBrowser="true" />
+    </huientity>
+
+    <huientity
+        name="Incident"
+        id="bp_incident" >
+        <huirelation to="bp_application" id="rel_bp_incident_application"
+            name="affected" reversename="was affected by" tooltip="" />
+        <huirelation to="bp_icssystem" id="rel_bp_incident_icssystem"
+            name="affected" reversename="was affected by" tooltip="" />
+        <huirelation to="bp_itsystem" id="rel_bp_incident_itsystem"
+            name="affected" reversename="was affected by" tooltip="" />
+        <huirelation to="bp_network" id="rel_bp_incident_network"
+            name="affected" reversename="was affected by" tooltip="" />
+        <huirelation to="bp_device" id="rel_bp_incident_device"
+            name="affected" reversename="was affected by" tooltip="" />
+        <huirelation to="bp_room" id="rel_bp_incident_room"
+            name="affected" reversename="was affected by" tooltip="" />
+
+        <huirelation to="bp_threat" id="rel_bp_incident_threat"
+            name="predicted as" reversename="occurred as" tooltip="" />
+
+        <huirelation to="bp_requirement" id="rel_bp_incident_requirement"
+            name="in future prevented by" reversename="reaction to" tooltip="" />
+
+        <huiproperty
+            name="Title"
+            id="bp_incident_name"
+            required="true" />
+        <huiproperty
+            name="Abbreviation"
+            id="bp_incident_abbr" />
+        <huiproperty
+            id="bp_incident_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+        <huiproperty
+            name="Event(s)"
+            id="bp_incident_desc"
+            inputtype="text"
+            showInObjectBrowser="true"/>
+    <huiproperty
+        name="Date"
+        id="bp_incident_date"
+        inputtype="date">
+            <defaultRule class="Today" />
+        </huiproperty>
+        <huiproperty
+            name="Document"
+            id="bp_incident_document"
+            isURL="true" />
+        <huipropertygroup name="VV BSIG" id="bp_incident_vv_bsig" tags="VV-BSIG">
+            <huiproperty name="VV BSIG Type" id="bp_incident_vv_bsig_type" inputtype="singleoption">
+                <option name="Parried Malware" id="bp_incident_vv_bsig_parried_malware" />
+                <option name="Successful Malware Installation" id="bp_incident_vv_bsig_succ_malware_installation" />
+                <option name="System intrusion" id="bp_incident_vv_bsig_system_intrusion" />
+                <option name="Unauthorized use of System" id="bp_incident_vv_bsig_unauthorized_system_use" />
+                <option name="Dataloss by Malware or Hackers" id="bp_incident_vv_bsig_dataloss" />
+                <option name="Manipulation of Hard- / Software" id="bp_incident_vv_bsig_hardsoftware_manipulation"/>
+                <option name="DDos" id="bp_incident_vv_bsig_ddos"/>
+                <option name="Theft or loss of IT System" id="bp_incident_vv_bsig_itsystem_theft"/>
+                <option name="Theft or loss of Data Storage media" id="bp_incident_vv_bsig_data_media_theft"/>
+                <option name="Improper disposal" id="bp_incident_vv_bsig_improper_disposal"/>
+                <option name="Disclosure by unauthorized employees" id="bp_incident_vv_bsig_unauthorized_employees_disclosure"/>
+                <option name="Security vulnerability" id="bp_incident_vv_bsig_security_vulnerability"/>
+                <option name="Severe cancellation of resources" id="bp_incident_vv_bsig_severe_resources_cancellation"/>
+                <option name="Severe Function error" id="bp_incident_vv_bsig_severe_function_error"/>
+                <option name="Severe Overloadsituations" id="bp_incident_vv_bsig_severe_overload"/>
+                <option name="Violation of IT-Security Policy" id="bp_incident_vv_bsig_policy_violation"/>
+                <option name="Internal reasons" id="bp_incident_vv_bsig_internal_reasons"/>
+                <option name="Forces of Nature" id="bp_incident_vv_bsig_forces_of_nature"/>
+                <option name="Damage" id="bp_incident_vv_bsig_damage"/>
+                <option name="Special Findings" id="bp_incident_vv_bsig_special_findings"/>
+            </huiproperty>
+
+            <huiproperty
+                name="Classification of external Attack"
+                id="bp_incident_vv_bsig_classification_external_attack"
+                required="false"
+                inputtype="multioption">
+
+                <option
+                    id="bp_incident_vv_bsig_classification_external_attack_directed"
+                    name="Directed" />
+                <option
+                    id="bp_incident_vv_bsig_classification_external_attack_parried_malware"
+                    name="Parried Malware" />
+                <option
+                    id="bp_incident_vv_bsig_classification_external_attack_succ_malware_installation"
+                    name="Successful Malware Installation" />
+                <option
+                    id="bp_incident_vv_bsig_classification_external_attack_system_intrusion"
+                    name="System Intrusion" />
+                <option
+                    id="bp_incident_vv_bsig_classification_external_attack_unauthorized_system_use"
+                    name="Unauthorized use of System" />
+                <option
+                    id="bp_incident_vv_bsig_classification_external_attack_dataloss"
+                    name="Dataloss by Malware or Hackers" />
+                <option
+                    id="bp_incident_vv_bsig_classification_external_attack_hardsoftware_manipulation"
+                    name="Manipulation of Hard- / Software" />
+                <option
+                    id="bp_incident_vv_bsig_classification_external_attack_ddos"
+                    name="DDoS" />
+            </huiproperty>
+            <huiproperty
+                name="Classification of data loss"
+                id="bp_incident_vv_bsig_classification_data_loss"
+                required="false"
+                inputtype="multioption">
+                <option
+                    id="bp_incident_vv_bsig_classification_data_loss_itsystem_theft"
+                    name="Theft or loss of IT-System" />
+                <option
+                    id="bp_incident_vv_bsig_classification_data_loss_data_media_theft"
+                    name="Theft or loss of Data Storage media" />
+                <option
+                    id="bp_incident_vv_bsig_classification_data_loss_improper_disposal"
+                    name="Improper disposal" />
+                <option
+                    id="bp_incident_vv_bsig_classification_data_loss_unauthorized_employees_disclosure"
+                    name="Disclosure by unauthorized employees" />
+            </huiproperty>
+            <huiproperty id="bp_incident_vv_bsig_classification_security_vulnerability"
+                name="Classification IT-Security Vulnerability"
+                inputtype="booleanoption" defaultValue="0"/>
+            <huiproperty id="bp_incident_vv_bsig_classification_swhw_component_error"
+                name="Classification Soft-/ Hardware Component Error"
+                required="false"
+                inputtype="multioption">
+                <option
+                    id="bp_incident_vv_bsig_classification_swhw_component_error_severe_resources_cancellation"
+                    name="Severe Cancellation of Resources" />
+                <option
+                    id="bp_incident_vv_bsig_classification_swhw_component_error_severe_function_error"
+                    name="Severe Function error" />
+                <option
+                    id="bp_incident_vv_bsig_classification_swhw_component_error_severe_overload"
+                    name="Severe Overloadsituations" />
+            </huiproperty>
+            <huiproperty id="bp_incident_vv_bsig_classification_policy_violation"
+                name="Violation of IT-Security Policy"
+                inputtype="booleanoption" defaultValue="0"/>
+            <huiproperty id="bp_incident_vv_bsig_classification_internal_reasons"
+                name="Internal Reasons"
+                inputtype="booleanoption" defaultValue="0"/>
+            <huiproperty id="bp_incident_vv_bsig_classification_external_influences"
+                name="External Influences"
+                required="false"
+                inputtype="multioption">
+                <option
+                    id="bp_incident_vv_bsig_classification_external_influences_forces_of_nature"
+                    name="Forces of Nature" />
+                <option
+                    id="bp_incident_vv_bsig_classification_external_influences_damage"
+                    name="Damage" />
+            </huiproperty>
+            <huiproperty id="bp_incident_vv_bsig_classification_particular_findings"
+                name="Particular Findings"
+                inputtype="booleanoption" defaultValue="0"/>
+            <huiproperty id="bp_incident_vv_bsig_purpose_of_information"
+                name="Purpose of Information"
+                inputtype="multioption">
+                <option
+                    id="bp_incident_vv_bsig_purpose_of_information_attention"
+                    name="For your Attention"/>
+                <option
+                    id="bp_incident_vv_bsig_purpose_of_information_approval"
+                    name="Approval for report admission "/>
+                <option
+                    id="bp_incident_vv_bsig_purpose_of_information_explicit_approval"
+                    name="Explicit Approval for report admission by reporting person required"/>
+                <option
+                    id="bp_incident_vv_bsig_purpose_of_information_callback"
+                    name="Call-Back"/>
+                <option
+                    id="bp_incident_vv_bsig_purpose_of_information_statement"
+                    name="Request for Statement"/>
+                <option
+                    id="bp_incident_vv_bsig_purpose_of_information_support"
+                    name="Support required"/>
+                <option
+                    id="bp_incident_vv_bsig_purpose_of_information_processing"
+                    name="Incident processing by BSI-IT-LZ"/>
+                </huiproperty>
+                <huiproperty id="bp_incident_vv_bsig_circumstances" name="Circumstances"
+                    inputtype="text"
+                    textrows="10">
+                    <defaultRule class="SimpleValue">
+                        <param id="bp_incident_vv_bsig_circumstances_default">Leitfragen:
+Was wurde festgestellt / was ist passiert?
+Wer, bzw. was ist betroffen?
+Welcher Schaden wurde bereits festgestellt?
+Ist eine Kompromittierung weiterer
+Systeme in anderen Organisationen wahrscheinlich?
+Wurden bereits (Gegen-)
+Maßnahmen ergriffen? Wenn ja, welche?
+Wurden bereits weitere Stellen informiert?
+</param>
+                    </defaultRule>
+                </huiproperty>
+                <huiproperty id="bp_incident_vv_bsig_procedure_proposals" name="Procedure Proposals"
+                    inputtype="text"
+                    textrows="10" />
+                <huiproperty id="bp_incident_vv_bsig_miscellaneous" name="Miscellaneous"
+                    inputtype="text"
+                    textrows="10" />
+        </huipropertygroup>
+    </huientity>
+
+    <huientity
+        name="Incident Group"
+        id="bp_incident_group" >
+        <huiproperty
+            name="Title"
+            id="bp_incident_group_name"
+            required="true" />
+
+        <huiproperty
+            name="Description"
+            id="bp_incident_group_desc"
+            inputtype="text"
+            showInObjectBrowser="true" />
+    </huientity>
+
+    <huientity
+        name="Record"
+        id="bp_record" >
+        <huiproperty
+            name="Title"
+            id="bp_record_name"
+            required="true" />
+        <huiproperty
+            name="Abbreviation"
+            id="bp_record_abbr" />
+        <huiproperty
+            id="bp_record_tag"
+            name="Tags"
+            tooltip="List of tags, separated by comma or space"/>
+        <huiproperty
+            name="Document"
+            id="bp_record_document"
+            isURL="true" />
+        <huipropertygroup id="bp_record_training" name="Education and Training">
+
+            <huiproperty name="Training measure" id="bp_record_training_measure" inputtype="multioption" >
+                <option id="bp_record_training_type_seminar" name="Seminar" />
+                <option id="bp_record_training_type_workshop" name="Workshop" />
+                <option id="bp_record_training_type_trainings" name="Trainings" />
+                <option id="bp_record_training_type_convention" name="Convention" />
+                <option id="bp_record_training_type_personal" name="Personal initiative, literature" />
+                <option id="bp_record_training_type_other" name="Any other trainings" />
+            </huiproperty>
+
+            <huiproperty
+                name="Other trainings"
+                id="bp_record_training_other" >
+            </huiproperty>
+
+            <huiproperty
+                name="Training Company"
+                id="bp_record_training_company"
+                inputtype="text" >
+            </huiproperty>
+
+            <huiproperty
+                name="Topic"
+                id="bp_record_training_topic"
+                inputtype="text" >
+            </huiproperty>
+
+            <huiproperty
+                name="Date"
+                id="bp_record_training_date"
+                inputtype="date" >
+                <defaultRule class="Today"/>
+            </huiproperty>
+
+            <huiproperty
+                name="Duration"
+                id="bp_record_training_duration">
+            </huiproperty>
+
+            <huiproperty
+                name="Certificate of attendance"
+                id="bp_record_training_certificate"
+                inputtype="booleanoption" >
+            </huiproperty>
+
+        </huipropertygroup>
+
+        <huipropertygroup id="bp_record_requests" name="Requests">
+            <huiproperty id="bp_record_request_type" name="Type of request" inputtype="singleoption">
+                <option id="bp_record_request_type_internal" name="Internal request" />
+                <option id="bp_record_request_type_external" name="External request" />
+            </huiproperty>
+
+            <huiproperty
+                name="Name and contact details of the enquirer"
+                id="bp_record_request_contact"
+                inputtype="text" >
+            </huiproperty>
+
+            <huiproperty
+                name="Reason of request"
+                id="bp_record_request_reason"
+                inputtype="text" >
+            </huiproperty>
+
+            <huiproperty
+                name="Document"
+                id="bp_record_request_document"
+                isURL="true" >
+            </huiproperty>
+
+            <huiproperty
+                name="Statement of data protection officer"
+                id="bp_record_request_statement"
+                inputtype="text" >
+            </huiproperty>
+
+           <huiproperty
+                name="Date of request"
+                id="bp_record_request_date"
+                inputtype="date" >
+                <defaultRule class="Today"/>
+           </huiproperty>
+
+            <huiproperty
+                name="Date of statement"
+                id="bp_record_request_statement_date"
+                inputtype="date" >
+                <defaultRule class="Today"/>
+            </huiproperty>
+
+            <huiproperty
+                name="Confidentiality level"
+                id="bp_record_request_confidentiality"
+                inputtype="numericoption" min="0" max="3">
+                <depends option="bp_record_request_confidentiality_public" value="0"/>
+                <option
+                    id="bp_record_request_confidentiality_public"
+                    name="0 Public"
+                    value="0" />
+                <option
+                    id="bp_record_request_confidentiality_external"
+                    name="1 External Use"
+                    value ="1" />
+                <option
+                    id="bp_record_request_confidentiality_internal"
+                    name="2 Internal Use"
+                    value="2" />
+                <option
+                    id="bp_record_request_confidentiality_sensitive"
+                    name="3 Sensitive"
+                    value="3" />
+            </huiproperty>
+
+            <huiproperty
+                name="Comment (for internal use)"
+                id="bp_record_request_comment"
+                inputtype="text" >
+            </huiproperty>
+
+        </huipropertygroup>
+    </huientity>
+
+    <huientity
+        name="Record Group"
+        id="bp_record_group" >
+        <huiproperty
+            name="Title"
+            id="bp_record_group_name"
+            required="true" />
+
+        <huiproperty
+            name="Description"
+            id="bp_record_group_desc"
+            inputtype="text"
+            showInObjectBrowser="true" />
     </huientity>
 </huientities>

@@ -181,7 +181,9 @@ public class Messages extends NLS {
     public static String AddGroupHandler_permission_error;
     public static String AddGroupHandler_room;
     public static String AddGroupHandler_safeguard;
-   
+    public static String AddGroupHandler_document;
+    public static String AddGroupHandler_incident;
+    public static String AddGroupHandler_record;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

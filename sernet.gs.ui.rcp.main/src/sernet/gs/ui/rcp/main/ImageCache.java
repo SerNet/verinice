@@ -31,7 +31,10 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
 
+import sernet.verinice.model.bp.elements.BpDocument;
+import sernet.verinice.model.bp.elements.BpIncident;
 import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRecord;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.BusinessProcess;
@@ -42,6 +45,9 @@ import sernet.verinice.model.bp.elements.ItSystem;
 import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.groups.BpDocumentGroup;
+import sernet.verinice.model.bp.groups.BpIncidentGroup;
+import sernet.verinice.model.bp.groups.BpRecordGroup;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
@@ -400,6 +406,9 @@ public final class ImageCache {
 		TYPE_ID_ICON_MAP.put(Network.TYPE_ID, BP_NETWORK);
 		TYPE_ID_ICON_MAP.put(Room.TYPE_ID,  BP_ROOM);
 	    TYPE_ID_ICON_MAP.put(Safeguard.TYPE_ID, BP_SAFEGUARD);
+	    TYPE_ID_ICON_MAP.put(BpDocument.TYPE_ID, ISO27K_DOCUMENT);
+	    TYPE_ID_ICON_MAP.put(BpIncident.TYPE_ID, ISO27K_INCIDENT);
+	    TYPE_ID_ICON_MAP.put(BpRecord.TYPE_ID, ISO27K_RECORD);
         TYPE_ID_ICON_MAP.put(ImportBpGroup.TYPE_ID, ImageCache.ISO27K_IMPORT);
 		
 		BSI_ICON_MAP = new HashMap<String, String>();
