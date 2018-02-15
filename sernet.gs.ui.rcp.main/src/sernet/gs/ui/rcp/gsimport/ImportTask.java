@@ -125,7 +125,6 @@ public class ImportTask extends AbstractGstoolImportTask {
 
     private final Map<MbBaust, BausteinUmsetzung> alleBausteineToBausteinUmsetzungMap;
     private final Map<MbBaust, ModZobjBst> alleBausteineToZoBstMap;
-    private final Map<MbBaust, Baustein> gstool2VeriniceBausteinMap;
     private final Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualMassnahmenMap;  
     private final Map<NZielobjekt, List<BausteineMassnahmenResult>> nZielObjektBausteineMassnahmenResultMap;
     
@@ -146,7 +145,6 @@ public class ImportTask extends AbstractGstoolImportTask {
         this.alleBausteineToBausteinUmsetzungMap = new HashMap<>();
         this.alleBausteineToZoBstMap = new HashMap<>();
         this.alleMassnahmen = new HashMap<>();
-        this.gstool2VeriniceBausteinMap = new HashMap<>();
         this.individualMassnahmenMap = new HashMap<>();
         this.nZielObjektBausteineMassnahmenResultMap = new HashMap<>();
         this.createdLinks = new HashSet();
@@ -787,10 +785,6 @@ public class ImportTask extends AbstractGstoolImportTask {
 
         if (command.getAlleMassnahmen() != null) {
             this.alleMassnahmen.putAll(command.getAlleMassnahmen());
-        }
-
-        if(command.getGstool2VeriniceBausteinMap() != null && command.getGstool2VeriniceBausteinMap().size() > 0){
-            this.gstool2VeriniceBausteinMap.putAll(command.getGstool2VeriniceBausteinMap());
         }
 
         if(command.getIndividualMassnahmenMap() != null && command.getIndividualMassnahmenMap().size() > 0){

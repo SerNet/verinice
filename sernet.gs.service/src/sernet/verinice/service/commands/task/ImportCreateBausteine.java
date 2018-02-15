@@ -122,8 +122,6 @@ public class ImportCreateBausteine extends GenericCommand {
     private List<Baustein> bausteine;
     private final String sourceId;
 
-    private final Map<MbBaust, Baustein> gstool2veriniceBausteinMap;
-
     private static final short BST_BEARBEITET_ENTBEHRLICH = 3;
 
 
@@ -141,7 +139,6 @@ public class ImportCreateBausteine extends GenericCommand {
         this.udBausteineTxtMap = udBstTxtMap;
         this.udBstMassTxtMap = udBstMassTxtMap;
         this.udBaustGefMap = udBaustGefMap;
-        this.gstool2veriniceBausteinMap = new HashMap<MbBaust, Baustein>();
         this.individualMassnahmenMap = new HashMap<BausteinUmsetzung, List<BausteineMassnahmenResult>>();
         this.bausteine = bausteine;
     }
@@ -159,7 +156,6 @@ public class ImportCreateBausteine extends GenericCommand {
         this.udBausteineTxtMap = udBstTxtMap;
         this.udBstMassTxtMap = udBstMassTxtMap;
         this.udBaustGefMap = udBaustGefMap;
-        this.gstool2veriniceBausteinMap = new HashMap<MbBaust, Baustein>();
         this.individualMassnahmenMap = new HashMap<BausteinUmsetzung, List<BausteineMassnahmenResult>>();
         this.bausteine = bausteine;
     }
@@ -185,9 +181,6 @@ public class ImportCreateBausteine extends GenericCommand {
 
     private BausteinUmsetzung createBaustein(CnATreeElement element, MbBaust mbBaust, List<BausteineMassnahmenResult> list) throws Exception {
         Baustein baustein = findBausteinForId(TransferData.getId(mbBaust));
-        if(baustein != null) {
-            gstool2veriniceBausteinMap.put(mbBaust, baustein);
-        }
         Integer refZobId = null;
         isReference: for (BausteineMassnahmenResult bausteineMassnahmenResult : list) {
             refZobId = bausteineMassnahmenResult.zoBst.getRefZobId();
@@ -268,7 +261,6 @@ public class ImportCreateBausteine extends GenericCommand {
                 transferUserDefinedBaustein(baustein, bit, bausteinUmsetzung);
                 transferMassnahmen(bausteinUmsetzung, list, true);
                 transferGefForUDBst(baustein, bausteinUmsetzung);
-                gstool2veriniceBausteinMap.put(mbBaust, baustein);
             }
         }
         return bausteinUmsetzung;
@@ -580,10 +572,6 @@ public class ImportCreateBausteine extends GenericCommand {
 
     public Map<ModZobjBstMass, MassnahmenUmsetzung> getAlleMassnahmen() {
         return alleMassnahmen;
-    }
-
-    public Map<MbBaust, Baustein> getGstool2VeriniceBausteinMap(){
-        return gstool2veriniceBausteinMap;
     }
 
     public Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> getIndividualMassnahmenMap(){
