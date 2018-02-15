@@ -186,10 +186,6 @@ public final class ImageCache {
 
 	public static final String REPORT = "report.png";
 
-	public static final String DBCONNECT = "database_connect.png";
-	
-	public static final String DBCLOSE = "database_delete.png";
-
 	public static final String VIEW_BROWSER = "tag.png";
     public static final String VIEW_MASSNAHMEN = "gs.png";
 	public static final String VIEW_BSIMODEL = "tree_explorer.gif";
