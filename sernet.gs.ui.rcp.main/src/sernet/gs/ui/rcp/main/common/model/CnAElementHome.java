@@ -259,7 +259,7 @@ public final class CnAElementHome {
             log.debug("Deleting element, uuid: " + element.getUuid()); //$NON-NLS-1$
         }
         
-        RemoveElement command = new RemoveElement(element);
+        RemoveElement<CnATreeElement> command = new RemoveElement<>(element);
         deleteValidations(element);
         getCommandService().executeCommand(command);
     }
