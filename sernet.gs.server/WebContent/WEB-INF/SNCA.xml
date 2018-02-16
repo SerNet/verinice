@@ -8575,107 +8575,107 @@ Wurden bereits weitere Stellen informiert?
                 </huiproperty>
             <huiproperty tags="Privacy" id="process_evaluation_of_toms" name="Evaluation of TOM's" inputtype="text" />
 
-		<huiproperty id="process_stellungnahmedsb_sachg_group_itkonzept" name="IT-Sicherheitskonzept liegt vor?" inputtype="singleoption">
+		<huiproperty id="process_stellungnahmedsb_sachg_group_itkonzept" name="IT-Sicherheitskonzept liegt vor?" inputtype="singleoption" editable="false">
             <option id="process_dsb_schwerw_abw_opt_itkonzept_1" name="Ja" />
             <option id="process_dsb_schwerw_abw_opt_itkonzept_2" name="Nein" />
         </huiproperty>
-		<huiproperty tags="Privacy" id="process_itkonzept" name="Bemerkungen" inputtype="text">
+		<huiproperty tags="Privacy" id="process_itkonzept" name="Bemerkungen" inputtype="text" editable="false">
             <depends option="process_stellungnahmedsb_sachg_group_itkonzept" value="process_dsb_schwerw_abw_opt_itkonzept_1" />
         </huiproperty>
 
-         <huiproperty id="process_dsb_schwerw_abw_opt_zutr" name="Zutrittskontrolle" inputtype="singleoption">
+         <huiproperty id="process_dsb_schwerw_abw_opt_zutr" name="Zutrittskontrolle" inputtype="singleoption" editable="false">
                 <option id="process_dsb_schwerw_abw_opt_zutr_1" name="Ja" />
                 <option id="process_dsb_schwerw_abw_opt_zutr_2" name="Nein" />
                 <option id="process_dsb_schwerw_abw_opt_zutr_3" name="Teilweise" />
             </huiproperty>
-     <huiproperty id="process_dsb_schwerw_abw_istzust" name="Ist-Zustand" inputtype="text">
+     <huiproperty id="process_dsb_schwerw_abw_istzust" name="Ist-Zustand" inputtype="text" editable="false">
             </huiproperty>
-            <huiproperty id="process_dsb_schwerw_abw_zutr" name="Abweichungen" inputtype="text">
+            <huiproperty id="process_dsb_schwerw_abw_zutr" name="Abweichungen" inputtype="text" editable="false">
             </huiproperty>
-            <huiproperty id="process_dsb_schwerw_verb_zutr" name="Verbesserungsvorschläge" inputtype="text">
+            <huiproperty id="process_dsb_schwerw_verb_zutr" name="Verbesserungsvorschläge" inputtype="text" editable="false">
             </huiproperty>
             
-            <huiproperty id="process_dsb_schwerw_abw_opt_zuga" name="Zugangskontrolle" inputtype="singleoption" >
+            <huiproperty id="process_dsb_schwerw_abw_opt_zuga" name="Zugangskontrolle" inputtype="singleoption" editable="false">
                 <option id="process_dsb_schwerw_abw_opt_zuga_1" name="Ja" />
                 <option id="process_dsb_schwerw_abw_opt_zuga_2" name="Nein" />
                 <option id="process_dsb_schwerw_abw_opt_zuga_3" name="Teilweise" />
                 </huiproperty>
-        <huiproperty id="process_dsb_schwerw_abw_zuga_istzust" name="Ist-Zustand" inputtype="text">
+        <huiproperty id="process_dsb_schwerw_abw_zuga_istzust" name="Ist-Zustand" inputtype="text" editable="false">
                 </huiproperty>
-            <huiproperty id="process_dsb_schwerw_abw_zuga" name="Abweichungen" inputtype="text">
+            <huiproperty id="process_dsb_schwerw_abw_zuga" name="Abweichungen" inputtype="text" editable="false">
                 </huiproperty>
-            <huiproperty id="process_dsb_schwerw_verb_zuga" name="Verbesserungsvorschläge" inputtype="text">
+            <huiproperty id="process_dsb_schwerw_verb_zuga" name="Verbesserungsvorschläge" inputtype="text" editable="false">
             </huiproperty>
             
-            <huiproperty id="process_dsb_schwerw_abw_opt_zugr" name="Zugriffskontrolle" inputtype="singleoption">
+            <huiproperty id="process_dsb_schwerw_abw_opt_zugr" name="Zugriffskontrolle" inputtype="singleoption" editable="false">
                 <option id="process_dsb_schwerw_abw_opt_zugr_1" name="Ja" />
                 <option id="process_dsb_schwerw_abw_opt_zugr_2" name="Nein" />
                 <option id="process_dsb_schwerw_abw_opt_zugr_3" name="Teilweise" />
                 </huiproperty>
-        <huiproperty id="process_dsb_schwerw_abw_zugr_istzust" name="Ist-Zustand" inputtype="text" >
+        <huiproperty id="process_dsb_schwerw_abw_zugr_istzust" name="Ist-Zustand" inputtype="text"  editable="false">
                 </huiproperty>
-            <huiproperty id="process_dsb_schwerw_abw_zugr" name="Abweichungen" inputtype="text" >
+            <huiproperty id="process_dsb_schwerw_abw_zugr" name="Abweichungen" inputtype="text" editable="false">
                 </huiproperty>
-            <huiproperty id="process_dsb_schwerw_verb_zugr" name="Verbesserungsvorschläge" inputtype="text">
+            <huiproperty id="process_dsb_schwerw_verb_zugr" name="Verbesserungsvorschläge" inputtype="text" editable="false">
             </huiproperty>
             
-            <huiproperty id="process_dsb_schwerw_abw_opt_weiterg" name="Weitergabekontrolle" inputtype="singleoption" >
+            <huiproperty id="process_dsb_schwerw_abw_opt_weiterg" name="Weitergabekontrolle" inputtype="singleoption" editable="false">
                 <option id="process_dsb_schwerw_abw_opt_weiterg_1" name="Ja" />
                 <option id="process_dsb_schwerw_abw_opt_weiterg_2" name="Nein" />
                 <option id="process_dsb_schwerw_abw_opt_weiterg_3" name="Teilweise" />
                 </huiproperty>
-         <huiproperty id="process_dsb_schwerw_abw_weiterg_istzust" name="Ist-Zustand" inputtype="text" >
+         <huiproperty id="process_dsb_schwerw_abw_weiterg_istzust" name="Ist-Zustand" inputtype="text" editable="false">
                </huiproperty>
-            <huiproperty id="process_dsb_schwerw_abw_weiterg" name="Abweichungen" inputtype="text" >
+            <huiproperty id="process_dsb_schwerw_abw_weiterg" name="Abweichungen" inputtype="text" editable="false">
                </huiproperty>
-            <huiproperty id="process_dsb_schwerw_verb_weiterg" name="Verbesserungsvorschläge" inputtype="text">
+            <huiproperty id="process_dsb_schwerw_verb_weiterg" name="Verbesserungsvorschläge" inputtype="text" editable="false">
             </huiproperty>           
-            <huiproperty id="process_dsb_schwerw_abw_opt_eing" name="Eingabekontrolle" inputtype="singleoption" >
+            <huiproperty id="process_dsb_schwerw_abw_opt_eing" name="Eingabekontrolle" inputtype="singleoption" editable="false">
                 <option id="process_dsb_schwerw_abw_opt_eing_1" name="Ja" />
                 <option id="process_dsb_schwerw_abw_opt_eing_2" name="Nein" />
                 <option id="process_dsb_schwerw_abw_opt_eing_3" name="Teilweise" />
                 </huiproperty>
-        <huiproperty id="process_dsb_schwerw_abw_eing_istzust" name="Ist-Zustand" inputtype="text" >
+        <huiproperty id="process_dsb_schwerw_abw_eing_istzust" name="Ist-Zustand" inputtype="text" editable="false">
                 </huiproperty>
-            <huiproperty id="process_dsb_schwerw_abw_eing" name="Abweichungen" inputtype="text" >
+            <huiproperty id="process_dsb_schwerw_abw_eing" name="Abweichungen" inputtype="text" editable="false">
                 </huiproperty>
-            <huiproperty id="process_dsb_schwerw_verb_eing" name="Verbesserungsvorschläge" inputtype="text">
+            <huiproperty id="process_dsb_schwerw_verb_eing" name="Verbesserungsvorschläge" inputtype="text" editable="false">
             </huiproperty>
             
-            <huiproperty id="process_dsb_schwerw_abw_opt_auftr" name="Auftragskontrolle" inputtype="singleoption" >
+            <huiproperty id="process_dsb_schwerw_abw_opt_auftr" name="Auftragskontrolle" inputtype="singleoption" editable="false">
                 <option id="process_dsb_schwerw_abw_opt_auftr_1" name="Ja" />
                 <option id="process_dsb_schwerw_abw_opt_auftr_2" name="Nein" />
                 <option id="process_dsb_schwerw_abw_opt_auftr_3" name="Teilweise" />
                 </huiproperty>
-         <huiproperty id="process_dsb_schwerw_abw_auftr_istzust" name="Ist-Zustand" inputtype="text" >
+         <huiproperty id="process_dsb_schwerw_abw_auftr_istzust" name="Ist-Zustand" inputtype="text" editable="false">
                 </huiproperty>
-            <huiproperty id="process_dsb_schwerw_abw_auftr" name="Abweichungen" inputtype="text" >
+            <huiproperty id="process_dsb_schwerw_abw_auftr" name="Abweichungen" inputtype="text" editable="false">
                 </huiproperty>
-            <huiproperty id="process_dsb_schwerw_verb_auftr" name="Verbesserungsvorschläge" inputtype="text">
+            <huiproperty id="process_dsb_schwerw_verb_auftr" name="Verbesserungsvorschläge" inputtype="text" editable="false">
             </huiproperty>
             
-            <huiproperty id="process_dsb_schwerw_abw_opt_verf" name="Verfügbarkeitskontrolle" inputtype="singleoption" >
+            <huiproperty id="process_dsb_schwerw_abw_opt_verf" name="Verfügbarkeitskontrolle" inputtype="singleoption" editable="false">
                 <option id="process_dsb_schwerw_abw_opt_verf_1" name="Ja" />
                 <option id="process_dsb_schwerw_abw_opt_verf_2" name="Nein" />
                 <option id="process_dsb_schwerw_abw_opt_verf_3" name="Teilweise" />
                 </huiproperty>
-         <huiproperty id="process_dsb_schwerw_abw_verf_istzust" name="Ist-Zustand" inputtype="text">
+         <huiproperty id="process_dsb_schwerw_abw_verf_istzust" name="Ist-Zustand" inputtype="text" editable="false">
                 </huiproperty>
-            <huiproperty id="process_dsb_schwerw_abw_verf" name="Abweichungen" inputtype="text">
+            <huiproperty id="process_dsb_schwerw_abw_verf" name="Abweichungen" inputtype="text" editable="false">
                 </huiproperty>
-            <huiproperty id="process_dsb_schwerw_verb_verf" name="Verbesserungsvorschläge" inputtype="text">
+            <huiproperty id="process_dsb_schwerw_verb_verf" name="Verbesserungsvorschläge" inputtype="text" editable="false">
             </huiproperty>
             
-            <huiproperty id="process_dsb_schwerw_abw_opt_trenn" name="Trennungsgebot" inputtype="singleoption" >
+            <huiproperty id="process_dsb_schwerw_abw_opt_trenn" name="Trennungsgebot" inputtype="singleoption" editable="false"> 
                 <option id="process_dsb_schwerw_abw_opt_trenn_1" name="Ja" />
                 <option id="process_dsb_schwerw_abw_opt_trenn_2" name="Nein" />
                 <option id="process_dsb_schwerw_abw_opt_trenn_3" name="Teilweise" />
                 </huiproperty>
-        <huiproperty id="process_dsb_schwerw_abw_trenn_istzust" name="Ist-Zustand" inputtype="text">
+        <huiproperty id="process_dsb_schwerw_abw_trenn_istzust" name="Ist-Zustand" inputtype="text" editable="false">
                 </huiproperty>
-            <huiproperty id="process_dsb_schwerw_abw_trenn" name="Abweichungen" inputtype="text">
+            <huiproperty id="process_dsb_schwerw_abw_trenn" name="Abweichungen" inputtype="text" editable="false">
                 </huiproperty>
-            <huiproperty id="process_dsb_schwerw_verb_trenn" name="Verbesserungsvorschläge" inputtype="text">
+            <huiproperty id="process_dsb_schwerw_verb_trenn" name="Verbesserungsvorschläge" inputtype="text" editable="false">
             </huiproperty>
         </huipropertygroup>           
     </huientity>
