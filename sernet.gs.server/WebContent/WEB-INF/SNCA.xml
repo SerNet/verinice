@@ -8573,7 +8573,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty tags="Privacy" id="process_zertifiz_bez" name="Bezeichnung des Standards" inputtype="text">
                     <depends option="process_stellungnahmedsb_sachg_group_zertifiz" value="process_dsb_schwerw_abw_opt_zertifiz_1" />
                 </huiproperty>
-        
+            <huiproperty tags="Privacy" id="process_evaluation_of_toms" name="Evaluation of TOM's" inputtype="text" />
 
 		<huiproperty id="process_stellungnahmedsb_sachg_group_itkonzept" name="IT-Sicherheitskonzept liegt vor?" inputtype="singleoption">
             <option id="process_dsb_schwerw_abw_opt_itkonzept_1" name="Ja" />
