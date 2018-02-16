@@ -193,9 +193,10 @@ public class HUITypeFactory {
     }
 
     private void readAllEntities() {
-        this.allEntities = new HashMap<>();
         NodeList entities = doc.getElementsByTagName("huientity");
-        for (int i = 0; i < entities.getLength(); ++i) {
+        int numberOfEntities = entities.getLength();
+        this.allEntities = new HashMap<>(numberOfEntities);
+        for (int i = 0; i < numberOfEntities; ++i) {
 
             Element entityEl = (Element) entities.item(i);
             EntityType entityObj = new EntityType();
