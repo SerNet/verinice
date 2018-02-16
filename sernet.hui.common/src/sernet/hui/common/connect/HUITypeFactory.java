@@ -51,7 +51,6 @@ import sernet.hui.common.rules.NotEmpty;
 import sernet.hui.common.rules.RuleFactory;
 import sernet.snutils.DBException;
 
-
 /**
  * Parses XML file with defined properties and creates appropriate
  * <code>PropertyType </code> objects.
@@ -61,7 +60,7 @@ public class HUITypeFactory {
     private static final Logger LOG = Logger.getLogger(HUITypeFactory.class);
 
     public static final String HUI_CONFIGURATION_FILE = "SNCA.xml";
-    
+
     private static final String ATTRIBUTE_NAME = "name";
     private static final String ATTRIBUTE_ID = "id";
     private static final String ATTRIBUTE_REVERSENAME = "reversename";
@@ -83,13 +82,12 @@ public class HUITypeFactory {
     private static final String ATTRIBUTE_INHERITING_ENTITY = "inheritingentity";
 
     private static Document doc;
-    
+
     private Set<String> allTags = new HashSet<>();
 
     private Map<String, EntityType> allEntities = null;
 
     private Map<String, String> defaultMessages = new HashMap<>();
-
 
     // loads translated messages for HUI entities from resource bundles
     private SNCAMessages messages;
@@ -101,7 +99,7 @@ public class HUITypeFactory {
     public HUITypeFactory(Resource resource) throws DBException, IOException {
         this(resource.getURL());
     }
-    
+
     public HUITypeFactory(IUrlLoader urlLoader) throws DBException, IOException {
         init(urlLoader.load());
     }
@@ -117,7 +115,8 @@ public class HUITypeFactory {
 
     private void init(URL xmlFile) throws DBException {
         if (xmlFile == null) {
-            throw new DBException("Pfad für XML Systemdefinition nicht initialisiert. Config File korrekt?");
+            throw new DBException(
+                    "Pfad für XML Systemdefinition nicht initialisiert. Config File korrekt?");
         }
         if (xmlFile.getProtocol().equals("http") || xmlFile.getProtocol().equals("ftp")) {
             try {
@@ -130,7 +129,8 @@ public class HUITypeFactory {
         messages = new SNCAMessages(xmlFile.toExternalForm());
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Conf url: " + messages.getBaseUrl() + ", localized name of huientity role: " + messages.getString("role"));
+            LOG.debug("Conf url: " + messages.getBaseUrl() + ", localized name of huientity role: "
+                    + messages.getString("role"));
         }
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -143,8 +143,10 @@ public class HUITypeFactory {
             factory.setFeature("http://xml.org/sax/features/validation", true);
             factory.setFeature("http://apache.org/xml/features/validation/schema", true);
 
-            factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
-            factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", getClass().getResource("/hitro.xsd").toString());
+            factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
+                    "http://www.w3.org/2001/XMLSchema");
+            factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource",
+                    getClass().getResource("/hitro.xsd").toString());
 
             parser = factory.newDocumentBuilder();
 
@@ -168,7 +170,8 @@ public class HUITypeFactory {
 
                 @Override
                 public void warning(SAXParseException exception) throws SAXException {
-                    Logger.getLogger(this.getClass()).debug("Parser warning: " + exception.getLocalizedMessage());
+                    Logger.getLogger(this.getClass())
+                            .debug("Parser warning: " + exception.getLocalizedMessage());
                 }
             });
             doc = parser.parse(xmlFile.openStream());
@@ -176,9 +179,12 @@ public class HUITypeFactory {
 
         } catch (IOException ie) {
             LOG.error(ie);
-            throw new DBException("Die XML-Datei mit der Definition der Formularfelder konnte nicht geladen werden! Bitte Pfad und Erreichbarkeit laut Konfigurationsfile überprüfen.", ie);
+            throw new DBException(
+                    "Die XML-Datei mit der Definition der Formularfelder konnte nicht geladen werden! Bitte Pfad und Erreichbarkeit laut Konfigurationsfile überprüfen.",
+                    ie);
         } catch (SAXException e) {
-            throw new DBException("Die XML-Datei mit der Definition der Formularfelder ist defekt!", e);
+            throw new DBException("Die XML-Datei mit der Definition der Formularfelder ist defekt!",
+                    e);
         }
     }
 
@@ -190,7 +196,7 @@ public class HUITypeFactory {
         return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
     }
 
-       private void readAllEntities() {
+    private void readAllEntities() {
         this.allEntities = new HashMap<>();
         NodeList entities = doc.getElementsByTagName("huientity");
         for (int i = 0; i < entities.getLength(); ++i) {
@@ -206,14 +212,12 @@ public class HUITypeFactory {
             entityObj.setName(getMessage(id));
 
             this.allEntities.put(entityEl.getAttribute(ATTRIBUTE_ID), entityObj);
-            
-            
+
             readChildElements(entityObj, null);
         }
-        
-        
+
     }
-   
+
     public Set<String> getAllTypeIds() {
         return allEntities.keySet();
     }
@@ -285,24 +289,27 @@ public class HUITypeFactory {
 
     private void readRelation(Element child, String sourceTypeId, HuiRelation relation) {
         final String id = child.getAttribute(ATTRIBUTE_ID);
-        // name, reversename and tooltip are loaded from SNCAMessages (resource bundles)
-        // key is: [id]_name, [id]_reversename, [id]_tooltip 
-        final String keyName = getKey(id,ATTRIBUTE_NAME);
+        // name, reversename and tooltip are loaded from SNCAMessages (resource
+        // bundles)
+        // key is: [id]_name, [id]_reversename, [id]_tooltip
+        final String keyName = getKey(id, ATTRIBUTE_NAME);
         final String name = child.getAttribute(ATTRIBUTE_NAME);
-        final String keyReversename = getKey(id,ATTRIBUTE_REVERSENAME);
+        final String keyReversename = getKey(id, ATTRIBUTE_REVERSENAME);
         final String reverseName = child.getAttribute(ATTRIBUTE_REVERSENAME);
         defaultMessages.put(keyName, name);
         defaultMessages.put(keyReversename, reverseName);
         relation.setName(getMessage(keyName));
         relation.setReversename(getMessage(keyReversename));
-        relation.setTooltip(getMessage(getKey(id,ATTRIBUTE_TOOLTIP), child.getAttribute(ATTRIBUTE_TOOLTIP), true));
-        
+        relation.setTooltip(getMessage(getKey(id, ATTRIBUTE_TOOLTIP),
+                child.getAttribute(ATTRIBUTE_TOOLTIP), true));
+
         relation.setTo(child.getAttribute("to"));
         relation.setFrom(sourceTypeId);
     }
 
     /**
-     * Returns the key of a resource bundle property for a given id and attibute name.
+     * Returns the key of a resource bundle property for a given id and attibute
+     * name.
      * 
      * @param id
      *            the id of an hui element
@@ -324,11 +331,12 @@ public class HUITypeFactory {
         propObj.setId(id);
 
         // name and tooltip are loaded from SNCAMessages (resource bundles)
-        // key is: [id]_name, [id]_tooltip 
+        // key is: [id]_name, [id]_tooltip
         final String name = prop.getAttribute(ATTRIBUTE_NAME);
         defaultMessages.put(id, name);
         propObj.setName(getMessage(id));
-        propObj.setTooltiptext(getMessage(getKey(id, ATTRIBUTE_TOOLTIP), prop.getAttribute(ATTRIBUTE_TOOLTIP), true));
+        propObj.setTooltiptext(getMessage(getKey(id, ATTRIBUTE_TOOLTIP),
+                prop.getAttribute(ATTRIBUTE_TOOLTIP), true));
 
         propObj.setTags(prop.getAttribute(ATTRIBUTE_TAGS));
         addToTagList(prop.getAttribute(ATTRIBUTE_TAGS));
@@ -339,7 +347,8 @@ public class HUITypeFactory {
         propObj.setInitialFocus(prop.getAttribute("focus").equals(BOOLEAN_TRUE));
         propObj.setEditable(prop.getAttribute("editable").equals(BOOLEAN_TRUE));
         propObj.setVisible(prop.getAttribute("visible").equals(BOOLEAN_TRUE));
-        propObj.setShowInObjectBrowser(prop.getAttribute("showInObjectBrowser").equals(BOOLEAN_TRUE));
+        propObj.setShowInObjectBrowser(
+                prop.getAttribute("showInObjectBrowser").equals(BOOLEAN_TRUE));
         propObj.setURL(prop.getAttribute("isURL").equals(BOOLEAN_TRUE));
         propObj.setReportable(prop.getAttribute("report").equals(BOOLEAN_TRUE));
         propObj.setTextRows(prop.getAttribute("textrows"));
@@ -354,7 +363,7 @@ public class HUITypeFactory {
             propObj.setNumericMax(prop.getAttribute("max"));
             propObj.setNumericDefault(prop.getAttribute(ATTRIBUTE_DEFAULTVALUE));
         }
-        
+
         if (propObj.isBooleanSelect()) {
             propObj.setNumericMin("0");
             propObj.setNumericMax("1");
@@ -366,7 +375,7 @@ public class HUITypeFactory {
             propObj.addValidator(new NotEmpty());
         }
         // add additional validations
-        for(IValidationRule rule : readValidationRules(prop)){
+        for (IValidationRule rule : readValidationRules(prop)) {
             propObj.addValidator(rule);
         }
 
@@ -377,7 +386,7 @@ public class HUITypeFactory {
 
     private String readReferencedCnaLinkType(Element prop) {
         NodeList list = prop.getElementsByTagName("references");
-        if(list != null && list.getLength()>0){
+        if (list != null && list.getLength() > 0) {
             Element referencesElmt = (Element) list.item(0);
             return referencesElmt.getAttribute("linkType");
         } else {
@@ -398,18 +407,17 @@ public class HUITypeFactory {
     }
 
     private void addToTagList(String tags) {
-        if (tags == null || tags.length()<1){
+        if (tags == null || tags.length() < 1) {
             return;
         }
         String newTags = tags.replaceAll("\\s+", "");
         String[] individualTags = newTags.split(",");
         allTags.addAll(Arrays.asList(individualTags));
     }
-    
+
     public Set<String> getAllTags() {
         return allTags;
     }
-
 
     private PropertyGroup readPropertyGroup(String id) {
         Element group = doc.getElementById(id);
@@ -444,26 +452,26 @@ public class HUITypeFactory {
         }
         return depends;
     }
-    
-    private List<IValidationRule> readValidationRules(Element prop){
+
+    private List<IValidationRule> readValidationRules(Element prop) {
         ArrayList<IValidationRule> ruleList = new ArrayList<>(0);
         NodeList list = prop.getElementsByTagName("validationRule");
-        for(int i = 0; i < list.getLength(); i++){
-            Element ruleElement = (Element)list.item(i);
+        for (int i = 0; i < list.getLength(); i++) {
+            Element ruleElement = (Element) list.item(i);
             String className = ruleElement.getAttribute("class");
-            IValidationRule rule = (IValidationRule)RuleFactory.getValidationRule(className);
+            IValidationRule rule = (IValidationRule) RuleFactory.getValidationRule(className);
             String hint = ruleElement.getAttribute("hint");
             rule.init(readValidationRuleParams(ruleElement), hint);
             ruleList.add(rule);
         }
         return ruleList;
     }
-    
-    private String[] readValidationRuleParams(Element ruleElement){
+
+    private String[] readValidationRuleParams(Element ruleElement) {
         NodeList paramNodeList = ruleElement.getElementsByTagName("param");
         String[] params = new String[paramNodeList.getLength()];
-        for(int i = 0; i < paramNodeList.getLength(); i++){
-            Element paramNode = (Element)paramNodeList.item(i);
+        for (int i = 0; i < paramNodeList.getLength(); i++) {
+            Element paramNode = (Element) paramNodeList.item(i);
             params[i] = paramNode.getTextContent();
         }
         return params;
@@ -493,7 +501,7 @@ public class HUITypeFactory {
         for (int i = 0; i < paramNodeList.getLength(); i++) {
             Element paramNode = (Element) paramNodeList.item(i);
             params[i] = paramNode.getTextContent();
-            if(rule.isMultiLanguage()) {
+            if (rule.isMultiLanguage()) {
                 params[i] = getMessage(paramNode.getAttribute(ATTRIBUTE_ID), params[i]);
             }
         }
@@ -503,8 +511,7 @@ public class HUITypeFactory {
     private List<PropertyOption> getOptionsForPropertyType(String id) {
         Element prop = doc.getElementById(id);
         NodeList values = prop.getElementsByTagName("option");
-        ArrayList<PropertyOption> possibleValues = new ArrayList<>(
-                values.getLength());
+        ArrayList<PropertyOption> possibleValues = new ArrayList<>(values.getLength());
         for (int i = 0; i < values.getLength(); ++i) {
             Element value = (Element) values.item(i);
             PropertyOption dv = new PropertyOption();
@@ -512,22 +519,22 @@ public class HUITypeFactory {
             dv.setId(idOption);
             // name is loaded from SNCAMessages (resource bundles)
             dv.setName(getMessage(idOption, value.getAttribute(ATTRIBUTE_NAME)));
-            
-            if (value.getAttribute(ATTRIBUTE_VALUE) != null && value.getAttribute(ATTRIBUTE_VALUE).length()>0) {
-			    try {
-			        dv.setValue( Integer.parseInt(value.getAttribute(ATTRIBUTE_VALUE)) );
+
+            if (value.getAttribute(ATTRIBUTE_VALUE) != null
+                    && value.getAttribute(ATTRIBUTE_VALUE).length() > 0) {
+                try {
+                    dv.setValue(Integer.parseInt(value.getAttribute(ATTRIBUTE_VALUE)));
                 } catch (NumberFormatException e) {
-			        if (LOG.isDebugEnabled()) {
+                    if (LOG.isDebugEnabled()) {
                         LOG.debug("Not a valid number for option "
                                 + value.getAttribute(ATTRIBUTE_VALUE), e);
-			        }
-			        dv.setValue(null);
-			    }
-			}
-			else {
-			    dv.setValue(null);
-			}
-			
+                    }
+                    dv.setValue(null);
+                }
+            } else {
+                dv.setValue(null);
+            }
+
             possibleValues.add(dv);
         }
         return possibleValues;
@@ -538,8 +545,8 @@ public class HUITypeFactory {
     }
 
     /**
-     * Get list of possible relations from one entity type to another entity type.
-     * I.e. from person to document: author, reviewer, signer
+     * Get list of possible relations from one entity type to another entity
+     * type. I.e. from person to document: author, reviewer, signer
      * 
      * @param fromEntityTypeID
      * @param toEntityTypeID
@@ -548,39 +555,36 @@ public class HUITypeFactory {
     public Set<HuiRelation> getPossibleRelations(String fromEntityTypeID, String toEntityTypeID) {
         return getEntityType(fromEntityTypeID).getPossibleRelations(toEntityTypeID);
     }
-    
+
     /**
-     * Get list of possible relations from the given entity type to any other entities.
-     * I.e. from "document"
-     * - to person: author, reviewer, signer
-     * - to server: documentation
-     * - to requirement: contract 
+     * Get list of possible relations from the given entity type to any other
+     * entities. I.e. from "document" - to person: author, reviewer, signer - to
+     * server: documentation - to requirement: contract
      * 
      * @param fromEntityTypeID
      * @return
      */
     public Set<HuiRelation> getPossibleRelationsFrom(String fromEntityTypeID) {
-        
+
         if (getEntityType(fromEntityTypeID) == null) {
             LOG.error("cannot find entitytype for:\t" + fromEntityTypeID);
-            
+
         }
-        
+
         return getEntityType(fromEntityTypeID).getPossibleRelations();
     }
-    
+
     /**
-     * Get list of all possible relations from any entity type to the given entity type.
-     * I.e. to "requirement"
-     * - from document: contract
-     * - from person: responsible
-     * - from control: implementation
+     * Get list of all possible relations from any entity type to the given
+     * entity type. I.e. to "requirement" - from document: contract - from
+     * person: responsible - from control: implementation
      * 
      * @param toEntityTypeID
      * @return
      */
     public Set<HuiRelation> getPossibleRelationsTo(String toEntityTypeID) {
-        // for this reverse request we have to iterate through all entitytypes and search:
+        // for this reverse request we have to iterate through all entitytypes
+        // and search:
         Set<HuiRelation> allRelations = new HashSet<>();
         Set<Entry<String, EntityType>> entrySet = allEntities.entrySet();
         for (Entry<String, EntityType> entry : entrySet) {
@@ -592,7 +596,6 @@ public class HUITypeFactory {
         }
         return allRelations;
     }
-    
 
     /**
      * Returns the HuiRelation object with the ID = huiRelationId.
@@ -617,70 +620,65 @@ public class HUITypeFactory {
         }
         return null;
     }
-    
+
     /**
-     * Returns a translated message for a key
-     * if no translated message is found, "[key] (!)"
-     * is returned
+     * Returns a translated message for a key if no translated message is found,
+     * "[key] (!)" is returned
      * 
-     * Translated messages are read from  {@link SNCAMessages}
-     * which are special resource bundles.
+     * Translated messages are read from {@link SNCAMessages} which are special
+     * resource bundles.
      * 
-     * @param key key of the message
+     * @param key
+     *            key of the message
      * @return a translated message or (if not found) "[key] (!)"
      */
     public String getMessage(String key) {
         return getMessage(key, defaultMessages.get(key), false);
     }
-    
+
     /**
-     * Returns a translated message for a key
-     * or a default message if no translated message is found
-     * or "[key] (!)" if a default message is not found 
+     * Returns a translated message for a key or a default message if no
+     * translated message is found or "[key] (!)" if a default message is not
+     * found
      * 
-     * Translated messages are read from  {@link SNCAMessages}
-     * which are special resource bundles.
+     * Translated messages are read from {@link SNCAMessages} which are special
+     * resource bundles.
      * 
-     * @param key 
-     *      key of the message
-     * @param defaultMessage 
-     *      default message
-     * @return 
-     *      a translated message 
-     *      or a default message if not found
-     *      or "[key] (!)" if a default message is not found
+     * @param key
+     *            key of the message
+     * @param defaultMessage
+     *            default message
+     * @return a translated message or a default message if not found or "[key]
+     *         (!)" if a default message is not found
      */
     public String getMessage(String key, String defaultMessage) {
         return getMessage(key, defaultMessage, false);
     }
 
     /**
-     * Returns a translated message for a key
-     * or a default message if no translated message
-     * is found
-     * or "[key] (!)" if a default message is not found and emptyIfNotFound is false
-     * or "" if a default message is not found and emptyIfNotFound is true
+     * Returns a translated message for a key or a default message if no
+     * translated message is found or "[key] (!)" if a default message is not
+     * found and emptyIfNotFound is false or "" if a default message is not
+     * found and emptyIfNotFound is true
      * 
-     * Translated messages are read from  {@link SNCAMessages}
-     * which are special resource bundles.
+     * Translated messages are read from {@link SNCAMessages} which are special
+     * resource bundles.
      * 
-     * @param key 
-     *      key of the message
-     * @param defaultMessage 
-     *      default message
-     * @param emptyIfNotFound 
-     *      true: an empty string is returned if translated message is not found 
-     *      and defaultMessage is null or empty
-     *      false: null is returned if translated message is not found 
-     *      and defaultMessage is null or empty
-     * @return 
-     *      a translated message 
-     *      or a default message if not found
-     *      or "[key] (!)" if a default message is not found
-     *      or "" if a default message is not found and emptyIfNotFound is true
+     * @param key
+     *            key of the message
+     * @param defaultMessage
+     *            default message
+     * @param emptyIfNotFound
+     *            true: an empty string is returned if translated message is not
+     *            found and defaultMessage is null or empty false: null is
+     *            returned if translated message is not found and defaultMessage
+     *            is null or empty
+     * @return a translated message or a default message if not found or "[key]
+     *         (!)" if a default message is not found or "" if a default message
+     *         is not found and emptyIfNotFound is true
      */
     public String getMessage(String key, String defaultMessage, boolean emptyIfNotFound) {
-        //treat an empty string as null
+        // treat an empty string as null
         String message = messages.getString(key);
         if (message != null) {
             if (LOG.isDebugEnabled()) {
@@ -720,7 +718,7 @@ public class HUITypeFactory {
             }
             return defaultMessage;
         }
-        
+
     }
 
     /**
@@ -747,10 +745,9 @@ public class HUITypeFactory {
                 return group;
             }
         }
-        
-        return null;
-        
-    }
 
+        return null;
+
+    }
 
 }
