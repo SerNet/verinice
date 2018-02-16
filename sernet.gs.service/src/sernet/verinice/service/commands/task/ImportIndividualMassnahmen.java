@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.model.Baustein;
@@ -120,12 +119,13 @@ public class ImportIndividualMassnahmen extends GenericCommand {
         }
     }
     
-    private String getIndividualId(String id) {
+    private static String getIndividualId(String id) {
         StringBuilder sb = new StringBuilder();
         sb.append(INDIVIDUAL_CONTROL_IDENTIFIER);
-        for(int i = 0; i <  id.toCharArray().length; i++) {
-            if(StringUtils.isNumeric(String.valueOf(id.toCharArray()[i])) || id.toCharArray()[i] == '.'){
-                sb.append(id.toCharArray()[i]);
+        for(int i = 0; i < id.length(); i++) {
+            char c = id.charAt(i);
+            if( c == '.' || Character.isDigit(c)){
+                sb.append(c);
             }
         }
         return sb.toString();
@@ -190,7 +190,7 @@ public class ImportIndividualMassnahmen extends GenericCommand {
     private Massnahme getIndividualMassnahmeFromGstoolDb(String bausteineMassnahmenResultIdentifier, Massnahme m) {
         if(massnahmenInfos.containsKey(bausteineMassnahmenResultIdentifier)){
             MassnahmeInformationTransfer massnahmeInformationTransfer = massnahmenInfos.get(bausteineMassnahmenResultIdentifier);
-            if(StringUtils.isNotEmpty(massnahmeInformationTransfer.getTitel())){
+            if(!massnahmeInformationTransfer.getTitel().isEmpty()){
                 m = new Massnahme();
                 m.setId(massnahmeInformationTransfer.getId());
                 m.setTitel((massnahmeInformationTransfer.getTitel() != null) ? massnahmeInformationTransfer.getTitel() : "no name available");
