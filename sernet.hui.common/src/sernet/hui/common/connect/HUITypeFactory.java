@@ -73,7 +73,7 @@ public class HUITypeFactory {
     private static final String HUI_PROPERTY_GROUP = "huipropertygroup";
     private static final String HUI_RELATION = "huirelation";
 
-    private static Document doc;
+    private Document doc;
 
     private Set<String> allTags = new HashSet<>();
 
