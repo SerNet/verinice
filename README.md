@@ -21,6 +21,14 @@ verinice reports can be customized – and you’re able to design
 completely new reports which can be exported as PDF, HTML or Excel (CSV)
 file.
 
+### Target Platform
+
+The spec file for the verinice target platform is stored in
+sernet.verinice.releng.tp. Add this folder as a project.
+
+To build and run your project go to Window > Preferences > Plug-in
+Development > Target Platform and select 'verinice-platform'
+
 ## Dynamic Object Model (HitroUI)
 
 The HitroUI Framework is a part of verinice. A simple XML-file defines
