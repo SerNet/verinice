@@ -17,7 +17,9 @@
  ******************************************************************************/
 package sernet.hui.common.connect;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -166,7 +168,9 @@ public class HUITypeFactory {
                             .debug("Parser warning: " + exception.getLocalizedMessage());
                 }
             });
-            doc = parser.parse(xmlFile.openStream());
+            try (InputStream is = new BufferedInputStream(xmlFile.openStream())) {
+                doc = parser.parse(is);
+            }
             readAllEntities();
 
         } catch (IOException ie) {
