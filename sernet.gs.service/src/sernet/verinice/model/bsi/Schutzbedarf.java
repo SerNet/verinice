@@ -94,8 +94,9 @@ public final class Schutzbedarf {
 			return SUFFIX_HOCH;
 		case SEHRHOCH:
 			return SUFFIX_SEHRHOCH;
+		default:
+		     return SUFFIX_NONE;
 		}
-		return SUFFIX_NONE;
 	}
 
 	

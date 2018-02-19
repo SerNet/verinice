@@ -36,7 +36,7 @@ public final class ElementMapperFactory {
     
     private static final Map<String, IElementMapper> MAPPER_MAP; 
     static {
-        MAPPER_MAP = new Hashtable<String, IElementMapper>();
+        MAPPER_MAP = new Hashtable<>();
         MAPPER_MAP.put(IsaMapper.ID,new IsaMapper());
         MAPPER_MAP.put(Isa20Mapper.ID,new Isa20Mapper());
         MAPPER_MAP.put(DEFAULT_MAPPER_ID,new IsaMapper());

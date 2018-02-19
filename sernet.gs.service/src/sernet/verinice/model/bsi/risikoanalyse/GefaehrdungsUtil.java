@@ -18,7 +18,6 @@
 package sernet.verinice.model.bsi.risikoanalyse;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import sernet.gs.model.Gefaehrdung;
@@ -39,10 +38,8 @@ public final class GefaehrdungsUtil {
             return null;
         }
 
-        GefaehrdungsUmsetzung gefaehrdungInList = null;
-        List<GefaehrdungsUmsetzung> found = new ArrayList<GefaehrdungsUmsetzung>();
-        for (Iterator iterator = allGefaehrdungsUmsetzungen.iterator(); iterator.hasNext();) {
-            gefaehrdungInList = (GefaehrdungsUmsetzung) iterator.next();
+        List<GefaehrdungsUmsetzung> found = new ArrayList<>();
+        for (GefaehrdungsUmsetzung gefaehrdungInList : allGefaehrdungsUmsetzungen) {
             if (gefaehrdung.getId() == null || gefaehrdungInList.getId() == null) {
                 continue;
             }
@@ -64,10 +61,8 @@ public final class GefaehrdungsUtil {
             return null;
         }
 
-        GefaehrdungsUmsetzung gefaehrdungInList = null;
-        List<GefaehrdungsUmsetzung> found = new ArrayList<GefaehrdungsUmsetzung>();
-        findGefaehrdung: for (Iterator iterator = allGefaehrdungsUmsetzungen.iterator(); iterator.hasNext();) {
-            gefaehrdungInList = (GefaehrdungsUmsetzung) iterator.next();
+        List<GefaehrdungsUmsetzung> found = new ArrayList<>();
+        for (GefaehrdungsUmsetzung gefaehrdungInList : allGefaehrdungsUmsetzungen) {
             if (gefaehrdung.getId() == null || gefaehrdungInList.getId() == null) {
                 continue;
             }
@@ -83,10 +78,8 @@ public final class GefaehrdungsUtil {
         return found;
     }
 
-    @SuppressWarnings("unchecked")
-    public static boolean listContainsById(Iterable selectedArrayList, Gefaehrdung currentGefaehrdung) {
-        for (Iterator iterator = selectedArrayList.iterator(); iterator.hasNext();) {
-            Object object = iterator.next();
+    public static boolean listContainsById(Iterable<?> selectedArrayList, Gefaehrdung currentGefaehrdung) {
+        for (Object object : selectedArrayList) {
             if (object instanceof Gefaehrdung) {
                 Gefaehrdung gefaehrdung = (Gefaehrdung) object;
                 if (gefaehrdung.getId().equals(currentGefaehrdung.getId())) {
