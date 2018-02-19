@@ -20,20 +20,15 @@ package sernet.gs.service;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.io.IOUtils;
+
 public abstract class InputUtil {
 
     public static String streamToString(InputStream in, String charset) throws IOException {
-        final int byteArraySize = 4096;
-        StringBuffer out = new StringBuffer();
-        byte[] b = new byte[byteArraySize];
-        if(in!=null) {
-            for (int n; (n = in.read(b)) != -1;) {
-                out.append(new String(b, 0, n, charset));
-            }
-        } else {
-            out.append("");
+        if (in == null) {
+           return "";
         }
-        return out.toString();
+        return IOUtils.toString(in, charset);
     }
 
 }
