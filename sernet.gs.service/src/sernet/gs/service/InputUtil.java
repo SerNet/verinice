@@ -22,7 +22,7 @@ import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 
-public abstract class InputUtil {
+public final class InputUtil {
 
     public static String streamToString(InputStream in, String charset) throws IOException {
         if (in == null) {
@@ -31,4 +31,7 @@ public abstract class InputUtil {
         return IOUtils.toString(in, charset);
     }
 
+    private InputUtil() {
+
+    }
 }

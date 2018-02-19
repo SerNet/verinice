@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 
 import sernet.hui.common.connect.Property;
 
-public abstract class Schutzbedarf {
+public final class Schutzbedarf {
 
 	public static final String VERTRAULICHKEIT 	= "_vertraulichkeit"; //$NON-NLS-1$
 	public static final String VERFUEGBARKEIT 		= "_verfuegbarkeit"; //$NON-NLS-1$
@@ -126,5 +126,9 @@ public abstract class Schutzbedarf {
 
 	public static boolean isMgmtReviewNeeded(String propertyValue) {
 		return propertyValue.indexOf(ERGAENZENDEANALYSE_NOETIG)!=-1;
+	}
+
+	private Schutzbedarf() {
+
 	}
 }

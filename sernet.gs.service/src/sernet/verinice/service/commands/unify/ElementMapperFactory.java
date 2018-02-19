@@ -30,7 +30,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public abstract class ElementMapperFactory {
+public final class ElementMapperFactory {
     
     public static final String DEFAULT_MAPPER_ID = IsaMapper.ID;
     
@@ -53,4 +53,7 @@ public abstract class ElementMapperFactory {
         return result;
     }
 
+    private ElementMapperFactory() {
+
+    }
 }

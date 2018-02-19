@@ -27,7 +27,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public abstract class ElementChecker {
+public final class ElementChecker {
     
     private static final Logger LOG = Logger.getLogger(ElementChecker.class);
     
@@ -83,5 +83,9 @@ public abstract class ElementChecker {
        } catch( Exception e ) {
            LOG.warn("Children-set of element is not initialized.", e);
        }      
+    }
+
+    private ElementChecker() {
+
     }
 }

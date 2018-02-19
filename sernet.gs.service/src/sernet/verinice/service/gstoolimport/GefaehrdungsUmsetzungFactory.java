@@ -23,7 +23,7 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class GefaehrdungsUmsetzungFactory {
+public final class GefaehrdungsUmsetzungFactory {
 
     public static GefaehrdungsUmsetzung build(CnATreeElement parent, Gefaehrdung source, String language) {
 		GefaehrdungsUmsetzung gefaehrdungsUmsetzung = new GefaehrdungsUmsetzung(parent);
@@ -52,5 +52,9 @@ public class GefaehrdungsUmsetzungFactory {
     public static GefaehrdungsUmsetzung createScenario(BausteinUmsetzung parent, Gefaehrdung gef, String language) {
         GefaehrdungsUmsetzung scenario = build(parent, gef, language);
         return scenario;
+    }
+
+    private GefaehrdungsUmsetzungFactory() {
+
     }
 }

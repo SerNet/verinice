@@ -32,7 +32,7 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * @author koderman[at]sernet[dot]de
  */
-public class ItemControlTransformer {
+public final class ItemControlTransformer {
 
 	/**
 	 * Transforms a catalog item to a IControl.
@@ -161,6 +161,10 @@ public class ItemControlTransformer {
             iso27kGroup.setTitel(item.getName().replaceAll("\\s", " "));
         }
         return iso27kGroup;
+    }
+
+    private ItemControlTransformer() {
+
     }
 
 }

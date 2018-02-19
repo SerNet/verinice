@@ -31,7 +31,7 @@ import sernet.gs.model.Gefaehrdung;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public abstract class GefaehrdungsUtil {
+public final class GefaehrdungsUtil {
 
     public static List<GefaehrdungsUmsetzung> removeBySameId(List<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen, GefaehrdungsUmsetzung gefaehrdung) {
 
@@ -110,6 +110,10 @@ public abstract class GefaehrdungsUtil {
             }
         }
         return false;
+    }
+
+    private GefaehrdungsUtil() {
+
     }
 
 }
