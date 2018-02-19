@@ -328,7 +328,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
 
     @Override
     public List<CnATreeElement> getChangedElements() {
-        return Collections.singletonList(element);
+        return Collections.<CnATreeElement>singletonList(element);
     }
 
     @Override
