@@ -100,7 +100,12 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      * @param huiTypeFactory
      */
     public void initDefaultValues(HUITypeFactory huiTypeFactory) {
-        String[] types = huiTypeFactory.getEntityType(this.entityType).getAllPropertyTypeIDsIncludingGroups();
+        EntityType entityTypeFromFactory = huiTypeFactory.getEntityType(this.entityType);
+        if (entityTypeFromFactory == null) {
+            throw new IllegalArgumentException("Cannot initialize default values for " + this
+                    + " from the given HUITypeFactory since it does not support the entity type.");
+        }
+        String[] types = entityTypeFromFactory.getAllPropertyTypeIDsIncludingGroups();
         for (String type : types) {
             PropertyType propertyType = huiTypeFactory.getPropertyType(this.entityType, type);
             if (propertyType.isNumericSelect() || propertyType.isBooleanSelect()) {
@@ -953,6 +958,11 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             log = Logger.getLogger(Entity.class);
         }
         return log;
+    }
+
+    @Override
+    public String toString() {
+        return "Entity [entityType=" + entityType + ", dbId=" + dbId + ", uuid=" + uuid + "]";
     }
 
 }
