@@ -345,9 +345,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         this.scopeId = scopeId;
     }
 
-    @Override
-    public abstract String getTypeId();
-
 	public String getObjectType() {
 		return objectType;
 	}
