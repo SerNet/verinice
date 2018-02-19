@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.security.MessageDigest;
 
 import org.apache.log4j.Logger;
@@ -111,16 +112,12 @@ public final class FileUtil {
     }
     
     public static byte[] getFileData(File f){
-        FileInputStream fis=null;        
-        byte[] bFile = new byte[(int) f.length()];  
         try {
-            fis = new FileInputStream(f);      
-            fis.read(bFile);     
-            fis.close();
+            return Files.readAllBytes(f.toPath());
+
         } catch (IOException e) {
             throw new RuntimeException("Error while reading file data",e);
         }     
-        return bFile;
     }
     
     public static boolean deleteDirectory(File path) {
