@@ -42,6 +42,7 @@ public class IncompleteStepsSummary extends MassnahmenSummary {
 
 	private static HibernateCallback hcb = new NotCompletedUmsetzungenSummaryCallback();
 
+	@Override
 	public void execute() {
 		setSummary(getNotCompletedStufenSummary());
 	}

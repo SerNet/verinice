@@ -97,6 +97,7 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 		}
 	}
 	
+	@Override
 	public void databaseChildRemoved(CnATreeElement child) {
 		for (IISO27KModelListener listener : getListeners()) {
 			listener.databaseChildRemoved(child);
@@ -139,6 +140,7 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 		}
 	}
 	
+	@Override
 	public void linkAdded(CnALink link) {
 		for (IISO27KModelListener listener : getListeners()) {
 			listener.linkAdded(link);
@@ -206,19 +208,22 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
         }      
     }
     
+    @Override
     public void validationAdded(Integer scopeId){
         for(IISO27KModelListener listener : getListeners()){
             listener.validationAdded(scopeId);
         }
-    };
+    }
     
+    @Override
     public void validationRemoved(Integer scopeId){
         for(IISO27KModelListener listener : getListeners()){
             listener.validationRemoved(scopeId);
         }
-    };
+    }
     
+    @Override
     public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){
         // do nothing
-    };
+    }
 }

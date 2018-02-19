@@ -177,7 +177,7 @@ public class Attachment extends Addition implements Serializable, Comparable<Att
 		return subEntityType;
 	}
 
-	
+	@Override
 	public String getTypeId() {
 		return TYPE_ID;
 	}

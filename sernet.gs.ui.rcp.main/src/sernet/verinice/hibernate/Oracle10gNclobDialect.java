@@ -35,6 +35,7 @@ public class Oracle10gNclobDialect extends Oracle10gDialect {
         registerHibernateType( Types.NCLOB, Hibernate.CLOB.getName() );
     }
 
+    @Override
     protected void registerLargeObjectTypeMappings() {
         super.registerLargeObjectTypeMappings();
         registerColumnType( Types.NCLOB, "nclob" );    

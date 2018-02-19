@@ -39,6 +39,7 @@ public class UmsetzungSummary extends MassnahmenSummary {
 
 	private static final HibernateCallback HCB = new UmsetzungenSummaryCallback();
 
+	@Override
 	public void execute() {
 		super.execute();
 		setSummary(getUmsetzungenSummary());

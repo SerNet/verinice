@@ -48,6 +48,7 @@ public class Catalog extends Item implements ICatalog {
 	
 	private transient Logger log = Logger.getLogger(Catalog.class);
 	
+	@Override
 	public Logger getLog() {
 		if(log==null) {
 			log = Logger.getLogger(Catalog.class);
