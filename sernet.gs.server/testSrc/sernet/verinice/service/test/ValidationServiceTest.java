@@ -193,7 +193,7 @@ public class ValidationServiceTest extends CommandServiceProvider {
     }
 
     private void removeElement(CnATreeElement element) {
-        RemoveElement<CnATreeElement> deleteElement = new RemoveElement<CnATreeElement>(element);
+        RemoveElement<CnATreeElement> deleteElement = new RemoveElement<>(element);
         try {
             commandService.executeCommand(deleteElement);
             LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(element.getUuid());

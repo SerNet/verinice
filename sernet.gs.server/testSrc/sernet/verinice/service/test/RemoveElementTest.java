@@ -162,6 +162,15 @@ public class RemoveElementTest extends CommandServiceProvider {
     }
 
     @Test
+    public void removeElements() throws CommandException {
+        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<>(itVerbund, organization);
+        commandService.executeCommand(removeCommand);
+
+        assertElementIsDeleted(itVerbund);
+        assertElementIsDeleted(organization);
+    }
+
+    @Test
     public void removeVerbundFromImportedBSIVerbund() throws CommandException {
         LoadModel<BSIModel> loadBSIModel = new LoadModel<>(BSIModel.class);
         BSIModel bSIModel = commandService.executeCommand(loadBSIModel).getModel();
