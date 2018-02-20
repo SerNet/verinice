@@ -18,6 +18,8 @@
 package sernet.verinice.model.bsi.risikoanalyse;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import sernet.gs.model.Gefaehrdung;
@@ -38,8 +40,6 @@ public final class GefaehrdungsUtil {
             return null;
         }
         return removeBySameId(allGefaehrdungsUmsetzungen, gefaehrdung.getId());
-
-       
     }
 
     public static List<GefaehrdungsUmsetzung> removeBySameId(List<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen, Gefaehrdung gefaehrdung) {
@@ -52,20 +52,21 @@ public final class GefaehrdungsUtil {
 
     private static List<GefaehrdungsUmsetzung> removeBySameId(
             List<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen, String id) {
+        if (id == null) {
+            return Collections.<GefaehrdungsUmsetzung> emptyList();
+        }
         List<GefaehrdungsUmsetzung> found = new ArrayList<>();
-        for (GefaehrdungsUmsetzung gefaehrdungInList : allGefaehrdungsUmsetzungen) {
-            if (id == null || gefaehrdungInList.getId() == null) {
+        Iterator<GefaehrdungsUmsetzung> iterator = allGefaehrdungsUmsetzungen.iterator();
+        while (iterator.hasNext()) {
+            GefaehrdungsUmsetzung item = iterator.next();
+            if (item.getId() == null) {
                 continue;
             }
-            if (gefaehrdungInList.getId().equals(id)) {
-                found.add(gefaehrdungInList);
+            if (item.getId().equals(id)) {
+                found.add(item);
+                iterator.remove();
             }
         }
-
-        for (GefaehrdungsUmsetzung toDelete : found) {
-            allGefaehrdungsUmsetzungen.remove(toDelete);
-        }
-
         return found;
     }
 
