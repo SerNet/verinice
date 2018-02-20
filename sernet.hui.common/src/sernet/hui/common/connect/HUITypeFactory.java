@@ -517,19 +517,16 @@ public class HUITypeFactory {
             // name is loaded from SNCAMessages (resource bundles)
             dv.setName(getMessage(idOption, value.getAttribute(ATTRIBUTE_NAME)));
 
-            if (value.getAttribute(ATTRIBUTE_VALUE) != null
-                    && value.getAttribute(ATTRIBUTE_VALUE).length() > 0) {
+            String optValue = value.getAttribute(ATTRIBUTE_VALUE);
+            if (optValue != null && !optValue.isEmpty()) {
                 try {
-                    dv.setValue(Integer.parseInt(value.getAttribute(ATTRIBUTE_VALUE)));
+                    dv.setValue(Integer.parseInt(optValue));
                 } catch (NumberFormatException e) {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Not a valid number for option "
-                                + value.getAttribute(ATTRIBUTE_VALUE), e);
+                                + optValue, e);
                     }
-                    dv.setValue(null);
                 }
-            } else {
-                dv.setValue(null);
             }
 
             possibleValues.add(dv);
