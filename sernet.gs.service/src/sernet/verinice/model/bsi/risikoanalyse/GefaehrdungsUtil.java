@@ -37,22 +37,9 @@ public final class GefaehrdungsUtil {
         if (gefaehrdung == null) {
             return null;
         }
+        return removeBySameId(allGefaehrdungsUmsetzungen, gefaehrdung.getId());
 
-        List<GefaehrdungsUmsetzung> found = new ArrayList<>();
-        for (GefaehrdungsUmsetzung gefaehrdungInList : allGefaehrdungsUmsetzungen) {
-            if (gefaehrdung.getId() == null || gefaehrdungInList.getId() == null) {
-                continue;
-            }
-            if (gefaehrdungInList.getId().equals(gefaehrdung.getId())) {
-                found.add(gefaehrdungInList);
-            }
-        }
-
-        for (GefaehrdungsUmsetzung toDelete : found) {
-            allGefaehrdungsUmsetzungen.remove(toDelete);
-        }
-
-        return found;
+       
     }
 
     public static List<GefaehrdungsUmsetzung> removeBySameId(List<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen, Gefaehrdung gefaehrdung) {
@@ -60,13 +47,17 @@ public final class GefaehrdungsUtil {
         if (gefaehrdung == null) {
             return null;
         }
+        return removeBySameId(allGefaehrdungsUmsetzungen, gefaehrdung.getId());
+    }
 
+    private static List<GefaehrdungsUmsetzung> removeBySameId(
+            List<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen, String id) {
         List<GefaehrdungsUmsetzung> found = new ArrayList<>();
         for (GefaehrdungsUmsetzung gefaehrdungInList : allGefaehrdungsUmsetzungen) {
-            if (gefaehrdung.getId() == null || gefaehrdungInList.getId() == null) {
+            if (id == null || gefaehrdungInList.getId() == null) {
                 continue;
             }
-            if (gefaehrdungInList.getId().equals(gefaehrdung.getId())) {
+            if (gefaehrdungInList.getId().equals(id)) {
                 found.add(gefaehrdungInList);
             }
         }
