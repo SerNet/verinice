@@ -3068,38 +3068,6 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                 inputtype="booleanoption" name="Effectiveness of TOMs" defaultValue="0" tags="Privacy" />
         </huipropertygroup>
 
-        <huipropertygroup id="mnums_data_protection_objectives_bdsg" name="Data privacy control objectives according to \u00A764 BDSG-new"
-            tags="Privacy">
-            <huiproperty id="mnums_data_protection_objectives_bdsg_access" inputtype="booleanoption" name="Access control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="mnums_data_protection_objectives_bdsg_data_media" inputtype="booleanoption"
-                name="Data media control" defaultValue="0" tags="Privacy" />
-            <huiproperty id="mnums_data_protection_objectives_bdsg_storage" inputtype="booleanoption" name="Storage control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="mnums_data_protection_objectives_bdsg_user" inputtype="booleanoption" name="User control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="mnums_data_protection_objectives_bdsg_data_access" inputtype="booleanoption"
-                name="Data access control" defaultValue="0" tags="Privacy" />
-            <huiproperty id="mnums_data_protection_objectives_bdsg_transmission" inputtype="booleanoption"
-                name="Control of transmission" defaultValue="0" tags="Privacy" />
-            <huiproperty id="mnums_data_protection_objectives_bdsg_input" inputtype="booleanoption" name="Input control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="mnums_data_protection_objectives_bdsg_transport" inputtype="booleanoption" name="Transport control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="mnums_data_protection_objectives_bdsg_recoverability" inputtype="booleanoption"
-                name="Recoverability" defaultValue="0" tags="Privacy" />
-            <huiproperty id="mnums_data_protection_objectives_bdsg_reliability" inputtype="booleanoption"
-                name="Reliability" defaultValue="0" tags="Privacy" />
-            <huiproperty id="mnums_data_protection_objectives_bdsg_integrity" inputtype="booleanoption" name="Data integrity"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="mnums_data_protection_objectives_bdsg_order_control" inputtype="booleanoption"
-                name="Order control" defaultValue="0" tags="Privacy" />
-            <huiproperty id="mnums_data_protection_objectives_bdsg_availability" inputtype="booleanoption"
-                name="Availability control" defaultValue="0" tags="Privacy" />
-            <huiproperty id="mnums_data_protection_objectives_bdsg_seperability" inputtype="booleanoption"
-                name="Seperability" defaultValue="0" tags="Privacy" />
-        </huipropertygroup>
-    
     <huipropertygroup name="KIX" id="mnums_kix_group" tags="KIX" >
       <huiproperty name="KIX ticket 1" id="mnums_kix_ticket1" isURL="true"/>
       <huiproperty name="KIX ticket 2" id="mnums_kix_ticket2" isURL="true"/>
@@ -6290,38 +6258,6 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                 inputtype="booleanoption" name="Recoverability" defaultValue="0" tags="Privacy" />
             <huiproperty id="control_data_protection_objectives_eugdpr_effectiveness"
                 inputtype="booleanoption" name="Effectiveness of TOMs" defaultValue="0" tags="Privacy" />
-        </huipropertygroup>
-        
-        <huipropertygroup id="control_data_protection_objectives_bdsg" name="Data privacy control objectives according to \u00A764 BDSG-new"
-            tags="Privacy">
-            <huiproperty id="control_data_protection_objectives_bdsg_access" inputtype="booleanoption" name="Access control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="control_data_protection_objectives_bdsg_data_media" inputtype="booleanoption"
-                name="Data media control" defaultValue="0" tags="Privacy" />
-            <huiproperty id="control_data_protection_objectives_bdsg_storage" inputtype="booleanoption" name="Storage control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="control_data_protection_objectives_bdsg_user" inputtype="booleanoption" name="User control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="control_data_protection_objectives_bdsg_data_access" inputtype="booleanoption"
-                name="Data access control" defaultValue="0" tags="Privacy" />
-            <huiproperty id="control_data_protection_objectives_bdsg_transmission" inputtype="booleanoption"
-                name="Control of transmission" defaultValue="0" tags="Privacy" />
-            <huiproperty id="control_data_protection_objectives_bdsg_input" inputtype="booleanoption" name="Input control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="control_data_protection_objectives_bdsg_transport" inputtype="booleanoption" name="Transport control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="control_data_protection_objectives_bdsg_recoverability" inputtype="booleanoption"
-                name="Recoverability" defaultValue="0" tags="Privacy" />
-            <huiproperty id="control_data_protection_objectives_bdsg_reliability" inputtype="booleanoption"
-                name="Reliability" defaultValue="0" tags="Privacy" />
-            <huiproperty id="control_data_protection_objectives_bdsg_integrity" inputtype="booleanoption" name="Data integrity"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="control_data_protection_objectives_bdsg_order_control" inputtype="booleanoption"
-                name="Order control" defaultValue="0" tags="Privacy" />
-            <huiproperty id="control_data_protection_objectives_bdsg_availability" inputtype="booleanoption"
-                name="Availability control" defaultValue="0" tags="Privacy" />
-            <huiproperty id="control_data_protection_objectives_bdsg_seperability" inputtype="booleanoption"
-                name="Seperability" defaultValue="0" tags="Privacy" />
         </huipropertygroup>
         
           <huipropertygroup name="Greenbone GSM" id="gsm_control_group" tags="Greenbone_GSM" >
@@ -10156,38 +10092,6 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="bp_requirement_data_protection_objectives_eugdpr_effectiveness"
                 inputtype="booleanoption" name="Effectiveness of TOMs" defaultValue="0" tags="Privacy" />
         </huipropertygroup>
-
-        <huipropertygroup id="bp_requirement_data_protection_objectives_bdsg" name="Data privacy control objectives according to \u00A764 BDSG-new"
-            tags="Privacy">
-            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_access" inputtype="booleanoption" name="Access control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_data_media" inputtype="booleanoption"
-                name="Data media control" defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_storage" inputtype="booleanoption" name="Storage control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_user" inputtype="booleanoption" name="User control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_data_access" inputtype="booleanoption"
-                name="Data access control" defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_transmission" inputtype="booleanoption"
-                name="Control of transmission" defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_input" inputtype="booleanoption" name="Input control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_transport" inputtype="booleanoption" name="Transport control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_recoverability" inputtype="booleanoption"
-                name="Recoverability" defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_reliability" inputtype="booleanoption"
-                name="Reliability" defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_integrity" inputtype="booleanoption" name="Data integrity"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_order_control" inputtype="booleanoption"
-                name="Order control" defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_availability" inputtype="booleanoption"
-                name="Availability control" defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_requirement_data_protection_objectives_bdsg_seperability" inputtype="booleanoption"
-                name="Seperability" defaultValue="0" tags="Privacy" />
-        </huipropertygroup>
         
     </huientity>
 
@@ -10741,38 +10645,6 @@ Wurden bereits weitere Stellen informiert?
                 inputtype="booleanoption" name="Recoverability" defaultValue="0" tags="Privacy" />
             <huiproperty id="bp_safeguard_data_protection_objectives_eugdpr_effectiveness"
                 inputtype="booleanoption" name="Effectiveness of TOMs" defaultValue="0" tags="Privacy" />
-        </huipropertygroup>
-
-        <huipropertygroup id="bp_safeguard_data_protection_objectives_bdsg" name="Data privacy control objectives according to \u00A764 BDSG-new"
-            tags="Privacy">
-            <huiproperty id="bp_safeguard_data_protection_objectives_bdsg_access" inputtype="booleanoption" name="Access control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_safeguard_data_protection_objectives_bdsg_data_media" inputtype="booleanoption"
-                name="Data media control" defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_safeguard_data_protection_objectives_bdsg_storage" inputtype="booleanoption" name="Storage control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_safeguard_data_protection_objectives_bdsg_user" inputtype="booleanoption" name="User control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_safeguard_data_protection_objectives_bdsg_data_access" inputtype="booleanoption"
-                name="Data access control" defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_safeguard_data_protection_objectives_bdsg_transmission" inputtype="booleanoption"
-                name="Control of transmission" defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_safeguard_data_protection_objectives_bdsg_input" inputtype="booleanoption" name="Input control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_safeguard_data_protection_objectives_bdsg_transport" inputtype="booleanoption" name="Transport control"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_safeguard_data_protection_objectives_bdsg_recoverability" inputtype="booleanoption"
-                name="Recoverability" defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_safeguard_data_protection_objectives_bdsg_reliability" inputtype="booleanoption"
-                name="Reliability" defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_safeguard_data_protection_objectives_bdsg_integrity" inputtype="booleanoption" name="Data integrity"
-                defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_safeguard_data_protection_objectives_bdsg_order_control" inputtype="booleanoption"
-                name="Order control" defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_safeguard_data_protection_objectives_bdsg_availability" inputtype="booleanoption"
-                name="Availability control" defaultValue="0" tags="Privacy" />
-            <huiproperty id="bp_safeguard_data_protection_objectives_bdsg_seperability" inputtype="booleanoption"
-                name="Seperability" defaultValue="0" tags="Privacy" />
         </huipropertygroup>
         
     </huientity>
