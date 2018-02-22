@@ -29,7 +29,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Domain;
 import sernet.verinice.rcp.linktable.ui.LinkTableColumn;
+import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.model.IObjectModelService;
 
 /**
@@ -161,13 +163,27 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
      * sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#getLabelText(java.
      * lang. Object)
      */
+    @SuppressWarnings("deprecation")
     @Override
     protected String getLabelText(Object element) {
-        if (element instanceof String) {
-            return ltrColumn.getContentService().getLabel((String) element);
+        String typeId = element.toString();
+        IObjectModelService contentService = ltrColumn.getContentService();
+        String typeLabel = contentService.getLabel(typeId);
+        Domain domain = CnATypeMapper.getDomainFromTypeId(typeId);
+        String domainLabel;
+        StringBuilder sb;
+        if (domain == Domain.DATA_PROTECTION) {
+            domainLabel = Domain.getLabelObsolete();
+            sb = new StringBuilder(typeLabel.length() + domainLabel.length() + 3);
+            sb.append(typeLabel).append(" (").append(domainLabel).append(")");
         } else {
-            return ltrColumn.getContentService().getLabel(element.toString());
+            domainLabel = domain.getLabel();
+            sb = new StringBuilder(typeLabel.length() + domainLabel.length() + typeId.length() + 5);
+            sb.append(typeLabel).append(" (").append(domainLabel).append(": ").append(typeId)
+                    .append(")");
         }
+
+        return sb.toString();
     }
 
     /*
