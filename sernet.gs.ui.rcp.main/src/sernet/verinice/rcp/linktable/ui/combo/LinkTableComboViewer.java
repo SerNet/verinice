@@ -19,10 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.rcp.linktable.ui.combo;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -224,14 +227,23 @@ public abstract class LinkTableComboViewer extends ComboViewer
     }
 
     protected String[] sortElementsByLabel(String[] typeIDs) {
+        String [] result = new String[typeIDs.length];
+        System.arraycopy(typeIDs, 0, result, 0, typeIDs.length);
 
-        TreeMap<String, String> sortedValues = new TreeMap<>();
+        final Map<String, String> translations = new HashMap<>(typeIDs.length);
         for (String typeID : typeIDs) {
-            sortedValues.put(ltrColumn.getContentService().getLabel(typeID), typeID);
-
+            translations.put(typeID, ltrColumn.getContentService().getLabel(typeID));
         }
-        return sortedValues.values().toArray(new String[0]);
 
+        Arrays.sort(result, new Comparator<String>() {
+
+            @Override
+            public int compare(String o1, String o2) {
+                return translations.get(o1).compareTo(translations.get(o2));
+            }
+        });
+
+        return result;
     }
 
     protected void selectFirstElement(boolean selectionChangedEvent) {
