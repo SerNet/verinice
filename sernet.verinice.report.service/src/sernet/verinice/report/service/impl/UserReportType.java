@@ -25,9 +25,7 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.IDataExtractionTask;
-import org.eclipse.birt.report.engine.api.IRenderTask;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
-import org.eclipse.birt.report.engine.api.IRunTask;
 import org.eclipse.birt.report.model.api.PropertyHandle;
 import org.eclipse.birt.report.model.api.ReportDesignHandle;
 import org.eclipse.birt.report.model.api.VariableElementHandle;
@@ -145,22 +143,6 @@ public class UserReportType implements IReportType {
 		}
 	}
 	
-	private IRenderTask runAndRenderReport(int timesToRun, int timesToRender, IRunTask runTask, IReportOptions reportOptions, BIRTReportService brs){
-	    try{
-	        for(int i = 0;i < timesToRun; i++){
-	            brs.run(runTask, reportOptions);
-	        }
-	    } catch (Exception e){
-	            LOG.error("error while running report", e);
-	    }
-	    IRenderTask renderTask = brs.createRenderTask(reportDocument);
-	    for(int i = 0;i < timesToRender; i++){
-	        brs.render(renderTask, reportOptions);
-	    } 
-	    return renderTask;
-
-	}
-
 	@Override
 	public String getUseCaseID() {
 		return IReportType.USE_CASE_ID_ALWAYS_REPORT;

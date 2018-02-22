@@ -18,16 +18,11 @@
 package sernet.verinice.service.commands.crud;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.service.NumericStringComparator;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
@@ -123,41 +118,4 @@ public class LoadReportIsaQuestionDetails extends GenericCommand {
         return result;
     }
     
-    private List<ControlGroup> getControlGroups(Integer root){
-        ArrayList<ControlGroup> retList = new ArrayList<ControlGroup>(0);
-        Set<ControlGroup> retSet = new HashSet<ControlGroup>();
-        try {
-            LoadReportElements command = new LoadReportElements(ControlGroup.TYPE_ID, root);
-            command = getCommandService().executeCommand(command);
-            List<CnATreeElement> groups = command.getElements();
-            if(groups.size() == 1 && groups.get(0).getDbId().equals(root)){
-                groups.clear();
-                groups.addAll(command.getElements(ControlGroup.TYPE_ID, groups.get(0)));
-            }
-            for(CnATreeElement e : groups){
-                if(e instanceof ControlGroup){
-                    ControlGroup c = (ControlGroup)e;
-                    if(e.getParent() instanceof ControlGroup &&
-                            c.getEntity().getSimpleValue(PROP_CONTROLGROUP_ISELEMENT)
-                            .equals(VALUE_CONTROLGROUP_ISELEMENT)){ // avoids rootControlGroup
-                        retSet.add((ControlGroup)e);
-                    }
-                }
-            }
-        } catch (CommandException e) {
-            LOG.error("Error while determing controlgroups");
-        }
-        retList.addAll(retSet);
-        retList.trimToSize();
-        Collections.sort(retList, new Comparator<ControlGroup>() {
-
-            @Override
-            public int compare(ControlGroup o1, ControlGroup o2) {
-                NumericStringComparator comp = new NumericStringComparator();
-                return comp.compare(o1.getTitle(), o2.getTitle());
-            }
-        });
-        return retList;
-    }
-
 }

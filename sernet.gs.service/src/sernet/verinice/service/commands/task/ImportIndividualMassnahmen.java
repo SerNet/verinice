@@ -68,18 +68,6 @@ public class ImportIndividualMassnahmen extends GenericCommand {
         this.changedElements = new HashSet<>(); // set<bausteinumsetzung>
     }
 
-    private BausteineMassnahmenResult getBausteineMassnahmeResultFromCache(String identifier) {
-        for(List<BausteineMassnahmenResult> list : individualMassnahmenMap.values()) {
-            for(BausteineMassnahmenResult bausteineMassnahmenResult : list) {
-                if(identifier.equals(TransferData.createBausteineMassnahmenResultIdentifier(bausteineMassnahmenResult))) {
-                    return bausteineMassnahmenResult;
-                }
-            }
-        }
-        return null;
-    }
-
-
     @Override
     public void execute() {
         for(BausteinUmsetzung bausteinUmsetzung : individualMassnahmenMap.keySet()){

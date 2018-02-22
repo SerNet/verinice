@@ -28,11 +28,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
 
 import javax.imageio.ImageIO;
 
@@ -51,14 +48,12 @@ import bsh.TargetError;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.HuiTypeFactoryException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.oda.driver.Activator;
 import sernet.verinice.security.report.ReportClassLoader;
-import sernet.verinice.security.report.ReportSecurityException;
 
 
 
@@ -704,19 +699,6 @@ public class Query implements IQuery
     public void cancel() throws OdaException
     {
     	result = null;
-    }
-    
-    private Set<String> getImportsFromQuery(String query){
-        Set<String> imports = new HashSet<String>();
-        StringTokenizer tokenizer = new StringTokenizer(query, ";");
-        while(tokenizer.hasMoreTokens()){
-            String token = tokenizer.nextToken();
-            if(token.trim().startsWith("import")){
-                String importPath = token.substring(token.lastIndexOf(" "));
-                imports.add(importPath.trim());
-            }
-        }
-        return imports;
     }
     
 }

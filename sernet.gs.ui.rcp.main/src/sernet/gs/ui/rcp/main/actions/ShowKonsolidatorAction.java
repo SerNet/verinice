@@ -180,8 +180,4 @@ public class ShowKonsolidatorAction extends RightsEnabledAction implements ISele
         // no structured selection:
         setEnabled(false);
     }
-
-    private void dispose() {
-        window.getSelectionService().removeSelectionListener(this);
-    }
 }
