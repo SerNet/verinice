@@ -19,40 +19,9 @@ package sernet.verinice.rcp;
 
 import org.eclipse.osgi.util.NLS;
 
-import sernet.verinice.model.bp.groups.ApplicationGroup;
-import sernet.verinice.model.bp.groups.BpPersonGroup;
-import sernet.verinice.model.bp.groups.BpRequirementGroup;
-import sernet.verinice.model.bp.groups.BpThreatGroup;
-import sernet.verinice.model.bp.groups.BusinessProcessGroup;
-import sernet.verinice.model.bp.groups.DeviceGroup;
-import sernet.verinice.model.bp.groups.IcsSystemGroup;
-import sernet.verinice.model.bp.groups.ItSystemGroup;
-import sernet.verinice.model.bp.groups.NetworkGroup;
-import sernet.verinice.model.bp.groups.RoomGroup;
-import sernet.verinice.model.bp.groups.SafeguardGroup;
-import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.AssetGroup;
-import sernet.verinice.model.iso27k.AuditGroup;
-import sernet.verinice.model.iso27k.ControlGroup;
-import sernet.verinice.model.iso27k.DocumentGroup;
-import sernet.verinice.model.iso27k.EvidenceGroup;
-import sernet.verinice.model.iso27k.ExceptionGroup;
-import sernet.verinice.model.iso27k.FindingGroup;
-import sernet.verinice.model.iso27k.IncidentGroup;
-import sernet.verinice.model.iso27k.IncidentScenarioGroup;
-import sernet.verinice.model.iso27k.InterviewGroup;
-import sernet.verinice.model.iso27k.PersonGroup;
-import sernet.verinice.model.iso27k.ProcessGroup;
-import sernet.verinice.model.iso27k.RecordGroup;
-import sernet.verinice.model.iso27k.RequirementGroup;
-import sernet.verinice.model.iso27k.ResponseGroup;
-import sernet.verinice.model.iso27k.ThreatGroup;
-import sernet.verinice.model.iso27k.VulnerabilityGroup;
-
 /**
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 public class Messages extends NLS {
@@ -147,7 +116,7 @@ public class Messages extends NLS {
     public static String UserprofileDialog_9;
     public static String ValidationServiceUI_0;
     public static String ValidationServiceUI_1;
-    
+
     public static String AddGroup_0;
     public static String AddGroup_1;
     public static String AddGroup_2;
@@ -166,7 +135,7 @@ public class Messages extends NLS {
     public static String AddGroup_15;
     public static String AddGroup_16;
     public static String AddGroup_17;
-    
+
     public static String AddGroupHandler_application;
     public static String AddGroupHandler_group;
     public static String AddGroupHandler_requirement;
