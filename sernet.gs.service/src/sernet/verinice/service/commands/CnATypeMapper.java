@@ -20,6 +20,7 @@ package sernet.verinice.service.commands;
 import java.util.HashMap;
 import java.util.Map;
 
+import sernet.hui.common.connect.EntityType;
 import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.BpDocument;
 import sernet.verinice.model.bp.elements.BpIncident;
@@ -274,9 +275,12 @@ public class CnATypeMapper {
             BpDocumentGroup.TYPE_ID, BpIncidentGroup.TYPE_ID, BpRecordGroup.TYPE_ID };
 
     public boolean isStrukturElement(CnATreeElement child) {
+        EntityType entityType = child.getEntityType();
+        if (entityType == null) {
+            return false;
+        }
         for (String strukturType : STRUKTUR_ELEMENT_TYPES) {
-            if (child.getEntityType() != null
-                    && child.getEntityType().getId().equals(strukturType)) {
+            if (entityType.getId().equals(strukturType)) {
                 return true;
             }
         }
@@ -284,9 +288,12 @@ public class CnATypeMapper {
     }
 
     public boolean isIiso27kElement(CnATreeElement child) {
+        EntityType entityType = child.getEntityType();
+        if (entityType == null) {
+            return false;
+        }
         for (String strukturType : IISO27K_ELEMENT_TYPES) {
-            if (child.getEntityType() != null
-                    && child.getEntityType().getId().equals(strukturType)) {
+            if (entityType.getId().equals(strukturType)) {
                 return true;
             }
         }
@@ -294,9 +301,12 @@ public class CnATypeMapper {
     }
 
     public boolean isBpElement(CnATreeElement child) {
+        EntityType entityType = child.getEntityType();
+        if (entityType == null) {
+            return false;
+        }
         for (String strukturType : BP_ELEMENT_TYPES) {
-            if (child.getEntityType() != null
-                    && child.getEntityType().getId().equals(strukturType)) {
+            if (entityType.getId().equals(strukturType)) {
                 return true;
             }
         }
