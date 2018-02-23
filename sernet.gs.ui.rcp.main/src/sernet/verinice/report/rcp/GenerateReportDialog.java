@@ -61,8 +61,6 @@ import sernet.verinice.service.commands.crud.LoadCnATreeElementTitles;
 
 public class GenerateReportDialog extends TitleAreaDialog {
 
-    private static final String FILE_SEPARATOR = "file.separator";
-
     private static final Logger LOG = Logger.getLogger(GenerateReportDialog.class);
 
     // manual filename mode or auto filename mode
@@ -105,8 +103,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
     private String useCase;
 
     private boolean isContextMenuCall;
-
-    private boolean useCache = true;
 
     private boolean useDefaultFolder = true;
     

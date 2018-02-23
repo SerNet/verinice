@@ -67,7 +67,6 @@ import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.Permission;
 import sernet.verinice.service.sync.StreamFactory;
 import sernet.verinice.service.sync.VeriniceArchive;
 import sernet.verinice.service.sync.VnaSchemaVersion;
@@ -129,7 +128,6 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     private transient String cacheId = null;
     private transient Cache cache = null;   
     private transient IBaseDao<CnATreeElement, Serializable> dao;
-    private transient IBaseDao<Permission, Serializable> permissionDao;
     private transient ExecutorService taskExecutor;
  
     public ExportCommand( final List<CnATreeElement> elements, 

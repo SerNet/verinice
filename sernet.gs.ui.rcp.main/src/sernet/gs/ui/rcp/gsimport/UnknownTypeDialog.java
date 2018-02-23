@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -55,8 +54,6 @@ import sernet.hui.common.connect.HUITypeFactory;
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de> - add scrolledComposite for labels of unknown types
  */
 public class UnknownTypeDialog extends Dialog {
-    
-    private final static Logger LOG = Logger.getLogger(UnknownTypeDialog.class);
     
     private boolean result = false;
 

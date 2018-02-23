@@ -63,7 +63,6 @@ public class ImportCreateBausteinReferences extends GenericCommand {
     private final CnATreeElement element;
     private final List<Baustein> bausteine;
     private final Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap;
-    private final Map<MbBaust, ModZobjBst> bausteinMap;
     private final Map<MbBaust, Baustein> gstool2VeriniceBausteinMap;
     private final String sourceId;
     private static final String NO_COMMENT = "";
@@ -72,7 +71,6 @@ public class ImportCreateBausteinReferences extends GenericCommand {
         this.element = element;
         this.bausteineMassnahmenMap = bausteineMassnahmenMap;
         this.sourceId = sourceId;
-        this.bausteinMap = bausteinMap;
         this.gstool2VeriniceBausteinMap = gstool2VeriniceBausteinMap;
         this.bausteine = bausteine;
     }

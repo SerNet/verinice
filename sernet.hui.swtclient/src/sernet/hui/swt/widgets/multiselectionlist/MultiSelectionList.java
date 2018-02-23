@@ -60,8 +60,6 @@ public class MultiSelectionList {
 	// map with key-value "optionid : checkbox"
 	private Map<String, Button> checkboxes = new HashMap<String, Button>();
 
-	private GridData customLayout;
-
 	private boolean referencesEntities;
 
 	private List<IMLPropertyOption> options;
@@ -251,7 +249,6 @@ public class MultiSelectionList {
 	public void setLayoutData(GridData scrolledComposite1LData) {
 		group.setLayoutData(scrolledComposite1LData);
 		group.layout();
-		this.customLayout = scrolledComposite1LData;
 	}
 
 	private void fireSelect(IMLPropertyType type, IMLPropertyOption option) {

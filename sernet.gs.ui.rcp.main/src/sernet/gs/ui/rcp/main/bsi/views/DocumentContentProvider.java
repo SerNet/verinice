@@ -61,8 +61,6 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
 	private static final String DOCUMENT_PROPERTY_SUFFIX_GERMAN = "_dokument";
 	private static final String DOCUMENT_PROPERTY_SUFFIX_ENGLISH = "_document";
 	
-	private static final Logger LOG = Logger.getLogger(DocumentContentProvider.class);
-
 	public DocumentContentProvider(TreeViewer viewer) {
 		this.viewer = viewer;
 	}

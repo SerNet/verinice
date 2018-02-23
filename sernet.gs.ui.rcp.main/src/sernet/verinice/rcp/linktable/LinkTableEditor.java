@@ -68,7 +68,6 @@ public class LinkTableEditor extends EditorPart {
     private boolean isDirty = false;
 
     private LinkTableFieldListener contentObserver;
-    private String toolTip = null;
     private boolean validQuery = false;
 
     /* (non-Javadoc)
@@ -155,7 +154,6 @@ public class LinkTableEditor extends EditorPart {
                 if (validationResult.isValid()) {
                     setTitleImage(defaultImage);
                     setPartName(linkTableEditorInput.getName());
-                    toolTip = getPartName();
                     validQuery = true;
                 } else {
                     ImageDescriptor[] descriptors = new ImageDescriptor[5];
@@ -168,7 +166,6 @@ public class LinkTableEditor extends EditorPart {
 
                     setTitleImage(decorated);
                     setPartName(linkTableEditorInput.getName() + Messages.VeriniceLinkTableEditor_7);
-                    toolTip = validationResult.getMessage();
                     firePropertyChange(IEditorPart.PROP_DIRTY);
                     validQuery = false;
                 }

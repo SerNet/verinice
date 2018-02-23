@@ -100,8 +100,6 @@ public final class CnAElementHome {
     
     protected static final String LINK_NO_COMMENT = ""; //$NON-NLS-1$
 
-    private static final String QUERY_FIND_BY_ID = "from " + CnATreeElement.class.getName() + " as element " + "where element.dbId = ?"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
     private ICommandService commandService;
     
     private IValidationService validationService;

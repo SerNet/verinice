@@ -79,8 +79,6 @@ public class ToDoBean {
 
     private boolean showDescription = false;
 
-    private Set<String> roles = null;
-
     private ICommandService commandService;
 
     // ISO 27001
