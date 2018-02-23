@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import sernet.hui.common.connect.EntityType;
+import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.BpDocument;
 import sernet.verinice.model.bp.elements.BpIncident;
@@ -58,6 +59,9 @@ import sernet.verinice.model.bsi.Client;
 import sernet.verinice.model.bsi.ClientsKategorie;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.GebaeudeKategorie;
+import sernet.verinice.model.bsi.IBSIStrukturElement;
+import sernet.verinice.model.bsi.IBSIStrukturKategorie;
+import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmeKategorie;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
@@ -75,9 +79,12 @@ import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.IGefaehrdungsBaumElement;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Domain;
 import sernet.verinice.model.ds.Datenverarbeitung;
+import sernet.verinice.model.ds.IDatenschutzElement;
 import sernet.verinice.model.ds.Personengruppen;
 import sernet.verinice.model.ds.StellungnahmeDSB;
 import sernet.verinice.model.ds.VerantwortlicheStelle;
@@ -96,6 +103,7 @@ import sernet.verinice.model.iso27k.EvidenceGroup;
 import sernet.verinice.model.iso27k.ExceptionGroup;
 import sernet.verinice.model.iso27k.Finding;
 import sernet.verinice.model.iso27k.FindingGroup;
+import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.Incident;
 import sernet.verinice.model.iso27k.IncidentGroup;
 import sernet.verinice.model.iso27k.IncidentScenario;
@@ -328,6 +336,28 @@ public final class CnATypeMapper {
         }
 
         return klass;
+    }
+
+    public static Domain getDomainFromTypeId(String typeId) {
+        Class<Object> clazz = getClassFromTypeId(typeId);
+        if (IBpElement.class.isAssignableFrom(clazz)) {
+            return Domain.BP;
+        }
+        if (IISO27kElement.class.isAssignableFrom(clazz)) {
+            return Domain.ISO;
+        }
+        if (IBSIStrukturElement.class.isAssignableFrom(clazz)
+                || IBSIStrukturKategorie.class.isAssignableFrom(clazz)
+                || IMassnahmeUmsetzung.class.isAssignableFrom(clazz)
+                || IGefaehrdungsBaumElement.class.isAssignableFrom(clazz)
+                || BausteinUmsetzung.class.equals(clazz)
+                || FinishedRiskAnalysis.class.equals(clazz)) {
+            return Domain.BP_OLD;
+        }
+        if (IDatenschutzElement.class.isAssignableFrom(clazz)) {
+            return Domain.DP;
+        }
+        throw new IllegalArgumentException("Unupported type " + clazz + " (" + typeId + ")");
     }
 
     public static String getDescriptionPropertyForType(String typeId) {
