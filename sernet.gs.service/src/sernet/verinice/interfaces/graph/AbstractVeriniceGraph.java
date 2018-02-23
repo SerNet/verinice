@@ -37,8 +37,6 @@ import sernet.verinice.model.common.CnATreeElement;
 public abstract  class AbstractVeriniceGraph implements VeriniceGraph {
 
 
-    public abstract Graph<CnATreeElement, Edge> getGraph();
-
     private transient Logger log = Logger.getLogger(UndirectedVeriniceGraph.class);
 
     public Logger getLog() {

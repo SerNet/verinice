@@ -30,13 +30,13 @@ import sernet.verinice.model.common.CnATreeElement;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public abstract class ElementMapperFactory {
+public final class ElementMapperFactory {
     
     public static final String DEFAULT_MAPPER_ID = IsaMapper.ID;
     
     private static final Map<String, IElementMapper> MAPPER_MAP; 
     static {
-        MAPPER_MAP = new Hashtable<String, IElementMapper>();
+        MAPPER_MAP = new Hashtable<>();
         MAPPER_MAP.put(IsaMapper.ID,new IsaMapper());
         MAPPER_MAP.put(Isa20Mapper.ID,new Isa20Mapper());
         MAPPER_MAP.put(DEFAULT_MAPPER_ID,new IsaMapper());
@@ -53,4 +53,7 @@ public abstract class ElementMapperFactory {
         return result;
     }
 
+    private ElementMapperFactory() {
+
+    }
 }

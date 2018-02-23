@@ -41,6 +41,7 @@ public class IncompleteZyklusSummary extends MassnahmenSummary {
 	
 	private HibernateCallback hcb = new Callback();
 
+	@Override
 	public void execute() {
 		setSummary(getNotCompletedZyklusSummary());
 	}

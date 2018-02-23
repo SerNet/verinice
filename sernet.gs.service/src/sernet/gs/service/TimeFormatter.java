@@ -24,7 +24,7 @@ package sernet.gs.service;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public abstract class TimeFormatter {
+public final class TimeFormatter {
     
     public static String getHumanRedableTime(long ms) {
         double x = ms / 1000.0;      
@@ -67,4 +67,7 @@ public abstract class TimeFormatter {
         return sb.toString();     
     }
     
+    private TimeFormatter() {
+
+    }
 }

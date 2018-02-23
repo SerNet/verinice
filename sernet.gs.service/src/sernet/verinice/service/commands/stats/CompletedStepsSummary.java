@@ -42,6 +42,7 @@ public class CompletedStepsSummary extends MassnahmenSummary {
 
 	private static HibernateCallback hcb = new Callback();
 
+	@Override
 	public void execute() {
 		setSummary(getCompletedStufenSummary());
 	}

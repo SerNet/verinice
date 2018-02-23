@@ -18,6 +18,7 @@
 package sernet.verinice.model.bsi.risikoanalyse;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,31 +32,14 @@ import sernet.gs.model.Gefaehrdung;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public abstract class GefaehrdungsUtil {
+public final class GefaehrdungsUtil {
 
     public static List<GefaehrdungsUmsetzung> removeBySameId(List<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen, GefaehrdungsUmsetzung gefaehrdung) {
 
         if (gefaehrdung == null) {
             return null;
         }
-
-        GefaehrdungsUmsetzung gefaehrdungInList = null;
-        List<GefaehrdungsUmsetzung> found = new ArrayList<GefaehrdungsUmsetzung>();
-        for (Iterator iterator = allGefaehrdungsUmsetzungen.iterator(); iterator.hasNext();) {
-            gefaehrdungInList = (GefaehrdungsUmsetzung) iterator.next();
-            if (gefaehrdung.getId() == null || gefaehrdungInList.getId() == null) {
-                continue;
-            }
-            if (gefaehrdungInList.getId().equals(gefaehrdung.getId())) {
-                found.add(gefaehrdungInList);
-            }
-        }
-
-        for (GefaehrdungsUmsetzung toDelete : found) {
-            allGefaehrdungsUmsetzungen.remove(toDelete);
-        }
-
-        return found;
+        return removeBySameId(allGefaehrdungsUmsetzungen, gefaehrdung.getId());
     }
 
     public static List<GefaehrdungsUmsetzung> removeBySameId(List<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen, Gefaehrdung gefaehrdung) {
@@ -63,30 +47,31 @@ public abstract class GefaehrdungsUtil {
         if (gefaehrdung == null) {
             return null;
         }
+        return removeBySameId(allGefaehrdungsUmsetzungen, gefaehrdung.getId());
+    }
 
-        GefaehrdungsUmsetzung gefaehrdungInList = null;
-        List<GefaehrdungsUmsetzung> found = new ArrayList<GefaehrdungsUmsetzung>();
-        findGefaehrdung: for (Iterator iterator = allGefaehrdungsUmsetzungen.iterator(); iterator.hasNext();) {
-            gefaehrdungInList = (GefaehrdungsUmsetzung) iterator.next();
-            if (gefaehrdung.getId() == null || gefaehrdungInList.getId() == null) {
+    private static List<GefaehrdungsUmsetzung> removeBySameId(
+            List<GefaehrdungsUmsetzung> allGefaehrdungsUmsetzungen, String id) {
+        if (id == null) {
+            return Collections.<GefaehrdungsUmsetzung> emptyList();
+        }
+        List<GefaehrdungsUmsetzung> found = new ArrayList<>();
+        Iterator<GefaehrdungsUmsetzung> iterator = allGefaehrdungsUmsetzungen.iterator();
+        while (iterator.hasNext()) {
+            GefaehrdungsUmsetzung item = iterator.next();
+            if (item.getId() == null) {
                 continue;
             }
-            if (gefaehrdungInList.getId().equals(gefaehrdung.getId())) {
-                found.add(gefaehrdungInList);
+            if (item.getId().equals(id)) {
+                found.add(item);
+                iterator.remove();
             }
         }
-
-        for (GefaehrdungsUmsetzung toDelete : found) {
-            allGefaehrdungsUmsetzungen.remove(toDelete);
-        }
-
         return found;
     }
 
-    @SuppressWarnings("unchecked")
-    public static boolean listContainsById(Iterable selectedArrayList, Gefaehrdung currentGefaehrdung) {
-        for (Iterator iterator = selectedArrayList.iterator(); iterator.hasNext();) {
-            Object object = iterator.next();
+    public static boolean listContainsById(Iterable<?> selectedArrayList, Gefaehrdung currentGefaehrdung) {
+        for (Object object : selectedArrayList) {
             if (object instanceof Gefaehrdung) {
                 Gefaehrdung gefaehrdung = (Gefaehrdung) object;
                 if (gefaehrdung.getId().equals(currentGefaehrdung.getId())) {
@@ -110,6 +95,10 @@ public abstract class GefaehrdungsUtil {
             }
         }
         return false;
+    }
+
+    private GefaehrdungsUtil() {
+
     }
 
 }

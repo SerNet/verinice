@@ -93,6 +93,7 @@ public class NetzKomponente extends CnATreeElement
 		return CnaStructureHelper.canContain(obj);
 	}
 	
+	@Override
 	public void setTitel(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}

@@ -47,6 +47,7 @@ public class CompletedLayerSummary extends MassnahmenSummary {
 	
 	private List<Baustein> bausteine;
 
+	@Override
 	public void execute() {
 		try {
 			setSummary(getSchichtenSummary());
