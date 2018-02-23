@@ -274,7 +274,7 @@ public class CnATypeMapper {
             ItSystemGroup.TYPE_ID, NetworkGroup.TYPE_ID, RoomGroup.TYPE_ID, SafeguardGroup.TYPE_ID,
             BpDocumentGroup.TYPE_ID, BpIncidentGroup.TYPE_ID, BpRecordGroup.TYPE_ID };
 
-    public boolean isStrukturElement(CnATreeElement child) {
+    public static boolean isStrukturElement(CnATreeElement child) {
         EntityType entityType = child.getEntityType();
         if (entityType == null) {
             return false;
@@ -287,7 +287,7 @@ public class CnATypeMapper {
         return false;
     }
 
-    public boolean isIiso27kElement(CnATreeElement child) {
+    public static boolean isIiso27kElement(CnATreeElement child) {
         EntityType entityType = child.getEntityType();
         if (entityType == null) {
             return false;
@@ -300,7 +300,7 @@ public class CnATypeMapper {
         return false;
     }
 
-    public boolean isBpElement(CnATreeElement child) {
+    public static boolean isBpElement(CnATreeElement child) {
         EntityType entityType = child.getEntityType();
         if (entityType == null) {
             return false;
@@ -330,7 +330,7 @@ public class CnATypeMapper {
         return klass;
     }
 
-    public String getDescriptionPropertyForType(String typeId) {
+    public static String getDescriptionPropertyForType(String typeId) {
         return descriptionPropertyMap.get(typeId);
     }
 }
