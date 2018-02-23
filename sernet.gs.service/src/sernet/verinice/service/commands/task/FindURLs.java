@@ -33,24 +33,15 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.service.Retriever;
-import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.URLUtil;
-import sernet.verinice.interfaces.ApplicationRoles;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.DocumentLink;
 import sernet.verinice.model.bsi.DocumentLinkRoot;
 import sernet.verinice.model.bsi.DocumentReference;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.Permission;
-import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.service.auth.AuthenticationHelper;
-import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
 
 /**
  * Retrieves the properties which are URLs as a {@link DocumentLinkRoot}
@@ -221,46 +212,4 @@ public class FindURLs extends GenericCommand {
 		}
 		
 	}
-	/**
-	 * Rightmanagement is done by Hibernate Filter since HQL-Query is used to determine content
-	 * @param elmt
-	 * @return
-	 */
-	@Deprecated
-	private boolean isReadAllowed(CnATreeElement elmt){
-        if (!getAuthService().isPermissionHandlingNeeded()) {
-            return true;
-        }
-        
-        if (AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
-            return true;
-        }
-	    
-	    LoadCurrentUserConfiguration lcuc = new LoadCurrentUserConfiguration();
-	    try{
-	        lcuc = getCommandService().executeCommand(lcuc);
-	    } catch (CommandException e){
-	        LOG.error("Error checking element permissions", e);
-	        return false;
-	    }
-	    Configuration c = lcuc.getConfiguration();
-
-	    // No configuration for the current user (anymore?). Then nothing is
-	    // writable.
-	    if (c == null) {
-	        return false;
-	    }
-
-	    CnATreeElement elemntWithPermissions = Retriever.checkRetrievePermissions(elmt);
-	    for (Permission p : elemntWithPermissions.getPermissions()) {
-	        if (p.isReadAllowed() && c.getRoles().contains(p.getRole())) {
-	            return true;
-	        }
-	    }
-	    return false;
-	}
-	
-	private IAuthService getAuthService() {
-        return (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
-    }
 }

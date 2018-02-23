@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
@@ -30,7 +29,6 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
-import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.Audit;
@@ -202,25 +200,6 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
         LoadReportLinkedElements command = new LoadReportLinkedElements(Asset.TYPE_ID, p.getDbId(), true, false);
         command = getCommandService().executeCommand(command);
         return command.getElements();
-    }
-
-    /**
-     * if a child is marked red, its parent is marked red also
-     * 
-     * @param element
-     * @param currentMap
-     * @param daoFactory
-     * @return
-     */
-    private Map<String, Integer> markParents(CnATreeElement element, Map<String, Integer> currentMap, IDAOFactory daoFactory) {
-        while (!(element instanceof Organization)) {
-            if (element instanceof IncidentScenarioGroup) {
-                currentMap.put(element.getUuid(), RiskAnalysisHelper.RISK_COLOR_RED);
-            }
-            element = element.getParent();
-            element = daoFactory.getDAO(CnATreeElement.class).initializeAndUnproxy(element);
-        }
-        return currentMap;
     }
 
     /**

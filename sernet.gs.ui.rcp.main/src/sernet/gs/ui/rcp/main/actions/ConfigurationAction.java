@@ -40,8 +40,6 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.AccountDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.connect.EntityType;
-import sernet.hui.common.connect.HitroUtil;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
@@ -130,13 +128,6 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
         }
     }
 
-    private TitleAreaDialog createDialog() {
-        IWorkbenchWindow window2 = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        EntityType entType = HitroUtil.getInstance().getTypeFactory().getEntityType(Configuration.TYPE_ID);     
-        final TitleAreaDialog dialog = new AccountDialog(window2.getShell(), entType, Messages.ConfigurationAction_4, configuration.getEntity());
-        return dialog;
-    }
-    
     private TitleAreaDialog createWizard() {
         AccountWizard wizard = new AccountWizard(configuration);                 
         WizardDialog wizardDialog = new NonModalWizardDialog(Display.getCurrent().getActiveShell(),wizard);

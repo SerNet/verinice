@@ -22,11 +22,9 @@ package sernet.verinice.rcp;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -142,24 +140,6 @@ public class ServerConnectionToggleAction extends RightsEnabledAction {
      */
     private void export() throws CommandException, IOException {
         export(new ArrayList<CnATreeElement>(dialog.getSelectedElementSet()), 0); 
-    }
-    
-    /**
-     * Exports one VNA archive per scope and keeps the original
-     * scope-id of every single scope.
-     * 
-     * @throws CommandException
-     * @throws IOException
-     */
-    private void exportOneVnaPerScope() throws CommandException, IOException {
-        Set<CnATreeElement> elementSet = dialog.getSelectedElementSet(); 
-        if(elementSet!=null && elementSet.size()>0) {
-            int i=0;
-            for (CnATreeElement element : elementSet) {
-                export(Arrays.asList(element),i);
-                i++;
-            }                
-        }
     }
     
     private void export(List<CnATreeElement> elementList,int i) throws CommandException, IOException {

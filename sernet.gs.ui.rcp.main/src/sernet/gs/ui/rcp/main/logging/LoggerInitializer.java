@@ -152,16 +152,6 @@ public class LoggerInitializer implements ILogPathService {
         System.err.println("no logging path is configured for file appender");
     }
 
-    private SecurityManager getSecurityManager() {
-        SecurityManager security = System.getSecurityManager();
-        new SecurityManager();
-        if (security == null) {
-            security = new SecurityManager();
-        }
-
-        return security;
-    }
-
     private boolean validatePath(String path) {
         OutputStream out = null;
         try {

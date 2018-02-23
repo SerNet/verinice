@@ -17,8 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.actions;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -190,24 +188,6 @@ public class TestAction extends Action {
         } catch (Exception e) {
             ExceptionUtil.log(e, "test failed");
         }
-    }
-
-    /**
-     * @param result
-     */
-    private String print(List<List<String>> result) {
-        if (LOG.isDebugEnabled()) {
-            StringBuilder sb = new StringBuilder();
-            for (List<String> list : result) {
-                for (String string : list) {
-                    sb.append(string).append("\t");
-                }
-                sb.append("\n");
-            }
-            LOG.debug("List for report: " + sb.toString());
-            return sb.toString();
-        }
-        return "";
     }
 
 }
