@@ -128,7 +128,7 @@ import sernet.verinice.model.samt.SamtTopic;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
-public class CnATypeMapper {
+public final class CnATypeMapper {
     private static final Map<String, Class<? extends CnATreeElement>> typeIdClass = new HashMap<>();
 
     private static final Map<String, String> descriptionPropertyMap = new HashMap<>();
@@ -332,5 +332,9 @@ public class CnATypeMapper {
 
     public static String getDescriptionPropertyForType(String typeId) {
         return descriptionPropertyMap.get(typeId);
+    }
+
+    private CnATypeMapper() {
+
     }
 }
