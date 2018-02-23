@@ -128,9 +128,9 @@ import sernet.verinice.model.samt.SamtTopic;
  *
  */
 public class CnATypeMapper {
-    private static Map<String, Class<? extends CnATreeElement>> typeIdClass = new HashMap<>();
+    private static final Map<String, Class<? extends CnATreeElement>> typeIdClass = new HashMap<>();
 
-    private static Map<String, String> descriptionPropertyMap = new HashMap<>();
+    private static final Map<String, String> descriptionPropertyMap = new HashMap<>();
 
     static {
         typeIdClass.put(Anwendung.TYPE_ID, Anwendung.class);
