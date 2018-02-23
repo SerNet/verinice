@@ -118,22 +118,19 @@ import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
- * Mapper to find classes by typeID String.
- * Needed during Import (originally refactored out of SyncInsertUpdateCommand)
- * but also needed in many other cases because Hibernate looses marker interfaces (such as IISO27kElement)
+ * Mapper to find classes by typeID String. Needed during Import (originally
+ * refactored out of SyncInsertUpdateCommand) but also needed in many other
+ * cases because Hibernate looses marker interfaces (such as IISO27kElement)
  * when loading subclasses over generic queries.
  * 
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 public class CnATypeMapper {
     private static Map<String, Class<? extends CnATreeElement>> typeIdClass = new HashMap<>();
-    
-    private static Map<String, String> descriptionPropertyMap = new HashMap<>();
 
-  
+    private static Map<String, String> descriptionPropertyMap = new HashMap<>();
 
     static {
         typeIdClass.put(Anwendung.TYPE_ID, Anwendung.class);
@@ -164,7 +161,7 @@ public class CnATypeMapper {
         typeIdClass.put(StellungnahmeDSB.TYPE_ID, StellungnahmeDSB.class);
         typeIdClass.put(Datenverarbeitung.TYPE_ID, Datenverarbeitung.class);
         typeIdClass.put(Zweckbestimmung.TYPE_ID, Zweckbestimmung.class);
-        
+
         typeIdClass.put(ResponseGroup.TYPE_ID, ResponseGroup.class);
         typeIdClass.put(ExceptionGroup.TYPE_ID, ExceptionGroup.class);
         typeIdClass.put(VulnerabilityGroup.TYPE_ID, VulnerabilityGroup.class);
@@ -183,14 +180,16 @@ public class CnATypeMapper {
         typeIdClass.put(EvidenceGroup.TYPE_ID, EvidenceGroup.class);
         typeIdClass.put(InterviewGroup.TYPE_ID, InterviewGroup.class);
         typeIdClass.put(FindingGroup.TYPE_ID, FindingGroup.class);
-        
+
         typeIdClass.put(Response.TYPE_ID, Response.class);
-        typeIdClass.put(sernet.verinice.model.iso27k.Exception.TYPE_ID, sernet.verinice.model.iso27k.Exception.class);
+        typeIdClass.put(sernet.verinice.model.iso27k.Exception.TYPE_ID,
+                sernet.verinice.model.iso27k.Exception.class);
         typeIdClass.put(Vulnerability.TYPE_ID, Vulnerability.class);
         typeIdClass.put(PersonIso.TYPE_ID, PersonIso.class);
         typeIdClass.put(Incident.TYPE_ID, Incident.class);
         typeIdClass.put(Threat.TYPE_ID, Threat.class);
-        typeIdClass.put(sernet.verinice.model.iso27k.Process.TYPE_ID, sernet.verinice.model.iso27k.Process.class);
+        typeIdClass.put(sernet.verinice.model.iso27k.Process.TYPE_ID,
+                sernet.verinice.model.iso27k.Process.class);
         typeIdClass.put(Audit.TYPE_ID, Audit.class);
         typeIdClass.put(IncidentScenario.TYPE_ID, IncidentScenario.class);
         typeIdClass.put(Record.TYPE_ID, Record.class);
@@ -203,10 +202,10 @@ public class CnATypeMapper {
         typeIdClass.put(Finding.TYPE_ID, Finding.class);
 
         typeIdClass.put(SamtTopic.TYPE_ID, SamtTopic.class);
-        
+
         typeIdClass.put(GefaehrdungsUmsetzung.TYPE_ID, GefaehrdungsUmsetzung.class);
         typeIdClass.put(FinishedRiskAnalysis.TYPE_ID, FinishedRiskAnalysis.class);
-        
+
         typeIdClass.put(ApplicationGroup.TYPE_ID, ApplicationGroup.class);
         typeIdClass.put(BpPersonGroup.TYPE_ID, BpPersonGroup.class);
         typeIdClass.put(BpRequirementGroup.TYPE_ID, BpRequirementGroup.class);
@@ -221,7 +220,7 @@ public class CnATypeMapper {
         typeIdClass.put(BpDocumentGroup.TYPE_ID, BpDocumentGroup.class);
         typeIdClass.put(BpIncidentGroup.TYPE_ID, BpIncidentGroup.class);
         typeIdClass.put(BpRecordGroup.TYPE_ID, BpRecordGroup.class);
-        
+
         typeIdClass.put(Application.TYPE_ID, Application.class);
         typeIdClass.put(BpPerson.TYPE_ID, BpPerson.class);
         typeIdClass.put(BpThreat.TYPE_ID, BpThreat.class);
@@ -238,9 +237,6 @@ public class CnATypeMapper {
         typeIdClass.put(BpDocument.TYPE_ID, BpDocument.class);
         typeIdClass.put(BpIncident.TYPE_ID, BpIncident.class);
         typeIdClass.put(BpRecord.TYPE_ID, BpRecord.class);
-        
-        // typeIdClass.put(RisikoMassnahmenUmsetzung.TYPE_ID,
-        // RisikoMassnahmenUmsetzung.class);
 
         // map for description properties:
         descriptionPropertyMap.put(Client.TYPE_ID, Client.PROP_ERLAEUTERUNG);
@@ -253,97 +249,60 @@ public class CnATypeMapper {
         descriptionPropertyMap.put(Raum.TYPE_ID, Raum.PROP_ERLAEUTERUNG);
         descriptionPropertyMap.put(BausteinUmsetzung.TYPE_ID, BausteinUmsetzung.P_ERLAEUTERUNG);
         descriptionPropertyMap.put(MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.P_ERLAEUTERUNG);
-        
-    }
-    
- // this is necessary because hibernate returns proxy objects that will not implement the marker interface IBSIStrukturelement
-    private static final String[] STRUKTUR_ELEMENT_TYPES = new String[] {
-        Anwendung.TYPE_ID,
-        BSIModel.TYPE_ID,
-        Client.TYPE_ID,
-        Gebaeude.TYPE_ID,
-        ITVerbund.TYPE_ID,
-        NetzKomponente.TYPE_ID,
-        Person.TYPE_ID,
-        Raum.TYPE_ID,
-        Server.TYPE_ID,
-        SonstIT.TYPE_ID,
-        TelefonKomponente.TYPE_ID
-    };
 
-    private static final String[] IISO27K_ELEMENT_TYPES = new String[] {
-        ResponseGroup.TYPE_ID,
-        ExceptionGroup.TYPE_ID,
-        VulnerabilityGroup.TYPE_ID,
-        PersonGroup.TYPE_ID,
-        IncidentGroup.TYPE_ID,
-        ThreatGroup.TYPE_ID,
-        Organization.TYPE_ID,
-        ProcessGroup.TYPE_ID,
-        AuditGroup.TYPE_ID,
-        IncidentScenarioGroup.TYPE_ID,
-        RecordGroup.TYPE_ID,
-        RequirementGroup.TYPE_ID,
-        ControlGroup.TYPE_ID,
-        DocumentGroup.TYPE_ID,
-        AssetGroup.TYPE_ID,
-        EvidenceGroup.TYPE_ID,
-        InterviewGroup.TYPE_ID,
-        FindingGroup.TYPE_ID
-    };
-    
-    private static final String[] BP_ELEMENT_TYPES = new String[] {
-        ApplicationGroup.TYPE_ID,
-        BpPersonGroup.TYPE_ID,
-        BpRequirementGroup.TYPE_ID,
-        BpThreatGroup.TYPE_ID,
-        BusinessProcessGroup.TYPE_ID,
-        DeviceGroup.TYPE_ID,
-        IcsSystemGroup.TYPE_ID,
-        ItSystemGroup.TYPE_ID,
-        NetworkGroup.TYPE_ID,
-        RoomGroup.TYPE_ID,
-        SafeguardGroup.TYPE_ID,
-        BpDocumentGroup.TYPE_ID,
-        BpIncidentGroup.TYPE_ID,
-        BpRecordGroup.TYPE_ID
-    };
-    
-    /**
-     * @param child
-     * @return
-     */
+    }
+
+    // this is necessary because hibernate returns proxy objects that will not
+    // implement the marker interface IBSIStrukturelement
+    private static final String[] STRUKTUR_ELEMENT_TYPES = new String[] { Anwendung.TYPE_ID,
+            BSIModel.TYPE_ID, Client.TYPE_ID, Gebaeude.TYPE_ID, ITVerbund.TYPE_ID,
+            NetzKomponente.TYPE_ID, Person.TYPE_ID, Raum.TYPE_ID, Server.TYPE_ID, SonstIT.TYPE_ID,
+            TelefonKomponente.TYPE_ID };
+
+    private static final String[] IISO27K_ELEMENT_TYPES = new String[] { ResponseGroup.TYPE_ID,
+            ExceptionGroup.TYPE_ID, VulnerabilityGroup.TYPE_ID, PersonGroup.TYPE_ID,
+            IncidentGroup.TYPE_ID, ThreatGroup.TYPE_ID, Organization.TYPE_ID, ProcessGroup.TYPE_ID,
+            AuditGroup.TYPE_ID, IncidentScenarioGroup.TYPE_ID, RecordGroup.TYPE_ID,
+            RequirementGroup.TYPE_ID, ControlGroup.TYPE_ID, DocumentGroup.TYPE_ID,
+            AssetGroup.TYPE_ID, EvidenceGroup.TYPE_ID, InterviewGroup.TYPE_ID,
+            FindingGroup.TYPE_ID };
+
+    private static final String[] BP_ELEMENT_TYPES = new String[] { ApplicationGroup.TYPE_ID,
+            BpPersonGroup.TYPE_ID, BpRequirementGroup.TYPE_ID, BpThreatGroup.TYPE_ID,
+            BusinessProcessGroup.TYPE_ID, DeviceGroup.TYPE_ID, IcsSystemGroup.TYPE_ID,
+            ItSystemGroup.TYPE_ID, NetworkGroup.TYPE_ID, RoomGroup.TYPE_ID, SafeguardGroup.TYPE_ID,
+            BpDocumentGroup.TYPE_ID, BpIncidentGroup.TYPE_ID, BpRecordGroup.TYPE_ID };
+
     public boolean isStrukturElement(CnATreeElement child) {
         for (String strukturType : STRUKTUR_ELEMENT_TYPES) {
-            if (child.getEntityType() != null && child.getEntityType().getId().equals(strukturType)){
+            if (child.getEntityType() != null
+                    && child.getEntityType().getId().equals(strukturType)) {
                 return true;
             }
         }
         return false;
     }
-    
-    /**
-     * @param child
-     * @return
-     */
+
     public boolean isIiso27kElement(CnATreeElement child) {
         for (String strukturType : IISO27K_ELEMENT_TYPES) {
-            if (child.getEntityType() != null && child.getEntityType().getId().equals(strukturType)){
+            if (child.getEntityType() != null
+                    && child.getEntityType().getId().equals(strukturType)) {
                 return true;
             }
         }
         return false;
     }
-    
+
     public boolean isBpElement(CnATreeElement child) {
         for (String strukturType : BP_ELEMENT_TYPES) {
-            if (child.getEntityType() != null && child.getEntityType().getId().equals(strukturType)) {
+            if (child.getEntityType() != null
+                    && child.getEntityType().getId().equals(strukturType)) {
                 return true;
             }
         }
         return false;
     }
-    
+
     /************************************************************
      * getClassFromTypeId()
      * 
@@ -354,15 +313,14 @@ public class CnATypeMapper {
     public static <T> Class<T> getClassFromTypeId(String typeId) {
         Class<T> klass = (Class<T>) typeIdClass.get(typeId);
         if (klass == null) {
-            throw new IllegalStateException(String.format("Type ID '%s' was not available in type map.", typeId));
+            throw new IllegalStateException(
+                    String.format("Type ID '%s' was not available in type map.", typeId));
         }
 
         return klass;
     }
-    
+
     public String getDescriptionPropertyForType(String typeId) {
         return descriptionPropertyMap.get(typeId);
     }
 }
-
-
