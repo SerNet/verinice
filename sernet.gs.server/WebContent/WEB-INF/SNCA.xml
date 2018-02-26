@@ -8767,7 +8767,6 @@ Wurden bereits weitere Stellen informiert?
     name="Vertraulichkeitsstufe"
             id="vertraulichkeitsstufe"
         inputtype="numericoption" min="0" max="3">
-                    <depends option="vertraulichkeitsstufe_0" value="0"/>
                     <option
                         id="vertraulichkeitsstufe_0"
                         name="0 Public" 
@@ -11104,7 +11103,6 @@ Wurden bereits weitere Stellen informiert?
                 name="Confidentiality level"
                 id="bp_record_request_confidentiality"
                 inputtype="numericoption" min="0" max="3">
-                <depends option="bp_record_request_confidentiality_public" value="0"/>
                 <option
                     id="bp_record_request_confidentiality_public"
                     name="0 Public"
