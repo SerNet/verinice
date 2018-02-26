@@ -93,7 +93,7 @@ public class TransferData {
 
     private static final Logger LOG = Logger.getLogger(TransferData.class);
 
-    private static char KEIN_SIEGEL = '-';
+    private static final char KEIN_SIEGEL = '-';
 
     private final GSVampire vampire;
     private final boolean importRollen;
