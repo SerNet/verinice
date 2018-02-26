@@ -8037,14 +8037,30 @@ Wurden bereits weitere Stellen informiert?
                 <option id="process_va_gemenVerantwo_2" name="Nein" />
             </huiproperty>
 
-            <huiproperty id="process_va_gemenVerant_Kontaktd" name="Angaben zum gemeinsam Verantwortlichen"/>
-            <huiproperty id="process_va_gemenVerant_name" name="Name" />
-            <huiproperty id="process_va_gemenVerant_ansprech" name="Ansprechpartner" />
-            <huiproperty id="process_va_gemenVerant_strass" name="Straße" />
-            <huiproperty id="process_va_gemenVerant_plz" name="Postleitzahl" />
-            <huiproperty id="process_va_gemenVerant_ort" name="Ort" />
-            <huiproperty id="process_va_gemenVerant_tel" name="Telefon" />
-            <huiproperty id="process_va_gemenVerant_email" name="E-Mail-Adresse" />
+            <huiproperty id="process_va_gemenVerant_Kontaktd" name="Angaben zum gemeinsam Verantwortlichen">
+                <depends option="process_va_gemenVerant" value="process_va_gemenVerantwo_1" />
+            </huiproperty>
+            <huiproperty id="process_va_gemenVerant_name" name="Name">
+                <depends option="process_va_gemenVerant" value="process_va_gemenVerantwo_1" />
+            </huiproperty>
+            <huiproperty id="process_va_gemenVerant_ansprech" name="Ansprechpartner">
+                <depends option="process_va_gemenVerant" value="process_va_gemenVerantwo_1" />
+            </huiproperty>
+            <huiproperty id="process_va_gemenVerant_strass" name="Straße">
+                <depends option="process_va_gemenVerant" value="process_va_gemenVerantwo_1" />
+            </huiproperty>
+            <huiproperty id="process_va_gemenVerant_plz" name="Postleitzahl">
+                <depends option="process_va_gemenVerant" value="process_va_gemenVerantwo_1" />
+            </huiproperty>
+            <huiproperty id="process_va_gemenVerant_ort" name="Ort">
+                <depends option="process_va_gemenVerant" value="process_va_gemenVerantwo_1" />
+            </huiproperty>
+            <huiproperty id="process_va_gemenVerant_tel" name="Telefon">
+                <depends option="process_va_gemenVerant" value="process_va_gemenVerantwo_1" />
+            </huiproperty>
+            <huiproperty id="process_va_gemenVerant_email" name="E-Mail-Adresse">
+                <depends option="process_va_gemenVerant" value="process_va_gemenVerantwo_1" />
+            </huiproperty>
         </huipropertygroup>
      
         <huipropertygroup tags="Privacy" id="process_zb_group" name="Zweckbestimmung">
