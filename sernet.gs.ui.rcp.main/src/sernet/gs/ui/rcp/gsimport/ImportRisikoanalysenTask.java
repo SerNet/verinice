@@ -222,9 +222,9 @@ public class ImportRisikoanalysenTask extends AbstractGstoolImportTask {
         // first, create or find matching "gefaehrdung" as a source for this
         // "gefaehrdungsumsetzung":
         Gefaehrdung gefaehrdung = null;
-        if (transferData.isUserDefGefaehrdung(gefaehrdungenResult.getGefaehrdung())) {
+        if (TransferData.isUserDefGefaehrdung(gefaehrdungenResult.getGefaehrdung())) {
             OwnGefaehrdung ownGefaehrdung = new OwnGefaehrdung();
-            transferData.transferOwnGefaehrdung(ownGefaehrdung, gefaehrdungenResult);
+            TransferData.transferOwnGefaehrdung(ownGefaehrdung, gefaehrdungenResult);
             // avoid doubles, check if gefaehrdung with same name already
             // created:
             String cacheId = createOwnGefaehrdungsCacheId(ownGefaehrdung);
@@ -255,7 +255,7 @@ public class ImportRisikoanalysenTask extends AbstractGstoolImportTask {
                 GSScraper.CATALOG_LANGUAGE_GERMAN);
         associateGefaehrdung = ServiceFactory.lookupCommandService().executeCommand(associateGefaehrdung);
         GefaehrdungsUmsetzung gefaehrdungsUmsetzung = associateGefaehrdung.getGefaehrdungsUmsetzung();
-        transferData.transferRAGefaehrdungsUmsetzung(gefaehrdungsUmsetzung, gefaehrdungenResult);
+        TransferData.transferRAGefaehrdungsUmsetzung(gefaehrdungsUmsetzung, gefaehrdungenResult);
         gefaehrdungsUmsetzung.setExtId(GSVampire.generateGefaehrdungsUmsetzungExtid(String.valueOf(gefaehrdungenResult.getGefaehrdung().getId().getGefId()), String.valueOf(gefaehrdungenResult.getZielobjekt().getId().getZobId()), gefaehrdungenResult.getGefaehrdung().getGuid(), gefaehrdungenResult.getZielobjekt().getGuid()));
         CnAElementHome.getInstance().update(gefaehrdungsUmsetzung);
         assert (gefaehrdungsUmsetzung.getExtId() != null);
@@ -277,7 +277,7 @@ public class ImportRisikoanalysenTask extends AbstractGstoolImportTask {
     
     private void importMassnahme(CnATreeElement element, RAGefaehrdungsMassnahmenResult massnahmenResult, GefaehrdungsUmsetzung gefaehrdungsUmsetzung) throws SQLException, IOException, CommandException {
         RisikoMassnahmenUmsetzung risikoMassnahme = null;
-        if (transferData.isUserDefMassnahme(massnahmenResult)) {
+        if (TransferData.isUserDefMassnahme(massnahmenResult)) {
             risikoMassnahme = importUserMassnahme(element, massnahmenResult, gefaehrdungsUmsetzung);          
         } else {
             risikoMassnahme = importBsiMassnahme(element, massnahmenResult, gefaehrdungsUmsetzung);          
@@ -293,7 +293,7 @@ public class ImportRisikoanalysenTask extends AbstractGstoolImportTask {
     private RisikoMassnahmenUmsetzung importUserMassnahme(CnATreeElement element, RAGefaehrdungsMassnahmenResult massnahmenResult, GefaehrdungsUmsetzung gefaehrdungsUmsetzung) throws SQLException, IOException, CommandException {
         RisikoMassnahmenUmsetzung risikoMassnahme;
         risikoMassnahme = new RisikoMassnahmenUmsetzung(element, gefaehrdungsUmsetzung);
-        transferData.transferRAGefaehrdungsMassnahmen(massnahmenResult, gefaehrdungsUmsetzung, risikoMassnahme);
+        TransferData.transferRAGefaehrdungsMassnahmen(massnahmenResult, gefaehrdungsUmsetzung, risikoMassnahme);
         if(LOG.isDebugEnabled()){
             LOG.debug("Transferred user defined massnahme: " + risikoMassnahme.getTitle());
         }

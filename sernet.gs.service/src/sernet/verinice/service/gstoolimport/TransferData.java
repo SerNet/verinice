@@ -141,12 +141,14 @@ public class TransferData {
         this.importRollen = importRollen;
     }
 
-    public void transfer(ITVerbund itverbund, ZielobjektTypeResult result) throws CommandException {
+    public static void transfer(ITVerbund itverbund, ZielobjektTypeResult result)
+            throws CommandException {
         NZielobjekt source = result.zielobjekt;
         itverbund.setTitel(source.getName());
         itverbund.setExtId(result.zielobjekt.getGuid());
 
-        UpdateElement<ITVerbund> command = new UpdateElement<>(itverbund, true, ChangeLogEntry.STATION_ID);
+        UpdateElement<ITVerbund> command = new UpdateElement<>(itverbund, true,
+                ChangeLogEntry.STATION_ID);
         getCommandService().executeCommand(command);
     }
 
@@ -200,7 +202,7 @@ public class TransferData {
      * @param target
      * @param esa
      */
-    public void transferESA(CnATreeElement target, ESAResult esa) {
+    public static void transferESA(CnATreeElement target, ESAResult esa) {
         // Zielobjekt-erg.sich.analyse
         // risikoanalyse J/N nZobEsa esamsunj
         // begründung bes. einsatz J/N Esaeinsatz 0 nein, 1 ja
@@ -222,15 +224,16 @@ public class TransferData {
                 esa.getEntscheidungAm());
     }
 
-    private CnATreeElement setESAEntscheidung(CnATreeElement target, String entscheidungDurch,
-            Date entscheidungBis, Date entscheidungAm) {
+    private static CnATreeElement setESAEntscheidung(CnATreeElement target,
+            String entscheidungDurch, Date entscheidungBis, Date entscheidungAm) {
         target = setESAEntscheidungDurch(target, entscheidungDurch);
         target = setESAEntscheidungAm(target, entscheidungAm);
         target = setESAEntscheidungBis(target, entscheidungBis);
         return target;
     }
 
-    private CnATreeElement setESAEntscheidungBis(CnATreeElement target, Date entscheidungBis) {
+    private static CnATreeElement setESAEntscheidungBis(CnATreeElement target,
+            Date entscheidungBis) {
         if (entscheidungBis != null
                 && typeIdESAEntscheidungBisMap.containsKey(target.getTypeId())) {
             target.setSimpleProperty(typeIdESAEntscheidungBisMap.get(target.getTypeId()),
@@ -239,7 +242,7 @@ public class TransferData {
         return target;
     }
 
-    private CnATreeElement setESAEntscheidungAm(CnATreeElement target, Date entscheidungAm) {
+    private static CnATreeElement setESAEntscheidungAm(CnATreeElement target, Date entscheidungAm) {
         if (entscheidungAm != null && typeIdESAEntscheidungAmMap.containsKey(target.getTypeId())) {
             target.setSimpleProperty(typeIdESAEntscheidungAmMap.get(target.getTypeId()),
                     String.valueOf(entscheidungAm.getTime()));
@@ -247,7 +250,7 @@ public class TransferData {
         return target;
     }
 
-    private CnATreeElement setESAEntscheidungDurch(CnATreeElement target,
+    private static CnATreeElement setESAEntscheidungDurch(CnATreeElement target,
             String entscheidungDurch) {
         if (StringUtils.isNotEmpty(entscheidungDurch)
                 && typeIdESAEntscheidungDurchMap.containsKey(target.getTypeId())) {
@@ -261,7 +264,7 @@ public class TransferData {
      * @param target
      * @param begruendung
      */
-    private void setEsaBegruendung(CnATreeElement target, String begruendung) {
+    private static void setEsaBegruendung(CnATreeElement target, String begruendung) {
 
         if (target.getTypeId().equals(Raum.TYPE_ID)) {
             target.setSimpleProperty("raum_risikoanalyse_begruendung", begruendung);
@@ -290,7 +293,7 @@ public class TransferData {
 
     }
 
-    private void setRATrueFalse(CnATreeElement target, byte unj) {
+    private static void setRATrueFalse(CnATreeElement target, byte unj) {
         if (unj == GSDBConstants.UNJ_UNBEARBEITET) {
             return;
         }
@@ -301,7 +304,7 @@ public class TransferData {
         }
     }
 
-    private void setRATrue(CnATreeElement target) {
+    private static void setRATrue(CnATreeElement target) {
         if (target.getTypeId().equals(Raum.TYPE_ID)) {
             target.setSimpleProperty("raum_risikoanalyse", "raum_risikoanalyse_noetig");
         }
@@ -330,7 +333,7 @@ public class TransferData {
         }
     }
 
-    private void setRAFalse(CnATreeElement target) {
+    private static void setRAFalse(CnATreeElement target) {
         if (target.getTypeId().equals(Raum.TYPE_ID)) {
             target.setSimpleProperty("raum_risikoanalyse", "raum_risikoanalyse_unnoetig");
         }
@@ -359,7 +362,8 @@ public class TransferData {
         }
     }
 
-    private void setEsaTrue(CnATreeElement target, byte besondererEinsatz, byte nichtModellierbar) {
+    private static void setEsaTrue(CnATreeElement target, byte besondererEinsatz,
+            byte nichtModellierbar) {
         // one of the reasons has to be given, if not do nothing:
         if (besondererEinsatz == 0 && nichtModellierbar == 0) {
             return;
@@ -406,7 +410,7 @@ public class TransferData {
      * @throws IOException
      * @throws SQLException
      */
-    public void transferRAGefaehrdungsUmsetzung(GefaehrdungsUmsetzung gefaehrdungsUmsetzung,
+    public static void transferRAGefaehrdungsUmsetzung(GefaehrdungsUmsetzung gefaehrdungsUmsetzung,
             RAGefaehrdungenResult ragResult) throws IOException {
         // gefährdungsbewertung:
 
@@ -475,7 +479,7 @@ public class TransferData {
         gefaehrdungsUmsetzung.setUrl(url);
     }
 
-    private String transferUrl(String url) {
+    private static String transferUrl(String url) {
         String regex = "(\\\\.*\\\\.*\\\\)(.*)(\\.html)";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(url);
@@ -485,7 +489,7 @@ public class TransferData {
         return url;
     }
 
-    private void transferGefaehrdungsBewertungTxt(GefaehrdungsUmsetzung gefUms,
+    private static void transferGefaehrdungsBewertungTxt(GefaehrdungsUmsetzung gefUms,
             String zgVollstaBegr, String zgStaerkeBegr, String zgZuverlaBegr,
             MsUnj unterschriftLiegtVor, String begruendungRisikobehandlung) {
         StringBuilder sb = new StringBuilder();
@@ -522,7 +526,7 @@ public class TransferData {
 
     }
 
-    private void transferGefaehrdungsBewertung(GefaehrdungsUmsetzung gefUms,
+    private static void transferGefaehrdungsBewertung(GefaehrdungsUmsetzung gefUms,
             MsUnj msUnjByZgVollstaUnjId, MsUnj msUnjByZgStaerkeUnjId, MsUnj msUnjByZgZuverlaUnjId) {
         if (msUnjByZgStaerkeUnjId.getUnjId() == GSDBConstants.UNJ_JA) {
             gefUms.setSimpleProperty("gefaehrdungsumsetzung_mechanismenstaerke",
@@ -552,7 +556,7 @@ public class TransferData {
         }
     }
 
-    public boolean isUserDefGefaehrdung(MbGefaehr gefaehrdung) {
+    public static boolean isUserDefGefaehrdung(MbGefaehr gefaehrdung) {
         return gefaehrdung.getUserdef() == GSDBConstants.USERDEF_YES;
     }
 
@@ -560,7 +564,7 @@ public class TransferData {
      * @param gefaehrdung
      * @return
      */
-    private String translateGefaehrdungsNr(MbGefaehr gefaehrdung) {
+    private static String translateGefaehrdungsNr(MbGefaehr gefaehrdung) {
         // this is how the displayed "number" has to be determined:
         if (gefaehrdung.getUserdef() == GSDBConstants.USERDEF_YES) {
             return "bG " + gefaehrdung.getGfkId() + "." + gefaehrdung.getNr();
@@ -593,7 +597,7 @@ public class TransferData {
      * @param gefaehrdung
      * @throws IOException
      */
-    public void transferRAGefaehrdungsMassnahmen(RAGefaehrdungsMassnahmenResult ragmResult,
+    public static void transferRAGefaehrdungsMassnahmen(RAGefaehrdungsMassnahmenResult ragmResult,
             GefaehrdungsUmsetzung gefUms, MassnahmenUmsetzung massnahmenUmsetzung)
             throws IOException {
         // Ben.def.gs massnahme
@@ -645,7 +649,7 @@ public class TransferData {
      * @param kurzname
      * @return
      */
-    private char convertToChar(String kurzname) {
+    private static char convertToChar(String kurzname) {
         char result = KEIN_SIEGEL;
         if (kurzname != null && !kurzname.isEmpty()) {
             if (kurzname.length() > 1) {
@@ -657,7 +661,7 @@ public class TransferData {
         return result;
     }
 
-    public boolean isUserDefMassnahme(RAGefaehrdungsMassnahmenResult ragmResult) {
+    public static boolean isUserDefMassnahme(RAGefaehrdungsMassnahmenResult ragmResult) {
         return ragmResult.getMassnahme().getUserdef() == GSDBConstants.USERDEF_YES;
     }
 
@@ -665,7 +669,7 @@ public class TransferData {
      * @param ragmResult
      * @return
      */
-    private String translateMassnahmenNr(RAGefaehrdungsMassnahmenResult ragmResult) {
+    private static String translateMassnahmenNr(RAGefaehrdungsMassnahmenResult ragmResult) {
         if (ragmResult.getMassnahme().getUserdef() == GSDBConstants.USERDEF_YES) {
             return "bM " + ragmResult.getMassnahme().getMskId() + "."
                     + ragmResult.getMassnahme().getNr();
@@ -714,14 +718,14 @@ public class TransferData {
         return "";
     }
 
-    private void typedTransfer(Client element, ZielobjektTypeResult result) {
+    private static void typedTransfer(Client element, ZielobjektTypeResult result) {
         element.setTitel(result.zielobjekt.getName());
         element.setKuerzel(result.zielobjekt.getKuerzel());
         element.setErlaeuterung(result.zielobjekt.getBeschreibung());
         element.setAnzahl(result.zielobjekt.getAnzahl());
     }
 
-    private void typedTransfer(Server element, ZielobjektTypeResult result) {
+    private static void typedTransfer(Server element, ZielobjektTypeResult result) {
         element.setTitel(result.zielobjekt.getName());
         element.setKuerzel(result.zielobjekt.getKuerzel());
         element.setErlaeuterung(result.zielobjekt.getBeschreibung());
@@ -756,42 +760,42 @@ public class TransferData {
 
     }
 
-    private void typedTransfer(TelefonKomponente element, ZielobjektTypeResult result) {
+    private static void typedTransfer(TelefonKomponente element, ZielobjektTypeResult result) {
         element.setTitel(result.zielobjekt.getName());
         element.setKuerzel(result.zielobjekt.getKuerzel());
         element.setErlaeuterung(result.zielobjekt.getBeschreibung());
         element.setAnzahl(result.zielobjekt.getAnzahl());
     }
 
-    private void typedTransfer(SonstIT element, ZielobjektTypeResult result) {
+    private static void typedTransfer(SonstIT element, ZielobjektTypeResult result) {
         element.setTitel(result.zielobjekt.getName());
         element.setKuerzel(result.zielobjekt.getKuerzel());
         element.setErlaeuterung(result.zielobjekt.getBeschreibung());
         element.setAnzahl(result.zielobjekt.getAnzahl());
     }
 
-    private void typedTransfer(NetzKomponente element, ZielobjektTypeResult result) {
+    private static void typedTransfer(NetzKomponente element, ZielobjektTypeResult result) {
         element.setTitel(result.zielobjekt.getName());
         element.setKuerzel(result.zielobjekt.getKuerzel());
         element.setErlaeuterung(result.zielobjekt.getBeschreibung());
         element.setAnzahl(result.zielobjekt.getAnzahl());
     }
 
-    private void typedTransfer(Gebaeude element, ZielobjektTypeResult result) {
+    private static void typedTransfer(Gebaeude element, ZielobjektTypeResult result) {
         element.setTitel(result.zielobjekt.getName());
         element.setKuerzel(result.zielobjekt.getKuerzel());
         element.setErlaeuterung(result.zielobjekt.getBeschreibung());
         element.setAnzahl(result.zielobjekt.getAnzahl());
     }
 
-    private void typedTransfer(Raum element, ZielobjektTypeResult result) {
+    private static void typedTransfer(Raum element, ZielobjektTypeResult result) {
         element.setTitel(result.zielobjekt.getName());
         element.setKuerzel(result.zielobjekt.getKuerzel());
         element.setErlaeuterung(result.zielobjekt.getBeschreibung());
         element.setAnzahl(result.zielobjekt.getAnzahl());
     }
 
-    public int translateSchutzbedarf(String name) {
+    public static int translateSchutzbedarf(String name) {
         if (name.equals("normal")) {
             return Schutzbedarf.NORMAL;
         }
@@ -809,7 +813,7 @@ public class TransferData {
      * @param searchResult
      * @return
      */
-    public Map<MbBaust, List<BausteineMassnahmenResult>> convertBausteinMap(
+    public static Map<MbBaust, List<BausteineMassnahmenResult>> convertBausteinMap(
             List<BausteineMassnahmenResult> searchResult) {
         // convert list to map: of bausteine and corresponding massnahmen:
         Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = new HashMap<>();
@@ -829,7 +833,7 @@ public class TransferData {
      *
      * @param notesResults
      */
-    public Map<MbBaust, List<NotizenMassnahmeResult>> convertZielobjektNotizenMap(
+    public static Map<MbBaust, List<NotizenMassnahmeResult>> convertZielobjektNotizenMap(
             List<NotizenMassnahmeResult> searchResult) {
         Map<MbBaust, List<NotizenMassnahmeResult>> bausteineMassnahmenMap = new HashMap<>();
         for (NotizenMassnahmeResult result : searchResult) {
@@ -921,7 +925,7 @@ public class TransferData {
      * @param ragResult
      * @throws IOException
      */
-    public void transferOwnGefaehrdung(OwnGefaehrdung ownGefaehrdung,
+    public static void transferOwnGefaehrdung(OwnGefaehrdung ownGefaehrdung,
             RAGefaehrdungenResult ragResult) throws IOException {
         String gefNr = translateGefaehrdungsNr(ragResult.getGefaehrdung());
         ownGefaehrdung.setId(gefNr);
