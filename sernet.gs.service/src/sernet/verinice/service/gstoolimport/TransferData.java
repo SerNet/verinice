@@ -95,12 +95,10 @@ public class TransferData {
 
     private static char KEIN_SIEGEL = '-';
 
-
     private final GSVampire vampire;
     private final boolean importRollen;
     private List<MbDringlichkeitTxt> dringlichkeiten;
     private Map<String, String> drgMap;
-
 
     private static final Map<String, String> typeIdESAEntscheidungBisMap = new HashMap<>(8);
     private static final Map<String, String> typeIdESAEntscheidungAmMap = new HashMap<>(8);
@@ -110,29 +108,33 @@ public class TransferData {
         typeIdESAEntscheidungBisMap.put(Anwendung.TYPE_ID, Anwendung.PROP_ESA_ENTSCHEIDUNG_BIS);
         typeIdESAEntscheidungBisMap.put(Client.TYPE_ID, Client.PROP_ESA_ENTSCHEIDUNG_BIS);
         typeIdESAEntscheidungBisMap.put(Gebaeude.TYPE_ID, Gebaeude.PROP_ESA_ENTSCHEIDUNG_BIS);
-        typeIdESAEntscheidungBisMap.put(NetzKomponente.TYPE_ID, NetzKomponente.PROP_ESA_ENTSCHEIDUNG_BIS);
+        typeIdESAEntscheidungBisMap.put(NetzKomponente.TYPE_ID,
+                NetzKomponente.PROP_ESA_ENTSCHEIDUNG_BIS);
         typeIdESAEntscheidungBisMap.put(Server.TYPE_ID, Server.PROP_ESA_ENTSCHEIDUNG_BIS);
         typeIdESAEntscheidungBisMap.put(SonstIT.TYPE_ID, SonstIT.PROP_ESA_ENTSCHEIDUNG_BIS);
-        typeIdESAEntscheidungBisMap.put(TelefonKomponente.TYPE_ID, TelefonKomponente.PROP_ESA_ENTSCHEIDUNG_BIS);
+        typeIdESAEntscheidungBisMap.put(TelefonKomponente.TYPE_ID,
+                TelefonKomponente.PROP_ESA_ENTSCHEIDUNG_BIS);
         typeIdESAEntscheidungAmMap.put(Raum.TYPE_ID, Raum.PROP_ESA_ENTSCHEIDUNG_AM);
         typeIdESAEntscheidungAmMap.put(Anwendung.TYPE_ID, Anwendung.PROP_ESA_ENTSCHEIDUNG_AM);
         typeIdESAEntscheidungAmMap.put(Client.TYPE_ID, Client.PROP_ESA_ENTSCHEIDUNG_AM);
         typeIdESAEntscheidungAmMap.put(Gebaeude.TYPE_ID, Gebaeude.PROP_ESA_ENTSCHEIDUNG_AM);
-        typeIdESAEntscheidungAmMap.put(NetzKomponente.TYPE_ID, NetzKomponente.PROP_ESA_ENTSCHEIDUNG_AM);
+        typeIdESAEntscheidungAmMap.put(NetzKomponente.TYPE_ID,
+                NetzKomponente.PROP_ESA_ENTSCHEIDUNG_AM);
         typeIdESAEntscheidungAmMap.put(Server.TYPE_ID, Server.PROP_ESA_ENTSCHEIDUNG_AM);
         typeIdESAEntscheidungAmMap.put(SonstIT.TYPE_ID, SonstIT.PROP_ESA_ENTSCHEIDUNG_AM);
-        typeIdESAEntscheidungAmMap.put(TelefonKomponente.TYPE_ID, TelefonKomponente.PROP_ESA_ENTSCHEIDUNG_AM);
+        typeIdESAEntscheidungAmMap.put(TelefonKomponente.TYPE_ID,
+                TelefonKomponente.PROP_ESA_ENTSCHEIDUNG_AM);
         typeIdESAEntscheidungDurchMap.put(Raum.TYPE_ID, Raum.PROP_ESA_ENTSCHEIDUNG_DURCH);
         typeIdESAEntscheidungDurchMap.put(Anwendung.TYPE_ID, Anwendung.PROP_ESA_ENTSCHEIDUNG_DURCH);
         typeIdESAEntscheidungDurchMap.put(Client.TYPE_ID, Client.PROP_ESA_ENTSCHEIDUNG_DURCH);
         typeIdESAEntscheidungDurchMap.put(Gebaeude.TYPE_ID, Gebaeude.PROP_ESA_ENTSCHEIDUNG_DURCH);
-        typeIdESAEntscheidungDurchMap.put(NetzKomponente.TYPE_ID, NetzKomponente.PROP_ESA_ENTSCHEIDUNG_DURCH);
+        typeIdESAEntscheidungDurchMap.put(NetzKomponente.TYPE_ID,
+                NetzKomponente.PROP_ESA_ENTSCHEIDUNG_DURCH);
         typeIdESAEntscheidungDurchMap.put(Server.TYPE_ID, Server.PROP_ESA_ENTSCHEIDUNG_DURCH);
         typeIdESAEntscheidungDurchMap.put(SonstIT.TYPE_ID, SonstIT.PROP_ESA_ENTSCHEIDUNG_DURCH);
-        typeIdESAEntscheidungDurchMap.put(TelefonKomponente.TYPE_ID, TelefonKomponente.PROP_ESA_ENTSCHEIDUNG_DURCH);
+        typeIdESAEntscheidungDurchMap.put(TelefonKomponente.TYPE_ID,
+                TelefonKomponente.PROP_ESA_ENTSCHEIDUNG_DURCH);
     }
-
-
 
     public TransferData(GSVampire vampire, boolean importRollen) {
         this.vampire = vampire;
@@ -143,9 +145,9 @@ public class TransferData {
         NZielobjekt source = result.zielobjekt;
         itverbund.setTitel(source.getName());
         itverbund.setExtId(result.zielobjekt.getGuid());
-        
+
         UpdateElement command = new UpdateElement(itverbund, true, ChangeLogEntry.STATION_ID);
-        getCommandService().executeCommand(command);        
+        getCommandService().executeCommand(command);
     }
 
     public void transfer(CnATreeElement element, ZielobjektTypeResult result) {
@@ -216,33 +218,41 @@ public class TransferData {
         begruendung += esa.getBegruendung();
         setEsaBegruendung(target, begruendung);
 
-        target = setESAEntscheidung(target, esa.getZmiName(), esa.getEntscheidungBis(), esa.getEntscheidungAm());
+        target = setESAEntscheidung(target, esa.getZmiName(), esa.getEntscheidungBis(),
+                esa.getEntscheidungAm());
     }
 
-    private CnATreeElement setESAEntscheidung(CnATreeElement target, String entscheidungDurch, Date entscheidungBis, Date entscheidungAm){
+    private CnATreeElement setESAEntscheidung(CnATreeElement target, String entscheidungDurch,
+            Date entscheidungBis, Date entscheidungAm) {
         target = setESAEntscheidungDurch(target, entscheidungDurch);
         target = setESAEntscheidungAm(target, entscheidungAm);
         target = setESAEntscheidungBis(target, entscheidungBis);
         return target;
     }
 
-
-    private CnATreeElement setESAEntscheidungBis(CnATreeElement target, Date entscheidungBis){
-        if(entscheidungBis != null && typeIdESAEntscheidungBisMap.containsKey(target.getTypeId())){
-            target.setSimpleProperty(typeIdESAEntscheidungBisMap.get(target.getTypeId()), String.valueOf(entscheidungBis.getTime()));
+    private CnATreeElement setESAEntscheidungBis(CnATreeElement target, Date entscheidungBis) {
+        if (entscheidungBis != null
+                && typeIdESAEntscheidungBisMap.containsKey(target.getTypeId())) {
+            target.setSimpleProperty(typeIdESAEntscheidungBisMap.get(target.getTypeId()),
+                    String.valueOf(entscheidungBis.getTime()));
         }
         return target;
     }
 
-    private CnATreeElement setESAEntscheidungAm(CnATreeElement target, Date entscheidungAm){
-        if(entscheidungAm != null && typeIdESAEntscheidungAmMap.containsKey(target.getTypeId())){
-            target.setSimpleProperty(typeIdESAEntscheidungAmMap.get(target.getTypeId()), String.valueOf(entscheidungAm.getTime()));
+    private CnATreeElement setESAEntscheidungAm(CnATreeElement target, Date entscheidungAm) {
+        if (entscheidungAm != null && typeIdESAEntscheidungAmMap.containsKey(target.getTypeId())) {
+            target.setSimpleProperty(typeIdESAEntscheidungAmMap.get(target.getTypeId()),
+                    String.valueOf(entscheidungAm.getTime()));
         }
         return target;
     }
-    private CnATreeElement setESAEntscheidungDurch(CnATreeElement target, String entscheidungDurch){
-        if(StringUtils.isNotEmpty(entscheidungDurch) && typeIdESAEntscheidungDurchMap.containsKey(target.getTypeId())){
-            target.setSimpleProperty(typeIdESAEntscheidungDurchMap.get(target.getTypeId()), entscheidungDurch);
+
+    private CnATreeElement setESAEntscheidungDurch(CnATreeElement target,
+            String entscheidungDurch) {
+        if (StringUtils.isNotEmpty(entscheidungDurch)
+                && typeIdESAEntscheidungDurchMap.containsKey(target.getTypeId())) {
+            target.setSimpleProperty(typeIdESAEntscheidungDurchMap.get(target.getTypeId()),
+                    entscheidungDurch);
         }
         return target;
     }
@@ -305,7 +315,8 @@ public class TransferData {
             target.setSimpleProperty("gebaeude_risikoanalyse", "gebaeude_risikoanalyse_noetig");
         }
         if (target.getTypeId().equals(NetzKomponente.TYPE_ID)) {
-            target.setSimpleProperty("nkkomponente_risikoanalyse", "nkkomponente_risikoanalyse_noetig");
+            target.setSimpleProperty("nkkomponente_risikoanalyse",
+                    "nkkomponente_risikoanalyse_noetig");
         }
         if (target.getTypeId().equals(Server.TYPE_ID)) {
             target.setSimpleProperty("server_risikoanalyse", "server_risikoanalyse_noetig");
@@ -314,7 +325,8 @@ public class TransferData {
             target.setSimpleProperty("sonstit_risikoanalyse", "sonstit_risikoanalyse_noetig");
         }
         if (target.getTypeId().equals(TelefonKomponente.TYPE_ID)) {
-            target.setSimpleProperty("tkkomponente_risikoanalyse", "tkkomponente_risikoanalyse_noetig");
+            target.setSimpleProperty("tkkomponente_risikoanalyse",
+                    "tkkomponente_risikoanalyse_noetig");
         }
     }
 
@@ -332,7 +344,8 @@ public class TransferData {
             target.setSimpleProperty("gebaeude_risikoanalyse", "gebaeude_risikoanalyse_unnoetig");
         }
         if (target.getTypeId().equals(NetzKomponente.TYPE_ID)) {
-            target.setSimpleProperty("nkkomponente_risikoanalyse", "nkkomponente_risikoanalyse_unnoetig");
+            target.setSimpleProperty("nkkomponente_risikoanalyse",
+                    "nkkomponente_risikoanalyse_unnoetig");
         }
         if (target.getTypeId().equals(Server.TYPE_ID)) {
             target.setSimpleProperty("server_risikoanalyse", "server_risikoanalyse_unnoetig");
@@ -341,7 +354,8 @@ public class TransferData {
             target.setSimpleProperty("sonstit_risikoanalyse", "sonstit_risikoanalyse_unnoetig");
         }
         if (target.getTypeId().equals(TelefonKomponente.TYPE_ID)) {
-            target.setSimpleProperty("tkkomponente_risikoanalyse", "tkkomponente_risikoanalyse_unnoetig");
+            target.setSimpleProperty("tkkomponente_risikoanalyse",
+                    "tkkomponente_risikoanalyse_unnoetig");
         }
     }
 
@@ -354,25 +368,32 @@ public class TransferData {
             target.setSimpleProperty("raum_ergaenzendeanalyse", "raum_ergaenzendeanalyse_modell");
         }
         if (target.getTypeId().equals(Anwendung.TYPE_ID)) {
-            target.setSimpleProperty("anwendung_ergaenzendeanalyse", "anwendung_ergaenzendeanalyse_modell");
+            target.setSimpleProperty("anwendung_ergaenzendeanalyse",
+                    "anwendung_ergaenzendeanalyse_modell");
         }
         if (target.getTypeId().equals(Client.TYPE_ID)) {
-            target.setSimpleProperty("client_ergaenzendeanalyse", "client_ergaenzendeanalyse_modell");
+            target.setSimpleProperty("client_ergaenzendeanalyse",
+                    "client_ergaenzendeanalyse_modell");
         }
         if (target.getTypeId().equals(Gebaeude.TYPE_ID)) {
-            target.setSimpleProperty("gebaeude_ergaenzendeanalyse", "gebaeude_ergaenzendeanalyse_modell");
+            target.setSimpleProperty("gebaeude_ergaenzendeanalyse",
+                    "gebaeude_ergaenzendeanalyse_modell");
         }
         if (target.getTypeId().equals(NetzKomponente.TYPE_ID)) {
-            target.setSimpleProperty("nkkomponente_ergaenzendeanalyse", "nkkomponente_ergaenzendeanalyse_modell");
+            target.setSimpleProperty("nkkomponente_ergaenzendeanalyse",
+                    "nkkomponente_ergaenzendeanalyse_modell");
         }
         if (target.getTypeId().equals(Server.TYPE_ID)) {
-            target.setSimpleProperty("server_ergaenzendeanalyse", "server_ergaenzendeanalyse_modell");
+            target.setSimpleProperty("server_ergaenzendeanalyse",
+                    "server_ergaenzendeanalyse_modell");
         }
         if (target.getTypeId().equals(SonstIT.TYPE_ID)) {
-            target.setSimpleProperty("sonstit_ergaenzendeanalyse", "sonstit_ergaenzendeanalyse_modell");
+            target.setSimpleProperty("sonstit_ergaenzendeanalyse",
+                    "sonstit_ergaenzendeanalyse_modell");
         }
         if (target.getTypeId().equals(TelefonKomponente.TYPE_ID)) {
-            target.setSimpleProperty("tkkomponente_ergaenzendeanalyse", "tkkomponente_ergaenzendeanalyse_modell");
+            target.setSimpleProperty("tkkomponente_ergaenzendeanalyse",
+                    "tkkomponente_ergaenzendeanalyse_modell");
         }
     }
 
@@ -385,19 +406,24 @@ public class TransferData {
      * @throws IOException
      * @throws SQLException
      */
-    public void transferRAGefaehrdungsUmsetzung(GefaehrdungsUmsetzung gefaehrdungsUmsetzung, RAGefaehrdungenResult ragResult) throws IOException {
+    public void transferRAGefaehrdungsUmsetzung(GefaehrdungsUmsetzung gefaehrdungsUmsetzung,
+            RAGefaehrdungenResult ragResult) throws IOException {
         // gefährdungsbewertung:
 
         // vollständigkeit J/N
         // mechanismenstärke J/N
         // zuverlässigkeit J/N
-        transferGefaehrdungsBewertung(gefaehrdungsUmsetzung, ragResult.getRzg().getMsUnjByZgVollstaUnjId(), ragResult.getRzg().getMsUnjByZgStaerkeUnjId(), ragResult.getRzg().getMsUnjByZgZuverlaUnjId());
+        transferGefaehrdungsBewertung(gefaehrdungsUmsetzung,
+                ragResult.getRzg().getMsUnjByZgVollstaUnjId(),
+                ragResult.getRzg().getMsUnjByZgStaerkeUnjId(),
+                ragResult.getRzg().getMsUnjByZgZuverlaUnjId());
 
         transferGefaehrdungsBewertungTxt(gefaehrdungsUmsetzung,
                 // vollst begr
                 // mechan begr
                 // zuverl begr
-                ragResult.getRzg().getZgVollstaBegr(), ragResult.getRzg().getZgStaerkeBegr(), ragResult.getRzg().getZgZuverlaBegr(),
+                ragResult.getRzg().getZgVollstaBegr(), ragResult.getRzg().getZgStaerkeBegr(),
+                ragResult.getRzg().getZgZuverlaBegr(),
                 // unterschrift liegt vor J/N
                 ragResult.getRzg().getMsUnjByZgUnterUnjId(),
                 // Risikobehandlung begründung
@@ -414,9 +440,11 @@ public class TransferData {
 
         // ausreichender schutz J/N
         if (ragResult.getRzg().getMsUnjByZgOkUnjId().getUnjId() == GSDBConstants.UNJ_JA) {
-            gefaehrdungsUmsetzung.setSimpleProperty("gefaehrdungsumsetzung_okay", "gefaehrdungsumsetzung_okay_yes");
+            gefaehrdungsUmsetzung.setSimpleProperty("gefaehrdungsumsetzung_okay",
+                    "gefaehrdungsumsetzung_okay_yes");
         } else if (ragResult.getRzg().getMsUnjByZgOkUnjId().getUnjId() == GSDBConstants.UNJ_NEIN) {
-            gefaehrdungsUmsetzung.setSimpleProperty("gefaehrdungsumsetzung_okay", "gefaehrdungsumsetzung_okay_no");
+            gefaehrdungsUmsetzung.setSimpleProperty("gefaehrdungsumsetzung_okay",
+                    "gefaehrdungsumsetzung_okay_no");
         }
 
         // we skip these: (from GSTOOL GUI, columns unknown, could be some of
@@ -438,7 +466,9 @@ public class TransferData {
         String gefNr = translateGefaehrdungsNr(ragResult.getGefaehrdung());
         gefaehrdungsUmsetzung.setSimpleProperty("gefaehrdungsumsetzung_id", gefNr);
 
-        gefaehrdungsUmsetzung.setDescription(convertClobToStringEncodingSave(ragResult.getGefaehrdungTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
+        gefaehrdungsUmsetzung.setDescription(
+                convertClobToStringEncodingSave(ragResult.getGefaehrdungTxt().getBeschreibung(),
+                        GSScraperUtil.getInstance().getModel().getEncoding()));
 
         gefaehrdungsUmsetzung.setTitel(ragResult.getGefaehrdungTxt().getName());
         String url = transferUrl(ragResult.getGefaehrdung().getLink());
@@ -455,7 +485,9 @@ public class TransferData {
         return url;
     }
 
-    private void transferGefaehrdungsBewertungTxt(GefaehrdungsUmsetzung gefUms, String zgVollstaBegr, String zgStaerkeBegr, String zgZuverlaBegr, MsUnj unterschriftLiegtVor, String begruendungRisikobehandlung) {
+    private void transferGefaehrdungsBewertungTxt(GefaehrdungsUmsetzung gefUms,
+            String zgVollstaBegr, String zgStaerkeBegr, String zgZuverlaBegr,
+            MsUnj unterschriftLiegtVor, String begruendungRisikobehandlung) {
         StringBuilder sb = new StringBuilder();
 
         if (zgVollstaBegr != null && zgVollstaBegr.length() > 0) {
@@ -490,26 +522,33 @@ public class TransferData {
 
     }
 
-    private void transferGefaehrdungsBewertung(GefaehrdungsUmsetzung gefUms, MsUnj msUnjByZgVollstaUnjId, MsUnj msUnjByZgStaerkeUnjId, MsUnj msUnjByZgZuverlaUnjId) {
+    private void transferGefaehrdungsBewertung(GefaehrdungsUmsetzung gefUms,
+            MsUnj msUnjByZgVollstaUnjId, MsUnj msUnjByZgStaerkeUnjId, MsUnj msUnjByZgZuverlaUnjId) {
         if (msUnjByZgStaerkeUnjId.getUnjId() == GSDBConstants.UNJ_JA) {
-            gefUms.setSimpleProperty("gefaehrdungsumsetzung_mechanismenstaerke", "gefaehrdungsumsetzung_mechanismenstaerke_ja");
+            gefUms.setSimpleProperty("gefaehrdungsumsetzung_mechanismenstaerke",
+                    "gefaehrdungsumsetzung_mechanismenstaerke_ja");
         }
         if (msUnjByZgStaerkeUnjId.getUnjId() == GSDBConstants.UNJ_NEIN) {
-            gefUms.setSimpleProperty("gefaehrdungsumsetzung_mechanismenstaerke", "gefaehrdungsumsetzung_mechanismenstaerke_nein");
+            gefUms.setSimpleProperty("gefaehrdungsumsetzung_mechanismenstaerke",
+                    "gefaehrdungsumsetzung_mechanismenstaerke_nein");
         }
 
         if (msUnjByZgVollstaUnjId.getUnjId() == GSDBConstants.UNJ_JA) {
-            gefUms.setSimpleProperty("gefaehrdungsumsetzung_vollstaendigkeit", "gefaehrdungsumsetzung_vollstaendigkeit_ja");
+            gefUms.setSimpleProperty("gefaehrdungsumsetzung_vollstaendigkeit",
+                    "gefaehrdungsumsetzung_vollstaendigkeit_ja");
         }
         if (msUnjByZgVollstaUnjId.getUnjId() == GSDBConstants.UNJ_NEIN) {
-            gefUms.setSimpleProperty("gefaehrdungsumsetzung_vollstaendigkeit", "gefaehrdungsumsetzung_vollstaendigkeit_nein");
+            gefUms.setSimpleProperty("gefaehrdungsumsetzung_vollstaendigkeit",
+                    "gefaehrdungsumsetzung_vollstaendigkeit_nein");
         }
 
         if (msUnjByZgZuverlaUnjId.getUnjId() == GSDBConstants.UNJ_JA) {
-            gefUms.setSimpleProperty("gefaehrdungsumsetzung_zuverlaessigkeit", "gefaehrdungsumsetzung_zuverlaessigkeit_ja");
+            gefUms.setSimpleProperty("gefaehrdungsumsetzung_zuverlaessigkeit",
+                    "gefaehrdungsumsetzung_zuverlaessigkeit_ja");
         }
         if (msUnjByZgZuverlaUnjId.getUnjId() == GSDBConstants.UNJ_NEIN) {
-            gefUms.setSimpleProperty("gefaehrdungsumsetzung_zuverlaessigkeit", "gefaehrdungsumsetzung_zuverlaessigkeit_nein");
+            gefUms.setSimpleProperty("gefaehrdungsumsetzung_zuverlaessigkeit",
+                    "gefaehrdungsumsetzung_zuverlaessigkeit_nein");
         }
     }
 
@@ -530,17 +569,17 @@ public class TransferData {
         }
     }
 
-
-    public static String convertClobToStringEncodingSave(Clob clob, String encoding) throws IOException{
-        try{
+    public static String convertClobToStringEncodingSave(Clob clob, String encoding)
+            throws IOException {
+        try {
             Reader reader = clob.getCharacterStream();
             InputStream in = new ByteArrayInputStream(IOUtils.toByteArray(reader, encoding));
-            if(in!=null) {
-                return InputUtil.streamToString(in, encoding );
+            if (in != null) {
+                return InputUtil.streamToString(in, encoding);
             } else {
                 return "";
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             LOG.error("Error while converting clob to String", e);
             throw new RuntimeException(e);
         }
@@ -555,7 +594,9 @@ public class TransferData {
      * @throws IOException
      * @throws SQLException
      */
-    public void transferRAGefaehrdungsMassnahmen(RAGefaehrdungsMassnahmenResult ragmResult, GefaehrdungsUmsetzung gefUms, MassnahmenUmsetzung massnahmenUmsetzung) throws SQLException, IOException {
+    public void transferRAGefaehrdungsMassnahmen(RAGefaehrdungsMassnahmenResult ragmResult,
+            GefaehrdungsUmsetzung gefUms, MassnahmenUmsetzung massnahmenUmsetzung)
+            throws SQLException, IOException {
         // Ben.def.gs massnahme
         // -------------------
         // katalog
@@ -568,18 +609,21 @@ public class TransferData {
         String massnahmeNr = translateMassnahmenNr(ragmResult);
         massnahmenUmsetzung.setSimpleProperty("mnums_id", massnahmeNr);
         massnahmenUmsetzung.setName(ragmResult.getMassnahmeTxt().getName());
-        massnahmenUmsetzung.setDescription(convertClobToStringEncodingSave(ragmResult.getMassnahmeTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
+        massnahmenUmsetzung.setDescription(
+                convertClobToStringEncodingSave(ragmResult.getMassnahmeTxt().getBeschreibung(),
+                        GSScraperUtil.getInstance().getModel().getEncoding()));
         massnahmenUmsetzung.setErlaeuterung(ragmResult.getMzbm().getUmsBeschr());
         massnahmenUmsetzung.setUrl(transferUrl(ragmResult.getMassnahme().getLink()));
         char siegel = convertToChar(ragmResult.getSiegelTxt().getKurzname());
-        if(siegel!=KEIN_SIEGEL) {
+        if (siegel != KEIN_SIEGEL) {
             massnahmenUmsetzung.setStufe(siegel);
         }
         MassnahmenFactory massnahmenFactory = new MassnahmenFactory();
-        massnahmenUmsetzung = massnahmenFactory.transferUmsetzungWithDate(massnahmenUmsetzung, ragmResult.getUmsTxt().getName(), ragmResult.getMzbm().getUmsDatBis());
-        massnahmenUmsetzung = massnahmenFactory.transferRevision(massnahmenUmsetzung, ragmResult.getMzbm().getRevDat(), ragmResult.getMzbm().getRevDatNext(), ragmResult.getMzbm().getRevBeschr());
-
-
+        massnahmenUmsetzung = massnahmenFactory.transferUmsetzungWithDate(massnahmenUmsetzung,
+                ragmResult.getUmsTxt().getName(), ragmResult.getMzbm().getUmsDatBis());
+        massnahmenUmsetzung = massnahmenFactory.transferRevision(massnahmenUmsetzung,
+                ragmResult.getMzbm().getRevDat(), ragmResult.getMzbm().getRevDatNext(),
+                ragmResult.getMzbm().getRevBeschr());
 
         // may be necessary for user defined bausteine:
 
@@ -596,18 +640,16 @@ public class TransferData {
 
     }
 
-
     /**
-     * Convert ">G<", A, B, C, W, "-", "---" to a char
-     * ">G<" is converted to G
+     * Convert ">G<", A, B, C, W, "-", "---" to a char ">G<" is converted to G
      *
      * @param kurzname
      * @return
      */
     private char convertToChar(String kurzname) {
         char result = KEIN_SIEGEL;
-        if(kurzname!=null && !kurzname.isEmpty()) {
-            if(kurzname.length()>1)  {
+        if (kurzname != null && !kurzname.isEmpty()) {
+            if (kurzname.length() > 1) {
                 result = kurzname.toCharArray()[1];
             } else {
                 result = kurzname.toCharArray()[0];
@@ -626,9 +668,11 @@ public class TransferData {
      */
     private String translateMassnahmenNr(RAGefaehrdungsMassnahmenResult ragmResult) {
         if (ragmResult.getMassnahme().getUserdef() == GSDBConstants.USERDEF_YES) {
-            return "bM " + ragmResult.getMassnahme().getMskId() + "." + ragmResult.getMassnahme().getNr();
+            return "bM " + ragmResult.getMassnahme().getMskId() + "."
+                    + ragmResult.getMassnahme().getNr();
         } else {
-            return "M " + ragmResult.getMassnahme().getMskId() + "." + ragmResult.getMassnahme().getNr();
+            return "M " + ragmResult.getMassnahme().getMskId() + "."
+                    + ragmResult.getMassnahme().getNr();
         }
     }
 
@@ -639,7 +683,8 @@ public class TransferData {
         element.setAnzahl(result.zielobjekt.getAnzahl());
         element.setVerarbeiteteInformationen(result.zielobjekt.getAnwBeschrInf());
         element.setProzessBeschreibung(result.zielobjekt.getAnwInf2Beschr());
-        element.setProzessWichtigkeit(translateDringlichkeit(result.zielobjekt.getMbDringlichkeit()));
+        element.setProzessWichtigkeit(
+                translateDringlichkeit(result.zielobjekt.getMbDringlichkeit()));
         element.setProzessWichtigkeitBegruendung(result.zielobjekt.getAnwInf1Beschr());
     }
 
@@ -685,22 +730,27 @@ public class TransferData {
     }
 
     private void typedTransfer(Person element, ZielobjektTypeResult result) {
-        element.getEntity().setSimpleValue(element.getEntityType().getPropertyType(Person.P_NAME), result.zielobjekt.getName());
+        element.getEntity().setSimpleValue(element.getEntityType().getPropertyType(Person.P_NAME),
+                result.zielobjekt.getName());
         element.setKuerzel(result.zielobjekt.getKuerzel());
         element.setErlaeuterung(result.zielobjekt.getBeschreibung());
         element.setAnzahl(result.zielobjekt.getAnzahl());
-        element.getEntity().setSimpleValue(element.getEntityType().getPropertyType(Person.P_PHONE), result.zielobjekt.getTelefon());
-        element.getEntity().setSimpleValue(element.getEntityType().getPropertyType(Person.P_ORGEINHEIT), result.zielobjekt.getAbteilung());
-
+        element.getEntity().setSimpleValue(element.getEntityType().getPropertyType(Person.P_PHONE),
+                result.zielobjekt.getTelefon());
+        element.getEntity().setSimpleValue(
+                element.getEntityType().getPropertyType(Person.P_ORGEINHEIT),
+                result.zielobjekt.getAbteilung());
 
         if (importRollen) {
             List<MbRolleTxt> rollen = vampire.findRollenByZielobjekt(result.zielobjekt);
             for (MbRolleTxt rolle : rollen) {
                 boolean success = element.addRole(rolle.getName());
                 if (!success) {
-                    Logger.getLogger(this.getClass()).debug("Rolle konnte nicht übertragen werden: " + rolle.getName());
+                    Logger.getLogger(this.getClass())
+                            .debug("Rolle konnte nicht übertragen werden: " + rolle.getName());
                 } else {
-                    Logger.getLogger(this.getClass()).debug("Rolle übertragen: " + rolle.getName() + " für Benutzer " + element.getTitle());
+                    Logger.getLogger(this.getClass()).debug("Rolle übertragen: " + rolle.getName()
+                            + " für Benutzer " + element.getTitle());
                 }
             }
         }
@@ -760,7 +810,8 @@ public class TransferData {
      * @param searchResult
      * @return
      */
-    public Map<MbBaust, List<BausteineMassnahmenResult>> convertBausteinMap(List<BausteineMassnahmenResult> searchResult) {
+    public Map<MbBaust, List<BausteineMassnahmenResult>> convertBausteinMap(
+            List<BausteineMassnahmenResult> searchResult) {
         // convert list to map: of bausteine and corresponding massnahmen:
         Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = new HashMap<MbBaust, List<BausteineMassnahmenResult>>();
         for (BausteineMassnahmenResult result : searchResult) {
@@ -779,7 +830,8 @@ public class TransferData {
      *
      * @param notesResults
      */
-    public Map<MbBaust, List<NotizenMassnahmeResult>> convertZielobjektNotizenMap(List<NotizenMassnahmeResult> searchResult) {
+    public Map<MbBaust, List<NotizenMassnahmeResult>> convertZielobjektNotizenMap(
+            List<NotizenMassnahmeResult> searchResult) {
         Map<MbBaust, List<NotizenMassnahmeResult>> bausteineMassnahmenMap = new HashMap<MbBaust, List<NotizenMassnahmeResult>>();
         for (NotizenMassnahmeResult result : searchResult) {
             List<NotizenMassnahmeResult> list = bausteineMassnahmenMap.get(result.baustein);
@@ -803,9 +855,11 @@ public class TransferData {
         return "";
     }
 
-    public static BausteineMassnahmenResult findMassnahmenVorlageBaustein(MassnahmenUmsetzung massnahmenUmsetzung, List<BausteineMassnahmenResult> list) {
+    public static BausteineMassnahmenResult findMassnahmenVorlageBaustein(
+            MassnahmenUmsetzung massnahmenUmsetzung, List<BausteineMassnahmenResult> list) {
         for (BausteineMassnahmenResult result : list) {
-            if (massnahmenUmsetzung.getKapitelValue()[0] == result.massnahme.getMskId() && massnahmenUmsetzung.getKapitelValue()[1] == result.massnahme.getNr()) {
+            if (massnahmenUmsetzung.getKapitelValue()[0] == result.massnahme.getMskId()
+                    && massnahmenUmsetzung.getKapitelValue()[1] == result.massnahme.getNr()) {
                 return result;
             }
         }
@@ -816,11 +870,14 @@ public class TransferData {
      * @param mnums
      * @param massnahmenNotizen
      */
-    public static List<NotizenMassnahmeResult> findMassnahmenVorlageNotiz(MassnahmenUmsetzung massnahmenUmsetzung, List<NotizenMassnahmeResult> list) {
+    public static List<NotizenMassnahmeResult> findMassnahmenVorlageNotiz(
+            MassnahmenUmsetzung massnahmenUmsetzung, List<NotizenMassnahmeResult> list) {
         List<NotizenMassnahmeResult> resultList = new ArrayList<NotizenMassnahmeResult>();
 
         for (NotizenMassnahmeResult result : list) {
-            if (result.massnahme != null && massnahmenUmsetzung.getKapitelValue()[0] == result.massnahme.getMskId() && massnahmenUmsetzung.getKapitelValue()[1] == result.massnahme.getNr()) {
+            if (result.massnahme != null
+                    && massnahmenUmsetzung.getKapitelValue()[0] == result.massnahme.getMskId()
+                    && massnahmenUmsetzung.getKapitelValue()[1] == result.massnahme.getNr()) {
                 resultList.add(result);
             }
         }
@@ -844,7 +901,8 @@ public class TransferData {
      * @param massnahmenNotizen
      * @return
      */
-    public static List<NotizenMassnahmeResult> findBausteinVorlageNotiz(BausteinUmsetzung bstUms, List<NotizenMassnahmeResult> list) {
+    public static List<NotizenMassnahmeResult> findBausteinVorlageNotiz(BausteinUmsetzung bstUms,
+            List<NotizenMassnahmeResult> list) {
 
         List<NotizenMassnahmeResult> resultList = new ArrayList<NotizenMassnahmeResult>();
 
@@ -865,15 +923,22 @@ public class TransferData {
      * @throws IOException
      * @throws SQLException
      */
-    public void transferOwnGefaehrdung(OwnGefaehrdung ownGefaehrdung, RAGefaehrdungenResult ragResult) throws SQLException, IOException {
+    public void transferOwnGefaehrdung(OwnGefaehrdung ownGefaehrdung,
+            RAGefaehrdungenResult ragResult) throws SQLException, IOException {
         String gefNr = translateGefaehrdungsNr(ragResult.getGefaehrdung());
         ownGefaehrdung.setId(gefNr);
-        ownGefaehrdung.setExtId(GSVampire.generateGefaehrdungsUmsetzungExtid(String.valueOf(ragResult.getGefaehrdung().getId().getGefId()), String.valueOf(ragResult.getZielobjekt().getId().getZobId()), ragResult.getGefaehrdung().getGuid(), ragResult.getZielobjekt().getGuid()));
+        ownGefaehrdung.setExtId(GSVampire.generateGefaehrdungsUmsetzungExtid(
+                String.valueOf(ragResult.getGefaehrdung().getId().getGefId()),
+                String.valueOf(ragResult.getZielobjekt().getId().getZobId()),
+                ragResult.getGefaehrdung().getGuid(), ragResult.getZielobjekt().getGuid()));
         ownGefaehrdung.setTitel(ragResult.getGefaehrdungTxt().getName());
-        ownGefaehrdung.setBeschreibung(convertClobToStringEncodingSave(ragResult.getGefaehrdungTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
+        ownGefaehrdung.setBeschreibung(
+                convertClobToStringEncodingSave(ragResult.getGefaehrdungTxt().getBeschreibung(),
+                        GSScraperUtil.getInstance().getModel().getEncoding()));
     }
 
-    public static String createBausteineMassnahmenResultIdentifier(BausteineMassnahmenResult bausteineMassnahmenResult) {
+    public static String createBausteineMassnahmenResultIdentifier(
+            BausteineMassnahmenResult bausteineMassnahmenResult) {
         StringBuilder sb = new StringBuilder();
         sb.append(bausteineMassnahmenResult.baustein.getId().getBauId());
         sb.append(bausteineMassnahmenResult.massnahme.getId().getMasId());
