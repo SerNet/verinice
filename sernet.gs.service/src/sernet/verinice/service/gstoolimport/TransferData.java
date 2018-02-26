@@ -93,6 +93,10 @@ public class TransferData {
 
     private static final Logger LOG = Logger.getLogger(TransferData.class);
 
+    private static final Pattern PATTERN_BAUSTEIN_NUMMER = Pattern.compile("(\\d+)\\.0*(\\d+)");
+
+    private static final Pattern PATTERN_URL = Pattern.compile("(\\\\.*\\\\.*\\\\)(.*)(\\.html)");
+
     private static final char KEIN_SIEGEL = '-';
 
     private final GSVampire vampire;
@@ -480,9 +484,7 @@ public class TransferData {
     }
 
     private static String transferUrl(String url) {
-        String regex = "(\\\\.*\\\\.*\\\\)(.*)(\\.html)";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(url);
+        Matcher matcher = PATTERN_URL.matcher(url);
         if (matcher.find()) {
             url = matcher.group(2);
         }
@@ -848,9 +850,8 @@ public class TransferData {
     }
 
     public static String getId(MbBaust mbBaust) {
-        Pattern pattern = Pattern.compile("(\\d+)\\.0*(\\d+)");
 
-        Matcher match = pattern.matcher(mbBaust.getNr());
+        Matcher match = PATTERN_BAUSTEIN_NUMMER.matcher(mbBaust.getNr());
         if (match.matches()) {
             return "B " + match.group(1) + "." + Integer.parseInt(match.group(2));
         }
