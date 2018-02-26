@@ -56,6 +56,10 @@ public class ModelingMetaDao {
             "join fetch propertyList.properties as props " +
             "where element.uuid in (:uuids)"; //$NON-NLS-1$
 
+    private static final String HQL_LOAD_ELEMENTS_WITH_CHILDREN_PROPERTIES = "select element from CnATreeElement element " + 
+            "left join fetch element.children as child " + "left join fetch child.entity as entity " + "left join fetch entity.typedPropertyLists as propertyList " + "left join fetch propertyList.properties as props " + 
+            "where element.uuid in (:uuids)"; // $NON-NLS-6$
+
     public static final String HQL_LOAD_ELEMENTS_OF_SCOPE = "select  safeguard from CnATreeElement safeguard " +
             "join fetch safeguard.entity as entity " +
             "join fetch entity.typedPropertyLists as propertyList " +
@@ -82,14 +86,27 @@ public class ModelingMetaDao {
             "join fetch propertyList.properties as props " +
             "where safeguard.objectType = :typeId " +
             "and module.uuid in (:uuids)"; //$NON-NLS-1$
+
+    private static final String HQL_LOAD_LINKED_SAFEGUARD_GROUPS_OF_MODULES = "select safeguardGroup from CnATreeElement safeguardGroup " +
+            "join fetch safeguardGroup.children as safeguard " +
+            "join safeguard.linksUp as linksUp " +
+            "join linksUp.dependant as requirement " +
+            "join requirement.parent as module " +
+            "join fetch safeguard.entity as entity " +
+            "join fetch entity.typedPropertyLists as propertyList " +
+            "join fetch propertyList.properties as props " +
+            "where safeguardGroup.objectType = :typeId " +
+            "and module.uuid in (:uuids)"; //$NON-NLS-1$
     
     private static final String HQL_LOAD_CHILDREN_WITH_PROPERTIES = "select requirement from CnATreeElement requirement " +
             "join requirement.parent as module " +
             "join fetch requirement.entity as entity " +
             "join fetch entity.typedPropertyLists as propertyList " +
             "join fetch propertyList.properties as props " +
-            "where requirement.objectType = :typeId " + 
-            "and module.uuid in (:uuids)"; //$NON-NLS-1$
+            "where module.uuid in (:uuids)"; //$NON-NLS-1$
+
+    private static final String HQL_LOAD_TYPED_CHILDREN_WITH_PROPERTIES = HQL_LOAD_CHILDREN_WITH_PROPERTIES + 
+            " and requirement.objectType = :typeId"; //$NON-NLS-1$
     
     private static final String HQL_LOAD_LINKED_ELEMENTS_WITH_PROPERTIES = "select element from CnATreeElement element "
             + "join element.linksUp as linksUp " + "join linksUp.dependant as requirement "
@@ -126,6 +143,18 @@ public class ModelingMetaDao {
             public Object doInHibernate(Session session) throws SQLException {
                 Query query = session.createQuery(HQL_LOAD_ELEMENTS_WITH_PROPERTIES)
                         .setParameterList(UUIDS, allUuids);
+                query.setReadOnly(true);
+                return query.list();
+            }
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<CnATreeElement> loadElementsWithChildrenProperties(final Collection<String> allUuids) {
+        return getDao().findByCallback(new HibernateCallback() {
+            @Override
+            public Object doInHibernate(Session session) throws SQLException {
+                Query query = session.createQuery(HQL_LOAD_ELEMENTS_WITH_CHILDREN_PROPERTIES).setParameterList(UUIDS, allUuids);
                 query.setReadOnly(true);
                 return query.list();
             }
@@ -174,8 +203,11 @@ public class ModelingMetaDao {
         final List<CnATreeElement> resultList = getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
-                Query query = session.createQuery(HQL_LOAD_CHILDREN_WITH_PROPERTIES)
-                        .setParameterList(UUIDS, parentUuids).setParameter(TYPE_ID, typeId);
+                String hql = (typeId == null) ? HQL_LOAD_CHILDREN_WITH_PROPERTIES : HQL_LOAD_TYPED_CHILDREN_WITH_PROPERTIES;
+                Query query = session.createQuery(hql).setParameterList(UUIDS, parentUuids);
+                if (typeId != null) {
+                    query.setParameter(TYPE_ID, typeId);
+                }
                 query.setReadOnly(true);
                 return query.list();
             }
@@ -192,6 +224,17 @@ public class ModelingMetaDao {
                 Query query = session
                         .createQuery(ModelingMetaDao.HQL_LOAD_LINKED_SAFEGUARDS_OF_MODULES)
                         .setParameterList(UUIDS, parentUuids).setParameter(TYPE_ID, typeId);
+                return query.list();
+            }
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<CnATreeElement> loadChildrenLinksParents(final Set<String> parentUuids, final String typeId) {
+        return getDao().findByCallback(new HibernateCallback() {
+            @Override
+            public Object doInHibernate(Session session) throws SQLException {
+                Query query = session.createQuery(ModelingMetaDao.HQL_LOAD_LINKED_SAFEGUARD_GROUPS_OF_MODULES).setParameterList(UUIDS, parentUuids).setParameter(TYPE_ID, typeId);
                 return query.list();
             }
         });
@@ -237,6 +280,12 @@ public class ModelingMetaDao {
 
     public CnATreeElement loadElementWithChildren(Integer dbid) {
         return getDao().retrieve(dbid, RetrieveInfo.getChildrenInstance());
+    }
+
+    public CnATreeElement loadElementWithChildrenProperties(String uuid) {
+        RetrieveInfo ri = RetrieveInfo.getChildrenInstance();
+        ri.setChildrenProperties(true);
+        return getDao().findByUuid(uuid, ri);
     }
 
     public CnATreeElement loadElementWithProperties(Integer dbid) {

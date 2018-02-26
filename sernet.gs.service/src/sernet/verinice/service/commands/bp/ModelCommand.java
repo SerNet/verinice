@@ -23,7 +23,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -50,16 +49,13 @@ import sernet.verinice.service.bp.exceptions.BpModelingException;
  * Modules / Requirements
  * 
  * The module and all requirements in the module are copied from the ITBP
- * Compendium to the information network. The group structure of the modules
- * from the compendium is retained in the information network. The modules and
- * groups are created only once per IT network.
+ * Compendium to the information network. The module is copied and pasted as
+ * child of the element.
  * 
  * Safeguards
  * 
  * If there is a safeguard for a requirement in the compendium, the safeguard is
- * copied to the information network. The group structure of the modules from
- * the compendium is retained in the information network. Safeguards and groups
- * are only created once in the IT network.
+ * copied to the information network and pasted as child of the element.
  * 
  * Elemental threats
  * 
@@ -84,14 +80,14 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     private static final long serialVersionUID = -4024742735347303204L;
 
-    private transient Logger log = Logger.getLogger(ModelCommand.class);
+    private static final Logger LOG = Logger.getLogger(ModelCommand.class);
 
     private transient ModelingMetaDao metaDao;
 
     private Set<String> moduleUuidsFromCompendium;
     private transient Set<String> newModuleUuidsFromScope = Collections.emptySet();
     private List<String> targetUuids;
-    private transient Set<BpRequirementGroup> requirementGroups;
+    private transient Set<CnATreeElement> requirementGroups;
     private transient Set<CnATreeElement> targetElements;
     private transient ItNetwork itNetwork;
 
@@ -120,21 +116,21 @@ public class ModelCommand extends ChangeLoggingCommand {
             createLinks();
             saveReturnValues();
         } catch (CommandException e) {
-            getLog().error("Error while modeling.", e);
+            LOG.error("Error while modeling.", e);
             throw new RuntimeCommandException("Error while modeling.", e);
         }
     }
 
     private void handleModules() throws CommandException {
-        ModelModulesCommand modelModulesCommand = new ModelModulesCommand(requirementGroups,
-                itNetwork);
+        ModelCopyCommand modelModulesCommand = new ModelModulesCommand(requirementGroups,
+                targetElements);
         modelModulesCommand = getCommandService().executeCommand(modelModulesCommand);
-        newModuleUuidsFromScope = modelModulesCommand.getModuleUuidsFromScope();
+        newModuleUuidsFromScope = modelModulesCommand.getNewModuleUuids();
     }
 
     private void handleSafeguards() throws CommandException {
-        ModelSafeguardsCommand modelSafeguardsCommand = new ModelSafeguardsCommand(
-                moduleUuidsFromCompendium, getTargetScopeId());
+        ModelSafeguardGroupCommand modelSafeguardsCommand = new ModelSafeguardGroupCommand(
+                moduleUuidsFromCompendium, targetElements);
         getCommandService().executeCommand(modelSafeguardsCommand);
     }
 
@@ -162,8 +158,10 @@ public class ModelCommand extends ChangeLoggingCommand {
     }
 
     private void loadElements() {
-        List<CnATreeElement> elements = getMetaDao().loadElementsWithProperties(getAllUuids());
-        distributeElements(new HashSet<>(elements));
+        List<CnATreeElement> elements = getMetaDao().loadElementsWithProperties(moduleUuidsFromCompendium);
+        requirementGroups = new HashSet<>(elements);
+        elements = getMetaDao().loadElementsWithChildrenProperties(targetUuids);
+        targetElements = new HashSet<>(elements);
         loadItNetwork();
     }
 
@@ -191,17 +189,6 @@ public class ModelCommand extends ChangeLoggingCommand {
             throw new BpModelingException("Elmenent is not an it network, db id: " + targetScopeId);
         }
         itNetwork = (ItNetwork) element;
-    }
-
-    private List<String> getAllUuids() {
-        List<String> allUuids = new LinkedList<>();
-        allUuids.addAll(moduleUuidsFromCompendium);
-        allUuids.addAll(targetUuids);
-        return allUuids;
-    }
-
-    private IBaseDao<CnATreeElement, Serializable> getDao() {
-        return getDaoFactory().getDAO(CnATreeElement.class);
     }
 
     private void validateParameter(Set<String> compendiumUuids, List<String> targetUuids) {
@@ -241,6 +228,10 @@ public class ModelCommand extends ChangeLoggingCommand {
         return metaDao;
     }
 
+    private IBaseDao<CnATreeElement, Serializable> getDao() {
+        return getDaoFactory().getDAO(CnATreeElement.class);
+    }
+
     @Override
     public String getStationId() {
         return stationId;
@@ -251,10 +242,4 @@ public class ModelCommand extends ChangeLoggingCommand {
         return ChangeLogEntry.TYPE_INSERT;
     }
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(ModelCommand.class);
-        }
-        return log;
-    }
 }

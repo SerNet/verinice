@@ -26,6 +26,7 @@ import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementWithChilds;
@@ -44,8 +45,8 @@ public class IcsSystem extends ElementWithChilds implements IBpElement, IBpGroup
     public static final String TYPE_ID = "bp_icssystem"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_icssystem_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_icssystem_tag"; //$NON-NLS-1$
-
-    public static final String[] CHILD_TYPES = new String[] {BpRequirementGroup.TYPE_ID};
+    
+    public static final String[] CHILD_TYPES = new String[] { BpRequirementGroup.TYPE_ID, SafeguardGroup.TYPE_ID };
     
     private final ILinkChangeListener linkChangeListener = new MaximumProtectionRequirementsValueListener(this);
     private final IReevaluator protectionRequirementsProvider = new ProtectionRequirementsValueAdapter(this);
