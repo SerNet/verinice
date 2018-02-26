@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -60,6 +61,49 @@ public final class ModelingValidator {
                 && isRequirementValidInItNetworkTypeSafe((BpRequirement) requirement, itNetwork);
     }
 
+    /**
+     * Checks if a safeguard is valid when modelling in an IT network. The
+     * method checks whether the set proceeding of the safeguard matches the
+     * proceeding in the IT network.
+     * 
+     * @param safeguard
+     *            A CnATreeElement that should be a safeguard
+     * @param itNetwork
+     *            An IT network
+     * @return true if the CnATreeElement is valid, false if not
+     */
+    public static boolean isSafeguardValidInItNetwork(CnATreeElement safeguard,
+            ItNetwork itNetwork) {
+        return Safeguard.isSafeguard(safeguard)
+                && isSafeguardValidInItNetworkTypeSafe((Safeguard) safeguard, itNetwork);
+    }
+
+    private static boolean isSafeguardValidInItNetworkTypeSafe(Safeguard requirement,
+            ItNetwork itNetwork) {
+        String proceedingOfItNetwork = itNetwork.getEntity()
+                .getRawPropertyValue(ItNetwork.PROP_QUALIFIER);
+        String proceedingOfSafeguard = requirement.getEntity()
+                .getRawPropertyValue(Safeguard.PROP_QUALIFIER);
+        if (proceedingOfItNetwork == null || proceedingOfItNetwork.isEmpty()) {
+            return true;
+        }
+
+        switch (proceedingOfItNetwork) {
+        case ItNetwork.PROP_QUALIFIER_BASIC:
+            return Safeguard.PROP_QUALIFIER_BASIC.equals(proceedingOfSafeguard);
+        case ItNetwork.PROP_QUALIFIER_STANDARD:
+            return true;
+        case ItNetwork.PROP_QUALIFIER_HIGH:
+            return true;
+        default: {
+            // Proceeding is unknown, accept the requirement anyway
+            LOG.info("It network " + itNetwork.getTitle()
+                    + " has an unknown proceeding of securing: " + proceedingOfItNetwork);
+            return true;
+        }
+        }
+    }
+
     private static boolean isRequirementValidInItNetworkTypeSafe(BpRequirement requirement,
             ItNetwork itNetwork) {
         String proceedingOfItNetwork = itNetwork.getEntity()
@@ -70,22 +114,19 @@ public final class ModelingValidator {
             return true;
         }
 
-        // with ENUMs one simply could
-        // return proceedingOfRequirement <= proceedingOfItNetwork;
         switch (proceedingOfItNetwork) {
         case ItNetwork.PROP_QUALIFIER_BASIC:
             return BpRequirement.PROP_QUALIFIER_BASIC.equals(proceedingOfRequirement);
         case ItNetwork.PROP_QUALIFIER_STANDARD:
-            return !BpRequirement.PROP_QUALIFIER_HIGH.equals(proceedingOfRequirement);
+            return true;
         case ItNetwork.PROP_QUALIFIER_HIGH:
             return true;
-        }
-
-        // Proceeding is unknown, accept the requirement anyway
-        if (LOG.isInfoEnabled()) {
+        default: {
+            // Proceeding is unknown, accept the requirement anyway
             LOG.info("It network " + itNetwork.getTitle()
                     + " has an unknown proceeding of securing: " + proceedingOfItNetwork);
+            return true;
+            }
         }
-        return true;
     }
 }

@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -44,11 +45,14 @@ public class ModelSafeguardGroupCommand extends ModelCopyCommand {
 
     private Set<String> moduleUuids;
     private transient Set<CnATreeElement> safeguardGroupsFromCompendium;
+    private ItNetwork itNetwork;
 
-    public ModelSafeguardGroupCommand(Set<String> moduleUuids, Set<CnATreeElement> targetElements) {
+    public ModelSafeguardGroupCommand(Set<String> moduleUuids, Set<CnATreeElement> targetElements,
+            ItNetwork itNetwork) {
         super();
         this.moduleUuids = moduleUuids;
         this.targetElements = targetElements;
+        this.itNetwork = itNetwork;
     }
 
     @Override
@@ -56,7 +60,21 @@ public class ModelSafeguardGroupCommand extends ModelCopyCommand {
         if (safeguardGroupsFromCompendium == null) {
             loadCompendiumSafeguardGroups();
         }
+        validateSafeguardGroups(safeguardGroupsFromCompendium);
         return safeguardGroupsFromCompendium;
+    }
+
+    private void validateSafeguardGroups(Set<CnATreeElement> safeguardGroups) {
+        for (CnATreeElement group : safeguardGroups) {
+            Set<CnATreeElement> safeguards = group.getChildren();
+            Set<CnATreeElement> validSafeguards = new HashSet<>(safeguards.size());
+            for (CnATreeElement safeguard : safeguards) {
+                if (ModelingValidator.isSafeguardValidInItNetwork(safeguard, itNetwork)) {
+                    validSafeguards.add(safeguard);
+                }
+            }
+            group.setChildren(validSafeguards);
+        }
     }
 
     @Override

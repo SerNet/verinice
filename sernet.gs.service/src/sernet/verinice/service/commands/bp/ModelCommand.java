@@ -134,7 +134,7 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     private void handleSafeguards() throws CommandException {
         ModelSafeguardGroupCommand modelSafeguardsCommand = new ModelSafeguardGroupCommand(
-                moduleUuidsFromCompendium, targetElements);
+                moduleUuidsFromCompendium, targetElements, itNetwork);
         getCommandService().executeCommand(modelSafeguardsCommand);
     }
 
@@ -167,6 +167,20 @@ public class ModelCommand extends ChangeLoggingCommand {
         elements = getMetaDao().loadElementsWithChildrenProperties(targetUuids);
         targetElements = new HashSet<>(elements);
         loadItNetwork();
+        validateModules(requirementGroups);
+    }
+
+    private void validateModules(Set<CnATreeElement> requirementGroups) {
+        for (CnATreeElement module : requirementGroups) {
+            Set<CnATreeElement> requirements = module.getChildren();
+            Set<CnATreeElement> validRequirements = new HashSet<>(requirements.size());
+            for (CnATreeElement requirement : requirements) {
+                if (ModelingValidator.isRequirementValidInItNetwork(requirement, itNetwork)) {
+                    validRequirements.add(requirement);
+                }
+            }
+            module.setChildren(validRequirements);
+        }
     }
 
     protected void distributeElements(Collection<CnATreeElement> elements) {
