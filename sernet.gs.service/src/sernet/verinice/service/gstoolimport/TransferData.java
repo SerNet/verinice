@@ -56,7 +56,6 @@ import sernet.gs.reveng.importData.NotizenMassnahmeResult;
 import sernet.gs.reveng.importData.RAGefaehrdungenResult;
 import sernet.gs.reveng.importData.RAGefaehrdungsMassnahmenResult;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
-import sernet.gs.service.InputUtil;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
@@ -577,14 +576,9 @@ public class TransferData {
 
     public static String convertClobToStringEncodingSave(Clob clob, String encoding)
             throws IOException {
-        try {
-            Reader reader = clob.getCharacterStream();
-            InputStream in = new ByteArrayInputStream(IOUtils.toByteArray(reader, encoding));
-            if (in != null) {
-                return InputUtil.streamToString(in, encoding);
-            } else {
-                return "";
-            }
+        try (Reader reader = clob.getCharacterStream();
+                InputStream in = new ByteArrayInputStream(IOUtils.toByteArray(reader, encoding))) {
+            return IOUtils.toString(in, encoding);
         } catch (SQLException e) {
             LOG.error("Error while converting clob to String", e);
             throw new RuntimeException(e);
