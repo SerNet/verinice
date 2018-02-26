@@ -25,6 +25,7 @@ import java.io.StringReader;
 import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -694,11 +695,12 @@ public class TransferData {
         }
 
         if (drgMap == null) {
-            drgMap = new HashMap<>();
-            drgMap.put("unterstützend", Anwendung.PROP_PROZESSBEZUG_UNTERSTUETZEND);
-            drgMap.put("wichtig", Anwendung.PROP_PROZESSBEZUG_WICHTIG);
-            drgMap.put("wesentlich", Anwendung.PROP_PROZESSBEZUG_WESENTLICH);
-            drgMap.put("hochgradig notwendig", Anwendung.PROP_PROZESSBEZUG_HOCHGRADIG);
+            Map<String, String> m = new HashMap<>(4);
+            m.put("unterstützend", Anwendung.PROP_PROZESSBEZUG_UNTERSTUETZEND);
+            m.put("wichtig", Anwendung.PROP_PROZESSBEZUG_WICHTIG);
+            m.put("wesentlich", Anwendung.PROP_PROZESSBEZUG_WESENTLICH);
+            m.put("hochgradig notwendig", Anwendung.PROP_PROZESSBEZUG_HOCHGRADIG);
+            drgMap = Collections.unmodifiableMap(m);
         }
 
         MbDringlichkeitId drgId = mbDringlichkeit.getId();
