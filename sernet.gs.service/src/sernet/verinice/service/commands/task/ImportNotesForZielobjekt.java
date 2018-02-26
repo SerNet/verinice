@@ -185,7 +185,7 @@ public class ImportNotesForZielobjekt extends GenericCommand {
         }
         
         if (copy.size() > 0) {
-            List<NotizenMassnahmeResult> bstNotizVorlagen = TransferData.findBausteinVorlageNotiz(bstUms, massnahmenNotizen);
+            List<NotizenMassnahmeResult> bstNotizVorlagen = TransferData.findBausteinVorlageNotiz(massnahmenNotizen);
             for (NotizenMassnahmeResult bstNotizVorlage : bstNotizVorlagen) {
                 copy.remove(bstNotizVorlage);
                 

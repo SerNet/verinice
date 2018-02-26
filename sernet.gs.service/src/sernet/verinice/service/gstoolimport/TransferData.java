@@ -60,7 +60,6 @@ import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.Anwendung;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.Client;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.ITVerbund;
@@ -588,14 +587,14 @@ public class TransferData {
     /**
      * Transfer all data from one "massnahme" from gstool to existing
      * "gefaehrdung" underneath a risk analysis in verinice.
-     *
+     * 
      * @param result
      * @param gefaehrdung
+     *
      * @throws IOException
      */
     public static void transferRAGefaehrdungsMassnahmen(RAGefaehrdungsMassnahmenResult ragmResult,
-            GefaehrdungsUmsetzung gefUms, MassnahmenUmsetzung massnahmenUmsetzung)
-            throws IOException {
+            MassnahmenUmsetzung massnahmenUmsetzung) throws IOException {
         // Ben.def.gs massnahme
         // -------------------
         // katalog
@@ -893,12 +892,12 @@ public class TransferData {
 
     /**
      * Find notes that are connected to a baustein directly.
-     *
-     * @param bstUms
+     * 
      * @param massnahmenNotizen
+     *
      * @return
      */
-    public static List<NotizenMassnahmeResult> findBausteinVorlageNotiz(BausteinUmsetzung bstUms,
+    public static List<NotizenMassnahmeResult> findBausteinVorlageNotiz(
             List<NotizenMassnahmeResult> list) {
 
         List<NotizenMassnahmeResult> resultList = new ArrayList<>();

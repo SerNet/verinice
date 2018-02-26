@@ -293,7 +293,7 @@ public class ImportRisikoanalysenTask extends AbstractGstoolImportTask {
     private RisikoMassnahmenUmsetzung importUserMassnahme(CnATreeElement element, RAGefaehrdungsMassnahmenResult massnahmenResult, GefaehrdungsUmsetzung gefaehrdungsUmsetzung) throws SQLException, IOException, CommandException {
         RisikoMassnahmenUmsetzung risikoMassnahme;
         risikoMassnahme = new RisikoMassnahmenUmsetzung(element, gefaehrdungsUmsetzung);
-        TransferData.transferRAGefaehrdungsMassnahmen(massnahmenResult, gefaehrdungsUmsetzung, risikoMassnahme);
+        TransferData.transferRAGefaehrdungsMassnahmen(massnahmenResult, risikoMassnahme);
         if(LOG.isDebugEnabled()){
             LOG.debug("Transferred user defined massnahme: " + risikoMassnahme.getTitle());
         }
@@ -322,7 +322,7 @@ public class ImportRisikoanalysenTask extends AbstractGstoolImportTask {
     private RisikoMassnahmenUmsetzung importBsiMassnahme(CnATreeElement element, RAGefaehrdungsMassnahmenResult massnahmenResult, GefaehrdungsUmsetzung gefaehrdungsUmsetzung) throws SQLException, IOException {
         RisikoMassnahmenUmsetzung risikoMassnahme;
         MassnahmenUmsetzung newMnUms = new MassnahmenUmsetzung(gefaehrdungsUmsetzung);
-        transferData.transferRAGefaehrdungsMassnahmen(massnahmenResult, gefaehrdungsUmsetzung, newMnUms);
+        transferData.transferRAGefaehrdungsMassnahmen(massnahmenResult, newMnUms);
         if(LOG.isDebugEnabled()){
             LOG.debug("Transferred BSI-standard massnahme: " + newMnUms.getTitle());
         }
