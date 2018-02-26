@@ -146,7 +146,7 @@ public class TransferData {
         itverbund.setTitel(source.getName());
         itverbund.setExtId(result.zielobjekt.getGuid());
 
-        UpdateElement command = new UpdateElement(itverbund, true, ChangeLogEntry.STATION_ID);
+        UpdateElement<ITVerbund> command = new UpdateElement<>(itverbund, true, ChangeLogEntry.STATION_ID);
         getCommandService().executeCommand(command);
     }
 
@@ -696,7 +696,7 @@ public class TransferData {
         }
 
         if (drgMap == null) {
-            drgMap = new HashMap<String, String>();
+            drgMap = new HashMap<>();
             drgMap.put("unterstützend", Anwendung.PROP_PROZESSBEZUG_UNTERSTUETZEND);
             drgMap.put("wichtig", Anwendung.PROP_PROZESSBEZUG_WICHTIG);
             drgMap.put("wesentlich", Anwendung.PROP_PROZESSBEZUG_WESENTLICH);
@@ -812,11 +812,11 @@ public class TransferData {
     public Map<MbBaust, List<BausteineMassnahmenResult>> convertBausteinMap(
             List<BausteineMassnahmenResult> searchResult) {
         // convert list to map: of bausteine and corresponding massnahmen:
-        Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = new HashMap<MbBaust, List<BausteineMassnahmenResult>>();
+        Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = new HashMap<>();
         for (BausteineMassnahmenResult result : searchResult) {
             List<BausteineMassnahmenResult> list = bausteineMassnahmenMap.get(result.baustein);
             if (list == null) {
-                list = new ArrayList<BausteineMassnahmenResult>();
+                list = new ArrayList<>();
                 bausteineMassnahmenMap.put(result.baustein, list);
             }
             list.add(result);
@@ -831,11 +831,11 @@ public class TransferData {
      */
     public Map<MbBaust, List<NotizenMassnahmeResult>> convertZielobjektNotizenMap(
             List<NotizenMassnahmeResult> searchResult) {
-        Map<MbBaust, List<NotizenMassnahmeResult>> bausteineMassnahmenMap = new HashMap<MbBaust, List<NotizenMassnahmeResult>>();
+        Map<MbBaust, List<NotizenMassnahmeResult>> bausteineMassnahmenMap = new HashMap<>();
         for (NotizenMassnahmeResult result : searchResult) {
             List<NotizenMassnahmeResult> list = bausteineMassnahmenMap.get(result.baustein);
             if (list == null) {
-                list = new ArrayList<NotizenMassnahmeResult>();
+                list = new ArrayList<>();
                 bausteineMassnahmenMap.put(result.baustein, list);
             }
             list.add(result);
@@ -871,7 +871,7 @@ public class TransferData {
      */
     public static List<NotizenMassnahmeResult> findMassnahmenVorlageNotiz(
             MassnahmenUmsetzung massnahmenUmsetzung, List<NotizenMassnahmeResult> list) {
-        List<NotizenMassnahmeResult> resultList = new ArrayList<NotizenMassnahmeResult>();
+        List<NotizenMassnahmeResult> resultList = new ArrayList<>();
 
         for (NotizenMassnahmeResult result : list) {
             if (result.massnahme != null
@@ -903,7 +903,7 @@ public class TransferData {
     public static List<NotizenMassnahmeResult> findBausteinVorlageNotiz(BausteinUmsetzung bstUms,
             List<NotizenMassnahmeResult> list) {
 
-        List<NotizenMassnahmeResult> resultList = new ArrayList<NotizenMassnahmeResult>();
+        List<NotizenMassnahmeResult> resultList = new ArrayList<>();
 
         for (NotizenMassnahmeResult result : list) {
             if (result.massnahme == null) {
