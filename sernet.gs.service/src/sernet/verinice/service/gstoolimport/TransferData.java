@@ -592,11 +592,10 @@ public class TransferData {
      * @param result
      * @param gefaehrdung
      * @throws IOException
-     * @throws SQLException
      */
     public void transferRAGefaehrdungsMassnahmen(RAGefaehrdungsMassnahmenResult ragmResult,
             GefaehrdungsUmsetzung gefUms, MassnahmenUmsetzung massnahmenUmsetzung)
-            throws SQLException, IOException {
+            throws IOException {
         // Ben.def.gs massnahme
         // -------------------
         // katalog
@@ -921,10 +920,9 @@ public class TransferData {
      * @param ownGefaehrdung
      * @param ragResult
      * @throws IOException
-     * @throws SQLException
      */
     public void transferOwnGefaehrdung(OwnGefaehrdung ownGefaehrdung,
-            RAGefaehrdungenResult ragResult) throws SQLException, IOException {
+            RAGefaehrdungenResult ragResult) throws IOException {
         String gefNr = translateGefaehrdungsNr(ragResult.getGefaehrdung());
         ownGefaehrdung.setId(gefNr);
         ownGefaehrdung.setExtId(GSVampire.generateGefaehrdungsUmsetzungExtid(
