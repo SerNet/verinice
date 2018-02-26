@@ -224,15 +224,15 @@ public class TransferData {
         begruendung += esa.getBegruendung();
         setEsaBegruendung(target, begruendung);
 
-        target = setESAEntscheidung(target, esa.getZmiName(), esa.getEntscheidungBis(),
+        setESAEntscheidung(target, esa.getZmiName(), esa.getEntscheidungBis(),
                 esa.getEntscheidungAm());
     }
 
     private static CnATreeElement setESAEntscheidung(CnATreeElement target,
             String entscheidungDurch, Date entscheidungBis, Date entscheidungAm) {
-        target = setESAEntscheidungDurch(target, entscheidungDurch);
-        target = setESAEntscheidungAm(target, entscheidungAm);
-        target = setESAEntscheidungBis(target, entscheidungBis);
+        setESAEntscheidungDurch(target, entscheidungDurch);
+        setESAEntscheidungAm(target, entscheidungAm);
+        setESAEntscheidungBis(target, entscheidungBis);
         return target;
     }
 
@@ -626,9 +626,8 @@ public class TransferData {
         MassnahmenFactory massnahmenFactory = new MassnahmenFactory();
         massnahmenUmsetzung = massnahmenFactory.transferUmsetzungWithDate(massnahmenUmsetzung,
                 ragmResult.getUmsTxt().getName(), ragmResult.getMzbm().getUmsDatBis());
-        massnahmenUmsetzung = massnahmenFactory.transferRevision(massnahmenUmsetzung,
-                ragmResult.getMzbm().getRevDat(), ragmResult.getMzbm().getRevDatNext(),
-                ragmResult.getMzbm().getRevBeschr());
+        massnahmenFactory.transferRevision(massnahmenUmsetzung, ragmResult.getMzbm().getRevDat(),
+                ragmResult.getMzbm().getRevDatNext(), ragmResult.getMzbm().getRevBeschr());
 
         // may be necessary for user defined bausteine:
 
@@ -912,8 +911,6 @@ public class TransferData {
 
         for (NotizenMassnahmeResult result : list) {
             if (result.massnahme == null) {
-                Integer refZobId = result.zoBst.getRefZobId();
-                boolean stop = refZobId != null;
                 resultList.add(result);
             }
         }
