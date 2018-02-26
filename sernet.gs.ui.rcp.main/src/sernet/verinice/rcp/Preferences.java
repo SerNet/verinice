@@ -73,6 +73,10 @@ public final class Preferences {
         return bpCatalogFilePath;
     }
 
+    public static boolean isModelSafeguardsActive() {
+        return getPreferenceStore().getBoolean(PreferenceConstants.BP_MODEL_SAFEGUARDS);
+    }
+
     public static String getPrivacyCatalogFilePath() {
         return getPreferenceStore().getString(PreferenceConstants.DSZIPFILE);
     }

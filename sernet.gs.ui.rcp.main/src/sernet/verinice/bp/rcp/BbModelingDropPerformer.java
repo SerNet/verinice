@@ -64,6 +64,7 @@ import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
+import sernet.verinice.rcp.Preferences;
 import sernet.verinice.rcp.catalog.CatalogDragListener;
 import sernet.verinice.service.bp.exceptions.BpModelingException;
 import sernet.verinice.service.bp.exceptions.GroupNotFoundInScopeException;
@@ -185,6 +186,7 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         targetUuids.add(element.getUuid());
 
         modelCommand = new ModelCommand(compendiumUuids, targetUuids);
+        modelCommand.setHandleSafeguards(Preferences.isModelSafeguardsActive());
         modelCommand = getCommandService().executeCommand(modelCommand);
         CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
     }

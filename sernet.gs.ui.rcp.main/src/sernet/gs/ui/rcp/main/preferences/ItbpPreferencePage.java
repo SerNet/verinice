@@ -24,6 +24,7 @@ import java.net.MalformedURLException;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
@@ -63,7 +64,7 @@ public class ItbpPreferencePage extends FieldEditorPreferencePage
 
     @Override
     protected Control createContents(Composite parent) {
-        boolean isStandalone = sernet.verinice.rcp.Preferences.isStandalone();
+        boolean isStandalone = Preferences.isStandalone();
         if (!isStandalone) {
             GridLayoutFactory.fillDefaults().applyTo(parent);
             Label servermode = new Label(parent, SWT.NONE);
@@ -79,6 +80,7 @@ public class ItbpPreferencePage extends FieldEditorPreferencePage
             generalTextLink.addListener(SWT.Selection, new KatalogPreferenceLinkListener());
             createFieldEditors();
         }
+        createModelSafeguardsField();
         initialize();
         checkState();
         return fieldEditorParent;
@@ -112,6 +114,13 @@ public class ItbpPreferencePage extends FieldEditorPreferencePage
                 catalogEditorParent);
         catalogZipfilePath.setFileExtensions(new String[] { "*.zip;*.ZIP", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
         addField(catalogZipfilePath);
+    }
+
+    private void createModelSafeguardsField() {
+        final BooleanFieldEditor modelSafeguards = new BooleanFieldEditor(
+                PreferenceConstants.BP_MODEL_SAFEGUARDS, Messages.getString("ItbpPreferencePage.model_safeguards"), //$NON-NLS-1$
+                getFieldEditorParent()); // $NON-NLS-1$
+        addField(modelSafeguards);
     }
 
     @Override

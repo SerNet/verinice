@@ -91,6 +91,8 @@ public class ModelCommand extends ChangeLoggingCommand {
     private transient Set<CnATreeElement> targetElements;
     private transient ItNetwork itNetwork;
 
+    private boolean handleSafeguards = true;
+
     // Return values
     private String proceedingLable;
 
@@ -110,7 +112,9 @@ public class ModelCommand extends ChangeLoggingCommand {
             loadElements();
             handleModules();
             if (!newModuleUuidsFromScope.isEmpty()) {
-                handleSafeguards();
+                if (isHandleSafeguards()) {
+                    handleSafeguards();
+                }
                 handleThreats();
             }
             createLinks();
@@ -219,6 +223,14 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     public void setProceedingLable(String proceedingLable) {
         this.proceedingLable = proceedingLable;
+    }
+
+    public boolean isHandleSafeguards() {
+        return handleSafeguards;
+    }
+
+    public void setHandleSafeguards(boolean handleSafeguards) {
+        this.handleSafeguards = handleSafeguards;
     }
 
     public ModelingMetaDao getMetaDao() {
