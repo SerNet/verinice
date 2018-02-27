@@ -78,9 +78,9 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
 
     private static final int SIZE_X = 150;
     private static final int SIZE_Y = 500;
-    final int marginWidth = 10;
+    static final int MARGIN_WIDTH = 10;
 
-    final int defaultColNr = 3;
+    static final int DEFAULT_COL_NR = 3;
 
     private ReportTemplateMetaData editTemplate;
 
@@ -168,7 +168,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         ofgd.horizontalAlignment = SWT.LEFT;
         ofgd.verticalAlignment = SWT.TOP;
         ofgd.grabExcessHorizontalSpace = true;
-        ofgd.horizontalSpan = defaultColNr;
+        ofgd.horizontalSpan = DEFAULT_COL_NR;
 
         GridData gdRadio = new GridData();
         gdRadio.grabExcessHorizontalSpace = true;

@@ -124,11 +124,11 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     private IReportSupplier supplier;
 
-    final int defaultColNr = 3;
+    static final int DEFAULT_COL_NR = 3;
 
-    final int dataScopeMinimumWidth = 200;
-    final int dataScopeComboMinimumWidth = 500;
-    final int marginWidth = 10;
+    static final int DATA_SCOPE_MINIMUM_WIDTH = 200;
+    static final int DATA_SCOPE_COMBO_MINIMUM_WIDTH = 500;
+    static final int MARGIN_WIDTH = 10;
 
     public GenerateReportDialog(Shell parentShell) {
         super(parentShell);
@@ -234,8 +234,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         final Composite composite = (Composite) super.createDialogArea(parent);
         GridLayout layout = (GridLayout) composite.getLayout();
-        layout.marginWidth = marginWidth;
-        layout.marginHeight = marginWidth;
+        layout.marginWidth = MARGIN_WIDTH;
+        layout.marginHeight = MARGIN_WIDTH;
         composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
         // GridData for all labels
@@ -309,9 +309,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         Group groupFile = new Group(composite, SWT.NULL);
         groupFile.setLayoutData(
-                new GridData(GridData.FILL, GridData.CENTER, true, false, defaultColNr, 1));
+                new GridData(GridData.FILL, GridData.CENTER, true, false, DEFAULT_COL_NR, 1));
         layout = new GridLayout();
-        layout.numColumns = defaultColNr;
+        layout.numColumns = DEFAULT_COL_NR;
         groupFile.setLayout(layout);
 
         Label labelOutputFormat = new Label(groupFile, SWT.NONE);
@@ -399,7 +399,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         Group groupCache = new Group(composite, SWT.NULL);
         groupCache.setLayoutData(
-                new GridData(GridData.FILL, GridData.FILL, true, false, defaultColNr, 1));
+                new GridData(GridData.FILL, GridData.FILL, true, false, DEFAULT_COL_NR, 1));
         layout = new GridLayout();
         layout.numColumns = 2;
         groupCache.setLayout(layout);
@@ -461,7 +461,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         gridDataCombo.horizontalAlignment = SWT.FILL;
         gridDataCombo.grabExcessHorizontalSpace = true;
         gridDataCombo.horizontalSpan = 2;
-        gridDataCombo.minimumWidth = dataScopeComboMinimumWidth;
+        gridDataCombo.minimumWidth = DATA_SCOPE_COMBO_MINIMUM_WIDTH;
         return gridDataCombo;
     }
 
@@ -470,7 +470,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         gridDataLabel.horizontalAlignment = SWT.LEFT;
         gridDataLabel.verticalAlignment = SWT.CENTER;
         gridDataLabel.grabExcessHorizontalSpace = true;
-        gridDataLabel.minimumWidth = dataScopeMinimumWidth;
+        gridDataLabel.minimumWidth = DATA_SCOPE_MINIMUM_WIDTH;
         return gridDataLabel;
     }
 
@@ -478,9 +478,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
         GridLayout layout;
         Group reportGroup = new Group(composite, SWT.NULL);
         reportGroup.setLayoutData(
-                new GridData(GridData.FILL, GridData.FILL, true, false, defaultColNr, 1));
+                new GridData(GridData.FILL, GridData.FILL, true, false, DEFAULT_COL_NR, 1));
         layout = new GridLayout();
-        layout.numColumns = defaultColNr;
+        layout.numColumns = DEFAULT_COL_NR;
         reportGroup.setLayout(layout);
         return reportGroup;
     }
