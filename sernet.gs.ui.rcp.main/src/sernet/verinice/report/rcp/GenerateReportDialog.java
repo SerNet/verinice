@@ -112,10 +112,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     private String defaultTemplateFolder;
 
-    private Button useDefaultFolderButton;
-
-    private Button useDateCheckbox;
-
     private IReportType chosenReportType;
 
     // estimated size of dialog for placement (doesnt have to be exact):
@@ -365,7 +361,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         useDateLabel.setText(Messages.GenerateReportDialog_33);
         useDateLabel.setLayoutData(gridDataLabel);
 
-        useDateCheckbox = new Button(groupFile, SWT.CHECK);
+        Button useDateCheckbox = new Button(groupFile, SWT.CHECK);
         useDateCheckbox.setSelection(true);
         GridData useDateCheckboxGridData = new GridData();
         useDateCheckboxGridData.horizontalSpan = 2;
@@ -383,7 +379,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         useDefaultFolderLabel.setText(Messages.GenerateReportDialog_26);
         useDefaultFolderLabel.setLayoutData(gridDataLabel);
 
-        useDefaultFolderButton = new Button(groupFile, SWT.CHECK);
+        Button useDefaultFolderButton = new Button(groupFile, SWT.CHECK);
         useDefaultFolderButton.setSelection(true);
         GridData useDefaultFolderButtonGridData = new GridData();
         useDefaultFolderButtonGridData.horizontalSpan = 2;

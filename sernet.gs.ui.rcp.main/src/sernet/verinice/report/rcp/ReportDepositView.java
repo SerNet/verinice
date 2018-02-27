@@ -95,8 +95,6 @@ public class ReportDepositView extends RightsEnabledView {
     private TableSorter tableSorter = new TableSorter();
     private TableViewer viewer;
 
-    private ISelectionListener selectionListener;
-
     private ReportDepositContentProvider contentprovider = new ReportDepositContentProvider(this);
 
     private RightsEnabledAction addTemplateAction;
@@ -185,7 +183,7 @@ public class ReportDepositView extends RightsEnabledView {
     }
 
     private void hookPageSelection() {
-        selectionListener = new ISelectionListener() {
+        ISelectionListener selectionListener = new ISelectionListener() {
             @Override
             public void selectionChanged(IWorkbenchPart part, ISelection selection) {
                 pageSelectionChanged(part, selection);
