@@ -121,7 +121,6 @@ public abstract class ReportAction extends RightsEnabledActionDelegate
     }
 
     private IReportOptions prepareReportOptions() {
-        File f = dialog.getOutputFile();
         final IReportOptions ro = new IReportOptions() {
             Integer rootElmt;
             Integer[] rootElmts;
@@ -200,7 +199,6 @@ public abstract class ReportAction extends RightsEnabledActionDelegate
     private void runUIBlockingReportGeneration(final IReportOptions ro, IProgressMonitor monitor) {
         monitor.beginTask(Messages.GenerateReportAction_1, IProgressMonitor.UNKNOWN);
         Activator.inheritVeriniceContextState();
-        IOutputFormat format = dialog.getOutputFormat();
         try {
             dialog.getReportType().createReport(ro);
             dialog.getReportType().createReport(dialog.getReportMetaData());

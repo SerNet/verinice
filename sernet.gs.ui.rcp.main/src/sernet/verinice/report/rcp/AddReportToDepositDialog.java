@@ -311,11 +311,6 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
 
     }
 
-    @Override
-    protected void cancelPressed() {
-        super.cancelPressed();
-    }
-
     private void updateTemplate() {
         try {
             ReportTemplateMetaData metaData = new ReportTemplateMetaData(

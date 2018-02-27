@@ -487,8 +487,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
         String path;
         if (defaultTemplateFolder != null && !defaultTemplateFolder.isEmpty()) {
             path = defaultTemplateFolder;
-        } else if (isTemplateFilePath()) {
-            path = getOldTemplateFolderPath();
         } else {
             path = System.getProperty(IVeriniceConstants.USER_HOME); // $NON-NLS-1$
         }
@@ -531,18 +529,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
         return textFile != null && textFile.getText() != null && !textFile.getText().isEmpty();
     }
 
-    @Deprecated
-    boolean isTemplateFilePath() {
-        return false;
-    }
-
     private String getOldFolderPath() {
         return getFolderFromPath(textFile.getText());
-    }
-
-    @Deprecated
-    private String getOldTemplateFolderPath() {
-        return System.getProperty(IVeriniceConstants.OSGI_INSTANCE_AREA);
     }
 
     private String getFolderFromPath(String path) {
@@ -667,9 +655,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     protected void setupOutputFilepath() {
         String currentPath = textFile.getText();
-        String path = currentPath;
         if (currentPath != null && !currentPath.isEmpty() && chosenOutputFormat != null) {
             int lastDot = currentPath.lastIndexOf('.');
+            String path;
             if (lastDot != -1) {
                 path = currentPath.substring(0, lastDot + 1) + chosenOutputFormat.getFileSuffix();
             } else {
@@ -778,7 +766,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 Activator.getDefault().getPreferenceStore()
                         .setValue(PreferenceConstants.DEFAULT_FOLDER_REPORT, currentPath);
             }
-            currentPath = getOldTemplateFolderPath();
             outputFile = new File(f);
         } catch (Exception e) {
             LOG.error("Error while creating report.", e);
