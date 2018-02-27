@@ -21,5 +21,27 @@ package sernet.verinice.model.common;
  * Represents a modeling domain, e.g. Base Protection or ISO
  */
 public enum Domain {
-    ISO, BP_OLD, BP, DP
+    ISM(Messages.getString("Domain.ISM")), BASE_PROTECTION_OLD(
+            Messages.getString("Domain.BASE_PROTECTION_OLD")), BASE_PROTECTION(
+                    Messages.getString("Domain.BASE_PROTECTION")), @Deprecated
+    DATA_PROTECTION(Messages.getString("Domain.DATA_PROTECTION"));
+
+    private final String label;
+
+    private static final String LABEL_OBSOLETE = Messages.getString("Domain.obsolete");
+
+    Domain(String label) {
+        this.label = label;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    /**
+     * Get the label for obsolete domains, e.g. data protection
+     */
+    public static String getLabelObsolete() {
+        return LABEL_OBSOLETE;
+    }
 }
