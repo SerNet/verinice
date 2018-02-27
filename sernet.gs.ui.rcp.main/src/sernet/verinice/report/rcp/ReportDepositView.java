@@ -59,8 +59,6 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
@@ -72,10 +70,6 @@ import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
 import sernet.verinice.interfaces.ReportDepositException;
 import sernet.verinice.interfaces.ReportTemplateServiceException;
 import sernet.verinice.iso27k.rcp.JobScheduler;
-import sernet.verinice.model.bp.elements.BpModel;
-import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.catalog.CatalogModel;
-import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.rcp.ReportTemplateSync;
 import sernet.verinice.rcp.RightsEnabledView;
@@ -309,34 +303,6 @@ public class ReportDepositView extends RightsEnabledView {
         manager.add(this.addTemplateAction);
         manager.add(this.editTemplateAction);
         manager.add(this.deleteTemplateAction);
-    }
-
-    private final class ContentLoader implements IModelLoadListener {
-        @Override
-        public void loaded(ISO27KModel model) {
-            JobScheduler.scheduleInitJob(loadDataJob);
-            CnAElementFactory.getInstance().removeLoadListener(this);
-        }
-
-        @Override
-        public void loaded(BSIModel model) {
-
-        }
-
-        @Override
-        public void closed(BSIModel model) {
-
-        }
-
-        @Override
-        public void loaded(BpModel model) {
-            // nothing to do
-        }
-
-        @Override
-        public void loaded(CatalogModel model) {
-            // nothing to do
-        }
     }
 
     private static class ReportDepositLabelProvider extends LabelProvider
