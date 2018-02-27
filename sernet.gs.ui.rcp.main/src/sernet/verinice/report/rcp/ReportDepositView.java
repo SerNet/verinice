@@ -135,40 +135,41 @@ public class ReportDepositView extends RightsEnabledView {
         createTable(parent);
         getSite().setSelectionProvider(viewer);
         hookPageSelection();
-        
+
         makeActions();
         hookActions();
-        
-        
+
         fillLocalToolBar();
-        
+
         viewer.setInput(getContent());
     }
-    
+
     private void createTable(Composite parent) {
         TableColumn reportNameColumn;
         TableColumn outputFormatColumn;
         TableColumn templateColumn;
-        
+
         final int reportNameWidth = 200;
         final int outputFormatWidth = 200;
         final int templateWidth = 100;
-        
-        viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
+
+        viewer = new TableViewer(parent,
+                SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
         viewer.setContentProvider(contentprovider);
         viewer.setLabelProvider(new ReportDepositLabelProvider());
         Table table = viewer.getTable();
-        
+
         reportNameColumn = new TableColumn(table, SWT.LEFT);
         reportNameColumn.setWidth(reportNameWidth);
         reportNameColumn.setText(Messages.ReportDepositView_1);
         reportNameColumn.addSelectionListener(new SortSelectionAdapter(this, reportNameColumn, 0));
-             
+
         outputFormatColumn = new TableColumn(table, SWT.LEFT);
         outputFormatColumn.setWidth(outputFormatWidth);
         outputFormatColumn.setText(Messages.ReportDepositView_2);
-        outputFormatColumn.addSelectionListener(new SortSelectionAdapter(this, outputFormatColumn, 1));
-        
+        outputFormatColumn
+                .addSelectionListener(new SortSelectionAdapter(this, outputFormatColumn, 1));
+
         templateColumn = new TableColumn(table, SWT.LEFT);
         templateColumn.setWidth(templateWidth);
         templateColumn.setText(Messages.ReportDepositView_3);
@@ -177,12 +178,12 @@ public class ReportDepositView extends RightsEnabledView {
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
         viewer.setSorter(tableSorter);
-        
+
         // ensure initial table sorting (by filename)
-        ((TableSorter)viewer.getSorter()).setColumn(0);
+        ((TableSorter) viewer.getSorter()).setColumn(0);
 
     }
-    
+
     private void hookPageSelection() {
         selectionListener = new ISelectionListener() {
             @Override
@@ -192,19 +193,19 @@ public class ReportDepositView extends RightsEnabledView {
         };
         getSite().getPage().addPostSelectionListener(selectionListener);
     }
-    
+
     protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
         Object element = ((IStructuredSelection) selection).getFirstElement();
-//        elementSelected(element);
+        // elementSelected(element);
         if (element instanceof ReportTemplateMetaData) {
-           editTemplateAction.setEnabled(true);
-           deleteTemplateAction.setEnabled(true);
+            editTemplateAction.setEnabled(true);
+            deleteTemplateAction.setEnabled(true);
         } else {
             editTemplateAction.setEnabled(false);
-            deleteTemplateAction.setEnabled(false);            
+            deleteTemplateAction.setEnabled(false);
         }
     }
-    
+
     private void hookActions() {
         viewer.addDoubleClickListener(new IDoubleClickListener() {
             @Override
@@ -214,52 +215,60 @@ public class ReportDepositView extends RightsEnabledView {
         });
     }
 
-    
     private void makeActions() {
-        
+
         addTemplateAction = new RightsEnabledAction(ActionRightIDs.REPORTDEPOSITADD) {
             @Override
             public void doRun() {
-                AddReportToDepositDialog dlg = new AddReportToDepositDialog(Display.getDefault().getActiveShell());
+                AddReportToDepositDialog dlg = new AddReportToDepositDialog(
+                        Display.getDefault().getActiveShell());
                 dlg.open();
                 updateView();
             }
         };
         addTemplateAction.setText(Messages.ReportDepositView_5);
         addTemplateAction.setToolTipText(Messages.ReportDepositView_7);
-        addTemplateAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
-        addTemplateAction.setEnabled(true); 
+        addTemplateAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
+        addTemplateAction.setEnabled(true);
 
         deleteTemplateAction = new RightsEnabledAction(ActionRightIDs.REPORTDEPOSITDELETE) {
-            
+
             @Override
             public void doRun() {
                 int count = ((IStructuredSelection) viewer.getSelection()).size();
-                boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), Messages.ReportDepositView_15, NLS.bind(Messages.ReportDepositView_16, count));
-                if (!confirm){
+                boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(),
+                        Messages.ReportDepositView_15,
+                        NLS.bind(Messages.ReportDepositView_16, count));
+                if (!confirm) {
                     return;
                 }
                 deleteAttachments();
                 updateView();
             }
         };
-        
+
         deleteTemplateAction.setText(Messages.ReportDepositView_13);
         deleteTemplateAction.setToolTipText(Messages.ReportDepositView_14);
-        deleteTemplateAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.DELETE));
+        deleteTemplateAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.DELETE));
         deleteTemplateAction.setEnabled(false);
 
         editTemplateAction = new RightsEnabledAction(ActionRightIDs.REPORTDEPOSITEDIT) {
-            
+
             @Override
             public void doRun() {
                 int count = ((IStructuredSelection) viewer.getSelection()).size();
-                if(count == 1){
-                    AddReportToDepositDialog dlg = new AddReportToDepositDialog(Display.getDefault().getActiveShell(), (ReportTemplateMetaData)((IStructuredSelection)viewer.getSelection()).getFirstElement());
+                if (count == 1) {
+                    AddReportToDepositDialog dlg = new AddReportToDepositDialog(
+                            Display.getDefault().getActiveShell(),
+                            (ReportTemplateMetaData) ((IStructuredSelection) viewer.getSelection())
+                                    .getFirstElement());
                     dlg.open();
                     updateView();
                 } else {
-                    MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.ReportDepositView_20, Messages.ReportDepositView_21);
+                    MessageDialog.openWarning(Display.getDefault().getActiveShell(),
+                            Messages.ReportDepositView_20, Messages.ReportDepositView_21);
                     return;
                 }
             }
@@ -267,7 +276,8 @@ public class ReportDepositView extends RightsEnabledView {
 
         editTemplateAction.setText(Messages.ReportDepositView_17);
         editTemplateAction.setToolTipText(Messages.ReportDepositView_18);
-        editTemplateAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
+        editTemplateAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
         editTemplateAction.setEnabled(false);
 
         refreshAction = new Action() {
@@ -280,7 +290,8 @@ public class ReportDepositView extends RightsEnabledView {
 
         refreshAction.setText(Messages.ReportDepositView_19);
         refreshAction.setToolTipText(Messages.ReportDepositView_19);
-        refreshAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
+        refreshAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
         refreshAction.setEnabled(true);
 
         doubleclickAction = new Action() {
@@ -330,7 +341,8 @@ public class ReportDepositView extends RightsEnabledView {
         }
     }
 
-    private static class ReportDepositLabelProvider extends LabelProvider implements ITableLabelProvider {
+    private static class ReportDepositLabelProvider extends LabelProvider
+            implements ITableLabelProvider {
 
         @Override
         public Image getColumnImage(Object element, int columnIndex) {
@@ -353,19 +365,19 @@ public class ReportDepositView extends RightsEnabledView {
                 ReportTemplateMetaData data = (ReportTemplateMetaData) element;
                 switch (columnIndex) {
                 case 0:
-                    return data.getOutputname(); //$NON-NLS-1$
+                    return data.getOutputname(); // $NON-NLS-1$
                 case 1:
                     StringBuilder sb = new StringBuilder();
                     OutputFormat[] formats = data.getOutputFormats();
-                    for(int i = 0; i < formats.length; i++){
+                    for (int i = 0; i < formats.length; i++) {
                         sb.append(formats[i]);
-                        if(!(i == formats.length - 1)){
+                        if (!(i == formats.length - 1)) {
                             sb.append(", ");
                         }
                     }
-                    return sb.toString(); //$NON-NLS-1$
+                    return sb.toString(); // $NON-NLS-1$
                 case 2:
-                    return data.getFilename(); //$NON-NLS-1$
+                    return data.getFilename(); // $NON-NLS-1$
                 default:
                     return null;
                 }
@@ -374,10 +386,9 @@ public class ReportDepositView extends RightsEnabledView {
                 throw new RuntimeException(e);
             }
         }
- 
 
     }
-    
+
     private static class SortSelectionAdapter extends SelectionAdapter {
         private ReportDepositView depositView;
         private TableColumn column;
@@ -406,7 +417,7 @@ public class ReportDepositView extends RightsEnabledView {
         }
 
     }
-    
+
     private static class TableSorter extends ViewerSorter {
         private int propertyIndex;
         private static final int DEFAULT_SORT_COLUMN = 0;
@@ -453,13 +464,14 @@ public class ReportDepositView extends RightsEnabledView {
                 // e1 and e2 != null
                 switch (propertyIndex) {
                 case 0:
-                    rc = comporeToLowerCase(data1.getDecoratedOutputname(), data2.getDecoratedOutputname());
+                    rc = comporeToLowerCase(data1.getDecoratedOutputname(),
+                            data2.getDecoratedOutputname());
                     break;
                 case 1:
                     // implement a sorted list here that needs to be compared
-                    String s1 = getSortedOutputFormatsString(data1.getOutputFormats()); 
+                    String s1 = getSortedOutputFormatsString(data1.getOutputFormats());
                     String s2 = getSortedOutputFormatsString(data2.getOutputFormats());
-                    if(s1 != null &&  s2 != null){
+                    if (s1 != null && s2 != null) {
                         rc = s1.compareTo(s2);
                     }
                     break;
@@ -480,7 +492,7 @@ public class ReportDepositView extends RightsEnabledView {
 
         private int comporeToLowerCase(String filename1, String filename2) {
             int rc = 0;
-            if(filename1!=null && filename2!=null) {
+            if (filename1 != null && filename2 != null) {
                 rc = filename1.toLowerCase().compareTo(filename2.toLowerCase());
             }
             return rc;
@@ -517,7 +529,8 @@ public class ReportDepositView extends RightsEnabledView {
 
     public RightsServiceClient getRightsService() {
         if (rightsService == null) {
-            rightsService = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+            rightsService = (RightsServiceClient) VeriniceContext
+                    .get(VeriniceContext.RIGHTS_SERVICE);
         }
         return rightsService;
     }
@@ -532,31 +545,33 @@ public class ReportDepositView extends RightsEnabledView {
     private ICommandService createCommandServive() {
         return ServiceFactory.lookupCommandService();
     }
-    
-    private Object getContent(){
-        try{
-            Set<ReportTemplateMetaData> templateSet = getReportService().getServerReportTemplates(Locale.getDefault().getLanguage());
+
+    private Object getContent() {
+        try {
+            Set<ReportTemplateMetaData> templateSet = getReportService()
+                    .getServerReportTemplates(Locale.getDefault().getLanguage());
             return templateSet.toArray(new ReportTemplateMetaData[templateSet.size()]);
-        } catch (ReportTemplateServiceException e){
+        } catch (ReportTemplateServiceException e) {
             String msg = "Something went wrong with reading the propertyfiles";
             ExceptionUtil.log(e, msg);
-        } catch (Exception e){
+        } catch (Exception e) {
             String msg = "Error reading reports from deposit";
             ExceptionUtil.log(e, msg);
         }
         return new PlaceHolder(Messages.ReportDepositView_4);
     }
-    
-    private IReportDepositService getReportService(){
+
+    private IReportDepositService getReportService() {
         return ServiceFactory.lookupReportDepositService();
     }
-    
+
     private void deleteAttachments() {
         Iterator iterator = ((IStructuredSelection) viewer.getSelection()).iterator();
         while (iterator.hasNext()) {
             ReportTemplateMetaData sel = (ReportTemplateMetaData) iterator.next();
             try {
-                ServiceFactory.lookupReportDepositService().remove(sel, Locale.getDefault().getLanguage());
+                ServiceFactory.lookupReportDepositService().remove(sel,
+                        Locale.getDefault().getLanguage());
             } catch (ReportDepositException e) {
                 ExceptionUtil.log(e, "Error deleting Reporttemplate:\t" + sel.getOutputname());
             }
