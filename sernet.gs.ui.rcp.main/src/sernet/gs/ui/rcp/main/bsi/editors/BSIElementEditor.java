@@ -124,6 +124,59 @@ public class BSIElementEditor extends EditorPart {
             modelChanged();
         }
 
+        private void saveChangedElementProperties(PropertyChangedEvent event) {
+            if (isTaskEditorContext()
+                    && StringUtils.isNotEmpty(event.getProperty().getPropertyType())) {
+                PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(
+                        cnAElement.getEntityType().getId(), event.getProperty().getPropertyType());
+                if (propertyType.isSingleSelect()) {
+                    changedElementProperties.put(event.getProperty().getPropertyType(),
+                            event.getProperty().getPropertyValue());
+                } else if (propertyType.isDate()) {
+                    saveChangedDateElementProperties(event);
+                } else if (propertyType.isMultiselect() || propertyType.isReference()) {
+                    // nothing to do
+                } else {
+                    changedElementProperties.put(event.getProperty().getPropertyType(),
+                            event.getProperty().getPropertyValue());
+                }
+            }
+        }
+
+        private void saveChangedDateElementProperties(PropertyChangedEvent event) {
+            try {
+                String date = FormInputParser.dateToString(
+                        new java.sql.Date(Long.parseLong(event.getProperty().getPropertyValue())));
+                changedElementProperties.put(event.getProperty().getPropertyType(), date);
+            } catch (NumberFormatException | AssertException e) {
+                LOG.error("Exception while getting the value of a date property", e);
+            }
+        }
+
+        private void saveMultiselectElementProperties(IMLPropertyType arg0) {
+            if (isTaskEditorContext() && StringUtils.isNotEmpty(arg0.getId())) {
+                PropertyType propertyType = HUITypeFactory.getInstance()
+                        .getPropertyType(cnAElement.getEntityType().getId(), arg0.getId());
+                List<Property> properties = cnAElement.getEntity()
+                        .getProperties(propertyType.getId()).getProperties();
+
+                StringBuilder sb = new StringBuilder();
+                for (Property property : properties) {
+                    sb.append(property.getPropertyValue()).append(",");
+                }
+                changedElementProperties.put(propertyType.getId(), sb.toString());
+            }
+        }
+
+        private void modelChanged() {
+            boolean wasDirty = isDirty();
+            isModelModified = true;
+
+            if (!wasDirty) {
+                firePropertyChange(IEditorPart.PROP_DIRTY);
+            }
+        }
+
     };
     private CnATreeElement cnAElement;
     private LinkMaker linkMaker;
@@ -211,9 +264,9 @@ public class BSIElementEditor extends EditorPart {
     }
 
     private void loadChangedElementPropertiesFromTask() {
-        Map<String, String> changedElementProperties = (Map<String, String>) getTaskService()
+        Map<String, String> changedElementPropertiesForTask = getTaskService()
                 .loadChangedElementProperties(task.getId());
-        for (Entry<String, String> entry : changedElementProperties.entrySet()) {
+        for (Entry<String, String> entry : changedElementPropertiesForTask.entrySet()) {
             cnAElement.setPropertyValue(entry.getKey(), entry.getValue());
         }
 
@@ -239,14 +292,14 @@ public class BSIElementEditor extends EditorPart {
 
                 IEditorReference[] editorReferences = PlatformUI.getWorkbench()
                         .getActiveWorkbenchWindow().getActivePage().getEditorReferences();
-                ArrayList<IEditorReference> closeOthers = new ArrayList<IEditorReference>();
+                ArrayList<IEditorReference> closeOthers = new ArrayList<>();
                 BSIElementEditorInput myInput = (BSIElementEditorInput) getEditorInput();
 
-                allEditors: for (IEditorReference editorReference : editorReferences) {
+                for (IEditorReference editorReference : editorReferences) {
                     IEditorInput input;
                     try {
                         if (editorReference.isPinned() || editorReference.isDirty()) {
-                            continue allEditors;
+                            continue;
                         }
                         input = editorReference.getEditorInput();
                         if (input instanceof BSIElementEditorInput) {
@@ -281,6 +334,7 @@ public class BSIElementEditor extends EditorPart {
             isModelModified = false;
             this.setPartName(cnAElement.getTitle());
             this.setTitleToolTip(cnAElement.getTitle());
+            setIcon();
             firePropertyChange(IEditorPart.PROP_DIRTY);
         } catch (StaleObjectStateException se) {
             // close editor, loosing changes:
@@ -306,71 +360,9 @@ public class BSIElementEditor extends EditorPart {
         return (ITaskService) VeriniceContext.get(VeriniceContext.TASK_SERVICE);
     }
 
-    private void refresh() {
-        // notify all views of change:
-        CnAElementFactory.getModel(cnAElement).childChanged(cnAElement);
-
-        // removed CnAElementFactory.getModel(cnAElement).refreshAllListeners
-        // here
-        // before release 1.4.2
-    }
-
     @Override
     public void doSaveAs() {
         // not supported
-    }
-
-    private void saveChangedElementProperties(PropertyChangedEvent event) {
-        if (isTaskEditorContext()
-                && StringUtils.isNotEmpty(event.getProperty().getPropertyType())) {
-            PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(
-                    cnAElement.getEntityType().getId(), event.getProperty().getPropertyType());
-            if (propertyType.isSingleSelect()) {
-                changedElementProperties.put(event.getProperty().getPropertyType(),
-                        event.getProperty().getPropertyValue());
-            } else if (propertyType.isDate()) {
-                saveChangedDateElementProperties(event);
-            } else if (propertyType.isMultiselect() || propertyType.isReference()) {
-                // nothing to do
-            } else {
-                changedElementProperties.put(event.getProperty().getPropertyType(),
-                        event.getProperty().getPropertyValue());
-            }
-        }
-    }
-
-    private void saveChangedDateElementProperties(PropertyChangedEvent event) {
-        try {
-            String date = FormInputParser.dateToString(
-                    new java.sql.Date(Long.parseLong(event.getProperty().getPropertyValue())));
-            changedElementProperties.put(event.getProperty().getPropertyType(), date);
-        } catch (NumberFormatException | AssertException e) {
-            LOG.error("Exception while getting the value of a date property", e);
-        }
-    }
-
-    private void saveMultiselectElementProperties(IMLPropertyType arg0) {
-        if (isTaskEditorContext() && StringUtils.isNotEmpty(arg0.getId())) {
-            PropertyType propertyType = HUITypeFactory.getInstance()
-                    .getPropertyType(cnAElement.getEntityType().getId(), arg0.getId());
-            List<Property> properties = cnAElement.getEntity().getProperties(propertyType.getId())
-                    .getProperties();
-
-            StringBuilder sb = new StringBuilder();
-            for (Property property : properties) {
-                sb.append(property.getPropertyValue()).append(",");
-            }
-            changedElementProperties.put(propertyType.getId(), sb.toString());
-        }
-    }
-
-    private void modelChanged() {
-        boolean wasDirty = isDirty();
-        isModelModified = true;
-
-        if (!wasDirty) {
-            firePropertyChange(IEditorPart.PROP_DIRTY);
-        }
     }
 
     /**
@@ -386,10 +378,6 @@ public class BSIElementEditor extends EditorPart {
         return tags0.split(",");
     }
 
-    /**
-     * 
-     */
-    @SuppressWarnings("unchecked")
     private void setIcon() {
         Image icon = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
         if (cnAElement != null) {
@@ -574,6 +562,16 @@ public class BSIElementEditor extends EditorPart {
             monitor.setTaskName("Refresh application...");
             refresh();
             return Status.OK_STATUS;
+        }
+
+        private void refresh() {
+            // notify all views of change:
+            CnAElementFactory.getModel(cnAElement).childChanged(cnAElement);
+
+            // removed
+            // CnAElementFactory.getModel(cnAElement).refreshAllListeners
+            // here
+            // before release 1.4.2
         }
     }
 
