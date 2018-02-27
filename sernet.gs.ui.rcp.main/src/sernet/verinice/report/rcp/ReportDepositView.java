@@ -332,7 +332,7 @@ public class ReportDepositView extends RightsEnabledView {
                     OutputFormat[] formats = data.getOutputFormats();
                     for (int i = 0; i < formats.length; i++) {
                         sb.append(formats[i]);
-                        if (!(i == formats.length - 1)) {
+                        if (i != formats.length - 1) {
                             sb.append(", ");
                         }
                     }
