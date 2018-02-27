@@ -310,9 +310,6 @@ public class ReportDepositView extends RightsEnabledView {
 
         @Override
         public Image getColumnImage(Object element, int columnIndex) {
-            if (element instanceof PlaceHolder) {
-                return null;
-            }
             return null;
         }
 
