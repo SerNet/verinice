@@ -32,8 +32,6 @@ public class LoadReportElementWithLinks extends GenericCommand implements ICache
     private List<List<String>> result;
     private List<CnALink> linkList;
 
-    private transient CnATypeMapper cnATypeMapper;
-    
     private boolean resultInjectedFromCache = false;
     
     public LoadReportElementWithLinks(String typeId, Integer rootElement) {
@@ -52,7 +50,6 @@ public class LoadReportElementWithLinks extends GenericCommand implements ICache
 	
 	public void execute() {
 	    if(!resultInjectedFromCache){
-	        cnATypeMapper = new CnATypeMapper();
 	        linkList = new ArrayList<CnALink>();
 
 	        LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement}); 
@@ -159,12 +156,12 @@ public class LoadReportElementWithLinks extends GenericCommand implements ICache
      */
     @SuppressWarnings("unchecked")
     private String getAbbreviation(CnATreeElement relationObject) {
-        if (cnATypeMapper.isStrukturElement(relationObject) ) {
+        if (CnATypeMapper.isStrukturElement(relationObject) ) {
             IBaseDao dao = getDaoFactory().getDAO(relationObject.getTypeId());
             IBSIStrukturElement elmt = (IBSIStrukturElement) dao.findById(relationObject.getDbId());
             return elmt.getKuerzel();
         }
-        if (cnATypeMapper.isIiso27kElement(relationObject)) {
+        if (CnATypeMapper.isIiso27kElement(relationObject)) {
             IBaseDao dao = getDaoFactory().getDAO(relationObject.getTypeId());
             IISO27kElement elmt = (IISO27kElement) dao.findById(relationObject.getDbId());
             return elmt.getAbbreviation();
