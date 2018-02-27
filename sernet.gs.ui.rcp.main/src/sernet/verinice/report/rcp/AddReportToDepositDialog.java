@@ -355,7 +355,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         if (defaultTemplatePath != null && !defaultTemplatePath.isEmpty()) {
             dlg.setFilterPath(defaultTemplatePath);
         }
-        ArrayList<String> extensionList = new ArrayList<String>();
+        ArrayList<String> extensionList = new ArrayList<>();
         extensionList.add("*.rptdesign"); //$NON-NLS-1$
         extensionList.add("*.*"); //$NON-NLS-1$
         dlg.setFilterExtensions(extensionList.toArray(new String[extensionList.size()]));
@@ -378,7 +378,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     }
 
     private OutputFormat[] getReportOutputFormats() {
-        ArrayList<OutputFormat> list = new ArrayList<OutputFormat>(0);
+        ArrayList<OutputFormat> list = new ArrayList<>(0);
         if (outputTypeExcelCheckbox.getSelection()) {
             list.add(OutputFormat.XLS);
         }

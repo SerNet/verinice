@@ -497,7 +497,7 @@ public class ReportDepositView extends RightsEnabledView {
         }
 
         private String getSortedOutputFormatsString(OutputFormat[] input) {
-            ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> list = new ArrayList<>();
             for (OutputFormat format : input) {
                 list.add(format.toString());
             }

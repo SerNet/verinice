@@ -177,7 +177,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     public GenerateReportDialog(Shell shell, List<Object> objects) {
         this(shell);
-        List<CnATreeElement> elmts = new ArrayList<CnATreeElement>();
+        List<CnATreeElement> elmts = new ArrayList<>();
         for (Object object : objects) {
             CnATreeElement cnaElmt = (CnATreeElement) object;
             elmts.add(cnaElmt);
@@ -502,7 +502,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     public void selectOutputFile() {
         FileDialog dlg = new FileDialog(getParentShell(), SWT.SAVE);
-        ArrayList<String> extensionList = new ArrayList<String>();
+        ArrayList<String> extensionList = new ArrayList<>();
         if (chosenOutputFormat != null && chosenOutputFormat.getFileSuffix() != null) {
             extensionList.add("*." + chosenOutputFormat.getFileSuffix()); //$NON-NLS-1$
         }
@@ -565,7 +565,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
      * Load list of scopes for user selection of top level element for report.
      */
     private void setupComboScopes() {
-        scopes = new ArrayList<CnATreeElement>();
+        scopes = new ArrayList<>();
 
         // check if audit was selected by context menu:
         if (this.auditId != null && isContextMenuCall()) {
@@ -579,7 +579,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         } else if (this.preSelectedElments != null && this.preSelectedElments.size() > 0
                 && isContextMenuCall()) {
             scopeCombo.removeAll();
-            ArrayList<Integer> auditIDList = new ArrayList<Integer>();
+            ArrayList<Integer> auditIDList = new ArrayList<>();
             StringBuilder sb = new StringBuilder();
             for (CnATreeElement elmt : preSelectedElments) {
                 sb.append(elmt.getTitle());
@@ -603,7 +603,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         scopes.addAll(loadITVerbuende());
         scopes.addAll(loadItNetworks());
 
-        List<String> scopeTitles = new ArrayList<String>();
+        List<String> scopeTitles = new ArrayList<>();
 
         Collections.sort(scopes, new Comparator<CnATreeElement>() {
             @Override
@@ -717,7 +717,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
                         Messages.GenerateReportDialog_6);
                 return;
             }
-            List<Integer> scopeIds = new ArrayList<Integer>(0);
+            List<Integer> scopeIds = new ArrayList<>(0);
             if (getRootElement() != null) {
                 scopeIds.add(getRootElement());
             }
@@ -843,7 +843,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
     }
 
     private List<Organization> loadScopes() {
-        LoadCnATreeElementTitles<Organization> compoundLoader = new LoadCnATreeElementTitles<Organization>(
+        LoadCnATreeElementTitles<Organization> compoundLoader = new LoadCnATreeElementTitles<>(
                 Organization.class);
         try {
             compoundLoader = ServiceFactory.lookupCommandService().executeCommand(compoundLoader);
@@ -856,7 +856,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
     }
 
     private List<ItNetwork> loadItNetworks() {
-        LoadCnATreeElementTitles<ItNetwork> compoundLoader = new LoadCnATreeElementTitles<ItNetwork>(
+        LoadCnATreeElementTitles<ItNetwork> compoundLoader = new LoadCnATreeElementTitles<>(
                 ItNetwork.class);
         try {
             compoundLoader = ServiceFactory.lookupCommandService().executeCommand(compoundLoader);
@@ -871,7 +871,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
      * 
      */
     private List<ITVerbund> loadITVerbuende() {
-        LoadCnATreeElementTitles<ITVerbund> compoundLoader = new LoadCnATreeElementTitles<ITVerbund>(
+        LoadCnATreeElementTitles<ITVerbund> compoundLoader = new LoadCnATreeElementTitles<>(
                 ITVerbund.class);
         try {
             compoundLoader = ServiceFactory.lookupCommandService().executeCommand(compoundLoader);
@@ -904,7 +904,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
     }
 
     private void filterReportTypes() {
-        ArrayList<ReportTemplateMetaData> list = new ArrayList<ReportTemplateMetaData>();
+        ArrayList<ReportTemplateMetaData> list = new ArrayList<>();
         if (useCase != null && !useCase.equals("") && reportTemplates.length > 0) {
             for (ReportTemplateMetaData data : reportTemplates) {
                 // if (rt.getUseCaseID().equals(useCase) ||
