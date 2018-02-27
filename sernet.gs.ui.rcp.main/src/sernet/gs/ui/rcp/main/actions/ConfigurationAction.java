@@ -71,8 +71,6 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
 
 	Configuration configuration;
 
-	private IWorkbenchPart targetPart;
-	
 	private ICommandService commandService;
 	
 	private IRightsServiceClient rightsService;
@@ -86,14 +84,12 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
         this.configuration = configuration;
     }
 
-
     @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		this.targetPart = targetPart;
-	}
-	
 
-    /* (non-Javadoc)
+    }
+
+    /*
      * @see org.eclipse.jface.action.Action#run()
      */
     public void run() {
@@ -134,7 +130,7 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
         return wizardDialog;
     }
     
-	/* (non-Javadoc)
+	/*
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
 	@Override

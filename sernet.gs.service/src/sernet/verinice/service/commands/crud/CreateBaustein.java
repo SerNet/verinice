@@ -68,8 +68,6 @@ public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggi
     private String typeId;
     private String language;
     
-    private CnATreeElement container;
-
 	public CreateBaustein(CnATreeElement container, Baustein baustein, String language) {
 		
 		dbId = container.getDbId();
@@ -79,8 +77,6 @@ public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggi
 		stationId = ChangeLogEntry.STATION_ID;
 		
 		this.language = language;
-		
-		this.container = container;
 		
 	}
 	

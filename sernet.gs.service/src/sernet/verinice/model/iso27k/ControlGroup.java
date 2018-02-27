@@ -19,8 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.model.iso27k;
 
-import org.apache.log4j.Logger;
-
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.samt.SamtTopic;
@@ -32,8 +30,6 @@ import sernet.verinice.model.samt.SamtTopic;
 @SuppressWarnings("serial")
 public class ControlGroup extends Group<Control> implements IISO27kGroup {
     
-    private static final Logger LOG = Logger.getLogger(ControlGroup.class);
-
 	public static final String TYPE_ID = "controlgroup"; //$NON-NLS-1$
 	public static final String PROP_NAME = "controlgroup_name"; //$NON-NLS-1$
 	

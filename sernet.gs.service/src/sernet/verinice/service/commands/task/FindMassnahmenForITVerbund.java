@@ -66,33 +66,6 @@ public class FindMassnahmenForITVerbund extends FindMassnahmenAbstract {
     
     public static final String FILTER_DATE = "filter-date";
     
-    private static final String SQL_DATE = "SELECT cnatreeelement.dbid,properties.propertytype,properties.propertyvalue FROM cnatreeelement " +
-    "JOIN entity ON cnatreeelement.entity_id = entity.dbid " +
-    "JOIN propertylist ON entity.dbid = propertylist.typedlist_id  JOIN properties ON properties.properties_id = propertylist.dbid  " +
-    "JOIN cnatreeelement cnatreeele2_ on cnatreeelement.parent=cnatreeele2_.dbId " +
-    "JOIN cnatreeelement cnatreeele3_ on cnatreeele2_.parent=cnatreeele3_.dbId " +
-    "JOIN cnatreeelement cnatreeele7_ on cnatreeele3_.parent=cnatreeele7_.dbId " +
-    "where (cnatreeele7_.parent = :id or cnatreeele2_.parent = :id2) " +
-    "AND cnatreeelement.object_type='massnahmen-umsetzung' " +
-    "and properties.propertytype='mnums_umsetzungbis' " +
-    "order by properties.propertyvalue";
-    
-    // PostgreSQL to select all Massnahmen dbids without a mnums_umsetzungbis property
-    // because of the aggregat function bool_and this works for PostgreSQL only
-    /*
-    private static final String SQL = "SELECT dbid FROM (SELECT cnatreeelement.dbid as dbid,bool_and(properties.propertytype!='mnums_umsetzungbis') as nodate " +
-    		"FROM cnatreeelement " +
-    		"JOIN entity ON cnatreeelement.entity_id = entity.dbid " +
-    		"JOIN propertylist ON entity.dbid = propertylist.typedlist_id " +
-    		"JOIN properties ON properties.properties_id = propertylist.dbid " +
-    		"JOIN cnatreeelement cnatreeele2_ on cnatreeelement.parent=cnatreeele2_.dbId " +
-    		"JOIN cnatreeelement cnatreeele3_ on cnatreeele2_.parent=cnatreeele3_.dbId " +
-    		"JOIN cnatreeelement cnatreeele7_ on cnatreeele3_.parent=cnatreeele7_.dbId " +
-    		"WHERE (cnatreeele7_.parent = :id or cnatreeele2_.parent = :id2) " +
-    		"GROUP BY cnatreeelement.dbid) AS result " +
-    		"WHERE nodate";
-    */
-    
     private static final String SQL = "SELECT cnatreeelement.dbid,properties.propertytype,properties.propertyvalue FROM cnatreeelement " +
     "JOIN entity ON cnatreeelement.entity_id = entity.dbid " +
     "JOIN propertylist ON entity.dbid = propertylist.typedlist_id " +

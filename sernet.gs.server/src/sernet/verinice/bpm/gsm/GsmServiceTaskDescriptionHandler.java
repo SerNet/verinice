@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
@@ -40,8 +39,6 @@ import sernet.verinice.interfaces.bpm.ITaskDescriptionHandler;
 @SuppressWarnings("restriction")
 public class GsmServiceTaskDescriptionHandler implements ITaskDescriptionHandler {
 
-    private static final Logger LOG = Logger.getLogger(GsmServiceTaskDescriptionHandler.class);
-    
     public static final String TEMPLATE_EXTENSION = ".vm"; //$NON-NLS-1$
     
     // template path without lang code "_en" and file extension ".vm"
@@ -49,7 +46,7 @@ public class GsmServiceTaskDescriptionHandler implements ITaskDescriptionHandler
     
     private VelocityEngine velocityEngine;
     
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.bpm.ITaskDescriptionHandler#loadTitle(java.lang.String, java.util.Map)
      */
     @Override
@@ -57,7 +54,7 @@ public class GsmServiceTaskDescriptionHandler implements ITaskDescriptionHandler
         return sernet.verinice.model.bpm.Messages.getString(taskId, processVars.get(IGsmIsmExecuteProzess.VAR_CONTROL_GROUP_TITLE));
     }
     
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.bpm.ITaskDescriptionHandler#loadDescription(java.lang.String, java.util.Map)
      */
     @Override

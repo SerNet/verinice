@@ -34,8 +34,6 @@ import sernet.verinice.service.bp.importer.BpImporter;
 
 public class TestAction extends Action {
 
-    private String typeID;
-    private Integer dbID;
     public static final String ID = "sernet.gs.ui.rcp.main.testaction"; //$NON-NLS-1$
     
     private static final Logger LOG = Logger.getLogger(TestAction.class);
@@ -43,8 +41,6 @@ public class TestAction extends Action {
     public TestAction(IWorkbenchWindow window, String label, String typeID, Integer dbID) {
         setText(label);
         setId(ID);
-        this.typeID = typeID;
-        this.dbID = dbID;
         
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
         setEnabled(false);

@@ -59,8 +59,6 @@ public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLogging
 	
 	CnATreeElement importRootObject;
 	
-	private boolean importToITGS = false;
-	
 	@SuppressWarnings("unchecked")
 	private Map<Class,CnATreeElement> containerMap = new HashMap<Class,CnATreeElement>(2);
 	
@@ -73,11 +71,6 @@ public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLogging
 	public SaveLdapUser(Set<PersonInfo> personSet) {
 		this();
 		this.personSet = personSet;
-	}
-
-	public SaveLdapUser(Set<PersonInfo> personSet, boolean importITGS){
-	    this(personSet);
-	    this.importToITGS = importITGS;
 	}
 
 	@Override

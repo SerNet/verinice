@@ -32,8 +32,6 @@ import java.util.Map;
 import java.util.PropertyPermission;
 import java.util.logging.LoggingPermission;
 
-import org.apache.log4j.Logger;
-
 import sernet.verinice.interfaces.report.IReportPermissionHandler;
 import sernet.verinice.interfaces.report.IReportPermissionHandler.PermissionClassname;
 import sernet.verinice.report.service.impl.security.permissionhandling.DefaultPermissionHandler;
@@ -60,9 +58,6 @@ import sernet.verinice.security.report.ReportSecurityContext;
  *
  */
 public class ReportSecurityPermissionManager {
-
-    private static final Logger LOG 
-        = Logger.getLogger(ReportSecurityPermissionManager.class);
 
     private Map<PermissionClassname, IReportPermissionHandler>
     permissionHandlerMap = null;

@@ -25,7 +25,6 @@ import org.springframework.security.Authentication;
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
-import org.springframework.security.ui.basicauth.BasicProcessingFilterEntryPoint;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ApplicationRoles;
@@ -46,13 +45,12 @@ import sernet.verinice.model.common.configuration.Configuration;
  */
 public class BasicAuthenticationService implements IAuthService {
     
-    private BasicProcessingFilterEntryPoint entryPoint;
     private String guestUser = "";
     private String adminUsername;
     private IBaseDao<Configuration, Serializable> configurationDao;
     private boolean handlingPasswords;
     
-    private final static String HQL = "select scopeprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
+    private static final String HQL = "select scopeprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
             "inner join conf.entity as entity " + //$NON-NLS-1$
             "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
             "inner join propertyList.properties as props " + //$NON-NLS-1$
@@ -70,14 +68,7 @@ public class BasicAuthenticationService implements IAuthService {
         this.guestUser = guestUser;
     }
     
-    /**
-     * @param entryPoint the entryPoint to set
-     */
-    public void setEntryPoint(BasicProcessingFilterEntryPoint entryPoint) {
-        this.entryPoint = entryPoint;
-    }
-
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.IAuthService#getRoles()
      */
     @Override
@@ -90,7 +81,7 @@ public class BasicAuthenticationService implements IAuthService {
         return roles;
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.IAuthService#getUsername()
      */
     @Override
@@ -135,7 +126,7 @@ public class BasicAuthenticationService implements IAuthService {
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.IAuthService#hashOwnPassword(java.lang.String, java.lang.String)
      */
     @Override
@@ -144,7 +135,7 @@ public class BasicAuthenticationService implements IAuthService {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.IAuthService#hashPassword(java.lang.String, java.lang.String)
      */
     @Override
@@ -153,7 +144,7 @@ public class BasicAuthenticationService implements IAuthService {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.IAuthService#isPermissionHandlingNeeded()
      */
     @Override
@@ -180,7 +171,7 @@ public class BasicAuthenticationService implements IAuthService {
         return isScopeOnly;
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.IAuthService#isDeactivated()
      */
     @Override
@@ -227,7 +218,7 @@ public class BasicAuthenticationService implements IAuthService {
         this.configurationDao = configurationDao;
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.IAuthService#isLogoutPossible()
      */
     @Override
@@ -236,7 +227,6 @@ public class BasicAuthenticationService implements IAuthService {
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see
      * sernet.verinice.interfaces.IAuthService#currentUserHasRole(java.lang.
