@@ -362,7 +362,7 @@ public class ImportTask extends AbstractGstoolImportTask {
                 // save element for later:
                 alleZielobjekte.put(zielobjekt.zielobjekt, itverbund);
 
-                transferData.transfer(itverbund, zielobjekt);
+                TransferData.transfer(itverbund, zielobjekt);
                 createBausteine(sourceId, itverbund, zielobjekt.zielobjekt);
 
                 // save links from itverbuende to other objects to
@@ -596,11 +596,11 @@ public class ImportTask extends AbstractGstoolImportTask {
         MSchutzbedarfkategTxt verfu = getGstoolDao().findSchutzbedarfNameForId(schubeda.getZsbVerfuSbkId());
         MSchutzbedarfkategTxt integ = getGstoolDao().findSchutzbedarfNameForId(schubeda.getZsbIntegSbkId());
 
-        int vertraulichkeit = (vertr != null) ? transferData.translateSchutzbedarf(vertr.getName()) : Schutzbedarf.UNDEF;
+        int vertraulichkeit = (vertr != null) ? TransferData.translateSchutzbedarf(vertr.getName()) : Schutzbedarf.UNDEF;
 
-        int verfuegbarkeit = (verfu != null) ? transferData.translateSchutzbedarf(verfu.getName()) : Schutzbedarf.UNDEF;
+        int verfuegbarkeit = (verfu != null) ? TransferData.translateSchutzbedarf(verfu.getName()) : Schutzbedarf.UNDEF;
 
-        int integritaet = (integ != null) ? transferData.translateSchutzbedarf(integ.getName()) : Schutzbedarf.UNDEF;
+        int integritaet = (integ != null) ? TransferData.translateSchutzbedarf(integ.getName()) : Schutzbedarf.UNDEF;
 
         String vertrBegruendung = schubeda.getZsbVertrBegr();
         String verfuBegruendung = schubeda.getZsbVerfuBegr();
@@ -769,7 +769,7 @@ public class ImportTask extends AbstractGstoolImportTask {
         List<BausteineMassnahmenResult> findBausteinMassnahmenByZielobjekt = getGstoolDao().findBausteinMassnahmenByZielobjekt(zielobjekt);
         nZielObjektBausteineMassnahmenResultMap.put(zielobjekt, findBausteinMassnahmenByZielobjekt);
 
-        Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = transferData.convertBausteinMap(findBausteinMassnahmenByZielobjekt);
+        Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = TransferData.convertBausteinMap(findBausteinMassnahmenByZielobjekt);
 
         this.monitor.subTask(numberImported + "/" + numberOfElements + " - Erstelle " + zielobjekt.getName() + " mit " + bausteineMassnahmenMap.keySet().size() + " Baust. und " + getAnzahlMassnahmen(bausteineMassnahmenMap) + " Maßn...");
 
@@ -876,7 +876,7 @@ public class ImportTask extends AbstractGstoolImportTask {
             }
             return element;
         }
-        transferData.transferESA(element, esaResult.get(0));
+        TransferData.transferESA(element, esaResult.get(0));
         CnAElementHome.getInstance().update(element);
         return element;
     }
