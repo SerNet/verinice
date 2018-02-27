@@ -657,10 +657,11 @@ public class GenerateReportDialog extends TitleAreaDialog {
             } else {
                 path = currentPath.substring(0, lastSlash);
             }
+            if (!currentPath.equals(path)) {
+                textFile.setText(path);
+            }
         }
-        if (!currentPath.equals(path)) {
-            textFile.setText(path);
-        }
+
         return path;
     }
 
@@ -674,10 +675,11 @@ public class GenerateReportDialog extends TitleAreaDialog {
             } else {
                 path = currentPath + chosenOutputFormat.getFileSuffix();
             }
+            if (!currentPath.equals(path)) {
+                textFile.setText(path);
+            }
         }
-        if (!currentPath.equals(path)) {
-            textFile.setText(path);
-        }
+       
     }
 
     protected String getDefaultOutputFilename() {
