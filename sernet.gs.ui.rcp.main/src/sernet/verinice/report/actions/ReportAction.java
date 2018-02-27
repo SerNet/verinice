@@ -109,7 +109,7 @@ public abstract class ReportAction extends RightsEnabledActionDelegate
     }
 
     protected void openDialog() {
-        if (!isContextMenuCall() || rootObjects == null || rootObjects.size() == 0) {
+        if (!isContextMenuCall() || rootObjects == null || rootObjects.isEmpty()) {
             dialog = new GenerateReportDialog(shell);
         } else if (rootObjects.size() == 1 && isContextMenuCall()) {
             dialog = new GenerateReportDialog(shell, rootObjects.get(0));

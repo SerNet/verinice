@@ -576,7 +576,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
             scopeCombo.select(0);
             scopeCombo.redraw();
             return;
-        } else if (this.preSelectedElments != null && this.preSelectedElments.size() > 0
+        } else if (this.preSelectedElments != null && !this.preSelectedElments.isEmpty()
                 && isContextMenuCall()) {
             scopeCombo.removeAll();
             ArrayList<Integer> auditIDList = new ArrayList<>();
@@ -734,7 +734,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
             IValidationService vService = ServiceFactory.lookupValidationService();
             boolean validationsExistant = false;
             for (Integer scopeId : scopeIds) {
-                if (vService.getValidations(scopeId, (Integer) null).size() > 0) {
+                if (!vService.getValidations(scopeId, (Integer) null).isEmpty()) {
                     validationsExistant = true;
                     break;
                 }
