@@ -481,6 +481,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
         return reportGroup;
     }
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     public void selectTemplateFile() {
         FileDialog dlg = new FileDialog(getParentShell(), SWT.OPEN);
@@ -667,7 +670,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 textFile.setText(path);
             }
         }
-       
+
     }
 
     protected String getDefaultOutputFilename() {
@@ -692,6 +695,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
         return convertToFileName(sb.toString());
     }
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     public boolean isReportTemplate() {
         // return chosenReportType != null &&
@@ -804,6 +810,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
         return chosenOutputFormat;
     }
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     public IReportType getReportType() {
         return chosenReportType;
