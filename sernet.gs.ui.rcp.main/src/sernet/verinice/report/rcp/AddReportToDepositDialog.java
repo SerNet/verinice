@@ -335,10 +335,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
                     FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(),
                     getReportOutputFormats(), true, null, allowMultipleRootObjects.getSelection());
             getReportService().add(metaData, rptDesignFile, getLanguage());
-        } catch (IOException e) {
-            LOG.error("Error while adding new report template file", e); //$NON-NLS-1$
-            ExceptionUtil.log(e, Messages.AddReportToDepositDialog_3);
-        } catch (ReportDepositException e) {
+        } catch (IOException | ReportDepositException e) {
             LOG.error("Error while adding new report template file", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.AddReportToDepositDialog_3);
         }
