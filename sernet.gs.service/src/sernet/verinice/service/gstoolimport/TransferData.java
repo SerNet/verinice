@@ -45,6 +45,7 @@ import sernet.gs.reveng.MbBaust;
 import sernet.gs.reveng.MbDringlichkeit;
 import sernet.gs.reveng.MbDringlichkeitId;
 import sernet.gs.reveng.MbDringlichkeitTxt;
+import sernet.gs.reveng.MbDringlichkeitTxtId;
 import sernet.gs.reveng.MbGefaehr;
 import sernet.gs.reveng.MbRolleTxt;
 import sernet.gs.reveng.MsUnj;
@@ -704,11 +705,12 @@ public class TransferData {
         }
 
         MbDringlichkeitId drgId = mbDringlichkeit.getId();
-        String drgName = "";
         for (MbDringlichkeitTxt dringlichkeit : dringlichkeiten) {
-            if (dringlichkeit.getId().getSprId() == 1 && dringlichkeit.getId().equals(drgId)) {
-                drgName = dringlichkeit.getName();
-                return drgMap.get(drgName);
+            MbDringlichkeitTxtId dringlichkeitId = dringlichkeit.getId();
+            if (dringlichkeitId.getSprId() == 1
+                    && dringlichkeitId.getDrgId().equals(drgId.getDrgId())
+                    && dringlichkeitId.getDrgImpId().equals(drgId.getDrgImpId())) {
+                return drgMap.get(dringlichkeit.getName());
             }
         }
         return "";
