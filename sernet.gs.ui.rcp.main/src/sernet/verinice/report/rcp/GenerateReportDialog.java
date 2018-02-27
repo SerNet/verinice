@@ -175,7 +175,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         }
     }
 
-    public GenerateReportDialog(Shell shell, List<Object> objects) {
+    public GenerateReportDialog(Shell shell, List<?> objects) {
         this(shell);
         List<CnATreeElement> elmts = new ArrayList<>();
         for (Object object : objects) {
@@ -185,7 +185,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         this.preSelectedElments = elmts;
     }
 
-    public GenerateReportDialog(Shell shell, List<Object> objects, String useCase) {
+    public GenerateReportDialog(Shell shell, List<?> objects, String useCase) {
         this(shell, objects);
         this.useCase = useCase;
     }
@@ -425,15 +425,13 @@ public class GenerateReportDialog extends TitleAreaDialog {
      * 
      * @return sorted Array (for access later on)
      */
-    @SuppressWarnings("unchecked")
     private ReportTemplateMetaData[] fillReportCombo() {
 
-        Arrays.sort(reportTemplates, new Comparator() {
+        Arrays.sort(reportTemplates, new Comparator<ReportTemplateMetaData>() {
             @Override
-            public int compare(Object template1, Object template2) {
-                return comparator.compare(
-                        ((ReportTemplateMetaData) template1).getDecoratedOutputname(),
-                        ((ReportTemplateMetaData) template2).getDecoratedOutputname());
+            public int compare(ReportTemplateMetaData template1, ReportTemplateMetaData template2) {
+                return comparator.compare(template1.getDecoratedOutputname(),
+                        template2.getDecoratedOutputname());
             }
         });
 
@@ -989,7 +987,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 Messages.GenerateReportDialog_28, Messages.ReportDepositView_24);
     }
 
-    private void sortList(List list) {
+    private void sortList(List<ReportTemplateMetaData> list) {
         Collections.sort(list, new Comparator<ReportTemplateMetaData>() {
 
             @Override

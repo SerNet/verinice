@@ -527,7 +527,7 @@ public class ReportDepositView extends RightsEnabledView {
     }
 
     private void deleteAttachments() {
-        Iterator iterator = ((IStructuredSelection) viewer.getSelection()).iterator();
+        Iterator<?> iterator = ((IStructuredSelection) viewer.getSelection()).iterator();
         while (iterator.hasNext()) {
             ReportTemplateMetaData sel = (ReportTemplateMetaData) iterator.next();
             try {

@@ -61,7 +61,7 @@ public abstract class ReportAction extends RightsEnabledActionDelegate
     Shell shell;
 
     protected GenerateReportDialog dialog;
-    protected List<Object> rootObjects;
+    protected List<?> rootObjects;
 
     private boolean generationSuccessful = false;
 
