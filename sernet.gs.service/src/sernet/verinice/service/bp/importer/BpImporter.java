@@ -1067,6 +1067,8 @@ public class BpImporter {
                 if (safeguardParent == null) {
                     safeguardParent = (SafeguardGroup) createElement(SafeguardGroup.TYPE_ID,
                             moduleParent, moduleTitle);
+                    safeguardParent.setIdentifier(moduleIdentifier);
+                    safeguardParent = (SafeguardGroup) updateElement(safeguardParent);
                 }
             }
         }
