@@ -281,6 +281,7 @@ public class BSIElementEditor extends EditorPart {
             isModelModified = false;
             this.setPartName(cnAElement.getTitle());
             this.setTitleToolTip(cnAElement.getTitle());
+            setIcon();
             firePropertyChange(IEditorPart.PROP_DIRTY);
         } catch (StaleObjectStateException se) {
             // close editor, loosing changes:
