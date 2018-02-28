@@ -903,14 +903,10 @@ public class GenerateReportDialog extends TitleAreaDialog {
         ArrayList<ReportTemplateMetaData> list = new ArrayList<>();
         if (useCase != null && !useCase.equals("") && reportTemplates.length > 0) {
             for (ReportTemplateMetaData data : reportTemplates) {
-                // if (rt.getUseCaseID().equals(useCase) ||
-                // rt.getUseCaseID().equals(IReportType.USE_CASE_ID_ALWAYS_REPORT))
-                // {
                 /*
                  * TODO: add use case to template properties for filtering
                  */
                 list.add(data);
-                // }
             }
         }
         reportTemplates = list.toArray(new ReportTemplateMetaData[list.size()]);
