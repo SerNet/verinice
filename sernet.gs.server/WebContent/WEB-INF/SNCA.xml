@@ -9885,57 +9885,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
         </huipropertygroup>
 
-
-        <huipropertygroup id="bp_requirement_effectivenessgroup" name="Safeguard Strength"
-            tags="Risk">
-            <huiproperty name="Impact on Confidentiality" id="bp_requirement_effectiveness_c"
-                tags="Risk" inputtype="numericoption" min="0" max="4">
-                <option name="No effect" id="bp_requirement_effectiveness_c_0" value="0" />
-                <option name="Modified to Very High" id="bp_requirement_effectiveness_c_1"
-                    value="1" />
-                <option name="Modified to High" id="bp_requirement_effectiveness_c_2" value="2" />
-                <option name="Modified to Normal" id="bp_requirement_effectiveness_c_3"
-                    value="3" />
-                <option name="Modified to Insignificant" id="bp_requirement_effectiveness_c_4"
-                    value="4" />
-            </huiproperty>
-            <huiproperty tags="Risk" name="Impact on Integrity" id="bp_requirement_effectiveness_i"
-                inputtype="numericoption" min="0" max="4">
-                <option name="No effect" id="bp_requirement_effectiveness_i_0" value="0" />
-                <option name="Modified to Very High" id="bp_requirement_effectiveness_i_1"
-                    value="1" />
-                <option name="Modified to High" id="bp_requirement_effectiveness_i_2" value="2" />
-                <option name="Modified to Normal" id="bp_requirement_effectiveness_i_3"
-                    value="3" />
-                <option name="Modified to Insignificant" id="bp_requirement_effectiveness_i_4"
-                    value="4" />
-            </huiproperty>
-            <huiproperty tags="Risk" name="Impact on Availability" id="bp_requirement_effectiveness_a"
-                inputtype="numericoption" min="0" max="4">
-                <option name="No effect" id="bp_requirement_effectiveness_a_0" value="0" />
-                <option name="Modified to Very High" id="bp_requirement_effectiveness_a_1"
-                    value="1" />
-                <option name="Modified to High" id="bp_requirement_effectiveness_a_2" value="2" />
-                <option name="Modified to Normal" id="bp_requirement_effectiveness_a_3"
-                    value="3" />
-                <option name="Modified to Insignificant" id="bp_requirement_effectiveness_a_4"
-                    value="4" />
-            </huiproperty>
-            <huiproperty tags="Risk" name="Probability of threat" id="bp_requirement_effectiveness_p"
-                inputtype="numericoption" min="0" max="4">
-                <option name="No effect" id="bp_requirement_effectiveness_p_0" value="0" />
-                <option name="Modified to Very Often" id="bp_requirement_effectiveness_p_1"
-                    value="1" />
-                <option name="Modified to Frequently" id="bp_requirement_effectiveness_p_2"
-                    value="2" />
-                <option name="Modified to Medium" id="bp_requirement_effectiveness_p_3"
-                    value="3" />
-                <option name="Modified to Rare" id="bp_requirement_effectiveness_p_4" value="4" />
-            </huiproperty>
-            <huiproperty tags="Risk" name="Description" id="bp_requirement_effectiveness_desc"
-                inputtype="text" />
-        </huipropertygroup>
-
         <huipropertygroup id="bp_requirement_data_protection_objectives_eugdpr" name="Data privacy control objectives according to Art. 32 EU GDPR"
            tags="Privacy">
             <huiproperty id="bp_requirement_data_protection_objectives_eugdpr_pseudonymization"
