@@ -9098,33 +9098,6 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
             <huiproperty id="bp_itnetwork_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
         </huipropertygroup>
-        <huipropertygroup id="bp_itnetwork_risk_management" name="Risk Management"
-            tags="Risk">
-            <huiproperty editable="false" id="bp_itnetwork_risk_c" name="Confidentiality risk value"
-                tags="Risk" />
-            <huiproperty editable="false" id="bp_itnetwork_risk_i" name="Integrity risk value"
-                tags="Risk" />
-            <huiproperty editable="false" id="bp_itnetwork_risk_a" name="Availability risk value"
-                tags="Risk" />
-            <huiproperty editable="false" id="bp_itnetwork_risk_with_control_c"
-                name="Confidentiality risk with implemented safeguards" tags="Risk" />
-            <huiproperty editable="false" id="bp_itnetwork_risk_with_control_i"
-                name="Integrity risk with implemented safeguards" tags="Risk" />
-            <huiproperty editable="false" id="bp_itnetwork_risk_with_control_a"
-                name="Availability risk with implemented safeguards" tags="Risk" />
-            <huiproperty editable="false" id="bp_itnetwork_risk_planned_control_c"
-                name="Confidentiality risk with planned safeguards" tags="Risk" />
-            <huiproperty editable="false" id="bp_itnetwork_risk_planned_control_i"
-                name="Integrity risk with planned safeguards" tags="Risk" />
-            <huiproperty editable="false" id="bp_itnetwork_risk_planned_control_a"
-                name="Availability risk with planned safeguards" tags="Risk" />
-            <huiproperty editable="false" id="bp_itnetwork_risk_without_na_control_c"
-                name="Confidentiality risk without N.A safeguards" tags="Risk" />
-            <huiproperty editable="false" id="bp_itnetwork_risk_without_na_control_i"
-                name="Integrity risk without N.A safeguards" tags="Risk" />
-            <huiproperty editable="false" id="bp_itnetwork_risk_without_na_control_a"
-                name="Availability risk without N.A safeguards" tags="Risk" />
-        </huipropertygroup>
         <huipropertygroup id="bp_itnetwork_group_protection_level_insignificant"
             name="Protection Level Category: Insignificant">
             <huiproperty id="bp_itnetwork_pl_insignificant_laws" inputtype="text"
@@ -9292,32 +9265,6 @@ Wurden bereits weitere Stellen informiert?
                     </param>
                 </defaultRule>
             </huiproperty>
-        </huipropertygroup>
-        <huipropertygroup id="bp_itnetwork_threat_probability_group" name="Threat probability"
-            tags="Risk">
-            <huiproperty id="bp_itnetwork_threat_probability" inputtype="text" name="Probability"
-                tags="Risk" textrows="6">
-                <defaultRule class="SimpleValue">
-                    <param id="bp_itnetwork_threat_probability_default">Threats are classified by the probability of their ocurrence as
-                        follows:
-                        Rare:  Event could occur according to current knowledge at most every 5 years.
-                        Medium:  Event occurs once every 5 years to once a year.
-                        Frequent:  Event occurs once a year to once a month.
-                        Very often:  Event occurs several times a month.
-                    </param>
-                </defaultRule>
-            </huiproperty>
-        </huipropertygroup>
-        <huipropertygroup id="bp_itnetwork_risk_group" name="Acceptable Risk Levels"
-            tags="Risk">
-            <huiproperty id="bp_itnetwork_risk_acceptance_c" inputtype="numericoption"
-                max="6" min="0" name="Confidentiality" tags="Risk" />
-            <huiproperty id="bp_itnetwork_risk_acceptance_i" inputtype="numericoption"
-                max="6" min="0" name="Integrity" tags="Risk" />
-            <huiproperty id="bp_itnetwork_risk_acceptance_a" inputtype="numericoption"
-                max="6" min="0" name="Availability" tags="Risk" />
-            <huiproperty id="bp_itnetwork_risk_acceptance_explanation" inputtype="text"
-                name="Explanation" tags="Risk" />
         </huipropertygroup>
         <huipropertygroup id="bp_itnetwork_vv_bsig" name="VV BSIG">
             <huiproperty id="bp_itnetwork_vv_bsig_authority" name="Authority" />
