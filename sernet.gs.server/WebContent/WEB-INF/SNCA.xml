@@ -676,7 +676,6 @@ the value between <param></param> will be used directly if no string is found fo
             <option id="server_kix_workflow_status_failure" name="Failure"/>
         </huiproperty>
       </huipropertygroup>
-
     </huientity>
 
     <huientity
@@ -9588,6 +9587,25 @@ Wurden bereits weitere Stellen informiert?
 		    </huiproperty>
 		    <huiproperty id="bp_icssystem_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
         </huipropertygroup>
+        <huipropertygroup name="KIX" id="bp_icssystem_kix" tags="KIX" >
+            <huiproperty name="KIX Ticket 1" id="bp_icssystem_kix_ticket1" isURL="true"/>
+            <huiproperty name="KIX Ticket 2" id="bp_icssystem_kix_ticket2" isURL="true"/>
+            <huiproperty name="KIX Ticket 3" id="bp_icssystem_kix_ticket3" isURL="true"/>
+            <huiproperty name="KIX Ticket 4" id="bp_icssystem_kix_ticket4" isURL="true"/>
+            <huiproperty name="KIX Ticket 5" id="bp_icssystem_kix_ticket5" isURL="true"/>
+            <huiproperty name="KIX Ticket 6" id="bp_icssystem_kix_ticket6" isURL="true"/>
+            <huiproperty name="KIX Ticket 7" id="bp_icssystem_kix_ticket7" isURL="true"/>
+            <huiproperty name="KIX Ticket 8" id="bp_icssystem_kix_ticket8" isURL="true"/>
+            <huiproperty name="KIX Ticket 9" id="bp_icssystem_kix_ticket9" isURL="true"/>
+            <huiproperty name="KIX Ticket 10" id="bp_icssystem_kix_ticket10" isURL="true"/>
+            <huiproperty id="bp_icssystem_kix_workflow_status" name="KIX workflow status" tags="KIX" inputtype="singleoption" >
+                <option id="bp_icssystem_kix_workflow_status_not_requested" name="Not requested"/>
+                <option id="bp_icssystem_kix_workflow_status_start" name="Start workflow"/>
+                <option id="bp_icssystem_kix_workflow_status_running" name="Running"/>
+                <option id="bp_icssystem_kix_workflow_status_finished" name="Finished"/>
+                <option id="bp_icssystem_kix_workflow_status_failure" name="Failure"/>
+            </huiproperty>
+        </huipropertygroup>
     </huientity>
 
     <huientity id="bp_icssystem_group" name="ICS System Group">
@@ -9694,7 +9712,26 @@ Wurden bereits weitere Stellen informiert?
 		    </huiproperty>
 		    <huiproperty id="bp_itsystem_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
         </huipropertygroup>
-    </huientity>
+        <huipropertygroup name="KIX" id="bp_itsystem_kix" tags="KIX" >
+            <huiproperty name="KIX Ticket 1" id="bp_itsystem_kix_ticket1" isURL="true"/>
+            <huiproperty name="KIX Ticket 2" id="bp_itsystem_kix_ticket2" isURL="true"/>
+            <huiproperty name="KIX Ticket 3" id="bp_itsystem_kix_ticket3" isURL="true"/>
+            <huiproperty name="KIX Ticket 4" id="bp_itsystem_kix_ticket4" isURL="true"/>
+            <huiproperty name="KIX Ticket 5" id="bp_itsystem_kix_ticket5" isURL="true"/>
+            <huiproperty name="KIX Ticket 6" id="bp_itsystem_kix_ticket6" isURL="true"/>
+            <huiproperty name="KIX Ticket 7" id="bp_itsystem_kix_ticket7" isURL="true"/>
+            <huiproperty name="KIX Ticket 8" id="bp_itsystem_kix_ticket8" isURL="true"/>
+            <huiproperty name="KIX Ticket 9" id="bp_itsystem_kix_ticket9" isURL="true"/>
+            <huiproperty name="KIX Ticket 10" id="bp_itsystem_kix_ticket10" isURL="true"/>
+            <huiproperty id="bp_itsystem_kix_workflow_status" name="KIX workflow status" tags="KIX" inputtype="singleoption" >
+                <option id="bp_itsystem_kix_workflow_status_not_requested" name="Not requested"/>
+                <option id="bp_itsystem_kix_workflow_status_start" name="Start workflow"/>
+                <option id="bp_itsystem_kix_workflow_status_running" name="Running"/>
+                <option id="bp_itsystem_kix_workflow_status_finished" name="Finished"/>
+                <option id="bp_itsystem_kix_workflow_status_failure" name="Failure"/>
+            </huiproperty>
+        </huipropertygroup>
+      </huientity>
 
     <huientity id="bp_itsystem_group" name="IT System Group">
         <huiproperty id="bp_itsystem_group_name" name="Title" required="true" />
@@ -9920,6 +9957,25 @@ Wurden bereits weitere Stellen informiert?
                 inputtype="booleanoption" name="Effectiveness of TOMs" defaultValue="0" tags="Privacy" />
         </huipropertygroup>
 
+        <huipropertygroup name="KIX" id="bp_requirement_kix" tags="KIX" >
+            <huiproperty name="KIX Ticket 1" id="bp_requirement_kix_ticket1" isURL="true"/>
+            <huiproperty name="KIX Ticket 2" id="bp_requirement_kix_ticket2" isURL="true"/>
+            <huiproperty name="KIX Ticket 3" id="bp_requirement_kix_ticket3" isURL="true"/>
+            <huiproperty name="KIX Ticket 4" id="bp_requirement_kix_ticket4" isURL="true"/>
+            <huiproperty name="KIX Ticket 5" id="bp_requirement_kix_ticket5" isURL="true"/>
+            <huiproperty name="KIX Ticket 6" id="bp_requirement_kix_ticket6" isURL="true"/>
+            <huiproperty name="KIX Ticket 7" id="bp_requirement_kix_ticket7" isURL="true"/>
+            <huiproperty name="KIX Ticket 8" id="bp_requirement_kix_ticket8" isURL="true"/>
+            <huiproperty name="KIX Ticket 9" id="bp_requirement_kix_ticket9" isURL="true"/>
+            <huiproperty name="KIX Ticket 10" id="bp_requirement_kix_ticket10" isURL="true"/>
+            <huiproperty id="bp_requirement_kix_workflow_status" name="KIX workflow status" tags="KIX" inputtype="singleoption" >
+                <option id="bp_requirement_kix_workflow_status_not_requested" name="Not requested"/>
+                <option id="bp_requirement_kix_workflow_status_start" name="Start workflow"/>
+                <option id="bp_requirement_kix_workflow_status_running" name="Running"/>
+                <option id="bp_requirement_kix_workflow_status_finished" name="Finished"/>
+                <option id="bp_requirement_kix_workflow_status_failure" name="Failure"/>
+            </huiproperty>
+        </huipropertygroup>
     </huientity>
 
     <huientity id="bp_requirement_group" name="Module">
@@ -10098,6 +10154,25 @@ Wurden bereits weitere Stellen informiert?
 		    </huiproperty>
 		    <huiproperty id="bp_network_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
         </huipropertygroup>
+        <huipropertygroup name="KIX" id="bp_network_kix" tags="KIX" >
+            <huiproperty name="KIX Ticket 1" id="bp_network_kix_ticket1" isURL="true"/>
+            <huiproperty name="KIX Ticket 2" id="bp_network_kix_ticket2" isURL="true"/>
+            <huiproperty name="KIX Ticket 3" id="bp_network_kix_ticket3" isURL="true"/>
+            <huiproperty name="KIX Ticket 4" id="bp_network_kix_ticket4" isURL="true"/>
+            <huiproperty name="KIX Ticket 5" id="bp_network_kix_ticket5" isURL="true"/>
+            <huiproperty name="KIX Ticket 6" id="bp_network_kix_ticket6" isURL="true"/>
+            <huiproperty name="KIX Ticket 7" id="bp_network_kix_ticket7" isURL="true"/>
+            <huiproperty name="KIX Ticket 8" id="bp_network_kix_ticket8" isURL="true"/>
+            <huiproperty name="KIX Ticket 9" id="bp_network_kix_ticket9" isURL="true"/>
+            <huiproperty name="KIX Ticket 10" id="bp_network_kix_ticket10" isURL="true"/>
+            <huiproperty id="bp_network_kix_workflow_status" name="KIX workflow status" tags="KIX" inputtype="singleoption" >
+                <option id="bp_network_kix_workflow_status_not_requested" name="Not requested"/>
+                <option id="bp_network_kix_workflow_status_start" name="Start workflow"/>
+                <option id="bp_network_kix_workflow_status_running" name="Running"/>
+                <option id="bp_network_kix_workflow_status_finished" name="Finished"/>
+                <option id="bp_network_kix_workflow_status_failure" name="Failure"/>
+            </huiproperty>
+        </huipropertygroup>
     </huientity>
 
     <huientity id="bp_network_group" name="Network Group">
@@ -10197,6 +10272,25 @@ Wurden bereits weitere Stellen informiert?
 		      <option id="bp_device_value_availability_very_high" name="Very High" value="4"/>
 		    </huiproperty>
 		    <huiproperty id="bp_device_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
+        </huipropertygroup>
+        <huipropertygroup name="KIX" id="bp_device_kix" tags="KIX" >
+            <huiproperty name="KIX Ticket 1" id="bp_device_kix_ticket1" isURL="true"/>
+            <huiproperty name="KIX Ticket 2" id="bp_device_kix_ticket2" isURL="true"/>
+            <huiproperty name="KIX Ticket 3" id="bp_device_kix_ticket3" isURL="true"/>
+            <huiproperty name="KIX Ticket 4" id="bp_device_kix_ticket4" isURL="true"/>
+            <huiproperty name="KIX Ticket 5" id="bp_device_kix_ticket5" isURL="true"/>
+            <huiproperty name="KIX Ticket 6" id="bp_device_kix_ticket6" isURL="true"/>
+            <huiproperty name="KIX Ticket 7" id="bp_device_kix_ticket7" isURL="true"/>
+            <huiproperty name="KIX Ticket 8" id="bp_device_kix_ticket8" isURL="true"/>
+            <huiproperty name="KIX Ticket 9" id="bp_device_kix_ticket9" isURL="true"/>
+            <huiproperty name="KIX Ticket 10" id="bp_device_kix_ticket10" isURL="true"/>
+            <huiproperty id="bp_device_kix_workflow_status" name="KIX workflow status" tags="KIX" inputtype="singleoption" >
+                <option id="bp_device_kix_workflow_status_not_requested" name="Not requested"/>
+                <option id="bp_device_kix_workflow_status_start" name="Start workflow"/>
+                <option id="bp_device_kix_workflow_status_running" name="Running"/>
+                <option id="bp_device_kix_workflow_status_finished" name="Finished"/>
+                <option id="bp_device_kix_workflow_status_failure" name="Failure"/>
+            </huiproperty>
         </huipropertygroup>
     </huientity>
 
@@ -10380,6 +10474,25 @@ Wurden bereits weitere Stellen informiert?
                 inputtype="booleanoption" name="Effectiveness of TOMs" defaultValue="0" tags="Privacy" />
         </huipropertygroup>
 
+        <huipropertygroup name="KIX" id="bp_safeguard_kix" tags="KIX" >
+            <huiproperty name="KIX Ticket 1" id="bp_safeguard_kix_ticket1" isURL="true"/>
+            <huiproperty name="KIX Ticket 2" id="bp_safeguard_kix_ticket2" isURL="true"/>
+            <huiproperty name="KIX Ticket 3" id="bp_safeguard_kix_ticket3" isURL="true"/>
+            <huiproperty name="KIX Ticket 4" id="bp_safeguard_kix_ticket4" isURL="true"/>
+            <huiproperty name="KIX Ticket 5" id="bp_safeguard_kix_ticket5" isURL="true"/>
+            <huiproperty name="KIX Ticket 6" id="bp_safeguard_kix_ticket6" isURL="true"/>
+            <huiproperty name="KIX Ticket 7" id="bp_safeguard_kix_ticket7" isURL="true"/>
+            <huiproperty name="KIX Ticket 8" id="bp_safeguard_kix_ticket8" isURL="true"/>
+            <huiproperty name="KIX Ticket 9" id="bp_safeguard_kix_ticket9" isURL="true"/>
+            <huiproperty name="KIX Ticket 10" id="bp_safeguard_kix_ticket10" isURL="true"/>
+            <huiproperty id="bp_safeguard_kix_workflow_status" name="KIX workflow status" tags="KIX" inputtype="singleoption" >
+                <option id="bp_safeguard_kix_workflow_status_not_requested" name="Not requested"/>
+                <option id="bp_safeguard_kix_workflow_status_start" name="Start workflow"/>
+                <option id="bp_safeguard_kix_workflow_status_running" name="Running"/>
+                <option id="bp_safeguard_kix_workflow_status_finished" name="Finished"/>
+                <option id="bp_safeguard_kix_workflow_status_failure" name="Failure"/>
+            </huiproperty>
+        </huipropertygroup>
     </huientity>
 
     <huientity id="bp_safeguard_group" name="Safeguard Group">
