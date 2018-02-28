@@ -39,6 +39,9 @@ public class SafeguardGroup extends Group<Safeguard> implements IBpGroup {
 
     private static final String PROP_NAME = "bp_safeguard_group_name"; //$NON-NLS-1$
     
+    private static final String PROP_ID = "bp_safeguard_group_id"; //$NON-NLS-1$
+
+    
     public static final String[] CHILD_TYPES = new String[] {Safeguard.TYPE_ID};
     
     protected SafeguardGroup() {}
@@ -66,6 +69,14 @@ public class SafeguardGroup extends Group<Safeguard> implements IBpGroup {
     @Override
     public void setTitel(String title) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
+    }
+    
+    public String getIdentifier() {
+        return getEntity().getPropertyValue(PROP_ID);
+    }
+
+    public void setIdentifier(String id) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), id);
     }
 
 }

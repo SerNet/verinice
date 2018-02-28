@@ -29,6 +29,7 @@ import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
@@ -145,6 +146,9 @@ public class TreeLabelProvider extends LabelProvider {
         } else if (element instanceof BpRequirementGroup) {
             BpRequirementGroup requirementGroup = (BpRequirementGroup) element;
             return requirementGroup.getIdentifier().concat(" ");
+        } else if (element instanceof SafeguardGroup) {
+            SafeguardGroup safeguardGroup = (SafeguardGroup) element;
+            return safeguardGroup.getIdentifier().concat(" ");
         }
         return "";
     }

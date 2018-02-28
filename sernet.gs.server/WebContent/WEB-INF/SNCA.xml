@@ -10664,6 +10664,7 @@ Wurden bereits weitere Stellen informiert?
     </huientity>
 
     <huientity id="bp_safeguard_group" name="Safeguard Group">
+        <huiproperty id="bp_safeguard_group_id" name="Identifier" />
         <huiproperty id="bp_safeguard_group_name" name="Title" required="true" />
         <huiproperty editable="false" id="bp_safeguard_group_objectbrowser_content"
             inputtype="text" name="Safeguardgroup Content" showInObjectBrowser="true" visible="false" />
