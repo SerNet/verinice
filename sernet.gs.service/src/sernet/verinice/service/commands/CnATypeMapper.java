@@ -341,10 +341,10 @@ public final class CnATypeMapper {
     public static Domain getDomainFromTypeId(String typeId) {
         Class<Object> clazz = getClassFromTypeId(typeId);
         if (IBpElement.class.isAssignableFrom(clazz)) {
-            return Domain.BP;
+            return Domain.BASE_PROTECTION;
         }
         if (IISO27kElement.class.isAssignableFrom(clazz)) {
-            return Domain.ISO;
+            return Domain.ISM;
         }
         if (IBSIStrukturElement.class.isAssignableFrom(clazz)
                 || IBSIStrukturKategorie.class.isAssignableFrom(clazz)
@@ -352,10 +352,10 @@ public final class CnATypeMapper {
                 || IGefaehrdungsBaumElement.class.isAssignableFrom(clazz)
                 || BausteinUmsetzung.class.equals(clazz)
                 || FinishedRiskAnalysis.class.equals(clazz)) {
-            return Domain.BP_OLD;
+            return Domain.BASE_PROTECTION_OLD;
         }
         if (IDatenschutzElement.class.isAssignableFrom(clazz)) {
-            return Domain.DP;
+            return Domain.DATA_PROTECTION;
         }
         throw new IllegalArgumentException("Unupported type " + clazz + " (" + typeId + ")");
     }
