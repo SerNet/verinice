@@ -10029,14 +10029,6 @@ Wurden bereits weitere Stellen informiert?
             name="Affects Integrity" tags="Risk" />
         <huiproperty defaultValue="1" id="bp_threat_value_method_availability"
             inputtype="booleanoption" name="Affects Availability" tags="Risk" />
-        <huiproperty defaultValue="0" id="bp_threat_probability" inputtype="numericoption"
-            max="4" min="0" name="Threat Probability" tags="Risk">
-            <option id="bp_threat_probability_0" name="Unedited" value="0" />
-            <option id="bp_threat_probability_1" name="Rare" value="1" />
-            <option id="bp_threat_probability_2" name="Medium" value="2" />
-            <option id="bp_threat_probability_3" name="Frequently" value="3" />
-            <option id="bp_threat_probability_4" name="Very Often" value="4" />
-        </huiproperty>
     </huientity>
 
     <huientity id="bp_threat_group" name="bp_threat-Group">
