@@ -19,13 +19,14 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
+import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
-public class BpThreat extends CnATreeElement implements IBpElement {
+public class BpThreat extends CnATreeElement implements IBpElement, IIdentifiableElement {
     
     private static final long serialVersionUID = -7182966153863832177L;
     
@@ -87,6 +88,7 @@ public class BpThreat extends CnATreeElement implements IBpElement {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
     
+    @Override
     public String getIdentifier() {
         return getEntity().getPropertyValue(PROP_ID);
     }
@@ -127,6 +129,11 @@ public class BpThreat extends CnATreeElement implements IBpElement {
     
     public static String getIdentifierOfThreat(CnATreeElement requirement) {
         return requirement.getEntity().getPropertyValue(PROP_ID);
+    }
+
+    @Override
+    public String getFullTitle() {
+        return joinPrefixAndTitle(getIdentifier(), getTitle());
     }
 
 }

@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.groups;
 
+import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.CnATreeElement;
@@ -28,7 +29,7 @@ import sernet.verinice.model.iso27k.Group;
  * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
-public class SafeguardGroup extends Group<Safeguard> implements IBpGroup {
+public class SafeguardGroup extends Group<Safeguard> implements IBpGroup, IIdentifiableElement {
     
     private static final long serialVersionUID = -6689926582876183791L;
     
@@ -71,12 +72,18 @@ public class SafeguardGroup extends Group<Safeguard> implements IBpGroup {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
     }
     
+    @Override
     public String getIdentifier() {
         return getEntity().getPropertyValue(PROP_ID);
     }
 
     public void setIdentifier(String id) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), id);
+    }
+
+    @Override
+    public String getFullTitle() {
+        return joinPrefixAndTitle(getIdentifier(), getTitle());
     }
 
 }

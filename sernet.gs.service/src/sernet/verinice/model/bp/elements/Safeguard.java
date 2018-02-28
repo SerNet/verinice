@@ -23,6 +23,7 @@ import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementa
 
 import java.util.Date;
 
+import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.Reevaluator;
@@ -37,7 +38,7 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * @author Daniel Murygin dm[at]sernet.de
  *
  */
-public class Safeguard extends CnATreeElement implements IBpElement {
+public class Safeguard extends CnATreeElement implements IBpElement, IIdentifiableElement {
 
     private static final long serialVersionUID = -2117441377311538326L;
 
@@ -144,6 +145,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
     }
 
+    @Override
     public String getIdentifier() {
         return getEntity().getPropertyValue(PROP_ID);
     }
@@ -191,5 +193,10 @@ public class Safeguard extends CnATreeElement implements IBpElement {
 
     public static String getIdentifierOfSafeguard(CnATreeElement requirement) {
         return requirement.getEntity().getPropertyValue(PROP_ID);
+    }
+
+    @Override
+    public String getFullTitle() {
+        return joinPrefixAndTitle(getIdentifier(), getTitle());
     }
 }
