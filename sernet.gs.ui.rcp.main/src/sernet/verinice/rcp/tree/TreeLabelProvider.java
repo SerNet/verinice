@@ -28,15 +28,9 @@ import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
-import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kElement;
-import sernet.verinice.model.iso27k.ImportIsoGroup;
-import sernet.verinice.model.samt.SamtTopic;
-import sernet.verinice.service.iso27k.ControlMaturityService;
 import sernet.verinice.service.iso27k.ItemControlTransformer;
 
 /**
@@ -54,8 +48,6 @@ public class TreeLabelProvider extends LabelProvider {
         super();
     }
 
-    private ControlMaturityService maturityService = new ControlMaturityService();
-
     @Override
     public Image getImage(Object obj) {
         Image image = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
@@ -63,45 +55,12 @@ public class TreeLabelProvider extends LabelProvider {
             if (!(obj instanceof CnATreeElement)) {
                 return image;
             } else {
-                return getImage((CnATreeElement) obj);
+                return CnAImageProvider.getImage((CnATreeElement) obj);
             }
         } catch (Exception e) {
             LOG.error("Error while getting image for tree item.", e);
             return image;
         }
-    }
-
-    private Image getImage(CnATreeElement element) {
-        Image image = CnAImageProvider.getCustomImage((CnATreeElement) element);
-        if (image != null) {
-            return image;
-        }
-        if (element instanceof Group && !(element instanceof ImportIsoGroup)
-                && !(element instanceof ImportBpGroup)) {
-            Group group = (Group) element;
-            // TODO - getChildTypes()[0] might be a problem for more than one
-            // type
-            image = ImageCache.getInstance().getImageForTypeId(group.getChildTypes()[0]);
-        } else if (element instanceof SamtTopic) {
-            SamtTopic topic = (SamtTopic) element;
-            image = ImageCache.getInstance()
-                    .getControlImplementationImage(maturityService.getIsaState(topic));
-        } else if (element instanceof Control) {
-            Control control = (Control) element;
-            image = ImageCache.getInstance()
-                    .getControlImplementationImage(control.getImplementation());
-
-        } else if (element instanceof Safeguard || element instanceof BpRequirement) {
-            image = CnAImageProvider.getImage(element);
-        } else {
-            // else return type icon:
-            image = ImageCache.getInstance().getImageForTypeId(element.getTypeId());
-        }
-
-        if (image == null) {
-            image = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
-        }
-        return image;
     }
 
     @Override
