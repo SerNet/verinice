@@ -1,17 +1,17 @@
 /*******************************************************************************
  * Copyright (c) 2009 Alexander Koderman <ak[at]sernet[dot]de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ *     This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
+ *     You should have received a copy of the GNU Lesser General Public
+ * License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
@@ -152,21 +152,21 @@ import sernet.verinice.service.model.LoadModel;
 
 /**
  * Factory for all model elements. Contains typed factories for sub-elements.
- * 
- * 
+ *
+ *
  * To add new model types see:
- * 
+ *
  * https://wiki.sernet.private/wiki/Verinice/Entities
- * 
+ *
  * - add new class with new type-id (String) - add type-id to Hitro-UI XML
  * Config (SNCA.xml) - add a factory for the type-id here - add the type to
  * hibernate's cnatreeelement.hbm.xml - don't forget to change the method
  * canContain() in the parent to include the new type - add Actions (add,
  * delete) to plugin.xml - create ActionDelegates which use this factory to
  * create new instances - register editor for type in EditorFactory
- * 
+ *
  * @author koderman[at]sernet[dot]de
- * 
+ *
  */
 public final class CnAElementFactory {
 
@@ -218,6 +218,7 @@ public final class CnAElementFactory {
 
         }
 
+        @Override
         public CnATreeElement build(CnATreeElement container, BuildInput input)
                 throws CommandException {
             CnATreeElement child = dbHome.save(container, elementClass, typeId);
@@ -264,6 +265,7 @@ public final class CnAElementFactory {
 
         // Datenschutz Elemente
         elementbuilders.put(StellungnahmeDSB.TYPE_ID, new ElementBuilder() {
+            @Override
             public CnATreeElement build(CnATreeElement container, BuildInput input)
                     throws CommandException {
                 StellungnahmeDSB child = dbHome.save(container, StellungnahmeDSB.class,
@@ -316,6 +318,7 @@ public final class CnAElementFactory {
         elementbuilders.put(Person.TYPE_ID, new DefaultElementBuilder(Person.TYPE_ID));
 
         elementbuilders.put(Anwendung.TYPE_ID, new ElementBuilder() {
+            @Override
             public CnATreeElement build(CnATreeElement container, BuildInput input)
                     throws CommandException {
 
@@ -332,6 +335,7 @@ public final class CnAElementFactory {
 
         elementbuilders.put(BausteinUmsetzung.TYPE_ID,
                 new IElementBuilder<BausteinUmsetzung, Baustein>() {
+                    @Override
                     public BausteinUmsetzung build(CnATreeElement container,
                             BuildInput<Baustein> input) throws CommandException {
 
@@ -359,6 +363,7 @@ public final class CnAElementFactory {
                 new DefaultElementBuilder(GefaehrdungsUmsetzung.TYPE_ID));
 
         elementbuilders.put(ITVerbund.TYPE_ID, new ElementBuilder() {
+            @Override
             public ITVerbund build(CnATreeElement container, BuildInput input)
                     throws CommandException {
 
@@ -451,6 +456,7 @@ public final class CnAElementFactory {
         // renewed / modernized ITBP
 
         elementbuilders.put(ItNetwork.TYPE_ID, new ElementBuilder() {
+            @Override
             public CnATreeElement build(CnATreeElement container, BuildInput input)
                     throws CommandException {
                 log.debug("Creating new ItNetwork in " + container); //$NON-NLS-1$
@@ -519,7 +525,7 @@ public final class CnAElementFactory {
     /**
      * Create new BSI element with new HUI Entity. The HUI Entity will be added
      * to the given container.
-     * 
+     *
      * @param container
      * @return the newly added element
      * @throws Exception
@@ -544,7 +550,7 @@ public final class CnAElementFactory {
     /**
      * Create new BSI element with new HUI Entity. The HUI Entity will be added
      * to the given container.
-     * 
+     *
      * @param container
      * @return the newly added element
      * @throws Exception
@@ -578,7 +584,7 @@ public final class CnAElementFactory {
     /**
      * Create new BSI element with new HUI Entity. The HUI Entity will be added
      * to the given container.
-     * 
+     *
      * @param container
      * @return the newly added element
      * @throws Exception
@@ -682,9 +688,9 @@ public final class CnAElementFactory {
     /**
      * Method is called to inform listener when an ISO27KModel is loaded or
      * created
-     * 
+     *
      * If an {@link BSIModel} is created method fireLoad() is called
-     * 
+     *
      * @param model
      *            a new loaded or created {@link ISO27KModel}
      */
@@ -708,7 +714,7 @@ public final class CnAElementFactory {
 
     /**
      * Returns whether there is an active database connection.
-     * 
+     *
      * @return
      */
     public boolean isDbOpen() {
@@ -717,7 +723,7 @@ public final class CnAElementFactory {
 
     /**
      * Returns the model for a {@link CnATreeElement}
-     * 
+     *
      * @param element
      *            returned model belongs to this element
      * @return the model for an element
@@ -735,6 +741,9 @@ public final class CnAElementFactory {
     }
 
     public ISO27KModel getISO27kModel() {
+        if (isoModel != null) {
+            return isoModel;
+        }
         synchronized (mutex) {
             if (isoModel == null) {
                 isoModel = loadIsoModel();
@@ -747,6 +756,9 @@ public final class CnAElementFactory {
     }
 
     public BpModel getBpModel() {
+        if (boModel != null) {
+            return boModel;
+        }
         synchronized (mutex) {
             if (boModel == null) {
                 boModel = loadBpModel();
@@ -759,6 +771,9 @@ public final class CnAElementFactory {
     }
 
     public CatalogModel getCatalogModel() {
+        if (catalogModel != null) {
+            return catalogModel;
+        }
         synchronized (mutex) {
             if (catalogModel == null) {
                 catalogModel = loadCatalogModel();
@@ -778,7 +793,7 @@ public final class CnAElementFactory {
             if (log.isInfoEnabled()) {
                 log.info("Catalog Model created"); //$NON-NLS-1$
             }
-            if (isoModel != null) {
+            if (catalogModel != null) {
                 fireLoad(catalogModel);
             }
         } catch (CommandException e) {
@@ -921,6 +936,7 @@ public final class CnAElementFactory {
     /**
      * @deprecated Use method reloadAllModelsFromDatabase()
      */
+    @Deprecated
     public void reloadModelFromDatabase() {
         reloadAllModelsFromDatabase();
     }
