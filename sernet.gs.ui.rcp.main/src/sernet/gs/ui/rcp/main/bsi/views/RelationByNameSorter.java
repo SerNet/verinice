@@ -24,6 +24,7 @@ import java.util.Set;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.model.common.CnALink;
 
 /**
@@ -35,6 +36,8 @@ public class RelationByNameSorter extends ViewerSorter {
 
     private IRelationTable view;
     private Set<String> sorterProperties;
+    private NumericStringComparator numComp = new NumericStringComparator();
+
 
     public RelationByNameSorter(IRelationTable view, String... sorterProperties) {
         this.view = view;
@@ -80,9 +83,11 @@ public class RelationByNameSorter extends ViewerSorter {
         }
 
         // categories are the same, so we sort by name within the category:
-        String title1 = CnALink.getRelationObjectTitle(view.getInputElmt(), link1);
-        String title2 = CnALink.getRelationObjectTitle(view.getInputElmt(), link2);
+        String title1 = RelationViewLabelProvider
+                .getLinkTargetTitleIncludingPotentialIdentifier(view.getInputElmt(), link1);
+        String title2 = RelationViewLabelProvider
+                .getLinkTargetTitleIncludingPotentialIdentifier(view.getInputElmt(), link2);
 
-        return title1.compareTo(title2);
+        return numComp.compare(title1, title2);
     }
 }

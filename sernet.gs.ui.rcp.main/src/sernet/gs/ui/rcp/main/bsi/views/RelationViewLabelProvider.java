@@ -32,7 +32,13 @@ import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
+import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadElementTitles;
@@ -130,14 +136,11 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
             return ""; // image only //$NON-NLS-1$
         case 3:
             replaceLinkEntities(link);
-            return CnALink.getRelationObjectTitle(view.getInputElmt(), link);
+            return getLinkTargetTitleIncludingPotentialIdentifier(view.getInputElmt(), link);
         case 4:
             String title = "";
             try {
-                CnATreeElement target = link.getDependency();
-                if (target.equals(view.getInputElmt())) {
-                    target = link.getDependant();
-                }
+                CnATreeElement target = getElementOnOtherSide(view.getInputElmt(), link);
                 if (!titleMap.containsKey(target.getScopeId())) {
                     title = loadElementsTitles(target);
                 } else {
@@ -166,6 +169,24 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
         default:
             return ""; //$NON-NLS-1$
         }
+    }
+
+    private static CnATreeElement getElementOnOtherSide(CnATreeElement elementOnThisSide, CnALink link) {
+        CnATreeElement dependency = link.getDependency();
+        if (dependency.equals(elementOnThisSide)) {
+            return link.getDependant();
+        }
+        return dependency;
+    }
+
+    public static String getLinkTargetTitleIncludingPotentialIdentifier(CnATreeElement linkSource, CnALink link) {
+        CnATreeElement linkTarget = getElementOnOtherSide(linkSource, link);
+        if (linkTarget instanceof BpRequirement || linkTarget instanceof BpRequirementGroup
+                || linkTarget instanceof Safeguard || linkTarget instanceof SafeguardGroup
+                || linkTarget instanceof BpThreat) {
+            return ((IIdentifiableElement) linkTarget).getFullTitle();
+        }
+        return CnALink.getRelationObjectTitle(linkSource, link);
     }
 
     public static void replaceLinkEntities(CnALink link) {
