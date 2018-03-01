@@ -49,6 +49,7 @@ import sernet.gs.reveng.MbZeiteinheitenTxt;
 import sernet.gs.reveng.ModZobjBst;
 import sernet.gs.reveng.ModZobjBstMass;
 import sernet.gs.reveng.NZielobjekt;
+import sernet.gs.reveng.NZielobjektId;
 import sernet.gs.reveng.NZobSb;
 import sernet.gs.reveng.importData.BausteinInformationTransfer;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
@@ -107,13 +108,13 @@ public class ImportTask extends AbstractGstoolImportTask {
 
     private List<MbZeiteinheitenTxt> zeiten;
     private final Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
-    private final Map<NZielobjekt, CnATreeElement> alleZielobjekte = new HashMap<>();
+    private final Map<NZielobjektId, CnATreeElement> alleZielobjekte = new HashMap<>();
     private final List<Person> allePersonen = new ArrayList<>();
 
     private List<Baustein> allCatalogueBausteine;
 
-    // map of zielobjekt-guid to itverbund NZielobjekt:
-    private final Map<String, NZielobjekt> itverbundZuordnung = new HashMap<>();
+    // map of zielobjekt-guid to itverbund NZielobjekt ID:
+    private final Map<String, NZielobjektId> itverbundZuordnung = new HashMap<>();
 
     private final boolean importBausteine;
     private final boolean massnahmenPersonen;
@@ -127,7 +128,7 @@ public class ImportTask extends AbstractGstoolImportTask {
     private final Map<MbBaust, BausteinUmsetzung> alleBausteineToBausteinUmsetzungMap;
     private final Map<MbBaust, ModZobjBst> alleBausteineToZoBstMap;
     private final Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualMassnahmenMap;  
-    private final Map<NZielobjekt, List<BausteineMassnahmenResult>> nZielObjektBausteineMassnahmenResultMap;
+    private final Map<NZielobjektId, List<BausteineMassnahmenResult>> nZielObjektBausteineMassnahmenResultMap;
     
     private final Set<String> createdLinks;
    
@@ -226,8 +227,8 @@ public class ImportTask extends AbstractGstoolImportTask {
             CnATreeElement element = null;
             if (!neueVerbuende.isEmpty()) {
                 // find correct itverbund for resultZO
-                NZielobjekt origITVerbundZO = itverbundZuordnung.get(zielobjekt.zielobjekt.getGuid());
-                ITVerbund itverbund = (ITVerbund) alleZielobjekte.get(origITVerbundZO);
+                NZielobjektId origITVerbundZOID = itverbundZuordnung.get(zielobjekt.zielobjekt.getGuid());
+                ITVerbund itverbund = (ITVerbund) alleZielobjekte.get(origITVerbundZOID);
                 if (itverbund == null) {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("ITVerbund not found for ZO: " + zielobjekt.zielobjekt.getName() + ". Created in BSI");
@@ -248,7 +249,8 @@ public class ImportTask extends AbstractGstoolImportTask {
             }
             if (element != null) {
                 // save element for later:
-                alleZielobjekte.put(zielobjekt.zielobjekt, element);
+                NZielobjektId identifier = zielobjekt.zielobjekt.getId();
+                alleZielobjekte.put(identifier, element);
 
                 // separately save persons:
                 if (element instanceof Person) {
@@ -325,11 +327,11 @@ public class ImportTask extends AbstractGstoolImportTask {
         monitor.beginTask("Lese Bausteinreferenzen...", n);
         int i = 1;
         startTime = System.currentTimeMillis();
-        for (Entry<NZielobjekt, CnATreeElement> entry : alleZielobjekte.entrySet()) {
-            NZielobjekt zielobjekt = entry.getKey();
+        for (Entry<NZielobjektId, CnATreeElement> entry : alleZielobjekte.entrySet()) {
+            NZielobjektId zielobjektId = entry.getKey();
             CnATreeElement element = entry.getValue();
             monitor.subTask(i + "/" + n + " - " + element.getTitle());
-            createBausteinReferences(element, zielobjekt);
+            createBausteinReferences(element, zielobjektId);
             monitor.worked(1);
             i++;
         }
@@ -360,19 +362,19 @@ public class ImportTask extends AbstractGstoolImportTask {
                 numberImported++;
 
                 // save element for later:
-                alleZielobjekte.put(zielobjekt.zielobjekt, itverbund);
+                alleZielobjekte.put(zielobjekt.zielobjekt.getId(), itverbund);
 
                 TransferData.transfer(itverbund, zielobjekt);
                 createBausteine(sourceId, itverbund, zielobjekt.zielobjekt);
 
                 // save links from itverbuende to other objects to
                 // facilitate creating ZOs in their correct IT-Verbund:
-                List<NZielobjekt> itvLinks = getGstoolDao().findLinksByZielobjekt(zielobjekt.zielobjekt);
+                List<NZielobjekt> itvLinks = getGstoolDao().findLinksByZielobjektId(zielobjekt.zielobjekt.getId());
                 for (NZielobjekt nZielobjekt : itvLinks) {
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("Saving Zuordnung from ZO" + nZielobjekt.getName() + "(GUID " + nZielobjekt.getGuid() + ") to ITVerbund " + zielobjekt.zielobjekt.getName());
                     }
-                    itverbundZuordnung.put(nZielobjekt.getGuid(), zielobjekt.zielobjekt);
+                    itverbundZuordnung.put(nZielobjekt.getGuid(), zielobjekt.zielobjekt.getId());
                 }
             }
         }
@@ -430,15 +432,15 @@ public class ImportTask extends AbstractGstoolImportTask {
      * @param zielobjekt
      * @throws CommandException
      */
-    private void createBausteinReferences(CnATreeElement element, NZielobjekt zielobjekt) throws CommandException {
+    private void createBausteinReferences(CnATreeElement element, NZielobjektId zielobjektId) throws CommandException {
         if (!importBausteine) {
             return;
         }
         
         long startTime = System.currentTimeMillis();
         List<BausteineMassnahmenResult> findBausteinMassnahmenByZielobjekt = null;
-        if(nZielObjektBausteineMassnahmenResultMap.containsKey(zielobjekt)) {
-            findBausteinMassnahmenByZielobjekt = nZielObjektBausteineMassnahmenResultMap.get(zielobjekt);
+        if(nZielObjektBausteineMassnahmenResultMap.containsKey(zielobjektId)) {
+            findBausteinMassnahmenByZielobjekt = nZielObjektBausteineMassnahmenResultMap.get(zielobjektId);
         } else {
             findBausteinMassnahmenByZielobjekt = Collections.emptyList();
         }
@@ -446,7 +448,7 @@ public class ImportTask extends AbstractGstoolImportTask {
         findBausteinMassnahmenByZielobjekt = reduceBausteinMassnahmeResultToOnePerBaustein(findBausteinMassnahmenByZielobjekt);
         
         for(BausteineMassnahmenResult bausteineMassnahmenResult : findBausteinMassnahmenByZielobjekt) {
-            List<Integer> targetIds = getGstoolDao().findReferencedZobsByBaustein(bausteineMassnahmenResult.zoBst, zielobjekt.getId().getZobId());
+            List<Integer> targetIds = getGstoolDao().findReferencedZobsByBaustein(bausteineMassnahmenResult.zoBst, zielobjektId.getZobId());
             Set<CnATreeElement> targets = getCnATreeElementsById(targetIds);
             
             
@@ -538,9 +540,9 @@ public class ImportTask extends AbstractGstoolImportTask {
     }
     
     private CnATreeElement getCnATreeElementByZobId(Integer zobId) {
-        for(Entry<NZielobjekt, CnATreeElement> entry : alleZielobjekte.entrySet()) {
-            NZielobjekt zielobjekt = entry.getKey();
-            if(zobId.equals(zielobjekt.getId().getZobId())){
+        for(Entry<NZielobjektId, CnATreeElement> entry : alleZielobjekte.entrySet()) {
+            NZielobjektId zielobjektId = entry.getKey();
+            if(zobId.equals(zielobjektId.getZobId())){
                 return entry.getValue();
             }
         }
@@ -553,17 +555,17 @@ public class ImportTask extends AbstractGstoolImportTask {
         }
 
         monitor.beginTask("Importiere Schutzbedarf für alle Zielobjekte...", alleZielobjekte.size());
-        Set<Entry<NZielobjekt, CnATreeElement>> alleZielobjekteEntries = alleZielobjekte.entrySet();
+        Set<Entry<NZielobjektId, CnATreeElement>> alleZielobjekteEntries = alleZielobjekte.entrySet();
 
-        for (Entry<NZielobjekt, CnATreeElement> entry : alleZielobjekteEntries) {
+        for (Entry<NZielobjektId, CnATreeElement> entry : alleZielobjekteEntries) {
             handleSchutzBedarfForSingleElement(entry);
         }
 
     }
 
-    private void handleSchutzBedarfForSingleElement(Entry<NZielobjekt, CnATreeElement> entry) throws CommandException {
+    private void handleSchutzBedarfForSingleElement(Entry<NZielobjektId, CnATreeElement> entry) throws CommandException {
         if (entry.getValue().getProtectionRequirementsProvider() != null) {
-            List<NZobSb> internalSchutzbedarf = getGstoolDao().findSchutzbedarfByZielobjekt(entry.getKey());
+            List<NZobSb> internalSchutzbedarf = getGstoolDao().findSchutzbedarfByZielobjektId(entry.getKey());
             for (NZobSb schubeda : internalSchutzbedarf) {
                 transferSchutzBedarfGeneral(entry, schubeda);
             }
@@ -572,8 +574,8 @@ public class ImportTask extends AbstractGstoolImportTask {
         }
     }
 
-    private void transferSchutzBedarfNetzkomponente(Entry<NZielobjekt, CnATreeElement> entry) throws CommandException {
-        List<NZobSb> internalSchutzbedarf = getGstoolDao().findSchutzbedarfByZielobjekt(entry.getKey());
+    private void transferSchutzBedarfNetzkomponente(Entry<NZielobjektId, CnATreeElement> entry) throws CommandException {
+        List<NZobSb> internalSchutzbedarf = getGstoolDao().findSchutzbedarfByZielobjektId(entry.getKey());
         boolean uebertragung, angebunden, vertraulich, integritaet, verfuegbar;
         if (internalSchutzbedarf.size() == 1) {
             NZobSb nzobSb = internalSchutzbedarf.get(0);
@@ -589,7 +591,7 @@ public class ImportTask extends AbstractGstoolImportTask {
         }
     }
 
-    private void transferSchutzBedarfGeneral(Entry<NZielobjekt, CnATreeElement> entry, NZobSb schubeda) throws CommandException {
+    private void transferSchutzBedarfGeneral(Entry<NZielobjektId, CnATreeElement> entry, NZobSb schubeda) throws CommandException {
         CnATreeElement element = entry.getValue();
 
         MSchutzbedarfkategTxt vertr = getGstoolDao().findSchutzbedarfNameForId(schubeda.getZsbVertrSbkId());
@@ -619,12 +621,12 @@ public class ImportTask extends AbstractGstoolImportTask {
         if (!this.zielObjekteZielobjekte) {
             return;
         }
-        Set<NZielobjekt> allElements = alleZielobjekte.keySet();
         List<Link> linkList = new LinkedList<>();
-        for (NZielobjekt zielobjekt : allElements) {
+        for (Entry<NZielobjektId, CnATreeElement> entry : alleZielobjekte.entrySet()) {
             monitor.worked(1);
-            CnATreeElement dependant = alleZielobjekte.get(zielobjekt);
-            List<NZielobjekt> dependencies = getGstoolDao().findLinksByZielobjekt(zielobjekt);
+            NZielobjektId zielobjektId = entry.getKey();
+            CnATreeElement dependant = entry.getValue();
+            List<NZielobjekt> dependencies = getGstoolDao().findLinksByZielobjektId(zielobjektId);
 
             for (NZielobjekt dependency : dependencies) {
                 CnATreeElement dependencyElement = findZielobjektFor(dependency);
@@ -660,9 +662,9 @@ public class ImportTask extends AbstractGstoolImportTask {
     }
 
     private CnATreeElement findZielobjektFor(NZielobjekt dependency) {
-        for (Entry<NZielobjekt, CnATreeElement> entry : alleZielobjekte.entrySet()) {
-            NZielobjekt zielobjekt = entry.getKey();
-            if (zielobjekt.getId().equals(dependency.getId())) {
+        for (Entry<NZielobjektId, CnATreeElement> entry : alleZielobjekte.entrySet()) {
+            NZielobjektId zielobjektId = entry.getKey();
+            if (zielobjektId.equals(dependency.getId())) {
                 return entry.getValue();
             }
         }
@@ -767,7 +769,7 @@ public class ImportTask extends AbstractGstoolImportTask {
         }
 
         List<BausteineMassnahmenResult> findBausteinMassnahmenByZielobjekt = getGstoolDao().findBausteinMassnahmenByZielobjekt(zielobjekt);
-        nZielObjektBausteineMassnahmenResultMap.put(zielobjekt, findBausteinMassnahmenByZielobjekt);
+        nZielObjektBausteineMassnahmenResultMap.put(zielobjekt.getId(), findBausteinMassnahmenByZielobjekt);
 
         Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = TransferData.convertBausteinMap(findBausteinMassnahmenByZielobjekt);
 
