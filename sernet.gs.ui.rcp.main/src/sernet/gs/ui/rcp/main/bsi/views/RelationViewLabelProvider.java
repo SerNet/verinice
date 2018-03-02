@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -45,13 +46,13 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
     private static final Logger log = Logger.getLogger(RelationViewLabelProvider.class);
 
     private IRelationTable view;
-    private static HashMap<Integer, String> titleMap = new HashMap<>();
+    private static Map<Integer, String> titleMap = new HashMap<>();
 
     public RelationViewLabelProvider(IRelationTable view) {
         this.view = view;
     }
 
-    private String getRisk(CnALink link, String col) {
+    private static String getRisk(CnALink link, String col) {
         String riskValue = "";
         switch (col) {
         case IRelationTable.COLUMN_RISK_C:
@@ -98,7 +99,7 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
     }
 
     @Override
-    public String getColumnText(Object obj, int index) {
+    public  String getColumnText(Object obj, int index) {
         if (obj instanceof PlaceHolder) {
             if (index != 1) {
                 return ""; //$NON-NLS-1$
@@ -166,7 +167,7 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
         }
     }
 
-    public void replaceLinkEntities(CnALink link) {
+    public static void replaceLinkEntities(CnALink link) {
         CnATreeElement dependantWithProperties = Retriever
                 .checkRetrieveElement(link.getDependant());
         CnATreeElement dependencyWithProperties = Retriever
@@ -200,7 +201,7 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 
     }
 
-    private Image getObjTypeImage(CnATreeElement elmt) {
+    private static Image getObjTypeImage(CnATreeElement elmt) {
         return CnAImageProvider.getImage(elmt);
 
     }

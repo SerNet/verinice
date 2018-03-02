@@ -17,6 +17,10 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 
@@ -30,22 +34,20 @@ import sernet.verinice.model.common.CnALink;
 public class RelationByNameSorter extends ViewerSorter {
 
     private IRelationTable view;
-    private String[] sorterProperties;
+    private Set<String> sorterProperties;
 
     public RelationByNameSorter(IRelationTable view, String... sorterProperties) {
         this.view = view;
-        this.sorterProperties = sorterProperties;
+        this.sorterProperties = new HashSet<>(sorterProperties.length);
+        Collections.addAll(this.sorterProperties, sorterProperties);
     }
 
-    public boolean isSorterProperty(Object arg0, String arg1) {
-        for (String prop : sorterProperties) {
-            if (arg1.equals(prop)) {
-                return true;
-            }
-        }
-        return false;
+    @Override
+    public boolean isSorterProperty(Object element, String property) {
+        return sorterProperties.contains(property);
     }
 
+    @Override
     public int compare(Viewer viewer, Object o1, Object o2) {
         if (o1 == null || o2 == null) {
             return 0;
