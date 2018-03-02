@@ -20,6 +20,7 @@ package sernet.gs.ui.rcp.main.bsi.views;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -53,44 +54,37 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
     }
 
     private static String getRisk(CnALink link, String col) {
-        String riskValue = "";
+        String riskValue;
         switch (col) {
         case IRelationTable.COLUMN_RISK_C:
-            if (link.getRiskConfidentiality() != null) {
-                riskValue = link.getRiskConfidentiality().toString();
-            }
+            riskValue = riskValueToString(link.getRiskConfidentiality());
             break;
         case IRelationTable.COLUMN_RISK_C_CONTROLS:
-            if (link.getRiskConfidentialityWithControls() != null) {
-                riskValue = link.getRiskConfidentialityWithControls().toString();
-            }
+            riskValue = riskValueToString(link.getRiskConfidentialityWithControls());
             break;
         case IRelationTable.COLUMN_RISK_I:
-            if (link.getRiskIntegrity() != null) {
-                riskValue = link.getRiskIntegrity().toString();
-            }
+            riskValue = riskValueToString(link.getRiskIntegrity());
             break;
         case IRelationTable.COLUMN_RISK_I_CONTROLS:
-            if (link.getRiskIntegrityWithControls() != null) {
-                riskValue = link.getRiskIntegrityWithControls().toString();
-            }
+            riskValue = riskValueToString(link.getRiskIntegrityWithControls());
             break;
         case IRelationTable.COLUMN_RISK_A:
-            if (link.getRiskAvailability() != null) {
-                riskValue = link.getRiskAvailability().toString();
-            }
+            riskValue = riskValueToString(link.getRiskAvailability());
             break;
         case IRelationTable.COLUMN_RISK_A_CONTROLS:
-            if (link.getRiskAvailabilityWithControls() != null) {
-                riskValue = link.getRiskAvailabilityWithControls().toString();
-            }
+            riskValue = riskValueToString(link.getRiskAvailabilityWithControls());
             break;
         case IRelationTable.COLUMN_RISK_TREATMENT:
             if (link.getRiskTreatment() != null) {
                 riskValue = CnALink.riskTreatmentLabels.get(link.getRiskTreatment().name());
             } else if (RelationTableViewer.isAssetAndSzenario(link)) {
                 riskValue = CnALink.riskTreatmentLabels.get(CnALink.RiskTreatment.UNEDITED.name());
+            } else {
+                riskValue = StringUtils.EMPTY;
             }
+            break;
+        default:
+            riskValue = StringUtils.EMPTY;
         }
         if (log.isDebugEnabled()) {
             log.debug("Risk values for column: " + col + " is: " + riskValue);
@@ -98,8 +92,15 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
         return riskValue;
     }
 
+    private static String riskValueToString(Integer value) {
+        if (value == null) {
+            return StringUtils.EMPTY;
+        }
+        return value.toString();
+    }
+
     @Override
-    public  String getColumnText(Object obj, int index) {
+    public String getColumnText(Object obj, int index) {
         if (obj instanceof PlaceHolder) {
             if (index != 1) {
                 return ""; //$NON-NLS-1$
