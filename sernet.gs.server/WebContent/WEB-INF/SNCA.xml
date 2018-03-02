@@ -10711,12 +10711,12 @@ Wurden bereits weitere Stellen informiert?
             name="documents" reversename="related document" tooltip=""/>
 
         <huiproperty
+            name="Abbreviation"
+            id="bp_document_abbr" />
+        <huiproperty
             name="Title"
             id="bp_document_name"
             required="true"/>
-        <huiproperty
-            name="Abbreviation"
-            id="bp_document_abbr" />
         <huiproperty
             id="bp_document_tag"
             name="Tags"
@@ -10789,12 +10789,12 @@ Wurden bereits weitere Stellen informiert?
             name="in future prevented by" reversename="reaction to" tooltip="" />
 
         <huiproperty
+            name="Abbreviation"
+            id="bp_incident_abbr" />
+        <huiproperty
             name="Title"
             id="bp_incident_name"
             required="true" />
-        <huiproperty
-            name="Abbreviation"
-            id="bp_incident_abbr" />
         <huiproperty
             id="bp_incident_tag"
             name="Tags"
@@ -10993,12 +10993,12 @@ Wurden bereits weitere Stellen informiert?
         name="Record"
         id="bp_record" >
         <huiproperty
+            name="Abbreviation"
+            id="bp_record_abbr" />
+        <huiproperty
             name="Title"
             id="bp_record_name"
             required="true" />
-        <huiproperty
-            name="Abbreviation"
-            id="bp_record_abbr" />
         <huiproperty
             id="bp_record_tag"
             name="Tags"
