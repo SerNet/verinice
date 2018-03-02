@@ -24,63 +24,63 @@ import sernet.verinice.model.common.CnALink;
 
 /**
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 public class RelationByNameSorter extends ViewerSorter {
-	
-	private IRelationTable view;
+
+    private IRelationTable view;
     private String[] sorterProperties;
 
-	public RelationByNameSorter(IRelationTable view, String... sorterProperties) {
-		this.view = view;
-		this.sorterProperties = sorterProperties;
-	}
-	
+    public RelationByNameSorter(IRelationTable view, String... sorterProperties) {
+        this.view = view;
+        this.sorterProperties = sorterProperties;
+    }
 
-		public boolean isSorterProperty(Object arg0, String arg1) {
-		    for (String prop : sorterProperties) {
-                if (arg1.equals(prop)){
-                    return true;
-                }
+    public boolean isSorterProperty(Object arg0, String arg1) {
+        for (String prop : sorterProperties) {
+            if (arg1.equals(prop)) {
+                return true;
             }
-		    return false;
-		}
-		
-		public int compare(Viewer viewer, Object o1, Object o2) {
-			if (o1 == null || o2 == null){
-				return 0;
-			}
-			CnALink link1 = (CnALink) o1;
-			CnALink link2 = (CnALink) o2;
-			
-			String link1UpId   = link1.getDependant().getTypeId();
-			String link1DownId = link1.getDependency().getTypeId();
-			String link2UpId   = link2.getDependant().getTypeId();
-			String link2DownId = link2.getDependency().getTypeId();
+        }
+        return false;
+    }
 
-			// if we have the same element on one side...
-			if (link1UpId.equals(link2UpId)) {
-			    // compare if we have a different category on the other side and sort by category first:
-			    int compare = link1DownId.compareTo(link2DownId);
-			    if (compare != 0){
-			        return compare;
-			    }
-			}
+    public int compare(Viewer viewer, Object o1, Object o2) {
+        if (o1 == null || o2 == null) {
+            return 0;
+        }
+        CnALink link1 = (CnALink) o1;
+        CnALink link2 = (CnALink) o2;
 
-			// the same but for reversed sides (since we don't know if were displaying the upward / downward direction:
-			if (link1DownId.equals(link2DownId)) {
-			    int compare = link1UpId.compareTo(link2UpId);
-			    if (compare != 0){
-			        return compare;
-			    }
-			}
+        String link1UpId = link1.getDependant().getTypeId();
+        String link1DownId = link1.getDependency().getTypeId();
+        String link2UpId = link2.getDependant().getTypeId();
+        String link2DownId = link2.getDependency().getTypeId();
 
-			// categories are the same, so we sort by name within the category:
-			String title1 = CnALink.getRelationObjectTitle(view.getInputElmt(), link1);
-			String title2 = CnALink.getRelationObjectTitle(view.getInputElmt(), link2);
+        // if we have the same element on one side...
+        if (link1UpId.equals(link2UpId)) {
+            // compare if we have a different category on the other side and
+            // sort by category first:
+            int compare = link1DownId.compareTo(link2DownId);
+            if (compare != 0) {
+                return compare;
+            }
+        }
 
-			return title1.compareTo(title2);
-		}
+        // the same but for reversed sides (since we don't know if were
+        // displaying the upward / downward direction:
+        if (link1DownId.equals(link2DownId)) {
+            int compare = link1UpId.compareTo(link2UpId);
+            if (compare != 0) {
+                return compare;
+            }
+        }
+
+        // categories are the same, so we sort by name within the category:
+        String title1 = CnALink.getRelationObjectTitle(view.getInputElmt(), link1);
+        String title2 = CnALink.getRelationObjectTitle(view.getInputElmt(), link2);
+
+        return title1.compareTo(title2);
+    }
 }
