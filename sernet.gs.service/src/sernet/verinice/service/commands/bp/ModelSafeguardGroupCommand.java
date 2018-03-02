@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
@@ -78,16 +79,14 @@ public class ModelSafeguardGroupCommand extends ModelCopyCommand {
     }
 
     @Override
-    protected boolean isEqual(CnATreeElement e1, CnATreeElement e2) {
-        boolean equals = false;
-        if (SafeguardGroup.TYPE_ID.equals(e2.getTypeId()) && SafeguardGroup.TYPE_ID.equals(e1.getTypeId())) {
-            SafeguardGroup targetModule = (SafeguardGroup) e2;
-            SafeguardGroup module = (SafeguardGroup) e1;
-            if (ModelCommand.nullSafeEquals(targetModule.getTitle(), module.getTitle())) {
-                equals = true;
-            }
-        }
-        return equals;
+    protected String getIdentifier(CnATreeElement element) {
+        return ((SafeguardGroup) element).getTitle();
+    }
+
+    @Override
+    protected boolean isSuitableType(CnATreeElement e1, CnATreeElement e2) {
+        return SafeguardGroup.TYPE_ID.equals(e2.getTypeId())
+                && SafeguardGroup.TYPE_ID.equals(e1.getTypeId());
     }
 
     private void loadCompendiumSafeguardGroups() {
@@ -100,6 +99,20 @@ public class ModelSafeguardGroupCommand extends ModelCopyCommand {
 
     private List<CnATreeElement> loadSafeguardGroupsByModuleUuids() {
         return getMetaDao().loadChildrenLinksParents(moduleUuids, SafeguardGroup.TYPE_ID);
+    }
+
+    /*
+     * @see
+     * sernet.verinice.service.commands.bp.ModelCopyCommand#handleChild(sernet.
+     * verinice.model.common.CnATreeElement,
+     * sernet.verinice.model.common.CnATreeElement,
+     * sernet.verinice.model.common.CnATreeElement)
+     */
+    @Override
+    protected void handleChild(CnATreeElement target, CnATreeElement elementCompendium,
+            CnATreeElement elementScope) throws CommandException {
+        // TODO Auto-generated method stub
+
     }
 
 }

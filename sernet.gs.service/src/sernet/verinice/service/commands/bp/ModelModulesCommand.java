@@ -19,10 +19,17 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.CopyCommand;
 
 /**
  * This command models modules (requirements groups) from the ITBP compendium
@@ -44,16 +51,42 @@ public class ModelModulesCommand extends ModelCopyCommand {
         this.targetElements = targetElements;
     }
 
-    protected boolean isEqual(CnATreeElement e1, CnATreeElement e2) {
-        boolean equals = false;
-        if (BpRequirementGroup.TYPE_ID.equals(e2.getTypeId()) && BpRequirementGroup.TYPE_ID.equals(e1.getTypeId())) {
-            BpRequirementGroup targetModule = (BpRequirementGroup) e2;
-            BpRequirementGroup module = (BpRequirementGroup) e1;
-            if (ModelCommand.nullSafeEquals(targetModule.getIdentifier(), module.getIdentifier())) {
-                equals = true;
+    protected void handleChild(CnATreeElement target, CnATreeElement elementCompendium,
+            CnATreeElement elementScope) throws CommandException {
+        Map<String, CnATreeElement> compendiumIdMap = getIdMapOfChildren(elementCompendium);
+        Map<String, CnATreeElement> scopeIdMap = getIdMapOfChildren(elementScope);
+        List<String> missingUuids = new LinkedList<>();
+        for (String identifierCompendium : compendiumIdMap.keySet()) {
+            if (!scopeIdMap.containsKey(identifierCompendium)) {
+                missingUuids.add(compendiumIdMap.get(identifierCompendium).getUuid());
             }
         }
-        return equals;
+        if (!missingUuids.isEmpty()) {
+            CopyCommand copyCommand = new CopyCommand(elementScope.getUuid(), missingUuids);
+            copyCommand = getCommandService().executeCommand(copyCommand);
+        }
+    }
+
+    private Map<String, CnATreeElement> getIdMapOfChildren(CnATreeElement element) {
+        Map<String, CnATreeElement> idMap = new HashMap<>();
+        for (CnATreeElement child : element.getChildren()) {
+            idMap.put(getIdentifier(child), child);
+        }
+        return idMap;
+    }
+
+    protected String getIdentifier(CnATreeElement element) {
+        if (element instanceof BpRequirementGroup) {
+            return ((BpRequirementGroup) element).getIdentifier();
+        }
+        if (element instanceof BpRequirement) {
+            return ((BpRequirement) element).getIdentifier();
+        }
+        return null;
+    }
+
+    protected boolean isSuitableType(CnATreeElement e1, CnATreeElement e2) {
+        return BpRequirementGroup.TYPE_ID.equals(e2.getTypeId()) && BpRequirementGroup.TYPE_ID.equals(e1.getTypeId());
     }
 
     public Set<CnATreeElement> getElementsFromCompendium() {

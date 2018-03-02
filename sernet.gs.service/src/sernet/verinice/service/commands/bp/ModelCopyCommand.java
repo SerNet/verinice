@@ -18,11 +18,14 @@
 package sernet.verinice.service.commands.bp;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -50,6 +53,8 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
 
     protected Set<CnATreeElement> targetElements;
     protected Set<String> newModuleUuids = Collections.emptySet();
+    // key: element from compendium, value: element from scope
+    protected Map<CnATreeElement, CnATreeElement> elementMap;
 
     public ModelCopyCommand() {
         super();
@@ -78,37 +83,94 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
 
     protected abstract Set<CnATreeElement> getElementsFromCompendium();
 
-    protected abstract boolean isEqual(CnATreeElement e1, CnATreeElement e2);
+    protected abstract boolean isSuitableType(CnATreeElement e1, CnATreeElement e2);
+
+    protected boolean isEqual(CnATreeElement e1, CnATreeElement e2) {
+        boolean equals = false;
+        if (isSuitableType(e1, e2)) {
+            if (ModelCommand.nullSafeEquals(getIdentifier(e1), getIdentifier(e2))) {
+                equals = true;
+            }
+        }
+        return equals;
+    }
+
+    protected abstract String getIdentifier(CnATreeElement element);
 
     private void handleElement() throws CommandException {
         for (CnATreeElement target : targetElements) {
-            List<String> missingUuids = createListOfMissingUuids(target);
-            if (!missingUuids.isEmpty()) {
-                CopyCommand copyCommand = new CopyCommand(target.getUuid(), missingUuids);
-                copyCommand = getCommandService().executeCommand(copyCommand);
-                newModuleUuids = new HashSet<>(copyCommand.getNewElements());
-            }
+            copyMissingElements(target);
+            handleChildren(target);
         }
     }
+
+    private void copyMissingElements(CnATreeElement target) throws CommandException {
+        List<String> missingUuids = createListOfMissingUuids(target);
+        if (!missingUuids.isEmpty()) {
+            CopyCommand copyCommand = new CopyCommand(target.getUuid(), missingUuids);
+            copyCommand = getCommandService().executeCommand(copyCommand);
+            newModuleUuids = new HashSet<>(copyCommand.getNewElements());
+        }
+    }
+
+    private void handleChildren(CnATreeElement target) throws CommandException {
+        for (Map.Entry<CnATreeElement, CnATreeElement> entry : elementMap.entrySet()) {
+            loadAndHandleChild(target, entry);
+        }
+    }
+
+    private void loadAndHandleChild(CnATreeElement target,
+            Map.Entry<CnATreeElement, CnATreeElement> entry) throws CommandException {
+        String uuidCompendium = entry.getKey().getUuid();
+        String uuidScope = entry.getValue().getUuid();
+        CnATreeElement elementCompendium = null;
+        CnATreeElement elementScope = null;
+        Set<CnATreeElement> elementsWithChildren = new HashSet<>(getMetaDao()
+                .loadElementsWithChildrenProperties(Arrays.asList(uuidCompendium, uuidScope)));
+        for (CnATreeElement element : elementsWithChildren) {
+            if (element.getUuid().equals(uuidCompendium)) {
+                elementCompendium = element;
+            }
+            if (element.getUuid().equals(uuidScope)) {
+                elementScope = element;
+            }
+        }
+        handleChild(target, elementCompendium, elementScope);
+    }
+
+    protected abstract void handleChild(CnATreeElement target, CnATreeElement elementCompendium,
+            CnATreeElement elementScope) throws CommandException;
 
     private List<String> createListOfMissingUuids(CnATreeElement targetWithChildren) {
         List<String> uuids = new LinkedList<>();
         Set<CnATreeElement> targetChildren = targetWithChildren.getChildren();
+        elementMap = new HashMap<>(targetChildren.size());
         for (CnATreeElement module : getElementsFromCompendium()) {
-            if (!elementExists(targetChildren, module)) {
+            CnATreeElement existingElement = getElementFromChildren(targetChildren, module);
+            if (existingElement == null) {
                 uuids.add(module.getUuid());
+            } else if (isSuitableType(existingElement, module)) {
+                elementMap.put(module, existingElement);
             }
         }
         return uuids;
     }
 
-    protected boolean elementExists(Set<CnATreeElement> targetChildren, CnATreeElement element) {
+    /**
+     * @param targetChildren
+     *            A set of child elements
+     * @param element
+     *            An element
+     * @return The element with the same identifier with element from set
+     */
+    protected CnATreeElement getElementFromChildren(Set<CnATreeElement> targetChildren,
+            CnATreeElement element) {
         for (CnATreeElement child : targetChildren) {
             if (isEqual(element, child)) {
-                return true;
+                return child;
             }
         }
-        return false;
+        return null;
     }
 
     public ModelingMetaDao getMetaDao() {
