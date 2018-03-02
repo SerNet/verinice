@@ -45,7 +45,7 @@ import sernet.hui.common.multiselectionlist.IMLPropertyOption;
  */
 public class HuiProperty implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     private static final Logger LOG = Logger.getLogger(HuiProperty.class);
 
