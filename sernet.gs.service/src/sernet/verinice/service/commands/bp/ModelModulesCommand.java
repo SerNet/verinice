@@ -56,14 +56,14 @@ public class ModelModulesCommand extends ModelCopyCommand {
         Map<String, CnATreeElement> compendiumIdMap = getIdMapOfChildren(elementCompendium);
         Map<String, CnATreeElement> scopeIdMap = getIdMapOfChildren(elementScope);
         List<String> missingUuids = new LinkedList<>();
-        for (String identifierCompendium : compendiumIdMap.keySet()) {
-            if (!scopeIdMap.containsKey(identifierCompendium)) {
-                missingUuids.add(compendiumIdMap.get(identifierCompendium).getUuid());
+        for (Map.Entry<String, CnATreeElement> entry : compendiumIdMap.entrySet()) {
+            if (!scopeIdMap.containsKey(entry.getKey())) {
+                missingUuids.add(entry.getValue().getUuid());
             }
         }
         if (!missingUuids.isEmpty()) {
             CopyCommand copyCommand = new CopyCommand(elementScope.getUuid(), missingUuids);
-            copyCommand = getCommandService().executeCommand(copyCommand);
+            getCommandService().executeCommand(copyCommand);
         }
     }
 

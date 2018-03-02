@@ -83,17 +83,10 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
 
     protected abstract Set<CnATreeElement> getElementsFromCompendium();
 
-    protected abstract boolean isSuitableType(CnATreeElement e1, CnATreeElement e2);
+    protected abstract void handleChild(CnATreeElement target, CnATreeElement elementCompendium,
+            CnATreeElement elementScope) throws CommandException;
 
-    protected boolean isEqual(CnATreeElement e1, CnATreeElement e2) {
-        boolean equals = false;
-        if (isSuitableType(e1, e2)) {
-            if (ModelCommand.nullSafeEquals(getIdentifier(e1), getIdentifier(e2))) {
-                equals = true;
-            }
-        }
-        return equals;
-    }
+    protected abstract boolean isSuitableType(CnATreeElement e1, CnATreeElement e2);
 
     protected abstract String getIdentifier(CnATreeElement element);
 
@@ -138,9 +131,6 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
         handleChild(target, elementCompendium, elementScope);
     }
 
-    protected abstract void handleChild(CnATreeElement target, CnATreeElement elementCompendium,
-            CnATreeElement elementScope) throws CommandException;
-
     private List<String> createListOfMissingUuids(CnATreeElement targetWithChildren) {
         List<String> uuids = new LinkedList<>();
         Set<CnATreeElement> targetChildren = targetWithChildren.getChildren();
@@ -173,6 +163,15 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
         return null;
     }
 
+    protected boolean isEqual(CnATreeElement e1, CnATreeElement e2) {
+        boolean equals = false;
+        if (isSuitableType(e1, e2)
+                && ModelCommand.nullSafeEquals(getIdentifier(e1), getIdentifier(e2))) {
+            equals = true;
+        }
+        return equals;
+    }
+
     public ModelingMetaDao getMetaDao() {
         if (metaDao == null) {
             metaDao = new ModelingMetaDao(getDao());
@@ -190,6 +189,14 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
 
     public Set<String> getNewModuleUuids() {
         return newModuleUuids;
+    }
+
+    public Set<String> getModuleUuidsFromScope() {
+        Set<String> uuids = new HashSet<>(newModuleUuids);
+        for (CnATreeElement element : elementMap.values()) {
+            uuids.add(element.getUuid());
+        }
+        return uuids;
     }
 
     protected void logElements(Collection<?> collection) {

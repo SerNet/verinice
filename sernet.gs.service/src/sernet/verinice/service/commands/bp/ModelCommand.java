@@ -86,6 +86,7 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     private Set<String> moduleUuidsFromCompendium;
     private transient Set<String> newModuleUuidsFromScope = Collections.emptySet();
+    private transient Set<String> moduleUuidsFromScope = Collections.emptySet();
     private List<String> targetUuids;
     private transient Set<CnATreeElement> requirementGroups;
     private transient Set<CnATreeElement> targetElements;
@@ -111,12 +112,10 @@ public class ModelCommand extends ChangeLoggingCommand {
         try {
             loadElements();
             handleModules();
-            if (!newModuleUuidsFromScope.isEmpty()) {
-                if (isHandleSafeguards()) {
-                    handleSafeguards();
-                }
-                handleThreats();
+            if (isHandleSafeguards()) {
+                handleSafeguards();
             }
+            handleThreats();
             createLinks();
             saveReturnValues();
         } catch (CommandException e) {
@@ -130,6 +129,7 @@ public class ModelCommand extends ChangeLoggingCommand {
                 targetElements);
         modelModulesCommand = getCommandService().executeCommand(modelModulesCommand);
         newModuleUuidsFromScope = modelModulesCommand.getNewModuleUuids();
+        moduleUuidsFromScope = modelModulesCommand.getModuleUuidsFromScope();
     }
 
     private void handleSafeguards() throws CommandException {
@@ -146,7 +146,7 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     private void createLinks() throws CommandException {
         ModelLinksCommand modelLinksCommand = new ModelLinksCommand(moduleUuidsFromCompendium,
-                newModuleUuidsFromScope, itNetwork, targetElements);
+                moduleUuidsFromScope, itNetwork, targetElements);
         getCommandService().executeCommand(modelLinksCommand);
     }
 
