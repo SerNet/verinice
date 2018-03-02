@@ -24,6 +24,7 @@ import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementa
 
 import java.util.Date;
 
+import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.Reevaluator;
@@ -38,7 +39,7 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class BpRequirement extends CnATreeElement implements IBpElement {
+public class BpRequirement extends CnATreeElement implements IBpElement, IIdentifiableElement {
 
     private static final long serialVersionUID = 436541703079680979L;
 
@@ -153,6 +154,7 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
     }
 
+    @Override
     public String getIdentifier() {
         return getEntity().getPropertyValue(PROP_ID);
     }
@@ -234,6 +236,11 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
             return false;
         }
         return TYPE_ID.equals(element.getTypeId());
+    }
+
+    @Override
+    public String getFullTitle() {
+        return joinPrefixAndTitle(getIdentifier(), getTitle());
     }
 
 }

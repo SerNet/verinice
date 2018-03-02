@@ -21,6 +21,7 @@ package sernet.verinice.model.bp.groups;
 
 import java.util.Date;
 
+import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.common.CnATreeElement;
@@ -30,7 +31,7 @@ import sernet.verinice.model.iso27k.Group;
  * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
-public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup {
+public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup, IIdentifiableElement {
 
     private static final long serialVersionUID = 7752776589962581995L;
 
@@ -82,6 +83,7 @@ public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup
                 description);
     }
 
+    @Override
     public String getIdentifier() {
         return getEntity().getPropertyValue(PROP_ID);
     }
@@ -107,5 +109,12 @@ public class BpRequirementGroup extends Group<BpRequirement> implements IBpGroup
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_IMPLEMENTATION_ORDER),
                 implementationSequence);
     }
+
+    @Override
+    public String getFullTitle() {
+        return joinPrefixAndTitle(getIdentifier(), getTitle());
+    }
+
+    
 
 }

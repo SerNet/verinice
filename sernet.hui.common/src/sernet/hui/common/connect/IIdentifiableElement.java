@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Daniel Murygin <dm{a}sernet{dot}de>.
+ * Copyright (c) 2018 Jochen Kemnade.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -14,19 +14,20 @@
  * along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
  *
- * Contributors:
- *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.model.bp;
-
-import sernet.hui.common.connect.ITitledElement;
-import sernet.hui.common.connect.ITypedElement;
+package sernet.hui.common.connect;
 
 /**
- *
- *
- * @author Daniel Murygin <dm{a}sernet{dot}de>
+ * An interface for elements that have an identifier
  */
-public interface IBpElement extends ITypedElement, ITitledElement {
+public interface IIdentifiableElement extends ITitledElement {
+
+    String getIdentifier();
+
+    /**
+     * Returns a combination of the element's identifier and its title.
+     * If either is null or empty, it returns the other one, if both are empty, it returns the empty string.
+     */
+    String getFullTitle();
 
 }
