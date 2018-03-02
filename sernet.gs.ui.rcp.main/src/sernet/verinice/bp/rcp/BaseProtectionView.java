@@ -70,13 +70,13 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.verinice.bp.rcp.filter.BaseProtectionFilterAction;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
-import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IBpModelListener;
@@ -85,11 +85,8 @@ import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.TagParameter;
-import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
-import sernet.verinice.rcp.ViewFilterAction;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.bp.BaseProtectionPerspective;
 import sernet.verinice.rcp.tree.TreeContentProvider;
@@ -131,7 +128,7 @@ public class BaseProtectionView extends RightsEnabledView
     private Action expandAllAction;
     private CollapseAction collapseAction;
     private Action collapseAllAction;
-    private ViewFilterAction filterAction;
+    private BaseProtectionFilterAction filterAction;
     private ShowAccessControlEditAction accessControlEditAction;
     private NaturalizeAction naturalizeAction;
     
@@ -342,18 +339,7 @@ public class BaseProtectionView extends RightsEnabledView
     }
 
     private void makeFilterAction() {
-        HideEmptyFilter hideEmptyFilter = createHideEmptyFilter();
-        TypeParameter typeParameter = createTypeParameter();
-        TagParameter tagParameter = new TagParameter();
-        filterAction = new ViewFilterAction("Filter...", //  //$NON-NLS-1$
-                tagParameter,
-                hideEmptyFilter,
-                typeParameter);
-        filterAction.setTypes(ViewFilterAction.BASE_PROTECTION_TYPES);
-        elementManager.addParameter(tagParameter);
-        if(typeParameter!=null) {
-            elementManager.addParameter(typeParameter);
-        }
+        filterAction = new BaseProtectionFilterAction(viewer);
     }
 
     protected void makeExpandAndCollapseActions() {
@@ -399,25 +385,6 @@ public class BaseProtectionView extends RightsEnabledView
         return linkingActive;
     }
     
-    /**
-     * Override this in subclasses to hide empty groups
-     * on startup.
-     * 
-     * @return a HideEmptyFilter
-     */
-    protected HideEmptyFilter createHideEmptyFilter() {
-        return new HideEmptyFilter(viewer);
-    }
-
-    /**
-     * Override this in subclasses to hide empty groups
-     * on startup.
-     * 
-     * @return a {@link TypeParameter}
-     */
-    protected TypeParameter createTypeParameter() {
-        return new TypeParameter();
-    }
     
     private void addActions() {
         viewer.addDoubleClickListener(new IDoubleClickListener() {
