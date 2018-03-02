@@ -20,8 +20,6 @@
 package sernet.verinice.web;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -50,8 +48,6 @@ public class HuiProperty implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private static final Logger LOG = Logger.getLogger(HuiProperty.class);
-
-    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat();
 
     private String key;
 
@@ -366,14 +362,6 @@ public class HuiProperty implements Serializable {
 
     public void setShowLabel(boolean showLabel) {
         this.showLabel = showLabel;
-    }
-
-    public String getDatePattern() {
-        return DATE_FORMAT.toPattern();
-    }
-
-    public DateFormat getDateFormat() {
-        return DATE_FORMAT;
     }
 
     @Override
