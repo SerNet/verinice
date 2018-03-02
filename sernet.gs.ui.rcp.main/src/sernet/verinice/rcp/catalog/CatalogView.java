@@ -334,7 +334,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         hideEmptyFilter.setHideEmpty(true);
         TagParameter tagParameter = new TagParameter();
         TypeParameter typeParameter = new TypeParameter();
-        filterAction = new ViewFilterAction(viewer, Messages.ISMView_12, tagParameter, hideEmptyFilter, typeParameter);
+        filterAction = new ViewFilterAction(Messages.ISMView_12, tagParameter, hideEmptyFilter, typeParameter);
 
         linkWithEditorAction = new Action(Messages.ISMView_5, IAction.AS_CHECK_BOX) {
             @Override

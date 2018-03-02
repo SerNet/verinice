@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -151,7 +150,6 @@ public class ViewFilterAction extends Action {
     private TypeParameter typeParameter;
 
     public ViewFilterAction(
-            StructuredViewer viewer, 
             String title, 
             TagParameter tagFilter, 
             HideEmptyFilter hideEmptyFilter,

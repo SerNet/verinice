@@ -407,8 +407,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 		HideEmptyFilter hideEmptyFilter = createHideEmptyFilter();
 		TypeParameter typeParameter = createTypeParameter();
 		TagParameter tagParameter = new TagParameter();
-        filterAction = new ViewFilterAction(viewer,
-				Messages.ISMView_12,
+        filterAction = new ViewFilterAction(Messages.ISMView_12,
 				tagParameter,
 				hideEmptyFilter,
 				typeParameter);    

@@ -345,8 +345,7 @@ public class BaseProtectionView extends RightsEnabledView
         HideEmptyFilter hideEmptyFilter = createHideEmptyFilter();
         TypeParameter typeParameter = createTypeParameter();
         TagParameter tagParameter = new TagParameter();
-        filterAction = new ViewFilterAction(viewer,
-                "Filter...", //  //$NON-NLS-1$
+        filterAction = new ViewFilterAction("Filter...", //  //$NON-NLS-1$
                 tagParameter,
                 hideEmptyFilter,
                 typeParameter);
