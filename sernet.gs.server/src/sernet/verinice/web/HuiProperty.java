@@ -34,7 +34,6 @@ import javax.faces.model.SelectItem;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import sernet.hui.common.connect.DependsType;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
@@ -416,9 +415,9 @@ public class HuiProperty implements Serializable {
     }
 
     /**
-     * According to the {@link DependsType} this property is enabled. This
-     * additional getter is necessary for JSF and is delegated to
-     * {@link #isEnabled()}.
+     * According to the {@link sernet.hui.common.connect.DependsType} this
+     * property is enabled. This additional getter is necessary for JSF and is
+     * delegated to {@link #isEnabled()}.
      *
      * @return true if all dependencies are satisfied.
      */
@@ -432,14 +431,15 @@ public class HuiProperty implements Serializable {
      *
      * @param isEnabled
      *            Indicates if the property satisfied all dependency, defined by
-     *            {@link DependsType}.
+     *            {@link sernet.hui.common.connect.DependsType}.
      */
     public void setIsEnabled(boolean isEnabled) {
         this.setEnabled(isEnabled);
     }
 
     /**
-     * According to the {@link DependsType} this property is enabled.
+     * According to the {@link sernet.hui.common.connect.DependsType} this
+     * property is enabled.
      *
      * @return true if all dependencies are satisfied.
      */
