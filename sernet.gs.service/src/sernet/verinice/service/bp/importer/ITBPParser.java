@@ -35,72 +35,73 @@ import ITBP2VNA.generated.module.Document;
  *
  */
 public class ITBPParser {
-    
+
     private final static Logger LOG = Logger.getLogger(ITBPParser.class);
 
     public static ITBPParser instance;
-    
+
     public ITBPParser() {
     }
-    
+
     public Document parseModule(File moduleXMLFile) {
-        
+
         Document moduleDocument = null;
-        
+
         try {
-            
+
             JAXBContext context = JAXBContext.newInstance(Document.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            moduleDocument =  (Document)unmarshaller.unmarshal(moduleXMLFile);
+            moduleDocument = (Document) unmarshaller.unmarshal(moduleXMLFile);
 
         } catch (JAXBException e) {
-            LOG.error("Error while parsing ITBP-Document:\t" + moduleXMLFile.getAbsolutePath(),e);
-        } 
-        
+            LOG.error("Error while parsing ITBP-Document:\t" + moduleXMLFile.getAbsolutePath(), e);
+        }
+
         return moduleDocument;
-        
+
     }
-    
+
     public ITBP2VNA.generated.threat.Document parseThreat(File threatXMLFile) {
-        
+
         ITBP2VNA.generated.threat.Document threadDocument = null;
-        
+
         try {
-            
+
             JAXBContext context = JAXBContext.newInstance(ITBP2VNA.generated.threat.Document.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            threadDocument = (ITBP2VNA.generated.threat.Document)unmarshaller.unmarshal(threatXMLFile);
+            threadDocument = (ITBP2VNA.generated.threat.Document) unmarshaller
+                    .unmarshal(threatXMLFile);
 
         } catch (JAXBException e) {
-            LOG.error("Error while parsing ITBP-Document:\t" + threatXMLFile.getAbsolutePath(),e);
-        } 
-        
+            LOG.error("Error while parsing ITBP-Document:\t" + threatXMLFile.getAbsolutePath(), e);
+        }
+
         return threadDocument;
-        
+
     }
-    
-    public ITBP2VNA.generated.implementationhint.Document parseImplementationHint(File implHintXMLFile) {
-        
+
+    public ITBP2VNA.generated.implementationhint.Document parseImplementationHint(
+            File implHintXMLFile) {
+
         ITBP2VNA.generated.implementationhint.Document implHintDocument = null;
-        
+
         try {
-            
-            JAXBContext context = JAXBContext.newInstance(ITBP2VNA.generated.implementationhint.Document.class);
+
+            JAXBContext context = JAXBContext
+                    .newInstance(ITBP2VNA.generated.implementationhint.Document.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
-            implHintDocument = (ITBP2VNA.generated.implementationhint.Document)unmarshaller.unmarshal(implHintXMLFile);
+            implHintDocument = (ITBP2VNA.generated.implementationhint.Document) unmarshaller
+                    .unmarshal(implHintXMLFile);
 
         } catch (JAXBException e) {
-            LOG.error("Error while parsing ITBP-Document:\t" + implHintXMLFile.getAbsolutePath(),e);
-        } 
-        
-        return implHintDocument;
-        
-    }
-    
-    
-    
+            LOG.error("Error while parsing ITBP-Document:\t" + implHintXMLFile.getAbsolutePath(),
+                    e);
+        }
 
-    
+        return implHintDocument;
+
+    }
+
     public static ITBPParser getInstance() {
         if (instance == null) {
             instance = new ITBPParser();
