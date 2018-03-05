@@ -49,7 +49,7 @@ import sernet.verinice.service.bp.importer.Messages;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class HtmlHelper {
+public final class HtmlHelper {
 
     private static final Logger LOG = Logger.getLogger(HtmlHelper.class);
 
@@ -361,41 +361,36 @@ public class HtmlHelper {
         int subChapter = 1;
 
         for (Object o : introduction) {
-            if (o instanceof Element) {
-                Element node = (Element) o;
-                if ("introduction".equals(node.getNodeName())) {
-                    sb.append(generateChapterHeader(chapter, subChapter++, -1,
-                            Messages.Introduction));
-                    if (!node.getTextContent().trim().startsWith(HTML_OPEN_PARAGRAPH)) {
-                        sb.append(HTML_OPEN_PARAGRAPH);
-                    }
-                    sb.append(node.getTextContent());
-                    if (!node.getTextContent().trim().startsWith(HTML_OPEN_PARAGRAPH)) {
-                        sb.append(HTML_CLOSE_PARAGRAPH);
-                    }
-                } else if ("purpose".equals(node.getNodeName())) {
-                    sb.append(generateChapterHeader(chapter, subChapter++, -1, Messages.Purpose));
-                    if (!node.getTextContent().trim().startsWith(HTML_OPEN_PARAGRAPH)) {
-                        sb.append(HTML_OPEN_PARAGRAPH);
-                    }
-                    sb.append(node.getTextContent());
-                    if (!node.getTextContent().trim().startsWith(HTML_OPEN_PARAGRAPH)) {
-                        sb.append(HTML_CLOSE_PARAGRAPH);
-                    }
-                } else if ("differentiation".equals(node.getNodeName())) {
-                    sb.append(generateChapterHeader(chapter, subChapter++, -1,
-                            Messages.Differentiation));
-                    if (!node.getTextContent().trim().startsWith(HTML_OPEN_PARAGRAPH)) {
-                        sb.append(HTML_OPEN_PARAGRAPH);
-                    }
-                    sb.append(node.getTextContent());
-                    if (!node.getTextContent().trim().startsWith(HTML_OPEN_PARAGRAPH)) {
-                        sb.append(HTML_CLOSE_PARAGRAPH);
-                    }
-                }
+            if (!(o instanceof Element)) {
+                continue;
+            }
+            Element node = (Element) o;
+            if ("introduction".equals(node.getNodeName())) {
+                sb.append(generateChapterHeader(chapter, subChapter++, -1, Messages.Introduction));
+                appendNodeTextEnsureParagraph(sb, node);
+            } else if ("purpose".equals(node.getNodeName())) {
+                sb.append(generateChapterHeader(chapter, subChapter++, -1, Messages.Purpose));
+                appendNodeTextEnsureParagraph(sb, node);
+            } else if ("differentiation".equals(node.getNodeName())) {
+                sb.append(
+                        generateChapterHeader(chapter, subChapter++, -1, Messages.Differentiation));
+                appendNodeTextEnsureParagraph(sb, node);
+
             }
         }
         return sb.toString();
+    }
+
+    private static void appendNodeTextEnsureParagraph(StringBuilder sb, Element node) {
+        String nodeText = node.getTextContent();
+        boolean startsWithOpenParagraph = nodeText.trim().startsWith(HTML_OPEN_PARAGRAPH);
+        if (!startsWithOpenParagraph) {
+            sb.append(HTML_OPEN_PARAGRAPH);
+        }
+        sb.append(node.getTextContent());
+        if (!startsWithOpenParagraph) {
+            sb.append(HTML_CLOSE_PARAGRAPH);
+        }
     }
 
     /**

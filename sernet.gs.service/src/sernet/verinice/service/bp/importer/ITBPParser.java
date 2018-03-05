@@ -34,13 +34,13 @@ import ITBP2VNA.generated.module.Document;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class ITBPParser {
+public final class ITBPParser {
 
-    private final static Logger LOG = Logger.getLogger(ITBPParser.class);
+    private static final Logger LOG = Logger.getLogger(ITBPParser.class);
 
-    public static ITBPParser instance;
+    private static ITBPParser instance;
 
-    public ITBPParser() {
+    private ITBPParser() {
     }
 
     public Document parseModule(File moduleXMLFile) {
@@ -54,7 +54,7 @@ public class ITBPParser {
             moduleDocument = (Document) unmarshaller.unmarshal(moduleXMLFile);
 
         } catch (JAXBException e) {
-            LOG.error("Error while parsing ITBP-Document:\t" + moduleXMLFile.getAbsolutePath(), e);
+            logParseException(moduleXMLFile, e);
         }
 
         return moduleDocument;
@@ -73,7 +73,7 @@ public class ITBPParser {
                     .unmarshal(threatXMLFile);
 
         } catch (JAXBException e) {
-            LOG.error("Error while parsing ITBP-Document:\t" + threatXMLFile.getAbsolutePath(), e);
+            logParseException(threatXMLFile, e);
         }
 
         return threadDocument;
@@ -94,8 +94,7 @@ public class ITBPParser {
                     .unmarshal(implHintXMLFile);
 
         } catch (JAXBException e) {
-            LOG.error("Error while parsing ITBP-Document:\t" + implHintXMLFile.getAbsolutePath(),
-                    e);
+            logParseException(implHintXMLFile, e);
         }
 
         return implHintDocument;
@@ -107,6 +106,10 @@ public class ITBPParser {
             instance = new ITBPParser();
         }
         return instance;
+    }
+
+    private static void logParseException(File moduleXMLFile, JAXBException e) {
+        LOG.error("Error while parsing ITBP-Document:\t" + moduleXMLFile.getAbsolutePath(), e);
     }
 
 }
