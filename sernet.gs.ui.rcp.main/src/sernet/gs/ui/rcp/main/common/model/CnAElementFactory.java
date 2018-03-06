@@ -249,6 +249,12 @@ public final class CnAElementFactory {
             }
             listener.loaded(isoModel);
         }
+        if (boModel != null) {
+            if (log.isDebugEnabled()) {
+                log.debug("Firing safety event: bo model");
+            }
+            listener.loaded(boModel);
+        }
 
     }
 
