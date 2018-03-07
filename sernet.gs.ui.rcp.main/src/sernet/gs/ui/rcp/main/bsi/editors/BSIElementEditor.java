@@ -273,7 +273,9 @@ public class BSIElementEditor extends EditorPart {
                 LOG.info("Sciped save cnAElement."); //$NON-NLS-1$
             } else {
                 monitor.beginTask(Messages.BSIElementEditor_1, IProgressMonitor.UNKNOWN);
+                EditorUtil.updateDependentObjects(cnAElement);
                 save();
+                linkMaker.viewer.refresh();
 
                 // Refresh other views in background
                 Job job = new RefreshJob("Refresh application...");
@@ -521,11 +523,6 @@ public class BSIElementEditor extends EditorPart {
         private void refresh() {
             // notify all views of change:
             CnAElementFactory.getModel(cnAElement).childChanged(cnAElement);
-
-            // removed
-            // CnAElementFactory.getModel(cnAElement).refreshAllListeners
-            // here
-            // before release 1.4.2
         }
     }
 

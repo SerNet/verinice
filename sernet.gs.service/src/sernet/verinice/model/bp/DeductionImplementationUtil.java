@@ -31,7 +31,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author uz[at]sernet.de
  *
  */
-public class DeductionImplementationUtil {
+public final class DeductionImplementationUtil {
 
     public static final String IMPLEMENTATION_STATUS = "_implementation_status";
     public static final String IMPLEMENTATION_DEDUCE = "_implementation_deduce";
@@ -47,22 +47,29 @@ public class DeductionImplementationUtil {
 
     /**
      * Set the implementation status of the {@link Safeguard} to the
-     * {@link BpRequirement} when the deduction of the implementation status
-     * is enabled for this {@link BpRequirement}.
+     * {@link BpRequirement} when the deduction of the implementation status is
+     * enabled for this {@link BpRequirement}.
+     *
+     * @return true if the status has changed
      */
-    public static void setImplementationStausToRequirement(CnATreeElement safeguard,
+    public static boolean setImplementationStausToRequirement(CnATreeElement safeguard,
             CnATreeElement requirement) {
-        if (isDeductiveImplementationEnabled(requirement)) {
-            String optionValue = getImplementationStatus(safeguard);
-            if (optionValue != null) {
-                optionValue = optionValue.replaceFirst(Safeguard.TYPE_ID,
-                        BpRequirement.TYPE_ID);
-                requirement.setPropertyValue(getImplementationStatusId(requirement),
-                        optionValue);
-            }
+        if (!isDeductiveImplementationEnabled(requirement)) {
+            return false;
         }
+        String optionValue = getImplementationStatus(safeguard);
+        if (optionValue == null) {
+            return false;
+        }
+        optionValue = optionValue.replaceFirst(Safeguard.TYPE_ID, BpRequirement.TYPE_ID);
+        String propertyType = getImplementationStatusId(requirement);
+        String propertyValue = getImplementationStatus(requirement);
+        if (optionValue.equals(propertyValue)) {
+            return false;
+        }
+        requirement.setSimpleProperty(propertyType, optionValue);
+        return true;
     }
-
 
     /**
      * Return the implementation status of the given {@link CnATreeElement}.

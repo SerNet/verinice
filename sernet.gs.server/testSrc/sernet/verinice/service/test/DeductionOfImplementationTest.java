@@ -20,6 +20,7 @@
 package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_DEDUCE;
@@ -30,6 +31,7 @@ import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATIO
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS_CODE_YES;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatus;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatusId;
+import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementationStausToRequirement;
 
 import org.apache.log4j.Logger;
 import org.junit.Ignore;
@@ -55,7 +57,7 @@ import sernet.verinice.service.commands.UpdateElement;
  * Test the deduction of the implementation for a requirement. A
  * {@link BpRequirement} can deduce the implementation status from a linked
  * {@link Safeguard} when the property 'xxx_implementation_deduce' is set.
- * 
+ *
  * @author uz[at]sernet.de
  *
  */
@@ -66,7 +68,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
 
     /**
      * Generic dataholder.
-     * 
+     *
      * @author uz[at]sernet.de
      *
      * @param <A>
@@ -84,8 +86,36 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     }
 
     /**
+     * Test the util method.
+     *
+     * @throws CommandException
+     */
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void testSetImplementationStausToRequirement() throws CommandException {
+        Dou<Safeguard, BpRequirement> dou = createTestElements();
+        Safeguard safeguard = dou.a;
+        BpRequirement requirement = dou.b;
+
+        updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
+        prepareRequirement(requirement);
+
+        assertTrue(setImplementationStausToRequirement(safeguard, requirement));
+        assertFalse(setImplementationStausToRequirement(safeguard, requirement));
+
+        updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        assertEquals(requirement.getTypeId() + IMPLEMENTATION_STATUS_CODE_NO,
+                getImplementationStatus(requirement));
+        assertTrue(setImplementationStausToRequirement(safeguard, requirement));
+        assertEquals(requirement.getTypeId() + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
+                getImplementationStatus(requirement));
+
+    }
+
+    /**
      * Change the implementation_status after the link is created.
-     * 
+     *
      */
     @Transactional
     @Rollback(true)
@@ -104,7 +134,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     /**
      * Change the implementation_status after the link is created. Opposite link
      * direction.
-     * 
+     *
      */
     @Transactional
     @Rollback(true)
@@ -122,7 +152,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
 
     /**
      * Change the implementation_status before the link is created.
-     * 
+     *
      */
     @Transactional
     @Rollback(true)
@@ -152,7 +182,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_YES);
         assertEquals("Must be option yes.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_YES,
                 getImplementationStatus(requirement));
-        
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("Change the safeguard implementation status to: "
                     + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
@@ -165,7 +195,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     /**
      * Change the implementation_status before the link is created. Opposite
      * link direction.
-     * 
+     *
      */
     @Transactional
     @Rollback(true)
@@ -207,7 +237,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
 
     /**
      * Switch the deduction off.
-     * 
+     *
      */
     @Transactional
     @Rollback(true)
@@ -231,7 +261,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
 
     /**
      * Switch the deduction off. Opposite link direction.
-     * 
+     *
      */
     @Transactional
     @Rollback(true)
@@ -303,12 +333,12 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
 
         createLink(requirement1, safeguard, null);
         createLink(requirement2, safeguard, null);
-        
+
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
         assertDeduction(safeguard, requirement1);
         assertDeduction(safeguard, requirement2);
     }
-    
+
     /**
      * Two requirements linked to one safeguard .
      */
@@ -328,16 +358,16 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
 
         createLink(safeguard, requirement1, null);
         createLink(safeguard, requirement2, null);
-        
+
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
         assertDeduction(safeguard, requirement1);
         assertDeduction(safeguard, requirement2);
     }
-    
+
     /**
      * Create the test elements. Create a new it network and the necessary
      * groups for the target test objects. Returns the two objects under test.
-     * 
+     *
      */
     private Dou<Safeguard, BpRequirement> createTestElements() throws CommandException {
         ItNetwork itNetwork = createNewBPOrganization();
@@ -353,7 +383,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
 
     /**
      * Assert the deduction of the implementation value.
-     * 
+     *
      */
     private void assertDeduction(Safeguard safeguard, BpRequirement requirement)
             throws CommandException {
@@ -372,7 +402,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_YES);
         assertEquals("Must be option yes.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_YES,
                 getImplementationStatus(requirement));
-        
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("Change the safeguard implementation status to: "
                     + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
@@ -384,7 +414,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
 
     /**
      * Disables the deduction and assert the implementation state don't change.
-     * 
+     *
      */
     private void assertDisabledDeduction(Safeguard safeguard, BpRequirement requirement)
             throws CommandException {
@@ -422,7 +452,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
 
     /**
      * Will set implementation_status and update the safeguard.
-     * 
+     *
      */
     private Safeguard updateSafeguard(Safeguard safeguard, String option) throws CommandException {
         safeguard.setSimpleProperty(safeguard.getTypeId() + IMPLEMENTATION_STATUS,
@@ -437,7 +467,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     /**
      * Prepare a requirement for the test. The field 'implementation_status'
      * will be set to yes and deduction of the implementation is enabled.
-     * 
+     *
      */
     private BpRequirement prepareRequirement(BpRequirement requirement) throws CommandException {
         requirement.setSimpleProperty(requirement.getTypeId() + IMPLEMENTATION_STATUS,
