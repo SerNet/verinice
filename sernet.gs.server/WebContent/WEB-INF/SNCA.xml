@@ -8010,7 +8010,8 @@ Wurden bereits weitere Stellen informiert?
 
         <huipropertygroup tags="Privacy" id="process_va_group" name="Verarbeitungsangaben">
             <depends option="process_privacy_yesno" value="1" />
-
+			
+			<huiproperty defaultValue="0" id="process_va_external_processor" inputtype="booleanoption" name="Verarbeitung als Auftragsverarbeiter nach Art. 30 II DS-GVO"/>
             <huiproperty id="process_va_fachbereich" name="Fachbereich" />
             <huiproperty tags="Privacy" id="process_va_art" name="Art der Verarbeitung" inputtype="singleoption">
                 <option id="process_va_art_ersterhebung" name="Ersterhebung" />
@@ -8061,6 +8062,7 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="process_va_gemenVerant_email" name="E-Mail-Adresse">
                 <depends option="process_va_gemenVerant" value="process_va_gemenVerantwo_1" />
             </huiproperty>
+            <huiproperty name="Document" id="process_va_gemenVerant_document" isURL="true" />
         </huipropertygroup>
      
         <huipropertygroup tags="Privacy" id="process_zb_group" name="Zweckbestimmung">
