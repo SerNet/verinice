@@ -19,6 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
+import java.util.Collection;
+
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
 import sernet.verinice.model.bp.groups.BpDocumentGroup;
@@ -34,18 +37,20 @@ import sernet.verinice.model.bp.groups.ItSystemGroup;
 import sernet.verinice.model.bp.groups.NetworkGroup;
 import sernet.verinice.model.bp.groups.RoomGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
+import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class ItNetwork extends CnATreeElement implements IBpElement  {
+public class ItNetwork extends CnATreeElement implements IBpElement, ITaggableElement  {
     
     private static final long serialVersionUID = -542743048413632420L;
        
     public static final String TYPE_ID = "bp_itnetwork"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_itnetwork_name"; //$NON-NLS-1$
+    public static final String PROP_TAG = "bp_itnetwork_tag"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER = "bp_itnetwork_qualifier"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER_BASIC = "bp_itnetwork_qualifier_basic"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER_STANDARD = "bp_itnetwork_qualifier_standard"; //$NON-NLS-1$
@@ -141,6 +146,11 @@ public class ItNetwork extends CnATreeElement implements IBpElement  {
             return false;
         }
         return TYPE_ID.equals(element.getTypeId());
+    }
+
+    @Override
+    public Collection<String> getTags() {
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
 }

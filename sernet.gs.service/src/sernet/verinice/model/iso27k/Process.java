@@ -101,7 +101,7 @@ public class Process extends CnATreeElement implements IISO27kElement {
 	}
 	
 	@Override
-    public Collection<? extends String> getTags() {
+    public Collection<String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 

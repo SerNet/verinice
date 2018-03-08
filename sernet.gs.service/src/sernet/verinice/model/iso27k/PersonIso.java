@@ -116,7 +116,7 @@ public class PersonIso extends CnATreeElement implements IISO27kElement {
         return sb.toString();       
 	}
 	
-	public Collection<? extends String> getTags() {
+	public Collection<String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	

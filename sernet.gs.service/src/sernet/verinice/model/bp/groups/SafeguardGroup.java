@@ -19,9 +19,12 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.groups;
 
+import java.util.Collection;
+
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 
@@ -41,6 +44,9 @@ public class SafeguardGroup extends Group<Safeguard> implements IBpGroup, IIdent
     private static final String PROP_NAME = "bp_safeguard_group_name"; //$NON-NLS-1$
     
     private static final String PROP_ID = "bp_safeguard_group_id"; //$NON-NLS-1$
+
+    public static final String PROP_TAG = "bp_safeguard_group_tag"; //$NON-NLS-1$
+
 
     
     public static final String[] CHILD_TYPES = new String[] {Safeguard.TYPE_ID};
@@ -84,6 +90,11 @@ public class SafeguardGroup extends Group<Safeguard> implements IBpGroup, IIdent
     @Override
     public String getFullTitle() {
         return joinPrefixAndTitle(getIdentifier(), getTitle());
+    }
+
+    @Override
+    public Collection<String> getTags() {
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
 }

@@ -22,12 +22,15 @@ package sernet.verinice.model.bp.elements;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeductiveImplementationEnabled;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementationStausToRequirement;
 
+import java.util.Collection;
 import java.util.Date;
 
 import sernet.hui.common.connect.IIdentifiableElement;
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.Reevaluator;
+import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.AbstractLinkChangeListener;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
@@ -39,7 +42,7 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class BpRequirement extends CnATreeElement implements IBpElement, IIdentifiableElement {
+public class BpRequirement extends CnATreeElement implements IBpElement, IIdentifiableElement, ITaggableElement {
 
     private static final long serialVersionUID = 436541703079680979L;
 
@@ -49,6 +52,7 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
     public static final String PROP_OBJECTBROWSER = "bp_requirement_objectbrowser_content"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_requirement_name"; //$NON-NLS-1$
     public static final String PROP_ID = "bp_requirement_id"; //$NON-NLS-1$
+    public static final String PROP_TAG = "bp_requirement_tag"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER = "bp_requirement_qualifier"; //$NON-NLS-1$
     public static final String PROP_LAST_CHANGE = "bp_requirement_last_change"; //$NON-NLS-1$
     public static final String PROP_CONFIDENTIALITY = "bp_requirement_value_method_confidentiality";//$NON-NLS-1$
@@ -241,6 +245,11 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
     @Override
     public String getFullTitle() {
         return joinPrefixAndTitle(getIdentifier(), getTitle());
+    }
+
+    @Override
+    public Collection<String> getTags() {
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
 }

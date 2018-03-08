@@ -21,12 +21,13 @@ package sernet.verinice.model.bp.elements;
 import java.util.Collection;
 
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("serial")
-public class BpRecord extends CnATreeElement implements IBpElement {
+public class BpRecord extends CnATreeElement implements IBpElement, ITaggableElement {
 
     public static final String TYPE_ID = "bp_record"; //$NON-NLS-1$
     public static final String PROP_ABBR = "bp_record_abbr"; //$NON-NLS-1$
@@ -77,8 +78,10 @@ public class BpRecord extends CnATreeElement implements IBpElement {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
     }
 
+    @Override
     public Collection<String> getTags() {
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
+
 
 }
