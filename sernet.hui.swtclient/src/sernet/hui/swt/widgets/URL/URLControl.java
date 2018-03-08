@@ -57,7 +57,7 @@ public class URLControl implements IHuiControl {
     private boolean useValidationGUIHints;
     private Label label;
 
-    private Pattern pattern = Pattern.compile("<a href=\"(.*)\">(.*)</a>"); //$NON-NLS-1$
+    private static final Pattern pattern = Pattern.compile("<a href=\"(.*)\">(.*)</a>"); //$NON-NLS-1$
 
     public URLControl(Entity entity, PropertyType type, Composite parent, boolean editable,
             boolean showValidationHint, boolean useValidationGuiHints) {
