@@ -52,6 +52,7 @@ public class URLControl implements IHuiControl {
     private Composite parent;
     private boolean editable;
     private Link link;
+    private Button editBtn;
     private Property savedProp;
     private boolean showValidationHint;
     private boolean useValidationGUIHints;
@@ -101,7 +102,7 @@ public class URLControl implements IHuiControl {
 
         });
 
-        Button editBtn = new Button(container, SWT.PUSH);
+        editBtn = new Button(container, SWT.PUSH);
         editBtn.setText(Messages.getString("URLControl.1")); //$NON-NLS-1$
         editBtn.setToolTipText(this.type.getTooltiptext());
         editBtn.setEnabled(editable);
@@ -161,12 +162,11 @@ public class URLControl implements IHuiControl {
     }
 
     public Control getControl() {
-        // TODO Auto-generated method stub
-        return null;
+        return editBtn;
     }
 
     public void setFocus() {
-        // TODO Auto-generated method stub
+        editBtn.setFocus();
 
     }
 
