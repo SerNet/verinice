@@ -143,7 +143,7 @@ public class URLControl implements IHuiControl {
     protected void showLinkEditDialog() {
         String href = ""; //$NON-NLS-1$
         String name = ""; //$NON-NLS-1$
-        if (savedProp != null && savedProp.getPropertyValue() != null) {
+        if (savedProp.getPropertyValue() != null) {
             Matcher matcher = pattern.matcher(savedProp.getPropertyValue());
             if (matcher.find()) {
                 href = matcher.group(1);
