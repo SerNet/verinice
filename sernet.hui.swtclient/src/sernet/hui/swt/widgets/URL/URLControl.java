@@ -47,156 +47,151 @@ import sernet.hui.swt.widgets.IHuiControl;
 
 public class URLControl implements IHuiControl {
 
-	private Entity entity;
-	private PropertyType type;
-	private Composite parent;
-	private boolean editable;
-	private Link link;
-	private Property savedProp;
-	private boolean showValidationHint;
-	private boolean useValidationGUIHints;
-	private Label label;
-	
-	private Pattern pattern = Pattern.compile("<a href=\"(.*)\">(.*)</a>"); //$NON-NLS-1$
+    private Entity entity;
+    private PropertyType type;
+    private Composite parent;
+    private boolean editable;
+    private Link link;
+    private Property savedProp;
+    private boolean showValidationHint;
+    private boolean useValidationGUIHints;
+    private Label label;
 
-	public URLControl(Entity entity, PropertyType type, Composite parent,
-			boolean editable, boolean showValidationHint, boolean useValidationGuiHints) {
-		this.entity = entity;
-		this.type = type;
-		this.parent = parent;
-		this.editable = editable;
-		this.showValidationHint = showValidationHint;
+    private Pattern pattern = Pattern.compile("<a href=\"(.*)\">(.*)</a>"); //$NON-NLS-1$
+
+    public URLControl(Entity entity, PropertyType type, Composite parent, boolean editable,
+            boolean showValidationHint, boolean useValidationGuiHints) {
+        this.entity = entity;
+        this.type = type;
+        this.parent = parent;
+        this.editable = editable;
+        this.showValidationHint = showValidationHint;
         this.useValidationGUIHints = useValidationGuiHints;
-	}
+    }
 
-	public void create() {
-		label = new Label(parent, SWT.NULL);
-		if(showValidationHint && useValidationGUIHints){
-		   refontLabel(true);
-		}
-		label.setText(type.getName());
-		
+    public void create() {
+        label = new Label(parent, SWT.NULL);
+        if (showValidationHint && useValidationGUIHints) {
+            refontLabel(true);
+        }
+        label.setText(type.getName());
 
-		Composite container = new Composite(parent, SWT.NULL);
-		GridLayout contLayout = new GridLayout(3, false);
-		contLayout.horizontalSpacing = 5;
-		contLayout.marginLeft = 0;
-		contLayout.marginWidth = 0;
-		contLayout.marginHeight = 0;
-		container.setLayout(contLayout);
+        Composite container = new Composite(parent, SWT.NULL);
+        GridLayout contLayout = new GridLayout(3, false);
+        contLayout.horizontalSpacing = 5;
+        contLayout.marginLeft = 0;
+        contLayout.marginWidth = 0;
+        contLayout.marginHeight = 0;
+        container.setLayout(contLayout);
 
-		GridData containerLData = new GridData();
-		containerLData.horizontalAlignment = GridData.FILL;
-		containerLData.grabExcessHorizontalSpace = true;
-		container.setLayoutData(containerLData);
+        GridData containerLData = new GridData();
+        containerLData.horizontalAlignment = GridData.FILL;
+        containerLData.grabExcessHorizontalSpace = true;
+        container.setLayoutData(containerLData);
 
-		link = new Link(container, SWT.NONE);
-		link.setToolTipText(this.type.getTooltiptext());
-		link.setLayoutData(new GridData(GridData.FILL, GridData.CENTER,		
-				true, false, 1, 1));
-		link.addListener (SWT.Selection, new Listener () {
-			public void handleEvent(Event event) {
-				if (getHref() != null && getHref().length()>0){
-					Program.launch(getHref());
-				}
-			}
+        link = new Link(container, SWT.NONE);
+        link.setToolTipText(this.type.getTooltiptext());
+        link.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
+        link.addListener(SWT.Selection, new Listener() {
+            public void handleEvent(Event event) {
+                if (getHref() != null && getHref().length() > 0) {
+                    Program.launch(getHref());
+                }
+            }
 
-		});
+        });
 
-		Button editBtn = new Button(container, SWT.PUSH);
-		editBtn.setText(Messages.getString("URLControl.1")); //$NON-NLS-1$
-		editBtn.setToolTipText(this.type.getTooltiptext());
-		editBtn.setEnabled(editable);
-		editBtn.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent arg0) {
-				showLinkEditDialog();
-			}
+        Button editBtn = new Button(container, SWT.PUSH);
+        editBtn.setText(Messages.getString("URLControl.1")); //$NON-NLS-1$
+        editBtn.setToolTipText(this.type.getTooltiptext());
+        editBtn.setEnabled(editable);
+        editBtn.addSelectionListener(new SelectionListener() {
+            public void widgetSelected(SelectionEvent arg0) {
+                showLinkEditDialog();
+            }
 
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				showLinkEditDialog();
-			}
-		});
+            public void widgetDefaultSelected(SelectionEvent arg0) {
+                showLinkEditDialog();
+            }
+        });
 
-		setLinkText();
-	}
+        setLinkText();
+    }
 
-	protected String getHref() {
-		Matcher matcher = pattern.matcher(savedProp.getPropertyValue());
-		if (matcher.find()) {
-			return matcher.group(1);
+    protected String getHref() {
+        Matcher matcher = pattern.matcher(savedProp.getPropertyValue());
+        if (matcher.find()) {
+            return matcher.group(1);
 
-		}
-		return ""; //$NON-NLS-1$
-	}
+        }
+        return ""; //$NON-NLS-1$
+    }
 
-	private void setLinkText() {
-		PropertyList propList = entity.getProperties(type.getId());
-		savedProp = propList != null ? propList.getProperty(0) : null;
+    private void setLinkText() {
+        PropertyList propList = entity.getProperties(type.getId());
+        savedProp = propList != null ? propList.getProperty(0) : null;
 
-		if (savedProp == null) {
-			savedProp = entity.createNewProperty(type, ""); //$NON-NLS-1$
-		}
-		if(savedProp.getPropertyValue()!=null) {
-			link.setText(savedProp.getPropertyValue());
-		}
-		link.pack();
-	}
+        if (savedProp == null) {
+            savedProp = entity.createNewProperty(type, ""); //$NON-NLS-1$
+        }
+        if (savedProp.getPropertyValue() != null) {
+            link.setText(savedProp.getPropertyValue());
+        }
+        link.pack();
+    }
 
-	protected void showLinkEditDialog() {
-		String href = ""; //$NON-NLS-1$
-		String name = ""; //$NON-NLS-1$
-		if(savedProp!=null && savedProp.getPropertyValue()!=null) {
-			Matcher matcher = pattern.matcher(savedProp.getPropertyValue());
-			if (matcher.find()) {
-				href = matcher.group(1);
-				name = matcher.group(2);
-	
-			}
-		}
-		URLControlDialog dialog = new URLControlDialog(Display.getCurrent()
-				.getActiveShell(), name, href, this.type);
-		if (dialog.open() == InputDialog.OK) {
-			savedProp.setPropertyValue("<a href=\"" + dialog.getHref() + "\">"  //$NON-NLS-1$ //$NON-NLS-2$
-					+ dialog.getName()
-					+ "</a>"); //$NON-NLS-1$
-			update();
-		}
-	}
+    protected void showLinkEditDialog() {
+        String href = ""; //$NON-NLS-1$
+        String name = ""; //$NON-NLS-1$
+        if (savedProp != null && savedProp.getPropertyValue() != null) {
+            Matcher matcher = pattern.matcher(savedProp.getPropertyValue());
+            if (matcher.find()) {
+                href = matcher.group(1);
+                name = matcher.group(2);
 
-	public Control getControl() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+            }
+        }
+        URLControlDialog dialog = new URLControlDialog(Display.getCurrent().getActiveShell(), name,
+                href, this.type);
+        if (dialog.open() == InputDialog.OK) {
+            savedProp.setPropertyValue("<a href=\"" + dialog.getHref() + "\">" //$NON-NLS-1$ //$NON-NLS-2$
+                    + dialog.getName() + "</a>"); //$NON-NLS-1$
+            update();
+        }
+    }
 
-	public void setFocus() {
-		// TODO Auto-generated method stub
+    public Control getControl() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	}
+    public void setFocus() {
+        // TODO Auto-generated method stub
 
-	public void update() {
-		PropertyList propList = entity.getProperties(type.getId());
-		Property entityProp;
-		entityProp = propList != null ? propList.getProperty(0) : null;
-		if (entityProp != null
-				&& !link.getText().equals(entityProp.getPropertyValue())) {
-			savedProp = entityProp;
-			if (Display.getCurrent() != null) {
-				setLinkText();
-			} else {
-				Display.getDefault().asyncExec(new Runnable() {
-					public void run() {
-						setLinkText();
-					}
-				});
-			}
-		}
-	}
+    }
 
-	public boolean validate() {
+    public void update() {
+        PropertyList propList = entity.getProperties(type.getId());
+        Property entityProp;
+        entityProp = propList != null ? propList.getProperty(0) : null;
+        if (entityProp != null && !link.getText().equals(entityProp.getPropertyValue())) {
+            savedProp = entityProp;
+            if (Display.getCurrent() != null) {
+                setLinkText();
+            } else {
+                Display.getDefault().asyncExec(new Runnable() {
+                    public void run() {
+                        setLinkText();
+                    }
+                });
+            }
+        }
+    }
+
+    public boolean validate() {
         boolean valid = true;
-        for(Entry<String, Boolean> entry : type.validate(
-                link.getText(), null).entrySet()){
-            if(!entry.getValue().booleanValue()){
+        for (Entry<String, Boolean> entry : type.validate(link.getText(), null).entrySet()) {
+            if (!entry.getValue().booleanValue()) {
                 valid = false;
                 break;
             }
@@ -206,22 +201,23 @@ public class URLControl implements IHuiControl {
             return true;
         }
 
-        if(useValidationGUIHints){
+        if (useValidationGUIHints) {
             refontLabel(true);
         }
         return false;
-	}
-	
+    }
+
     private void refontLabel(boolean dye) {
         FontData fontData = label.getFont().getFontData()[0];
         Font font;
         int color;
-        if(dye){
-            font= new Font(label.getParent().getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
-                    SWT.BOLD));
+        if (dye) {
+            font = new Font(label.getParent().getDisplay(),
+                    new FontData(fontData.getName(), fontData.getHeight(), SWT.BOLD));
             color = SWT.COLOR_RED;
         } else {
-            font = new Font(label.getParent().getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
+            font = new Font(label.getParent().getDisplay(),
+                    new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
             color = SWT.COLOR_WIDGET_FOREGROUND;
         }
         label.setForeground(label.getParent().getDisplay().getSystemColor(color));
