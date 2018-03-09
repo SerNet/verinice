@@ -180,6 +180,7 @@ public final class ImageCache {
     public static final String CLIENT = "computer.png";
 
     public static final String FILTER = "filter_tsk.gif";
+    public static final String FILTER_ACTIVE = "filter_tsk_active.gif";
 
     public static final String REPORT = "report.png";
 
