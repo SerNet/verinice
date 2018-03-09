@@ -27,6 +27,7 @@ import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bpm.TodoViewItem;
 import sernet.verinice.model.bsi.CnAPlaceholder;
 import sernet.verinice.model.bsi.ImportBsiGroup;
@@ -36,6 +37,7 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.iso27k.ControlMaturityService;
 
@@ -141,7 +143,8 @@ public final class CnAImageProvider {
         if (element instanceof GefaehrdungsUmsetzung) {
             return imageCache.getImage(ImageCache.GEFAEHRDUNG);
         }
-        if (element instanceof ImportBsiGroup) {
+        if (element instanceof ImportBpGroup || element instanceof ImportIsoGroup
+                || element instanceof ImportBsiGroup) {
             return imageCache.getImage(ImageCache.ISO27K_IMPORT);
         }
 
