@@ -8062,7 +8062,9 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="process_va_gemenVerant_email" name="E-Mail-Adresse">
                 <depends option="process_va_gemenVerant" value="process_va_gemenVerantwo_1" />
             </huiproperty>
-            <huiproperty name="Document" id="process_va_gemenVerant_document" isURL="true" />
+            <huiproperty name="Document" id="process_va_gemenVerant_document" isURL="true" >
+                <depends option="process_va_gemenVerant" value="process_va_gemenVerantwo_1" />
+            </huiproperty>
         </huipropertygroup>
      
         <huipropertygroup tags="Privacy" id="process_zb_group" name="Zweckbestimmung">
