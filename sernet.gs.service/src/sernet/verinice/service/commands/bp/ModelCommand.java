@@ -117,12 +117,14 @@ public class ModelCommand extends ChangeLoggingCommand {
             }
             handleThreats();
             createLinks();
+            createDummySafeguards();
             saveReturnValues();
         } catch (CommandException e) {
             LOG.error("Error while modeling.", e);
             throw new RuntimeCommandException("Error while modeling.", e);
         }
     }
+
 
     private void handleModules() throws CommandException {
         ModelCopyCommand modelModulesCommand = new ModelModulesCommand(requirementGroups,
@@ -148,6 +150,12 @@ public class ModelCommand extends ChangeLoggingCommand {
         ModelLinksCommand modelLinksCommand = new ModelLinksCommand(moduleUuidsFromCompendium,
                 moduleUuidsFromScope, itNetwork, targetElements);
         getCommandService().executeCommand(modelLinksCommand);
+    }
+
+    private void createDummySafeguards() throws CommandException {
+        ModelDummySafeguards modelDummySafeguards = new ModelDummySafeguards(moduleUuidsFromScope,
+                targetElements);
+        getCommandService().executeCommand(modelDummySafeguards);
     }
 
     private void saveReturnValues() {

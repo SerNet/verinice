@@ -101,18 +101,10 @@ public class ModelSafeguardGroupCommand extends ModelCopyCommand {
         return getMetaDao().loadChildrenLinksParents(moduleUuids, SafeguardGroup.TYPE_ID);
     }
 
-    /*
-     * @see
-     * sernet.verinice.service.commands.bp.ModelCopyCommand#handleChild(sernet.
-     * verinice.model.common.CnATreeElement,
-     * sernet.verinice.model.common.CnATreeElement,
-     * sernet.verinice.model.common.CnATreeElement)
-     */
     @Override
     protected void handleChild(CnATreeElement target, CnATreeElement elementCompendium,
             CnATreeElement elementScope) throws CommandException {
-        // TODO Auto-generated method stub
-
+        // nothing to do
     }
 
 }
