@@ -3,11 +3,17 @@ package sernet.verinice.model.bsi;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class TagHelperTest {
+
+    @Test
+    public void splitTagsAllTestsInOne() {
+        Assert.assertArrayEquals(
+                new String[] { "foo", "bar", "tag1", "tag2", "label1", "label2", "5", "6" },
+                TagHelper.getTags("foo,bar tag1 tag2, label1 , label2 , , 5,6").toArray());
+    }
 
     @Test
     public void splitTagsSeparatedWithComma() {
