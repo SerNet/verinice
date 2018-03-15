@@ -117,7 +117,8 @@ public class ModelCommand extends ChangeLoggingCommand {
             }
             handleThreats();
             createLinks();
-            createDummySafeguards();
+            // Creating dummy safeguards is disabled at the moment
+            // createDummySafeguards();
             saveReturnValues();
         } catch (CommandException e) {
             LOG.error("Error while modeling.", e);

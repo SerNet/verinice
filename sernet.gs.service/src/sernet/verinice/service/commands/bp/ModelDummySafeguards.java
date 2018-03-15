@@ -17,19 +17,33 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
+import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import sernet.verinice.interfaces.ChangeLoggingCommand;
+import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.ChangeLogEntry;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
+ * Creates a dummy safeguard for a requirement if no safeguard is linked to
+ * requirement.
  * 
+ * Development of this function has begun. However, the further development was
+ * interrupted. Executing of this command is disabled in ModelCommand.
  */
 public class ModelDummySafeguards extends ChangeLoggingCommand {
 
+    private static final Logger LOG = Logger.getLogger(ModelDummySafeguards.class);
+
     private Set<String> moduleUuidsFromScope;
     private Set<CnATreeElement> targetElements;
+
+    private transient ModelingMetaDao metaDao;
 
     private String stationId;
 
@@ -43,6 +57,34 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
 
     @Override
     public void execute() {
+        for (String uuid : moduleUuidsFromScope) {
+            handleModule(uuid);
+        }
+    }
+
+    private void handleModule(String uuid) {
+        Set<CnATreeElement> requirements = findSafeguardsByModuleUuid(uuid);
+        for (CnATreeElement requirement : requirements) {
+            Set<CnALink> linksToSafeguard = requirement.getLinksDown();
+            if (linksToSafeguard.isEmpty()) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("No safeguards found for module with UUID: " + uuid
+                            + ", will create a dummy safewguard now...");
+                }
+                createDummySafeguardForRequirement(requirement);
+            } else {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Safeguards found for module with UUID: " + uuid);
+                    for (CnALink link : linksToSafeguard) {
+                        LOG.debug("Link type: " + link.getRelationId());
+                    }
+                }
+            }
+        }
+
+    }
+
+    private void createDummySafeguardForRequirement(CnATreeElement requirement) {
         // TODO Auto-generated method stub
 
     }
@@ -57,4 +99,18 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
         return ChangeLogEntry.TYPE_INSERT;
     }
 
+    private Set<CnATreeElement> findSafeguardsByModuleUuid(String uuid) {
+        return getMetaDao().loadLinkedElementsOfParents(Arrays.asList(uuid));
+    }
+
+    public ModelingMetaDao getMetaDao() {
+        if (metaDao == null) {
+            metaDao = new ModelingMetaDao(getDao());
+        }
+        return metaDao;
+    }
+
+    private IBaseDao<CnATreeElement, Serializable> getDao() {
+        return getDaoFactory().getDAO(CnATreeElement.class);
+    }
 }

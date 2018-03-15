@@ -77,7 +77,8 @@ public class ModelingMetaDao {
             "join fetch p2.parent as p3 " +
             "where element.uuid in (:uuids)"; //$NON-NLS-1$
 
-    private static final String HQL_LOAD_LINKED_SAFEGUARDS_OF_MODULES = "select safeguard from CnATreeElement safeguard " +
+    private static final String HQL_LOAD_LINKED_SAFEGUARDS_WITH_PROPERTIES_OF_MODULES = "select safeguard from CnATreeElement safeguard "
+            +
             "join safeguard.linksUp as linksUp " +
             "join linksUp.dependant as requirement " +
             "join requirement.parent as module " +
@@ -86,6 +87,10 @@ public class ModelingMetaDao {
             "join fetch propertyList.properties as props " +
             "where safeguard.objectType = :typeId " +
             "and module.uuid in (:uuids)"; //$NON-NLS-1$
+
+    private static final String HQL_LOAD_CHILDREN_WITH_LINKS_DOWN = "select requirement from CnATreeElement requirement "
+            + "join requirement.parent as module "
+            + "where module.uuid in (:uuids)"; // $NON-NLS-2$
 
     private static final String HQL_LOAD_LINKED_SAFEGUARD_GROUPS_OF_MODULES = "select safeguardGroup from CnATreeElement safeguardGroup " +
             "join fetch safeguardGroup.children as safeguard " +
@@ -216,13 +221,28 @@ public class ModelingMetaDao {
     }
 
     @SuppressWarnings("unchecked")
-    public List<CnATreeElement> loadLinkedElementsOfParents(final Set<String> parentUuids,
+    public Set<CnATreeElement> loadLinkedElementsOfParents(final Collection<String> parentUuids) {
+        final List<CnATreeElement> resultList = getDao().findByCallback(new HibernateCallback() {
+            @Override
+            public Object doInHibernate(Session session) throws SQLException {
+                Query query = session.createQuery(ModelingMetaDao.HQL_LOAD_CHILDREN_WITH_LINKS_DOWN)
+                        .setParameterList(UUIDS, parentUuids);
+                return query.list();
+            }
+        });
+        return new HashSet<>(resultList);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<CnATreeElement> loadLinkedElementsWithPropertiesOfParents(
+            final Collection<String> parentUuids,
             final String typeId) {
         return getDao().findByCallback(new HibernateCallback() {
             @Override
             public Object doInHibernate(Session session) throws SQLException {
                 Query query = session
-                        .createQuery(ModelingMetaDao.HQL_LOAD_LINKED_SAFEGUARDS_OF_MODULES)
+                        .createQuery(
+                                ModelingMetaDao.HQL_LOAD_LINKED_SAFEGUARDS_WITH_PROPERTIES_OF_MODULES)
                         .setParameterList(UUIDS, parentUuids).setParameter(TYPE_ID, typeId);
                 return query.list();
             }

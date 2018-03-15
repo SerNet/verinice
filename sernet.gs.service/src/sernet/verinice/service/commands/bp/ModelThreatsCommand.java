@@ -212,7 +212,7 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
     }
 
     private List<CnATreeElement> findThreatsByModuleUuids() {
-        return getMetaDao().loadLinkedElementsOfParents(moduleUuids, BpThreat.TYPE_ID);
+        return getMetaDao().loadLinkedElementsWithPropertiesOfParents(moduleUuids, BpThreat.TYPE_ID);
     }
 
     /**
