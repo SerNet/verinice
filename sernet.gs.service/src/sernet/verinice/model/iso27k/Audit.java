@@ -139,7 +139,7 @@ public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGrou
 	}
 	
 	@Override
-    public Collection<? extends String> getTags() {
+    public Collection<String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
 	}
 	

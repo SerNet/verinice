@@ -19,8 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.groups;
 
+import java.util.Collection;
+
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.elements.Device;
+import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 
@@ -34,7 +37,8 @@ public class DeviceGroup extends Group<Device> implements IBpGroup {
     
     public static final String TYPE_ID = "bp_device_group"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_device_group_name"; //$NON-NLS-1$
-    
+    public static final String PROP_TAG = "bp_device_group_tag"; //$NON-NLS-1$
+
     public static final String[] CHILD_TYPES = new String[] {Device.TYPE_ID};
     
     protected DeviceGroup() {}
@@ -64,4 +68,9 @@ public class DeviceGroup extends Group<Device> implements IBpGroup {
         return CHILD_TYPES;
     }
     
+    @Override
+    public Collection<String> getTags() {
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
+    }
+
 }

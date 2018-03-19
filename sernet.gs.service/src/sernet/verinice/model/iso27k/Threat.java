@@ -86,7 +86,7 @@ public class Threat extends CnATreeElement implements IISO27kElement {
 	    getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_DESCRIPTION), desc);
 	}
 	
-	public Collection<? extends String> getTags() {
+	public Collection<String> getTags() {
 		return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
 	}
 

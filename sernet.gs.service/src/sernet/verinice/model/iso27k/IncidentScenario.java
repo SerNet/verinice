@@ -132,7 +132,7 @@ public class IncidentScenario extends CnATreeElement implements IISO27kElement {
 	}
 	
 	@Override
-    public Collection<? extends String> getTags() {
+    public Collection<String> getTags() {
 		return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
 	}
 	
