@@ -47,6 +47,7 @@ import sernet.gs.reveng.ModZobjBstMass;
 import sernet.gs.reveng.ModZobjBstMassId;
 import sernet.gs.reveng.NZielobjekt;
 import sernet.gs.reveng.NZielobjektDAO;
+import sernet.gs.reveng.NZielobjektId;
 import sernet.gs.reveng.NZobSb;
 import sernet.gs.reveng.NZobSbDAO;
 import sernet.gs.reveng.NmbNotiz;
@@ -788,12 +789,12 @@ public class GSVampire {
 		return result;
 	}
 
-	public List<NZielobjekt> findLinksByZielobjekt(NZielobjekt zielobjekt) {
+	public List<NZielobjekt> findLinksByZielobjektId(NZielobjektId zielobjektId) {
 		List<NZielobjekt> result = new ArrayList<NZielobjekt>();
 		NZielobjektDAO dao = new NZielobjektDAO();
 		Transaction transaction = dao.getSession().beginTransaction();
 		Query query = dao.getSession().createQuery(QUERY_LINKS_FOR_ZIELOBJEKT);
-		query.setProperties(zielobjekt.getId());
+		query.setProperties(zielobjektId);
 		Iterator iterate = query.iterate();
 		while (iterate.hasNext()) {
 			result.add((NZielobjekt) iterate.next());
@@ -803,13 +804,13 @@ public class GSVampire {
 		return result;
 	}
 
-	public List<NZobSb> findSchutzbedarfByZielobjekt(NZielobjekt zielobjekt) {
+	public List<NZobSb> findSchutzbedarfByZielobjektId(NZielobjektId zielobjektId) {
 		List<NZobSb> result = new ArrayList<NZobSb>();
 		NZobSbDAO dao = new NZobSbDAO();
 		Transaction transaction = dao.getSession().beginTransaction();
 		Query query = dao.getSession().createQuery(
 				QUERY_SCHUTZBEDARF_FOR_ZIELOBJEKT);
-		query.setProperties(zielobjekt.getId());
+		query.setProperties(zielobjektId);
 		Iterator iterate = query.iterate();
 		while (iterate.hasNext()) {
 			result.add((NZobSb) iterate.next());

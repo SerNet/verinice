@@ -272,7 +272,7 @@ public class TestGSVampire {
 			NZielobjekt zielobjekt = zielobjektTypeResult.zielobjekt;
 			assertNotNull(zielobjekt);
 			List<NZielobjekt> dependants = vampire
-					.findLinksByZielobjekt(zielobjekt);
+					.findLinksByZielobjektId(zielobjekt.getId());
 			for (NZielobjekt dependant : dependants) {
 				foundlinks = true;
 				System.out.println("Gefunden: Verknüpfung von "
@@ -397,7 +397,7 @@ public class TestGSVampire {
 			NZielobjekt zielobjekt = zielobjektTypeResult.zielobjekt;
 			assertNotNull(zielobjekt);
 			List<NZobSb> schutzbedarf = vampire
-					.findSchutzbedarfByZielobjekt(zielobjekt);
+					.findSchutzbedarfByZielobjektId(zielobjekt.getId());
 			for (NZobSb schubeda : schutzbedarf) {
 				foundlinks = true;
 				MSchutzbedarfkategTxt vertr = vampire
