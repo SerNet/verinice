@@ -35,6 +35,7 @@ import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.RemoveLink;
@@ -48,7 +49,7 @@ public class MigrateDataProtectionCommand extends GraphCommand {
     private static final Logger LOG = Logger.getLogger(MigrateDataProtectionCommand.class);
 
     private static final long serialVersionUID = 1L;
-    private static final String[] TYPE_IDS = new String[] { "process", "control" };
+    private static final String[] TYPE_IDS = new String[] { Process.TYPE_ID, Control.TYPE_ID };
     public static final String REL_PROCESS_CONTROL_OBJECTIVES = "rel_process_control_objectives";
     public static final List<String> RELATIONS = Lists.newArrayList(
             "rel_process_control_Zutrittskontrolle", "rel_process_control_Zugangskontrolle",
@@ -57,6 +58,7 @@ public class MigrateDataProtectionCommand extends GraphCommand {
             "rel_process_control_Verfügbarkeitskontrolle",
             "rel_process_control_Trennungskontrolle");
     private Set<CnATreeElement> processes;
+    private Set<CnATreeElement> affectedObjects = new HashSet<>();
 
     public MigrateDataProtectionCommand(Integer... scopeIds) {
         GraphElementLoader loader = new GraphElementLoader();
@@ -65,23 +67,16 @@ public class MigrateDataProtectionCommand extends GraphCommand {
             loader.setScopeIds(scopeIds);
         }
         addLoader(loader);
-    }
-
-    @Override
-    public List<String> getRelationIds() {
-        return RELATIONS;
-    }
-
-    @Override
-    public void addRelationId(String id) {
-        // override so no relation can be added later.
+        for (String relation : RELATIONS) {
+            addRelationId(relation);
+        }
     }
 
     @Override
     public void executeWithGraph() {
         VeriniceGraph processGraph = getGraph();
-        processes = processGraph.getElements("process");
-        Set<CnATreeElement> controls = processGraph.getElements("control");
+        processes = processGraph.getElements(Process.TYPE_ID);
+        Set<CnATreeElement> controls = processGraph.getElements(Control.TYPE_ID);
 
         for (CnATreeElement control : controls) {
             Set<PropertyType> toms = getTOMS(control);
@@ -90,17 +85,17 @@ public class MigrateDataProtectionCommand extends GraphCommand {
                     updateControlWithToms(control, toms);
                     Set<CnATreeElement> affectedProcesses = removeLinks(control, processGraph);
                     createLinks(control, affectedProcesses);
+                    affectedObjects.addAll(affectedProcesses);
                 } catch (CommandException e) {
-                    LOG.error("Error while transforming data protection", e);
+                    LOG.error("Error while transforming data protection controls", e);
                 }
-
             }
         }
     }
 
     /**
-     * @param control
-     * @param affectedProcesses
+     * Create the new dataprotection link between the control and the processes.
+     *
      * @throws CommandException
      */
     private void createLinks(CnATreeElement control, Set<CnATreeElement> affectedProcesses)
@@ -113,18 +108,18 @@ public class MigrateDataProtectionCommand extends GraphCommand {
     }
 
     /**
-     * @param control
-     * @param processGraph
+     * Remove the old dataprotection links between control and process.
+     *
      * @return the affected processes
      * @throws CommandException
      */
     private Set<CnATreeElement> removeLinks(CnATreeElement control, VeriniceGraph processGraph)
             throws CommandException {
-        Set<Edge> allReslations = processGraph.getEdgesByElementType(control, Process.TYPE_ID);
+        Set<Edge> allRelations = processGraph.getEdgesByElementType(control, Process.TYPE_ID);
 
         String cUuid = control.getUuid();
         Set<CnATreeElement> affectedProcesses = new HashSet<>();
-        for (Edge edge : allReslations) {
+        for (Edge edge : allRelations) {
             if (!RELATIONS.contains(edge.getType())) {
                 continue;// ensure we only take the right link types (might be
                          // unnecessary)
@@ -142,6 +137,11 @@ public class MigrateDataProtectionCommand extends GraphCommand {
         return affectedProcesses;
     }
 
+    /**
+     * Write the state of the mapped control in the control properties.
+     *
+     * @throws CommandException
+     */
     private void updateControlWithToms(CnATreeElement control, Set<PropertyType> toms)
             throws CommandException {
         for (PropertyType property : toms) {
@@ -149,15 +149,23 @@ public class MigrateDataProtectionCommand extends GraphCommand {
         }
         UpdateElementEntity<CnATreeElement> updateCmd = new UpdateElementEntity<>(control,
                 ChangeLogEntry.STATION_ID);
-        getCommandService().executeCommand(updateCmd);
+        UpdateElementEntity<CnATreeElement> command = getCommandService().executeCommand(updateCmd);
+        affectedObjects.add(command.getElement());
     }
 
+    /**
+     * Get the TOMS set for a given control.
+     */
     private Set<PropertyType> getTOMS(CnATreeElement control) {
-        return TomMapper.getInstance().getIsoMapping().get(control.getTitle());
+        return TomMapper.getInstance().getMapping(control.getTitle());
     }
 
     public Set<CnATreeElement> getProcesses() {
         return processes;
+    }
+
+    public Set<CnATreeElement> getAffectedObjects() {
+        return affectedObjects;
     }
 
 }
