@@ -38,29 +38,46 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.iso27k.Control;
 
 /**
+ * This singleton contains the mapping from the old dataprotection to the new
+ * on.
  *
  */
 public final class TomMapper {
     private static final Logger LOG = Logger.getLogger(TomMapper.class);
+    private static final String MAPPING_ISO_CONTROLS_CSV = "/MappingISO-Controls.csv";
+    private static final String MAPPING_ITGS_CONTROLS_CSV = "/MappingITGS-Controls.csv";
 
     private static TomMapper instance;
     private static final int NUMBER_OF_TOMS = 8;
     private Map<String, Set<PropertyType>> isoMapping;
+    private Map<String, Set<PropertyType>> itgsMapping;
 
-    public TomMapper() {
+    private TomMapper() {
         super();
         try {
-            InputStream resourceAsStream = getClass()
-                    .getResourceAsStream("/MappingISO-Controls.csv");
-            InputStreamReader reader = new InputStreamReader(resourceAsStream);
-            CSVReader csvReader = new CSVReader(reader, ',', '"');
-            List<String[]> readAll = csvReader.readAll();
-            csvReader.close();
-            reader.close();
+            List<String[]> readAll = readMapping(MAPPING_ISO_CONTROLS_CSV);
             isoMapping = transformCsv(readAll);
+            readAll = readMapping(MAPPING_ITGS_CONTROLS_CSV);
+            itgsMapping = transformCsv(readAll);
         } catch (IOException e) {
-            LOG.error("Error initalizing ISO Mapping", e);
+            LOG.error("Error initalizing Mapping", e);
         }
+    }
+
+    /**
+     * @param filename
+     * @return
+     * @throws IOException
+     */
+    private List<String[]> readMapping(String filename) throws IOException {
+        InputStream resourceAsStream = getClass()
+                .getResourceAsStream(filename);
+        InputStreamReader reader = new InputStreamReader(resourceAsStream);
+        CSVReader csvReader = new CSVReader(reader, ',', '"');
+        List<String[]> readAll = csvReader.readAll();
+        csvReader.close();
+        reader.close();
+        return readAll;
     }
 
     public static TomMapper getInstance() {
@@ -128,7 +145,12 @@ public final class TomMapper {
         return hashSet;
     }
 
-    public Map<String, Set<PropertyType>> getIsoMapping() {
-        return isoMapping;
+    public Set<PropertyType> getMapping(String controlTitle) {
+        Set<PropertyType> set = isoMapping.get(controlTitle);
+        if (set == null) {
+            set = itgsMapping.get(controlTitle);
+        }
+
+        return set;
     }
 }
