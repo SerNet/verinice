@@ -83,9 +83,6 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
 
     protected abstract Set<CnATreeElement> getElementsFromCompendium();
 
-    protected abstract void handleChild(CnATreeElement target, CnATreeElement elementCompendium,
-            CnATreeElement elementScope) throws CommandException;
-
     protected abstract boolean isSuitableType(CnATreeElement e1, CnATreeElement e2);
 
     protected abstract String getIdentifier(CnATreeElement element);
@@ -95,6 +92,30 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
             copyMissingElements(target);
             handleChildren(target);
         }
+    }
+
+    protected void handleChild(CnATreeElement target, CnATreeElement elementCompendium,
+            CnATreeElement elementScope) throws CommandException {
+        Map<String, CnATreeElement> compendiumIdMap = getIdMapOfChildren(elementCompendium);
+        Map<String, CnATreeElement> scopeIdMap = getIdMapOfChildren(elementScope);
+        List<String> missingUuids = new LinkedList<>();
+        for (Map.Entry<String, CnATreeElement> entry : compendiumIdMap.entrySet()) {
+            if (!scopeIdMap.containsKey(entry.getKey())) {
+                missingUuids.add(entry.getValue().getUuid());
+            }
+        }
+        if (!missingUuids.isEmpty()) {
+            CopyCommand copyCommand = new CopyCommand(elementScope.getUuid(), missingUuids);
+            getCommandService().executeCommand(copyCommand);
+        }
+    }
+
+    private Map<String, CnATreeElement> getIdMapOfChildren(CnATreeElement element) {
+        Map<String, CnATreeElement> idMap = new HashMap<>();
+        for (CnATreeElement child : element.getChildren()) {
+            idMap.put(getIdentifier(child), child);
+        }
+        return idMap;
     }
 
     private void copyMissingElements(CnATreeElement target) throws CommandException {

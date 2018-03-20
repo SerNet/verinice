@@ -25,8 +25,8 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -80,7 +80,13 @@ public class ModelSafeguardGroupCommand extends ModelCopyCommand {
 
     @Override
     protected String getIdentifier(CnATreeElement element) {
-        return ((SafeguardGroup) element).getTitle();
+        if (element instanceof Safeguard) {
+            return ((Safeguard) element).getIdentifier();
+        }
+        if (element instanceof SafeguardGroup) {
+            return ((SafeguardGroup) element).getTitle();
+        }
+        return null;
     }
 
     @Override
@@ -101,10 +107,6 @@ public class ModelSafeguardGroupCommand extends ModelCopyCommand {
         return getMetaDao().loadChildrenLinksParents(moduleUuids, SafeguardGroup.TYPE_ID);
     }
 
-    @Override
-    protected void handleChild(CnATreeElement target, CnATreeElement elementCompendium,
-            CnATreeElement elementScope) throws CommandException {
-        // nothing to do
-    }
+
 
 }

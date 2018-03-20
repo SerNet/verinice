@@ -19,17 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.CopyCommand;
 
 /**
  * This command models modules (requirements groups) from the ITBP compendium
@@ -49,30 +43,6 @@ public class ModelModulesCommand extends ModelCopyCommand {
         super();
         this.modulesCompendium = modules;
         this.targetElements = targetElements;
-    }
-
-    protected void handleChild(CnATreeElement target, CnATreeElement elementCompendium,
-            CnATreeElement elementScope) throws CommandException {
-        Map<String, CnATreeElement> compendiumIdMap = getIdMapOfChildren(elementCompendium);
-        Map<String, CnATreeElement> scopeIdMap = getIdMapOfChildren(elementScope);
-        List<String> missingUuids = new LinkedList<>();
-        for (Map.Entry<String, CnATreeElement> entry : compendiumIdMap.entrySet()) {
-            if (!scopeIdMap.containsKey(entry.getKey())) {
-                missingUuids.add(entry.getValue().getUuid());
-            }
-        }
-        if (!missingUuids.isEmpty()) {
-            CopyCommand copyCommand = new CopyCommand(elementScope.getUuid(), missingUuids);
-            getCommandService().executeCommand(copyCommand);
-        }
-    }
-
-    private Map<String, CnATreeElement> getIdMapOfChildren(CnATreeElement element) {
-        Map<String, CnATreeElement> idMap = new HashMap<>();
-        for (CnATreeElement child : element.getChildren()) {
-            idMap.put(getIdentifier(child), child);
-        }
-        return idMap;
     }
 
     protected String getIdentifier(CnATreeElement element) {
