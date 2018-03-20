@@ -291,13 +291,15 @@ public class CopyCommand extends GenericCommand {
                     final String title = newElement.getTitle();
                     final String copyGefaehrdungtitle = ((GefaehrdungsUmsetzung) newElement)
                             .getText();
-                    final Set<CnATreeElement> siblings = toGroup.getChildren();
+                    Set<CnATreeElement> siblings = toGroup.getChildren();
                     siblings.remove(newElement);
+                    siblings = removeDifferentTypes(siblings, newElement.getTypeId());
                     newElement.setTitel(getUniqueTitle(title, copyGefaehrdungtitle, siblings, 0));
                 } else {
                     final String title = newElement.getTitle();
-                    final Set<CnATreeElement> siblings = toGroup.getChildren();
+                    Set<CnATreeElement> siblings = toGroup.getChildren();
                     siblings.remove(newElement);
+                    siblings = removeDifferentTypes(siblings, newElement.getTypeId());
                     newElement.setTitel(getUniqueTitle(title, title, siblings, 0));
                 }
             }
@@ -316,6 +318,16 @@ public class CopyCommand extends GenericCommand {
         }
         newElement.setChildren(new HashSet<CnATreeElement>());
         return newElement;
+    }
+
+    private Set<CnATreeElement> removeDifferentTypes(Set<CnATreeElement> set, String typeId) {
+        Set<CnATreeElement> newSet = new HashSet<>(set.size());
+        for (CnATreeElement element : set) {
+            if (element.getTypeId().equals(typeId)) {
+                newSet.add(element);
+            }
+        }
+        return newSet;
     }
 
     private void copyAttachments(final CnATreeElement destinationElement,
