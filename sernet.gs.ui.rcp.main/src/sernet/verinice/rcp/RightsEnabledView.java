@@ -51,7 +51,8 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
     private static final Logger LOG = Logger.getLogger(RightsEnabledView.class);
     
     protected void openingDeclined() { 
-        LOG.error("Opening of view is now allowed, view-id: " + getViewId() + ", action-id: " + getRightID());      
+        LOG.error("Opening of view is not allowed, view-id: " + getViewId() + ", action-id: "
+                + getRightID());
         if (LOG.isDebugEnabled()) {
             LOG.debug("Stacktrace: ", new RuntimeException());
         }
