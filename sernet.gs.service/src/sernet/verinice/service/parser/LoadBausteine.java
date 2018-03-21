@@ -30,14 +30,7 @@ import sernet.verinice.interfaces.IProgress;
 @SuppressWarnings("serial")
 public class LoadBausteine extends GenericCommand implements INoAccessControl {
 
-    private transient Logger log = Logger.getLogger(LoadBausteine.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(LoadBausteine.class);
-        }
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(LoadBausteine.class);
 
     private List<Baustein> bausteine;
 
@@ -63,7 +56,7 @@ public class LoadBausteine extends GenericCommand implements INoAccessControl {
                 }
             });
         } catch (Exception e) {
-            getLog().error("Error while loading bausteine: ", e);
+            log.error("Error while loading bausteine: ", e);
             throw new RuntimeCommandException(e);
         }
     }

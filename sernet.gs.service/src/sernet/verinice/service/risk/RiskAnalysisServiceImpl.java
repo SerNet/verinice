@@ -57,7 +57,7 @@ import sernet.verinice.model.iso27k.Vulnerability;
  */
 public class RiskAnalysisServiceImpl implements RiskAnalysisService {
 
-    private static final transient Logger LOG = Logger.getLogger(RiskAnalysisServiceImpl.class);
+    private static final Logger LOG = Logger.getLogger(RiskAnalysisServiceImpl.class);
     private static final Logger LOG_RUNTIME = Logger
             .getLogger(RiskAnalysisServiceImpl.class.getName() + ".runtime");
 

@@ -63,7 +63,7 @@ import sernet.verinice.model.validation.CnAValidation;
 @SuppressWarnings("serial")
 public abstract class CnATreeElement implements Serializable, IBSIModelListener, ITypedElement {
 
-    private transient Logger log = Logger.getLogger(CnATreeElement.class); // NOPMD by dm on 07.02.12 12:36
+    private static final Logger log = Logger.getLogger(CnATreeElement.class); // NOPMD by dm on 07.02.12 12:36
 
     private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(CnATreeElement.class);
 
@@ -71,13 +71,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     public static final String UUID = "uuid";
     public static final String PARENT_ID = "parent-id";
     public static final String SCOPE_ID = "scope-id";
-
-    private Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(CnATreeElement.class);
-        }
-        return log;
-    }
 
 	private Integer dbId;
 
@@ -148,7 +141,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		try {
 		    result = this.getUuid().equals(that.getUuid());
         } catch (Exception e) {
-            getLog().error("Error in equals, this uuid: " + this.getUuid(), e);
+            log.error("Error in equals, this uuid: " + this.getUuid(), e);
         }
 		return result;
 	}
@@ -168,13 +161,13 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 				try {
                     getParent().childAdded(this, child);
                 } catch (Exception e) {
-                    getLog().error("Error while adding child", e);
+                    log.error("Error while adding child", e);
                 }
 			} else {
 				this.childAdded(this, child);
 			}
-		} else if (getLog().isDebugEnabled()) {
-		    getLog().debug("Element not added. Parent refuses " + child);
+		} else if (log.isDebugEnabled()) {
+		    log.debug("Element not added. Parent refuses " + child);
         }
 	}
 
@@ -189,7 +182,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     	        childRemoved(this, child);
     		}
 	    } catch(Exception e) {
-            getLog().error("Error while removing child", e);
+            log.error("Error while removing child", e);
         }
 	}
 
@@ -360,12 +353,12 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
 	public EntityType getEntityType() {
 		if (subEntityType == null) {
-		    if (getLog().isDebugEnabled()) {
-		        getLog().debug("type-factory: " + getTypeFactory());
+		    if (log.isDebugEnabled()) {
+		        log.debug("type-factory: " + getTypeFactory());
             }
 			subEntityType = getTypeFactory().getEntityType(getTypeId());
-			if (getLog().isDebugEnabled()) {
-                getLog().debug("type: " + getTypeId() + ", subEntityType: " + subEntityType);
+			if (log.isDebugEnabled()) {
+                log.debug("type: " + getTypeId() + ", subEntityType: " + subEntityType);
             }
 		}
 		return subEntityType;
@@ -684,23 +677,23 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	 */
 	public void replace(CnATreeElement newElement) {
 		if (this == newElement) {
-		    if (getLog().isDebugEnabled()) {
-		        getLog().debug("NOT replacing, same instance: " + newElement);
+		    if (log.isDebugEnabled()) {
+		        log.debug("NOT replacing, same instance: " + newElement);
             }
 			return;
 		}
 		if (getParent() == null) {
 			// replace children of root element:
-		    if (getLog().isDebugEnabled()) {
-		        getLog().debug("Replacing children of element " + this);
+		    if (log.isDebugEnabled()) {
+		        log.debug("Replacing children of element " + this);
             }
 			this.children = newElement.getChildren();
 			this.setChildrenLoaded(true);
 
 			return;
 		} else {
-		    if (getLog().isDebugEnabled()) {
-		        getLog().debug("Replacing child " + this + "in parent " + getParent());
+		    if (log.isDebugEnabled()) {
+		        log.debug("Replacing child " + this + "in parent " + getParent());
             }
 			getParent().removeChild(this);
 			getParent().addChild(newElement);

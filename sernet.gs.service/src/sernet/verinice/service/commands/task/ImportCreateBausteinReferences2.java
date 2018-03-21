@@ -40,7 +40,7 @@ import sernet.verinice.service.commands.CreateLink;
 @SuppressWarnings("serial")
 public class ImportCreateBausteinReferences2 extends GenericCommand {
     
-    private transient Logger log = Logger.getLogger(ImportCreateBausteinReferences2.class);
+    private static final Logger log = Logger.getLogger(ImportCreateBausteinReferences2.class);
     private static final String NO_COMMENT = "";
     
     private CnATreeElement source = null;
@@ -60,8 +60,8 @@ public class ImportCreateBausteinReferences2 extends GenericCommand {
         for(CnATreeElement target : destinations) {
             Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(source.getEntityType().getId(), target.getEntityType().getId());
             if (!possibleRelations.isEmpty()) {
-                if(getLog().isDebugEnabled()) {
-                    getLog().debug("Creating BausteinReference between " + source.getTitle() + " and " + target.getTitle());
+                if(log.isDebugEnabled()) {
+                    log.debug("Creating BausteinReference between " + source.getTitle() + " and " + target.getTitle());
                 }
                 CreateLink command = new CreateLink(source, target, possibleRelations.iterator().next().getId(), NO_COMMENT);
                 command = getCommandService().executeCommand(command);
@@ -69,18 +69,12 @@ public class ImportCreateBausteinReferences2 extends GenericCommand {
             }
         }
         } catch (Exception e) {
-            getLog().error("Error while creating link between elements imported by gstool import", e);
+            log.error("Error while creating link between elements imported by gstool import", e);
             throw new RuntimeException(e);
         }
 
     }
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(ImportCreateBausteinReferences.class);
-        }
-        return log;
-    }
-    
+
     public Set<String> getCreatedLinksIdentifier(){
         return this.createdLinksIdentifier;
     }

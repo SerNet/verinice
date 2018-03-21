@@ -52,15 +52,8 @@ import sernet.verinice.model.samt.SamtTopic;
  */
 public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
 
-    private transient Logger log = Logger.getLogger(FindSamtGroup.class);
+    private static final Logger log = Logger.getLogger(FindSamtGroup.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(FindSamtGroup.class);
-        }
-        return log;
-    }
-    
     private transient IAuthService authService;
     
     private ControlGroup selfAssessmentGroup = null;
@@ -106,8 +99,8 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
                 if (isParent(controlGroup, dbId)) {
                     selfAssessmentGroup =  controlGroup;
                     hydrate(selfAssessmentGroup);
-                    if (getLog().isDebugEnabled()) {
-                        getLog().debug("result: " + selfAssessmentGroup);
+                    if (log.isDebugEnabled()) {
+                        log.debug("result: " + selfAssessmentGroup);
                     }
                     return;
                 }
@@ -116,11 +109,11 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
         
         // result is first element in resultList 
         if(resultList!=null && !resultList.isEmpty()) {
-            getLog().debug("number of self assessment groups " + FindSamtGroup.nullSaveSize(resultList));
+            log.debug("number of self assessment groups " + FindSamtGroup.nullSaveSize(resultList));
             selfAssessmentGroup =  resultList.get(0);
             hydrate(selfAssessmentGroup);
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("result: " + selfAssessmentGroup);
+            if (log.isDebugEnabled()) {
+                log.debug("result: " + selfAssessmentGroup);
             }
         } 
     }
@@ -135,8 +128,8 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
        
         
         final String hql = sbHql.toString();
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("hql: " + hql);
+        if (log.isDebugEnabled()) {
+            log.debug("hql: " + hql);
         }
         
         List<ControlGroup> controlGroupList;
@@ -149,8 +142,8 @@ public class FindSamtGroup extends GenericCommand implements IAuthAwareCommand {
             controlGroupList = Collections.emptyList();
         }
         
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("number of controlGroups " + FindSamtGroup.nullSaveSize(controlGroupList));
+        if (log.isDebugEnabled()) {
+            log.debug("number of controlGroups " + FindSamtGroup.nullSaveSize(controlGroupList));
         }
         
         // check if parent is Audit and children are SamtTopics

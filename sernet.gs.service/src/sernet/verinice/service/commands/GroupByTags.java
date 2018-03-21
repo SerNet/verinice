@@ -59,14 +59,7 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
  */
 public class GroupByTags extends GenericCommand { 
 
-    private transient Logger log = Logger.getLogger(GroupByTags.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(GroupByTags.class);
-        }
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(GroupByTags.class);
 
     private String groupUuid;
 
@@ -114,10 +107,10 @@ public class GroupByTags extends GenericCommand {
             createChildrenGroups(group);
             moveChildrenToGroups(group);
         } catch (RuntimeException e) {
-            getLog().error("Error while grouping by tags", e);
+            log.error("Error while grouping by tags", e);
             throw e;
         } catch (Exception e) {
-            getLog().error("Error while grouping by tags", e);
+            log.error("Error while grouping by tags", e);
             throw new RuntimeCommandException("Error while grouping by tags", e);
         }
     }

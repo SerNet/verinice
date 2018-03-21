@@ -38,7 +38,7 @@ import sernet.verinice.model.iso27k.Organization;
 @SuppressWarnings("serial")
 public class LoadReportControlGroups extends GenericCommand implements ICachedCommand{
 
-	private transient Logger log = Logger
+	private static final Logger log = Logger
 			.getLogger(LoadReportControlGroups.class);
 
 	private Organization rootObject;
@@ -48,13 +48,6 @@ public class LoadReportControlGroups extends GenericCommand implements ICachedCo
 	private Integer dbId = null;
 	
     private boolean resultInjectedFromCache = false;
-
-	public Logger getLog() {
-		if (log == null) {
-			log = Logger.getLogger(LoadReportControlGroups.class);
-		}
-		return log;
-	}
 
 	public LoadReportControlGroups(Integer orgDbId) {
 		this.dbId = orgDbId;
@@ -116,7 +109,7 @@ public class LoadReportControlGroups extends GenericCommand implements ICachedCo
 	            });
 	            finalList.addAll(sortedList);
 	        } catch (CommandException e) {
-	            getLog().error("Error while executing command", e);
+	            log.error("Error while executing command", e);
 	        }
 	    }
 	    return finalList;
@@ -156,8 +149,8 @@ public class LoadReportControlGroups extends GenericCommand implements ICachedCo
     public void injectCacheResult(Object result) {
         this.result = (ArrayList<CnATreeElement>)result;
         resultInjectedFromCache = true;
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(log.isDebugEnabled()){
+            log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 

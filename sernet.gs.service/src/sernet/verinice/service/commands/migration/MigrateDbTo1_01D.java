@@ -39,7 +39,7 @@ public class MigrateDbTo1_01D extends DbMigration {
     
     private static final String ORACLE_TEMP_TABLE_NAME = "TEMP_FILESIZE_TABLE";
     
-    private transient Logger log;
+    private static final Logger log = Logger.getLogger(MigrateDbTo1_01D.class);
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICommand#execute()
@@ -49,8 +49,8 @@ public class MigrateDbTo1_01D extends DbMigration {
         long callBackStartTime = System.currentTimeMillis();
         try {
             List<Object[]> idToSizeList = getIdSizeList();
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Time for executing callback:\t" + String.valueOf(((System.currentTimeMillis() - callBackStartTime) / 1000)) + "seconds");
+            if (log.isDebugEnabled()) {
+                log.debug("Time for executing callback:\t" + String.valueOf(((System.currentTimeMillis() - callBackStartTime) / 1000)) + "seconds");
             }
             addFileSizeToAttachments(idToSizeList);
             if (isOracle()) {
@@ -60,8 +60,8 @@ public class MigrateDbTo1_01D extends DbMigration {
             handleError(e, "Something went wrong");
         }
 
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Time for updating all entities:\t" + String.valueOf(((System.currentTimeMillis() - callBackStartTime) / 1000)) + "seconds");
+        if (log.isDebugEnabled()) {
+            log.debug("Time for updating all entities:\t" + String.valueOf(((System.currentTimeMillis() - callBackStartTime) / 1000)) + "seconds");
         }
 
         super.updateVersion();
@@ -88,8 +88,8 @@ public class MigrateDbTo1_01D extends DbMigration {
      */
     private void addFileSizeToAttachments(List<Object[]> idToSizeList) {
         for(Object[] element : idToSizeList){
-            if(getLog().isDebugEnabled()){
-                getLog().debug("Updating Attachment (" + idToSizeList.indexOf(element) + "/" + idToSizeList.size() + ")");
+            if(log.isDebugEnabled()){
+                log.debug("Updating Attachment (" + idToSizeList.indexOf(element) + "/" + idToSizeList.size() + ")");
             }
             int dbid = 0;
             int filesize = -1;
@@ -138,8 +138,8 @@ public class MigrateDbTo1_01D extends DbMigration {
             @Override
             public Object doInHibernate(Session session) throws HibernateException, SQLException {
 
-                if(getLog().isDebugEnabled()){
-                    getLog().debug("Configured Hibernate Dialect:\t" + getHibernateDialect());
+                if(log.isDebugEnabled()){
+                    log.debug("Configured Hibernate Dialect:\t" + getHibernateDialect());
                 }
                 String sql = determineDialectSpecificQueryText(getHibernateDialect());
                 return getFilesizeDataFromDB(session, sql);
@@ -159,7 +159,7 @@ public class MigrateDbTo1_01D extends DbMigration {
                         return handleOracleDB(session, sql);
                     }
                 } else {
-                    getLog().warn("Unsupported dialect (" + getHibernateDialect() + ") configured.\nPlease use one of the supported (Oracle, Postgresql or Derby)");
+                    log.warn("Unsupported dialect (" + getHibernateDialect() + ") configured.\nPlease use one of the supported (Oracle, Postgresql or Derby)");
                     return new ArrayList<Object[]>(0);
                 }
             }
@@ -180,7 +180,7 @@ public class MigrateDbTo1_01D extends DbMigration {
                         retVal = session.createSQLQuery("select dbid, dbms_lob.getlength(obj) from " + ORACLE_TEMP_TABLE_NAME).list(); 
                     } catch (Exception e){
                         // do nothing
-                        getLog().warn("table not created yet, trying again", e);
+                        log.warn("table not created yet, trying again", e);
                     }
                 }
                 if(System.currentTimeMillis() - start_time > MAX_DURATION){
@@ -221,13 +221,8 @@ public class MigrateDbTo1_01D extends DbMigration {
     }
 
     private void handleError(Exception ex, String message) {
-        getLog().error(message, ex);
+        log.error(message, ex);
         throw new RuntimeException(message);
     }
 
-    private Logger getLog() {
-        if (log == null)
-            log = Logger.getLogger(MigrateDbTo1_01D.class);
-        return log;
-    }
 }

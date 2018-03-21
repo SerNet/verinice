@@ -31,14 +31,7 @@ import sernet.verinice.model.common.HydratorUtil;
 
 public class LoadElementForEditor<T extends CnATreeElement> extends GenericCommand {
 
-	private transient Logger log = Logger.getLogger(LoadElementForEditor.class);
-	
-	public Logger getLog() {
-		if(log==null) {
-			log = Logger.getLogger(LoadElementForEditor.class);
-		}
-		return log;
-	}
+	private static final Logger log = Logger.getLogger(LoadElementForEditor.class);
 	
 	private T element;
 	private boolean retrieveChildren;
@@ -57,8 +50,8 @@ public class LoadElementForEditor<T extends CnATreeElement> extends GenericComma
 	}
 	
 	public void execute() {
-		if (getLog().isDebugEnabled()) {
-			getLog().debug("execute, dbId: " + dbId);
+		if (log.isDebugEnabled()) {
+			log.debug("execute, dbId: " + dbId);
 		}
 		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
 		RetrieveInfo ri = new RetrieveInfo();

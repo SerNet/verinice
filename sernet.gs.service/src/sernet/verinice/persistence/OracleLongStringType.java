@@ -40,15 +40,8 @@ import org.hibernate.usertype.UserType;
 @SuppressWarnings("restriction")
 public class OracleLongStringType implements UserType {
     
-    private transient Logger log = Logger.getLogger(OracleLongStringType.class);
+    private static final Logger log = Logger.getLogger(OracleLongStringType.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(OracleLongStringType.class);
-        }
-        return log;
-    }
-    
     public OracleLongStringType() {
     }
 
@@ -78,7 +71,7 @@ public class OracleLongStringType implements UserType {
         } catch (IOException ex) {
             // worth printing b/c this means a failure occurred reading from
             // stream
-            getLog().error(ex);
+            log.error(ex);
         } catch (Exception t) {
             // eat this exception b/c it is of no interest (i.e. stream is null
             // for null attribute value)
@@ -95,7 +88,7 @@ public class OracleLongStringType implements UserType {
             InputStream is = new ByteArrayInputStream(s.getBytes());
             st.setAsciiStream(index, is, s.length());
         } catch (Exception ex) {
-            getLog().error(ex);
+            log.error(ex);
         }
     }
 

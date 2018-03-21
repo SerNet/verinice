@@ -71,10 +71,9 @@ public class LoadDeviationRiskTableCommand extends GenericCommand {
     private String cacheId = null;
     private transient Cache cache = null;
 
-    private transient Logger log;
+    private static final Logger log = LoggerFactory.getLogger(LoadDeviationRiskTableCommand.class);
 
     public LoadDeviationRiskTableCommand(int chapterId, String chapterName) {
-        log = LoggerFactory.getLogger(LoadDeviationRiskTableCommand.class);
         int chapterId0 = -1;
         if(String.valueOf(chapterId).startsWith(String.valueOf(LoadChapterListCommand.PLACEHOLDER_CONTROLGROUP_ID))){
             String chapterIdString = String.valueOf(chapterId);

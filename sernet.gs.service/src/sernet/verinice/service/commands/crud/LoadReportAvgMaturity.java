@@ -35,7 +35,7 @@ import sernet.verinice.service.commands.stats.CSRMassnahmenSummaryHome;
  */
 public class LoadReportAvgMaturity extends GenericCommand implements ICachedCommand {
     
-    private transient Logger log = Logger.getLogger(LoadReportAvgMaturity.class);
+    private static final Logger log = Logger.getLogger(LoadReportAvgMaturity.class);
     
     private int matCount = 0;
     private double matSum = 0.0;
@@ -77,18 +77,11 @@ public class LoadReportAvgMaturity extends GenericCommand implements ICachedComm
                 tmplist.add(String.valueOf(cg.getDbId()));
                 result.add(tmplist);
             } catch (Exception e){
-                getLog().error("Error while computing avgMaturity", e);
+                log.error("Error while computing avgMaturity", e);
             }
         }
     }
         
-    private Logger getLog(){
-        if(log == null){
-            log = Logger.getLogger(LoadReportAvgMaturity.class);
-        }
-        return log;
-    }
-
     private void addMaturity(double mat){
         if(mat > 0){
             matSum += mat;
@@ -131,8 +124,8 @@ public class LoadReportAvgMaturity extends GenericCommand implements ICachedComm
     public void injectCacheResult(Object result) {
         this.result = (ArrayList<List<String>>)result;
         resultInjectedFromCache = true;
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(log.isDebugEnabled()){
+            log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 

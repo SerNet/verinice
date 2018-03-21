@@ -22,15 +22,8 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class LoadReportElementList extends GenericCommand implements ICachedCommand{
 
-    private transient Logger log = Logger.getLogger(LoadReportElementList.class);
+    private static final Logger log = Logger.getLogger(LoadReportElementList.class);
     
-    public Logger getLog() {
-        if(log==null) {
-            log = Logger.getLogger(LoadReportElementList.class);
-        }
-        return log;
-    }
-
 	private String typeId;
     private Integer rootElement;
     private List<CnATreeElement> elements;
@@ -44,7 +37,7 @@ public class LoadReportElementList extends GenericCommand implements ICachedComm
 	
 	public void execute() {
 	    if(!resultInjectedFromCache){
-	        getLog().debug("LoadReportElements for root_object " + rootElement);
+	        log.debug("LoadReportElements for root_object " + rootElement);
 
 	        LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement});
 	        try {
@@ -66,7 +59,7 @@ public class LoadReportElementList extends GenericCommand implements ICachedComm
 	                elementLoader = getCommandService().executeCommand(elementLoader);
 	                this.elements.addAll(elementLoader.getElements());
 	            } catch (CommandException e) {
-	                getLog().error("Error while retrieving elements", e);
+	                log.error("Error while retrieving elements", e);
 	            }
 	        }
 
@@ -123,8 +116,8 @@ public class LoadReportElementList extends GenericCommand implements ICachedComm
     public void injectCacheResult(Object result) {
         this.elements = (ArrayList<CnATreeElement>)result;
         resultInjectedFromCache = true;
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(log.isDebugEnabled()){
+            log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 

@@ -51,7 +51,7 @@ public class GS2BSITransformService {
 	
 	private IProgressObserver progressObserver;
 
-	private Logger log = null;
+	private static final Logger log = Logger.getLogger(GS2BSITransformService.class);
 	
 	private int numberOfControls;
 	
@@ -101,7 +101,6 @@ public class GS2BSITransformService {
 	public GS2BSITransformService(IProgressObserver progressObserver,
 			IModelUpdater modelUpdater, Group<?> selectedGroup, Object data) {
 		this.progressObserver = progressObserver;
-		log = Logger.getLogger(GS2BSITransformService.class);
 		itemList = new ArrayList<>(20);
 		if(data instanceof Object[]){
 		    Object[] o = (Object[]) data;
@@ -151,7 +150,7 @@ public class GS2BSITransformService {
                 insertItem(progressObserver, selectedGroup, o);
             }
         } catch (Exception e) {
-            getLog().error("Error while transforming GS element to ISM element", e);
+            log.error("Error while transforming GS element to ISM element", e);
         }
     }
 	
@@ -162,7 +161,7 @@ public class GS2BSITransformService {
 	 */
 	private void insertItem(IProgressObserver monitor, Group<?> group, Object item) {
 		if(monitor.isCanceled()) {
-			getLog().warn("Transforming canceled. " //$NON-NLS-1$ 
+			log.warn("Transforming canceled. " //$NON-NLS-1$ 
 			        + numberProcessed + " items transformed."); //$NON-NLS-2$ //$NON-NLS-3$
 			return;
 		}
@@ -223,7 +222,7 @@ public class GS2BSITransformService {
                     }
                 }
             } catch (Exception e) {
-                getLog().error("Error while transforming baustein", e);
+                log.error("Error while transforming baustein", e);
             }
         }
     }
@@ -235,12 +234,12 @@ public class GS2BSITransformService {
             for (CnATreeElement e : elements) {
                 monitor.setTaskName(getText(numberProcessed, e.getTitle()));
                 if (e.getParent().canContain(e)) {
-                    if (getLog().isDebugEnabled()) {
-                        getLog().debug("Creating element,  UUID: " + e.getUuid() + ", title: " //$NON-NLS-1$ //$NON-NLS-2$
+                    if (log.isDebugEnabled()) {
+                        log.debug("Creating element,  UUID: " + e.getUuid() + ", title: " //$NON-NLS-1$ //$NON-NLS-2$
                                 + e.getTitle());
                     }
                 } else {
-                    getLog().warn(
+                    log.warn(
                             "trying to drop an item into a group that is unable to accept this type of items");
                     errorOccured = true;
                 }
@@ -256,7 +255,7 @@ public class GS2BSITransformService {
                         }
                         command = getCommandService().executeCommand(command);
                     } catch (CommandException ce) {
-                        getLog().error("Error while inserting control", ce); //$NON-NLS-1$
+                        log.error("Error while inserting control", ce); //$NON-NLS-1$
                         throw new RuntimeException("Error while inserting control", ce); //$NON-NLS-1$
                     }
                     e = command.getElement();
@@ -271,7 +270,7 @@ public class GS2BSITransformService {
                         c2 = ServiceFactory.lookupCommandService().executeCommand(c2);
                         e.setParent(c2.getElement());
                     } catch (CommandException e1) {
-                        getLog().error("Error while loading element", e1);
+                        log.error("Error while loading element", e1);
                     }
                     CnATreeElement parent = e.getParent();
                     parent.addChild(e);
@@ -300,7 +299,7 @@ public class GS2BSITransformService {
                     m.getStand());
             c.setDescription(description);
         } catch (GSServiceException e) {
-            getLog().error("Error while transforming massnahme into control", e);
+            log.error("Error while transforming massnahme into control", e);
         }
         return c;
 	}
@@ -347,10 +346,4 @@ public class GS2BSITransformService {
 		return ServiceFactory.lookupCommandService();
 	}
 	
-	private Logger getLog(){
-	    if(log == null){
-	        log = Logger.getLogger(GS2BSITransformService.class);
-	    }
-	    return log;
-	}
 }

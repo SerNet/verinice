@@ -38,15 +38,8 @@ import sernet.verinice.model.common.CnATreeElement;
 public class LoadElementsByUuid<T extends CnATreeElement> extends GenericCommand {
 
     private static final long serialVersionUID = 1L;
-    private transient Logger log = Logger.getLogger(LoadElementsByUuid.class);
+    private static final Logger log = Logger.getLogger(LoadElementsByUuid.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(LoadElementsByUuid.class);
-        }
-        return log;
-    }
-    
     private HashSet<String> uuids;
     protected HashSet<T> elements;
     private String typeId;
@@ -80,9 +73,9 @@ public class LoadElementsByUuid<T extends CnATreeElement> extends GenericCommand
 	
     public void execute() {
         long start = 0;
-        if (getLog().isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             start = System.currentTimeMillis();
-            getLog().debug("execute() called ..."); //$NON-NLS-1$
+            log.debug("execute() called ..."); //$NON-NLS-1$
         }
         elements = new HashSet<>(uuids.size());
         for (String uuid : uuids) {
@@ -91,13 +84,13 @@ public class LoadElementsByUuid<T extends CnATreeElement> extends GenericCommand
 
                 elements.add(element);
             } else {
-                getLog().warn("element " + uuid + " not found!");
+                log.warn("element " + uuid + " not found!");
             }
         }
 
-        if (getLog().isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             long duration = System.currentTimeMillis() - start;
-            getLog().debug("execute() finished in: " + TimeFormatter.getHumanRedableTime(duration)); //$NON-NLS-1$
+            log.debug("execute() finished in: " + TimeFormatter.getHumanRedableTime(duration)); //$NON-NLS-1$
         }		
     }
 

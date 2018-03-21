@@ -34,7 +34,7 @@ import org.junit.Test;
  */
 public class BooleanCombinator {
 
-    private Logger log = Logger.getLogger(BooleanCombinator.class);
+    private static final Logger log = Logger.getLogger(BooleanCombinator.class);
 
     private int upperBound;
 

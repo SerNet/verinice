@@ -69,14 +69,7 @@ import sernet.verinice.service.iso27k.ItemControlTransformer;
  */
 public class CreateSelfAssessment extends ChangeLoggingCommand implements IChangeLoggingCommand, IAuthAwareCommand {
 
-    private transient Logger log = Logger.getLogger(CreateSelfAssessment.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(CreateSelfAssessment.class);
-        }
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(CreateSelfAssessment.class);
 
     private CsvFile csvFile;
     private String titleOrganization;
@@ -177,10 +170,10 @@ public class CreateSelfAssessment extends ChangeLoggingCommand implements IChang
                 daoLink.saveOrUpdate(link);
             }
         } catch (CommandException e) {
-            getLog().error("Error while creating self assesment", e); //$NON-NLS-1$
+            log.error("Error while creating self assesment", e); //$NON-NLS-1$
             throw new RuntimeCommandException("Error while creating self assesment: " + e.getMessage()); //$NON-NLS-1$
         } catch (IOException e){
-            getLog().error("I-/O-Error while creating self assesment", e); //$NON-NLS-1$
+            log.error("I-/O-Error while creating self assesment", e); //$NON-NLS-1$
             throw new RuntimeCommandException("I-/O-Error while creating self assesment: " + e.getMessage()); //$NON-NLS-1$
         }
     }

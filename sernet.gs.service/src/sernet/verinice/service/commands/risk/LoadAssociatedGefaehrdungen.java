@@ -62,14 +62,7 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand
     private List<Baustein> alleBausteine;
     private List<GefaehrdungsUmsetzung> associatedGefaehrdungen;
 
-    private transient Logger log;
-
-    private Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(LoadAssociatedGefaehrdungen.class);
-        }
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(LoadAssociatedGefaehrdungen.class);
 
     private transient IAuthService authService;
 
@@ -89,7 +82,7 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand
             loadAssociatedGefaehrdungen();
             inheritPermissions();
         } catch (CommandException e) {
-            getLog().error("Something went wrong on computing associated "
+            log.error("Something went wrong on computing associated "
                     + "Gefaehrdungen via link for element:\t"
                     + cnaElement.getUuid(), e);
             throw new RuntimeCommandException(e);

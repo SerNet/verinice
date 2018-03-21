@@ -39,7 +39,7 @@ import sernet.verinice.service.commands.stats.CSRMassnahmenSummaryHome;
  */
 public class LoadMaturityRadarChartData extends GenericCommand implements ICachedCommand{
     
-    private transient Logger log = Logger.getLogger(LoadMaturityRadarChartData.class);
+    private static final Logger log = Logger.getLogger(LoadMaturityRadarChartData.class);
     
     public static final String[] COLUMNS = new String[] { 
         "CATEGORIES",
@@ -70,13 +70,6 @@ public class LoadMaturityRadarChartData extends GenericCommand implements ICache
         this.sgdbid = samtGroupId;
     }
     
-    private Logger getLog(){
-        if(log == null){
-            log = Logger.getLogger(LoadMaturityRadarChartData.class);
-        }
-        return log;
-    }
-    
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
@@ -90,7 +83,7 @@ public class LoadMaturityRadarChartData extends GenericCommand implements ICache
                 list.add(samtRootGroup);
                 result = getMaturityValues(list);
             } catch (Exception e){
-                getLog().error("Error while filling maturityChart dataset", e);
+                log.error("Error while filling maturityChart dataset", e);
             }
         }
     }
@@ -139,7 +132,7 @@ public class LoadMaturityRadarChartData extends GenericCommand implements ICache
                     list.add(row);
                 }
             } catch (CommandException e){
-                getLog().error("Error while determing maturity values", e);
+                log.error("Error while determing maturity values", e);
             }
         }
         list.trimToSize();
@@ -196,8 +189,8 @@ public class LoadMaturityRadarChartData extends GenericCommand implements ICache
             this.result = (ArrayList<List<String>>)array[0];
             this.samtRootGroup = (ControlGroup)array[1];
             resultInjectedFromCache = true;
-            if(getLog().isDebugEnabled()){
-                getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+            if(log.isDebugEnabled()){
+                log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
             }
         }
         

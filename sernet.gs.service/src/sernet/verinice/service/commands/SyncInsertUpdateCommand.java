@@ -91,23 +91,9 @@ import sernet.verinice.service.sync.IVeriniceArchive;
 @SuppressWarnings({ "serial" })
 public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwareCommand {
 
-    private transient Logger log = Logger.getLogger(SyncInsertUpdateCommand.class);
+    private static final Logger log = Logger.getLogger(SyncInsertUpdateCommand.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(SyncInsertUpdateCommand.class);
-        }
-        return log;
-    }
-
-    private transient Logger logrt = Logger.getLogger(SyncInsertUpdateCommand.class.getName() + ".rt");
-
-    public Logger getLogrt() {
-        if (logrt == null) {
-            logrt = Logger.getLogger(SyncInsertUpdateCommand.class.getName() + ".rt");
-        }
-        return logrt;
-    }
+    private static final Logger logrt = Logger.getLogger(SyncInsertUpdateCommand.class.getName() + ".rt");
 
     private static final int FLUSH_LEVEL = 50;
 
@@ -172,7 +158,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         importReferenceTypes = new ImportReferenceTypes(iBaseDao, getCommandService(), idElementMap);
 
         try {
-            if (getLogrt().isDebugEnabled()) {
+            if (logrt.isDebugEnabled()) {
                 globalStart = System.currentTimeMillis();
             }
             merged = 0;
@@ -188,8 +174,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
             importReferenceTypes.replaceExternalIdsWithDbIds();
 
-            if (getLogrt().isDebugEnabled()) {
-                getLogrt().debug("Elements: " + merged);
+            if (logrt.isDebugEnabled()) {
+                logrt.debug("Elements: " + merged);
             }
 
             for (SyncLink syncLink : syncData.getSyncLink()) {
@@ -200,10 +186,10 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
             finalizeDaos();
         } catch (RuntimeException e) {
-            getLog().error("RuntimeException while importing", e);
+            log.error("RuntimeException while importing", e);
             throw e;
         } catch (Exception e) {
-            getLog().error("Exception while importing", e);
+            log.error("Exception while importing", e);
             throw new RuntimeCommandException(e);
         }
     }
@@ -212,8 +198,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         CheckSourceId checkSourceIdCommand = new CheckSourceId(id);
         checkSourceIdCommand = getCommandService().executeCommand(checkSourceIdCommand);
         boolean isSourceIdInDatabase = checkSourceIdCommand.exists();
-        if (isSourceIdInDatabase && getLog().isDebugEnabled()) {
-            getLog().debug("Source-Id exists in DB: " + id);
+        if (isSourceIdInDatabase && log.isDebugEnabled()) {
+            log.debug("Source-Id exists in DB: " + id);
         }
         return isSourceIdInDatabase;
     }
@@ -222,11 +208,11 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         String extId = so.getExtId();
         String extObjectType = so.getExtObjectType();
         long start = 0;
-        if (getLogrt().isDebugEnabled()) {
+        if (logrt.isDebugEnabled()) {
             start = System.currentTimeMillis();
         }
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Importing element type: " + extObjectType + "," + " extId: " + extId + "...");
+        if (log.isDebugEnabled()) {
+            log.debug("Importing element type: " + extObjectType + "," + " extId: " + extId + "...");
         }
 
         boolean setAttributes = false;
@@ -235,7 +221,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
         if (mot == null) {
             final String message = "Could not find mapObjectType-Element" + " for XML type: " + extObjectType;
-            getLog().error(message);
+            log.error(message);
             errorList.add(message);
             return;
         }
@@ -252,8 +238,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         if (elementInDB != null) {
             if (parameter.isUpdate()) {
                 /*** UPDATE: ***/
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Element found in db: updating," + " uuid: " + elementInDB.getUuid());
+                if (log.isDebugEnabled()) {
+                    log.debug("Element found in db: updating," + " uuid: " + elementInDB.getUuid());
                 }
                 // use current parent from DB instead the parent from xml/vna
                 parent = elementInDB.getParent();
@@ -265,8 +251,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 setAttributes = true;
                 potentiallyUpdated++;
             } else {
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Element found in db, update disabled," + " uuid: " + elementInDB.getUuid());
+                if (log.isDebugEnabled()) {
+                    log.debug("Element found in db, update disabled," + " uuid: " + elementInDB.getUuid());
                 }
                 // do not update this object's attributes!
                 setAttributes = false;
@@ -297,11 +283,11 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
                 setAttributes = true;
                 inserted++;
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Element inserted, uuid: " + elementInDB.getUuid());
+                if (log.isDebugEnabled()) {
+                    log.debug("Element inserted, uuid: " + elementInDB.getUuid());
                 }
             } catch (Exception e) {
-                getLog().error("Error while inserting element, type: " + extObjectType + ", extId: " + extId, e);
+                log.error("Error while inserting element, type: " + extObjectType + ", extId: " + extId, e);
                 errorList.add("Konnte " + veriniceObjectType + "-Objekt nicht erzeugen.");
             }
         }
@@ -327,7 +313,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 String attrIntId = null;
                 if (mat == null) {
                     final String message = "Could not find mapObjectType-" + "Element for XML attribute type: " + attrExtId + " of type: " + extObjectType + ". Using extern-id.";
-                    getLog().warn(message);
+                    log.warn(message);
                     attrIntId = attrExtId;
                 } else {
                     attrIntId = mat.getIntId();
@@ -338,7 +324,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 try {
                     elementInDB.getEntity().importProperties(huiTypeFactory, attrIntId, attrValues, syncaAttribute.getLimitedLicense(), syncaAttribute.getLicenseContentId(), licenseManagementValid);
                 } catch (IndexOutOfBoundsException e) {
-                    getLog().error("wrong number of arguments while importing", e);
+                    log.error("wrong number of arguments while importing", e);
                 }
                 addElement(elementInDB);
             } // for <syncAttribute>
@@ -365,7 +351,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             idElementMap.put(extId, elementInDB);
         }
 
-        if (getLogrt().isDebugEnabled()) {
+        if (logrt.isDebugEnabled()) {
             logRuntime(start);
         }
         // Handle all the child objects.
@@ -373,8 +359,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             // The object that was created or modified during the course of
             // this method call is the parent for the import of the
             // child elements.
-            if (getLog().isDebugEnabled() && child != null) {
-                getLog().debug("Child found, type: " + child.getExtObjectType() + ", extId: " + child.getExtId());
+            if (log.isDebugEnabled() && child != null) {
+                log.debug("Child found, type: " + child.getExtObjectType() + ", extId: " + child.getExtId());
             }
             importObject(elementInDB, child);
         }
@@ -499,8 +485,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             attachment.setTitel(fileXml.getFile());
             attachment.setFileSize(String.valueOf(getSyncObjectFileSize(fileXml)));
 
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Attachment file size: " + attachment.getFileSize());
+            if (log.isDebugEnabled()) {
+                log.debug("Attachment file size: " + attachment.getFileSize());
             }
 
             SaveNote command = new SaveNote(attachment);
@@ -515,15 +501,15 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
                 if (mat == null) {
                     final String message = "Could not find " + "mapObjectType-Element for XML attribute type: " + attrExtId + " of type: " + Attachment.TYPE_ID;
-                    getLog().error(message);
+                    log.error(message);
                     this.errorList.add(message);
                 } else {
                     String attrIntId = mat.getIntId();
                     attachment.getEntity().importProperties(huiTypeFactory, attrIntId, attrValues, sa.getLimitedLicense(), sa.getLicenseContentId(), false);
                 }
             }
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Attachment file size (after properties save): " + attachment.getFileSize());
+            if (log.isDebugEnabled()) {
+                log.debug("Attachment file size (after properties save): " + attachment.getFileSize());
             }
 
         }
@@ -578,20 +564,20 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         if (dependant == null) {
             dependant = findDbElement(this.sourceId, dependantId, true, true);
             if (dependant == null) {
-                getLog().error("Can not import link. dependant not found in " + "xml file and db, dependant ext-id: " + dependantId + " dependency ext-id: " + dependencyId);
+                log.error("Can not import link. dependant not found in " + "xml file and db, dependant ext-id: " + dependantId + " dependency ext-id: " + dependencyId);
                 return;
-            } else if (getLog().isDebugEnabled()) {
-                getLog().debug("dependant not found in XML file but in db, " + "ext-id: " + dependantId);
+            } else if (log.isDebugEnabled()) {
+                log.debug("dependant not found in XML file but in db, " + "ext-id: " + dependantId);
             }
         }
         CnATreeElement dependency = idElementMap.get(dependencyId);
         if (dependency == null) {
             dependency = findDbElement(this.sourceId, dependencyId, true, true);
             if (dependency == null) {
-                getLog().error("Can not import link. dependency not found in " + "xml file and db, dependency ext-id: " + dependencyId + " dependant ext-id: " + dependantId);
+                log.error("Can not import link. dependency not found in " + "xml file and db, dependency ext-id: " + dependencyId + " dependant ext-id: " + dependantId);
                 return;
-            } else if (getLog().isDebugEnabled()) {
-                getLog().debug("dependency not found in XML file but in db, " + "ext-id: " + dependencyId);
+            } else if (log.isDebugEnabled()) {
+                log.debug("dependency not found in XML file but in db, " + "ext-id: " + dependencyId);
             }
         }
 
@@ -599,24 +585,24 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
         String titleDependant = "unknown";
         String titleDependency = "unknown";
-        if (getLog().isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             try {
                 titleDependant = dependant.getTitle();
                 titleDependency = dependency.getTitle();
             } catch (Exception e) {
-                getLog().debug("Error while reading title.", e);
+                log.debug("Error while reading title.", e);
             }
         }
 
         if (isNew(link)) {
             dependant.addLinkDown(link);
             dependency.addLinkUp(link);
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Creating new link from: " + titleDependant + " to: " + titleDependency + "...");
+            if (log.isDebugEnabled()) {
+                log.debug("Creating new link from: " + titleDependant + " to: " + titleDependency + "...");
             }
             getDao(CnALink.class).saveOrUpdate(link);
-        } else if (getLog().isDebugEnabled()) {
-            getLog().debug("Link exists: " + titleDependant + " to: " + titleDependency);
+        } else if (log.isDebugEnabled()) {
+            log.debug("Link exists: " + titleDependant + " to: " + titleDependency);
         }
 
     }
@@ -815,7 +801,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             try {
                 cmdLoadContainer = getCommandService().executeCommand(cmdLoadContainer);
             } catch (CommandException e) {
-                getLog().error("Error while accessing container.", e);
+                log.error("Error while accessing container.", e);
                 errorList.add("Fehler beim Ausführen von LoadBSIModel.");
                 throw new RuntimeCommandException("Fehler beim Anlegen des " + "Behälters für importierte Objekte.", e);
             }
@@ -910,7 +896,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
     private void handleCreateContainerException(Exception e) {
         String message = "Fehler beim Anlegen des Behaelters für" + " importierte Objekte.";
-        getLog().error(message, e);
+        log.error(message, e);
         errorList.add(message);
         throw new RuntimeCommandException(message, e);
     }
@@ -980,14 +966,14 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
     private void flushAndClearDao(IBaseDao<CnATreeElement, Serializable> dao) {
         long flushstart = 0;
-        if (getLogrt().isDebugEnabled()) {
+        if (logrt.isDebugEnabled()) {
             flushstart = System.currentTimeMillis();
         }
         dao.flush();
         dao.clear();
-        if (getLogrt().isDebugEnabled()) {
+        if (logrt.isDebugEnabled()) {
             long time = System.currentTimeMillis() - flushstart;
-            getLogrt().debug("Flushed, runtime: " + time + " ms");
+            logrt.debug("Flushed, runtime: " + time + " ms");
         }
     }
 
@@ -996,7 +982,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         long time = cur - start;
         long globalTime = cur - globalStart;
         long a = Math.round((globalTime * 1.0) / merged);
-        getLogrt().debug("Element " + merged + ": " + time + "ms, avg.: " + a);
+        logrt.debug("Element " + merged + ": " + time + "ms, avg.: " + a);
     }
 
     /**

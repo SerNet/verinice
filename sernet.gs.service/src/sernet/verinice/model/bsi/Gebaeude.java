@@ -29,14 +29,8 @@ import sernet.verinice.model.common.ILinkChangeListener;
 public class Gebaeude extends CnATreeElement
 implements IBSIStrukturElement {
     
-    private transient Logger log = Logger.getLogger(Gebaeude.class);
+    private static final Logger log = Logger.getLogger(Gebaeude.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(Gebaeude.class);
-        }
-        return log;
-    }
 	// ID must correspond to entity definition in XML description
 	public static final String TYPE_ID = "gebaeude"; //$NON-NLS-1$
 	

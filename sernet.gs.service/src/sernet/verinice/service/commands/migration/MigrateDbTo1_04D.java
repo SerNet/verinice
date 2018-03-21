@@ -35,7 +35,7 @@ import sernet.verinice.model.bsi.Attachment;
 @SuppressWarnings("serial")
 public class MigrateDbTo1_04D extends DbMigration {
 
-    private transient Logger log;
+    private static final Logger log = Logger.getLogger(MigrateDbTo1_04D.class);
 
     private static final List<String> DERBY_SQL_LIST;
     static {
@@ -48,7 +48,7 @@ public class MigrateDbTo1_04D extends DbMigration {
 
     @Override
     public void execute() {
-        getLog().debug("Updating db to Version: " + getVersion());
+        log.debug("Updating db to Version: " + getVersion());
         // This migration only effects Apache Derby
         if (isDerby()) {
             updateDerby();
@@ -71,8 +71,8 @@ public class MigrateDbTo1_04D extends DbMigration {
             @Override
             public Integer doInHibernate(Session session) throws HibernateException, SQLException {
                 int result = session.createSQLQuery(sql).executeUpdate();
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Result of session.executeUpdate():\t" + result);
+                if (log.isDebugEnabled()) {
+                    log.debug("Result of session.executeUpdate():\t" + result);
                 }
                 return result;
             }
@@ -84,9 +84,4 @@ public class MigrateDbTo1_04D extends DbMigration {
         return 1.04D;
     }
 
-    private Logger getLog() {
-        if (log == null)
-            log = Logger.getLogger(MigrateDbTo1_04D.class);
-        return log;
-    }
 }

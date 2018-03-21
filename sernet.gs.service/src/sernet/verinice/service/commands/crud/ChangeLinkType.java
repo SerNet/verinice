@@ -45,15 +45,8 @@ public class ChangeLinkType extends GenericCommand {
 
 	private CnALink link;
 	
-	private transient Logger log = Logger.getLogger(ChangeLinkType.class);
+	private static final Logger log = Logger.getLogger(ChangeLinkType.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(ChangeLinkType.class);
-        }
-        return log;
-    }
-	
 	public CnALink getLink() {
 		return link;
 	}
@@ -88,8 +81,8 @@ public class ChangeLinkType extends GenericCommand {
 	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
 	 */
 	public void execute() {
-	    if (getLog().isDebugEnabled()) {
-            getLog().debug("Changing link type.");
+	    if (log.isDebugEnabled()) {
+            log.debug("Changing link type.");
         }
 	    
 		try {
@@ -97,8 +90,8 @@ public class ChangeLinkType extends GenericCommand {
 			link = dao.findById(link.getId());
 			
 			if (link == null) {
-			    if (getLog().isDebugEnabled()) {
-                    getLog().warn("Could not find link to change.");
+			    if (log.isDebugEnabled()) {
+                    log.warn("Could not find link to change.");
                 }
 			    return;
 			}

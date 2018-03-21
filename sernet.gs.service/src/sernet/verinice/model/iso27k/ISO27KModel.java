@@ -34,7 +34,7 @@ import sernet.verinice.model.validation.CnAValidation;
 @SuppressWarnings("serial")
 public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 
-	private transient Logger log;
+	private static final Logger log = Logger.getLogger(ISO27KModel.class);
 	
 	public static final String TYPE_ID = "iso27kmodel"; //$NON-NLS-1$
 	
@@ -150,15 +150,15 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 	public void modelReload(ISO27KModel newModel) {
 		for (IISO27KModelListener listener : getListeners()) {
 			listener.modelReload(newModel);
-			if (getLog().isDebugEnabled()) {
-				getLog().debug("modelReload, listener: " + listener); //$NON-NLS-1$
+			if (log.isDebugEnabled()) {
+				log.debug("modelReload, listener: " + listener); //$NON-NLS-1$
 			}
 		}
 	}
 	
 	public void addISO27KModelListener(IISO27KModelListener listener) {
-	    if (getLog().isDebugEnabled()) {
-            getLog().debug("Adding ISO model listener.");
+	    if (log.isDebugEnabled()) {
+            log.debug("Adding ISO model listener.");
         }
 		if (!getListeners().contains(listener)){
 			getListeners().add(listener);
@@ -186,13 +186,6 @@ public class ISO27KModel extends CnATreeElement implements IISO27kRoot {
 		}
 	}
 	
-	private Logger getLog() {
-		if(log==null) {
-			log = Logger.getLogger(ISO27KModel.class);
-		}
-		return log;
-	}
-
     /**
      * Moves all {@link IISO27KModelListener} from this model
      * to newModel.

@@ -36,7 +36,7 @@ import sernet.verinice.service.commands.LoadElementByUuid;
  */
 public class LoadScopeElementsById extends GenericCommand {
 
-    private static transient Logger LOG = Logger.getLogger(LoadScopeElementsById.class);
+    private static final Logger LOG = Logger.getLogger(LoadScopeElementsById.class);
     
     private List<CnATreeElement> list;
 

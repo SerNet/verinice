@@ -55,15 +55,8 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 @SuppressWarnings({ "serial", "unchecked" })
 public class FindMassnahmenForITVerbund extends FindMassnahmenAbstract {
 	
-	private transient Logger log = Logger.getLogger(FindMassnahmenForITVerbund.class);
+	private static final Logger log = Logger.getLogger(FindMassnahmenForITVerbund.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(FindMassnahmenForITVerbund.class);
-        }
-        return log;
-    }
-    
     public static final String FILTER_DATE = "filter-date";
     
     private static final String SQL = "SELECT cnatreeelement.dbid,properties.propertytype,properties.propertyvalue FROM cnatreeelement " +
@@ -109,8 +102,8 @@ public class FindMassnahmenForITVerbund extends FindMassnahmenAbstract {
     public void execute() {
 		try {
 			long start = System.currentTimeMillis();
-			if (getLog().isDebugEnabled()) {
-			    getLog().debug("FindMassnahmenForITVerbund, itverbundDbId: " + itverbundDbId);
+			if (log.isDebugEnabled()) {
+			    log.debug("FindMassnahmenForITVerbund, itverbundDbId: " + itverbundDbId);
 			}
 //			List<MassnahmenUmsetzung> list = new ArrayList<MassnahmenUmsetzung>();
 			List<MassnahmenUmsetzung> list = null;
@@ -119,12 +112,12 @@ public class FindMassnahmenForITVerbund extends FindMassnahmenAbstract {
 			
 			// create display items:
 			fillList(list);
-			if(getLog().isDebugEnabled()) {
+			if(log.isDebugEnabled()) {
 				long runtime = System.currentTimeMillis() - start;
-				getLog().debug("FindMassnahmenForITVerbund runtime: " + runtime + " ms.");
+				log.debug("FindMassnahmenForITVerbund runtime: " + runtime + " ms.");
 			}
 		} catch (Exception e) {
-		    getLog().error("Error while executing command", e);
+		    log.error("Error while executing command", e);
 			throw new RuntimeCommandException(e);
 		}
 	}
@@ -177,9 +170,9 @@ public class FindMassnahmenForITVerbund extends FindMassnahmenAbstract {
             SQLQuery sqlQuery = session.createSQLQuery(SQL);
             sqlQuery.setInteger("id", itverbundDbId).setInteger("id2", itverbundDbId);
             List<TaskItem> idList = createIdList(sqlQuery.list());
-            if(getLog().isDebugEnabled()) {
+            if(log.isDebugEnabled()) {
                 long runtime = System.currentTimeMillis() - start;
-                getLog().debug("FindMassnahmenForITVerbund runtime select all ids: " + runtime + " ms.");
+                log.debug("FindMassnahmenForITVerbund runtime select all ids: " + runtime + " ms.");
             }
             setNumber(idList.size());
             
@@ -197,9 +190,9 @@ public class FindMassnahmenForITVerbund extends FindMassnahmenAbstract {
                 query.setParameterList("idList", idArray);
     			query.setReadOnly(true);
     			result = query.list();
-    			if(getLog().isDebugEnabled()) {
+    			if(log.isDebugEnabled()) {
                     long runtime = System.currentTimeMillis() - start;
-                    getLog().debug("FindMassnahmenForITVerbund runtime load data for " + LOAD_BLOCK_SIZE + " elements: " + runtime + " ms.");
+                    log.debug("FindMassnahmenForITVerbund runtime load data for " + LOAD_BLOCK_SIZE + " elements: " + runtime + " ms.");
                 }
             } else {
                 result = Collections.emptyList();

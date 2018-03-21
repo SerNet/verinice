@@ -28,14 +28,7 @@ import sernet.verinice.model.bsi.Note;
 
 public class DeleteNote extends GenericCommand {
 
-private transient Logger log = Logger.getLogger(DeleteNote.class);
-	
-	public Logger getLog() {
-		if(log==null) {
-			log = Logger.getLogger(LoadNotes.class);
-		}
-		return log;
-	}
+private static final Logger log = Logger.getLogger(DeleteNote.class);
 	
 	Addition note;
 
@@ -45,14 +38,14 @@ private transient Logger log = Logger.getLogger(DeleteNote.class);
 	}
 
 	public void execute() {
-		if (getLog().isDebugEnabled()) {
-			getLog().debug("executing...");
+		if (log.isDebugEnabled()) {
+			log.debug("executing...");
 		}
 		if(getNote()!=null) {
 			IBaseDao<Addition, Serializable> dao = getDaoFactory().getDAO(Addition.class);
 			dao.delete(getNote());
-			if (getLog().isDebugEnabled()) {
-				getLog().debug("Addition deleted, id: " + getNote().getDbId());
+			if (log.isDebugEnabled()) {
+				log.debug("Addition deleted, id: " + getNote().getDbId());
 			}
 		}
 	}

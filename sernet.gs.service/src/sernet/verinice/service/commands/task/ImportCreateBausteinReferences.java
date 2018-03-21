@@ -51,14 +51,7 @@ import sernet.verinice.service.gstoolimport.TransferData;
 @Deprecated
 public class ImportCreateBausteinReferences extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(ImportCreateBausteinReferences.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(ImportCreateBausteinReferences.class);
-        }
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(ImportCreateBausteinReferences.class);
 
     private final CnATreeElement element;
     private final List<Baustein> bausteine;
@@ -124,7 +117,7 @@ public class ImportCreateBausteinReferences extends GenericCommand {
         if (refZobId != null && baustein != null) {
             createBausteinReferences(element, baustein, refZobId);
         } else {
-            getLog().warn("No baustein-reference found for element:\t" + element.getTitle());
+            log.warn("No baustein-reference found for element:\t" + element.getTitle());
         }
     }
 
@@ -152,8 +145,8 @@ public class ImportCreateBausteinReferences extends GenericCommand {
      * @throws CommandException
      */
     private void createBausteinReferences(CnATreeElement element, Baustein baustein, Integer refZobId) throws CommandException {
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Looking for previously created baustein by sourceId, extId: " + sourceId + ", " + createExtId(baustein, refZobId));
+        if(log.isDebugEnabled()){
+            log.debug("Looking for previously created baustein by sourceId, extId: " + sourceId + ", " + createExtId(baustein, refZobId));
         }
         LoadCnAElementByExternalID cmd = new LoadCnAElementByExternalID(sourceId, createExtId(baustein, refZobId));
         cmd = getCommandService().executeCommand(cmd);
@@ -165,8 +158,8 @@ public class ImportCreateBausteinReferences extends GenericCommand {
 
             Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(previousBaustein.getEntityType().getId(), element.getEntityType().getId());
             if (!possibleRelations.isEmpty()) {
-                if(getLog().isDebugEnabled()) {
-                    getLog().debug("Creating BausteinReference between " + previousBaustein.getTitle() + " and " + element.getTitle());
+                if(log.isDebugEnabled()) {
+                    log.debug("Creating BausteinReference between " + previousBaustein.getTitle() + " and " + element.getTitle());
                 }
                 CreateLink cmd2 = new CreateLink(previousBaustein, element, possibleRelations.iterator().next().getId(), NO_COMMENT);
                 getCommandService().executeCommand(cmd2);

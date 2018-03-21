@@ -38,7 +38,7 @@ import sernet.verinice.service.commands.stats.CSRMassnahmenSummaryHome;
  */
 public class LoadSamtComplianceRadarChartData extends GenericCommand implements ICachedCommand{
     
-    private static transient Logger log = Logger.getLogger(LoadSamtComplianceRadarChartData.class);
+    private static final Logger log = Logger.getLogger(LoadSamtComplianceRadarChartData.class);
     
     public static final String[] COLUMNS = new String[] { 
         "CATEGORIES",
@@ -89,16 +89,9 @@ public class LoadSamtComplianceRadarChartData extends GenericCommand implements 
                     result.add(row);
                 }
             } catch (CommandException e){
-                getLog().error("Error while executing command", e);
+                log.error("Error while executing command", e);
             }
         }
-    }
-    
-    private Logger getLog(){
-        if(log == null){
-            log = Logger.getLogger(LoadSamtComplianceRadarChartData.class);
-        }
-        return log;
     }
     
     private List<Entry<String, Double>> sort(Set<Entry<String, Double>> entrySet) {
@@ -135,8 +128,8 @@ public class LoadSamtComplianceRadarChartData extends GenericCommand implements 
     public void injectCacheResult(Object result) {
         this.result = (ArrayList<ArrayList<String>>)result;
         resultInjectedFromCache = true;
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(log.isDebugEnabled()){
+            log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 

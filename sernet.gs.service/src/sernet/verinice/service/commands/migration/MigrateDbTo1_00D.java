@@ -50,7 +50,7 @@ import sernet.verinice.service.account.AccountSearchParameter;
 @SuppressWarnings("serial")
 public class MigrateDbTo1_00D extends DbMigration {
 
-    private transient Logger log;
+    private static final Logger log = Logger.getLogger(MigrateDbTo1_00D.class);
 
     private IAccountService accountService;
 
@@ -81,7 +81,7 @@ public class MigrateDbTo1_00D extends DbMigration {
     }
 
     private void handleError(Exception ex, String message) {
-        getLog().error(message, ex);
+        log.error(message, ex);
         throw new RuntimeException(message);
     }
 
@@ -115,12 +115,6 @@ public class MigrateDbTo1_00D extends DbMigration {
         }
 
         return accountGroupNames;
-    }
-
-    private Logger getLog() {
-        if (log == null)
-            log = Logger.getLogger(MigrateDbTo1_00D.class);
-        return log;
     }
 
     @Override

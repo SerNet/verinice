@@ -39,7 +39,7 @@ public class SearchViewElementTransfer extends VeriniceElementTransfer {
             .getCanonicalName();
     private static final int TYPEID_SEARCH_VIEW_ELEMENT = registerType(
             TYPENAME_SEARCH_VIEW_ELEMENT);
-    private transient Logger log = Logger.getLogger(SearchViewElementTransfer.class);
+    private static final Logger log = Logger.getLogger(SearchViewElementTransfer.class);
 
 
 
@@ -48,12 +48,6 @@ public class SearchViewElementTransfer extends VeriniceElementTransfer {
     private SearchViewElementTransfer() {
     }
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(SearchViewElementTransfer.class);
-        }
-        return log;
-    }
     public static SearchViewElementTransfer getInstance() {
         return instance;
     }

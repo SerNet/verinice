@@ -53,14 +53,7 @@ import com.opencsv.CSVReader;
 @SuppressWarnings("serial")
 public class ImportCatalog extends GenericCommand implements ICatalogImporter {
 
-    private transient Logger log = Logger.getLogger(ImportCatalog.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(ImportCatalog.class);
-        }
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(ImportCatalog.class);
 
     private ImportConfiguration config;
 
@@ -97,7 +90,7 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
             config = new ImportConfiguration(csvFile);
             importCatalog();
         } catch (Exception e) {
-            getLog().error("Error while executing", e);
+            log.error("Error while executing", e);
             throw new RuntimeCommandException("Fehler beim Importieren des Katalogs.", e);
         }
     }
@@ -119,11 +112,11 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
                 if (nextLine.length >= 4) {
                 	item = processLine(nextLine, item);
                 } else {
-                    getLog().warn("Invalid line (number: " + n + ") in CSV file. Line content is: '");
+                    log.warn("Invalid line (number: " + n + ") in CSV file. Line content is: '");
                     for (int i = 0; i < nextLine.length; i++) {
-                    	getLog().warn(nextLine[i]);
+                    	log.warn(nextLine[i]);
                     }
-                    getLog().warn("'");
+                    log.warn("'");
                 }
                 n++;
             } // end while
@@ -133,11 +126,11 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
             // create the tree
             catalog.processItemBuffer();
 
-            if (getLog().isDebugEnabled()) {
-                getLog().debug(catalog);
+            if (log.isDebugEnabled()) {
+                log.debug(catalog);
             }
         } catch (IOException e) {
-            getLog().error("Error while importing", e);
+            log.error("Error while importing", e);
             throw new RuntimeException("Error while importing", e);
         }
     }
@@ -156,11 +149,11 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
         	threshold2 = nextLine[8];
         }
         if (isNewTopic(nextLine)) {             	
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("#: " + number);
-                getLog().debug("heading: " + heading);
-                getLog().debug("type: " + type);
-                getLog().debug("text: " + text);
+            if (log.isDebugEnabled()) {
+                log.debug("#: " + number);
+                log.debug("heading: " + heading);
+                log.debug("type: " + type);
+                log.debug("text: " + text);
             }
 
             if (item != null) {
@@ -176,12 +169,12 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
             // line can have optional weight and threshold
             // levels:
             if (hasMaturityLevels(nextLine)) {
-            	if (getLog().isDebugEnabled()) {
-            		getLog().debug("maturity: " + maturity);
-                    getLog().debug("weight 1: " + weight1);
-                    getLog().debug("weight 2: " + weight2);
-                    getLog().debug("threshold 1: " + threshold1);
-                    getLog().debug("threshold 2: " + threshold2);
+            	if (log.isDebugEnabled()) {
+            		log.debug("maturity: " + maturity);
+                    log.debug("weight 1: " + weight1);
+                    log.debug("weight 2: " + weight2);
+                    log.debug("threshold 1: " + threshold1);
+                    log.debug("threshold 2: " + threshold2);
             	}
             	item.setWeight1(weight1);
                 item.setWeight2(weight2);

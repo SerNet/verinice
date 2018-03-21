@@ -46,7 +46,7 @@ import sernet.verinice.service.test.CommandServiceProvider;
  */
 abstract public class AbstractVNAImportHelper extends CommandServiceProvider {
 
-    private Logger log = Logger.getLogger(AbstractVNAImportHelper.class);
+    private static final Logger log = Logger.getLogger(AbstractVNAImportHelper.class);
 
     private String vnaFilePath;
 

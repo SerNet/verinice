@@ -39,7 +39,7 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("serial")
 public class LoadReportElementByTitle<T extends CnATreeElement> extends GenericCommand implements ICachedCommand{
 
-	private transient Logger log = Logger
+	private static final Logger log = Logger
 		.getLogger(LoadReportElementByTitle.class);
 	
 	private CnATreeElement result;
@@ -123,18 +123,11 @@ public class LoadReportElementByTitle<T extends CnATreeElement> extends GenericC
     public void injectCacheResult(Object result) {
         this.result = (CnATreeElement)result;
         resultInjectedFromCache = true;
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(log.isDebugEnabled()){
+            log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
     
-    public Logger getLog(){
-        if(log == null){
-            log = Logger.getLogger(this.getClass());
-        }
-        return log;
-    }
-
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */

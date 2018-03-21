@@ -41,7 +41,7 @@ import sernet.verinice.model.samt.SamtTopic;
  */
 public class LoadReportISARiskChapter extends GenericCommand implements ICachedCommand{
     
-    private static transient Logger log = Logger.getLogger(LoadReportISARiskChapter.class);
+    private static final Logger log = Logger.getLogger(LoadReportISARiskChapter.class);
     
     public static final String[] COLUMNS = new String[]{"RISK_NO",
                                                          "RISK_LOW",
