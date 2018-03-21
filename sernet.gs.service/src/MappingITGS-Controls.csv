@@ -1,6 +1,7 @@
 M 1.1 Einhaltung Einschlägiger Normen und Vorschriften,x,x,x,x,x,x,x,x
 M 1.1 Einhaltung einschlägiger Normen und Vorschriften,x,x,x,x,x,x,x,x
 M 1.10 Sichere Türen und Fenster,,,x,,,,,
+M 1.10 Verwendung von Sicherheitstüren und -fenstern,,,x,,,,,
 M 1.11 Lagepläne der Versorgungsleitungen,,,x,,,,,
 M 1.12 Vermeidung von Lagehinweisen auf schützenswerte Gebäudeteile,,,x,,,,,
 M 1.13 Anordnung schützenswerter Gebäudeteile,,,x,,,,,
@@ -83,9 +84,12 @@ M 2.14 Schlüsselverwaltung,,,x,,x,,,
 M 2.140 Analyse der aktuellen Netzsituation,,,x,x,x,,,
 M 2.141 Entwicklung eines Netzkonzeptes,,,x,x,x,,,
 M 2.143 Entwicklung eines Netzmanagement-Konzeptes,,,x,x,x,,,
+M 2.143 Entwicklung eines Netzmanagementkonzeptes,,,x,x,x,,,
 M 2.144 Verwendung von SNMP als Netzmanagement-Protokoll,,,x,x,x,,,
+M 2.144 Geeignete Auswahl eines Netzmanagement-Protokolls,,,x,x,x,,,
 M 2.145 Anforderungen an ein Netzmanagement-Tool,,,x,x,x,,,
 M 2.146 Sicherer Betrieb eines Netzmanagement-Systems,,,x,x,x,,,
+M 2.146 Sicherer Betrieb eines Netzmanagementsystems,,,x,x,x,,,
 M 2.15 Brandschutzbegehungen,,,,,x,,,
 M 2.154 Erstellung eines Sicherheitskonzeptes gegen Schadprogramme,,,x,,x,,,
 M 2.157 Auswahl eines geeigneten Viren-Schutzprogramms,,,x,,x,,,
@@ -101,9 +105,11 @@ M 2.165 Auswahl eines geeigneten kryptographischen Produktes,,x,x,x,x,x,x,x
 M 2.166 Regelung des Einsatzes von Kryptomodulen,,x,x,x,x,x,x,x
 M 2.167 Auswahl geeigneter Verfahren zur Löschung oder Vernichtung von Daten,,,x,,,,,
 M 2.168 IT-System-Analyse vor Einführung eines Systemmanagement-Systems,,,x,x,x,,x,x
+M 2.168 IT-System-Analyse vor Einführung eines Systemmanagementsystems,,,x,x,x,,x,x
 M 2.169 Entwickeln einer Systemmanagementstrategie,,,x,x,x,,x,x
-M 2.17 Zutrittsregelung und -kontrolle,,,,x,x,,,
+M 2.17 Zutrittsregelung und -kontrolle,,,,x,,,,
 M 2.170 Anforderungen an ein Systemmanagement-System,,,x,x,x,,,x
+M 2.170 Anforderungen an ein Systemmanagementsystem,,,x,x,x,,,x
 M 2.171 Geeignete Auswahl eines Systemmanagement-Produktes,,,x,x,x,x,x,x
 M 2.177 Sicherheit bei Umzügen,,x,,x,x,,x,
 M 2.178 Erstellung einer Sicherheitsleitlinie für die Faxnutzung,,,x,x,x,,x,x
@@ -149,8 +155,10 @@ M 2.251 Festlegung der Sicherheitsanforderungen für Outsourcing-Vorhaben,,,x,x,
 M 2.252 Wahl eines geeigneten Outsourcing-Dienstleisters,,,x,x,x,,,x
 M 2.253 Vertragsgestaltung mit dem Outsourcing-Dienstleister,,,x,x,x,,,x
 M 2.254 Erstellung eines Sicherheitskonzepts für das Outsourcing-Vorhaben,,,x,x,x,,,x
+M 2.254 Erstellung eines IT-Sicherheitskonzepts für das Outsourcing-Vorhaben,,,x,x,x,,,x
 M 2.255 Sichere Migration bei Outsourcing-Vorhaben,,,x,x,x,,,x
 M 2.256 Planung und Aufrechterhaltung der Informationssicherheit im laufenden Outsourcing-Betrieb,,,x,x,x,,,x
+M 2.256 Planung und Aufrechterhaltung der IT-Sicherheit im laufenden Outsourcing-Betrieb,,,x,x,x,,,x
 M 2.259 Einführung eines übergeordneten Dokumentenmanagements,,,x,,x,,,
 M 2.262 Regelung der Nutzung von Archivsystemen,,x,x,x,x,x,x,x
 M 2.264 Regelmäßige Aufbereitung von verschlüsselten Daten bei der Archivierung,,x,x,x,,,,
@@ -171,11 +179,12 @@ M 2.310 Geeignete Auswahl von Laptops,,,x,,,,,
 M 2.311 Planung von Schutzschränken,,,x,,,,,
 M 2.312 Konzeption eines Schulungs- und Sensibilisierungsprogramms zur Informationssicherheit,x,x,x,x,x,,x,x
 M 2.313 Sichere Anmeldung bei Internet-Diensten,,,x,,,,,
-M 2.314 Verwendung von hochverfügbaren Architekturen für Server,,,,,x,x,,
+M 2.314 Verwendung von hochverfügbaren Architekturen für Server,,,,,x,x,x,
 M 2.315 Planung des Servereinsatzes,,,x,x,x,x,x,
 M 2.316 Festlegen einer Sicherheitsrichtlinie für einen allgemeinen Server,,,x,x,x,x,x,
 M 2.317 Beschaffungskriterien für einen Server,,,x,x,x,x,x,
 M 2.318 Sichere Installation eines IT-Systems,,,x,x,x,x,,
+M 2.318 Sichere Installation eines Servers,,,x,x,x,x,,
 M 2.319 Migration eines Servers,,,x,x,x,,,
 M 2.32 Einrichtung einer eingeschränkten Benutzerumgebung,,,x,,,,,
 M 2.320 Geregelte Außerbetriebnahme eines Servers,,,x,x,x,,,
@@ -183,13 +192,18 @@ M 2.321 Planung des Einsatzes von Client-Server-Netzen,,,x,x,x,,,
 M 2.322 Festlegen einer Sicherheitsrichtlinie für ein Client-Server-Netz,,,x,x,x,x,x,
 M 2.323 Geregelte Außerbetriebnahme eines Clients,,,x,x,x,,,
 M 2.324 Einführung von Windows auf Clients ab Windows XP planen,,x,x,x,x,,,
+M 2.324 Einführung von Windows XP und Windows Vista planen,,x,x,x,x,,,
 M 2.325 Planung der Sicherheitsrichtlinien für Windows-Clients ab Windows XP,,x,x,x,x,,,
+M 2.325 Planung der Sicherheitsrichtlinien von Windows XP und Windows Vista,,x,x,x,x,,,
 M 2.326 Planung der Gruppenrichtlinien für Clients ab Windows XP,,,x,x,x,,,
+M 2.326 Planung der Windows XP und Windows Vista Gruppenrichtlinien,,,x,x,x,,,
 M 2.327 Sicherheit beim Fernzugriff auf Clients ab Windows XP,,,x,x,x,,,
+M 2.327 Sicherheit beim Fernzugriff unter Windows XP und Windows Vista,,,x,x,x,,,
 M 2.328 Einsatz von Windows XP auf mobilen Rechnern,,x,x,x,x,,,
 M 2.329 Einführung von Windows XP SP2,,,x,x,x,,,
 M 2.33 Aufteilung der Administrationstätigkeiten unter Unix,,,x,x,,,,
 M 2.330 Regelmäßige Prüfung der Sicherheitsrichtlinien und ihrer Umsetzung bei Windows-Clients ab Windows XP,,,,,,,,x
+M 2.330 Regelmäßige Prüfung der Windows XP und Windows Vista Sicherheitsrichtlinien und ihrer Umsetzung,,,,,,,,x
 M 2.335 Festlegung der Sicherheitsziele und -strategie,,,x,x,x,,,
 M 2.336 Übernahme der Gesamtverantwortung für Informationssicherheit durch die Leitungsebene,,,x,x,x,,,x
 M 2.337 Integration der Informationssicherheit in organisationsweite Abläufe und Prozesse,,,x,x,x,,,x
@@ -201,12 +215,14 @@ M 2.345 Outsourcing eines SAP Systems,,,,,,,,x
 M 2.35 Informationsbeschaffung über Sicherheitslücken des Systems,,,,,x,,,
 M 2.355 Auswahl von Lieferanten für eine Speicherlösung,,,,,,,,x
 M 2.356 Vertragsgestaltung mit Dienstleistern für Speicherlösungen,,,,,,,,x
+M 2.356 Vertragsgestaltung mit SAN-Dienstleistern,,,,,,,,x
 M 2.357 Aufbau eines Administrationsnetzes für Speichersysteme,,,x,,,,,
 M 2.359 Überwachung und Verwaltung von Speicherlösungen,,,,,,,,x
 M 2.360 Sicherheits-Audits und Berichtswesen bei Speichersystemen,,,,,,,,x
 M 2.363 Schutz gegen SQL-Injection,,,x,,x,,,
 M 2.37 Der aufgeräumte Arbeitsplatz,,,x,x,x,,,
 M 2.370 Administration der Berechtigungen ab Windows Server 2003,,,x,x,,,,
+M 2.370 Administration der Berechtigungen unter Windows Server 2003,,,x,x,,,,
 M 2.371 Geregelte Deaktivierung und Löschung ungenutzter Konten,,,x,,,,,
 M 2.38 Aufteilung der Administrationstätigkeiten,,,,x,,,,
 M 2.381 Festlegung einer Strategie für die WLAN-Nutzung,,,x,x,,,,x
@@ -233,7 +249,7 @@ M 2.416 Planung des VPN-Einsatzes,,,x,x,,,,
 M 2.417 Planung der technischen VPN-Realisierung,,x,x,x,,,,
 M 2.418 Erstellung einer Sicherheitsrichtlinie zur VPN-Nutzung,,,x,x,,,,x
 M 2.419 Geeignete Auswahl von VPN-Produkten,,,x,x,,,,
-M 2.42 Festlegung der möglichen Kommunikationspartner,,,,x,,,,x
+M 2.42 Festlegung der möglichen Kommunikationspartner,,,,x,,,,
 M 2.420 Auswahl eines Trusted-VPN-Dienstleisters,,,x,x,,,,
 M 2.421 Planung des Patch- und Änderungsmanagementprozesses,,,x,x,,x,x,x
 M 2.422 Umgang mit Änderungsanforderungen,,,x,x,,,,
@@ -303,7 +319,7 @@ M 2.587 Vorgehensweise und Konzeption der Prozesse beim Identitäs- und Berechti
 M 2.6 Vergabe von Zutrittsberechtigungen,,,x,,,,,
 M 2.60 Sichere Administration eines Modems,,,x,x,,,,
 M 2.61 Regelung des Modem-Einsatzes,,,x,x,,,,
-M 2.62 Software-Abnahme- und Freigabe-Verfahren,,,,x,x,,x,x
+M 2.62 Software-Abnahme- und Freigabe-Verfahren,,,,x,x,,,x
 M 2.63 Einrichten der Zugriffsrechte,,,x,,,,,
 M 2.64 Kontrolle der Protokolldateien,,,x,x,,,,x
 M 2.65 Kontrolle der Wirksamkeit der Benutzer-Trennung am IT-System,,,,x,,,,x
@@ -353,6 +369,7 @@ M 4.146 Sicherer Betrieb von Windows Client-Betriebssystemen,,,x,x,x,,,
 M 4.149 Datei- und Freigabeberechtigungen unter Windows,,,x,,,,,
 M 4.15 Gesichertes Login,,,x,x,x,,,
 M 4.16 Zugangsbeschränkungen für Benutzer-Kennungen und / oder Terminals,,,x,,x,,,
+M 4.16 Zugangsbeschränkungen für Accounts und / oder Terminals,,,x,,x,,,
 M 4.168 Auswahl eines geeigneten Archivsystems,,,x,,x,,,
 M 4.169 Verwendung geeigneter Archivmedien,,,x,,x,,,
 M 4.17 Sperren und Löschen nicht benötigter Accounts und Terminals,,,x,x,x,,,
@@ -371,21 +388,28 @@ M 4.205 Protokollierung bei Routern und Switches,,,,x,,,,
 M 4.21 Verhinderung des unautorisierten Erlangens von Administratorrechten,,,x,x,x,,,
 M 4.22 Verhinderung des Vertraulichkeitsverlusts schutzbedürftiger Daten im Unix-System,,,x,x,x,,,
 M 4.227 Einsatz eines lokalen NTP-Servers zur Zeitsynchronisation,,,,x,x,,,x
+"M 4.228 Nutzung der Sicherheitsmechanismen von PDAs",,,x,x,,,,
 "M 4.228 Nutzung der Sicherheitsmechanismen von Smartphones, Tablets und PDAs",,,x,x,,,,
 "M 4.229 Sicherer Betrieb von Smartphones, Tablets und PDAs",,,x,x,,,,
+"M 4.229 Sicherer Betrieb von PDAs",,,x,x,,,,
 M 4.23 Sicherer Aufruf ausführbarer Dateien,,,x,x,x,,,
 "M 4.230 Zentrale Administration von Smartphones, Tablets und PDAs",,,x,x,x,,,
+"M 4.230 Zentrale Administration von PDAs",,,x,x,x,,,
 "M 4.231 Einsatz zusätzlicher Sicherheitswerkzeuge für Smartphones, Tablets oder PDAs",,,x,x,x,,,
+"M 4.231 Einsatz zusätzlicher Sicherheitswerkzeuge für PDAs",,,x,x,x,,,
 M 4.237 Sichere Grundkonfiguration eines IT-Systems,,,x,x,x,,,x
 M 4.238 Einsatz eines lokalen Paketfilters,,,x,x,,,,
 M 4.239 Sicherer Betrieb eines Servers,,,x,x,x,,,x
 M 4.24 Sicherstellung einer konsistenten Systemverwaltung,,,x,x,x,,,
 M 4.241 Sicherer Betrieb von Clients,,,x,x,x,,,x
 M 4.243 Verwaltungswerkzeuge unter Windows Client-Betriebssystemen,,,x,x,x,,,x
+M 4.243 Verwaltungswerkzeuge unter Windows Client-Betriebssysteme,,,x,x,x,,,x
 M 4.244 Sichere Systemkonfiguration von Windows Client-Betriebssystemen,,,x,x,x,,,x
 M 4.245 Basiseinstellungen für Windows Group Policy Objects,,,x,x,x,,,x
 M 4.246 Konfiguration der Systemdienste auf Clients ab Windows XP,,,x,x,x,,,x
+M 4.246 Konfiguration der Systemdienste unter Windows XP und Windows Vista,,,x,x,x,,,x
 M 4.247 Restriktive Berechtigungsvergabe bei Client-Betriebssystemen ab Windows Vista,,,x,x,x,,,x
+M 4.247 Restriktive Berechtigungsvergabe unter Windows Client-Betriebssystemen,,,x,x,x,,,x
 M 4.248 Sichere Installation von Windows Client-Betriebssystemen,,,x,x,x,,,x
 M 4.249 Windows Client-Systeme aktuell halten,,,x,x,x,,,x
 M 4.254 Sicherer Einsatz von drahtlosen Tastaturen und Mäusen,,,x,x,,,,
@@ -414,14 +438,16 @@ M 4.274 Sichere Grundkonfiguration von Speichersystemen,,,x,x,,,,
 M 4.275 Sicherer Betrieb einer Speicherlösung,,,x,x,,,,
 M 4.276 Planung des Einsatzes von Windows Server 2003,,,x,x,,,,
 "M 4.277 Absicherung der SMB-, LDAP- und RPC-Kommunikation unter Windows Servern",,,x,x,,,,
-"M 4.277 Absicherung der SMB-, LDAP- und RPC-Kommunikation unter Windows-Servern",,,x,x,,,,
+"M 4.277 Absicherung der SMB-, LDAP- und RPC-Kommunikation unter Windows Server 2003",,,x,x,,,,
 M 4.278 Sichere Nutzung von EFS unter Windows Server 2003,,,x,x,,,,
 M 4.279 Erweiterte Sicherheitsaspekte für Windows Server 2003,,,x,x,,,,
 M 4.280 Sichere Basiskonfiguration ab Windows Server 2003,,,x,x,,,,
+M 4.280 Sichere Basiskonfiguration von Windows Server 2003,,,x,x,,,,
 M 4.281 Sichere Installation und Bereitstellung von Windows Server 2003,,,x,x,,,,
 M 4.282 Sichere Konfiguration der IIS-Basis-Komponente unter Windows Server 2003,,,x,x,,,,
 M 4.283 Sichere Migration von Windows NT 4 Server und Windows 2000 Server auf Windows Server 2003,,,x,x,,,,
 M 4.284 Umgang mit Diensten ab Windows Server 2003,,,x,x,,,,
+M 4.284 Umgang mit Diensten unter Windows Server 2003,,,x,x,,,,
 M 4.285 Deinstallation nicht benötigter Client-Funktionen von Windows Server 2003,,,x,x,,,,
 M 4.286 Verwendung der Softwareeinschränkungsrichtlinie unter Windows Server 2003,,,x,x,,,,
 M 4.29 Einsatz eines Verschlüsselungsproduktes für tragbare IT-Systeme,,,x,x,x,,,
@@ -436,7 +462,7 @@ M 4.3 Einsatz von Viren-Schutzprogrammen,,,x,x,x,,x,
 "M 4.300 Informationsschutz bei Druckern, Kopierern und Multifunktionsgeräten",,,x,x,x,,,
 "M 4.301 Beschränkung der Zugriffe auf Drucker, Kopierer und Multifunktionsgeräte",,,x,,,,,
 "M 4.302 Protokollierung bei Druckern, Kopierern und Multifunktionsgeräten",,,,x,,,,
-M 4.32 Physikalisches Löschen der Datenträger vor und nach Verwendung,,,x,,,,,x
+M 4.32 Physikalisches Löschen der Datenträger vor und nach Verwendung,,,x,x,,,,x
 M 4.320 Sichere Konfiguration eines VPNs,,,x,,x,,,x
 M 4.321 Sicherer Betrieb eines VPNs,,,x,,x,,,x
 M 4.322 Sperrung nicht mehr benötigter VPN-Zugänge,,,x,,x,,,x
@@ -460,6 +486,7 @@ M 4.428 Audit der Lotus Notes/Domino-Umgebung,,,,,,,,x
 M 4.433 Einsatz von Datenträgerverschlüsselung,,x,x,x,,,,
 M 4.435 Selbstverschlüsselnde Festplatten,,x,x,x,,,,
 M 4.48 Passwortschutz unter Windows-Systemen,,,x,x,x,,,
+M 4.48 Passwortschutz unter NT-basierten Windows-Systemen,,,x,x,x,,,
 M 4.493 Auswahl einer Entwicklungsumgebung für die Software-Entwicklung,,,x,x,x,,,
 M 4.494 Sicherer Einsatz einer Entwicklungsumgebung,x,,x,x,x,,,
 M 4.495 Sicheres Systemdesign bei der Software-Entwicklung,,,x,x,x,,,
@@ -530,10 +557,12 @@ M 5.58 Auswahl und Installation von Datenbankschnittstellen-Treibern,,,x,,,,,
 M 5.59 Schutz vor DNS-Spoofing bei Authentisierungsmechanismen,,,x,,,,,
 M 5.60 Auswahl einer geeigneten Backbone-Technologie,,,,,x,x,,
 M 5.61 Geeignete physische Segmentierung,,,x,x,x,,,
+M 5.61 Geeignete physikalische Segmentierung,,,x,x,x,,,
 M 5.62 Geeignete logische Segmentierung,,,x,x,x,,,
 M 5.63 Einsatz von GnuPG oder PGP,,,x,x,,,,
 M 5.64 Secure Shell,,x,x,x,,,,
 M 5.66 Clientseitige Verwendung von SSL/TLS,,x,x,x,,,,
+M 5.66 Verwendung von TLS/SSL,,x,x,x,,,,
 M 5.67 Verwendung eines Zeitstempel-Dienstes,,,x,x,,,,
 M 5.68 Einsatz von Verschlüsselungsverfahren zur Netzkommunikation,,x,x,x,,,,
 M 5.69 Schutz vor aktiven Inhalten,,,x,x,x,,,
@@ -669,7 +698,9 @@ M 6.92 Notfallvorsorge bei Routern und Switches,,,,,x,,,
 M 6.93 Notfallvorsorge für z/OS-Systeme,,,,,x,,,
 M 6.94 Notfallvorsorge bei Sicherheitsgateways,,,,,x,,,
 "M 6.95 Ausfallvorsorge und Datensicherung bei Smartphones, Tablets und PDAs",,,,x,x,,,x
+"M 6.95 Ausfallvorsorge und Datensicherung bei PDAs",,,,x,x,,,x
 M 6.96 Notfallvorsorge für einen Server,,,,,x,,,
 M 6.97 Notfallvorsorge für SAP Systeme,,,,,x,,,
 M 6.98 Notfallvorsorge und Notfallreaktion für Speicherlösungen,,,,,x,,,
 M 6.99 Regelmäßige Sicherung wichtiger Systemkomponenten für Windows-Server,,,,,x,,,
+M 6.99 Regelmäßige Sicherung wichtiger Systemkomponenten für Windows Server 2003,,,,,x,,,

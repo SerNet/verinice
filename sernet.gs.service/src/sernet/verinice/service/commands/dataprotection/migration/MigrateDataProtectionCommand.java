@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.elasticsearch.common.collect.Lists;
 
@@ -58,9 +59,26 @@ public class MigrateDataProtectionCommand extends GraphCommand {
             "rel_process_control_Verfügbarkeitskontrolle",
             "rel_process_control_Trennungskontrolle");
     private Set<CnATreeElement> processes;
+    private Set<CnATreeElement> transformedControls = new HashSet<>();
     private Set<CnATreeElement> affectedObjects = new HashSet<>();
+    private Set<CnATreeElement> missedControls = new HashSet<>();
 
     public MigrateDataProtectionCommand(Integer... scopeIds) {
+        initalizeCommand(scopeIds);
+    }
+
+    public MigrateDataProtectionCommand(Set<CnATreeElement> selectedElementSet) {
+        Set<Integer> set = new HashSet<>();
+        for (CnATreeElement cnATreeElement : selectedElementSet) {
+            set.add(cnATreeElement.getDbId());
+        }
+        initalizeCommand(set.toArray(new Integer[selectedElementSet.size()]));
+    }
+
+    /**
+     * @param scopeIds
+     */
+    protected void initalizeCommand(Integer... scopeIds) {
         GraphElementLoader loader = new GraphElementLoader();
         loader.setTypeIds(TYPE_IDS);
         if (scopeIds.length > 0) {
@@ -86,9 +104,13 @@ public class MigrateDataProtectionCommand extends GraphCommand {
                     Set<CnATreeElement> affectedProcesses = removeLinks(control, processGraph);
                     createLinks(control, affectedProcesses);
                     affectedObjects.addAll(affectedProcesses);
+                    transformedControls.add(control);
                 } catch (CommandException e) {
-                    LOG.error("Error while transforming data protection controls", e);
+                    LOG.error("Error while transforming data protection controls. Current Control: "
+                            + control.getTitle(), e);
                 }
+            } else {
+                missedControls.add(control);
             }
         }
     }
@@ -119,6 +141,7 @@ public class MigrateDataProtectionCommand extends GraphCommand {
 
         String cUuid = control.getUuid();
         Set<CnATreeElement> affectedProcesses = new HashSet<>();
+        RemoveLink<CnALink> removeLinkCmd = new RemoveLink<>();
         for (Edge edge : allRelations) {
             if (!RELATIONS.contains(edge.getType())) {
                 continue;// ensure we only take the right link types (might be
@@ -130,10 +153,10 @@ public class MigrateDataProtectionCommand extends GraphCommand {
             } else {
                 affectedProcesses.add(edge.getSource());
             }
-            RemoveLink<CnALink> removeLinkCmd = new RemoveLink<>(edge.getSource().getDbId(),
+            removeLinkCmd.addLinkData(edge.getSource().getDbId(),
                     edge.getTarget().getDbId(), edge.getType());
-            getCommandService().executeCommand(removeLinkCmd);
         }
+        getCommandService().executeCommand(removeLinkCmd);
         return affectedProcesses;
     }
 
@@ -157,7 +180,11 @@ public class MigrateDataProtectionCommand extends GraphCommand {
      * Get the TOMS set for a given control.
      */
     private Set<PropertyType> getTOMS(CnATreeElement control) {
-        return TomMapper.getInstance().getMapping(control.getTitle());
+        String title = control.getTitle();
+        if (StringUtils.isEmpty(title)) {
+            return null;
+        }
+        return TomMapper.getInstance().getMapping(title.trim());
     }
 
     public Set<CnATreeElement> getProcesses() {
@@ -166,6 +193,14 @@ public class MigrateDataProtectionCommand extends GraphCommand {
 
     public Set<CnATreeElement> getAffectedObjects() {
         return affectedObjects;
+    }
+
+    public Set<CnATreeElement> getMissedControls() {
+        return missedControls;
+    }
+
+    public Set<CnATreeElement> getControls() {
+        return transformedControls;
     }
 
 }

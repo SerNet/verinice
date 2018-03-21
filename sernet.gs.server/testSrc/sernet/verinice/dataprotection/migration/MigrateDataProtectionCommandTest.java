@@ -11,6 +11,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.elasticsearch.common.collect.Sets;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import sernet.gs.service.RetrieveInfo;
@@ -28,6 +29,7 @@ import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.dataprotection.migration.MigrateDataProtectionCommand;
 import sernet.verinice.service.test.CommandServiceProvider;
 
+@Ignore
 public class MigrateDataProtectionCommandTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(MigrateDataProtectionCommandTest.class);
