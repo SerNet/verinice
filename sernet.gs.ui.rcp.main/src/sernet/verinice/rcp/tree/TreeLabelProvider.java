@@ -24,11 +24,7 @@ import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
-import sernet.verinice.model.bp.elements.BpRequirement;
-import sernet.verinice.model.bp.elements.BpThreat;
-import sernet.verinice.model.bp.elements.Safeguard;
-import sernet.verinice.model.bp.groups.BpRequirementGroup;
-import sernet.verinice.model.bp.groups.SafeguardGroup;
+import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.service.iso27k.ItemControlTransformer;
@@ -71,13 +67,8 @@ public class TreeLabelProvider extends LabelProvider {
         }
         try {
             CnATreeElement element = (CnATreeElement) obj;
-            StringBuilder sb = new StringBuilder();
-            sb.append(getPrefix(element));
-            String title = element.getTitle();
-            if (title != null) {
-                sb.append(title);
-            }
-            text = ItemControlTransformer.truncate(sb.toString(), MAX_TEXT_WIDTH);
+            String title = getElementTitle(element);
+            text = ItemControlTransformer.truncate(title, MAX_TEXT_WIDTH);
             if (LOG.isDebugEnabled()) {
                 text = text + " (scope: " + element.getScopeId() + "," + " uu: " + element.getUuid()
                         + ", ext: " + element.getExtId() + ")";
@@ -88,28 +79,22 @@ public class TreeLabelProvider extends LabelProvider {
         return text;
     }
 
-    private String getPrefix(CnATreeElement element) {
+    private static String getElementTitle(CnATreeElement element) {
+        if (element instanceof IIdentifiableElement) {
+            return ((IIdentifiableElement) element).getFullTitle();
+        }
+        StringBuilder sb = new StringBuilder();
         if (element instanceof IISO27kElement) {
             String abbreviation = ((IISO27kElement) element).getAbbreviation();
-            return StringUtils.isEmpty(abbreviation) ? "" : abbreviation.concat(" ");
-        } else if (element instanceof Safeguard) {
-            Safeguard safeguard = (Safeguard) element;
-            return String.format("%s [%s] ", safeguard.getIdentifier(), safeguard.getQualifier());
-        } else if (element instanceof BpRequirement) {
-            BpRequirement requirement = (BpRequirement) element;
-            return String.format("%s [%s] ", requirement.getIdentifier(),
-                    requirement.getQualifier());
-        } else if (element instanceof BpThreat) {
-            BpThreat requirement = (BpThreat) element;
-            return requirement.getIdentifier().concat(" ");
-        } else if (element instanceof BpRequirementGroup) {
-            BpRequirementGroup requirementGroup = (BpRequirementGroup) element;
-            return requirementGroup.getIdentifier().concat(" ");
-        } else if (element instanceof SafeguardGroup) {
-            SafeguardGroup safeguardGroup = (SafeguardGroup) element;
-            return safeguardGroup.getIdentifier().concat(" ");
+            if (!StringUtils.isEmpty(abbreviation)) {
+                sb.append(abbreviation);
+                sb.append(" ");
+            }
         }
-        return "";
+        String title = element.getTitle();
+        if (title != null) {
+            sb.append(title);
+        }
+        return sb.toString();
     }
-
 }
