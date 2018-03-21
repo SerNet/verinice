@@ -114,12 +114,16 @@ public class DbVersion extends GenericCommand {
             DbMigration migration = new MigrateDbTo1_05D();
             getCommandService().executeCommand(migration);
         }
+        // FIXME restore condition!
+        // if (dbVersion < MigrateDbTo1_06D.VERSION) {
+        DbMigration migration = new MigrateDbTo1_06D();
+        getCommandService().executeCommand(migration);
+        // }
     }
 
     public void execute() {
         final double tolerableDiff = 0.01;
-        if (Math.abs(
-                clientVersion - VersionConstants.COMPATIBLE_CLIENT_VERSION) >= tolerableDiff) {
+        if (Math.abs(clientVersion - VersionConstants.COMPATIBLE_CLIENT_VERSION) >= tolerableDiff) {
             throw new RuntimeCommandException("Inkompatible Client Version. "
                     + "Server akzeptiert nur V " + VersionConstants.COMPATIBLE_CLIENT_VERSION
                     + ". Vorhandene Client Version: " + clientVersion);

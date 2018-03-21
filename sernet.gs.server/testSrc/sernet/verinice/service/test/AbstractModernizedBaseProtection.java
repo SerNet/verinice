@@ -21,6 +21,8 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Objects;
+
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.elements.Application;
@@ -68,7 +70,15 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
      */
     protected <T extends Group<?>> T createGroup(CnATreeElement container, Class<T> type)
             throws CommandException {
-        return createElement(container, type);
+        return createGroup(container, type, "");
+    }
+
+    /**
+     * Create a {@link Group} in the given container.
+     */
+    protected <T extends Group<?>> T createGroup(CnATreeElement container, Class<T> type,
+            String title) throws CommandException {
+        return createElement(container, type, title);
     }
 
     /**
@@ -76,7 +86,15 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
      */
     protected <T extends CnATreeElement> T createElement(CnATreeElement container, Class<T> type)
             throws CommandException {
-        CreateElement<T> saveCommand = new CreateElement<>(container, type, "");
+        return createElement(container, type, "");
+    }
+
+    /**
+     * Create a {@link CnATreeElement} in the given container.
+     */
+    protected <T extends CnATreeElement> T createElement(CnATreeElement container, Class<T> type,
+            String title) throws CommandException {
+        CreateElement<T> saveCommand = new CreateElement<>(container, type, title);
         saveCommand.setInheritAuditPermissions(true);
         saveCommand = commandService.executeCommand(saveCommand);
         return saveCommand.getNewElement();
@@ -117,6 +135,14 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
      */
     protected Safeguard createSafeguard(CnATreeElement container) throws CommandException {
         return createElement(container, Safeguard.class);
+    }
+
+    /**
+     * Create a {@link Safeguard} in the given container.
+     */
+    protected Safeguard createSafeguard(CnATreeElement container, String title)
+            throws CommandException {
+        return createElement(container, Safeguard.class, title);
     }
 
     /**
@@ -163,11 +189,26 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
         return createElement(container, BpThreat.class);
     }
 
+    /**
+     * Create a {@link BpRequirementGroup} in the given container.
+     */
+    protected BpRequirementGroup createRequirementGroup(CnATreeElement container)
+            throws CommandException {
+        return createGroup(container, BpRequirementGroup.class);
+    }
+
+    /**
+     * Create a {@link SafeguardGroup} in the given container.
+     */
+    protected BpRequirement createBpRequirement(CnATreeElement container) throws CommandException {
+        return createElement(container, BpRequirement.class);
+    }
+
     protected <T extends CnATreeElement> T reloadElement(T element) throws CommandException {
         RetrieveInfo ri = new RetrieveInfo().setProperties(true).setLinksUp(true)
                 .setLinksDown(true);
-        LoadElementByUuid<CnATreeElement> loadElementByUuid = new LoadElementByUuid<CnATreeElement>(
-                element.getUuid(), ri);
+        LoadElementByUuid<CnATreeElement> loadElementByUuid = new LoadElementByUuid<>(
+                Objects.requireNonNull(element).getUuid(), ri);
         LoadElementByUuid<CnATreeElement> executeCommand = commandService
                 .executeCommand(loadElementByUuid);
         return (T) executeCommand.getElement();
