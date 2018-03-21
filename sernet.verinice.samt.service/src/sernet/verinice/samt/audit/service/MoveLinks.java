@@ -142,7 +142,7 @@ public class MoveLinks extends ChangeLoggingCommand implements IChangeLoggingCom
 
     private CnALink createLink(CnATreeElement dependant, CnATreeElement dependency, String relationId) {
         try {
-            CreateLink<CnALink, CnATreeElement, CnATreeElement> createLink = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(dependant, dependency, relationId, "created by command CopyLinks");      
+            CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<>(dependant, dependency, relationId, "created by command CopyLinks");
             createLink = getCommandService().executeCommand(createLink);
             return createLink.getLink();          
         } catch (CommandException e) {

@@ -125,7 +125,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         Safeguard safeguard = dou.a;
         BpRequirement requirement = dou.b;
 
-        CreateLink<CnALink, CnATreeElement, CnATreeElement> createLink = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(
+        CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
                 requirement, safeguard, null, null);
         createLink = commandService.executeCommand(createLink);
         assertDeduction(safeguard, requirement);
@@ -144,7 +144,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         Safeguard safeguard = dou.a;
         BpRequirement requirement = dou.b;
 
-        CreateLink<CnALink, CnATreeElement, CnATreeElement> createLink = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(
+        CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
                 safeguard, requirement, null, null);
         createLink = commandService.executeCommand(createLink);
         assertDeduction(safeguard, requirement);
@@ -168,7 +168,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         }
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
 
-        CreateLink<CnALink, CnATreeElement, CnATreeElement> createLink = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(
+        CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
                 requirement, safeguard, null, null);
         createLink = commandService.executeCommand(createLink);
 
@@ -211,7 +211,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         }
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
 
-        CreateLink<CnALink, CnATreeElement, CnATreeElement> createLink = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(
+        CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
                 safeguard, requirement, null, null);
         createLink = commandService.executeCommand(createLink);
 
@@ -253,7 +253,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         }
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
 
-        CreateLink<CnALink, CnATreeElement, CnATreeElement> createLink = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(
+        CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
                 requirement, safeguard, null, null);
         createLink = commandService.executeCommand(createLink);
         assertDisabledDeduction(safeguard, requirement);
@@ -277,7 +277,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         }
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
 
-        CreateLink<CnALink, CnATreeElement, CnATreeElement> createLink = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(
+        CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
                 safeguard, requirement, null, null);
         createLink = commandService.executeCommand(createLink);
         assertDisabledDeduction(safeguard, requirement);
@@ -297,14 +297,14 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         requirement = prepareRequirement(requirement);
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
 
-        CreateLink<CnALink, CnATreeElement, CnATreeElement> createLink = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(
+        CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
                 requirement, safeguard, null, null);
         createLink = commandService.executeCommand(createLink);
 
         assertEquals("Must be option no.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
                 getImplementationStatus(requirement));
 
-        RemoveLink<CnALink> removeLink = new RemoveLink<CnALink>(createLink.getLink());
+        RemoveLink removeLink = new RemoveLink(createLink.getLink());
         removeLink = commandService.executeCommand(removeLink);
 
         assertNotSame("", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,

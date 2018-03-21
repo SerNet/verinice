@@ -41,7 +41,7 @@ import sernet.verinice.model.common.RelationNotDefinedException;
  * 
  * @param <T>
  */
-public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends CnATreeElement> extends GenericCommand {
+public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> extends GenericCommand {
 
     private transient Logger log = Logger.getLogger(CreateLink.class);
     

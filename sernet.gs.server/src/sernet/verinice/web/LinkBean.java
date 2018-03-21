@@ -310,7 +310,7 @@ public class LinkBean {
     public void deleteLink() {
         try {
             if(getSelectedLink()!=null) {
-                RemoveLink<CnALink> command = new RemoveLink<CnALink>(
+                RemoveLink command = new RemoveLink(
                         getSelectedLink().getDependantId(), 
                         getSelectedLink().getDependencyId(), 
                         getSelectedLink().getTypeId());

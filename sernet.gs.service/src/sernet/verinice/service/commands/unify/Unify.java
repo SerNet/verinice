@@ -213,7 +213,7 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
     }
     
     private void removeLink(CnALink link)throws sernet.verinice.interfaces.CommandException{
-        RemoveLink<CnALink> command = new RemoveLink<CnALink>(link);
+        RemoveLink command = new RemoveLink(link);
         getCommandService().executeCommand(command);
     }
     
