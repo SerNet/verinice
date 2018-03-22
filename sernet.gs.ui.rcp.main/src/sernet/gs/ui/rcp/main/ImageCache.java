@@ -45,9 +45,6 @@ import sernet.verinice.model.bp.elements.ItSystem;
 import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.bp.elements.Safeguard;
-import sernet.verinice.model.bp.groups.BpDocumentGroup;
-import sernet.verinice.model.bp.groups.BpIncidentGroup;
-import sernet.verinice.model.bp.groups.BpRecordGroup;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
@@ -356,7 +353,7 @@ public final class ImageCache {
 
     private static URL imagePath;
 
-    private final Map<ImageDescriptor, Image> imageMap = new HashMap<ImageDescriptor, Image>();
+    private final Map<ImageDescriptor, Image> imageMap = new HashMap<>();
 
     // for BSI elements: map of <element type> : <icon name>
     private static final Map<String, String> BSI_ICON_MAP;
@@ -364,10 +361,10 @@ public final class ImageCache {
     // for ISO27k elements: map of <element type> : <icon name>
     private static final Map<String, String> TYPE_ID_ICON_MAP;
 
-    private static Bundle bundle;
+    private Bundle bundle;
 
     static {
-        TYPE_ID_ICON_MAP = new HashMap<String, String>();
+        TYPE_ID_ICON_MAP = new HashMap<>();
 
         // fill type map for iso27k icons:
         TYPE_ID_ICON_MAP.put(Organization.TYPE_ID, ImageCache.ISO27K_SCOPE);
@@ -412,7 +409,7 @@ public final class ImageCache {
         TYPE_ID_ICON_MAP.put(BpRecord.TYPE_ID, ISO27K_RECORD);
         TYPE_ID_ICON_MAP.put(ImportBpGroup.TYPE_ID, ImageCache.ISO27K_IMPORT);
 
-        BSI_ICON_MAP = new HashMap<String, String>();
+        BSI_ICON_MAP = new HashMap<>();
 
         // fill type map for BSI icons:
         BSI_ICON_MAP.put(ITVerbund.TYPE_ID, ImageCache.EXPLORER);
