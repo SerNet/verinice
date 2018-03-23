@@ -21,7 +21,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.jface.resource.CompositeImageDescriptor;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 
 import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -167,13 +169,20 @@ public final class CnAImageProvider {
             Safeguard safeguard = (Safeguard) element;
             safeguard = (Safeguard) Retriever.checkRetrieveElement(safeguard);
             String state = safeguard.getImplementationStatus();
-            return getImageByImplementationState(state);
+
+            final Image implementationStateImage = getImageByImplementationState(state);
+            final Image typeImage = ImageCache.getInstance().getImage(ImageCache.BP_SAFEGUARD);
+
+            return createImageWithOverlay(implementationStateImage, typeImage);
         }
         if (element instanceof BpRequirement) {
             BpRequirement requirement = (BpRequirement) element;
             requirement = (BpRequirement) Retriever.checkRetrieveElement(requirement);
             String state = requirement.getImplementationStatus();
-            return getImageByImplementationState(state);
+            final Image implementationStateImage = getImageByImplementationState(state);
+            final Image typeImage = ImageCache.getInstance().getImage(ImageCache.BP_REQUIREMENT);
+
+            return createImageWithOverlay(implementationStateImage, typeImage);
         }
         if (element instanceof Control) {
             Control control = (Control) element;
@@ -193,12 +202,39 @@ public final class CnAImageProvider {
         return null;
     }
 
+    private static Image createImageWithOverlay(final Image baseImage, final Image overlayImage) {
+        CompositeImageDescriptor imageWithOverlayDescriptor = new ImageWithOverlayDescriptor(
+                baseImage, overlayImage);
+        return imageWithOverlayDescriptor.createImage();
+    }
+
     private static Image getImageByImplementationState(String state) {
         String imageName = IMAGE_NAME_BY_STATE.get(state);
         if (imageName == null) {
             imageName = ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET;
         }
         return ImageCache.getInstance().getImage(imageName);
+    }
+
+    private static final class ImageWithOverlayDescriptor extends CompositeImageDescriptor {
+        private final Image baseImage;
+        private final Image overlayImage;
+
+        private ImageWithOverlayDescriptor(Image baseImage, Image overlayImage) {
+            this.baseImage = baseImage;
+            this.overlayImage = overlayImage;
+        }
+
+        @Override
+        protected Point getSize() {
+            return new Point(16, 16);
+        }
+
+        @Override
+        protected void drawCompositeImage(int width, int height) {
+            drawImage(baseImage.getImageData(), 0, 0);
+            drawImage(overlayImage.getImageData().scaledTo(8, 8), 0, 0);
+        }
     }
 
     private CnAImageProvider() {
