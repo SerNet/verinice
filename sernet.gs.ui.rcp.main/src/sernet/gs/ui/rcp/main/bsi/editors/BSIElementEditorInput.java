@@ -38,6 +38,8 @@ import sernet.verinice.model.common.CnATreeElement;
 public class BSIElementEditorInput implements IEditorInput {
 
     private static final Logger LOG = Logger.getLogger(BSIElementEditorInput.class);
+
+    private static final int MAX_TITLE_LENGTH = 20;
     
 	private CnATreeElement element;
 	private TaskInformation task;
@@ -79,14 +81,14 @@ public class BSIElementEditorInput implements IEditorInput {
 		return element.getId();
 	}
 
-	public String getName() {
-	    final int maxTitleLength = 21; 
-		return element.getTitle().substring(0, 
-		            element.getTitle().length() < maxTitleLength 
-		            ? element.getTitle().length() 
-		            : maxTitleLength - 1  
-		       );
-	}
+    public String getName() {
+        String elementTitle = element.getTitle();
+        int elementTitleLength = elementTitle.length();
+        if (elementTitleLength <= MAX_TITLE_LENGTH) {
+            return elementTitle;
+        }
+        return elementTitle.substring(0, MAX_TITLE_LENGTH - 1);
+    }
 
 	public IPersistableElement getPersistable() {
 		return null;
