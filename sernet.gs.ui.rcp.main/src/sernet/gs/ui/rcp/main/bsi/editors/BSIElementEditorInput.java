@@ -26,7 +26,6 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -39,8 +38,6 @@ import sernet.verinice.model.common.CnATreeElement;
 public class BSIElementEditorInput implements IEditorInput {
 
     private static final Logger LOG = Logger.getLogger(BSIElementEditorInput.class);
-
-    private static final int MAX_TITLE_LENGTH = 20;
     
 	private CnATreeElement element;
 	private TaskInformation task;
@@ -83,12 +80,7 @@ public class BSIElementEditorInput implements IEditorInput {
 	}
 
     public String getName() {
-        String elementTitle = getElementTitle();
-        int elementTitleLength = elementTitle.length();
-        if (elementTitleLength <= MAX_TITLE_LENGTH) {
-            return elementTitle;
-        }
-        return elementTitle.substring(0, MAX_TITLE_LENGTH - 1);
+        return EditorUtil.getEditorName(element);
     }
 
 	public IPersistableElement getPersistable() {
@@ -96,15 +88,8 @@ public class BSIElementEditorInput implements IEditorInput {
 	}
 
 	public String getToolTipText() {
-		return getElementTitle();
+		return EditorUtil.getEditorToolTipText(element);
 	}
-
-    private String getElementTitle() {
-        if (element instanceof IIdentifiableElement) {
-            return ((IIdentifiableElement) element).getFullTitle();
-        }
-        return element.getTitle();
-    }
 
 	public Object getAdapter(Class adapter) {
 		return null;
