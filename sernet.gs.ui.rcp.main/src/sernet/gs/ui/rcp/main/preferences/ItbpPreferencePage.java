@@ -28,6 +28,7 @@ import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
+import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.program.Program;
@@ -44,6 +45,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.interfaces.IInternalServer;
 import sernet.verinice.rcp.Preferences;
+import sernet.verinice.service.commands.bp.Proceeding;
 
 /**
  * Preference page for IT baseline protection (ITBP).
@@ -80,7 +82,7 @@ public class ItbpPreferencePage extends FieldEditorPreferencePage
             generalTextLink.addListener(SWT.Selection, new KatalogPreferenceLinkListener());
             createFieldEditors();
         }
-        createModelSafeguardsField();
+        createModelingGroup();
         initialize();
         checkState();
         return fieldEditorParent;
@@ -99,11 +101,7 @@ public class ItbpPreferencePage extends FieldEditorPreferencePage
      */
     @Override
     public void createFieldEditors() {
-        Group catalogComposite = new Group(getFieldEditorParent(), SWT.FILL);
-        catalogComposite.setText(Messages.getString("ItbpPreferencePage.24")); //$NON-NLS-1$
-        GridLayoutFactory.fillDefaults().margins(5, 10).numColumns(1)
-                .generateLayout(catalogComposite);
-        GridDataFactory.fillDefaults().grab(true, false).applyTo(catalogComposite);
+        Group catalogComposite = createGroup(Messages.getString("ItbpPreferencePage.24")); //$NON-NLS-1$
         Link calatogLink = new Link(catalogComposite, SWT.NONE);
         calatogLink.setText(Messages.getString("ItbpPreferencePage.11")); //$NON-NLS-1$
         calatogLink.addListener(SWT.Selection, new KatalogPreferenceLinkListener());
@@ -116,11 +114,39 @@ public class ItbpPreferencePage extends FieldEditorPreferencePage
         addField(catalogZipfilePath);
     }
 
-    private void createModelSafeguardsField() {
+    private void createModelingGroup() {
+        createModelSafeguardsField(getFieldEditorParent());
+        createProceedingField(getFieldEditorParent());
+    }
+
+    private void createModelSafeguardsField(Composite parent) {
         final BooleanFieldEditor modelSafeguards = new BooleanFieldEditor(
-                PreferenceConstants.BP_MODEL_SAFEGUARDS, Messages.getString("ItbpPreferencePage.model_safeguards"), //$NON-NLS-1$
-                getFieldEditorParent()); // $NON-NLS-1$
+                PreferenceConstants.BP_MODEL_SAFEGUARDS,
+                Messages.getString("ItbpPreferencePage.model_safeguards"), //$NON-NLS-1$
+                parent);
         addField(modelSafeguards);
+    }
+
+    private void createProceedingField(Composite parent) {
+        String name = PreferenceConstants.BP_PROCEEDING;
+        String labelText = Messages.getString("ItbpPreferencePage.approach"); //$NON-NLS-1$
+        String[][] labelAndValues = new String[][] {
+                { Proceeding.BASIC.getLabel(), PreferenceConstants.BP_PROCEEDING_BASIC },
+                { Proceeding.STANDARD.getLabel(), PreferenceConstants.BP_PROCEEDING_STANDARD },
+                { Proceeding.HIGH.getLabel(), PreferenceConstants.BP_PROCEEDING_HIGH } };
+
+        FieldEditor proceeding = new RadioGroupFieldEditor(name, labelText, 3, labelAndValues,
+                getFieldEditorParent());
+        addField(proceeding);
+    }
+
+    private Group createGroup(String title) {
+        Group catalogComposite = new Group(getFieldEditorParent(), SWT.FILL);
+        catalogComposite.setText(title);
+        GridLayoutFactory.fillDefaults().margins(5, 10).numColumns(1)
+                .generateLayout(catalogComposite);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(catalogComposite);
+        return catalogComposite;
     }
 
     @Override

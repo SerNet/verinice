@@ -59,7 +59,7 @@ import sernet.verinice.service.commands.CreateMultipleLinks;
  */
 public class ModelLinksCommand extends GenericCommand {
 
-    private static final long serialVersionUID = 4422466491907527613L;
+    private static final long serialVersionUID = 3734973573896101608L;
 
     private static final Logger LOG = Logger.getLogger(ModelLinksCommand.class);
 
@@ -105,6 +105,7 @@ public class ModelLinksCommand extends GenericCommand {
     private transient Set<String> moduleUuidsFromCompendium;
     private transient Set<String> newModuleUuidsFromScope;
     private transient ItNetwork itNetwork;
+    private Proceeding proceeding;
 
     private transient Set<CnATreeElement> elementsFromScope;
     private transient Set<CnATreeElement> requirementsFromCompendium;
@@ -282,7 +283,7 @@ public class ModelLinksCommand extends GenericCommand {
         Set<CnATreeElement> allRequirements = findRequirementsByModuleUuid(moduleUuids);
         Set<CnATreeElement> validRequirements = new HashSet<>(allRequirements.size());
         for (CnATreeElement requirement : allRequirements) {
-            if (ModelingValidator.isRequirementValidInItNetwork(requirement, itNetwork)) {
+            if (ModelingValidator.isRequirementValidInItNetwork(requirement, proceeding)) {
                 validRequirements.add(requirement);
             }
         }
@@ -341,6 +342,10 @@ public class ModelLinksCommand extends GenericCommand {
 
     private boolean isNewModuleInScope() {
         return newModuleUuidsFromScope != null && !newModuleUuidsFromScope.isEmpty();
+    }
+
+    public void setProceeding(Proceeding proceeding) {
+        this.proceeding = proceeding;
     }
 
     public ModelingMetaDao getMetaDao() {

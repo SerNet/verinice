@@ -34,8 +34,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
     private static final String STANDALONE_UPDATENEWS_URL_DEFAULT = "https://update.verinice.org/pub/verinice/news.json";
 
 	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
 	 */
 	@Override
@@ -67,8 +65,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.DB_USER, ""); //$NON-NLS-1$
 		store.setDefault(PreferenceConstants.DB_PASS, ""); //$NON-NLS-1$
 
-		store.setDefault(PreferenceConstants.GS_DB_URL, PreferenceConstants.GS_DB_URL_LOCALHOST); //$NON-NLS-1$
-		store.setDefault(PreferenceConstants.GS_DB_USER, PreferenceConstants.GS_DB_USER_DEFAULT); //$NON-NLS-1$
+        store.setDefault(PreferenceConstants.GS_DB_URL, PreferenceConstants.GS_DB_URL_LOCALHOST);
+        store.setDefault(PreferenceConstants.GS_DB_USER, PreferenceConstants.GS_DB_USER_DEFAULT);
 		store.setDefault(PreferenceConstants.GS_DB_PASS, ""); //$NON-NLS-1$
 		
 		store.setDefault(PreferenceConstants.OPERATION_MODE, PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
@@ -116,5 +114,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(PreferenceConstants.STANDALONE_UPDATENEWS_URL, STANDALONE_UPDATENEWS_URL_DEFAULT);
         store.setDefault(PreferenceConstants.INFO_CONTROLS_TRANSFORMED_TO_MODERNIZED_GS, true);
         store.setDefault(PreferenceConstants.BP_MODEL_SAFEGUARDS, true);
+        store.setDefault(PreferenceConstants.BP_PROCEEDING,
+                PreferenceConstants.BP_PROCEEDING_STANDARD);
 	}
 }

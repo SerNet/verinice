@@ -78,14 +78,13 @@ import sernet.verinice.service.bp.exceptions.BpModelingException;
  */
 public class ModelCommand extends ChangeLoggingCommand {
 
-    private static final long serialVersionUID = -4024742735347303204L;
+    private static final long serialVersionUID = 5392127862582051541L;
 
     private static final Logger LOG = Logger.getLogger(ModelCommand.class);
 
     private transient ModelingMetaDao metaDao;
 
     private Set<String> moduleUuidsFromCompendium;
-    private transient Set<String> newModuleUuidsFromScope = Collections.emptySet();
     private transient Set<String> moduleUuidsFromScope = Collections.emptySet();
     private List<String> targetUuids;
     private transient Set<CnATreeElement> requirementGroups;
@@ -93,6 +92,7 @@ public class ModelCommand extends ChangeLoggingCommand {
     private transient ItNetwork itNetwork;
 
     private boolean handleSafeguards = true;
+    private Proceeding proceeding = Proceeding.STANDARD;
 
     // Return values
     private String proceedingLable;
@@ -131,13 +131,12 @@ public class ModelCommand extends ChangeLoggingCommand {
         ModelCopyCommand modelModulesCommand = new ModelModulesCommand(requirementGroups,
                 targetElements);
         modelModulesCommand = getCommandService().executeCommand(modelModulesCommand);
-        newModuleUuidsFromScope = modelModulesCommand.getNewModuleUuids();
         moduleUuidsFromScope = modelModulesCommand.getModuleUuidsFromScope();
     }
 
     private void handleSafeguards() throws CommandException {
         ModelSafeguardGroupCommand modelSafeguardsCommand = new ModelSafeguardGroupCommand(
-                moduleUuidsFromCompendium, targetElements, itNetwork);
+                moduleUuidsFromCompendium, targetElements, proceeding);
         getCommandService().executeCommand(modelSafeguardsCommand);
     }
 
@@ -150,6 +149,7 @@ public class ModelCommand extends ChangeLoggingCommand {
     private void createLinks() throws CommandException {
         ModelLinksCommand modelLinksCommand = new ModelLinksCommand(moduleUuidsFromCompendium,
                 moduleUuidsFromScope, itNetwork, targetElements);
+        modelLinksCommand.setProceeding(proceeding);
         getCommandService().executeCommand(modelLinksCommand);
     }
 
@@ -160,7 +160,7 @@ public class ModelCommand extends ChangeLoggingCommand {
     }
 
     private void saveReturnValues() {
-        proceedingLable = itNetwork.getProceeding();
+        proceedingLable = proceeding.getLabel();
     }
 
     private Integer getTargetScopeId() {
@@ -184,7 +184,8 @@ public class ModelCommand extends ChangeLoggingCommand {
             Set<CnATreeElement> requirements = module.getChildren();
             Set<CnATreeElement> validRequirements = new HashSet<>(requirements.size());
             for (CnATreeElement requirement : requirements) {
-                if (ModelingValidator.isRequirementValidInItNetwork(requirement, itNetwork)) {
+                if (ModelingValidator.isRequirementValidInItNetwork(requirement,
+                        proceeding)) {
                     validRequirements.add(requirement);
                 }
             }
@@ -246,6 +247,10 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     public void setProceedingLable(String proceedingLable) {
         this.proceedingLable = proceedingLable;
+    }
+
+    public void setProceeding(Proceeding proceeding) {
+        this.proceeding = proceeding;
     }
 
     public boolean isHandleSafeguards() {
