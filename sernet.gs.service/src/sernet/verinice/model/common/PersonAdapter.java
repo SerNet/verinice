@@ -19,12 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.model.common;
 
+import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.iso27k.PersonIso;
 
 /**
- * PersonAdapter adapts methods for
- * {@link PersonIso} and {@link Person} objects.
+ * PersonAdapter adapts methods for {@link PersonIso}, {@link BpPerson}, and
+ * {@link Person} objects.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -33,47 +34,37 @@ public final class PersonAdapter {
     private PersonAdapter() {
         // do not instantiate this class
     }
-    
+
     /**
-     * @param person A person
+     * @param person
+     *            A person
      * @return the name of a person in the form: "SURNAME, FIRST NAME"
      */
     public static String getFullName(CnATreeElement person) {
-        String name = null;
-        if(person instanceof PersonIso) {
-            name = getFullName((PersonIso)person);
+        if (person instanceof PersonIso) {
+            final String firstName = person.getEntity().getSimpleValue(PersonIso.PROP_NAME);
+            final String surname = person.getEntity().getSimpleValue(PersonIso.PROP_SURNAME);
+            return getFullName(firstName, surname);
+        } else if (person instanceof Person) {
+            final String firstName = person.getEntity().getSimpleValue(Person.P_VORNAME);
+            final String surname = ((Person) person).getNachname();
+            return getFullName(firstName, surname);
+        } else if (person instanceof BpPerson) {
+            final String firstName = person.getEntity().getSimpleValue(BpPerson.PROP_FIRST_NAME);
+            final String surname = person.getEntity().getSimpleValue(BpPerson.PROP_LAST_NAME);
+            return getFullName(firstName, surname);
+        } else {
+            throw new IllegalArgumentException("Unsupported entity type: " + person.getTypeId());
         }
-        if(person instanceof Person) {
-            name = getFullName((Person)person);
-        }
-        return name;
     }
-    
-    private static String getFullName(PersonIso person) {
+
+    private static String getFullName(String name, String surname) {
         StringBuilder sb = new StringBuilder();
-        final String surname = person.getEntity().getSimpleValue(PersonIso.PROP_SURNAME);
-        if(surname!=null && !surname.isEmpty()) {
+        if (surname != null && !surname.isEmpty()) {
             sb.append(surname);
         }
-        final String name = person.getEntity().getSimpleValue(PersonIso.PROP_NAME);
-        if(name!=null && !name.isEmpty()) {
-            if(sb.length()>0) {
-                sb.append(", ");
-            }
-            sb.append(name);
-        }
-        return sb.toString();
-    }
-    
-    private static String getFullName(Person person) {
-        StringBuilder sb = new StringBuilder();
-        final String surname = person.getNachname();
-        if(surname!=null && !surname.isEmpty()) {
-            sb.append(surname);
-        }
-        final String name = person.getEntity().getSimpleValue(Person.P_VORNAME);
-        if(name!=null && !name.isEmpty()) {
-            if(sb.length()>0) {
+        if (name != null && !name.isEmpty()) {
+            if (sb.length() > 0) {
                 sb.append(", ");
             }
             sb.append(name);
