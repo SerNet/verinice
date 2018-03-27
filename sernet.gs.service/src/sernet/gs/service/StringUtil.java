@@ -68,11 +68,11 @@ public abstract class StringUtil {
      * @return the truncated text
      */
     public static String truncate(String text, int maxWidth) {
-        String truncatedText = text;
-        if (text != null && text.length() > maxWidth) {
-            truncatedText = new StringBuilder(text.substring(0, (maxWidth - 1))).append("…")
-                    .toString();
+        if (text == null || text.length() <= maxWidth) {
+            return text;
         }
-        return truncatedText;
+        StringBuilder sb = new StringBuilder(maxWidth);
+        sb.append(text, 0, maxWidth - 1).append("…");
+        return sb.toString();
     }
 }
