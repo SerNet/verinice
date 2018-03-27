@@ -61,4 +61,18 @@ public abstract class StringUtil {
            }
         return filename;
     }
+
+    /**
+     * Truncates a text if it is longer than maxWidth.
+     * If text is truncated ellipses ("…") are added in the end.
+     * @return the truncated text
+     */
+    public static String truncate(String text, int maxWidth) {
+        String truncatedText = text;
+        if (text != null && text.length() > maxWidth) {
+            truncatedText = new StringBuilder(text.substring(0, (maxWidth - 1))).append("…")
+                    .toString();
+        }
+        return truncatedText;
+    }
 }
