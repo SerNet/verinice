@@ -63,7 +63,7 @@ public class ModelLinksCommand extends GenericCommand {
 
     private static final Logger LOG = Logger.getLogger(ModelLinksCommand.class);
 
-    private static final Map<String, String> ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS = new HashMap<>();
+    public static final Map<String, String> ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS = new HashMap<>();
     private static final Map<String, String> ELEMENT_TO_THREAT_LINK_TYPE_IDS = new HashMap<>();
 
     static {

@@ -92,6 +92,7 @@ public class ModelCommand extends ChangeLoggingCommand {
     private transient ItNetwork itNetwork;
 
     private boolean handleSafeguards = true;
+    private boolean handleDummySafeguards = true;
     private Proceeding proceeding = Proceeding.STANDARD;
 
     // Return values
@@ -117,8 +118,9 @@ public class ModelCommand extends ChangeLoggingCommand {
             }
             handleThreats();
             createLinks();
-            // Creating dummy safeguards is disabled at the moment
-            // createDummySafeguards();
+            if (isHandleSafeguards() && isHandleDummySafeguards()) {
+                createDummySafeguards();
+            }
             saveReturnValues();
         } catch (CommandException e) {
             LOG.error("Error while modeling.", e);
@@ -154,13 +156,14 @@ public class ModelCommand extends ChangeLoggingCommand {
     }
 
     private void createDummySafeguards() throws CommandException {
-        ModelDummySafeguards modelDummySafeguards = new ModelDummySafeguards(moduleUuidsFromScope,
-                targetElements);
+        ModelDummySafeguards modelDummySafeguards = new ModelDummySafeguards(moduleUuidsFromScope);
         getCommandService().executeCommand(modelDummySafeguards);
     }
 
     private void saveReturnValues() {
-        proceedingLable = proceeding.getLabel();
+        if (proceeding != null) {
+            proceedingLable = proceeding.getLabel();
+        }
     }
 
     private Integer getTargetScopeId() {
@@ -259,6 +262,14 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     public void setHandleSafeguards(boolean handleSafeguards) {
         this.handleSafeguards = handleSafeguards;
+    }
+
+    public boolean isHandleDummySafeguards() {
+        return handleDummySafeguards;
+    }
+
+    public void setHandleDummySafeguards(boolean handleDummySafeguards) {
+        this.handleDummySafeguards = handleDummySafeguards;
     }
 
     public ModelingMetaDao getMetaDao() {

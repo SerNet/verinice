@@ -78,9 +78,14 @@ public final class Preferences {
         return getPreferenceStore().getBoolean(PreferenceConstants.BP_MODEL_SAFEGUARDS);
     }
 
+    public static boolean isModelDummySafeguardsActive() {
+        return getPreferenceStore().getBoolean(PreferenceConstants.BP_MODEL_DUMMY_SAFEGUARDS);
+    }
+
     public static Proceeding getBpProceeding() {
-        return Proceeding
-                .valueOf(getPreferenceStore().getString(PreferenceConstants.BP_PROCEEDING));
+        String stringValue = getPreferenceStore().getString(PreferenceConstants.BP_PROCEEDING);
+        return (stringValue != null && !stringValue.isEmpty()) ? Proceeding.valueOf(stringValue)
+                : null;
     }
 
     public static String getPrivacyCatalogFilePath() {

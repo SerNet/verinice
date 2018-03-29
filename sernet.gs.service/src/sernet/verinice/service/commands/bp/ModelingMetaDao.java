@@ -90,7 +90,8 @@ public class ModelingMetaDao {
 
     private static final String HQL_LOAD_CHILDREN_WITH_LINKS_DOWN = "select requirement from CnATreeElement requirement "
             + "join requirement.parent as module "
-            + "where module.uuid in (:uuids)"; // $NON-NLS-2$
+            + "join requirement.linksDown as linksDown "
+            + "where module.uuid in (:uuids) "; // $NON-NLS-2$
 
     private static final String HQL_LOAD_LINKED_SAFEGUARD_GROUPS_OF_MODULES = "select safeguardGroup from CnATreeElement safeguardGroup " +
             "join fetch safeguardGroup.children as safeguard " +
@@ -282,6 +283,10 @@ public class ModelingMetaDao {
                 return query.list();
             }
         });
+    }
+
+    public CnATreeElement save(CnATreeElement element) {
+        return getDao().merge(element);
     }
 
     public CnATreeElement loadElementWithPropertiesAndChildren(String uuid) {

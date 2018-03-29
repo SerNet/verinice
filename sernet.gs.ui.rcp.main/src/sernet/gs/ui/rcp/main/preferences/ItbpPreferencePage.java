@@ -56,6 +56,8 @@ public class ItbpPreferencePage extends FieldEditorPreferencePage
     private static final Logger LOG = Logger.getLogger(ItbpPreferencePage.class);
 
     private FileFieldEditor catalogZipfilePath;
+    private BooleanFieldEditor modelSafeguards;
+    private BooleanFieldEditor modelDummySafeguards;
 
     private Composite fieldEditorParent;
 
@@ -115,27 +117,36 @@ public class ItbpPreferencePage extends FieldEditorPreferencePage
     }
 
     private void createModelingGroup() {
-        createModelSafeguardsField(getFieldEditorParent());
         createProceedingField(getFieldEditorParent());
+        createModelSafeguardsField(getFieldEditorParent());
+        createModelDummySafeguardsField(getFieldEditorParent());
     }
 
     private void createModelSafeguardsField(Composite parent) {
-        final BooleanFieldEditor modelSafeguards = new BooleanFieldEditor(
+        modelSafeguards = new BooleanFieldEditor(
                 PreferenceConstants.BP_MODEL_SAFEGUARDS,
                 Messages.getString("ItbpPreferencePage.model_safeguards"), //$NON-NLS-1$
                 parent);
         addField(modelSafeguards);
     }
 
+    private void createModelDummySafeguardsField(Composite parent) {
+        modelDummySafeguards = new BooleanFieldEditor(
+                PreferenceConstants.BP_MODEL_DUMMY_SAFEGUARDS,
+                Messages.getString("ItbpPreferencePage.dummy-safeguards"), parent); //$NON-NLS-1$
+        addField(modelDummySafeguards);
+    }
+
     private void createProceedingField(Composite parent) {
         String name = PreferenceConstants.BP_PROCEEDING;
         String labelText = Messages.getString("ItbpPreferencePage.approach"); //$NON-NLS-1$
         String[][] labelAndValues = new String[][] {
+                { Messages.getString("ItbpPreferencePage.unedited"), "" }, //$NON-NLS-1$ //$NON-NLS-2$
                 { Proceeding.BASIC.getLabel(), PreferenceConstants.BP_PROCEEDING_BASIC },
                 { Proceeding.STANDARD.getLabel(), PreferenceConstants.BP_PROCEEDING_STANDARD },
                 { Proceeding.HIGH.getLabel(), PreferenceConstants.BP_PROCEEDING_HIGH } };
 
-        FieldEditor proceeding = new RadioGroupFieldEditor(name, labelText, 3, labelAndValues,
+        FieldEditor proceeding = new RadioGroupFieldEditor(name, labelText, 4, labelAndValues,
                 getFieldEditorParent());
         addField(proceeding);
     }
@@ -163,6 +174,10 @@ public class ItbpPreferencePage extends FieldEditorPreferencePage
                 } catch (MalformedURLException e) {
                     LOG.warn("ITBP catalog zip file path is an invalid URL."); //$NON-NLS-1$
                 }
+            }
+            if (event.getSource() == modelSafeguards) {
+                modelDummySafeguards.setEnabled(modelSafeguards.getBooleanValue(),
+                        getFieldEditorParent());
             }
         }
     }
