@@ -181,13 +181,15 @@ public abstract class ElementFilter {
             if (ArrayUtils.isEmpty(tagArray)) {
                 return true;
             }
-
-            if (filterOrgs && Organization.TYPE_ID.equals(element.getTypeId())) {
-                return checkTags(tagArray, (Organization) element);
-            } else if (!filterOrgs && element instanceof IISO27kElement
-                    && !(element instanceof Group) && !(element instanceof IISO27Scope)) {
+            if (Organization.TYPE_ID.equals(element.getTypeId())) {
+                if (filterOrgs) {
+                    return checkTags(tagArray, (Organization) element);
+                } else {
+                    return true;
+                }
+            } else if (element instanceof IISO27kElement && !(element instanceof Group)
+                    && !(element instanceof IISO27Scope)) {
                 return checkTags(tagArray, (IISO27kElement) element);
-
             } else {
                 return true;
             }
