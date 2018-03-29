@@ -29,9 +29,9 @@ import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IFilter;
 import sernet.verinice.interfaces.IParameter;
-import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27Scope;
 import sernet.verinice.model.iso27k.IISO27kElement;
@@ -181,31 +181,26 @@ public abstract class ElementFilter {
             if (ArrayUtils.isEmpty(tagArray)) {
                 return true;
             }
+
             if (filterOrgs && Organization.TYPE_ID.equals(element.getTypeId())) {
-                Collection<String> tagList = TagHelper
-                        .getTags(element.getEntity().getSimpleValue(Organization.PROP_TAG));
-                for (String tag : tagArray) {
-                    if (tag.equals(NO_TAG) && tagList.isEmpty()) {
-                        return true;
-                    }
-                    for (String zielTag : tagList) {
-                        if (zielTag.equals(tag)) {
-                            return true;
-                        }
-                    }
-                }
+                return checkTags(tagArray, (Organization) element);
             } else if (!filterOrgs && element instanceof IISO27kElement
                     && !(element instanceof Group) && !(element instanceof IISO27Scope)) {
-                IISO27kElement iso = (IISO27kElement) element;
-                for (String tag : tagArray) {
-                    if (tag.equals(NO_TAG) && iso.getTags().isEmpty()) {
-                        return true;
-                    }
-                    for (String zielTag : iso.getTags()) {
-                        if (zielTag.equals(tag)) {
-                            return true;
-                        }
-                    }
+                return checkTags(tagArray, (IISO27kElement) element);
+
+            } else {
+                return true;
+            }
+        }
+
+        private static boolean checkTags(String[] tagsfFromFilter, ITaggableElement element) {
+            Collection<String> tagsFromElement = element.getTags();
+            for (String tag : tagsfFromFilter) {
+                if (tag.equals(NO_TAG) && tagsFromElement.isEmpty()) {
+                    return true;
+                }
+                if (tagsFromElement.contains(tag)) {
+                    return true;
                 }
             }
             return false;
