@@ -55,15 +55,6 @@ public abstract class ElementFilter {
     }
 
     /**
-     * @deprecated Use filterChildrenOfElement(CnATreeElement, Map<String,
-     *             Object>) instead
-     */
-    @Deprecated
-    public static void applyParameter(CnATreeElement element, Map<String, Object> filterParameter) {
-        filterChildrenOfElement(element, filterParameter);
-    }
-
-    /**
      * Filters the element's children with the filter parameters.
      * 
      * @param element
