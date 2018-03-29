@@ -22,12 +22,12 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
-import sernet.verinice.service.iso27k.ItemControlTransformer;
 
 /**
  * Label provider for ISO 27000 model elements.
@@ -68,7 +68,7 @@ public class TreeLabelProvider extends LabelProvider {
         try {
             CnATreeElement element = (CnATreeElement) obj;
             String title = getElementTitle(element);
-            text = ItemControlTransformer.truncate(title, MAX_TEXT_WIDTH);
+            text = StringUtil.truncate(title, MAX_TEXT_WIDTH);
             if (LOG.isDebugEnabled()) {
                 text = text + " (scope: " + element.getScopeId() + "," + " uu: " + element.getUuid()
                         + ", ext: " + element.getExtId() + ")";

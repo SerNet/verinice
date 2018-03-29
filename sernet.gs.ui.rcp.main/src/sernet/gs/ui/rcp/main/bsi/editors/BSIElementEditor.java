@@ -260,8 +260,8 @@ public class BSIElementEditor extends EditorPart {
             cnAElement.setPropertyValue(entry.getKey(), entry.getValue());
         }
 
-        this.setPartName(cnAElement.getTitle());
-        this.setTitleToolTip(cnAElement.getTitle());
+        this.setPartName(EditorUtil.getEditorName(cnAElement));
+        this.setTitleToolTip(EditorUtil.getEditorToolTipText(cnAElement));
         LOG.info("Loaded changes for element properties from task."); //$NON-NLS-1$
     }
 
@@ -324,8 +324,8 @@ public class BSIElementEditor extends EditorPart {
             // save element, refresh etc:
             CnAElementHome.getInstance().updateEntity(cnAElement);
             isModelModified = false;
-            this.setPartName(cnAElement.getTitle());
-            this.setTitleToolTip(cnAElement.getTitle());
+            this.setPartName(EditorUtil.getEditorName(cnAElement));
+            this.setTitleToolTip(EditorUtil.getEditorToolTipText(cnAElement));
             setIcon();
             firePropertyChange(IEditorPart.PROP_DIRTY);
         } catch (StaleObjectStateException se) {
@@ -343,8 +343,8 @@ public class BSIElementEditor extends EditorPart {
             LOG.info("Updated task: saved changes in element properties."); //$NON-NLS-1$
         }
         isModelModified = false;
-        this.setPartName(cnAElement.getTitle() + Messages.BSIElementEditor_9);
-        this.setTitleToolTip(cnAElement.getTitle());
+        this.setPartName(EditorUtil.getEditorName(cnAElement) + Messages.BSIElementEditor_9);
+        this.setTitleToolTip(EditorUtil.getEditorToolTipText(cnAElement));
         firePropertyChange(IEditorPart.PROP_DIRTY);
     }
 

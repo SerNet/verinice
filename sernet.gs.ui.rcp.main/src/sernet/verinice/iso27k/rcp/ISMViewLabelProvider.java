@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.service.Retriever;
+import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.TreeViewerCache;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
@@ -33,7 +34,6 @@ import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.rcp.tree.TreeLabelProvider;
 import sernet.verinice.service.iso27k.ControlMaturityService;
-import sernet.verinice.service.iso27k.ItemControlTransformer;
 
 /**
  * Label provider for ISO 27000 model elements.
@@ -128,7 +128,7 @@ public class ISMViewLabelProvider extends LabelProvider  {
                     sb.append(title);
                 }
                 if(sb.length()>0) {
-                    text = ItemControlTransformer.truncate(sb.toString(),maxWidth) ;
+                    text = StringUtil.truncate(sb.toString(),maxWidth) ;
                 }
                 if (LOG.isDebugEnabled()) {
                     text = text + " (" + element.getScopeId() + ")";

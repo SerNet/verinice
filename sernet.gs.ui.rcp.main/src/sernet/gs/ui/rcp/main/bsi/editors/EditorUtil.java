@@ -21,7 +21,9 @@ package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.Set;
 
+import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
@@ -33,6 +35,8 @@ import sernet.verinice.model.common.CnATreeElement;
  * dependent objects
  */
 public final class EditorUtil {
+
+    private static final int MAX_TITLE_LENGTH = 20;
 
     private EditorUtil() {
         super();
@@ -90,6 +94,22 @@ public final class EditorUtil {
                 CnAElementFactory.getModel(dependency).childChanged(dependency);
             }
         }
+    }
+
+    public static String getEditorName(CnATreeElement cnATreeElement) {
+        String elementTitle = getElementTitle(cnATreeElement);
+        return StringUtil.truncate(elementTitle, MAX_TITLE_LENGTH);
+    }
+
+    public static String getEditorToolTipText(CnATreeElement cnATreeElement) {
+        return getElementTitle(cnATreeElement);
+    }
+
+    private static String getElementTitle(CnATreeElement cnATreeElement) {
+        if (cnATreeElement instanceof IIdentifiableElement) {
+            return ((IIdentifiableElement) cnATreeElement).getFullTitle();
+        }
+        return cnATreeElement.getTitle();
     }
 
 }
