@@ -48,20 +48,21 @@ public abstract class ElementFilter {
     public static final String PARAM_TYPE_IDS = "type_ids"; //$NON-NLS-1$
     public static final String PARAM_TAGS = "tags"; //$NON-NLS-1$
     public static final String PARAM_FILTER_ORGS = "filter_orgs"; //$NON-NLS-1$
-    public static final String[] ALL_TYPES = new String[]{"ALL_TYPES","ALL_TYPES"}; //$NON-NLS-1$ //$NON-NLS-1$
-    
+    public static final String[] ALL_TYPES = new String[] { "ALL_TYPES", "ALL_TYPES" }; //$NON-NLS-1$
+
     private ElementFilter() {
         super();
     }
 
     /**
-     * @deprecated Use filterChildrenOfElement(CnATreeElement, Map<String, Object>) instead
+     * @deprecated Use filterChildrenOfElement(CnATreeElement, Map<String,
+     *             Object>) instead
      */
-    @Deprecated 
+    @Deprecated
     public static void applyParameter(CnATreeElement element, Map<String, Object> filterParameter) {
         filterChildrenOfElement(element, filterParameter);
     }
-    
+
     /**
      * Filters the element's children with the filter parameters.
      * 
@@ -141,7 +142,7 @@ public abstract class ElementFilter {
         public static TypeFilter createFilter(Set<String[]> visibleTypeSet) {
             return new TypeFilter(visibleTypeSet);
         }
-        
+
         protected TypeFilter(Set<String[]> visibleTypeSet) {
             super();
             this.visibleTypeSet = visibleTypeSet;
@@ -149,14 +150,15 @@ public abstract class ElementFilter {
 
         @Override
         public boolean check(CnATreeElement element) {
-            return element.isScope() || contains(visibleTypeSet,element.getTypeId());
+            return element.isScope() || contains(visibleTypeSet, element.getTypeId());
         }
-        
+
         private boolean contains(Set<String[]> visibleTypePairs, String typeId) {
             for (String[] visibleTypePair : visibleTypePairs) {
                 String visibleElementType = visibleTypePair[0];
                 String visibleGroupType = visibleTypePair[1];
-                if (visibleElementType.equals(ALL_TYPES[0]) || visibleElementType.equals(typeId) || visibleGroupType.equals(typeId)) {
+                if (visibleElementType.equals(ALL_TYPES[0]) || visibleElementType.equals(typeId)
+                        || visibleGroupType.equals(typeId)) {
                     return true;
                 }
             }
@@ -169,7 +171,7 @@ public abstract class ElementFilter {
         private boolean filterOrgs;
 
         public static TagFilter createFilter(String[] tagArray, boolean filterOrgs) {
-            return new TagFilter(tagArray,filterOrgs);
+            return new TagFilter(tagArray, filterOrgs);
         }
 
         protected TagFilter(String[] tagArray, boolean filterOrgs) {
@@ -178,8 +180,10 @@ public abstract class ElementFilter {
             this.filterOrgs = filterOrgs;
         }
 
-        /* (non-Javadoc)
-         * @see sernet.verinice.iso27k.service.commands.IFilter#check(sernet.verinice.model.common.CnATreeElement)
+        /*
+         * @see
+         * sernet.verinice.iso27k.service.commands.IFilter#check(sernet.verinice
+         * .model.common.CnATreeElement)
          */
         @Override
         public boolean check(CnATreeElement element) {
