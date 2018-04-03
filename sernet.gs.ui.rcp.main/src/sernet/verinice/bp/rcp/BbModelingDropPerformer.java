@@ -105,8 +105,6 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
     private CnATreeElement targetElement = null;
 
     /*
-     * (non-Javadoc)
-     *
      * @see
      * sernet.verinice.iso27k.rcp.action.DropPerformer#performDrop(java.lang.
      * Object, java.lang.Object, org.eclipse.jface.viewers.Viewer)
@@ -118,12 +116,10 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
             if (log.isDebugEnabled()) {
                 logParameter(draggedModules, targetElement);
             }
-            if (draggedModules == null || draggedModules.isEmpty()) {
-                log.warn("List of dragged modules is empty. Can not model element."); //$NON-NLS-1$
-                return false;
+            if (isValid(draggedModules)) {
+                startModelingByProgressService(draggedModules);
+                showConfirmationDialog();
             }
-            startModelingByProgressService(draggedModules);
-            showConfirmationDialog();
             return true;
         } catch (InvocationTargetException e) {
             log.error(e);
@@ -135,25 +131,6 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
             showError(e, Messages.BbModelingDropPerformer_Error1);
             return false;
         }
-    }
-
-    private void showConfirmationDialog() {
-        InfoDialogWithShowToggle.openInformation(Messages.BbModelingDropPerformerConfirmationTitle,
-                getConfirmationDialogMessage(),
-                Messages.BbModelingDropPerformerConfirmationToggleMessage,
-                PreferenceConstants.INFO_BP_MODELING_CONFIRMATION);
-    }
-
-    private String getConfirmationDialogMessage() {
-        String message = Messages.BbModelingDropPerformerConfirmationNoProceeding;
-        String proceedingLabel = null;
-        if (modelCommand != null) {
-            proceedingLabel = modelCommand.getProceedingLable();
-        }
-        if (proceedingLabel != null && !proceedingLabel.isEmpty()) {
-            message = NLS.bind(Messages.BbModelingDropPerformerConfirmation, proceedingLabel);
-        }
-        return message;
     }
 
     private void startModelingByProgressService(final List<CnATreeElement> draggedModules)
@@ -193,6 +170,37 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
     }
 
+    private boolean isValid(List<CnATreeElement> draggedModules) {
+        if (draggedModules == null || draggedModules.isEmpty()) {
+            log.warn("List of dragged modules is empty. Can not model element."); //$NON-NLS-1$
+            return false;
+        }
+        if (Preferences.getBpProceeding() == null) {
+            showModelingError(Messages.BbModelingDropPerformer_noSecuringApproach);
+            return false;
+        }
+        return true;
+    }
+
+    private void showConfirmationDialog() {
+        InfoDialogWithShowToggle.openInformation(Messages.BbModelingDropPerformerConfirmationTitle,
+                getConfirmationDialogMessage(),
+                Messages.BbModelingDropPerformerConfirmationToggleMessage,
+                PreferenceConstants.INFO_BP_MODELING_CONFIRMATION);
+    }
+
+    private String getConfirmationDialogMessage() {
+        String message = Messages.BbModelingDropPerformerConfirmationNoProceeding;
+        String proceedingLabel = null;
+        if (modelCommand != null) {
+            proceedingLabel = modelCommand.getProceedingLable();
+        }
+        if (proceedingLabel != null && !proceedingLabel.isEmpty()) {
+            message = NLS.bind(Messages.BbModelingDropPerformerConfirmation, proceedingLabel);
+        }
+        return message;
+    }
+
     private void closeEditors() {
         IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow()
                 .getActivePage().getEditorReferences();
@@ -205,7 +213,7 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
                     PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(er.getEditor(true), true);
                 }
             } catch (PartInitException e) {
-                ExceptionUtil.log(e, "Error closing editors");
+                ExceptionUtil.log(e, Messages.BbModelingDropPerformer_errorClosingEditors);
             }
         }
     }
@@ -330,15 +338,15 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         final Throwable rootCause = ExceptionUtils.getRootCause(e);
         if (rootCause instanceof GroupNotFoundInScopeException
                 || rootCause instanceof BpModelingException) {
-            showModelingError(rootCause);
+            showModelingError(rootCause.getMessage());
         } else {
             ExceptionUtil.log(e, message);
         }
     }
 
-    private void showModelingError(final Throwable rootCause) {
+    private void showModelingError(final String causeMessage) {
         final String message = NLS.bind(Messages.BbModelingDropPerformer_ModelingAborted,
-                rootCause.getMessage());
+                causeMessage);
         Display.getDefault().asyncExec(new Runnable() {
             @Override
             public void run() {
