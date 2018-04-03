@@ -8511,6 +8511,7 @@ Wurden bereits weitere Stellen informiert?
                 <option id="process_stellungnahmedsb_vorpruefung_1" name="Ja" />
                 <option id="process_stellungnahmedsb_vorpruefung_2" name="Nein" />
             </huiproperty>
+            <huiproperty id="process_stellungnahmedsb_document" name="Dokument" isURL="true" />
        </huipropertygroup>
 
        <huipropertygroup tags="Privacy" id="process_rechtmaessigkeit_group" name="Rechtmäßigkeit der Verarbeitung">
