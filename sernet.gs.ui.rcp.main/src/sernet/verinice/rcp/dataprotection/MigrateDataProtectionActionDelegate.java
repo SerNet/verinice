@@ -88,14 +88,17 @@ public class MigrateDataProtectionActionDelegate extends RightsEnabledActionDele
 
     private Shell shell;
 
+    private ITreeSelection selection;
+
     @Override
     public void doRun(IAction action) {
         try {
             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /* ask save */);
             MigrateDataProtectionDialog dialog = new MigrateDataProtectionDialog(getShell());
             dialog.setSelectedElement(selectedOrganization);
-            boolean showMigrationDialog = dialog.isShowMigrationDialog();
+            dialog.setSelection(selection);
             if (dialog.open() == Window.OK) {
+                boolean showMigrationDialog = dialog.isShowMigrationDialog();
                 Set<CnATreeElement> selectedElementSet = dialog.getSelectedElementSet();
                 RunMigrationCommand commandRunner = new RunMigrationCommand(selectedElementSet);
                 PlatformUI.getWorkbench().getProgressService().busyCursorWhile(commandRunner);
@@ -103,7 +106,6 @@ public class MigrateDataProtectionActionDelegate extends RightsEnabledActionDele
                 if (showMigrationDialog) {
                     MigrateDataProtectionCommand cmd = commandRunner.migrateDataProtectionCommand;
                     Set<String> processes = cmd.getAffectedProcessNames();
-                    // Set<String> controls = cmd.getAffectedControlsNames();
                     Set<String> missedControls = cmd.getMissedControlNames();
                     displayFinishedDialog(selectedElementSet, processes,
                             cmd.getAffectedNumberOfControls(), missedControls,
@@ -125,7 +127,7 @@ public class MigrateDataProtectionActionDelegate extends RightsEnabledActionDele
 
         StringBuilder orgNames = new StringBuilder();
         for (CnATreeElement org : organizations) {
-            orgNames.append(org.getTitle()).append(" "); //$NON-NLS-1$
+            orgNames.append("'").append(org.getTitle()).append("' "); //$NON-NLS-1$//$NON-NLS-2$
         }
 
         String message = Messages.bind(
@@ -160,9 +162,10 @@ public class MigrateDataProtectionActionDelegate extends RightsEnabledActionDele
     }
 
     @Override
-    public void selectionChanged(IAction action, ISelection selection) {//TODO use multi selection
+    public void selectionChanged(IAction action, ISelection selection) {
         if (selection instanceof ITreeSelection) {
             selectedOrganization = null;
+            this.selection = (ITreeSelection) selection;
             ITreeSelection selectionCurrent = (ITreeSelection) selection;
             for (Iterator<?> iter = selectionCurrent.iterator(); iter.hasNext();) {
                 Object selectedObject = iter.next();

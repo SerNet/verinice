@@ -55,7 +55,6 @@ public class MigrateDataProtectionDialog extends TitleAreaDialog {
         try {
             organizationWidget = new OrganizationMultiselectWidget(container, selection,
                     selectedElement);
-
             organizationWidget.addSelectionListener(new SelectionAdapter() {
 
                 @Override
@@ -118,5 +117,9 @@ public class MigrateDataProtectionDialog extends TitleAreaDialog {
 
     public boolean isShowMigrationDialog() {
         return showMigrationDialog;
+    }
+
+    public void setSelection(ITreeSelection selection) {
+        this.selection = selection;
     }
 }

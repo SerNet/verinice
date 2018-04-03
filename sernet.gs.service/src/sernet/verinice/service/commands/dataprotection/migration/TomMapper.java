@@ -40,7 +40,7 @@ import sernet.verinice.model.iso27k.Control;
 
 /**
  * This singleton contains the mapping from the old dataprotection to the new
- * on.
+ * one.
  *
  */
 public final class TomMapper {
@@ -105,10 +105,10 @@ public final class TomMapper {
     }
 
     private Set<PropertyType> toPropertyTypeSet(String[] line) {
-        Set<PropertyType> hashSet = new HashSet<>(NUMBER_OF_TOMS);
         if (line.length < NUMBER_OF_TOMS + 1) {
             return Collections.emptySet();
         }
+        Set<PropertyType> hashSet = new HashSet<>(NUMBER_OF_TOMS);
         if (!line[1].isEmpty()) {
             hashSet.add(HUITypeFactory.getInstance().getPropertyType(Control.TYPE_ID,
                     "control_data_protection_objectives_eugdpr_pseudonymization"));
