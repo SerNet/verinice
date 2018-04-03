@@ -38,6 +38,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -77,6 +78,7 @@ public class MigrateDataProtectionActionDelegate extends RightsEnabledActionDele
                 CnAElementFactory.getInstance().reloadIsoModelFromDatabase();
             } catch (CommandException e) {
                 LOG.error("Error while migrating dataprotection", e); //$NON-NLS-1$
+                throw new RuntimeCommandException(e);
             }
             monitor.done();
         }
@@ -114,16 +116,16 @@ public class MigrateDataProtectionActionDelegate extends RightsEnabledActionDele
             }
         } catch (Exception e) {
             LOG.error("Error running the dataprotection migration.", e); //$NON-NLS-1$
-            MessageDialog.openError(getShell(), "Error while migrating dataprotection", //$NON-NLS-1$
-                    "An error occours");//$NON-NLS-1$
+            MessageDialog.openError(getShell(), Messages.MigrateDataProtectionActionDelegate_error_dialog_titel,
+                    Messages.MigrateDataProtectionActionDelegate_error_dialog_message);
         }
     }
 
     private void displayFinishedDialog(Set<CnATreeElement> organizations,
             Set<String> processes, int controls, Set<String> missedControls,
             int createdLinks, int deletedLinks) {
-        String listOfMissedControls = StringUtils.join(missedControls, "\n");
-        String processNames = StringUtils.join(processes, ", ");
+        String listOfMissedControls = StringUtils.join(missedControls, "\n"); //$NON-NLS-1$
+        String processNames = StringUtils.join(processes, ", "); //$NON-NLS-1$
 
         StringBuilder orgNames = new StringBuilder();
         for (CnATreeElement org : organizations) {
