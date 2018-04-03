@@ -115,6 +115,8 @@ public class ModelCommand extends ChangeLoggingCommand {
             handleModules();
             if (isHandleSafeguards()) {
                 handleSafeguards();
+            } else {
+                disableDeduction();
             }
             handleThreats();
             createLinks();
@@ -140,6 +142,12 @@ public class ModelCommand extends ChangeLoggingCommand {
         ModelSafeguardGroupCommand modelSafeguardsCommand = new ModelSafeguardGroupCommand(
                 moduleUuidsFromCompendium, targetElements, proceeding);
         getCommandService().executeCommand(modelSafeguardsCommand);
+    }
+
+    private void disableDeduction() throws CommandException {
+        DisableDeductionCommand disableDeductionCommand = new DisableDeductionCommand(
+                moduleUuidsFromScope);
+        getCommandService().executeCommand(disableDeductionCommand);
     }
 
     private void handleThreats() throws CommandException {

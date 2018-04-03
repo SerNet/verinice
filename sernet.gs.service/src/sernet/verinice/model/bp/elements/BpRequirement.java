@@ -61,6 +61,7 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
     public static final String PROP_QUALIFIER_BASIC = "bp_requirement_qualifier_basic"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER_STANDARD = "bp_requirement_qualifier_standard"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER_HIGH = "bp_requirement_qualifier_high"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_DEDUCE = "bp_requirement_implementation_deduce"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS = "bp_requirement_implementation_status"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS_NO = "bp_requirement_implementation_status_no"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS_YES = "bp_requirement_implementation_status_yes"; //$NON-NLS-1$
@@ -77,6 +78,9 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
     public static final String REL_BP_REQUIREMENT_BP_DEVICE = "rel_bp_requirement_bp_device"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_NETWORK = "rel_bp_requirement_bp_network"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_ROOM = "rel_bp_requirement_bp_room"; //$NON-NLS-1$
+
+    private static final String TRUE = "1"; //$NON-NLS-1$
+    private static final String FALSE = "0"; //$NON-NLS-1$
 
     private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
     private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
@@ -192,6 +196,15 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
      */
     public void setApproach(String approach) {
         setQualifier(approach);
+    }
+
+    public void setDeductionOfImplementation(boolean active) {
+        String value = (active) ? TRUE : FALSE;
+        getEntity().setPropertyValue(PROP_IMPLEMENTATION_DEDUCE, value);
+    }
+
+    public boolean isDeductionOfImplementation() {
+        return TRUE.equals(getEntity().getPropertyValue(PROP_IMPLEMENTATION_DEDUCE));
     }
 
     public Date getLastChange() {
