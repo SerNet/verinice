@@ -32,7 +32,7 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("serial")
-public class RemoveLink<T extends CnALink> extends ChangeLoggingCommand implements IChangeLoggingCommand {
+public class RemoveLink extends ChangeLoggingCommand implements IChangeLoggingCommand {
 
 private transient Logger log = Logger.getLogger(RemoveLink.class);
     

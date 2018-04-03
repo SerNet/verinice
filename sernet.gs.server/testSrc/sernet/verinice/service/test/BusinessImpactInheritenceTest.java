@@ -87,7 +87,7 @@ public class BusinessImpactInheritenceTest extends BeforeEachVNAImportHelper {
         
         // add link
         Process process = (Process) loadElement(SOURCE_ID, EXT_ID_INTERNE_KOMMUNIKATION);
-        CreateLink<CnALink,Process,Asset> command = new CreateLink<CnALink,Process,Asset>(process, asset, Process.REL_PROCESS_ASSET, "BusinessImpactInheritenceTest");
+        CreateLink<Process,Asset> command = new CreateLink<Process,Asset>(process, asset, Process.REL_PROCESS_ASSET, "BusinessImpactInheritenceTest");
         command = commandService.executeCommand(command);
         asset = (Asset) loadElement(SOURCE_ID, EXT_ID_VMWARE_GUEST_2);
         checkCIA(asset, 2, 2, 2);
@@ -129,7 +129,7 @@ public class BusinessImpactInheritenceTest extends BeforeEachVNAImportHelper {
         Set<CnALink> links = asset.getLinksUp();
         for (CnALink link : links) {
             if(Process.REL_PROCESS_ASSET.equals(link.getRelationId())) {
-                RemoveLink<CnALink> removeLink = new RemoveLink<CnALink>(link);
+                RemoveLink removeLink = new RemoveLink(link);
                 removeLink = commandService.executeCommand(removeLink);
             }
         }
