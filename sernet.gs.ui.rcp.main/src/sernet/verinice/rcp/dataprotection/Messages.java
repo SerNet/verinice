@@ -4,6 +4,8 @@ import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.rcp.dataprotection.messages"; //$NON-NLS-1$
+    public static String MigrateDataProtectionActionDelegate_error_dialog_message;
+    public static String MigrateDataProtectionActionDelegate_error_dialog_titel;
     public static String MigrateDataProtectionActionDelegate_migration_log_plural;
     public static String MigrateDataProtectionActionDelegate_migration_log_singular;
     public static String MigrateDataProtectionActionDelegate_migration_finished_message;

@@ -53,7 +53,7 @@ import sernet.verinice.model.iso27k.Process;
 /**
  * This command migrates one or more iso organizations from the old data
  * protection to the new one. Each control linked to a process which can be
- * fount in the migration table of the {@link TomMapper} will be migrated. This
+ * found in the migration table of the {@link TomMapper} will be migrated. This
  * means it removes all old links from type RELATIONS, and add the link
  * REL_PROCESS_CONTROL_OBJECTIVES and add the toms properties to the control.
  */

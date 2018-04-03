@@ -22,6 +22,9 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.OrganizationMultiselectWidget;
 import sernet.verinice.model.common.CnATreeElement;
 
+/**
+ * A dialog to select the organizations for the migration of the dataprotection.
+ */
 public class MigrateDataProtectionDialog extends TitleAreaDialog {
     private static final Logger LOG = Logger.getLogger(MigrateDataProtectionDialog.class);
 
