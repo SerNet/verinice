@@ -45,6 +45,7 @@ import sernet.verinice.interfaces.graph.Edge;
 import sernet.verinice.interfaces.graph.GraphElementLoader;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnALink.Id;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Process;
@@ -180,7 +181,21 @@ public class MigrateDataProtectionCommand extends GraphCommand {
                     @Override
                     public Object doInHibernate(Session session)
                             throws HibernateException, SQLException {
-                    for (CnALink.Id id : linkData) {
+                    Id[] linkDataArray = linkData.toArray(new CnALink.Id[linkData.size()]);
+                    int i = linkDataArray.length / 5;
+                    for (int j = 0; j < i; j++) {
+                        Query query = session.createQuery("delete CnALink c where c.id=:id1 or "
+                                + "c.id=:id2 or c.id=:id3 or c.id=:id4 or c.id=:id5");
+                        query.setParameter("id1", linkDataArray[0 + (j * 5)]);
+                        query.setParameter("id2", linkDataArray[1 + (j * 5)]);
+                        query.setParameter("id3", linkDataArray[2 + (j * 5)]);
+                        query.setParameter("id4", linkDataArray[3 + (j * 5)]);
+                        query.setParameter("id5", linkDataArray[4 + (j * 5)]);
+                        query.executeUpdate();
+                    }
+                    // update the rest
+                    for (int j = i * 5; j < linkDataArray.length; j++) {
+                        Id id = linkDataArray[j];
                         Query query = session.createQuery("delete CnALink c where c.id=:id");
                         query.setParameter("id", id);
                         query.executeUpdate();
