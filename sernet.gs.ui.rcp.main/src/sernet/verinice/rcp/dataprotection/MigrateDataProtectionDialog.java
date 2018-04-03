@@ -8,11 +8,12 @@ import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -20,7 +21,6 @@ import org.eclipse.swt.widgets.Shell;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.OrganizationMultiselectWidget;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.rcp.risk.Messages;
 
 public class MigrateDataProtectionDialog extends TitleAreaDialog {
     private static final Logger LOG = Logger.getLogger(MigrateDataProtectionDialog.class);
@@ -28,6 +28,7 @@ public class MigrateDataProtectionDialog extends TitleAreaDialog {
     private ITreeSelection selection;
     private CnATreeElement selectedElement;
     private OrganizationMultiselectWidget organizationWidget;
+    private boolean showMigrationDialog = true;
 
     /**
      * Create the dialog.
@@ -44,8 +45,8 @@ public class MigrateDataProtectionDialog extends TitleAreaDialog {
      */
     @Override
     protected Control createDialogArea(Composite parent) {
-        setMessage("Migrate organisation");
-        setTitle("Dataprotection migration");
+        setTitle(Messages.MigrateDataProtectionDialog_title);
+        setMessage(Messages.MigrateDataProtectionDialog_message);
         Composite area = (Composite) super.createDialogArea(parent);
         Composite container = new Composite(area, SWT.NONE);
         container.setLayout(new GridLayout(1, false));
@@ -55,24 +56,35 @@ public class MigrateDataProtectionDialog extends TitleAreaDialog {
             organizationWidget = new OrganizationMultiselectWidget(container, selection,
                     selectedElement);
 
-            organizationWidget.addSelectionListener(new SelectionListener() {
+            organizationWidget.addSelectionListener(new SelectionAdapter() {
 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
                     if (organizationWidget.getSelectedElementSet().isEmpty()) {
-                        setErrorMessage("Please select an organization.");
+                        setErrorMessage(Messages.MigrateDataProtectionDialog_select_org);
                     } else {
                         setErrorMessage(null);
                     }
                 }
+            });
+            Composite composite = new Composite(container, SWT.NONE);
+            composite.setLayout(new GridLayout(1, false));
+            composite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 
+            final Button btnCheckButton = new Button(composite, SWT.CHECK);
+            btnCheckButton.setSelection(showMigrationDialog);
+            btnCheckButton.addSelectionListener(new SelectionAdapter() {
                 @Override
-                public void widgetDefaultSelected(SelectionEvent e) {
+                public void widgetSelected(SelectionEvent e) {
+                    showMigrationDialog = btnCheckButton.getSelection();
                 }
             });
+            btnCheckButton.setText(Messages.MigrateDataProtectionDialog_show_migration_dialog);
+
         } catch (CommandException ex) {
             LOG.error("Error while loading organizations", ex); //$NON-NLS-1$
-            setMessage(Messages.OrganizationPage_ErrorMessage, IMessageProvider.ERROR);
+            setMessage(sernet.verinice.rcp.risk.Messages.OrganizationPage_ErrorMessage,
+                    IMessageProvider.ERROR);
         }
 
         return area;
@@ -102,5 +114,9 @@ public class MigrateDataProtectionDialog extends TitleAreaDialog {
 
     public void setSelectedElement(CnATreeElement selectedElement) {
         this.selectedElement = selectedElement;
+    }
+
+    public boolean isShowMigrationDialog() {
+        return showMigrationDialog;
     }
 }

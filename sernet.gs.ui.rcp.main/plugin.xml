@@ -905,11 +905,11 @@
                class="sernet.verinice.rcp.dataprotection.MigrateDataProtectionActionDelegate"
                enablesFor="+"
                icon="icons/sweetie-verinice/png/16-paper-calculate-percent.png"
-               id="sernet.verinice.rcp.risk.RiskAnalysisActionDelegate.action"
-               label="migrate"
+               id="sernet.verinice.rcp.dataprotection.MigrateDataProtectionActionDelegate.action"
+               label="%action.lable.migration.dataprotection"
                menubarPath="special"
                style="push"
-               tooltip="%action.tooltip.risk.analysis.iso">
+               tooltip="%action.tooltip.migration.dataprotection">
          </action>
       </objectContribution>
 

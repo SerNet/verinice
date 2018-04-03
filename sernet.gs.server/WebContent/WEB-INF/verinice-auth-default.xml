@@ -505,6 +505,7 @@
           <action id="unify" />
 	        <action id="xmlexport"/>
 	        <action id="xmlimport"/>
+	        <action id="migrate_data_protection"/>
 	        <action id="showallfiles" />
         </profile>
     </profiles>

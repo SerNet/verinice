@@ -102,6 +102,7 @@
 	        <action id="xmlimport"/>
 	        <action id="cnavalidation" />
 	        <action id="showallfiles" />
+	        <action id="migrate_data_protection" />
         </profile>
     </profiles>
     <userprofiles>

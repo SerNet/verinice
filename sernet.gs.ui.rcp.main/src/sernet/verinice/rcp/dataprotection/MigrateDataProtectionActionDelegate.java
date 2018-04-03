@@ -23,6 +23,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
@@ -31,6 +32,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
@@ -43,6 +45,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.rcp.RightsEnabledActionDelegate;
+import sernet.verinice.rcp.dialogs.ScrollableMultilineDialog;
 import sernet.verinice.service.commands.dataprotection.migration.MigrateDataProtectionCommand;
 
 /**
@@ -62,7 +65,7 @@ public class MigrateDataProtectionActionDelegate extends RightsEnabledActionDele
         @Override
         public void run(IProgressMonitor monitor)
                 throws InvocationTargetException, InterruptedException {
-            monitor.beginTask("Migrate the organizations to the new dataprotection",
+            monitor.beginTask(Messages.MigrateDataProtectionActionDelegate_monitor_message,
                     IProgressMonitor.UNKNOWN);
             MigrateDataProtectionCommand command = new MigrateDataProtectionCommand(
                     selectedElementSet);
@@ -70,10 +73,10 @@ public class MigrateDataProtectionActionDelegate extends RightsEnabledActionDele
             try {
                 migrateDataProtectionCommand = ServiceFactory.lookupCommandService()
                         .executeCommand(command);
-                monitor.beginTask("Refreshing data ....", IProgressMonitor.UNKNOWN);
+                monitor.beginTask(Messages.MigrateDataProtectionActionDelegate_monitor_message_refresh, IProgressMonitor.UNKNOWN);
                 CnAElementFactory.getInstance().reloadIsoModelFromDatabase();
             } catch (CommandException e) {
-                LOG.error("Error while migrating dataprotection", e);
+                LOG.error("Error while migrating dataprotection", e); //$NON-NLS-1$
             }
             monitor.done();
         }
@@ -91,53 +94,60 @@ public class MigrateDataProtectionActionDelegate extends RightsEnabledActionDele
             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /* ask save */);
             MigrateDataProtectionDialog dialog = new MigrateDataProtectionDialog(getShell());
             dialog.setSelectedElement(selectedOrganization);
+            boolean showMigrationDialog = dialog.isShowMigrationDialog();
             if (dialog.open() == Window.OK) {
                 Set<CnATreeElement> selectedElementSet = dialog.getSelectedElementSet();
-                RunMigrationCommand iRunnableWithProgressImplementation =
-                        new RunMigrationCommand(selectedElementSet);
-                PlatformUI.getWorkbench().getProgressService()
-                        .busyCursorWhile(iRunnableWithProgressImplementation);
+                RunMigrationCommand commandRunner = new RunMigrationCommand(selectedElementSet);
+                PlatformUI.getWorkbench().getProgressService().busyCursorWhile(commandRunner);
 
-                Set<CnATreeElement> processes = iRunnableWithProgressImplementation.migrateDataProtectionCommand
-                        .getProcesses();
-                Set<CnATreeElement> controls = iRunnableWithProgressImplementation.migrateDataProtectionCommand
-                        .getControls();
-                Set<CnATreeElement> missedControls = iRunnableWithProgressImplementation.migrateDataProtectionCommand
-                        .getMissedControls();
-
-                displayFinishedDialog(selectedElementSet, processes, controls, missedControls);
+                if (showMigrationDialog) {
+                    MigrateDataProtectionCommand cmd = commandRunner.migrateDataProtectionCommand;
+                    Set<String> processes = cmd.getAffectedProcessNames();
+                    // Set<String> controls = cmd.getAffectedControlsNames();
+                    Set<String> missedControls = cmd.getMissedControlNames();
+                    displayFinishedDialog(selectedElementSet, processes,
+                            cmd.getAffectedNumberOfControls(), missedControls,
+                            cmd.getNumberOfCreatedLinks(), cmd.getNumberOfDeletedLinks());
+                }
             }
         } catch (Exception e) {
-            LOG.error("Error running the dataprotection migration.", e);
-            MessageDialog.openError(getShell(), "Error while migrating dataprotection",
-                    "An error occours");
+            LOG.error("Error running the dataprotection migration.", e); //$NON-NLS-1$
+            MessageDialog.openError(getShell(), "Error while migrating dataprotection", //$NON-NLS-1$
+                    "An error occours");//$NON-NLS-1$
         }
     }
 
     private void displayFinishedDialog(Set<CnATreeElement> organizations,
-            Set<CnATreeElement> processes, Set<CnATreeElement> controls,
-            Set<CnATreeElement> missedControls) {
-        StringBuilder sb = new StringBuilder();
-        for (CnATreeElement cnATreeElement : missedControls) {
-            sb.append(cnATreeElement.getTitle()).append("\n");
-        }
+            Set<String> processes, int controls, Set<String> missedControls,
+            int createdLinks, int deletedLinks) {
+        String listOfMissedControls = StringUtils.join(missedControls, "\n");
+        String processNames = StringUtils.join(processes, ", ");
 
-        StringBuilder sb1 = new StringBuilder();
+        StringBuilder orgNames = new StringBuilder();
         for (CnATreeElement org : organizations) {
-            sb1.append(org.getTitle()).append(" ");
+            orgNames.append(org.getTitle()).append(" "); //$NON-NLS-1$
         }
 
-        ScrollableMultilineDialog multilineDialog = new ScrollableMultilineDialog(getShell(),
-                "The " + sb1.toString() + " are migrated.\n" + processes.size() + " processes and "
-                        + controls.size()
-                        + " controls\n" + "Missed controls: " + missedControls.size() + "\n"
-                        + sb.toString());
+        String message = Messages.bind(
+                organizations.size() == 1
+                        ? Messages.MigrateDataProtectionActionDelegate_migration_log_singular
+                        : Messages.MigrateDataProtectionActionDelegate_migration_log_plural,
+                new String[] { orgNames.toString(), Integer.toString(processes.size()),
+                        Integer.toString(controls),
+                        Integer.toString(createdLinks), Integer.toString(deletedLinks),
+                        processNames, Integer.toString(missedControls.size()),
+                        listOfMissedControls });
+
+        ScrollableMultilineDialog multilineDialog = new ScrollableMultilineDialog(
+                Display.getCurrent().getActiveShell(),
+                message, Messages.MigrateDataProtectionActionDelegate_migration_finished_title,
+                Messages.MigrateDataProtectionActionDelegate_migration_finished_message);
         multilineDialog.open();
     }
 
     @Override
-    public String getRightID() {// TODO: right for migrating
-        return ActionRightIDs.RISKANALYSIS;
+    public String getRightID() {
+        return ActionRightIDs.MIGRATE_DATA_PROTECTION;
     }
 
     @Override
@@ -150,7 +160,7 @@ public class MigrateDataProtectionActionDelegate extends RightsEnabledActionDele
     }
 
     @Override
-    public void selectionChanged(IAction action, ISelection selection) {
+    public void selectionChanged(IAction action, ISelection selection) {//TODO use multi selection
         if (selection instanceof ITreeSelection) {
             selectedOrganization = null;
             ITreeSelection selectionCurrent = (ITreeSelection) selection;

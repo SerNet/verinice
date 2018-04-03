@@ -19,31 +19,42 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.dataprotection.migration;
 
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.elasticsearch.common.collect.Lists;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GraphCommand;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IElementEntityDao;
 import sernet.verinice.interfaces.graph.Edge;
 import sernet.verinice.interfaces.graph.GraphElementLoader;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
-import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Process;
-import sernet.verinice.service.commands.CreateLink;
-import sernet.verinice.service.commands.RemoveLink;
-import sernet.verinice.service.commands.UpdateElementEntity;
 
 /**
- *
+ * This command migrates one or more iso organizations from the old data
+ * protection to the new one. Each control linked to a process which can be
+ * fount in the migration table of the {@link TomMapper} will be migrated. This
+ * means it removes all old links from type RELATIONS, and add the link
+ * REL_PROCESS_CONTROL_OBJECTIVES and add the toms properties to the control.
  */
 public class MigrateDataProtectionCommand extends GraphCommand {
 
@@ -58,10 +69,17 @@ public class MigrateDataProtectionCommand extends GraphCommand {
             "rel_process_control_Eingabekontrolle", "rel_process_control_Auftragskontrolle",
             "rel_process_control_Verfügbarkeitskontrolle",
             "rel_process_control_Trennungskontrolle");
+    private transient Map<CnATreeElement, Set<CnATreeElement>> ds_links2create;
+    private transient Set<CnATreeElement> controls2Update;
+    private transient Set<CnALink.Id> linkData;
+    private Set<String> missedControlNames = new HashSet<>();
+    private Set<String> affectedControlsNames;
+    private Set<String> affectedProcessNames;
+    private int numberOfDeletedLinks;
+    private int numberOfCreatedLinks;
+    private int affectedNumberOfControls;
+
     private Set<CnATreeElement> processes;
-    private Set<CnATreeElement> transformedControls = new HashSet<>();
-    private Set<CnATreeElement> affectedObjects = new HashSet<>();
-    private Set<CnATreeElement> missedControls = new HashSet<>();
 
     public MigrateDataProtectionCommand(Integer... scopeIds) {
         initalizeCommand(scopeIds);
@@ -96,36 +114,83 @@ public class MigrateDataProtectionCommand extends GraphCommand {
         processes = processGraph.getElements(Process.TYPE_ID);
         Set<CnATreeElement> controls = processGraph.getElements(Control.TYPE_ID);
 
+        numberOfCreatedLinks = 0;
+        ds_links2create = new HashMap<>(controls.size());
+        controls2Update = new HashSet<>(controls.size());
+        affectedControlsNames = new HashSet<>(controls.size());
+        affectedProcessNames = new HashSet<>(processes.size());
+        linkData = new HashSet<>(controls.size() * RELATIONS.size() * processes.size());
+
         for (CnATreeElement control : controls) {
             Set<PropertyType> toms = getTOMS(control);
             if (toms != null && !toms.isEmpty()) {
                 try {
                     updateControlWithToms(control, toms);
                     Set<CnATreeElement> affectedProcesses = removeLinks(control, processGraph);
-                    createLinks(control, affectedProcesses);
-                    affectedObjects.addAll(affectedProcesses);
-                    transformedControls.add(control);
+                    ds_links2create.put(control, affectedProcesses);
+                    affectedControlsNames.add(control.getTitle());
                 } catch (CommandException e) {
                     LOG.error("Error while transforming data protection controls. Current Control: "
                             + control.getTitle(), e);
                 }
             } else {
-                missedControls.add(control);
+                missedControlNames.add(control.getTitle());
             }
         }
+        numberOfDeletedLinks = linkData.size();
+        affectedNumberOfControls = ds_links2create.size();
+        for (CnATreeElement cnATreeElement : processes) {
+            affectedProcessNames.add(cnATreeElement.getTitle());
+        }
+        persitData();
+        LOG.info("command finished");
     }
 
     /**
-     * Create the new dataprotection link between the control and the processes.
+     * For performance reasons we write the data in big chunks to the database
+     * and don't use commands.
      *
-     * @throws CommandException
+     * @param removeLinkCmd
      */
-    private void createLinks(CnATreeElement control, Set<CnATreeElement> affectedProcesses)
-            throws CommandException {
-        for (CnATreeElement process : affectedProcesses) {
-            CreateLink<CnALink, CnATreeElement, CnATreeElement> createLinkCmd = new CreateLink<>(
-                    process, control, REL_PROCESS_CONTROL_OBJECTIVES);
-            getCommandService().executeCommand(createLinkCmd);
+    private void persitData() {
+        try {
+
+            LOG.info("update controls");
+            IElementEntityDao elementEntityDao = getDaoFactory().getElementEntityDao();
+            for (CnATreeElement cnATreeElement : controls2Update) {
+                elementEntityDao.mergeEntityOfElement(cnATreeElement, false);
+            }
+
+            LOG.info("Create ds links");
+            IBaseDao<CnALink, Serializable> linkDao = getDaoFactory().getDAO(CnALink.class);
+            for (Entry<CnATreeElement, Set<CnATreeElement>> entry : ds_links2create.entrySet()) {
+                for (CnATreeElement process : entry.getValue()) {
+                    CnALink link = new CnALink(process, entry.getKey(),
+                            REL_PROCESS_CONTROL_OBJECTIVES, "auto migrated");
+                    linkDao.merge(link, false);
+                    numberOfCreatedLinks++;
+                }
+            }
+            linkDao.flush();
+
+            LOG.info("delete Links");
+            IBaseDao<CnALink, Serializable> dao = getDaoFactory().getDAO(CnALink.class);
+                dao.executeCallback(new HibernateCallback() {
+
+                    @Override
+                    public Object doInHibernate(Session session)
+                            throws HibernateException, SQLException {
+                    for (CnALink.Id id : linkData) {
+                        Query query = session.createQuery("delete CnALink c where c.id=:id");
+                        query.setParameter("id", id);
+                        query.executeUpdate();
+                    }
+                    session.flush();
+                    return null;
+                    }
+                });
+        } catch (Exception e) {
+            LOG.error("Error while delete links", e);
         }
     }
 
@@ -140,8 +205,7 @@ public class MigrateDataProtectionCommand extends GraphCommand {
         Set<Edge> allRelations = processGraph.getEdgesByElementType(control, Process.TYPE_ID);
 
         String cUuid = control.getUuid();
-        Set<CnATreeElement> affectedProcesses = new HashSet<>();
-        RemoveLink<CnALink> removeLinkCmd = new RemoveLink<>();
+        Set<CnATreeElement> affectedProcesses = new HashSet<>(allRelations.size());
         for (Edge edge : allRelations) {
             if (!RELATIONS.contains(edge.getType())) {
                 continue;// ensure we only take the right link types (might be
@@ -153,12 +217,13 @@ public class MigrateDataProtectionCommand extends GraphCommand {
             } else {
                 affectedProcesses.add(edge.getSource());
             }
-            removeLinkCmd.addLinkData(edge.getSource().getDbId(),
-                    edge.getTarget().getDbId(), edge.getType());
+            CnALink.Id e = new CnALink.Id(edge.getSource().getDbId(), edge.getTarget().getDbId(),
+                    edge.getType());
+            linkData.add(e);
         }
-        getCommandService().executeCommand(removeLinkCmd);
         return affectedProcesses;
     }
+
 
     /**
      * Write the state of the mapped control in the control properties.
@@ -170,10 +235,7 @@ public class MigrateDataProtectionCommand extends GraphCommand {
         for (PropertyType property : toms) {
             control.getEntity().setSimpleValue(property, "1");
         }
-        UpdateElementEntity<CnATreeElement> updateCmd = new UpdateElementEntity<>(control,
-                ChangeLogEntry.STATION_ID);
-        UpdateElementEntity<CnATreeElement> command = getCommandService().executeCommand(updateCmd);
-        affectedObjects.add(command.getElement());
+        controls2Update.add(control);
     }
 
     /**
@@ -187,20 +249,32 @@ public class MigrateDataProtectionCommand extends GraphCommand {
         return TomMapper.getInstance().getMapping(title.trim());
     }
 
+    public Set<String> getMissedControlNames() {
+        return missedControlNames;
+    }
+
+    public Set<String> getAffectedControlsNames() {
+        return affectedControlsNames;
+    }
+
+    public Set<String> getAffectedProcessNames() {
+        return affectedProcessNames;
+    }
+
+    public int getNumberOfDeletedLinks() {
+        return numberOfDeletedLinks;
+    }
+
+    public int getNumberOfCreatedLinks() {
+        return numberOfCreatedLinks;
+    }
+
     public Set<CnATreeElement> getProcesses() {
         return processes;
     }
 
-    public Set<CnATreeElement> getAffectedObjects() {
-        return affectedObjects;
-    }
-
-    public Set<CnATreeElement> getMissedControls() {
-        return missedControls;
-    }
-
-    public Set<CnATreeElement> getControls() {
-        return transformedControls;
+    public int getAffectedNumberOfControls() {
+        return affectedNumberOfControls;
     }
 
 }

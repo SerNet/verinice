@@ -22,6 +22,7 @@ package sernet.verinice.service.commands.dataprotection.migration;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -51,6 +52,7 @@ public final class TomMapper {
     private static final int NUMBER_OF_TOMS = 8;
     private Map<String, Set<PropertyType>> isoMapping;
     private Map<String, Set<PropertyType>> itgsMapping;
+    private Map<String, Set<PropertyType>> customMapping;
 
     private TomMapper() {
         super();
@@ -70,14 +72,12 @@ public final class TomMapper {
      * @throws IOException
      */
     private List<String[]> readMapping(String filename) throws IOException {
-        InputStream resourceAsStream = getClass()
-                .getResourceAsStream(filename);
-        InputStreamReader reader = new InputStreamReader(resourceAsStream);
-        CSVReader csvReader = new CSVReader(reader, ',', '"');
-        List<String[]> readAll = csvReader.readAll();
-        csvReader.close();
-        reader.close();
-        return readAll;
+        try (InputStream resourceAsStream = getClass().getResourceAsStream(filename);
+                InputStreamReader reader = new InputStreamReader(resourceAsStream,
+                        StandardCharsets.UTF_8);
+                CSVReader csvReader = new CSVReader(reader, ',', '"')) {
+            return csvReader.readAll();
+        }
     }
 
     public static TomMapper getInstance() {
