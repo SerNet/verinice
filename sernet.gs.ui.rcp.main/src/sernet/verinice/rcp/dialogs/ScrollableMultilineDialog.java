@@ -1,4 +1,4 @@
-package sernet.verinice.rcp.dataprotection;
+package sernet.verinice.rcp.dialogs;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,27 +21,40 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * A generic scrollable dialog to show a long text witch can be copied to the
+ * clippboard or exported as file.
+ */
 public class ScrollableMultilineDialog extends TitleAreaDialog {
     private String message;
+    private String dialogTitle;
+    private String dialogMessage;
+    private boolean showSaveButton = true;
 
     /**
      * Create the dialog.
+     *
      * @param parentShell
      */
-    public ScrollableMultilineDialog(Shell parentShell, String message) {
+    public ScrollableMultilineDialog(Shell parentShell, String message, String dialogTitle,
+            String dialogMessage) {
         super(parentShell);
-        setShellStyle(SWT.RESIZE);
+        setHelpAvailable(false);
+        setShellStyle(SWT.RESIZE | SWT.APPLICATION_MODAL);
         this.message = message;
+        this.dialogTitle = dialogTitle;
+        this.dialogMessage = dialogMessage;
     }
 
     /**
      * Create contents of the dialog.
+     *
      * @param parent
      */
     @Override
     protected Control createDialogArea(Composite parent) {
-        setMessage("The migration is finished.");
-        setTitle("Migration finished.");
+        setMessage(dialogMessage);
+        setTitle(dialogTitle);
         Composite area = (Composite) super.createDialogArea(parent);
         Composite container = new Composite(area, SWT.NONE);
         container.setLayout(new GridLayout(1, false));
@@ -61,11 +74,12 @@ public class ScrollableMultilineDialog extends TitleAreaDialog {
         Composite composite = new Composite(container, SWT.NONE);
         composite.setLayout(new GridLayout(2, false));
         composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+        composite.setVisible(showSaveButton);
 
-        Composite composite_1 = new Composite(composite, SWT.NONE);
+        Composite composite_export = new Composite(composite, SWT.NONE);
         GridData gd_composite_1 = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
         gd_composite_1.heightHint = 32;
-        composite_1.setLayoutData(gd_composite_1);
+        composite_export.setLayoutData(gd_composite_1);
 
         Button btnNewButton = new Button(composite, SWT.NONE);
         btnNewButton.addSelectionListener(new SelectionAdapter() {
@@ -77,8 +91,7 @@ public class ScrollableMultilineDialog extends TitleAreaDialog {
                     try {
                         FileUtils.writeStringToFile(new File(filename), message);
                     } catch (IOException e1) {
-
-                        MessageDialog.openError(getShell(), "Error writing file.",
+                        MessageDialog.openError(getShell(), "Error writing file.", //$NON-NLS-1$
                                 e1.getLocalizedMessage());
                     }
                 }
@@ -86,12 +99,13 @@ public class ScrollableMultilineDialog extends TitleAreaDialog {
         });
         btnNewButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
         btnNewButton.setAlignment(SWT.RIGHT);
-        btnNewButton.setText("Save migration log.");
+        btnNewButton.setText(Messages.ScrollableMultilineDialog_save_button_text);
         return area;
     }
 
     /**
      * Create contents of the button bar.
+     *
      * @param parent
      */
     @Override
@@ -106,5 +120,12 @@ public class ScrollableMultilineDialog extends TitleAreaDialog {
     @Override
     protected Point getInitialSize() {
         return new Point(600, 400);
+    }
+
+    /**
+     * To hide the save button set to false.
+     */
+    public void setShowSaveButton(boolean showSaveButton) {
+        this.showSaveButton = showSaveButton;
     }
 }

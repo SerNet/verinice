@@ -11,7 +11,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.elasticsearch.common.collect.Sets;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import sernet.gs.service.RetrieveInfo;
@@ -29,7 +28,7 @@ import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.dataprotection.migration.MigrateDataProtectionCommand;
 import sernet.verinice.service.test.CommandServiceProvider;
 
-@Ignore
+
 public class MigrateDataProtectionCommandTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(MigrateDataProtectionCommandTest.class);
@@ -65,6 +64,9 @@ public class MigrateDataProtectionCommandTest extends CommandServiceProvider {
         CnATreeElement control = createNewElement((Group<CnATreeElement>) cgroup, Control.class);
         control.setTitel("5.1.1 Informationssicherheitsrichtlinie");
         control = updateElement(control);
+
+        createdElements.add(process);
+        createdElements.add(control);
 
         createLink(process, control, "rel_process_control_Zutrittskontrolle");
         createLink(process, control, "rel_process_control_Zugangskontrolle");
@@ -116,6 +118,9 @@ public class MigrateDataProtectionCommandTest extends CommandServiceProvider {
         control1.setTitel(
                 "14.1.1 Analyse und Spezifikation von Informationssicherheitsanforderungen");
         control1 = updateElement(control1);
+        createdElements.add(process);
+        createdElements.add(control);
+        createdElements.add(control1);
 
         createLink(process, control1, "rel_process_control_Zutrittskontrolle");
         createLink(process, control1, "rel_process_control_Zugangskontrolle");
@@ -172,6 +177,9 @@ public class MigrateDataProtectionCommandTest extends CommandServiceProvider {
         CnATreeElement control1 = createNewElement((Group<CnATreeElement>) cgroup, Control.class);
         control1.setTitel("Unrelated control");
         control1 = updateElement(control1);
+        createdElements.add(process);
+        createdElements.add(control);
+        createdElements.add(control1);
 
         createLink(process, control1, "rel_process_control_Zutrittskontrolle");
         createLink(process, control1, "rel_process_control_Zugangskontrolle");
@@ -221,6 +229,8 @@ public class MigrateDataProtectionCommandTest extends CommandServiceProvider {
                     Control.class);
             control.setTitel("5.1.1 Informationssicherheitsrichtlinie");
             updateElement(control);
+            createdElements.add(process);
+            createdElements.add(control);
 
             createLink(process, control, relationType);
             pmap.put(relationType, process);
@@ -270,6 +280,8 @@ public class MigrateDataProtectionCommandTest extends CommandServiceProvider {
         CnATreeElement control = createNewElement((Group<CnATreeElement>) cgroup, Control.class);
         control.setTitel("5.1.1 Informationssicherheitsrichtlinie");
         control = updateElement(control);
+        createdElements.add(process);
+        createdElements.add(control);
 
         createLink(process, control, "rel_process_control_Zutrittskontrolle");
         createLink(process, control, "rel_process_control_Zugangskontrolle");
@@ -284,6 +296,8 @@ public class MigrateDataProtectionCommandTest extends CommandServiceProvider {
         CnATreeElement control1 = createNewElement((Group<CnATreeElement>) cgroup1, Control.class);
         control1.setTitel("5.1.1 Informationssicherheitsrichtlinie");
         control1 = updateElement(control1);
+        createdElements.add(process1);
+        createdElements.add(control1);
 
         createLink(process1, control1, "rel_process_control_Zutrittskontrolle");
         createLink(process1, control1, "rel_process_control_Zugangskontrolle");
