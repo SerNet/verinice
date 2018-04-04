@@ -52,7 +52,7 @@ public class BulkEditUpdate extends ChangeLoggingCommand implements IChangeLoggi
     }
 
     public void execute() {
-        changedEntities = new HashSet<Entity>(dbIDs.size());
+        changedEntities = new HashSet<>(dbIDs.size());
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(clazz);
         for (Integer id : dbIDs) {
             CnATreeElement found = dao.findById(id);
@@ -79,8 +79,7 @@ public class BulkEditUpdate extends ChangeLoggingCommand implements IChangeLoggi
      * getChangedElements()
      */
     public List<CnATreeElement> getChangedElements() {
-        List<CnATreeElement> changedElements = new ArrayList<CnATreeElement>(
-                changedEntities.size());
+        List<CnATreeElement> changedElements = new ArrayList<>(changedEntities.size());
         try {
             for (Entity entity : changedEntities) {
                 LoadCnAElementByEntityId command = new LoadCnAElementByEntityId(entity.getDbId());

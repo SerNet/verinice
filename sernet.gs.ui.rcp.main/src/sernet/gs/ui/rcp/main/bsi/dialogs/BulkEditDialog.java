@@ -54,13 +54,6 @@ public class BulkEditDialog extends Dialog {
         this.entType = entType;
     }
 
-    public BulkEditDialog(Shell shell, EntityType entType2, String title, Entity entity) {
-        this(shell, entType2);
-        useRules = true;
-        this.title = title;
-        this.entity = entity;
-    }
-
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);

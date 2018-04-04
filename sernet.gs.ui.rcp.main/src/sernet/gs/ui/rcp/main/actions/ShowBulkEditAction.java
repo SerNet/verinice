@@ -117,8 +117,8 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             return;
         }
 
-        dbIDs = new ArrayList<Integer>(selection.size());
-        selectedElements = new ArrayList<CnATreeElement>();
+        dbIDs = new ArrayList<>(selection.size());
+        selectedElements = new ArrayList<>();
         entType = null;
         readSelection(selection);
         Dialog dialog = null;
@@ -150,7 +150,6 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             PlatformUI.getWorkbench().getProgressService()
                     .busyCursorWhile(new IRunnableWithProgress() {
                         @Override
-                        @SuppressWarnings("restriction")
                         public void run(IProgressMonitor monitor)
                                 throws InvocationTargetException, InterruptedException {
                             doEdit(dialogEntity, monitor);
@@ -170,7 +169,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
 
         // the selected items are of type CnaTreeelement and can be
         // edited right here:
-        if (selectedElements.size() > 0) {
+        if (!(selectedElements.isEmpty())) {
             if (!(selectedElements.get(0) instanceof Person
                     || selectedElements.get(0) instanceof PersonIso)) {
                 editElements(selectedElements, dialogEntity, monitor);
@@ -218,7 +217,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
     private void readSelection(IStructuredSelection selection) {
         if (selection.getFirstElement() instanceof TodoViewItem) {
             // prepare list according to selected lightweight todo items:
-            for (Iterator iter = selection.iterator(); iter.hasNext();) {
+            for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
                 TodoViewItem item = (TodoViewItem) iter.next();
                 dbIDs.add(item.getDbId());
             }
@@ -226,7 +225,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             clazz = MassnahmenUmsetzung.class;
         } else if (selection.getFirstElement() instanceof Person
                 || selection.getFirstElement() instanceof PersonIso) {
-            for (Iterator iter = selection.iterator(); iter.hasNext();) {
+            for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
                 CnATreeElement cElmt = (CnATreeElement) iter.next();
                 LoadConfiguration command = new LoadConfiguration(cElmt);
                 try {
@@ -244,15 +243,10 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                     ExceptionUtil.log(e, Messages.ShowBulkEditAction_6);
                 }
             }
-            if (selection.getFirstElement() instanceof Person
-                    || selection.getFirstElement() instanceof PersonIso) {
-                clazz = Configuration.class;
-            } else {
-                clazz = null;
-            }
+            clazz = Configuration.class;
         } else {
             // prepare list according to selected tree items:
-            for (Iterator iter = selection.iterator(); iter.hasNext();) {
+            for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
                 Object o = iter.next();
                 CnATreeElement elmt = null;
                 if (o instanceof CnATreeElement) {
@@ -277,7 +271,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
     private boolean isAllowed(IStructuredSelection selection) {
         // Realizes that the action to delete an element is greyed out,
         // when there is no right to do so.
-        Iterator iterator = (selection).iterator();
+        Iterator<?> iterator = (selection).iterator();
         while (iterator.hasNext()) {
             Object next = iterator.next();
             if (next instanceof CnATreeElement) {
@@ -316,7 +310,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                     newPassword);
         }
         command = ServiceFactory.lookupCommandService().executeCommand(command);
-        if (((ConfigurationBulkEditUpdate) command).getFailedUpdates().size() > 0) {
+        if (!((ConfigurationBulkEditUpdate) command).getFailedUpdates().isEmpty()) {
             StringBuilder sb = new StringBuilder();
             sb.append(Messages.ShowBulkEditAction_15).append(":\n");
             for (String username : ((ConfigurationBulkEditUpdate) command).getFailedUpdates()) {
@@ -335,10 +329,11 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
         if (input instanceof IStructuredSelection) {
             IStructuredSelection selection = (IStructuredSelection) input;
+            boolean selectionEmpty = selection.isEmpty();
 
             // check for listitems:
-            if (selection.size() > 0 && selection.getFirstElement() instanceof TodoViewItem) {
-                for (Iterator iter = selection.iterator(); iter.hasNext();) {
+            if (!selectionEmpty && selection.getFirstElement() instanceof TodoViewItem) {
+                for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
                     if (!(iter.next() instanceof TodoViewItem)) {
                         setEnabled(false);
                         return;
@@ -352,12 +347,12 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
 
             // check for document references:
             CnATreeElement elmt = null;
-            if (selection.size() > 0 && selection.getFirstElement() instanceof DocumentReference) {
+            if (!selectionEmpty && selection.getFirstElement() instanceof DocumentReference) {
                 elmt = ((DocumentReference) selection.getFirstElement()).getCnaTreeElement();
             }
 
             // check for other objects:
-            else if (selection.size() > 0 && selection.getFirstElement() instanceof CnATreeElement
+            else if (!selectionEmpty && selection.getFirstElement() instanceof CnATreeElement
                     && ((CnATreeElement) selection.getFirstElement()).getEntity() != null) {
                 elmt = (CnATreeElement) selection.getFirstElement();
             }
@@ -365,7 +360,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             if (elmt != null) {
                 String type = elmt.getEntity().getEntityType();
 
-                for (Iterator iter = selection.iterator(); iter.hasNext();) {
+                for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
                     Object o = iter.next();
                     if (o instanceof CnATreeElement) {
                         elmt = (CnATreeElement) o;
@@ -406,10 +401,9 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         try {
             monitor.setTaskName(Messages.ShowBulkEditAction_11);
             monitor.beginTask(Messages.ShowBulkEditAction_12, IProgressMonitor.UNKNOWN);
-            // CnAElementHome.getInstance().update(selectedElements);
             UpdateMultipleElementEntities command = new UpdateMultipleElementEntities(
                     selectedElements);
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            ServiceFactory.lookupCommandService().executeCommand(command);
         } catch (Exception e) {
             logger.error("Error while bulk update", e);
             ExceptionUtil.log(e, Messages.ShowBulkEditAction_13);
