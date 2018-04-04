@@ -42,10 +42,6 @@ public class TreeLabelProvider extends LabelProvider {
     private static final Logger LOG = Logger.getLogger(TreeLabelProvider.class);
     private static final int MAX_TEXT_WIDTH = 80;
 
-    public TreeLabelProvider() {
-        super();
-    }
-
     @Override
     public Image getImage(Object obj) {
         Image image = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
