@@ -212,6 +212,10 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             CnAElementFactory.getInstance().getISO27kModel()
                     .refreshAllListeners(IBSIModelListener.SOURCE_BULK_EDIT);
         }
+        if (CnAElementFactory.isBpModelLoaded()) {
+            CnAElementFactory.getInstance().getBpModel()
+                    .refreshAllListeners(IBSIModelListener.SOURCE_BULK_EDIT);
+        }
     }
 
     private void readSelection(IStructuredSelection selection) {
