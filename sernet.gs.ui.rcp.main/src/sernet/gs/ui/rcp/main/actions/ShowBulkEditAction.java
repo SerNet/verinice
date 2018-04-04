@@ -79,7 +79,7 @@ import sernet.verinice.service.commands.task.ConfigurationBulkEditUpdate;
  */
 public class ShowBulkEditAction extends RightsEnabledAction implements ISelectionListener {
 
-    private static final transient Logger LOG = Logger.getLogger(ShowBulkEditAction.class);
+    private static final Logger logger = Logger.getLogger(ShowBulkEditAction.class);
 
     private List<Integer> dbIDs;
     private ArrayList<CnATreeElement> selectedElements;
@@ -159,7 +159,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         } catch (InterruptedException e) {
             ExceptionUtil.log(e, Messages.ShowBulkEditAction_5);
         } catch (Exception e) {
-            LOG.error("Error on bulk edit", e);
+            logger.error("Error on bulk edit", e);
             ExceptionUtil.log(e, Messages.ShowBulkEditAction_6);
         }
     }
@@ -240,7 +240,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                         dbIDs.add(command2.getConfiguration().getDbId());
                     }
                 } catch (CommandException e) {
-                    LOG.error("Error while retrieving configuration", e);
+                    logger.error("Error while retrieving configuration", e);
                     ExceptionUtil.log(e, Messages.ShowBulkEditAction_6);
                 }
             }
@@ -268,7 +268,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                 entType = HUITypeFactory.getInstance()
                         .getEntityType(elmt.getEntity().getEntityType());
                 selectedElements.add(elmt);
-                LOG.debug("Adding to bulk edit: " + elmt.getTitle()); //$NON-NLS-1$
+                logger.debug("Adding to bulk edit: " + elmt.getTitle()); //$NON-NLS-1$
             }
             clazz = null;
         }
@@ -411,7 +411,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                     selectedElements);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
         } catch (Exception e) {
-            LOG.error("Error while bulk update", e);
+            logger.error("Error while bulk update", e);
             ExceptionUtil.log(e, Messages.ShowBulkEditAction_13);
         }
 

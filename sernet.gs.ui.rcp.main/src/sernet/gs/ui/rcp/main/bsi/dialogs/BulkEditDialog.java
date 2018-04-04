@@ -41,7 +41,7 @@ import sernet.snutils.DBException;
 
 public class BulkEditDialog extends Dialog {
 
-    private static final Logger LOG = Logger.getLogger(BulkEditDialog.class);
+    private static final Logger logger = Logger.getLogger(BulkEditDialog.class);
 
     private EntityType entType;
     private Entity entity = null;
@@ -105,7 +105,7 @@ public class BulkEditDialog extends Dialog {
             }
 
         } catch (Exception e) {
-            LOG.error("Error creating BulkeditDialog", e);
+            logger.error("Error creating BulkeditDialog", e);
         }
         return null;
     }
