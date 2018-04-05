@@ -47,15 +47,14 @@ import sernet.verinice.service.commands.CreateMultipleLinks;
 /**
  * Creates a dummy safeguard for a requirement if no safeguard is linked to
  * requirement.
- * 
- * Development of this function has begun. However, the further development was
- * interrupted. Executing of this command is disabled in ModelCommand.
  */
 public class ModelDummySafeguards extends ChangeLoggingCommand {
 
+    private static final long serialVersionUID = -7408967723722365794L;
+
     private static final Logger LOG = Logger.getLogger(ModelDummySafeguards.class);
 
-    public static final Map<String, String> REQUIREMENT_SAFEGUARD_QUALIFIER = new HashMap<>();
+    private static final Map<String, String> REQUIREMENT_SAFEGUARD_QUALIFIER = new HashMap<>();
 
     static {
         REQUIREMENT_SAFEGUARD_QUALIFIER.put(BpRequirement.PROP_QUALIFIER_BASIC,
@@ -67,15 +66,19 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
     }
 
     private Set<String> moduleUuidsFromScope;
+    private Set<String> safeguardGroupUuidsFromScope;
+    private List<CnATreeElement> safeguardGroups;
 
     private transient List<Link> linkList;
 
     private transient ModelingMetaDao metaDao;
     private String stationId;
 
-    public ModelDummySafeguards(Set<String> moduleUuidsFromScope) {
+    public ModelDummySafeguards(Set<String> moduleUuidsFromScope,
+            Set<String> safeguardGroupUuidsFromScope) {
         super();
         this.moduleUuidsFromScope = moduleUuidsFromScope;
+        this.safeguardGroupUuidsFromScope = safeguardGroupUuidsFromScope;
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 
@@ -92,7 +95,7 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
 
     private void handleModule(String uuid) throws CommandException {
         Set<CnATreeElement> requirements = findSafeguardsByModuleUuid(uuid);
-        linkList = new LinkedList<Link>();
+        linkList = new LinkedList<>();
         for (CnATreeElement requirement : requirements) {
             handleRequirement(requirement);
         }
@@ -175,7 +178,22 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
 
     private CnATreeElement getSafeguardGroup(CnATreeElement element, String fullTitle) {
         CnATreeElement safeguardGroup = null;
-        for (CnATreeElement group : element.getChildren()) {
+        Set<CnATreeElement> children = element.getChildren();
+        safeguardGroup = getSafeguardGroup(fullTitle, children);
+        if (safeguardGroup == null) {
+            if (safeguardGroups == null) {
+                safeguardGroups = getMetaDao()
+                        .loadElementsWithProperties(safeguardGroupUuidsFromScope);
+            }
+            safeguardGroup = getSafeguardGroup(fullTitle, safeguardGroups);
+        }
+        return safeguardGroup;
+    }
+
+    private CnATreeElement getSafeguardGroup(String fullTitle,
+            Collection<CnATreeElement> allSafeguardGroups) {
+        CnATreeElement safeguardGroup = null;
+        for (CnATreeElement group : allSafeguardGroups) {
             if (SafeguardGroup.TYPE_ID.equals(group.getTypeId())
                     && fullTitle.equals(((IIdentifiableElement) group).getFullTitle())) {
                 safeguardGroup = group;

@@ -56,6 +56,8 @@ import sernet.verinice.service.bp.exceptions.BpModelingException;
  * 
  * If there is a safeguard for a requirement in the compendium, the safeguard is
  * copied to the information network and pasted as child of the element.
+ * Optional dummy safeguards are created if no safeguard is linked to a
+ * requirement in compendium.
  * 
  * Elemental threats
  * 
@@ -86,6 +88,7 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     private Set<String> moduleUuidsFromCompendium;
     private transient Set<String> moduleUuidsFromScope = Collections.emptySet();
+    private transient Set<String> safeguardGroupUuidsFromScope = Collections.emptySet();
     private List<String> targetUuids;
     private transient Set<CnATreeElement> requirementGroups;
     private transient Set<CnATreeElement> targetElements;
@@ -135,13 +138,14 @@ public class ModelCommand extends ChangeLoggingCommand {
         ModelCopyCommand modelModulesCommand = new ModelModulesCommand(requirementGroups,
                 targetElements);
         modelModulesCommand = getCommandService().executeCommand(modelModulesCommand);
-        moduleUuidsFromScope = modelModulesCommand.getModuleUuidsFromScope();
+        moduleUuidsFromScope = modelModulesCommand.getGroupUuidsFromScope();
     }
 
     private void handleSafeguards() throws CommandException {
         ModelSafeguardGroupCommand modelSafeguardsCommand = new ModelSafeguardGroupCommand(
                 moduleUuidsFromCompendium, targetElements, proceeding);
-        getCommandService().executeCommand(modelSafeguardsCommand);
+        modelSafeguardsCommand = getCommandService().executeCommand(modelSafeguardsCommand);
+        safeguardGroupUuidsFromScope = modelSafeguardsCommand.getGroupUuidsFromScope();
     }
 
     private void disableDeduction() throws CommandException {
@@ -164,7 +168,8 @@ public class ModelCommand extends ChangeLoggingCommand {
     }
 
     private void createDummySafeguards() throws CommandException {
-        ModelDummySafeguards modelDummySafeguards = new ModelDummySafeguards(moduleUuidsFromScope);
+        ModelDummySafeguards modelDummySafeguards = new ModelDummySafeguards(moduleUuidsFromScope,
+                safeguardGroupUuidsFromScope);
         getCommandService().executeCommand(modelDummySafeguards);
     }
 

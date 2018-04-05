@@ -94,7 +94,7 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
         }
     }
 
-    protected void handleChild(CnATreeElement target, CnATreeElement elementCompendium,
+    protected void handleChild(CnATreeElement elementCompendium,
             CnATreeElement elementScope) throws CommandException {
         Map<String, CnATreeElement> compendiumIdMap = getIdMapOfChildren(elementCompendium);
         Map<String, CnATreeElement> scopeIdMap = getIdMapOfChildren(elementScope);
@@ -149,19 +149,19 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
                 elementScope = element;
             }
         }
-        handleChild(target, elementCompendium, elementScope);
+        handleChild(elementCompendium, elementScope);
     }
 
     private List<String> createListOfMissingUuids(CnATreeElement targetWithChildren) {
         List<String> uuids = new LinkedList<>();
         Set<CnATreeElement> targetChildren = targetWithChildren.getChildren();
         elementMap = new HashMap<>(targetChildren.size());
-        for (CnATreeElement module : getElementsFromCompendium()) {
-            CnATreeElement existingElement = getElementFromChildren(targetChildren, module);
+        for (CnATreeElement group : getElementsFromCompendium()) {
+            CnATreeElement existingElement = getElementFromChildren(targetChildren, group);
             if (existingElement == null) {
-                uuids.add(module.getUuid());
-            } else if (isSuitableType(existingElement, module)) {
-                elementMap.put(module, existingElement);
+                uuids.add(group.getUuid());
+            } else if (isSuitableType(existingElement, group)) {
+                elementMap.put(group, existingElement);
             }
         }
         return uuids;
@@ -212,7 +212,7 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
         return newModuleUuids;
     }
 
-    public Set<String> getModuleUuidsFromScope() {
+    public Set<String> getGroupUuidsFromScope() {
         Set<String> uuids = new HashSet<>(newModuleUuids);
         for (CnATreeElement element : elementMap.values()) {
             uuids.add(element.getUuid());
