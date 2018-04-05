@@ -100,8 +100,6 @@ public class LinkMaker extends Composite implements IRelationTable {
     // SWT
     RelationTableViewer viewer;
     private WorkbenchPart part;
-    private SelectionListener linkAction;
-    private SelectionListener unlinkAction;
     private Action doubleClickAction;
 
     // SWT widgets
@@ -167,8 +165,8 @@ public class LinkMaker extends Composite implements IRelationTable {
         // register resize listener for cutting the tooltips
         addResizeListener(cellLabelProviders);
 
-        linkAction = new CreateLinkSelectionListener(this);
-        unlinkAction = new RemoveLinkSelectionListener(this);
+        SelectionListener linkAction = new CreateLinkSelectionListener(this);
+        SelectionListener unlinkAction = new RemoveLinkSelectionListener(this);
         this.addLinkButton.addSelectionListener(linkAction);
         this.removeLinkButton.addSelectionListener(unlinkAction);
 
@@ -435,7 +433,7 @@ public class LinkMaker extends Composite implements IRelationTable {
     }
 
     private void initNamesForElementTypeCombo() {
-        elementTypeNamesAndIds = new TreeMap<String, String>();
+        elementTypeNamesAndIds = new TreeMap<>();
 
         if (allPossibleRelations == null) {
             elementTypeNames = new String[0];
@@ -464,7 +462,7 @@ public class LinkMaker extends Composite implements IRelationTable {
     }
 
     private void fillPossibleLinkLists() {
-        allPossibleRelations = new ArrayList<HuiRelation>();
+        allPossibleRelations = new ArrayList<>();
         String entityTypeID = inputElmt.getEntity().getEntityType();
 
         allPossibleRelations.addAll(huiTypeFactory.getPossibleRelationsFrom(entityTypeID));
