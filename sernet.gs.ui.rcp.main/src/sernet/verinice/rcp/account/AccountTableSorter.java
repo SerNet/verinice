@@ -102,8 +102,8 @@ class AccountTableSorter extends ViewerSorter {
 
     private int compareTitle(CnATreeElement p1, CnATreeElement p2) {
         int rc = 0;
-        String title1 = ElementTitleCache.get(p1.getScopeId());
-        String title2 = ElementTitleCache.get(p2.getScopeId());
+        String title1 = ElementTitleCache.getInstance().get(p1.getScopeId());
+        String title2 = ElementTitleCache.getInstance().get(p2.getScopeId());
         if(title1!=null && title2!=null) {
             rc = nsc.compare(title1.toLowerCase(), title2.toLowerCase());
         }
