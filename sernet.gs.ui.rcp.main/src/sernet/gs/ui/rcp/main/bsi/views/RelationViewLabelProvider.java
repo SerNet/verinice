@@ -18,7 +18,9 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.util.HashMap;
+import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -30,7 +32,13 @@ import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
+import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadElementTitles;
@@ -45,56 +53,56 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
     private static final Logger log = Logger.getLogger(RelationViewLabelProvider.class);
 
     private IRelationTable view;
-    private static HashMap<Integer, String> titleMap = new HashMap<>();
+    private static Map<Integer, String> titleMap = new HashMap<>();
 
     public RelationViewLabelProvider(IRelationTable view) {
         this.view = view;
     }
 
-    private String getRisk(CnALink link, String col) {
-        String riskValue = "";
+    private static String getRisk(CnALink link, String col) {
+        String riskValue;
         switch (col) {
         case IRelationTable.COLUMN_RISK_C:
-            if (link.getRiskConfidentiality() != null) {
-                riskValue = link.getRiskConfidentiality().toString();
-            }
+            riskValue = riskValueToString(link.getRiskConfidentiality());
             break;
         case IRelationTable.COLUMN_RISK_C_CONTROLS:
-            if (link.getRiskConfidentialityWithControls() != null) {
-                riskValue = link.getRiskConfidentialityWithControls().toString();
-            }
+            riskValue = riskValueToString(link.getRiskConfidentialityWithControls());
             break;
         case IRelationTable.COLUMN_RISK_I:
-            if (link.getRiskIntegrity() != null) {
-                riskValue = link.getRiskIntegrity().toString();
-            }
+            riskValue = riskValueToString(link.getRiskIntegrity());
             break;
         case IRelationTable.COLUMN_RISK_I_CONTROLS:
-            if (link.getRiskIntegrityWithControls() != null) {
-                riskValue = link.getRiskIntegrityWithControls().toString();
-            }
+            riskValue = riskValueToString(link.getRiskIntegrityWithControls());
             break;
         case IRelationTable.COLUMN_RISK_A:
-            if (link.getRiskAvailability() != null) {
-                riskValue = link.getRiskAvailability().toString();
-            }
+            riskValue = riskValueToString(link.getRiskAvailability());
             break;
         case IRelationTable.COLUMN_RISK_A_CONTROLS:
-            if (link.getRiskAvailabilityWithControls() != null) {
-                riskValue = link.getRiskAvailabilityWithControls().toString();
-            }
+            riskValue = riskValueToString(link.getRiskAvailabilityWithControls());
             break;
         case IRelationTable.COLUMN_RISK_TREATMENT:
             if (link.getRiskTreatment() != null) {
                 riskValue = CnALink.riskTreatmentLabels.get(link.getRiskTreatment().name());
             } else if (RelationTableViewer.isAssetAndSzenario(link)) {
                 riskValue = CnALink.riskTreatmentLabels.get(CnALink.RiskTreatment.UNEDITED.name());
+            } else {
+                riskValue = StringUtils.EMPTY;
             }
+            break;
+        default:
+            riskValue = StringUtils.EMPTY;
         }
         if (log.isDebugEnabled()) {
             log.debug("Risk values for column: " + col + " is: " + riskValue);
         }
         return riskValue;
+    }
+
+    private static String riskValueToString(Integer value) {
+        if (value == null) {
+            return StringUtils.EMPTY;
+        }
+        return value.toString();
     }
 
     @Override
@@ -128,14 +136,11 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
             return ""; // image only //$NON-NLS-1$
         case 3:
             replaceLinkEntities(link);
-            return CnALink.getRelationObjectTitle(view.getInputElmt(), link);
+            return getLinkTargetTitleIncludingPotentialIdentifier(view.getInputElmt(), link);
         case 4:
             String title = "";
             try {
-                CnATreeElement target = link.getDependency();
-                if (target.equals(view.getInputElmt())) {
-                    target = link.getDependant();
-                }
+                CnATreeElement target = getElementOnOtherSide(view.getInputElmt(), link);
                 if (!titleMap.containsKey(target.getScopeId())) {
                     title = loadElementsTitles(target);
                 } else {
@@ -166,7 +171,25 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
         }
     }
 
-    public void replaceLinkEntities(CnALink link) {
+    private static CnATreeElement getElementOnOtherSide(CnATreeElement elementOnThisSide, CnALink link) {
+        CnATreeElement dependency = link.getDependency();
+        if (dependency.equals(elementOnThisSide)) {
+            return link.getDependant();
+        }
+        return dependency;
+    }
+
+    public static String getLinkTargetTitleIncludingPotentialIdentifier(CnATreeElement linkSource, CnALink link) {
+        CnATreeElement linkTarget = getElementOnOtherSide(linkSource, link);
+        if (linkTarget instanceof BpRequirement || linkTarget instanceof BpRequirementGroup
+                || linkTarget instanceof Safeguard || linkTarget instanceof SafeguardGroup
+                || linkTarget instanceof BpThreat) {
+            return ((IIdentifiableElement) linkTarget).getFullTitle();
+        }
+        return CnALink.getRelationObjectTitle(linkSource, link);
+    }
+
+    public static void replaceLinkEntities(CnALink link) {
         CnATreeElement dependantWithProperties = Retriever
                 .checkRetrieveElement(link.getDependant());
         CnATreeElement dependencyWithProperties = Retriever
@@ -200,7 +223,7 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 
     }
 
-    private Image getObjTypeImage(CnATreeElement elmt) {
+    private static Image getObjTypeImage(CnATreeElement elmt) {
         return CnAImageProvider.getImage(elmt);
 
     }

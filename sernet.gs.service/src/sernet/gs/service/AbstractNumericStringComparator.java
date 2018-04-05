@@ -235,31 +235,24 @@ public abstract class AbstractNumericStringComparator<T> implements Comparator<T
         return getCollator().compare(string1, string2);
     }
 
-	private int getFirstDigitIndex(String str) {
+	private static int getFirstDigitIndex(String str) {
 		return getFirstDigitIndex(str, 0);
 	}
 
-	private int getFirstDigitIndex(String str, int start) {
-		return getFirstDigitIndex(str.toCharArray(), start);
+	private static int getFirstDigitIndex(String str, int start) {
+        for (int i = start; i < str.length(); i++) {
+            if (Character.isDigit(str.charAt(i))) {
+                return i;
+            }
+        }
+        return -1;
 	}
 
-	private int getFirstDigitIndex(char[] chrs, int start) {
-		int sz = chrs.length;
-
-		for (int i = start; i < sz; i++) {
-			if (Character.isDigit(chrs[i])) {
-				return i;
-			}
-		}
-
-		return -1;
-	}
-
-	private int getLastDigitIndex(String str, int start) {
+	private static int getLastDigitIndex(String str, int start) {
 		return getLastDigitIndex(str.toCharArray(), start);
 	}
 
-	private int getLastDigitIndex(char[] chrs, int start) {
+	private static int getLastDigitIndex(char[] chrs, int start) {
 		int sz = chrs.length;
 
 		for (int i = start; i < sz; i++) {
@@ -271,7 +264,7 @@ public abstract class AbstractNumericStringComparator<T> implements Comparator<T
 		return -1;
 	}
 
-	private int countZeroes(String str) {
+	private static int countZeroes(String str) {
 		int count = 0;
 
 		// assuming str is small...
