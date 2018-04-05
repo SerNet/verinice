@@ -152,6 +152,8 @@ public class LinkMaker extends Composite implements IRelationTable {
         CnAElementFactory.getLoadedModel().addBSIModelListener(relationViewContentProvider);
         CnAElementFactory.getInstance().getISO27kModel()
                 .addISO27KModelListener(relationViewContentProvider);
+        CnAElementFactory.getInstance().getBpModel()
+                .addModITBOModelListener(relationViewContentProvider);
         // listeners to remove stale links from currently open object in editor
         // to prevent conflicts when saving:
         linkRemover = new LinkRemover(this);
