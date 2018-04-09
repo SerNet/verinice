@@ -21,6 +21,8 @@ package sernet.verinice.service.commands.dataprotection.migration;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +38,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
+import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GraphCommand;
@@ -51,10 +54,10 @@ import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Process;
 
 /**
- * This command migrates one or more iso organizations from the old data
- * protection to the new one. Each control linked to a process which can be
- * found in the migration table of the {@link TomMapper} will be migrated. This
- * means it removes all old links from type RELATIONS, and add the link
+ * This command migrates one or more iso organizations from the old data privacy
+ * to the new one. Each control linked to a process which can be found in the
+ * migration table of the {@link TomMapper} will be migrated. This means it
+ * removes all old links from type RELATIONS, and add the link
  * REL_PROCESS_CONTROL_OBJECTIVES and add the toms properties to the control.
  */
 public class MigrateDataProtectionCommand extends GraphCommand {
@@ -70,15 +73,14 @@ public class MigrateDataProtectionCommand extends GraphCommand {
             "rel_process_control_Eingabekontrolle", "rel_process_control_Auftragskontrolle",
             "rel_process_control_Verfügbarkeitskontrolle",
             "rel_process_control_Trennungskontrolle");
-    private transient Map<CnATreeElement, Set<CnATreeElement>> ds_links2create;
-    private transient Set<CnATreeElement> controls2Update;
-    private transient Set<CnALink.Id> linkData;
-    private Set<String> missedControlNames = new HashSet<>();
-    private Set<String> affectedControlsNames;
-    private Set<String> affectedProcessNames;
+    private transient IBaseDao<CnALink, Serializable> linkDao;
+    private List<String> missedControlNames;
+    private List<String> affectedControlsNames;
+    private List<String> affectedProcessNames;
     private int numberOfDeletedLinks;
     private int numberOfCreatedLinks;
     private int affectedNumberOfControls;
+    private int missedNumberOfControls;
 
     private Set<CnATreeElement> processes;
 
@@ -114,109 +116,184 @@ public class MigrateDataProtectionCommand extends GraphCommand {
         VeriniceGraph processGraph = getGraph();
         processes = processGraph.getElements(Process.TYPE_ID);
         Set<CnATreeElement> controls = processGraph.getElements(Control.TYPE_ID);
+        Set<Integer> scopeIds = new HashSet<>(processes.size());
+        for (CnATreeElement process : processes) {
+            scopeIds.add(process.getScopeId());
+        }
 
+        linkDao = getDaoFactory().getDAO(CnALink.class);
         numberOfCreatedLinks = 0;
-        ds_links2create = new HashMap<>(controls.size());
-        controls2Update = new HashSet<>(controls.size());
-        affectedControlsNames = new HashSet<>(controls.size());
-        affectedProcessNames = new HashSet<>(processes.size());
-        linkData = new HashSet<>(controls.size() * RELATIONS.size() * processes.size());
+        missedNumberOfControls = 0;
+        affectedControlsNames = new ArrayList<>(controls.size());
+        missedControlNames = new ArrayList<>(controls.size());
+        affectedProcessNames = new ArrayList<>(processes.size());
+        Map<CnATreeElement, Set<CnATreeElement>> ds_links2create = new HashMap<>(controls.size());
+        Set<CnATreeElement> controls2Update = new HashSet<>(controls.size());
+        Set<CnALink.Id> linkData = new HashSet<>(
+                controls.size() * RELATIONS.size() * processes.size());
+        Set<CnATreeElement> missedControls = new HashSet<>(controls.size());
 
         for (CnATreeElement control : controls) {
             Set<PropertyType> toms = getTOMS(control);
             if (toms != null && !toms.isEmpty()) {
-                try {
-                    updateControlWithToms(control, toms);
-                    Set<CnATreeElement> affectedProcesses = removeLinks(control, processGraph);
+                updateControlWithToms(control, toms, controls2Update);
+                Set<CnATreeElement> affectedProcesses = collectLinksToRemove(control, linkData,
+                        controls2Update);
                     ds_links2create.put(control, affectedProcesses);
                     affectedControlsNames.add(control.getTitle());
-                } catch (CommandException e) {
-                    LOG.error("Error while transforming data protection controls. Current Control: "
-                            + control.getTitle(), e);
-                }
             } else {
                 missedControlNames.add(control.getTitle());
+                missedControls.add(control);
             }
         }
         numberOfDeletedLinks = linkData.size();
+        missedNumberOfControls = missedControls.size();
         affectedNumberOfControls = ds_links2create.size();
         for (CnATreeElement cnATreeElement : processes) {
             affectedProcessNames.add(cnATreeElement.getTitle());
         }
-        persitData();
+        persitData(linkData, missedControls, scopeIds, controls2Update, ds_links2create);
         LOG.info("command finished");
     }
 
     /**
      * For performance reasons we write the data in big chunks to the database
      * and don't use commands.
-     *
-     * @param removeLinkCmd
      */
-    private void persitData() {
+    private void persitData(Set<Id> linkData, Set<CnATreeElement> missedControls,
+            Set<Integer> scopeIds, Set<CnATreeElement> controls2Update,
+            Map<CnATreeElement, Set<CnATreeElement>> ds_links2create) {
         try {
 
-            LOG.info("update controls");
             IElementEntityDao elementEntityDao = getDaoFactory().getElementEntityDao();
             for (CnATreeElement cnATreeElement : controls2Update) {
                 elementEntityDao.mergeEntityOfElement(cnATreeElement, false);
             }
 
-            LOG.info("Create ds links");
-            IBaseDao<CnALink, Serializable> linkDao = getDaoFactory().getDAO(CnALink.class);
-            for (Entry<CnATreeElement, Set<CnATreeElement>> entry : ds_links2create.entrySet()) {
-                for (CnATreeElement process : entry.getValue()) {
-                    CnALink link = new CnALink(process, entry.getKey(),
-                            REL_PROCESS_CONTROL_OBJECTIVES, "auto migrated");
-                    linkDao.merge(link, false);
-                    numberOfCreatedLinks++;
-                }
-            }
-            linkDao.flush();
+            IBaseDao<CnATreeElement, Serializable> baseDao = getDaoFactory()
+                    .getDAO(CnATreeElement.class);
+            baseDao.executeCallback(new HibernateCallback() {
 
-            LOG.info("delete Links");
-            IBaseDao<CnALink, Serializable> dao = getDaoFactory().getDAO(CnALink.class);
-                dao.executeCallback(new HibernateCallback() {
-
-                    @Override
-                    public Object doInHibernate(Session session)
-                            throws HibernateException, SQLException {
-                    Id[] linkDataArray = linkData.toArray(new CnALink.Id[linkData.size()]);
-                    int i = linkDataArray.length / 5;
-                    for (int j = 0; j < i; j++) {
-                        Query query = session.createQuery("delete CnALink c where c.id=:id1 or "
-                                + "c.id=:id2 or c.id=:id3 or c.id=:id4 or c.id=:id5");
-                        query.setParameter("id1", linkDataArray[0 + (j * 5)]);
-                        query.setParameter("id2", linkDataArray[1 + (j * 5)]);
-                        query.setParameter("id3", linkDataArray[2 + (j * 5)]);
-                        query.setParameter("id4", linkDataArray[3 + (j * 5)]);
-                        query.setParameter("id5", linkDataArray[4 + (j * 5)]);
+                @Override
+                public Object doInHibernate(Session session)
+                        throws HibernateException, SQLException {
+                    for (Integer sId : scopeIds) {
+                        Query query = session.createQuery(
+                                "update CnATreeElement c set c.sourceId='DP' where c.scopeId=:sId and c.sourceId='BDSG' or c.sourceId='BDSG_VRL'");
+                        query.setParameter("sId", sId);
                         query.executeUpdate();
                     }
-                    // update the rest
-                    for (int j = i * 5; j < linkDataArray.length; j++) {
-                        Id id = linkDataArray[j];
-                        Query query = session.createQuery("delete CnALink c where c.id=:id");
-                        query.setParameter("id", id);
-                        query.executeUpdate();
-                    }
-                    session.flush();
                     return null;
-                    }
-                });
+                }
+            });
+
+            changeLinks(linkData, missedControls, ds_links2create);
         } catch (Exception e) {
-            LOG.error("Error while delete links", e);
+            LOG.error("Error while delete persit migratioin data.", e);
+            throw new RuntimeCommandException(e);
         }
     }
 
     /**
-     * Remove the old dataprotection links between control and process.
+     * Creates the new links of type 'rel_process_control_objectives' for each
+     * process to control in ds_links2create. Update all remaining links
+     * description and delete all old links.
+     */
+    private void changeLinks(Set<Id> linkData, Set<CnATreeElement> missedControls,
+            Map<CnATreeElement, Set<CnATreeElement>> ds_links2create) {
+        for (Entry<CnATreeElement, Set<CnATreeElement>> entry : ds_links2create.entrySet()) {
+            for (CnATreeElement process : entry.getValue()) {
+                CnALink link = new CnALink(process, entry.getKey(), REL_PROCESS_CONTROL_OBJECTIVES,
+                        null);
+                linkDao.merge(link, false);
+                numberOfCreatedLinks++;
+            }
+        }
+
+        updateMissedLinksDescription(missedControls);
+        deleteOldLinks(linkData);
+    }
+
+    /**
+     * Set the description 'check' to the old, not removed links, because the
+     * control is not migrated.
+     */
+    private void updateMissedLinksDescription(Set<CnATreeElement> missedControls) {
+        VeriniceGraph processGraph = getGraph();
+        LOG.info("update old link descriptions");
+        Set<CnALink.Id> ids = new HashSet<>(missedControls.size() * RELATIONS.size());
+        for (CnATreeElement control : missedControls) {
+            Set<Edge> allRelations = processGraph.getEdgesByElementType(control, Process.TYPE_ID);
+            for (Edge edge : allRelations) {
+                ids.add(new CnALink.Id(edge.getSource().getDbId(), edge.getTarget().getDbId(),
+                        edge.getType()));
+            }
+        }
+        linkDao.executeCallback(new HibernateCallback() {
+
+            @Override
+            public Object doInHibernate(Session session)
+                    throws HibernateException, SQLException {
+                String comment = sernet.verinice.service.commands.Messages
+                        .getString("check.old.links");
+                for (Id id : ids) {
+                    Query query = session.createQuery(
+                            "update CnALink c set c.comment=:comment where c.id=:id");
+                    query.setParameter("id", id);
+                    query.setParameter("comment", comment);
+                    query.executeUpdate();
+                }
+                return null;
+            }
+        });
+    }
+
+    /**
+     * Delete all old dp links of the migrated controls. This should be the last
+     */
+    private void deleteOldLinks(Set<Id> linkData) {
+        IBaseDao<CnALink, Serializable> dao = getDaoFactory().getDAO(CnALink.class);
+            dao.executeCallback(new HibernateCallback() {
+
+                @Override
+                public Object doInHibernate(Session session)
+                        throws HibernateException, SQLException {
+                Id[] linkDataArray = linkData.toArray(new CnALink.Id[linkData.size()]);
+                int i = linkDataArray.length / 5;
+                for (int j = 0; j < i; j++) {
+                    Query query = session.createQuery("delete CnALink c where c.id=:id1 or "
+                            + "c.id=:id2 or c.id=:id3 or c.id=:id4 or c.id=:id5");
+                    query.setParameter("id1", linkDataArray[0 + (j * 5)]);
+                    query.setParameter("id2", linkDataArray[1 + (j * 5)]);
+                    query.setParameter("id3", linkDataArray[2 + (j * 5)]);
+                    query.setParameter("id4", linkDataArray[3 + (j * 5)]);
+                    query.setParameter("id5", linkDataArray[4 + (j * 5)]);
+                    query.executeUpdate();
+                }
+                // update the rest
+                for (int j = i * 5; j < linkDataArray.length; j++) {
+                    Id id = linkDataArray[j];
+                    Query query = session.createQuery("delete CnALink c where c.id=:id");
+                    query.setParameter("id", id);
+                    query.executeUpdate();
+                }
+                session.flush();
+                return null;
+                }
+            });
+    }
+
+    /**
+     * Collects the links to remove in the linkData set.
+     *
+     * @param controls2Update
      *
      * @return the affected processes
      * @throws CommandException
      */
-    private Set<CnATreeElement> removeLinks(CnATreeElement control, VeriniceGraph processGraph)
-            throws CommandException {
+    private Set<CnATreeElement> collectLinksToRemove(CnATreeElement control, Set<Id> linkData,
+            Set<CnATreeElement> controls2Update) {
+        VeriniceGraph processGraph = getGraph();
         Set<Edge> allRelations = processGraph.getEdgesByElementType(control, Process.TYPE_ID);
 
         String cUuid = control.getUuid();
@@ -232,9 +309,8 @@ public class MigrateDataProtectionCommand extends GraphCommand {
             } else {
                 affectedProcesses.add(edge.getSource());
             }
-            CnALink.Id e = new CnALink.Id(edge.getSource().getDbId(), edge.getTarget().getDbId(),
-                    edge.getType());
-            linkData.add(e);
+            linkData.add(new CnALink.Id(edge.getSource().getDbId(), edge.getTarget().getDbId(),
+                    edge.getType()));
         }
         return affectedProcesses;
     }
@@ -243,10 +319,12 @@ public class MigrateDataProtectionCommand extends GraphCommand {
     /**
      * Write the state of the mapped control in the control properties.
      *
+     * @param controls2Update
+     *
      * @throws CommandException
      */
-    private void updateControlWithToms(CnATreeElement control, Set<PropertyType> toms)
-            throws CommandException {
+    private void updateControlWithToms(CnATreeElement control, Set<PropertyType> toms,
+            Set<CnATreeElement> controls2Update) {
         for (PropertyType property : toms) {
             control.getEntity().setSimpleValue(property, "1");
         }
@@ -254,25 +332,25 @@ public class MigrateDataProtectionCommand extends GraphCommand {
     }
 
     /**
-     * Get the TOMS set for a given control.
+     * Get the TOM set for a given control.
      */
     private Set<PropertyType> getTOMS(CnATreeElement control) {
         String title = control.getTitle();
         if (StringUtils.isEmpty(title)) {
-            return null;
+            return Collections.emptySet();
         }
         return TomMapper.getInstance().getMapping(title.trim());
     }
 
-    public Set<String> getMissedControlNames() {
+    public List<String> getMissedControlNames() {
         return missedControlNames;
     }
 
-    public Set<String> getAffectedControlsNames() {
+    public List<String> getAffectedControlsNames() {
         return affectedControlsNames;
     }
 
-    public Set<String> getAffectedProcessNames() {
+    public List<String> getAffectedProcessNames() {
         return affectedProcessNames;
     }
 
@@ -290,6 +368,10 @@ public class MigrateDataProtectionCommand extends GraphCommand {
 
     public int getAffectedNumberOfControls() {
         return affectedNumberOfControls;
+    }
+
+    public int getMissedNumberOfControls() {
+        return missedNumberOfControls;
     }
 
 }

@@ -20,6 +20,7 @@
 package sernet.verinice.rcp.dataprotection;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -107,8 +108,8 @@ public class MigrateDataProtectionActionDelegate extends RightsEnabledActionDele
 
                 if (showMigrationDialog) {
                     MigrateDataProtectionCommand cmd = commandRunner.migrateDataProtectionCommand;
-                    Set<String> processes = cmd.getAffectedProcessNames();
-                    Set<String> missedControls = cmd.getMissedControlNames();
+                    Collection<String> processes = cmd.getAffectedProcessNames();
+                    Collection<String> missedControls = cmd.getMissedControlNames();
                     displayFinishedDialog(selectedElementSet, processes,
                             cmd.getAffectedNumberOfControls(), missedControls,
                             cmd.getNumberOfCreatedLinks(), cmd.getNumberOfDeletedLinks());
@@ -122,7 +123,7 @@ public class MigrateDataProtectionActionDelegate extends RightsEnabledActionDele
     }
 
     private void displayFinishedDialog(Set<CnATreeElement> organizations,
-            Set<String> processes, int controls, Set<String> missedControls,
+            Collection<String> processes, int controls, Collection<String> missedControls,
             int createdLinks, int deletedLinks) {
         String listOfMissedControls = StringUtils.join(missedControls, "\n"); //$NON-NLS-1$
         String processNames = StringUtils.join(processes, ", "); //$NON-NLS-1$
