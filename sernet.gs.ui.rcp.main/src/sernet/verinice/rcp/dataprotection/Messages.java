@@ -15,7 +15,6 @@ public class Messages extends NLS {
     public static String MigrateDataProtectionDialog_message;
     public static String MigrateDataProtectionDialog_select_org;
     public static String MigrateDataProtectionDialog_title;
-    public static String MigrateDataProtectionDialog_show_migration_dialog;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

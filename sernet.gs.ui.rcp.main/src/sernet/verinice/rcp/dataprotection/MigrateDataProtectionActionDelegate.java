@@ -101,19 +101,16 @@ public class MigrateDataProtectionActionDelegate extends RightsEnabledActionDele
             dialog.setSelectedElement(selectedOrganization);
             dialog.setSelection(selection);
             if (dialog.open() == Window.OK) {
-                boolean showMigrationDialog = dialog.isShowMigrationDialog();
                 Set<CnATreeElement> selectedElementSet = dialog.getSelectedElementSet();
                 RunMigrationCommand commandRunner = new RunMigrationCommand(selectedElementSet);
                 PlatformUI.getWorkbench().getProgressService().busyCursorWhile(commandRunner);
 
-                if (showMigrationDialog) {
-                    MigrateDataProtectionCommand cmd = commandRunner.migrateDataProtectionCommand;
-                    Collection<String> processes = cmd.getAffectedProcessNames();
-                    Collection<String> missedControls = cmd.getMissedControlNames();
-                    displayFinishedDialog(selectedElementSet, processes,
-                            cmd.getAffectedNumberOfControls(), missedControls,
-                            cmd.getNumberOfCreatedLinks(), cmd.getNumberOfDeletedLinks());
-                }
+                MigrateDataProtectionCommand cmd = commandRunner.migrateDataProtectionCommand;
+                Collection<String> processes = cmd.getAffectedProcessNames();
+                Collection<String> missedControls = cmd.getMissedControlNames();
+                displayFinishedDialog(selectedElementSet, processes,
+                        cmd.getAffectedNumberOfControls(), missedControls,
+                        cmd.getNumberOfCreatedLinks(), cmd.getNumberOfDeletedLinks());
             }
         } catch (Exception e) {
             LOG.error("Error running the dataprotection migration.", e); //$NON-NLS-1$

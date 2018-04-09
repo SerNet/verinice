@@ -13,7 +13,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -73,16 +72,6 @@ public class MigrateDataProtectionDialog extends TitleAreaDialog {
             composite.setLayout(new GridLayout(1, false));
             composite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 
-            final Button btnCheckButton = new Button(composite, SWT.CHECK);
-            btnCheckButton.setSelection(showMigrationDialog);
-            btnCheckButton.addSelectionListener(new SelectionAdapter() {
-                @Override
-                public void widgetSelected(SelectionEvent e) {
-                    showMigrationDialog = btnCheckButton.getSelection();
-                }
-            });
-            btnCheckButton.setText(Messages.MigrateDataProtectionDialog_show_migration_dialog);
-
         } catch (CommandException ex) {
             LOG.error("Error while loading organizations", ex); //$NON-NLS-1$
             setMessage(sernet.verinice.rcp.risk.Messages.OrganizationPage_ErrorMessage,
@@ -116,10 +105,6 @@ public class MigrateDataProtectionDialog extends TitleAreaDialog {
 
     public void setSelectedElement(CnATreeElement selectedElement) {
         this.selectedElement = selectedElement;
-    }
-
-    public boolean isShowMigrationDialog() {
-        return showMigrationDialog;
     }
 
     public void setSelection(ITreeSelection selection) {
