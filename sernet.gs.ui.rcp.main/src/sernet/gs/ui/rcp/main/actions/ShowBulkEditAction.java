@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.naming.ConfigurationException;
 
@@ -38,6 +39,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -53,11 +56,15 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.PasswordException;
+import sernet.verinice.model.bp.DeductionImplementationUtil;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bpm.TodoViewItem;
 import sernet.verinice.model.bsi.DocumentReference;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.IISO27kElement;
@@ -407,7 +414,30 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             monitor.beginTask(Messages.ShowBulkEditAction_12, IProgressMonitor.UNKNOWN);
             UpdateMultipleElementEntities command = new UpdateMultipleElementEntities(
                     selectedElements);
-            ServiceFactory.lookupCommandService().executeCommand(command);
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            List<CnATreeElement> changedElements = command.getChangedElements();
+            for (CnATreeElement cnATreeElement : changedElements) {
+                if (!(cnATreeElement instanceof Safeguard)) {
+                    continue;
+                }
+                cnATreeElement = Retriever.retrieveElement(cnATreeElement, new RetrieveInfo()
+                        .setProperties(true).setLinksUp(true).setLinksUpProperties(true));
+                Set<CnALink> linksUp = cnATreeElement.getLinksUp();
+                for (CnALink cnALink : linksUp) {
+                    if (BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD
+                            .equals(cnALink.getRelationId())) {
+                        CnATreeElement requirement = cnALink.getDependant();
+                        if (DeductionImplementationUtil
+                                .isDeductiveImplementationEnabled(requirement)) {
+                            // the requirements' implementation status could
+                            // have been updated if state deduction is
+                            // enabled, so better refresh them (VN-2067)
+                            CnAElementFactory.getModel(requirement).childChanged(requirement);
+                        }
+                    }
+
+                }
+            }
         } catch (Exception e) {
             logger.error("Error while bulk update", e);
             ExceptionUtil.log(e, Messages.ShowBulkEditAction_13);
