@@ -23,6 +23,7 @@
       <perspective
             class="sernet.gs.ui.rcp.main.PerspectiveDS"
             icon="icons/shield.png"
+            id="sernet.gs.ui.rcp.main.PerspectiveDS"
             name="%perspective.name.0"/>
       <perspective
             class="sernet.verinice.iso27k.rcp.Iso27kPerspective"
