@@ -56,11 +56,11 @@ import sernet.verinice.service.commands.dataprotection.migration.MigrateDataProt
 public class MigrateDataProtectionActionDelegate extends RightsEnabledActionDelegate
         implements IWorkbenchWindowActionDelegate {
 
-    private final class RunMigrationCommand implements IRunnableWithProgress {
+    private final class RunMigration implements IRunnableWithProgress {
         private final Set<CnATreeElement> selectedElementSet;
         private MigrateDataProtectionCommand migrateDataProtectionCommand;
 
-        private RunMigrationCommand(Set<CnATreeElement> selectedElementSet) {
+        private RunMigration(Set<CnATreeElement> selectedElementSet) {
             this.selectedElementSet = selectedElementSet;
         }
 
@@ -69,12 +69,12 @@ public class MigrateDataProtectionActionDelegate extends RightsEnabledActionDele
                 throws InvocationTargetException, InterruptedException {
             monitor.beginTask(Messages.MigrateDataProtectionActionDelegate_monitor_message,
                     IProgressMonitor.UNKNOWN);
-            MigrateDataProtectionCommand command = new MigrateDataProtectionCommand(
+            MigrateDataProtectionCommand migrationCommand = new MigrateDataProtectionCommand(
                     selectedElementSet);
 
             try {
                 migrateDataProtectionCommand = ServiceFactory.lookupCommandService()
-                        .executeCommand(command);
+                        .executeCommand(migrationCommand);
                 monitor.beginTask(Messages.MigrateDataProtectionActionDelegate_monitor_message_refresh, IProgressMonitor.UNKNOWN);
                 CnAElementFactory.getInstance().reloadIsoModelFromDatabase();
             } catch (CommandException e) {
@@ -102,15 +102,15 @@ public class MigrateDataProtectionActionDelegate extends RightsEnabledActionDele
             dialog.setSelection(selection);
             if (dialog.open() == Window.OK) {
                 Set<CnATreeElement> selectedElementSet = dialog.getSelectedElementSet();
-                RunMigrationCommand commandRunner = new RunMigrationCommand(selectedElementSet);
+                RunMigration commandRunner = new RunMigration(selectedElementSet);
                 PlatformUI.getWorkbench().getProgressService().busyCursorWhile(commandRunner);
 
-                MigrateDataProtectionCommand cmd = commandRunner.migrateDataProtectionCommand;
-                Collection<String> processes = cmd.getAffectedProcessNames();
-                Collection<String> missedControls = cmd.getMissedControlNames();
+                MigrateDataProtectionCommand migrationCommand = commandRunner.migrateDataProtectionCommand;
+                Collection<String> processes = migrationCommand.getAffectedProcessNames();
+                Collection<String> missedControls = migrationCommand.getMissedControlNames();
                 displayFinishedDialog(selectedElementSet, processes,
-                        cmd.getAffectedNumberOfControls(), missedControls,
-                        cmd.getNumberOfCreatedLinks(), cmd.getNumberOfDeletedLinks());
+                        migrationCommand.getAffectedNumberOfControls(), missedControls,
+                        migrationCommand.getNumberOfCreatedLinks(), migrationCommand.getNumberOfDeletedLinks());
             }
         } catch (Exception e) {
             LOG.error("Error running the dataprotection migration.", e); //$NON-NLS-1$

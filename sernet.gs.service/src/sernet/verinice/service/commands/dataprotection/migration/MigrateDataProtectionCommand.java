@@ -109,25 +109,23 @@ public class MigrateDataProtectionCommand extends GraphCommand {
         for (String relation : RELATIONS) {
             addRelationId(relation);
         }
+
+        numberOfCreatedLinks = 0;
+        missedNumberOfControls = 0;
     }
 
     @Override
     public void executeWithGraph() {
+        linkDao = getDaoFactory().getDAO(CnALink.class);
         VeriniceGraph processGraph = getGraph();
         processes = processGraph.getElements(Process.TYPE_ID);
         Set<CnATreeElement> controls = processGraph.getElements(Control.TYPE_ID);
-        Set<Integer> scopeIds = new HashSet<>(processes.size());
-        for (CnATreeElement process : processes) {
-            scopeIds.add(process.getScopeId());
-        }
+        Set<Integer> scopeIds = collectAffectedScopeIds();
 
-        linkDao = getDaoFactory().getDAO(CnALink.class);
-        numberOfCreatedLinks = 0;
-        missedNumberOfControls = 0;
         affectedControlsNames = new ArrayList<>(controls.size());
         missedControlNames = new ArrayList<>(controls.size());
         affectedProcessNames = new ArrayList<>(processes.size());
-        Map<CnATreeElement, Set<CnATreeElement>> ds_links2create = new HashMap<>(controls.size());
+        Map<CnATreeElement, Set<CnATreeElement>> dsLinks2create = new HashMap<>(controls.size());
         Set<CnATreeElement> controls2Update = new HashSet<>(controls.size());
         Set<CnALink.Id> linkData = new HashSet<>(
                 controls.size() * RELATIONS.size() * processes.size());
@@ -137,9 +135,8 @@ public class MigrateDataProtectionCommand extends GraphCommand {
             Set<PropertyType> toms = getTOMS(control);
             if (toms != null && !toms.isEmpty()) {
                 updateControlWithToms(control, toms, controls2Update);
-                Set<CnATreeElement> affectedProcesses = collectLinksToRemove(control, linkData,
-                        controls2Update);
-                    ds_links2create.put(control, affectedProcesses);
+                Set<CnATreeElement> affectedProcesses = collectLinksToRemove(control, linkData);
+                    dsLinks2create.put(control, affectedProcesses);
                     affectedControlsNames.add(control.getTitle());
             } else {
                 missedControlNames.add(control.getTitle());
@@ -148,13 +145,23 @@ public class MigrateDataProtectionCommand extends GraphCommand {
         }
         numberOfDeletedLinks = linkData.size();
         missedNumberOfControls = missedControls.size();
-        affectedNumberOfControls = ds_links2create.size();
+        affectedNumberOfControls = dsLinks2create.size();
         for (CnATreeElement cnATreeElement : processes) {
             affectedProcessNames.add(cnATreeElement.getTitle());
         }
-        persitData(linkData, missedControls, scopeIds, controls2Update, ds_links2create);
-        LOG.info("command finished");
+        persitData(linkData, missedControls, scopeIds, controls2Update, dsLinks2create);
         getGraphService().setRelationIds(null);
+    }
+
+    /**
+     * @return
+     */
+    private Set<Integer> collectAffectedScopeIds() {
+        Set<Integer> scopeIds = new HashSet<>(processes.size());
+        for (CnATreeElement process : processes) {
+            scopeIds.add(process.getScopeId());
+        }
+        return scopeIds;
     }
 
     /**
@@ -163,7 +170,7 @@ public class MigrateDataProtectionCommand extends GraphCommand {
      */
     private void persitData(Set<Id> linkData, Set<CnATreeElement> missedControls,
             final Set<Integer> scopeIds, Set<CnATreeElement> controls2Update,
-            Map<CnATreeElement, Set<CnATreeElement>> ds_links2create) {
+            Map<CnATreeElement, Set<CnATreeElement>> dsLinks2create) {
         try {
 
             IElementEntityDao elementEntityDao = getDaoFactory().getElementEntityDao();
@@ -188,7 +195,7 @@ public class MigrateDataProtectionCommand extends GraphCommand {
                 }
             });
 
-            changeLinks(linkData, missedControls, ds_links2create);
+            changeLinks(linkData, missedControls, dsLinks2create);
         } catch (Exception e) {
             LOG.error("Error while delete persit migratioin data.", e);
             throw new RuntimeCommandException(e);
@@ -197,12 +204,12 @@ public class MigrateDataProtectionCommand extends GraphCommand {
 
     /**
      * Creates the new links of type 'rel_process_control_objectives' for each
-     * process to control in ds_links2create. Update all remaining links
+     * process to control in dsLinks2create. Update all remaining links
      * description and delete all old links.
      */
     private void changeLinks(Set<Id> linkData, Set<CnATreeElement> missedControls,
-            Map<CnATreeElement, Set<CnATreeElement>> ds_links2create) {
-        for (Entry<CnATreeElement, Set<CnATreeElement>> entry : ds_links2create.entrySet()) {
+            Map<CnATreeElement, Set<CnATreeElement>> dsLinks2create) {
+        for (Entry<CnATreeElement, Set<CnATreeElement>> entry : dsLinks2create.entrySet()) {
             for (CnATreeElement process : entry.getValue()) {
                 CnALink link = new CnALink(process, entry.getKey(), REL_PROCESS_CONTROL_OBJECTIVES,
                         null);
@@ -287,13 +294,10 @@ public class MigrateDataProtectionCommand extends GraphCommand {
     /**
      * Collects the links to remove in the linkData set.
      *
-     * @param controls2Update
-     *
      * @return the affected processes
      * @throws CommandException
      */
-    private Set<CnATreeElement> collectLinksToRemove(CnATreeElement control, Set<Id> linkData,
-            Set<CnATreeElement> controls2Update) {
+    private Set<CnATreeElement> collectLinksToRemove(CnATreeElement control, Set<Id> linkData) {
         VeriniceGraph processGraph = getGraph();
         Set<Edge> allRelations = processGraph.getEdgesByElementType(control, Process.TYPE_ID);
 

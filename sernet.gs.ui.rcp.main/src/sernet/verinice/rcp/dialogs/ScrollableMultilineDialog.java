@@ -76,10 +76,10 @@ public class ScrollableMultilineDialog extends TitleAreaDialog {
         composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
         composite.setVisible(showSaveButton);
 
-        Composite composite_export = new Composite(composite, SWT.NONE);
-        GridData gd_composite_1 = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
-        gd_composite_1.heightHint = 32;
-        composite_export.setLayoutData(gd_composite_1);
+        Composite compositeExport = new Composite(composite, SWT.NONE);
+        GridData gdComposite = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
+        gdComposite.heightHint = 32;
+        compositeExport.setLayoutData(gdComposite);
 
         Button btnNewButton = new Button(composite, SWT.NONE);
         btnNewButton.addSelectionListener(new SelectionAdapter() {
