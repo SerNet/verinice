@@ -33,20 +33,23 @@ import sernet.verinice.model.common.CnATreeElement;
 /**
  * This command disables the deduction of implementation state of requirements.
  */
-public class DisableDeductionCommand extends GenericCommand {
+public class ChangeDeductionCommand extends GenericCommand {
 
     private static final long serialVersionUID = 8635370207893250381L;
 
-    private static final Logger LOG = Logger.getLogger(DisableDeductionCommand.class);
+    private static final Logger LOG = Logger.getLogger(ChangeDeductionCommand.class);
 
     private transient ModelingMetaDao metaDao;
 
-    private transient Set<String> newModuleUuidsFromScope;
+    private transient Set<String> moduleUuidsFromScope;
+
+    private boolean deductImplementation = false;
 
 
-    public DisableDeductionCommand(Set<String> newModuleUuidsFromScope) {
+    public ChangeDeductionCommand(Set<String> moduleUuidsFromScope, boolean deductImplementation) {
         super();
-        this.newModuleUuidsFromScope = newModuleUuidsFromScope;
+        this.moduleUuidsFromScope = moduleUuidsFromScope;
+        this.deductImplementation = deductImplementation;
     }
 
     @Override
@@ -62,12 +65,12 @@ public class DisableDeductionCommand extends GenericCommand {
     }
 
     private void handleRequirement(BpRequirement requirement) {
-        requirement.setDeductionOfImplementation(false);
+        requirement.setDeductionOfImplementation(deductImplementation);
         getMetaDao().save(requirement);
     }
 
     private Set<CnATreeElement> loadRequirements() {
-        return getMetaDao().loadChildrenWithProperties(newModuleUuidsFromScope,
+        return getMetaDao().loadChildrenWithProperties(moduleUuidsFromScope,
                 BpRequirement.TYPE_ID);
     }
 

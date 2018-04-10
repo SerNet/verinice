@@ -118,9 +118,8 @@ public class ModelCommand extends ChangeLoggingCommand {
             handleModules();
             if (isHandleSafeguards()) {
                 handleSafeguards();
-            } else {
-                disableDeduction();
             }
+            setDeduction(isHandleSafeguards());
             handleThreats();
             createLinks();
             if (isHandleSafeguards() && isHandleDummySafeguards()) {
@@ -148,9 +147,9 @@ public class ModelCommand extends ChangeLoggingCommand {
         safeguardGroupUuidsFromScope = modelSafeguardsCommand.getGroupUuidsFromScope();
     }
 
-    private void disableDeduction() throws CommandException {
-        DisableDeductionCommand disableDeductionCommand = new DisableDeductionCommand(
-                moduleUuidsFromScope);
+    private void setDeduction(boolean deductImplementation) throws CommandException {
+        ChangeDeductionCommand disableDeductionCommand = new ChangeDeductionCommand(
+                moduleUuidsFromScope, deductImplementation);
         getCommandService().executeCommand(disableDeductionCommand);
     }
 
