@@ -154,6 +154,7 @@ public class MigrateDataProtectionCommand extends GraphCommand {
         }
         persitData(linkData, missedControls, scopeIds, controls2Update, ds_links2create);
         LOG.info("command finished");
+        getGraphService().setRelationIds(null);
     }
 
     /**
@@ -161,7 +162,7 @@ public class MigrateDataProtectionCommand extends GraphCommand {
      * and don't use commands.
      */
     private void persitData(Set<Id> linkData, Set<CnATreeElement> missedControls,
-            Set<Integer> scopeIds, Set<CnATreeElement> controls2Update,
+            final Set<Integer> scopeIds, Set<CnATreeElement> controls2Update,
             Map<CnATreeElement, Set<CnATreeElement>> ds_links2create) {
         try {
 
@@ -221,7 +222,7 @@ public class MigrateDataProtectionCommand extends GraphCommand {
     private void updateMissedLinksDescription(Set<CnATreeElement> missedControls) {
         VeriniceGraph processGraph = getGraph();
         LOG.info("update old link descriptions");
-        Set<CnALink.Id> ids = new HashSet<>(missedControls.size() * RELATIONS.size());
+        final Set<CnALink.Id> ids = new HashSet<>(missedControls.size() * RELATIONS.size());
         for (CnATreeElement control : missedControls) {
             Set<Edge> allRelations = processGraph.getEdgesByElementType(control, Process.TYPE_ID);
             for (Edge edge : allRelations) {
@@ -251,7 +252,7 @@ public class MigrateDataProtectionCommand extends GraphCommand {
     /**
      * Delete all old dp links of the migrated controls. This should be the last
      */
-    private void deleteOldLinks(Set<Id> linkData) {
+    private void deleteOldLinks(final Set<Id> linkData) {
         IBaseDao<CnALink, Serializable> dao = getDaoFactory().getDAO(CnALink.class);
             dao.executeCallback(new HibernateCallback() {
 
