@@ -186,8 +186,7 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
 
         modelCommand = new ModelCommand(compendiumUuids, targetUuids);
         modelCommand = getCommandService().executeCommand(modelCommand);
-        CnAElementFactory.getInstance().reloadBpModelFromDatabase();
-        CnAElementFactory.getInstance().reloadCatalogModelFromDatabase();
+        CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
     }
 
     private void closeEditors() {
