@@ -180,7 +180,7 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
         CnATreeElement safeguardGroup = null;
         Set<CnATreeElement> children = element.getChildren();
         safeguardGroup = getSafeguardGroup(fullTitle, children);
-        if (safeguardGroup == null) {
+        if (safeguardGroup == null && !safeguardGroupUuidsFromScope.isEmpty()) {
             if (safeguardGroups == null) {
                 safeguardGroups = getMetaDao()
                         .loadElementsWithProperties(safeguardGroupUuidsFromScope);
