@@ -21,6 +21,7 @@ package sernet.verinice.rcp.dataprotection;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -39,6 +40,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -107,7 +109,10 @@ public class MigrateDataProtectionActionDelegate extends RightsEnabledActionDele
 
                 MigrateDataProtectionCommand migrationCommand = commandRunner.migrateDataProtectionCommand;
                 Collection<String> processes = migrationCommand.getAffectedProcessNames();
+                Collections.sort(migrationCommand.getMissedControlNames(),
+                        new NumericStringComparator());
                 Collection<String> missedControls = migrationCommand.getMissedControlNames();
+
                 displayFinishedDialog(selectedElementSet, processes,
                         migrationCommand.getAffectedNumberOfControls(), missedControls,
                         migrationCommand.getNumberOfCreatedLinks(), migrationCommand.getNumberOfDeletedLinks());
