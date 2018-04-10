@@ -1,0 +1,48 @@
+buildscript {
+	repositories {
+		mavenLocal()
+		mavenCentral()
+	    maven {
+      		url 'http://oss.sonatype.org/content/repositories/snapshots/'
+    	}
+	}
+	dependencies {
+		classpath 'org.standardout:bnd-platform:1.6.0-SNAPSHOT'
+	}
+}
+
+apply plugin: 'org.standardout.bnd-platform'
+
+repositories {
+	jcenter()
+	maven {
+		url 'http://conjars.org/repo/'
+	}
+}
+
+platform {
+	// configure proper names for the p2 update site
+	categoryId = 'Verinice-Eclipse-Libs'
+	categoryName = 'Verinice Eclipse Libs'
+
+	featureId = 'All-Verinice-Eclipse-Libs'
+	featureName = 'All Verinice Eclipse Libs'
+	featureVersion = '0.1.0.'
+	featureProvider = 'Verinice'
+
+	defaultQualifier = ''
+	useBndHashQualifiers = false
+	useFeatureHashQualifiers = false
+	defaultQualifierMap.prefix = ''
+	
+	feature(id: 'deps', name: 'deps', version: '1.0.0') {
+		plugin fileTree('/home/simon/git/verinice-master/verinice/target-platform/stripped-target') {
+   			 include '**/*.jar'
+   			 exclude '**/*sources.jar'
+		}
+	}
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '4.6'
+}

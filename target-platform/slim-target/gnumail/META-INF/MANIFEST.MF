@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: gnumail
+Bundle-SymbolicName: gnumail
+Bundle-Version: 1.1.2
+Bundle-ClassPath: gnumail-1.1.2.jar,
+ gnumail-providers-1.1.2.jar
+Export-Package: gnu.mail.handler,
+ gnu.mail.util,
+ javax.mail,
+ javax.mail.event,
+ javax.mail.internet,
+ javax.mail.search,
+ javax.mail.util
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Eclipse-BuddyPolicy: registered
+Require-Bundle: inetlib;bundle-version="1.1.1"
