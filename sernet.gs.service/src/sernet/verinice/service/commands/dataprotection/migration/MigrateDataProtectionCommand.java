@@ -132,12 +132,15 @@ public class MigrateDataProtectionCommand extends GraphCommand {
         Set<CnATreeElement> missedControls = new HashSet<>(controls.size());
 
         for (CnATreeElement control : controls) {
+            if (!isDsGvoControl(control, processGraph)) {
+                continue;
+            }
             Set<PropertyType> toms = getTOMS(control);
             if (toms != null && !toms.isEmpty()) {
                 updateControlWithToms(control, toms, controls2Update);
                 Set<CnATreeElement> affectedProcesses = collectLinksToRemove(control, linkData);
-                    dsLinks2create.put(control, affectedProcesses);
-                    affectedControlsNames.add(control.getTitle());
+                dsLinks2create.put(control, affectedProcesses);
+                affectedControlsNames.add(control.getTitle());
             } else {
                 missedControlNames.add(control.getTitle());
                 missedControls.add(control);
@@ -154,7 +157,23 @@ public class MigrateDataProtectionCommand extends GraphCommand {
     }
 
     /**
-     * @return
+     * Check if the control is linked to a process, only then the control is
+     * relevant for the migration because we get only those relevant links back
+     * from the graph service.
+     *
+     */
+    private boolean isDsGvoControl(CnATreeElement control, VeriniceGraph processGraph) {
+        Set<CnATreeElement> linkTargets = processGraph.getLinkTargets(control);
+        for (CnATreeElement cnATreeElement : linkTargets) {
+            if (cnATreeElement.getTypeId().equals(Process.TYPE_ID)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Collects the scopes of the affected processes.
      */
     private Set<Integer> collectAffectedScopeIds() {
         Set<Integer> scopeIds = new HashSet<>(processes.size());
