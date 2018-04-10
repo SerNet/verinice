@@ -52,7 +52,6 @@ public final class TomMapper {
     private static final int NUMBER_OF_TOMS = 8;
     private Map<String, Set<PropertyType>> isoMapping;
     private Map<String, Set<PropertyType>> itgsMapping;
-    private Map<String, Set<PropertyType>> customMapping;
 
     private TomMapper() {
         super();
@@ -111,35 +110,35 @@ public final class TomMapper {
         Set<PropertyType> hashSet = new HashSet<>(NUMBER_OF_TOMS);
         if (!line[1].isEmpty()) {
             hashSet.add(HUITypeFactory.getInstance().getPropertyType(Control.TYPE_ID,
-                    "control_data_protection_objectives_eugdpr_pseudonymization"));
+                    Control.PROP_CONTROL_EUGDPR_PSEUDONYMIZATION));
         }
         if (!line[2].isEmpty()) {
             hashSet.add(HUITypeFactory.getInstance().getPropertyType(Control.TYPE_ID,
-                    "control_data_protection_objectives_eugdpr_encryption"));
+                    Control.PROP_CONTROL_EUGDPR_ENCRYPTION));
         }
         if (!line[3].isEmpty()) {
             hashSet.add(HUITypeFactory.getInstance().getPropertyType(Control.TYPE_ID,
-                    "control_data_protection_objectives_eugdpr_confidentiality"));
+                    Control.PROP_CONTROL_EUGDPR_CONFIDENTIALITY));
         }
         if (!line[4].isEmpty()) {
             hashSet.add(HUITypeFactory.getInstance().getPropertyType(Control.TYPE_ID,
-                    "control_data_protection_objectives_eugdpr_integrity"));
+                    Control.PROP_CONTROL_EUGDPR_INTEGRITY));
         }
         if (!line[5].isEmpty()) {
             hashSet.add(HUITypeFactory.getInstance().getPropertyType(Control.TYPE_ID,
-                    "control_data_protection_objectives_eugdpr_availability"));
+                    Control.PROP_CONTROL_EUGDPR_AVAILABILITY));
         }
         if (!line[6].isEmpty()) {
             hashSet.add(HUITypeFactory.getInstance().getPropertyType(Control.TYPE_ID,
-                    "control_data_protection_objectives_eugdpr_resilience"));
+                    Control.PROP_CONTROL_EUGDPR_RESILIENCE));
         }
         if (!line[7].isEmpty()) {
             hashSet.add(HUITypeFactory.getInstance().getPropertyType(Control.TYPE_ID,
-                    "control_data_protection_objectives_eugdpr_recoverability"));
+                    Control.PROP_CONTROL_EUGDPR_RECOVERABILITY));
         }
         if (!line[8].isEmpty()) {
             hashSet.add(HUITypeFactory.getInstance().getPropertyType(Control.TYPE_ID,
-                    "control_data_protection_objectives_eugdpr_effectiveness"));
+                    Control.PROP_CONTROL_EUGDPR_EFFECTIVENESS));
         }
 
         return hashSet;
