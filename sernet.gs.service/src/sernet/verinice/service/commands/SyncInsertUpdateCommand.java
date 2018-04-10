@@ -762,7 +762,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         try {
             command = getCommandService().executeCommand(command);
         } catch (CommandException e) {
-            final String message = "Error while loading element by source " + "and externeal id";
+            final String message = "Error while loading element by source and external ID";
             log.error(message, e);
             throw new RuntimeCommandException(message, e);
         }
@@ -772,7 +772,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 result = foundElements.get(0);
             }
             if (foundElements.size() > 1) {
-                final String message = "Found more than one element with " + "source-id: " + sourceId + " and externeal-id: " + externalId;
+                final String message = "Found more than one element with source-id: " + sourceId + " and external ID: " + externalId;
                 log.error(message);
                 throw new RuntimeCommandException(message);
             }
