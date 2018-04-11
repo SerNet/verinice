@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target name="target-platform-separated" sequenceNumber="23">
+<locations>
+<location path="/home/simon/mirror/mozilla" type="Directory"/>
+<location path="/home/simon/mirror/datatools" type="Directory"/>
+<location path="/home/simon/mirror/lowagie" type="Directory"/>
+<location path="/home/simon/mirror/emf" type="Directory"/>
+<location path="/home/simon/mirror/elastic" type="Directory"/>
+<location path="/home/simon/mirror/gson" type="Directory"/>
+<location path="/home/simon/mirror/birt" type="Directory"/>
+<location path="/home/simon/mirror/beanutils" type="Directory"/>
+<location path="/home/simon/mirror/pax" type="Directory"/>
+<location path="/home/simon/mirror/w3c" type="Directory"/>
+<location path="/home/simon/mirror/spring" type="Directory"/>
+<location path="/home/simon/mirror/apache/batik" type="Directory"/>
+<location path="/home/simon/mirror/jfree" type="Directory"/>
+<location path="/home/simon/mirror/3.7/eclipse/plugins" type="Directory"/>
+<location path="/home/simon/mirror/apache/commons" type="Directory"/>
+<location path="/home/simon/mirror/threeten" type="Directory"/>
+</locations>
+</target>
