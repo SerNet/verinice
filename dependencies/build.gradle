@@ -34,12 +34,22 @@ platform {
 	useBndHashQualifiers = false
 	useFeatureHashQualifiers = false
 	defaultQualifierMap.prefix = ''
+
 	
-	feature(id: 'deps', name: 'deps', version: '1.0.0') {
-		plugin fileTree('/home/simon/git/verinice-master/verinice/target-platform/stripped-target') {
-   			 include '**/*.jar'
-   			 exclude '**/*sources.jar'
-		}
+//	feature(id: 'deps', name: 'deps', version: '1.0.0') {
+//		plugin fileTree('/home/simon/git/verinice-master/verinice/target-platform/stripped-target') {
+//   			 include '**/*.jar'
+//   			 exclude '**/*sources.jar'
+//		}
+//	}
+	
+	feature(id: 'gemini-blueprint', name: 'gemini-blueprint', version: '1.0.0') {
+		plugin('org.eclipse.gemini.blueprint:gemini-blueprint-extender:2.1.0.RELEASE')
+		plugin('org.eclipse.gemini.blueprint:gemini-blueprint-io:2.1.0.RELEASE')
+		plugin('org.eclipse.gemini.blueprint:gemini-blueprint-extensions:2.1.0.RELEASE')
+		plugin('org.apache.servicemix.bundles:org.apache.servicemix.bundles.aopalliance:1.0_6')
+		plugin('org.apache.servicemix.bundles:org.apache.servicemix.bundles.spring-aop:4.3.7.RELEASE_1')
+		plugin('org.apache.servicemix.bundles:org.apache.servicemix.bundles.spring-orm:4.3.7.RELEASE_1')
 	}
 }
 
