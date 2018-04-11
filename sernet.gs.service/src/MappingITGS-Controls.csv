@@ -1,0 +1,706 @@
+M 1.1 Einhaltung Einschlägiger Normen und Vorschriften,x,x,x,x,x,x,x,x
+M 1.1 Einhaltung einschlägiger Normen und Vorschriften,x,x,x,x,x,x,x,x
+M 1.10 Sichere Türen und Fenster,,,x,,,,,
+M 1.10 Verwendung von Sicherheitstüren und -fenstern,,,x,,,,,
+M 1.11 Lagepläne der Versorgungsleitungen,,,x,,,,,
+M 1.12 Vermeidung von Lagehinweisen auf schützenswerte Gebäudeteile,,,x,,,,,
+M 1.13 Anordnung schützenswerter Gebäudeteile,,,x,,,,,
+M 1.15 Geschlossene Fenster und Türen,,,x,,,,,
+M 1.16 Geeignete Standortauswahl,,,,,x,x,,
+M 1.17 Pförtnerdienst,,,x,,,,,
+M 1.18 Gefahrenmeldeanlage,,,x,,x,,,
+M 1.19 Einbruchsschutz,,,x,,,,,
+M 1.2 Regelungen für Zutritt zu Verteilern,,,x,,,,,
+M 1.22 Materielle Sicherung von Leitungen und Verteilern,,,X,X,X,,,
+M 1.23 Abgeschlossene Türen,,,X,,,,,
+M 1.24 Vermeidung von wasserführenden Leitungen,,,,,X,,,
+M 1.26 Not-Aus-Schalter,,,,,x,,,
+M 1.27 Klimatisierung der Technik / in Technikräumen,,,,,x,,,
+M 1.28 Lokale unterbrechungsfreie Stromversorgung,,,,,x,,,
+M 1.29 Geeignete Aufstellung eines IT-Systems,,,x,,,,,
+M 1.30 Absicherung der Datenträger mit TK-Gebührendaten,,,x,x,,,,
+M 1.31 Fernanzeige von Störungen,,,,,x,,,
+M 1.32 Geeignete Aufstellung von Druckern und Kopierern,,,x,,,,,
+M 1.33 Geeignete Aufbewahrung tragbarer IT-Systeme bei mobilem Einsatz,,,x,x,x,,,
+M 1.34 Geeignete Aufbewahrung tragbarer IT-Systeme im stationären Einsatz,,,x,x,x,,,
+M 1.35 Sammelaufbewahrung tragbarer IT-Systeme,,,x,,x,,,
+M 1.36 Sichere Aufbewahrung der Datenträger vor und nach Versand,,,x,x,x,,,
+M 1.37 Geeignete Aufstellung eines Faxgerätes,,,x,,,,,
+M 1.38 Geeignete Aufstellung eines Modems,,,x,,,,,
+M 1.4 Blitzschutzeinrichtungen,,,,,x,,,
+M 1.40 Geeignete Aufstellung von Schutzschränken,,,,,x,,,
+M 1.43 Gesicherte Aufstellung aktiver Netzkomponenten,,,x,,x,,,
+M 1.44 Geeignete Einrichtung eines häuslichen Arbeitsplatzes,,,x,x,x,,,
+M 1.45 Geeignete Aufbewahrung dienstlicher Unterlagen und Datenträger,,,x,x,x,,,
+M 1.46 Einsatz von Diebstahl-Sicherungen,,,x,,x,,,
+M 1.47 Eigener Brandabschnitt,,,,,x,,,
+M 1.48 Brandmeldeanlage im Rechenzentrum,,,,,x,,,
+M 1.49 Technische und organisatorische Vorgaben für das Rechenzentrum,,,x,x,x,,,
+M 1.50 Rauchschutz,,,,,x,,,
+M 1.51 Brandlastreduzierung,,,,,x,,,
+"M 1.52 Redundanz, Modularität und Skalierbarkeit in der technischen Infrastruktur",,,,,x,x,x,
+M 1.53 Videoüberwachung,,,x,,x,,,
+M 1.54 Brandfrühesterkennung / Löschtechnik,,,,,x,,,
+M 1.58 Technische und organisatorische Vorgaben für Serverräume,,,x,x,x,,,
+M 1.59 Geeignete Aufstellung von Speicher- und Archivsystemen,,,x,,x,,,
+M 1.6 Einhaltung von Brandschutzvorschriften,,,,,x,,,
+M 1.60 Geeignete Lagerung von Archivmedien,,,x,,x,,,
+M 1.61 Geeignete Auswahl und Nutzung eines mobilen Arbeitsplatzes,,,x,x,x,,,
+M 1.62 Brandschutz von Patchfeldern,,,,,x,,,
+M 1.63 Geeignete Aufstellung von Access Points,,,x,,,,,
+M 1.7 Handfeuerlöscher,,,,,x,,,
+M 1.70 Zentrale unterbrechungsfreie Stromversorgung,,,,,x,,,
+M 1.71 Funktionstests der technischen Infrastruktur,,,,,x,,,
+M 1.75 Branderkennung in Gebäuden,,,,,x,,,
+M 1.78 Sicherheitskonzept für die Gebäudenutzung,,,x,,,,,
+M 1.79 Bildung von Sicherheitszonen,,,x,,,,,
+M 1.80 Zutrittskontrollsystem und Berechtigungsmanagement,,,x,,,,,
+M 1.9 Brandabschottung von Trassen,,,,,x,,,
+M 2.1 Festlegung von Verantwortlichkeiten und Regelungen,x,x,x,x,x,x,x,x
+M 2.109 Rechtevergabe für den Fernzugriff,,,x,,,,,
+M 2.11 Regelung des Passwortgebrauchs,,x,x,x,,,,
+M 2.110 Datenschutzaspekte bei der Protokollierung,,,x,x,,,,
+M 2.112 Regelung des Akten- und Datenträgertransports zwischen häuslichem Arbeitsplatz und Institution,,,x,x,x,,,
+M 2.113 Regelungen für Telearbeit,,,x,x,x,,,
+M 2.114 Informationsfluss zwischen Telearbeiter und Institution,,,,x,,,,
+M 2.115 Betreuungs- und Wartungskonzept für Telearbeitsplätze,,,x,x,x,,,
+M 2.117 Erstellung eines Sicherheitskonzeptes für Telearbeit,,,x,x,x,,,
+M 2.124 Geeignete Auswahl einer Datenbank-Software,,,x,x,x,,,
+M 2.125 Installation und Konfiguration einer Datenbank,,,x,x,x,,,
+M 2.126 Erstellung eines Datenbanksicherheitskonzeptes,,,x,x,x,,,
+M 2.128 Zugangskontrolle einer Datenbank,,,x,,,,,
+M 2.129 Zugriffskontrolle einer Datenbank,,,x,,,,,
+M 2.13 Ordnungsgemäße Entsorgung von schützenswerten Betriebsmitteln,,,x,x,,,,
+M 2.130 Gewährleistung der Datenbankintegrität,,,x,x,x,,,
+M 2.131 Aufteilung von Administrationstätigkeiten bei Datenbanksystemen,,,x,x,x,,,
+M 2.132 Regelung für die Einrichtung von Datenbankbenutzern/-benutzergruppen,,,x,x,x,,,
+M 2.133 Kontrolle der Protokolldateien eines Datenbanksystems,,,x,x,x,,,
+M 2.134 Richtlinien für Datenbank-Anfragen,,,x,x,x,,,
+M 2.135 Gesicherte Datenübernahme in eine Datenbank,,,x,x,x,,,
+M 2.137 Beschaffung eines geeigneten Datensicherungssystems,,,,,x,,,
+M 2.138 Strukturierte Datenhaltung,,,,,x,,,
+M 2.139 Ist-Aufnahme der aktuellen Netzsituation,,,x,x,x,,,
+M 2.14 Schlüsselverwaltung,,,x,,x,,,
+M 2.140 Analyse der aktuellen Netzsituation,,,x,x,x,,,
+M 2.141 Entwicklung eines Netzkonzeptes,,,x,x,x,,,
+M 2.143 Entwicklung eines Netzmanagement-Konzeptes,,,x,x,x,,,
+M 2.143 Entwicklung eines Netzmanagementkonzeptes,,,x,x,x,,,
+M 2.144 Verwendung von SNMP als Netzmanagement-Protokoll,,,x,x,x,,,
+M 2.144 Geeignete Auswahl eines Netzmanagement-Protokolls,,,x,x,x,,,
+M 2.145 Anforderungen an ein Netzmanagement-Tool,,,x,x,x,,,
+M 2.146 Sicherer Betrieb eines Netzmanagement-Systems,,,x,x,x,,,
+M 2.146 Sicherer Betrieb eines Netzmanagementsystems,,,x,x,x,,,
+M 2.15 Brandschutzbegehungen,,,,,x,,,
+M 2.154 Erstellung eines Sicherheitskonzeptes gegen Schadprogramme,,,x,,x,,,
+M 2.157 Auswahl eines geeigneten Viren-Schutzprogramms,,,x,,x,,,
+M 2.158 Meldung von Schadprogramm-Infektionen,,,x,,x,,,
+M 2.159 Aktualisierung der eingesetzten Viren-Schutzprogramme und Signaturen,,,x,,x,,,
+M 2.16 Beaufsichtigung oder Begleitung von Fremdpersonen,,,x,,x,,,
+M 2.160 Regelungen zum Schutz vor Schadprogrammen,,,x,,x,,,
+M 2.161 Entwicklung eines Kryptokonzepts,,x,x,x,x,x,x,x
+M 2.162 Bedarfserhebung für den Einsatz kryptographischer Verfahren und Produkte,,x,x,x,x,x,x,x
+M 2.163 Erhebung der Einflussfaktoren für kryptographische Verfahren und Produkte,,x,x,x,x,x,x,x
+M 2.164 Auswahl eines geeigneten kryptographischen Verfahrens,,x,x,x,x,x,x,x
+M 2.165 Auswahl eines geeigneten kryptographischen Produktes,,x,x,x,x,x,x,x
+M 2.166 Regelung des Einsatzes von Kryptomodulen,,x,x,x,x,x,x,x
+M 2.167 Auswahl geeigneter Verfahren zur Löschung oder Vernichtung von Daten,,,x,,,,,
+M 2.168 IT-System-Analyse vor Einführung eines Systemmanagement-Systems,,,x,x,x,,x,x
+M 2.168 IT-System-Analyse vor Einführung eines Systemmanagementsystems,,,x,x,x,,x,x
+M 2.169 Entwickeln einer Systemmanagementstrategie,,,x,x,x,,x,x
+M 2.17 Zutrittsregelung und -kontrolle,,,,x,,,,
+M 2.170 Anforderungen an ein Systemmanagement-System,,,x,x,x,,,x
+M 2.170 Anforderungen an ein Systemmanagementsystem,,,x,x,x,,,x
+M 2.171 Geeignete Auswahl eines Systemmanagement-Produktes,,,x,x,x,x,x,x
+M 2.177 Sicherheit bei Umzügen,,x,,x,x,,x,
+M 2.178 Erstellung einer Sicherheitsleitlinie für die Faxnutzung,,,x,x,x,,x,x
+M 2.179 Regelungen für den Faxserver-Einsatz,,,x,x,x,,,x
+M 2.180 Einrichten einer Fax-Poststelle,,,x,x,x,,,
+M 2.181 Auswahl eines geeigneten Faxservers,,,x,x,x,,x,
+M 2.188 Sicherheitsrichtlinien und Regelungen für die Mobiltelefon-Nutzung,,x,x,x,x,,,x
+M 2.189 Sperrung des Mobiltelefons bei Verlust,,x,x,x,x,,,
+M 2.19 Neutrale Dokumentation in den Verteilern,,,,x,x,,,
+M 2.192 Erstellung einer Leitlinie zur Informationssicherheit,x,x,x,x,x,x,x,x
+M 2.193 Aufbau einer geeigneten Organisationsstruktur für Informationssicherheit,x,x,x,x,x,x,x,x
+M 2.195 Erstellung eines Sicherheitskonzepts,x,x,x,x,x,x,x,x
+M 2.197 Integration der Mitarbeiter in den Sicherheitsprozess,,,x,x,x,,,x
+M 2.198 Sensibilisierung der Mitarbeiter für Informationssicherheit,x,x,x,x,x,,x,x
+M 2.199 Aufrechterhaltung der Informationssicherheit,,,,,,,,x
+M 2.200 Management-Berichte zur Informationssicherheit,,,,,,,,x
+M 2.201 Dokumentation des Sicherheitsprozesses,,,,,,,,x
+M 2.204 Verhinderung ungesicherter Netzzugänge,,,x,x,,,,
+M 2.205 Übertragung und Abruf personenbezogener Daten,,,x,x,,,,
+M 2.212 Organisatorische Vorgaben für die Gebäudereinigung,,,x,x,x,,,
+M 2.213 Inspektion und Wartung der technischen Infrastruktur,,,,,x,x,x,x
+M 2.214 Konzeption des IT-Betriebs,,,x,x,x,x,x,x
+"M 2.217 Sorgfältige Einstufung und Umgang mit Informationen, Anwendungen und Systemen",,,x,x,x,,,x
+M 2.218 Regelung der Mitnahme von Datenträgern und IT-Komponenten,,,,x,,,,
+M 2.22 Hinterlegen des Passwortes,,,,,x,,,
+M 2.22 Hinterlegen des Passworts,,,,,x,,,
+M 2.220 Richtlinien für die Zugriffs- bzw. Zugangskontrolle,,,,x,,,,x
+M 2.221 Änderungsmanagement,,,,,,,,x
+M 2.223 Sicherheitsvorgaben für die Nutzung von Standardsoftware,x,x,x,x,x,,x,x
+M 2.224 Vorbeugung gegen Schadprogramme,,x,x,x,x,,x,x
+"M 2.225 Zuweisung der Verantwortung für Informationen, Anwendungen und IT-Komponenten",,,x,x,x,,,x
+M 2.226 Regelungen für den Einsatz von Fremdpersonal,,,x,x,x,,,x
+M 2.23 Herausgabe einer PC-Richtlinie,x,x,x,x,x,,,x
+M 2.234 Konzeption von Internet-PCs,x,x,x,x,x,,,x
+M 2.235 Richtlinien für die Nutzung von Internet-PCs,x,x,x,x,x,,,x
+M 2.242 Zielsetzung der elektronischen Archivierung,,x,x,x,x,x,x,x
+M 2.243 Entwicklung des Archivierungskonzepts,,x,x,x,x,x,x,x
+M 2.244 Ermittlung der technischen Einflussfaktoren für die elektronische Archivierung,,x,x,x,x,x,x,x
+M 2.245 Ermittlung der rechtlichen Einflussfaktoren für die elektronische Archivierung,,x,x,x,x,x,x,x
+M 2.246 Ermittlung der organisatorischen Einflussfaktoren für die elektronische Archivierung,,x,x,x,x,x,x,x
+M 2.250 Festlegung einer Outsourcing-Strategie,,,x,x,x,,,x
+M 2.251 Festlegung der Sicherheitsanforderungen für Outsourcing-Vorhaben,,,x,x,x,,,x
+M 2.252 Wahl eines geeigneten Outsourcing-Dienstleisters,,,x,x,x,,,x
+M 2.253 Vertragsgestaltung mit dem Outsourcing-Dienstleister,,,x,x,x,,,x
+M 2.254 Erstellung eines Sicherheitskonzepts für das Outsourcing-Vorhaben,,,x,x,x,,,x
+M 2.254 Erstellung eines IT-Sicherheitskonzepts für das Outsourcing-Vorhaben,,,x,x,x,,,x
+M 2.255 Sichere Migration bei Outsourcing-Vorhaben,,,x,x,x,,,x
+M 2.256 Planung und Aufrechterhaltung der Informationssicherheit im laufenden Outsourcing-Betrieb,,,x,x,x,,,x
+M 2.256 Planung und Aufrechterhaltung der IT-Sicherheit im laufenden Outsourcing-Betrieb,,,x,x,x,,,x
+M 2.259 Einführung eines übergeordneten Dokumentenmanagements,,,x,,x,,,
+M 2.262 Regelung der Nutzung von Archivsystemen,,x,x,x,x,x,x,x
+M 2.264 Regelmäßige Aufbereitung von verschlüsselten Daten bei der Archivierung,,x,x,x,,,,
+M 2.265 Geeigneter Einsatz digitaler Signaturen bei der Archivierung,,x,x,x,,,,
+M 2.27 Wartung einer TK-Anlage,,,x,x,x,,,x
+M 2.273 Zeitnahes Einspielen sicherheitsrelevanter Patches und Updates,,,x,x,x,,,x
+M 2.279 Erstellung einer Sicherheitsrichtlinie für Router und Switches,,,x,,x,,,x
+M 2.282 Regelmäßige Kontrolle von Routern und Switches,,,,,,,,x
+M 2.3 Datenträgerverwaltung,,,x,,x,,,
+M 2.30 Regelung für die Einrichtung von Benutzern / Benutzergruppen,,,x,,,,,
+M 2.300 Sichere Außerbetriebnahme oder Ersatz von Komponenten eines Sicherheitsgateways,,,,x,,,,
+"M 2.304 Sicherheitsrichtlinien und Regelungen für die Nutzung von Smartphones, Tablets und PDAs",,,x,x,x,,,x
+M 2.306 Verlustmeldung,,,x,x,x,,,
+M 2.307 Geordnete Beendigung eines Outsourcing- oder Cloud-Nutzungs-Verhältnisses,,,x,x,x,,,x
+M 2.309 Sicherheitsrichtlinien und Regelungen für die mobile IT-Nutzung,,,x,x,x,,,x
+M 2.31 Dokumentation der zugelassenen Benutzer und Rechteprofile,,,x,,,,,
+M 2.310 Geeignete Auswahl von Laptops,,,x,,,,,
+M 2.311 Planung von Schutzschränken,,,x,,,,,
+M 2.312 Konzeption eines Schulungs- und Sensibilisierungsprogramms zur Informationssicherheit,x,x,x,x,x,,x,x
+M 2.313 Sichere Anmeldung bei Internet-Diensten,,,x,,,,,
+M 2.314 Verwendung von hochverfügbaren Architekturen für Server,,,,,x,x,x,
+M 2.315 Planung des Servereinsatzes,,,x,x,x,x,x,
+M 2.316 Festlegen einer Sicherheitsrichtlinie für einen allgemeinen Server,,,x,x,x,x,x,
+M 2.317 Beschaffungskriterien für einen Server,,,x,x,x,x,x,
+M 2.318 Sichere Installation eines IT-Systems,,,x,x,x,x,,
+M 2.318 Sichere Installation eines Servers,,,x,x,x,x,,
+M 2.319 Migration eines Servers,,,x,x,x,,,
+M 2.32 Einrichtung einer eingeschränkten Benutzerumgebung,,,x,,,,,
+M 2.320 Geregelte Außerbetriebnahme eines Servers,,,x,x,x,,,
+M 2.321 Planung des Einsatzes von Client-Server-Netzen,,,x,x,x,,,
+M 2.322 Festlegen einer Sicherheitsrichtlinie für ein Client-Server-Netz,,,x,x,x,x,x,
+M 2.323 Geregelte Außerbetriebnahme eines Clients,,,x,x,x,,,
+M 2.324 Einführung von Windows auf Clients ab Windows XP planen,,x,x,x,x,,,
+M 2.324 Einführung von Windows XP und Windows Vista planen,,x,x,x,x,,,
+M 2.325 Planung der Sicherheitsrichtlinien für Windows-Clients ab Windows XP,,x,x,x,x,,,
+M 2.325 Planung der Sicherheitsrichtlinien von Windows XP und Windows Vista,,x,x,x,x,,,
+M 2.326 Planung der Gruppenrichtlinien für Clients ab Windows XP,,,x,x,x,,,
+M 2.326 Planung der Windows XP und Windows Vista Gruppenrichtlinien,,,x,x,x,,,
+M 2.327 Sicherheit beim Fernzugriff auf Clients ab Windows XP,,,x,x,x,,,
+M 2.327 Sicherheit beim Fernzugriff unter Windows XP und Windows Vista,,,x,x,x,,,
+M 2.328 Einsatz von Windows XP auf mobilen Rechnern,,x,x,x,x,,,
+M 2.329 Einführung von Windows XP SP2,,,x,x,x,,,
+M 2.33 Aufteilung der Administrationstätigkeiten unter Unix,,,x,x,,,,
+M 2.330 Regelmäßige Prüfung der Sicherheitsrichtlinien und ihrer Umsetzung bei Windows-Clients ab Windows XP,,,,,,,,x
+M 2.330 Regelmäßige Prüfung der Windows XP und Windows Vista Sicherheitsrichtlinien und ihrer Umsetzung,,,,,,,,x
+M 2.335 Festlegung der Sicherheitsziele und -strategie,,,x,x,x,,,
+M 2.336 Übernahme der Gesamtverantwortung für Informationssicherheit durch die Leitungsebene,,,x,x,x,,,x
+M 2.337 Integration der Informationssicherheit in organisationsweite Abläufe und Prozesse,,,x,x,x,,,x
+M 2.338 Erstellung von zielgruppengerechten Sicherheitsrichtlinien,,,x,x,x,,,x
+M 2.341 Planung des SAP Einsatzes,,,x,x,x,,,
+M 2.342 Planung von SAP Berechtigungen,,,x,,,,,
+M 2.344 Sicherer Betrieb von SAP Systemen im Internet,,,x,,,,,
+M 2.345 Outsourcing eines SAP Systems,,,,,,,,x
+M 2.35 Informationsbeschaffung über Sicherheitslücken des Systems,,,,,x,,,
+M 2.355 Auswahl von Lieferanten für eine Speicherlösung,,,,,,,,x
+M 2.356 Vertragsgestaltung mit Dienstleistern für Speicherlösungen,,,,,,,,x
+M 2.356 Vertragsgestaltung mit SAN-Dienstleistern,,,,,,,,x
+M 2.357 Aufbau eines Administrationsnetzes für Speichersysteme,,,x,,,,,
+M 2.359 Überwachung und Verwaltung von Speicherlösungen,,,,,,,,x
+M 2.360 Sicherheits-Audits und Berichtswesen bei Speichersystemen,,,,,,,,x
+M 2.363 Schutz gegen SQL-Injection,,,x,,x,,,
+M 2.37 Der aufgeräumte Arbeitsplatz,,,x,x,x,,,
+M 2.370 Administration der Berechtigungen ab Windows Server 2003,,,x,x,,,,
+M 2.370 Administration der Berechtigungen unter Windows Server 2003,,,x,x,,,,
+M 2.371 Geregelte Deaktivierung und Löschung ungenutzter Konten,,,x,,,,,
+M 2.38 Aufteilung der Administrationstätigkeiten,,,,x,,,,
+M 2.381 Festlegung einer Strategie für die WLAN-Nutzung,,,x,x,,,,x
+M 2.382 Erstellung einer Sicherheitsrichtlinie zur WLAN-Nutzung,,,x,x,,,,x
+M 2.383 Auswahl eines geeigneten WLAN-Standards,,,x,x,,,,
+M 2.384 Auswahl geeigneter Kryptoverfahren für WLAN,,x,x,x,,,,
+M 2.385 Geeignete Auswahl von WLAN-Komponenten,,x,x,x,,,,x
+M 2.386 Sorgfältige Planung notwendiger WLAN-Migrationsschritte,,,x,x,,,,x
+"M 2.387 Installation, Konfiguration und Betreuung eines WLANs durch Dritte",,,x,x,,,,x
+M 2.388 Geeignetes WLAN-Schlüsselmanagement,,x,x,x,,,,x
+M 2.389 Sichere Nutzung von Hotspots,,,x,x,,,,
+M 2.39 Reaktion auf Verletzungen der Sicherheitsvorgaben,,,,,,,,x
+M 2.4 Regelungen für Wartungs- und Reparaturarbeiten,,,x,x,x,,,x
+"M 2.400 Sichere Außerbetriebnahme von Druckern, Kopierern und Multifunktionsgeräten",,,x,x,x,,,
+M 2.401 Umgang mit mobilen Datenträgern und Geräten,,,x,x,x,,,
+M 2.402 Zurücksetzen von Passwörtern,,,x,,,,,
+M 2.41 Verpflichtung der Mitarbeiter zur Datensicherung,,,,,x,,,
+M 2.411 Trennung der Verwaltung von Diensten und Daten eines Active Directory,,,x,x,,,,
+M 2.412 Schutz der Authentisierung beim Einsatz von Active Directory,,,x,x,,,,
+M 2.413 Sicherer Einsatz von DNS für Active Directory,,,x,x,,,,
+M 2.414 Computer-Viren-Schutz für Domänen-Controller,,,x,x,x,,x,
+M 2.415 Durchführung einer VPN-Anforderungsanalyse,,,x,x,,,,
+M 2.416 Planung des VPN-Einsatzes,,,x,x,,,,
+M 2.417 Planung der technischen VPN-Realisierung,,x,x,x,,,,
+M 2.418 Erstellung einer Sicherheitsrichtlinie zur VPN-Nutzung,,,x,x,,,,x
+M 2.419 Geeignete Auswahl von VPN-Produkten,,,x,x,,,,
+M 2.42 Festlegung der möglichen Kommunikationspartner,,,,x,,,,
+M 2.420 Auswahl eines Trusted-VPN-Dienstleisters,,,x,x,,,,
+M 2.421 Planung des Patch- und Änderungsmanagementprozesses,,,x,x,,x,x,x
+M 2.422 Umgang mit Änderungsanforderungen,,,x,x,,,,
+M 2.423 Festlegung der Verantwortlichkeiten für das Patch- und Änderungsmanagement,,,x,x,,,,x
+M 2.424 Sicherheitsrichtlinie zum Einsatz von Patch- und Änderungsmanagement-Werkzeugen,,,x,x,,x,x,x
+M 2.425 Geeignete Auswahl von Werkzeugen für das Patch- und Änderungsmanagement,,,x,x,,x,x,
+M 2.426 Integration des Patch- und Änderungsmanagements in die Geschäftsprozesse,,,x,x,,,,x
+M 2.427 Abstimmung von Änderungsanforderungen,,,,,,,,x
+M 2.428 Skalierbarkeit beim Patch- und Änderungsmanagement,,,,,,x,,
+M 2.43 Ausreichende Kennzeichnung der Datenträger beim Versand,,,x,x,,,,
+M 2.430 Sicherheitsrichtlinien und Regelungen für den Informationsschutz unterwegs,,,x,x,x,,,x
+M 2.431 Regelung der Vorgehensweise für die Löschung oder Vernichtung von Informationen,,,x,x,,,,x
+M 2.432 Richtlinie für die Löschung und Vernichtung von Informationen,,,,,,,,x
+M 2.45 Regelung des Datenträgeraustausches,,,x,x,,,,x
+M 2.454 Planung des sicheren Einsatzes von Groupware-Systemen,,,x,x,x,,,
+M 2.455 Festlegung einer Sicherheitsrichtlinie für Groupware,,,x,x,x,,,x
+M 2.456 Sichere Administration von Groupware-Systemen,,,x,x,,,,
+M 2.457 Konzeption für die sichere Internet-Nutzung,,,x,x,x,,,
+M 2.458 Richtlinie für die Internet-Nutzung,,,x,x,x,,,x
+M 2.46 Geeignetes Schlüsselmanagement,,x,x,x,,,,
+M 2.460 Geregelte Nutzung von externen Dienstleistungen,,,x,x,x,,,x
+M 2.497 Erstellung eines Sicherheitskonzepts für die Protokollierung,,,x,x,,,,
+M 2.498 Behandlung von Warn- und Fehlermeldungen,,,,,x,x,x,x
+"M 2.498 Behandlung von Warn-, und Fehlermeldungen",,,,,x,x,x,x
+M 2.5 Aufgabenverteilung und Funktionstrennung,,,x,x,,,,
+M 2.50 Geeignete Entsorgung von Fax-Verbrauchsgütern und -Ersatzteilen,,,x,x,,,,
+M 2.500 Protokollierung von IT-Systemen,,,,x,,,,
+M 2.501 Datenschutzmanagement,,,x,x,x,,,
+M 2.502 Regelung der Verantwortlichkeiten im Bereich Datenschutz,x,x,x,x,x,x,x,x
+M 2.503 Aspekte eines Datenschutzkonzeptes,,,x,x,x,,,x
+M 2.504 Prüfung rechtlicher Rahmenbedingungen und Vorabkontrolle bei der Verarbeitung personenbezogener Daten,x,x,x,x,x,x,x,x
+M 2.505 Festlegung von technisch-organisatorischen Maßnahmen entsprechend dem Stand der Technik bei der Verarbeitung personenbezogener Daten,x,x,x,x,x,x,x,x
+M 2.506 Verpflichtung/Unterrichtung der Mitarbeiter bei der Verarbeitung personenbezogener Daten,,,x,x,x,,,x
+M 2.507 Organisatorische Verfahren zur Sicherstellung der Rechte der Betroffenen bei der Verarbeitung personenbezogener Daten,,,x,x,x,,,x
+M 2.508 Führung von Verfahrensverzeichnissen und Erfüllung der Meldepflichten bei der Verarbeitung personenbezogener Daten,,,x,x,x,,,x
+M 2.509 Datenschutzrechtliche Freigabe,,,x,x,x,,,
+M 2.510 Meldung und Regelung von Abrufverfahren bei der Verarbeitung personenbezogener Daten,,,x,x,x,,,x
+M 2.511 Regelung der Auftragsdatenverarbeitung bei der Verarbeitung personenbezogener Daten,,,x,x,x,,,x
+M 2.512 Regelung der Verknüpfung und Verwendung von Daten bei der Verarbeitung personenbezogener Daten,,,x,x,x,,,x
+M 2.513 Dokumentation der datenschutzrechtlichen Zulässigkeit,,,x,x,x,,,x
+M 2.514 Aufrechterhaltung des Datenschutzes im laufenden Betrieb,,,x,x,x,,,x
+M 2.515 Datenschutzgerechte Löschung/Vernichtung,,,x,x,x,,,
+M 2.516 Bereitstellung von Sicherheitsrichtlinien für Cloud-Anwender,x,x,x,x,x,x,x,x
+M 2.517 Vertragsgestaltung mit Dritt-Dienstleistern,,,x,x,x,,,x
+M 2.518 Einsatz einer hochverfügbaren Firewall-Lösung,,,,,,x,x,x
+M 2.519 Geregelte Benutzer- und Berechtigungsverwaltung im Cloud Computing,,,x,x,,,,
+M 2.520 Sicheres und vollständiges Löschen von Cloud-Anwenderdaten,,,x,x,,,,
+M 2.53 Abschalten des Faxgerätes außerhalb der Bürozeiten,,,x,x,,,,
+M 2.534 Erstellung einer Cloud-Nutzungs-Strategie,,,x,x,x,,,x
+M 2.535 Erstellung einer Sicherheitsrichtlinie für die Cloud-Nutzung,,,x,x,x,x,x,x
+M 2.539 Erstellung eines Sicherheitskonzeptes für die Cloud-Nutzung,,,x,x,x,x,x,x
+M 2.540 Sorgfältige Auswahl eines Cloud-Diensteanbieters,,,x,x,x,,,x
+M 2.541 Vertragsgestaltung mit dem Cloud-Diensteanbieter,,,x,x,x,,,x
+M 2.543 Aufrechterhaltung der Informationssicherheit im laufenden Cloud-Nutzungs-Betrieb,,,,,,,x,x
+M 2.544 Auditierung bei Cloud-Nutzung,,,,,,,,x
+M 2.555 Entwicklung eines Authentisierungskonzeptes für Anwendungen,,,x,,,,,
+M 2.556 Planung und Umsetzung von Test und Freigabe von Anwendungen,,,x,,,,,
+"M 2.558 Sensibilisierung der Mitarbeiter zur Informationssicherheit bei Mobiltelefonen, Smartphones, Tablets und PDAs",x,x,x,x,x,,x,x
+M 2.575 Regelmäßige Sicherheitsaudits für die Software-Entwicklungsumgebung,,,,,,,,X
+M 2.576 Erstellung einer Sicherheitsrichtlinie für den Einsatz von lokalen Netzen,,,,,,,,X
+M 2.577 Auswahl geeigneter Kryptoverfahren für Netze,,x,x,x,,,,
+"M 2.578 Installation, Konfiguration und Betreuung eines lokalen Netzes durch Dritte",,,,,,,,x
+M 2.579 Regelmäßige Audits des lokalen Netzes,,,,,,,,x
+M 2.585 Konzeption eines Identitäts- und Berechtigungsmanagements,,,x,,,,,x
+"M 2.586 Einrichtung, Änderung und Entzug von Berechtigungen",,,x,,,,,x
+M 2.587 Vorgehensweise und Konzeption der Prozesse beim Identitäs- und Berechtigungsmanagement,,,x,,,,,x
+M 2.6 Vergabe von Zutrittsberechtigungen,,,x,,,,,
+M 2.60 Sichere Administration eines Modems,,,x,x,,,,
+M 2.61 Regelung des Modem-Einsatzes,,,x,x,,,,
+M 2.62 Software-Abnahme- und Freigabe-Verfahren,,,,x,x,,,x
+M 2.63 Einrichten der Zugriffsrechte,,,x,,,,,
+M 2.64 Kontrolle der Protokolldateien,,,x,x,,,,x
+M 2.65 Kontrolle der Wirksamkeit der Benutzer-Trennung am IT-System,,,,x,,,,x
+M 2.69 Einrichtung von Standardarbeitsplätzen,,,x,x,x,,,x
+M 2.7 Vergabe von Zugangsberechtigungen,,,x,,,,,
+M 2.70 Entwicklung eines Konzepts für Sicherheitsgateways,,,x,x,,,,
+M 2.71 Festlegung einer Policy für ein Sicherheitsgateway,,,x,x,,,,
+M 2.8 Vergabe von Zugriffsrechten,,,x,,,,,
+M 2.80 Erstellung eines Anforderungskatalogs für Standardsoftware,x,x,x,x,x,x,x,x
+M 2.9 Nutzungsverbot nicht freigegebener Hard- und Software,,,x,x,x,,,
+M 3.11 Schulung des Wartungs- und Administrationspersonals,x,x,x,x,x,,x,x
+M 3.13 Sensibilisierung der Mitarbeiter für mögliche TK-Gefährdungen,,,x,x,x,,,x
+M 3.14 Einweisung des Personals in den geregelten Ablauf der Informationsweitergabe und des Datenträgeraustausches,,,,x,,,,
+M 3.15 Informationen für alle Mitarbeiter über die Faxnutzung,,,,x,,,,
+M 3.18 Verpflichtung der Benutzer zum Abmelden nach Aufgabenerfüllung,,,x,,,,,
+"M 3.2 Verpflichtung der Mitarbeiter auf Einhaltung einschlägiger Gesetze, Vorschriften und Regelungen",x,x,x,x,x,x,x,x
+M 3.21 Sicherheitstechnische Einweisung der Telearbeiter,x,x,x,x,x,,,x
+M 3.23 Einführung in kryptographische Grundbegriffe,,x,x,x,,,,
+M 3.26 Einweisung des Personals in den sicheren Umgang mit IT,x,x,x,x,x,,x,x
+M 3.27 Schulung zur Active Directory-Verwaltung,x,x,x,x,x,,x,x
+M 3.28 Schulung zu Sicherheitsmechanismen für Benutzer bei Windows Client-Betriebssystemen,x,x,x,x,x,,x,x
+M 3.29 Schulung zur Administration von Novell eDirectory,x,x,x,x,x,,x,x
+M 3.33 Sicherheitsüberprüfung von Mitarbeitern,,,x,x,,,,x
+M 3.44 Sensibilisierung des Managements für Informationssicherheit,x,x,x,x,x,,x,x
+M 3.45 Planung von Schulungsinhalten zur Informationssicherheit,x,x,x,x,x,,x,x
+M 3.46 Ansprechpartner zu Sicherheitsfragen,x,x,x,x,x,,x,x
+M 3.47 Durchführung von Planspielen zur Informationssicherheit,x,x,x,x,x,,x,x
+M 3.48 Auswahl von Trainern oder externen Schulungsanbietern,x,x,x,x,x,,x,x
+M 3.49 Schulung zur Vorgehensweise nach IT-Grundschutz,x,x,x,x,x,,x,x
+M 3.5 Schulung zu Sicerheitsmaßnahmen,x,x,x,x,x,,x,x
+M 3.5 Schulung zu Sicherheitsmaßnahmen,x,x,x,x,x,,x,x
+M 3.55 Vertraulichkeitsvereinbarungen,,,X,,,,,X
+M 3.59 Schulung zum sicheren WLAN-Einsatz,,x,x,x,x,,x,x
+M 3.6 Geregelte Verfahrensweise beim Ausscheiden von Mitarbeitern,,,x,,,,,
+M 3.60 Sensibilisierung der Mitarbeiter zum sicheren Umgang mit mobilen Datenträgern und Geräten,x,x,x,x,x,,x,x
+M 3.67 Einweisung aller Mitarbeiter über Methoden zur Löschung oder Vernichtung von Daten,,,x,,,,,x
+M 3.77 Sensibilisierung zur sicheren Internet-Nutzung,,,x,x,x,,,x
+M 3.78 Korrektes Auftreten im Internet,,,x,x,x,,,x
+M 3.90 Allgemeine Grundlagen für die zentrale Protokollierung,,,x,x,x,x,,x
+M 4.1 Passwortschutz für IT-Systeme,,,x,x,x,,,
+M 4.11 Absicherung der TK-Anlagen-Schnittstellen,,,x,x,,,,
+M 4.13 Sorgfältige Vergabe von IDs,,,x,x,x,,,
+M 4.133 Geeignete Auswahl von Authentikationsmechanismen,,,x,,,,,
+M 4.135 Restriktive Vergabe von Zugriffsrechten auf Systemdateien,,,x,,,,,
+M 4.14 Obligatorischer Passwortschutz unter Unix,,,x,,,,,
+M 4.146 Sicherer Betrieb von Windows Client-Betriebssystemen,,,x,x,x,,,
+M 4.149 Datei- und Freigabeberechtigungen unter Windows,,,x,,,,,
+M 4.15 Gesichertes Login,,,x,x,x,,,
+M 4.16 Zugangsbeschränkungen für Benutzer-Kennungen und / oder Terminals,,,x,,x,,,
+M 4.16 Zugangsbeschränkungen für Accounts und / oder Terminals,,,x,,x,,,
+M 4.168 Auswahl eines geeigneten Archivsystems,,,x,,x,,,
+M 4.169 Verwendung geeigneter Archivmedien,,,x,,x,,,
+M 4.17 Sperren und Löschen nicht benötigter Accounts und Terminals,,,x,x,x,,,
+M 4.171 Schutz der Integrität der Index-Datenbank von Archivsystemen,,,x,x,x,,,
+M 4.172 Protokollierung der Archivzugriffe,,,x,x,x,,,
+M 4.173 Regelmäßige Funktions- und Recoverytests bei der Archivierung,,,,,x,,x,x
+M 4.176 Auswahl einer Authentisierungsmethode für Webangebote,,,x,x,x,,,
+M 4.2 Bildschirmsperre,,,x,x,x,,,
+M 4.20 Restriktive Attributvergabe bei Unix-Benutzerdateien und -verzeichnissen,,,x,,,,,
+M 4.200 Umgang mit USB-Speichermedien,,,x,x,x,,,
+M 4.201 Sichere lokale Grundkonfiguration von Routern und Switches,,,x,,,,,
+M 4.202 Sichere Netz-Grundkonfiguration von Routern und Switches,,,x,,,,,
+M 4.203 Konfigurations-Checkliste für Router und Switches,,,x,,,,,
+M 4.204 Sichere Administration von Routern und Switches,,,x,,,,,
+M 4.205 Protokollierung bei Routern und Switches,,,,x,,,,
+M 4.21 Verhinderung des unautorisierten Erlangens von Administratorrechten,,,x,x,x,,,
+M 4.22 Verhinderung des Vertraulichkeitsverlusts schutzbedürftiger Daten im Unix-System,,,x,x,x,,,
+M 4.227 Einsatz eines lokalen NTP-Servers zur Zeitsynchronisation,,,,x,x,,,x
+"M 4.228 Nutzung der Sicherheitsmechanismen von PDAs",,,x,x,,,,
+"M 4.228 Nutzung der Sicherheitsmechanismen von Smartphones, Tablets und PDAs",,,x,x,,,,
+"M 4.229 Sicherer Betrieb von Smartphones, Tablets und PDAs",,,x,x,,,,
+"M 4.229 Sicherer Betrieb von PDAs",,,x,x,,,,
+M 4.23 Sicherer Aufruf ausführbarer Dateien,,,x,x,x,,,
+"M 4.230 Zentrale Administration von Smartphones, Tablets und PDAs",,,x,x,x,,,
+"M 4.230 Zentrale Administration von PDAs",,,x,x,x,,,
+"M 4.231 Einsatz zusätzlicher Sicherheitswerkzeuge für Smartphones, Tablets oder PDAs",,,x,x,x,,,
+"M 4.231 Einsatz zusätzlicher Sicherheitswerkzeuge für PDAs",,,x,x,x,,,
+M 4.237 Sichere Grundkonfiguration eines IT-Systems,,,x,x,x,,,x
+M 4.238 Einsatz eines lokalen Paketfilters,,,x,x,,,,
+M 4.239 Sicherer Betrieb eines Servers,,,x,x,x,,,x
+M 4.24 Sicherstellung einer konsistenten Systemverwaltung,,,x,x,x,,,
+M 4.241 Sicherer Betrieb von Clients,,,x,x,x,,,x
+M 4.243 Verwaltungswerkzeuge unter Windows Client-Betriebssystemen,,,x,x,x,,,x
+M 4.243 Verwaltungswerkzeuge unter Windows Client-Betriebssysteme,,,x,x,x,,,x
+M 4.244 Sichere Systemkonfiguration von Windows Client-Betriebssystemen,,,x,x,x,,,x
+M 4.245 Basiseinstellungen für Windows Group Policy Objects,,,x,x,x,,,x
+M 4.246 Konfiguration der Systemdienste auf Clients ab Windows XP,,,x,x,x,,,x
+M 4.246 Konfiguration der Systemdienste unter Windows XP und Windows Vista,,,x,x,x,,,x
+M 4.247 Restriktive Berechtigungsvergabe bei Client-Betriebssystemen ab Windows Vista,,,x,x,x,,,x
+M 4.247 Restriktive Berechtigungsvergabe unter Windows Client-Betriebssystemen,,,x,x,x,,,x
+M 4.248 Sichere Installation von Windows Client-Betriebssystemen,,,x,x,x,,,x
+M 4.249 Windows Client-Systeme aktuell halten,,,x,x,x,,,x
+M 4.254 Sicherer Einsatz von drahtlosen Tastaturen und Mäusen,,,x,x,,,,
+M 4.255 Nutzung von IrDA-Schnittstellen,,,x,x,,,,
+M 4.256 Sichere Installation von SAP Systemen,,,x,x,,,,
+M 4.257 Absicherung des SAP Installationsverzeichnisses auf Betriebssystemebene,,,x,x,,,,
+M 4.258 Sichere Konfiguration des SAP ABAP-Stacks,,,x,x,,,,
+M 4.259 Sicherer Einsatz der ABAP-Stack Benutzerverwaltung,,,x,x,,,,
+M 4.26 Regelmäßiger Sicherheitscheck des Unix-Systems,,,,,,,,x
+M 4.260 Berechtigungsverwaltung für SAP Systeme,,,x,x,,,,
+M 4.261 Sicherer Umgang mit kritischen SAP Berechtigungen,,,x,x,,,,
+M 4.262 Konfiguration zusätzlicher SAP Berechtigungsprüfungen,,,x,x,,,,
+M 4.263 Absicherung von SAP Destinationen,,,x,x,,,,
+M 4.264 Einschränkung von direkten Tabellenveränderungen in SAP Systemen,,,x,x,,,,
+M 4.265 Sichere Konfiguration der Batch-Verarbeitung im SAP System,,,x,x,,,,
+M 4.266 Sichere Konfiguration des SAP Java-Stacks,,,x,x,,,,
+M 4.267 Sicherer Einsatz der SAP Java-Stack Benutzerverwaltung,,,x,x,,,,
+M 4.268 Sichere Konfiguration der SAP Java-Stack Berechtigungen,,,x,x,,,,
+M 4.269 Sichere Konfiguration der SAP System Datenbank,,,x,x,,,,
+M 4.27 Zugriffsschutz am Laptop,,,x,x,x,,,
+M 4.270 SAP Protokollierung,,,x,x,,,,
+M 4.271 Virenschutz für SAP Systeme,,,x,x,,,,
+M 4.272 Sichere Nutzung des SAP Transportsystems,,,x,x,,,,
+M 4.273 Sichere Nutzung der SAP Java-Stack Software-Verteilung,,,x,x,,,,
+M 4.274 Sichere Grundkonfiguration von Speichersystemen,,,x,x,,,,
+M 4.275 Sicherer Betrieb einer Speicherlösung,,,x,x,,,,
+M 4.276 Planung des Einsatzes von Windows Server 2003,,,x,x,,,,
+"M 4.277 Absicherung der SMB-, LDAP- und RPC-Kommunikation unter Windows Servern",,,x,x,,,,
+"M 4.277 Absicherung der SMB-, LDAP- und RPC-Kommunikation unter Windows Server 2003",,,x,x,,,,
+M 4.278 Sichere Nutzung von EFS unter Windows Server 2003,,,x,x,,,,
+M 4.279 Erweiterte Sicherheitsaspekte für Windows Server 2003,,,x,x,,,,
+M 4.280 Sichere Basiskonfiguration ab Windows Server 2003,,,x,x,,,,
+M 4.280 Sichere Basiskonfiguration von Windows Server 2003,,,x,x,,,,
+M 4.281 Sichere Installation und Bereitstellung von Windows Server 2003,,,x,x,,,,
+M 4.282 Sichere Konfiguration der IIS-Basis-Komponente unter Windows Server 2003,,,x,x,,,,
+M 4.283 Sichere Migration von Windows NT 4 Server und Windows 2000 Server auf Windows Server 2003,,,x,x,,,,
+M 4.284 Umgang mit Diensten ab Windows Server 2003,,,x,x,,,,
+M 4.284 Umgang mit Diensten unter Windows Server 2003,,,x,x,,,,
+M 4.285 Deinstallation nicht benötigter Client-Funktionen von Windows Server 2003,,,x,x,,,,
+M 4.286 Verwendung der Softwareeinschränkungsrichtlinie unter Windows Server 2003,,,x,x,,,,
+M 4.29 Einsatz eines Verschlüsselungsproduktes für tragbare IT-Systeme,,,x,x,x,,,
+M 4.293 Sicherer Betrieb von Hotspots,,,x,x,,,,
+M 4.294 Sichere Konfiguration der Access Points,,x,x,x,,,,
+M 4.295 Sichere Konfiguration der WLAN-Clients,,x,x,x,,,,
+M 4.296 Einsatz einer geeigneten WLAN-Management-Lösung,,,x,x,x,,x,x
+M 4.297 Sicherer Betrieb der WLAN-Komponenten,,,x,x,x,,x,x
+M 4.298 Regelmäßige Audits der WLAN-Komponenten,,,,,,,,x
+"M 4.299 Authentisierung bei Druckern, Kopierern und Multifunktionsgeräten",,,x,,,,,
+M 4.3 Einsatz von Viren-Schutzprogrammen,,,x,x,x,,x,
+"M 4.300 Informationsschutz bei Druckern, Kopierern und Multifunktionsgeräten",,,x,x,x,,,
+"M 4.301 Beschränkung der Zugriffe auf Drucker, Kopierer und Multifunktionsgeräte",,,x,,,,,
+"M 4.302 Protokollierung bei Druckern, Kopierern und Multifunktionsgeräten",,,,x,,,,
+M 4.32 Physikalisches Löschen der Datenträger vor und nach Verwendung,,,x,x,,,,x
+M 4.320 Sichere Konfiguration eines VPNs,,,x,,x,,,x
+M 4.321 Sicherer Betrieb eines VPNs,,,x,,x,,,x
+M 4.322 Sperrung nicht mehr benötigter VPN-Zugänge,,,x,,x,,,x
+M 4.323 Synchronisierung innerhalb des Patch- und Änderungsmanagements,,,x,,x,,,x
+M 4.33 Einsatz eines Viren-Suchprogramms bei Datenträgeraustausch und Datenübertragung,,,,x,x,,,
+"M 4.34 Einsatz von Verschlüsselung, Checksummen oder Digitalen Signaturen",,x,x,x,,,,
+M 4.341 Integritätsschutz ab Windows Vista,,,,x,,,,
+M 4.345 Schutz vor unerwünschten Informationsabflüssen,,,x,x,,,,
+M 4.346 Sichere Konfiguration virtueller IT-Systeme,,,x,x,,x,,
+M 4.348 Zeitsynchronisation in virtuellen IT-Systemen,,,,x,x,,,x
+M 4.349 Sicherer Betrieb von virtuellen Infrastrukturen,,,x,x,,x,,x
+M 4.35 Verifizieren der zu übertragenden Daten vor Versand,,,,x,,,,
+M 4.4 Geeigneter Umgang mit Laufwerken für Wechselmedien und externen Datenspeichern,,x,x,x,x,,,
+M 4.40 Verhinderung der unautorisierten Nutzung von Rechnermikrofonen und Kameras,,x,x,x,x,,,
+M 4.400 Restriktive Herausgabe sicherheitsrelevanter Informationen bei Webanwendungen und Web-Services,,,x,x,x,,,
+M 4.401 Schutz vertraulicher Daten bei Webanwendungen,,x,x,x,,,,
+M 4.402 Zugriffskontrolle bei Webanwendungen,,,x,,,,,
+M 4.41 Einsatz angemessener Sicherheitsprodukte für IT-Systeme,x,x,x,x,x,x,x,
+M 4.42 Implementierung von Sicherheitsfunktionalitäten in der IT-Anwendung,x,x,x,x,x,x,x,
+M 4.428 Audit der Lotus Notes/Domino-Umgebung,,,,,,,,x
+M 4.433 Einsatz von Datenträgerverschlüsselung,,x,x,x,,,,
+M 4.435 Selbstverschlüsselnde Festplatten,,x,x,x,,,,
+M 4.48 Passwortschutz unter Windows-Systemen,,,x,x,x,,,
+M 4.48 Passwortschutz unter NT-basierten Windows-Systemen,,,x,x,x,,,
+M 4.493 Auswahl einer Entwicklungsumgebung für die Software-Entwicklung,,,x,x,x,,,
+M 4.494 Sicherer Einsatz einer Entwicklungsumgebung,x,,x,x,x,,,
+M 4.495 Sicheres Systemdesign bei der Software-Entwicklung,,,x,x,x,,,
+M 4.496 Sichere Installation der entwickelten Software,,,x,x,x,,,
+M 4.497 Sichere Installation eines Netzmanagement-Systems,,,x,x,x,,,
+M 4.498 Sicherer Einsatz von Single-Sign-On,,,x,,,,,
+M 4.499 Geeignete Auswahl von Identitäts- und Berechtigungsmanagement-Systemen,,,x,,,,,
+M 4.5 Protokollierung bei TK-Anlagen,,,,x,,,,
+M 4.500 Sicherer Einsatz von Systemen für Identitäts- und Berechtigungsmanagement,,,x,,,,,
+M 4.6 Revision der TK-Anlagenkonfiguration,,,,,,,,x
+M 4.63 Sicherheitstechnische Anforderungen an den Telearbeitsrechner,x,x,x,x,x,,x,x
+M 4.64 Verifizieren der zu übertragenden Daten vor Weitergabe / Beseitigung von Restinformationen,,,x,x,,,,
+M 4.7 Änderung voreingestellter Passwörter,,,x,x,x,,,
+M 4.72 Datenbank-Verschlüsselung,,x,x,x,,,,
+M 4.79 Sichere Zugriffsmechanismen bei lokaler Administration,,,x,,x,,,
+M 4.80 Sichere Zugriffsmechanismen bei Fernadministration,,,x,,x,,,
+M 4.81 Audit und Protokollierung der Aktivitäten im Netz,,,,,,,,x
+M 4.84 Nutzung der BIOS-Sicherheitsmechanismen,,,x,,,,,
+M 4.9 Einsatz der Sicherheitsmechanismen von X-Window,,,x,,,,,
+M 4.90 Einsatz von kryptographischen Verfahren auf den verschiedenen Schichten des ISO/OSI-Referenzmodells,,x,x,x,,,,
+M 4.91 Sichere Installation eines Systemmanagementsystems,,,x,,x,,,
+M 4.92 Sicherer Betrieb eines Systemmanagementsystems,,,x,,x,,,
+M 4.93 Regelmäßige Integritätsprüfung,,,,,,,,x
+M 4.99 Schutz gegen nachträgliche Veränderungen von Informationen,,,x,,,,,
+M 5.10 Restriktive Rechtevergabe,,,x,,,,,
+M 5.108 Kryptographische Absicherung von Groupware bzw. E-Mail,,x,x,x,,,,
+M 5.109 Einsatz eines E-Mail-Scanners auf dem Mailserver,,,x,x,x,,,
+M 5.121 Sichere Kommunikation von unterwegs,,x,x,x,,,,
+M 5.122 Sicherer Anschluss von Laptops an lokale Netze,,x,x,x,x,,,
+M 5.123 Absicherung der Netzkommunikation unter Windows,,x,x,x,x,,,
+"M 5.124 Netzzugänge in Besprechungs-, Veranstaltungs- und Schulungsräumen",,x,x,x,x,,,
+M 5.125 Absicherung der Kommunikation von und zu SAP Systemen,,x,x,x,x,,,
+M 5.126 Absicherung der SAP RFC-Schnittstelle,,,x,x,x,,,
+M 5.127 Absicherung des SAP Internet Connection Framework (ICF),,,x,x,x,,,
+M 5.128 Absicherung der SAP ALE (IDoc/BAPI) Schnittstelle,,,x,x,x,,,
+M 5.129 Sichere Konfiguration der HTTP-basierten Dienste von SAP Systemen,,x,x,x,x,,,
+M 5.130 Absicherung des SANs durch Segmentierung,,,x,x,x,,x,
+M 5.131 Absicherung von IP-Protokollen unter Windows Server 2003,,x,x,x,x,,,
+M 5.132 Sicherer Einsatz von WebDAV unter Windows Server 2003,,x,x,x,x,,,
+M 5.139 Sichere Anbindung eines WLANs an ein LAN,,,x,x,,,,
+M 5.14 Absicherung interner Remote-Zugänge von TK-Anlagen,,,,x,x,,,
+M 5.141 Regelmäßige Sicherheitschecks in WLANs,,,,,x,,,
+M 5.15 Absicherung externer Remote-Zugänge von TK-Anlagen,,,,x,x,,,
+M 5.150 Durchführung von Penetrationstests,,,,,,,,x
+M 5.16 Übersicht über Netzdienste,,,,x,x,,,
+M 5.160 Authentisierung gegenüber Webservern,,,x,,,,,
+M 5.17 Einsatz der Sicherheitsmechanismen von NFS,,,,x,x,,,
+M 5.18 Einsatz der Sicherheitsmechanismen von NIS,,,,x,x,,,
+M 5.19 Einsatz der Sicherheitsmechanismen von sendmail,,,,x,x,,,
+"M 5.20 Einsatz der Sicherheitsmechanismen von rlogin, rsh und rcp",,,,x,x,,,
+"M 5.21 Sicherer Einsatz von telnet, ftp, tftp und rexec",,,,x,x,,,
+M 5.22 Kompatibilitätsprüfung des Sender- und Empfängersystems,,,,x,,,,
+M 5.23 Auswahl einer geeigneten Versandart für Datenträger,,,,x,,,,
+M 5.26 Telefonische Ankündigung einer Faxsendung,,,x,,,,,
+M 5.27 Telefonische Rückversicherung über korrekten Faxempfang,,,,x,,,,
+M 5.28 Telefonische Rückversicherung über korrekten Faxabsender,,,,x,,,,
+M 5.29 Gelegentliche Kontrolle programmierter Zieladressen und Protokolle,,,,,,,,x
+M 5.32 Sicherer Einsatz von Kommunikationssoftware,,,x,x,,,,
+M 5.33 Absicherung von Fernwartung,,,x,,,,,x
+M 5.34 Einsatz von Einmalpasswörtern,,,x,,,,,
+M 5.39 Sicherer Einsatz der Protokolle und Dienste,,,x,x,x,,,
+M 5.51 Sicherheitstechnische Anforderungen an die Kommunikationsverbindung Telearbeitsrechner - Institution,,,,x,,,,
+M 5.52 Sicherheitstechnische Anforderungen an den Kommunikationsrechner,,,,x,,,,
+M 5.54 Umgang mit unerwünschten E-Mails,,,x,,,,,
+M 5.56 Sicherer Betrieb eines Mailservers,,,x,x,,,,
+M 5.57 Sichere Konfiguration der Groupware-/Mail-Clients,,,x,x,,,,
+M 5.58 Auswahl und Installation von Datenbankschnittstellen-Treibern,,,x,,,,,
+M 5.59 Schutz vor DNS-Spoofing bei Authentisierungsmechanismen,,,x,,,,,
+M 5.60 Auswahl einer geeigneten Backbone-Technologie,,,,,x,x,,
+M 5.61 Geeignete physische Segmentierung,,,x,x,x,,,
+M 5.61 Geeignete physikalische Segmentierung,,,x,x,x,,,
+M 5.62 Geeignete logische Segmentierung,,,x,x,x,,,
+M 5.63 Einsatz von GnuPG oder PGP,,,x,x,,,,
+M 5.64 Secure Shell,,x,x,x,,,,
+M 5.66 Clientseitige Verwendung von SSL/TLS,,x,x,x,,,,
+M 5.66 Verwendung von TLS/SSL,,x,x,x,,,,
+M 5.67 Verwendung eines Zeitstempel-Dienstes,,,x,x,,,,
+M 5.68 Einsatz von Verschlüsselungsverfahren zur Netzkommunikation,,x,x,x,,,,
+M 5.69 Schutz vor aktiven Inhalten,,,x,x,x,,,
+M 5.8 Regelmäßiger Sicherheitscheck des Netzes,,,,,,,,x
+M 5.80 Schutz vor Abhören der Raumgespräche über Mobiltelefone,,,x,,,,,
+M 5.81 Sichere Datenübertragung über Mobiltelefone,,,,x,,,,
+M 5.88 Vereinbarung über Datenaustausch mit Dritten,,,,x,,,,x
+M 5.9 Protokollierung am Server,,,x,x,x,x,,
+M 5.91 Einsatz von Personal Firewalls für Clients,,,x,,,,,
+M 5.92 Sichere Internet-Anbindung von Internet-PCs,,,x,x,x,,,
+M 6.1 Erstellung einer Übersicht über Verfügbarkeitsanforderungen,,,,,x,,,
+M 6.100 Erstellung eines Notfallplans für den Ausfall von VoIP,,,,,x,,,x
+M 6.101 Datensicherung bei VoIP,,,,,x,,,
+M 6.102 Verhaltensregeln bei WLAN-Sicherheitsvorfällen,,,,,x,,,x
+M 6.103 Redundanzen für die Primärverkabelung,,,,,x,,x,
+M 6.104 Redundanzen für die Gebäudeverkabelung,,,,,x,,x,
+"M 6.105 Notfallvorsorge bei Druckern, Kopierern und Multifunktionsgeräten",,,,,x,,,
+M 6.106 Erstellung eines Notfallplans für den Ausfall eines Verzeichnisdienstes,,,,,x,,,x
+M 6.107 Erstellung von Datensicherungen für Verzeichnisdienste,,,,,x,,,
+M 6.108 Datensicherung für Domänen-Controller,,,,,x,,,
+M 6.109 Notfallplan für den Ausfall eines VPNs,,,x,,x,,,x
+M 6.110 Festlegung des Geltungsbereichs und der Notfallmanagementstrategie,,,,,x,,,x
+M 6.111 Leitlinie zum Notfallmanagement und Übernahme der Gesamtverantwortung durch die Leitungsebene,,,,,x,,,x
+M 6.112 Aufbau einer geeigneten Organisationsstruktur für das Notfallmanagement,,,,,x,,,x
+M 6.113 Bereitstellung angemessener Ressourcen für das Notfallmanagement,,,,,x,,,x
+M 6.114 Erstellung eines Notfallkonzepts,,,x,,x,,,x
+M 6.115 Integration der Mitarbeiter in den Notfallmanagement-Prozess,,,,,x,,,x
+M 6.116 Integration von Notfallmanagement in organisationsweite Abläufe und Prozesse,,,,,x,,,x
+M 6.117 Tests und Notfallübungen,,,,,x,,,x
+M 6.118 Überprüfung und Aufrechterhaltung der Notfallmaßnahmen,,,,,x,,,x
+M 6.119 Dokumentation im Notfallmanagement-Prozess,,,x,,x,,,
+M 6.120 Überprüfung und Steuerung des Notfallmanagement-Systems,,,,,,,,x
+M 6.121 Erstellung einer Richtlinie zur Behandlung von Sicherheitsvorfällen,,,x,x,x,,,x
+M 6.122 Definition eines Sicherheitsvorfalls,,,x,x,x,,,x
+M 6.123 Einrichtung eines Expertenteams für die Behandlung von Sicherheitsvorfällen,,,x,x,x,,,x
+M 6.124 Festlegung der Schnittstellen der Sicherheitsvorfallbehandlung zur Störungs- und Fehlerbehebung,,,,,x,,,x
+M 6.125 Einrichtung einer zentralen Kontaktstelle für die Meldung von Sicherheitsvorfällen,,,x,x,x,,,x
+M 6.126 Einführung in die Computer-Forensik,,,x,x,x,,,x
+M 6.127 Etablierung von Beweissicherungsmaßnahmen bei Sicherheitsvorfällen,,,x,x,x,,,x
+M 6.128 Schulung an Beweismittelsicherungswerkzeugen,,,x,x,x,,,x
+M 6.129 Schulung der Mitarbeiter des Service Desk zur Behandlung von Sicherheitsvorfällen,,,x,x,x,,,x
+M 6.130 Erkennen und Erfassen von Sicherheitsvorfällen,,,x,x,x,,,x
+M 6.131 Qualifizieren und Bewerten von Sicherheitsvorfällen,,,x,x,x,,,x
+M 6.132 Eindämmen der Auswirkung von Sicherheitsvorfällen,,,x,x,x,,,x
+M 6.133 Wiederherstellung der Betriebsumgebung nach Sicherheitsvorfällen,,,x,x,x,,x,x
+M 6.134 Dokumentation von Sicherheitsvorfällen,,,,,x,,,
+M 6.135 Regelmäßige Sicherung wichtiger Systemkomponenten eines Samba-Servers,,,,,x,,,
+M 6.136 Erstellen eines Notfallplans für den Ausfall eines Samba-Servers,,,,,x,,,
+M 6.138 Erstellung eines Notfallplans für den Ausfall von Virtualisierungskomponenten,,,,,x,,,
+M 6.139 Erstellen eines Notfallplans für DNS-Server,,,,,x,,,
+M 6.140 Erstellen eines Notfallplans für den Ausfall von Groupware-Systemen,,,,,x,,,
+M 6.141 Festlegung von Ausweichverfahren bei der Internet-Nutzung,,,,,x,,x,
+M 6.142 Einsatz von redundanten Terminalservern,,,,,x,,x,
+M 6.143 Bereitstellung von Terminalserver-Clients aus Depot-Wartung,,,,,x,,,
+M 6.145 Notfallvorsorge für TK-Anlagen,,,,,x,,,
+M 6.146 Datensicherung und Wiederherstellung von Mac OS X Clients,,,,,x,,,
+M 6.148 Aussonderung eines Mac OS X Systems,,,,,x,,,
+M 6.149 Datensicherung unter Exchange,,,,,x,,,
+M 6.150 Datensicherung beim Einsatz von OpenLDAP,,,,,x,,,
+M 6.152 Notfallvorsorge und regelmäßige Datensicherung im Cloud Computing,,,,,x,,,x
+M 6.153 Einsatz von redundanten Cloud-Management-Komponenten,,,,,x,,x,x
+M 6.154 Notfallmanagement für Web-Services,,,,,x,,,x
+M 6.155 Erstellung eines Notfallkonzeptes für einen Cloud Service,,,,,x,,,x
+M 6.156 Durchführung eigener Datensicherungen,,,,,x,,,
+M 6.157 Entwicklung eines Redundanzkonzeptes für Anwendungen,,,,,x,,x,
+M 6.158 Notfallvorsorge für Anwendungen,,,,,x,,,
+"M 6.159 Vorsorge vor Verlust und Diebstahl von Smartphones, Tablets und PDAs",,,,,x,,,
+M 6.16 Abschließen von Versicherungen,,,,,x,,,
+M 6.160 Notfallvorsorgekonzept für SOA-Umgebungen,,,,,x,,,
+M 6.161 Redundante Hardware-Komponenten in serviceorientierten Architekturen,,,,,x,,x,
+M 6.162 Reaktion bei praktischer Schwächung eines Kryptoverfahrens,,,,,x,,,
+M 6.163 Wiederherstellung von eingebetteten Systemen,,,,,x,,x,
+M 6.164 Notfallvorsorge bei der Software-Entwicklung,,,,,x,,,
+M 6.165 Erstellen eines Notfallplans für den Ausfall des lokalen Netzes,,,,,x,,,x
+M 6.166 Notfallvorsorge beim Identitäts- und Berechtigungsmanagement,,,x,,x,,,
+M 6.17 Alarmierungsplan und Brandschutzübungen,,,,,x,,,x
+M 6.18 Redundante Leitungsführung,,,,,x,,x,
+M 6.20 Geeignete Aufbewahrung der Backup-Datenträger,,,x,,x,,,
+M 6.21 Sicherungskopie der eingesetzten Software,,,,,x,,,
+M 6.22 Sporadische Überprüfung auf Wiederherstellbarkeit von Datensicherungen,,,,,x,,x,x
+M 6.23 Verhaltensregeln bei Auftreten von Schadprogrammen,,,,,x,,,x
+M 6.24 Erstellen eines Notfall-Bootmediums,,,,,x,,x,
+M 6.26 Regelmäßige Datensicherung der TK-Anlagen-Konfigurationsdaten,,,,,x,,,
+M 6.27 Sicheres Update des BIOS,,,,,x,,,
+M 6.29 TK-Basisanschluss für Notrufe,,,,,x,,,
+M 6.31 Verhaltensregeln nach Verlust der Systemintegrität,,,,x,x,,,
+M 6.32 Regelmäßige Datensicherung,,,,,x,,,
+M 6.33 Entwicklung eines Datensicherungskonzepts,,,,,x,,,x
+M 6.34 Erhebung der Einflussfaktoren der Datensicherung,,,,,x,,,x
+M 6.35 Festlegung der Verfahrensweise für die Datensicherung,,,,,x,,,x
+M 6.36 Festlegung des Minimaldatensicherungskonzeptes,,,,,x,,,x
+M 6.37 Dokumentation der Datensicherung,,,,,x,,,x
+M 6.38 Sicherungskopie der übermittelten Daten,,,,,x,,,
+M 6.39 Auflistung von Händleradressen zur Fax-Wiederbeschaffung,,,,,x,,,
+M 6.41 Übungen zur Datenrekonstruktion,,,,,x,,,x
+M 6.43 Einsatz redundanter Windows-Server,,,,,x,,x,
+M 6.47 Datensicherung bei der Telearbeit,,,,,x,,,
+M 6.48 Verhaltensregeln nach Verlust der Datenbankintegrität,,,,x,x,,,x
+M 6.49 Datensicherung einer Datenbank,,,,,x,,,
+M 6.50 Archivierung von Datenbeständen,,,,x,x,,,
+M 6.51 Wiederherstellung einer Datenbank,,,,,x,,x,
+M 6.52 Regelmäßige Sicherung der Konfigurationsdaten aktiver Netzkomponenten,,,,,x,,x,x
+M 6.53 Redundante Auslegung der Netzkomponenten,,,,,x,,x,
+M 6.54 Verhaltensregeln nach Verlust der Netzintegrität,,,,x,x,,,x
+M 6.56 Datensicherung bei Einsatz kryptographischer Verfahren,,x,x,,x,,,
+M 6.57 Erstellen eines Notfallplans für den Ausfall des Managementsystems,,,,,x,,,x
+M 6.58 Etablierung einer Vorgehensweise zur Behandlung von Sicherheitsvorfällen,,,x,x,x,,,x
+M 6.59 Festlegung von Verantwortlichkeiten bei Sicherheitsvorfällen,,,x,x,x,,,x
+M 6.60 Festlegung von Meldewegen für Sicherheitsvorfälle,,,x,x,x,,,x
+M 6.61 Eskalationsstrategie für Sicherheitsvorfälle,,,x,x,x,,,x
+M 6.62 Festlegung von Prioritäten für die Behandlung von Sicherheitsvorfällen,,,x,x,x,,,x
+M 6.64 Behebung von Sicherheitsvorfällen,,,x,x,x,,,x
+M 6.65 Benachrichtigung betroffener Stellen bei Sicherheitsvorfällen,,,x,x,x,,,x
+M 6.66 Nachbereitung von Sicherheitsvorfällen,,,x,x,x,,,x
+M 6.67 Einsatz von Detektionsmaßnahmen für Sicherheitsvorfälle,,,x,x,x,,,x
+M 6.68 Effizienzprüfung des Managementsystems zur Behandlung von Sicherheitsvorfällen,,,x,x,x,,,x
+M 6.69 Notfallvorsorge und Ausfallsicherheit bei Faxservern,,,,,x,,,
+M 6.71 Datensicherung bei mobiler Nutzung des IT-Systems,,,,,x,,,
+M 6.72 Ausfallvorsorge bei Mobiltelefonen,,,,,x,,,
+M 6.73 Notfallplanung und Notfallübungen für die Lotus Notes/Domino-Umgebung,,,,,x,,,x
+M 6.74 Notfallarchiv,,,x,,x,,,
+M 6.75 Redundante Kommunikationsverbindungen,,,,,x,,x,
+M 6.76 Erstellen eines Notfallplans für den Ausfall von Windows-Systemen,,,,,x,,,x
+M 6.78 Datensicherung unter Windows Clients,,,,,x,,,
+M 6.79 Datensicherung beim Einsatz von Internet-PCs,,,,,x,,,
+M 6.81 Erstellen von Datensicherungen für Novell eDirectory,,,,,x,,,
+M 6.83 Notfallvorsorge beim Outsourcing,,,,,x,,,x
+M 6.84 Regelmäßige Datensicherung der System- und Archivdaten,,,,,x,,,
+M 6.88 Erstellen eines Notfallplans für den Webserver,,,,,x,,,
+M 6.90 Datensicherung und Archivierung bei Groupware und E-Mail,,,x,,x,,,
+M 6.91 Datensicherung und Recovery bei Routern und Switches,,,x,,x,,,
+M 6.92 Notfallvorsorge bei Routern und Switches,,,,,x,,,
+M 6.93 Notfallvorsorge für z/OS-Systeme,,,,,x,,,
+M 6.94 Notfallvorsorge bei Sicherheitsgateways,,,,,x,,,
+"M 6.95 Ausfallvorsorge und Datensicherung bei Smartphones, Tablets und PDAs",,,,x,x,,,x
+"M 6.95 Ausfallvorsorge und Datensicherung bei PDAs",,,,x,x,,,x
+M 6.96 Notfallvorsorge für einen Server,,,,,x,,,
+M 6.97 Notfallvorsorge für SAP Systeme,,,,,x,,,
+M 6.98 Notfallvorsorge und Notfallreaktion für Speicherlösungen,,,,,x,,,
+M 6.99 Regelmäßige Sicherung wichtiger Systemkomponenten für Windows-Server,,,,,x,,,
+M 6.99 Regelmäßige Sicherung wichtiger Systemkomponenten für Windows Server 2003,,,,,x,,,
