@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="target-platform-p2" sequenceNumber="22">
+<?pde version="3.8"?><target name="target-platform-p2" sequenceNumber="23">
 <locations>
 <location path="/home/simon/git/verinice-master/verinice/target-platform/stripped-target" type="Directory"/>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -13,6 +13,10 @@
 <unit id="org.junit" version="4.12.0.v201504281640"/>
 <unit id="org.junit.source" version="4.12.0.v201504281640"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180330011457/repository"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.sdk.ide" version="3.7.2.M20120208-0800"/>
+<repository location="http://download.eclipse.org/eclipse/updates/3.7"/>
 </location>
 </locations>
 </target>

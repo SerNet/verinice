@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="target-platform-slim" sequenceNumber="0">
+<?pde version="3.8"?><target name="target-platform-slim" sequenceNumber="2">
 <locations>
 <location path="/home/simon/git/verinice-master/verinice/target-platform/slim-target" type="Directory"/>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="inetlib.feature.group" version="1.1.1"/>
+<unit id="inetlib.source.feature.group" version="1.1.1"/>
+<unit id="jgrapht.feature.group" version="0.8.1"/>
+<unit id="jgrapht.source.feature.group" version="0.8.1"/>
+<repository location="file:/home/simon/Desktop/updatesite/bla/3/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.junit" version="4.12.0.v201504281640"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180330011457/repository"/>
+</location>
 </locations>
 </target>
