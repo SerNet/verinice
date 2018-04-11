@@ -68,14 +68,14 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
     public static final String PROP_EFFECTIVENESS_PROBABILITY="control_eff_probability";
     public static final String PROP_GSM_ISM_CONTROL_DESCRIPTION = "gsm_ism_control_description";
     public static final String PROP_CONTROL_EFFECT_P = "control_eff_probability";
-    public static final String PROP_CONTROL_EUGDPR_PSEUDONYMIZATION = "control_data_protection_objectives_eugdpr_pseudonymization";
-    public static final String PROP_CONTROL_EUGDPR_ENCRYPTION = "control_data_protection_objectives_eugdpr_encryption";
-    public static final String PROP_CONTROL_EUGDPR_CONFIDENTIALITY = "control_data_protection_objectives_eugdpr_confidentiality";
-    public static final String PROP_CONTROL_EUGDPR_INTEGRITY = "control_data_protection_objectives_eugdpr_integrity";
-    public static final String PROP_CONTROL_EUGDPR_AVAILABILITY = "control_data_protection_objectives_eugdpr_availability";
-    public static final String PROP_CONTROL_EUGDPR_RESILIENCE = "control_data_protection_objectives_eugdpr_resilience";
-    public static final String PROP_CONTROL_EUGDPR_RECOVERABILITY = "control_data_protection_objectives_eugdpr_recoverability";
-    public static final String PROP_CONTROL_EUGDPR_EFFECTIVENESS = "control_data_protection_objectives_eugdpr_effectiveness";
+    public static final String PROP_EUGDPR_PSEUDONYMIZATION = "control_data_protection_objectives_eugdpr_pseudonymization";
+    public static final String PROP_EUGDPR_ENCRYPTION = "control_data_protection_objectives_eugdpr_encryption";
+    public static final String PROP_EUGDPR_CONFIDENTIALITY = "control_data_protection_objectives_eugdpr_confidentiality";
+    public static final String PROP_EUGDPR_INTEGRITY = "control_data_protection_objectives_eugdpr_integrity";
+    public static final String PROP_EUGDPR_AVAILABILITY = "control_data_protection_objectives_eugdpr_availability";
+    public static final String PROP_EUGDPR_RESILIENCE = "control_data_protection_objectives_eugdpr_resilience";
+    public static final String PROP_EUGDPR_RECOVERABILITY = "control_data_protection_objectives_eugdpr_recoverability";
+    public static final String PROP_EUGDPR_EFFECTIVENESS = "control_data_protection_objectives_eugdpr_effectiveness";
 
     public static final String REL_CONTROL_PERSON_ISO = "rel_control_person-iso";
     public static final String REL_CONTROL_INCSCEN = "rel_control_incscen";

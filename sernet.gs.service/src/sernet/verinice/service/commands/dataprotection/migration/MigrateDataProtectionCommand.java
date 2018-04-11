@@ -163,13 +163,9 @@ public class MigrateDataProtectionCommand extends GraphCommand {
      *
      */
     private boolean isDsGvoControl(CnATreeElement control, VeriniceGraph processGraph) {
-        Set<CnATreeElement> linkTargets = processGraph.getLinkTargets(control);
-        for (CnATreeElement cnATreeElement : linkTargets) {
-            if (cnATreeElement.getTypeId().equals(Process.TYPE_ID)) {
-                return true;
-            }
-        }
-        return false;
+        Set<CnATreeElement> linkTargets = processGraph.getLinkTargetsByElementType(control,
+                Process.TYPE_ID);
+        return !linkTargets.isEmpty();
     }
 
     /**

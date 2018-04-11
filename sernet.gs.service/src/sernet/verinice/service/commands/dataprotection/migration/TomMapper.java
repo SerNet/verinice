@@ -110,35 +110,35 @@ public final class TomMapper {
         Set<PropertyType> hashSet = new HashSet<>(NUMBER_OF_TOMS);
         if (!line[1].isEmpty()) {
             hashSet.add(HUITypeFactory.getInstance().getPropertyType(Control.TYPE_ID,
-                    Control.PROP_CONTROL_EUGDPR_PSEUDONYMIZATION));
+                    Control.PROP_EUGDPR_PSEUDONYMIZATION));
         }
         if (!line[2].isEmpty()) {
             hashSet.add(HUITypeFactory.getInstance().getPropertyType(Control.TYPE_ID,
-                    Control.PROP_CONTROL_EUGDPR_ENCRYPTION));
+                    Control.PROP_EUGDPR_ENCRYPTION));
         }
         if (!line[3].isEmpty()) {
             hashSet.add(HUITypeFactory.getInstance().getPropertyType(Control.TYPE_ID,
-                    Control.PROP_CONTROL_EUGDPR_CONFIDENTIALITY));
+                    Control.PROP_EUGDPR_CONFIDENTIALITY));
         }
         if (!line[4].isEmpty()) {
             hashSet.add(HUITypeFactory.getInstance().getPropertyType(Control.TYPE_ID,
-                    Control.PROP_CONTROL_EUGDPR_INTEGRITY));
+                    Control.PROP_EUGDPR_INTEGRITY));
         }
         if (!line[5].isEmpty()) {
             hashSet.add(HUITypeFactory.getInstance().getPropertyType(Control.TYPE_ID,
-                    Control.PROP_CONTROL_EUGDPR_AVAILABILITY));
+                    Control.PROP_EUGDPR_AVAILABILITY));
         }
         if (!line[6].isEmpty()) {
             hashSet.add(HUITypeFactory.getInstance().getPropertyType(Control.TYPE_ID,
-                    Control.PROP_CONTROL_EUGDPR_RESILIENCE));
+                    Control.PROP_EUGDPR_RESILIENCE));
         }
         if (!line[7].isEmpty()) {
             hashSet.add(HUITypeFactory.getInstance().getPropertyType(Control.TYPE_ID,
-                    Control.PROP_CONTROL_EUGDPR_RECOVERABILITY));
+                    Control.PROP_EUGDPR_RECOVERABILITY));
         }
         if (!line[8].isEmpty()) {
             hashSet.add(HUITypeFactory.getInstance().getPropertyType(Control.TYPE_ID,
-                    Control.PROP_CONTROL_EUGDPR_EFFECTIVENESS));
+                    Control.PROP_EUGDPR_EFFECTIVENESS));
         }
 
         return hashSet;
