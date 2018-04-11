@@ -1,5 +1,7 @@
 **/bin
 **/target
+**/build/
+**/.gradle/*
 
 sernet.gs.server/WebContent/WEB-INF/lib/sernet.gs.reveng.jar
 sernet.gs.server/WebContent/WEB-INF/lib/sernet.gs.service.jar
