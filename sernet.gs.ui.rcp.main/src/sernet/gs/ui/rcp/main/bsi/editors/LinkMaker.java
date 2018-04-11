@@ -93,15 +93,13 @@ public class LinkMaker extends Composite implements IRelationTable {
     static final String LAST_SELECTED_RELATION_PREF_PREFIX = "last_selected_relation_for";
 
     private static final int RELATION_COMBO_WIDTH = 200;
-    
+
     private static final int FORM_ATTACHMENT_NUMERATOR_DEFAULT = 100;
     private static final int FORM_ATTACHMENT_OFFSET_DEFAULT = 5;
 
     // SWT
     RelationTableViewer viewer;
     private WorkbenchPart part;
-    private SelectionListener linkAction;
-    private SelectionListener unlinkAction;
     private Action doubleClickAction;
 
     // SWT widgets
@@ -109,7 +107,7 @@ public class LinkMaker extends Composite implements IRelationTable {
     private Label label;
     private Button addLinkButton;
     private Button removeLinkButton;
-    
+
     // JFaces
     final ComboViewer relationComboViewer = new ComboViewer(this, SWT.READ_ONLY);
 
@@ -150,7 +148,10 @@ public class LinkMaker extends Composite implements IRelationTable {
 
         // listeners to reload view:
         CnAElementFactory.getLoadedModel().addBSIModelListener(relationViewContentProvider);
-        CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(relationViewContentProvider);
+        CnAElementFactory.getInstance().getISO27kModel()
+                .addISO27KModelListener(relationViewContentProvider);
+        CnAElementFactory.getInstance().getBpModel()
+                .addModITBOModelListener(relationViewContentProvider);
         // listeners to remove stale links from currently open object in editor
         // to prevent conflicts when saving:
         linkRemover = new LinkRemover(this);
@@ -159,15 +160,16 @@ public class LinkMaker extends Composite implements IRelationTable {
 
         // init tooltip provider
         ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.RECREATE);
-        List<PathCellLabelProvider> cellLabelProviders = viewer.initToolTips(relationViewLabelProvider, this);
+        List<PathCellLabelProvider> cellLabelProviders = viewer
+                .initToolTips(relationViewLabelProvider, this);
         // register resize listener for cutting the tooltips
         addResizeListener(cellLabelProviders);
 
-        linkAction = new CreateLinkSelectionListener(this);
-        unlinkAction = new RemoveLinkSelectionListener(this);
+        SelectionListener linkAction = new CreateLinkSelectionListener(this);
+        SelectionListener unlinkAction = new RemoveLinkSelectionListener(this);
         this.addLinkButton.addSelectionListener(linkAction);
         this.removeLinkButton.addSelectionListener(unlinkAction);
-        
+
         createFilter();
 
         createDoubleClickAction();
@@ -199,7 +201,7 @@ public class LinkMaker extends Composite implements IRelationTable {
         formData.left = new FormAttachment(comboElementType, FORM_ATTACHMENT_OFFSET_DEFAULT);
         formData.width = RELATION_COMBO_WIDTH;
         relationComboViewer.getCombo().setLayoutData(formData);
-        
+
         relationComboViewer.setContentProvider(new ArrayContentProvider() {
             @Override
             public Object[] getElements(Object inputElement) {
@@ -214,7 +216,7 @@ public class LinkMaker extends Composite implements IRelationTable {
                 return relations.toArray();
             }
         });
-                
+
         relationComboViewer.setLabelProvider(new LabelProvider() {
 
             @Override
@@ -269,7 +271,8 @@ public class LinkMaker extends Composite implements IRelationTable {
 
         relationViewLabelProvider = new RelationViewLabelProvider(this);
         viewer.setLabelProvider(relationViewLabelProvider);
-        viewer.setSorter(new RelationByNameSorter(this, IRelationTable.COLUMN_TITLE, IRelationTable.COLUMN_TYPE_IMG));
+        viewer.setSorter(new RelationByNameSorter(this, IRelationTable.COLUMN_TITLE,
+                IRelationTable.COLUMN_TYPE_IMG));
 
         part.getSite().setSelectionProvider(viewer);
     }
@@ -412,10 +415,10 @@ public class LinkMaker extends Composite implements IRelationTable {
 
     private void addRelationComboListener() {
         relationComboViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            
+
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
- 
+
                 StructuredSelection selection = (StructuredSelection) relationComboViewer
                         .getSelection();
                 DirectedHuiRelation selectedRelation = (DirectedHuiRelation) selection
@@ -430,7 +433,7 @@ public class LinkMaker extends Composite implements IRelationTable {
     }
 
     private void initNamesForElementTypeCombo() {
-        elementTypeNamesAndIds = new TreeMap<String, String>();
+        elementTypeNamesAndIds = new TreeMap<>();
 
         if (allPossibleRelations == null) {
             elementTypeNames = new String[0];
@@ -439,8 +442,10 @@ public class LinkMaker extends Composite implements IRelationTable {
                 // from or to element, show other side respectively:
                 String targetEntityTypeID = huiRelation.getTo();
                 String sourceEntityTypeID = huiRelation.getFrom();
-                String targetEntityTypeName = huiTypeFactory.getEntityType(targetEntityTypeID).getName();
-                String sourceEntityTypeName = huiTypeFactory.getEntityType(sourceEntityTypeID).getName();
+                String targetEntityTypeName = huiTypeFactory.getEntityType(targetEntityTypeID)
+                        .getName();
+                String sourceEntityTypeName = huiTypeFactory.getEntityType(sourceEntityTypeID)
+                        .getName();
                 if (sourceEntityTypeID.equals(inputElmt.getEntity().getEntityType())) {
                     elementTypeNamesAndIds.put(targetEntityTypeName, targetEntityTypeID);
                 } else {
@@ -457,7 +462,7 @@ public class LinkMaker extends Composite implements IRelationTable {
     }
 
     private void fillPossibleLinkLists() {
-        allPossibleRelations = new ArrayList<HuiRelation>();
+        allPossibleRelations = new ArrayList<>();
         String entityTypeID = inputElmt.getEntity().getEntityType();
 
         allPossibleRelations.addAll(huiTypeFactory.getPossibleRelationsFrom(entityTypeID));
@@ -551,7 +556,7 @@ public class LinkMaker extends Composite implements IRelationTable {
         });
 
         WorkspaceJob job = new ReloadLinksWorkspaceJob(inputElmt, viewer, Messages.LinkMaker_10);
-        
+
         job.setUser(false);
         job.schedule();
 
@@ -560,8 +565,10 @@ public class LinkMaker extends Composite implements IRelationTable {
     @Override
     public void dispose() {
         CnAElementFactory.getLoadedModel().removeBSIModelListener(relationViewContentProvider);
-        CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(relationViewContentProvider);
-        CnAElementFactory.getInstance().getBpModel().removeBpModelListener(relationViewContentProvider);
+        CnAElementFactory.getInstance().getISO27kModel()
+                .removeISO27KModelListener(relationViewContentProvider);
+        CnAElementFactory.getInstance().getBpModel()
+                .removeBpModelListener(relationViewContentProvider);
 
         CnAElementFactory.getLoadedModel().removeBSIModelListener(linkRemover);
         CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(linkRemover);
@@ -586,7 +593,8 @@ public class LinkMaker extends Composite implements IRelationTable {
             // enabled / false if not
         } else {
             Activator.inheritVeriniceContextState();
-            RightsServiceClient service = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+            RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                    .get(VeriniceContext.RIGHTS_SERVICE);
             return service.isEnabled(getRightID());
         }
     }
