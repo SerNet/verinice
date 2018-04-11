@@ -32,4 +32,4 @@ Export-Package: com.ccg.net.ethernet,
 Require-Bundle: sernet.hui.common,
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
  com.springsource.org.hibernate;bundle-version="3.2.6",
- com.springsource.org.junit;bundle-version="4.4.0"
+ org.junit;bundle-version="4.12.0"
