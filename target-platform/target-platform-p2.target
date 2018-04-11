@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="target-platform-p2" sequenceNumber="23">
+<?pde version="3.8"?><target name="target-platform-p2" sequenceNumber="31">
 <locations>
 <location path="/home/simon/git/verinice-master/verinice/target-platform/stripped-target" type="Directory"/>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="inetlib.feature.group" version="1.1.1"/>
-<unit id="inetlib.source.feature.group" version="1.1.1"/>
-<unit id="jgrapht.feature.group" version="0.8.1"/>
-<unit id="jgrapht.source.feature.group" version="0.8.1"/>
-<repository location="file:/home/simon/Desktop/updatesite/bla/3/"/>
-</location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.junit" version="4.12.0.v201504281640"/>
 <unit id="org.junit.source" version="4.12.0.v201504281640"/>
@@ -17,6 +10,21 @@
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.sdk.ide" version="3.7.2.M20120208-0800"/>
 <repository location="http://download.eclipse.org/eclipse/updates/3.7"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="antlr.feature.group" version="2.7.7"/>
+<unit id="antlr.source.feature.group" version="2.7.7"/>
+<unit id="inetlib.feature.group" version="1.1.1"/>
+<unit id="inetlib.source.feature.group" version="1.1.1"/>
+<unit id="jgrapht.feature.group" version="0.8.1"/>
+<unit id="jgrapht.source.feature.group" version="0.8.1"/>
+<unit id="net.sf.ehcache.feature.group" version="2.10.4"/>
+<unit id="net.sf.ehcache.source.feature.group" version="2.10.4"/>
+<unit id="org.hibernate.feature.group" version="3.6.11"/>
+<unit id="org.hibernate.source.feature.group" version="3.6.11"/>
+<unit id="org.jdom.feature.group" version="2.0.2"/>
+<unit id="org.jdom.source.feature.group" version="2.0.2"/>
+<repository location="file:/home/simon/Desktop/updatesite/bla/15/"/>
 </location>
 </locations>
 </target>
