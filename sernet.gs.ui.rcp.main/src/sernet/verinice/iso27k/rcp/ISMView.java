@@ -1,17 +1,17 @@
 /*******************************************************************************
  * Copyright (c) 2009 Daniel Murygin <dm[at]sernet[dot]de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ *     This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
+ *     You should have received a copy of the GNU Lesser General Public
+ * License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Daniel <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
@@ -131,8 +131,8 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
-import sernet.verinice.rcp.ViewFilterAction;
 import sernet.verinice.rcp.RightsEnabledView;
+import sernet.verinice.rcp.ViewFilterAction;
 import sernet.verinice.rcp.tree.TreeContentProvider;
 import sernet.verinice.rcp.tree.TreeLabelProvider;
 import sernet.verinice.rcp.tree.TreeUpdateListener;
@@ -145,52 +145,52 @@ import sernet.verinice.service.tree.ElementManager;
 public class ISMView extends RightsEnabledView implements ILinkedWithEditorView {
 
 	private static final Logger LOG = Logger.getLogger(ISMView.class);
-	
+
 	public static final String ID = "sernet.verinice.iso27k.rcp.ISMView"; //$NON-NLS-1$
-	
+
 	private static int operations = DND.DROP_COPY | DND.DROP_MOVE;
 
 	protected TreeViewer viewer;
-	
+
 	private TreeContentProvider contentProvider;
 	private ElementManager elementManager;
-	
+
 	private DrillDownAdapter drillDownAdapter;
 
-	private Action doubleClickAction; 
-	
+	private Action doubleClickAction;
+
 	private ShowBulkEditAction bulkEditAction;
-	
+
 	private ExpandAction expandAction;
-	
+
 	private CollapseAction collapseAction;
-	
+
 	private Action expandAllAction;
 
 	private Action collapseAllAction;
-	
+
 	private Action linkWithEditorAction;
-	
+
 	private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
-	
+
 	private ViewFilterAction filterAction;
-	
+
 	private MetaDropAdapter metaDropAdapter;
 
 	private ShowAccessControlEditAction accessControlEditAction;
 
     private NaturalizeAction naturalizeAction;
-	
+
 	private IModelLoadListener modelLoadListener;
-	
+
 	private Object mutex = new Object();
 
 	private IISO27KModelListener modelUpdateListener;
-	
+
 	private boolean linkingActive = false;
-	
+
 	private ICommandService commandService;
-	
+
     public ISMView() {
         super();
         elementManager = new ElementManager();
@@ -200,7 +200,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     public String getRightID(){
 	    return ActionRightIDs.ISMVIEW;
 	}
-	
+
 	/* (non-Javadoc)
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
@@ -208,7 +208,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     public String getViewId() {
         return ID;
     }
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
@@ -232,8 +232,8 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 	    if(CnAElementFactory.getInstance().isIsoModelLoaded()) {
 	        CnAElementFactory.getInstance().reloadModelFromDatabase();
 	    }
-	    
-	    
+
+
 	    contentProvider = new TreeContentProvider(elementManager);
 		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		drillDownAdapter = new DrillDownAdapter(viewer);
@@ -241,19 +241,19 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 		viewer.setContentProvider(contentProvider);
 		viewer.setLabelProvider(new DecoratingLabelProvider(new TreeLabelProvider(), workbench.getDecoratorManager()));
 		toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
-		
+
 		getSite().setSelectionProvider(viewer);
 		hookContextMenu();
 		makeActions();
 		addActions();
 		fillToolBar();
 		hookDNDListeners();
-		
+
 		getSite().getPage().addPartListener(linkWithEditorPartListener);
 	}
 
     /**
-	 * 
+	 *
 	 */
 	protected void startInitDataJob() {
 	    if (LOG.isDebugEnabled()) {
@@ -275,10 +275,10 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 				return status;
 			}
 		};
-		JobScheduler.scheduleInitJob(initDataJob);		
+		JobScheduler.scheduleInitJob(initDataJob);
 	}
 
-	protected void initData() {	
+	protected void initData() {
 	    if (LOG.isDebugEnabled()) {
             LOG.debug("ISMVIEW: initData"); //$NON-NLS-1$
         }
@@ -304,17 +304,17 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
                 }
 	            // model is not loaded yet: add a listener to load data when it's loaded
 	            modelLoadListener = new IModelLoadListener() {
-	                
+
 	                @Override
                     public void closed(BSIModel model) {
 	                    // nothing to do
 	                }
-	                
+
 	                @Override
                     public void loaded(BSIModel model) {
 	                    // nothing to do
 	                }
-	                
+
 	                @Override
 	                public void loaded(ISO27KModel model) {
 	                    startInitDataJob();
@@ -329,14 +329,14 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
                     public void loaded(CatalogModel model) {
                         // nothing to do
                     }
-	                
+
 	            };
 	            CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
-	            
+
 	        }
 	    }
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
 	 */
@@ -354,15 +354,15 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 	public void setInput(ISO27KModel model) {
 		viewer.setInput(model);
 	}
-	
+
 	public void setInput(List<Organization> organizationList) {
 		viewer.setInput(organizationList);
 	}
-	
+
 	public void setInput(Organization organization) {
 		viewer.setInput(organization);
 	}
-	
+
 	private void makeActions() {
 	    ControlDropPerformer controlDropAdapter;
 	    BSIModelViewDropListener bsiDropAdapter;
@@ -370,14 +370,14 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 			@Override
             public void run() {
 				if(viewer.getSelection() instanceof IStructuredSelection) {
-					Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();		
+					Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
 					EditorFactory.getInstance().updateAndOpenObject(sel);
 				}
 			}
 		};
-		
+
 		bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_6);
-	
+
 		expandAction = new ExpandAction(viewer, contentProvider);
 		expandAction.setText(Messages.ISMView_7);
 		expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
@@ -385,7 +385,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 		collapseAction = new CollapseAction(viewer);
 		collapseAction.setText(Messages.ISMView_8);
 		collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
-	
+
 		expandAllAction = new Action() {
 			@Override
 			public void run() {
@@ -403,7 +403,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 		};
 		collapseAllAction.setText(Messages.ISMView_10);
 		collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
-		
+
 		HideEmptyFilter hideEmptyFilter = createHideEmptyFilter();
 		TypeParameter typeParameter = createTypeParameter();
 		TagParameter tagParameter = new TagParameter();
@@ -411,28 +411,28 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 				Messages.ISMView_12,
 				tagParameter,
 				hideEmptyFilter,
-				typeParameter);    
-       
+				typeParameter);
+
         elementManager.addParameter(tagParameter);
         if(typeParameter!=null) {
             elementManager.addParameter(typeParameter);
-        }	
-        
+        }
+
 		metaDropAdapter = new MetaDropAdapter(viewer);
 		controlDropAdapter = new ControlDropPerformer(viewer);
 		bsiDropAdapter = new BSIModelViewDropListener(viewer);
 		BSIModelDropPerformer bsi2IsmDropAdapter = new BSIModelDropPerformer(viewer);
 		FileDropPerformer fileDropPerformer = new FileDropPerformer(viewer);
 		metaDropAdapter.addAdapter(controlDropAdapter);
-		metaDropAdapter.addAdapter(bsiDropAdapter);	
-		
+		metaDropAdapter.addAdapter(bsiDropAdapter);
+
 		metaDropAdapter.addAdapter(bsi2IsmDropAdapter);
-        metaDropAdapter.addAdapter(fileDropPerformer); 
-		
+        metaDropAdapter.addAdapter(fileDropPerformer);
+
 		accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_11);
-		
+
 		naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
-		
+
 		linkWithEditorAction = new Action(Messages.ISMView_5, IAction.AS_CHECK_BOX) {
             @Override
             public void run() {
@@ -447,23 +447,23 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     /**
      * Override this in subclasses to hide empty groups
      * on startup.
-     * 
+     *
      * @return a HideEmptyFilter
      */
     protected HideEmptyFilter createHideEmptyFilter() {
         return new HideEmptyFilter(viewer);
     }
-    
+
     /**
      * Override this in subclasses to hide empty groups
      * on startup.
-     * 
+     *
      * @return a {@link TypeParameter}
      */
     protected TypeParameter createTypeParameter() {
         return new TypeParameter();
     }
-	
+
 	protected void fillToolBar() {
 		IActionBars bars = getViewSite().getActionBars();
 		IToolBarManager manager = bars.getToolBarManager();
@@ -473,7 +473,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 		manager.add(filterAction);
 		manager.add(linkWithEditorAction);
 	}
-	
+
 
 	private void hookContextMenu() {
 		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
@@ -482,14 +482,14 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 			@Override
             public void menuAboutToShow(IMenuManager manager) {
 				fillContextMenu(manager);
-			}			
+			}
 		});
 		Menu menu = menuMgr.createContextMenu(viewer.getControl());
-		
+
 		viewer.getControl().setMenu(menu);
 		getSite().registerContextMenu(menuMgr, viewer);
 	}
-	
+
 	private void hookDNDListeners() {
 	    Transfer[] dragTypes = new Transfer[] { ISO27kElementTransfer.getInstance(),
 	                                            ISO27kGroupTransfer.getInstance()
@@ -503,17 +503,17 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 	                                            FileTransfer.getInstance(),
 	                                            SearchViewElementTransfer.getInstance()
 	                                          };
-	    
+
 
 		viewer.addDragSupport(operations, dragTypes, new BSIModelViewDragListener(viewer));
 		viewer.addDropSupport(operations, dropTypes, metaDropAdapter);
-		
+
 	}
-	
+
 	protected void expandAll() {
 		viewer.expandAll();
 	}
-	
+
 	private void addActions() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			@Override
@@ -521,7 +521,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 				doubleClickAction.run();
 			}
 		});
-		
+
 		viewer.addSelectionChangedListener(expandAction);
 		viewer.addSelectionChangedListener(collapseAction);
 	}
@@ -536,7 +536,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 			if(sel instanceof Organization) {
 				Organization element = (Organization) sel;
 				if(CnAElementHome.getInstance().isNewChildAllowed(element)) {
-					MenuManager submenuNew = new MenuManager("&New","content/new"); //$NON-NLS-1$ //$NON-NLS-2$
+                    MenuManager submenuNew = new MenuManager(Messages.NewObjectMenu, "content/new"); //$NON-NLS-1$ //$NON-NLS-2$
 					submenuNew.add(new AddGroup(element,AssetGroup.TYPE_ID,Asset.TYPE_ID));
 					submenuNew.add(new AddGroup(element,AuditGroup.TYPE_ID,Audit.TYPE_ID));
 					submenuNew.add(new AddGroup(element,ControlGroup.TYPE_ID,Control.TYPE_ID));
@@ -558,7 +558,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 				}
 			}
 		}
-		
+
 		manager.add(new GroupMarker("content")); //$NON-NLS-1$
 		manager.add(new Separator());
 		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
@@ -570,9 +570,9 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 		manager.add(new Separator());
 		manager.add(expandAction);
 		manager.add(collapseAction);
-		drillDownAdapter.addNavigationActions(manager);	
+		drillDownAdapter.addNavigationActions(manager);
 	}
-	
+
     /* (non-Javadoc)
      * @see sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.eclipse.ui.IEditorPart)
      */
@@ -584,13 +584,13 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
         CnATreeElement element = BSIElementEditorInput.extractElement(editor);
         if(element == null && editor.getEditorInput() instanceof AttachmentEditorInput){
             element = getElementFromAttachment(editor);
-            
-            
+
+
         }
         if(!(element instanceof IISO27kElement)) {
             return;
         }
-        
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("Element in editor: " + element.getUuid()); //$NON-NLS-1$
             LOG.debug("Expanding tree now to show element..."); //$NON-NLS-1$
@@ -600,10 +600,10 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
         } else {
             return;
         }
-        
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("Tree is expanded."); //$NON-NLS-1$
-        } 
+        }
     }
 
     /**
@@ -614,7 +614,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     private CnATreeElement getElementFromAttachment(IEditorPart editor) {
         return AttachmentEditorInput.extractCnaTreeElement(editor);
     }
-    
+
     protected void toggleLinking(boolean checked) {
         this.linkingActive = checked;
         if (checked) {
@@ -625,17 +625,17 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     protected boolean isLinkingActive() {
         return linkingActive;
     }
-	
+
 	/**
 	 * Passing the focus request to the viewer's control.
-	 * 
+	 *
 	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
 	 */
 	@Override
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
-	
+
 	public ICommandService getCommandService() {
         if (commandService == null) {
             commandService = createCommandService();
