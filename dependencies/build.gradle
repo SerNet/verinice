@@ -35,14 +35,63 @@ platform {
 	useFeatureHashQualifiers = false
 	defaultQualifierMap.prefix = ''
 
+	// seems to be unused 
+	feature(id: 'inetlib', name: 'inetlib', version: '1.1.1') {
+		plugin('com.axway.ats.gnu.classpath.ext:inetlib:1.1.1') {
+			bnd {
+				instruction 'Eclipse-RegisterBuddy', 'com.springsource.javax.activation'
+				optionalImport 'gnu.inet.http'
+				optionalImport 'gnu.inet.http.event'
+				optionalImport 'gnu.inet.util'
+				optionalImport 'javax.naming.ldap'
+				optionalImport 'javax.net.ssl'
+				optionalImport 'javax.security.auth.callback'
+				optionalImport 'javax.security.sasl'
+			}
+		}
+	}
+
+	feature(id: 'jgrapht', name: 'jgrapht', version: '0.8.1') {
+		plugin('thirdparty:jgrapht-jdk1.6:0.8.1') {
+			bnd {
+				optionalImport 'com.touchgraph.graphlayout'
+				optionalImport 'com.touchgraph.graphlayout.interaction'
+				optionalImport 'javax.swing'
+				optionalImport 'javax.swing.border'
+				optionalImport 'javax.swing.tree'
+				optionalImport 'javax.swing.undo'
+				optionalImport 'javax.xml.transform'
+				optionalImport 'javax.xml.transform.sax'
+				optionalImport 'javax.xml.transform.stream'
+				optionalImport 'org.jgraph'
+				optionalImport 'org.jgraph.event'
+				optionalImport 'org.jgraph.graph'
+				optionalImport 'org.jgrapht'
+				optionalImport 'org.jgrapht.alg.util'
+				optionalImport 'org.jgrapht.event'
+				optionalImport 'org.jgrapht.experimental.alg'
+				optionalImport 'org.jgrapht.experimental.equivalence'
+				optionalImport 'org.jgrapht.experimental.permutation'
+				optionalImport 'org.jgrapht.ext'
+				optionalImport 'org.jgrapht.generate'
+				optionalImport 'org.jgrapht.graph'
+				optionalImport 'org.jgrapht.traverse'
+				optionalImport 'org.jgrapht.util'
+				optionalImport 'org.xml.sax'
+				optionalImport 'org.xml.sax.helpers'
+				optionalImport 'javax.security.sasl'
+				optionalImport 'javax.security.auth.callback'
+				optionalImport 'javax.net.ssl'
+				optionalImport 'javax.naming.ldap'
+				optionalImport 'gnu.inet.util'
+				optionalImport 'gnu.inet.http.event'
+				optionalImport 'gnu.inet.http'
+			}
+		}
+	}
 	
-//	feature(id: 'deps', name: 'deps', version: '1.0.0') {
-//		plugin fileTree('/home/simon/git/verinice-master/verinice/target-platform/stripped-target') {
-//   			 include '**/*.jar'
-//   			 exclude '**/*sources.jar'
-//		}
-//	}
 	
+/*
 	feature(id: 'gemini-blueprint', name: 'gemini-blueprint', version: '1.0.0') {
 		plugin('org.eclipse.gemini.blueprint:gemini-blueprint-extender:2.1.0.RELEASE')
 		plugin('org.eclipse.gemini.blueprint:gemini-blueprint-io:2.1.0.RELEASE')
@@ -51,6 +100,7 @@ platform {
 		plugin('org.apache.servicemix.bundles:org.apache.servicemix.bundles.spring-aop:4.3.7.RELEASE_1')
 		plugin('org.apache.servicemix.bundles:org.apache.servicemix.bundles.spring-orm:4.3.7.RELEASE_1')
 	}
+*/
 }
 
 task wrapper(type: Wrapper) {
