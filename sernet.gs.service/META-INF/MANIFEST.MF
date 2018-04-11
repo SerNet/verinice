@@ -95,7 +95,6 @@ Eclipse-RegisterBuddy: sernet.springclient,com.springsource.org.hibernate
 Require-Bundle: com.springsource.org.apache.commons.io;bundle-version="1.4.0",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
  sernet.hui.common,
- opencsv-3.3;bundle-version="3.3.0",
  jbpm;bundle-version="4.4.0",
  com.springsource.net.sf.ehcache;bundle-version="1.6.0",
  jgrapht;bundle-version="0.8.3",
@@ -114,7 +113,8 @@ Require-Bundle: com.springsource.org.apache.commons.io;bundle-version="1.4.0",
  jcommon-1.0.14;bundle-version="1.0.14",
  sernet.gs.reveng;bundle-version="1.1.1",
  org.springframework.core,
- com.springsource.org.hibernate
+ com.springsource.org.hibernate,
+ opencsv-3.3;bundle-version="3.3.0"
 Import-Package: org.eclipse.osgi.util,
  org.hibernate,
  org.hibernate.criterion,
