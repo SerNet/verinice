@@ -47,7 +47,7 @@ class AccountLabelProvider extends ColumnLabelProvider implements ITableLabelPro
             Integer scopeId = account.getPerson().getScopeId();
             switch (columnIndex) { 
             case 0:
-                return ElementTitleCache.get(scopeId);
+                return ElementTitleCache.getInstance().get(scopeId);
             case 1:               
                 return person.getParentName();
             case 2:   

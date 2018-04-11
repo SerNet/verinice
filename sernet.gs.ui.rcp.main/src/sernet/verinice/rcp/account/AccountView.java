@@ -80,19 +80,15 @@ import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bp.elements.ItNetwork;
-import sernet.verinice.model.bp.groups.BpPersonGroup;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.model.bsi.PersonenKategorie;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.model.iso27k.PersonGroup;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
 import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
-import sernet.verinice.rcp.ElementTitleCache;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.TextEventAdapter;
 import sernet.verinice.service.account.AccountLoader;
@@ -176,9 +172,6 @@ public class AccountView extends RightsEnabledView {
     }
 
     private void init() throws CommandException {
-        ElementTitleCache.load(new String[] { ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID,
-                ItNetwork.TYPE_ID, PersonGroup.TYPE_ID, PersonenKategorie.TYPE_ID_HIBERNATE,
-                BpPersonGroup.TYPE_ID });
         findAccounts();
         loadScopes();
         initCombos();
