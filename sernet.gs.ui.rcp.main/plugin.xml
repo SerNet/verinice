@@ -904,7 +904,7 @@
          <action
                class="sernet.verinice.rcp.dataprotection.MigrateDataProtectionActionDelegate"
                enablesFor="+"
-               icon="icons/sweetie-verinice/png/16-paper-calculate-percent.png"
+               icon="icons/gdpr-16.png"
                id="sernet.verinice.rcp.dataprotection.MigrateDataProtectionActionDelegate.action"
                label="%action.lable.migration.dataprotection"
                menubarPath="special"
