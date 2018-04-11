@@ -275,7 +275,9 @@ public class BSIElementEditor extends EditorPart {
                 monitor.beginTask(Messages.BSIElementEditor_1, IProgressMonitor.UNKNOWN);
                 EditorUtil.updateDependentObjects(cnAElement);
                 save();
-                linkMaker.viewer.refresh();
+                if (linkMaker != null) {
+                    linkMaker.viewer.refresh();
+                }
 
                 // Refresh other views in background
                 Job job = new RefreshJob("Refresh application...");
