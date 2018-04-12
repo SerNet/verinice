@@ -124,6 +124,13 @@ platform {
 		}
 	}
 	
+	feature(id: 'jfree', name: 'jfreechart-swt', version: '1.0.0') {
+		plugin('jfree:jfreechart-swt:1.0.9') {
+			exclude group: 'org.eclipse.swt', module: 'org.eclipse.swt.cocoa.macosx.x86_64'
+		}
+		plugin('jfree:jfreechart:1.0.13')
+	}
+	
 /*
 	feature(id: 'gemini-blueprint', name: 'gemini-blueprint', version: '1.0.0') {
 		plugin('org.eclipse.gemini.blueprint:gemini-blueprint-extender:2.1.0.RELEASE')
