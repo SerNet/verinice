@@ -130,14 +130,18 @@ platform {
 		}
 		plugin('jfree:jfreechart:1.0.13')
 	}
-	
+
+	feature(id: 'lowagie', name: 'lowagie', version: '2.1.7') {
+		plugin('org.eclipse.birt.runtime.3_7_1:com.lowagie.text:2.1.7')
+	}
+
 	feature(id: 'pax', name: 'pax', version: '0.6.0') {
 		plugin fileTree("${project.projectDir}/pax/") {
    			include '**/*.jar'
    			exclude '**/*sources.jar'
 		}
 	}
-	
+
 /*
 	feature(id: 'gemini-blueprint', name: 'gemini-blueprint', version: '1.0.0') {
 		plugin('org.eclipse.gemini.blueprint:gemini-blueprint-extender:2.1.0.RELEASE')

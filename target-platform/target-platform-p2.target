@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="target-platform-p2" sequenceNumber="49">
+<?pde version="3.8"?><target name="target-platform-p2" sequenceNumber="52">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.birt.feature.group" version="3.7.2.v20120213-BDF9E9bGTzuHh03p2c0AWvmC3Ltk"/>
+<unit id="org.eclipse.birt.osgi.runtime.sdk.feature.group" version="3.7.2.v20120213-777D386vH9DhL7e9QKLh0vkCyimU"/>
 <unit id="org.eclipse.datatools.enablement.sdk.feature.feature.group" version="1.9.2.v201109161655-7I9O7XFE9Jfxu0wIxMQtoLz0X-dE"/>
 <unit id="org.eclipse.datatools.sdk.feature.feature.group" version="1.9.2.v201109161655-7PA37eFEpPYv5_Ae3-6EjC5ZX4e5"/>
 <repository location="http://download.eclipse.org/releases/indigo"/>
@@ -38,6 +39,8 @@
 <unit id="jfree.source.feature.group" version="1.0.0"/>
 <unit id="jgrapht.feature.group" version="0.8.1"/>
 <unit id="jgrapht.source.feature.group" version="0.8.1"/>
+<unit id="lowagie.feature.group" version="2.1.7"/>
+<unit id="lowagie.source.feature.group" version="2.1.7"/>
 <unit id="net.sf.ehcache.feature.group" version="2.10.4"/>
 <unit id="net.sf.ehcache.source.feature.group" version="2.10.4"/>
 <unit id="org.hibernate.feature.group" version="3.6.11"/>
@@ -46,7 +49,7 @@
 <unit id="org.jdom.source.feature.group" version="2.0.2"/>
 <unit id="pax.feature.group" version="0.6.0"/>
 <unit id="pax.source.feature.group" version="0.6.0"/>
-<repository location="file:/home/simon/Desktop/updatesite/bla/32/"/>
+<repository location="file:/home/simon/Desktop/updatesite/bla/33/"/>
 </location>
 </locations>
 </target>
