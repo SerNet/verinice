@@ -1,22 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="target-platform-p2" sequenceNumber="40">
+<?pde version="3.8"?><target name="target-platform-p2" sequenceNumber="41">
 <locations>
 <location path="/home/simon/git/verinice-master/verinice/target-platform/stripped-target" type="Directory"/>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="ch.qos.logback.classic" version="1.1.2.v20160208-0839"/>
-<unit id="ch.qos.logback.classic.source" version="1.1.2.v20160208-0839"/>
-<unit id="ch.qos.logback.core" version="1.1.2.v20160208-0839"/>
-<unit id="ch.qos.logback.core.source" version="1.1.2.v20160208-0839"/>
-<unit id="ch.qos.logback.slf4j" version="1.1.2.v20160301-0943"/>
-<unit id="ch.qos.logback.slf4j.source" version="1.1.2.v20160301-0943"/>
-<unit id="com.google.gson" version="2.7.0.v20170129-0911"/>
-<unit id="com.google.gson.source" version="2.7.0.v20170129-0911"/>
-<unit id="org.junit" version="4.12.0.v201504281640"/>
-<unit id="org.junit.source" version="4.12.0.v201504281640"/>
-<unit id="org.slf4j.api" version="1.7.10.v20170428-1633"/>
-<unit id="org.slf4j.api.source" version="1.7.10.v20170428-1633"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180330011457/repository"/>
-</location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.birt.feature.group" version="3.7.2.v20120213-BDF9E9bGTzuHh03p2c0AWvmC3Ltk"/>
 <unit id="org.eclipse.datatools.enablement.sdk.feature.feature.group" version="1.9.2.v201109161655-7I9O7XFE9Jfxu0wIxMQtoLz0X-dE"/>
@@ -43,6 +28,23 @@
 <unit id="org.jdom.feature.group" version="2.0.2"/>
 <unit id="org.jdom.source.feature.group" version="2.0.2"/>
 <repository location="file:/home/simon/Desktop/updatesite/bla/28/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="ch.qos.logback.classic" version="1.1.2.v20160208-0839"/>
+<unit id="ch.qos.logback.classic.source" version="1.1.2.v20160208-0839"/>
+<unit id="ch.qos.logback.core" version="1.1.2.v20160208-0839"/>
+<unit id="ch.qos.logback.core.source" version="1.1.2.v20160208-0839"/>
+<unit id="ch.qos.logback.slf4j" version="1.1.2.v20160301-0943"/>
+<unit id="ch.qos.logback.slf4j.source" version="1.1.2.v20160301-0943"/>
+<unit id="com.google.gson" version="2.7.0.v20170129-0911"/>
+<unit id="com.google.gson.source" version="2.7.0.v20170129-0911"/>
+<unit id="org.junit" version="4.12.0.v201504281640"/>
+<unit id="org.junit.source" version="4.12.0.v201504281640"/>
+<unit id="org.mozilla.javascript" version="1.7.5.v201504281450"/>
+<unit id="org.mozilla.javascript.source" version="1.7.5.v201504281450"/>
+<unit id="org.slf4j.api" version="1.7.10.v20170428-1633"/>
+<unit id="org.slf4j.api.source" version="1.7.10.v20170428-1633"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180330011457/repository"/>
 </location>
 </locations>
 </target>
