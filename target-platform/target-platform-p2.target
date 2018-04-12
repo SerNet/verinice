@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="target-platform-p2" sequenceNumber="34">
+<?pde version="3.8"?><target name="target-platform-p2" sequenceNumber="35">
 <locations>
 <location path="/home/simon/git/verinice-master/verinice/target-platform/stripped-target" type="Directory"/>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -27,6 +27,7 @@
 <repository location="file:/home/simon/Desktop/updatesite/bla/26/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.birt.feature.group" version="3.7.2.v20120213-BDF9E9bGTzuHh03p2c0AWvmC3Ltk"/>
 <unit id="org.eclipse.datatools.enablement.sdk.feature.feature.group" version="1.9.2.v201109161655-7I9O7XFE9Jfxu0wIxMQtoLz0X-dE"/>
 <unit id="org.eclipse.datatools.sdk.feature.feature.group" version="1.9.2.v201109161655-7PA37eFEpPYv5_Ae3-6EjC5ZX4e5"/>
 <repository location="http://download.eclipse.org/releases/indigo"/>
