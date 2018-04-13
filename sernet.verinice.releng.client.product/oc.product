@@ -72,11 +72,12 @@ VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilin
    </configIni>
 
    <launcherArgs>
-      <programArgs>-data @user.home/verinice/workspace
+      <programArgs>-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl de -console -consoleLog -noExit
       </programArgs>
       <programArgsMac>-vm ../../../jre/Contents/Home/lib/jli/libjli.dylib
       </programArgsMac>
-      <vmArgs>-Xms256m -Xmx768m -XX:MaxMetaspaceSize=256m -XX:MaxPermSize=256m -XX:+IgnoreUnrecognizedVMOptions -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost  -Dosgi.parentClassloader=ext
+      <vmArgs>-Xms512m -Xmx4096m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost -Djavax.activation.debug=true  -Dosgi.parentClassloader=ext
+-Dorg.eclipse.swt.browser.XULRunnerPath=/home/simon/git/verinice-orig/verinice/xulrunner-1.9.2/bin
       </vmArgs>
       <vmArgsMac>-Djava.awt.headless=true
       </vmArgsMac>
@@ -90,7 +91,6 @@ VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilin
    <launcher name="verinice">
       <linux icon="verinice_icons/v.xpm"/>
       <macosx icon="verinice_icons/v.icns"/>
-      <solaris/>
       <win useIco="true">
          <ico path="verinice_icons/v-128-16.ico"/>
          <bmp/>
@@ -100,7 +100,9 @@ VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilin
    <intro introId="sernet.gs.ui.rcp.main.intro1"/>
 
    <vm>
-      <linux include="true">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/OSGi%Minimum-1.0</linux>
+      <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</linux>
+      <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</macos>
+      <windows include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</windows>
    </vm>
 
    <license>
@@ -854,18 +856,35 @@ Public License instead of this License.  But first, please read
 
    <features>
       <feature id="sernet.gs.server.feature" version="1.1.1.qualifier"/>
-      <feature id="sernet.gs.ui.rcp.main.feature" version="1.1.1.qualifier"/>
+      <feature id="sernet.gs.ui.rcp.main.feature"/>
+      <feature id="sernet.thirdparty.feature" version="1.0.0"/>
+      <feature id="sernet.localdependencies"/>
+      <feature id="spring" version="0.6.0"/>
+      <feature id="pax" version="0.6.0"/>
+      <feature id="antlr" version="2.7.7"/>
+      <feature id="apache" version="0.6.0"/>
+      <feature id="inetlib" version="1.1.1"/>
+      <feature id="jfree" version="1.0.0"/>
+      <feature id="jgrapht" version="0.8.1"/>
+      <feature id="lowagie" version="2.1.7"/>
+      <feature id="w3c" version="0.6.0"/>
+      <feature id="org.eclipse.platform" version="3.7.2.v20120207-1839-9gF7UHPDFxGjd-PqDr2jX_4yKaumkoHTz04_q-q"/>
       <feature id="org.eclipse.equinox.p2.user.ui"/>
+      <feature id="org.eclipse.help"/>
+      <feature id="org.eclipse.equinox.p2.extras.feature"/>
+      <feature id="org.eclipse.rcp"/>
+      <feature id="org.eclipse.equinox.p2.core.feature"/>
+      <feature id="org.eclipse.equinox.p2.rcp.feature"/>
+      <feature id="sernet.datatools.feature" version="1.0.0"/>
+      <feature id="sernet.birt.feature" version="1.0.0"/>
    </features>
 
    <configurations>
-      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="4" />
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
-      <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="5" />
+      <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
-      <plugin id="org.eclipse.jubula.rc.rcp" autoStart="true" startLevel="1" />
-      <plugin id="sernet.verinice.kerberos" autoStart="true" startLevel="1" />
    </configurations>
 
    <preferencesInfo>
