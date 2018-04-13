@@ -142,6 +142,27 @@ platform {
 		}
 	}
 
+	feature(id: 'apache', name: 'apache', version: '0.6.0') {
+		plugin fileTree("${project.projectDir}/apache/") {
+   			include '**/*.jar'
+   			exclude '**/*sources.jar'
+		}
+	}
+
+	feature(id: 'w3c', name: 'w3c', version: '0.6.0') {
+		plugin fileTree("${project.projectDir}/w3c/") {
+   			include '**/*.jar'
+   			exclude '**/*sources.jar'
+		}
+	}
+
+	feature(id: 'spring', name: 'spring', version: '0.6.0') {
+		plugin fileTree("${project.projectDir}/spring/") {
+   			include '**/*.jar'
+   			exclude '**/*sources.jar'
+		}
+	}
+
 /*
 	feature(id: 'gemini-blueprint', name: 'gemini-blueprint', version: '1.0.0') {
 		plugin('org.eclipse.gemini.blueprint:gemini-blueprint-extender:2.1.0.RELEASE')
