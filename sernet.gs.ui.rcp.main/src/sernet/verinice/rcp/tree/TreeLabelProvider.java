@@ -26,6 +26,8 @@ import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
 import sernet.hui.common.connect.IIdentifiableElement;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
 
@@ -39,10 +41,6 @@ public class TreeLabelProvider extends LabelProvider {
 
     private static final Logger LOG = Logger.getLogger(TreeLabelProvider.class);
     private static final int MAX_TEXT_WIDTH = 80;
-
-    public TreeLabelProvider() {
-        super();
-    }
 
     @Override
     public Image getImage(Object obj) {
@@ -80,7 +78,15 @@ public class TreeLabelProvider extends LabelProvider {
     }
 
     private static String getElementTitle(CnATreeElement element) {
-        if (element instanceof IIdentifiableElement) {
+        if (element instanceof Safeguard) {
+            Safeguard safeguard = (Safeguard) element;
+            return createTitleForElementWithQualifier(safeguard.getIdentifier(),
+                    safeguard.getQualifier(), safeguard.getTitle());
+        } else if (element instanceof BpRequirement) {
+            BpRequirement requirement = (BpRequirement) element;
+            return createTitleForElementWithQualifier(requirement.getIdentifier(),
+                    requirement.getQualifier(), requirement.getTitle());
+        } else if (element instanceof IIdentifiableElement) {
             return ((IIdentifiableElement) element).getFullTitle();
         }
         StringBuilder sb = new StringBuilder();
@@ -96,5 +102,11 @@ public class TreeLabelProvider extends LabelProvider {
             sb.append(title);
         }
         return sb.toString();
+    }
+
+    private static String createTitleForElementWithQualifier(String identifier, String qualifier,
+            String title) {
+        return StringUtils.join(new Object[] { identifier, " [", qualifier, "] ", title });
+
     }
 }
