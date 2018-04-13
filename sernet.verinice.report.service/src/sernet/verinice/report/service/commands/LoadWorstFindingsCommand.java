@@ -23,13 +23,13 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.Status;
-
-import org.apache.log4j.Logger;
-
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -66,7 +66,7 @@ public class LoadWorstFindingsCommand extends GenericCommand {
     private transient Cache cache = null;
     
     public LoadWorstFindingsCommand(int id) {
-        log = Logger.getLogger(LoadWorstFindingsCommand.class);
+        log = LoggerFactory.getLogger(LoadWorstFindingsCommand.class);
         int id0 = -1;
         if(String.valueOf(id).startsWith(String.valueOf(LoadChapterListCommand.PLACEHOLDER_CONTROLGROUP_ID))){
             String chapterIdString = String.valueOf(id);

@@ -28,7 +28,8 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -56,7 +57,7 @@ public final class TocHelper2 {
     
     private static int maxTocEntryLength = 0;
     
-    private static final Logger LOG = Logger.getLogger(TocHelper2.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TocHelper2.class);
     
     // list of tables
     private static Map<Integer, TocEntry<String, Integer>> loTMap = new HashMap<Integer, TocEntry<String,Integer>>();

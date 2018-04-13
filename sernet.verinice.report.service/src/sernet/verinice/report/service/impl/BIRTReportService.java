@@ -29,7 +29,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 
-import org.apache.log4j.Logger;
 import org.eclipse.birt.core.data.DataTypeUtil;
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
@@ -51,6 +50,8 @@ import org.eclipse.birt.report.model.api.DefaultResourceLocator;
 import org.eclipse.birt.report.model.api.IResourceLocator;
 import org.eclipse.birt.report.model.api.ModuleHandle;
 import org.eclipse.birt.report.model.api.ModuleOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sernet.gs.ui.rcp.main.ServiceComponent;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
@@ -61,11 +62,10 @@ import sernet.verinice.report.service.Activator;
 import sernet.verinice.report.service.impl.security.ReportExecutionThread;
 import sernet.verinice.report.service.impl.security.ReportSecurityManager;
 import sernet.verinice.security.report.ReportClassLoader;
-import sernet.verinice.security.report.ReportSecurityException;
 
 public class BIRTReportService {
 	
-	private final Logger log = Logger.getLogger(BIRTReportService.class);
+	private final Logger log = LoggerFactory.getLogger(BIRTReportService.class);
 	
 	private IReportEngine engine;
 

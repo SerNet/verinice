@@ -19,13 +19,14 @@ package sernet.verinice.report.service.impl;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.EXCELRenderOption;
 import org.eclipse.birt.report.engine.api.HTMLRenderOption;
 import org.eclipse.birt.report.engine.api.IPDFRenderOption;
 import org.eclipse.birt.report.engine.api.IRenderOption;
 import org.eclipse.birt.report.engine.api.PDFRenderOption;
 import org.eclipse.birt.report.engine.api.RenderOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportService;
@@ -39,7 +40,7 @@ public class ReportService implements IReportService {
 	
 	private IReportType[] reportTypes;
 	
-	private static final Logger LOG = Logger.getLogger(ReportService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ReportService.class);
 	
     private static final String PROPERTIES_FILE_EXTENSION = "properties";
     private static final char EXTENSION_SEPARATOR_CHAR = '.';

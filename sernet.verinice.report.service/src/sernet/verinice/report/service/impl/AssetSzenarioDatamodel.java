@@ -25,7 +25,8 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
@@ -45,7 +46,7 @@ import sernet.verinice.model.iso27k.IncidentScenario;
  */
 public class AssetSzenarioDatamodel implements Serializable{
 
-    private static final Logger LOG = Logger.getLogger(AssetSzenarioDatamodel.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AssetSzenarioDatamodel.class);
 
     private static final String[] TYPE_IDS = new String[]{Asset.TYPE_ID, IncidentScenario.TYPE_ID};
     

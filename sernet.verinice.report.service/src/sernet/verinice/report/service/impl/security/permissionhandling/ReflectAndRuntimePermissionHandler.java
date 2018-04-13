@@ -24,8 +24,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.apache.log4j.Logger;
 import org.eclipse.osgi.util.NLS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sernet.verinice.report.service.impl.security.Messages;
 
@@ -35,7 +36,7 @@ import sernet.verinice.report.service.impl.security.Messages;
  */
 public class ReflectAndRuntimePermissionHandler extends AbstractPermissionHandler {
     
-    private final static Logger LOG = Logger.getLogger(ReflectAndRuntimePermissionHandler.class);
+    private final static Logger LOG = LoggerFactory.getLogger(ReflectAndRuntimePermissionHandler.class);
     
 
     @Override
