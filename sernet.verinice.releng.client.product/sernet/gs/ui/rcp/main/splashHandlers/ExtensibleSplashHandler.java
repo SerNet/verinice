@@ -1,5 +1,5 @@
 
-package sernet.gs.ui.rcp.main.splashHandler;
+package sernet.gs.ui.rcp.main.splashHandlers;
 
 import java.util.ArrayList;
 import java.util.Iterator;
