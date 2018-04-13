@@ -72,12 +72,12 @@ VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilin
    </configIni>
 
    <launcherArgs>
-      <programArgs>-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl de -console -consoleLog -noExit
+      <programArgs>-nl de -console -consoleLog -noExit
       </programArgs>
       <programArgsMac>-vm ../../../jre/Contents/Home/lib/jli/libjli.dylib
       </programArgsMac>
       <vmArgs>-Xms512m -Xmx4096m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost -Djavax.activation.debug=true  -Dosgi.parentClassloader=ext
--Dorg.eclipse.swt.browser.XULRunnerPath=/home/simon/git/verinice-orig/verinice/xulrunner-1.9.2/bin
+ -Dorg.eclipse.swt.browser.XULRunnerPath=/home/simon/git/verinice-orig/verinice/xulrunner-1.9.2/bin
       </vmArgs>
       <vmArgsMac>-Djava.awt.headless=true
       </vmArgsMac>
@@ -863,20 +863,13 @@ Public License instead of this License.  But first, please read
       <feature id="pax" version="0.6.0"/>
       <feature id="antlr" version="2.7.7"/>
       <feature id="apache" version="0.6.0"/>
-      <feature id="inetlib" version="1.1.1"/>
       <feature id="jfree" version="1.0.0"/>
       <feature id="jgrapht" version="0.8.1"/>
       <feature id="lowagie" version="2.1.7"/>
       <feature id="w3c" version="0.6.0"/>
-      <feature id="org.eclipse.platform" version="3.7.2.v20120207-1839-9gF7UHPDFxGjd-PqDr2jX_4yKaumkoHTz04_q-q"/>
-      <feature id="org.eclipse.equinox.p2.user.ui"/>
-      <feature id="org.eclipse.help"/>
-      <feature id="org.eclipse.equinox.p2.extras.feature"/>
-      <feature id="org.eclipse.rcp"/>
-      <feature id="org.eclipse.equinox.p2.core.feature"/>
-      <feature id="org.eclipse.equinox.p2.rcp.feature"/>
       <feature id="sernet.datatools.feature" version="1.0.0"/>
       <feature id="sernet.birt.feature" version="1.0.0"/>
+      <feature id="sernet.eclipse.feature" version="1.0.0"/>
    </features>
 
    <configurations>

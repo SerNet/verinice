@@ -351,13 +351,6 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="sernet.verinice.bp.importer"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="sernet.verinice.fei.rcp"
          download-size="0"
          install-size="0"
@@ -372,21 +365,7 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="sernet.verinice.kerberos"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="sernet.verinice.oda.driver"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="sernet.verinice.oda.driver.designer"
          download-size="0"
          install-size="0"
          version="0.0.0"
