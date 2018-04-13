@@ -1,48 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="target-platform-e4" sequenceNumber="73">
+<?pde version="3.8"?><target name="target-platform-e4" sequenceNumber="75">
 <locations>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="antlr.feature.group" version="2.7.7"/>
-<unit id="antlr.source.feature.group" version="2.7.7"/>
-<unit id="apache.feature.group" version="0.6.0"/>
-<unit id="apache.source.feature.group" version="0.6.0"/>
-<unit id="inetlib.feature.group" version="1.1.1"/>
-<unit id="inetlib.source.feature.group" version="1.1.1"/>
-<unit id="jfree.feature.group" version="1.0.0"/>
-<unit id="jfree.source.feature.group" version="1.0.0"/>
-<unit id="jgrapht.feature.group" version="0.8.1"/>
-<unit id="jgrapht.source.feature.group" version="0.8.1"/>
-<unit id="lowagie.feature.group" version="2.1.7"/>
-<unit id="lowagie.source.feature.group" version="2.1.7"/>
-<unit id="net.sf.ehcache.feature.group" version="2.10.4"/>
-<unit id="net.sf.ehcache.source.feature.group" version="2.10.4"/>
-<unit id="org.hibernate.feature.group" version="3.6.11"/>
-<unit id="org.hibernate.source.feature.group" version="3.6.11"/>
-<unit id="org.jdom.feature.group" version="2.0.2"/>
-<unit id="org.jdom.source.feature.group" version="2.0.2"/>
-<unit id="pax.feature.group" version="0.6.0"/>
-<unit id="pax.source.feature.group" version="0.6.0"/>
-<unit id="spring.feature.group" version="0.6.0"/>
-<unit id="spring.source.feature.group" version="0.6.0"/>
-<unit id="w3c.feature.group" version="0.6.0"/>
-<unit id="w3c.source.feature.group" version="0.6.0"/>
-<repository location="file:/home/simon/Desktop/updatesite/bla/36/"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.birt.feature.group" version="4.7.0.v201706222054"/>
-<unit id="org.eclipse.birt.osgi.runtime.sdk.feature.group" version="4.7.0.v201706222054"/>
-<unit id="org.eclipse.datatools.connectivity.feature.feature.group" version="1.14.100.201802212225"/>
-<unit id="org.eclipse.datatools.enablement.feature.feature.group" version="1.14.100.201801242337"/>
-<unit id="org.eclipse.datatools.enablement.sdk.feature.feature.group" version="1.14.100.201802061819"/>
-<unit id="org.eclipse.datatools.sdk.feature.feature.group" version="1.14.100.201801242337"/>
-<unit id="org.eclipse.datatools.sqldevtools.feature.feature.group" version="1.14.100.201802061753"/>
-<repository location="http://download.eclipse.org/releases/photon"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.equinox.sdk.feature.group" version="3.13.4.v20180322-2228"/>
-<unit id="org.eclipse.sdk.ide" version="4.7.3.M20180330-0640"/>
-<repository location="http://download.eclipse.org/eclipse/updates/4.7"/>
-</location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="ch.qos.logback.classic" version="1.1.2.v20160208-0839"/>
 <unit id="ch.qos.logback.classic.source" version="1.1.2.v20160208-0839"/>
@@ -83,6 +41,52 @@
 <unit id="org.slf4j.api" version="1.7.10.v20170428-1633"/>
 <unit id="org.slf4j.api.source" version="1.7.10.v20170428-1633"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180330011457/repository"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.birt.feature.group" version="4.7.0.v201706222054"/>
+<unit id="org.eclipse.birt.osgi.runtime.sdk.feature.group" version="4.7.0.v201706222054"/>
+<unit id="org.eclipse.datatools.connectivity.feature.feature.group" version="1.14.100.201802212225"/>
+<unit id="org.eclipse.datatools.enablement.feature.feature.group" version="1.14.100.201801242337"/>
+<unit id="org.eclipse.datatools.enablement.sdk.feature.feature.group" version="1.14.100.201802061819"/>
+<unit id="org.eclipse.datatools.sdk.feature.feature.group" version="1.14.100.201801242337"/>
+<unit id="org.eclipse.datatools.sqldevtools.feature.feature.group" version="1.14.100.201802061753"/>
+<repository location="http://download.eclipse.org/releases/photon"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.equinox.sdk.feature.group" version="3.13.4.v20180322-2228"/>
+<unit id="org.eclipse.sdk.ide" version="4.7.3.M20180330-0640"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.7"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="antlr.feature.group" version="2.7.7"/>
+<unit id="antlr.source.feature.group" version="2.7.7"/>
+<unit id="apache.feature.group" version="0.6.0"/>
+<unit id="apache.source.feature.group" version="0.6.0"/>
+<unit id="com.opencsv.feature.group" version="4.1.0"/>
+<unit id="com.opencsv.source.feature.group" version="4.1.0"/>
+<unit id="inetlib.feature.group" version="1.1.1"/>
+<unit id="inetlib.source.feature.group" version="1.1.1"/>
+<unit id="jfree.feature.group" version="1.0.0"/>
+<unit id="jfree.source.feature.group" version="1.0.0"/>
+<unit id="jgrapht.feature.group" version="0.8.1"/>
+<unit id="jgrapht.source.feature.group" version="0.8.1"/>
+<unit id="lowagie.feature.group" version="2.1.7"/>
+<unit id="lowagie.source.feature.group" version="2.1.7"/>
+<unit id="net.sf.ehcache.feature.group" version="2.10.4"/>
+<unit id="net.sf.ehcache.source.feature.group" version="2.10.4"/>
+<unit id="org.hibernate.feature.group" version="3.6.11"/>
+<unit id="org.hibernate.source.feature.group" version="3.6.11"/>
+<unit id="org.jdom.feature.group" version="2.0.2"/>
+<unit id="org.jdom.source.feature.group" version="2.0.2"/>
+<unit id="pax.feature.group" version="0.6.0"/>
+<unit id="pax.source.feature.group" version="0.6.0"/>
+<unit id="spring.feature.group" version="0.6.0"/>
+<unit id="spring.source.feature.group" version="0.6.0"/>
+<unit id="threetenbp.feature.group" version="1.3.6"/>
+<unit id="threetenbp.source.feature.group" version="1.3.6"/>
+<unit id="w3c.feature.group" version="0.6.0"/>
+<unit id="w3c.source.feature.group" version="0.6.0"/>
+<repository location="file:/home/simon/Desktop/updatesite/verinice/100/"/>
 </location>
 </locations>
 </target>
