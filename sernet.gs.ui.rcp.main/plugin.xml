@@ -2506,7 +2506,7 @@
    <extension
          point="org.eclipse.ui.splashHandlers">
       <splashHandler
-            class="sernet.gs.ui.rcp.main.splashHandlers.ExtensibleSplashHandler"
+            class="sernet.gs.ui.rcp.main.splashHandler.ExtensibleSplashHandler"
             id="sernet.gs.ui.rcp.main.splashHandlers.extensible">
       </splashHandler>
       <splashHandlerProductBinding
