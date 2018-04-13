@@ -72,7 +72,7 @@ VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilin
    </configIni>
 
    <launcherArgs>
-      <programArgs>-nl de -console -consoleLog -noExit
+      <programArgs>-nl de -console -consoleLog
       </programArgs>
       <programArgsMac>-vm ../../../jre/Contents/Home/lib/jli/libjli.dylib
       </programArgsMac>
