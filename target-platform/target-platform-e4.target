@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="target-platform-e4" sequenceNumber="37">
+<?pde version="3.8"?><target name="target-platform-p2" sequenceNumber="69">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.sdk.feature.group" version="3.14.0.v20180305-1409"/>
@@ -9,28 +9,51 @@
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="antlr.feature.group" version="2.7.7"/>
 <unit id="antlr.source.feature.group" version="2.7.7"/>
+<unit id="apache.feature.group" version="0.6.0"/>
+<unit id="apache.source.feature.group" version="0.6.0"/>
 <unit id="inetlib.feature.group" version="1.1.1"/>
 <unit id="inetlib.source.feature.group" version="1.1.1"/>
+<unit id="jfree.feature.group" version="1.0.0"/>
+<unit id="jfree.source.feature.group" version="1.0.0"/>
 <unit id="jgrapht.feature.group" version="0.8.1"/>
 <unit id="jgrapht.source.feature.group" version="0.8.1"/>
+<unit id="lowagie.feature.group" version="2.1.7"/>
+<unit id="lowagie.source.feature.group" version="2.1.7"/>
 <unit id="net.sf.ehcache.feature.group" version="2.10.4"/>
 <unit id="net.sf.ehcache.source.feature.group" version="2.10.4"/>
 <unit id="org.hibernate.feature.group" version="3.6.11"/>
 <unit id="org.hibernate.source.feature.group" version="3.6.11"/>
 <unit id="org.jdom.feature.group" version="2.0.2"/>
 <unit id="org.jdom.source.feature.group" version="2.0.2"/>
-<repository location="file:/home/simon/Desktop/updatesite/bla/15/"/>
+<unit id="pax.feature.group" version="0.6.0"/>
+<unit id="pax.source.feature.group" version="0.6.0"/>
+<unit id="spring.feature.group" version="0.6.0"/>
+<unit id="spring.source.feature.group" version="0.6.0"/>
+<unit id="w3c.feature.group" version="0.6.0"/>
+<unit id="w3c.source.feature.group" version="0.6.0"/>
+<repository location="file:/home/simon/Desktop/updatesite/bla/36/"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="ch.qos.logback.classic" version="1.1.2.v20160208-0839"/>
+<unit id="ch.qos.logback.classic.source" version="1.1.2.v20160208-0839"/>
+<unit id="ch.qos.logback.core" version="1.1.2.v20160208-0839"/>
+<unit id="ch.qos.logback.core.source" version="1.1.2.v20160208-0839"/>
+<unit id="ch.qos.logback.slf4j" version="1.1.2.v20160301-0943"/>
+<unit id="ch.qos.logback.slf4j.source" version="1.1.2.v20160301-0943"/>
+<unit id="com.google.gson" version="2.7.0.v20170129-0911"/>
+<unit id="com.google.gson.source" version="2.7.0.v20170129-0911"/>
+<unit id="javax.xml.bind" version="2.2.0.v201105210648"/>
+<unit id="javax.xml.stream" version="1.0.1.v201004272200"/>
+<unit id="javax.xml.ws" version="2.1.0.v200902101523"/>
 <unit id="org.junit" version="4.12.0.v201504281640"/>
 <unit id="org.junit.source" version="4.12.0.v201504281640"/>
+<unit id="org.mozilla.javascript" version="1.7.5.v201504281450"/>
+<unit id="org.mozilla.javascript.source" version="1.7.5.v201504281450"/>
+<unit id="org.slf4j.api" version="1.7.10.v20170428-1633"/>
+<unit id="org.slf4j.api.source" version="1.7.10.v20170428-1633"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180330011457/repository"/>
 </location>
-<location path="/home/simon/git/verinice-master/verinice/target-platform/e4-target" type="Directory"/>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.birt.chart.cshelp.feature.group" version="4.7.0.v201706222054"/>
-<unit id="org.eclipse.birt.cshelp.feature.group" version="4.7.0.v201706222054"/>
-<unit id="org.eclipse.birt.doc.feature.group" version="4.7.0.v201706222054"/>
 <unit id="org.eclipse.birt.feature.group" version="4.7.0.v201706222054"/>
 <unit id="org.eclipse.birt.osgi.runtime.sdk.feature.group" version="4.7.0.v201706222054"/>
 <unit id="org.eclipse.datatools.connectivity.feature.feature.group" version="1.14.100.201802212225"/>
