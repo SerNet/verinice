@@ -871,6 +871,7 @@ Public License instead of this License.  But first, please read
       <feature id="w3c" version="0.6.0"/>
       <feature id="sernet.datatools.feature" version="1.0.0"/>
       <feature id="sernet.eclipse.feature" version="1.0.0"/>
+      <feature id="com.opencsv" version="4.1.0"/>
    </features>
 
    <configurations>
