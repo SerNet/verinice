@@ -51,7 +51,7 @@ public final class ExceptionUtil {
             + METADATA_LOG_FILE_PATH_RELATIVE;
     private static final String CLIENT_LOG_FILE_PATH_DEFAULT = WORKSPACE_PATH_DEFAULT
             + CLIENT_LOG_FILE_PATH_RELATIVE;
-    private static final String SERVER_LOG_FILE_PATH_DEFAULT = "/usr/local/share/tomcat6/logs/verinice-server.log"; //$NON-NLS-1$
+    private static final String SERVER_LOG_FILE_PATH_DEFAULT = "/usr/share/tomcat6/logs/verinice-server.log"; //$NON-NLS-1$
 
     private ExceptionUtil() {
     }
@@ -71,20 +71,24 @@ public final class ExceptionUtil {
 
         if (Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.ERRORPOPUPS)) {
-            final String message = getMessage();
-            openErrorDialog(exceptionTitle, message);
+            final String message = getMessage(exceptionTitle);
+            openErrorDialog(Messages.ExceptionUtilErrorPopupTitle, message);
         }
     }
 
-    private static String getMessage() {
+    private static String getMessage(String exceptionMessage) {
+        if (exceptionMessage == null) {
+            exceptionMessage = "";
+        }
         final String clientLogFilePath = getClientLogFilePath();
         final String metadataLogFilePath = getMetadataLogFilePath();
         if (Preferences.isStandalone()) {
-            return NLS.bind(Messages.ExceptionUtilErrorMessageStandalone, clientLogFilePath,
-                    metadataLogFilePath);
+            return NLS.bind(Messages.ExceptionUtilErrorMessageStandalone,
+                    new Object[] { exceptionMessage, clientLogFilePath, metadataLogFilePath });
         } else {
             return NLS.bind(Messages.ExceptionUtilErrorMessageServerMode, new Object[] {
-                    clientLogFilePath, metadataLogFilePath, SERVER_LOG_FILE_PATH_DEFAULT });
+                    exceptionMessage, clientLogFilePath, metadataLogFilePath,
+                    SERVER_LOG_FILE_PATH_DEFAULT });
         }
     }
 
