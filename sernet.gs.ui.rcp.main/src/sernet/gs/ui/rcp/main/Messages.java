@@ -104,6 +104,7 @@ public class Messages extends NLS {
     public static String CnAWorkspace_4;
     public static String ExceptionUtil_2;
     public static String ExceptionUtil_3;
+    public static String ExceptionUtilErrorPopupTitle;
     public static String ExceptionUtilErrorMessageStandalone;
     public static String ExceptionUtilErrorMessageServerMode;
     static {
