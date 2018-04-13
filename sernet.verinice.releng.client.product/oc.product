@@ -77,7 +77,7 @@ VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilin
       <programArgsMac>-vm ../../../jre/Contents/Home/lib/jli/libjli.dylib
       </programArgsMac>
       <vmArgs>-Xms512m -Xmx4096m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost -Djavax.activation.debug=true  -Dosgi.parentClassloader=ext
- -Dorg.eclipse.swt.browser.XULRunnerPath=/home/simon/git/verinice-orig/verinice/xulrunner-1.9.2/bin
+ -Dorg.eclipse.swt.browser.XULRunnerPath=/home/simon/git/verinice-orig/verinice/xulrunner-1.9.2/bin -Djavax.xml.soap.SOAPFactory=org.apache.axis.soap.SOAPFactoryImpl -Djavax.xml.soap.MessageFactory=org.apache.axis.soap.MessageFactoryImpl -Djavax.xml.soap.SOAPConnectionFactory=org.apache.axis.soap.SOAPConnectionFactoryImpl
       </vmArgs>
       <vmArgsMac>-Djava.awt.headless=true
       </vmArgsMac>
@@ -855,6 +855,7 @@ Public License instead of this License.  But first, please read
    </plugins>
 
    <features>
+      <feature id="sernet.birt.feature" version="1.0.0"/>
       <feature id="org.eclipse.e4.rcp"/>
       <feature id="sernet.gs.server.feature" version="1.1.1.qualifier"/>
       <feature id="sernet.gs.ui.rcp.main.feature"/>
@@ -869,7 +870,6 @@ Public License instead of this License.  But first, please read
       <feature id="lowagie" version="2.1.7"/>
       <feature id="w3c" version="0.6.0"/>
       <feature id="sernet.datatools.feature" version="1.0.0"/>
-      <feature id="sernet.birt.feature" version="1.0.0"/>
       <feature id="sernet.eclipse.feature" version="1.0.0"/>
    </features>
 
