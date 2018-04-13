@@ -181,66 +181,6 @@ permanent authorization for you to choose that version for the
 Library.
    </license>
 
-   <requires>
-      <import plugin="org.eclipse.osgi"/>
-      <import plugin="com.springsource.org.apache.log4j"/>
-      <import plugin="javax.servlet"/>
-      <import plugin="com.springsource.org.apache.commons.logging"/>
-      <import plugin="com.springsource.javax.xml.stream"/>
-      <import plugin="com.springsource.antlr"/>
-      <import plugin="com.springsource.javassist"/>
-      <import plugin="com.springsource.net.sf.cglib"/>
-      <import plugin="org.apache.commons.collections"/>
-      <import plugin="com.springsource.org.dom4j"/>
-      <import plugin="com.springsource.org.objectweb.asm"/>
-      <import plugin="com.springsource.org.objectweb.asm.attrs"/>
-      <import plugin="com.springsource.net.sf.ehcache"/>
-      <import plugin="com.springsource.javax.transaction"/>
-      <import plugin="com.springsource.org.mortbay.util"/>
-      <import plugin="org.apache.commons.codec"/>
-      <import plugin="com.springsource.org.mortbay.jetty.server"/>
-      <import plugin="org.eclipse.osgi.services"/>
-      <import plugin="org.springframework.core"/>
-      <import plugin="org.springframework.beans"/>
-      <import plugin="com.springsource.org.aspectj.weaver"/>
-      <import plugin="com.springsource.org.aopalliance"/>
-      <import plugin="org.springframework.aop"/>
-      <import plugin="org.springframework.transaction"/>
-      <import plugin="org.springframework.context"/>
-      <import plugin="org.springframework.jdbc"/>
-      <import plugin="com.springsource.org.quartz"/>
-      <import plugin="org.eclipse.equinox.common"/>
-      <import plugin="org.springframework.web"/>
-      <import plugin="com.springsource.org.hibernate"/>
-      <import plugin="org.springframework.osgi.io"/>
-      <import plugin="org.springframework.osgi.core"/>
-      <import plugin="org.apache.commons.httpclient"/>
-      <import plugin="org.springframework.context.support"/>
-      <import plugin="org.springframework.security.core"/>
-      <import plugin="sernet.hui.common" version="1.0.0" match="greaterOrEqual"/>
-      <import plugin="sernet.gs.ui.rcp.main"/>
-      <import plugin="org.eclipse.core.runtime" version="3.4.0" match="greaterOrEqual"/>
-      <import plugin="org.eclipse.equinox.app"/>
-      <import plugin="org.springframework.orm"/>
-      <import plugin="org.springframework.osgi.web"/>
-      <import plugin="org.springframework.web.servlet"/>
-      <import plugin="sernet.gs.service"/>
-      <import plugin="sernet.gs.reveng"/>
-      <import plugin="org.eclipse.core.runtime" version="3.5.0" match="compatible"/>
-      <import plugin="org.eclipse.compare.core" version="3.5.0" match="compatible"/>
-      <import plugin="org.eclipse.core.expressions" version="3.4.100" match="compatible"/>
-      <import plugin="org.eclipse.jface.text" version="3.5.0" match="compatible"/>
-      <import plugin="org.eclipse.ui" version="3.5.0" match="compatible"/>
-      <import plugin="com.ibm.icu"/>
-      <import plugin="org.eclipse.ui" version="3.3.0" match="compatible"/>
-      <import plugin="org.eclipse.core.runtime" version="3.3.0" match="compatible"/>
-      <import plugin="org.eclipse.core.net" version="1.0.0" match="compatible"/>
-      <import plugin="org.eclipse.ui.ide" version="3.5.0" match="compatible"/>
-      <import plugin="org.eclipse.core.filebuffers" version="3.5.0" match="compatible"/>
-      <import plugin="org.eclipse.core.resources" version="3.5.0" match="compatible"/>
-      <import plugin="org.eclipse.core.filesystem" version="1.2.0" match="compatible"/>
-   </requires>
-
    <plugin
          id="sernet.gs.server"
          download-size="0"

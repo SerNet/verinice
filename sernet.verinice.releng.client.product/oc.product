@@ -855,6 +855,7 @@ Public License instead of this License.  But first, please read
    </plugins>
 
    <features>
+      <feature id="org.eclipse.e4.rcp"/>
       <feature id="sernet.gs.server.feature" version="1.1.1.qualifier"/>
       <feature id="sernet.gs.ui.rcp.main.feature"/>
       <feature id="sernet.thirdparty.feature" version="1.0.0"/>
