@@ -36,43 +36,44 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * This command creates links for copied elements.
- * Copies of elements are passed in a map. Key of the map
- * is the UUID of the source element, values is the UUID of the copy.
+ * This command creates links for copied elements. Copies of elements are passed
+ * in a map. Key of the map is the UUID of the source element, values is the
+ * UUID of the copy.
  * 
  * All links from the source elements are copied the following way:
  * 
- * If the link destination element was copied together with the source a new link is created
- * from the source copy to the destination copy.
+ * If the link destination element was copied together with the source a new
+ * link is created from the source copy to the destination copy.
  * 
- * If the link destination element was not copied a new link is created
- * from the source copy to the original destination.
+ * If the link destination element was not copied a new link is created from the
+ * source copy to the original destination.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class CopyLinksCommand extends GenericCommand {
 
     private transient Logger log = Logger.getLogger(CopyLinksCommand.class);
+
     public Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(CopyLinksCommand.class);
         }
         return log;
     }
-    
+
     private static final int FLUSH_LEVEL = 20;
     private int number = 0;
-    
+
     private static final String UP = "up";
     private static final String DOWN = "down";
-    
+
     private transient Map<String, String> sourceDestMap;
-    
+
     private transient Map<String, List<String[]>> existingUpLinkMap;
     private transient Map<String, List<String[]>> existingDownLinkMap;
-    
+
     private transient IBaseDao<CnATreeElement, Serializable> dao;
-    
+
     /**
      * @param sourceDestMap
      */
@@ -81,7 +82,9 @@ public class CopyLinksCommand extends GenericCommand {
         this.sourceDestMap = sourceDestMap;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
@@ -100,27 +103,28 @@ public class CopyLinksCommand extends GenericCommand {
     }
 
     private void createLinks(String sourceUuid, List<String[]> destinations, String direction) {
-        if(destinations==null) {
+        if (destinations == null) {
             return;
         }
         for (String[] destAndType : destinations) {
             String uuid = destAndType[0];
             String copyDestUuid = sourceDestMap.get(uuid);
-            if(copyDestUuid!=null) {
+            if (copyDestUuid != null) {
                 uuid = copyDestUuid;
                 if (getLog().isDebugEnabled()) {
-                    getLog().debug("Creating link to copy of target... " + sourceUuid + " -> " + uuid);
-                }       
+                    getLog().debug(
+                            "Creating link to copy of target... " + sourceUuid + " -> " + uuid);
+                }
             } else if (getLog().isDebugEnabled()) {
                 getLog().debug("Creating link to same target... " + sourceUuid + " -> " + uuid);
-            } 
-            if(UP.equals(direction)) {
+            }
+            if (UP.equals(direction)) {
                 createLink(sourceUuid, uuid, destAndType[1]);
             } else {
                 createLink(uuid, sourceUuid, destAndType[1]);
             }
             number++;
-            if(number % FLUSH_LEVEL == 0 ) {
+            if (number % FLUSH_LEVEL == 0) {
                 flushAndClear();
             }
         }
@@ -131,11 +135,12 @@ public class CopyLinksCommand extends GenericCommand {
         linkDao.flush();
         linkDao.clear();
         getDao().flush();
-        getDao().clear();      
+        getDao().clear();
     }
 
     private void createLink(String sourceUuid, String destUuid, String type) {
-        CreateLink<CnATreeElement, CnATreeElement>  createLink = new CreateLink<>(sourceUuid, destUuid, type);
+        CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<>(sourceUuid,
+                destUuid, type);
         try {
             getCommandService().executeCommand(createLink);
         } catch (CommandException e) {
@@ -153,23 +158,26 @@ public class CopyLinksCommand extends GenericCommand {
             cacheLink(sourceAndDest);
         }
     }
-    
+
     private void cacheLink(Object[] sourceAndDest) {
-        cacheLink((String)sourceAndDest[0], (String)sourceAndDest[1], (String)sourceAndDest[2], existingUpLinkMap);
-        cacheLink((String)sourceAndDest[1], (String)sourceAndDest[0], (String)sourceAndDest[2], existingDownLinkMap);
+        cacheLink((String) sourceAndDest[0], (String) sourceAndDest[1], (String) sourceAndDest[2],
+                existingUpLinkMap);
+        cacheLink((String) sourceAndDest[1], (String) sourceAndDest[0], (String) sourceAndDest[2],
+                existingDownLinkMap);
     }
 
-    public void cacheLink(String source, String dest, String type, Map<String, List<String[]>> map) {
+    public void cacheLink(String source, String dest, String type,
+            Map<String, List<String[]>> map) {
         List<String[]> destinations = map.get(source);
-        if(destinations==null) {
-            destinations = new LinkedList<String[]>();          
+        if (destinations == null) {
+            destinations = new LinkedList<String[]>();
             map.put(source, destinations);
         }
-        destinations.add(new String[]{dest,type});
+        destinations.add(new String[] { dest, type });
     }
 
     private IBaseDao<CnATreeElement, Serializable> getDao() {
-        if(dao==null) {
+        if (dao == null) {
             dao = getDaoFactory().getDAO(CnATreeElement.class);
         }
         return dao;
