@@ -52,14 +52,7 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class CopyLinksCommand extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(CopyLinksCommand.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(CopyLinksCommand.class);
-        }
-        return log;
-    }
+    private static final Logger logger = Logger.getLogger(CopyLinksCommand.class);
 
     private static final int FLUSH_LEVEL = 20;
     private int number = 0;
@@ -111,12 +104,12 @@ public class CopyLinksCommand extends GenericCommand {
             String copyDestUuid = sourceDestMap.get(uuid);
             if (copyDestUuid != null) {
                 uuid = copyDestUuid;
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug(
+                if (logger.isDebugEnabled()) {
+                    logger.debug(
                             "Creating link to copy of target... " + sourceUuid + " -> " + uuid);
                 }
-            } else if (getLog().isDebugEnabled()) {
-                getLog().debug("Creating link to same target... " + sourceUuid + " -> " + uuid);
+            } else if (logger.isDebugEnabled()) {
+                logger.debug("Creating link to same target... " + sourceUuid + " -> " + uuid);
             }
             if (UP.equals(direction)) {
                 createLink(sourceUuid, uuid, destAndType[1]);
@@ -144,7 +137,7 @@ public class CopyLinksCommand extends GenericCommand {
         try {
             getCommandService().executeCommand(createLink);
         } catch (CommandException e) {
-            getLog().error("Error while creating link for copy", e);
+            logger.error("Error while creating link for copy", e);
             throw new RuntimeCommandException(e);
         }
     }
