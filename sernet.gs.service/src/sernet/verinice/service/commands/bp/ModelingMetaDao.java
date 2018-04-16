@@ -49,11 +49,14 @@ public class ModelingMetaDao {
 
     private static final String TYPE_ID = "typeId";
     private static final String UUIDS = "uuids";
+    
+    private static final String JOIN_PROPERTIES =
+    "join fetch entity.typedPropertyLists as propertyList " +
+    "join fetch propertyList.properties as props ";
 
     private static final String HQL_LOAD_ELEMENTS_WITH_PROPERTIES = "select element from CnATreeElement element " +
             "join fetch element.entity as entity " +
-            "join fetch entity.typedPropertyLists as propertyList " +
-            "join fetch propertyList.properties as props " +
+            JOIN_PROPERTIES +
             "where element.uuid in (:uuids)"; //$NON-NLS-1$
 
     private static final String HQL_LOAD_ELEMENTS_WITH_CHILDREN_PROPERTIES = "select element from CnATreeElement element " + 
@@ -62,8 +65,7 @@ public class ModelingMetaDao {
 
     public static final String HQL_LOAD_ELEMENTS_OF_SCOPE = "select  safeguard from CnATreeElement safeguard " +
             "join fetch safeguard.entity as entity " +
-            "join fetch entity.typedPropertyLists as propertyList " +
-            "join fetch propertyList.properties as props " +
+            JOIN_PROPERTIES +
             "where safeguard.objectType = :typeId " +
             "and safeguard.scopeId = :scopeId"; //$NON-NLS-1$
 
@@ -83,8 +85,7 @@ public class ModelingMetaDao {
             "join linksUp.dependant as requirement " +
             "join requirement.parent as module " +
             "join fetch safeguard.entity as entity " +
-            "join fetch entity.typedPropertyLists as propertyList " +
-            "join fetch propertyList.properties as props " +
+            JOIN_PROPERTIES +   
             "where safeguard.objectType = :typeId " +
             "and module.uuid in (:uuids)"; //$NON-NLS-1$
 
@@ -99,16 +100,14 @@ public class ModelingMetaDao {
             "join linksUp.dependant as requirement " +
             "join requirement.parent as module " +
             "join fetch safeguard.entity as entity " +
-            "join fetch entity.typedPropertyLists as propertyList " +
-            "join fetch propertyList.properties as props " +
+            JOIN_PROPERTIES +         
             "where safeguardGroup.objectType = :typeId " +
             "and module.uuid in (:uuids)"; //$NON-NLS-1$
     
     private static final String HQL_LOAD_CHILDREN_WITH_PROPERTIES = "select requirement from CnATreeElement requirement " +
             "join requirement.parent as module " +
             "join fetch requirement.entity as entity " +
-            "join fetch entity.typedPropertyLists as propertyList " +
-            "join fetch propertyList.properties as props " +
+            JOIN_PROPERTIES +       
             "where module.uuid in (:uuids)"; //$NON-NLS-1$
 
     private static final String HQL_LOAD_TYPED_CHILDREN_WITH_PROPERTIES = HQL_LOAD_CHILDREN_WITH_PROPERTIES + 
@@ -117,8 +116,7 @@ public class ModelingMetaDao {
     private static final String HQL_LOAD_LINKED_ELEMENTS_WITH_PROPERTIES = "select element from CnATreeElement element "
             + "join element.linksUp as linksUp " + "join linksUp.dependant as requirement "
             + "join fetch element.entity as entity "
-            + "join fetch entity.typedPropertyLists as propertyList "
-            + "join fetch propertyList.properties as props "
+            + JOIN_PROPERTIES            
             + "where element.objectType in (:typeIds) " 
             + "and requirement.uuid = :uuid"; //$NON-NLS-2$
     

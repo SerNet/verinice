@@ -144,7 +144,7 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
             throws CommandException {
         CnATreeElement element = laodTargetElement(requirement);
         BpRequirementGroup requirementGroup = (BpRequirementGroup) requirement.getParent();
-        String moduleTitle = ((IIdentifiableElement) requirementGroup).getFullTitle();
+        String moduleTitle = requirementGroup.getFullTitle();
         CnATreeElement safeguardGroup = getSafeguardGroup(element, moduleTitle);
         if (safeguardGroup == null) {
             safeguardGroup = createSafeguardGroup(element, requirementGroup);

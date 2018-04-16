@@ -90,7 +90,7 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
     private void handleElement() throws CommandException {
         for (CnATreeElement target : targetElements) {
             copyMissingElements(target);
-            handleChildren(target);
+            handleChildren();
         }
     }
 
@@ -127,14 +127,14 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
         }
     }
 
-    private void handleChildren(CnATreeElement target) throws CommandException {
+    private void handleChildren() throws CommandException {
         for (Map.Entry<CnATreeElement, CnATreeElement> entry : elementMap.entrySet()) {
-            loadAndHandleChild(target, entry);
+            loadAndHandleChild(entry);
         }
     }
 
-    private void loadAndHandleChild(CnATreeElement target,
-            Map.Entry<CnATreeElement, CnATreeElement> entry) throws CommandException {
+    private void loadAndHandleChild(Map.Entry<CnATreeElement, CnATreeElement> entry)
+            throws CommandException {
         String uuidCompendium = entry.getKey().getUuid();
         String uuidScope = entry.getValue().getUuid();
         CnATreeElement elementCompendium = null;

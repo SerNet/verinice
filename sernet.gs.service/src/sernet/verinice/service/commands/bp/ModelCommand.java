@@ -52,11 +52,11 @@ import sernet.verinice.service.bp.exceptions.BpModelingException;
  * Compendium to the information network. The module is copied and pasted as
  * child of the element.
  * 
- * Safeguards
+ * Safeguards (optional)
  * 
- * If there is a safeguard for a requirement in the compendium, the safeguard is
- * copied to the information network and pasted as child of the element.
- * Optional dummy safeguards are created if no safeguard is linked to a
+ * If there is a safeguard for a requirement in the compendium, optional the
+ * safeguard is copied to the information network and pasted as child of the
+ * element. Optional dummy safeguards are created if no safeguard is linked to a
  * requirement in compendium.
  * 
  * Elemental threats
