@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
@@ -32,34 +31,6 @@ import org.eclipse.ui.PlatformUI;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
-import sernet.verinice.model.bp.elements.Application;
-import sernet.verinice.model.bp.elements.BpDocument;
-import sernet.verinice.model.bp.elements.BpIncident;
-import sernet.verinice.model.bp.elements.BpPerson;
-import sernet.verinice.model.bp.elements.BpRecord;
-import sernet.verinice.model.bp.elements.BpRequirement;
-import sernet.verinice.model.bp.elements.BpThreat;
-import sernet.verinice.model.bp.elements.BusinessProcess;
-import sernet.verinice.model.bp.elements.Device;
-import sernet.verinice.model.bp.elements.IcsSystem;
-import sernet.verinice.model.bp.elements.ItSystem;
-import sernet.verinice.model.bp.elements.Network;
-import sernet.verinice.model.bp.elements.Room;
-import sernet.verinice.model.bp.elements.Safeguard;
-import sernet.verinice.model.bp.groups.ApplicationGroup;
-import sernet.verinice.model.bp.groups.BpDocumentGroup;
-import sernet.verinice.model.bp.groups.BpIncidentGroup;
-import sernet.verinice.model.bp.groups.BpPersonGroup;
-import sernet.verinice.model.bp.groups.BpRecordGroup;
-import sernet.verinice.model.bp.groups.BpRequirementGroup;
-import sernet.verinice.model.bp.groups.BpThreatGroup;
-import sernet.verinice.model.bp.groups.BusinessProcessGroup;
-import sernet.verinice.model.bp.groups.DeviceGroup;
-import sernet.verinice.model.bp.groups.IcsSystemGroup;
-import sernet.verinice.model.bp.groups.ItSystemGroup;
-import sernet.verinice.model.bp.groups.NetworkGroup;
-import sernet.verinice.model.bp.groups.RoomGroup;
-import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.TagParameter;
 import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.model.iso27k.Asset;
@@ -126,23 +97,6 @@ public class ViewFilterAction extends Action {
         new String[] {Vulnerability.TYPE_ID,VulnerabilityGroup.TYPE_ID}
     };
     
-    public static final String[][] BASE_PROTECTION_TYPES = new String[][] {
-        new String[] {BusinessProcess.TYPE_ID, BusinessProcessGroup.TYPE_ID},
-        new String[] {Application.TYPE_ID, ApplicationGroup.TYPE_ID},
-        new String[] {ItSystem.TYPE_ID, ItSystemGroup.TYPE_ID},
-        new String[] {IcsSystem.TYPE_ID, IcsSystemGroup.TYPE_ID},
-        new String[] {Device.TYPE_ID, DeviceGroup.TYPE_ID},
-        new String[] {Network.TYPE_ID, NetworkGroup.TYPE_ID},
-        new String[] {Room.TYPE_ID, RoomGroup.TYPE_ID},
-        new String[] {BpPerson.TYPE_ID, BpPersonGroup.TYPE_ID},
-        new String[] {BpRequirement.TYPE_ID, BpRequirementGroup.TYPE_ID},
-        new String[] {BpThreat.TYPE_ID, BpThreatGroup.TYPE_ID},
-        new String[] {Safeguard.TYPE_ID, SafeguardGroup.TYPE_ID},
-        new String[] {BpDocument.TYPE_ID, BpDocumentGroup.TYPE_ID},
-        new String[] {BpIncident.TYPE_ID, BpIncidentGroup.TYPE_ID},
-        new String[] {BpRecord.TYPE_ID, BpRecordGroup.TYPE_ID}
-	};
-   
     private String[][] types = ISO_TYPES; 
     
     private Shell shell;
@@ -151,7 +105,6 @@ public class ViewFilterAction extends Action {
     private TypeParameter typeParameter;
 
     public ViewFilterAction(
-            StructuredViewer viewer, 
             String title, 
             TagParameter tagFilter, 
             HideEmptyFilter hideEmptyFilter,
