@@ -162,6 +162,12 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         List<String> targetUuids = new LinkedList<>();
         targetUuids.add(element.getUuid());
 
+        executeModelCommand(compendiumUuids, targetUuids);
+        CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
+    }
+
+    private void executeModelCommand(Set<String> compendiumUuids, List<String> targetUuids)
+            throws CommandException {
         modelCommand = new ModelCommand(compendiumUuids, targetUuids);
         modelCommand.setHandleSafeguards(Preferences.isModelSafeguardsActive());
         modelCommand.setHandleDummySafeguards(Preferences.isModelDummySafeguardsActive());
