@@ -168,7 +168,7 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     private void createDummySafeguards() throws CommandException {
         ModelDummySafeguards modelDummySafeguards = new ModelDummySafeguards(moduleUuidsFromScope,
-                safeguardGroupUuidsFromScope);
+                safeguardGroupUuidsFromScope, proceeding);
         getCommandService().executeCommand(modelDummySafeguards);
     }
 

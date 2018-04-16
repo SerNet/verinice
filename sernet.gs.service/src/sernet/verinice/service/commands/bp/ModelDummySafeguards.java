@@ -67,6 +67,7 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
 
     private Set<String> moduleUuidsFromScope;
     private Set<String> safeguardGroupUuidsFromScope;
+    private Proceeding proceeding;
     private List<CnATreeElement> safeguardGroups;
 
     private transient List<Link> linkList;
@@ -75,10 +76,11 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
     private String stationId;
 
     public ModelDummySafeguards(Set<String> moduleUuidsFromScope,
-            Set<String> safeguardGroupUuidsFromScope) {
+            Set<String> safeguardGroupUuidsFromScope, Proceeding proceeding) {
         super();
         this.moduleUuidsFromScope = moduleUuidsFromScope;
         this.safeguardGroupUuidsFromScope = safeguardGroupUuidsFromScope;
+        this.proceeding = proceeding;
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 
@@ -97,7 +99,9 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
         Set<CnATreeElement> requirements = findSafeguardsByModuleUuid(uuid);
         linkList = new LinkedList<>();
         for (CnATreeElement requirement : requirements) {
-            handleRequirement(requirement);
+            if (ModelingValidator.isRequirementValid(requirement, proceeding)) {
+                handleRequirement(requirement);
+            }
         }
         CreateMultipleLinks createMultipleLinks = new CreateMultipleLinks(linkList);
         getCommandService().executeCommand(createMultipleLinks);
