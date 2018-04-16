@@ -69,7 +69,7 @@ public class ModelSafeguardGroupCommand extends ModelCopyCommand {
             Set<CnATreeElement> safeguards = group.getChildren();
             Set<CnATreeElement> validSafeguards = new HashSet<>(safeguards.size());
             for (CnATreeElement safeguard : safeguards) {
-                if (ModelingValidator.isSafeguardValidInItNetwork(safeguard, proceeding)) {
+                if (ModelingValidator.isSafeguardValid(safeguard, proceeding)) {
                     validSafeguards.add(safeguard);
                 }
             }

@@ -199,7 +199,7 @@ public class ModelCommand extends ChangeLoggingCommand {
             Set<CnATreeElement> requirements = module.getChildren();
             Set<CnATreeElement> validRequirements = new HashSet<>(requirements.size());
             for (CnATreeElement requirement : requirements) {
-                if (ModelingValidator.isRequirementValidInItNetwork(requirement,
+                if (ModelingValidator.isRequirementValid(requirement,
                         proceeding)) {
                     validRequirements.add(requirement);
                 }

@@ -55,10 +55,10 @@ public final class ModelingValidator {
      *            An IT network
      * @return true if the CnATreeElement is valid, false if not
      */
-    public static boolean isRequirementValidInItNetwork(CnATreeElement requirement,
+    public static boolean isRequirementValid(CnATreeElement requirement,
             Proceeding proceeding) {
         return BpRequirement.isBpRequirement(requirement)
-                && isRequirementValidInItNetworkTypeSafe((BpRequirement) requirement, proceeding);
+                && isRequirementValidTypeSafe((BpRequirement) requirement, proceeding);
     }
 
     /**
@@ -72,13 +72,13 @@ public final class ModelingValidator {
      *            An IT network
      * @return true if the CnATreeElement is valid, false if not
      */
-    public static boolean isSafeguardValidInItNetwork(CnATreeElement safeguard,
+    public static boolean isSafeguardValid(CnATreeElement safeguard,
             Proceeding proceeding) {
         return Safeguard.isSafeguard(safeguard)
-                && isSafeguardValidInItNetworkTypeSafe((Safeguard) safeguard, proceeding);
+                && isSafeguardValidTypeSafe((Safeguard) safeguard, proceeding);
     }
 
-    private static boolean isSafeguardValidInItNetworkTypeSafe(Safeguard requirement,
+    private static boolean isSafeguardValidTypeSafe(Safeguard requirement,
             Proceeding proceeding) {
         String proceedingOfSafeguard = requirement.getEntity()
                 .getRawPropertyValue(Safeguard.PROP_QUALIFIER);
@@ -101,7 +101,7 @@ public final class ModelingValidator {
         }
     }
 
-    private static boolean isRequirementValidInItNetworkTypeSafe(BpRequirement requirement,
+    private static boolean isRequirementValidTypeSafe(BpRequirement requirement,
             Proceeding proceeding) {
         String proceedingOfRequirement = requirement.getEntity()
                 .getRawPropertyValue(BpRequirement.PROP_QUALIFIER);

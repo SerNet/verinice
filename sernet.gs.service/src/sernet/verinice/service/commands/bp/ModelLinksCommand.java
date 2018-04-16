@@ -283,7 +283,7 @@ public class ModelLinksCommand extends GenericCommand {
         Set<CnATreeElement> allRequirements = findRequirementsByModuleUuid(moduleUuids);
         Set<CnATreeElement> validRequirements = new HashSet<>(allRequirements.size());
         for (CnATreeElement requirement : allRequirements) {
-            if (ModelingValidator.isRequirementValidInItNetwork(requirement, proceeding)) {
+            if (ModelingValidator.isRequirementValid(requirement, proceeding)) {
                 validRequirements.add(requirement);
             }
         }
