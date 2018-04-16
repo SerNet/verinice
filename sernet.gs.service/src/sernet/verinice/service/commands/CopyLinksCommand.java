@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
@@ -88,10 +88,11 @@ public class CopyLinksCommand extends GenericCommand {
 
     public void copyLinks() {
         number = 0;
-        Set<String> sourceUuids = sourceDestMap.keySet();
-        for (String sourceUuid : sourceUuids) {
-            createLinks(sourceDestMap.get(sourceUuid), existingUpLinkMap.get(sourceUuid), UP);
-            createLinks(sourceDestMap.get(sourceUuid), existingDownLinkMap.get(sourceUuid), DOWN);
+        for (Entry<String, String> e : sourceDestMap.entrySet()) {
+            String sourceUuid = e.getKey();
+            String targetUuid = e.getValue();
+            createLinks(targetUuid, existingUpLinkMap.get(sourceUuid), UP);
+            createLinks(targetUuid, existingDownLinkMap.get(sourceUuid), DOWN);
         }
     }
 
