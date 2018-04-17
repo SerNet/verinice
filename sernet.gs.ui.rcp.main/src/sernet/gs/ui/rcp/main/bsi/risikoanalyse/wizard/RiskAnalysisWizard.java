@@ -123,7 +123,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 
         // FIXME server: just reload risk analysis instead of complete model.
 
-        CnAElementFactory.getInstance().reloadModelFromDatabase();
+        CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
 
         return true;
     }
@@ -136,7 +136,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
     @Override
     public boolean performCancel() {
         // FIXME server: just reload risk analysis instead of complete model.
-        CnAElementFactory.getInstance().reloadModelFromDatabase();
+        CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
         return true;
     }
 

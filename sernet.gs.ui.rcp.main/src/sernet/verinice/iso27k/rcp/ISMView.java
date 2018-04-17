@@ -230,7 +230,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 	protected void initView(Composite parent) {
 	    IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
 	    if(CnAElementFactory.getInstance().isIsoModelLoaded()) {
-	        CnAElementFactory.getInstance().reloadModelFromDatabase();
+	        CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
 	    }
 
 

@@ -98,7 +98,7 @@ public class CutService extends PasteService implements IProgressTask {
             cc = getCommandService().executeCommand(cc);
             numberOfElements = cc.getNumber();
             progressObserver.setTaskName(Messages.getString("CutService.3"));
-            CnAElementFactory.getInstance().reloadModelFromDatabase();
+            CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
             elementChanges = cc.getChanges();
 		} catch (PermissionException e) {
 			if (log.isDebugEnabled()) {

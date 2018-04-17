@@ -939,14 +939,6 @@ public final class CnAElementFactory {
         }
     }
 
-    /**
-     * @deprecated Use method reloadAllModelsFromDatabase()
-     */
-    @Deprecated
-    public void reloadModelFromDatabase() {
-        reloadAllModelsFromDatabase();
-    }
-
     public void reloadAllModelsFromDatabase() {
         try {
             fireClosed();

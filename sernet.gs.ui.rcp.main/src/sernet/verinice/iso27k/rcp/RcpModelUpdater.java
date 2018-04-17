@@ -42,7 +42,7 @@ public class RcpModelUpdater implements IModelUpdater {
      * @see sernet.verinice.iso27k.service.IModelUpdater#reload()
      */
     public void reload() {
-        CnAElementFactory.getInstance().reloadModelFromDatabase();
+        CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
     }
 
 }
