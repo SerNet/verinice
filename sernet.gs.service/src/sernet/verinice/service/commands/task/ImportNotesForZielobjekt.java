@@ -136,8 +136,7 @@ public class ImportNotesForZielobjekt extends GenericCommand {
             
            
            String typeId = element.getTypeId();
-           CnATypeMapper mapper = new CnATypeMapper();
-           String descriptionPropId = mapper.getDescriptionPropertyForType(typeId);
+           String descriptionPropId = CnATypeMapper.getDescriptionPropertyForType(typeId);
 
            if (descriptionPropId == null){
                return;
@@ -186,7 +185,7 @@ public class ImportNotesForZielobjekt extends GenericCommand {
         }
         
         if (copy.size() > 0) {
-            List<NotizenMassnahmeResult> bstNotizVorlagen = TransferData.findBausteinVorlageNotiz(bstUms, massnahmenNotizen);
+            List<NotizenMassnahmeResult> bstNotizVorlagen = TransferData.findBausteinVorlageNotiz(massnahmenNotizen);
             for (NotizenMassnahmeResult bstNotizVorlage : bstNotizVorlagen) {
                 copy.remove(bstNotizVorlage);
                 

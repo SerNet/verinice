@@ -1,6 +1,5 @@
 package sernet.verinice.report.actions;
 
-import org.apache.log4j.Logger;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
@@ -9,8 +8,6 @@ import sernet.verinice.report.rcp.GenerateReportDialog;
 
 public class GenerateReportAction extends ReportAction implements IWorkbenchWindowActionDelegate, RightEnabledUserInteraction {
 
-    private static final Logger LOG = Logger.getLogger(GenerateReportAction.class);
-    
     @Override
     protected void openDialog() {
         // reportgeneration called from applicationactionbar

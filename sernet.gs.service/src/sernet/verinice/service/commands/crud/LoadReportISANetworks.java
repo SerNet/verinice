@@ -49,7 +49,6 @@ public class LoadReportISANetworks extends GenericCommand implements ICachedComm
     private boolean resultInjectedFromCache = false;
     
     private static transient Logger LOG = Logger.getLogger(LoadReportISANetworks.class);
-    private static final String OVERVIEW_PROPERTY = "controlgroup_is_NoIso_group";
     
     private static final String NETWORKS_ROOTGROUPNAME = "01.02 Networkscans";
     

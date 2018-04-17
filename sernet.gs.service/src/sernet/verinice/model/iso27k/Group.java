@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -31,7 +32,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public abstract class Group<T> extends CnATreeElement {
+public abstract class Group<T> extends CnATreeElement implements ITaggableElement {
 	
 	public Group() {
 		super();
@@ -70,7 +71,7 @@ public abstract class Group<T> extends CnATreeElement {
 		return canContain;
 	}
 	
-    public Collection<? extends String> getTags() {
+    public Collection<String> getTags() {
 		// empty, override this to add tags to groups
 		// dont't forget to add a huiproperty to your SNCA.xml
 		return Collections.emptyList();

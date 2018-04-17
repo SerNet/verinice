@@ -82,15 +82,6 @@ public class SearchViewDropListener extends ViewerDropAdapter
     }
 
     /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // nothing to do
-
-    }
-
-    /* (non-Javadoc)
      * @see sernet.verinice.iso27k.rcp.action.DropPerformer#validateDrop(java.lang.Object, int, org.eclipse.swt.dnd.TransferData)
      */
     @Override

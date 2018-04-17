@@ -19,8 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.groups;
 
+import java.util.Collection;
+
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.elements.BusinessProcess;
+import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 
@@ -34,7 +37,8 @@ public class BusinessProcessGroup extends Group<BusinessProcess> implements IBpG
 
     public static final String TYPE_ID = "bp_businessprocess_group"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_businessprocess_group_name"; //$NON-NLS-1$
-    
+    public static final String PROP_TAG = "bp_businessprocess_group_tag"; //$NON-NLS-1$
+
     public static final String[] CHILD_TYPES = new String[] {BusinessProcess.TYPE_ID};
     
     protected BusinessProcessGroup() {}
@@ -64,4 +68,8 @@ public class BusinessProcessGroup extends Group<BusinessProcess> implements IBpG
         return CHILD_TYPES;
     }
 
+    @Override
+    public Collection<String> getTags() {
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
+    }
 }

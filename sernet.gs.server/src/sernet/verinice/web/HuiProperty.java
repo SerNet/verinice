@@ -20,8 +20,6 @@
 package sernet.verinice.web;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -34,7 +32,6 @@ import javax.faces.model.SelectItem;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import sernet.hui.common.connect.DependsType;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
@@ -48,11 +45,9 @@ import sernet.hui.common.multiselectionlist.IMLPropertyOption;
  */
 public class HuiProperty implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     private static final Logger LOG = Logger.getLogger(HuiProperty.class);
-
-    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat();
 
     private String key;
 
@@ -110,8 +105,8 @@ public class HuiProperty implements Serializable {
     public String getURLValue() {
         if (getIsURL() && getValue() != null && !getValue().isEmpty()) {
             try {
-                int n = getIndexOf((String) getValue(), '"', 0);
-                String[] a = ((String) getValue()).substring(n).split(">");
+                int n = getIndexOf(getValue(), '"', 0);
+                String[] a = (getValue()).substring(n).split(">");
                 return a[0].replaceAll("\"", "");
             } catch (Exception e) {
                 LOG.warn("Something went wrong on reading the URLValue", e);
@@ -121,12 +116,11 @@ public class HuiProperty implements Serializable {
     }
 
     public String getURLText() {
-        if (getIsURL() && getValue() != null && !((String) getValue()).isEmpty()) {
+        if (getIsURL() && getValue() != null && !getValue().isEmpty()) {
             try {
-                int n = getIndexOf((String) getValue(), '"', 0);
-                String[] a = ((String) getValue()).substring(n).split(">");
-                String value = a[1].replaceAll("</a", "");
-                return value;
+                int n = getIndexOf(getValue(), '"', 0);
+                String[] a = (getValue()).substring(n).split(">");
+                return a[1].replaceAll("</a", "");
             } catch (Exception e) {
                 LOG.warn("Something went wrong on reading the URLText", e);
             }
@@ -137,7 +131,8 @@ public class HuiProperty implements Serializable {
     public void setURLText(String urlText) {
         if (getIsURL()) {
             StringBuilder sb = new StringBuilder();
-            sb.append("<a href=\"").append(getURLValue()).append("\">").append(urlText).append("</a>");
+            sb.append("<a href=\"").append(getURLValue()).append("\">").append(urlText)
+                    .append("</a>");
             setValue(sb.toString());
         }
     }
@@ -145,7 +140,8 @@ public class HuiProperty implements Serializable {
     public void setURLValue(String urlValue) {
         if (getIsURL()) {
             StringBuilder sb = new StringBuilder();
-            sb.append("<a href=\"").append(urlValue).append("\">").append(getURLText()).append("</a>");
+            sb.append("<a href=\"").append(urlValue).append("\">").append(getURLText())
+                    .append("</a>");
             setValue(sb.toString());
         }
 
@@ -250,7 +246,7 @@ public class HuiProperty implements Serializable {
         String item = null;
 
         if (getIsSingleSelect() && getValue() != null) {
-            option = propertyType.getOption((String) getValue());
+            option = propertyType.getOption(getValue());
         }
         if (getIsNumericSelect() && getValue() != null && !getValue().equals("")) {
             option = propertyType.getOption(Integer.valueOf(getValue()));
@@ -272,10 +268,10 @@ public class HuiProperty implements Serializable {
             return null;
         }
         if (item == null) {
-            setValue(null);
             return null;
         }
-        if (getIsSingleSelect() && item.equals(Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE))) {
+        if (getIsSingleSelect()
+                && item.equals(Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE))) {
             setValue(null);
             return null;
         }
@@ -340,7 +336,7 @@ public class HuiProperty implements Serializable {
     }
 
     public void setValue(String value) {
-        if(!Objects.equals(this.value, value)) {
+        if (!Objects.equals(this.value, value)) {
             this.value = value;
             fireChangeListeners();
         }
@@ -366,17 +362,6 @@ public class HuiProperty implements Serializable {
         this.showLabel = showLabel;
     }
 
-    public String getDatePattern() {
-        return DATE_FORMAT.toPattern();
-    }
-    
-    public DateFormat getDateFormat() {
-        return DATE_FORMAT;
-    }
-
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -388,32 +373,37 @@ public class HuiProperty implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         HuiProperty other = (HuiProperty) obj;
         if (key == null) {
-            if (other.key != null)
+            if (other.key != null) {
                 return false;
-        } else if (!key.equals(other.key))
+            }
+        } else if (!key.equals(other.key)) {
             return false;
+        }
         if (value == null) {
-            if (other.value != null)
+            if (other.value != null) {
                 return false;
-        } else if (!value.equals(other.value))
+            }
+        } else if (!value.equals(other.value)) {
             return false;
+        }
         return true;
     }
 
-
-
     /**
-     * According to the {@link DependsType} this property is enabled. This
-     * additional getter is necessary for JSF and is delegated to
-     * {@link #isEnabled()}.
+     * According to the {@link sernet.hui.common.connect.DependsType} this
+     * property is enabled. This additional getter is necessary for JSF and is
+     * delegated to {@link #isEnabled()}.
      *
      * @return true if all dependencies are satisfied.
      */
@@ -427,14 +417,15 @@ public class HuiProperty implements Serializable {
      *
      * @param isEnabled
      *            Indicates if the property satisfied all dependency, defined by
-     *            {@link DependsType}.
+     *            {@link sernet.hui.common.connect.DependsType}.
      */
     public void setIsEnabled(boolean isEnabled) {
         this.setEnabled(isEnabled);
     }
 
     /**
-     * According to the {@link DependsType} this property is enabled.
+     * According to the {@link sernet.hui.common.connect.DependsType} this
+     * property is enabled.
      *
      * @return true if all dependencies are satisfied.
      */
@@ -481,7 +472,7 @@ public class HuiProperty implements Serializable {
      * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
      *
      */
-    public interface ValueChangeListener  extends Serializable {
+    public interface ValueChangeListener extends Serializable {
 
         /**
          * Called whenever the value of the {@link HuiProperty} is changed.
@@ -495,16 +486,17 @@ public class HuiProperty implements Serializable {
 
     @Override
     public String toString() {
-        return "HuiProperty [key=" + key + ", value=" + value + ", propertyType=" + propertyType + ", showLabel=" + showLabel + ", isEnabled=" + isEnabled + "]";
+        return "HuiProperty [key=" + key + ", value=" + value + ", propertyType=" + propertyType
+                + ", showLabel=" + showLabel + ", isEnabled=" + isEnabled + "]";
     }
-
 
     public List<SelectItem> getOptions() {
 
         if (propertyType.isMultiselect() && options == null) {
             options = new ArrayList<>(propertyType.getOptions().size());
             for (IMLPropertyOption imlPropertyOption : propertyType.getOptions()) {
-                SelectItem selectItem = new SelectItem(imlPropertyOption.getId(), imlPropertyOption.getName());
+                SelectItem selectItem = new SelectItem(imlPropertyOption.getId(),
+                        imlPropertyOption.getName());
                 options.add(selectItem);
             }
         }
@@ -517,7 +509,7 @@ public class HuiProperty implements Serializable {
             return Collections.emptyList();
         }
 
-        String[] split = getValue() != null ? getValue().split(",s*") : new String[]{};
+        String[] split = getValue() != null ? getValue().split(",s*") : new String[] {};
         List<String> selectedOptions = new ArrayList<>(split.length);
         for (int i = 0; i < split.length; i++) {
             selectedOptions.add(split[i].trim());

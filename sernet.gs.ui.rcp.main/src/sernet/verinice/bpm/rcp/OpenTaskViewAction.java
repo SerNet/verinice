@@ -18,7 +18,7 @@ public class OpenTaskViewAction extends OpenViewAction {
     Boolean isActive = null;
     
     public OpenTaskViewAction(IWorkbenchWindow window) {
-        super(window, Messages.OpenTaskViewAction_0, TaskView.ID, ImageCache.VIEW_TASK);
+        super(window, Messages.OpenTaskViewAction_0, TaskView.ID, ImageCache.VIEW_TASK, ActionRightIDs.TASKVIEW);
         CnAElementFactory.getInstance().addLoadListener(new IModelLoadListener() {
             public void closed(BSIModel model) {                
             }
@@ -39,8 +39,6 @@ public class OpenTaskViewAction extends OpenViewAction {
                 // nothing to do
             }
         });
-        setRightID(ActionRightIDs.TASKVIEW);
-        setEnabled(checkRights());
     }
     
     public OpenTaskViewAction(IWorkbenchWindow window, String rightID){

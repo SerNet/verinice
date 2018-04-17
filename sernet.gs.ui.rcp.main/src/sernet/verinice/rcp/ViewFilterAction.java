@@ -33,7 +33,10 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.model.bp.elements.Application;
+import sernet.verinice.model.bp.elements.BpDocument;
+import sernet.verinice.model.bp.elements.BpIncident;
 import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRecord;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.BusinessProcess;
@@ -44,7 +47,10 @@ import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpDocumentGroup;
+import sernet.verinice.model.bp.groups.BpIncidentGroup;
 import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRecordGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.BusinessProcessGroup;
@@ -131,7 +137,10 @@ public class ViewFilterAction extends Action {
         new String[] {BpPerson.TYPE_ID, BpPersonGroup.TYPE_ID},
         new String[] {BpRequirement.TYPE_ID, BpRequirementGroup.TYPE_ID},
         new String[] {BpThreat.TYPE_ID, BpThreatGroup.TYPE_ID},
-        new String[] {Safeguard.TYPE_ID, SafeguardGroup.TYPE_ID}
+        new String[] {Safeguard.TYPE_ID, SafeguardGroup.TYPE_ID},
+        new String[] {BpDocument.TYPE_ID, BpDocumentGroup.TYPE_ID},
+        new String[] {BpIncident.TYPE_ID, BpIncidentGroup.TYPE_ID},
+        new String[] {BpRecord.TYPE_ID, BpRecordGroup.TYPE_ID}
 	};
    
     private String[][] types = ISO_TYPES; 

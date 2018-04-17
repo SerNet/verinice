@@ -21,8 +21,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.LinkKategorie;
 import sernet.verinice.model.common.CnALink;
@@ -37,36 +35,14 @@ import sernet.verinice.model.common.CnATreeElement;
 public class BSIModelViewLabelProvider extends LabelProvider {
 
     private static final Logger LOG = Logger.getLogger(BSIModelViewLabelProvider.class);
-    
+
     public BSIModelViewLabelProvider() {
         super();
     }
 
-
     @Override
     public Image getImage(Object obj) {
-        if(obj instanceof CnATreeElement) {
-            Image image = CnAImageProvider.getCustomImage((CnATreeElement)obj);
-            if(image!=null) {
-                return image;
-            }
-        }
-        
-        if (obj instanceof BausteinUmsetzung) {         
-            return ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG);
-        }
-
-        else if (obj instanceof LinkKategorie) {
-            return ImageCache.getInstance().getImage(ImageCache.LINKS);
-        }
-
-        else if (obj instanceof CnALink) {
-            CnALink link = (CnALink) obj;
-            return CnAImageProvider.getImage(link.getDependency());
-        }
-
-        CnATreeElement el = (CnATreeElement) obj;
-        return CnAImageProvider.getImage(el);
+        return CnAImageProvider.getImage((CnATreeElement) obj);
     }
 
     @Override
@@ -75,7 +51,7 @@ public class BSIModelViewLabelProvider extends LabelProvider {
             if (obj == null) {
                 return "<null>";
             }
-    
+
             if (obj instanceof IBSIStrukturElement) {
                 IBSIStrukturElement el = (IBSIStrukturElement) obj;
                 CnATreeElement el2 = (CnATreeElement) obj;
@@ -89,26 +65,26 @@ public class BSIModelViewLabelProvider extends LabelProvider {
                 }
                 return title.toString();
             }
-    
+
             else if (obj instanceof LinkKategorie) {
                 return ((LinkKategorie) obj).getTitle();
             } else if (obj instanceof CnALink) {
                 CnALink link = (CnALink) obj;
                 return link.getTitle();
             }
-    
+
             CnATreeElement el = (CnATreeElement) obj;
             StringBuilder title = new StringBuilder(el.getTitle());
             if (LOG.isDebugEnabled()) {
                 appendIds(title, el);
             }
             return title.toString();
-        } catch( Exception e ) {
+        } catch (Exception e) {
             LOG.error("Error while getting label", e);
             return "";
         }
     }
-    
+
     void appendIds(StringBuilder sb, CnATreeElement element) {
         sb.append(" (scope: ").append(element.getScopeId());
         sb.append(", uu: ").append(element.getUuid());

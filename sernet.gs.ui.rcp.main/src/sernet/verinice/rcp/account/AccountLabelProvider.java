@@ -23,8 +23,6 @@ class AccountLabelProvider extends ColumnLabelProvider implements ITableLabelPro
 
     private static final Logger LOG = Logger.getLogger(AccountLabelProvider.class);
     
-    private static final String DUMMY_LM_LABEL = "###verinice-dummy-id###";
-    
     boolean titleMapInitialized = false;
     
     private Map<Integer, LicenseMessageInfos> lmInfosMap;

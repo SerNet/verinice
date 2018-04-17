@@ -42,7 +42,6 @@ import sernet.verinice.service.gstoolimport.TransferData;
 public class ImportNotesTask extends AbstractGstoolImportTask  {
 	
 	private IProgress monitor;
-	private TransferData transferData;
 
 	public void executeTask(int importType, IProgress monitor) throws DBException, CommandException {
 		Preferences prefs = Activator.getDefault().getPluginPreferences();
@@ -51,7 +50,6 @@ public class ImportNotesTask extends AbstractGstoolImportTask  {
 			throw new DBException("Kann nicht direkt aus MDB-Datei importieren. Datenbank vorher anhängen in Menü \"Bearbeiten, Einstellungen\".");
 		}
 		this.monitor = monitor;	
-		transferData = new TransferData(getGstoolDao(), false);
 		importNotes();
 	}
 	
@@ -71,7 +69,7 @@ public class ImportNotesTask extends AbstractGstoolImportTask  {
 			i++;
 			monitor.subTask(i + "/" + n + " - Zielobjekt: " + name);
 			List<NotizenMassnahmeResult> notesResults = getGstoolDao().findNotizenForZielobjekt(name);
-			Map<MbBaust, List<NotizenMassnahmeResult>> notizenMap = transferData.convertZielobjektNotizenMap(notesResults);
+			Map<MbBaust, List<NotizenMassnahmeResult>> notizenMap = TransferData.convertZielobjektNotizenMap(notesResults);
 			ImportNotesForZielobjekt command = new ImportNotesForZielobjekt(name, notizenMap);
 			command = ServiceFactory.lookupCommandService().executeCommand(command);
 		}

@@ -201,6 +201,7 @@ public class AddElementHandler extends RightsEnabledHandler implements IElementU
      */
     @Override
     public boolean checkRights() {
+        Activator.inheritVeriniceContextState();
         RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
@@ -213,11 +214,4 @@ public class AddElementHandler extends RightsEnabledHandler implements IElementU
         return ActionRightIDs.ADDISMELEMENT;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // DO NOTHING
-    }
 }

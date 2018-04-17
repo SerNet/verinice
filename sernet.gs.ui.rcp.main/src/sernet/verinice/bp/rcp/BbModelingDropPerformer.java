@@ -186,8 +186,7 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
 
         modelCommand = new ModelCommand(compendiumUuids, targetUuids);
         modelCommand = getCommandService().executeCommand(modelCommand);
-        CnAElementFactory.getInstance().reloadBpModelFromDatabase();
-        CnAElementFactory.getInstance().reloadCatalogModelFromDatabase();
+        CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
     }
 
     private void closeEditors() {
@@ -300,16 +299,6 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
     @Override
     public String getRightID() {
         return ActionRightIDs.BASEPROTECTIONMODELING;
-    }
-
-    /*
-     * @see
-     * sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.
-     * lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // nothing to do
     }
 
     private CnATreeElement getTargetElement(Object target) {

@@ -32,7 +32,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
  * @author Sebastian Engel <s.engel@tarent.de>
  * 
  */
-public class CertificateUtils {
+public final class CertificateUtils {
 
     private static final Logger LOG = Logger.getLogger(CertificateUtils.class);
     
@@ -110,4 +110,7 @@ public class CertificateUtils {
 		return x509Certificate;
 	}
 
+	private CertificateUtils() {
+
+	}
 }

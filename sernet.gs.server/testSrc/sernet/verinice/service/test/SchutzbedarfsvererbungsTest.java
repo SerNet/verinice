@@ -98,7 +98,7 @@ public class SchutzbedarfsvererbungsTest extends BeforeEachVNAImportHelper {
         
         // add link
         Server server = (Server) loadElement(SOURCE_ID, EXT_ID_SERVER_1);
-        CreateLink<CnALink,Server,Raum> command = new CreateLink<CnALink,Server,Raum>(server, raum, Server.REL_SERVER_RAUM, "SchutzbedarfsvererbungsTest");
+        CreateLink<Server,Raum> command = new CreateLink<Server,Raum>(server, raum, Server.REL_SERVER_RAUM, "SchutzbedarfsvererbungsTest");
         command = commandService.executeCommand(command);
         gebaeude = (Gebaeude) loadElement(SOURCE_ID, EXT_ID_GEBAEUDE_1);
         checkSchutzbedarf(gebaeude, SEHR_HOCH, SEHR_HOCH, SEHR_HOCH);
@@ -144,7 +144,7 @@ public class SchutzbedarfsvererbungsTest extends BeforeEachVNAImportHelper {
         Set<CnALink> links = raum.getLinksUp();
         for (CnALink link : links) {
             if(Server.REL_SERVER_RAUM.equals(link.getRelationId())) {
-                RemoveLink<CnALink> removeLink = new RemoveLink<CnALink>(link);
+                RemoveLink removeLink = new RemoveLink(link);
                 removeLink = commandService.executeCommand(removeLink);
             }
         }

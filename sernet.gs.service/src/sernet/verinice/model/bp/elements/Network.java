@@ -19,10 +19,14 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
+import java.util.Collection;
+
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementWithChilds;
 import sernet.verinice.model.common.ILinkChangeListener;
@@ -33,13 +37,14 @@ import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class Network extends ElementWithChilds implements IBpElement, IBpGroup {
+public class Network extends ElementWithChilds implements IBpElement, IBpGroup, ITaggableElement {
     
     private static final long serialVersionUID = -5306479716342566201L;
     
     public static final String TYPE_ID = "bp_network"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_network_name"; //$NON-NLS-1$
-    
+    public static final String PROP_TAG = "bp_network_tag"; //$NON-NLS-1$
+
     public static final String[] CHILD_TYPES = new String[] {BpRequirementGroup.TYPE_ID};
     
     private final ILinkChangeListener linkChangeListener = new MaximumProtectionRequirementsValueListener(this);
@@ -82,4 +87,9 @@ public class Network extends ElementWithChilds implements IBpElement, IBpGroup {
         return CHILD_TYPES;
     }
     
+    @Override
+    public Collection<String> getTags() {
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
+    }
+
 }

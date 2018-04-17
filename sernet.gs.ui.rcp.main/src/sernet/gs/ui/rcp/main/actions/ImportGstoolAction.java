@@ -39,8 +39,6 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.GSImportDialog;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 
 /**
  * Rights enables JFace action which starts the GSTOOL import.
@@ -58,23 +56,9 @@ public class ImportGstoolAction extends RightsEnabledAction {
 	private String sourceId;
 
     public ImportGstoolAction(IWorkbenchWindow window, String label) {
-        setText(label);
+        super(ActionRightIDs.GSTOOLIMPORT, label);
         setId(ID);
         setEnabled(true); // now works in standalone again
-        setRightID(ActionRightIDs.GSTOOLIMPORT);
-        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-            IInternalServerStartListener listener = new IInternalServerStartListener(){
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if(e.isStarted()){
-                        setEnabled(checkRights());
-                    }
-                }
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            setEnabled(checkRights());
-        }
     }
     
 

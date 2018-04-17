@@ -46,7 +46,6 @@ public class PathFinderCommand extends GenericCommand {
     }
     
     private static final String PARENT = "..";
-    private static final String THIS = ".";
     
     private String path;    
     private String uuidStart;

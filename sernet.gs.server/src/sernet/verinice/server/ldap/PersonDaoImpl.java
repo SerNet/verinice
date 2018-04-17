@@ -5,7 +5,6 @@ import java.util.List;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
-import org.apache.log4j.Logger;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 
@@ -24,15 +23,13 @@ public class PersonDaoImpl implements IPersonDao {
 	
 	private LdapTemplate ldapTemplate;
 	
-	private static final Logger LOG = Logger.getLogger(PersonDaoImpl.class); 
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PersonInfo> getPersonList(PersonParameter parameter) {
 	    return ldapTemplate.search(getBase(), getUserFilter(parameter),new LdapPersonMapper());
 	}
 	
-	/* (non-Javadoc)
+	/*
 	 * @see sernet.verinice.interfaces.ldap.IPersonDao#getPersonList(sernet.verinice.interfaces.ldap.PersonParameter, boolean)
 	 */
 	@Override

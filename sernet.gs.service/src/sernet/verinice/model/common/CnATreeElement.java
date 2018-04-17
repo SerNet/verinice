@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import sernet.hui.common.VeriniceContext;
@@ -344,9 +345,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     public void setScopeId(Integer scopeId) {
         this.scopeId = scopeId;
     }
-
-    @Override
-    public abstract String getTypeId();
 
 	public String getObjectType() {
 		return objectType;
@@ -827,5 +825,25 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     public boolean isItNetwork() {
         return ItNetwork.class.equals(getClass()) || ItNetwork.TYPE_ID.equals(getTypeId());
+    }
+
+    /**
+     * Joins a prefix and a title. If either is null or empty, it returns the
+     * other one, if both are null or empty, it returns the empty string
+     */
+    protected static String joinPrefixAndTitle(String prefix, String title) {
+        boolean hasTitle = StringUtils.isNotEmpty(title);
+        boolean hasIdentifier = StringUtils.isNotEmpty(prefix);
+
+        if (hasTitle) {
+            if (hasIdentifier) {
+                return StringUtils.join(new Object[] { prefix, " ", title });
+            } else {
+                return title;
+            }
+        } else if (hasIdentifier) {
+            return prefix;
+        }
+        return StringUtils.EMPTY;
     }
 }

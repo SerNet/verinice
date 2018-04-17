@@ -22,11 +22,9 @@ package sernet.verinice.rcp;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -49,8 +47,6 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.model.common.CnATreeElement;
@@ -85,31 +81,11 @@ public class ServerConnectionToggleAction extends RightsEnabledAction {
     private ServerConnectionToggleDialog dialog;
     
     public ServerConnectionToggleAction() {
-        if (Preferences.isServerMode()) {
-            setText(Messages.ServerConnectionToggleAction_0);
-        }
-        if (Preferences.isStandalone()) {
-            setText(Messages.ServerConnectionToggleAction_1);
-        }
+        super(ActionRightIDs.XMLEXPORT, Preferences.isServerMode() ? Messages.ServerConnectionToggleAction_0 : Messages.ServerConnectionToggleAction_1);
         setId(ID);
-        setRightID(ActionRightIDs.XMLEXPORT);
         StringBuilder sb = new StringBuilder();
         sb.append(CnAWorkspace.getInstance().getConfDir()).append(File.separatorChar).append(StartupImporter.SERVER_TRANSPORT_BASENAME);
         filePathBase = sb.toString();
-        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-            IInternalServerStartListener listener = new IInternalServerStartListener(){
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if(e.isStarted()){
-                        setEnabled(checkRights());
-                    }
-                }
-
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            setEnabled(checkRights());
-        }
     }
 
     /* (non-Javadoc)
@@ -164,24 +140,6 @@ public class ServerConnectionToggleAction extends RightsEnabledAction {
      */
     private void export() throws CommandException, IOException {
         export(new ArrayList<CnATreeElement>(dialog.getSelectedElementSet()), 0); 
-    }
-    
-    /**
-     * Exports one VNA archive per scope and keeps the original
-     * scope-id of every single scope.
-     * 
-     * @throws CommandException
-     * @throws IOException
-     */
-    private void exportOneVnaPerScope() throws CommandException, IOException {
-        Set<CnATreeElement> elementSet = dialog.getSelectedElementSet(); 
-        if(elementSet!=null && elementSet.size()>0) {
-            int i=0;
-            for (CnATreeElement element : elementSet) {
-                export(Arrays.asList(element),i);
-                i++;
-            }                
-        }
     }
     
     private void export(List<CnATreeElement> elementList,int i) throws CommandException, IOException {

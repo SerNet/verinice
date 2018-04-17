@@ -22,15 +22,15 @@ package sernet.verinice.model.bp.elements;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeductiveImplementationEnabled;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementationStausToRequirement;
 
+import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.StringTokenizer;
 
+import sernet.hui.common.connect.IIdentifiableElement;
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.Reevaluator;
+import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.AbstractLinkChangeListener;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
@@ -42,7 +42,7 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class BpRequirement extends CnATreeElement implements IBpElement {
+public class BpRequirement extends CnATreeElement implements IBpElement, IIdentifiableElement, ITaggableElement {
 
     private static final long serialVersionUID = 436541703079680979L;
 
@@ -52,16 +52,20 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     public static final String PROP_OBJECTBROWSER = "bp_requirement_objectbrowser_content"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_requirement_name"; //$NON-NLS-1$
     public static final String PROP_ID = "bp_requirement_id"; //$NON-NLS-1$
+    public static final String PROP_TAG = "bp_requirement_tag"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER = "bp_requirement_qualifier"; //$NON-NLS-1$
     public static final String PROP_LAST_CHANGE = "bp_requirement_last_change"; //$NON-NLS-1$
-    public static final String PROP_RESPONSIBLE_ROLES = "bp_requirement_responsibleroles"; //$NON-NLS-1$
     public static final String PROP_CONFIDENTIALITY = "bp_requirement_value_method_confidentiality";//$NON-NLS-1$
     public static final String PROP_INTEGRITY = "bp_requirement_value_method_integrity";//$NON-NLS-1$
     public static final String PROP_AVAILABILITY = "bp_requirement_value_method_availability";//$NON-NLS-1$
     public static final String PROP_QUALIFIER_BASIC = "bp_requirement_qualifier_basic"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER_STANDARD = "bp_requirement_qualifier_standard"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER_HIGH = "bp_requirement_qualifier_high"; //$NON-NLS-1$
-
+    public static final String PROP_IMPLEMENTATION_STATUS = "bp_requirement_implementation_status"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_NO = "bp_requirement_implementation_status_no"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_YES = "bp_requirement_implementation_status_yes"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_PARTIALLY = "bp_requirement_implementation_status_partially"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_requirement_implementation_status_na"; //$NON-NLS-1$
 
     public static final String REL_BP_REQUIREMENT_BP_THREAT = "rel_bp_requirement_bp_threat"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_SAFEGUARD = "rel_bp_requirement_bp_safeguard"; //$NON-NLS-1$
@@ -73,7 +77,6 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     public static final String REL_BP_REQUIREMENT_BP_DEVICE = "rel_bp_requirement_bp_device"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_NETWORK = "rel_bp_requirement_bp_network"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_ROOM = "rel_bp_requirement_bp_room"; //$NON-NLS-1$
-
 
     private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
     private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
@@ -96,7 +99,8 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         }
     };
 
-    protected BpRequirement() {}
+    protected BpRequirement() {
+    }
 
     public BpRequirement(CnATreeElement parent) {
         super(parent);
@@ -107,10 +111,12 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     public ILinkChangeListener getLinkChangeListener() {
         return linkChangeListener;
     }
+
     @Override
     public IReevaluator getProtectionRequirementsProvider() {
         return protectionRequirementsProvider;
     }
+
     @Override
     public String getTypeId() {
         return TYPE_ID;
@@ -126,7 +132,8 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     }
 
     public void setObjectBrowserDescription(String description) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER), description);
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER),
+                description);
     }
 
     public String getAbbreviation() {
@@ -151,6 +158,7 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
     }
 
+    @Override
     public String getIdentifier() {
         return getEntity().getPropertyValue(PROP_ID);
     }
@@ -191,40 +199,8 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
     }
 
     public void setLastChange(Date date) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE), String.valueOf(date.getTime()));
-    }
-
-    public Set<String> getResponsibleRoles(){
-        String property = getEntity().getPropertyValue(PROP_RESPONSIBLE_ROLES);
-        Set<String> roles;
-        if (property != null && property.length() > 0) {
-            StringTokenizer tokenizer = new StringTokenizer(property, "/");
-            roles = new HashSet<>(tokenizer.countTokens() + 1);
-            while (tokenizer.hasMoreTokens()) {
-                roles.add(tokenizer.nextToken());
-            }
-        } else {
-            roles = new HashSet<>();
-        }
-        return roles;
-    }
-
-    public void setResponisbleRoles(String roles) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_RESPONSIBLE_ROLES), roles);
-    }
-
-    public void addResponsibleRole(String role) {
-        Set<String> roles = getResponsibleRoles();
-        roles.add(role);
-        StringBuilder property = new StringBuilder();
-        Iterator<String> iter = roles.iterator();
-        while (iter.hasNext()) {
-            property.append(iter.next());
-            if (iter.hasNext()) {
-                property.append(" / ");
-            }
-        }
-        setResponisbleRoles(property.toString());
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE),
+                String.valueOf(date.getTime()));
     }
 
     public void setIsAffectsConfidentiality(boolean affectsConfidentiality) {
@@ -251,6 +227,10 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
         return ((this.getNumericProperty(PROP_AVAILABILITY) == 1) ? true : false);
     }
 
+    public String getImplementationStatus(){
+        return getEntity().getRawPropertyValue(PROP_IMPLEMENTATION_STATUS);
+    }
+
     public static String getIdentifierOfRequirement(CnATreeElement requirement) {
         return requirement.getEntity().getPropertyValue(PROP_ID);
     }
@@ -260,6 +240,16 @@ public class BpRequirement extends CnATreeElement implements IBpElement {
             return false;
         }
         return TYPE_ID.equals(element.getTypeId());
+    }
+
+    @Override
+    public String getFullTitle() {
+        return joinPrefixAndTitle(getIdentifier(), getTitle());
+    }
+
+    @Override
+    public Collection<String> getTags() {
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
 }

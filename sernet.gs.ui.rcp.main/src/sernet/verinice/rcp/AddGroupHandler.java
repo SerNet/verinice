@@ -50,7 +50,10 @@ import sernet.verinice.interfaces.CnATreeElementBuildException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpDocumentGroup;
+import sernet.verinice.model.bp.groups.BpIncidentGroup;
 import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRecordGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.BusinessProcessGroup;
@@ -128,7 +131,10 @@ public abstract class AddGroupHandler extends RightsEnabledHandler implements IE
         TITLE_FOR_TYPE.put(ItSystemGroup.TYPE_ID, Messages.AddGroupHandler_it_system);
         TITLE_FOR_TYPE.put(NetworkGroup.TYPE_ID, Messages.AddGroupHandler_network);
         TITLE_FOR_TYPE.put(RoomGroup.TYPE_ID, Messages.AddGroupHandler_room);
-        TITLE_FOR_TYPE.put(SafeguardGroup.TYPE_ID, Messages.AddGroupHandler_safeguard);  
+        TITLE_FOR_TYPE.put(SafeguardGroup.TYPE_ID, Messages.AddGroupHandler_safeguard);
+        TITLE_FOR_TYPE.put(BpDocumentGroup.TYPE_ID, Messages.AddGroupHandler_document);
+        TITLE_FOR_TYPE.put(BpIncidentGroup.TYPE_ID, Messages.AddGroupHandler_incident);
+        TITLE_FOR_TYPE.put(BpRecordGroup.TYPE_ID, Messages.AddGroupHandler_record);
     }
 	
 	private CnATreeElement parent;

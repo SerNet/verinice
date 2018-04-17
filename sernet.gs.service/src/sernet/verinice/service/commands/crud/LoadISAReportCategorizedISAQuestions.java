@@ -49,8 +49,6 @@ public class LoadISAReportCategorizedISAQuestions extends GenericCommand impleme
     private static final String SAMTTOPIC_CATEGORIZATION = "samt_topic_user_classification";
     private static final String SAMTTOPIC_FINDING_PROPERTY = "samt_topic_audit_findings";
     
-    private boolean resultInjectedFromCache = false;
-    
     private List<List<String>> results;
     
     public LoadISAReportCategorizedISAQuestions(int root, String categorie){
@@ -114,7 +112,6 @@ public class LoadISAReportCategorizedISAQuestions extends GenericCommand impleme
     public void injectCacheResult(Object result) {
         if(result instanceof ArrayList<?>){
             this.results = (ArrayList<List<String>>)result;
-            resultInjectedFromCache = true;
             if(LOG.isDebugEnabled()){
                 LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
             }

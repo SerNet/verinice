@@ -19,13 +19,14 @@
  ******************************************************************************/
 package sernet.verinice.model.bp;
 
+import sernet.hui.common.connect.ITitledElement;
+import sernet.hui.common.connect.ITypedElement;
+
 /**
  *
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public interface IBpElement {
-    public String getTypeId();
+public interface IBpElement extends ITypedElement, ITitledElement {
 
-    public String getTitle();
 }

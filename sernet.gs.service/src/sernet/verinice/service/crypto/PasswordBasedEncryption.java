@@ -43,7 +43,7 @@ import sernet.verinice.interfaces.encryption.PasswordException;
  * @author Sebastian Engel <s.engel@tarent.de>
  * 
  */
-public abstract class PasswordBasedEncryption {
+public final class PasswordBasedEncryption {
 
     /**
      * The salt used for Password Based En- and decryption. This should be at
@@ -352,5 +352,9 @@ public abstract class PasswordBasedEncryption {
         } catch (InvalidKeySpecException e) {
             throw new EncryptionException(e);
         }
+    }
+
+    private PasswordBasedEncryption() {
+
     }
 }

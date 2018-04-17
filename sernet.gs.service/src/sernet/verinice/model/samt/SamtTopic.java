@@ -103,10 +103,10 @@ public class SamtTopic extends CnATreeElement implements IISO27kElement, IContro
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
     }
     
-    /* (non-Javadoc)
-     * @see sernet.verinice.iso27k.model.IISO27kElement#getTags()
+    /*
+     * @see sernet.hui.common.connect.ITaggableElement#getTags()
      */
-    public Collection<? extends String> getTags() {
+    public Collection<String> getTags() {
         return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
     }
 

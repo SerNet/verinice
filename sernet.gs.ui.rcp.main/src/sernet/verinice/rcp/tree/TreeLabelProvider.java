@@ -22,20 +22,12 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
+import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
-import sernet.verinice.model.bp.elements.BpRequirement;
-import sernet.verinice.model.bp.elements.BpThreat;
-import sernet.verinice.model.bp.elements.Safeguard;
-import sernet.verinice.model.bp.groups.ImportBpGroup;
+import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kElement;
-import sernet.verinice.model.iso27k.ImportIsoGroup;
-import sernet.verinice.model.samt.SamtTopic;
-import sernet.verinice.service.iso27k.ControlMaturityService;
-import sernet.verinice.service.iso27k.ItemControlTransformer;
 
 /**
  * Label provider for ISO 27000 model elements.
@@ -43,59 +35,28 @@ import sernet.verinice.service.iso27k.ItemControlTransformer;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * 
  */
-public class TreeLabelProvider extends LabelProvider  {
+public class TreeLabelProvider extends LabelProvider {
 
     private static final Logger LOG = Logger.getLogger(TreeLabelProvider.class);
     private static final int MAX_TEXT_WIDTH = 80;
-    
-	public TreeLabelProvider() {
-		super();
-	}
 
-	private ControlMaturityService maturityService = new ControlMaturityService();
+    public TreeLabelProvider() {
+        super();
+    }
 
     @Override
-	public Image getImage(Object obj) {
-		Image image = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
-		try {
-    		if (!(obj instanceof CnATreeElement)) {
-    			return image;
-    		} else {
-    		    return getImage((CnATreeElement) obj);
-    		}
-    	} catch(Exception e) {
+    public Image getImage(Object obj) {
+        Image image = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
+        try {
+            if (!(obj instanceof CnATreeElement)) {
+                return image;
+            } else {
+                return CnAImageProvider.getImage((CnATreeElement) obj);
+            }
+        } catch (Exception e) {
             LOG.error("Error while getting image for tree item.", e);
             return image;
-        }		
-	}
-    
-    private Image getImage(CnATreeElement element) {
-        Image image = CnAImageProvider.getCustomImage((CnATreeElement)element);
-        if (image!=null) {
-            return image;
         }
-        if (element instanceof Group && !(element instanceof ImportIsoGroup) && !(element instanceof ImportBpGroup)) {
-            Group group = (Group) element;
-            // TODO - getChildTypes()[0] might be a problem for more than one type
-            image = ImageCache.getInstance().getImageForTypeId(group.getChildTypes()[0]);
-        } else if (element instanceof SamtTopic) {
-              SamtTopic topic = (SamtTopic) element;
-              image = ImageCache.getInstance().
-                      getControlImplementationImage(maturityService.getIsaState(topic));
-        } else if (element instanceof Control) {
-            Control control = (Control) element;
-            image = ImageCache.getInstance().
-                    getControlImplementationImage(control.getImplementation());
-            
-        } else {
-            // else return type icon:
-            image = ImageCache.getInstance().getImageForTypeId(element.getTypeId());
-        }
-        
-        if (image == null) {
-            image = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
-        }
-        return image;
     }
 
     @Override
@@ -106,45 +67,34 @@ public class TreeLabelProvider extends LabelProvider  {
         }
         try {
             CnATreeElement element = (CnATreeElement) obj;
-            StringBuilder sb = new StringBuilder();
-            sb.append(getPrefix(element));
-            String title = element.getTitle();
-            if (title != null) {
-                sb.append(title);
-            }
-            text = ItemControlTransformer.truncate(sb.toString(), MAX_TEXT_WIDTH) ;
+            String title = getElementTitle(element);
+            text = StringUtil.truncate(title, MAX_TEXT_WIDTH);
             if (LOG.isDebugEnabled()) {
-                text = text + " (scope: " + element.getScopeId() + ","
-                        + " uu: " + element.getUuid() + ", ext: " + element.getExtId() + ")";
+                text = text + " (scope: " + element.getScopeId() + "," + " uu: " + element.getUuid()
+                        + ", ext: " + element.getExtId() + ")";
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             LOG.error("Error while getting label for tree item.", e);
         }
-		return text;
-	}
-
-    private String getPrefix(CnATreeElement element) {
-        if (element instanceof IISO27kElement) {
-            String abbreviation = ((IISO27kElement)element).getAbbreviation();
-            return StringUtils.isEmpty(abbreviation) ? "" : abbreviation.concat(" ");
-        }
-        else if (element instanceof Safeguard) {
-            Safeguard safeguard = (Safeguard) element;
-            return String.format("%s [%s] ",
-                    safeguard.getIdentifier(),
-                    safeguard.getQualifier());
-        }
-        else if (element instanceof BpRequirement) {
-            BpRequirement requirement = (BpRequirement) element;
-            return String.format("%s [%s] ",
-                    requirement.getIdentifier(),
-                    requirement.getQualifier());
-        }
-        else if (element instanceof BpThreat) {
-            BpThreat requirement = (BpThreat) element;
-            return requirement.getIdentifier().concat(" ");
-        }
-        return "";
+        return text;
     }
 
+    private static String getElementTitle(CnATreeElement element) {
+        if (element instanceof IIdentifiableElement) {
+            return ((IIdentifiableElement) element).getFullTitle();
+        }
+        StringBuilder sb = new StringBuilder();
+        if (element instanceof IISO27kElement) {
+            String abbreviation = ((IISO27kElement) element).getAbbreviation();
+            if (!StringUtils.isEmpty(abbreviation)) {
+                sb.append(abbreviation);
+                sb.append(" ");
+            }
+        }
+        String title = element.getTitle();
+        if (title != null) {
+            sb.append(title);
+        }
+        return sb.toString();
+    }
 }

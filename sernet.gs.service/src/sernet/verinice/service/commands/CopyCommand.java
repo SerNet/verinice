@@ -69,8 +69,6 @@ public class CopyCommand extends GenericCommand {
     }
     
     private static final int FLUSH_LEVEL = 10;
-    private final boolean flush = false;
-    
     
     private String uuidGroup;
     
@@ -86,8 +84,6 @@ public class CopyCommand extends GenericCommand {
     private transient IBaseDao<CnATreeElement, Serializable> dao;
     
     private List<String> newElements;
-    
-    private boolean copyLinks = false;
     
     private boolean copyAttachments = false;
     
@@ -119,7 +115,6 @@ public class CopyCommand extends GenericCommand {
         super();
         this.uuidGroup = uuidGroup;
         this.uuidList = uuidList;
-        this.copyLinks = copyLinks;
         this.postProcessorList = postProcessorList;
         if (copyLinks) {
             addPostProcessor(new CopyLinks());
@@ -299,7 +294,7 @@ public class CopyCommand extends GenericCommand {
                 }
             }
         }     
-        SaveElement<CnATreeElement> saveCommand = new SaveElement<>(newElement, flush);
+        SaveElement<CnATreeElement> saveCommand = new SaveElement<>(newElement);
         saveCommand = getCommandService().executeCommand(saveCommand);
         newElement = saveCommand.getElement();
         newElement.setParentAndScope(toGroup);

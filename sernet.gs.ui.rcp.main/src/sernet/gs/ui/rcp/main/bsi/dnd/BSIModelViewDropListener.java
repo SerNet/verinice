@@ -304,18 +304,6 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.
-     * lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // nothing
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.iso27k.rcp.action.DropPerformer#isActive()
      */
     @Override

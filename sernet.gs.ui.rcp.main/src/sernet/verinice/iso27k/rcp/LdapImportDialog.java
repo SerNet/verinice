@@ -446,7 +446,7 @@ public class LdapImportDialog extends TitleAreaDialog {
 	@Override
 	protected void okPressed() {
 	    boolean importToITGS = radioButtonTargetPerspective[0].getSelection();
-		SaveLdapUser saveLdapUser = new SaveLdapUser(personSet, importToITGS);
+		SaveLdapUser saveLdapUser = new SaveLdapUser(personSet);
 		try {
 			saveLdapUser = ServiceFactory.lookupCommandService().executeCommand(saveLdapUser);
 		} catch (UsernameExistsException e) {

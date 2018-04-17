@@ -1328,11 +1328,12 @@ public class Document {
     })
     public static class ThreatScenario {
 
-        protected String description;
+        protected ITBP2VNA.generated.module.Description description;
+
         @XmlElement(required = true)
         protected Document.ThreatScenario.SpecificThreats specificThreats;
 
-        public String getDescription() {
+        public ITBP2VNA.generated.module.Description getDescription() {
             return description;
         }
 
@@ -1344,7 +1345,7 @@ public class Document {
          *     {@link String }
          *     
          */
-        public void setDescription(String value) {
+        public void setDescription(ITBP2VNA.generated.module.Description value) {
             this.description = value;
         }
 

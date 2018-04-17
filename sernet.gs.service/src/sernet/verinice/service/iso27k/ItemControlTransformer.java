@@ -32,7 +32,7 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * @author koderman[at]sernet[dot]de
  */
-public class ItemControlTransformer {
+public final class ItemControlTransformer {
 
 	/**
 	 * Transforms a catalog item to a IControl.
@@ -97,20 +97,6 @@ public class ItemControlTransformer {
 	}
 	
 	/**
-	 * Truncates a text if it is longer than maxWidth.
-	 * If text is truncated ellipses ("…") are added in the end.
-	 * @return the truncated text
-	 */
-	public static String truncate(String text, int maxWidth) {
-        String truncatedText = text;
-        if (text != null && text.length() > maxWidth) {
-            truncatedText = new StringBuilder(text.substring(0, (maxWidth - 1))).append("…")
-                    .toString();
-        }
-        return truncatedText;
-	}
-	
-	/**
 	 * Teilt einen String in mehrere Zeilen, wenn er laenger als
 	 * maxWidth ist.
 	 * 
@@ -161,6 +147,10 @@ public class ItemControlTransformer {
             iso27kGroup.setTitel(item.getName().replaceAll("\\s", " "));
         }
         return iso27kGroup;
+    }
+
+    private ItemControlTransformer() {
+
     }
 
 }

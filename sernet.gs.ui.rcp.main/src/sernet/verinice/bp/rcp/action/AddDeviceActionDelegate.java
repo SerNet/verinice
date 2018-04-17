@@ -19,49 +19,17 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp.action;
 
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IWorkbenchPart;
-
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.model.bp.elements.Device;
 import sernet.verinice.model.bp.groups.DeviceGroup;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class AddDeviceActionDelegate extends AbstractAddBpElementActionDelegate {
+public class AddDeviceActionDelegate extends AbstractAddBpElementActionDelegate<Device> {
 
-    private IWorkbenchPart targetPart;
-
-    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-        this.targetPart = targetPart;
+    public AddDeviceActionDelegate() {
+        super(DeviceGroup.class, Device.TYPE_ID, Messages.AddOtherSystemDelegate_0);
     }
 
-    public void run(IAction action) {
-
-        try {
-            Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
-            CnATreeElement newElement = null;
-            if (sel instanceof DeviceGroup) {
-                CnATreeElement cont = (CnATreeElement) sel;
-                boolean inheritIcon = Activator.getDefault().getPreferenceStore()
-                        .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);
-                newElement = CnAElementFactory.getInstance().saveNew(cont, Device.TYPE_ID, null, inheritIcon);
-            }
-            if (newElement != null) {
-                EditorFactory.getInstance().openEditor(newElement);
-            }
-        } catch (Exception e) {
-            ExceptionUtil.log(e, Messages.AddOtherSystemDelegate_0);
-        }
-
-    }
-    
 }

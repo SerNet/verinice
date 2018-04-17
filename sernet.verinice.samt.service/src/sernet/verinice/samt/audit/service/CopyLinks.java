@@ -178,7 +178,7 @@ public class CopyLinks extends ChangeLoggingCommand implements IChangeLoggingCom
                 getLog().debug("Creating link, dependant " + dependant.getTitle() + "...");
             } 
             if(!cretedLinkSet.contains(new CnALink(dependant, dependency, relationId, null))) {
-                CreateLink<CnALink, CnATreeElement, CnATreeElement> createLink = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(dependant, dependency, relationId, "created by command CopyLinks");      
+                CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<>(dependant, dependency, relationId, "created by command CopyLinks");
                 createLink = getCommandService().executeCommand(createLink);
                 cretedLinkSet.add(createLink.getLink());
                 return createLink.getLink();

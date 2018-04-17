@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 
 import sernet.gs.service.CsvFile;
+import sernet.gs.service.StringUtil;
 import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -88,7 +89,6 @@ import sernet.verinice.service.commands.SaveNote;
 import sernet.verinice.service.commands.crud.DeleteNote;
 import sernet.verinice.service.iso27k.ImportCatalog;
 import sernet.verinice.service.iso27k.Item;
-import sernet.verinice.service.iso27k.ItemControlTransformer;
 import sernet.verinice.service.model.LoadModel;
 
 /**
@@ -509,7 +509,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
 			IItem item = ((IItem)obj);
 			String label = "";
 			if(item!=null) {
-			    label = ItemControlTransformer.truncate(item.getName(), maxLabelWidth);
+			    label = StringUtil.truncate(item.getName(), maxLabelWidth);
 			}
 			return label;
 		}

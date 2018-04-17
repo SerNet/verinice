@@ -45,14 +45,5 @@ public abstract class AbstractAddCnATreeElementActionDelegate implements IObject
         RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // do nothing
-        
-    }
 
 }

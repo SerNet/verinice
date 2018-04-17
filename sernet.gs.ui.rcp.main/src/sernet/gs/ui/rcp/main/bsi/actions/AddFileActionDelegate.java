@@ -29,6 +29,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.views.FileView;
@@ -119,6 +120,7 @@ public class AddFileActionDelegate implements IObjectActionDelegate, RightEnable
      */
     @Override
     public boolean checkRights() {
+        Activator.inheritVeriniceContextState();
         RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
@@ -129,15 +131,6 @@ public class AddFileActionDelegate implements IObjectActionDelegate, RightEnable
     @Override
     public String getRightID() {
         return ActionRightIDs.ADDFILE;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // Do nothing
-        
     }
 
     private boolean isCnATreeElementEditable(ISelection selection) {

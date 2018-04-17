@@ -47,9 +47,7 @@ public final class TocHelper2 {
     private static int listOfTablesEntryCount = 0;
     
     private static int listOfFiguresEntryCount = 0;
-    
-    private static int pageHeadingCount = 0;
-    
+   
     private static int engineIteration = 0;
     
     private static int pageStartCount = 0;
@@ -131,7 +129,6 @@ public final class TocHelper2 {
             listOfFiguresEntryCount = 0;
             engineIteration = 0;
             pageStartCount = 0;
-            pageHeadingCount = 0;
             break;
 
         default:
@@ -317,12 +314,6 @@ public final class TocHelper2 {
         }        
     }
     
-    public static void increasePHCount(){
-        if(engineIteration > 2){
-            pageHeadingCount++;
-        }
-    }
-    
     
     public static void increaseLoTCount(){
         if(engineIteration > 1){
@@ -412,7 +403,7 @@ public final class TocHelper2 {
             return toString().hashCode();
         }
 
-        /* (non-Javadoc)
+        /*
          * @see java.lang.Comparable#compareTo(java.lang.Object)
          */
         @Override

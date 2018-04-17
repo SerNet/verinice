@@ -21,8 +21,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.GenericCommand;
@@ -38,8 +36,6 @@ import sernet.verinice.service.account.AccountLoader;
  */
 @SuppressWarnings("serial")
 public class LoadPermissions extends GenericCommand {
-
-    private transient Logger log = Logger.getLogger(LoadPermissions.class);
 
 	private CnATreeElement cte;
 	

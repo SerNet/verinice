@@ -59,14 +59,6 @@ public class ShowSpiderChartACtion extends ShowSomeViewAction implements IViewAc
     }
 
     /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // do nothing
-    }
-
-    /* (non-Javadoc)
      * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
      */
     @Override

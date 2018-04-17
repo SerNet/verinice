@@ -107,11 +107,11 @@ public class ChangeLinkType extends GenericCommand {
 			CnATreeElement dependency = link.getDependency();
 			
 			// links are immutable, so we have to recreate the link:
-			RemoveLink<CnALink> command3 = new RemoveLink<CnALink>(link);
+			RemoveLink command3 = new RemoveLink(link);
 			getCommandService().executeCommand(command3);
 			
-			CreateLink<CnALink, CnATreeElement, CnATreeElement> command4 
-				= new CreateLink<CnALink, CnATreeElement, CnATreeElement>(dependant, dependency, linkTypeID, comment);
+			CreateLink<CnATreeElement, CnATreeElement> command4 
+				= new CreateLink<>(dependant, dependency, linkTypeID, comment);
 			command4 = getCommandService().executeCommand(command4);
 			link = command4.getLink();
 			

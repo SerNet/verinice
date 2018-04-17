@@ -148,12 +148,4 @@ public class AssignAllIsaTopics implements IObjectActionDelegate, RightEnabledUs
         return ActionRightIDs.ASSIGNALLISATOPICS;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // Do nothing
-    }
-
 }

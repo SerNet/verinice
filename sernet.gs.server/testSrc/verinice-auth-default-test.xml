@@ -81,6 +81,7 @@
             <action id="ismview" />
             <action id="ismviewweb" />
             <action id="konsolidator" />
+            <action id="migrate_data_protection"/>
             <action id="naturalize" />
             <action id="notes" />
             <action id="relations" />
@@ -163,6 +164,7 @@
             <action id="ismview" />
             <action id="ismviewweb" />
             <action id="konsolidator" />
+            <action id="migrate_data_protection"/>
             <action id="naturalize" />
             <action id="notes" />
             <action id="relations" />
@@ -240,6 +242,7 @@
             <action id="ismview" />
             <action id="ismviewweb" />
             <action id="konsolidator" />
+            <action id="migrate_data_protection"/>
             <action id="naturalize" />
             <action id="notes" />
             <action id="relations" />
@@ -321,6 +324,7 @@
             <action id="ismview" />
             <action id="ismviewweb" />
             <action id="konsolidator" />
+            <action id="migrate_data_protection"/>
             <action id="naturalize" />
             <action id="notes" />
             <action id="relations" />

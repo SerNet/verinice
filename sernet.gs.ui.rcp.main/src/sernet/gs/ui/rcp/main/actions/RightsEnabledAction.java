@@ -41,26 +41,25 @@ import sernet.verinice.interfaces.RightEnabledUserInteraction;
  */
 public abstract class RightsEnabledAction extends Action implements RightEnabledUserInteraction {
 
-    private String rightID = null;
+    private final String rightID;
+    
+    private boolean serverRunning = true;
 
     public RightsEnabledAction(String rightID) {
-        this.setRightID(rightID);
+        this.rightID = rightID;
         setEnabledViaRightID();
     }
 
     public RightsEnabledAction(String rightID, String text) {
         super(text);
-        this.setRightID(rightID);
+        this.rightID = rightID;
         setEnabledViaRightID();
     }
 
     public RightsEnabledAction(String rightID, String text, int style) {
         super(text, style);
-        this.setRightID(rightID);
+        this.rightID = rightID;
         setEnabledViaRightID();
-    }
-
-    public RightsEnabledAction() {
     }
 
     /**
@@ -87,7 +86,7 @@ public abstract class RightsEnabledAction extends Action implements RightEnabled
     public abstract void doRun();
 
     @Override
-    public boolean checkRights() {
+    public final boolean checkRights() {
         if (getRightID() == null) {
             // no right management should be used
             return true;
@@ -105,24 +104,14 @@ public abstract class RightsEnabledAction extends Action implements RightEnabled
     }
 
     @Override
-    public String getRightID() {
+    public final String getRightID() {
         return rightID;
-    }
-
-    /**
-     * Overwrite/call this, to enable right-management for the action
-     * this class implements
-     * 
-     * @param rightID
-     */
-    @Override
-    public void setRightID(String rightID) {
-        this.rightID = rightID;
     }
 
     private void setEnabledViaRightID() {
         if (Activator.getDefault().isStandalone()
                 && !Activator.getDefault().getInternalServer().isRunning()) {
+            serverRunning = false;
             addInternalServerStartListener();
         } else {
             setEnabled(checkRights());
@@ -134,11 +123,16 @@ public abstract class RightsEnabledAction extends Action implements RightEnabled
             @Override
             public void statusChanged(InternalServerEvent e) {
                 if (e.isStarted()) {
+                    serverRunning = true;
                     setEnabled(checkRights());
                 }
             }
         };
         Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+    }
+    
+    public final boolean isServerRunning() {
+        return serverRunning;
     }
 
 }

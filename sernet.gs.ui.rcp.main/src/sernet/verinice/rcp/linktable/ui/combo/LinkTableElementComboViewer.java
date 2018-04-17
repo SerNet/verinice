@@ -19,7 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.rcp.linktable.ui.combo;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ISelection;
@@ -27,7 +29,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Domain;
 import sernet.verinice.rcp.linktable.ui.LinkTableColumn;
+import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.model.IObjectModelService;
 
 /**
@@ -35,7 +39,6 @@ import sernet.verinice.service.model.IObjectModelService;
  * 
  * 
  * @see IObjectModelService
- * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public class LinkTableElementComboViewer extends LinkTableComboViewer {
 
@@ -43,21 +46,19 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
 
     private boolean isDefault;
 
-    public LinkTableElementComboViewer(LinkTableColumn ltrParent,
-            Composite parent) {
+    public LinkTableElementComboViewer(LinkTableColumn ltrParent, Composite parent) {
         this(null, null, null, ltrParent, parent);
 
     }
 
     public LinkTableElementComboViewer(LinkTableComboViewer leftCombo, String relatedID,
-            LinkTableOperationType operationType,
-            LinkTableColumn ltrParent, Composite parent) {
+            LinkTableOperationType operationType, LinkTableColumn ltrParent, Composite parent) {
         this(leftCombo, relatedID, operationType, ltrParent, parent, false);
     }
 
     public LinkTableElementComboViewer(LinkTableComboViewer leftCombo, String relatedID,
-            LinkTableOperationType operationType,
-            LinkTableColumn ltrParent, Composite parent, boolean isFirstElement) {
+            LinkTableOperationType operationType, LinkTableColumn ltrParent, Composite parent,
+            boolean isFirstElement) {
         super(leftCombo, relatedID, operationType, ltrParent, parent);
 
         if (isFirstElement || isDefault) {
@@ -65,10 +66,7 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
         }
     }
 
-
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.
      * eclipse.jface.viewers.SelectionChangedEvent)
@@ -79,10 +77,8 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
         if (operationType == LinkTableOperationType.PROPERTY) {
             return null;
         } else if (operationType == LinkTableOperationType.RELATION) {
-            LinkTableOperationTypeComboViewer opType = new LinkTableOperationTypeComboViewer(
-                    this, getCurrentSelection(), operationType,
-                    ltrColumn,
-                    parent);
+            LinkTableOperationTypeComboViewer opType = new LinkTableOperationTypeComboViewer(this,
+                    getCurrentSelection(), operationType, ltrColumn, parent);
             opType.select(LinkTableOperationType.PROPERTY.getOutput());
             opType.getCombo().setEnabled(false);
             opType.selectionChanged(null);
@@ -90,15 +86,12 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
 
         } else {
             return new LinkTableOperationTypeComboViewer(this, getCurrentSelection(), operationType,
-                    ltrColumn,
-                    parent);
+                    ltrColumn, parent);
         }
 
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.
      * lang.Object)
@@ -112,12 +105,10 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
         } else {
             switch (operationType) {
             case CHILD:
-                typeIDs = objectService.getPossibleChildren(relatedID)
-                        .toArray(new String[0]);
+                typeIDs = objectService.getPossibleChildren(relatedID).toArray(new String[0]);
                 break;
             case GROUP:
-                typeIDs = objectService.getPossibleParents(relatedID)
-                        .toArray(new String[0]);
+                typeIDs = objectService.getPossibleParents(relatedID).toArray(new String[0]);
                 break;
             case RELATION:
                 typeIDs = objectService.getPossibleRelationPartners(relatedID)
@@ -141,23 +132,20 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#copy()
      */
     @Override
-    public LinkTableComboViewer createCopy(LinkTableComboViewer leftCombo, LinkTableColumn ltrParent,
-            Composite newParent) {
+    public LinkTableComboViewer createCopy(LinkTableComboViewer leftCombo,
+            LinkTableColumn ltrParent, Composite newParent) {
 
         return new LinkTableElementComboViewer(leftCombo, relatedID, operationType, ltrParent,
                 newParent, false);
     }
 
-
     /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#doSelectionChanged()
+     * @see
+     * sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#doSelectionChanged(
+     * )
      */
     @Override
     protected void doSelectionChanged() {
@@ -171,23 +159,34 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#getLabelText(java.lang.
-     * Object)
+     * @see
+     * sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#getLabelText(java.
+     * lang. Object)
      */
+    @SuppressWarnings("deprecation")
     @Override
     protected String getLabelText(Object element) {
-        if (element instanceof String) {
-            return ltrColumn.getContentService().getLabel((String) element);
+        String typeId = element.toString();
+        IObjectModelService contentService = ltrColumn.getContentService();
+        String typeLabel = contentService.getLabel(typeId);
+        Domain domain = CnATypeMapper.getDomainFromTypeId(typeId);
+        String domainLabel;
+        StringBuilder sb;
+        if (domain == Domain.DATA_PROTECTION) {
+            domainLabel = Domain.getLabelObsolete();
+            sb = new StringBuilder(typeLabel.length() + domainLabel.length() + 3);
+            sb.append(typeLabel).append(" (").append(domainLabel).append(")");
         } else {
-            return ltrColumn.getContentService().getLabel(element.toString());
+            domainLabel = domain.getLabel();
+            sb = new StringBuilder(typeLabel.length() + domainLabel.length() + typeId.length() + 5);
+            sb.append(typeLabel).append(" (").append(domainLabel).append(": ").append(typeId)
+                    .append(")");
         }
+
+        return sb.toString();
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#refreshCombo()
      */
     @Override
@@ -197,10 +196,9 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
-     * sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#select(java.lang.String)
+     * sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#select(java.lang.
+     * String)
      */
     @Override
     protected void select(String string) {
@@ -211,15 +209,13 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.linktable.ui.combo.
      * LinkTableComboViewer#doGetAllRelationTypes()
      */
     @Override
     protected Set<String> doGetAllRelationTypes() {
 
-        HashSet<String> relationIDs = new HashSet<>(); 
+        HashSet<String> relationIDs = new HashSet<>();
         if (LinkTableOperationType.isRelation(operationType)) {
             relationIDs.addAll(
                     ltrColumn.getContentService().getRelations(relatedID, getCurrentSelection()));

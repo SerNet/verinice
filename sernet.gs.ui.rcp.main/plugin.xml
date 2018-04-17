@@ -23,6 +23,7 @@
       <perspective
             class="sernet.gs.ui.rcp.main.PerspectiveDS"
             icon="icons/shield.png"
+            id="sernet.gs.ui.rcp.main.dsperspective"
             name="%perspective.name.0"/>
       <perspective
             class="sernet.verinice.iso27k.rcp.Iso27kPerspective"
@@ -411,7 +412,7 @@
             name="verinice">
          <property
                name="aboutText"
-               value="SerNet verinice 1.15.0 - Codename &apos;Miyazaki&apos;&#x0A;&#x0A;(c) SerNet Service Network GmbH and others 1996-2018&#x0A;&#x0A;Contact the authors: verinice@sernet.de&#x0A;&#x0A;or&#x0A;&#x0A;Visit our homepage: http://www.verinice.com/en&#x0A;&#x0A;Contributors:&#x0A;Alexander Koderman 		&#x0A;Anne Hanekop 			&#x0A;Marek Seeger&#x0A;Andreas Becker			&#x0A;Robert Schuster			&#x0A;Daniel Murygin			&#x0A;Sebastian Engel 		&#x0A;Markus Joos				&#x0A;Gregorio Levano			&#x0A;Christian Ganzmann 		&#x0A;Carmen Probst 			&#x0A;Sebastian Hagedorn 		&#x0A;Johannes Stillig 			&#x0A;Christian Eschenlohr 		&#x0A;Julia Haas  	&#x0A;Sirin Torun  	&#x0A;Benjamin Weißenfels         &#x0A;Stanislav Strigunov  	&#x0A;Joachim Seifert				&#x0A;Moritz Reiter&#x0A;Alexander von Ossowski &#x0A;Ruth Motza&#x0A;Viktor Schmidt         &#x0A;Tatjana Anisow         &#x0A;Michael Flürenbrock         &#x0A;Urs Zeidler         &#x0A;Alexander Ben Nasrallah &#x0A;Jochen Kemnade &#x0A;Antonio Marino &#x0A;&#x0A;&#x0A;Artwork:&#x0A;Blackbit						www.blackbit.de&#x0A;Icons by Axialis Team		    http://www.axialis.com&#x0A;Icons by Yusuke Kamiyamane      http://p.yusukekamiyamane.com&#x0A;Icons by FAMFAMFAM              http://www.famfamfam.com&#x0A;Joseph North					&lt;north@sublink.ca&gt;&#x0A;Agentur Roeder					www.agentur-roeder.de&#x0A;&#x0A;&#x0A;This program comes with ABSOLUTELY NO WARRANTY.&#x0A;This is free software, and you are welcome to redistribute it under certain conditions.&#x0A;Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.&#x0A;See the LICENSE.txt contained in the program folder, the verinice Plugin-Details in the help menu and the copyright and license header in each source file for details.&#x0A;&#x0A;VDA Information Security Assessment&#x0A;(c) Arbeitskreis Informationsschutz des Verband der Automobilindustrie e. V. (VDA)&#x0A;Lizenz: http://creativecommons.org/licenses/by-nd/3.0/de/&#x0A;VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilindustrie e. V. (VDA), die zur Nutzung in verinice lizenziert sind. Alle Rechte vorbehalten. "/>
+               value="SerNet verinice 1.16.0 - Codename &apos;Agger&apos;&#x0A;&#x0A;(c) SerNet Service Network GmbH and others 1996-2018&#x0A;&#x0A;Contact the authors: verinice@sernet.de&#x0A;&#x0A;or&#x0A;&#x0A;Visit our homepage: http://www.verinice.com/en&#x0A;&#x0A;Contributors:&#x0A;Alexander Koderman 		&#x0A;Anne Hanekop 			&#x0A;Marek Seeger&#x0A;Andreas Becker			&#x0A;Robert Schuster			&#x0A;Daniel Murygin			&#x0A;Sebastian Engel 		&#x0A;Markus Joos				&#x0A;Gregorio Levano			&#x0A;Christian Ganzmann 		&#x0A;Carmen Probst 			&#x0A;Sebastian Hagedorn 		&#x0A;Johannes Stillig 			&#x0A;Christian Eschenlohr 		&#x0A;Julia Haas  	&#x0A;Sirin Torun  	&#x0A;Benjamin Weißenfels         &#x0A;Stanislav Strigunov  	&#x0A;Joachim Seifert				&#x0A;Moritz Reiter&#x0A;Alexander von Ossowski &#x0A;Ruth Motza&#x0A;Viktor Schmidt         &#x0A;Tatjana Anisow         &#x0A;Michael Flürenbrock         &#x0A;Urs Zeidler         &#x0A;Alexander Ben Nasrallah &#x0A;Jochen Kemnade &#x0A;Antonio Marino &#x0A;&#x0A;&#x0A;Artwork:&#x0A;Blackbit						www.blackbit.de&#x0A;Icons by Axialis Team		    http://www.axialis.com&#x0A;Icons by Yusuke Kamiyamane      http://p.yusukekamiyamane.com&#x0A;Icons by FAMFAMFAM              http://www.famfamfam.com&#x0A;Joseph North					&lt;north@sublink.ca&gt;&#x0A;Agentur Roeder					www.agentur-roeder.de&#x0A;&#x0A;&#x0A;This program comes with ABSOLUTELY NO WARRANTY.&#x0A;This is free software, and you are welcome to redistribute it under certain conditions.&#x0A;Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.&#x0A;See the LICENSE.txt contained in the program folder, the verinice Plugin-Details in the help menu and the copyright and license header in each source file for details.&#x0A;&#x0A;VDA Information Security Assessment&#x0A;(c) Arbeitskreis Informationsschutz des Verband der Automobilindustrie e. V. (VDA)&#x0A;Lizenz: http://creativecommons.org/licenses/by-nd/3.0/de/&#x0A;VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilindustrie e. V. (VDA), die zur Nutzung in verinice lizenziert sind. Alle Rechte vorbehalten. "/>
          <property
                name="windowImages"
                value="verinice_icons/v-16.png,verinice_icons/v-32.png,verinice_icons/v-48.png,verinice_icons/v-64.png,verinice_icons/v-128.png"/>
@@ -677,8 +678,15 @@
         </objectContribution>              
       <objectContribution
             adaptable="false"
-            id="sernet.gs.ui.rcp.main.personContribution1"
-            objectClass="sernet.verinice.model.bsi.Person">
+            id="sernet.verinice.accountSettings"
+            objectClass="sernet.verinice.model.common.CnATreeElement">
+            <visibility>
+                 <or>
+                    <objectClass name="sernet.verinice.model.bsi.Person"/>
+                    <objectClass name="sernet.verinice.model.iso27k.PersonIso"/>
+                    <objectClass name="sernet.verinice.model.bp.elements.BpPerson"/>
+                  </or>
+               </visibility>
          <action
                class="sernet.gs.ui.rcp.main.actions.ConfigurationAction"
                enablesFor="1"
@@ -798,21 +806,6 @@
       </objectContribution>     
       <objectContribution
             adaptable="false"
-            id="sernet.verinice.model.iso27k.Person"
-            objectClass="sernet.verinice.model.iso27k.PersonIso">
-         <action
-               class="sernet.gs.ui.rcp.main.actions.ConfigurationAction"
-               enablesFor="1"
-               icon="icons/user_edit.png"
-               id="sernet.gs.ui.rcp.main.personconfiguration"
-               label="%action.label.12"
-               menubarPath="special"
-               style="push"
-               tooltip="%action.tooltip.12">
-         </action>
-      </objectContribution>
-      <objectContribution
-            adaptable="false"
             id="sernet.verinice.bpm.rcp.CreateIsaControl.controlgroup"
             objectClass="sernet.verinice.model.iso27k.ControlGroup">
          <action
@@ -903,6 +896,23 @@
                tooltip="%action.tooltip.risk.analysis.iso">
          </action>
       </objectContribution>
+<!-- -->
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.rcp.dataprotection.MigrateDataProtectionActionDelegate"
+            objectClass="sernet.verinice.model.iso27k.Organization">
+         <action
+               class="sernet.verinice.rcp.dataprotection.MigrateDataProtectionActionDelegate"
+               enablesFor="+"
+               icon="icons/gdpr-16.png"
+               id="sernet.verinice.rcp.dataprotection.MigrateDataProtectionActionDelegate.action"
+               label="%action.lable.migration.dataprotection"
+               menubarPath="special"
+               style="push"
+               tooltip="%action.tooltip.migration.dataprotection">
+         </action>
+      </objectContribution>
+
       <objectContribution
             adaptable="false"
             id="sernet.verinice.rcp.IconSelectAction"
@@ -1269,6 +1279,49 @@
                menubarPath="content"
                style="push"
                tooltip="%action.tooltip.addSafeguard"/>
+      </objectContribution>
+	  <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.bpDocumentContrib"
+            objectClass="sernet.verinice.model.bp.groups.BpDocumentGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddBpDocumentActionDelegate"
+               enablesFor="+"
+               icon="icons/mime-document.png"
+               id="sernet.gs.ui.rcp.main.bp.bpdocument"
+               label="%action.label.addBpDocument"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addBpDocument"/>
+      </objectContribution>
+               
+	  <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.bpIncidentContrib"
+            objectClass="sernet.verinice.model.bp.groups.BpIncidentGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddBpIncidentActionDelegate"
+               enablesFor="+"
+               icon="icons/sweetie-verinice/png/16-arrow-incident-red.png"
+               id="sernet.gs.ui.rcp.main.bp.bpincident"
+               label="%action.label.addBpIncident"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addBpIncident"/>
+      </objectContribution>
+      	  <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bp.bpRecordContrib"
+            objectClass="sernet.verinice.model.bp.groups.BpRecordGroup">
+         <action
+               class="sernet.verinice.bp.rcp.action.AddBpRecordActionDelegate"
+               enablesFor="+"
+               icon="icons/mime-text.png"
+               id="sernet.gs.ui.rcp.main.bp.bprecord"
+               label="%action.label.addBpRecord"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.addBpRecord"/>
       </objectContribution>
    </extension>                               
    <extension point="org.eclipse.ui.menus">

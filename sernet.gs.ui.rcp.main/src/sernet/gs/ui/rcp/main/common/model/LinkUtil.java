@@ -47,7 +47,7 @@ public final class LinkUtil {
     }
 
     public static void createLink(CnATreeElement source, CnATreeElement target, String relationId) {
-        CreateLink<CnALink, CnATreeElement, CnATreeElement> command = new CreateLink<>(source,
+        CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source,
                 target, relationId);
         try {
             commandService.executeCommand(command);
@@ -60,7 +60,7 @@ public final class LinkUtil {
     public static void createLinks(Set<CnATreeElement> sources, CnATreeElement target,
             String relationId) {
         for (CnATreeElement source : sources) {
-            CreateLink<CnALink, CnATreeElement, CnATreeElement> command = new CreateLink<>(source,
+            CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source,
                     target, relationId);
             try {
                 commandService.executeCommand(command);
@@ -74,7 +74,7 @@ public final class LinkUtil {
     public static void createLinks(CnATreeElement source, Set<CnATreeElement> targets,
             String relationId) {
         for (CnATreeElement target : targets) {
-            CreateLink<CnALink, CnATreeElement, CnATreeElement> command = new CreateLink<>(source,
+            CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source,
                     target, relationId);
             try {
                 commandService.executeCommand(command);

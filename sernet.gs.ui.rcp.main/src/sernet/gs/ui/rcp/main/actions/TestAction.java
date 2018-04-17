@@ -17,8 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.actions;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -36,8 +34,6 @@ import sernet.verinice.service.bp.importer.BpImporter;
 
 public class TestAction extends Action {
 
-    private String typeID;
-    private Integer dbID;
     public static final String ID = "sernet.gs.ui.rcp.main.testaction"; //$NON-NLS-1$
     
     private static final Logger LOG = Logger.getLogger(TestAction.class);
@@ -45,8 +41,6 @@ public class TestAction extends Action {
     public TestAction(IWorkbenchWindow window, String label, String typeID, Integer dbID) {
         setText(label);
         setId(ID);
-        this.typeID = typeID;
-        this.dbID = dbID;
         
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
         setEnabled(false);
@@ -190,24 +184,6 @@ public class TestAction extends Action {
         } catch (Exception e) {
             ExceptionUtil.log(e, "test failed");
         }
-    }
-
-    /**
-     * @param result
-     */
-    private String print(List<List<String>> result) {
-        if (LOG.isDebugEnabled()) {
-            StringBuilder sb = new StringBuilder();
-            for (List<String> list : result) {
-                for (String string : list) {
-                    sb.append(string).append("\t");
-                }
-                sb.append("\n");
-            }
-            LOG.debug("List for report: " + sb.toString());
-            return sb.toString();
-        }
-        return "";
     }
 
 }

@@ -53,8 +53,6 @@ public class FindSGCommand extends GenericCommand implements ICachedCommand{
         return log;
     }
 
-    private transient IAuthService authService;
-
     private ControlGroup selfAssessmentGroup = null;
 
     private boolean hydrateParent;

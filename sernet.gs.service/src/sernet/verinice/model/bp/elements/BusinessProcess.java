@@ -19,10 +19,14 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
+import java.util.Collection;
+
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementWithChilds;
 import sernet.verinice.model.common.ILinkChangeListener;
@@ -33,13 +37,14 @@ import sernet.verinice.model.iso27k.MaximumProtectionRequirementsValueListener;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class BusinessProcess extends ElementWithChilds implements IBpElement, IBpGroup {
+public class BusinessProcess extends ElementWithChilds implements IBpElement, IBpGroup, ITaggableElement {
     
     private static final long serialVersionUID = 8636558522661263370L;
     
     public static final String TYPE_ID = "bp_businessprocess"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_businessprocess_name"; //$NON-NLS-1$
-    
+    public static final String PROP_TAG = "bp_businessprocess_tag"; //$NON-NLS-1$
+
     public static final String[] CHILD_TYPES = new String[] {BpRequirementGroup.TYPE_ID};
 
     private final ILinkChangeListener linkChangeListener = new MaximumProtectionRequirementsValueListener(this);
@@ -80,6 +85,11 @@ public class BusinessProcess extends ElementWithChilds implements IBpElement, IB
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;
+    }
+
+    @Override
+    public Collection<String> getTags() {
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
     
 }

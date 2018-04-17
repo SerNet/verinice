@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.licensemanagement;
 
-import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
@@ -35,11 +34,9 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
  */
 public class RemoveInvalidLicensesJob extends QuartzJobBean implements StatefulJob {
 
-    private static final Logger LOG = Logger.getLogger(RemoveInvalidLicensesJob.class);
-    
     private LicenseRemover remover;
     
-    /* (non-Javadoc)
+    /*
      * @see org.springframework.scheduling.quartz.
      * QuartzJobBean#executeInternal(org.quartz.JobExecutionContext)
      */

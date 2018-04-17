@@ -47,13 +47,4 @@ public abstract class  AddModulandMethodActionDelegate implements IObjectActionD
         return service.isEnabled(getRightID());
     }
     
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-        // do nothing
-        
-    }
-
 }

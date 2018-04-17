@@ -89,8 +89,7 @@ public class LoadReportRiskAnalysis extends GenericCommand implements ICachedCom
 
             // this is necessary to get the correct type of object instead of a
             // hibernate proxy:
-            CnATypeMapper cnATypeMapper = new CnATypeMapper();
-            if (cnATypeMapper.isStrukturElement(elmt)) {
+            if (CnATypeMapper.isStrukturElement(elmt)) {
                 IBaseDao dao2 = getDaoFactory().getDAO(elmt.getTypeId());
                 IBSIStrukturElement realelmt = (IBSIStrukturElement) dao2.findById(elmt.getDbId());
                 row.add(realelmt.getKuerzel());

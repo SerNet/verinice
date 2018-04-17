@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.actions;
 
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -45,8 +46,6 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.service.commands.UpdatePermissions;
@@ -74,28 +73,13 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
     private boolean isUpdateChildren;
 
     public ShowAccessControlEditAction(IWorkbenchWindow window, String label) {
+        super(ActionRightIDs.ACCESSCONTROL, label);
         this.window = window;
-        setText(label);
         setId(ID);
         setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SECURITY));
         setToolTipText(Messages.ShowAccessControlEditAction_1);
         window.getSelectionService().addSelectionListener(this);
-        setRightID(ActionRightIDs.ACCESSCONTROL);
-        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-            IInternalServerStartListener listener = new IInternalServerStartListener(){
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if(e.isStarted()){
-                        setEnabled(checkRights());
-                    }
-                }
-
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            setEnabled(checkRights());
-        }
     }
 
    

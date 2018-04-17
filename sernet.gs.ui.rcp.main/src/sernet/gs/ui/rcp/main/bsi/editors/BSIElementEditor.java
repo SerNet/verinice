@@ -70,14 +70,7 @@ import sernet.snutils.AssertException;
 import sernet.snutils.FormInputParser;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
-import sernet.verinice.model.bp.IBpElement;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.IBSIStrukturElement;
-import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Group;
-import sernet.verinice.model.iso27k.IISO27kElement;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.crud.LoadElementForEditor;
 
 /**
@@ -121,6 +114,59 @@ public class BSIElementEditor extends EditorPart {
             modelChanged();
         }
 
+        private void saveChangedElementProperties(PropertyChangedEvent event) {
+            if (isTaskEditorContext()
+                    && StringUtils.isNotEmpty(event.getProperty().getPropertyType())) {
+                PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(
+                        cnAElement.getEntityType().getId(), event.getProperty().getPropertyType());
+                if (propertyType.isSingleSelect()) {
+                    changedElementProperties.put(event.getProperty().getPropertyType(),
+                            event.getProperty().getPropertyValue());
+                } else if (propertyType.isDate()) {
+                    saveChangedDateElementProperties(event);
+                } else if (propertyType.isMultiselect() || propertyType.isReference()) {
+                    // nothing to do
+                } else {
+                    changedElementProperties.put(event.getProperty().getPropertyType(),
+                            event.getProperty().getPropertyValue());
+                }
+            }
+        }
+
+        private void saveChangedDateElementProperties(PropertyChangedEvent event) {
+            try {
+                String date = FormInputParser.dateToString(
+                        new java.sql.Date(Long.parseLong(event.getProperty().getPropertyValue())));
+                changedElementProperties.put(event.getProperty().getPropertyType(), date);
+            } catch (NumberFormatException | AssertException e) {
+                LOG.error("Exception while getting the value of a date property", e);
+            }
+        }
+
+        private void saveMultiselectElementProperties(IMLPropertyType arg0) {
+            if (isTaskEditorContext() && StringUtils.isNotEmpty(arg0.getId())) {
+                PropertyType propertyType = HUITypeFactory.getInstance()
+                        .getPropertyType(cnAElement.getEntityType().getId(), arg0.getId());
+                List<Property> properties = cnAElement.getEntity()
+                        .getProperties(propertyType.getId()).getProperties();
+
+                StringBuilder sb = new StringBuilder();
+                for (Property property : properties) {
+                    sb.append(property.getPropertyValue()).append(",");
+                }
+                changedElementProperties.put(propertyType.getId(), sb.toString());
+            }
+        }
+
+        private void modelChanged() {
+            boolean wasDirty = isDirty();
+            isModelModified = true;
+
+            if (!wasDirty) {
+                firePropertyChange(IEditorPart.PROP_DIRTY);
+            }
+        }
+
     };
     private CnATreeElement cnAElement;
     private LinkMaker linkMaker;
@@ -130,7 +176,7 @@ public class BSIElementEditor extends EditorPart {
         if (!(input instanceof BSIElementEditorInput)) {
             throw new PartInitException("invalid input"); //$NON-NLS-1$
         }
-        
+
         setSite(site);
         setInput(input);
         setPartName(input.getName());
@@ -152,7 +198,8 @@ public class BSIElementEditor extends EditorPart {
             cnAElement.setChildren(elementWithChildren.getChildren());
 
             Entity entity = cnAElement.getEntity();
-            EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(entity.getEntityType());
+            EntityType entityType = HitroUtil.getInstance().getTypeFactory()
+                    .getEntityType(entity.getEntityType());
 
             if (isTaskEditorContext()) {
                 loadChangedElementPropertiesFromTask();
@@ -171,7 +218,8 @@ public class BSIElementEditor extends EditorPart {
 
             String[] tags = BSIElementEditor.getEditorTags();
 
-            boolean strict = Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
+            boolean strict = Activator.getDefault().getPluginPreferences()
+                    .getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
 
             // samt perspective offers a simple view, only showing properties
             // tagged with "isa":
@@ -181,7 +229,11 @@ public class BSIElementEditor extends EditorPart {
             }
 
             // create view of all properties, read only or read/write:
-            huiComposite.createView(entity, getIsWriteAllowed(), true, tags, strict, ServiceFactory.lookupValidationService().getPropertyTypesToValidate(entity, cnAElement.getDbId()), Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.USE_VALIDATION_GUI_HINTS));
+            huiComposite.createView(entity, getIsWriteAllowed(), true, tags, strict,
+                    ServiceFactory.lookupValidationService().getPropertyTypesToValidate(entity,
+                            cnAElement.getDbId()),
+                    Activator.getDefault().getPreferenceStore()
+                            .getBoolean(PreferenceConstants.USE_VALIDATION_GUI_HINTS));
             InputHelperFactory.setInputHelpers(entityType, huiComposite);
             huiComposite.resetInitialFocus();
 
@@ -202,13 +254,14 @@ public class BSIElementEditor extends EditorPart {
     }
 
     private void loadChangedElementPropertiesFromTask() {
-        Map<String, String> changedElementProperties = (Map<String, String>) getTaskService().loadChangedElementProperties(task.getId());
-        for (Entry<String, String> entry : changedElementProperties.entrySet()) {
+        Map<String, String> changedElementPropertiesForTask = getTaskService()
+                .loadChangedElementProperties(task.getId());
+        for (Entry<String, String> entry : changedElementPropertiesForTask.entrySet()) {
             cnAElement.setPropertyValue(entry.getKey(), entry.getValue());
         }
 
-        this.setPartName(cnAElement.getTitle());
-        this.setTitleToolTip(cnAElement.getTitle());
+        this.setPartName(EditorUtil.getEditorName(cnAElement));
+        this.setTitleToolTip(EditorUtil.getEditorToolTipText(cnAElement));
         LOG.info("Loaded changes for element properties from task."); //$NON-NLS-1$
     }
 
@@ -220,22 +273,27 @@ public class BSIElementEditor extends EditorPart {
                 LOG.info("Sciped save cnAElement."); //$NON-NLS-1$
             } else {
                 monitor.beginTask(Messages.BSIElementEditor_1, IProgressMonitor.UNKNOWN);
+                EditorUtil.updateDependentObjects(cnAElement);
                 save();
+                if (linkMaker != null) {
+                    linkMaker.viewer.refresh();
+                }
 
                 // Refresh other views in background
                 Job job = new RefreshJob("Refresh application...");
                 job.setRule(new RefreshJobRule());
                 job.schedule();
 
-                IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences();
-                ArrayList<IEditorReference> closeOthers = new ArrayList<IEditorReference>();
+                IEditorReference[] editorReferences = PlatformUI.getWorkbench()
+                        .getActiveWorkbenchWindow().getActivePage().getEditorReferences();
+                ArrayList<IEditorReference> closeOthers = new ArrayList<>();
                 BSIElementEditorInput myInput = (BSIElementEditorInput) getEditorInput();
 
-                allEditors: for (IEditorReference editorReference : editorReferences) {
+                for (IEditorReference editorReference : editorReferences) {
                     IEditorInput input;
                     try {
                         if (editorReference.isPinned() || editorReference.isDirty()) {
-                            continue allEditors;
+                            continue;
                         }
                         input = editorReference.getEditorInput();
                         if (input instanceof BSIElementEditorInput) {
@@ -249,8 +307,10 @@ public class BSIElementEditor extends EditorPart {
                     }
                 }
 
-                IEditorReference[] closeArray = closeOthers.toArray(new IEditorReference[closeOthers.size()]);
-                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditors(closeArray, true);
+                IEditorReference[] closeArray = closeOthers
+                        .toArray(new IEditorReference[closeOthers.size()]);
+                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                        .closeEditors(closeArray, true);
 
                 monitor.done();
             }
@@ -266,8 +326,9 @@ public class BSIElementEditor extends EditorPart {
             // save element, refresh etc:
             CnAElementHome.getInstance().updateEntity(cnAElement);
             isModelModified = false;
-            this.setPartName(cnAElement.getTitle());
-            this.setTitleToolTip(cnAElement.getTitle());
+            this.setPartName(EditorUtil.getEditorName(cnAElement));
+            this.setTitleToolTip(EditorUtil.getEditorToolTipText(cnAElement));
+            setIcon();
             firePropertyChange(IEditorPart.PROP_DIRTY);
         } catch (StaleObjectStateException se) {
             // close editor, loosing changes:
@@ -284,8 +345,8 @@ public class BSIElementEditor extends EditorPart {
             LOG.info("Updated task: saved changes in element properties."); //$NON-NLS-1$
         }
         isModelModified = false;
-        this.setPartName(cnAElement.getTitle() + Messages.BSIElementEditor_9);
-        this.setTitleToolTip(cnAElement.getTitle());
+        this.setPartName(EditorUtil.getEditorName(cnAElement) + Messages.BSIElementEditor_9);
+        this.setTitleToolTip(EditorUtil.getEditorToolTipText(cnAElement));
         firePropertyChange(IEditorPart.PROP_DIRTY);
     }
 
@@ -293,64 +354,9 @@ public class BSIElementEditor extends EditorPart {
         return (ITaskService) VeriniceContext.get(VeriniceContext.TASK_SERVICE);
     }
 
-    private void refresh() {
-        // notify all views of change:
-        CnAElementFactory.getModel(cnAElement).childChanged(cnAElement);
-
-        // removed CnAElementFactory.getModel(cnAElement).refreshAllListeners
-        // here
-        // before release 1.4.2
-    }
-
     @Override
     public void doSaveAs() {
         // not supported
-    }
-
-    private void saveChangedElementProperties(PropertyChangedEvent event) {
-        if (isTaskEditorContext() && StringUtils.isNotEmpty(event.getProperty().getPropertyType())) {
-            PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(cnAElement.getEntityType().getId(), event.getProperty().getPropertyType());
-            if (propertyType.isSingleSelect()) {
-                changedElementProperties.put(event.getProperty().getPropertyType(), event.getProperty().getPropertyValue());
-            } else if (propertyType.isDate()) {
-                saveChangedDateElementProperties(event);
-            } else if (propertyType.isMultiselect() || propertyType.isReference()) {
-                // nothing to do
-            } else {
-                changedElementProperties.put(event.getProperty().getPropertyType(), event.getProperty().getPropertyValue());
-            }
-        }
-    }
-
-    private void saveChangedDateElementProperties(PropertyChangedEvent event) {
-        try {
-            String date = FormInputParser.dateToString(new java.sql.Date(Long.parseLong(event.getProperty().getPropertyValue())));
-            changedElementProperties.put(event.getProperty().getPropertyType(), date);
-        } catch (NumberFormatException | AssertException e) {
-            LOG.error("Exception while getting the value of a date property", e);
-        }
-    }
-
-    private void saveMultiselectElementProperties(IMLPropertyType arg0) {
-        if (isTaskEditorContext() && StringUtils.isNotEmpty(arg0.getId())) {
-            PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(cnAElement.getEntityType().getId(), arg0.getId());
-            List<Property> properties = cnAElement.getEntity().getProperties(propertyType.getId()).getProperties();
-
-            StringBuilder sb = new StringBuilder();
-            for (Property property : properties) {
-                sb.append(property.getPropertyValue()).append(",");
-            }
-            changedElementProperties.put(propertyType.getId(), sb.toString());
-        }
-    }
-
-    private void modelChanged() {
-        boolean wasDirty = isDirty();
-        isModelModified = true;
-
-        if (!wasDirty) {
-            firePropertyChange(IEditorPart.PROP_DIRTY);
-        }
     }
 
     /**
@@ -366,44 +372,12 @@ public class BSIElementEditor extends EditorPart {
         return tags0.split(",");
     }
 
-    /**
-     * 
-     */
-    @SuppressWarnings("unchecked")
     private void setIcon() {
         Image icon = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
         if (cnAElement != null) {
-            icon = CnAImageProvider.getCustomImage(cnAElement);
-            if (icon == null) {
-                icon = getDefaultIcon();
-            }
+            icon = CnAImageProvider.getImage(cnAElement, true);
         }
         setTitleImage(icon);
-    }
-
-    private Image getDefaultIcon() {
-        Image icon;
-        if (cnAElement instanceof Organization) {
-            icon = ImageCache.getInstance().getImageForTypeId(Organization.TYPE_ID);
-        } else if (cnAElement instanceof Group) {
-            icon = ImageCache.getInstance().getImageForTypeId(((Group) cnAElement).getChildTypes()[0]);
-        } else if (cnAElement instanceof IISO27kElement || cnAElement instanceof IBpElement) {
-            icon = ImageCache.getInstance().getImageForTypeId(cnAElement.getTypeId());
-        } else if (cnAElement instanceof IBSIStrukturElement || cnAElement instanceof IBSIStrukturKategorie) {
-            icon = ImageCache.getInstance().getBSITypeImage(cnAElement.getTypeId());
-        } else if (cnAElement instanceof BausteinUmsetzung) {
-            icon = ImageCache.getInstance().getImage(ImageCache.BAUSTEIN_UMSETZUNG);
-        } else if (isBpElement(cnAElement)) {
-            icon = ImageCache.getInstance().getImageForTypeId(cnAElement.getTypeId());
-        } else {
-            icon = CnAImageProvider.getImage(cnAElement);
-        }
-        return icon;
-    }
-
-    private boolean isBpElement(CnATreeElement element) {
-        return element instanceof IBpElement;
-                
     }
 
     @Override
@@ -462,7 +436,8 @@ public class BSIElementEditor extends EditorPart {
     }
 
     private boolean showLinkMaker() {
-        boolean showLinkMaker = Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.SHOW_LINK_MAKER_IN_EDITOR);
+        boolean showLinkMaker = Activator.getDefault().getPreferenceStore()
+                .getBoolean(PreferenceConstants.SHOW_LINK_MAKER_IN_EDITOR);
         return showLinkMaker && !isSamtPerspective();
     }
 
@@ -470,7 +445,8 @@ public class BSIElementEditor extends EditorPart {
      * @return
      */
     private boolean isSamtPerspective() {
-        IPerspectiveDescriptor perspective = getSite().getWorkbenchWindow().getActivePage().getPerspective();
+        IPerspectiveDescriptor perspective = getSite().getWorkbenchWindow().getActivePage()
+                .getPerspective();
         // do not show linkmaker in SAMT perspective:
         return perspective.getId().equals(SAMT_PERSPECTIVE_ID);
     }
@@ -491,13 +467,15 @@ public class BSIElementEditor extends EditorPart {
         }
         huiComposite.closeView();
         cnAElement.getEntity().removeListener(modelListener);
-        EditorRegistry.getInstance().closeEditor(((BSIElementEditorInput) getEditorInput()).getId());
+        EditorRegistry.getInstance()
+                .closeEditor(((BSIElementEditorInput) getEditorInput()).getId());
 
         super.dispose();
     }
 
     public static final String[] getEditorTags() {
-        String tagString = Activator.getDefault().getPluginPreferences().getString(PreferenceConstants.HUI_TAGS);
+        String tagString = Activator.getDefault().getPluginPreferences()
+                .getString(PreferenceConstants.HUI_TAGS);
         String[] tags = null;
         if (PreferenceConstants.HUI_TAGS_ALL.equals(tagString)) {
             Set<String> allTagsSet = HitroUtil.getInstance().getTypeFactory().getAllTags();
@@ -542,6 +520,11 @@ public class BSIElementEditor extends EditorPart {
             monitor.setTaskName("Refresh application...");
             refresh();
             return Status.OK_STATUS;
+        }
+
+        private void refresh() {
+            // notify all views of change:
+            CnAElementFactory.getModel(cnAElement).childChanged(cnAElement);
         }
     }
 

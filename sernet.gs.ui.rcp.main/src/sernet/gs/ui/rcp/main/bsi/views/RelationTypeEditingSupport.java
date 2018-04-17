@@ -179,7 +179,7 @@ public class RelationTypeEditingSupport extends EditingSupport {
         
         CnALink newCnaLink = null;
         if (changeLinkDirection(cnaLink, linkTypeId)) {
-            CreateLink<CnALink, CnATreeElement, CnATreeElement> createLinkCommand =
+            CreateLink<CnATreeElement, CnATreeElement> createLinkCommand =
                     new CreateLink<>(
                             cnaLink.getDependency(), cnaLink.getDependant(), linkTypeId);
             try {

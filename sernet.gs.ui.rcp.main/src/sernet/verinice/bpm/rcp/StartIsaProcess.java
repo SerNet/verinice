@@ -149,11 +149,4 @@ public class StartIsaProcess implements IObjectActionDelegate, RightEnabledUserI
         return ActionRightIDs.CREATEISATASKS;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
-    @Override
-    public void setRightID(String rightID) {
-    }
-
 }

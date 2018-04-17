@@ -135,7 +135,7 @@ public class CopyLinksCommand extends GenericCommand {
     }
 
     private void createLink(String sourceUuid, String destUuid, String type) {
-        CreateLink<CnALink, CnATreeElement, CnATreeElement>  createLink = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(sourceUuid, destUuid, type);
+        CreateLink<CnATreeElement, CnATreeElement>  createLink = new CreateLink<>(sourceUuid, destUuid, type);
         try {
             getCommandService().executeCommand(createLink);
         } catch (CommandException e) {

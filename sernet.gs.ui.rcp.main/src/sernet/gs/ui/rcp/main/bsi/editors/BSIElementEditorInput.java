@@ -79,21 +79,16 @@ public class BSIElementEditorInput implements IEditorInput {
 		return element.getId();
 	}
 
-	public String getName() {
-	    final int maxTitleLength = 21; 
-		return element.getTitle().substring(0, 
-		            element.getTitle().length() < maxTitleLength 
-		            ? element.getTitle().length() 
-		            : maxTitleLength - 1  
-		       );
-	}
+    public String getName() {
+        return EditorUtil.getEditorName(element);
+    }
 
 	public IPersistableElement getPersistable() {
 		return null;
 	}
 
 	public String getToolTipText() {
-		return element.getTitle();
+		return EditorUtil.getEditorToolTipText(element);
 	}
 
 	public Object getAdapter(Class adapter) {

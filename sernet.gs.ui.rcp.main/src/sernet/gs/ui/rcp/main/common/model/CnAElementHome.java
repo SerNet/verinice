@@ -100,8 +100,6 @@ public final class CnAElementHome {
     
     protected static final String LINK_NO_COMMENT = ""; //$NON-NLS-1$
 
-    private static final String QUERY_FIND_BY_ID = "from " + CnATreeElement.class.getName() + " as element " + "where element.dbId = ?"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
     private ICommandService commandService;
     
     private IValidationService validationService;
@@ -259,7 +257,7 @@ public final class CnAElementHome {
             log.debug("Deleting element, uuid: " + element.getUuid()); //$NON-NLS-1$
         }
         
-        RemoveElement command = new RemoveElement(element);
+        RemoveElement<CnATreeElement> command = new RemoveElement<>(element);
         deleteValidations(element);
         getCommandService().executeCommand(command);
     }

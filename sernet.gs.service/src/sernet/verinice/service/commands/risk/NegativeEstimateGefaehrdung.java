@@ -104,10 +104,6 @@ public class NegativeEstimateGefaehrdung extends GenericCommand {
         return getDaoFactory().getDAO(FinishedRiskAnalysisLists.class);
     }
     
-    private IBaseDao<GefaehrdungsUmsetzung, Serializable> getGefaehrdungsUmsetzungDao() {
-        return getDaoFactory().getDAO(GefaehrdungsUmsetzung.class);
-    }
-    
     private IBaseDao<CnATreeElement, Serializable> getElementDao() {
         return getDaoFactory().getDAO(CnATreeElement.class);
     }

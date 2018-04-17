@@ -141,7 +141,7 @@ public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGrou
 	}
 	
 	@Override
-    public Collection<? extends String> getTags() {
+    public Collection<String> getTags() {
 		return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
 	}
 	

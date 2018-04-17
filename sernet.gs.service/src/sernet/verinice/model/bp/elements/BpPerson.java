@@ -19,20 +19,26 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
+import java.util.Collection;
+
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class BpPerson extends CnATreeElement implements IBpElement  {
+public class BpPerson extends CnATreeElement implements IBpElement, ITaggableElement {
     
     private static final long serialVersionUID = -1764245620965365934L;
     
     public static final String TYPE_ID = "bp_person"; //$NON-NLS-1$
     public static final String PROP_LAST_NAME = "bp_person_last_name"; //$NON-NLS-1$
     public static final String PROP_FIRST_NAME = "bp_person_first_name"; //$NON-NLS-1$
+    public static final String PROP_TAG = "bp_person_tag"; //$NON-NLS-1$
+
 
     protected BpPerson() {}
     
@@ -66,6 +72,11 @@ public class BpPerson extends CnATreeElement implements IBpElement  {
     @Override
     public String getTypeId() {
         return TYPE_ID;
+    }
+
+    @Override
+    public Collection<String> getTags() {
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
 }

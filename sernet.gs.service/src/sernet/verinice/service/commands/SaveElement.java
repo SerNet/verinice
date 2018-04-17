@@ -42,23 +42,15 @@ public class SaveElement<T extends ITypedElement> extends ChangeLoggingCommand i
 
 	protected T element;
 	protected String stationId;
-	private boolean flush = false;
 	private boolean logChanges = true;
 	
 	public SaveElement() { 
 	}
 	
 	public SaveElement(T element) {
-	    this(element,false);
 		this.element = element;
 		this.stationId = ChangeLogEntry.STATION_ID;
 	}
-	
-	public SaveElement(T element, boolean flush) {
-        this.element = element;
-        this.stationId = ChangeLogEntry.STATION_ID;
-        this.flush = flush;
-    }
 	
 	@Override
     public void execute() {

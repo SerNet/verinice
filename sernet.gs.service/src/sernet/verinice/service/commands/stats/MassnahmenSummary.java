@@ -22,7 +22,7 @@ import java.util.Map;
 import sernet.verinice.interfaces.GenericCommand;
 
 @SuppressWarnings("serial")
-public abstract class MassnahmenSummary<T> extends GenericCommand {
+public abstract class MassnahmenSummary extends GenericCommand {
 
 	private Map<String, Integer> summary;
 

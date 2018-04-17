@@ -21,15 +21,15 @@ package sernet.verinice.model.bp.elements;
 
 import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementationStausToRequirement;
 
+import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.StringTokenizer;
 
+import sernet.hui.common.connect.IIdentifiableElement;
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.Reevaluator;
+import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.AbstractLinkChangeListener;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
@@ -41,7 +41,7 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * @author Daniel Murygin dm[at]sernet.de
  *
  */
-public class Safeguard extends CnATreeElement implements IBpElement {
+public class Safeguard extends CnATreeElement implements IBpElement, IIdentifiableElement, ITaggableElement {
 
     private static final long serialVersionUID = -2117441377311538326L;
 
@@ -50,15 +50,21 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     private static final String PROP_OBJECTBROWSER_DESC = "bp_safeguard_objectbrowser_content"; //$NON-NLS-1$
     private static final String PROP_NAME = "bp_safeguard_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_safeguard_id"; //$NON-NLS-1$
+    public static final String PROP_TAG = "bp_safeguard_tag"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER = "bp_safeguard_qualifier"; //$NON-NLS-1$
     private static final String PROP_LAST_CHANGE = "bp_safeguard_last_change"; //$NON-NLS-1$
-    private static final String PROP_RESP_ROLES = "bp_safeguard_responsibleroles";//$NON-NLS-1$
     public static final String PROP_CONFIDENTIALITY = "bp_safeguard_value_method_confidentiality";//$NON-NLS-1$
     public static final String PROP_INTEGRITY = "bp_safeguard_value_method_integrity";//$NON-NLS-1$
     public static final String PROP_AVAILABILITY = "bp_safeguard_value_method_availability";//$NON-NLS-1$
     public static final String PROP_QUALIFIER_BASIC = "bp_safeguard_qualifier_basic";//$NON-NLS-1$
     public static final String PROP_QUALIFIER_STANDARD = "bp_safeguard_qualifier_standard";//$NON-NLS-1$
     public static final String PROP_QUALIFIER_HIGH = "bp_safeguard_qualifier_high";//$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS = "bp_safeguard_implementation_status"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_NO = "bp_safeguard_implementation_status_no"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_YES = "bp_safeguard_implementation_status_yes"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_PARTIALLY = "bp_safeguard_implementation_status_partially"; //$NON-NLS-1$
+    public static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_safeguard_implementation_status_na"; //$NON-NLS-1$
+
     public static final String REL_BP_SAFEGUARD_BP_THREAT = "rel_bp_safeguard_bp_threat"; //$NON-NLS-1$
 
     private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
@@ -81,7 +87,8 @@ public class Safeguard extends CnATreeElement implements IBpElement {
         }
     };
 
-    protected Safeguard() {}
+    protected Safeguard() {
+    }
 
     @Override
     public ILinkChangeListener getLinkChangeListener() {
@@ -92,7 +99,6 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     public IReevaluator getProtectionRequirementsProvider() {
         return protectionRequirementsProvider;
     }
-
 
     public Safeguard(CnATreeElement parent) {
         super(parent);
@@ -109,7 +115,8 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     }
 
     public void setObjectBrowserDescription(String description) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER_DESC), description);
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER_DESC),
+                description);
     }
 
     public String getAbbreviation() {
@@ -129,7 +136,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
-    
+
     public void setTitle(String title) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
     }
@@ -142,6 +149,7 @@ public class Safeguard extends CnATreeElement implements IBpElement {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
     }
 
+    @Override
     public String getIdentifier() {
         return getEntity().getPropertyValue(PROP_ID);
     }
@@ -155,40 +163,8 @@ public class Safeguard extends CnATreeElement implements IBpElement {
     }
 
     public void setLastChange(Date date) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE), String.valueOf(date.getTime()));
-    }
-
-    public Set<String> getResponsibleRoles(){
-        String property = getEntity().getPropertyValue(PROP_RESP_ROLES);
-        Set<String> roles;
-        if (property != null && property.length() > 0) {
-            StringTokenizer tokenizer = new StringTokenizer(property, "/");
-            roles = new HashSet<>(tokenizer.countTokens() + 1);
-            while (tokenizer.hasMoreTokens()) {
-                roles.add(tokenizer.nextToken());
-            }
-        } else {
-            roles = new HashSet<>();
-        }
-        return roles;
-    }
-
-    public void setResponisbleRoles(String roles) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_RESP_ROLES), roles);
-    }
-
-    public void addResponsibleRole(String role) {
-        Set<String> roles = getResponsibleRoles();
-        roles.add(role);
-        StringBuilder property = new StringBuilder();
-        Iterator<String> iter = roles.iterator();
-        while (iter.hasNext()) {
-            property.append(iter.next());
-            if (iter.hasNext()) {
-                property.append(" / ");
-            }
-        }
-        setResponisbleRoles(property.toString());
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_LAST_CHANGE),
+                String.valueOf(date.getTime()));
     }
 
     public void setIsAffectsConfidentiality(boolean affectsConfidentiality) {
@@ -215,7 +191,22 @@ public class Safeguard extends CnATreeElement implements IBpElement {
         return ((this.getNumericProperty(PROP_AVAILABILITY) == 1) ? true : false);
     }
 
+    public String getImplementationStatus(){
+        return getEntity().getRawPropertyValue(PROP_IMPLEMENTATION_STATUS);
+    }
+
     public static String getIdentifierOfSafeguard(CnATreeElement requirement) {
         return requirement.getEntity().getPropertyValue(PROP_ID);
     }
+
+    @Override
+    public String getFullTitle() {
+        return joinPrefixAndTitle(getIdentifier(), getTitle());
+    }
+
+    @Override
+    public Collection<String> getTags() {
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
+    }
+
 }

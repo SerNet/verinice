@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.actions;
 
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -52,8 +53,6 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.PasswordException;
 import sernet.verinice.model.bpm.TodoViewItem;
 import sernet.verinice.model.bsi.DocumentReference;
@@ -94,28 +93,13 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
     private final IWorkbenchWindow window;
 
     public ShowBulkEditAction(IWorkbenchWindow window, String label) {
+        super(ActionRightIDs.BULKEDIT, label);
         this.window = window;
-        setText(label);
         setId(ID);
         setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.CASCADE));
         window.getSelectionService().addSelectionListener(this);
         setToolTipText(Messages.ShowBulkEditAction_1);
-        setRightID(ActionRightIDs.BULKEDIT);
-        if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-            IInternalServerStartListener listener = new IInternalServerStartListener(){
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if(e.isStarted()){
-                        setEnabled(checkRights());
-                    }
-                }
-
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            setEnabled(checkRights());
-        }
     }
 
     /* (non-Javadoc)

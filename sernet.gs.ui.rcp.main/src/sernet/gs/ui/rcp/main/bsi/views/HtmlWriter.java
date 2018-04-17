@@ -41,11 +41,11 @@ import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
-import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.bp.IBpElement;
@@ -93,9 +93,7 @@ public abstract class HtmlWriter {
      */
     public static String getHtml(Object element) throws GSServiceException {
         
-        String html = "";
-        
-        html = handleRequestDynamic(element);
+        String html = handleRequestDynamic(element);
         
         if (StringUtils.isEmpty(html)){
             html = handleRequestStatic(element);
@@ -122,19 +120,24 @@ public abstract class HtmlWriter {
      * empty String if no property is found or element is not instanceof
      * {@link CnATreeElement}
      */
-    private static String handleRequestDynamic(Object element){
+    private static String handleRequestDynamic(Object element) {
+        if (!(element instanceof CnATreeElement)){
+            return StringUtils.EMPTY;
+        }
+
+        CnATreeElement cnaTreeElement = (CnATreeElement) element;
+        EntityType entityType = cnaTreeElement.getEntityType();
+        if (entityType == null) {
+            return StringUtils.EMPTY;
+        }
+
         StringBuilder sb = new StringBuilder();
-        if (element instanceof CnATreeElement){
-            CnATreeElement cnaTreeElement = (CnATreeElement)element;
-            List<PropertyType> htmlProperties = cnaTreeElement
-                    .getEntityType().getObjectBrowserPropertyTypes();
-            Iterator<PropertyType> iterator = htmlProperties.iterator();
-            while (iterator.hasNext()){
-                sb.append(buildObjectBrowserContent(cnaTreeElement,
-                        iterator.next()));
-                if (iterator.hasNext()){
-                    sb.append("<br><br>");
-                }
+        List<PropertyType> htmlProperties = entityType.getObjectBrowserPropertyTypes();
+        Iterator<PropertyType> iterator = htmlProperties.iterator();
+        while (iterator.hasNext()) {
+            sb.append(buildObjectBrowserContent(cnaTreeElement, iterator.next()));
+            if (iterator.hasNext()) {
+                sb.append("<br><br>");
             }
         }
         return sb.toString();
@@ -250,7 +253,6 @@ public abstract class HtmlWriter {
      * @param property
      */
     private static String getLicenseRestrictedPropertyValue(Property property) {
-        StringBuilder sb = new StringBuilder();
         String encryptedContentId = property.getLicenseContentId();
         String cypherText = property.getPropertyValue();
         String currentUser = ServiceFactory.lookupAuthService().getUsername();
@@ -383,7 +385,7 @@ public abstract class HtmlWriter {
                             descriptionProperty),
                     VeriniceCharset.CHARSET_UTF_8.name());
             return sb.toString();
-        };
+        }
         
         if (element instanceof SamtTopic){
             StringBuilder sb = new StringBuilder();
@@ -574,16 +576,6 @@ public abstract class HtmlWriter {
            return null;
        }
    }
-//   
-//   private String htmlizeDescription(String plainDescription) {
-//       StringBuilder htmlDescriptionBuilder = new StringBuilder();
-//       
-//       htmlDescriptionBuilder.append(HTML_DESCRIPTION_PREAMBEL);
-//       htmlDescriptionBuilder.append(plainDescription);
-//       htmlDescriptionBuilder.append(HTML_DESCRIPTION_SUFFIX);
-//       String htmlDescription = htmlDescriptionBuilder.toString();
-//       return htmlDescription;
-//   }
 
    private static String removeUnsupportedHtmlPattern(String line) {
        line = line.replaceAll("<a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -606,9 +598,4 @@ public abstract class HtmlWriter {
        return ServiceFactory.lookupLicenseManagementService();
    }
    
-   private static IEncryptionService getCryptoService(){
-       return ServiceFactory.lookupEncryptionService();
-   }
 }
-
-

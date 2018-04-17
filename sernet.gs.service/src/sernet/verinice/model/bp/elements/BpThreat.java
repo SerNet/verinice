@@ -19,13 +19,18 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
+import java.util.Collection;
+
+import sernet.hui.common.connect.IIdentifiableElement;
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
-public class BpThreat extends CnATreeElement implements IBpElement {
+public class BpThreat extends CnATreeElement implements IBpElement, IIdentifiableElement, ITaggableElement {
     
     private static final long serialVersionUID = -7182966153863832177L;
     
@@ -33,6 +38,7 @@ public class BpThreat extends CnATreeElement implements IBpElement {
     private static final String PROP_OBJECTBROWSER_DESC = "bp_threat_objectbrowser_content"; //$NON-NLS-1$
     private static final String PROP_NAME = "bp_threat_name"; //$NON-NLS-1$
     private static final String PROP_ID = "bp_threat_id"; //$NON-NLS-1$
+    public static final String PROP_TAG = "bp_threat_tag"; //$NON-NLS-1$
 
     private static final String PROP_CONFIDENIALITY = "bp_threat_value_method_confidentiality"; //$NON-NLS-1$
     private static final String PROP_INTEGRITY = "bp_threat_value_method_integrity"; //$NON-NLS-1$
@@ -87,6 +93,7 @@ public class BpThreat extends CnATreeElement implements IBpElement {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
     
+    @Override
     public String getIdentifier() {
         return getEntity().getPropertyValue(PROP_ID);
     }
@@ -127,6 +134,16 @@ public class BpThreat extends CnATreeElement implements IBpElement {
     
     public static String getIdentifierOfThreat(CnATreeElement requirement) {
         return requirement.getEntity().getPropertyValue(PROP_ID);
+    }
+
+    @Override
+    public String getFullTitle() {
+        return joinPrefixAndTitle(getIdentifier(), getTitle());
+    }
+
+    @Override
+    public Collection<String> getTags() {
+        return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
 }

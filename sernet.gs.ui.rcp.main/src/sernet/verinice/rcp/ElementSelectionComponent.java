@@ -59,7 +59,6 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.CnaTreeElementTitleFilter;
 import sernet.gs.ui.rcp.main.bsi.dialogs.Messages;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
@@ -77,17 +76,17 @@ import sernet.verinice.service.commands.LoadElementTitles;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class ElementSelectionComponent {
-    private transient Logger log = Logger.getLogger
-            (ElementSelectionComponent.class); 
+
+    private static final Logger log = Logger.getLogger(ElementSelectionComponent.class);
 
     private Composite container;
 
     private TableViewer viewer;
     private Text text;
     private Button checkbox;
-    
+
     private CnaTreeElementTitleFilter filter;
-    
+
     private List<CnATreeElement> elementList;
     private Integer scopeId;
     private Integer groupId;
@@ -95,23 +94,20 @@ public class ElementSelectionComponent {
     private boolean scopeOnly;
     private boolean showScopeCheckbox;
     private static final String COLUMN_IMG = "_img"; //$NON-NLS-1$
-    private static final String COLUMN_SCOPE_ID= "_scope_id"; //$NON-NLS-1$
+    private static final String COLUMN_SCOPE_ID = "_scope_id"; //$NON-NLS-1$
     private static final String COLUMN_LABEL = "_label"; //$NON-NLS-1$
-    private static Map<Integer, String> titleMap = 
-            new HashMap<Integer, String>();
-    
-    private List<CnATreeElement> selectedElements = 
-            new ArrayList<CnATreeElement>();
-    
+    private static Map<Integer, String> titleMap = new HashMap<>();
+
+    private List<CnATreeElement> selectedElements = new ArrayList<>();
+
     private Integer height;
-    
-    public ElementSelectionComponent(Composite container, 
-            String type, Integer scopeId) {
+
+    public ElementSelectionComponent(Composite container, String type, Integer scopeId) {
         this(container, type, scopeId, null);
     }
-    
-    public ElementSelectionComponent(Composite container, String type,
-            Integer scopeId, Integer groupId) {
+
+    public ElementSelectionComponent(Composite container, String type, Integer scopeId,
+            Integer groupId) {
         super();
         this.container = container;
         this.typeId = type;
@@ -120,9 +116,9 @@ public class ElementSelectionComponent {
         scopeOnly = true;
         showScopeCheckbox = true;
     }
-    
+
     public void init() {
-       
+
         final int formAttachmentDefaultOffset = 5;
         final int column1Width = 25;
         final int column2Width = 200;
@@ -130,7 +126,7 @@ public class ElementSelectionComponent {
         final int formData2Numerator = 100;
         final int formData3Numerator = formData2Numerator;
         container.setLayout(new FormLayout());
-             
+
         Label label1 = new Label(container, SWT.NULL);
         label1.setText(Messages.CnATreeElementSelectionDialog_3);
 
@@ -139,13 +135,12 @@ public class ElementSelectionComponent {
         formData.left = new FormAttachment(0, formAttachmentDefaultOffset);
         label1.setLayoutData(formData);
         label1.pack();
-        
+
         text = new Text(container, SWT.BORDER);
         FormData formData2 = new FormData();
         formData2.top = new FormAttachment(0, formAttachmentDefaultOffset);
-        formData2.left = new FormAttachment(label1, 
-                formAttachmentDefaultOffset);
-        formData2.right = new FormAttachment(formData2Numerator, 
+        formData2.left = new FormAttachment(label1, formAttachmentDefaultOffset);
+        formData2.right = new FormAttachment(formData2Numerator,
                 (-1) * formAttachmentDefaultOffset);
         text.setLayoutData(formData2);
         text.addKeyListener(new KeyListener() {
@@ -153,23 +148,24 @@ public class ElementSelectionComponent {
             public void keyReleased(KeyEvent e) {
                 filter.setPattern(text.getText());
             }
-            
+
             @Override
             public void keyPressed(KeyEvent e) {
             }
         });
-        
+
         if (isShowScopeCheckbox()) {
             SelectionListener listener = new SelectionListener() {
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                    Button button = (e.getSource() instanceof Button)
-                            ? (Button)e.getSource() : null;
-                    if (button != null){
+                    Button button = (e.getSource() instanceof Button) ? (Button) e.getSource()
+                            : null;
+                    if (button != null) {
                         scopeOnly = button.getSelection();
                         loadElements();
                     }
                 }
+
                 @Override
                 public void widgetDefaultSelected(SelectionEvent e) {
                 }
@@ -177,211 +173,126 @@ public class ElementSelectionComponent {
             checkbox = SWTElementFactory.generateCheckboxButton(container,
                     Messages.CnATreeElementSelectionDialog_4, true, listener);
             FormData checkboxFD = new FormData();
-            checkboxFD.top = new FormAttachment(text,
-                    formAttachmentDefaultOffset);
-            checkboxFD.left = new FormAttachment(0,
-                    formAttachmentDefaultOffset);
+            checkboxFD.top = new FormAttachment(text, formAttachmentDefaultOffset);
+            checkboxFD.left = new FormAttachment(0, formAttachmentDefaultOffset);
             checkbox.setLayoutData(checkboxFD);
             checkbox.pack();
         }
-        
-        viewer = new TableViewer(container, SWT.BORDER 
-                | SWT.FULL_SELECTION | SWT.MULTI);
+
+        viewer = new TableViewer(container, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
         FormData formData3 = new FormData();
         if (isShowScopeCheckbox()) {
-            formData3.top = new FormAttachment(checkbox,
-                    formAttachmentDefaultOffset);
+            formData3.top = new FormAttachment(checkbox, formAttachmentDefaultOffset);
         } else {
-            formData3.top = new FormAttachment(text,
-                    formAttachmentDefaultOffset);
+            formData3.top = new FormAttachment(text, formAttachmentDefaultOffset);
         }
         formData3.left = new FormAttachment(0, formAttachmentDefaultOffset);
         formData3.right = new FormAttachment(formData3Numerator,
                 (-1) * formAttachmentDefaultOffset);
         formData3.bottom = new FormAttachment(formData3Numerator,
                 (-1) * formAttachmentDefaultOffset);
-        if (getHeight()!=null) {
+        if (getHeight() != null) {
             formData3.height = getHeight();
         }
         viewer.getTable().setLayoutData(formData3);
         viewer.getTable().setHeaderVisible(true);
         viewer.getTable().setLinesVisible(true);
-        
+
         // image column:
         TableViewerColumn column1 = new TableViewerColumn(viewer, SWT.LEFT);
         column1.getColumn().setText(""); //$NON-NLS-1$
         column1.getColumn().setWidth(column1Width);
         column1.getColumn().setResizable(false);
-        column1.setLabelProvider(new CellLabelProvider() {
-            @Override
-            public void update(ViewerCell cell) {
-                if (cell.getElement() instanceof PlaceHolder){
-                    return;
-                }
-                CnATreeElement element = (CnATreeElement)cell.getElement();
-                Image image = CnAImageProvider.getCustomImage(element);
-                if (image==null) {
-                    image = ImageCache.getInstance().
-                            getObjectTypeImage(element.getTypeId());
-                }
-                cell.setImage(image);
-            }
-        });
-        
+        column1.setLabelProvider(new ImageColumnCellLabelProvider());
+
         // label column
         TableViewerColumn column2 = new TableViewerColumn(viewer, SWT.LEFT);
         column2.getColumn().setText(Messages.CnATreeElementSelectionDialog_9);
         column2.getColumn().setResizable(true);
         column2.getColumn().setWidth(column2Width);
-        column2.setLabelProvider(new CellLabelProvider() {
-            @Override
-            public void update(ViewerCell cell) {
-                if (cell.getElement() instanceof PlaceHolder) {
-                    cell.setText( ((PlaceHolder)cell.getElement()).getTitle() );
-                    return;
-                }
-                cell.setText( makeTitle((CnATreeElement)cell.getElement()) );
-            }
-        });
-        
-         // scope id column:
+        column2.setLabelProvider(new LabelColumnCellLabelProvider());
+
+        // scope id column:
         TableViewerColumn column3 = new TableViewerColumn(viewer, SWT.LEFT);
         column3.getColumn().setText(Messages.CnATreeElementSelectionDialog_10);
         column3.getColumn().setWidth(column3Width);
         column3.getColumn().setResizable(true);
-        column3.setLabelProvider(new CellLabelProvider() {
-            @Override
-            public void update(ViewerCell cell) {
-                if (cell.getElement() instanceof PlaceHolder) {
-                    cell.setText( ((PlaceHolder)cell.getElement()).getTitle() );
-                    return;
-                }
-                String title = "";
-                CnATreeElement elmt = (CnATreeElement)cell.getElement();
-                
-                try {
-                    if (!titleMap.containsKey(elmt.getScopeId())){
-                        title = loadElementsTitles(elmt);
-                    } else {
-                        title = titleMap.get(elmt.getScopeId());
-                    }
-                } catch (CommandException e) {
-                    log.error("Error while getting element", e);
-                }
-                cell.setText(title);
-            }    
-        });
-        
-        viewer.setColumnProperties(new String[]
-                {COLUMN_IMG, COLUMN_SCOPE_ID, COLUMN_LABEL});
+        column3.setLabelProvider(new ScopeIdColumnCellLabelProvider());
+
+        viewer.setColumnProperties(new String[] { COLUMN_IMG, COLUMN_SCOPE_ID, COLUMN_LABEL });
         viewer.setContentProvider(new ArrayContentProvider());
         filter = new CnaTreeElementTitleFilter(viewer);
-        viewer.setSorter(new ViewerSorter() {
-            @Override
-            public int compare(Viewer viewer, Object e1, Object e2) {
-                String title1 = "";
-                String title2 = "";
-                CnATreeElement elmt1 = (CnATreeElement) e1;
-                CnATreeElement elmt2 = (CnATreeElement) e2;
-                if (titleMap!=null){
-                    title1 = titleMap.get(elmt1.getScopeId());
-                    title2 = titleMap.get(elmt2.getScopeId());
-                    if (title1 != null && title2 != null){
-                        int allScopeTitles = title1.compareTo(title2);
-                        if (allScopeTitles == 0){
-                            return makeTitle(elmt1).compareTo(makeTitle(elmt2));
-                        }
-                        return title1.compareTo(title2);
-                    } else {
-                        if (title1==null && title2==null) {
-                            return makeTitle(elmt1).compareTo(makeTitle(elmt2));  
-                        }
-                        if (title1 == null){
-                            return 1;
-                        } if (title2 == null) {
-                            return -1;
-                        }
-                    }
-                }
-                return makeTitle(elmt1).compareTo(makeTitle(elmt2));  
-            } 
-        });
-        
+        viewer.setSorter(new ElementTableViewerSorter());
+
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
-                selectedElements = ((IStructuredSelection)viewer.
-                        getSelection()).toList();
+                selectedElements = ((IStructuredSelection) viewer.getSelection()).toList();
             }
         });
-        
-        viewer.addDoubleClickListener(new IDoubleClickListener() {           
+
+        viewer.addDoubleClickListener(new IDoubleClickListener() {
             @Override
             public void doubleClick(DoubleClickEvent event) {
-                selectedElements = ((IStructuredSelection)viewer.
-                        getSelection()).toList();
+                selectedElements = ((IStructuredSelection) viewer.getSelection()).toList();
             }
         });
     }
-    
- 
+
     public void loadElements() {
         loadElementsAndSelect(null);
     }
 
     @SuppressWarnings("unchecked")
     public void loadElementsAndSelect(final CnATreeElement selected) {
-        if (typeId == null || typeId.length()==0){
+        if (typeId == null || typeId.length() == 0) {
             return;
         }
         ArrayList temp = new ArrayList(1);
         temp.add(new PlaceHolder(Messages.CnATreeElementSelectionDialog_6));
         viewer.setInput(temp);
-        
-        WorkspaceJob job = new WorkspaceJob(
-                Messages.CnATreeElementSelectionDialog_7) {
+
+        WorkspaceJob job = new WorkspaceJob(Messages.CnATreeElementSelectionDialog_7) {
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 Activator.inheritVeriniceContextState();
 
                 try {
-                    monitor.setTaskName(
-                            Messages.CnATreeElementSelectionDialog_8);
-                    loadElementsFromDb(); 
+                    monitor.setTaskName(Messages.CnATreeElementSelectionDialog_8);
+                    loadElementsFromDb();
                     setSelectedElement(selected);
                 } catch (Exception e) {
-                    ExceptionUtil.log(e,
-                            Messages.CnATreeElementSelectionDialog_0);
+                    ExceptionUtil.log(e, Messages.CnATreeElementSelectionDialog_0);
                 }
                 return Status.OK_STATUS;
             }
         };
         job.setUser(false);
-        job.schedule();        
+        job.schedule();
     }
 
     /**
      * 
      */
     protected void setSelection() {
-        if (selectedElements!=null && !selectedElements.isEmpty()) {
+        if (selectedElements != null && !selectedElements.isEmpty()) {
             getViewer().setSelection(new StructuredSelection(selectedElements));
         }
     }
 
-    private String makeTitle(CnATreeElement elmt) {
+    private static String makeTitle(CnATreeElement elmt) {
         StringBuilder sb = new StringBuilder();
         if (elmt instanceof IISO27kElement) {
-            String abbreviation = ((IISO27kElement)elmt).getAbbreviation();
-            if (abbreviation!=null && !abbreviation.isEmpty()) {
+            String abbreviation = ((IISO27kElement) elmt).getAbbreviation();
+            if (abbreviation != null && !abbreviation.isEmpty()) {
                 sb.append(abbreviation).append(" ");
             }
         }
-        
+
         sb.append(elmt.getTitle());
         return sb.toString();
     }
-    
+
     public List<CnATreeElement> getSelectedElements() {
         return selectedElements;
     }
@@ -400,7 +311,7 @@ public class ElementSelectionComponent {
 
     public void setScopeOnly(boolean scopeOnly) {
         this.scopeOnly = scopeOnly;
-        if (this.checkbox!=null) {
+        if (this.checkbox != null) {
             this.checkbox.setSelection(scopeOnly);
         }
     }
@@ -416,20 +327,19 @@ public class ElementSelectionComponent {
     private void loadElementsFromDb() throws CommandException {
         LoadCnAElementByEntityTypeId command;
         if (scopeOnly) {
-            command = new LoadCnAElementByEntityTypeId(typeId, getScopeId(),
-                    getGroupId());    
+            command = new LoadCnAElementByEntityTypeId(typeId, getScopeId(), getGroupId());
         } else {
             command = new LoadCnAElementByEntityTypeId(typeId);
         }
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         showElementsInTable(command.getElements());
     }
-    
+
     private void showElementsInTable(final List<CnATreeElement> list) {
         Display.getDefault().asyncExec(new Runnable() {
             @Override
             public void run() {
-                if (list !=null){
+                if (list != null) {
                     viewer.setInput(list);
                 } else {
                     ArrayList temp = new ArrayList(0);
@@ -439,9 +349,9 @@ public class ElementSelectionComponent {
         });
         elementList = list;
     }
-    
+
     public void deselectElements() {
-        Display.getDefault().syncExec(new Runnable() {                 
+        Display.getDefault().syncExec(new Runnable() {
             @Override
             public void run() {
                 getViewer().getTable().deselectAll();
@@ -450,33 +360,21 @@ public class ElementSelectionComponent {
             }
         });
     }
-    
+
     public void setSelectedElement(final CnATreeElement selectedElement) {
-        if (selectedElement!=null) {
+        if (selectedElement != null) {
             int i = elementList.indexOf(selectedElement);
-            if (i!=-1) {
-                Display.getDefault().syncExec(new Runnable() {                 
+            if (i != -1) {
+                Display.getDefault().syncExec(new Runnable() {
                     @Override
                     public void run() {
                         getViewer().getTable().deselectAll();
-                        getViewer().
-                        setSelection(new StructuredSelection(selectedElement));
-                        selectedElements = ((IStructuredSelection)viewer.
-                                getSelection()).toList();
+                        getViewer().setSelection(new StructuredSelection(selectedElement));
+                        selectedElements = ((IStructuredSelection) viewer.getSelection()).toList();
                     }
                 });
             }
         }
-    }
-           
-    private String loadElementsTitles(CnATreeElement elmt) 
-            throws CommandException {
-        LoadElementTitles scopeCommand;
-        scopeCommand = new LoadElementTitles();
-        scopeCommand = ServiceFactory.lookupCommandService().
-                executeCommand(scopeCommand);
-        titleMap = scopeCommand.getElements();
-        return titleMap.get(elmt.getScopeId());
     }
 
     public Integer getScopeId() {
@@ -510,5 +408,88 @@ public class ElementSelectionComponent {
     public void setHeight(Integer height) {
         this.height = height;
     }
-   
+
+    private static final class ElementTableViewerSorter extends ViewerSorter {
+        @Override
+        public int compare(Viewer viewer, Object e1, Object e2) {
+
+            CnATreeElement elmt1 = (CnATreeElement) e1;
+            CnATreeElement elmt2 = (CnATreeElement) e2;
+            if (titleMap != null) {
+                String title1 = titleMap.get(elmt1.getScopeId());
+                String title2 = titleMap.get(elmt2.getScopeId());
+                if (title1 != null && title2 != null) {
+                    int allScopeTitles = title1.compareTo(title2);
+                    if (allScopeTitles == 0) {
+                        return makeTitle(elmt1).compareTo(makeTitle(elmt2));
+                    }
+                    return title1.compareTo(title2);
+                } else {
+                    if (title1 == null && title2 == null) {
+                        return makeTitle(elmt1).compareTo(makeTitle(elmt2));
+                    }
+                    if (title1 == null) {
+                        return 1;
+                    }
+                    // title2 == null
+                    return -1;
+                }
+            }
+            return makeTitle(elmt1).compareTo(makeTitle(elmt2));
+        }
+    }
+
+    private static final class ScopeIdColumnCellLabelProvider extends CellLabelProvider {
+        @Override
+        public void update(ViewerCell cell) {
+            if (cell.getElement() instanceof PlaceHolder) {
+                cell.setText(((PlaceHolder) cell.getElement()).getTitle());
+                return;
+            }
+            String title = "";
+            CnATreeElement elmt = (CnATreeElement) cell.getElement();
+
+            try {
+                if (!titleMap.containsKey(elmt.getScopeId())) {
+                    title = loadElementsTitles(elmt);
+                } else {
+                    title = titleMap.get(elmt.getScopeId());
+                }
+            } catch (CommandException e) {
+                log.error("Error while getting element", e);
+            }
+            cell.setText(title);
+        }
+
+        private static String loadElementsTitles(CnATreeElement elmt) throws CommandException {
+            LoadElementTitles scopeCommand;
+            scopeCommand = new LoadElementTitles();
+            scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
+            titleMap = scopeCommand.getElements();
+            return titleMap.get(elmt.getScopeId());
+        }
+    }
+
+    private static final class LabelColumnCellLabelProvider extends CellLabelProvider {
+        @Override
+        public void update(ViewerCell cell) {
+            if (cell.getElement() instanceof PlaceHolder) {
+                cell.setText(((PlaceHolder) cell.getElement()).getTitle());
+                return;
+            }
+            cell.setText(makeTitle((CnATreeElement) cell.getElement()));
+        }
+    }
+
+    private static final class ImageColumnCellLabelProvider extends CellLabelProvider {
+        @Override
+        public void update(ViewerCell cell) {
+            if (cell.getElement() instanceof PlaceHolder) {
+                return;
+            }
+            CnATreeElement element = (CnATreeElement) cell.getElement();
+            Image image = CnAImageProvider.getImage(element);
+            cell.setImage(image);
+        }
+    }
 }
