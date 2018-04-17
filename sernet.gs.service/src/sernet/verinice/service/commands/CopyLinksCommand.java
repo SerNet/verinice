@@ -146,8 +146,8 @@ public class CopyLinksCommand extends GenericCommand {
     public void loadAndCacheLinks() {
         String hql = "select l.dependant.uuid,l.dependency.uuid,l.id.typeId from sernet.verinice.model.common.CnALink l";
         List<Object[]> allLinkedUuids = getDao().findByQuery(hql, null);
-        existingUpLinkMap = new HashMap<String, List<String[]>>();
-        existingDownLinkMap = new HashMap<String, List<String[]>>();
+        existingUpLinkMap = new HashMap<>();
+        existingDownLinkMap = new HashMap<>();
         for (Object[] sourceAndDest : allLinkedUuids) {
             cacheLink(sourceAndDest);
         }
@@ -164,7 +164,7 @@ public class CopyLinksCommand extends GenericCommand {
             Map<String, List<String[]>> map) {
         List<String[]> destinations = map.get(source);
         if (destinations == null) {
-            destinations = new LinkedList<String[]>();
+            destinations = new LinkedList<>();
             map.put(source, destinations);
         }
         destinations.add(new String[] { dest, type });
