@@ -62,8 +62,8 @@ public class CopyLinksCommand extends GenericCommand {
 
     private transient Map<String, String> sourceDestMap;
 
-    private transient Map<String, List<String[]>> existingUpLinkMap;
-    private transient Map<String, List<String[]>> existingDownLinkMap;
+    private transient Map<String, List<LinkInformation>> existingUpLinkMap;
+    private transient Map<String, List<LinkInformation>> existingDownLinkMap;
 
     private transient IBaseDao<CnATreeElement, Serializable> dao;
 
@@ -96,12 +96,13 @@ public class CopyLinksCommand extends GenericCommand {
         }
     }
 
-    private void createLinks(String sourceUuid, List<String[]> destinations, String direction) {
+    private void createLinks(String sourceUuid, List<LinkInformation> destinations,
+            String direction) {
         if (destinations == null) {
             return;
         }
-        for (String[] destAndType : destinations) {
-            String uuid = destAndType[0];
+        for (LinkInformation destAndType : destinations) {
+            String uuid = destAndType.destination;
             String copyDestUuid = sourceDestMap.get(uuid);
             if (copyDestUuid != null) {
                 uuid = copyDestUuid;
@@ -113,9 +114,9 @@ public class CopyLinksCommand extends GenericCommand {
                 logger.debug("Creating link to same target... " + sourceUuid + " -> " + uuid);
             }
             if (UP.equals(direction)) {
-                createLink(sourceUuid, uuid, destAndType[1]);
+                createLink(sourceUuid, uuid, destAndType.type);
             } else {
-                createLink(uuid, sourceUuid, destAndType[1]);
+                createLink(uuid, sourceUuid, destAndType.type);
             }
             number++;
             if (number % FLUSH_LEVEL == 0) {
@@ -148,26 +149,27 @@ public class CopyLinksCommand extends GenericCommand {
         List<Object[]> allLinkedUuids = getDao().findByQuery(hql, null);
         existingUpLinkMap = new HashMap<>();
         existingDownLinkMap = new HashMap<>();
-        for (Object[] sourceAndDest : allLinkedUuids) {
-            cacheLink(sourceAndDest);
+        for (Object[] entry : allLinkedUuids) {
+            String dependantUUID = (String) entry[0];
+            String dependencyUUID = (String) entry[1];
+            String typeId = (String) entry[2];
+            cacheLink(dependantUUID, dependencyUUID, typeId);
         }
     }
 
-    private void cacheLink(Object[] sourceAndDest) {
-        cacheLink((String) sourceAndDest[0], (String) sourceAndDest[1], (String) sourceAndDest[2],
-                existingUpLinkMap);
-        cacheLink((String) sourceAndDest[1], (String) sourceAndDest[0], (String) sourceAndDest[2],
-                existingDownLinkMap);
+    private void cacheLink(String dependantUUID, String dependencyUUID, String typeId) {
+        cacheLink(dependantUUID, dependencyUUID, typeId, existingUpLinkMap);
+        cacheLink(dependencyUUID, dependantUUID, typeId, existingDownLinkMap);
     }
 
-    public void cacheLink(String source, String dest, String type,
-            Map<String, List<String[]>> map) {
-        List<String[]> destinations = map.get(source);
+    public static void cacheLink(String source, String dest, String type,
+            Map<String, List<LinkInformation>> map) {
+        List<LinkInformation> destinations = map.get(source);
         if (destinations == null) {
             destinations = new LinkedList<>();
             map.put(source, destinations);
         }
-        destinations.add(new String[] { dest, type });
+        destinations.add(new LinkInformation(dest, type));
     }
 
     private IBaseDao<CnATreeElement, Serializable> getDao() {
@@ -177,4 +179,14 @@ public class CopyLinksCommand extends GenericCommand {
         return dao;
     }
 
+    private static final class LinkInformation {
+
+        LinkInformation(String destination, String type) {
+            this.destination = destination;
+            this.type = type;
+        }
+
+        private final String destination;
+        private final String type;
+    }
 }
