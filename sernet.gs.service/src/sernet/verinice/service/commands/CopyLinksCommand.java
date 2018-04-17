@@ -125,6 +125,7 @@ public class CopyLinksCommand extends GenericCommand {
                 flushAndClear();
             }
         }
+        flushAndClear();
     }
 
     private void flushAndClear() {
