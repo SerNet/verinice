@@ -78,6 +78,7 @@ import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.bp.rcp.BaseProtectionTreeSorter;
+import sernet.verinice.bp.rcp.filter.BaseProtectionFilterAction;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -92,11 +93,8 @@ import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.catalog.ICatalogModelListener;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.TagParameter;
-import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
-import sernet.verinice.rcp.ViewFilterAction;
 import sernet.verinice.rcp.bp.BaseProtectionPerspective;
 import sernet.verinice.rcp.tree.TreeContentProvider;
 import sernet.verinice.rcp.tree.TreeLabelProvider;
@@ -126,7 +124,7 @@ public class CatalogView extends RightsEnabledView
     private Action doubleClickAction;
     private ExpandAction expandAction;
     private CollapseAction collapseAction;
-    private ViewFilterAction filterAction;
+    private Action filterAction;
     private ShowAccessControlEditAction accessControlEditAction;
     private Action linkWithEditorAction;
     private DeleteSelectionAction deleteAction;
@@ -337,9 +335,7 @@ public class CatalogView extends RightsEnabledView
 
         HideEmptyFilter hideEmptyFilter = new HideEmptyFilter(viewer);
         hideEmptyFilter.setHideEmpty(true);
-        TagParameter tagParameter = new TagParameter();
-        TypeParameter typeParameter = new TypeParameter();
-        filterAction = new ViewFilterAction(Messages.ISMView_12, tagParameter, hideEmptyFilter, typeParameter);
+        filterAction = new BaseProtectionFilterAction(viewer, true);
 
         linkWithEditorAction = new Action(Messages.ISMView_5, IAction.AS_CHECK_BOX) {
             @Override
