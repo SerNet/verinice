@@ -114,7 +114,7 @@ import sernet.verinice.service.tree.ElementManager;
 public class CatalogView extends RightsEnabledView
         implements IAttachedToPerspective, ILinkedWithEditorView {
 
-    private static final Logger LOG = Logger.getLogger(CatalogView.class);
+    private static final Logger logger = Logger.getLogger(CatalogView.class);
 
     protected TreeViewer viewer;
     private TreeContentProvider contentProvider;
@@ -159,7 +159,7 @@ public class CatalogView extends RightsEnabledView
             initView(parent);
             startInitDataJob();
         } catch (Exception e) {
-            LOG.error("Error while creating organization view", e); //$NON-NLS-1$
+            logger.error("Error while creating organization view", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.ISMView_2);
         }
     }
@@ -232,8 +232,8 @@ public class CatalogView extends RightsEnabledView
     }
 
     protected void startInitDataJob() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Catalogview: startInitDataJob"); //$NON-NLS-1$
+        if (logger.isDebugEnabled()) {
+            logger.debug("Catalogview: startInitDataJob"); //$NON-NLS-1$
         }
         WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
             @Override
@@ -243,7 +243,7 @@ public class CatalogView extends RightsEnabledView
                     monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
                     initData();
                 } catch (Exception e) {
-                    LOG.error("Error while loading data for catalog view.", e); //$NON-NLS-1$
+                    logger.error("Error while loading data for catalog view.", e); //$NON-NLS-1$
                     status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.ISMView_4, //$NON-NLS-1$
                             e);
                 } finally {
@@ -256,16 +256,15 @@ public class CatalogView extends RightsEnabledView
     }
 
     protected void initData() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("MotITBPCatalogVIEW: initData"); //$NON-NLS-1$
+        if (logger.isDebugEnabled()) {
+            logger.debug("MotITBPCatalogVIEW: initData"); //$NON-NLS-1$
         }
         lock.lock();
         try {
             if (CnAElementFactory.isModernizedBpCatalogLoaded()) {
                 if (modelUpdateListener == null) {
-                    if (LOG.isDebugEnabled()) {
-                        Logger.getLogger(this.getClass())
-                                .debug("Creating modelUpdateListener for MotITBPView."); //$NON-NLS-1$
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Creating modelUpdateListener for MotITBPView."); //$NON-NLS-1$
                     }
                     modelUpdateListener = new TreeUpdateListener(viewer, elementManager);
                     CnAElementFactory.getInstance().getCatalogModel()
@@ -279,8 +278,8 @@ public class CatalogView extends RightsEnabledView
                     });
                 }
             } else if (modelLoadListener == null) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("CatalogModel No model loaded, adding model load listener."); //$NON-NLS-1$
+                if (logger.isDebugEnabled()) {
+                    logger.debug("CatalogModel No model loaded, adding model load listener."); //$NON-NLS-1$
                 }
                 // model is not loaded yet: add a listener to load data when
                 // it's loaded
@@ -325,7 +324,7 @@ public class CatalogView extends RightsEnabledView
                     try {
                         openEditorReadOnly(sel);
                     } catch (PartInitException e) {
-                        LOG.error("Error opening the BSIElement editor for: " + sel, e); //$NON-NLS-1$
+                        logger.error("Error opening the BSIElement editor for: " + sel, e); //$NON-NLS-1$
                     }
                 }
             }
@@ -457,8 +456,8 @@ public class CatalogView extends RightsEnabledView
         }
         CnATreeElement element = BSIElementEditorInput.extractElement(activeEditor);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Element in editor: " + element.getUuid()); //$NON-NLS-1$
+        if (logger.isDebugEnabled()) {
+            logger.debug("Element in editor: " + element.getUuid()); //$NON-NLS-1$
         }
         if (element != null) {
             viewer.setSelection(new StructuredSelection(element), true);
@@ -466,8 +465,8 @@ public class CatalogView extends RightsEnabledView
             return;
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Tree is expanded."); //$NON-NLS-1$
+        if (logger.isDebugEnabled()) {
+            logger.debug("Tree is expanded."); //$NON-NLS-1$
         }
     }
 
