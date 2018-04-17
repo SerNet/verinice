@@ -62,9 +62,6 @@ public class CopyLinksCommand extends GenericCommand {
     private static final int FLUSH_LEVEL = 20;
     private int number = 0;
 
-    private static final String UP = "up";
-    private static final String DOWN = "down";
-
     private transient Map<String, String> sourceDestMap;
 
     private transient Map<String, List<LinkInformation>> existingUpLinkMap;
@@ -96,13 +93,13 @@ public class CopyLinksCommand extends GenericCommand {
         for (Entry<String, String> e : sourceDestMap.entrySet()) {
             String sourceUuid = e.getKey();
             String targetUuid = e.getValue();
-            createLinks(targetUuid, existingUpLinkMap.get(sourceUuid), UP);
-            createLinks(targetUuid, existingDownLinkMap.get(sourceUuid), DOWN);
+            createLinks(targetUuid, existingUpLinkMap.get(sourceUuid), Direction.UP);
+            createLinks(targetUuid, existingDownLinkMap.get(sourceUuid), Direction.DOWN);
         }
     }
 
     private void createLinks(String sourceUuid, List<LinkInformation> destinations,
-            String direction) {
+            Direction direction) {
         if (destinations == null) {
             return;
         }
@@ -118,7 +115,7 @@ public class CopyLinksCommand extends GenericCommand {
             } else if (logger.isDebugEnabled()) {
                 logger.debug("Creating link to same target... " + sourceUuid + " -> " + uuid);
             }
-            if (UP.equals(direction)) {
+            if (direction == Direction.UP) {
                 createLink(sourceUuid, uuid, destAndType.type);
             } else {
                 createLink(uuid, sourceUuid, destAndType.type);
@@ -211,5 +208,9 @@ public class CopyLinksCommand extends GenericCommand {
 
         private final String destination;
         private final String type;
+    }
+
+    private enum Direction {
+        UP, DOWN
     }
 }
