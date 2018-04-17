@@ -94,25 +94,33 @@ public abstract class ElementFilter {
         parameterMap = new Hashtable<>();
         for (IParameter param : paramerterList) {
             if (param instanceof TypeParameter) {
-                Set<String[]> typeIdSet = (Set<String[]>) param.getParameter();
-                if (typeIdSet != null && !typeIdSet.isEmpty()) {
-                    String[] typeIdArray = typeIdSet.iterator().next();
-                    if (typeIdSet.size() > 1
-                            || !Arrays.equals(typeIdArray, ElementFilter.ALL_TYPES)) {
-                        parameterMap.put(ElementFilter.PARAM_TYPE_IDS, typeIdSet);
-                    }
-                }
+                addTypeParameter(parameterMap, param);
             }
             if (param instanceof TagParameter) {
-                TagParameter tagParameter = (TagParameter) param;
-                String[] tagArray = tagParameter.getPattern();
-                if (tagArray != null && tagArray.length > 0) {
-                    parameterMap.put(ElementFilter.PARAM_TAGS, tagParameter.getPattern());
-                    parameterMap.put(ElementFilter.PARAM_FILTER_ORGS, tagParameter.isFilterOrg());
-                }
+                addTagParameter(parameterMap, param);
             }
         }
         return parameterMap;
+    }
+
+    private static void addTagParameter(Map<String, Object> parameterMap, IParameter param) {
+        TagParameter tagParameter = (TagParameter) param;
+        String[] tagArray = tagParameter.getPattern();
+        if (tagArray != null && tagArray.length > 0) {
+            parameterMap.put(ElementFilter.PARAM_TAGS, tagParameter.getPattern());
+            parameterMap.put(ElementFilter.PARAM_FILTER_ORGS, tagParameter.isFilterOrg());
+        }
+    }
+
+    private static void addTypeParameter(Map<String, Object> parameterMap, IParameter param) {
+        Set<String[]> typeIdSet = (Set<String[]>) param.getParameter();
+        if (typeIdSet != null && !typeIdSet.isEmpty()) {
+            String[] typeIdArray = typeIdSet.iterator().next();
+            if (typeIdSet.size() > 1
+                    || !Arrays.equals(typeIdArray, ElementFilter.ALL_TYPES)) {
+                parameterMap.put(ElementFilter.PARAM_TYPE_IDS, typeIdSet);
+            }
+        }
     }
 
     private static boolean checkElement(CnATreeElement element, Set<IFilter> filterSet) {
