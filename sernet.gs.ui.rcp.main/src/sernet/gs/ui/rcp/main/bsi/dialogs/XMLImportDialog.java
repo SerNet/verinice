@@ -911,7 +911,7 @@ public class XMLImportDialog extends Dialog {
         final int maxChangedElements = 9;
         if (changedElement != null && changedElement.size() > maxChangedElements) {
             // if more than 9 elements changed or added do a complete reload
-            CnAElementFactory.getInstance().reloadModelFromDatabase();
+            CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
         } else {
             if (importRootObjectSet != null && importRootObjectSet.size() > 0) {
                 for (CnATreeElement importRootObject : importRootObjectSet) {

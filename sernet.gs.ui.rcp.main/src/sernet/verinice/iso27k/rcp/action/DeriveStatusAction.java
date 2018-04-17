@@ -211,6 +211,6 @@ public class DeriveStatusAction extends ActionDelegate implements IViewActionDel
     }
 
     private void updateModel() {
-        CnAElementFactory.getInstance().reloadModelFromDatabase();
+        CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
     }
 }

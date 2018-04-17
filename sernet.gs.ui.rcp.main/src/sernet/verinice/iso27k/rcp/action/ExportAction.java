@@ -204,7 +204,7 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
         if(changedElementList!=null && !changedElementList.isEmpty() ) {
         	if(changedElementList.size()>maxChangedElements) {
 	            // if more than 9 elements changed or added do a complete reload
-	            CnAElementFactory.getInstance().reloadModelFromDatabase();
+	            CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
         	} else {
                 for (CnATreeElement cnATreeElement : changedElementList) {
                     CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement);

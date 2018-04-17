@@ -135,7 +135,7 @@ public class ViewFilterAction extends Action {
                 PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
                     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                         monitor.beginTask("Activating filter...", IProgressMonitor.UNKNOWN);
-                        CnAElementFactory.getInstance().reloadModelFromDatabase();
+                        CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
                         monitor.done();
                     }
                  });

@@ -159,7 +159,7 @@ public class BaseProtectionView extends RightsEnabledView
     protected void initView(Composite parent) {
         IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
         if (CnAElementFactory.isBpModelLoaded()) {
-            CnAElementFactory.getInstance().reloadModelFromDatabase();
+            CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
         }
 
         contentProvider = new TreeContentProvider(elementManager);

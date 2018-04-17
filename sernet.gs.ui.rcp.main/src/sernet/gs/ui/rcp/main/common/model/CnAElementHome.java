@@ -544,7 +544,7 @@ public final class CnAElementHome {
         // fire model changed events:        
         for (CnALink link : newLinks) {
             if (link.getDependant() instanceof ITVerbund) {
-                CnAElementFactory.getInstance().reloadModelFromDatabase();
+                CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
                 return;
             }
         }

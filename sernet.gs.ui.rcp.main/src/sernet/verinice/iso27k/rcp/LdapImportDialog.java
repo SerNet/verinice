@@ -474,7 +474,7 @@ public class LdapImportDialog extends TitleAreaDialog {
         final int maxNrOfElements = 9;
 	    if(changedElement!=null && changedElement.size()>maxNrOfElements) {
             // if more than 9 elements changed or added do a complete reload
-            CnAElementFactory.getInstance().reloadModelFromDatabase();
+            CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
         } else {
             if (importRootObject != null) {   				
                 CnAElementFactory.getModel(importRootObject).childAdded(importRootObject.getParent(), importRootObject);

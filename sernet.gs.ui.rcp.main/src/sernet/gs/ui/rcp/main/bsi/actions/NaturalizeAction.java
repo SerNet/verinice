@@ -110,7 +110,7 @@ public class NaturalizeAction extends RightsEnabledAction implements ISelectionL
                                         CnAElementFactory.getModel(element).childChanged(element);
                                     }
                                 } else {
-                                    CnAElementFactory.getInstance().reloadModelFromDatabase();
+                                    CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
                                 }
                             }
                             
