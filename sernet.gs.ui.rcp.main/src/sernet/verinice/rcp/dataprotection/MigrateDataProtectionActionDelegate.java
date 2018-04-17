@@ -128,7 +128,7 @@ public class MigrateDataProtectionActionDelegate extends RightsEnabledActionDele
             Collection<String> processes, int controls, Collection<String> missedControls,
             int createdLinks, int deletedLinks) {
         String listOfMissedControls = StringUtils.join(missedControls, "\n"); //$NON-NLS-1$
-        String processNames = StringUtils.join(processes, ", "); //$NON-NLS-1$
+        String processNames = StringUtils.join(processes, ",\n"); //$NON-NLS-1$
 
         StringBuilder orgNames = new StringBuilder();
         for (CnATreeElement org : organizations) {

@@ -268,7 +268,6 @@ public class HuiProperty implements Serializable {
             return null;
         }
         if (item == null) {
-            setValue(null);
             return null;
         }
         if (getIsSingleSelect()

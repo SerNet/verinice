@@ -201,6 +201,7 @@ public class AddElementHandler extends RightsEnabledHandler implements IElementU
      */
     @Override
     public boolean checkRights() {
+        Activator.inheritVeriniceContextState();
         RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
