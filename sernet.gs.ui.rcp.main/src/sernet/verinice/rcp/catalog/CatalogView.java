@@ -78,6 +78,7 @@ import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.bp.rcp.BaseProtectionTreeSorter;
+import sernet.verinice.bp.rcp.filter.BaseProtectionFilterAction;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -92,11 +93,8 @@ import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.catalog.ICatalogModelListener;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.TagParameter;
-import sernet.verinice.model.common.TypeParameter;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
-import sernet.verinice.rcp.ViewFilterAction;
 import sernet.verinice.rcp.bp.BaseProtectionPerspective;
 import sernet.verinice.rcp.tree.TreeContentProvider;
 import sernet.verinice.rcp.tree.TreeLabelProvider;
@@ -105,15 +103,16 @@ import sernet.verinice.service.tree.ElementManager;
 
 /**
  * The CatalogView shows catalog elements in a tree view. A catalog consists of
- * any elements. All elements in a catalog are immutable. Elements in a
- * catalog are templates for the elements in other views.
+ * any elements. All elements in a catalog are immutable. Elements in a catalog
+ * are templates for the elements in other views.
  * 
  * @author Urs Zeidler uz[at]sernet.de
  * @author Daniel Murygin
  */
-public class CatalogView extends RightsEnabledView implements IAttachedToPerspective, ILinkedWithEditorView {
+public class CatalogView extends RightsEnabledView
+        implements IAttachedToPerspective, ILinkedWithEditorView {
 
-    private static final Logger LOG = Logger.getLogger(CatalogView.class);
+    private static final Logger logger = Logger.getLogger(CatalogView.class);
 
     protected TreeViewer viewer;
     private TreeContentProvider contentProvider;
@@ -125,7 +124,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
     private Action doubleClickAction;
     private ExpandAction expandAction;
     private CollapseAction collapseAction;
-    private ViewFilterAction filterAction;
+    private Action filterAction;
     private ShowAccessControlEditAction accessControlEditAction;
     private Action linkWithEditorAction;
     private DeleteSelectionAction deleteAction;
@@ -158,7 +157,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
             initView(parent);
             startInitDataJob();
         } catch (Exception e) {
-            LOG.error("Error while creating organization view", e); //$NON-NLS-1$
+            logger.error("Error while creating organization view", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.ISMView_2);
         }
     }
@@ -211,7 +210,8 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
             }
         });
 
-        toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
+        toggleLinking(Activator.getDefault().getPreferenceStore()
+                .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
         getSite().setSelectionProvider(viewer);
         hookContextMenu();
         makeActions();
@@ -230,8 +230,8 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
     }
 
     protected void startInitDataJob() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Catalogview: startInitDataJob"); //$NON-NLS-1$
+        if (logger.isDebugEnabled()) {
+            logger.debug("Catalogview: startInitDataJob"); //$NON-NLS-1$
         }
         WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
             @Override
@@ -241,8 +241,9 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
                     monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
                     initData();
                 } catch (Exception e) {
-                    LOG.error("Error while loading data for catalog view.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.ISMView_4, e); //$NON-NLS-1$
+                    logger.error("Error while loading data for catalog view.", e); //$NON-NLS-1$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.ISMView_4, //$NON-NLS-1$
+                            e);
                 } finally {
                     monitor.done();
                 }
@@ -253,18 +254,19 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
     }
 
     protected void initData() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("MotITBPCatalogVIEW: initData"); //$NON-NLS-1$
+        if (logger.isDebugEnabled()) {
+            logger.debug("MotITBPCatalogVIEW: initData"); //$NON-NLS-1$
         }
         lock.lock();
         try {
             if (CnAElementFactory.isModernizedBpCatalogLoaded()) {
                 if (modelUpdateListener == null) {
-                    if (LOG.isDebugEnabled()) {
-                        Logger.getLogger(this.getClass()).debug("Creating modelUpdateListener for MotITBPView."); //$NON-NLS-1$
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Creating modelUpdateListener for MotITBPView."); //$NON-NLS-1$
                     }
                     modelUpdateListener = new TreeUpdateListener(viewer, elementManager);
-                    CnAElementFactory.getInstance().getCatalogModel().addCatalogModelListener(modelUpdateListener);//
+                    CnAElementFactory.getInstance().getCatalogModel()
+                            .addCatalogModelListener(modelUpdateListener);//
                     Display.getDefault().syncExec(new Runnable() {
                         @Override
                         public void run() {
@@ -274,8 +276,8 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
                     });
                 }
             } else if (modelLoadListener == null) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("CatalogModel No model loaded, adding model load listener."); //$NON-NLS-1$
+                if (logger.isDebugEnabled()) {
+                    logger.debug("CatalogModel No model loaded, adding model load listener."); //$NON-NLS-1$
                 }
                 // model is not loaded yet: add a listener to load data when
                 // it's loaded
@@ -320,21 +322,20 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
                     try {
                         openEditorReadOnly(sel);
                     } catch (PartInitException e) {
-                        LOG.error("Error opening the BSIElement editor for: " + sel, e); //$NON-NLS-1$
+                        logger.error("Error opening the BSIElement editor for: " + sel, e); //$NON-NLS-1$
                     }
                 }
             }
         };
         doubleClickAction.setText(Messages.CatalogView_open_in_editor);
-        doubleClickAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.OPEN_EDIT));
+        doubleClickAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.OPEN_EDIT));
 
         makeExpandAndCollapseActions();
 
         HideEmptyFilter hideEmptyFilter = new HideEmptyFilter(viewer);
         hideEmptyFilter.setHideEmpty(true);
-        TagParameter tagParameter = new TagParameter();
-        TypeParameter typeParameter = new TypeParameter();
-        filterAction = new ViewFilterAction(Messages.ISMView_12, tagParameter, hideEmptyFilter, typeParameter);
+        filterAction = new BaseProtectionFilterAction(viewer, true);
 
         linkWithEditorAction = new Action(Messages.ISMView_5, IAction.AS_CHECK_BOX) {
             @Override
@@ -343,7 +344,8 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
             }
         };
         linkWithEditorAction.setChecked(isLinkingActive());
-        linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
+        linkWithEditorAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
 
         deleteAction = new DeleteSelectionAction();
         // We have to bind key for custom actions by hand.
@@ -363,11 +365,13 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
     private void makeExpandAndCollapseActions() {
         expandAction = new ExpandAction(viewer, contentProvider);
         expandAction.setText(Messages.ISMView_7);
-        expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
+        expandAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
         collapseAction = new CollapseAction(viewer);
         collapseAction.setText(Messages.ISMView_8);
-        collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
+        collapseAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 
         expandAllAction = new Action() {
             @Override
@@ -376,7 +380,8 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
             }
         };
         expandAllAction.setText(Messages.ISMView_9);
-        expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
+        expandAllAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
         collapseAllAction = new Action() {
             @Override
@@ -385,7 +390,8 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
             }
         };
         collapseAllAction.setText(Messages.ISMView_10);
-        collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
+        collapseAllAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
     }
 
     protected void openEditorReadOnly(Object sel) throws PartInitException {
@@ -446,8 +452,8 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         }
         CnATreeElement element = BSIElementEditorInput.extractElement(activeEditor);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Element in editor: " + element.getUuid()); //$NON-NLS-1$
+        if (logger.isDebugEnabled()) {
+            logger.debug("Element in editor: " + element.getUuid()); //$NON-NLS-1$
         }
         if (element != null) {
             viewer.setSelection(new StructuredSelection(element), true);
@@ -455,8 +461,8 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
             return;
         }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Tree is expanded."); //$NON-NLS-1$
+        if (logger.isDebugEnabled()) {
+            logger.debug("Tree is expanded."); //$NON-NLS-1$
         }
     }
 
@@ -469,7 +475,8 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
     public void dispose() {
         elementManager.clearCache();
         if (CnAElementFactory.isModernizedBpCatalogLoaded()) {
-            CnAElementFactory.getInstance().getCatalogModel().removeCatalogModelListener(modelUpdateListener);
+            CnAElementFactory.getInstance().getCatalogModel()
+                    .removeCatalogModelListener(modelUpdateListener);
         }
         CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
         getSite().getPage().removePartListener(linkWithEditorPartListener);

@@ -101,12 +101,15 @@ public class BaseProtectionFilterDialog extends Dialog {
 
     private boolean hideEmptyGroups;
 
+    private final boolean hideEmptyGroupsByDefault;
+
     public BaseProtectionFilterDialog(Shell parentShell,
             Set<ImplementationStatus> selectedImplementationStatus,
             Set<Qualifier> selectedQualifiers,
             Set<String> selectedElementTypes, Set<String> selectedTags,
-            boolean applyTagFilterToItNetworks, boolean hideEmptyGroups) {
+            boolean applyTagFilterToItNetworks, boolean hideEmptyGroups, boolean hideEmptyGroupsByDefault) {
         super(parentShell);
+        this.hideEmptyGroupsByDefault = hideEmptyGroupsByDefault;
         this.selectedImplementationStatus = new HashSet<>(selectedImplementationStatus);
         this.selectedQualifiers = new HashSet<>(selectedQualifiers);
         this.selectedElementTypes = new HashSet<>(selectedElementTypes);
@@ -289,7 +292,7 @@ public class BaseProtectionFilterDialog extends Dialog {
                 elementTypeSelector.setCheckedElements(new Object[0]);
                 tagsSelector.setCheckedElements(new Object[0]);
                 applyTagFilterToItNetworksCheckbox.setSelection(false);
-                hideEmptyGroupsCheckbox.setSelection(false);
+                hideEmptyGroupsCheckbox.setSelection(hideEmptyGroupsByDefault);
             }
         });
         createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);

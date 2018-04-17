@@ -339,7 +339,7 @@ public class BaseProtectionView extends RightsEnabledView
     }
 
     private void makeFilterAction() {
-        filterAction = new BaseProtectionFilterAction(viewer);
+        filterAction = new BaseProtectionFilterAction(viewer, false);
     }
 
     protected void makeExpandAndCollapseActions() {
