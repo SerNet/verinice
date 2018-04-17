@@ -31,8 +31,8 @@ import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementWithChilds;
 import sernet.verinice.model.common.ILinkChangeListener;
-import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
 import sernet.verinice.model.iso27k.MaximumProtectionRequirementsValueListener;
+import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -44,6 +44,7 @@ public class BusinessProcess extends ElementWithChilds implements IBpElement, IB
     
     public static final String TYPE_ID = "bp_businessprocess"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_businessprocess_name"; //$NON-NLS-1$
+    public static final String PROP_TAG = "bp_businessprocess_tag"; //$NON-NLS-1$
     
     public static final String[] CHILD_TYPES = new String[] { BpRequirementGroup.TYPE_ID, SafeguardGroup.TYPE_ID };
 

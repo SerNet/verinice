@@ -19,18 +19,20 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
+import java.util.Collection;
+
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
-import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
+import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementWithChilds;
 import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.iso27k.MaximumProtectionRequirementsValueListener;
 import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
-import sernet.verinice.model.iso27k.MaximumProtectionRequirementsValueListener;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de

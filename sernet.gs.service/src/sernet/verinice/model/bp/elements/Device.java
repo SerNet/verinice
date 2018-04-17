@@ -33,7 +33,6 @@ import sernet.verinice.model.common.ElementWithChilds;
 import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.iso27k.MaximumProtectionRequirementsValueListener;
 import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
-import sernet.verinice.model.iso27k.MaximumProtectionRequirementsValueListener;
 
 /**
  * 
@@ -45,6 +44,7 @@ public class Device extends ElementWithChilds implements IBpElement, IBpGroup, I
     
     public static final String TYPE_ID = "bp_device"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_device_name"; //$NON-NLS-1$
+    public static final String PROP_TAG = "bp_device_tag"; //$NON-NLS-1$
     
     public static final String[] CHILD_TYPES = new String[] { BpRequirementGroup.TYPE_ID, SafeguardGroup.TYPE_ID };
 
