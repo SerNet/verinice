@@ -20,13 +20,18 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
@@ -145,8 +150,10 @@ public class CopyLinksCommand extends GenericCommand {
     }
 
     public void loadAndCacheLinks() {
-        String hql = "select l.dependant.uuid,l.dependency.uuid,l.id.typeId from sernet.verinice.model.common.CnALink l";
-        List<Object[]> allLinkedUuids = getDao().findByQuery(hql, null);
+        final Set<String> sourceUUIDs = sourceDestMap.keySet();
+        List<Object[]> allLinkedUuids = getDao()
+                .findByCallback(new FindLinksForElements(sourceUUIDs));
+
         existingUpLinkMap = new HashMap<>();
         existingDownLinkMap = new HashMap<>();
         for (Object[] entry : allLinkedUuids) {
@@ -177,6 +184,22 @@ public class CopyLinksCommand extends GenericCommand {
             dao = getDaoFactory().getDAO(CnATreeElement.class);
         }
         return dao;
+    }
+
+    private static final class FindLinksForElements implements HibernateCallback {
+        private final Set<String> sourceUUIDs;
+
+        private FindLinksForElements(Set<String> sourceUUIDs) {
+            this.sourceUUIDs = sourceUUIDs;
+        }
+
+        @Override
+        public Object doInHibernate(Session session) throws SQLException {
+            Query query = session.createQuery(
+                    "select l.dependant.uuid,l.dependency.uuid,l.id.typeId from sernet.verinice.model.common.CnALink l where l.dependant.uuid in (:sourceUUIDs) or l.dependency.uuid in (:sourceUUIDs)");
+            query.setParameterList("sourceUUIDs", sourceUUIDs);
+            return query.list();
+        }
     }
 
     private static final class LinkInformation {
