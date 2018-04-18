@@ -44,7 +44,7 @@ import sernet.verinice.model.common.RelationNotDefinedException;
 public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> extends GenericCommand {
 
     private transient Logger log = Logger.getLogger(CreateLink.class);
-    
+
     boolean validateLinkCreation = false;
 
     public Logger getLog() {
@@ -65,11 +65,11 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
     public CreateLink(String dependantUuid, String dependencyUuid) {
         this(dependantUuid, dependencyUuid, "", "");
     }
-    
+
     public CreateLink(U dependant, V dependency) {
         this(dependant, dependency, "", "");
     }
-    
+
     public CreateLink(String dependantUuid, String dependencyUuid, String relationId) {
         this(dependantUuid, dependencyUuid, relationId, "");
     }
@@ -77,8 +77,9 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
     public CreateLink(U dependant, V dependency, String relationId) {
         this(dependant, dependency, relationId, "");
     }
-    
-    public CreateLink(String dependantUuid, String dependencyUuid, String relationId, String comment) {
+
+    public CreateLink(String dependantUuid, String dependencyUuid, String relationId,
+            String comment) {
         this.dependantUuid = dependantUuid;
         this.dependencyUuid = dependencyUuid;
         this.relationId = relationId;
@@ -96,29 +97,35 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
     public void execute() {
         try {
             IBaseDao<CnALink, Serializable> linkDao = getDaoFactory().getDAO(CnALink.class);
-            IBaseDao<CnATreeElement, Serializable> dependantDao = getDaoFactory().getDAO(CnATreeElement.class);
-            IBaseDao<CnATreeElement, Serializable> dependencyDao = getDaoFactory().getDAO(CnATreeElement.class);
+            IBaseDao<CnATreeElement, Serializable> dependantDao = getDaoFactory()
+                    .getDAO(CnATreeElement.class);
+            IBaseDao<CnATreeElement, Serializable> dependencyDao = getDaoFactory()
+                    .getDAO(CnATreeElement.class);
 
             RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
-            ri.setLinksUp(true);      
-            dependency = dependencyDao.findByUuid(getDependencyUuid(), ri);          
-            
+            ri.setLinksUp(true);
+            dependency = dependencyDao.findByUuid(getDependencyUuid(), ri);
+
             ri = RetrieveInfo.getPropertyInstance();
-            ri.setLinksDown(true);  
+            ri.setLinksDown(true);
             dependant = dependantDao.findByUuid(getDependantUuid(), ri);
 
             if (getLog().isDebugEnabled()) {
-                getLog().debug("Creating link from " + dependency.getTypeId() + " to " + dependant.getTypeId());
+                getLog().debug("Creating link from " + dependency.getTypeId() + " to "
+                        + dependant.getTypeId());
             }
-            
+
             // only validate, if relationtype is set
-            if(StringUtils.isEmpty(relationId) || isRelationValid(dependant, dependency, relationId)) {
+            if (StringUtils.isEmpty(relationId)
+                    || isRelationValid(dependant, dependency, relationId)) {
                 link = new CnALink(dependant, dependency, relationId, comment);
                 linkDao.merge(link, true);
             } else {
                 StringBuilder sb = new StringBuilder();
-                sb.append("Relation for typeId:\t").append(relationId).append("\tfrom entityType:\t");
-                sb.append(dependant.getEntityType().getId()).append("\tto\t").append(dependency.getEntityType().getId());
+                sb.append("Relation for typeId:\t").append(relationId)
+                        .append("\tfrom entityType:\t");
+                sb.append(dependant.getEntityType().getId()).append("\tto\t")
+                        .append(dependency.getEntityType().getId());
                 sb.append(" is not defined in SNCA.xml. Link will not be created");
                 throw new RelationNotDefinedException(sb.toString());
             }
@@ -129,7 +136,7 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
         } catch (Exception e) {
             String message = "Error while creating link";
             getLog().error(message, e);
-            if(e instanceof RelationNotDefinedException) {
+            if (e instanceof RelationNotDefinedException) {
                 message = "Linktype did not pass validation";
             }
             throw new RuntimeException(message, e);
@@ -137,7 +144,7 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
     }
 
     private String getDependantUuid() {
-        if(dependantUuid!=null) {
+        if (dependantUuid != null) {
             return dependantUuid;
         } else {
             return dependant.getUuid();
@@ -145,7 +152,7 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
     }
 
     private String getDependencyUuid() {
-        if(dependencyUuid!=null) {
+        if (dependencyUuid != null) {
             return dependencyUuid;
         } else {
             return dependency.getUuid();
@@ -157,27 +164,36 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
     }
 
     /**
-     * gets all possible relations outgoing from entityType of sourceElement targeting the entityType of destinationElement. If one of those equals linkType, return true
-     * else return false (relationtype for source and destination is not defined in SNCA.xml )
+     * gets all possible relations outgoing from entityType of sourceElement
+     * targeting the entityType of destinationElement. If one of those equals
+     * linkType, return true else return false (relationtype for source and
+     * destination is not defined in SNCA.xml )
+     * 
      * @param sourceElement
      * @param destinationElement
      * @param relationType
      * @return
      */
-    private boolean isRelationValid(CnATreeElement sourceElement, CnATreeElement destinationElement, String relationType) {
-        if(CnALink.Id.NO_TYPE.equals(relationId)){ // special dnd itgs case which is allowed always
+
+    private boolean isRelationValid(CnATreeElement sourceElement, CnATreeElement destinationElement,
+            String relationType) {
+        if (CnALink.Id.NO_TYPE.equals(relationId)) { // special dnd itgs case
+                                                     // which is allowed always
             return true;
         }
         // special handling for links between elements of itgs model
-        if(sourceElement instanceof IBSIStrukturElement && destinationElement instanceof IBSIStrukturElement){
+        if (sourceElement instanceof IBSIStrukturElement
+                && destinationElement instanceof IBSIStrukturElement) {
             return true;
         }
 
-        for(HuiRelation relation : HUITypeFactory.getInstance().getPossibleRelations(sourceElement.getEntityType().getId(), destinationElement.getEntityType().getId())) {
-            if(relationType.equals(relation.getId())) {
+        for (HuiRelation relation : HUITypeFactory.getInstance().getPossibleRelations(
+                sourceElement.getEntityType().getId(),
+                destinationElement.getEntityType().getId())) {
+            if (relationType.equals(relation.getId())) {
                 return true;
             }
-        };
+        }
 
         return false;
     }
