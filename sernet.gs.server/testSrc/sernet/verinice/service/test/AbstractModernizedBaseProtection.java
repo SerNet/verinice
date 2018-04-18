@@ -21,6 +21,7 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertNotNull;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bp.elements.BpRequirement;
@@ -32,6 +33,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateITNetwork;
+import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.UpdateElement;
 import sernet.verinice.service.commands.crud.CreateBpModel;
 import sernet.verinice.service.model.LoadModel;
@@ -126,6 +128,16 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
      */
     protected BpRequirement createBpRequirement(CnATreeElement container) throws CommandException {
         return createElement(container, BpRequirement.class);
+    }
+
+    protected <T extends CnATreeElement> T reloadElement(T element) throws CommandException {
+        RetrieveInfo ri = new RetrieveInfo().setProperties(true).setLinksUp(true)
+                .setLinksDown(true);
+        LoadElementByUuid<CnATreeElement> loadElementByUuid = new LoadElementByUuid<CnATreeElement>(
+                element.getUuid(), ri);
+        LoadElementByUuid<CnATreeElement> executeCommand = commandService
+                .executeCommand(loadElementByUuid);
+        return (T) executeCommand.getElement();
     }
 
 }
