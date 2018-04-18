@@ -64,8 +64,7 @@ public class CopyLinksCommand extends GenericCommand {
 
     private transient Map<String, String> sourceDestMap;
 
-    private transient Map<String, List<LinkInformation>> existingUpLinkMap;
-    private transient Map<String, List<LinkInformation>> existingDownLinkMap;
+    private transient Map<String, List<LinkInformation>> existingLinksByCopiedElementUUID;
 
     private transient IBaseDao<CnATreeElement, Serializable> dao;
 
@@ -93,32 +92,30 @@ public class CopyLinksCommand extends GenericCommand {
         for (Entry<String, String> e : sourceDestMap.entrySet()) {
             String sourceUuid = e.getKey();
             String targetUuid = e.getValue();
-            createLinks(targetUuid, existingUpLinkMap.get(sourceUuid), Direction.UP);
-            createLinks(targetUuid, existingDownLinkMap.get(sourceUuid), Direction.DOWN);
+            createLinks(targetUuid, existingLinksByCopiedElementUUID.get(sourceUuid));
         }
     }
 
-    private void createLinks(String sourceUuid, List<LinkInformation> destinations,
-            Direction direction) {
-        if (destinations == null) {
+    private void createLinks(String copyTargetUUID, List<LinkInformation> linkInformations) {
+        if (linkInformations == null) {
             return;
         }
-        for (LinkInformation destAndType : destinations) {
-            String uuid = destAndType.destination;
-            String copyDestUuid = sourceDestMap.get(uuid);
+        for (LinkInformation linkInformation : linkInformations) {
+            String otherElementUUID = linkInformation.otherElementUUID;
+            String copyDestUuid = sourceDestMap.get(otherElementUUID);
             if (copyDestUuid != null) {
-                uuid = copyDestUuid;
+                otherElementUUID = copyDestUuid;
                 if (logger.isDebugEnabled()) {
                     logger.debug(
-                            "Creating link to copy of target... " + sourceUuid + " -> " + uuid);
+                            "Creating link to copy of target... " + copyTargetUUID + " -> " + otherElementUUID);
                 }
             } else if (logger.isDebugEnabled()) {
-                logger.debug("Creating link to same target... " + sourceUuid + " -> " + uuid);
+                logger.debug("Creating link to same target... " + copyTargetUUID + " -> " + otherElementUUID);
             }
-            if (direction == Direction.UP) {
-                createLink(sourceUuid, uuid, destAndType.type);
+            if (linkInformation.direction == Direction.FROM_COPIED_ELEMENT) {
+                createLink(copyTargetUUID, otherElementUUID, linkInformation.type);
             } else {
-                createLink(uuid, sourceUuid, destAndType.type);
+                createLink(otherElementUUID, copyTargetUUID, linkInformation.type);
             }
             number++;
             if (number % FLUSH_LEVEL == 0) {
@@ -148,33 +145,32 @@ public class CopyLinksCommand extends GenericCommand {
     }
 
     public void loadAndCacheLinks() {
-        final Set<String> sourceUUIDs = sourceDestMap.keySet();
+        final Set<String> copiedElementUUIDs = sourceDestMap.keySet();
         List<Object[]> allLinkedUuids = getDao()
-                .findByCallback(new FindLinksForElements(sourceUUIDs));
+                .findByCallback(new FindLinksForElements(copiedElementUUIDs));
 
-        existingUpLinkMap = new HashMap<>();
-        existingDownLinkMap = new HashMap<>();
+        existingLinksByCopiedElementUUID = new HashMap<>(copiedElementUUIDs.size());
         for (Object[] entry : allLinkedUuids) {
             String dependantUUID = (String) entry[0];
             String dependencyUUID = (String) entry[1];
             String typeId = (String) entry[2];
-            cacheLink(dependantUUID, dependencyUUID, typeId);
+            if (copiedElementUUIDs.contains(dependantUUID)) {
+                cacheLink(dependantUUID, dependencyUUID, typeId, Direction.FROM_COPIED_ELEMENT);
+            } else {
+                cacheLink(dependencyUUID, dependantUUID, typeId, Direction.TO_COPIED_ELEMENT);
+            }
         }
     }
 
-    private void cacheLink(String dependantUUID, String dependencyUUID, String typeId) {
-        cacheLink(dependantUUID, dependencyUUID, typeId, existingUpLinkMap);
-        cacheLink(dependencyUUID, dependantUUID, typeId, existingDownLinkMap);
-    }
-
-    public static void cacheLink(String source, String dest, String type,
-            Map<String, List<LinkInformation>> map) {
-        List<LinkInformation> destinations = map.get(source);
+    public void cacheLink(String copiedElementUUID, String destinationUUID, String type,
+            Direction direction) {
+        List<LinkInformation> destinations = existingLinksByCopiedElementUUID
+                .get(copiedElementUUID);
         if (destinations == null) {
             destinations = new LinkedList<>();
-            map.put(source, destinations);
+            existingLinksByCopiedElementUUID.put(copiedElementUUID, destinations);
         }
-        destinations.add(new LinkInformation(dest, type));
+        destinations.add(new LinkInformation(destinationUUID, type, direction));
     }
 
     private IBaseDao<CnATreeElement, Serializable> getDao() {
@@ -202,16 +198,18 @@ public class CopyLinksCommand extends GenericCommand {
 
     private static final class LinkInformation {
 
-        LinkInformation(String destination, String type) {
-            this.destination = destination;
+        LinkInformation(String destinationUUID, String type, Direction direction) {
+            this.otherElementUUID = destinationUUID;
             this.type = type;
+            this.direction = direction;
         }
 
-        private final String destination;
+        private final String otherElementUUID;
         private final String type;
+        private final Direction direction;
     }
 
     private enum Direction {
-        UP, DOWN
+        FROM_COPIED_ELEMENT, TO_COPIED_ELEMENT
     }
 }
