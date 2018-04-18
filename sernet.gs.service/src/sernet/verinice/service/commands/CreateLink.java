@@ -45,8 +45,6 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
 
     private transient Logger log = Logger.getLogger(CreateLink.class);
 
-    boolean validateLinkCreation = false;
-
     public Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(CreateLink.class);
