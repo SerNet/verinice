@@ -43,14 +43,7 @@ import sernet.verinice.model.common.RelationNotDefinedException;
  */
 public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(CreateLink.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(CreateLink.class);
-        }
-        return log;
-    }
+    private static final Logger logger = Logger.getLogger(CreateLink.class);
 
     private CnATreeElement dependant;
     private CnATreeElement dependency;
@@ -108,8 +101,8 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
             ri.setLinksDown(true);
             dependant = dependantDao.findByUuid(getDependantUuid(), ri);
 
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Creating link from " + dependency.getTypeId() + " to "
+            if (logger.isDebugEnabled()) {
+                logger.debug("Creating link from " + dependency.getTypeId() + " to "
                         + dependant.getTypeId());
             }
 
@@ -129,11 +122,11 @@ public class CreateLink<U extends CnATreeElement, V extends CnATreeElement> exte
             }
 
         } catch (RuntimeException e) {
-            getLog().error("RuntimeException while creating link.", e);
+            logger.error("RuntimeException while creating link.", e);
             throw e;
         } catch (Exception e) {
             String message = "Error while creating link";
-            getLog().error(message, e);
+            logger.error(message, e);
             if (e instanceof RelationNotDefinedException) {
                 message = "Linktype did not pass validation";
             }
