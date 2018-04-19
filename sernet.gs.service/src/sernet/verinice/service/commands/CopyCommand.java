@@ -380,7 +380,7 @@ public class CopyCommand extends GenericCommand {
 
     /**
      * Creates a list of elements. First all elements are loaded by UUID. A
-     * child will be removed from the list if it's parent is already a member.
+     * child will be removed from the list if its parent is already a member.
      * 
      * @param uuidList
      *            A list of element UUID
@@ -426,7 +426,7 @@ public class CopyCommand extends GenericCommand {
     }
 
     /**
-     * Returns a unique title compared to titles of all siblings siblings
+     * Returns a unique title compared to titles of all siblings
      * 
      * @param Title
      *            A title of an element
