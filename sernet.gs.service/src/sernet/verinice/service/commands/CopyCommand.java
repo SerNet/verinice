@@ -127,9 +127,9 @@ public class CopyCommand extends GenericCommand {
     @Override
     public void execute() {
         try {
-            newElements = new ArrayList<>();
             number = 0;
             List<CnATreeElement> rootElementsToCopy = createInsertList(uuidList);
+            newElements = new ArrayList<>(rootElementsToCopy.size());
             groupToPasteTo = getDao().findByUuid(uuidGroup,
                     RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));
             final Map<String, String> sourceDestMap = new HashMap<>();
