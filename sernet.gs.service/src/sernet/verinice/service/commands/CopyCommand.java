@@ -60,14 +60,7 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
 public class CopyCommand extends GenericCommand {
 
     private static final long serialVersionUID = -269076325994387265L;
-    private transient Logger log = Logger.getLogger(CopyCommand.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(CopyCommand.class);
-        }
-        return log;
-    }
+    private static final Logger logger = Logger.getLogger(CopyCommand.class);
 
     private static final int FLUSH_LEVEL = 10;
 
@@ -158,7 +151,7 @@ public class CopyCommand extends GenericCommand {
                 }
             }
         } catch (final Exception e) {
-            getLog().error("Error while copying element", e); //$NON-NLS-1$
+            logger.error("Error while copying element", e); //$NON-NLS-1$
             throw new RuntimeCommandException("Error while copying element", e); //$NON-NLS-1$
         }
     }
@@ -181,10 +174,10 @@ public class CopyCommand extends GenericCommand {
                 }
             }
         } else if (elementToCopy != null) {
-            getLog().warn("Can not copy element with pk: " + elementToCopy.getDbId() //$NON-NLS-1$
+            logger.warn("Can not copy element with pk: " + elementToCopy.getDbId() //$NON-NLS-1$
                     + " to group with pk: " + groupToPasteTo.getDbId()); //$NON-NLS-1$
         } else {
-            getLog().warn("Can not copy element. Element is null");
+            logger.warn("Can not copy element. Element is null");
         }
         return elementCopy;
     }
@@ -313,8 +306,8 @@ public class CopyCommand extends GenericCommand {
             copyAttachments(newElement,
                     getCommandService().executeCommand(attachmentLoader).getAttachmentList());
         }
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Copy created: " + newElement.getTitle()); //$NON-NLS-1$
+        if (logger.isDebugEnabled()) {
+            logger.debug("Copy created: " + newElement.getTitle()); //$NON-NLS-1$
         }
         newElement.setChildren(new HashSet<CnATreeElement>());
         return newElement;
@@ -535,7 +528,7 @@ public class CopyCommand extends GenericCommand {
                 final CopyLinksCommand copyLinksCommand = new CopyLinksCommand(sourceDestMap);
                 getCommandService().executeCommand(copyLinksCommand);
             } catch (final CommandException e) {
-                getLog().error("Error while copy links on server.", e);
+                logger.error("Error while copy links on server.", e);
             }
         }
 
