@@ -390,12 +390,11 @@ public class CopyCommand extends GenericCommand {
         final List<CnATreeElement> tempList = new ArrayList<>();
         final List<CnATreeElement> insertList = new ArrayList<>();
         final int depth = 0;
-        final int removed = 0;
         if (uuidList.size() > 1) {
             for (final String uuid : uuidList) {
                 final CnATreeElement element = getDao().findByUuid(uuid,
                         RetrieveInfo.getChildrenInstance());
-                createInsertList(element, tempList, insertList, depth, removed);
+                createInsertList(element, tempList, insertList, depth);
             }
         } else {
             final CnATreeElement element = getDao().findByUuid(uuidList.get(0),
@@ -406,7 +405,7 @@ public class CopyCommand extends GenericCommand {
     }
 
     private void createInsertList(final CnATreeElement element, final List<CnATreeElement> tempList,
-            final List<CnATreeElement> insertList, final int depth, int removed) {
+            final List<CnATreeElement> insertList, final int depth) {
         if (!tempList.contains(element)) {
             tempList.add(element);
             int depthLocal = depth;
@@ -418,12 +417,11 @@ public class CopyCommand extends GenericCommand {
 
                 depthLocal++;
                 for (final CnATreeElement child : element.getChildren()) {
-                    createInsertList(child, tempList, insertList, depthLocal, removed);
+                    createInsertList(child, tempList, insertList, depthLocal);
                 }
             }
         } else {
             insertList.remove(element);
-            removed++;
         }
     }
 
@@ -507,16 +505,7 @@ public class CopyCommand extends GenericCommand {
     @SuppressWarnings("serial")
     public class CopyLinks implements IPostProcessor, Serializable {
 
-        /**
-         * @param linkElement
-         */
-        public CopyLinks() {
-            // empty
-        }
-
         /*
-         * (non-Javadoc)
-         * 
          * @see
          * sernet.verinice.iso27k.service.PasteService.IPostProcessor#process(
          * java.util.Map)
