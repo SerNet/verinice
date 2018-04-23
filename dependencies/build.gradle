@@ -7,7 +7,7 @@ buildscript {
     	}
 	}
 	dependencies {
-		classpath 'org.standardout:bnd-platform:1.6.0-SNAPSHOT'
+		classpath 'org.standardout:bnd-platform:1.7.0-SNAPSHOT'
 	}
 }
 
@@ -25,10 +25,7 @@ platform {
 	categoryId = 'Verinice-Eclipse-Libs'
 	categoryName = 'Verinice Eclipse Libs'
 
-	featureId = 'All-Verinice-Eclipse-Libs'
-	featureName = 'All Verinice Eclipse Libs'
-	featureVersion = '0.1.0.'
-	featureProvider = 'Verinice'
+	generatePlatformFeature = false
 
 	defaultQualifier = ''
 	useBndHashQualifiers = false
@@ -136,7 +133,9 @@ platform {
 	}
 
 	feature(id: 'com.opencsv', name: 'opencsv', version: '4.1.0') {
-		plugin('com.opencsv:opencsv:4.1')
+		plugin('com.opencsv:opencsv:4.1') {
+			exclude group: 'commons-logging', module: 'commons-logging'
+		}
 	}
 
 	feature(id: 'threetenbp', name: 'threetenbp', version: '1.3.6') {
