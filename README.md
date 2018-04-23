@@ -76,8 +76,7 @@ people to work on one ISMS - even across different locations.
 To build the Verinice client, client update site, server and
 report designer all at once execute the following commands:
 
-1. `cd sernet.verinice.releng.parent`
-1. `mvn -Dtycho.disableP2Mirrors=true clean verify`
+1. `./mvnw -Dtycho.disableP2Mirrors=true clean verify`
 
 To see where the Verinice client, client update site, server
 and report designer build artifacts can then be found
@@ -85,7 +84,7 @@ read the following sections.
 
 If you want to skip the junit tests you need to add the -Dmaven.antrun.skip=true parameter.
 
-1. `mvn -Dtycho.disableP2Mirrors=true -Dmaven.antrun.skip=true  clean verify`
+1. `./mvnw -Dtycho.disableP2Mirrors=true -Dmaven.antrun.skip=true  clean verify`
 
 ## Verinice client
 
