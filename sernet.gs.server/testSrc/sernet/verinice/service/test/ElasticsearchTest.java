@@ -30,8 +30,8 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.util.Assert;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
@@ -94,14 +94,14 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
 
         VeriniceSearchResult result = searchService.query(new VeriniceQuery(longWord, VeriniceQuery.MAX_LIMIT));
         VeriniceSearchResultTable entity = result.getVeriniceSearchObject(SamtTopic.TYPE_ID);
-        Assert.notNull(entity, "Token \"" + longWord + "\" not found in " + VNA_FILENAME);
+        assertNotNull("Token \"" + longWord + "\" not found in " + VNA_FILENAME, entity);
 
         VeriniceSearchResultRow element = result.getVeriniceSearchObject(SamtTopic.TYPE_ID).getRows().iterator().next();
-        Assert.notNull(element.getValueFromResultString(SamtTopic.PROP_DESC), "Token \"" + longWord + "\" is not in the right column " + SamtTopic.PROP_DESC);
+        assertNotNull(element.getValueFromResultString(SamtTopic.PROP_DESC), "Token \"" + longWord + "\" is not in the right column " + SamtTopic.PROP_DESC);
 
         String propertyId = element.getOccurence().getColumnIds().first();
-        Assert.isTrue(element.getValueFromResultString(propertyId).contains(longWord),
-                "Token \"" + longWord + "\" is not in the right column " + propertyId);
+        assertTrue(
+                "Token \"" + longWord + "\" is not in the right column " + propertyId, element.getValueFromResultString(propertyId).contains(longWord));
     }
 
     @Test
@@ -145,19 +145,19 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
 
         VeriniceSearchResult result = searchService.query(new VeriniceQuery(phrase, VeriniceQuery.MAX_LIMIT));
         VeriniceSearchResultTable entity = result.getVeriniceSearchObject(SamtTopic.TYPE_ID);
-        Assert.notNull(entity, "Phrase \"" + phrase + "\" not found in " + VNA_FILENAME);
+        assertNotNull("Phrase \"" + phrase + "\" not found in " + VNA_FILENAME, entity);
 
         
         
         Set<VeriniceSearchResultRow> entities = result.getVeriniceSearchObject(SamtTopic.TYPE_ID).getRows();
-        Assert.isTrue(entities.size() == 1, "Phrase \"" + phrase + "\" should only match one time in " + VNA_FILENAME);
+        assertTrue("Phrase \"" + phrase + "\" should only match one time in " + VNA_FILENAME, entities.size() == 1);
 
         
         VeriniceSearchResultRow element = result.getVeriniceSearchObject(SamtTopic.TYPE_ID).getRows().iterator().next();
         String propertyId = element.getOccurence().getColumnIds().first();
         
-        Assert.notNull(element.getValueFromResultString(propertyId), "Phrase \"" + phrase + "\" is not in the right column " + propertyId);
-        Assert.isTrue(element.getValueFromResultString(propertyId).contains(phrase), "Phrase \"" + phrase + "\" is not in the right column " + propertyId);
+        assertNotNull(element.getValueFromResultString(propertyId), "Phrase \"" + phrase + "\" is not in the right column " + propertyId);
+        assertTrue("Phrase \"" + phrase + "\" is not in the right column " + propertyId, element.getValueFromResultString(propertyId).contains(phrase));
     }
     
     @After
