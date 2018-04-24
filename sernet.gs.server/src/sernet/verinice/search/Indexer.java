@@ -102,7 +102,8 @@ public class Indexer {
 
         indexingStart = System.currentTimeMillis();
 
-        ClosableCompletionService<CnATreeElement> completionService = TrackableCompletionService.newInstance();
+        ClosableCompletionService<CnATreeElement> completionService = TrackableCompletionService
+                .newInstance();
         List<String> allUuids = geAllCnATreeElementUUIDS();
 
         if (LOG.isInfoEnabled()) {
@@ -134,7 +135,8 @@ public class Indexer {
         return allUuids;
     }
 
-    private void logNonBlockingIndexingTermination(final ClosableCompletionService<CnATreeElement> completionService) {
+    private void logNonBlockingIndexingTermination(
+            final ClosableCompletionService<CnATreeElement> completionService) {
         if (LOG.isInfoEnabled()) {
             ExecutorService executor = Executors.newFixedThreadPool(1);
             executor.execute(new Runnable() {
@@ -190,7 +192,8 @@ public class Indexer {
         printIndexingTimeConsumption();
     }
 
-    private static void awaitIndexingTermination(ClosableCompletionService<CnATreeElement> completionService) {
+    private static void awaitIndexingTermination(
+            ClosableCompletionService<CnATreeElement> completionService) {
         while (!completionService.isClosed()) {
             try {
                 Future<CnATreeElement> future = completionService.poll(500l, TimeUnit.MILLISECONDS);
@@ -202,7 +205,8 @@ public class Indexer {
                     // after the current iteration.
                     CnATreeElement element = future.get();
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("element was indexed " + element.getTitle() + " - uuid " + element.getUuid());
+                        LOG.debug("element was indexed " + element.getTitle() + " - uuid "
+                                + element.getUuid());
                     }
                 }
             } catch (Exception e) {

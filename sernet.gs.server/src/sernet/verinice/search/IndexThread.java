@@ -45,25 +45,26 @@ public class IndexThread extends DummyAuthenticatorCallable<CnATreeElement> {
     private String uuid;
     private IJsonBuilder jsonBuilder;
 
-    public IndexThread(){}
+    public IndexThread() {
+    }
 
     /*
      * @see sernet.verinice.search.DummyAuthenticatorCallable#doCall()
      */
-     @Override
-     public CnATreeElement doCall() {
-         String json = null;
+    @Override
+    public CnATreeElement doCall() {
+        String json = null;
 
-         ServerInitializer.inheritVeriniceContextState();
-         json = getJsonBuilder().getJson(getElement());
+        ServerInitializer.inheritVeriniceContextState();
+        json = getJsonBuilder().getJson(getElement());
 
-         if (json != null) {
-             getSearchDao().updateOrIndex(element.getUuid(), json);
-         }
+        if (json != null) {
+            getSearchDao().updateOrIndex(element.getUuid(), json);
+        }
 
-         return element;
-     }
-    
+        return element;
+    }
+
     public CnATreeElement getElement() {
         if (element == null) {
             element = loadElement();
