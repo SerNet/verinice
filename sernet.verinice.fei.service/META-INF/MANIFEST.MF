@@ -11,3 +11,4 @@ Require-Bundle: com.springsource.org.apache.log4j;bundle-version="1.2.15",
 Import-Package: org.eclipse.core.runtime,
  org.osgi.framework
 Export-Package: sernet.verinice.fei.service
+Bundle-ClassPath: .

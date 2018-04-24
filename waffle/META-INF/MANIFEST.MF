@@ -11,7 +11,8 @@ Bundle-ClassPath: guava-18.0.jar,
  slf4j-api-1.7.9.jar,
  waffle-jna-1.7.3.jar,
  waffle-spring-security2-1.7.3.jar,
- waffle-tests-1.7.3.jar
+ waffle-tests-1.7.3.jar,
+ .
 Export-Package: com.google.common.io,
  com.sun.jna.platform.win32,
  waffle.windows.auth,

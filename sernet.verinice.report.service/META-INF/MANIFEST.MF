@@ -35,3 +35,4 @@ Service-Component: OSGI-INF/component.xml
 Import-Package: net.sf.ehcache,
  org.jfree.chart,
  org.slf4j;version="1.7.10"
+Bundle-ClassPath: .

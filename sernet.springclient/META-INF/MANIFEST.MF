@@ -37,3 +37,4 @@ Import-Package: org.apache.log4j,
  org.springframework.beans.factory,
  org.springframework.security.ui.digestauth;version="2.0.5.RELEASE"
 Eclipse-BuddyPolicy: global
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

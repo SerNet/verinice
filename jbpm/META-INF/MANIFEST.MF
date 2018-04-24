@@ -5,7 +5,8 @@ Bundle-SymbolicName: jbpm
 Bundle-Version: 4.4.0
 Bundle-ClassPath: jbpm-4.4-SN.jar,
  juel-engine.jar,
- juel-impl.jar
+ juel-impl.jar,
+ .
 Bundle-Vendor: JBoss Inc.
 Export-Package: com.sun.script.juel,
  de.odysseus.el,

@@ -16,3 +16,4 @@ Export-Package: sernet.verinice.samt.audit.service,
  sernet.verinice.samt.service
 Import-Package: org.eclipse.core.runtime,
  org.osgi.framework
+Bundle-ClassPath: .
