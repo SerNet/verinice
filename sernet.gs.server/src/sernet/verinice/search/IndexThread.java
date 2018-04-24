@@ -19,10 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.search;
 
-import org.apache.log4j.Logger;
+import java.util.List;
+
+import org.hibernate.FetchMode;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.server.security.DummyAuthenticatorCallable;
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.search.IJsonBuilder;
@@ -32,72 +35,46 @@ import sernet.verinice.model.common.CnATreeElement;
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class IndexThread extends DummyAuthenticatorCallable<CnATreeElement> {
-
-    private static final Logger LOG = Logger.getLogger(IndexThread.class);
-
-    private static final RetrieveInfo RI = RetrieveInfo.getPropertyInstance().setPermissions(true);
+public class IndexThread extends DummyAuthenticatorCallable<List<CnATreeElement>> {
 
     private IBaseDao<CnATreeElement, Integer> elementDao;
     private ISearchDao searchDao;
     private ISearchService searchService;
-    private CnATreeElement element;
-    private String uuid;
+    private List<String> uuids;
     private IJsonBuilder jsonBuilder;
-
-    public IndexThread() {
-    }
 
     /*
      * @see sernet.verinice.search.DummyAuthenticatorCallable#doCall()
      */
     @Override
-    public CnATreeElement doCall() {
+    public List<CnATreeElement> doCall() {
         String json = null;
 
         ServerInitializer.inheritVeriniceContextState();
-        json = getJsonBuilder().getJson(getElement());
+        List<CnATreeElement> elements = loadElements();
+        for (CnATreeElement cnATreeElement : elements) {
+            json = getJsonBuilder().getJson(cnATreeElement);
 
-        if (json != null) {
-            getSearchDao().updateOrIndex(element.getUuid(), json);
+            if (json != null) {
+                getSearchDao().updateOrIndex(cnATreeElement.getUuid(), json);
+            }
         }
 
-        return element;
+        return elements;
     }
 
-    public CnATreeElement getElement() {
-        if (element == null) {
-            element = loadElement();
-        }
-        return element;
+    private List<CnATreeElement> loadElements() {
+        DetachedCriteria criteria = DetachedCriteria.forClass(CnATreeElement.class);
+        criteria.add(Restrictions.in("uuid", uuids));
+        criteria.setFetchMode("permissions", FetchMode.JOIN);
+        criteria.setFetchMode("entity", FetchMode.JOIN);
+        criteria.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
+        criteria.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
+        return getElementDao().findByCriteria(criteria);
     }
 
-    private CnATreeElement loadElement() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Loading element with uuid: " + getUuid() + "...");
-        }
-
-        if (getUuid() != null) {
-            element = loadElementByDao(getUuid());
-        }
-
-        return element;
-    }
-
-    private CnATreeElement loadElementByDao(String uuid) {
-        return getElementDao().findByUuid(getUuid(), RI);
-    }
-
-    public void setElement(CnATreeElement element) {
-        this.element = element;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setUuids(List<String> uuids) {
+        this.uuids = uuids;
     }
 
     public IBaseDao<CnATreeElement, Integer> getElementDao() {

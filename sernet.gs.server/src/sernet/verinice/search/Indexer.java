@@ -19,8 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.search;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,6 +29,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.elasticsearch.common.collect.Lists;
 import org.springframework.beans.factory.ObjectFactory;
 
 import sernet.gs.server.security.DummyAuthenticationRunnable;
@@ -55,6 +56,8 @@ public class Indexer {
     private static final Logger LOG = Logger.getLogger(Indexer.class);
 
     private static final String HQL_LOAD_UUIDS = "select e.uuid from CnATreeElement e";
+
+    private static final int INDEXING_CHUNK_SIZE = 50;
 
     private IBaseDao<CnATreeElement, Integer> elementDao;
 
@@ -98,11 +101,11 @@ public class Indexer {
         exeService.shutdown();
     }
 
-    private ClosableCompletionService<CnATreeElement> doIndex() {
+    private ClosableCompletionService<List<CnATreeElement>> doIndex() {
 
         indexingStart = System.currentTimeMillis();
 
-        ClosableCompletionService<CnATreeElement> completionService = TrackableCompletionService
+        ClosableCompletionService<List<CnATreeElement>> completionService = TrackableCompletionService
                 .newInstance();
         List<String> allUuids = geAllCnATreeElementUUIDS();
 
@@ -136,7 +139,7 @@ public class Indexer {
     }
 
     private void logNonBlockingIndexingTermination(
-            final ClosableCompletionService<CnATreeElement> completionService) {
+            final ClosableCompletionService<List<CnATreeElement>> completionService) {
         if (LOG.isInfoEnabled()) {
             ExecutorService executor = Executors.newFixedThreadPool(1);
             executor.execute(new Runnable() {
@@ -183,7 +186,7 @@ public class Indexer {
     private void doBlockingIndexing() {
 
         ServerInitializer.inheritVeriniceContextState();
-        ClosableCompletionService<CnATreeElement> completionService = doIndex();
+        ClosableCompletionService<List<CnATreeElement>> completionService = doIndex();
 
         // This call causes the blocking since it takes every completed task
         // from the executor queue.
@@ -193,20 +196,24 @@ public class Indexer {
     }
 
     private static void awaitIndexingTermination(
-            ClosableCompletionService<CnATreeElement> completionService) {
+            ClosableCompletionService<List<CnATreeElement>> completionService) {
         while (!completionService.isClosed()) {
             try {
-                Future<CnATreeElement> future = completionService.poll(500l, TimeUnit.MILLISECONDS);
+                Future<List<CnATreeElement>> future = completionService.poll(500l,
+                        TimeUnit.MILLISECONDS);
                 if (future != null) {
                     // if the last element was removed from the queue in the
                     // previous iteration and the current iteration started
                     // before the executor could properly terminate, the queue
                     // will be empty. We should be able to exit from the loop
                     // after the current iteration.
-                    CnATreeElement element = future.get();
+                    List<CnATreeElement> elements = future.get();
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("element was indexed " + element.getTitle() + " - uuid "
-                                + element.getUuid());
+                        for (CnATreeElement element : elements) {
+                            LOG.debug("element was indexed " + element.getTitle() + " - uuid "
+                                    + element.getUuid());
+                        }
+
                     }
                 }
             } catch (Exception e) {
@@ -216,10 +223,11 @@ public class Indexer {
     }
 
     private Collection<IndexThread> createIndexThreadsByUuids(List<String> allUuids) {
-        Collection<IndexThread> indexThreads = new LinkedList<>();
-        for (String uuid : allUuids) {
+        List<List<String>> chunks = Lists.partition(allUuids, INDEXING_CHUNK_SIZE);
+        Collection<IndexThread> indexThreads = new ArrayList<>(chunks.size());
+        for (List<String> chunk : chunks) {
             IndexThread indexThread = (IndexThread) indexThreadFactory.getObject();
-            indexThread.setUuid(uuid);
+            indexThread.setUuids(chunk);
             indexThreads.add(indexThread);
         }
         return indexThreads;
@@ -229,7 +237,7 @@ public class Indexer {
         @Override
         public void doRun() {
             try {
-                ClosableCompletionService<CnATreeElement> completionService = doIndex();
+                ClosableCompletionService<List<CnATreeElement>> completionService = doIndex();
                 logNonBlockingIndexingTermination(completionService);
             } catch (Exception e) {
                 LOG.error("Error while indexing elements.", e);
