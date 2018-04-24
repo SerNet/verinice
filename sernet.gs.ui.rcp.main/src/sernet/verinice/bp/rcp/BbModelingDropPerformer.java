@@ -23,7 +23,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -155,14 +154,11 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
 
     private void modelModulesAndElement(List<CnATreeElement> draggedModules, CnATreeElement element)
             throws CommandException {
-        Set<String> compendiumUuids = new HashSet<>();
+        Set<String> compendiumUuids = new HashSet<>(draggedModules.size());
         for (CnATreeElement module : draggedModules) {
             compendiumUuids.add(module.getUuid());
         }
-        List<String> targetUuids = new LinkedList<>();
-        targetUuids.add(element.getUuid());
-
-        executeModelCommand(compendiumUuids, targetUuids);
+        executeModelCommand(compendiumUuids, Collections.singletonList(element.getUuid()));
         CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
     }
 
@@ -227,7 +223,7 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
     private List<CnATreeElement> getDraggedElements(Object data) {
         List<CnATreeElement> elementList = null;
         if (data instanceof Object[]) {
-            elementList = new LinkedList<>();
+            elementList = new ArrayList<>(((Object[]) data).length);
             for (Object o : (Object[]) data) {
                 if (o instanceof CnATreeElement) {
                     elementList.add((CnATreeElement) o);

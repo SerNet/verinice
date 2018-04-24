@@ -208,10 +208,6 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
         return targetElements;
     }
 
-    public Set<String> getNewModuleUuids() {
-        return newModuleUuids;
-    }
-
     public Set<String> getGroupUuidsFromScope() {
         Set<String> uuids = new HashSet<>(newModuleUuids);
         for (CnATreeElement element : elementMap.values()) {

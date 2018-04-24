@@ -148,9 +148,9 @@ public class ModelCommand extends ChangeLoggingCommand {
     }
 
     private void setDeduction(boolean deductImplementation) throws CommandException {
-        ChangeDeductionCommand disableDeductionCommand = new ChangeDeductionCommand(
+        ChangeDeductionCommand changeDeductionCommand = new ChangeDeductionCommand(
                 moduleUuidsFromScope, deductImplementation);
-        getCommandService().executeCommand(disableDeductionCommand);
+        getCommandService().executeCommand(changeDeductionCommand);
     }
 
     private void handleThreats() throws CommandException {

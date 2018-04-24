@@ -20,6 +20,7 @@
 package sernet.verinice.service.commands.bp;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -146,11 +147,13 @@ public class ModelLinksCommand extends GenericCommand {
         for (CnATreeElement requirementFromCompendium : requirementsFromCompendium) {
             linkList.addAll(createLinks(requirementFromCompendium));
         }
-        CreateMultipleLinks createMultipleLinks = new CreateMultipleLinks(linkList);
-        getCommandService().executeCommand(createMultipleLinks);
+        if (!linkList.isEmpty()) {
+            CreateMultipleLinks createMultipleLinks = new CreateMultipleLinks(linkList);
+            getCommandService().executeCommand(createMultipleLinks);
+        }
     }
 
-    protected List<Link> createLinks(CnATreeElement requirementFromCompendium) {
+    private List<Link> createLinks(CnATreeElement requirementFromCompendium) {
         List<Link> linkList = new LinkedList<>();
         linkList.addAll(linkRequirementWithTargetElements(requirementFromCompendium));
         Set<CnATreeElement> linkedElements = loadLinkedElements(
@@ -225,7 +228,7 @@ public class ModelLinksCommand extends GenericCommand {
 
     private List<Link> createLinksToSafeguardAndThreat(CnATreeElement requirementFromCompendium,
             Set<CnATreeElement> linkedElements) {
-        List<Link> linkList = new LinkedList<>();
+        List<Link> linkList = new ArrayList<>(linkedElements.size());
         for (CnATreeElement element : linkedElements) {
             if (element instanceof Safeguard) {
                 Safeguard safeguardFromCompendium = (Safeguard) element;
@@ -325,7 +328,7 @@ public class ModelLinksCommand extends GenericCommand {
     private void loadAllSafeguardsFromScope() {
         List<CnATreeElement> safeguards = getMetaDao().loadElementsFromScope(Safeguard.TYPE_ID,
                 itNetwork.getDbId());
-        allSafeguardsFromScope = new HashMap<>();
+        allSafeguardsFromScope = new HashMap<>(safeguards.size());
         for (CnATreeElement safeguard : safeguards) {
             allSafeguardsFromScope.put(Safeguard.getIdentifierOfSafeguard(safeguard), safeguard);
         }
@@ -334,7 +337,7 @@ public class ModelLinksCommand extends GenericCommand {
     private void loadAllThreatsFromScope() {
         List<CnATreeElement> threats = getMetaDao().loadElementsFromScope(BpThreat.TYPE_ID,
                 itNetwork.getDbId());
-        allThreatsFromScope = new HashMap<>();
+        allThreatsFromScope = new HashMap<>(threats.size());
         for (CnATreeElement threat : threats) {
             allThreatsFromScope.put(BpThreat.getIdentifierOfThreat(threat), threat);
         }

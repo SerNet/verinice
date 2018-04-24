@@ -20,6 +20,7 @@ package sernet.verinice.service.commands.bp;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -103,8 +104,10 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
                 handleRequirement(requirement);
             }
         }
-        CreateMultipleLinks createMultipleLinks = new CreateMultipleLinks(linkList);
-        getCommandService().executeCommand(createMultipleLinks);
+        if (!linkList.isEmpty()) {
+            CreateMultipleLinks createMultipleLinks = new CreateMultipleLinks(linkList);
+            getCommandService().executeCommand(createMultipleLinks);
+        }
     }
 
     private void handleRequirement(CnATreeElement requirement) throws CommandException {
@@ -146,7 +149,7 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
 
     private Safeguard createDummySafeguardForRequirement(BpRequirement requirement)
             throws CommandException {
-        CnATreeElement element = laodTargetElement(requirement);
+        CnATreeElement element = loadTargetElement(requirement);
         BpRequirementGroup requirementGroup = (BpRequirementGroup) requirement.getParent();
         String moduleTitle = requirementGroup.getFullTitle();
         CnATreeElement safeguardGroup = getSafeguardGroup(element, moduleTitle);
@@ -206,7 +209,7 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
         return safeguardGroup;
     }
 
-    private CnATreeElement laodTargetElement(CnATreeElement requirement) {
+    private CnATreeElement loadTargetElement(CnATreeElement requirement) {
         // Find target element
         CnATreeElement element = null;
         Set<CnALink> links = requirement.getLinksDown();
@@ -220,7 +223,8 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
         if (element == null) {
             return null;
         }
-        return getMetaDao().loadElementsWithChildrenProperties(Arrays.asList(element.getUuid()))
+        return getMetaDao()
+                .loadElementsWithChildrenProperties(Collections.singletonList(element.getUuid()))
                 .get(0);
     }
 
