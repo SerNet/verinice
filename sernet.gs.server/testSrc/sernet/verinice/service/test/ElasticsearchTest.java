@@ -21,7 +21,7 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
 import java.util.Set;
@@ -29,9 +29,10 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.hamcrest.CoreMatchers;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Test;
+import org.junit.matchers.JUnitMatchers;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
@@ -100,8 +101,7 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         assertNotNull(element.getValueFromResultString(SamtTopic.PROP_DESC), "Token \"" + longWord + "\" is not in the right column " + SamtTopic.PROP_DESC);
 
         String propertyId = element.getOccurence().getColumnIds().first();
-        assertTrue(
-                "Token \"" + longWord + "\" is not in the right column " + propertyId, element.getValueFromResultString(propertyId).contains(longWord));
+        assertThat("Token \"" + longWord + "\" is not in the right column " + propertyId, element.getValueFromResultString(propertyId), JUnitMatchers.containsString(longWord));
     }
 
     @Test
@@ -109,10 +109,10 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         searchIndexer.blockingIndexing();
 
         VeriniceSearchResult result = findByTitle(NEW_TITEL);
-        assertTrue("Element found with string: " + NEW_TITEL, result.getHits() == 0);
+        assertEquals("Element found with string: " + NEW_TITEL, 0, result.getHits());
 
         result = findByTitle(TITEL);
-        assertTrue("No element found with ' "+ TITEL + "' in title", result.getHits() > 0);
+        assertThat("No element found with ' "+ TITEL + "' in title", result.getHits(), CoreMatchers.not(CoreMatchers.equalTo(0)));
 
         VeriniceSearchResultRow row = result.getAllVeriniceSearchTables().iterator().next().getRows().iterator().next();
         String uuid = getUuid(row);
@@ -121,21 +121,21 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
 
         element.setTitel(NEW_TITEL);
         String json = jsonBuilder.getJson(element);
-        assertTrue("JSON does not contain " + NEW_TITEL + ":VNA_FILENAME " + json, json.contains(NEW_TITEL));
+        assertThat("JSON does not contain " + NEW_TITEL + ":VNA_FILENAME " + json, json, JUnitMatchers.containsString(NEW_TITEL));
 
         searchDao.update(uuid, json);
         result = findByTitle(NEW_TITEL);
-        assertTrue("No element found with string: " + NEW_TITEL, result.getHits() > 0);
+        assertThat("No element found with string: " + NEW_TITEL, result.getHits(), CoreMatchers.not(CoreMatchers.equalTo(0)));
     }
 
     @Test
     public void testDelete() {
         searchIndexer.blockingIndexing();
         VeriniceSearchResult result = findByTitle(TITEL);
-        assertTrue("No element found with " + TITEL + " in title", result.getHits() > 0);
+        assertThat("No element found with ' "+ TITEL + "' in title", result.getHits(), CoreMatchers.not(CoreMatchers.equalTo(0)));
         delete(result);
         result = findByTitle(NEW_TITEL);
-        assertTrue("Element found with " + TITEL + " in title", result.getHits() == 0);
+        assertEquals("Element found with ' "+ TITEL + "' in title", 0, result.getHits());
     }
     
     @Test
@@ -150,14 +150,14 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         
         
         Set<VeriniceSearchResultRow> entities = result.getVeriniceSearchObject(SamtTopic.TYPE_ID).getRows();
-        assertTrue("Phrase \"" + phrase + "\" should only match one time in " + VNA_FILENAME, entities.size() == 1);
+        assertEquals("Phrase \"" + phrase + "\" should only match one time in " + VNA_FILENAME, 1, entities.size());
 
         
         VeriniceSearchResultRow element = result.getVeriniceSearchObject(SamtTopic.TYPE_ID).getRows().iterator().next();
         String propertyId = element.getOccurence().getColumnIds().first();
         
         assertNotNull(element.getValueFromResultString(propertyId), "Phrase \"" + phrase + "\" is not in the right column " + propertyId);
-        assertTrue("Phrase \"" + phrase + "\" is not in the right column " + propertyId, element.getValueFromResultString(propertyId).contains(phrase));
+        assertThat("Phrase \"" + phrase + "\" is not in the right column " + propertyId, element.getValueFromResultString(propertyId), JUnitMatchers.containsString(phrase));
     }
     
     @After
