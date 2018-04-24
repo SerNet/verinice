@@ -17,8 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.oda;
 
-import java.util.Map;
-
 public interface IVeriniceOdaDriver {
 
 	/** Name of the property which stores the root element's id. The id specifies the database id of the
@@ -30,39 +28,14 @@ public interface IVeriniceOdaDriver {
 	 * objects that are being used for a report that compares some organziations.
 	 */
 	public static final String ROOT_ELEMENT_IDS_NAME = "rootElementIds";
-	
-	/**
-	 * Registers an image provider for a certain image name.
-	 * 
-	 * <p>The provider instance should be a generic and long-living object,
-	 * registered as early as possible and stay available throughout the runtime
-	 * of the application.</p>
-	 * 
-	 * @param name
-	 * @param imageProvider
-	 */
-	void setImageProvider(String name, IImageProvider imageProvider);
 
-	/**
-	 * Unregisters an image provider.
-	 * 
-	 * @param name
-	 */
-	void removeImageProvider(String name);
+	boolean getReportLoggingState();
 
-	/**
-	 * Makes the given map of keys and values available to the scripting environment
-	 * of a report.
-	 * 
-	 * <p>The use of this way of providing information to a report is discouraged as it
-	 * prevents the standalone use of the report from the report designer. If possible the
-	 * report should retrieve the information on its own (if neccessary with the help of custom
-	 * commands).</p>
-	 * 
-	 * @param Map
-	 */
-	void setScriptVariables(Map<String, Object> Map);
-	
-	Map<String, Object> getScriptVariables();
-	
+	String getLogLvl();
+
+	String getLogFile();
+
+	String getLocalReportLocation();
+
+	boolean isSandboxEnabled();
 }

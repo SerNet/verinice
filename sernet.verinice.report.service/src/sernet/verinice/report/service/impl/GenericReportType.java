@@ -32,11 +32,13 @@ import org.slf4j.LoggerFactory;
 
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IVeriniceConstants;
+import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
 import sernet.verinice.interfaces.report.ReportTypeException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
+import sernet.verinice.report.service.Activator;
 import sernet.verinice.report.service.impl.security.ReportSecurityManager;
 import sernet.verinice.security.report.ReportSecurityContext;
 
@@ -126,7 +128,8 @@ public class GenericReportType implements IReportType {
             if(metadata.isServer()){
                 rptURL = new URL(getDepositPath(IReportDepositService.REPORT_DEPOSIT_CLIENT_REMOTE) + metadata.getFilename());
             } else {
-                URI locationConst = URIUtil.fromString(brs.getOdaDriver().getLocalReportLocation());
+    		    IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
+                URI locationConst = URIUtil.fromString(odaDriver.getLocalReportLocation());
 
                 if(LOG.isDebugEnabled()){
                     LOG.debug("determined value for \"locationConst\":\t" + locationConst);

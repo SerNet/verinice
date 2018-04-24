@@ -33,8 +33,6 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.ILogPathService;
 import sernet.verinice.interfaces.IMain;
 import sernet.verinice.interfaces.IReportLocalTemplateDirectoryService;
-import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
-import sernet.verinice.model.report.ReportTemplate;
 import sernet.verinice.oda.driver.impl.VeriniceURLStreamHandlerService;
 import sernet.verinice.oda.driver.preferences.PreferenceConstants;
 
@@ -43,121 +41,105 @@ import sernet.verinice.oda.driver.preferences.PreferenceConstants;
  */
 public class Activator extends AbstractUIPlugin {
 
-    // The plug-in ID
-    public static final String PLUGIN_ID = "sernet.verinice.oda.driver";
+	// The plug-in ID
+	public static final String PLUGIN_ID = "sernet.verinice.oda.driver";
 
-    // The shared instance
-    private static Activator plugin;
+	// The shared instance
+	private static Activator plugin;
 
-    private VeriniceURLStreamHandlerService urlStreamHandlerService = new VeriniceURLStreamHandlerService();
+	private VeriniceURLStreamHandlerService urlStreamHandlerService = new VeriniceURLStreamHandlerService();
 
-    private ServiceTracker veriniceOdaDriverTracker;
+	private ServiceTracker mainTracker;
 
-    private ServiceTracker mainTracker;
+	private ServiceTracker commandServiceTracker;
 
-    private ServiceTracker commandServiceTracker;
+	private ServiceTracker logPathTracker;
 
-    private ServiceTracker logPathTracker;
+	private IReportLocalTemplateDirectoryService templateDirService;
 
-    private IReportLocalTemplateDirectoryService templateDirService;
+	private static final String WORK_OBJECTS = "workObjects";
 
-    private static final String WORK_OBJECTS = "workObjects";
+	/**
+	 * The constructor
+	 */
+	public Activator() {
+	}
 
-    /**
-     * The constructor
-     */
-    public Activator() {
-    }
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
+	 */
+	public void start(final BundleContext context) throws Exception {
+		super.start(context);
+		plugin = this;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-     */
-    public void start(final BundleContext context) throws Exception {
-        super.start(context);
-        plugin = this;
+		Hashtable<String, String[]> properties = new Hashtable<String, String[]>();
+		properties.put(URLConstants.URL_HANDLER_PROTOCOL, new String[] { "verinice" });
 
-        Hashtable<String, String[]> properties = new Hashtable<String, String[]>();
-        properties.put(URLConstants.URL_HANDLER_PROTOCOL, new String[] { "verinice" });
+		context.registerService(URLStreamHandlerService.class.getName(), urlStreamHandlerService, properties);
 
-        context.registerService(URLStreamHandlerService.class.getName(), urlStreamHandlerService, properties);
+		templateDirService = new ReportTemplateDirectoryService();
+		context.registerService(IReportLocalTemplateDirectoryService.class.getName(), templateDirService, null);
 
-        templateDirService = new ReportTemplateDirectoryService();
-        context.registerService(IReportLocalTemplateDirectoryService.class.getName(), templateDirService, null);
+		mainTracker = new ServiceTracker(context, IMain.class.getName(), null);
+		mainTracker.open();
 
-        veriniceOdaDriverTracker = new ServiceTracker(context, IVeriniceOdaDriver.class.getName(), null);
-        veriniceOdaDriverTracker.open();
+		commandServiceTracker = new ServiceTracker(context, ICommandService.class.getName(), null);
+		commandServiceTracker.open();
 
-        mainTracker = new ServiceTracker(context, IMain.class.getName(), null);
-        mainTracker.open();
+		logPathTracker = new ServiceTracker(context, ILogPathService.class.getName(), null);
+		logPathTracker.open();
 
-        commandServiceTracker = new ServiceTracker(context, ICommandService.class.getName(), null);
-        commandServiceTracker.open();
+	}
 
-        logPathTracker = new ServiceTracker(context, ILogPathService.class.getName(), null);
-        logPathTracker.open();
+	@Override
+	public void stop(BundleContext context) throws Exception {
+		super.stop(context);
+		plugin = null;
+		mainTracker.close();
+		commandServiceTracker.close();
+		logPathTracker.close();
+	}
 
-    }
+	/**
+	 * Returns the shared instance
+	 *
+	 * @return the shared instance
+	 */
+	public static Activator getDefault() {
+		return plugin;
+	}
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-     */
-    public void stop(BundleContext context) throws Exception {
-        super.stop(context);
-        plugin = null;
-        veriniceOdaDriverTracker.close();
-        mainTracker.close();
-        commandServiceTracker.close();
-        logPathTracker.close();
-    }
+	public VeriniceURLStreamHandlerService getURLStreamHandlerService() {
+		return urlStreamHandlerService;
+	}
 
-    /**
-     * Returns the shared instance
-     *
-     * @return the shared instance
-     */
-    public static Activator getDefault() {
-        return plugin;
-    }
+	public IMain getMain() {
+		return (IMain) mainTracker.getService();
+	}
 
-    public VeriniceURLStreamHandlerService getURLStreamHandlerService() {
-        return urlStreamHandlerService;
-    }
+	public ICommandService getCommandService() {
+		inheritVeriniceContext();
+		if (getPreferenceStore().getBoolean(PreferenceConstants.REPORT_USE_CACHE)) {
 
-    public IVeriniceOdaDriver getOdaDriver() {
-        return (IVeriniceOdaDriver) veriniceOdaDriverTracker.getService();
-    }
+			return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_CACHE_SERVICE);
+		} else {
+			return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
+		}
+	}
 
-    public IMain getMain() {
-        return (IMain) mainTracker.getService();
-    }
+	private void inheritVeriniceContext() {
+		VeriniceContext.State state = (VeriniceContext.State) SpringClientPlugin.getDefault().getBeanFactory()
+				.getBean(WORK_OBJECTS);
+		VeriniceContext.setState(state);
+	}
 
-    public ICommandService getCommandService() {
-        inheritVeriniceContext();
-        if (getPreferenceStore().getBoolean(PreferenceConstants.REPORT_USE_CACHE)) {
+	public ILogPathService getLogPathService() {
+		return (ILogPathService) logPathTracker.getService();
+	}
 
-            return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_CACHE_SERVICE);
-        } else {
-            return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
-        }
-    }
-
-    private void inheritVeriniceContext() {
-        VeriniceContext.State state = (VeriniceContext.State) SpringClientPlugin.getDefault().getBeanFactory().getBean(WORK_OBJECTS);
-        VeriniceContext.setState(state);
-    }
-
-    public ILogPathService getLogPathService() {
-        return (ILogPathService) logPathTracker.getService();
-    }
-
-    public IReportLocalTemplateDirectoryService getIReportTemplateDirectoryService()
-    {
-        return templateDirService;
-    }
+	public IReportLocalTemplateDirectoryService getIReportTemplateDirectoryService() {
+		return templateDirService;
+	}
 }
