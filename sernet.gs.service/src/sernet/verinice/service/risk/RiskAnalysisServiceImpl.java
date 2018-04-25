@@ -21,6 +21,7 @@ package sernet.verinice.service.risk;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.apache.log4j.Logger;
 
@@ -140,8 +141,7 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
         }
         loader.setTypeIds(new String[] { Asset.TYPE_ID, IncidentScenario.TYPE_ID, Control.TYPE_ID,
                 Threat.TYPE_ID, Vulnerability.TYPE_ID });
-        getGraphService().setLoader(loader);
-        return getGraphService().create();
+        return getGraphService().create(Collections.singletonList(loader));
     }
 
     public RiskCalculationMethod getRiskCalculationMethod() {

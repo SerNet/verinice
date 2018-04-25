@@ -20,7 +20,6 @@
 package sernet.verinice.graph;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -67,44 +66,60 @@ public class GraphService implements IGraphService, Serializable {
     private static final Logger LOG_RUNTIME = Logger
             .getLogger(GraphService.class.getName() + ".runtime");
 
-    private String[] relationIds;
-
-    private List<IGraphElementLoader> loaderList;
-
     private IBaseDao<CnATreeElement, Long> cnaTreeElementDao;
 
     private IBaseDao<CnALink, CnALink.Id> cnaLinkDao;
 
     @Override
-    public VeriniceGraph create() {
-        return create(true);
+    public VeriniceGraph create(List<? extends IGraphElementLoader> loaderList) {
+        return create(loaderList, true);
     }
 
     @Override
-    public VeriniceGraph create(boolean loadLinks) {
+    public VeriniceGraph create(List<? extends IGraphElementLoader> loaderList, boolean loadLinks) {
+        return create(loaderList, null, loadLinks);
+    }
+
+    @Override
+    public VeriniceGraph create(List<? extends IGraphElementLoader> loaderList,
+            String[] relationIds) {
+        return create(loaderList, relationIds, true);
+    }
+
+    @Override
+    public VeriniceGraph create(List<? extends IGraphElementLoader> loaderList,
+            String[] relationIds, boolean loadLinks) {
         VeriniceGraph graph = new UndirectedVeriniceGraph();
-        doCreate(graph, loadLinks);
+        doCreate(graph, loaderList, relationIds, loadLinks);
         return graph;
     }
 
     @Override
-    public VeriniceGraph createDirectedGraph() {
-        return createDirectedGraph(true);
+    public VeriniceGraph createDirectedGraph(List<? extends IGraphElementLoader> loaderList) {
+        return createDirectedGraph(loaderList, true);
     }
 
     @Override
-    public VeriniceGraph createDirectedGraph(boolean loadLinks) {
+    public VeriniceGraph createDirectedGraph(List<? extends IGraphElementLoader> loaderList,
+            boolean loadLinks) {
+        return createDirectedGraph(loaderList, null, loadLinks);
+    }
+
+    @Override
+    public VeriniceGraph createDirectedGraph(List<? extends IGraphElementLoader> loaderList,
+            String[] relationIds, boolean loadLinks) {
         VeriniceGraph graph = new DirectedVeriniceGraph();
 
-        doCreate(graph, loadLinks);
+        doCreate(graph, loaderList, relationIds, loadLinks);
         return graph;
     }
 
-    private void doCreate(VeriniceGraph graph, boolean loadLinks) {
+    private void doCreate(VeriniceGraph graph, List<? extends IGraphElementLoader> loaderList,
+            String[] relationIds, boolean loadLinks) {
         long time = initRuntime();
-        Map<String, CnATreeElement> uuidMap = loadVerticesAndRelatives(graph);
+        Map<String, CnATreeElement> uuidMap = loadVerticesAndRelatives(graph, loaderList);
         if (loadLinks) {
-            loadLinks(graph, uuidMap);
+            loadLinks(graph, relationIds, uuidMap);
         } else {
             LOG.info("Loading of links is disabled.");
         }
@@ -116,9 +131,10 @@ public class GraphService implements IGraphService, Serializable {
      * Loads all vertices and adds them to the graph. An edge for each children
      * is added if the child is part of the graph.
      */
-    private Map<String, CnATreeElement> loadVerticesAndRelatives(VeriniceGraph graph) {
+    private Map<String, CnATreeElement> loadVerticesAndRelatives(VeriniceGraph graph,
+            List<? extends IGraphElementLoader> loaderList) {
         List<CnATreeElement> elementList = new LinkedList<>();
-        for (IGraphElementLoader loader : getLoaderList()) {
+        for (IGraphElementLoader loader : loaderList) {
             loader.setCnaTreeElementDao(getCnaTreeElementDao());
             elementList.addAll(loader.loadElements());
         }
@@ -157,12 +173,13 @@ public class GraphService implements IGraphService, Serializable {
         }
     }
 
-    private void loadLinks(VeriniceGraph graph, Map<String, CnATreeElement> uuidMap) {
+    private void loadLinks(VeriniceGraph graph, String[] relationIds,
+            Map<String, CnATreeElement> uuidMap) {
         DetachedCriteria linkCrit = DetachedCriteria.forClass(CnALink.class);
         linkCrit.setFetchMode("dependant", FetchMode.JOIN);
         linkCrit.setFetchMode("dependency", FetchMode.JOIN);
-        if (getRelationIds() != null && getRelationIds().length > 0) {
-            linkCrit.add(Restrictions.in("id.typeId", getRelationIds()));
+        if (relationIds != null && relationIds.length > 0) {
+            linkCrit.add(Restrictions.in("id.typeId", relationIds));
         }
         linkCrit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         @SuppressWarnings("unchecked")
@@ -204,15 +221,6 @@ public class GraphService implements IGraphService, Serializable {
         return edge;
     }
 
-    public String[] getRelationIds() {
-        return (relationIds != null) ? relationIds.clone() : null;
-    }
-
-    @Override
-    public void setRelationIds(String[] relationIds) {
-        this.relationIds = (relationIds != null) ? relationIds.clone() : null;
-    }
-
     public IBaseDao<CnATreeElement, Long> getCnaTreeElementDao() {
         return cnaTreeElementDao;
     }
@@ -227,25 +235,6 @@ public class GraphService implements IGraphService, Serializable {
 
     public void setCnaLinkDao(IBaseDao<CnALink, CnALink.Id> cnaLinkDao) {
         this.cnaLinkDao = cnaLinkDao;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.graph.IGraphService#setLoader(sernet.verinice.graph.
-     * IGraphElementLoader[])
-     */
-    @Override
-    public void setLoader(IGraphElementLoader... loaderArray) {
-        loaderList = Arrays.asList(loaderArray);
-    }
-
-    public List<IGraphElementLoader> getLoaderList() {
-        return loaderList;
-    }
-
-    public void setLoaderList(List<IGraphElementLoader> loaderList) {
-        this.loaderList = loaderList;
     }
 
     private long initRuntime() {

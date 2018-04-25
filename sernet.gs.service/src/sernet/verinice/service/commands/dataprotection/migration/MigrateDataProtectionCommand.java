@@ -153,7 +153,6 @@ public class MigrateDataProtectionCommand extends GraphCommand {
             affectedProcessNames.add(cnATreeElement.getTitle());
         }
         persitData(linkData, missedControls, scopeIds, controls2Update, dsLinks2create);
-        getGraphService().setRelationIds(null);
     }
 
     /**

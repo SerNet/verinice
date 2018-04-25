@@ -20,6 +20,7 @@
 package sernet.verinice.bpm.gsm;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -329,10 +330,11 @@ public abstract class GsmProcessParameterCreater {
             IGraphElementLoader loader2 = new GraphElementLoader();
             loader2.setTypeIds(new String[] { PersonIso.TYPE_ID });
 
-            getGraphService().setLoader(loader1, loader2);
+            List<IGraphElementLoader> loaders = new ArrayList<>(2);
+            loaders.add(loader1);
+            loaders.add(loader2);
 
-            getGraphService().setRelationIds(relationIds);
-            graph = getGraphService().create();
+            graph = getGraphService().create(loaders, relationIds);
         } catch (Exception e) {
             LOG.error("Error while initialization", e);
         }

@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.graph;
 
+import java.util.List;
+
 /**
  * A service to load and analyze the element network of verinice with JGraphT.
  * 
@@ -38,21 +40,10 @@ package sernet.verinice.interfaces.graph;
  */
 public interface IGraphService {
 
-    void setRelationIds(String[] relationIds);
-
-    /**
-     * Sets one or more IGraphElementLoader Element-loaders loads elements which
-     * are part of the graph.
-     * 
-     * @param loader
-     *            One or more IGraphElementLoader
-     */
-    void setLoader(IGraphElementLoader... loader);
-
     /**
      * Initializes and creates the VeriniceGraph.
      */
-    VeriniceGraph create();
+    VeriniceGraph create(List<? extends IGraphElementLoader> loaderList);
 
     /**
      * Initializes and creates the VeriniceGraph.
@@ -61,7 +52,26 @@ public interface IGraphService {
      *            Disables the loading of links if {@code false} regardless of
      *            the relation ids.
      */
-    VeriniceGraph create(boolean loadLinks);
+    VeriniceGraph create(List<? extends IGraphElementLoader> loaderList, boolean loadLinks);
+
+    /**
+     * Initializes and creates the VeriniceGraph. The loading of links will be
+     * enabled.
+     */
+    VeriniceGraph create(List<? extends IGraphElementLoader> loaderList, String[] relationIds);
+
+    /**
+     * Initializes and creates the VeriniceGraph.
+     * 
+     * @param loadLinks
+     *            Disables the loading of links if {@code false} regardless of
+     *            the relation ids.
+     * @param loaderList
+     *            One or more IGraphElementLoader that loads elements which are
+     *            part of the graph
+     */
+    VeriniceGraph create(List<? extends IGraphElementLoader> loaderList, String[] relationIds,
+            boolean loadLinks);
 
     /**
      * Initializes and creates a directed verinice graph. The loading of links
@@ -69,7 +79,8 @@ public interface IGraphService {
      * 
      * @return
      */
-    VeriniceGraph createDirectedGraph();
+
+    VeriniceGraph createDirectedGraph(List<? extends IGraphElementLoader> loaderList);
 
     /**
      * Initializes and creates a directed verinice graph..
@@ -78,6 +89,20 @@ public interface IGraphService {
      *            Disables the loading of links if {@code false} regardless of
      *            the relation ids.
      */
-    VeriniceGraph createDirectedGraph(boolean loadLinks);
+    VeriniceGraph createDirectedGraph(List<? extends IGraphElementLoader> loaderList,
+            boolean loadLinks);
+
+    /**
+     * Initializes and creates a directed verinice graph..
+     * 
+     * @param loadLinks
+     *            Disables the loading of links if {@code false} regardless of
+     *            the relation ids.
+     * @param loaderList
+     *            One or more IGraphElementLoader that loads elements which are
+     *            part of the graph
+     */
+    VeriniceGraph createDirectedGraph(List<? extends IGraphElementLoader> loaderList,
+            String[] relationIds, boolean loadLinks);
 
 }

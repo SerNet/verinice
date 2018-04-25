@@ -21,6 +21,7 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -138,11 +139,7 @@ public class GraphServiceTest extends BeforeEachVNAImportHelper {
             loader.setScopeId(scopeId);
         }
         loader.setCnaTreeElementDao(elementDao);
-        graphService.setLoader(loader);
-        if (relationsTypeIds != null) {
-            graphService.setRelationIds(relationsTypeIds);
-        }
-        return graphService.create();
+        return graphService.create(Collections.singletonList(loader), relationsTypeIds);
     }
 
     private IncidentScenario findByTitle(Set<CnATreeElement> isList, String title) {

@@ -56,7 +56,6 @@ public class GraphCommand extends GenericCommand implements IGraphCommand {
     public void execute() {
         initGraph();
         executeWithGraph();
-        getGraphService().setRelationIds(null);
     }
 
     /**
@@ -70,13 +69,11 @@ public class GraphCommand extends GenericCommand implements IGraphCommand {
     }
 
     protected void initGraph() {
-        getGraphService()
-                .setLoader(getLoader().toArray(new IGraphElementLoader[getLoader().size()]));
-        if (getRelationIds() != null && !getRelationIds().isEmpty()) {
-            getGraphService()
-                    .setRelationIds(getRelationIds().toArray(new String[getRelationIds().size()]));
+        String[] relationIds = null;
+        if (relationIdList != null && !relationIdList.isEmpty()) {
+            relationIds = relationIdList.toArray(new String[relationIdList.size()]);
         }
-        this.graph = getGraphService().create();
+        this.graph = getGraphService().create(getLoader(), relationIds);
     }
 
     /*

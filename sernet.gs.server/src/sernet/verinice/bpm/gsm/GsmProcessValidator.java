@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.bpm.gsm;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -127,10 +129,11 @@ public class GsmProcessValidator {
             IGraphElementLoader loader2 = new GraphElementLoader();
             loader2.setTypeIds(new String[] { PersonIso.TYPE_ID });
 
-            getGraphService().setLoader(loader1, loader2);
+            List<IGraphElementLoader> loaders = new ArrayList<>(2);
+            loaders.add(loader1);
+            loaders.add(loader2);
 
-            getGraphService().setRelationIds(relationIds);
-            graph = getGraphService().create();
+            graph = getGraphService().create(loaders, relationIds);
         } catch (Exception e) {
             LOG.error("Error while initialization", e);
         }

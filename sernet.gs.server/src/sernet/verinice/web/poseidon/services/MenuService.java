@@ -193,8 +193,8 @@ public class MenuService implements Serializable {
             }
         });
 
-        graphService.setLoader(graphElementLoader);
-        VeriniceGraph veriniceGraph = graphService.create(false);
+        VeriniceGraph veriniceGraph = graphService
+                .create(Collections.singletonList(graphElementLoader), false);
 
         itNetworks = sortByTitle(veriniceGraph.getElements(ITVerbund.class));
         organizations = sortByTitle(veriniceGraph.getElements(Organization.class));

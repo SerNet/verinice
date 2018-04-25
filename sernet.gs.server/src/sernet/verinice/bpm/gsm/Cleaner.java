@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.bpm.gsm;
 
+import java.util.Collections;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -107,10 +108,7 @@ public class Cleaner {
         loader.setTypeIds(TYPE_IDS);
         loader.setScopeId(orgId);
 
-        getGraphService().setLoader(loader);
-
-        getGraphService().setRelationIds(RELATION_IDS);
-        return getGraphService().create();
+        return getGraphService().create(Collections.singletonList(loader), RELATION_IDS);
     }
 
     public IGraphService getGraphService() {
