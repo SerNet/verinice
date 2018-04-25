@@ -38,11 +38,9 @@ public class NotificationPage extends AuditorNotificationPage {
     public static final String PAGE_NAME = "account-wizard-notification-page"; //$NON-NLS-1$
      
     private boolean isNotification = false;
-    private boolean isNewTasks = false;
     private boolean isModifyReminder = false;
     
     private Button cbNotification;
-    private Button cbNewTasks;
     private Button cbModifyReminder;
     
     protected NotificationPage() {
@@ -62,13 +60,7 @@ public class NotificationPage extends AuditorNotificationPage {
             } 
         });
         addAllControlsFields(composite, Configuration.PROP_NOTIFICATION_GLOBAL_ALL, Configuration.PROP_NOTIFICATION_GLOBAL_SELF);
-        cbNewTasks = createCheckbox(composite, Messages.NotificationPage_4, isNewTasks);
-        cbNewTasks.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                isNewTasks = cbNewTasks.getSelection();
-            } 
-        });
+
         cbModifyReminder = createCheckbox(composite, Messages.NotificationPage_5, isModifyReminder);
         cbModifyReminder.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -97,14 +89,6 @@ public class NotificationPage extends AuditorNotificationPage {
 
     public void setNotification(boolean isNotification) {
         this.isNotification = isNotification;
-    }
-
-    public boolean isNewTasks() {
-        return isNewTasks;
-    }
-
-    public void setNewTasks(boolean isNewTasks) {
-        this.isNewTasks = isNewTasks;
     }
 
     public boolean isModifyReminder() {

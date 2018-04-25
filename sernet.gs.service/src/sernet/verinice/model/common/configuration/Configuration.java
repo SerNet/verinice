@@ -80,10 +80,6 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	public static final String PROP_NOTIFICATION_MEASURE_MODIFICATION_YES = "configuration_mailing_measure_modification_yesno_yes"; //$NON-NLS-1$
 	public static final String PROP_NOTIFICATION_MEASURE_MODIFICATION_NO = "configuration_mailing_measure_modification_yesno_no"; //$NON-NLS-1$
     
-	public static final String PROP_NOTIFICATION_MEASURE_ASSIGNMENT = "configuration_mailing_assigned"; //$NON-NLS-1$
-	public static final String PROP_NOTIFICATION_MEASURE_ASSIGNMENT_YES = "configuration_mailing_assigned_yesno_yes"; //$NON-NLS-1$
-	public static final String PROP_NOTIFICATION_MEASURE_ASSIGNMENT_NO = "configuration_mailing_assigned_yesno_no"; //$NON-NLS-1$
-
 	public static final String PROP_ISADMIN = "configuration_isadmin"; //$NON-NLS-1$
 	public static final String PROP_ISADMIN_YES = "configuration_isadmin_yes"; //$NON-NLS-1$
 	public static final String PROP_ISADMIN_NO = "configuration_isadmin_no"; //$NON-NLS-1$
@@ -418,15 +414,6 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 		return isRawPropertyValueEqual(PROP_NOTIFICATION_MEASURE_MODIFICATION, "configuration_mailing_measure_modification_yesno_yes");
 	}
 	
-	public void setNotificationMeasureAssignment(boolean b) {
-		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_NOTIFICATION_MEASURE_ASSIGNMENT);
-        entity.setSimpleValue(type, (b ? PROP_NOTIFICATION_MEASURE_ASSIGNMENT_YES : PROP_NOTIFICATION_MEASURE_ASSIGNMENT_NO));
-	}
-	
-	public boolean isNotificationMeasureAssignment() {
-		return isRawPropertyValueEqual(PROP_NOTIFICATION_MEASURE_ASSIGNMENT, PROP_NOTIFICATION_MEASURE_ASSIGNMENT_YES);
-	}
-
 	public void setAuditorNotificationExpirationEnabled(boolean b) {
 		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_AUDITOR_NOTIFICATION_EXPIRATION);
 		entity.setSimpleValue(type, (b ? "configuration_auditmailing_expiring_yes" : "configuration_auditmailing_expiring_no"));
@@ -664,7 +651,6 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
         sb.append("\nEmail: ").append(getNotificationEmail());
         sb.append("\nMailbenachrichtigung aktivieren: ").append(isNotificationEnabled());
         sb.append("\nAlle Massnahmen / nur eigene: ").append(isNotificationGlobal());
-        sb.append("\nNeue zu pruefende Aufgaben: ").append(isNotificationMeasureAssignment());
         sb.append("\nAenderung an Massnahmen: ").append(isNotificationMeasureModification());
         sb.append("\nTerminwarnung: an / aus: ").append(isNotificationExpirationEnabled());
         sb.append("\nTerminwarnung: bei Ablauf in X Tagen: ").append(getNotificationExpirationDays());
