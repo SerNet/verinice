@@ -40,53 +40,55 @@ import sernet.verinice.model.iso27k.PersonIso;
  * GsmProcessValidator is part of the GSM vulnerability tracking process.
  * Process definition is: gsm-ism-execute.jpdl.xml
  * 
- * GsmProcessValidator checks if an organization is valid
- * before starting the GSM process.
+ * GsmProcessValidator checks if an organization is valid before starting the
+ * GSM process.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class GsmProcessValidator {
 
     private static final Logger LOG = Logger.getLogger(GsmProcessValidator.class);
-    
-    private static final String[] typeIds = {AssetGroup.TYPE_ID, Asset.TYPE_ID, ControlGroup.TYPE_ID, Control.TYPE_ID};
 
-    private static final String[] relationIds = {AssetGroup.REL_PERSON_ISO};
-    
+    private static final String[] typeIds = { AssetGroup.TYPE_ID, Asset.TYPE_ID,
+            ControlGroup.TYPE_ID, Control.TYPE_ID };
+
+    private static final String[] relationIds = { AssetGroup.REL_PERSON_ISO };
+
     private Integer orgId;
-    
+
     private IGsmValidationResult result = new GsmValidationResult();
-    
+
     /**
-     * Every instance of GsmProcessStarter has an exclusive instance of a IGraphService
-     * Spring scope of graphService in veriniceserver-jbpm.xml is 'prototype'
+     * Every instance of GsmProcessStarter has an exclusive instance of a
+     * IGraphService Spring scope of graphService in veriniceserver-jbpm.xml is
+     * 'prototype'
      */
     private IGraphService graphService;
     private VeriniceGraph graph;
 
     public IGsmValidationResult validateOrganization(Integer orgId) {
         this.orgId = orgId;
-        initGraph();      
+        initGraph();
         validateAssets();
         validateControls();
-        
+
         return result;
     }
 
     private void validateAssets() {
         Set<CnATreeElement> assetGroupSet = getGraph().getElements(AssetGroup.TYPE_ID);
         for (CnATreeElement assetGroup : assetGroupSet) {
-            if(!isTopLevel(assetGroup)) {
+            if (!isTopLevel(assetGroup)) {
                 result.oneMoreRelevantAssetGroup();
-                if(!hasLinkedPerson(assetGroup)) {
+                if (!hasLinkedPerson(assetGroup)) {
                     result.addAssetGroupWithoutLinkedPerson(assetGroup.getTitle());
                 }
             }
         }
         Set<CnATreeElement> assetSet = getGraph().getElements(Asset.TYPE_ID);
         for (CnATreeElement asset : assetSet) {
-            if(isUngrouped(asset)) {
-                result.addUngroupedAsset(asset.getTitle());               
+            if (isUngrouped(asset)) {
+                result.addUngroupedAsset(asset.getTitle());
             }
         }
     }
@@ -94,8 +96,8 @@ public class GsmProcessValidator {
     private void validateControls() {
         Set<CnATreeElement> controlSet = getGraph().getElements(Control.TYPE_ID);
         for (CnATreeElement control : controlSet) {
-            if(isUngrouped(control)) {
-                result.addUngroupedControl(control.getTitle()); 
+            if (isUngrouped(control)) {
+                result.addUngroupedControl(control.getTitle());
             }
         }
     }
@@ -103,7 +105,7 @@ public class GsmProcessValidator {
     private boolean hasLinkedPerson(CnATreeElement assetGroup) {
         return !(getGraph().getLinkTargets(assetGroup, AssetGroup.REL_PERSON_ISO).isEmpty());
     }
-    
+
     private boolean isUngrouped(CnATreeElement asset) {
         return isTopLevel(asset.getParent());
     }
@@ -111,28 +113,29 @@ public class GsmProcessValidator {
     private boolean isTopLevel(CnATreeElement assetGroup) {
         return assetGroup.getParentId().equals(this.orgId);
     }
-    
+
     private void initGraph() {
-        try { 
-                   
-            // Add elements with type of Array "typeIds" of organization with id "orgId" to the graph
+        try {
+
+            // Add elements with type of Array "typeIds" of organization with id
+            // "orgId" to the graph
             IGraphElementLoader loader1 = new GraphElementLoader();
             loader1.setTypeIds(typeIds);
             loader1.setScopeId(orgId);
-            
+
             // add all persons in the database to the graph
             IGraphElementLoader loader2 = new GraphElementLoader();
-            loader2.setTypeIds(new String[]{PersonIso.TYPE_ID});
-           
+            loader2.setTypeIds(new String[] { PersonIso.TYPE_ID });
+
             getGraphService().setLoader(loader1, loader2);
-            
+
             getGraphService().setRelationIds(relationIds);
-            graph = getGraphService().create();          
-        } catch(Exception e) {
+            graph = getGraphService().create();
+        } catch (Exception e) {
             LOG.error("Error while initialization", e);
         }
     }
-    
+
     public Integer getOrgId() {
         return orgId;
     }
@@ -153,6 +156,4 @@ public class GsmProcessValidator {
         return graph;
     }
 
-    
-       
 }

@@ -107,8 +107,8 @@ public class MenuService implements Serializable {
     }
 
     /**
-     * Returns true if a menu entry with data of all objects of a
-     * given type is visible.
+     * Returns true if a menu entry with data of all objects of a given type is
+     * visible.
      *
      * The return values is cached in a map.
      *
@@ -154,9 +154,11 @@ public class MenuService implements Serializable {
      * @param typeLimit
      *            the limit of entries
      * @return true if the map not contains the type or when the number of
-     *         entries is less than the given typeLimit or the typeLimit is less then zero
+     *         entries is less than the given typeLimit or the typeLimit is less
+     *         then zero
      */
-    private boolean isAllMenuVisible(String typeID, Map<String, Long> idNumberMap, Integer typeLimit) {
+    private boolean isAllMenuVisible(String typeID, Map<String, Long> idNumberMap,
+            Integer typeLimit) {
         if (!idNumberMap.containsKey(typeID)) {
             return true;
         }
@@ -172,7 +174,8 @@ public class MenuService implements Serializable {
         IGraphService graphService = getGraphService();
         graphService.setLoadLinks(false);
         GraphElementLoader graphElementLoader = new GraphElementLoader();
-        graphElementLoader.setTypeIds(new String[] { ITVerbund.TYPE_ID, Organization.TYPE_ID, ControlGroup.TYPE_ID });
+        graphElementLoader.setTypeIds(
+                new String[] { ITVerbund.TYPE_ID, Organization.TYPE_ID, ControlGroup.TYPE_ID });
         graphElementLoader.setElementFilter(new IElementFilter() {
 
             private static final long serialVersionUID = 1L;
@@ -182,7 +185,8 @@ public class MenuService implements Serializable {
 
                 if (element instanceof ControlGroup) {
                     ControlGroup controlGroup = (ControlGroup) element;
-                    String property = controlGroup.getEntity().getPropertyValue(ControlGroup.PROP_IS_CATALOG);
+                    String property = controlGroup.getEntity()
+                            .getPropertyValue(ControlGroup.PROP_IS_CATALOG);
                     return "1".equals(property);
                 }
 

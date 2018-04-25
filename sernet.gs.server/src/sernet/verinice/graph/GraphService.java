@@ -45,38 +45,40 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * A service to load and analyse the element network of verinice
- * with JGraphT.
+ * A service to load and analyse the element network of verinice with JGraphT.
  * 
- * JGraphT is a free Java graph library that provides mathematical graph-theory objects and algorithms.
+ * JGraphT is a free Java graph library that provides mathematical graph-theory
+ * objects and algorithms.
  * 
- * Use {@link IGraphElementLoader} to configure which elements are loaded by the service.
+ * Use {@link IGraphElementLoader} to configure which elements are loaded by the
+ * service.
  * 
  * To configure link types use method: setRelationIds(String[] relationIds).
- *  
- * You have to call "create()" to initialize the service.
- * After that you can start to use the service.
+ * 
+ * You have to call "create()" to initialize the service. After that you can
+ * start to use the service.
  * 
  * @see http://jgrapht.org/
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class GraphService implements IGraphService, Serializable {
-    
+
     private static final Logger LOG = Logger.getLogger(GraphService.class);
-    private static final Logger LOG_RUNTIME = Logger.getLogger(GraphService.class.getName() + ".runtime");
-    
+    private static final Logger LOG_RUNTIME = Logger
+            .getLogger(GraphService.class.getName() + ".runtime");
+
     private VeriniceGraph graph;
-    
+
     private boolean loadLinks = true;
 
     private String[] relationIds;
-    
+
     private List<IGraphElementLoader> loaderList;
-    
+
     private IBaseDao<CnATreeElement, Long> cnaTreeElementDao;
-    
+
     private IBaseDao<CnALink, CnALink.Id> cnaLinkDao;
-    
+
     private Map<String, CnATreeElement> uuidMap = new HashMap<>();
 
     @Override
@@ -86,20 +88,18 @@ public class GraphService implements IGraphService, Serializable {
         return graph;
     }
 
-
     @Override
-    public VeriniceGraph createDirectedGraph(){
+    public VeriniceGraph createDirectedGraph() {
         graph = new DirectedVeriniceGraph();
-
         doCreate();
         return graph;
     }
 
-    private void doCreate(){
+    private void doCreate() {
         long time = initRuntime();
         uuidMap.clear();
         loadVerticesAndRelatives();
-        if(isLoadLinks()) {
+        if (isLoadLinks()) {
             loadLinks();
         } else {
             LOG.info("Loading of links is disabled.");
@@ -107,10 +107,10 @@ public class GraphService implements IGraphService, Serializable {
         log();
         logRuntime("Graph generation runtime: ", time);
     }
-    
+
     /**
-     * Loads all vertices and adds them to the graph.
-     * An edge for each children is added if the child is part of the graph.
+     * Loads all vertices and adds them to the graph. An edge for each children
+     * is added if the child is part of the graph.
      */
     private void loadVerticesAndRelatives() {
         List<CnATreeElement> elementList = new LinkedList<>();
@@ -124,7 +124,7 @@ public class GraphService implements IGraphService, Serializable {
         for (CnATreeElement element : elementList) {
             graph.addVertex(element);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Vertex added: " + element.getTitle() + " [" + element.getTypeId() + "]" );
+                LOG.debug("Vertex added: " + element.getTitle() + " [" + element.getTypeId() + "]");
             }
             uuidMap.put(element.getUuid(), element);
         }
@@ -138,13 +138,15 @@ public class GraphService implements IGraphService, Serializable {
 
     protected void createParentChildEdge(CnATreeElement parent, CnATreeElement child) {
         CnATreeElement childWithProperties = uuidMap.get(child.getUuid());
-        if(childWithProperties!=null) {
+        if (childWithProperties != null) {
             graph.addEdge(new Edge(parent, childWithProperties));
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Edge added: " + parent.getTitle() + " - " + childWithProperties.getTitle() + ", relatives" );
+                LOG.debug("Edge added: " + parent.getTitle() + " - "
+                        + childWithProperties.getTitle() + ", relatives");
             }
         } else if (LOG.isDebugEnabled()) {
-            LOG.debug("No Edge added, child was not found. Child type / uuid: " + child.getTypeId() + " / " + child.getUuid() + ", Parent is: " + parent.getTitle() );
+            LOG.debug("No Edge added, child was not found. Child type / uuid: " + child.getTypeId()
+                    + " / " + child.getUuid() + ", Parent is: " + parent.getTitle());
         }
     }
 
@@ -165,11 +167,12 @@ public class GraphService implements IGraphService, Serializable {
             CnATreeElement source = uuidMap.get(link.getDependant().getUuid());
             CnATreeElement target = uuidMap.get(link.getDependency().getUuid());
             Edge edge = createEdge(link);
-            if(edge!=null) {
-                
+            if (edge != null) {
+
                 graph.addEdge(edge);
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Edge added: " + source.getTitle() + " <-> " + target.getTitle() + " [" + link.getRelationId() + "]");
+                    LOG.debug("Edge added: " + source.getTitle() + " <-> " + target.getTitle()
+                            + " [" + link.getRelationId() + "]");
                 }
             }
         }
@@ -179,7 +182,7 @@ public class GraphService implements IGraphService, Serializable {
         CnATreeElement source = uuidMap.get(link.getDependant().getUuid());
         CnATreeElement target = uuidMap.get(link.getDependency().getUuid());
         Edge edge = null;
-        if(source!=null && target!=null) {
+        if (source != null && target != null) {
             edge = new Edge(source, target);
             edge.setType(link.getRelationId());
             edge.setDescription(link.getComment());
@@ -216,7 +219,7 @@ public class GraphService implements IGraphService, Serializable {
     public void setRelationIds(String[] relationIds) {
         this.relationIds = (relationIds != null) ? relationIds.clone() : null;
     }
-    
+
     public IBaseDao<CnATreeElement, Long> getCnaTreeElementDao() {
         return cnaTreeElementDao;
     }
@@ -224,7 +227,7 @@ public class GraphService implements IGraphService, Serializable {
     public void setCnaTreeElementDao(IBaseDao<CnATreeElement, Long> cnaTreeElementDao) {
         this.cnaTreeElementDao = cnaTreeElementDao;
     }
-    
+
     public IBaseDao<CnALink, CnALink.Id> getCnaLinkDao() {
         return cnaLinkDao;
     }
@@ -232,15 +235,18 @@ public class GraphService implements IGraphService, Serializable {
     public void setCnaLinkDao(IBaseDao<CnALink, CnALink.Id> cnaLinkDao) {
         this.cnaLinkDao = cnaLinkDao;
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.graph.IGraphService#setLoader(sernet.verinice.graph.IGraphElementLoader[])
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.graph.IGraphService#setLoader(sernet.verinice.graph.
+     * IGraphElementLoader[])
      */
     @Override
     public void setLoader(IGraphElementLoader... loaderArray) {
-        loaderList = Arrays.asList(loaderArray);       
+        loaderList = Arrays.asList(loaderArray);
     }
-    
+
     public List<IGraphElementLoader> getLoaderList() {
         return loaderList;
     }
@@ -248,11 +254,11 @@ public class GraphService implements IGraphService, Serializable {
     public void setLoaderList(List<IGraphElementLoader> loaderList) {
         this.loaderList = loaderList;
     }
-    
-    private void log() {  
-        getGraph().log();        
+
+    private void log() {
+        getGraph().log();
     }
-    
+
     private long initRuntime() {
         long time = 0;
         if (LOG_RUNTIME.isDebugEnabled()) {
@@ -260,10 +266,10 @@ public class GraphService implements IGraphService, Serializable {
         }
         return time;
     }
-    
+
     private void logRuntime(String message, long starttime) {
-        LOG_RUNTIME.debug(message + TimeFormatter.getHumanRedableTime(System.currentTimeMillis()-starttime));
+        LOG_RUNTIME.debug(message
+                + TimeFormatter.getHumanRedableTime(System.currentTimeMillis() - starttime));
     }
 
-  
 }
