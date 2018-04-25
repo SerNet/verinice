@@ -99,11 +99,6 @@ public abstract class GsmProcessParameterCreater {
     private int normalPriorityRiskLimit;
     public static final int NORMAL_PRIORITY_RISK_LIMIT_DEFAULT = 500;
 
-    /**
-     * Every instance of GsmProcessStarter has an exclusive instance of a
-     * IGraphService Spring scope of graphService in veriniceserver-jbpm.xml is
-     * 'prototype'
-     */
     private IGraphService graphService;
     private VeriniceGraph graph;
 

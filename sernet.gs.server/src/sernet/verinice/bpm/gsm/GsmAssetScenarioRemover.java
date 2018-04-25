@@ -64,11 +64,6 @@ public class GsmAssetScenarioRemover {
     private static final String[] relationIds = { IncidentScenario.REL_INCSCEN_ASSET,
             Control.REL_CONTROL_INCSCEN };
 
-    /**
-     * Every instance of GsmProcessStarter has an exclusive instance of a
-     * IGraphService Spring scope of graphService in veriniceserver-jbpm.xml is
-     * 'prototype'
-     */
     private IGraphService graphService;
 
     private IBaseDao<CnALink, CnALink.Id> linkDao;

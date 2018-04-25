@@ -60,11 +60,6 @@ public class GsmProcessValidator {
 
     private IGsmValidationResult result = new GsmValidationResult();
 
-    /**
-     * Every instance of GsmProcessStarter has an exclusive instance of a
-     * IGraphService Spring scope of graphService in veriniceserver-jbpm.xml is
-     * 'prototype'
-     */
     private IGraphService graphService;
     private VeriniceGraph graph;
 

@@ -53,10 +53,6 @@ public class Cleaner {
     private static final String[] RELATION_IDS = { IncidentScenario.REL_INCSCEN_ASSET,
             IncidentScenario.REL_INCSCEN_VULNERABILITY, Control.REL_CONTROL_INCSCEN };
 
-    /**
-     * Every instance of Cleaner has an exclusive instance of a IGraphService
-     * Spring scope of graphService in veriniceserver-jbpm.xml is 'prototype'
-     */
     private IGraphService graphService;
 
     private ICommandService commandService;

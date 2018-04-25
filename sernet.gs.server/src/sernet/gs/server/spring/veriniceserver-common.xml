@@ -365,7 +365,7 @@ This variant:
     
     <!-- A service to load and analyse the element network of verinice with JGraphT. -->
     <!-- JGraphT is a free Java graph library that provides mathematical graph-theory objects and algorithms. -->
-    <bean id="graphService" class="sernet.verinice.graph.GraphService" scope="prototype">  
+    <bean id="graphService" class="sernet.verinice.graph.GraphService">
         <property name="cnaTreeElementDao" ref="cnaTreeElementDao" />
         <property name="cnaLinkDao" ref="cnaLinkDao" />
     </bean>
