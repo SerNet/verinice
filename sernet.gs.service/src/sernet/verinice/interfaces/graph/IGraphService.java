@@ -66,14 +66,6 @@ public interface IGraphService {
     VeriniceGraph create();
 
     /**
-     * Returns the element network in a VeriniceGraph. Call create() before
-     * using this method.
-     * 
-     * @return The VeriniceGraph
-     */
-    VeriniceGraph getGraph();
-
-    /**
      * Initializes and creates a directed verinice graph..
      */
     VeriniceGraph createDirectedGraph();

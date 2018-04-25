@@ -138,13 +138,11 @@ public class GraphServiceTest extends BeforeEachVNAImportHelper {
             loader.setScopeId(scopeId);
         }
         loader.setCnaTreeElementDao(elementDao);
-        graphService.setLoader(loader);  
-        if(relationsTypeIds!=null) {
+        graphService.setLoader(loader);
+        if (relationsTypeIds != null) {
             graphService.setRelationIds(relationsTypeIds);
         }
-        graphService.create();
-        VeriniceGraph graph = graphService.getGraph();
-        return graph;
+        return graphService.create();
     }
 
     private IncidentScenario findByTitle(Set<CnATreeElement> isList, String title) {

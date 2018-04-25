@@ -99,8 +99,9 @@ public class GsmAssetScenarioRemover {
 
         // elements of gsm process are *all* from one scope
         int orgId = elementList.iterator().next().getScopeId();
-        initGraph(orgId);
-        DeleteAssetScenarioLinks hibernateCallback = new DeleteAssetScenarioLinks(elementList);
+        VeriniceGraph graph = initGraph(orgId);
+        DeleteAssetScenarioLinks hibernateCallback = new DeleteAssetScenarioLinks(elementList,
+                graph);
         Integer numberOfDeletedLinks = (Integer) getLinkDao().executeCallback(hibernateCallback);
         return numberOfDeletedLinks;
     }
@@ -113,19 +114,15 @@ public class GsmAssetScenarioRemover {
         return getElementDao().findByCallback(new LoadElements(elementUuidSet));
     }
 
-    private void initGraph(Integer orgId) {
-        try {
-            IGraphElementLoader loader = new GraphElementLoader();
-            loader.setTypeIds(typeIds);
-            loader.setScopeId(orgId);
+    private VeriniceGraph initGraph(Integer orgId) {
+        IGraphElementLoader loader = new GraphElementLoader();
+        loader.setTypeIds(typeIds);
+        loader.setScopeId(orgId);
 
-            getGraphService().setLoader(loader);
+        getGraphService().setLoader(loader);
 
-            getGraphService().setRelationIds(relationIds);
-            getGraphService().create();
-        } catch (Exception e) {
-            LOG.error("Error while initialization", e);
-        }
+        getGraphService().setRelationIds(relationIds);
+        return getGraphService().create();
     }
 
     public IGraphService getGraphService() {
@@ -134,10 +131,6 @@ public class GsmAssetScenarioRemover {
 
     public void setGraphService(IGraphService graphService) {
         this.graphService = graphService;
-    }
-
-    public VeriniceGraph getGraph() {
-        return getGraphService().getGraph();
     }
 
     public IBaseDao<CnALink, CnALink.Id> getLinkDao() {
@@ -188,12 +181,14 @@ public class GsmAssetScenarioRemover {
 
         private final String hql = "delete from CnALink link where link.id.typeId = :linkTypeId and link.id.dependencyId in (:assetIds) and link.id.dependantId = :scenarioDbId";
         private Query query;
+        private final VeriniceGraph graph;
 
         private List<CnATreeElement> processAssets = new LinkedList<CnATreeElement>();
         private List<CnATreeElement> processScenarios = new LinkedList<CnATreeElement>();
 
-        public DeleteAssetScenarioLinks(List<CnATreeElement> elementList) {
+        public DeleteAssetScenarioLinks(List<CnATreeElement> elementList, VeriniceGraph graph) {
             super();
+            this.graph = graph;
             processAssets = new LinkedList<CnATreeElement>();
             processScenarios = new LinkedList<CnATreeElement>();
             for (CnATreeElement element : elementList) {
@@ -227,7 +222,7 @@ public class GsmAssetScenarioRemover {
 
         private int handleScenario(CnATreeElement scenario) {
             // get all assets linked to the scenario
-            Set<CnATreeElement> allLinkedAssets = getGraph().getLinkTargets(scenario,
+            Set<CnATreeElement> allLinkedAssets = graph.getLinkTargets(scenario,
                     IncidentScenario.REL_INCSCEN_ASSET);
             int numberOfAllLinkedAssets = allLinkedAssets.size();
             // use all assets which are linked and in the process
@@ -237,7 +232,7 @@ public class GsmAssetScenarioRemover {
             int numberOfDeletedLinks = deleteAssetScenarioLinks(query, scenario,
                     processLinkedAssets);
             // Update control state
-            Set<CnATreeElement> linkedControls = getGraph().getLinkTargets(scenario,
+            Set<CnATreeElement> linkedControls = graph.getLinkTargets(scenario,
                     Control.REL_CONTROL_INCSCEN);
             String state = determineState(numberOfProcessLinkedAssets, numberOfAllLinkedAssets);
             updateControlState(linkedControls, state);

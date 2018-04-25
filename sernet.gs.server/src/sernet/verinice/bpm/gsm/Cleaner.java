@@ -65,13 +65,13 @@ public class Cleaner {
      */
     public void cleanUpOrganization(Integer orgId) {
         try {
-            initGraph(orgId);
-            Set<CnATreeElement> scenarioSet = getGraph().getElements(IncidentScenario.TYPE_ID);
+            VeriniceGraph graph = initGraph(orgId);
+            Set<CnATreeElement> scenarioSet = graph.getElements(IncidentScenario.TYPE_ID);
             for (CnATreeElement scenario : scenarioSet) {
-                int numberOfLinks = getGraph()
+                int numberOfLinks = graph
                         .getLinkTargets(scenario, IncidentScenario.REL_INCSCEN_ASSET).size();
                 if (numberOfLinks == 0) {
-                    deleteScenarioAndControl(scenario);
+                    deleteScenarioAndControl(scenario, graph);
                 }
             }
         } catch (CommandException e) {
@@ -79,18 +79,19 @@ public class Cleaner {
         }
     }
 
-    private void deleteScenarioAndControl(CnATreeElement scenario) throws CommandException {
+    private void deleteScenarioAndControl(CnATreeElement scenario, VeriniceGraph graph)
+            throws CommandException {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Deleting scenario (incl. linked control and vulnerability): "
                     + scenario.getTitle());
         }
-        Set<CnATreeElement> controlSet = getGraph().getLinkTargets(scenario,
+        Set<CnATreeElement> controlSet = graph.getLinkTargets(scenario,
                 Control.REL_CONTROL_INCSCEN);
         for (CnATreeElement control : controlSet) {
             RemoveElement<CnATreeElement> command = new RemoveElement<CnATreeElement>(control);
             command = getCommandService().executeCommand(command);
         }
-        Set<CnATreeElement> vulnerabilitySet = getGraph().getLinkTargets(scenario,
+        Set<CnATreeElement> vulnerabilitySet = graph.getLinkTargets(scenario,
                 IncidentScenario.REL_INCSCEN_VULNERABILITY);
         for (CnATreeElement vulnerability : vulnerabilitySet) {
             RemoveElement<CnATreeElement> command = new RemoveElement<CnATreeElement>(
@@ -101,23 +102,15 @@ public class Cleaner {
         command = getCommandService().executeCommand(command);
     }
 
-    private void initGraph(Integer orgId) {
-        try {
-            IGraphElementLoader loader = new GraphElementLoader();
-            loader.setTypeIds(TYPE_IDS);
-            loader.setScopeId(orgId);
+    private VeriniceGraph initGraph(Integer orgId) {
+        IGraphElementLoader loader = new GraphElementLoader();
+        loader.setTypeIds(TYPE_IDS);
+        loader.setScopeId(orgId);
 
-            getGraphService().setLoader(loader);
+        getGraphService().setLoader(loader);
 
-            getGraphService().setRelationIds(RELATION_IDS);
-            getGraphService().create();
-        } catch (Exception e) {
-            LOG.error("Error while initialization", e);
-        }
-    }
-
-    private VeriniceGraph getGraph() {
-        return getGraphService().getGraph();
+        getGraphService().setRelationIds(RELATION_IDS);
+        return getGraphService().create();
     }
 
     public IGraphService getGraphService() {
