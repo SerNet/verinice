@@ -172,7 +172,6 @@ public class MenuService implements Serializable {
     public void loadMenuData() {
 
         IGraphService graphService = getGraphService();
-        graphService.setLoadLinks(false);
         GraphElementLoader graphElementLoader = new GraphElementLoader();
         graphElementLoader.setTypeIds(
                 new String[] { ITVerbund.TYPE_ID, Organization.TYPE_ID, ControlGroup.TYPE_ID });
@@ -195,7 +194,7 @@ public class MenuService implements Serializable {
         });
 
         graphService.setLoader(graphElementLoader);
-        VeriniceGraph veriniceGraph = graphService.create();
+        VeriniceGraph veriniceGraph = graphService.create(false);
 
         itNetworks = sortByTitle(veriniceGraph.getElements(ITVerbund.class));
         organizations = sortByTitle(veriniceGraph.getElements(Organization.class));

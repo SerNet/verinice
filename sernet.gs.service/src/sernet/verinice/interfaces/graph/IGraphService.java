@@ -38,17 +38,6 @@ package sernet.verinice.interfaces.graph;
  */
 public interface IGraphService {
 
-    /**
-     * Disables the loading of links if param loadLinks is false regardless of
-     * the relation ids.
-     *
-     * By default the loading of links is enabled.
-     *
-     * @param loadLinks
-     *            If false no links are loaded at all
-     */
-    void setLoadLinks(boolean loadLinks);
-
     void setRelationIds(String[] relationIds);
 
     /**
@@ -66,8 +55,29 @@ public interface IGraphService {
     VeriniceGraph create();
 
     /**
-     * Initializes and creates a directed verinice graph..
+     * Initializes and creates the VeriniceGraph.
+     * 
+     * @param loadLinks
+     *            Disables the loading of links if {@code false} regardless of
+     *            the relation ids.
+     */
+    VeriniceGraph create(boolean loadLinks);
+
+    /**
+     * Initializes and creates a directed verinice graph. The loading of links
+     * will be enabled.
+     * 
+     * @return
      */
     VeriniceGraph createDirectedGraph();
+
+    /**
+     * Initializes and creates a directed verinice graph..
+     * 
+     * @param loadLinks
+     *            Disables the loading of links if {@code false} regardless of
+     *            the relation ids.
+     */
+    VeriniceGraph createDirectedGraph(boolean loadLinks);
 
 }

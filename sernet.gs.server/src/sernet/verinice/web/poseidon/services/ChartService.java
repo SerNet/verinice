@@ -204,13 +204,12 @@ public class ChartService extends GenericChartService {
     public StateData aggregateControlStates(int scopeId, int catalogId) {
 
         IGraphService graphService = getGraphService();
-        graphService.setLoadLinks(false);
         IGraphElementLoader graphElementLoader = new GraphElementLoader();
         graphElementLoader.setTypeIds(
                 new String[] { Organization.TYPE_ID, ControlGroup.TYPE_ID, Control.TYPE_ID });
         graphElementLoader.setScopeId(scopeId);
         graphService.setLoader(graphElementLoader);
-        VeriniceGraph veriniceGraph = graphService.createDirectedGraph();
+        VeriniceGraph veriniceGraph = graphService.createDirectedGraph(false);
         ControlGroup controlGroup = (ControlGroup) veriniceGraph.getElement(catalogId);
 
         AggregateIsmsControlsStrategy strategy = new AggregateIsmsControlsStrategyImpl(
@@ -232,13 +231,12 @@ public class ChartService extends GenericChartService {
     public StateData aggregateControlStates(int scopeId) {
 
         IGraphService graphService = getGraphService();
-        graphService.setLoadLinks(false);
         IGraphElementLoader graphElementLoader = new GraphElementLoader();
         graphElementLoader.setTypeIds(
                 new String[] { Organization.TYPE_ID, ControlGroup.TYPE_ID, Control.TYPE_ID });
         graphService.setLoader(graphElementLoader);
 
-        VeriniceGraph veriniceGraph = graphService.createDirectedGraph();
+        VeriniceGraph veriniceGraph = graphService.createDirectedGraph(false);
 
         List<ControlGroup> catalogs = menuService.getCatalogs();
         List<ControlGroup> catalogsOfScopeId = new ArrayList<>();
@@ -259,14 +257,13 @@ public class ChartService extends GenericChartService {
 
     private VeriniceGraph loadSafeguards(Integer scopeId, String... typeIds) {
         IGraphService graphService = getGraphService();
-        graphService.setLoadLinks(false);
         IGraphElementLoader graphElementLoader = new GraphElementLoader();
         graphElementLoader.setTypeIds(typeIds);
         if (scopeId != null) {
             graphElementLoader.setScopeId(scopeId);
         }
         graphService.setLoader(graphElementLoader);
-        return graphService.create();
+        return graphService.create(false);
     }
 
     private Integer checkScopeId(String scopeId) {

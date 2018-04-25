@@ -67,8 +67,6 @@ public class GraphService implements IGraphService, Serializable {
     private static final Logger LOG_RUNTIME = Logger
             .getLogger(GraphService.class.getName() + ".runtime");
 
-    private boolean loadLinks = true;
-
     private String[] relationIds;
 
     private List<IGraphElementLoader> loaderList;
@@ -79,23 +77,33 @@ public class GraphService implements IGraphService, Serializable {
 
     @Override
     public VeriniceGraph create() {
+        return create(true);
+    }
+
+    @Override
+    public VeriniceGraph create(boolean loadLinks) {
         VeriniceGraph graph = new UndirectedVeriniceGraph();
-        doCreate(graph);
+        doCreate(graph, loadLinks);
         return graph;
     }
 
     @Override
     public VeriniceGraph createDirectedGraph() {
+        return createDirectedGraph(true);
+    }
+
+    @Override
+    public VeriniceGraph createDirectedGraph(boolean loadLinks) {
         VeriniceGraph graph = new DirectedVeriniceGraph();
 
-        doCreate(graph);
+        doCreate(graph, loadLinks);
         return graph;
     }
 
-    private void doCreate(VeriniceGraph graph) {
+    private void doCreate(VeriniceGraph graph, boolean loadLinks) {
         long time = initRuntime();
         Map<String, CnATreeElement> uuidMap = loadVerticesAndRelatives(graph);
-        if (isLoadLinks()) {
+        if (loadLinks) {
             loadLinks(graph, uuidMap);
         } else {
             LOG.info("Loading of links is disabled.");
@@ -194,15 +202,6 @@ public class GraphService implements IGraphService, Serializable {
             edge.setRiskTreatment(link.getRiskTreatment());
         }
         return edge;
-    }
-
-    public boolean isLoadLinks() {
-        return loadLinks;
-    }
-
-    @Override
-    public void setLoadLinks(boolean loadLinks) {
-        this.loadLinks = loadLinks;
     }
 
     public String[] getRelationIds() {
