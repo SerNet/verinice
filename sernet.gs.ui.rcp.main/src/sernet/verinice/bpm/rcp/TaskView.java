@@ -645,8 +645,14 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     }
 
     private void configureActions() {
-        cancelTaskAction.setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKDELETE));
-        comboAccount.setEnabled(isTaskShowAllEnabled());
+        Display.getDefault().asyncExec(new Runnable() {
+            @Override
+            public void run() {
+                cancelTaskAction
+                        .setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKDELETE));
+                comboAccount.setEnabled(isTaskShowAllEnabled());
+            }
+        });
     }
 
     boolean isTaskShowAllEnabled() {

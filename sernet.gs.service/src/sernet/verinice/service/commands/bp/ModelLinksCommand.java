@@ -20,6 +20,7 @@
 package sernet.verinice.service.commands.bp;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,11 +60,11 @@ import sernet.verinice.service.commands.CreateMultipleLinks;
  */
 public class ModelLinksCommand extends GenericCommand {
 
-    private static final long serialVersionUID = 4422466491907527613L;
+    private static final long serialVersionUID = 3734973573896101608L;
 
     private static final Logger LOG = Logger.getLogger(ModelLinksCommand.class);
 
-    private static final Map<String, String> ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS = new HashMap<>();
+    public static final Map<String, String> ELEMENT_TO_REQUIREMENT_LINK_TYPE_IDS = new HashMap<>();
     private static final Map<String, String> ELEMENT_TO_THREAT_LINK_TYPE_IDS = new HashMap<>();
 
     static {
@@ -105,6 +106,7 @@ public class ModelLinksCommand extends GenericCommand {
     private transient Set<String> moduleUuidsFromCompendium;
     private transient Set<String> newModuleUuidsFromScope;
     private transient ItNetwork itNetwork;
+    private Proceeding proceeding;
 
     private transient Set<CnATreeElement> elementsFromScope;
     private transient Set<CnATreeElement> requirementsFromCompendium;
@@ -145,11 +147,13 @@ public class ModelLinksCommand extends GenericCommand {
         for (CnATreeElement requirementFromCompendium : requirementsFromCompendium) {
             linkList.addAll(createLinks(requirementFromCompendium));
         }
-        CreateMultipleLinks createMultipleLinks = new CreateMultipleLinks(linkList);
-        getCommandService().executeCommand(createMultipleLinks);
+        if (!linkList.isEmpty()) {
+            CreateMultipleLinks createMultipleLinks = new CreateMultipleLinks(linkList);
+            getCommandService().executeCommand(createMultipleLinks);
+        }
     }
 
-    protected List<Link> createLinks(CnATreeElement requirementFromCompendium) {
+    private List<Link> createLinks(CnATreeElement requirementFromCompendium) {
         List<Link> linkList = new LinkedList<>();
         linkList.addAll(linkRequirementWithTargetElements(requirementFromCompendium));
         Set<CnATreeElement> linkedElements = loadLinkedElements(
@@ -224,7 +228,7 @@ public class ModelLinksCommand extends GenericCommand {
 
     private List<Link> createLinksToSafeguardAndThreat(CnATreeElement requirementFromCompendium,
             Set<CnATreeElement> linkedElements) {
-        List<Link> linkList = new LinkedList<>();
+        List<Link> linkList = new ArrayList<>(linkedElements.size());
         for (CnATreeElement element : linkedElements) {
             if (element instanceof Safeguard) {
                 Safeguard safeguardFromCompendium = (Safeguard) element;
@@ -282,7 +286,7 @@ public class ModelLinksCommand extends GenericCommand {
         Set<CnATreeElement> allRequirements = findRequirementsByModuleUuid(moduleUuids);
         Set<CnATreeElement> validRequirements = new HashSet<>(allRequirements.size());
         for (CnATreeElement requirement : allRequirements) {
-            if (ModelingValidator.isRequirementValidInItNetwork(requirement, itNetwork)) {
+            if (ModelingValidator.isRequirementValid(requirement, proceeding)) {
                 validRequirements.add(requirement);
             }
         }
@@ -324,7 +328,7 @@ public class ModelLinksCommand extends GenericCommand {
     private void loadAllSafeguardsFromScope() {
         List<CnATreeElement> safeguards = getMetaDao().loadElementsFromScope(Safeguard.TYPE_ID,
                 itNetwork.getDbId());
-        allSafeguardsFromScope = new HashMap<>();
+        allSafeguardsFromScope = new HashMap<>(safeguards.size());
         for (CnATreeElement safeguard : safeguards) {
             allSafeguardsFromScope.put(Safeguard.getIdentifierOfSafeguard(safeguard), safeguard);
         }
@@ -333,7 +337,7 @@ public class ModelLinksCommand extends GenericCommand {
     private void loadAllThreatsFromScope() {
         List<CnATreeElement> threats = getMetaDao().loadElementsFromScope(BpThreat.TYPE_ID,
                 itNetwork.getDbId());
-        allThreatsFromScope = new HashMap<>();
+        allThreatsFromScope = new HashMap<>(threats.size());
         for (CnATreeElement threat : threats) {
             allThreatsFromScope.put(BpThreat.getIdentifierOfThreat(threat), threat);
         }
@@ -341,6 +345,10 @@ public class ModelLinksCommand extends GenericCommand {
 
     private boolean isNewModuleInScope() {
         return newModuleUuidsFromScope != null && !newModuleUuidsFromScope.isEmpty();
+    }
+
+    public void setProceeding(Proceeding proceeding) {
+        this.proceeding = proceeding;
     }
 
     public ModelingMetaDao getMetaDao() {

@@ -20,11 +20,12 @@
 package sernet.verinice.service.commands.bp;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -58,7 +59,7 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
 
     private static final long serialVersionUID = -4075156601968217297L;
 
-    private transient Logger log = Logger.getLogger(ModelThreatsCommand.class);
+    private static final Logger log = Logger.getLogger(ModelThreatsCommand.class);
 
     private transient ModelingMetaDao metaDao;
 
@@ -98,7 +99,7 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
                 insertMissingThreats();
             }
         } catch (CommandException e) {
-            getLog().error("Error while modeling threats.", e);
+            log.error("Error while modeling threats.", e);
             throw new RuntimeCommandException("Error while modeling threats.", e);
         }
     }
@@ -118,14 +119,14 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
 
         if (!isThreatInChildrenSet(parent.getChildren(), missingThreats.get(threat.getUuid()))) {
             CopyCommand copyCommand = new CopyCommand(parent.getUuid(),
-                    Arrays.asList(threat.getUuid()));
+                    Collections.singletonList(threat.getUuid()));
             getCommandService().executeCommand(copyCommand);
-            if (getLog().isDebugEnabled()) {
-                getLog().debug(
+            if (log.isDebugEnabled()) {
+                log.debug(
                         "Threat: " + threat.getTitle() + " created in group: " + parent.getTitle());
             }
-        } else if (getLog().isDebugEnabled()) {
-            getLog().debug("Threat: " + threat.getTitle() + " already exists in group: "
+        } else if (log.isDebugEnabled()) {
+            log.debug("Threat: " + threat.getTitle() + " already exists in group: "
                     + parent.getTitle());
         }
     }
@@ -145,18 +146,16 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
     private CnATreeElement getOrCreateGroup(CnATreeElement parent, CnATreeElement compendiumGroup)
             throws CommandException {
         CnATreeElement group = null;
-        boolean groupFound = false;
         for (CnATreeElement child : parent.getChildren()) {
             if (child.getTitle().equals(compendiumGroup.getTitle())) {
                 group = child;
-                groupFound = true;
                 break;
             }
         }
-        if (!groupFound) {
+        if (group == null) {
             group = createGroup(parent, compendiumGroup);
-        } else if (getLog().isDebugEnabled()) {
-            getLog().debug("Threat group: " + compendiumGroup.getTitle()
+        } else if (log.isDebugEnabled()) {
+            log.debug("Threat group: " + compendiumGroup.getTitle()
                     + " already exists in group: " + parent.getTitle());
         }
         return group;
@@ -172,8 +171,8 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
         String groupUuid = copyCommand.getNewElements().get(0);
         group = getMetaDao().loadElementWithPropertiesAndChildren(groupUuid);
         parent.addChild(group);
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Threat group: " + compendiumGroup.getTitle() + " created in group: "
+        if (log.isDebugEnabled()) {
+            log.debug("Threat group: " + compendiumGroup.getTitle() + " created in group: "
                     + parent.getTitle());
         }
         return group;
@@ -205,14 +204,14 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
 
     private void loadCompendiumThreats() {
         compendiumThreats = new HashSet<>(findThreatsByModuleUuids());
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Threats linked to modules: ");
+        if (log.isDebugEnabled()) {
+            log.debug("Threats linked to modules: ");
             logElements(compendiumThreats);
         }
     }
 
     private List<CnATreeElement> findThreatsByModuleUuids() {
-        return getMetaDao().loadLinkedElementsOfParents(moduleUuids, BpThreat.TYPE_ID);
+        return getMetaDao().loadLinkedElementsWithPropertiesOfParents(moduleUuids, BpThreat.TYPE_ID);
     }
 
     /**
@@ -222,8 +221,8 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
     private void loadScopeThreats() {
         scopeThreats = new HashSet<>(
                 getMetaDao().loadElementsFromScope(BpThreat.TYPE_ID, targetScopeId));
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Threats in target scope: ");
+        if (log.isDebugEnabled()) {
+            log.debug("Threats in target scope: ");
             logElements(scopeThreats);
         }
     }
@@ -231,7 +230,7 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
     private void loadParents() {
         List<CnATreeElement> threats = getMetaDao().loadElementsWithParent(missingThreats.keySet());
 
-        final List<String> parentUuids = new LinkedList<>();
+        final List<String> parentUuids = new ArrayList<>(threats.size());
         for (CnATreeElement threat : threats) {
             threatsWithParents.put(threat.getUuid(), threat);
             parentUuids.add(threat.getParent().getUuid());
@@ -243,8 +242,8 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
         for (CnATreeElement group : groupsWithProperties) {
             threatParentsWithProperties.put(group.getUuid(), group);
         }
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Threats parents: ");
+        if (log.isDebugEnabled()) {
+            log.debug("Threats parents: ");
             logElements(threatParentsWithProperties.values());
         }
     }
@@ -253,8 +252,8 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
         missingThreats.clear();
         for (CnATreeElement threat : compendiumThreats) {
             if (!isThreatInScope(threat)) {
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Threat is not in scope yet: " + threat);
+                if (log.isDebugEnabled()) {
+                    log.debug("Threat is not in scope yet: " + threat);
                 }
                 missingThreats.put(threat.getUuid(), threat);
             }
@@ -273,7 +272,7 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
 
     private void logElements(Collection<?> collection) {
         for (Object element : collection) {
-            getLog().debug(element);
+            log.debug(element);
         }
 
     }
@@ -307,13 +306,6 @@ public class ModelThreatsCommand extends ChangeLoggingCommand {
     @Override
     public String getStationId() {
         return stationId;
-    }
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(ModelThreatsCommand.class);
-        }
-        return log;
     }
 
 }

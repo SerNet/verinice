@@ -22,7 +22,7 @@ package sernet.verinice.service.commands.bp;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.model.bp.elements.BpRequirement;
-import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -55,37 +55,72 @@ public final class ModelingValidator {
      *            An IT network
      * @return true if the CnATreeElement is valid, false if not
      */
-    public static boolean isRequirementValidInItNetwork(CnATreeElement requirement, ItNetwork itNetwork) {
+    public static boolean isRequirementValid(CnATreeElement requirement,
+            Proceeding proceeding) {
         return BpRequirement.isBpRequirement(requirement)
-                && isRequirementValidInItNetworkTypeSafe((BpRequirement) requirement, itNetwork);
+                && isRequirementValidTypeSafe((BpRequirement) requirement, proceeding);
     }
 
-    private static boolean isRequirementValidInItNetworkTypeSafe(BpRequirement requirement,
-            ItNetwork itNetwork) {
-        String proceedingOfItNetwork = itNetwork.getEntity()
-                .getRawPropertyValue(ItNetwork.PROP_QUALIFIER);
+    /**
+     * Checks if a safeguard is valid when modelling in an IT network. The
+     * method checks whether the set proceeding of the safeguard matches the
+     * proceeding in the IT network.
+     * 
+     * @param safeguard
+     *            A CnATreeElement that should be a safeguard
+     * @param itNetwork
+     *            An IT network
+     * @return true if the CnATreeElement is valid, false if not
+     */
+    public static boolean isSafeguardValid(CnATreeElement safeguard,
+            Proceeding proceeding) {
+        return Safeguard.isSafeguard(safeguard)
+                && isSafeguardValidTypeSafe((Safeguard) safeguard, proceeding);
+    }
+
+    private static boolean isSafeguardValidTypeSafe(Safeguard requirement,
+            Proceeding proceeding) {
+        String proceedingOfSafeguard = requirement.getEntity()
+                .getRawPropertyValue(Safeguard.PROP_QUALIFIER);
+        if (proceeding == null) {
+            return true;
+        }
+
+        switch (proceeding) {
+        case BASIC:
+            return Safeguard.PROP_QUALIFIER_BASIC.equals(proceedingOfSafeguard);
+        case STANDARD:
+            return true;
+        case HIGH:
+            return true;
+        default: {
+            // Proceeding is unknown, accept the requirement anyway
+            LOG.info("Unknown proceeding of securing: " + proceeding);
+            return true;
+        }
+        }
+    }
+
+    private static boolean isRequirementValidTypeSafe(BpRequirement requirement,
+            Proceeding proceeding) {
         String proceedingOfRequirement = requirement.getEntity()
                 .getRawPropertyValue(BpRequirement.PROP_QUALIFIER);
-        if (proceedingOfItNetwork == null || proceedingOfItNetwork.isEmpty()) {
+        if (proceeding == null) {
             return true;
         }
 
-        // with ENUMs one simply could
-        // return proceedingOfRequirement <= proceedingOfItNetwork;
-        switch (proceedingOfItNetwork) {
-        case ItNetwork.PROP_QUALIFIER_BASIC:
+        switch (proceeding) {
+        case BASIC:
             return BpRequirement.PROP_QUALIFIER_BASIC.equals(proceedingOfRequirement);
-        case ItNetwork.PROP_QUALIFIER_STANDARD:
-            return !BpRequirement.PROP_QUALIFIER_HIGH.equals(proceedingOfRequirement);
-        case ItNetwork.PROP_QUALIFIER_HIGH:
+        case STANDARD:
             return true;
+        case HIGH:
+            return true;
+        default: {
+            // Proceeding is unknown, accept the requirement anyway
+            LOG.info("Unknown proceeding of securing: " + proceeding);
+            return true;
+            }
         }
-
-        // Proceeding is unknown, accept the requirement anyway
-        if (LOG.isInfoEnabled()) {
-            LOG.info("It network " + itNetwork.getTitle()
-                    + " has an unknown proceeding of securing: " + proceedingOfItNetwork);
-        }
-        return true;
     }
 }

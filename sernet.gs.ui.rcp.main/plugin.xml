@@ -1638,8 +1638,8 @@
             id="sernet.gs.ui.rcp.main.page4"
             name="%page.name"/>
       <page
-            class="sernet.gs.ui.rcp.main.preferences.KatalogePreferencePage"
-            id="sernet.gs.ui.rcp.main.preferences.CnAPreferencePage1"
+            class="sernet.gs.ui.rcp.main.preferences.ItbpPreferencePage"
+            id="sernet.gs.ui.rcp.main.preferences.ItbpPreferencePage"
             name="%page.name.0"/>
       <page
             class="sernet.gs.ui.rcp.main.preferences.ClientServerPreferencePage"

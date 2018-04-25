@@ -45,11 +45,13 @@ public class Messages extends NLS {
     public static String BaseProtectionView_Loading_2;
     public static String BbModelingDropPerformer_Error0;
     public static String BbModelingDropPerformer_Error1;
+    public static String BbModelingDropPerformer_errorClosingEditors;
     public static String BbModelingDropPerformerModelingError;
     public static String BbModelingDropPerformer_TwoModules;
     public static String BbModelingDropPerformer_ModelingAborted;
     public static String BbModelingDropPerformer_MultipleModules;
     public static String BbModelingDropPerformer_NoModules;
+    public static String BbModelingDropPerformer_noSecuringApproach;
     public static String BbModelingDropPerformer_OneModule;
     public static String BbModelingDropPerformerConfirmationNoProceeding;
     public static String BbModelingDropPerformerConfirmation;

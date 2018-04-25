@@ -204,9 +204,15 @@ public class Safeguard extends CnATreeElement implements IBpElement, IIdentifiab
         return joinPrefixAndTitle(getIdentifier(), getTitle());
     }
 
+    public static boolean isSafeguard(CnATreeElement element) {
+        if (element == null) {
+            return false;
+        }
+        return TYPE_ID.equals(element.getTypeId());
+    }
+
     @Override
     public Collection<String> getTags() {
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
-
 }
