@@ -77,8 +77,6 @@ public class GraphService implements IGraphService, Serializable {
 
     private IBaseDao<CnALink, CnALink.Id> cnaLinkDao;
 
-    private Map<String, CnATreeElement> uuidMap = new HashMap<>();
-
     @Override
     public VeriniceGraph create() {
         VeriniceGraph graph = new UndirectedVeriniceGraph();
@@ -96,10 +94,9 @@ public class GraphService implements IGraphService, Serializable {
 
     private void doCreate(VeriniceGraph graph) {
         long time = initRuntime();
-        uuidMap.clear();
-        loadVerticesAndRelatives(graph);
+        Map<String, CnATreeElement> uuidMap = loadVerticesAndRelatives(graph);
         if (isLoadLinks()) {
-            loadLinks(graph);
+            loadLinks(graph, uuidMap);
         } else {
             LOG.info("Loading of links is disabled.");
         }
@@ -111,7 +108,7 @@ public class GraphService implements IGraphService, Serializable {
      * Loads all vertices and adds them to the graph. An edge for each children
      * is added if the child is part of the graph.
      */
-    private void loadVerticesAndRelatives(VeriniceGraph graph) {
+    private Map<String, CnATreeElement> loadVerticesAndRelatives(VeriniceGraph graph) {
         List<CnATreeElement> elementList = new LinkedList<>();
         for (IGraphElementLoader loader : getLoaderList()) {
             loader.setCnaTreeElementDao(getCnaTreeElementDao());
@@ -120,6 +117,7 @@ public class GraphService implements IGraphService, Serializable {
         if (LOG.isInfoEnabled()) {
             LOG.info(elementList.size() + " relevant elements found");
         }
+        Map<String, CnATreeElement> uuidMap = new HashMap<>(elementList.size());
         for (CnATreeElement element : elementList) {
             graph.addVertex(element);
             if (LOG.isDebugEnabled()) {
@@ -130,13 +128,14 @@ public class GraphService implements IGraphService, Serializable {
         for (CnATreeElement parent : elementList) {
             Set<CnATreeElement> children = parent.getChildren();
             for (CnATreeElement child : children) {
-                createParentChildEdge(parent, child, graph);
+                createParentChildEdge(parent, child, graph, uuidMap);
             }
         }
+        return uuidMap;
     }
 
     protected void createParentChildEdge(CnATreeElement parent, CnATreeElement child,
-            VeriniceGraph graph) {
+            VeriniceGraph graph, Map<String, CnATreeElement> uuidMap) {
         CnATreeElement childWithProperties = uuidMap.get(child.getUuid());
         if (childWithProperties != null) {
             graph.addEdge(new Edge(parent, childWithProperties));
@@ -150,7 +149,7 @@ public class GraphService implements IGraphService, Serializable {
         }
     }
 
-    private void loadLinks(VeriniceGraph graph) {
+    private void loadLinks(VeriniceGraph graph, Map<String, CnATreeElement> uuidMap) {
         DetachedCriteria linkCrit = DetachedCriteria.forClass(CnALink.class);
         linkCrit.setFetchMode("dependant", FetchMode.JOIN);
         linkCrit.setFetchMode("dependency", FetchMode.JOIN);
@@ -166,7 +165,7 @@ public class GraphService implements IGraphService, Serializable {
         for (CnALink link : linkList) {
             CnATreeElement source = uuidMap.get(link.getDependant().getUuid());
             CnATreeElement target = uuidMap.get(link.getDependency().getUuid());
-            Edge edge = createEdge(link);
+            Edge edge = createEdge(link, uuidMap);
             if (edge != null) {
 
                 graph.addEdge(edge);
@@ -178,7 +177,7 @@ public class GraphService implements IGraphService, Serializable {
         }
     }
 
-    private Edge createEdge(CnALink link) {
+    private Edge createEdge(CnALink link, Map<String, CnATreeElement> uuidMap) {
         CnATreeElement source = uuidMap.get(link.getDependant().getUuid());
         CnATreeElement target = uuidMap.get(link.getDependency().getUuid());
         Edge edge = null;
