@@ -60,14 +60,7 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
 public class CopyCommand extends GenericCommand {
 
     private static final long serialVersionUID = -269076325994387265L;
-    private transient Logger log = Logger.getLogger(CopyCommand.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(CopyCommand.class);
-        }
-        return log;
-    }
+    private static final Logger logger = Logger.getLogger(CopyCommand.class);
 
     private static final int FLUSH_LEVEL = 10;
 
@@ -134,9 +127,9 @@ public class CopyCommand extends GenericCommand {
     @Override
     public void execute() {
         try {
-            newElements = new ArrayList<>();
             number = 0;
             List<CnATreeElement> rootElementsToCopy = createInsertList(uuidList);
+            newElements = new ArrayList<>(rootElementsToCopy.size());
             groupToPasteTo = getDao().findByUuid(uuidGroup,
                     RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));
             final Map<String, String> sourceDestMap = new HashMap<>();
@@ -158,7 +151,7 @@ public class CopyCommand extends GenericCommand {
                 }
             }
         } catch (final Exception e) {
-            getLog().error("Error while copying element", e); //$NON-NLS-1$
+            logger.error("Error while copying element", e); //$NON-NLS-1$
             throw new RuntimeCommandException("Error while copying element", e); //$NON-NLS-1$
         }
     }
@@ -181,10 +174,10 @@ public class CopyCommand extends GenericCommand {
                 }
             }
         } else if (elementToCopy != null) {
-            getLog().warn("Can not copy element with pk: " + elementToCopy.getDbId() //$NON-NLS-1$
+            logger.warn("Can not copy element with pk: " + elementToCopy.getDbId() //$NON-NLS-1$
                     + " to group with pk: " + groupToPasteTo.getDbId()); //$NON-NLS-1$
         } else {
-            getLog().warn("Can not copy element. Element is null");
+            logger.warn("Can not copy element. Element is null");
         }
         return elementCopy;
     }
@@ -313,8 +306,8 @@ public class CopyCommand extends GenericCommand {
             copyAttachments(newElement,
                     getCommandService().executeCommand(attachmentLoader).getAttachmentList());
         }
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Copy created: " + newElement.getTitle()); //$NON-NLS-1$
+        if (logger.isDebugEnabled()) {
+            logger.debug("Copy created: " + newElement.getTitle()); //$NON-NLS-1$
         }
         newElement.setChildren(new HashSet<CnATreeElement>());
         return newElement;
@@ -387,7 +380,7 @@ public class CopyCommand extends GenericCommand {
 
     /**
      * Creates a list of elements. First all elements are loaded by UUID. A
-     * child will be removed from the list if it's parent is already a member.
+     * child will be removed from the list if its parent is already a member.
      * 
      * @param uuidList
      *            A list of element UUID
@@ -397,12 +390,11 @@ public class CopyCommand extends GenericCommand {
         final List<CnATreeElement> tempList = new ArrayList<>();
         final List<CnATreeElement> insertList = new ArrayList<>();
         final int depth = 0;
-        final int removed = 0;
         if (uuidList.size() > 1) {
             for (final String uuid : uuidList) {
                 final CnATreeElement element = getDao().findByUuid(uuid,
                         RetrieveInfo.getChildrenInstance());
-                createInsertList(element, tempList, insertList, depth, removed);
+                createInsertList(element, tempList, insertList, depth);
             }
         } else {
             final CnATreeElement element = getDao().findByUuid(uuidList.get(0),
@@ -413,7 +405,7 @@ public class CopyCommand extends GenericCommand {
     }
 
     private void createInsertList(final CnATreeElement element, final List<CnATreeElement> tempList,
-            final List<CnATreeElement> insertList, final int depth, int removed) {
+            final List<CnATreeElement> insertList, final int depth) {
         if (!tempList.contains(element)) {
             tempList.add(element);
             int depthLocal = depth;
@@ -425,17 +417,16 @@ public class CopyCommand extends GenericCommand {
 
                 depthLocal++;
                 for (final CnATreeElement child : element.getChildren()) {
-                    createInsertList(child, tempList, insertList, depthLocal, removed);
+                    createInsertList(child, tempList, insertList, depthLocal);
                 }
             }
         } else {
             insertList.remove(element);
-            removed++;
         }
     }
 
     /**
-     * Returns a unique title compared to titles of all siblings siblings
+     * Returns a unique title compared to titles of all siblings
      * 
      * @param Title
      *            A title of an element
@@ -514,16 +505,7 @@ public class CopyCommand extends GenericCommand {
     @SuppressWarnings("serial")
     public class CopyLinks implements IPostProcessor, Serializable {
 
-        /**
-         * @param linkElement
-         */
-        public CopyLinks() {
-            // empty
-        }
-
         /*
-         * (non-Javadoc)
-         * 
          * @see
          * sernet.verinice.iso27k.service.PasteService.IPostProcessor#process(
          * java.util.Map)
@@ -535,7 +517,7 @@ public class CopyCommand extends GenericCommand {
                 final CopyLinksCommand copyLinksCommand = new CopyLinksCommand(sourceDestMap);
                 getCommandService().executeCommand(copyLinksCommand);
             } catch (final CommandException e) {
-                getLog().error("Error while copy links on server.", e);
+                logger.error("Error while copy links on server.", e);
             }
         }
 
