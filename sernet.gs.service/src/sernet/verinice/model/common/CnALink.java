@@ -442,6 +442,11 @@ public class CnALink implements Serializable, ITypedElement {
         return names;
     }
 
+    @Override
+    public String toString() {
+        return "CnALink [id=" + id + ", comment=" + comment + "]";
+    }
+
     public static class Id implements Serializable {
 
         public static final String NO_TYPE = "NO_TYPE";
