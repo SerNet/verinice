@@ -20,7 +20,6 @@ package sernet.hui.common.connect;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -234,14 +233,14 @@ public class EntityType {
     }
 
     public List<PropertyType> getObjectBrowserPropertyTypes() {
-        LinkedList<PropertyType> linkedList = new LinkedList<>();
-        for (IEntityElement entityElement : elements) {
-            if (entityElement instanceof PropertyType
-                    && ((PropertyType) entityElement).isShowInObjectBrowser()) {
-                linkedList.add((PropertyType) entityElement);
+        List<PropertyType> allPropertyTypesSorted = getAllPropertyTypesSorted();
+        List<PropertyType> result = new ArrayList<>(allPropertyTypesSorted.size());
+        for (PropertyType propertyType : allPropertyTypesSorted) {
+            if (propertyType.isShowInObjectBrowser()) {
+                result.add(propertyType);
             }
         }
-        return linkedList;
+        return result;
     }
 
     public void addPropertyType(PropertyType prop) {
