@@ -253,7 +253,7 @@ public class EntityType {
         return null;
     }
 
-    public LinkedList<PropertyType> getObjectBrowserPropertyTypes() {
+    public List<PropertyType> getObjectBrowserPropertyTypes() {
         LinkedList<PropertyType> linkedList = new LinkedList<>();
         for (IEntityElement entityElement : elements) {
             if (entityElement instanceof PropertyType
