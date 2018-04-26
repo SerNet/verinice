@@ -21,6 +21,7 @@ package sernet.verinice.service.risk;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.apache.log4j.Logger;
 
@@ -39,67 +40,77 @@ import sernet.verinice.model.iso27k.Vulnerability;
 
 /**
  * Service implementation to run a ISO/IEC 27005 risk analysis.
- *  
- * This implementation loads data by IGraphService and saves links by CnALink dao.
- *  
+ * 
+ * This implementation loads data by IGraphService and saves links by CnALink
+ * dao.
+ * 
  * This service is managed by the Spring framework. It is configured in file
- *  veriniceserver-risk-analysis.xml (On the server / verinice.PRO) or
- *  veriniceserver-risk-analysis-standalone.xml (verinice stanalone)
- *  
- * This service is configured as a singleton 
- * (see: https://en.wikipedia.org/wiki/Singleton_pattern).
- *  
+ * veriniceserver-risk-analysis.xml (On the server / verinice.PRO) or
+ * veriniceserver-risk-analysis-standalone.xml (verinice stanalone)
+ * 
+ * This service is configured as a singleton (see:
+ * https://en.wikipedia.org/wiki/Singleton_pattern).
+ * 
  * @author Alexander Koderman
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class RiskAnalysisServiceImpl implements RiskAnalysisService {
-    
+
     private static final transient Logger LOG = Logger.getLogger(RiskAnalysisServiceImpl.class);
-    private static final Logger LOG_RUNTIME = Logger.getLogger(RiskAnalysisServiceImpl.class.getName() + ".runtime");
-    
+    private static final Logger LOG_RUNTIME = Logger
+            .getLogger(RiskAnalysisServiceImpl.class.getName() + ".runtime");
+
     public enum RiskCalculationMethod {
         ADDITION, MULTIPLICATION
-    }  
+    }
+
     public static final RiskCalculationMethod RISK_CALCULATION_METHOD_DEFAULT = RiskCalculationMethod.ADDITION;
-    
+
     /**
-     * The riskCalculationMethod is configured in 
+     * The riskCalculationMethod is configured in
      * veriniceserver-plain.properties[.default|.local] respectively
      * veriniceserver-risk-analysis[-standalone].xml
      * 
-     * If no value is set in these files, RISK_CALCULATION_METHOD_DEFAULT is used.
+     * If no value is set in these files, RISK_CALCULATION_METHOD_DEFAULT is
+     * used.
      */
     private RiskCalculationMethod riskCalculationMethod = RISK_CALCULATION_METHOD_DEFAULT;
-    
-    private IGraphService graphService;  
+
+    private IGraphService graphService;
     private IBaseDao<CnALink, Serializable> cnaLinkDao;
-    
+
     public RiskAnalysisServiceImpl() {
         super();
     }
-    
-    public RiskAnalysisServiceImpl(IGraphService graphService, IBaseDao<CnALink,Serializable> cnaLinkDao) {
+
+    public RiskAnalysisServiceImpl(IGraphService graphService,
+            IBaseDao<CnALink, Serializable> cnaLinkDao) {
         this.graphService = graphService;
         this.cnaLinkDao = cnaLinkDao;
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.iso27k.service.RiskAnalysisService#runRiskAnalysis(java.lang.Long[])
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.iso27k.service.RiskAnalysisService#runRiskAnalysis(java.
+     * lang.Long[])
      */
     @Override
     public void runRiskAnalysis(RiskAnalysisConfiguration configuration) {
         if (LOG.isInfoEnabled()) {
-            LOG.info("Running a risk analysis on organizations with database ids: " + Arrays.toString(configuration.getOrganizationDbIds()) + "...");
-        }     
-        long time = initRuntime();   
-        
-        VeriniceGraph graph = loadGraph(configuration.getOrganizationDbIds());  
-        
+            LOG.info("Running a risk analysis on organizations with database ids: "
+                    + Arrays.toString(configuration.getOrganizationDbIds()) + "...");
+        }
+        long time = initRuntime();
+
+        VeriniceGraph graph = loadGraph(configuration.getOrganizationDbIds());
+
         RiskAnalysisJob job = new RiskAnalysisJob(graph, getCnaLinkDao());
         configureRiskCalculator(job);
         job.runRiskAnalysis();
-        
+
         logRuntime("runRiskAnalysis() runtime : ", time);
     }
 
@@ -122,21 +133,20 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
             break;
         }
     }
-   
-    private VeriniceGraph loadGraph(Integer[] scopeIds) { 
+
+    private VeriniceGraph loadGraph(Integer[] scopeIds) {
         IGraphElementLoader loader = new GraphElementLoader();
-        if(scopeIds!=null) {
+        if (scopeIds != null) {
             loader.setScopeIds(scopeIds);
         }
-        loader.setTypeIds(new String[]{Asset.TYPE_ID, IncidentScenario.TYPE_ID, Control.TYPE_ID, Threat.TYPE_ID, Vulnerability.TYPE_ID});
-        getGraphService().setLoader(loader);
-        return getGraphService().create() ;          
+        loader.setTypeIds(new String[] { Asset.TYPE_ID, IncidentScenario.TYPE_ID, Control.TYPE_ID,
+                Threat.TYPE_ID, Vulnerability.TYPE_ID });
+        return getGraphService().create(Collections.singletonList(loader));
     }
 
     public RiskCalculationMethod getRiskCalculationMethod() {
         return riskCalculationMethod;
     }
-
 
     public void setRiskCalculationMethod(RiskCalculationMethod riskCalculationArithmetic) {
         this.riskCalculationMethod = riskCalculationArithmetic;
@@ -157,7 +167,7 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
     public void setGraphService(IGraphService graphService) {
         this.graphService = graphService;
     }
-    
+
     static long initRuntime() {
         long time = 0;
         if (LOG_RUNTIME.isDebugEnabled()) {
@@ -165,9 +175,10 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
         }
         return time;
     }
-    
+
     static void logRuntime(String message, long starttime) {
-        LOG_RUNTIME.debug(message + TimeFormatter.getHumanRedableTime(System.currentTimeMillis()-starttime));
+        LOG_RUNTIME.debug(message
+                + TimeFormatter.getHumanRedableTime(System.currentTimeMillis() - starttime));
     }
 
 }

@@ -153,7 +153,6 @@ public class MigrateDataProtectionCommand extends GraphCommand {
             affectedProcessNames.add(cnATreeElement.getTitle());
         }
         persitData(linkData, missedControls, scopeIds, controls2Update, dsLinks2create);
-        getGraphService().setRelationIds(null);
     }
 
     /**
@@ -255,13 +254,12 @@ public class MigrateDataProtectionCommand extends GraphCommand {
         linkDao.executeCallback(new HibernateCallback() {
 
             @Override
-            public Object doInHibernate(Session session)
-                    throws HibernateException, SQLException {
+            public Object doInHibernate(Session session) throws HibernateException, SQLException {
                 String comment = sernet.verinice.service.commands.Messages
                         .getString("check.old.links");
                 for (Id id : ids) {
-                    Query query = session.createQuery(
-                            "update CnALink c set c.comment=:comment where c.id=:id");
+                    Query query = session
+                            .createQuery("update CnALink c set c.comment=:comment where c.id=:id");
                     query.setParameter("id", id);
                     query.setParameter("comment", comment);
                     query.executeUpdate();
@@ -276,11 +274,10 @@ public class MigrateDataProtectionCommand extends GraphCommand {
      */
     private void deleteOldLinks(final Set<Id> linkData) {
         IBaseDao<CnALink, Serializable> dao = getDaoFactory().getDAO(CnALink.class);
-            dao.executeCallback(new HibernateCallback() {
+        dao.executeCallback(new HibernateCallback() {
 
-                @Override
-                public Object doInHibernate(Session session)
-                        throws HibernateException, SQLException {
+            @Override
+            public Object doInHibernate(Session session) throws HibernateException, SQLException {
                 Id[] linkDataArray = linkData.toArray(new CnALink.Id[linkData.size()]);
                 int i = linkDataArray.length / 5;
                 for (int j = 0; j < i; j++) {
@@ -302,8 +299,8 @@ public class MigrateDataProtectionCommand extends GraphCommand {
                 }
                 session.flush();
                 return null;
-                }
-            });
+            }
+        });
     }
 
     /**
@@ -334,7 +331,6 @@ public class MigrateDataProtectionCommand extends GraphCommand {
         }
         return affectedProcesses;
     }
-
 
     /**
      * Write the state of the mapped control in the control properties.
