@@ -211,7 +211,7 @@ public class HuiProperty implements Serializable {
 
     public boolean getSingleSelect() {
         boolean result = false;
-        if (getValue() != null) {
+        if (getValue() != null && !getValue().isEmpty()) {
             result = Integer.valueOf(getValue()) == 1;
         }
         return result;
