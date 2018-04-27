@@ -50,13 +50,22 @@ public class ContextInitializer implements Filter {
         if (log.isDebugEnabled()) {
             log.debug("doFilter called...");
         }
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         if (VeriniceContext.getServerUrl() == null) {
-            VeriniceContext.setServerUrl(getServerUrl((HttpServletRequest) request));
+            VeriniceContext.setServerUrl(getServerUrl(httpServletRequest));
+        }
+
+        String servletPath = httpServletRequest.getServletPath();
+        if ("/todo/task.jsf".equals(servletPath)) {
+            httpServletResponse.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+            httpServletResponse.setHeader("Location", "../edit/tasks.xhtml");
+            return;
         }
 
         ServerInitializer.inheritVeriniceContextState();
 
-        disableCaching((HttpServletRequest) request, (HttpServletResponse) response);
+        disableCaching(httpServletRequest, httpServletResponse);
 
         // proceed along the chain
         chain.doFilter(request, response);
