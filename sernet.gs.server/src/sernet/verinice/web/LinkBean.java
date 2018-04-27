@@ -259,7 +259,7 @@ public class LinkBean {
             LinkInformation linkInformation = map(link,reverse);
             linkInformation.setType(getTypeName(link));
             linkList.add(linkInformation);
-            Util.addInfo("addLink", Util.getMessage(EditBean.BOUNDLE_NAME, "linkAdded", new String[] {target.getTitle()})); 
+            Util.addInfo("addLink", Util.getMessage(EditBean.BUNDLE_NAME, "linkAdded", new String[] {target.getTitle()})); 
         }
     }
     
