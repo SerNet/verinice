@@ -81,7 +81,7 @@ public class EditBean {
 
     private static final Logger LOG = Logger.getLogger(EditBean.class);
 
-    public static final String BOUNDLE_NAME = "sernet.verinice.web.EditMessages";
+    public static final String BUNDLE_NAME = "sernet.verinice.web.EditMessages";
     public static final String TAG_WEB = "Web";
     public static final String TAG_ALL = "ALL-TAGS-VISIBLE";
     private static final String SUBMIT = "submit";
@@ -130,7 +130,7 @@ public class EditBean {
             doInit(task);
         } catch (CommandException t) {
             LOG.error("Error while initialization. ", t);
-            Util.addError("massagePanel", Util.getMessage(BOUNDLE_NAME, "init.failed"));
+            Util.addError("massagePanel", Util.getMessage(BUNDLE_NAME, "init.failed"));
         }
         if (LOG.isDebugEnabled()) {
             long duration = System.currentTimeMillis() - start;
@@ -269,7 +269,7 @@ public class EditBean {
             element.setPropertyValue(entry.getKey(), entry.getValue());
         }
 
-        setTitle(element.getTitle() + Util.getMessage(BOUNDLE_NAME, "change.request"));
+        setTitle(element.getTitle() + Util.getMessage(BUNDLE_NAME, "change.request"));
         LOG.info("Loaded changes for element properties from task."); //$NON-NLS-1$
     }
 
@@ -360,13 +360,13 @@ public class EditBean {
             }
         } catch (SecurityException e) {
             LOG.error("Saving not allowed, uuid: " + getUuid(), e);
-            Util.addError(SUBMIT, Util.getMessage(BOUNDLE_NAME, "save.forbidden"));
+            Util.addError(SUBMIT, Util.getMessage(BUNDLE_NAME, "save.forbidden"));
         } catch (sernet.gs.service.SecurityException e) {
             LOG.error("Saving not allowed, uuid: " + getUuid(), e);
-            Util.addError(SUBMIT, Util.getMessage(BOUNDLE_NAME, "save.forbidden"));
+            Util.addError(SUBMIT, Util.getMessage(BUNDLE_NAME, "save.forbidden"));
         } catch (Exception e) {
             LOG.error("Error while saving element, uuid: " + getUuid(), e);
-            Util.addError(SUBMIT, Util.getMessage(BOUNDLE_NAME, "save.failed"));
+            Util.addError(SUBMIT, Util.getMessage(BUNDLE_NAME, "save.failed"));
         }
     }
 
@@ -424,7 +424,7 @@ public class EditBean {
 
     private String getSaveMessage() {
         if (saveMessage == null) {
-            return Util.getMessage(EditBean.BOUNDLE_NAME, "saved");
+            return Util.getMessage(EditBean.BUNDLE_NAME, "saved");
         } else {
             return saveMessage;
         }
@@ -516,7 +516,7 @@ public class EditBean {
             }
             changedElementProperties.put(key, newValue);
             if (key.contains(NAME_SUFFIX)) {
-                setTitle(newValue + Util.getMessage(BOUNDLE_NAME, "change.request"));
+                setTitle(newValue + Util.getMessage(BUNDLE_NAME, "change.request"));
             }
         }
     }
