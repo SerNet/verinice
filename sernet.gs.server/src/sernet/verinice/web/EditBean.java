@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Copyright (c) 2010 Daniel Murygin.
  *
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- * This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program. 
+ * along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
@@ -72,7 +72,7 @@ import sernet.verinice.service.parser.GSScraperUtil;
 /**
  * JSF managed bean which provides data for the element editor in the web
  * application. Main purpose for this this bean is template editor.xhtml.
- * 
+ *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @ManagedBean(name = "edit")
@@ -264,7 +264,7 @@ public class EditBean {
     }
 
     private void loadChangedElementPropertiesFromTask() {
-        Map<String, String> changedProperties = (Map<String, String>) getTaskService().loadChangedElementProperties(task.getId());
+        Map<String, String> changedProperties = getTaskService().loadChangedElementProperties(task.getId());
         for (Entry<String, String> entry : changedProperties.entrySet()) {
             element.setPropertyValue(entry.getKey(), entry.getValue());
         }
@@ -318,7 +318,7 @@ public class EditBean {
     /**
      * Returns true if tagSet contains one of the visible tags for this bean
      * instance.
-     * 
+     *
      * @param tagSet
      *            A set of tags
      * @return true if tagSet contains one of the visible tags
@@ -481,7 +481,7 @@ public class EditBean {
     /**
      * Check if write is allowed by using the saved element as context and
      * delegating to {@link #isWriteAllowed(CnATreeElement)}.
-     * 
+     *
      * @return true if write is allowed for the element.
      */
     public boolean isWriteAllowed() {
@@ -509,23 +509,15 @@ public class EditBean {
 
     private void trackChangedValuesForReleaseProcess(HuiProperty huiProperty) {
         String key = huiProperty.getKey();
-        String newValue = handleBooleanValue(huiProperty.getValue());
-
         if (StringUtils.isNotEmpty(key)) {
-
-            PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(getElement().getEntityType().getId(), key);
-
-            if (propertyType.isSingleSelect()) {
-                newValue = getSingleSelectOptionId(newValue, propertyType);
-            } else if (propertyType.isNumericSelect()) {
-                Entity entity = getElement().getEntity();
-                newValue = entity.getPropertyValue(key);
+            String newValue = huiProperty.getValue();
+            if (huiProperty.getIsBooleanSelect()) {
+                newValue = handleBooleanValue(huiProperty.getValue());
             }
-
             changedElementProperties.put(key, newValue);
-        }
-        if (key.contains(NAME_SUFFIX)) {
-            setTitle(newValue + Util.getMessage(BOUNDLE_NAME, "change.request"));
+            if (key.contains(NAME_SUFFIX)) {
+                setTitle(newValue + Util.getMessage(BOUNDLE_NAME, "change.request"));
+            }
         }
     }
 
