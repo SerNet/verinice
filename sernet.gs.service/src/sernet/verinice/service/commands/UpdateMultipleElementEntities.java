@@ -18,6 +18,7 @@
 package sernet.verinice.service.commands;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -34,6 +35,7 @@ public class UpdateMultipleElementEntities extends ChangeLoggingCommand {
     private static final Logger logger = Logger.getLogger(UpdateMultipleElementEntities.class);
 
     private List<CnATreeElement> elements;
+    private List<CnATreeElement> changedElements;
     private String stationId;
     private int changeType;
 
@@ -47,6 +49,7 @@ public class UpdateMultipleElementEntities extends ChangeLoggingCommand {
      */
     @Override
     public void execute() {
+        List<CnATreeElement> processed = new ArrayList<>(elements.size());
         for (final CnATreeElement element : elements) {
             @SuppressWarnings("rawtypes")
             IBaseDao dao = getDaoFactory().getDAO(element.getTypeId());
@@ -56,11 +59,12 @@ public class UpdateMultipleElementEntities extends ChangeLoggingCommand {
                 command = getCommandService().executeCommand(command);
                 dao.flush();
                 dao.clear();
+                processed.add(command.getElement());
             } catch (CommandException e) {
                 logger.error("Error while updating element entity", e);
             }
         }
-
+        this.changedElements = Collections.unmodifiableList(processed);
     }
 
     /*
@@ -87,12 +91,7 @@ public class UpdateMultipleElementEntities extends ChangeLoggingCommand {
      */
     @Override
     public List<CnATreeElement> getChangedElements() {
-        ArrayList<CnATreeElement> result = new ArrayList<>(elements.size());
-        for (CnATreeElement object : elements) {
-            CnATreeElement cnaElement = (CnATreeElement) object;
-            result.add(cnaElement);
-        }
-        return result;
+        return changedElements;
     }
 
 }
