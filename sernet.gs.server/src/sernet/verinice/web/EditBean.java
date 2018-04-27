@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Copyright (c) 2010 Daniel Murygin.
  *
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- * This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program. 
+ * along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
@@ -72,7 +72,7 @@ import sernet.verinice.service.parser.GSScraperUtil;
 /**
  * JSF managed bean which provides data for the element editor in the web
  * application. Main purpose for this this bean is template editor.xhtml.
- * 
+ *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @ManagedBean(name = "edit")
@@ -81,7 +81,7 @@ public class EditBean {
 
     private static final Logger LOG = Logger.getLogger(EditBean.class);
 
-    public static final String BOUNDLE_NAME = "sernet.verinice.web.EditMessages";
+    public static final String BUNDLE_NAME = "sernet.verinice.web.EditMessages";
     public static final String TAG_WEB = "Web";
     public static final String TAG_ALL = "ALL-TAGS-VISIBLE";
     private static final String SUBMIT = "submit";
@@ -130,7 +130,7 @@ public class EditBean {
             doInit(task);
         } catch (CommandException t) {
             LOG.error("Error while initialization. ", t);
-            Util.addError("massagePanel", Util.getMessage(BOUNDLE_NAME, "init.failed"));
+            Util.addError("massagePanel", Util.getMessage(BUNDLE_NAME, "init.failed"));
         }
         if (LOG.isDebugEnabled()) {
             long duration = System.currentTimeMillis() - start;
@@ -264,12 +264,12 @@ public class EditBean {
     }
 
     private void loadChangedElementPropertiesFromTask() {
-        Map<String, String> changedProperties = (Map<String, String>) getTaskService().loadChangedElementProperties(task.getId());
+        Map<String, String> changedProperties = getTaskService().loadChangedElementProperties(task.getId());
         for (Entry<String, String> entry : changedProperties.entrySet()) {
             element.setPropertyValue(entry.getKey(), entry.getValue());
         }
 
-        setTitle(element.getTitle() + Util.getMessage(BOUNDLE_NAME, "change.request"));
+        setTitle(element.getTitle() + Util.getMessage(BUNDLE_NAME, "change.request"));
         LOG.info("Loaded changes for element properties from task."); //$NON-NLS-1$
     }
 
@@ -318,7 +318,7 @@ public class EditBean {
     /**
      * Returns true if tagSet contains one of the visible tags for this bean
      * instance.
-     * 
+     *
      * @param tagSet
      *            A set of tags
      * @return true if tagSet contains one of the visible tags
@@ -360,13 +360,13 @@ public class EditBean {
             }
         } catch (SecurityException e) {
             LOG.error("Saving not allowed, uuid: " + getUuid(), e);
-            Util.addError(SUBMIT, Util.getMessage(BOUNDLE_NAME, "save.forbidden"));
+            Util.addError(SUBMIT, Util.getMessage(BUNDLE_NAME, "save.forbidden"));
         } catch (sernet.gs.service.SecurityException e) {
             LOG.error("Saving not allowed, uuid: " + getUuid(), e);
-            Util.addError(SUBMIT, Util.getMessage(BOUNDLE_NAME, "save.forbidden"));
+            Util.addError(SUBMIT, Util.getMessage(BUNDLE_NAME, "save.forbidden"));
         } catch (Exception e) {
             LOG.error("Error while saving element, uuid: " + getUuid(), e);
-            Util.addError(SUBMIT, Util.getMessage(BOUNDLE_NAME, "save.failed"));
+            Util.addError(SUBMIT, Util.getMessage(BUNDLE_NAME, "save.failed"));
         }
     }
 
@@ -424,7 +424,7 @@ public class EditBean {
 
     private String getSaveMessage() {
         if (saveMessage == null) {
-            return Util.getMessage(EditBean.BOUNDLE_NAME, "saved");
+            return Util.getMessage(EditBean.BUNDLE_NAME, "saved");
         } else {
             return saveMessage;
         }
@@ -481,7 +481,7 @@ public class EditBean {
     /**
      * Check if write is allowed by using the saved element as context and
      * delegating to {@link #isWriteAllowed(CnATreeElement)}.
-     * 
+     *
      * @return true if write is allowed for the element.
      */
     public boolean isWriteAllowed() {
@@ -509,23 +509,15 @@ public class EditBean {
 
     private void trackChangedValuesForReleaseProcess(HuiProperty huiProperty) {
         String key = huiProperty.getKey();
-        String newValue = handleBooleanValue(huiProperty.getValue());
-
         if (StringUtils.isNotEmpty(key)) {
-
-            PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(getElement().getEntityType().getId(), key);
-
-            if (propertyType.isSingleSelect()) {
-                newValue = getSingleSelectOptionId(newValue, propertyType);
-            } else if (propertyType.isNumericSelect()) {
-                Entity entity = getElement().getEntity();
-                newValue = entity.getPropertyValue(key);
+            String newValue = huiProperty.getValue();
+            if (huiProperty.getIsBooleanSelect()) {
+                newValue = handleBooleanValue(huiProperty.getValue());
             }
-
             changedElementProperties.put(key, newValue);
-        }
-        if (key.contains(NAME_SUFFIX)) {
-            setTitle(newValue + Util.getMessage(BOUNDLE_NAME, "change.request"));
+            if (key.contains(NAME_SUFFIX)) {
+                setTitle(newValue + Util.getMessage(BUNDLE_NAME, "change.request"));
+            }
         }
     }
 
