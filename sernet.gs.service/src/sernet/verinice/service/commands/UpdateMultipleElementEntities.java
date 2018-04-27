@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -46,12 +47,15 @@ public class UpdateMultipleElementEntities extends ChangeLoggingCommand {
      */
     @Override
     public void execute() {
-        for (CnATreeElement element : elements) {
+        for (final CnATreeElement element : elements) {
+            @SuppressWarnings("rawtypes")
+            IBaseDao dao = getDaoFactory().getDAO(element.getTypeId());
             UpdateElementEntity<? extends CnATreeElement> command = new UpdateElementEntity<>(
                     element, stationId);
             try {
                 command = getCommandService().executeCommand(command);
-                element = command.getElement();
+                dao.flush();
+                dao.clear();
             } catch (CommandException e) {
                 logger.error("Error while updating element entity", e);
             }
