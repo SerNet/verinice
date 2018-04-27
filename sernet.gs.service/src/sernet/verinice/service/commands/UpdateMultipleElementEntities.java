@@ -29,7 +29,8 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("serial")
-public class UpdateMultipleElementEntities extends ChangeLoggingCommand implements IChangeLoggingCommand {
+public class UpdateMultipleElementEntities extends ChangeLoggingCommand
+        implements IChangeLoggingCommand {
 
     private transient Logger log = Logger.getLogger(UpdateMultipleElementEntities.class);
 
@@ -39,61 +40,70 @@ public class UpdateMultipleElementEntities extends ChangeLoggingCommand implemen
         }
         return log;
     }
-    
-	private List<CnATreeElement> elements;
-	private String stationId;
-	private int changeType;
 
-	public UpdateMultipleElementEntities(List<CnATreeElement> elements) {
-		this.elements = elements;
-		this.stationId = ChangeLogEntry.STATION_ID;
-	}
+    private List<CnATreeElement> elements;
+    private String stationId;
+    private int changeType;
 
-	
-	/* (non-Javadoc)
-	 * @see sernet.verinice.interfaces.ICommand#execute()
-	 */
-	public void execute() {
-	    for (CnATreeElement element : elements) {
-	        UpdateElementEntity<? extends CnATreeElement> command = new UpdateElementEntity<CnATreeElement>(element, stationId);
-	        try {
+    public UpdateMultipleElementEntities(List<CnATreeElement> elements) {
+        this.elements = elements;
+        this.stationId = ChangeLogEntry.STATION_ID;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.ICommand#execute()
+     */
+    public void execute() {
+        for (CnATreeElement element : elements) {
+            UpdateElementEntity<? extends CnATreeElement> command = new UpdateElementEntity<CnATreeElement>(
+                    element, stationId);
+            try {
                 command = getCommandService().executeCommand(command);
                 element = command.getElement();
             } catch (CommandException e) {
                 getLog().error("Error while updating element entity", e);
             }
         }
-	    
-	}
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getChangeType()
-	 */
-	public int getChangeType() {
-		return this.changeType;
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getStationId()
-	 */
-	public String getStationId() {
-		return stationId;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#
+     * getChangeType()
+     */
+    public int getChangeType() {
+        return this.changeType;
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#getChangedElements()
-	 */
-	public List<CnATreeElement> getChangedElements() {
-		ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>(elements.size());
-		for (Object object : elements) {
-			if (object instanceof CnATreeElement) {
-				CnATreeElement cnaElement = (CnATreeElement) object;
-				result.add(cnaElement);
-			}
-		}
-		return result;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#
+     * getStationId()
+     */
+    public String getStationId() {
+        return stationId;
+    }
 
-	
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.IClientNotifyingCommand#
+     * getChangedElements()
+     */
+    public List<CnATreeElement> getChangedElements() {
+        ArrayList<CnATreeElement> result = new ArrayList<CnATreeElement>(elements.size());
+        for (Object object : elements) {
+            if (object instanceof CnATreeElement) {
+                CnATreeElement cnaElement = (CnATreeElement) object;
+                result.add(cnaElement);
+            }
+        }
+        return result;
+    }
 
 }
