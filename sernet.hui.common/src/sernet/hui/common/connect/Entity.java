@@ -200,10 +200,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(this.entityType,
                 propertyTypeId);
         PropertyList propertyList = typedPropertyLists.get(propertyTypeId);
-        if (propertyType.isReference()) {
-            typedPropertyLists.put(propertyTypeId, null);
-            setMultiselectProperty(propertyTypeId, value);
-        } else if (propertyType.isMultiselect()) {
+        if (propertyType.isReference() || propertyType.isMultiselect()) {
             typedPropertyLists.put(propertyTypeId, null);
             setMultiselectProperty(propertyTypeId, value);
         } else {
@@ -466,7 +463,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         // is taken and cleared before use.
         List<Property> properties = pl.getProperties();
         if (properties == null) {
-            properties = new LinkedList<Property>();
+            properties = new LinkedList<>();
             pl.setProperties(properties);
         } else {
             properties.clear();
