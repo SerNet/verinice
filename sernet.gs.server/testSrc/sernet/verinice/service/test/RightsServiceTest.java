@@ -180,7 +180,13 @@ public class RightsServiceTest extends ContextConfiguration {
     public void testAdminProfile() throws Exception {
         String[] allActionIds = ActionRightIDs.getAllRightIDs();
         for (String id : allActionIds) {
-            assertTrue( "Action: " + id + " is disabled for admin.", rightsServerHandler.isEnabled(ADMIN_NAME, id));
+            if (ActionRightIDs.CHANGEOWNPASSWORD.equals(id)) {
+                assertFalse("Action: " + id + " is enabled for admin.",
+                        rightsServerHandler.isEnabled(ADMIN_NAME, id));
+            } else {
+                assertTrue("Action: " + id + " is disabled for admin.",
+                        rightsServerHandler.isEnabled(ADMIN_NAME, id));
+            }
         }
     }
     
