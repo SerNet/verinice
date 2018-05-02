@@ -378,7 +378,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     public String getRawPropertyValue(String propertyTypeId) {
         String result = null;
         PropertyList propertyList = typedPropertyLists.get(propertyTypeId);
-        if (propertyList != null && propertyList.getProperties().size() > 0) {
+        if (propertyList != null && !propertyList.getProperties().isEmpty()) {
             StringBuilder sb = new StringBuilder();
             for (Iterator<Property> iter = propertyList.getProperties().iterator(); iter
                     .hasNext();) {
@@ -397,7 +397,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 
     public void setSimpleValue(PropertyType type, String value) {
         PropertyList list = typedPropertyLists.get(type.getId());
-        if (list == null || list.getProperties().size() == 0) {
+        if (list == null || list.getProperties().isEmpty()) {
             createNewProperty(type, value);
         } else {
             list.getProperty(0).setPropertyValue(value);
@@ -504,8 +504,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             p.setPropertyType(propertyTypeId);
             p.setPropertyValue(value);
             p.setParent(this);
-            if (licenseManagement && foreignContentId.size() > 0
-                    && foreignLimitedLicense.size() > 0) {
+            if (licenseManagement && !foreignContentId.isEmpty()
+                    && !foreignLimitedLicense.isEmpty()) {
                 p.setLimitedLicense(foreignLimitedLicense.get(i));
                 p.setLicenseContentId(foreignContentId.get(i));
             }
@@ -693,7 +693,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      */
     public int getInt(String propertyTypeId) {
         PropertyList propertyList = typedPropertyLists.get(propertyTypeId);
-        if (propertyList == null || propertyList.getProperties().size() == 0) {
+        if (propertyList == null || propertyList.getProperties().isEmpty()) {
             return Property.UNDEF;
         }
         PropertyType type = HUITypeFactory.getInstance().getPropertyType(this.entityType,
