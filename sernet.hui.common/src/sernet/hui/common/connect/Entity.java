@@ -62,7 +62,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     public static final String TITLE = "ENTITY_";
     public static final String TYPE_ID = "huientity";
 
-    private transient Logger log = Logger.getLogger(Entity.class);
+    private static final Logger logger = Logger.getLogger(Entity.class);
 
     private String uuid;
     private Integer dbId;
@@ -229,8 +229,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         if (value == null) {
             value = loadValueOfReferenceProperty(type);
             getReferenceValueCache().put(propertyTypeId, value);
-        } else if (getLog().isDebugEnabled()) {
-            getLog().debug("Reference value found in cache: " + value + ", property type id: "
+        } else if (logger.isDebugEnabled()) {
+            logger.debug("Reference value found in cache: " + value + ", property type id: "
                     + propertyTypeId + ", entity db id: " + getDbId());
         }
         return value;
@@ -251,8 +251,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                 sb.append(referenceEntity.getName());
                 first = false;
             }
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Reference value loaded from db: " + sb.toString()
+            if (logger.isDebugEnabled()) {
+                logger.debug("Reference value loaded from db: " + sb.toString()
                         + ", property type id: " + propertyTypeId + ", entity db id: " + getDbId());
             }
         }
@@ -279,7 +279,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             calendar.setTimeInMillis(FormInputParser.stringToDate(value.trim()).getTime());
             property.setPropertyValue(calendar, false, null);
         } catch (AssertException e) {
-            log.error("Exception while setting the value of a date property", e);
+            logger.error("Exception while setting the value of a date property", e);
         }
     }
 
@@ -296,8 +296,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         try {
             date = FormInputParser.dateToString(new java.sql.Date(Long.parseLong(propertyValue)));
         } catch (NumberFormatException | AssertException e) {
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Exception while getting the value of a date property", e);
+            if (logger.isDebugEnabled()) {
+                logger.debug("Exception while getting the value of a date property", e);
             }
             // Skip this value and continue processing
         }
@@ -318,7 +318,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         try {
             date = new Date(Long.valueOf(getRawPropertyValue(propertyTypeId)));
         } catch (NumberFormatException t) {
-            getLog().error("Error while returning date for property: " + propertyTypeId, t);
+            logger.error("Error while returning date for property: " + propertyTypeId, t);
         }
         return date;
     }
@@ -479,7 +479,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             Property p = new Property();
 
             if (propertyType == null) {
-                getLog().warn("Property-type was not found in SNCA.xml: " + propertyTypeId
+                logger.warn("Property-type was not found in SNCA.xml: " + propertyTypeId
                         + ", entity type: " + this.entityType);
             }
 
@@ -496,7 +496,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                     }
                 }
                 if (!found) {
-                    getLog().warn(
+                    logger.warn(
                             "No value found for option property: " + propertyTypeId + " of entity: "
                                     + this.entityType + ". Importing unmapped value: " + value);
                 }
@@ -565,8 +565,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         for (Property sourceProp : sourcePropertyList.getProperties()) {
             if (checkProperty(sourceProp, propertyTypeBlacklist)) {
                 newPropertyList.add(sourceProp.copy(this));
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Prop " + propertyListMapEntry.getKey() + " set to value: "
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Prop " + propertyListMapEntry.getKey() + " set to value: "
                             + sourceProp.getPropertyValue());
                 }
             }
@@ -651,7 +651,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                 typedPropertyLists.put(property.getPropertyTypeID(), typeList);
             }
         } catch (AssertException e) {
-            getLog().error(e);
+            logger.error(e);
         }
     }
 
@@ -729,12 +729,12 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                 Property prop = propertyList.getProperties().get(0);
                 value = prop.getPropertyValue();
             } else {
-                getLog().warn("Property " + propertyTypeId + " is not of type "
+                logger.warn("Property " + propertyTypeId + " is not of type "
                         + PropertyType.INPUT_SINGLEOPTION
                         + ". Can not determine option value. Entity id is: " + this.getDbId());
             }
         } else if (propertyList != null && propertyList.getProperties().size() > 1) {
-            getLog().warn("Property list " + propertyTypeId
+            logger.warn("Property list " + propertyTypeId
                     + " contains more than entry. Can not determine option value. Entity id is: "
                     + this.getDbId());
         }
@@ -774,7 +774,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             Property p = new Property();
 
             if (propertyType == null) {
-                getLog().warn("Property-type was not found in SNCA.xml: " + propertyTypeId
+                logger.warn("Property-type was not found in SNCA.xml: " + propertyTypeId
                         + ", entity type: " + this.entityType);
             }
 
@@ -790,7 +790,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                     }
                 }
                 if (!found) {
-                    getLog().warn(
+                    logger.warn(
                             "No value found for option property: " + propertyTypeId + " of entity: "
                                     + this.entityType + ". Importing unmapped value: " + value);
                 }
@@ -983,13 +983,6 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     public boolean equals(Object obj) {
         return (this == obj
                 || (obj instanceof Entity && this.uuid.equals(((Entity) obj).getUuid())));
-    }
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(Entity.class);
-        }
-        return log;
     }
 
     @Override
