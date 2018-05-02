@@ -696,9 +696,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         PropertyType type = HUITypeFactory.getInstance().getPropertyType(this.entityType,
                 propertyTypeId);
         if (type.isNumericSelect()) {
-            for (Property property : propertyList.getProperties()) {
-                return property.getNumericPropertyValue();
-            }
+            return propertyList.getProperties().get(0).getNumericPropertyValue();
         }
         return Property.UNDEF;
 
