@@ -162,7 +162,7 @@ public interface IDAOFactory {
 	
 	void setAccountGroupDao(IBaseDao<Gefaehrdung, Integer> dao);
 
-	void setchangeLogEntryDAO(
+	void setChangeLogEntryDAO(
 			IBaseDao<ChangeLogEntry, Integer> dao);
 
 	/**
