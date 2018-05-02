@@ -18,7 +18,6 @@
 package sernet.hui.common.connect;
 
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,8 +61,6 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 
     public static final String TITLE = "ENTITY_";
     public static final String TYPE_ID = "huientity";
-
-    private static final DateFormat DATE_FORMAT_ISO_8601 = new SimpleDateFormat("yyyy-MM-dd");
 
     private transient Logger log = Logger.getLogger(Entity.class);
 
@@ -345,7 +342,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         String dateInISO8601 = null;
         Date date = getDate(propertyTypeId);
         if (date != null) {
-            dateInISO8601 = DATE_FORMAT_ISO_8601.format(date);
+            dateInISO8601 = new SimpleDateFormat("yyyy-MM-dd").format(date);
         }
         return dateInISO8601;
     }
