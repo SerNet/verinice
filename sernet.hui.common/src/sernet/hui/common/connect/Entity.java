@@ -1,17 +1,17 @@
 /*******************************************************************************
  * Copyright (c) 2009 Alexander Koderman <ak[at]sernet[dot]de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ *     This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
+ *     You should have received a copy of the GNU Lesser General Public
+ * License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
@@ -44,15 +44,15 @@ import sernet.snutils.Tester;
 
 /**
  * This class defines an entity to be used as a DA-object in applications.
- * 
+ *
  * This is a practical implementation of a dynamic object model, but without
  * dynamic entities. The reasoning behind this is that the defined entities (i.e
  * "customer") usually do not change much for a given application, but their
  * properties will ("tel. no.", "mobile no.", "home no."...).
- * 
+ *
  * Relations between entities are also modeled as properties, which allows for
  * arbitrary relations between entities.
- * 
+ *
  * @author koderman[at]sernet[dot]de Initial implementation
  * @author Daniel Murygin <dm[at]sernet[dot]d> Refactoring
  */
@@ -93,7 +93,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     /**
      * Sets the default values of properties as defined in configuration file
      * SNCA.xml
-     * 
+     *
      * @param huiTypeFactory
      */
     public void initDefaultValues(HUITypeFactory huiTypeFactory) {
@@ -118,9 +118,9 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      * Convenience method to return a String representation of the given
      * propertyType. If there is no value with the propertyType in the database
      * an empty String is returned.
-     * 
+     *
      * See SNCA.xml for valid propertyTypes.
-     * 
+     *
      * @param propertyTypeId
      *            The type id of a property
      * @return The value of the property or an empty String if there is no value
@@ -137,11 +137,11 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      * Convenience method to return a String representation of the given
      * propertyTypeId. If there is no value with the propertyType in the
      * database an empty String is returned.
-     * 
+     *
      * See SNCA.xml for valid propertyTypes.
-     * 
+     *
      * This method replaces deprecated method {@link #getSimpleValue(String)}.
-     * 
+     *
      * @param propertyType
      *            The type id of a property
      * @return The value of the property or an empty String if there is no value
@@ -188,9 +188,9 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     /**
      * Convenience method to set a String representation of the given
      * propertyTypeId.
-     * 
+     *
      * See SNCA.xml for valid propertyTypes.
-     * 
+     *
      * @param propertyTypeId
      *            The type id of a property
      * @param value
@@ -238,19 +238,26 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         StringBuilder sb = new StringBuilder();
         PropertyList propertyList = typedPropertyLists.get(propertyTypeId);
         if (propertyList != null) {
-            List<IMLPropertyOption> referencedEntities = type
-                    .getReferencedEntities(propertyList.getProperties());
-            boolean first = true;
-            for (IMLPropertyOption referenceEntity : referencedEntities) {
-                if (!first) {
-                    sb.append(", ");
+            try {
+                List<IMLPropertyOption> referencedEntities = type
+                        .getReferencedEntities(propertyList.getProperties());
+                boolean first = true;
+                for (IMLPropertyOption referenceEntity : referencedEntities) {
+                    if (!first) {
+                        sb.append(", ");
+                    }
+                    sb.append(referenceEntity.getName());
+                    first = false;
                 }
-                sb.append(referenceEntity.getName());
-                first = false;
-            }
-            if (logger.isDebugEnabled()) {
-                logger.debug("Reference value loaded from db: " + sb.toString()
-                        + ", property type id: " + propertyTypeId + ", entity db id: " + getDbId());
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Reference value loaded from db: " + sb.toString()
+                            + ", property type id: " + propertyTypeId + ", entity db id: "
+                            + getDbId());
+                }
+            } catch (Exception e) {
+                logger.error("Error reading Entity:" + entityType + " uuid:" + this.uuid
+                        + " propertytype:" + propertyTypeId, e);
+                throw new RuntimeException("Error loading reference property.", e);
             }
         }
         return sb.toString();
@@ -304,7 +311,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     /**
      * Returns the property value as a Java date. If the property value can not
      * be converted to a date an error message is logged an null is returned.
-     * 
+     *
      * @param propertyTypeId
      *            The type id of a property
      * @return The property value as a Java date or null if the value can not be
@@ -323,12 +330,12 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     /**
      * Returns the property value as a date (without the time) in ISO 8601
      * format.
-     * 
+     *
      * e.g.: 1975-09-25 or 2004-05-24
-     * 
+     *
      * If the property value can not be converted to a date an error message is
      * logged an null is returned.
-     * 
+     *
      * @see https://en.wikipedia.org/wiki/ISO_8601
      * @param propertyTypeId
      *            The type id of a property
@@ -348,7 +355,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      * This method returns the value of a property just like it is saved in the
      * database. In contrast to {@link #getPropertyValue(String)} this method
      * does not do any formatting or conversion.
-     * 
+     *
      * @param propertyTypeId
      *            The type id of a property
      * @return The raw value of property
@@ -364,9 +371,9 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      * This method returns the value of a property just like it is saved in the
      * database. In contrast to {@link #getPropertyValue(String)} this method
      * does not do any formatting or conversion.
-     * 
+     *
      * This method replaces deprecated method {@link #getValue(String)}.
-     * 
+     *
      * @see {@link #getPropertyValue(String)}
      * @param propertyTypeId
      *            The type id of a property
@@ -415,7 +422,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 
     /**
      * Copy all property values from given entity to this one
-     * 
+     *
      * @param source
      *            The source entity for copying
      */
@@ -426,23 +433,23 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 
     /**
      * Sets the value for a given property.
-     * 
+     *
      * <p>
      * Since internally a property value is a multi-value this interface allows
      * setting these values in one row.
      * </p>
-     * 
+     *
      * <p>
      * Note: Using this method is preferred over modifying a
      * {@link PropertyList} object itself.
      * </p>
-     * 
+     *
      * <p>
      * Note: The actual values that are imported have to be
      * <em>untranslated</em> IOW should directly represent the strings used in
      * the SNCA.xml
      * </p>
-     * 
+     *
      * @param huiTypeFactory
      * @param propertyTypeId
      * @param foreignProperties
@@ -513,15 +520,15 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     /**
      * Retrieves the raw, untranslated individual data values and stores them in
      * a given list.
-     * 
+     *
      * <p>
      * The return values denotes the amount of values exported and can be used
      * to find out whether any work was done.
      * </p>
-     * 
+     *
      * @param propertyType
      * @param foreignProperties
-     * 
+     *
      * @return The amount of individual values exported.
      */
     public int exportProperties(String propertyType, List<String> foreignProperties,
@@ -542,7 +549,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     /**
      * Copy all property values from given entity to this one. Properties with
      * ids from list propertyTypeBlacklist will be ignored.
-     * 
+     *
      * @param source
      *            The source entity for copying
      * @param propertyTypeBlacklist
@@ -579,7 +586,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 
     /**
      * Check if given option is selected for any of the properties.
-     * 
+     *
      * @param optionId
      * @return
      */
@@ -631,7 +638,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     /**
      * Add a new property to the list of already present properties for its
      * type.
-     * 
+     *
      * @param property
      *            A property
      */
@@ -655,7 +662,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     /**
      * Removes a property with the given {@link PropertyType} and value from
      * this entity.
-     * 
+     *
      * @param propertyType
      *            A {@link PropertyType}
      * @param propertyValue
@@ -677,13 +684,13 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 
     /**
      * Returns the int value of a property with propertyTypeId.
-     * 
+     *
      * If no property value exists with the given propertyTypeId
      * {@link Property}.UNDEF is returned.
-     * 
+     *
      * If a property value exists but property has another input type than
      * "numericoption" {@link Property}.UNDEF is returned.
-     * 
+     *
      * @param propertyTypeId
      *            The type id of a property
      * @return Int value of a property
@@ -705,10 +712,10 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     /**
      * Returns the value (not the translated title) of an single select option
      * property.
-     * 
+     *
      * If property with id is not single select option property a warning is
      * logged and null is returned.
-     * 
+     *
      * @param propertyTypeId
      *            The type id of a property
      * @return value (not the translated title) of an single select option
@@ -738,23 +745,23 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 
     /**
      * Sets the value for a given property.
-     * 
+     *
      * <p>
      * Since internally a property value is a multi-value this interface allows
      * setting these values in one row.
      * </p>
-     * 
+     *
      * <p>
      * Note: Using this method is preferred over modifying a
      * {@link PropertyList} object itself.
      * </p>
-     * 
+     *
      * <p>
      * Note: The actual values that are imported have to be
      * <em>untranslated</em> IOW should directly represent the strings used in
      * the SNCA.xml
      * </p>
-     * 
+     *
      * @param huiTypeFactory
      * @param propertyTypeId
      * @param foreignProperties
@@ -820,15 +827,15 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     /**
      * Retrieves the raw, untranslated individual data values and stores them in
      * a given list.
-     * 
+     *
      * <p>
      * The return values denotes the amount of values exported and can be used
      * to find out whether any work was done.
      * </p>
-     * 
+     *
      * @param propertyType
      * @param foreignProperties
-     * 
+     *
      * @return The amount of individual values exported.
      */
     public int exportProperties(String propertyType, List<String> foreignProperties) {
@@ -843,7 +850,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * sernet.hui.common.multiselectionlist.ISelectOptionHandler#select(sernet.
      * hui.common.multiselectionlist.IMLPropertyType,
@@ -857,7 +864,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * sernet.hui.common.multiselectionlist.ISelectOptionHandler#unselect(sernet
      * .hui.common.multiselectionlist.IMLPropertyType,
@@ -871,7 +878,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see sernet.hui.common.connect.ITypedElement#getTypeId()
      */
     @Override
@@ -945,7 +952,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     /**
      * Returns all properties with the given property type id. Returns an empty
      * PropertyList if there are no properties with the given property type id.
-     * 
+     *
      * @param propertyTypeId
      *            The type id of a property
      * @return Returns all properties with the given property type id

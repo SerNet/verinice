@@ -202,7 +202,17 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
 
                     List<Integer> dbIds = new ArrayList<Integer>();
                     for (Property prop : references) {
-                        dbIds.add(Integer.parseInt(prop.getPropertyValue()));
+                        try {
+                            dbIds.add(Integer.parseInt(prop.getPropertyValue()));
+                        } catch (NumberFormatException e) {
+                            LOG.error(
+                                    "Error while resolving reference of a Person, the property type is: "
+                                            + prop.getPropertyTypeID() + " the property value is: "
+                                            + prop.getPropertyValue()
+                                            + " the referenced entity type is: "
+                                            + referencedEntityTypeId);
+                            throw e;
+                        }
                     }
                     LoadEntitiesByIds command = new LoadEntitiesByIds(dbIds);
 
