@@ -47,10 +47,9 @@ public final class Messages extends NLS {
 	public static String AccessControlEditDialog_7;
 	public static String AccessControlEditDialog_8;
 	public static String AccessControlEditDialog_9;
-    public static String AccountDialog_0;
-    public static String AccountDialog_1;
-    public static String AccountDialog_2;
-    public static String AccountDialog_3;
+    public static String PersonBulkEditDialog_UserAccountSettings;
+    public static String PersonBulkEditDialog_Password;
+    public static String PersonBulkEditDialog_RetypePassword;
     public static String AutoBausteinDialog_0;
     public static String AutoBausteinDialog_1;
     public static String AutoBausteinDialog_10;

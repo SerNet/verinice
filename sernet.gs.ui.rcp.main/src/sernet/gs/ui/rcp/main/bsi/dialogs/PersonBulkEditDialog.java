@@ -99,7 +99,7 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
     protected Control createDialogArea(Composite parent) {
         try {
             setTitle(title);
-            setMessage(Messages.AccountDialog_0);
+            setMessage(Messages.PersonBulkEditDialog_UserAccountSettings);
 
             Composite container = (Composite) super.createDialogArea(parent);
             GridData gd = new GridData(GridData.GRAB_HORIZONTAL);
@@ -199,13 +199,13 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
         gdText.horizontalAlignment = GridData.FILL;
 
         Label labelPassword = new Label(compositePassword, SWT.NONE);
-        labelPassword.setText(Messages.AccountDialog_2);
+        labelPassword.setText(Messages.PersonBulkEditDialog_Password);
 
         textPassword = new Text(compositePassword, SWT.BORDER | SWT.SINGLE | SWT.PASSWORD);
         textPassword.setLayoutData(gdText);
 
         Label labelPassword2 = new Label(compositePassword, SWT.NONE);
-        labelPassword2.setText(Messages.AccountDialog_3);
+        labelPassword2.setText(Messages.PersonBulkEditDialog_RetypePassword);
 
         textPassword2 = new Text(compositePassword, SWT.BORDER | SWT.SINGLE | SWT.PASSWORD);
         textPassword2.setLayoutData(gdText);
