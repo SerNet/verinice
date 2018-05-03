@@ -21,7 +21,7 @@ package sernet.verinice.web;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -66,12 +66,12 @@ public class LinkBean {
 
     private EntityType entityType;
 
-    private List<ILink> linkList = new ArrayList<ILink>();
+    private List<ILink> linkList = new ArrayList<>();
 
     private ILink selectedLink;
 
-    private List<String> linkTypeList = new ArrayList<String>();
-    private Map<String, HuiRelation> huiRelationMap = new Hashtable<String, HuiRelation>();
+    private List<String> linkTypeList = new ArrayList<>();
+    private Map<String, HuiRelation> huiRelationMap = new HashMap<>();
 
     private String selectedLinkType;
 
@@ -87,9 +87,9 @@ public class LinkBean {
 
     public void reset() {
         loading = true;
-        linkList = new ArrayList<ILink>();
-        linkTypeList = new ArrayList<String>();
-        huiRelationMap = new Hashtable<String, HuiRelation>();
+        linkList = new ArrayList<>();
+        linkTypeList = new ArrayList<>();
+        huiRelationMap = new HashMap<>();
     }
 
     public void init(TabChangeEvent tabChangeEvent) {
@@ -129,11 +129,11 @@ public class LinkBean {
         RetrieveInfo ri = new RetrieveInfo();
         ri.setLinksDownProperties(true);
         ri.setLinksUpProperties(true);
-        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(
-                getTypeId(), getElement().getUuid(), ri);
+        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(getTypeId(),
+                getElement().getUuid(), ri);
         command = getCommandService().executeCommand(command);
         setElement(command.getElement());
-        linkList = new ArrayList<ILink>();
+        linkList = new ArrayList<>();
         for (CnALink link : getElement().getLinksDown()) {
             linkList.add(map(link));
         }
@@ -141,8 +141,8 @@ public class LinkBean {
             linkList.add(map(link, true));
         }
         setSelectedLink(null);
-        linkTypeList = new ArrayList<String>();
-        huiRelationMap = new Hashtable<String, HuiRelation>();
+        linkTypeList = new ArrayList<>();
+        huiRelationMap = new HashMap<>();
         Set<HuiRelation> huiRelationSet = entityType.getPossibleRelations();
         for (HuiRelation huiRelation : huiRelationSet) {
             String label = getLinkTypeLabel(huiRelation);
@@ -320,7 +320,7 @@ public class LinkBean {
             if (getSelectedLink() != null) {
                 RemoveLink command = new RemoveLink(getSelectedLink().getDependantId(),
                         getSelectedLink().getDependencyId(), getSelectedLink().getTypeId());
-                command = getCommandService().executeCommand(command);
+                getCommandService().executeCommand(command);
                 getLinkList().remove(getSelectedLink());
                 setSelectedLink(null);
                 deleteVisible = false;
@@ -352,7 +352,8 @@ public class LinkBean {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Saving new link from " + source + " to " + target + "of type " + typeId); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
-        CreateLink command = new CreateLink(source, target, typeId, comment);
+        CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source, target,
+                typeId, comment);
         command = getCommandService().executeCommand(command);
         return command.getLink();
     }

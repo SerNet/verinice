@@ -78,6 +78,8 @@ public class RelationPage extends WizardPage {
         GridData gd = new GridData(SWT.FILL, SWT.TOP, true, false);
         relationCombo.setLayoutData(gd);
         relationCombo.addSelectionListener(new SelectionAdapter() {
+
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 relationComboModel.setSelectedIndex(relationCombo.getSelectionIndex());
                 relation = relationComboModel.getSelectedObject();
@@ -111,13 +113,12 @@ public class RelationPage extends WizardPage {
     }
 
     private void initComboValues() {
-        relationComboModel = new ComboModel<HuiRelation>(
-                new IComboModelLabelProvider<HuiRelation>() {
-                    @Override
-                    public String getLabel(HuiRelation relation) {
-                        return relation.getName();
-                    }
-                });
+        relationComboModel = new ComboModel<>(new IComboModelLabelProvider<HuiRelation>() {
+            @Override
+            public String getLabel(HuiRelation relation) {
+                return relation.getName();
+            }
+        });
         EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(elementType);
         Set<HuiRelation> personRelations = entityType.getPossibleRelations(PersonIso.TYPE_ID);
         for (HuiRelation huiRelation : personRelations) {
@@ -139,7 +140,7 @@ public class RelationPage extends WizardPage {
      */
     @Override
     public IWizardPage getNextPage() {
-        return (PropertyPage) getWizard().getPage(PropertyPage.NAME);
+        return getWizard().getPage(PropertyPage.NAME);
     }
 
     /*

@@ -38,25 +38,18 @@ import sernet.verinice.model.common.configuration.Configuration;
  */
 public class LoadUsername extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(LoadUsername.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(LoadUsername.class);
-        }
-        return log;
-    }
+    private static final Logger logger = Logger.getLogger(LoadUsername.class);
 
     public static final String HQL = "select props.propertyValue from Configuration as conf "
             + "join conf.person as person join conf.entity as entity "
             + "join entity.typedPropertyLists as propertyList join propertyList.properties as props "
             + "where person.uuid = ? and props.propertyType = ?";
 
-    String uuid;
+    private final String uuid;
 
-    String username;
+    private String username;
 
-    String linkId;
+    private final String linkId;
 
     public LoadUsername(String uuidControl, String linkId) {
         super();
@@ -65,8 +58,6 @@ public class LoadUsername extends GenericCommand {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
@@ -76,7 +67,7 @@ public class LoadUsername extends GenericCommand {
             RetrieveInfo ri = new RetrieveInfo();
             ri.setLinksUp(true);
             ri.setPermissions(true);
-            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid(uuid, ri);
+            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(uuid, ri);
             command = getCommandService().executeCommand(command);
             CnATreeElement control = command.getElement();
             if (control != null) {
@@ -90,15 +81,15 @@ public class LoadUsername extends GenericCommand {
                 if (uuidAssignee != null) {
                     IBaseDao<Configuration, Serializable> dao = getDaoFactory()
                             .getDAO(Configuration.class);
-                    List<String> result = dao.findByQuery(HQL,
+                    List<?> result = dao.findByQuery(HQL,
                             new String[] { uuidAssignee, Configuration.PROP_USERNAME });
                     if (result != null && !result.isEmpty()) {
-                        username = result.get(0);
+                        username = (String) result.get(0);
                     }
                 }
             }
         } catch (Exception t) {
-            getLog().error("Error while loading username for control uuid: " + uuid, t);
+            logger.error("Error while loading username for control uuid: " + uuid, t);
         }
     }
 
