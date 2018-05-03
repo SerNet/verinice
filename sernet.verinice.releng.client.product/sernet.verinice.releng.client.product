@@ -77,7 +77,7 @@ VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilin
       <programArgsMac>-vm ../../../jre/Contents/Home/lib/jli/libjli.dylib
       </programArgsMac>
       <vmArgs>-Xms512m -Xmx4096m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost -Djavax.activation.debug=true  -Dosgi.parentClassloader=ext
- -Dorg.eclipse.swt.browser.XULRunnerPath=/home/simon/git/verinice-orig/verinice/xulrunner-1.9.2/bin -Djavax.xml.soap.SOAPFactory=org.apache.axis.soap.SOAPFactoryImpl -Djavax.xml.soap.MessageFactory=org.apache.axis.soap.MessageFactoryImpl -Djavax.xml.soap.SOAPConnectionFactory=org.apache.axis.soap.SOAPConnectionFactoryImpl
+ -Djavax.xml.soap.SOAPFactory=org.apache.axis.soap.SOAPFactoryImpl -Djavax.xml.soap.MessageFactory=org.apache.axis.soap.MessageFactoryImpl -Djavax.xml.soap.SOAPConnectionFactory=org.apache.axis.soap.SOAPConnectionFactoryImpl
       </vmArgs>
       <vmArgsMac>-Djava.awt.headless=true
       </vmArgsMac>
