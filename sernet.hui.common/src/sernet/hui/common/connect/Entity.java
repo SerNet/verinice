@@ -255,9 +255,10 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                             + getDbId());
                 }
             } catch (Exception e) {
-                logger.error("Error reading Entity:" + entityType + " uuid:" + this.uuid
-                        + " propertytype:" + propertyTypeId, e);
-                throw new RuntimeException("Error loading reference property.", e);
+                String message = "Error reading Entity:" + entityType + " uuid:" + this.uuid
+                        + " propertytype:" + propertyTypeId;
+                logger.error(message, e);
+                throw new RuntimeException("Error loading reference property.\n" + message, e);
             }
         }
         return sb.toString();
