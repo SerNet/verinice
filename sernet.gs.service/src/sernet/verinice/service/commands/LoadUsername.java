@@ -46,29 +46,27 @@ public class LoadUsername extends GenericCommand {
         }
         return log;
     }
-    
-    public final static String HQL = "select props.propertyValue " +
-    "from Configuration as conf " +
-    "join conf.person as person " +
-    "join conf.entity as entity " +
-    "join entity.typedPropertyLists as propertyList " +
-    "join propertyList.properties as props " +
-    "where person.uuid = ? " +
-    "and props.propertyType = ?";
-    
+
+    public static final String HQL = "select props.propertyValue from Configuration as conf "
+            + "join conf.person as person join conf.entity as entity "
+            + "join entity.typedPropertyLists as propertyList join propertyList.properties as props "
+            + "where person.uuid = ? and props.propertyType = ?";
+
     String uuid;
-    
-    String username; 
-    
+
+    String username;
+
     String linkId;
-    
+
     public LoadUsername(String uuidControl, String linkId) {
         super();
         this.uuid = uuidControl;
         this.linkId = linkId;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
@@ -78,22 +76,24 @@ public class LoadUsername extends GenericCommand {
             RetrieveInfo ri = new RetrieveInfo();
             ri.setLinksUp(true);
             ri.setPermissions(true);
-            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid(uuid,ri);
+            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid(uuid, ri);
             command = getCommandService().executeCommand(command);
             CnATreeElement control = command.getElement();
-            if(control!=null) {
+            if (control != null) {
                 Set<CnALink> linkSet = control.getLinksDown();
                 for (CnALink link : linkSet) {
-                    if(this.linkId.equals(link.getRelationId())) {
-                        uuidAssignee = link.getDependency().getUuid();            
+                    if (this.linkId.equals(link.getRelationId())) {
+                        uuidAssignee = link.getDependency().getUuid();
                         break;
                     }
-                }      
-                if(uuidAssignee!=null) {
-                    IBaseDao<Configuration, Serializable> dao = getDaoFactory().getDAO(Configuration.class);
-                    List<String> result = dao.findByQuery(HQL, new String[] {uuidAssignee,Configuration.PROP_USERNAME});
-                    if(result!=null && !result.isEmpty()) {
-                        username = result.get(0);                      
+                }
+                if (uuidAssignee != null) {
+                    IBaseDao<Configuration, Serializable> dao = getDaoFactory()
+                            .getDAO(Configuration.class);
+                    List<String> result = dao.findByQuery(HQL,
+                            new String[] { uuidAssignee, Configuration.PROP_USERNAME });
+                    if (result != null && !result.isEmpty()) {
+                        username = result.get(0);
                     }
                 }
             }
