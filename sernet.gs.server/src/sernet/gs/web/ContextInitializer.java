@@ -36,30 +36,40 @@ import sernet.hui.common.VeriniceContext;
 
 public class ContextInitializer implements Filter {
 
-	private final Logger log = Logger.getLogger(ContextInitializer.class);
+    private final Logger log = Logger.getLogger(ContextInitializer.class);
 
-	public void destroy() {
-		if (log.isDebugEnabled()) {
-			log.debug("destroy called...");
-		}
+    public void destroy() {
+        if (log.isDebugEnabled()) {
+            log.debug("destroy called...");
+        }
 
-	}
+    }
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		if (log.isDebugEnabled()) {
-			log.debug("doFilter called...");
-		}
-		if(VeriniceContext.getServerUrl()==null) {
-		    VeriniceContext.setServerUrl(getServerUrl((HttpServletRequest) request));
-		}
-		
-		ServerInitializer.inheritVeriniceContextState();
-		
-		disableCaching((HttpServletRequest)request, (HttpServletResponse)response);
-		
-		// proceed along the chain
-	    chain.doFilter(request, response);
-	}
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        if (log.isDebugEnabled()) {
+            log.debug("doFilter called...");
+        }
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+        if (VeriniceContext.getServerUrl() == null) {
+            VeriniceContext.setServerUrl(getServerUrl(httpServletRequest));
+        }
+
+        String servletPath = httpServletRequest.getServletPath();
+        if ("/todo/task.jsf".equals(servletPath)) {
+            httpServletResponse.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+            httpServletResponse.setHeader("Location", "../edit/tasks.xhtml");
+            return;
+        }
+
+        ServerInitializer.inheritVeriniceContextState();
+
+        disableCaching(httpServletRequest, httpServletResponse);
+
+        // proceed along the chain
+        chain.doFilter(request, response);
+    }
 
     private String getServerUrl(HttpServletRequest request) {
         final int port80 = 80;
@@ -69,30 +79,35 @@ public class ContextInitializer implements Filter {
         String contextPath = request.getContextPath();
         StringBuilder sb = new StringBuilder();
         sb.append(scheme).append("://").append(serverName);
-        if(portNumber!=port80) {
+        if (portNumber != port80) {
             sb.append(":").append(portNumber);
-        }      
-        if(contextPath!=null && !contextPath.isEmpty()) {
+        }
+        if (contextPath != null && !contextPath.isEmpty()) {
             sb.append(contextPath).append("/");
         } else {
             sb.append("/");
         }
         return sb.toString();
     }
-    
-    private void disableCaching(HttpServletRequest request, HttpServletResponse response)  {
-        if (!request.getRequestURI().startsWith(request.getContextPath() + ResourceHandler.RESOURCE_IDENTIFIER)) { // Skip JSF resources (CSS/JS/Images/etc)
-            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+
+    private void disableCaching(HttpServletRequest request, HttpServletResponse response) {
+        if (!request.getRequestURI()
+                .startsWith(request.getContextPath() + ResourceHandler.RESOURCE_IDENTIFIER)) { // Skip
+                                                                                               // JSF
+                                                                                               // resources
+                                                                                               // (CSS/JS/Images/etc)
+            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP
+                                                                                        // 1.1.
             response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
             response.setDateHeader("Expires", 0); // Proxies.
         }
     }
 
-	public void init(FilterConfig arg0) throws ServletException {
-		if (log.isDebugEnabled()) {
-			log.debug("init called...");
-		}
+    public void init(FilterConfig arg0) throws ServletException {
+        if (log.isDebugEnabled()) {
+            log.debug("init called...");
+        }
 
-	}
+    }
 
 }
