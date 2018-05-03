@@ -20,12 +20,9 @@ package sernet.gs.ui.rcp.main.bsi.dialogs;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -212,24 +209,6 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
         
         textPassword = new Text(compositePassword, SWT.BORDER | SWT.SINGLE | SWT.PASSWORD);
         textPassword.setLayoutData(gdText);
-        textPassword.addFocusListener(new FocusListener() {
-            
-            @Override
-            public void focusLost(FocusEvent e) {
-                String pwd = textPassword.getText();
-                if(pwd.matches(".*[ÄäÖöÜüß€]+.*")) { //$NON-NLS-1$
-                    MessageDialog.openWarning(PersonBulkEditDialog.this.getShell(), Messages.AccountDialog_5, Messages.AccountDialog_6);
-                    textPassword.setText(""); //$NON-NLS-1$
-                    textPassword2.setText(""); //$NON-NLS-1$
-                    textPassword.setFocus();
-                }
-            }
-            
-            @Override
-            public void focusGained(FocusEvent e) {
-                // nothing to do
-            }
-        });
         
         Label labelPassword2 = new Label(compositePassword, SWT.NONE);
         labelPassword2.setText(Messages.AccountDialog_3);

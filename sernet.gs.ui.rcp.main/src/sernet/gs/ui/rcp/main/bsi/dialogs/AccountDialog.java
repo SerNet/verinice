@@ -46,7 +46,6 @@ import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.InputHelperFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -451,20 +450,7 @@ public class AccountDialog extends TitleAreaDialog {
 	}
 	
 	private boolean validateInput(){
-	    return checkUserName() && checkPassword1() && checkPassword2();
-	}
-	
-	private boolean checkPassword1(){
-        String pwd = textPassword.getText();
-        if(pwd.matches(".*[ÄäÖöÜüß€]+.*")) { //$NON-NLS-1$
-            MessageDialog.openWarning(AccountDialog.this.getShell(), Messages.AccountDialog_5, Messages.AccountDialog_6);
-            textPassword.setText(""); //$NON-NLS-1$
-            textPassword2.setText(""); //$NON-NLS-1$
-            textPassword.setFocus();
-            return false;
-        } else {
-            return true;
-        }
+        return checkUserName() && checkPassword2();
 	}
 	
 	private boolean checkPassword2(){

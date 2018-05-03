@@ -23,8 +23,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.graphics.Color;
@@ -97,26 +95,6 @@ public class PasswordDialog extends Dialog {
     }
 
     private void addListeners() {
-        text.addFocusListener(new FocusListener() {
-            
-            @Override
-            public void focusLost(FocusEvent e) {
-                String pwd = text.getText();
-                if(pwd.matches(".*[ÄäÖöÜüß€]+.*")) { //$NON-NLS-1$
-                    MessageDialog.openWarning(PasswordDialog.this.getShell(), Messages.AccountDialog_5, Messages.AccountDialog_6);
-                    text.setText(""); //$NON-NLS-1$
-                    text2.setText(""); //$NON-NLS-1$
-                    text.setFocus();
-                }
-
-            }
-            
-            @Override
-            public void focusGained(FocusEvent e) {
-                // nothing to do
-            }
-        });
-
         text2.addKeyListener(new KeyListener() {
             
             @Override

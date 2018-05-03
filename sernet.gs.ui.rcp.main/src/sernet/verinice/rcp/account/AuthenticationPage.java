@@ -141,15 +141,6 @@ public class AuthenticationPage extends BaseWizardPage {
 
     private boolean validatePassword() {
         boolean valid = isPassword();
-		// matches validate in PasswordDialog
-		if (getPassword() != null && getPassword().matches(".*[ÄäÖöÜüß€]+.*")) { //$NON-NLS-1$
-			setErrorMessage(sernet.gs.ui.rcp.main.bsi.dialogs.Messages.AccountDialog_5 + ", "
-					+ sernet.gs.ui.rcp.main.bsi.dialogs.Messages.AccountDialog_6);
-			return false;
-		} else {
-			setErrorMessage(null);
-			setMessage(sernet.verinice.rcp.account.Messages.AuthenticationPage_8);
-		}
 		
 		if (valid && getPassword() != null) {
 				valid = getPassword().equals(getPassword2());
