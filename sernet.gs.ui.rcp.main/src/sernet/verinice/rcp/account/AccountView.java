@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Daniel Murygin <dm[at]sernet[dot]de>.
+	 * Copyright (c) 2014 Daniel Murygin <dm[at]sernet[dot]de>.
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -101,6 +101,7 @@ import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@SuppressWarnings("restriction")
 public class AccountView extends RightsEnabledView {
 
     private static final Logger LOG = Logger.getLogger(AccountView.class);
@@ -414,7 +415,7 @@ public class AccountView extends RightsEnabledView {
         createTableColumn(Messages.AccountView_21, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
 
         try {
-            columnIndex = creatLMColumns(columnIndex);
+            creatLMColumns(columnIndex);
         } catch (LicenseManagementException e) {
             String msg = "Error creating license-mgmt-Colums";
             ExceptionUtil.log(e, msg);
@@ -492,27 +493,75 @@ public class AccountView extends RightsEnabledView {
     }
 
     private void makeActions() {
-        editAction = new ConfigurationAction();
-        editAction.setText(Messages.AccountView_23);
-        editAction.setToolTipText(Messages.AccountView_24);
-        editAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
+        makeEditAction();
+        makeSearchAction();
+        makeRunEditAction();
+        makeRemoveAction();
+        makeCreateAction();
 
-        searchAction = new Action() {
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.jface.action.Action#run()
-             */
+        getViewer().addDoubleClickListener(new IDoubleClickListener() {
+            @Override
+            public void doubleClick(DoubleClickEvent event) {
+                Configuration account = (Configuration) ((IStructuredSelection) event
+                        .getSelection()).getFirstElement();
+                if (AccountLoader.isEditAllowed(account)) {
+                    runEditAction.run();
+                }
+            }
+        });
+
+        textLogin.addKeyListener(
+                new EnterKeylistener(textLogin, IAccountSearchParameter.LOGIN, searchAction));
+        textFirstName.addKeyListener(new EnterKeylistener(textFirstName,
+                IAccountSearchParameter.FIRST_NAME, searchAction));
+        textFamilyName.addKeyListener(new EnterKeylistener(textFamilyName,
+                IAccountSearchParameter.FAMILY_NAME, searchAction));
+    }
+
+    private void makeCreateAction() {
+        createAction = new Action() {
             @Override
             public void run() {
+                Configuration account = Configuration.createDefaultAccount();
+                editAction.setConfiguration(account);
+                editAction.run();
                 findAccounts();
             }
         };
-        searchAction.setText(Messages.AccountView_26);
-        searchAction.setToolTipText(Messages.AccountView_27);
-        searchAction
-                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SEARCH));
+        createAction.setText("New...");
+        createAction.setToolTipText("New Account...");
+        createAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.USER_ADD));
+    }
 
+    private void makeRemoveAction() {
+        removeAction = new Action() {
+            @Override
+            public void run() {
+                if (getViewer().getSelection() instanceof IStructuredSelection
+                        && ((IStructuredSelection) getViewer().getSelection())
+                                .getFirstElement() instanceof Configuration) {
+                    try {
+                        Configuration account = (Configuration) ((IStructuredSelection) getViewer()
+                                .getSelection()).getFirstElement();
+                        if (AccountLoader.isEditAllowed(account)) {
+                            deactivateAccount(account);
+                            findAccounts();
+                        }
+                    } catch (Exception t) {
+                        LOG.error("Error while opening control.", t); //$NON-NLS-1$
+                    }
+                }
+            }
+        };
+        removeAction.setText(Messages.AccountView_30);
+        removeAction.setToolTipText(Messages.AccountView_31);
+        removeAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.USER_DISABLED));
+        removeAction.setEnabled(false);
+    }
+
+    private void makeRunEditAction() {
         runEditAction = new Action() {
             @Override
             public void run() {
@@ -539,63 +588,26 @@ public class AccountView extends RightsEnabledView {
         runEditAction
                 .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
         runEditAction.setEnabled(false);
+    }
 
-        removeAction = new Action() {
+    private void makeSearchAction() {
+        searchAction = new Action() {
             @Override
             public void run() {
-                if (getViewer().getSelection() instanceof IStructuredSelection
-                        && ((IStructuredSelection) getViewer().getSelection())
-                                .getFirstElement() instanceof Configuration) {
-                    try {
-                        Configuration account = (Configuration) ((IStructuredSelection) getViewer()
-                                .getSelection()).getFirstElement();
-                        if (AccountLoader.isEditAllowed(account)) {
-                            deactivateAccount(account);
-                            findAccounts();
-                        }
-                    } catch (Exception t) {
-                        LOG.error("Error while opening control.", t); //$NON-NLS-1$
-                    }
-                }
-            }
-        };
-        removeAction.setText(Messages.AccountView_30);
-        removeAction.setToolTipText(Messages.AccountView_31);
-        removeAction.setImageDescriptor(
-                ImageCache.getInstance().getImageDescriptor(ImageCache.USER_DISABLED));
-        removeAction.setEnabled(false);
-
-        createAction = new Action() {
-            @Override
-            public void run() {
-                Configuration account = Configuration.createDefaultAccount();
-                editAction.setConfiguration(account);
-                editAction.run();
                 findAccounts();
             }
         };
-        createAction.setText("New...");
-        createAction.setToolTipText("New Account...");
-        createAction.setImageDescriptor(
-                ImageCache.getInstance().getImageDescriptor(ImageCache.USER_ADD));
+        searchAction.setText(Messages.AccountView_26);
+        searchAction.setToolTipText(Messages.AccountView_27);
+        searchAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SEARCH));
+    }
 
-        getViewer().addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                Configuration account = (Configuration) ((IStructuredSelection) event
-                        .getSelection()).getFirstElement();
-                if (AccountLoader.isEditAllowed(account)) {
-                    runEditAction.run();
-                }
-            }
-        });
-
-        textLogin.addKeyListener(
-                new EnterKeylistener(textLogin, IAccountSearchParameter.LOGIN, searchAction));
-        textFirstName.addKeyListener(new EnterKeylistener(textFirstName,
-                IAccountSearchParameter.FIRST_NAME, searchAction));
-        textFamilyName.addKeyListener(new EnterKeylistener(textFamilyName,
-                IAccountSearchParameter.FAMILY_NAME, searchAction));
+    private void makeEditAction() {
+        editAction = new ConfigurationAction();
+        editAction.setText(Messages.AccountView_23);
+        editAction.setToolTipText(Messages.AccountView_24);
+        editAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
     }
 
     private void hookPageSelection() {

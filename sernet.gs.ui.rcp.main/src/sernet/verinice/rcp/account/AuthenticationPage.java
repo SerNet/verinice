@@ -113,7 +113,7 @@ public class AuthenticationPage extends BaseWizardPage {
 
     @Override
     protected void initData() throws Exception {
-  
+        // nothing to do
     }
     
     /* (non-Javadoc)

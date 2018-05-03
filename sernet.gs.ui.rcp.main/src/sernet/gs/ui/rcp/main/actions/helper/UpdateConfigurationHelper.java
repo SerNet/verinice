@@ -30,9 +30,7 @@ import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.actions.ConfigurationAction;
 import sernet.gs.ui.rcp.main.actions.Messages;
-import sernet.gs.ui.rcp.main.bsi.dialogs.AccountDialog;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IAuthService;

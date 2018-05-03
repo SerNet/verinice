@@ -39,7 +39,6 @@ public class AccountWizard extends Wizard {
     private GroupPage groupPage;
     private NotificationPage notificationPage;
     private AuditorNotificationPage auditorNotificationPage;
-    private ProfilePage profilePage;
     private LicenseMgmtPage licenseMgmtPage;
     
     public AccountWizard(Configuration account) {
@@ -72,7 +71,7 @@ public class AccountWizard extends Wizard {
         addPage(notificationPage);
         auditorNotificationPage = new AuditorNotificationPage();
         addPage(auditorNotificationPage);
-        profilePage = new ProfilePage();
+        ProfilePage profilePage = new ProfilePage();
         addPage(profilePage); 
 
         if (this.account != null) {
