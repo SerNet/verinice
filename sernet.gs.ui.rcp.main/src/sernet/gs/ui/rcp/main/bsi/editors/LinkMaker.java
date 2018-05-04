@@ -19,17 +19,12 @@
 
 package sernet.gs.ui.rcp.main.bsi.editors;
 
-import java.text.Collator;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.jface.action.Action;
@@ -76,6 +71,7 @@ import sernet.hui.common.connect.DirectedHuiRelation;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
+import sernet.hui.common.connect.HuiRelationUtil;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.common.CnALink;
@@ -336,14 +332,8 @@ public class LinkMaker extends Composite implements IRelationTable {
         String sourceEntityTypeId = inputElmt.getEntityType().getId();
         String targetEntityTypeId = selectedElementTypeId;
 
-        Set<HuiRelation> forwardRelations = huiTypeFactory.getPossibleRelations(sourceEntityTypeId,
-                targetEntityTypeId);
-        Set<HuiRelation> backwardRelations = new HashSet<>();
-        if (!sourceEntityTypeId.equals(targetEntityTypeId)) {
-            backwardRelations = huiTypeFactory.getPossibleRelations(targetEntityTypeId,
-                    sourceEntityTypeId);
-        }
-        Set<DirectedHuiRelation> relations = collateRelations(forwardRelations, backwardRelations);
+        Set<DirectedHuiRelation> relations = HuiRelationUtil
+                .getAllRelationsBothDirections(sourceEntityTypeId, targetEntityTypeId);
         relationComboViewer.setInput(relations);
 
         int relationItemCount = relationComboViewer.getCombo().getItemCount();
@@ -355,24 +345,6 @@ public class LinkMaker extends Composite implements IRelationTable {
         addLinkButton.setEnabled(relationItemCount > 0 && writeable && checkRights());
 
         selectRelationType();
-    }
-
-    private Set<DirectedHuiRelation> collateRelations(Set<HuiRelation> forwardRelations,
-            Set<HuiRelation> backwardRelations) {
-
-        Set<DirectedHuiRelation> collatedRelations = new TreeSet<>(
-                getDirectedHuiRelationComparator());
-
-        for (HuiRelation forwardRelation : forwardRelations) {
-            collatedRelations
-                    .add(DirectedHuiRelation.getDirectedHuiRelation(forwardRelation, true));
-        }
-        for (HuiRelation backwardRelation : backwardRelations) {
-            collatedRelations
-                    .add(DirectedHuiRelation.getDirectedHuiRelation(backwardRelation, false));
-        }
-
-        return collatedRelations;
     }
 
     private void selectRelationType() {
@@ -401,17 +373,6 @@ public class LinkMaker extends Composite implements IRelationTable {
                 relationComboViewer.setSelection(new StructuredSelection(relation));
             }
         }
-    }
-
-    private Comparator<DirectedHuiRelation> getDirectedHuiRelationComparator() {
-        return new Comparator<DirectedHuiRelation>() {
-            Collator collator = Collator.getInstance(Locale.getDefault());
-
-            @Override
-            public int compare(DirectedHuiRelation relation1, DirectedHuiRelation relation2) {
-                return collator.compare(relation1.getLabel(), relation2.getLabel());
-            }
-        };
     }
 
     private void addRelationComboListener() {
