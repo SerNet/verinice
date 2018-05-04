@@ -107,9 +107,17 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
         assertEquals(requirement.getTypeId() + IMPLEMENTATION_STATUS_CODE_NO,
                 getImplementationStatus(requirement));
+        
         assertTrue(setImplementationStausToRequirement(safeguard, requirement));
         assertEquals(requirement.getTypeId() + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
                 getImplementationStatus(requirement));
+        
+        updateSafeguard(safeguard, null);
+        assertEquals(requirement.getTypeId() + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
+                getImplementationStatus(requirement));
+        
+        assertTrue(setImplementationStausToRequirement(safeguard, requirement));
+        assertEquals(null, getImplementationStatus(requirement));
 
     }
 
@@ -455,8 +463,10 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
      *
      */
     private Safeguard updateSafeguard(Safeguard safeguard, String option) throws CommandException {
+        String value = option != null ? Safeguard.TYPE_ID + option : null;
+
         safeguard.setSimpleProperty(safeguard.getTypeId() + IMPLEMENTATION_STATUS,
-                Safeguard.TYPE_ID + option);
+                value);
         UpdateElement<Safeguard> command = new UpdateElement<>(safeguard, true, null);
         commandService.executeCommand(command);
         safeguard = command.getElement();

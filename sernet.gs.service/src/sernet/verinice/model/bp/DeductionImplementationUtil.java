@@ -58,15 +58,17 @@ public final class DeductionImplementationUtil {
             return false;
         }
         String optionValue = getImplementationStatus(safeguard);
-        if (optionValue == null) {
-            return false;
-        }
-        optionValue = optionValue.replaceFirst(Safeguard.TYPE_ID, BpRequirement.TYPE_ID);
         String propertyType = getImplementationStatusId(requirement);
         String propertyValue = getImplementationStatus(requirement);
-        if (optionValue.equals(propertyValue)) {
+        if (optionValue != null) {
+            optionValue = optionValue.replaceFirst(Safeguard.TYPE_ID, BpRequirement.TYPE_ID);
+            if (optionValue.equals(propertyValue)) {
+                return false;
+            }
+        } else if (propertyValue == null) {
             return false;
         }
+
         requirement.setSimpleProperty(propertyType, optionValue);
         return true;
     }
