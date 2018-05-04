@@ -21,9 +21,8 @@ package sernet.verinice.web;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
@@ -37,9 +36,11 @@ import sernet.gs.service.TimeFormatter;
 import sernet.gs.web.ExceptionHandler;
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.connect.DirectedHuiRelation;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiRelation;
+import sernet.hui.common.connect.HuiRelationUtil;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.iso27k.ILink;
@@ -70,10 +71,9 @@ public class LinkBean {
 
     private ILink selectedLink;
 
-    private List<String> linkTypeList = new ArrayList<>();
-    private Map<String, HuiRelation> huiRelationMap = new HashMap<>();
+    private Set<DirectedHuiRelation> possibleRelations = new HashSet<>();
 
-    private String selectedLinkType;
+    private DirectedHuiRelation selectedLinkType;
 
     private List<String> linkTargetNameList;
 
@@ -88,8 +88,7 @@ public class LinkBean {
     public void reset() {
         loading = true;
         linkList = new ArrayList<>();
-        linkTypeList = new ArrayList<>();
-        huiRelationMap = new HashMap<>();
+        possibleRelations = new HashSet<>();
     }
 
     public void init(TabChangeEvent tabChangeEvent) {
@@ -141,26 +140,18 @@ public class LinkBean {
             linkList.add(map(link, true));
         }
         setSelectedLink(null);
-        linkTypeList = new ArrayList<>();
-        huiRelationMap = new HashMap<>();
-        Set<HuiRelation> huiRelationSet = entityType.getPossibleRelations();
-        for (HuiRelation huiRelation : huiRelationSet) {
-            String label = getLinkTypeLabel(huiRelation);
-            linkTypeList.add(label);
-            huiRelationMap.put(label, huiRelation);
-        }
+        possibleRelations = HuiRelationUtil.getAllRelationsBothDirections(entityType.getId());
+
         loading = false;
     }
 
-    private String getLinkTypeLabel(HuiRelation huiRelation) {
+    public String getLinkTypeLabel(DirectedHuiRelation huiRelation) {
         StringBuilder sb = new StringBuilder();
-        if (getTypeId().equals(huiRelation.getFrom())) {
-            sb.append(huiRelation.getName());
-        } else {
-            sb.append(huiRelation.getReversename());
-        }
+        sb.append(huiRelation.getLabel());
+        String otherSideTypeId = huiRelation.isForward() ? huiRelation.getHuiRelation().getTo()
+                : huiRelation.getHuiRelation().getFrom();
         sb.append(" (");
-        sb.append(getHuiService().getMessage(huiRelation.getTo()));
+        sb.append(getHuiService().getMessage(otherSideTypeId));
         sb.append(")");
         return sb.toString();
     }
@@ -178,14 +169,13 @@ public class LinkBean {
     public void loadLinkTargets() {
         String targetTypeId = null;
         try {
-            if (getSelectedLinkType() != null) {
-                Set<HuiRelation> huiRelationSet = getEntityType().getPossibleRelations();
-                for (HuiRelation huiRelation : huiRelationSet) {
-                    if (getSelectedLinkType().equals(getLinkTypeLabel(huiRelation))) {
-                        targetTypeId = huiRelation.getTo();
-                        break;
-                    }
+            if (selectedLinkType != null) {
+                if (selectedLinkType.isForward()) {
+                    targetTypeId = selectedLinkType.getHuiRelation().getTo();
+                } else {
+                    targetTypeId = selectedLinkType.getHuiRelation().getFrom();
                 }
+
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("loadLinkTargets(), targetTypeId: " + targetTypeId);
                 }
@@ -246,25 +236,20 @@ public class LinkBean {
     }
 
     private void createLinkLookupRelations(CnATreeElement target) throws CommandException {
-        Set<HuiRelation> possibleRelations;
         boolean reverse = false;
-        HuiRelation selectedRelation = huiRelationMap.get(getSelectedLinkType());
-        CnALink link = createLink(getElement(), target, selectedRelation.getId(),
-                "Created by web client");
-        if (link == null) {
-            // if none found: try reverse direction from dragged element to
-            // target (link is always modelled from one side only)
-            possibleRelations = getHuiService().getPossibleRelations(target.getTypeId(),
-                    getTypeId());
-            if (!possibleRelations.isEmpty()) {
-                link = createLink(target, getElement(), selectedRelation.getId(),
-                        "Created by web client");
-            }
+        CnALink link;
+        if (selectedLinkType.isForward()) {
+            link = createLink(getElement(), target, selectedLinkType.getHuiRelation().getId(),
+                    "Created by web client");
+        } else {
             reverse = true;
+            link = createLink(target, getElement(), selectedLinkType.getHuiRelation().getId(),
+                    "Created by web client");
         }
+
         if (link != null) {
             LinkInformation linkInformation = map(link, reverse);
-            linkInformation.setType(getTypeName(link));
+            linkInformation.setType(selectedLinkType.getLabel());
             linkList.add(linkInformation);
             Util.addInfo("addLink", Util.getMessage(EditBean.BUNDLE_NAME, "linkAdded",
                     new String[] { target.getTitle() }));
@@ -331,22 +316,6 @@ public class LinkBean {
         }
     }
 
-    private String getTypeName(CnALink link) {
-        String typeName = null;
-        Set<HuiRelation> huiRelationSet = entityType.getPossibleRelations();
-        for (HuiRelation huiRelation : huiRelationSet) {
-            if (link.getRelationId() != null && link.getRelationId().equals(huiRelation.getId())) {
-                if (getTypeId().equals(huiRelation.getFrom())) {
-                    typeName = huiRelation.getName();
-                } else {
-                    typeName = huiRelation.getReversename();
-                }
-                break;
-            }
-        }
-        return typeName;
-    }
-
     private CnALink createLink(CnATreeElement source, CnATreeElement target, String typeId,
             String comment) throws CommandException {
         if (LOG.isDebugEnabled()) {
@@ -409,9 +378,6 @@ public class LinkBean {
         if (getLinkTargetNameList() != null) {
             getLinkTargetNameList().clear();
         }
-        if (getLinkTypeList() != null) {
-            getLinkTypeList().clear();
-        }
     }
 
     public CnATreeElement getElement() {
@@ -454,20 +420,16 @@ public class LinkBean {
         this.selectedLink = selectedLink;
     }
 
-    public List<String> getLinkTypeList() {
-        return linkTypeList;
+    public Set<DirectedHuiRelation> getPossibleRelations() {
+        return possibleRelations;
     }
 
-    public String getSelectedLinkType() {
+    public DirectedHuiRelation getSelectedLinkType() {
         return selectedLinkType;
     }
 
-    public void setSelectedLinkType(String selectedLinkType) {
+    public void setSelectedLinkType(DirectedHuiRelation selectedLinkType) {
         this.selectedLinkType = selectedLinkType;
-    }
-
-    public void setLinkTypeList(List<String> linkTargetList) {
-        this.linkTypeList = linkTargetList;
     }
 
     public List<String> getLinkTargetNameList() {
