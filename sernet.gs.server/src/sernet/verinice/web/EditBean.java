@@ -924,8 +924,13 @@ public class EditBean {
             if (dependsOnValue == null) {
                 return false;
             }
-
-            if (dependsType.isInverse()) {
+            if (dependsOn.getIsMultiselect()) {
+                if (dependsType.isInverse()) {
+                    return !dependsOnValue.contains(dependsType.getPropertyValue());
+                } else {
+                    return dependsOnValue.contains(dependsType.getPropertyValue());
+                }
+            } else if (dependsType.isInverse()) {
                 return !dependsOnValue.equals(dependsType.getPropertyValue());
             } else {
                 return dependsOnValue.equals(dependsType.getPropertyValue());
