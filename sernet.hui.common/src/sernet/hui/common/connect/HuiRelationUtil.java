@@ -50,6 +50,19 @@ public final class HuiRelationUtil {
         return collateRelations(forwardRelations, backwardRelations);
     }
 
+    /**
+     * Returns a set of all possible relations from and to an element type. The
+     * set will be sorted by the relations' labels.
+     */
+    public static Set<DirectedHuiRelation> getAllRelationsBothDirections(
+            String sourceEntityTypeId) {
+        Set<DirectedHuiRelation> result = new TreeSet<>(getDirectedHuiRelationComparator());
+        for (EntityType entityType : huiTypeFactory.getAllEntityTypes()) {
+            result.addAll(getAllRelationsBothDirections(sourceEntityTypeId, entityType.getId()));
+        }
+        return result;
+    }
+
     private static Set<DirectedHuiRelation> collateRelations(Set<HuiRelation> forwardRelations,
             Set<HuiRelation> backwardRelations) {
 
