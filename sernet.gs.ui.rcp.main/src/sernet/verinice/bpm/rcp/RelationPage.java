@@ -33,9 +33,9 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import sernet.hui.common.connect.EntityType;
-import sernet.hui.common.connect.HitroUtil;
+import sernet.hui.common.connect.DirectedHuiRelation;
 import sernet.hui.common.connect.HuiRelation;
+import sernet.hui.common.connect.HuiRelationUtil;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.model.iso27k.PersonIso;
@@ -54,10 +54,10 @@ public class RelationPage extends WizardPage {
 
     private String elementType;
 
-    private HuiRelation relation;
+    private DirectedHuiRelation relation;
 
     private Combo relationCombo;
-    private ComboModel<HuiRelation> relationComboModel;
+    private ComboModel<DirectedHuiRelation> relationComboModel;
 
     private boolean isActive = true;
 
@@ -113,16 +113,16 @@ public class RelationPage extends WizardPage {
     }
 
     private void initComboValues() {
-        relationComboModel = new ComboModel<>(new IComboModelLabelProvider<HuiRelation>() {
+        relationComboModel = new ComboModel<>(new IComboModelLabelProvider<DirectedHuiRelation>() {
             @Override
-            public String getLabel(HuiRelation relation) {
-                return relation.getName();
+            public String getLabel(DirectedHuiRelation relation) {
+                return relation.getLabel();
             }
         });
-        EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(elementType);
-        Set<HuiRelation> personRelations = entityType.getPossibleRelations(PersonIso.TYPE_ID);
-        for (HuiRelation huiRelation : personRelations) {
-            relationComboModel.add(huiRelation);
+        Set<DirectedHuiRelation> allPossibleRelations = HuiRelationUtil
+                .getAllRelationsBothDirections(elementType, PersonIso.TYPE_ID);
+        for (DirectedHuiRelation possibleRelation : allPossibleRelations) {
+            relationComboModel.add(possibleRelation);
         }
         if (!relationComboModel.isEmpty()) {
             relationComboModel.sort();
@@ -172,16 +172,12 @@ public class RelationPage extends WizardPage {
         this.isActive = active;
     }
 
-    public HuiRelation getRelation() {
-        return relation;
-    }
-
     public String getRelationId() {
-        return (getRelation() != null) ? getRelation().getId() : null;
+        return relation != null ? relation.getHuiRelation().getId() : null;
     }
 
     public String getRelationName() {
-        return (getRelation() != null) ? getRelation().getName() : null;
+        return relation != null ? relation.getLabel() : null;
     }
 
     public void setRelationId(String relationId) {
@@ -189,11 +185,12 @@ public class RelationPage extends WizardPage {
         if (relationId != null && relationComboModel != null) {
             int size = relationComboModel.getSize();
             for (int i = 0; i < size; i++) {
-                HuiRelation rel = relationComboModel.getObject(i);
+                DirectedHuiRelation directedHuiRelation = relationComboModel.getObject(i);
+                HuiRelation rel = directedHuiRelation.getHuiRelation();
                 if (relationId.equals(rel.getId())) {
                     relationComboModel.setSelectedIndex(i);
                     relationCombo.select(i);
-                    this.relation = rel;
+                    this.relation = directedHuiRelation;
                     break;
                 }
             }
