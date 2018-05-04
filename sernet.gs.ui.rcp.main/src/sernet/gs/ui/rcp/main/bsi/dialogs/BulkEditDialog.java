@@ -41,24 +41,17 @@ import sernet.snutils.DBException;
 
 public class BulkEditDialog extends Dialog {
 
-    private static final Logger LOG = Logger.getLogger(BulkEditDialog.class);
+    private static final Logger logger = Logger.getLogger(BulkEditDialog.class);
 
     private EntityType entType;
     private Entity entity = null;
     private boolean useRules = false;
     private String title = Messages.BulkEditDialog_0;
-    
+
     public BulkEditDialog(Shell parent, EntityType entType) {
         super(parent);
         setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
         this.entType = entType;
-    }
-
-    public BulkEditDialog(Shell shell, EntityType entType2, String title, Entity entity) {
-        this(shell, entType2);
-        useRules = true;
-        this.title = title;
-        this.entity = entity;
     }
 
     @Override
@@ -70,30 +63,34 @@ public class BulkEditDialog extends Dialog {
         final int shellLocationYSubtrahend = 400;
         newShell.setText(title);
         newShell.setSize(shellWidth, shellHeight);
-        
+
         // open the window right under the mouse pointer:
         Point cursorLocation = Display.getCurrent().getCursorLocation();
-        newShell.setLocation(new Point(cursorLocation.x-shellLocationXSubtrahend, cursorLocation.y-shellLocationYSubtrahend));
+        newShell.setLocation(new Point(cursorLocation.x - shellLocationXSubtrahend,
+                cursorLocation.y - shellLocationYSubtrahend));
     }
 
     @Override
     protected Control createDialogArea(Composite parent) {
         try {
             Composite container = (Composite) super.createDialogArea(parent);
-            container.setLayout(new FillLayout());      
-            
-            HitroUIComposite huiComposite = new HitroUIComposite(container, false);        
-            
+            container.setLayout(new FillLayout());
+
+            HitroUIComposite huiComposite = new HitroUIComposite(container, false);
+
             try {
                 if (this.entity == null) {
                     entity = new Entity(entType.getId());
                 }
-                
+
                 String[] tags = BSIElementEditor.getEditorTags();
-                boolean strict = Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
-                
+                boolean strict = Activator.getDefault().getPluginPreferences()
+                        .getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
+
                 // no validation here, so empty list is passed
-                huiComposite.createView(entity, true, useRules, tags, strict, new ArrayList<String>(0), Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.USE_VALIDATION_GUI_HINTS));
+                huiComposite.createView(entity, true, useRules, tags, strict,
+                        new ArrayList<String>(0), Activator.getDefault().getPreferenceStore()
+                                .getBoolean(PreferenceConstants.USE_VALIDATION_GUI_HINTS));
                 InputHelperFactory.setInputHelpers(entType, huiComposite);
                 return huiComposite;
             } catch (DBException e) {
@@ -101,7 +98,7 @@ public class BulkEditDialog extends Dialog {
             }
 
         } catch (Exception e) {
-            LOG.error("Error creating BulkeditDialog", e);
+            logger.error("Error creating BulkeditDialog", e);
         }
         return null;
     }

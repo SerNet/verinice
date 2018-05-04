@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.naming.ConfigurationException;
 
@@ -38,6 +39,8 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -53,11 +56,15 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.PasswordException;
+import sernet.verinice.model.bp.DeductionImplementationUtil;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bpm.TodoViewItem;
 import sernet.verinice.model.bsi.DocumentReference;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.IISO27kElement;
@@ -79,7 +86,7 @@ import sernet.verinice.service.commands.task.ConfigurationBulkEditUpdate;
  */
 public class ShowBulkEditAction extends RightsEnabledAction implements ISelectionListener {
 
-    private static final transient Logger LOG = Logger.getLogger(ShowBulkEditAction.class);
+    private static final Logger logger = Logger.getLogger(ShowBulkEditAction.class);
 
     private List<Integer> dbIDs;
     private ArrayList<CnATreeElement> selectedElements;
@@ -117,8 +124,8 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             return;
         }
 
-        dbIDs = new ArrayList<Integer>(selection.size());
-        selectedElements = new ArrayList<CnATreeElement>();
+        dbIDs = new ArrayList<>(selection.size());
+        selectedElements = new ArrayList<>();
         entType = null;
         readSelection(selection);
         Dialog dialog = null;
@@ -150,7 +157,6 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             PlatformUI.getWorkbench().getProgressService()
                     .busyCursorWhile(new IRunnableWithProgress() {
                         @Override
-                        @SuppressWarnings("restriction")
                         public void run(IProgressMonitor monitor)
                                 throws InvocationTargetException, InterruptedException {
                             doEdit(dialogEntity, monitor);
@@ -159,7 +165,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         } catch (InterruptedException e) {
             ExceptionUtil.log(e, Messages.ShowBulkEditAction_5);
         } catch (Exception e) {
-            LOG.error("Error on bulk edit", e);
+            logger.error("Error on bulk edit", e);
             ExceptionUtil.log(e, Messages.ShowBulkEditAction_6);
         }
     }
@@ -170,7 +176,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
 
         // the selected items are of type CnaTreeelement and can be
         // edited right here:
-        if (selectedElements.size() > 0) {
+        if (!(selectedElements.isEmpty())) {
             if (!(selectedElements.get(0) instanceof Person
                     || selectedElements.get(0) instanceof PersonIso)) {
                 editElements(selectedElements, dialogEntity, monitor);
@@ -213,12 +219,16 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             CnAElementFactory.getInstance().getISO27kModel()
                     .refreshAllListeners(IBSIModelListener.SOURCE_BULK_EDIT);
         }
+        if (CnAElementFactory.isBpModelLoaded()) {
+            CnAElementFactory.getInstance().getBpModel()
+                    .refreshAllListeners(IBSIModelListener.SOURCE_BULK_EDIT);
+        }
     }
 
     private void readSelection(IStructuredSelection selection) {
         if (selection.getFirstElement() instanceof TodoViewItem) {
             // prepare list according to selected lightweight todo items:
-            for (Iterator iter = selection.iterator(); iter.hasNext();) {
+            for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
                 TodoViewItem item = (TodoViewItem) iter.next();
                 dbIDs.add(item.getDbId());
             }
@@ -226,7 +236,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             clazz = MassnahmenUmsetzung.class;
         } else if (selection.getFirstElement() instanceof Person
                 || selection.getFirstElement() instanceof PersonIso) {
-            for (Iterator iter = selection.iterator(); iter.hasNext();) {
+            for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
                 CnATreeElement cElmt = (CnATreeElement) iter.next();
                 LoadConfiguration command = new LoadConfiguration(cElmt);
                 try {
@@ -240,19 +250,14 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                         dbIDs.add(command2.getConfiguration().getDbId());
                     }
                 } catch (CommandException e) {
-                    LOG.error("Error while retrieving configuration", e);
+                    logger.error("Error while retrieving configuration", e);
                     ExceptionUtil.log(e, Messages.ShowBulkEditAction_6);
                 }
             }
-            if (selection.getFirstElement() instanceof Person
-                    || selection.getFirstElement() instanceof PersonIso) {
-                clazz = Configuration.class;
-            } else {
-                clazz = null;
-            }
+            clazz = Configuration.class;
         } else {
             // prepare list according to selected tree items:
-            for (Iterator iter = selection.iterator(); iter.hasNext();) {
+            for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
                 Object o = iter.next();
                 CnATreeElement elmt = null;
                 if (o instanceof CnATreeElement) {
@@ -268,7 +273,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                 entType = HUITypeFactory.getInstance()
                         .getEntityType(elmt.getEntity().getEntityType());
                 selectedElements.add(elmt);
-                LOG.debug("Adding to bulk edit: " + elmt.getTitle()); //$NON-NLS-1$
+                logger.debug("Adding to bulk edit: " + elmt.getTitle()); //$NON-NLS-1$
             }
             clazz = null;
         }
@@ -277,7 +282,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
     private boolean isAllowed(IStructuredSelection selection) {
         // Realizes that the action to delete an element is greyed out,
         // when there is no right to do so.
-        Iterator iterator = (selection).iterator();
+        Iterator<?> iterator = (selection).iterator();
         while (iterator.hasNext()) {
             Object next = iterator.next();
             if (next instanceof CnATreeElement) {
@@ -316,7 +321,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                     newPassword);
         }
         command = ServiceFactory.lookupCommandService().executeCommand(command);
-        if (((ConfigurationBulkEditUpdate) command).getFailedUpdates().size() > 0) {
+        if (!((ConfigurationBulkEditUpdate) command).getFailedUpdates().isEmpty()) {
             StringBuilder sb = new StringBuilder();
             sb.append(Messages.ShowBulkEditAction_15).append(":\n");
             for (String username : ((ConfigurationBulkEditUpdate) command).getFailedUpdates()) {
@@ -335,10 +340,11 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
     public void selectionChanged(IWorkbenchPart part, ISelection input) {
         if (input instanceof IStructuredSelection) {
             IStructuredSelection selection = (IStructuredSelection) input;
+            boolean selectionEmpty = selection.isEmpty();
 
             // check for listitems:
-            if (selection.size() > 0 && selection.getFirstElement() instanceof TodoViewItem) {
-                for (Iterator iter = selection.iterator(); iter.hasNext();) {
+            if (!selectionEmpty && selection.getFirstElement() instanceof TodoViewItem) {
+                for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
                     if (!(iter.next() instanceof TodoViewItem)) {
                         setEnabled(false);
                         return;
@@ -352,12 +358,12 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
 
             // check for document references:
             CnATreeElement elmt = null;
-            if (selection.size() > 0 && selection.getFirstElement() instanceof DocumentReference) {
+            if (!selectionEmpty && selection.getFirstElement() instanceof DocumentReference) {
                 elmt = ((DocumentReference) selection.getFirstElement()).getCnaTreeElement();
             }
 
             // check for other objects:
-            else if (selection.size() > 0 && selection.getFirstElement() instanceof CnATreeElement
+            else if (!selectionEmpty && selection.getFirstElement() instanceof CnATreeElement
                     && ((CnATreeElement) selection.getFirstElement()).getEntity() != null) {
                 elmt = (CnATreeElement) selection.getFirstElement();
             }
@@ -365,7 +371,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             if (elmt != null) {
                 String type = elmt.getEntity().getEntityType();
 
-                for (Iterator iter = selection.iterator(); iter.hasNext();) {
+                for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
                     Object o = iter.next();
                     if (o instanceof CnATreeElement) {
                         elmt = (CnATreeElement) o;
@@ -406,12 +412,34 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         try {
             monitor.setTaskName(Messages.ShowBulkEditAction_11);
             monitor.beginTask(Messages.ShowBulkEditAction_12, IProgressMonitor.UNKNOWN);
-            // CnAElementHome.getInstance().update(selectedElements);
             UpdateMultipleElementEntities command = new UpdateMultipleElementEntities(
                     selectedElements);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
+            List<CnATreeElement> changedElements = command.getChangedElements();
+            for (CnATreeElement cnATreeElement : changedElements) {
+                if (!(cnATreeElement instanceof Safeguard)) {
+                    continue;
+                }
+                cnATreeElement = Retriever.retrieveElement(cnATreeElement, new RetrieveInfo()
+                        .setProperties(true).setLinksUp(true).setLinksUpProperties(true));
+                Set<CnALink> linksUp = cnATreeElement.getLinksUp();
+                for (CnALink cnALink : linksUp) {
+                    if (BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD
+                            .equals(cnALink.getRelationId())) {
+                        CnATreeElement requirement = cnALink.getDependant();
+                        if (DeductionImplementationUtil
+                                .isDeductiveImplementationEnabled(requirement)) {
+                            // the requirements' implementation status could
+                            // have been updated if state deduction is
+                            // enabled, so better refresh them (VN-2067)
+                            CnAElementFactory.getModel(requirement).childChanged(requirement);
+                        }
+                    }
+
+                }
+            }
         } catch (Exception e) {
-            LOG.error("Error while bulk update", e);
+            logger.error("Error while bulk update", e);
             ExceptionUtil.log(e, Messages.ShowBulkEditAction_13);
         }
 
