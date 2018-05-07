@@ -41,7 +41,7 @@ import javax.faces.context.FacesContext;
 public class ResourcesChecker {
 
     private static final String MANUAL_DIR = "manual";
-    private static final String BASE_CLIENT_DIR = "clients";
+    public static final String BASE_CLIENT_DIR = "/clients";
     private static final String MESSAGES = "sernet.verinice.web.WebMessages";
 
     private ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
@@ -66,10 +66,6 @@ public class ResourcesChecker {
             }
         });
         return files;
-    }
-
-    public String getClientPath(String clientName) {
-        return new File(BASE_CLIENT_DIR, clientName).getPath();
     }
 
     /**

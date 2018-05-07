@@ -50,7 +50,7 @@ public class ClientMenuProvider {
     private DefaultMenuItem menuItemForClientFile(File clientFile) {
         String clientName = clientFile.getName();
         DefaultMenuItem item = new DefaultMenuItem(nameForClient(clientName));
-        item.setUrl(resourceChecker.getClientPath(clientName));
+        item.setUrl(ResourcesChecker.BASE_CLIENT_DIR + "/" + clientName);
         item.setIcon(iconForClient(clientName));
         return item;
     }
