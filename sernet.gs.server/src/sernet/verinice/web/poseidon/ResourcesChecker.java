@@ -51,13 +51,16 @@ public class ResourcesChecker {
      * Checks whether there is at least one client available.
      */
     public boolean clientsAvailable() {
-        return clientDir.listFiles().length != 0;
+        return getClientFiles().length != 0;
     }
 
     /**
      * @return A list of files in the client directory sorted by name ascending.
      */
     public File[] getClientFiles() {
+        if (!clientDir.exists()) {
+            return new File[] {};
+        }
         File[] files = clientDir.listFiles();
         Arrays.sort(files, new Comparator<File>() {
             @Override
