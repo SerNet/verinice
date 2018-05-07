@@ -24,6 +24,7 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScheme;
 import org.apache.commons.httpclient.auth.CredentialsNotAvailableException;
 import org.apache.commons.httpclient.auth.CredentialsProvider;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.eclipse.ui.internal.net.auth.Authentication;
 
 /**
@@ -58,7 +59,7 @@ public class CommonsExecuter extends AbstractExecuter {
 
     @Override
     void init() {
-
+        getHttpClient().getParams().setParameter(HttpMethodParams.CREDENTIAL_CHARSET, "UTF-8");
         /**
          * Sets the verinice password dialog.
          */
