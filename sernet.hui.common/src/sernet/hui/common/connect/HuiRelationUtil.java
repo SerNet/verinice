@@ -77,7 +77,15 @@ public final class HuiRelationUtil {
 
         @Override
         public int compare(DirectedHuiRelation relation1, DirectedHuiRelation relation2) {
-            return collator.compare(relation1.getLabel(), relation2.getLabel());
+            int resultFromLabelComparison = collator.compare(relation1.getLabel(), relation2.getLabel());
+            if (resultFromLabelComparison != 0) {
+                return resultFromLabelComparison;
+            }
+            int resultFromForwardComparison = Boolean.compare(relation1.isForward(), relation2.isForward());
+            if (resultFromForwardComparison != 0) {
+                return resultFromForwardComparison;
+            }
+            return relation1.getHuiRelation().getId().compareTo(relation2.getHuiRelation().getId());
         }
     }
 
