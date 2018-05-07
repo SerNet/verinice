@@ -28,7 +28,7 @@ import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 
 /**
- * This class privides methods to generate a primeface menu model to access
+ * This class provides methods to generate a primeface menu model to access
  * downloadable client archives stored on the server.
  */
 @ManagedBean(name = "clientMenuProvider")
