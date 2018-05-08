@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -63,6 +64,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     public static final String TYPE_ID = "huientity";
 
     private static final Logger logger = Logger.getLogger(Entity.class);
+
+    private static final Pattern EPOCH_STRING = Pattern.compile("-?\\d+");
 
     private String uuid;
     private Integer dbId;
@@ -279,12 +282,16 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     }
 
     private void setDateProperty(String value, Property property) {
-        try {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(FormInputParser.stringToDate(value.trim()).getTime());
-            property.setPropertyValue(calendar, false, null);
-        } catch (AssertException e) {
-            logger.error("Exception while setting the value of a date property", e);
+        if (EPOCH_STRING.matcher(value).matches()) {
+            property.setPropertyValue(value, false, null);
+        } else {
+            try {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(FormInputParser.stringToDate(value.trim()).getTime());
+                property.setPropertyValue(calendar, false, null);
+            } catch (AssertException e) {
+                logger.error("Exception while setting the value of a date property", e);
+            }
         }
     }
 
