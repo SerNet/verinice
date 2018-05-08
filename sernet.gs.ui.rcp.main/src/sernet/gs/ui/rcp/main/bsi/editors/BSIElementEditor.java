@@ -68,6 +68,7 @@ import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.snutils.AssertException;
 import sernet.snutils.FormInputParser;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.common.CnATreeElement;
@@ -274,14 +275,13 @@ public class BSIElementEditor extends EditorPart {
                 LOG.info("Sciped save cnAElement."); //$NON-NLS-1$
             } else {
                 monitor.beginTask(Messages.BSIElementEditor_1, IProgressMonitor.UNKNOWN);
-                EditorUtil.updateDependentObjects(cnAElement);
                 save();
                 if (linkMaker != null) {
                     linkMaker.viewer.refresh();
                 }
-
                 // Refresh other views in background
-                Job job = new RefreshJob("Refresh application...");
+                Job job = new RefreshJob("Refresh application...",
+                        EditorUtil.getRelatedObjects(cnAElement));
                 job.setRule(new RefreshJobRule());
                 job.schedule();
 
@@ -326,6 +326,7 @@ public class BSIElementEditor extends EditorPart {
         try {
             // save element, refresh etc:
             CnAElementHome.getInstance().updateEntity(cnAElement);
+            EditorUtil.updateDependentObjects(cnAElement);
             isModelModified = false;
             this.setPartName(EditorUtil.getEditorName(cnAElement));
             this.setTitleToolTip(EditorUtil.getEditorToolTipText(cnAElement));
@@ -507,11 +508,18 @@ public class BSIElementEditor extends EditorPart {
      *
      */
     private final class RefreshJob extends Job {
+        private List<CnATreeElement> objects;
+
         /**
          * @param name
          */
         private RefreshJob(String name) {
             super(name);
+        }
+
+        public RefreshJob(String name, List<CnATreeElement> dependentObjects) {
+            super(name);
+            objects = dependentObjects;
         }
 
         @Override
@@ -524,6 +532,17 @@ public class BSIElementEditor extends EditorPart {
         private void refresh() {
             // notify all views of change:
             CnAElementFactory.getModel(cnAElement).childChanged(cnAElement);
+            if (objects != null) {
+                for (CnATreeElement cnATreeElement : objects) {
+                    try {
+                        CnAElementHome.getInstance().refresh(cnATreeElement);
+                        CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement);
+                    } catch (CommandException e) {
+                        LOG.error("Error synchronizing dependent model elements.");
+                    }
+
+                }
+            }
         }
     }
 
