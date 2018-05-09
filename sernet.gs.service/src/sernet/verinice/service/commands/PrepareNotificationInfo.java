@@ -501,7 +501,6 @@ public class PrepareNotificationInfo extends GenericCommand {
 		for (Configuration c : configurations)
 		{
 			if (c.isNotificationEnabled()
-					&& c.isNotificationMeasureAssignment()
 					&& c.isNotificationGlobal())
 			{
 				globalNotifees.add(c);
@@ -556,7 +555,6 @@ public class PrepareNotificationInfo extends GenericCommand {
 			Configuration c = retrieveConfiguration(p);
 			if (c != null
 					&& c.isNotificationEnabled()
-					&& c.isNotificationMeasureAssignment()
 					&& !c.isNotificationGlobal())
 			{
 				addAssignedMeasure(c, mu);

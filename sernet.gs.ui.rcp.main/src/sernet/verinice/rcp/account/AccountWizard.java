@@ -91,7 +91,6 @@ public class AccountWizard extends Wizard {
             licenseMgmtPage.setSendEmail(account.getNotificationLicense());
             notificationPage.setNotification(getAccount().isNotificationEnabled());
             notificationPage.setGlobal(getAccount().isNotificationGlobal());
-            notificationPage.setNewTasks(getAccount().isNotificationMeasureAssignment());
             notificationPage.setModifyReminder(getAccount().isNotificationMeasureModification());
             notificationPage.setDeadlineWarning(getAccount().isNotificationExpirationEnabled());
             notificationPage.setDeadlineInDays(getAccount().getNotificationExpirationDays());
@@ -122,7 +121,6 @@ public class AccountWizard extends Wizard {
 
         getAccount().setNotificationEnabled(notificationPage.isNotification());
         getAccount().setNotificationGlobal(notificationPage.isGlobal());
-        getAccount().setNotificationMeasureAssignment(notificationPage.isNewTasks());
         getAccount().setNotificationMeasureModification(notificationPage.isModifyReminder());
         getAccount().setNotificationExpirationEnabled(notificationPage.isDeadlineWarning());
         
