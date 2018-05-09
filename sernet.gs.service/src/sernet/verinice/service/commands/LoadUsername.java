@@ -20,17 +20,21 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.service.RetrieveInfo;
+import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.common.CnALink;
-import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.model.iso27k.PersonIso;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -38,12 +42,21 @@ import sernet.verinice.model.common.configuration.Configuration;
  */
 public class LoadUsername extends GenericCommand {
 
-    private static final Logger logger = Logger.getLogger(LoadUsername.class);
+    private static final Set<String> PERSON_TYPE_IDS;
 
-    public static final String HQL = "select props.propertyValue from Configuration as conf "
-            + "join conf.person as person join conf.entity as entity "
-            + "join entity.typedPropertyLists as propertyList join propertyList.properties as props "
-            + "where person.uuid = ? and props.propertyType = ?";
+    static {
+        Set<String> personTypeIDs = new HashSet<>(3);
+        personTypeIDs.add(Person.TYPE_ID);
+        personTypeIDs.add(PersonIso.TYPE_ID);
+        personTypeIDs.add(BpPerson.TYPE_ID);
+        PERSON_TYPE_IDS = Collections.unmodifiableSet(personTypeIDs);
+    }
+
+    public static final String HQL_FOR_LINK_DOWN_FROM_PERSON = createHQLQuery(true);
+
+    public static final String HQL_FOR_LINK_UP_FROM_PERSON = createHQLQuery(false);
+
+    private static final Logger logger = Logger.getLogger(LoadUsername.class);
 
     private final String uuid;
 
@@ -63,30 +76,24 @@ public class LoadUsername extends GenericCommand {
     @Override
     public void execute() {
         try {
-            String uuidAssignee = null;
-            RetrieveInfo ri = new RetrieveInfo();
-            ri.setLinksUp(true);
-            ri.setPermissions(true);
-            LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(uuid, ri);
-            command = getCommandService().executeCommand(command);
-            CnATreeElement control = command.getElement();
-            if (control != null) {
-                Set<CnALink> linkSet = control.getLinksDown();
-                for (CnALink link : linkSet) {
-                    if (this.linkId.equals(link.getRelationId())) {
-                        uuidAssignee = link.getDependency().getUuid();
-                        break;
-                    }
-                }
-                if (uuidAssignee != null) {
-                    IBaseDao<Configuration, Serializable> dao = getDaoFactory()
-                            .getDAO(Configuration.class);
-                    List<?> result = dao.findByQuery(HQL,
-                            new String[] { uuidAssignee, Configuration.PROP_USERNAME });
-                    if (result != null && !result.isEmpty()) {
-                        username = (String) result.get(0);
-                    }
-                }
+            HuiRelation relation = HUITypeFactory.getInstance().getRelation(linkId);
+            String hql;
+
+            if (PERSON_TYPE_IDS.contains(relation.getFrom())) {
+                hql = HQL_FOR_LINK_DOWN_FROM_PERSON;
+            } else if (PERSON_TYPE_IDS.contains(relation.getTo())) {
+                hql = HQL_FOR_LINK_UP_FROM_PERSON;
+            } else {
+                throw new IllegalStateException("Unable to find assignee for task/control " + uuid
+                        + ", unsupported relation type " + linkId);
+            }
+
+            IBaseDao<Configuration, Serializable> dao = getDaoFactory().getDAO(Configuration.class);
+            List<?> result = dao.findByQuery(hql,
+                    new String[] { uuid, linkId, Configuration.PROP_USERNAME });
+
+            if (result != null && !result.isEmpty()) {
+                username = (String) result.get(0);
             }
         } catch (Exception t) {
             logger.error("Error while loading username for control uuid: " + uuid, t);
@@ -101,4 +108,15 @@ public class LoadUsername extends GenericCommand {
         this.username = username;
     }
 
+    private static final String createHQLQuery(boolean forLinkDownFromPerson) {
+
+        return "select prop.propertyValue from Configuration as conf "
+                + "join conf.entity as entity join entity.typedPropertyLists as propertyList "
+                + "join propertyList.properties as prop "
+                + (forLinkDownFromPerson
+                        ? "join conf.person as person join person.linksDown as link join link.dependency as targetObject "
+                        : "join conf.person as person join person.linksUp as link join link.dependant as targetObject ")
+                + "where targetObject.uuid = ? and link.id.typeId = ? and prop.propertyType = ?";
+
+    }
 }
