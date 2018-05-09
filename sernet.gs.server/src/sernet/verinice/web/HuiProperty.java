@@ -509,7 +509,7 @@ public class HuiProperty implements Serializable {
             return Collections.emptyList();
         }
 
-        String[] split = getValue() != null ? getValue().split(",s*") : new String[] {};
+        String[] split = getValue() != null ? getValue().split(",*") : new String[] {};
         List<String> selectedOptions = new ArrayList<>(split.length);
         for (int i = 0; i < split.length; i++) {
             selectedOptions.add(split[i].trim());

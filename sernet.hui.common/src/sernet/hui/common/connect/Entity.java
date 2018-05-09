@@ -392,7 +392,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                     sb.append(prop.getPropertyValue());
                 }
                 if (iter.hasNext()) {
-                    sb.append(", ");
+                    sb.append(",");
                 }
             }
             result = sb.toString();
