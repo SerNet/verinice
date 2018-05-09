@@ -401,7 +401,9 @@ public class EditBean {
             for (HuiProperty property : group.getPropertyList()) {
 
                 if (property.getIsMultiselect()) {
-                    entity.setPropertyValue(property.getType().getId(), property.getValue() == null ? "" : property.getValue());
+                    String joinedProperties = StringUtils.join(property.getSelectedOptions(),",");
+                    entity.setPropertyValue(property.getType().getId(),
+                            property.getValue() == null ? "" : joinedProperties);
                 } else {
                     entity.setSimpleValue(property.getType(), property.getValue());
                 }
