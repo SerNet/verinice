@@ -102,6 +102,7 @@ import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.iso27k.rcp.RegexComboModelFilter;
 import sernet.verinice.model.bpm.TaskInformation;
+import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.PersonAdapter;
 import sernet.verinice.model.common.configuration.Configuration;
@@ -596,6 +597,16 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
                         CnATreeElement element = loadControl.getElement();
                         if (element != null) {
                             if (task.isWithAReleaseProcess()) {
+                                // check if the task is still available
+                                ITask reloadedTask = ServiceFactory.lookupTaskService()
+                                        .findTask(task.getId());
+                                if (reloadedTask == null) {
+                                    loadTasks();
+                                    showError(Messages.TaskView_6,
+                                            Messages.TaskView_Task_List_Refreshed);
+                                    return;
+                                }
+
                                 TaskEditorContext editorContext = new TaskEditorContext(task,
                                         element);
                                 EditorFactory.getInstance().updateAndOpenObject(editorContext);
