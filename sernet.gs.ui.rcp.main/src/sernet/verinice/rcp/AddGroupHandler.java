@@ -45,7 +45,6 @@ import sernet.gs.ui.rcp.main.common.model.NotSufficientRightsException;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
-import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CnATreeElementBuildException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.IBpGroup;
@@ -136,17 +135,7 @@ public abstract class AddGroupHandler extends RightsEnabledHandler implements IE
         TITLE_FOR_TYPE.put(BpRecordGroup.TYPE_ID, Messages.AddGroupHandler_record);
     }
 
-    private CnATreeElement parent;
-
-    private String typeId;
-
-    public AddGroupHandler() {
-        super();
-    }
-
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
      * ExecutionEvent)
@@ -155,8 +144,8 @@ public abstract class AddGroupHandler extends RightsEnabledHandler implements IE
     public Object execute(ExecutionEvent event) throws ExecutionException {
         try {
             if (checkRights()) {
-                parent = getSelectedElement(event);
-                createGroup();
+                CnATreeElement parent = getSelectedElement(event);
+                createGroup(parent);
             } else {
                 throw new NotSufficientRightsException("Action not allowed for user"); //$NON-NLS-1$
             }
@@ -170,16 +159,14 @@ public abstract class AddGroupHandler extends RightsEnabledHandler implements IE
         return null;
     }
 
-    protected void createGroup() throws CommandException, CnATreeElementBuildException {
+    protected void createGroup(CnATreeElement parent)
+            throws CommandException, CnATreeElementBuildException {
         CnATreeElement newGroup = null;
         if (parent != null) {
-            String groupTypeId = this.typeId;
-            if (groupTypeId == null) {
-                // child groups have the same type as parents
-                groupTypeId = parent.getTypeId();
-                if (parent instanceof Asset) {
-                    groupTypeId = ControlGroup.TYPE_ID;
-                }
+            // child groups have the same type as parents
+            String groupTypeId = parent.getTypeId();
+            if (parent instanceof Asset) {
+                groupTypeId = ControlGroup.TYPE_ID;
             }
             boolean inheritIcon = Activator.getDefault().getPreferenceStore()
                     .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);
@@ -203,8 +190,6 @@ public abstract class AddGroupHandler extends RightsEnabledHandler implements IE
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.
      * menus.UIElement, java.util.Map)
@@ -265,8 +250,6 @@ public abstract class AddGroupHandler extends RightsEnabledHandler implements IE
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
