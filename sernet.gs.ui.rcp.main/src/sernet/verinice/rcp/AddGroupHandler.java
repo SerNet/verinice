@@ -89,20 +89,19 @@ import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.rcp.RightsEnabledHandler;
 
 /**
- * THis handler creates new groups for ISO2700 and base protection
- * elements. 
+ * THis handler creates new groups for ISO2700 and base protection elements.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public abstract class AddGroupHandler extends RightsEnabledHandler implements IElementUpdater {
-	
-    private static final Logger LOG = Logger.getLogger(AddGroupHandler.class);	
-	protected static final Map<String, String> TITLE_FOR_TYPE;
-	
-	static {
+
+    private static final Logger LOG = Logger.getLogger(AddGroupHandler.class);
+    protected static final Map<String, String> TITLE_FOR_TYPE;
+
+    static {
         TITLE_FOR_TYPE = new HashMap<>();
-        // ISO27000 
-        TITLE_FOR_TYPE.put(AssetGroup.TYPE_ID, Messages.AddGroup_0); 
+        // ISO27000
+        TITLE_FOR_TYPE.put(AssetGroup.TYPE_ID, Messages.AddGroup_0);
         TITLE_FOR_TYPE.put(AuditGroup.TYPE_ID, Messages.AddGroup_1);
         TITLE_FOR_TYPE.put(ControlGroup.TYPE_ID, Messages.AddGroup_2);
         TITLE_FOR_TYPE.put(DocumentGroup.TYPE_ID, Messages.AddGroup_3);
@@ -136,30 +135,34 @@ public abstract class AddGroupHandler extends RightsEnabledHandler implements IE
         TITLE_FOR_TYPE.put(BpIncidentGroup.TYPE_ID, Messages.AddGroupHandler_incident);
         TITLE_FOR_TYPE.put(BpRecordGroup.TYPE_ID, Messages.AddGroupHandler_record);
     }
-	
-	private CnATreeElement parent;
-    
+
+    private CnATreeElement parent;
+
     private String typeId;
-	
+
     public AddGroupHandler() {
         super();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
+     * ExecutionEvent)
      */
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         try {
-            if(checkRights()){
-                parent = getSelectedElement(event);                       
+            if (checkRights()) {
+                parent = getSelectedElement(event);
                 createGroup();
             } else {
                 throw new NotSufficientRightsException("Action not allowed for user"); //$NON-NLS-1$
             }
-        } catch (NotSufficientRightsException e){
+        } catch (NotSufficientRightsException e) {
             LOG.error("Could not add element", e); //$NON-NLS-1$
-            ExceptionUtil.log(e, Messages.AddGroupHandler_permission_error); 
+            ExceptionUtil.log(e, Messages.AddGroupHandler_permission_error);
         } catch (Exception e) {
             LOG.error("Could not add element group", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.AddGroupHandler_error);
@@ -169,18 +172,19 @@ public abstract class AddGroupHandler extends RightsEnabledHandler implements IE
 
     protected void createGroup() throws CommandException, CnATreeElementBuildException {
         CnATreeElement newGroup = null;
-        if( parent != null) {          
+        if (parent != null) {
             String groupTypeId = this.typeId;
-            if(groupTypeId==null) {
+            if (groupTypeId == null) {
                 // child groups have the same type as parents
                 groupTypeId = parent.getTypeId();
-                if(parent instanceof Asset) {
+                if (parent instanceof Asset) {
                     groupTypeId = ControlGroup.TYPE_ID;
                 }
             }
             boolean inheritIcon = Activator.getDefault().getPreferenceStore()
                     .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);
-            newGroup = CnAElementFactory.getInstance().saveNew((CnATreeElement) parent, groupTypeId, null, inheritIcon);       
+            newGroup = CnAElementFactory.getInstance().saveNew((CnATreeElement) parent, groupTypeId,
+                    null, inheritIcon);
         }
         if (newGroup != null) {
             EditorFactory.getInstance().openEditor(newGroup);
@@ -189,53 +193,61 @@ public abstract class AddGroupHandler extends RightsEnabledHandler implements IE
 
     protected CnATreeElement getSelectedElement(ExecutionEvent event) {
         CnATreeElement element = null;
-        final IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);         
+        final IStructuredSelection selection = (IStructuredSelection) HandlerUtil
+                .getCurrentSelection(event);
         Object sel = selection.getFirstElement();
-        if(sel instanceof IISO27kGroup || sel instanceof IBpGroup) {
+        if (sel instanceof IISO27kGroup || sel instanceof IBpGroup) {
             element = (CnATreeElement) sel;
         }
         return element;
     }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.menus.UIElement, java.util.Map)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.commands.IElementUpdater#updateElement(org.eclipse.ui.
+     * menus.UIElement, java.util.Map)
      */
     @SuppressWarnings("rawtypes")
     @Override
     public void updateElement(UIElement menu, Map arg1) {
         CnATreeElement selectedElement = getSelectedElement();
-        if(selectedElement!=null) {
+        if (selectedElement != null) {
             configureMenu(menu, selectedElement);
-        }    
+        }
     }
-    
+
     private void configureMenu(UIElement menu, CnATreeElement selectedElement) {
         boolean allowed = CnAElementHome.getInstance().isNewChildAllowed(selectedElement);
-        boolean enabled = false;         
-        if(selectedElement instanceof Audit) {
+        boolean enabled = false;
+        if (selectedElement instanceof Audit) {
             enabled = false;
-            menu.setText(Messages.AddGroupHandler_new_group); 
-        } else if(selectedElement instanceof Group<?>) {
+            menu.setText(Messages.AddGroupHandler_new_group);
+        } else if (selectedElement instanceof Group<?>) {
             enabled = true;
             Group<?> group = (Group<?>) selectedElement;
             String childTypeId = group.getChildTypes()[0];
-            if(selectedElement instanceof Asset) {
+            if (selectedElement instanceof Asset) {
                 childTypeId = Control.TYPE_ID;
             }
-            menu.setIcon(ImageDescriptor.createFromImage(ImageCache.getInstance().getImageForTypeId(childTypeId)));   
-            menu.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.AddGroupHandler_new_group );
-        } 
+            menu.setIcon(ImageDescriptor
+                    .createFromImage(ImageCache.getInstance().getImageForTypeId(childTypeId)));
+            menu.setText(TITLE_FOR_TYPE.get(group.getTypeId()) != null
+                    ? TITLE_FOR_TYPE.get(group.getTypeId())
+                    : Messages.AddGroupHandler_new_group);
+        }
         // Only change state when it is enabled, since we do not want to
         // trash the enablement settings of plugin.xml
         if (this.isEnabled()) {
             this.setEnabled(allowed && enabled);
-        }     
+        }
     }
 
     private CnATreeElement getSelectedElement() {
         CnATreeElement element = null;
         ISelection selection = getSelection();
-        if(selection instanceof IStructuredSelection) {
+        if (selection instanceof IStructuredSelection) {
             Object sel = ((IStructuredSelection) selection).getFirstElement();
             if (sel instanceof CnATreeElement) {
                 element = (CnATreeElement) sel;
@@ -251,14 +263,16 @@ public abstract class AddGroupHandler extends RightsEnabledHandler implements IE
         ISelectionService selectionService = workbenchWindow.getSelectionService();
         return selectionService.getSelection();
     }
-    
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
