@@ -53,9 +53,7 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyGroup;
-import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
-import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IConfigurationService;
@@ -358,10 +356,7 @@ public class EditBean {
             } else {
                 LOG.warn("Control is null. Can not save.");
             }
-        } catch (SecurityException e) {
-            LOG.error("Saving not allowed, uuid: " + getUuid(), e);
-            Util.addError(SUBMIT, Util.getMessage(BUNDLE_NAME, "save.forbidden"));
-        } catch (sernet.gs.service.SecurityException e) {
+        } catch (SecurityException | sernet.gs.service.SecurityException e) {
             LOG.error("Saving not allowed, uuid: " + getUuid(), e);
             Util.addError(SUBMIT, Util.getMessage(BUNDLE_NAME, "save.forbidden"));
         } catch (Exception e) {
@@ -476,9 +471,6 @@ public class EditBean {
     public boolean writeEnabled() {
         boolean enabled = false;
         if (getElement() != null) {
-            // causes NoClassDefFoundError:
-            // org/eclipse/ui/plugin/AbstractUIPlugin
-            // FIXME: fix this dependency to eclipse related classes.
             enabled = getConfigurationService().isWriteAllowed(getElement());
         }
         return enabled;
@@ -509,8 +501,7 @@ public class EditBean {
     }
 
     private HuiProperty extractHuiProperty(AjaxBehaviorEvent event) {
-        HuiProperty huiProperty = (HuiProperty) ((UIInput) event.getComponent()).getAttributes().get("huiProperty");
-        return huiProperty;
+        return (HuiProperty) ((UIInput) event.getComponent()).getAttributes().get("huiProperty");
     }
 
     private void trackChangedValuesForReleaseProcess(HuiProperty huiProperty) {
@@ -545,19 +536,6 @@ public class EditBean {
         }
 
         return (String) newValue;
-    }
-
-    private String getSingleSelectOptionId(String newValue, PropertyType propertyType) {
-        String optionId = null;
-        if (!Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE).equals(newValue)) {
-            for (IMLPropertyOption option : propertyType.getOptions()) {
-                if (option.getName().equals(newValue)) {
-                    optionId = option.getId();
-                    break;
-                }
-            }
-        }
-        return optionId;
     }
 
     public void onDateSelect(SelectEvent event) {
@@ -844,7 +822,7 @@ public class EditBean {
                 text = GSScraperUtil.getInstanceWeb().getModel().getMassnahmeHtml(massnahme.getUrl(), massnahme.getStand());
             } catch (GSServiceException e) {
                 LOG.error("Error while loading massnahme description.", e);
-                Util.addError("submit", Util.getMessage("todo.load.failed"));
+                Util.addError(SUBMIT, Util.getMessage("todo.load.failed"));
             }
         }
         if (text != null) {
