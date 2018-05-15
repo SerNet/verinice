@@ -21,6 +21,7 @@ package sernet.verinice.web;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
@@ -505,18 +506,10 @@ public class HuiProperty implements Serializable {
     }
 
     public List<String> getSelectedOptions() {
-        if (!getIsMultiselect()) {
+        if (!getIsMultiselect() || getValue() == null) {
             return Collections.emptyList();
         }
-
-        String[] split = getValue() != null ? getValue().split(",*") : new String[] {};
-        List<String> selectedOptions = new ArrayList<>(split.length);
-        for (int i = 0; i < split.length; i++) {
-            selectedOptions.add(split[i].trim());
-
-        }
-
-        return selectedOptions;
+        return Arrays.asList(StringUtils.split(getValue(), ','));
     }
 
     public void setSelectedOptions(List<String> selectedOptions) {
