@@ -386,32 +386,7 @@ public class EditBean {
         if (!writeEnabled()) {
             throw new SecurityException("write is not allowed");
         }
-        Entity entity = getElement().getEntity();
-        for (HuiProperty property : getGeneralPropertyList()) {
-            if (property.getIsMultiselect()) {
-                entity.setPropertyValue(property.getType().getId(), property.getValue() == null ? "" : property.getValue());
-            } else {
-                entity.setSimpleValue(property.getType(), property.getValue());
-            }
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Property: " + property.getType().getId() + " set to: " + property.getValue());
-            }
-        }
-        for (sernet.verinice.web.PropertyGroup group : getGroupList()) {
-            for (HuiProperty property : group.getPropertyList()) {
-
-                if (property.getIsMultiselect()) {
-                    String joinedProperties = StringUtils.join(property.getSelectedOptions(),",");
-                    entity.setPropertyValue(property.getType().getId(),
-                            property.getValue() == null ? "" : joinedProperties);
-                } else {
-                    entity.setSimpleValue(property.getType(), property.getValue());
-                }
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Property: " + property.getType().getId() + " (" + property.getType().getInputName() + ") set to: " + property.getValue());
-                }
-            }
-        }
+        setPropertyValues();
         SaveElement<CnATreeElement> command = new SaveElement<>(getElement());
         command = getCommandService().executeCommand(command);
         setElement(command.getElement());
@@ -422,6 +397,35 @@ public class EditBean {
             LOG.debug("Element saved, uuid: " + getUuid());
         }
         Util.addInfo(SUBMIT, getSaveMessage());
+    }
+
+    private void setPropertyValues() {
+        Entity entity = getElement().getEntity();
+        for (HuiProperty property : getGeneralPropertyList()) {
+            setPropertyValue(entity, property);
+        }
+        for (sernet.verinice.web.PropertyGroup group : getGroupList()) {
+            for (HuiProperty property : group.getPropertyList()) {
+                setPropertyValue(entity, property);
+            }
+        }
+    }
+
+    private void setPropertyValue(Entity entity, HuiProperty property) {
+        if (property.getIsMultiselect()) {
+            setMultiSelectValue(entity, property);
+        } else {
+            entity.setSimpleValue(property.getType(), property.getValue());
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Property: " + property.getType().getId() + " ("
+                    + property.getType().getInputName() + ") set to: " + property.getValue());
+        }
+    }
+
+    private void setMultiSelectValue(Entity entity, HuiProperty property) {
+        String propertyValue =  property.getValue() == null ? "" : StringUtils.join(property.getSelectedOptions(),","); 
+        entity.setPropertyValue(property.getType().getId(), propertyValue);
     }
 
     private String getSaveMessage() {
