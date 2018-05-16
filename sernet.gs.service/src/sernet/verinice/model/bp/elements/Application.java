@@ -22,6 +22,7 @@ package sernet.verinice.model.bp.elements;
 import java.util.Collection;
 
 import sernet.hui.common.connect.ITaggableElement;
+import sernet.hui.common.connect.ITargetObject;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IBpGroup;
@@ -38,7 +39,7 @@ import sernet.verinice.model.iso27k.MaximumProtectionRequirementsValueListener;
  * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
-public class Application extends ElementWithChilds implements IBpElement, IBpGroup, ITaggableElement {
+public class Application extends ElementWithChilds implements IBpElement, IBpGroup, ITaggableElement, ITargetObject {
 
     private static final long serialVersionUID = -2569916837421863187L;
     
