@@ -509,7 +509,9 @@ public class HuiProperty implements Serializable {
         if (!getIsMultiselect() || getValue() == null) {
             return Collections.emptyList();
         }
-        return Arrays.asList(StringUtils.split(getValue(), ','));
+        // An ArrayList must be created explicitly
+        // https://stackoverflow.com/questions/17359226/com-sun-faces-renderkit-html-basic-menurenderer-createcollection-unable-to-crea
+        return new ArrayList<>(Arrays.asList(StringUtils.split(getValue(), ',')));
     }
 
     public void setSelectedOptions(List<String> selectedOptions) {

@@ -391,8 +391,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 
     private String joinPropertyValues(PropertyList propertyList) {
         StringBuilder sb = new StringBuilder();
-        for (Iterator<Property> iter = propertyList.getProperties().iterator(); iter
-                .hasNext();) {
+        for (Iterator<Property> iter = propertyList.getProperties().iterator(); iter.hasNext();) {
             String propertyValue = iter.next().getPropertyValue();
             if (propertyValue != null) {
                 sb.append(propertyValue);
