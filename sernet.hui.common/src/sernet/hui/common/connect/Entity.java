@@ -384,20 +384,23 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         String result = null;
         PropertyList propertyList = typedPropertyLists.get(propertyTypeId);
         if (propertyList != null && !propertyList.getProperties().isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            for (Iterator<Property> iter = propertyList.getProperties().iterator(); iter
-                    .hasNext();) {
-                Property prop = iter.next();
-                if (prop.getPropertyValue() != null) {
-                    sb.append(prop.getPropertyValue());
-                }
-                if (iter.hasNext()) {
-                    sb.append(", ");
-                }
-            }
-            result = sb.toString();
+            result = joinPropertyValues(propertyList);
         }
         return result;
+    }
+
+    private String joinPropertyValues(PropertyList propertyList) {
+        StringBuilder sb = new StringBuilder();
+        for (Iterator<Property> iter = propertyList.getProperties().iterator(); iter.hasNext();) {
+            String propertyValue = iter.next().getPropertyValue();
+            if (propertyValue != null) {
+                sb.append(propertyValue);
+            }
+            if (iter.hasNext()) {
+                sb.append(",");
+            }
+        }
+        return sb.toString();
     }
 
     public void setSimpleValue(PropertyType type, String value) {
