@@ -1065,6 +1065,9 @@ public final class CnAElementFactory {
         if (isIsoModelLoaded()) {
             CnAElementFactory.getInstance().getISO27kModel().databaseChildRemoved(changeLogEntry);
         }
+        if (isBpModelLoaded()) {
+            CnAElementFactory.getInstance().getBpModel().databaseChildRemoved(changeLogEntry);
+        }
     }
 
     public static boolean selectionOnlyContainsScopes(IStructuredSelection selection) {

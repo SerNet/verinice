@@ -557,7 +557,10 @@ public final class CnAElementHome {
             }
             if (link.getDependant() instanceof IISO27kElement || link.getDependency() instanceof IISO27kElement) {
                 CnAElementFactory.getInstance().getISO27kModel().linkAdded(link);
-            }                 
+            }
+            if (link.getDependant() instanceof IBpElement || link.getDependency() instanceof IBpElement) {
+                CnAElementFactory.getInstance().getBpModel().linkAdded(link);
+            }
         }
         DNDItems.clear();
     }

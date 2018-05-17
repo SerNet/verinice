@@ -157,6 +157,7 @@ public class LinkMaker extends Composite implements IRelationTable {
         linkRemover = new LinkRemover(this);
         CnAElementFactory.getLoadedModel().addBSIModelListener(linkRemover);
         CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(linkRemover);
+        CnAElementFactory.getInstance().getBpModel().addModITBOModelListener(linkRemover);
 
         // init tooltip provider
         ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.RECREATE);

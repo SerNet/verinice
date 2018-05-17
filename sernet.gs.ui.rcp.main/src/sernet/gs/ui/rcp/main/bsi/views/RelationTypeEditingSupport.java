@@ -194,6 +194,8 @@ public class RelationTypeEditingSupport extends EditingSupport {
                     }
                     CnAElementFactory.getInstance().getISO27kModel().linkRemoved(cnaLink);
                     CnAElementFactory.getInstance().getISO27kModel().linkAdded(newCnaLink);
+                    CnAElementFactory.getInstance().getBpModel().linkRemoved(cnaLink);
+                    CnAElementFactory.getInstance().getBpModel().linkAdded(newCnaLink);
                 }
             } catch (CommandException e) {
                 ExceptionUtil.log(e, Messages.RelationTypeEditingSupport_1);
@@ -216,6 +218,7 @@ public class RelationTypeEditingSupport extends EditingSupport {
             }
             
             CnAElementFactory.getInstance().getISO27kModel().linkChanged(cnaLink, newCnaLink, view);
+            CnAElementFactory.getInstance().getBpModel().linkChanged(cnaLink, newCnaLink, view);
         }
     }
     
