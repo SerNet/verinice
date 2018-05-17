@@ -220,7 +220,7 @@ public class Query implements IQuery
         
         public String[] getAllPropertyTypes(String entityTypeId, boolean withId) {
             HUITypeFactory htf = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
-            String[] props = htf.getEntityType(entityTypeId).getAllPropertyTypeIDsIncludingGroups();
+            String[] props = htf.getEntityType(entityTypeId).getAllPropertyTypeIds();
             if (withId) {
                 String[] arr = new String[props.length+1];
                 System.arraycopy(props, 0, arr, 0, props.length);

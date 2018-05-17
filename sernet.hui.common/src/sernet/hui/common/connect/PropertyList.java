@@ -123,4 +123,10 @@ public class PropertyList implements Serializable, ITypedElement  {
 	    return properties.isEmpty();
 	}
 
+    @Override
+    public String toString() {
+        return "PropertyList [properties=" + properties + ", dbId=" + dbId + ", entityId="
+                + entityId + ", uuid=" + uuid + "]";
+    }
+
 }
