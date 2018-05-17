@@ -39,6 +39,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -102,7 +103,6 @@ import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.iso27k.rcp.RegexComboModelFilter;
 import sernet.verinice.model.bpm.TaskInformation;
-import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.PersonAdapter;
 import sernet.verinice.model.common.configuration.Configuration;
@@ -177,7 +177,6 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     DateTime dateTimeUntil;
     Button disableDateButtonTo;
 
-    private Action doubleClickAction;
     private Action cancelTaskAction;
 
     private ICommandService commandService;
@@ -211,8 +210,8 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         createRootComposite(parent);
         dataLoader.initData();
         makeActions();
-        addActions();
-        addListener();
+        addToolBarActions();
+        addListeners();
     }
 
     public void loadTasks() {
@@ -581,63 +580,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     }
 
     private void makeActions() {
-        doubleClickAction = new Action() {
-            @Override
-            public void run() {
-                if (getViewer().getSelection() instanceof IStructuredSelection
-                        && ((IStructuredSelection) getViewer().getSelection())
-                                .getFirstElement() instanceof TaskInformation) {
-                    try {
-                        TaskInformation task = (TaskInformation) ((IStructuredSelection) getViewer()
-                                .getSelection()).getFirstElement();
-                        RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
-                        LoadAncestors loadControl = new LoadAncestors(task.getElementType(),
-                                task.getUuid(), ri);
-                        loadControl = getCommandService().executeCommand(loadControl);
-                        CnATreeElement element = loadControl.getElement();
-                        if (element != null) {
-                            if (task.isWithAReleaseProcess()) {
-                                // check if the task is still available
-                                ITask reloadedTask = ServiceFactory.lookupTaskService()
-                                        .findTask(task.getId());
-                                if (reloadedTask == null) {
-                                    loadTasks();
-                                    showError(Messages.TaskView_6,
-                                            Messages.TaskView_Task_List_Refreshed);
-                                    return;
-                                }
-
-                                TaskEditorContext editorContext = new TaskEditorContext(task,
-                                        element);
-                                EditorFactory.getInstance().updateAndOpenObject(editorContext);
-                            } else {
-                                EditorFactory.getInstance().updateAndOpenObject(element);
-                            }
-                        } else {
-                            showError("Error", Messages.TaskView_25); //$NON-NLS-1$
-                        }
-                    } catch (Exception t) {
-                        LOG.error("Error while opening control.", t); //$NON-NLS-1$
-                    }
-                }
-            }
-        };
-
-        cancelTaskAction = new Action(Messages.ButtonCancel, SWT.TOGGLE) {
-            @Override
-            public void run() {
-                try {
-                    cancelTask();
-                    this.setChecked(false);
-                } catch (Exception e) {
-                    LOG.error("Error while canceling task.", e); //$NON-NLS-1$
-                    showError(Messages.TaskView_6, Messages.TaskView_7);
-                }
-            }
-        };
-        cancelTaskAction.setEnabled(false);
-        cancelTaskAction.setImageDescriptor(
-                ImageCache.getInstance().getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_NEIN));
+        cancelTaskAction = createCancelTaskAction();
 
         if (Activator.getDefault().isStandalone()
                 && !Activator.getDefault().getInternalServer().isRunning()) {
@@ -655,6 +598,25 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         }
     }
 
+    private Action createCancelTaskAction() {
+        Action action = new Action(Messages.ButtonCancel, SWT.TOGGLE) {
+            @Override
+            public void run() {
+                try {
+                    cancelTask();
+                    this.setChecked(false);
+                } catch (Exception e) {
+                    LOG.error("Error while canceling task.", e); //$NON-NLS-1$
+                    showError(Messages.TaskView_6, Messages.TaskView_7);
+                }
+            }
+        };
+        action.setEnabled(false);
+        action.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_NEIN));
+        return action;
+    }
+
     private void configureActions() {
         Display.getDefault().asyncExec(new Runnable() {
             @Override
@@ -668,16 +630,6 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
 
     boolean isTaskShowAllEnabled() {
         return getRightsService().isEnabled(ActionRightIDs.TASKSHOWALL);
-    }
-
-    private void addActions() {
-        addToolBarActions();
-        getViewer().addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                doubleClickAction.run();
-            }
-        });
     }
 
     private void addToolBarActions() {
@@ -694,7 +646,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         manager.add(cancelTaskAction);
     }
 
-    private void addListener() {
+    private void addListeners() {
         taskListener = new ITaskListener() {
             @Override
             public void newTasks(List<ITask> taskList) {
@@ -734,6 +686,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
                                 .getFirstElement() instanceof TaskInformation;
             }
         });
+        addTaskDoubleClickListener();
         // First we create a menu Manager
         MenuManager menuManager = new MenuManager();
         Menu menu = menuManager.createContextMenu(tableViewer.getTable());
@@ -742,6 +695,54 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         getSite().registerContextMenu(menuManager, tableViewer);
         // Make the selection available
         getSite().setSelectionProvider(tableViewer);
+    }
+
+    private void addTaskDoubleClickListener() {
+        tableViewer.addDoubleClickListener(new IDoubleClickListener() {
+            @Override
+            public void doubleClick(DoubleClickEvent event) {
+                ISelection selection = event.getSelection();
+
+                if (selection instanceof IStructuredSelection && ((IStructuredSelection) selection)
+                        .getFirstElement() instanceof TaskInformation) {
+                    TaskInformation task = (TaskInformation) ((IStructuredSelection) selection)
+                            .getFirstElement();
+                    openTask(task);
+                }
+
+            }
+
+            private void openTask(TaskInformation task) {
+                try {
+                    RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+                    LoadAncestors loadControl = new LoadAncestors(task.getElementType(),
+                            task.getUuid(), ri);
+                    loadControl = getCommandService().executeCommand(loadControl);
+                    CnATreeElement element = loadControl.getElement();
+                    if (element == null) {
+                        showError("Error", Messages.TaskView_25);
+                    }
+                    if (task.isWithAReleaseProcess()) {
+                        // check if the task is still available
+                        ITask reloadedTask = ServiceFactory.lookupTaskService()
+                                .findTask(task.getId());
+                        if (reloadedTask == null) {
+                            loadTasks();
+                            showError(Messages.TaskView_6, Messages.TaskView_Task_List_Refreshed);
+                            return;
+                        }
+
+                        TaskEditorContext editorContext = new TaskEditorContext(task, element);
+                        EditorFactory.getInstance().updateAndOpenObject(editorContext);
+                    } else {
+                        EditorFactory.getInstance().updateAndOpenObject(element);
+                    }
+
+                } catch (Exception t) {
+                    LOG.error("Error while opening control.", t); //$NON-NLS-1$
+                }
+            }
+        });
     }
 
     /*
