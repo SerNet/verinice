@@ -49,45 +49,92 @@ public class ClientMenuProvider {
 
     private DefaultMenuItem menuItemForClientFile(File clientFile) {
         String clientName = clientFile.getName();
-        DefaultMenuItem item = new DefaultMenuItem(nameForClient(clientName));
+        ClientInformation ci = ClientInformation.fromFileName(clientName);
+        String menuTitle = String.format("verinice (%s)", ci.getInformation());
+        DefaultMenuItem item = new DefaultMenuItem(menuTitle);
         item.setUrl(ResourcesChecker.BASE_CLIENT_DIR + "/" + clientName);
-        item.setIcon(iconForClient(clientName));
+        item.setIcon(iconForClient(ci));
         return item;
     }
 
-    public String iconForClient(String client) {
-        if (client.contains("linux")) {
-            return "fa fa-fw fa-linux";
+    public String iconForClient(ClientInformation ci) {
+        switch (ci.getOs()) {
+            case Linux:
+                return "fa fa-fw fa-linux";
+            case macOS:
+                return "fa fa-fw fa-apple";
+            case Windows:
+                return "fa fa-fw fa-windows";
+            default:
+                return "fa fa-fw fa-archive";
         }
-        if (client.contains("mac")) {
-            return "fa fa-fw fa-apple";
-        }
-        if (client.contains("windows")) {
-            return "fa fa-fw fa-windows";
-        }
-        return "fa fa-fw fa-archive";
     }
-    
-    public String nameForClient(String client) {
-        if (client.contains("linux") && client.contains("x86_64")) {
-            return "verinice (Linux, 64 bit)";
-        }
-        if (client.contains("linux")) {
-            return "verinice (Linux, 32 bit)";
-        }
-        if (client.contains("mac")) {
-            return "verinice (macOS)";
-        }
-        if (client.contains("windows") && client.contains("x86_64")) {
-            return "verinice (Windows, 64 bit)";
-        }
-        if (client.contains("windows")) {
-            return "verinice (Windows, 32 bit)";
-        }
-        return "verinice.";
-    }
-    
+
     public void setResourceChecker(ResourcesChecker resourcesChecker) {
         this.resourceChecker = resourcesChecker;
+    }
+
+    public static class ClientInformation {
+        private OS os;
+        private boolean is64bits;
+
+        private ClientInformation() {
+            is64bits = false;
+        }
+
+        public static ClientInformation fromFileName(String fileName) {
+            ClientInformation ci = new ClientInformation();
+            if (fileName.contains("linux")) {
+                ci.os = ClientInformation.OS.Linux;
+            }
+            if (fileName.contains("mac")) {
+                ci.os = ClientInformation.OS.macOS;
+            }
+            if (fileName.contains("windows")) {
+                ci.os = ClientInformation.OS.Windows;
+            }
+            if (fileName.contains("x86_64")) {
+                ci.is64bits = true;
+            }
+            return ci;
+        }
+
+        public String getInformation() {
+            switch (os) {
+                case Linux:
+                    return is64bits ? "Linux, 64 bit" : "Linux, 32 bit";
+                case Windows:
+                    return is64bits ? "Windows, 64 bit" : "Windows, 32 bit";
+                case macOS:
+                    return "macOS";
+                default:
+                    return "";
+            }
+        }
+
+        @Override
+        public String toString() {
+            switch (os) {
+                case Linux:
+                    return is64bits ? "Linux, 64 bit" : "Linux, 32 bit";
+                case Windows:
+                    return is64bits ? "Windows, 64 bit" : "Windows, 32 bit";
+                case macOS:
+                    return "macOS";
+                default:
+                    return "";
+            }
+        }
+
+        public OS getOs() {
+            return os;
+        }
+
+        public enum OS {
+            Linux,
+            Windows,
+            macOS,
+            unknown
+        }
     }
 }
