@@ -58,24 +58,7 @@
 			<div class="ui-g-4 ui-sm-12">
 				<p:panel header="#{msgWeb['client_head']}" style="min-height: 200px">
 					<ui:fragment rendered="#{resourcesChecker.clientsAvailable()}">
-						<p:menu>
-							<p:menuitem
-								rendered="#{resourcesChecker.existsWindowsClient64Bit()}"
-								url="/clients/verinice-windows-x86_64.zip" icon="fa fa-fw fa-windows"
-								value="verinice (Windows, 64 bit)" />
-							<p:menuitem
-								rendered="#{resourcesChecker.existsWindowsClient32Bit()}"
-								url="/clients/verinice-windows-x86.zip" icon="fa fa-fw fa-windows"
-								value="verinice (Windows, 32 bit)" />
-							<p:menuitem
-								rendered="#{resourcesChecker.existsLinuxClient64Bit()}"
-								url="/clients/verinice-linux-x86_64.zip" icon="fa fa-fw fa-linux"
-								value="verinice (Linux, 64 bit)" />
-							<p:menuitem
-								rendered="#{resourcesChecker.existsLinuxClient32Bit()}"
-								url="/clients/verinice-linux-x86.zip" icon="fa fa-fw fa-linux"
-								value="verinice (Linux, 32 bit)" />
-						</p:menu>
+                        <p:menu model="#{clientMenuProvider.getMenu()}" />
 					</ui:fragment>
 					<ui:fragment rendered="#{not resourcesChecker.clientsAvailable()}">
 						<p>
