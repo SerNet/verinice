@@ -60,7 +60,11 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchCommandConstants;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.menus.CommandContributionItem;
+import org.eclipse.ui.menus.CommandContributionItemParameter;
 import org.eclipse.ui.part.DrillDownAdapter;
 
 import sernet.gs.ui.rcp.main.Activator;
@@ -494,6 +498,17 @@ public class CatalogView extends RightsEnabledView
             manager.add(doubleClickAction);
             manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
             manager.add(new Separator());
+            // Create a "Copy" context menu entry. Usually, we would do that
+            // declaratively in the plugin.xml file. To be able to do that, we
+            // would have to register the context menu with the workbench, but
+            // that would add the menu entries from the CnATreeElement
+            // objectContributions (such as change_icon), and we don't want
+            // those in the catalog view.
+            CommandContributionItemParameter parameter = new CommandContributionItemParameter(
+                    PlatformUI.getWorkbench(), null, IWorkbenchCommandConstants.EDIT_COPY,
+                    CommandContributionItem.STYLE_PUSH);
+            CommandContributionItem copyItem = new CommandContributionItem(parameter);
+            manager.add(copyItem);
             if (CnAElementFactory.selectionOnlyContainsScopes((IStructuredSelection) selection)) {
                 manager.add(deleteAction);
             }
