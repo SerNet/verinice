@@ -75,11 +75,11 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
 
     private static final Logger LOG = Logger.getLogger(StartIndividualProcess.class);
 
-    private List<String> selectedUuids = new LinkedList<String>();
+    private List<String> selectedUuids = new LinkedList<>();
 
-    private List<String> selectedTitles = new LinkedList<String>();
+    private List<String> selectedTitles = new LinkedList<>();
 
-    private List<String> selectedTypeIds = new LinkedList<String>();
+    private List<String> selectedTypeIds = new LinkedList<>();
 
     private String personTypeId = PersonIso.TYPE_ID;
 
@@ -90,20 +90,16 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
     private Boolean isActive = null;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
      * action.IAction, org.eclipse.ui.IWorkbenchPart)
      */
     @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-        // TODO Auto-generated method stub
 
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
@@ -205,8 +201,6 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
      * IAction, org.eclipse.jface.viewers.ISelection)
@@ -217,27 +211,31 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
         if (isActive()) {
             if (selection instanceof ITreeSelection) {
                 ITreeSelection treeSelection = (ITreeSelection) selection;
-                selectedUuids.clear();
-                selectedTitles.clear();
-                selectedTypeIds.clear();
-                for (Iterator iterator = treeSelection.iterator(); iterator.hasNext();) {
-                    Object selectedElement = iterator.next();
-                    if (selectedElement instanceof CnATreeElement) {
-                        CnATreeElement element = (CnATreeElement) selectedElement;
-                        selectedUuids.add(element.getUuid());
-                        selectedTitles.add(element.getTitle());
-                        selectedTypeIds.add(element.getTypeId());
-                    }
-                    if (isGrundschutzElement(selectedElement)) {
-                        personTypeId = Person.TYPE_ID;
-                    } else {
-                        personTypeId = PersonIso.TYPE_ID;
-                    }
-                }
+                handleNewSelection(treeSelection);
 
             }
         } else {
             action.setEnabled(false);
+        }
+    }
+
+    private void handleNewSelection(ITreeSelection treeSelection) {
+        selectedUuids.clear();
+        selectedTitles.clear();
+        selectedTypeIds.clear();
+        for (Iterator<?> iterator = treeSelection.iterator(); iterator.hasNext();) {
+            Object selectedElement = iterator.next();
+            if (selectedElement instanceof CnATreeElement) {
+                CnATreeElement element = (CnATreeElement) selectedElement;
+                selectedUuids.add(element.getUuid());
+                selectedTitles.add(element.getTitle());
+                selectedTypeIds.add(element.getTypeId());
+            }
+            if (isGrundschutzElement(selectedElement)) {
+                personTypeId = Person.TYPE_ID;
+            } else {
+                personTypeId = PersonIso.TYPE_ID;
+            }
         }
     }
 
@@ -259,7 +257,6 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
@@ -271,7 +268,6 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
