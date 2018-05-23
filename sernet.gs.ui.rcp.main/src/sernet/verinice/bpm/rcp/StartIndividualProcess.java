@@ -50,16 +50,17 @@ import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.bpm.IIndividualService;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.IBSIStrukturElement;
+import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.ImportBsiGroup;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Domain;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.rcp.NonModalWizardDialog;
+import sernet.verinice.service.commands.CnATypeMapper;
 
 /**
  * RCP Action to start jBPM process "individual-task" defined in
@@ -156,7 +157,8 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
         boolean valid = true;
         if (!selectedTypeIds.isEmpty()) {
             String type = selectedTypeIds.get(0);
-            if (ImportBsiGroup.TYPE_ID.equals(type) || ImportIsoGroup.TYPE_ID.equals(type)) {
+            if (ImportBsiGroup.TYPE_ID.equals(type) || ImportIsoGroup.TYPE_ID.equals(type)
+                    || ImportBpGroup.TYPE_ID.equals(type)) {
                 MessageDialog.openError(Display.getCurrent().getActiveShell(),
                         Messages.StartIndividualProcess_1, Messages.StartIndividualProcess_3);
                 valid = false;
@@ -223,30 +225,30 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
         selectedUuids.clear();
         selectedTitles.clear();
         selectedTypeIds.clear();
-        for (Iterator<?> iterator = treeSelection.iterator(); iterator.hasNext();) {
+        for (Iterator iterator = treeSelection.iterator(); iterator.hasNext();) {
             Object selectedElement = iterator.next();
             if (selectedElement instanceof CnATreeElement) {
                 CnATreeElement element = (CnATreeElement) selectedElement;
                 selectedUuids.add(element.getUuid());
                 selectedTitles.add(element.getTitle());
-                selectedTypeIds.add(element.getTypeId());
-            }
-            if (isGrundschutzElement(selectedElement)) {
-                personTypeId = Person.TYPE_ID;
-            } else {
-                personTypeId = PersonIso.TYPE_ID;
+                String typeId = element.getTypeId();
+                Domain domain = CnATypeMapper.getDomainFromTypeId(typeId);
+                switch (domain) {
+                case BASE_PROTECTION:
+                    personTypeId = BpPerson.TYPE_ID;
+                    break;
+                case BASE_PROTECTION_OLD:
+                    personTypeId = Person.TYPE_ID;
+                    break;
+                case ISM:
+                    personTypeId = PersonIso.TYPE_ID;
+                    break;
+                default:
+                    throw new IllegalStateException("Unhandled domain type " + domain);
+                }
+                selectedTypeIds.add(typeId);
             }
         }
-    }
-
-    /**
-     * @param selectedElement
-     * @return
-     */
-    private boolean isGrundschutzElement(Object selectedElement) {
-        return (selectedElement instanceof IBSIStrukturElement)
-                || (selectedElement instanceof BausteinUmsetzung)
-                || (selectedElement instanceof MassnahmenUmsetzung);
     }
 
     private boolean isActive() {
