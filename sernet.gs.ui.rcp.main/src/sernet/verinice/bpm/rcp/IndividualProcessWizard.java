@@ -77,7 +77,7 @@ public class IndividualProcessWizard extends Wizard {
 
     public IndividualProcessWizard(List<String> selectedUuids, String elementTitle, String typeId) {
         super();
-        this.uuids = new ArrayList<String>(selectedUuids);
+        this.uuids = new ArrayList<>(selectedUuids);
         this.elementTitle = elementTitle;
         this.elementType = typeId;
         setNeedsProgressMonitor(true);
@@ -236,7 +236,7 @@ public class IndividualProcessWizard extends Wizard {
 
     public Set<String> getProperties() {
         List<PropertyType> selectedTypes = propertyPage.getSelectedProperties();
-        Set<String> typeIds = new HashSet<String>(selectedTypes.size());
+        Set<String> typeIds = new HashSet<>(selectedTypes.size());
         for (PropertyType type : selectedTypes) {
             typeIds.add(type.getId());
         }
@@ -245,7 +245,7 @@ public class IndividualProcessWizard extends Wizard {
 
     public Set<String> getPropertyNames() {
         List<PropertyType> selectedTypes = propertyPage.getSelectedProperties();
-        Set<String> names = new HashSet<String>(selectedTypes.size());
+        Set<String> names = new HashSet<>(selectedTypes.size());
         for (PropertyType type : selectedTypes) {
             names.add(type.getName());
         }
