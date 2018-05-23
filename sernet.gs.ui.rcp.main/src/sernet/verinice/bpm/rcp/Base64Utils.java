@@ -37,7 +37,7 @@ public final class Base64Utils {
     private static final Logger logger = Logger.getLogger(Base64Utils.class);
 
     /** Write the object to a Base64 string. */
-    public static String toString(Serializable o) throws IOException {
+    public static String encode(Serializable o) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
         oos.writeObject(o);
@@ -45,7 +45,7 @@ public final class Base64Utils {
         return new String(BASE64EncoderStream.encode(baos.toByteArray()));
     }
 
-    public static Object fromString(String s) {
+    public static Object decode(String s) {
         Object o = null;
         try {
             byte[] data = BASE64DecoderStream.decode(s.getBytes());

@@ -31,13 +31,13 @@ public class Base64UtilsTest {
 
     @Test
     public void serializeString() throws IOException {
-        String serialized = Base64Utils.toString("Hello World!");
+        String serialized = Base64Utils.encode("Hello World!");
         Assert.assertEquals("rO0ABXQADEhlbGxvIFdvcmxkIQ==", serialized);
     }
 
     @Test
     public void deserializeString() throws IOException {
-        Object deserialized = Base64Utils.fromString("rO0ABXQADEhlbGxvIFdvcmxkIQ==");
+        Object deserialized = Base64Utils.decode("rO0ABXQADEhlbGxvIFdvcmxkIQ==");
         Assert.assertEquals("Hello World!", deserialized);
     }
 
@@ -47,7 +47,7 @@ public class Base64UtilsTest {
         IndividualServiceParameter parameter = new IndividualServiceParameter();
         parameter.setTitle("Foo");
         templateMap.put(parameter.getTitle(), parameter);
-        String serialized = Base64Utils.toString(templateMap);
+        String serialized = Base64Utils.encode(templateMap);
         Assert.assertEquals(
                 "rO0ABXNyABFqYXZhLnV0aWwuSGFzaE1hcAUH2sHDFmDRAwACRgAKbG9hZEZhY3RvckkACXRocmVzaG9sZHhwP0AAAAAAAAx3CAAAABAAAAABdAADRm9vc3IAOXNlcm5ldC52ZXJpbmljZS5pbnRlcmZhY2VzLmJwbS5JbmRpdmlkdWFsU2VydmljZVBhcmFtZXRlcpaYZGedybvRAgANWgATd2l0aEFSZWxlYXNlUHJvY2Vzc0wACGFzc2lnbmVldAASTGphdmEvbGFuZy9TdHJpbmc7TAASYXNzaWduZWVSZWxhdGlvbklkcQB+AARMABRhc3NpZ25lZVJlbGF0aW9uTmFtZXEAfgAETAALZGVzY3JpcHRpb25xAH4ABEwAB2R1ZURhdGV0ABBMamF2YS91dGlsL0RhdGU7TAAHb3JnVXVpZHEAfgAETAAKcHJvcGVydGllc3QAD0xqYXZhL3V0aWwvU2V0O0wADXByb3BlcnR5TmFtZXNxAH4ABkwAEnJlbWluZGVyUGVyaW9kRGF5c3QAE0xqYXZhL2xhbmcvSW50ZWdlcjtMAAV0aXRsZXEAfgAETAAGdHlwZUlkcQB+AARMAAR1dWlkcQB+AAR4cABwcHBwcHBwcHBxAH4AAnBweA==",
                 serialized);
@@ -59,9 +59,9 @@ public class Base64UtilsTest {
         IndividualServiceParameter parameter = new IndividualServiceParameter();
         parameter.setTitle("Foo");
         templateMap.put(parameter.getTitle(), parameter);
-        String serialized = Base64Utils.toString(templateMap);
+        String serialized = Base64Utils.encode(templateMap);
 
-        Object deserialized = Base64Utils.fromString(serialized);
+        Object deserialized = Base64Utils.decode(serialized);
         Assert.assertThat(deserialized, CoreMatchers.is(Map.class));
         @SuppressWarnings("rawtypes")
         Map deserializedAsMap = (Map) deserialized;
