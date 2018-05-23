@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.SWTElementFactory;
@@ -65,6 +66,15 @@ public class PersonTypeSelectDialog extends Dialog {
                     elementType = Person.TYPE_ID;
                 }
             }
+
+        };
+        SelectionAdapter itbpSelectionAdapter = new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (e.getSource() instanceof Button) {
+                    elementType = BpPerson.TYPE_ID;
+                }
+            }
         };
         Label label = new Label(container, SWT.LEFT);
         label.setText(Messages.PersonTypeSelectDialog_1);
@@ -72,7 +82,8 @@ public class PersonTypeSelectDialog extends Dialog {
                 ismSelectionAdapter);
         SWTElementFactory.generateRadioButton(container, Messages.PersonTypeSelectDialog_3, false,
                 bsiSelectionAdapter);
-
+        SWTElementFactory.generateRadioButton(container, Messages.PersonTypeSelectDialog_ITBP,
+                false, itbpSelectionAdapter);
         parent.pack();
         return container;
     }
