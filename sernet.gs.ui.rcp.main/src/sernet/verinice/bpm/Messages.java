@@ -32,6 +32,7 @@ public class Messages extends NLS {
     public static String PersonTypeSelectDialog_1;
     public static String PersonTypeSelectDialog_2;
     public static String PersonTypeSelectDialog_3;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

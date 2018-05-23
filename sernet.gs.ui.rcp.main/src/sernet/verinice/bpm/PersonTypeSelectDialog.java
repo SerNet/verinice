@@ -43,35 +43,38 @@ import sernet.verinice.rcp.SWTElementFactory;
 public class PersonTypeSelectDialog extends Dialog {
 
     private String elementType = PersonIso.TYPE_ID;
-    
+
     public PersonTypeSelectDialog(Shell shell) {
         super(shell);
     }
-        
+
     @Override
     protected Control createDialogArea(Composite parent) {
         getShell().setText(Messages.PersonTypeSelectDialog_0);
         Composite container = (Composite) super.createDialogArea(parent);
-        SelectionAdapter ismSelectionAdapter = new SelectionAdapter(){
+        SelectionAdapter ismSelectionAdapter = new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e){
-                if(e.getSource() instanceof Button){
+            public void widgetSelected(SelectionEvent e) {
+                if (e.getSource() instanceof Button) {
                     elementType = PersonIso.TYPE_ID;
                 }
             }
         };
-        SelectionAdapter bsiSelectionAdapter = new SelectionAdapter(){
+        SelectionAdapter bsiSelectionAdapter = new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e){
-                if(e.getSource() instanceof Button){
+            public void widgetSelected(SelectionEvent e) {
+                if (e.getSource() instanceof Button) {
                     elementType = Person.TYPE_ID;
                 }
             }
-        };       
+        };
         Label label = new Label(container, SWT.LEFT);
         label.setText(Messages.PersonTypeSelectDialog_1);
-        SWTElementFactory.generateRadioButton(container, Messages.PersonTypeSelectDialog_2, true, ismSelectionAdapter);
-        SWTElementFactory.generateRadioButton(container, Messages.PersonTypeSelectDialog_3, false, bsiSelectionAdapter);
+        SWTElementFactory.generateRadioButton(container, Messages.PersonTypeSelectDialog_2, true,
+                ismSelectionAdapter);
+        SWTElementFactory.generateRadioButton(container, Messages.PersonTypeSelectDialog_3, false,
+                bsiSelectionAdapter);
+
         parent.pack();
         return container;
     }
@@ -79,7 +82,7 @@ public class PersonTypeSelectDialog extends Dialog {
     public String getElementType() {
         return elementType;
     }
-    
+
     @Override
     protected boolean isResizable() {
         return true;

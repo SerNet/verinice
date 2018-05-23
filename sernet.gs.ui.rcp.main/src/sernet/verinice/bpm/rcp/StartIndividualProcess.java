@@ -62,9 +62,10 @@ import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.rcp.NonModalWizardDialog;
 
 /**
- * RCP Action to start jBPM process "individual-task" defined in individual-task.jpdl.xml.
- * Action opens a wizard {@link IndividualProcessWizard} to get process parameter.
- * Parameter are send to the {@link IIndividualService} to start the process.
+ * RCP Action to start jBPM process "individual-task" defined in
+ * individual-task.jpdl.xml. Action opens a wizard
+ * {@link IndividualProcessWizard} to get process parameter. Parameter are send
+ * to the {@link IIndividualService} to start the process.
  * 
  * This action in configured in plugin.xml
  * 
@@ -73,59 +74,67 @@ import sernet.verinice.rcp.NonModalWizardDialog;
 public class StartIndividualProcess implements IObjectActionDelegate, RightEnabledUserInteraction {
 
     private static final Logger LOG = Logger.getLogger(StartIndividualProcess.class);
-    
+
     private List<String> selectedUuids = new LinkedList<String>();
-    
+
     private List<String> selectedTitles = new LinkedList<String>();
 
     private List<String> selectedTypeIds = new LinkedList<String>();
-    
+
     private String personTypeId = PersonIso.TYPE_ID;
-    
+
     private IndividualServiceParameter parameter = new IndividualServiceParameter();
-    
+
     private int numberOfProcess = 0;
-    
+
     private Boolean isActive = null;
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
+     * action.IAction, org.eclipse.ui.IWorkbenchPart)
      */
     @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
         // TODO Auto-generated method stub
-        
+
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
-    @Override  
+    @Override
     public void run(IAction action) {
         try {
-            if(!selectedUuids.isEmpty() && isValid()) {
-                IndividualProcessWizard wizard = new IndividualProcessWizard(selectedUuids, selectedTitles.get(0),selectedTypeIds.get(0));                 
+            if (!selectedUuids.isEmpty() && isValid()) {
+                IndividualProcessWizard wizard = new IndividualProcessWizard(selectedUuids,
+                        selectedTitles.get(0), selectedTypeIds.get(0));
                 wizard.setPersonTypeId(personTypeId);
-                WizardDialog wizardDialog = new NonModalWizardDialog(Display.getCurrent().getActiveShell(),wizard);
+                WizardDialog wizardDialog = new NonModalWizardDialog(
+                        Display.getCurrent().getActiveShell(), wizard);
                 if (wizardDialog.open() == Window.OK) {
                     wizard.saveTemplate();
-                    parameter = wizard.getParameter();                                 
+                    parameter = wizard.getParameter();
                     startProcess(wizard.getUuids());
                 }
             }
-        } catch( Exception e) {
+        } catch (Exception e) {
             LOG.error("Error while starting individual task.", e); //$NON-NLS-1$
         }
     }
-    
+
     /**
      * @return
      */
     private boolean isValid() {
         boolean valid = true;
-        if(!selectedTypeIds.isEmpty()) {
+        if (!selectedTypeIds.isEmpty()) {
             valid = isOfTheSameType();
-            if(valid) {
+            if (valid) {
                 valid = isValidType();
             }
         }
@@ -136,8 +145,9 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
         boolean valid = true;
         String lastTypeId = null;
         for (String typeId : selectedTypeIds) {
-            if(lastTypeId!=null && !lastTypeId.equals(typeId)) {
-                MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.StartIndividualProcess_1, Messages.StartIndividualProcess_2);
+            if (lastTypeId != null && !lastTypeId.equals(typeId)) {
+                MessageDialog.openError(Display.getCurrent().getActiveShell(),
+                        Messages.StartIndividualProcess_1, Messages.StartIndividualProcess_2);
                 valid = false;
                 break;
             }
@@ -145,86 +155,90 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
         }
         return valid;
     }
-    
+
     private boolean isValidType() {
         boolean valid = true;
-        if(!selectedTypeIds.isEmpty()) {
-           String type = selectedTypeIds.get(0);
-           if(ImportBsiGroup.TYPE_ID.equals(type) || ImportIsoGroup.TYPE_ID.equals(type)) {
-               MessageDialog.openError(Display.getCurrent().getActiveShell(), Messages.StartIndividualProcess_1, Messages.StartIndividualProcess_3);
-               valid = false;              
-           }
+        if (!selectedTypeIds.isEmpty()) {
+            String type = selectedTypeIds.get(0);
+            if (ImportBsiGroup.TYPE_ID.equals(type) || ImportIsoGroup.TYPE_ID.equals(type)) {
+                MessageDialog.openError(Display.getCurrent().getActiveShell(),
+                        Messages.StartIndividualProcess_1, Messages.StartIndividualProcess_3);
+                valid = false;
+            }
         }
         return valid;
     }
 
     private void startProcess(final List<String> uuids) {
-        IProgressService progressService = PlatformUI.getWorkbench().getProgressService();       
+        IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         try {
-            progressService.run(true, true, new IRunnableWithProgress() {  
+            progressService.run(true, true, new IRunnableWithProgress() {
                 @Override
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                public void run(IProgressMonitor monitor)
+                        throws InvocationTargetException, InterruptedException {
                     Activator.inheritVeriniceContextState();
-                    numberOfProcess=0;
+                    numberOfProcess = 0;
                     IProcessStartInformation info = null;
-                    if(uuids!=null && !uuids.isEmpty() ) {
+                    if (uuids != null && !uuids.isEmpty()) {
                         for (String uuid : uuids) {
                             parameter.setUuid(uuid);
                             info = ServiceFactory.lookupIndividualService().startProcess(parameter);
-                            if(info!=null) {
-                                numberOfProcess+=info.getNumber();
+                            if (info != null) {
+                                numberOfProcess += info.getNumber();
                             }
                         }
-                                   
+
                     }
-                                    
+
                 }
             });
-            if(numberOfProcess > 0) {
+            if (numberOfProcess > 0) {
                 TaskChangeRegistry.tasksAdded();
             }
-            InfoDialogWithShowToggle.openInformation(
-                    Messages.StartIsaProcess_0,  
+            InfoDialogWithShowToggle.openInformation(Messages.StartIsaProcess_0,
                     Messages.bind(Messages.StartIndividualProcess_0, numberOfProcess),
-                    Messages.StartIsaProcess_3,
-                    PreferenceConstants.INFO_PROCESSES_STARTED);
+                    Messages.StartIsaProcess_3, PreferenceConstants.INFO_PROCESSES_STARTED);
         } catch (Exception t) {
-            LOG.error("Error while creating tasks.",t); //$NON-NLS-1$
-            ExceptionUtil.log(t, sernet.verinice.bpm.rcp.Messages.StartIsaProcess_5); 
+            LOG.error("Error while creating tasks.", t); //$NON-NLS-1$
+            ExceptionUtil.log(t, sernet.verinice.bpm.rcp.Messages.StartIsaProcess_5);
         }
-    } 
+    }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
+     * IAction, org.eclipse.jface.viewers.ISelection)
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
         action.setEnabled(checkRights());
-        if(isActive()) {
-            if(selection instanceof ITreeSelection) {
+        if (isActive()) {
+            if (selection instanceof ITreeSelection) {
                 ITreeSelection treeSelection = (ITreeSelection) selection;
                 selectedUuids.clear();
                 selectedTitles.clear();
                 selectedTypeIds.clear();
                 for (Iterator iterator = treeSelection.iterator(); iterator.hasNext();) {
-                    Object selectedElement = iterator.next();         
-                    if(selectedElement instanceof CnATreeElement) {
+                    Object selectedElement = iterator.next();
+                    if (selectedElement instanceof CnATreeElement) {
                         CnATreeElement element = (CnATreeElement) selectedElement;
                         selectedUuids.add(element.getUuid());
                         selectedTitles.add(element.getTitle());
                         selectedTypeIds.add(element.getTypeId());
                     }
-                    if(isGrundschutzElement(selectedElement)) {
+                    if (isGrundschutzElement(selectedElement)) {
                         personTypeId = Person.TYPE_ID;
                     } else {
                         personTypeId = PersonIso.TYPE_ID;
                     }
                 }
-                
+
             }
         } else {
             action.setEnabled(false);
-        }       
+        }
     }
 
     /**
@@ -236,24 +250,29 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
                 || (selectedElement instanceof BausteinUmsetzung)
                 || (selectedElement instanceof MassnahmenUmsetzung);
     }
-    
+
     private boolean isActive() {
-        if(isActive==null) {
+        if (isActive == null) {
             isActive = ServiceFactory.lookupProcessServiceIsa().isActive();
         }
         return isActive.booleanValue();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
@@ -262,5 +281,3 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
     }
 
 }
-
-
