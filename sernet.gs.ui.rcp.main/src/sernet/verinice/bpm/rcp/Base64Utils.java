@@ -24,10 +24,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
-
-import com.sun.xml.messaging.saaj.packaging.mime.util.BASE64DecoderStream;
-import com.sun.xml.messaging.saaj.packaging.mime.util.BASE64EncoderStream;
 
 /**
  * Helper class to work with base64-encoded objects
@@ -42,13 +40,13 @@ public final class Base64Utils {
         ObjectOutputStream oos = new ObjectOutputStream(baos);
         oos.writeObject(o);
         oos.close();
-        return new String(BASE64EncoderStream.encode(baos.toByteArray()));
+        return new String(Base64.encodeBase64(baos.toByteArray()));
     }
 
     public static Object decode(String s) {
         Object o = null;
         try {
-            byte[] data = BASE64DecoderStream.decode(s.getBytes());
+            byte[] data = Base64.decodeBase64(s.getBytes());
             ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
             o = ois.readObject();
             ois.close();
