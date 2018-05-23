@@ -236,7 +236,7 @@ public class DescriptionPage extends WizardPage {
             IndividualServiceParameter internalTemplate = templateComboModel.getSelectedObject();
             if(internalTemplate!=null) {
                 getTemplateMap().remove(internalTemplate.getTitle());
-                String value = IndividualProcessWizard.toString((Serializable) getTemplateMap());
+                String value = Base64Utils.toString((Serializable) getTemplateMap());
                 getBpmPreferences().put(IndividualProcessWizard.PREFERENCE_NAME, value);
                 getPreferences().flush();
                 templateComboModel.removeSelected();
@@ -282,7 +282,7 @@ public class DescriptionPage extends WizardPage {
        String value = getBpmPreferences().get(IndividualProcessWizard.PREFERENCE_NAME, null);           
         Map<String, IndividualServiceParameter> map;
         if(value!=null) {
-            map = (Hashtable<String, IndividualServiceParameter>) IndividualProcessWizard.fromString(value);
+            map = (Hashtable<String, IndividualServiceParameter>) Base64Utils.fromString(value);
         } else {
             map = new Hashtable<String, IndividualServiceParameter>();
         }
