@@ -2191,6 +2191,7 @@
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
 	       				<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
+	       				<equals value="sernet.verinice.rcp.catalog.CatalogView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
