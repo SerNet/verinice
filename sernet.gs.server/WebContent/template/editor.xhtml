@@ -82,8 +82,9 @@
 												value="#{link.selectedLinkType}">
 												<f:selectItem itemLabel="#{msgEdit['selectType']}"
 													itemValue="" />
-												<f:selectItems value="#{link.linkTypeList}" var="option"
-													itemLabel="#{option}" itemValue="#{option}" />
+												<f:selectItems value="#{link.possibleRelations}" var="option"
+													itemLabel="#{link.getLinkTypeLabel(option)}" itemValue="#{option}" />
+												<f:converter converterId="sernet.verinice.web.DirectedHuiRelationConverter"/>
 												<p:ajax update="linkTarget" event="change"
 													listener="#{link.loadLinkTargets}" process="linkType" />
 											</p:selectOneMenu>
