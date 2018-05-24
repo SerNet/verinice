@@ -101,12 +101,13 @@ public class CutService extends PasteService implements IProgressTask {
                     numberOfElements);
             CutCommand cc = new CutCommand(this.selectedGroup.getUuid(), uuidList,
                     getPostProcessorList());
-            configurePermissions(cc);
+            configurePermissions();
             cc = getCommandService().executeCommand(cc);
             numberOfElements = cc.getNumber();
             progressObserver.setTaskName(Messages.getString("CutService.3"));
             CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
             elementChanges = cc.getChanges();
+
         } catch (PermissionException e) {
             if (log.isDebugEnabled()) {
                 log.debug(e);
@@ -123,9 +124,9 @@ public class CutService extends PasteService implements IProgressTask {
         }
     }
 
-    private void configurePermissions(CutCommand cc) {
+    private void configurePermissions() {
         if (isInheritPermissions()) {
-            IPostProcessor postProcessor = cc.new InheritPermissions(this.selectedGroup);
+            IPostProcessor postProcessor = new CutCommand.InheritPermissions(this.selectedGroup);
             addPostProcessor(postProcessor);
         }
 

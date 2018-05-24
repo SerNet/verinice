@@ -29,6 +29,7 @@ import java.util.Map;
  */
 public interface IPostProcessor extends Serializable {
 
-    void process(List<String> copyUuidList, Map<String, String> sourceDestMap);
+    void process(ICommandService commandService, List<String> copyUuidList,
+            Map<String, String> sourceDestMap);
 
 }

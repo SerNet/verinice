@@ -54,32 +54,32 @@ public abstract class OverwritePermissions implements IPostProcessor, Serializab
      * java.util.Map)
      */
     @Override
-    public void process(List<String> copyUuidList, Map<String, String> sourceDestMap) {
+    public void process(ICommandService commandService, List<String> copyUuidList,
+            Map<String, String> sourceDestMap) {
         try {
-            loadPermissions();
+            loadPermissions(commandService);
             for (String uuidSource : copyUuidList) {
                 String uuidDest = sourceDestMap.get(uuidSource);
-                overwritePermissions(uuidDest);
+                overwritePermissions(commandService, uuidDest);
             }
         } catch (CommandException e) {
             log.error("Error while overwriting permissions", e);
         }
     }
 
-    private void loadPermissions() throws CommandException {
+    private void loadPermissions(ICommandService commandService) throws CommandException {
         RetrieveInfo ri = new RetrieveInfo();
         ri.setPermissions(true);
-        LoadElementByUuid<CnATreeElement> loadCommand = new LoadElementByUuid<>(
+        LoadElementByUuid<CnATreeElement> loadCommand = new LoadElementByUuid<CnATreeElement>(
                 uuidPermissionParent, ri);
-        loadCommand = getCommandService().executeCommand(loadCommand);
+        loadCommand = commandService.executeCommand(loadCommand);
         permissions = loadCommand.getElement().getPermissions();
     }
 
-    private void overwritePermissions(String uuid) throws CommandException {
+    private void overwritePermissions(ICommandService commandService, String uuid)
+            throws CommandException {
         UpdatePermissions updatePermissions = new UpdatePermissions(uuid, permissions, true, true);
-        getCommandService().executeCommand(updatePermissions);
+        updatePermissions = commandService.executeCommand(updatePermissions);
     }
-
-    protected abstract ICommandService getCommandService();
 
 }

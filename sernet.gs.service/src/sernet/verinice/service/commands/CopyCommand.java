@@ -38,6 +38,7 @@ import sernet.hui.common.connect.HitroUtil;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
@@ -147,7 +148,7 @@ public class CopyCommand extends GenericCommand {
                     copyElementUuidList.add(element.getUuid());
                 }
                 for (final IPostProcessor postProcessor : getPostProcessorList()) {
-                    postProcessor.process(copyElementUuidList, sourceDestMap);
+                    postProcessor.process(getCommandService(), copyElementUuidList, sourceDestMap);
                 }
             }
         } catch (final Exception e) {
@@ -503,7 +504,7 @@ public class CopyCommand extends GenericCommand {
      * 
      */
     @SuppressWarnings("serial")
-    public class CopyLinks implements IPostProcessor, Serializable {
+    public static class CopyLinks implements IPostProcessor, Serializable {
 
         /*
          * @see
@@ -511,11 +512,11 @@ public class CopyCommand extends GenericCommand {
          * java.util.Map)
          */
         @Override
-        public void process(final List<String> copyUuidList,
-                final Map<String, String> sourceDestMap) {
+        public void process(ICommandService commandService,
+                final List<String> copyUuidList, final Map<String, String> sourceDestMap) {
             try {
                 final CopyLinksCommand copyLinksCommand = new CopyLinksCommand(sourceDestMap);
-                getCommandService().executeCommand(copyLinksCommand);
+                commandService.executeCommand(copyLinksCommand);
             } catch (final CommandException e) {
                 logger.error("Error while copy links on server.", e);
             }

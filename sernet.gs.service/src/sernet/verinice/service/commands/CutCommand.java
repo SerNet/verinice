@@ -37,7 +37,6 @@ import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ElementChange;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -152,7 +151,7 @@ public class CutCommand extends ChangeLoggingCommand {
                 copyElementUuidList.add(element.getUuid());
             }
             for (IPostProcessor postProcessor : getPostProcessorList()) {
-                postProcessor.process(copyElementUuidList, sourceDestMap);
+                postProcessor.process(getCommandService(), copyElementUuidList, sourceDestMap);
             }
         }
     }
@@ -324,7 +323,7 @@ public class CutCommand extends ChangeLoggingCommand {
         return ChangeLogEntry.TYPE_UPDATE;
     }
 
-    public class InheritPermissions extends OverwritePermissions {
+    public static class InheritPermissions extends OverwritePermissions {
 
         /**
          * @param element
@@ -332,15 +331,6 @@ public class CutCommand extends ChangeLoggingCommand {
          */
         public InheritPermissions(CnATreeElement element) {
             super(element.getUuid());
-        }
-
-        /*
-         * @see sernet.verinice.service.commands.OverwritePermissions#
-         * getCommandService()
-         */
-        @Override
-        protected ICommandService getCommandService() {
-            return CutCommand.this.getCommandService();
         }
 
     }
