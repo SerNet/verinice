@@ -504,6 +504,8 @@ public class CatalogView extends RightsEnabledView
             CommandContributionItemParameter copyParameter = new CommandContributionItemParameter(
                     PlatformUI.getWorkbench(), null, IWorkbenchCommandConstants.EDIT_COPY,
                     CommandContributionItem.STYLE_PUSH);
+            copyParameter.icon = ImageCache.getInstance()
+                    .getImageDescriptor(ImageCache.COPY);
             CommandContributionItem copyItem = new CommandContributionItem(copyParameter);
             manager.add(copyItem);
 
