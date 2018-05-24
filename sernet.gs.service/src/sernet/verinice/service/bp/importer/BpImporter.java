@@ -17,6 +17,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -89,6 +91,9 @@ public class BpImporter {
     private static final Set<String> processIdentifierPrefixes;
     private static final Set<String> systemIdentifierPrefixes;
     private static final Map<String, String> implementationOrderByModuleIdentifier;
+    private static final Map<String, String> modelingHintByModuleIdentifier;
+
+    private static final Pattern MODULE_IDENTIFIER = Pattern.compile("([A-Z]+)\\.(\\d+\\.)*\\d+");
 
     private String xmlRootDirectory = null;
 
@@ -127,20 +132,26 @@ public class BpImporter {
         String propertyValueR3 = "bp_requirement_group_impl_seq_r3";
 
         Properties implementationOrder = new Properties();
+        Properties modelingHints = new Properties();
+
         try (InputStream implementationOrderProperties = BpImporter.class
-                .getResourceAsStream("implementation-order.properties")) {
+                .getResourceAsStream("implementation-order.properties");
+                InputStream modelingHintsProperties = BpImporter.class
+                        .getResourceAsStream("modeling-hints.properties")) {
             implementationOrder.load(implementationOrderProperties);
+            modelingHints.load(modelingHintsProperties);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load implementation order from file", e);
+            throw new RuntimeException(
+                    "Failed to load additional information from properties files", e);
         }
 
         Map<String, String> mapForImplementationOrder = new HashMap<>();
+        Map<String, String> mapForModelingHints = new HashMap<>();
 
         for (Entry<Object, Object> entry : implementationOrder.entrySet()) {
             String moduleIdentifier = (String) entry.getKey();
-            if (!moduleIdentifier.matches("[A-Z]{3,}\\.(\\d+\\.)*\\d+")) {
-                throw new RuntimeException("Illegal module name: '" + moduleIdentifier + "'.");
-            }
+            validateModuleIdentifier(moduleIdentifier);
+
             String implementationOrderName = (String) entry.getValue();
             String implementationOrderPropertyValue;
             switch (implementationOrderName) {
@@ -167,8 +178,34 @@ public class BpImporter {
             }
         }
 
+        for (Entry<Object, Object> entry : modelingHints.entrySet()) {
+            String moduleIdentifier = (String) entry.getKey();
+            validateModuleIdentifier(moduleIdentifier);
+            String modelingHint = (String) entry.getValue();
+
+            String existingMapping = mapForModelingHints.put(moduleIdentifier, modelingHint);
+            if (existingMapping != null) {
+                throw new RuntimeException("Found duplicate modeling hint mapping for module '"
+                        + moduleIdentifier + "'" + ".");
+            }
+        }
+
         implementationOrderByModuleIdentifier = Collections
                 .unmodifiableMap(mapForImplementationOrder);
+        modelingHintByModuleIdentifier = Collections.unmodifiableMap(mapForModelingHints);
+    }
+
+    private static void validateModuleIdentifier(String moduleIdentifier) {
+        Matcher matcher = MODULE_IDENTIFIER.matcher(moduleIdentifier);
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("Illegal module name: '" + moduleIdentifier + "'.");
+        }
+        String prefix = matcher.group(1);
+        if (!systemIdentifierPrefixes.contains(prefix)
+                && !processIdentifierPrefixes.contains(prefix)) {
+            throw new IllegalArgumentException("Illegal system identifier prefix '" + prefix
+                    + "' used in module identifier '" + moduleIdentifier + "'.");
+        }
     }
 
     public BpImporter(String xmlRoot) {
@@ -212,6 +249,14 @@ public class BpImporter {
         if (!moduleIdentifiersStrayImplementationOrder.isEmpty()) {
             LOG.warn("The implementation order mapping file contains an entry for the module(s) "
                     + moduleIdentifiersStrayImplementationOrder
+                    + ", but those modules do not exist in the import data.");
+        }
+        Set<String> modelingHintsStrayImplementationOrder = new HashSet<>();
+        modelingHintsStrayImplementationOrder.addAll(modelingHintByModuleIdentifier.keySet());
+        modelingHintsStrayImplementationOrder.removeAll(addedModules.keySet());
+        if (!modelingHintsStrayImplementationOrder.isEmpty()) {
+            LOG.warn("The implementation hint mapping file contains an entry for the module(s) "
+                    + modelingHintsStrayImplementationOrder
                     + ", but those modules do not exist in the import data.");
         }
 
@@ -702,8 +747,13 @@ public class BpImporter {
                     moduleTitle);
 
             veriniceModule.setIdentifier(moduleIdentifier);
-            veriniceModule
-                    .setObjectBrowserDescription(HtmlHelper.getCompleteModuleXMLText(bsiModule));
+            String modelingHint = modelingHintByModuleIdentifier.get(moduleIdentifier);
+            if (modelingHint == null) {
+                LOG.warn("No modeling hint specified for module '" + moduleIdentifier + "' ("
+                        + moduleTitle + ")");
+            }
+            veriniceModule.setObjectBrowserDescription(
+                    HtmlHelper.getCompleteModuleXMLText(bsiModule, modelingHint));
             veriniceModule.setLastChange(getBSIDate(bsiModule.getLastChange()));
             String implementationOrder = implementationOrderByModuleIdentifier
                     .get(moduleIdentifier);
@@ -713,6 +763,7 @@ public class BpImporter {
                 LOG.warn("No implementation order specified for module '" + moduleIdentifier + "' ("
                         + moduleTitle + ")");
             }
+
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Module : \t" + veriniceModule.getTitle() + " created");
             }
