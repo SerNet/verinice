@@ -64,7 +64,6 @@ public final class ActionRightIDs {
     public static final String DELETEITEM = "deleteitem";
     public static final String DERIVESTATUS = "derivestatus";
     public static final String DOCUMENTVIEW = "documentview";
-    public static final String DSMODELVIEW = "dsmodelview";
     public static final String EDITPROFILE = "editprofile";
     public static final String EDITLINKS = "editlinks";
     public static final String EXPORT_LINK_TABLE = "exportlinktable";

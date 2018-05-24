@@ -69,7 +69,6 @@
             <action id="deleteitem" />
             <action id="derivestatus" />
             <action id="documentview" />
-            <action id="dsmodelview" />
             <action id="editlinks" />
             <action id="exportlinktable" />
             <action id="files" />
@@ -163,7 +162,6 @@
 	        <action id="deleteitem" />
 	        <action id="derivestatus" />
 	        <action id="documentview" />
-	        <action id="dsmodelview" />
 	        <action id="editlinks" />
           <action id="exportlinktable" />
 	        <action id="files" />
@@ -211,7 +209,6 @@
             <action id="deleteitem" />
             <action id="derivestatus" />
             <action id="documentview" />
-            <action id="dsmodelview" />
             <action id="editlinks" />
             <action id="exportlinktable" />
             <action id="files" />
@@ -297,7 +294,6 @@
 	        <action id="deleteitem" />
 	        <action id="derivestatus"/>
 	        <action id="documentview" />
-	        <action id="dsmodelview" />
 	        <action id="editlinks" />
           <action id="exportlinktable" />
 	        <action id="files" />
@@ -383,7 +379,6 @@
             <action id="deleteitem" /> 
             <action id="derivestatus"/> 
             <action id="documentview" /> 
-            <action id="dsmodelview" /> 
             <action id="editlinks" /> 
             <action id="editprofile" /> 
           	<action id="exportlinktable" /> 
@@ -466,7 +461,6 @@
 	        <action id="deleteitem" />
 	        <action id="derivestatus"/>
 	        <action id="documentview" />
-	        <action id="dsmodelview" />
 	        <action id="editlinks" />
           <action id="editprofile" />
           <action id="exportlinktable" />
