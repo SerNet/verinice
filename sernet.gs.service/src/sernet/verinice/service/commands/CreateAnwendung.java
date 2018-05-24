@@ -27,15 +27,6 @@ public class CreateAnwendung extends CreateElement {
 	}
 	
 	@Override
-	public void execute() {
-		super.execute();
-		if (super.element instanceof Anwendung) {
-			Anwendung anwendung = (Anwendung) element;
-			anwendung.createCategories();
-		}
-	}
-	
-	@Override
 	public Anwendung getNewElement() {
 		return (Anwendung) super.getNewElement();
 	}

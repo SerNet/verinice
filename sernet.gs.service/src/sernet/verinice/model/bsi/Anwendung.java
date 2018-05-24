@@ -209,12 +209,4 @@ public class Anwendung extends CnATreeElement
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_PROZESSBEZUG), value);
 	}
 
-	public void createCategories() {
-		addChild(new Verarbeitungsangaben(this));
-		addChild(new VerantwortlicheStelle(this));
-		addChild(new Personengruppen(this));
-		addChild(new Datenverarbeitung(this));
-		addChild(new StellungnahmeDSB(this));
-	}
-
 }
