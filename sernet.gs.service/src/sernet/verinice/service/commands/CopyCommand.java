@@ -38,7 +38,6 @@ import sernet.hui.common.connect.HitroUtil;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
@@ -100,23 +99,10 @@ public class CopyCommand extends GenericCommand {
      */
     public CopyCommand(final String uuidGroup, final List<String> uuidList,
             final List<IPostProcessor> postProcessorList) {
-        this(uuidGroup, uuidList, postProcessorList, false);
-    }
-
-    /**
-     * @param uuid
-     * @param uuidList2
-     * @param postProcessorList2
-     */
-    public CopyCommand(final String uuidGroup, final List<String> uuidList,
-            final List<IPostProcessor> postProcessorList, final boolean copyLinks) {
         super();
         this.uuidGroup = uuidGroup;
         this.uuidList = uuidList;
         this.postProcessorList = postProcessorList;
-        if (copyLinks) {
-            addPostProcessor(new CopyLinks());
-        }
     }
 
     /**
@@ -497,31 +483,6 @@ public class CopyCommand extends GenericCommand {
 
     public List<String> getNewElements() {
         return newElements;
-    }
-
-    /**
-     * @author Daniel Murygin <dm[at]sernet[dot]de>
-     * 
-     */
-    @SuppressWarnings("serial")
-    public static class CopyLinks implements IPostProcessor, Serializable {
-
-        /*
-         * @see
-         * sernet.verinice.iso27k.service.PasteService.IPostProcessor#process(
-         * java.util.Map)
-         */
-        @Override
-        public void process(ICommandService commandService,
-                final List<String> copyUuidList, final Map<String, String> sourceDestMap) {
-            try {
-                final CopyLinksCommand copyLinksCommand = new CopyLinksCommand(sourceDestMap);
-                commandService.executeCommand(copyLinksCommand);
-            } catch (final CommandException e) {
-                logger.error("Error while copy links on server.", e);
-            }
-        }
-
     }
 
     public boolean isCopyChildren() {

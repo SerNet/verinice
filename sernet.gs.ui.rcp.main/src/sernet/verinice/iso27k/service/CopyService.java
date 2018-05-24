@@ -29,6 +29,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.service.commands.CopyCommand;
+import sernet.verinice.service.commands.CopyLinks;
 
 /**
  * A CopyService is a job, which copies a list of elements to an
@@ -44,8 +45,6 @@ public class CopyService extends PasteService implements IProgressTask {
     private final List<CnATreeElement> elements;
 
     private List<String> newElements;
-
-    private boolean copyLinks = false;
 
     private boolean copyAttachments = false;
 
@@ -81,7 +80,9 @@ public class CopyService extends PasteService implements IProgressTask {
         this.progressObserver = progressObserver;
         this.selectedGroup = group;
         this.elements = elementList;
-        this.copyLinks = copyLinks;
+        if (copyLinks) {
+            addPostProcessor(new CopyLinks());
+        }
     }
 
     /*
@@ -100,7 +101,7 @@ public class CopyService extends PasteService implements IProgressTask {
             progressObserver.beginTask(Messages.getString("CopyService.1", numberOfElements), //$NON-NLS-1$
                     IProgressObserver.UNKNOWN_NUMBER_OF_ITEMS);
             CopyCommand cc = new CopyCommand(this.selectedGroup.getUuid(), uuidList,
-                    getPostProcessorList(), this.copyLinks);
+                    getPostProcessorList());
             cc.setCopyAttachments(isCopyAttachments());
             cc = getCommandService().executeCommand(cc);
             numberOfElements = cc.getNumber();
@@ -133,5 +134,4 @@ public class CopyService extends PasteService implements IProgressTask {
     public void setCopyAttachments(final boolean copyAttachments) {
         this.copyAttachments = copyAttachments;
     }
-
 }
