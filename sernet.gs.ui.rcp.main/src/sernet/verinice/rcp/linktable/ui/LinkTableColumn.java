@@ -261,7 +261,7 @@ public class LinkTableColumn {
         String columnPath = firstCombo.getColumnPath();
         return createAlias(columnPath);
     }
-    
+
     public String createAlias(String columnPath) {
         String[] columnPathElements = columnPath.split("\\.|\\<|\\>|\\/|\\:");
         int lastElement = columnPathElements.length - 1;
