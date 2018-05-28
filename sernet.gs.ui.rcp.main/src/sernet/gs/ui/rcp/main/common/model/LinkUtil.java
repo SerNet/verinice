@@ -20,13 +20,17 @@
 
 package sernet.gs.ui.rcp.main.common.model;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Domain;
+import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.commands.CreateLink;
 
 /**
@@ -49,7 +53,25 @@ public final class LinkUtil {
         CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source, target,
                 relationId);
         try {
-            commandService.executeCommand(command);
+            command = commandService.executeCommand(command);
+            CnALink link = command.getLink();
+            Domain dependantDomain = CnATypeMapper
+                    .getDomainFromTypeId(link.getDependant().getTypeId());
+            Domain dependencyDomain = CnATypeMapper
+                    .getDomainFromTypeId(link.getDependency().getTypeId());
+            Set<Domain> relevantDomains = EnumSet.of(dependantDomain, dependencyDomain);
+
+            if (relevantDomains.contains(Domain.BASE_PROTECTION_OLD)
+                    && CnAElementFactory.isModelLoaded()) {
+                CnAElementFactory.getLoadedModel().linkAdded(link);
+            }
+            if (relevantDomains.contains(Domain.ISM) && CnAElementFactory.isIsoModelLoaded()) {
+                CnAElementFactory.getInstance().getISO27kModel().linkAdded(link);
+            }
+            if (relevantDomains.contains(Domain.BASE_PROTECTION)
+                    && CnAElementFactory.isBpModelLoaded()) {
+                CnAElementFactory.getInstance().getBpModel().linkAdded(link);
+            }
         } catch (CommandException e) {
             LOGGER.error("Link creation failed", e);
         }
