@@ -43,12 +43,14 @@ import sernet.verinice.model.validation.CnAValidation;
 import sernet.verinice.service.tree.ElementManager;
 
 /**
- * TreeUpdateListener updates a {@link TreeViewer} when a {@link CnATreeElement} was added, changed or removed.
- * It handles changes of ISO 27000 and BSI elements.
+ * TreeUpdateListener updates a {@link TreeViewer} when a {@link CnATreeElement}
+ * was added, changed or removed. It handles changes of ISO 27000 and BSI
+ * elements.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListener, IBpModelListener, ICatalogModelListener {
+public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListener,
+        IBpModelListener, ICatalogModelListener {
 
     private static final String ERROR_MESSAGE = "Error while updating treeview";
 
@@ -85,7 +87,7 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
             LOG.error(ERROR_MESSAGE, e);
         }
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -96,7 +98,7 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
     @Override
     public void databaseChildRemoved(ChangeLogEntry entry) {
         try {
-            if(entry!=null && entry.getUuid()!=null) {
+            if (entry != null && entry.getUuid() != null) {
                 getElementManager().elementRemoved(entry.getUuid());
                 updater.refresh();
             }
@@ -133,17 +135,18 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
      */
     @Override
     public void databaseChildAdded(CnATreeElement child) {
-         /*
-          *  CnAElementFactory.saveNew calls both
-          *  CnAElementFactory.getModel(child).childAdded(container, child) and
-          *  CnAElementFactory.getModel(child).databaseChildAdded(child);
-          *  
-          *  This method is empty, action is done in childAdded
-          */
+        /*
+         * CnAElementFactory.saveNew calls both
+         * CnAElementFactory.getModel(child).childAdded(container, child) and
+         * CnAElementFactory.getModel(child).databaseChildAdded(child);
+         * 
+         * This method is empty, action is done in childAdded
+         */
     }
-    
+
     /**
-     * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet werden
+     * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet
+     *             werden
      * @see sernet.verinice.model.bsi.IBSIModelListener#modelRefresh()
      */
     @Override
@@ -260,27 +263,34 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
     public void modelReload(ISO27KModel newModel) {
         doModelReload(newModel);
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.bsi.IBSIModelListener#modelReload(sernet.verinice.model.bsi.BSIModel)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.model.bsi.IBSIModelListener#modelReload(sernet.verinice.
+     * model.bsi.BSIModel)
      */
     @Override
     public void modelReload(BSIModel newModel) {
-        doModelReload(newModel);      
+        doModelReload(newModel);
     }
-    
+
     @Override
-    public void validationAdded(Integer scopeId){};
-    
+    public void validationAdded(Integer scopeId) {
+    };
+
     @Override
-    public void validationRemoved(Integer scopeId){};
-    
+    public void validationRemoved(Integer scopeId) {
+    };
+
     @Override
-    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
-    
-    
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation) {
+    };
+
     /**
-     * @param model A ISO27KModel or BSIModel
+     * @param model
+     *            A ISO27KModel or BSIModel
      */
     private void doModelReload(Object model) {
         try {
@@ -308,8 +318,6 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
             LOG.error(ERROR_MESSAGE, e);
         }
     }
-    
-    
 
     /**
      * @return the elementManager
@@ -367,8 +375,12 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
         }
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.iso27k.IBpModelListener#modelReload(sernet.verinice.model.bp.elements.BpModel)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.model.iso27k.IBpModelListener#modelReload(sernet.verinice
+     * .model.bp.elements.BpModel)
      */
     @Override
     public void modelReload(BpModel newModel) {

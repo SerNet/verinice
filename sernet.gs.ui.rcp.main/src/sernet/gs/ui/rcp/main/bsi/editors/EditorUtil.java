@@ -62,7 +62,8 @@ public final class EditorUtil {
      * When the deduction of the {@link BpRequirement} is set to active it needs
      * to apply the implementation status from the {@link Safeguard}. As the
      * changed object is not returned by the call to
-     * {@link sernet.gs.ui.rcp.main.common.model.CnAElementHome#updateEntity(CnATreeElement)} in the editor (see
+     * {@link sernet.gs.ui.rcp.main.common.model.CnAElementHome#updateEntity(CnATreeElement)}
+     * in the editor (see
      * {@link sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditor#save()}), we
      * need to change the state in our local copy.
      */

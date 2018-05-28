@@ -37,7 +37,7 @@ import sernet.verinice.service.commands.CreateLink;
  * @author Moritz Reiter
  */
 public final class LinkUtil {
-    
+
     private static final Logger LOGGER = Logger.getLogger(LinkUtil.class);
 
     private static final ICommandService commandService = CnAElementHome.getInstance()
@@ -47,12 +47,13 @@ public final class LinkUtil {
     }
 
     public static void createLink(CnATreeElement source, CnATreeElement target, String relationId) {
-        CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source,
-                target, relationId);
+        CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source, target,
+                relationId);
         try {
             commandService.executeCommand(command);
         } catch (CommandException e) {
-            // SonarLint 1.0.0 is not satisfied with this. Looks like a false positive to me.
+            // SonarLint 1.0.0 is not satisfied with this. Looks like a false
+            // positive to me.
             LOGGER.error("Link creation failed", e);
         }
     }
@@ -60,12 +61,13 @@ public final class LinkUtil {
     public static void createLinks(Set<CnATreeElement> sources, CnATreeElement target,
             String relationId) {
         for (CnATreeElement source : sources) {
-            CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source,
-                    target, relationId);
+            CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source, target,
+                    relationId);
             try {
                 commandService.executeCommand(command);
             } catch (CommandException e) {
-                // SonarLint 1.0.0 is not satisfied with this. Looks like a false positive to me.
+                // SonarLint 1.0.0 is not satisfied with this. Looks like a
+                // false positive to me.
                 LOGGER.error("Link creation failed", e);
             }
         }
@@ -74,12 +76,13 @@ public final class LinkUtil {
     public static void createLinks(CnATreeElement source, Set<CnATreeElement> targets,
             String relationId) {
         for (CnATreeElement target : targets) {
-            CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source,
-                    target, relationId);
+            CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source, target,
+                    relationId);
             try {
                 commandService.executeCommand(command);
             } catch (CommandException e) {
-                // SonarLint 1.0.0 is not satisfied with this. Looks like a false positive to me.
+                // SonarLint 1.0.0 is not satisfied with this. Looks like a
+                // false positive to me.
                 LOGGER.error("Link creation failed", e);
             }
         }
