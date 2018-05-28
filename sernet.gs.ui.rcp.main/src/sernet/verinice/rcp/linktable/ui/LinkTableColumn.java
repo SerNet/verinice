@@ -267,32 +267,39 @@ public class LinkTableColumn {
 
     public String createAlias(String columnPath) {
         String[] columnPathElements = COLUMN_NAVIGATOR_TOKEN.split(columnPath);
-        int lastElement = columnPathElements.length - 1;
-        String propertyId;
         String message;
-        try {
-            propertyId = columnPathElements[lastElement];
-            String element = columnPathElements[lastElement - 1];
-            logger.debug(columnPath);
-            logger.debug("Element:" + element);
-            logger.debug("Property:" + propertyId);
+
+        int numberOfTokens = columnPathElements.length;
+        if (numberOfTokens >= 2) {
+
+            String propertyId = columnPathElements[numberOfTokens - 1];
+            String element = columnPathElements[numberOfTokens - 2];
+            if (logger.isDebugEnabled()) {
+                logger.debug(columnPath);
+                logger.debug("Element:" + element);
+                logger.debug("Property:" + propertyId);
+            }
             if (columnPath.contains(LinkTableOperationType.RELATION.getOutput())) {
                 message = HUIObjectModelService.getCnaLinkPropertyMessage(propertyId);
             } else {
                 message = getContentService().getLabel(propertyId) + " ("
                         + getContentService().getLabel(element) + ")";
             }
-        } catch (IndexOutOfBoundsException e) {
-            logger.warn("String-split did not work, using old way", e);
+        } else {
+            if (logger.isInfoEnabled()) {
+                logger.info("Cannot use String split approach for column path " + columnPath
+                        + ", using old way");
+            }
             int propertyBeginning = columnPath
                     .lastIndexOf(LinkTableOperationType.PROPERTY.getOutput());
-            propertyId = columnPath.substring(propertyBeginning + 1);
+            String propertyId = columnPath.substring(propertyBeginning + 1);
             if (columnPath.contains(":")) {
                 message = HUIObjectModelService.getCnaLinkPropertyMessage(propertyId);
             } else {
                 message = getContentService().getLabel(propertyId);
             }
         }
+
         message = StringUtils.replaceEachRepeatedly(message,
                 new String[] { "/", ":", ".", "<", ">" }, new String[] { "", "", "", "", "" });
         message = message.replaceAll(" ", "__");
