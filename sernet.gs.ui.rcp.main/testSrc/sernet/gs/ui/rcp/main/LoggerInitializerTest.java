@@ -203,13 +203,8 @@ public class LoggerInitializerTest {
     @Test
     public void removeInvalidWindowsPrefix() {
 
-        System.setProperty(LOGGING_PATH_KEY, "file:\\C:\\tmp\\" + DEFAULT_VERINICE_LOG);
-        System.setProperty(LogDirectoryProvider.LOG4J_CONFIGURATION_JVM_ENV_KEY, getClass().getResource(CUSTOM_LOG4J_XML).getPath());
-
-        LoggerInitializer loggerInit = LoggerInitializer.setupLogFilePath();
-        loggerInit.setLogDirectoryProvider(new WindowsLogDirectory("file:\\C:\\tmp\\" + DEFAULT_VERINICE_LOG));
-
-        Assert.assertEquals("C:/tmp/", loggerInit.getLogDirectory());
+        LogDirectoryProvider provider = new WindowsLogDirectory("file:\\C:\\tmp\\" + DEFAULT_VERINICE_LOG);
+        Assert.assertEquals("C:/tmp/", provider.getLogDirectory());
     }
 
     @Test
