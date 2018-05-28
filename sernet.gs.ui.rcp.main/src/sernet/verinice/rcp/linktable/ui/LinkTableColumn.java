@@ -263,7 +263,7 @@ public class LinkTableColumn {
     }
 
     public String createAlias(String columnPath) {
-        String[] columnPathElements = columnPath.split("\\.|\\<|\\>|\\/|\\:");
+        String[] columnPathElements = columnPath.split("[.<>/:]");
         int lastElement = columnPathElements.length - 1;
         String propertyId;
         String message;
