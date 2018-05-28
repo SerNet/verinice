@@ -41,6 +41,7 @@ import sernet.verinice.service.model.HUIObjectModelService;
 import sernet.verinice.service.model.IObjectModelService;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Container for all widgets needed for a vlt-table column.
@@ -65,6 +66,8 @@ public class LinkTableColumn {
 
     private IObjectModelService contentService;
     private LinkTableElementComboViewer firstCombo;
+
+    private static final Pattern COLUMN_NAVIGATOR_TOKEN = Pattern.compile("[.<>/:]");
 
     public LinkTableColumn(LinkTableColumn copy, int number) {
 
@@ -263,7 +266,7 @@ public class LinkTableColumn {
     }
 
     public String createAlias(String columnPath) {
-        String[] columnPathElements = columnPath.split("[.<>/:]");
+        String[] columnPathElements = COLUMN_NAVIGATOR_TOKEN.split(columnPath);
         int lastElement = columnPathElements.length - 1;
         String propertyId;
         String message;
