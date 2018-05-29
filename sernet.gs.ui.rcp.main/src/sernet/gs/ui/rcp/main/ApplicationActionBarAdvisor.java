@@ -36,6 +36,7 @@ import org.eclipse.ui.IPerspectiveListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.actions.ContributionItemFactory;
@@ -201,7 +202,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
         removeExtraneousActions();
+        removeObsoletePerspectives();
     }
+
 
     @SuppressWarnings(WARNING_RESTRICTION)
     @Override
@@ -547,6 +550,16 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         removeStandardAction(reg, "org.eclipse.ui.WorkingSetActionSet"); //$NON-NLS-1$
     }
 
+    private void removeObsoletePerspectives() {
+        for (IPerspectiveDescriptor perspective : PlatformUI.getWorkbench().getPerspectiveRegistry()
+                .getPerspectives()) {
+            String perspectiveId = perspective.getId();
+            if (perspectiveId.startsWith("<") && perspectiveId.endsWith(">")) {
+                PlatformUI.getWorkbench().getPerspectiveRegistry().deletePerspective(perspective);
+            }
+        }
+    }
+    
     @SuppressWarnings(WARNING_RESTRICTION)
     private void removeStandardAction(ActionSetRegistry reg, String actionSetId) {
         IActionSetDescriptor[] actionSets = reg.getActionSets();
