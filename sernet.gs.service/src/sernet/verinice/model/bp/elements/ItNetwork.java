@@ -22,6 +22,7 @@ package sernet.verinice.model.bp.elements;
 import java.util.Collection;
 
 import sernet.hui.common.connect.ITaggableElement;
+import sernet.hui.common.connect.ITargetObject;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
 import sernet.verinice.model.bp.groups.BpDocumentGroup;
@@ -44,7 +45,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class ItNetwork extends CnATreeElement implements IBpElement, ITaggableElement  {
+public class ItNetwork extends CnATreeElement implements IBpElement, ITaggableElement, ITargetObject {
     
     private static final long serialVersionUID = -542743048413632420L;
        
