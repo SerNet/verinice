@@ -24,35 +24,35 @@ import org.apache.log4j.Logger;
 
 @SuppressWarnings("unchecked")
 public class CnPItems {
-	// TODO use system clipboard
+    // TODO use system clipboard
 
-	private static final Logger LOG = Logger.getLogger(CnPItems.class);
-	
-	private static List copyItems = new ArrayList();
-	
-	private static boolean copyLinks = false;
-	
-	private static List cutItems = new ArrayList();
+    private static final Logger LOG = Logger.getLogger(CnPItems.class);
 
-	public static void setCopyItems(List items) {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("setCopyItems: " + items);
-		}
-		copyItems.addAll(items); 
-	}
-	
-	public static void setCutItems(List items) {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("setCutItems: " + items);
-		}
-		cutItems.addAll(items); 
-	}
+    private static List copyItems = new ArrayList();
 
-	public static List getCopyItems() {
-		return copyItems;
-	}
-	
-	public static boolean isCopyLinks() {
+    private static boolean copyLinks = false;
+
+    private static List cutItems = new ArrayList();
+
+    public static void setCopyItems(List items) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("setCopyItems: " + items);
+        }
+        copyItems.addAll(items);
+    }
+
+    public static void setCutItems(List items) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("setCutItems: " + items);
+        }
+        cutItems.addAll(items);
+    }
+
+    public static List getCopyItems() {
+        return copyItems;
+    }
+
+    public static boolean isCopyLinks() {
         return copyLinks;
     }
 
@@ -61,17 +61,15 @@ public class CnPItems {
     }
 
     public static List getCutItems() {
-		return cutItems;
-	}
+        return cutItems;
+    }
 
-	public static void clearCopyItems() {
-		copyItems.clear();
-	}
-	
-	public static void clearCutItems() {
-		cutItems.clear();
-	}
-	
-	
+    public static void clearCopyItems() {
+        copyItems.clear();
+    }
+
+    public static void clearCutItems() {
+        cutItems.clear();
+    }
 
 }

@@ -38,66 +38,68 @@ import sernet.verinice.rcp.IProgressRunnable;
  */
 public class CopyTreeElements implements IProgressRunnable {
 
-	private IProgressTask service;
-	
-	private final CnATreeElement selectedGroup;
+    private IProgressTask service;
 
-	private final List<CnATreeElement> elements;
-	
-	private List<String> newElements;
-	
-	private final boolean copyLinks;
-	
-	private boolean copyAttachments = false;
-	
+    private final CnATreeElement selectedGroup;
 
-	@SuppressWarnings("unchecked")
-	public CopyTreeElements(final CnATreeElement selectedGroup, final List<CnATreeElement> elements, final boolean copyLinks) {
-		this.selectedGroup = selectedGroup;
-		this.elements = elements;
-		this.copyLinks = copyLinks;
-	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.runtime.IProgressMonitor)
-	 */
-	@Override
-    public void run(final IProgressMonitor monitor)  {	
-	    final IProgressObserver progressObserver = new RcpProgressObserver(monitor);
-		service = new CopyService(progressObserver,this.selectedGroup, elements, copyLinks);
-		((CopyService)service).setCopyAttachments(isCopyAttachments());
-		service.run();
-		newElements = ((CopyService)service).getNewElements();
-	}
+    private final List<CnATreeElement> elements;
 
-	/**
-	 * @return
-	 */
-	@Override
+    private List<String> newElements;
+
+    private final boolean copyLinks;
+
+    private boolean copyAttachments = false;
+
+    @SuppressWarnings("unchecked")
+    public CopyTreeElements(final CnATreeElement selectedGroup, final List<CnATreeElement> elements,
+            final boolean copyLinks) {
+        this.selectedGroup = selectedGroup;
+        this.elements = elements;
+        this.copyLinks = copyLinks;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.
+     * runtime.IProgressMonitor)
+     */
+    @Override
+    public void run(final IProgressMonitor monitor) {
+        final IProgressObserver progressObserver = new RcpProgressObserver(monitor);
+        service = new CopyService(progressObserver, this.selectedGroup, elements, copyLinks);
+        ((CopyService) service).setCopyAttachments(isCopyAttachments());
+        service.run();
+        newElements = ((CopyService) service).getNewElements();
+    }
+
+    /**
+     * @return
+     */
+    @Override
     public int getNumberOfElements() {
-		int n = 0;
-		if(service!=null) {
-			n = service.getNumberOfElements();
-		}
-		return n;
-	}
+        int n = 0;
+        if (service != null) {
+            n = service.getNumberOfElements();
+        }
+        return n;
+    }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.rcp.IProgressRunnable#openInformation()
      */
     @Override
     public void openInformation() {
         // TODO Auto-generated method stub
-        
-    }
 
+    }
 
     public List<String> getNewElements() {
         return newElements;
     }
-
 
     /**
      * @return the copyAttachments
@@ -106,9 +108,9 @@ public class CopyTreeElements implements IProgressRunnable {
         return copyAttachments;
     }
 
-
     /**
-     * @param copyAttachments the copyAttachments to set
+     * @param copyAttachments
+     *            the copyAttachments to set
      */
     public void setCopyAttachments(final boolean copyAttachments) {
         this.copyAttachments = copyAttachments;

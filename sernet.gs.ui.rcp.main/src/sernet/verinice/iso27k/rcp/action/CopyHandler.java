@@ -41,50 +41,56 @@ import sernet.verinice.rcp.RightsEnabledHandler;
  */
 public class CopyHandler extends RightsEnabledHandler {
 
-	private static final Logger LOG = Logger.getLogger(CopyHandler.class);
-	
-	private List<CnATreeElement> selectedElementList = new ArrayList<CnATreeElement>();
-	
-    public CopyHandler(){
-	    super();
-	}
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-	 */
-	@Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-	    changeSelection(HandlerUtil.getCurrentSelection(event));
-		CnPItems.clearCutItems();
-		CnPItems.clearCopyItems();
-		CnPItems.setCopyItems(selectedElementList);	
-		CnPItems.setCopyLinks(false);
-		return null;
-	}
-	
-	public void changeSelection(ISelection selection) {
-		try {
-			selectedElementList.clear();
-			if(selection instanceof IStructuredSelection) {
-				for (Iterator iterator = ((IStructuredSelection) selection).iterator(); iterator.hasNext();) {
-					Object sel = iterator.next();
-					if(sel instanceof CnATreeElement) {
-						selectedElementList.add((CnATreeElement) sel);
-					}
-				}			
-			}		
-		} catch (Exception e) {
-			LOG.error("Could not execute selectionChanged", e);
-		}
-	}
+    private static final Logger LOG = Logger.getLogger(CopyHandler.class);
 
-    /* (non-Javadoc)
+    private List<CnATreeElement> selectedElementList = new ArrayList<CnATreeElement>();
+
+    public CopyHandler() {
+        super();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
+     * ExecutionEvent)
+     */
+    @Override
+    public Object execute(ExecutionEvent event) throws ExecutionException {
+        changeSelection(HandlerUtil.getCurrentSelection(event));
+        CnPItems.clearCutItems();
+        CnPItems.clearCopyItems();
+        CnPItems.setCopyItems(selectedElementList);
+        CnPItems.setCopyLinks(false);
+        return null;
+    }
+
+    public void changeSelection(ISelection selection) {
+        try {
+            selectedElementList.clear();
+            if (selection instanceof IStructuredSelection) {
+                for (Iterator iterator = ((IStructuredSelection) selection).iterator(); iterator
+                        .hasNext();) {
+                    Object sel = iterator.next();
+                    if (sel instanceof CnATreeElement) {
+                        selectedElementList.add((CnATreeElement) sel);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("Could not execute selectionChanged", e);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
     public String getRightID() {
         return ActionRightIDs.ISMCOPY;
     }
-
 
 }
