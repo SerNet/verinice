@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
+   <extension-point id="splashExtension" name="Splash Extensions" schema="schema/splashExtension.exsd"/>
 
    <extension
          id="application"
@@ -436,9 +437,6 @@
                value="verinice">
          </property>
          <!-- START ProgressBar im Splash -->
-            <property name="startupProgressRect" value="-1,290,459,8"/>
-            <property name="startupForegroundColor" value="000000"/>
-            <property name="startupMessageRect" value="0,0,0,0"/>
 		 <!-- END ProgressBar im Splash -->
       </product>
    </extension>
@@ -2641,5 +2639,44 @@
    <extension point="org.eclipse.core.net.authenticator">
      <authenticator class="sernet.gs.ui.rcp.main.security.VeriniceAuthenticator">
      </authenticator>
+   </extension>
+   <extension
+         point="org.eclipse.ui.splashHandlers">
+      <splashHandler
+            class="sernet.gs.ui.rcp.main.splashHandlers.ExtensibleSplashHandler"
+            id="sernet.gs.ui.rcp.main.splashHandlers.extensible">
+      </splashHandler>
+      <splashHandlerProductBinding
+            productId="sernet.gs.ui.rcp.main.product"
+            splashId="sernet.gs.ui.rcp.main.splashHandlers.extensible">
+      </splashHandlerProductBinding>
+   </extension>
+   <extension
+         point="sernet.gs.ui.rcp.main.splashExtension">
+      <splashExtension
+            icon="icons/af.png"
+            id="af"
+            tooltip="Application Framework">
+      </splashExtension>
+      <splashExtension
+            icon="icons/embedded.png"
+            id="embedded"
+            tooltip="Embedded">
+      </splashExtension>
+      <splashExtension
+            icon="icons/enterprise.png"
+            id="enterprise"
+            tooltip="Enterprise">
+      </splashExtension>
+      <splashExtension
+            icon="icons/languages.png"
+            id="languages"
+            tooltip="Languages">
+      </splashExtension>
+      <splashExtension
+            icon="icons/rcp.png"
+            id="rcp"
+            tooltip="RCP">
+      </splashExtension>
    </extension>  
 </plugin>

@@ -23,12 +23,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
-import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.IDataExtractionTask;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import org.eclipse.birt.report.model.api.PropertyHandle;
 import org.eclipse.birt.report.model.api.ReportDesignHandle;
 import org.eclipse.birt.report.model.api.VariableElementHandle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
@@ -56,7 +57,7 @@ import sernet.verinice.security.report.ReportSecurityContext;
 @Deprecated
 public class UserReportType implements IReportType {
 	
-	private static final Logger LOG = Logger.getLogger(UserReportType.class);
+	private static final Logger LOG = LoggerFactory.getLogger(UserReportType.class);
 	
 	private static final String VAR_ENGINE_ITERATIONS = "engineIterations";
 	private static final String PROPERTYHANDLE_PAGEVARIABLE = "pageVariables";

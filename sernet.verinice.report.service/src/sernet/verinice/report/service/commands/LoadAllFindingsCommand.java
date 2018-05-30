@@ -28,12 +28,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.Status;
-
-import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -83,7 +84,7 @@ public class LoadAllFindingsCommand extends GenericCommand {
             id0 = Integer.parseInt(chapterIdString);
         }
         this.id = (id0 > -1) ? id0 : id;
-        log = Logger.getLogger(LoadAllFindingsCommand.class);
+        log = LoggerFactory.getLogger(LoadAllFindingsCommand.class);
     }
 
     public Object[][] getResult() {

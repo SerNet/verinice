@@ -19,21 +19,13 @@
 package sernet.verinice.oda.driver.impl;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.osgi.service.component.ComponentContext;
-
-import sernet.verinice.interfaces.oda.IImageProvider;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.oda.driver.Activator;
 import sernet.verinice.oda.driver.preferences.PreferenceConstants;
 
 public class VeriniceOdaDriver implements IVeriniceOdaDriver {
 
-	private VeriniceURLStreamHandlerService urlStreamHandlerFactory;
-	
-	private Map<String, Object> vars = new HashMap<String, Object>();
 	
 	private static Object instance;
 	
@@ -46,42 +38,17 @@ public class VeriniceOdaDriver implements IVeriniceOdaDriver {
 		}
 	}
 	
-	protected void activate(ComponentContext ctx)
-	{
-		this.urlStreamHandlerFactory = Activator.getDefault().getURLStreamHandlerService();
-	}
-	
 	@Override
-	public void setImageProvider(String name, IImageProvider imageProvider)
-	{
-		urlStreamHandlerFactory.setImageProvider(name, imageProvider);
-	}
-	
-	@Override
-	public void removeImageProvider(String name)
-	{
-		urlStreamHandlerFactory.remove(name);
-	}
-	
-	@Override
-	public void setScriptVariables(Map<String, Object> vars)
-	{
-		this.vars = vars;
-	}
-
-	@Override
-	public Map<String, Object> getScriptVariables() {
-		return vars;
-	}
-	
 	public boolean getReportLoggingState(){
 	    return Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.REPORT_LOGGING_ENABLED);
 	}
 	
+	@Override
 	public String getLogLvl(){
 	    return Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_LOGGING_LVL);
 	}
 	
+	@Override
 	public String getLogFile(){
 	    String path = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_LOG_FILE); 
 	    if(path != null && !path.endsWith(String.valueOf(File.separatorChar))){
@@ -90,10 +57,12 @@ public class VeriniceOdaDriver implements IVeriniceOdaDriver {
 	    return path + REPORT_LOGFILE;
 	}
 	
+	@Override
 	public String getLocalReportLocation(){
 	    return Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY);
 	}
 	
+	@Override
 	public boolean isSandboxEnabled(){
 	    String pref = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_USE_SANDBOX);
 	    return Boolean.parseBoolean(pref);

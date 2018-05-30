@@ -176,7 +176,7 @@ public class FindURLs extends GenericCommand {
             sb.append("AND p.propertyValue NOT LIKE ''");
 			final String hql = sb.toString();
 			Query hqlQuery = session.createQuery(hql);
-			hqlQuery.setParameterList("types", types, Hibernate.STRING);
+			hqlQuery.setParameterList("types", types, sernet.gs.reveng.type.Types.STRING_TYPE);
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("QueryString:\t"+ hqlQuery.getQueryString());
 			}

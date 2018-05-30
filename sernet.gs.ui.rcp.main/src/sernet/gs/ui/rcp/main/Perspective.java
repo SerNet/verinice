@@ -46,17 +46,12 @@ public class Perspective implements IPerspectiveFactory {
 		IFolderLayout controlFolder = layout.createFolder("control", IPageLayout.LEFT, RATIO_CONTROL_FOLDER, editorArea);
 		controlFolder.addView(BSIMassnahmenView.ID);
 		controlFolder.addPlaceholder(CatalogView.ID + ":*");
-		layout.getViewLayout(BSIMassnahmenView.ID).setCloseable(true);
-		layout.getViewLayout(CatalogView.ID).setCloseable(true);
 		
 		IFolderLayout modelFolder = layout.createFolder("model", IPageLayout.LEFT, RATIO_MODEL_FOLDER, editorArea);
 		modelFolder.addView(BsiModelView.ID);
 		modelFolder.addPlaceholder(ISMView.ID + ":*");
-		layout.getViewLayout(BSIMassnahmenView.ID).setCloseable(true);
-		layout.getViewLayout(ISMView.ID).setCloseable(true);
 		
 		IFolderLayout folder = layout.createFolder("datails",IPageLayout.BOTTOM, RATIO_DETAILS_FOLDER, editorArea);
 		folder.addView(BrowserView.ID);
-		layout.getViewLayout(BSIMassnahmenView.ID).setCloseable(true);	
 	}
 }

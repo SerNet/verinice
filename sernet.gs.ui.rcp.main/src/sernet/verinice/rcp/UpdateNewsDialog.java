@@ -132,11 +132,12 @@ public class UpdateNewsDialog extends Dialog {
             @Override
             public void changing(LocationEvent event) {
                 try {
-                    PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(event.location));
+                	if(!event.location.startsWith("about")) {
+                		PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(event.location));
+                	}
                 } catch (PartInitException | MalformedURLException e) {
                     LOG.error("Error opening Link in external Browser", e); //$NON-NLS-1$
                 }
-                
             }
             
             @Override

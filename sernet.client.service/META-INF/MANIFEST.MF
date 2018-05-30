@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Client Service
+Bundle-SymbolicName: sernet.client.service
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: SERNET
+Automatic-Module-Name: sernet.client.services
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: sernet.client.services.rights

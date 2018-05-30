@@ -1,0 +1,10 @@
+# To force a version qualifier update add the bug here
+Bug 456714 - Add version 54.1.1 ICU4J for Mars release
+Bug 403352 - Update all parent versions to match our build stream
+Bug 424909 - Adopt latest Orbit I-build for javax.annotation 1.2
+Bug 430284 - Update Orbit pre-reqs to latest Orbit I-build
+Bug 429661 - Update ICU4J to 52.1.v20140218 from Orbit
+Bug 399749 - update to Orbit M7 S-build URL
+Bug 458595 - Add version 54.1.1 ICU4J for Mars release - need to touch org.eclipse.e4.rcp
+Bug 506953 - Update prereqs for Oxygen Milestones: Orbit URL - update to felix.scr need to touch this bundle
+Bug 526786 - Latest code is not getting picked up in integration build (I20171102-2000)

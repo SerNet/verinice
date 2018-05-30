@@ -17,6 +17,9 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,14 +65,14 @@ public class Base64UtilsTest {
         String serialized = Base64Utils.encode(templateMap);
 
         Object deserialized = Base64Utils.decode(serialized);
-        Assert.assertThat(deserialized, CoreMatchers.is(Map.class));
+        assertThat(deserialized, CoreMatchers.instanceOf(Map.class));
         @SuppressWarnings("rawtypes")
         Map deserializedAsMap = (Map) deserialized;
-        Assert.assertEquals(1, deserializedAsMap.size());
+        assertEquals(1, deserializedAsMap.size());
         Object entryValue = deserializedAsMap.get("Foo");
-        Assert.assertThat(entryValue, CoreMatchers.is(IndividualServiceParameter.class));
+        assertThat(entryValue, CoreMatchers.instanceOf(IndividualServiceParameter.class));
         IndividualServiceParameter deserializedParameter = (IndividualServiceParameter) entryValue;
-        Assert.assertEquals("Foo", deserializedParameter.getTitle());
+        assertEquals("Foo", deserializedParameter.getTitle());
 
     }
 

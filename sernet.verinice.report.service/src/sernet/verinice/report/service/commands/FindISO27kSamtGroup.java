@@ -22,7 +22,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -41,13 +42,13 @@ import sernet.verinice.service.commands.crud.LoadReportElements;
 @SuppressWarnings("serial")
 public class FindISO27kSamtGroup extends GenericCommand implements IAuthAwareCommand, ICachedCommand {
 
-    private transient Logger log = Logger.getLogger(FindSamtGroup.class);
+    private transient Logger log = LoggerFactory.getLogger(FindSamtGroup.class);
     
     private boolean resultInjectedFromCache = false;
 
     public Logger getLog() {
         if (log == null) {
-            log = Logger.getLogger(FindSamtGroup.class);
+            log = LoggerFactory.getLogger(FindSamtGroup.class);
         }
         return log;
     }

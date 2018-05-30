@@ -8,13 +8,9 @@
 
 	<parent>
 		<groupId>sernet.verinice</groupId>
-		<artifactId>sernet.verinice.releng.parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-		<relativePath>../sernet.verinice.releng.parent/pom.xml</relativePath>
+		<artifactId>sernet.verinice.tycho.root</artifactId>
+		<version>1.0.0</version>
 	</parent>
-
-	<properties>
-	</properties>
 
 	<build>
 		<plugins>

@@ -50,7 +50,6 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommand;
-import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.oda.driver.Activator;
 import sernet.verinice.security.report.ReportClassLoader;
@@ -102,7 +101,6 @@ public class Query implements IQuery
     }
 
     private void init() {
-        IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();  	
     	ReportClassLoader securedClassLoader = new ReportClassLoader(Query.class.getClassLoader());	
 
     	try {
@@ -129,7 +127,6 @@ public class Query implements IQuery
 					" return (v == null) ? \"input parameter value \" + s + \" does not exist.\" : v;" +
 					"}");
 
-			interpreter.set("_vars", odaDriver.getScriptVariables());
 			interpreter.eval(
 					"vars(s) {" +
 					" v = _vars.get(s);" +

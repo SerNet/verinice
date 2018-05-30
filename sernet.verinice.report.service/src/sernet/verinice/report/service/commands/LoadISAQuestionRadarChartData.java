@@ -20,7 +20,8 @@ package sernet.verinice.report.service.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -36,7 +37,7 @@ import sernet.verinice.service.commands.crud.LoadReportElements;
  */
 public class LoadISAQuestionRadarChartData extends GenericCommand implements ICachedCommand{
     
-    private static transient Logger log = Logger.getLogger(LoadISAQuestionRadarChartData.class);
+    private static transient Logger log = LoggerFactory.getLogger(LoadISAQuestionRadarChartData.class);
     private static final int THRESHOLD_VALUE = 3;
     
     public static final String[] COLUMNS = new String[]{"title", 
@@ -184,7 +185,7 @@ public class LoadISAQuestionRadarChartData extends GenericCommand implements ICa
     
     private Logger getLog(){
         if(log == null){
-            log = Logger.getLogger(LoadISAQuestionRadarChartData.class);
+            log = LoggerFactory.getLogger(LoadISAQuestionRadarChartData.class);
         }
         return log;
     }

@@ -93,7 +93,7 @@ public class AttachmentEditorInput implements IEditorInput {
 	 */
 	public static CnATreeElement extractCnaTreeElement(IEditorPart editor){
 	    CnATreeElement element = null;
-	    if(editor.getEditorInput() instanceof AttachmentEditorInput){
+	    if(editor != null && editor.getEditorInput() instanceof AttachmentEditorInput){
 	        Attachment a = ((AttachmentEditorInput)editor.getEditorInput()).getInput();
 	        String hql = "from CnATreeElement elmt " +
 	                "left join fetch elmt.entity as entity " + 
