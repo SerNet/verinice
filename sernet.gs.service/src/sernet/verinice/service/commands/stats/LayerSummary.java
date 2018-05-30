@@ -103,7 +103,7 @@ public class LayerSummary extends CompletedLayerSummary {
 					+ "and bu.dbid = buc.entity_id "
 					+ "and buc.dbid = muc.parent "
 					+ "group by p.propertyvalue")
-					.addScalar("pv", Hibernate.STRING)
+					.addScalar("pv", sernet.gs.reveng.type.Types.STRING_TYPE)
 					.addScalar("amount", Hibernate.INTEGER)
 					.setString("type", BausteinUmsetzung.P_NR);
 			

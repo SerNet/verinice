@@ -385,7 +385,7 @@ public class GSVampire {
 
 		// get notes for massnahmen:
 		Query query = dao.getSession().createQuery(QUERY_NOTIZEN_FOR_ZIELOBJEKT_NAME);
-		query.setParameter("name", name, Hibernate.STRING);
+		query.setParameter("name", name, sernet.gs.reveng.type.Types.STRING_TYPE);
 		Iterator iterate = query.iterate();
 		while (iterate.hasNext()) {
 				Object[] next = (Object[]) iterate.next();
@@ -397,7 +397,7 @@ public class GSVampire {
 
 		// get notes for bausteine (bst, zo_bst, notiz)
 		query = dao.getSession().createQuery(QUERY_BAUSTEIN_NOTIZEN_FOR_ZIELOBJEKT_NAME);
-        query.setParameter("name", name, Hibernate.STRING);
+        query.setParameter("name", name, sernet.gs.reveng.type.Types.STRING_TYPE);
         iterate = query.iterate();
         while (iterate.hasNext()) {
                 Object[] next = (Object[]) iterate.next();
