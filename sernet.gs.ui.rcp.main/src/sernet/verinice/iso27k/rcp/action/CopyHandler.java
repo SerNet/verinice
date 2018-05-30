@@ -43,15 +43,13 @@ public class CopyHandler extends RightsEnabledHandler {
 
     private static final Logger LOG = Logger.getLogger(CopyHandler.class);
 
-    private List<CnATreeElement> selectedElementList = new ArrayList<CnATreeElement>();
+    private List<CnATreeElement> selectedElementList = new ArrayList<>();
 
     public CopyHandler() {
         super();
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
      * ExecutionEvent)
@@ -70,7 +68,7 @@ public class CopyHandler extends RightsEnabledHandler {
         try {
             selectedElementList.clear();
             if (selection instanceof IStructuredSelection) {
-                for (Iterator iterator = ((IStructuredSelection) selection).iterator(); iterator
+                for (Iterator<?> iterator = ((IStructuredSelection) selection).iterator(); iterator
                         .hasNext();) {
                     Object sel = iterator.next();
                     if (sel instanceof CnATreeElement) {
@@ -84,8 +82,6 @@ public class CopyHandler extends RightsEnabledHandler {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override

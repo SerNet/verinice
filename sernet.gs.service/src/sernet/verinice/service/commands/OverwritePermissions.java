@@ -70,7 +70,7 @@ public abstract class OverwritePermissions implements IPostProcessor, Serializab
     private void loadPermissions(ICommandService commandService) throws CommandException {
         RetrieveInfo ri = new RetrieveInfo();
         ri.setPermissions(true);
-        LoadElementByUuid<CnATreeElement> loadCommand = new LoadElementByUuid<CnATreeElement>(
+        LoadElementByUuid<CnATreeElement> loadCommand = new LoadElementByUuid<>(
                 uuidPermissionParent, ri);
         loadCommand = commandService.executeCommand(loadCommand);
         permissions = loadCommand.getElement().getPermissions();
@@ -79,7 +79,7 @@ public abstract class OverwritePermissions implements IPostProcessor, Serializab
     private void overwritePermissions(ICommandService commandService, String uuid)
             throws CommandException {
         UpdatePermissions updatePermissions = new UpdatePermissions(uuid, permissions, true, true);
-        updatePermissions = commandService.executeCommand(updatePermissions);
+        commandService.executeCommand(updatePermissions);
     }
 
 }

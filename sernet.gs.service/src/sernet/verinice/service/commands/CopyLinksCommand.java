@@ -77,8 +77,6 @@ public class CopyLinksCommand extends GenericCommand {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override

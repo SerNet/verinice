@@ -150,7 +150,6 @@ public class CatalogView extends RightsEnabledView
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
      * widgets.Composite)
@@ -168,7 +167,6 @@ public class CatalogView extends RightsEnabledView
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see sernet.verinice.rcp.RightsEnabledView#getRightID()
      */
@@ -178,7 +176,6 @@ public class CatalogView extends RightsEnabledView
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
@@ -444,7 +441,6 @@ public class CatalogView extends RightsEnabledView
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see
      * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.

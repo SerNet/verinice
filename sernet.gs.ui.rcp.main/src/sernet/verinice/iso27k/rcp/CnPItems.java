@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class CnPItems {
     // TODO use system clipboard
 

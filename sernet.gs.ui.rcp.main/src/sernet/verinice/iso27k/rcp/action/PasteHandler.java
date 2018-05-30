@@ -78,7 +78,7 @@ import sernet.verinice.service.commands.LoadElementByUuid;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-@SuppressWarnings({ "unchecked", "restriction" })
+@SuppressWarnings({ "restriction" })
 public class PasteHandler extends AbstractHandler {
 
     private static final Logger LOG = Logger.getLogger(PasteHandler.class);
@@ -86,7 +86,6 @@ public class PasteHandler extends AbstractHandler {
     private List<String> newCopyElements;
 
     /*
-     * (non-Javadoc)
      * 
      * @see
      * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
@@ -166,8 +165,8 @@ public class PasteHandler extends AbstractHandler {
         return target;
     }
 
-    private void copy(final CnATreeElement target, List copyList, boolean copyLinks)
-            throws InvocationTargetException, InterruptedException {
+    private void copy(final CnATreeElement target, @SuppressWarnings("rawtypes") List copyList,
+            boolean copyLinks) throws InvocationTargetException, InterruptedException {
         if (copyList != null && !copyList.isEmpty()) {
             IProgressRunnable operation = createOperation(target, copyList, copyLinks);
             if (operation != null) {
@@ -248,9 +247,10 @@ public class PasteHandler extends AbstractHandler {
         JobScheduler.scheduleJob(validationCreationJob, new Mutex());
     }
 
-    private void cut(final CnATreeElement target, List cutList)
+    private void cut(final CnATreeElement target, @SuppressWarnings("rawtypes") List cutList)
             throws InvocationTargetException, InterruptedException {
         if (cutList.get(0) instanceof CnATreeElement && target != null) {
+            @SuppressWarnings("unchecked")
             CutOperation operation = new CutOperation(target, cutList);
             operation.setInheritPermissions(inheritPermissions());
             IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
@@ -322,8 +322,9 @@ public class PasteHandler extends AbstractHandler {
      * @param copyLinks
      * @return
      */
-    private IProgressRunnable createOperation(CnATreeElement target, List copyList,
-            boolean copyLinks) {
+    @SuppressWarnings("unchecked")
+    private IProgressRunnable createOperation(CnATreeElement target,
+            @SuppressWarnings("rawtypes") List copyList, boolean copyLinks) {
         IProgressRunnable operation = null;
         if (copyList != null && !copyList.isEmpty()) {
             if (copyList.get(0) instanceof CnATreeElement) {

@@ -50,7 +50,6 @@ public class CopyTreeElements implements IProgressRunnable {
 
     private boolean copyAttachments = false;
 
-    @SuppressWarnings("unchecked")
     public CopyTreeElements(final CnATreeElement selectedGroup, final List<CnATreeElement> elements,
             final boolean copyLinks) {
         this.selectedGroup = selectedGroup;
@@ -59,8 +58,6 @@ public class CopyTreeElements implements IProgressRunnable {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.
      * runtime.IProgressMonitor)
@@ -87,8 +84,6 @@ public class CopyTreeElements implements IProgressRunnable {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.IProgressRunnable#openInformation()
      */
     @Override
