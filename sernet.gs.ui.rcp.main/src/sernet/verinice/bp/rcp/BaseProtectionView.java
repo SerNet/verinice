@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp;
 
+import java.util.Optional;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -377,7 +379,7 @@ public class BaseProtectionView extends RightsEnabledView
     protected void toggleLinking(boolean checked) {
         this.linkingActive = checked;
         if (checked) {
-            editorActivated(getSite().getPage().getActiveEditor());
+            Optional.ofNullable(getSite().getPage().getActiveEditor()).ifPresent(this::editorActivated);
         }
     }
     

@@ -18,6 +18,8 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 
+import java.util.Optional;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -110,7 +112,7 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     protected void toggleLinking(boolean checked) {
         this.linkingActive = checked;
         if (checked) {
-            editorActivated(getSite().getPage().getActiveEditor());
+            Optional.ofNullable(getSite().getPage().getActiveEditor()).ifPresent(this::editorActivated);
         }
     }
 
