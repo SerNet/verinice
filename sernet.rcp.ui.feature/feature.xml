@@ -4,8 +4,8 @@
       label="RCP UI"
       version="1.0.0.qualifier"
       provider-name="SERNET">
-  
-  <description url="http://verinice.com">
+
+   <description url="http://verinice.com">
       The Verinice Open Source ISMS Tool.
    </description>
 
@@ -381,6 +381,14 @@ Library.
 
    <plugin
          id="sernet.verinice.samt.service"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="sernet.verinice.kerberos"
+         os="win32"
          download-size="0"
          install-size="0"
          version="0.0.0"
