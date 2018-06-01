@@ -33,6 +33,8 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.ILogPathService;
 import sernet.verinice.interfaces.IMain;
 import sernet.verinice.interfaces.IReportLocalTemplateDirectoryService;
+import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
+import sernet.verinice.oda.driver.impl.VeriniceOdaDriver;
 import sernet.verinice.oda.driver.impl.VeriniceURLStreamHandlerService;
 import sernet.verinice.oda.driver.preferences.PreferenceConstants;
 
@@ -49,13 +51,11 @@ public class Activator extends AbstractUIPlugin {
 
 	private VeriniceURLStreamHandlerService urlStreamHandlerService = new VeriniceURLStreamHandlerService();
 
-	private ServiceTracker mainTracker;
-
-	private ServiceTracker commandServiceTracker;
-
-	private ServiceTracker logPathTracker;
-
+	private ServiceTracker<IMain,IMain> mainTracker;
+	private ServiceTracker<ICommandService, ICommandService> commandServiceTracker;
+	private ServiceTracker<ILogPathService, ILogPathService> logPathTracker;
 	private IReportLocalTemplateDirectoryService templateDirService;
+	private VeriniceOdaDriver veriniceOdaDriver;
 
 	private static final String WORK_OBJECTS = "workObjects";
 
@@ -82,15 +82,17 @@ public class Activator extends AbstractUIPlugin {
 		templateDirService = new ReportTemplateDirectoryService();
 		context.registerService(IReportLocalTemplateDirectoryService.class.getName(), templateDirService, null);
 
-		mainTracker = new ServiceTracker(context, IMain.class.getName(), null);
+		mainTracker = new ServiceTracker<IMain, IMain>(context, IMain.class.getName(), null);
 		mainTracker.open();
 
-		commandServiceTracker = new ServiceTracker(context, ICommandService.class.getName(), null);
+		commandServiceTracker = new ServiceTracker<ICommandService, ICommandService>(context, ICommandService.class.getName(), null);
 		commandServiceTracker.open();
 
-		logPathTracker = new ServiceTracker(context, ILogPathService.class.getName(), null);
+		logPathTracker = new ServiceTracker<ILogPathService, ILogPathService>(context, ILogPathService.class.getName(), null);
 		logPathTracker.open();
 
+		veriniceOdaDriver = new VeriniceOdaDriver();
+		context.registerService(IVeriniceOdaDriver.class.getName(), veriniceOdaDriver, null);
 	}
 
 	@Override
@@ -114,6 +116,10 @@ public class Activator extends AbstractUIPlugin {
 	public VeriniceURLStreamHandlerService getURLStreamHandlerService() {
 		return urlStreamHandlerService;
 	}
+
+    public IVeriniceOdaDriver getOdaDriver() {
+        return (IVeriniceOdaDriver) veriniceOdaDriver;
+    }
 
 	public IMain getMain() {
 		return (IMain) mainTracker.getService();
