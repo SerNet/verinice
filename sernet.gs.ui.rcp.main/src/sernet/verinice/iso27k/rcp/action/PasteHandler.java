@@ -72,6 +72,9 @@ import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.rcp.IProgressRunnable;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
+import sernet.verinice.rcp.catalog.CatalogView;
+import sernet.verinice.service.commands.CopyLinksCommand;
+import sernet.verinice.service.commands.CopyLinksCommand.CopyLinksMode;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
@@ -108,7 +111,8 @@ public class PasteHandler extends AbstractHandler {
                 }
                 if (CnAElementHome.getInstance().isNewChildAllowed(target)) {
                     if (!CnPItems.getCopyItems().isEmpty()) {
-                        copy(target, CnPItems.getCopyItems(), CnPItems.isCopyLinks());
+                        CopyLinksMode copyLinksMode = getCopyLinksMode();
+                        copy(target, CnPItems.getCopyItems(), copyLinksMode);
                     } else if (!CnPItems.getCutItems().isEmpty()) {
                         cut(target, CnPItems.getCutItems());
                     }
@@ -140,6 +144,18 @@ public class PasteHandler extends AbstractHandler {
         return null;
     }
 
+    private CopyLinksCommand.CopyLinksMode getCopyLinksMode() {
+        if (CnPItems.isCopyLinks()) {
+            if (CatalogView.ID.equals(CnPItems.getCopySourcePartId())) {
+                return CopyLinksCommand.CopyLinksMode.FROM_COMPENDIUM_TO_MODEL;
+            } else {
+                return CopyLinksCommand.CopyLinksMode.ALL;
+            }
+        } else {
+            return CopyLinksCommand.CopyLinksMode.NONE;
+        }
+    }
+
     private void handlePermissionException(PermissionException e) {
         MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
                 Messages.getString("PasteHandler.2"), //$NON-NLS-1$
@@ -166,9 +182,10 @@ public class PasteHandler extends AbstractHandler {
     }
 
     private void copy(final CnATreeElement target, @SuppressWarnings("rawtypes") List copyList,
-            boolean copyLinks) throws InvocationTargetException, InterruptedException {
+            CopyLinksCommand.CopyLinksMode copyLinksMode)
+            throws InvocationTargetException, InterruptedException {
         if (copyList != null && !copyList.isEmpty()) {
-            IProgressRunnable operation = createOperation(target, copyList, copyLinks);
+            IProgressRunnable operation = createOperation(target, copyList, copyLinksMode);
             if (operation != null) {
                 IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
                 progressService.run(true, true, operation);
@@ -322,13 +339,15 @@ public class PasteHandler extends AbstractHandler {
      * @param copyLinks
      * @return
      */
+
     @SuppressWarnings("unchecked")
     private IProgressRunnable createOperation(CnATreeElement target,
-            @SuppressWarnings("rawtypes") List copyList, boolean copyLinks) {
+            @SuppressWarnings("rawtypes") List copyList,
+            CopyLinksCommand.CopyLinksMode copyLinksMode) {
         IProgressRunnable operation = null;
         if (copyList != null && !copyList.isEmpty()) {
             if (copyList.get(0) instanceof CnATreeElement) {
-                operation = new CopyTreeElements(target, copyList, copyLinks);
+                operation = new CopyTreeElements(target, copyList, copyLinksMode);
                 ((CopyTreeElements) operation)
                         .setCopyAttachments(Activator.getDefault().getPreferenceStore()
                                 .getBoolean(PreferenceConstants.COPY_ATTACHMENTS_WITH_OBJECTS));

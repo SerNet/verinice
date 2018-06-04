@@ -36,6 +36,7 @@ import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CopyLinksCommand;
 import sernet.verinice.service.commands.RemoveElement;
+import sernet.verinice.service.commands.CopyLinksCommand.CopyLinksMode;
 
 public class CopyLinksCommandTest extends AbstractModernizedBaseProtection {
 
@@ -66,7 +67,7 @@ public class CopyLinksCommandTest extends AbstractModernizedBaseProtection {
         assertEquals(0, safeguard2.getLinksUp().size());
 
         CopyLinksCommand copyLinksCommand = new CopyLinksCommand(
-                Collections.singletonMap(safeguard1.getUuid(), safeguard2.getUuid()));
+                Collections.singletonMap(safeguard1.getUuid(), safeguard2.getUuid()), CopyLinksMode.ALL);
         commandService.executeCommand(copyLinksCommand);
         requirement1 = reloadElement(requirement1);
         safeguard1 = reloadElement(safeguard1);
@@ -93,7 +94,7 @@ public class CopyLinksCommandTest extends AbstractModernizedBaseProtection {
         assertEquals(0, requirement2.getLinksDown().size());
 
         CopyLinksCommand copyLinksCommand = new CopyLinksCommand(
-                Collections.singletonMap(requirement1.getUuid(), requirement2.getUuid()));
+                Collections.singletonMap(requirement1.getUuid(), requirement2.getUuid()), CopyLinksMode.ALL);
         commandService.executeCommand(copyLinksCommand);
         requirement1 = reloadElement(requirement1);
         safeguard1 = reloadElement(safeguard1);
@@ -119,7 +120,7 @@ public class CopyLinksCommandTest extends AbstractModernizedBaseProtection {
         assertEquals(0, room2.getLinksUp().size());
 
         CopyLinksCommand copyLinksCommand = new CopyLinksCommand(
-                Collections.singletonMap(room1.getUuid(), room2.getUuid()));
+                Collections.singletonMap(room1.getUuid(), room2.getUuid()), CopyLinksMode.ALL);
         commandService.executeCommand(copyLinksCommand);
         room1 = reloadElement(room1);
         room2 = reloadElement(room2);

@@ -68,12 +68,12 @@ public class CopyLinksCommand extends GenericCommand {
 
     private transient IBaseDao<CnATreeElement, Serializable> dao;
 
-    /**
-     * @param sourceDestMap
-     */
-    public CopyLinksCommand(Map<String, String> sourceDestMap) {
+    private final CopyLinksMode copyLinksMode;
+
+    public CopyLinksCommand(Map<String, String> sourceDestMap, CopyLinksMode copyLinksMode) {
         super();
         this.sourceDestMap = sourceDestMap;
+        this.copyLinksMode = copyLinksMode;
     }
 
     /*
@@ -81,6 +81,9 @@ public class CopyLinksCommand extends GenericCommand {
      */
     @Override
     public void execute() {
+        if (copyLinksMode == CopyLinksMode.NONE) {
+            return;
+        }
         loadAndCacheLinks();
         copyLinks();
     }
@@ -99,28 +102,61 @@ public class CopyLinksCommand extends GenericCommand {
             return;
         }
         for (LinkInformation linkInformation : linkInformations) {
-            String otherElementUUID = linkInformation.otherElementUUID;
-            String copyDestUuid = sourceDestMap.get(otherElementUUID);
-            if (copyDestUuid != null) {
-                otherElementUUID = copyDestUuid;
-                if (logger.isDebugEnabled()) {
-                    logger.debug(
-                            "Creating link to copy of target... " + copyTargetUUID + " -> " + otherElementUUID);
-                }
-            } else if (logger.isDebugEnabled()) {
-                logger.debug("Creating link to same target... " + copyTargetUUID + " -> " + otherElementUUID);
-            }
-            if (linkInformation.direction == Direction.FROM_COPIED_ELEMENT) {
-                createLink(copyTargetUUID, otherElementUUID, linkInformation.type);
-            } else {
-                createLink(otherElementUUID, copyTargetUUID, linkInformation.type);
-            }
+            processLink(linkInformation, copyTargetUUID);
             number++;
             if (number % FLUSH_LEVEL == 0) {
                 flushAndClear();
             }
         }
         flushAndClear();
+    }
+
+    /**
+     * Process a single link that a copied element is part of. Depending on the
+     * {@link CopyLinksMode copy mode} and whether the element on the other side
+     * of the link was copied too, this will either ignore the existing link or
+     * create a new link from the copied element. For example, when copying
+     * elements from the compendium, this will not copy links that would point
+     * into the compendium from the copied element.
+     * 
+     * 
+     * @param linkInformation
+     *            information about the processed link
+     * @param copyTargetUUID
+     *            the uuid of the element that one of the linked entities was
+     *            copied to
+     */
+    private void processLink(LinkInformation linkInformation, String copyTargetUUID) {
+        String otherElementUUID = linkInformation.otherElementUUID;
+        String copyDestinationUuid = sourceDestMap.get(otherElementUUID);
+        if (copyDestinationUuid == null) {
+            // the element on the other side of the link was not copied
+            if (copyLinksMode == CopyLinksMode.FROM_COMPENDIUM_TO_MODEL) {
+                // we don't want to copy the link if we copy from the compendium
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Skipping link to " + otherElementUUID
+                            + " while copying from compendium");
+                }
+                return;
+            } else {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Creating link to original target... " + copyTargetUUID + " -> "
+                            + otherElementUUID);
+                }
+            }
+        } else {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Creating link to copy of target... " + copyTargetUUID + " -> "
+                        + otherElementUUID);
+            }
+            otherElementUUID = copyDestinationUuid;
+        }
+
+        if (linkInformation.direction == Direction.FROM_COPIED_ELEMENT) {
+            createLink(copyTargetUUID, otherElementUUID, linkInformation.type);
+        } else {
+            createLink(otherElementUUID, copyTargetUUID, linkInformation.type);
+        }
     }
 
     private void flushAndClear() {
@@ -187,13 +223,18 @@ public class CopyLinksCommand extends GenericCommand {
 
         @Override
         public Object doInHibernate(Session session) throws SQLException {
-            Query query = session.createQuery(
-                    "select l.dependant.uuid,l.dependency.uuid,l.id.typeId from sernet.verinice.model.common.CnALink l where l.dependant.uuid in (:sourceUUIDs) or l.dependency.uuid in (:sourceUUIDs)");
+            Query query = session
+                    .createQuery("select l.dependant.uuid,l.dependency.uuid,l.id.typeId "
+                            + "from sernet.verinice.model.common.CnALink l "
+                            + "where l.dependant.uuid in (:sourceUUIDs) or l.dependency.uuid in (:sourceUUIDs)");
             query.setParameterList("sourceUUIDs", sourceUUIDs);
             return query.list();
         }
     }
 
+    /**
+     * Information about a link as seen from a copied element
+     */
     private static final class LinkInformation {
 
         LinkInformation(String destinationUUID, String type, Direction direction) {
@@ -209,5 +250,9 @@ public class CopyLinksCommand extends GenericCommand {
 
     private enum Direction {
         FROM_COPIED_ELEMENT, TO_COPIED_ELEMENT
+    }
+
+    public enum CopyLinksMode {
+        NONE, ALL, FROM_COMPENDIUM_TO_MODEL
     }
 }

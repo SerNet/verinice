@@ -28,6 +28,8 @@ import sernet.verinice.iso27k.service.IProgressObserver;
 import sernet.verinice.iso27k.service.IProgressTask;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.IProgressRunnable;
+import sernet.verinice.service.commands.CopyLinksCommand;
+import sernet.verinice.service.commands.CopyLinksCommand.CopyLinksMode;
 
 /**
  * Operation with copies elements and adds them to a group.
@@ -46,15 +48,15 @@ public class CopyTreeElements implements IProgressRunnable {
 
     private List<String> newElements;
 
-    private final boolean copyLinks;
+    private final CopyLinksCommand.CopyLinksMode copyLinksMode;
 
     private boolean copyAttachments = false;
 
     public CopyTreeElements(final CnATreeElement selectedGroup, final List<CnATreeElement> elements,
-            final boolean copyLinks) {
+            final CopyLinksCommand.CopyLinksMode copyLinksMode) {
         this.selectedGroup = selectedGroup;
         this.elements = elements;
-        this.copyLinks = copyLinks;
+        this.copyLinksMode = copyLinksMode;
     }
 
     /*
@@ -65,7 +67,7 @@ public class CopyTreeElements implements IProgressRunnable {
     @Override
     public void run(final IProgressMonitor monitor) {
         final IProgressObserver progressObserver = new RcpProgressObserver(monitor);
-        service = new CopyService(progressObserver, this.selectedGroup, elements, copyLinks);
+        service = new CopyService(progressObserver, this.selectedGroup, elements, copyLinksMode);
         ((CopyService) service).setCopyAttachments(isCopyAttachments());
         service.run();
         newElements = ((CopyService) service).getNewElements();
