@@ -61,6 +61,8 @@ public class CopyHandler extends RightsEnabledHandler {
         CnPItems.clearCopyItems();
         CnPItems.setCopyItems(selectedElementList);
         CnPItems.setCopyLinks(false);
+        CnPItems.setCopySourcePartId(HandlerUtil.getActivePartId(event));
+
         return null;
     }
 

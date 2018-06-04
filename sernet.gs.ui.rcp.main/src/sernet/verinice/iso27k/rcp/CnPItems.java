@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CnPItems {
+
     // TODO use system clipboard
 
     private static final Logger LOG = Logger.getLogger(CnPItems.class);
@@ -33,6 +34,8 @@ public class CnPItems {
     private static boolean copyLinks = false;
 
     private static List cutItems = new ArrayList();
+
+    private static String copySourcePartId;
 
     public static void setCopyItems(List items) {
         if (LOG.isDebugEnabled()) {
@@ -61,6 +64,7 @@ public class CnPItems {
     }
 
     public static List getCutItems() {
+
         return cutItems;
     }
 
@@ -70,6 +74,14 @@ public class CnPItems {
 
     public static void clearCutItems() {
         cutItems.clear();
+    }
+
+    public static void setCopySourcePartId(String copySourcePartId) {
+        CnPItems.copySourcePartId = copySourcePartId;
+    }
+
+    public static String getCopySourcePartId() {
+        return copySourcePartId;
     }
 
 }
