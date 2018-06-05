@@ -419,7 +419,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         // modernized IT-Baseline protection
         
         viewsMenu.add(this.openBpViewAction);
-        viewsMenu.add(this.openCatalogViewAction);
         viewsMenu.add(new Separator());
 
         // ISM
@@ -433,6 +432,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(new Separator());
         
         // global
+        viewsMenu.add(this.openCatalogViewAction);
         viewsMenu.add(this.openDocumentViewAction);
         viewsMenu.add(this.openBSIBrowserAction);
         viewsMenu.add(this.openNoteAction);
