@@ -30,6 +30,10 @@ package sernet.verinice.iso27k.service;
  */
 public interface IProgressObserver {
 
+    /** Constant indicating an unknown number of items
+     */
+    public static final int UNKNOWN_NUMBER_OF_ITEMS = -1;
+
 	/**
 	 * Returns true if the task is canceled, false if not
 	 * 
@@ -57,6 +61,7 @@ public interface IProgressObserver {
 	 * 
 	 * @param string the name of the task
 	 * @param numberOfItems  number of items of the task
+	 * @see {@link #UNKNOWN_NUMBER_OF_ITEMS}
 	 */
 	void beginTask(String string, int numberOfItems);
 

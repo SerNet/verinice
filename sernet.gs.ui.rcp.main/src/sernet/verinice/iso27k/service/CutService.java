@@ -41,7 +41,6 @@ import sernet.verinice.service.commands.CutCommand;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings("restriction")
 public class CutService extends PasteService implements IProgressTask {
 
     private final Logger log = Logger.getLogger(CutService.class);
@@ -60,7 +59,6 @@ public class CutService extends PasteService implements IProgressTask {
      * @param elementList
      *            a list of elements
      */
-    @SuppressWarnings("unchecked")
     public CutService(CnATreeElement group, List<CnATreeElement> elementList) {
         progressObserver = new DummyProgressObserver();
         this.selectedGroup = group;
@@ -77,7 +75,6 @@ public class CutService extends PasteService implements IProgressTask {
      * @param elementList
      *            a list of elements
      */
-    @SuppressWarnings("unchecked")
     public CutService(IProgressObserver progressObserver, CnATreeElement group,
             List<CnATreeElement> elementList) {
         this.progressObserver = progressObserver;
@@ -94,7 +91,7 @@ public class CutService extends PasteService implements IProgressTask {
         try {
             Activator.inheritVeriniceContextState();
             checkPermissions(this.elements);
-            List<String> uuidList = new ArrayList<String>(this.elements.size());
+            List<String> uuidList = new ArrayList<>(this.elements.size());
             for (CnATreeElement element : this.elements) {
                 uuidList.add(element.getUuid());
             }
@@ -135,15 +132,13 @@ public class CutService extends PasteService implements IProgressTask {
     }
 
     private boolean checkPermissions(List<CnATreeElement> elementList) {
-        boolean ok = true;
         for (CnATreeElement element : elementList) {
             if (!CnAElementHome.getInstance().isDeleteAllowed(element)) {
-                ok = false;
                 throw new PermissionException(
                         Messages.getString("CutService.4") + getTitle(element));
             }
         }
-        return ok;
+        return true;
     }
 
     private String getTitle(CnATreeElement element) {

@@ -54,8 +54,6 @@ public class AuditCopyService extends CopyService {
         }
 
         /*
-         * (non-Javadoc)
-         * 
          * @see
          * sernet.verinice.iso27k.service.PasteService.IPostProcessor#process(
          * java.util.Map)

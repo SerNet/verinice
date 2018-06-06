@@ -38,16 +38,9 @@ import sernet.verinice.model.common.Permission;
  */
 public abstract class OverwritePermissions implements IPostProcessor, Serializable {
 
-    private transient Logger log = Logger.getLogger(OverwritePermissions.class);
+    private static final Logger log = Logger.getLogger(OverwritePermissions.class);
 
     private String uuidPermissionParent;
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(OverwritePermissions.class);
-        }
-        return log;
-    }
 
     Set<Permission> permissions;
 
@@ -57,8 +50,6 @@ public abstract class OverwritePermissions implements IPostProcessor, Serializab
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.IPostProcessor#process(java.util.List,
      * java.util.Map)
      */
@@ -71,14 +62,14 @@ public abstract class OverwritePermissions implements IPostProcessor, Serializab
                 overwritePermissions(uuidDest);
             }
         } catch (CommandException e) {
-            getLog().error("Error while overwriting permissions", e);
+            log.error("Error while overwriting permissions", e);
         }
     }
 
     private void loadPermissions() throws CommandException {
         RetrieveInfo ri = new RetrieveInfo();
         ri.setPermissions(true);
-        LoadElementByUuid<CnATreeElement> loadCommand = new LoadElementByUuid<CnATreeElement>(
+        LoadElementByUuid<CnATreeElement> loadCommand = new LoadElementByUuid<>(
                 uuidPermissionParent, ri);
         loadCommand = getCommandService().executeCommand(loadCommand);
         permissions = loadCommand.getElement().getPermissions();
@@ -86,7 +77,7 @@ public abstract class OverwritePermissions implements IPostProcessor, Serializab
 
     private void overwritePermissions(String uuid) throws CommandException {
         UpdatePermissions updatePermissions = new UpdatePermissions(uuid, permissions, true, true);
-        updatePermissions = getCommandService().executeCommand(updatePermissions);
+        getCommandService().executeCommand(updatePermissions);
     }
 
     protected abstract ICommandService getCommandService();

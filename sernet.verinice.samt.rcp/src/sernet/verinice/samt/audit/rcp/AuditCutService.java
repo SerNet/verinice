@@ -54,8 +54,6 @@ public class AuditCutService extends CutService {
         }
 
         /*
-         * (non-Javadoc)
-         * 
          * @see
          * sernet.verinice.iso27k.service.PasteService.IPostProcessor#process(
          * java.util.Map)

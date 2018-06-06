@@ -59,7 +59,6 @@ public class CopyService extends PasteService implements IProgressTask {
      * @param elementList
      *            a list of elements
      */
-    @SuppressWarnings("unchecked")
     public CopyService(final CnATreeElement group, final List<CnATreeElement> elementList) {
         progressObserver = new DummyProgressObserver();
         this.selectedGroup = group;
@@ -86,21 +85,20 @@ public class CopyService extends PasteService implements IProgressTask {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.iso27k.service.IProgressTask#run()
      */
     @Override
     public void run() {
         try {
             Activator.inheritVeriniceContextState();
-            final List<String> uuidList = new ArrayList<String>(this.elements.size());
+            final List<String> uuidList = new ArrayList<>(this.elements.size());
             for (final CnATreeElement element : this.elements) {
                 uuidList.add(element.getUuid());
             }
             numberOfElements = uuidList.size();
             // -1 means unknown runtime
-            progressObserver.beginTask(Messages.getString("CopyService.1", numberOfElements), -1); //$NON-NLS-1$
+            progressObserver.beginTask(Messages.getString("CopyService.1", numberOfElements), //$NON-NLS-1$
+                    IProgressObserver.UNKNOWN_NUMBER_OF_ITEMS);
             CopyCommand cc = new CopyCommand(this.selectedGroup.getUuid(), uuidList,
                     getPostProcessorList(), this.copyLinks);
             cc.setCopyAttachments(isCopyAttachments());
