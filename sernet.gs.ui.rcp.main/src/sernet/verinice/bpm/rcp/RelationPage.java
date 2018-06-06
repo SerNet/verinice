@@ -38,7 +38,6 @@ import sernet.hui.common.connect.HuiRelation;
 import sernet.hui.common.connect.HuiRelationUtil;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
-import sernet.verinice.model.iso27k.PersonIso;
 
 /**
  * Wizard page of wizard {@link IndividualProcessWizard}. User sets a relation
@@ -61,8 +60,11 @@ public class RelationPage extends WizardPage {
 
     private boolean isActive = true;
 
-    protected RelationPage(String elementType) {
+    private final String personTypeId;
+
+    protected RelationPage(String elementType, String personTypeId) {
         super(NAME);
+        this.personTypeId = personTypeId;
         setTitle(Messages.RelationPage_1);
         setMessage(Messages.RelationPage_2);
         this.elementType = elementType;
@@ -120,7 +122,7 @@ public class RelationPage extends WizardPage {
             }
         });
         Set<DirectedHuiRelation> allPossibleRelations = HuiRelationUtil
-                .getAllRelationsBothDirections(elementType, PersonIso.TYPE_ID);
+                .getAllRelationsBothDirections(elementType, personTypeId);
         for (DirectedHuiRelation possibleRelation : allPossibleRelations) {
             relationComboModel.add(possibleRelation);
         }

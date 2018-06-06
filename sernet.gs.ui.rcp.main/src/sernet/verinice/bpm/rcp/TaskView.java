@@ -100,13 +100,11 @@ import sernet.verinice.interfaces.bpm.KeyMessage;
 import sernet.verinice.interfaces.bpm.KeyValue;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
-import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.iso27k.rcp.RegexComboModelFilter;
 import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.PersonAdapter;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.TextEventAdapter;
 import sernet.verinice.service.commands.LoadAncestors;
@@ -123,7 +121,7 @@ import sernet.verinice.service.commands.LoadAncestors;
  * @see TaskViewDataLoader
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class TaskView extends RightsEnabledView implements IAttachedToPerspective, IPartListener2 {
+public class TaskView extends RightsEnabledView implements IPartListener2 {
 
     private static final Logger LOG = Logger.getLogger(TaskView.class);
     static final NumericStringComparator NSC = new NumericStringComparator();
@@ -963,15 +961,6 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     @Override
     public void setFocus() {
         // empty
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
-     */
-    public String getPerspectiveId() {
-        return Iso27kPerspective.ID;
     }
 
     /*

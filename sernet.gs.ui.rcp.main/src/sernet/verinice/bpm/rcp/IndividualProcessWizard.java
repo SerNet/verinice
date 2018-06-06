@@ -80,7 +80,7 @@ public class IndividualProcessWizard extends Wizard {
         descriptionPage = new DescriptionPage(elementTitle);
         addPage(descriptionPage);
         // create relation before datepage
-        relationPage = new RelationPage(elementType);
+        relationPage = new RelationPage(elementType, personTypeId);
         datePage = new DatePage(relationPage.isRelation());
         personPage = new PersonPage();
         personPage.setPersonTypeId(getPersonTypeId());
