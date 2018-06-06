@@ -37,16 +37,15 @@ import sernet.verinice.samt.audit.service.CopyLinks;
 public class AuditCopyService extends CopyService {
 
     private static final Logger LOG = Logger.getLogger(AuditCopyService.class);
-    
+
     /**
      * @author Daniel Murygin <dm[at]sernet[dot]de>
      * 
      */
     public class LinkTask implements IPostProcessor {
 
-        
         private CnATreeElement linkTo;
-        
+
         /**
          * @param linkElement
          */
@@ -54,26 +53,31 @@ public class AuditCopyService extends CopyService {
             this.linkTo = linkTo;
         }
 
-        /* (non-Javadoc)
-         * @see sernet.verinice.iso27k.service.PasteService.IPostProcessor#process(java.util.Map)
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * sernet.verinice.iso27k.service.PasteService.IPostProcessor#process(
+         * java.util.Map)
          */
         @Override
         public void process(List<String> copyUuidList, Map<String, String> sourceDestMap) {
             try {
-                CopyLinks copyLinksCommand = new CopyLinks(copyUuidList,sourceDestMap,linkTo);          
+                CopyLinks copyLinksCommand = new CopyLinks(copyUuidList, sourceDestMap, linkTo);
                 getCommandService().executeCommand(copyLinksCommand);
             } catch (CommandException e) {
                 LOG.error("Error while creating links on server.", e);
             }
         }
-       
+
     }
 
     /**
      * @param group
      * @param elementList
      */
-    public AuditCopyService(CnATreeElement group, CnATreeElement linkTo, List<CnATreeElement> elementList) {
+    public AuditCopyService(CnATreeElement group, CnATreeElement linkTo,
+            List<CnATreeElement> elementList) {
         super(group, elementList);
         addPostProcessor(new LinkTask(linkTo));
     }

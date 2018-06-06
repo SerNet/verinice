@@ -35,9 +35,9 @@ import sernet.verinice.samt.audit.service.MoveLinks;
  *
  */
 public class AuditCutService extends CutService {
-    
+
     private static final Logger LOG = Logger.getLogger(AuditCutService.class);
-    
+
     /**
      * @author Daniel Murygin <dm[at]sernet[dot]de>
      * 
@@ -45,7 +45,7 @@ public class AuditCutService extends CutService {
     public class LinkTask implements IPostProcessor {
 
         private CnATreeElement linkTo;
-        
+
         /**
          * @param linkTo
          */
@@ -53,26 +53,31 @@ public class AuditCutService extends CutService {
             this.linkTo = linkTo;
         }
 
-        /* (non-Javadoc)
-         * @see sernet.verinice.iso27k.service.PasteService.IPostProcessor#process(java.util.Map)
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * sernet.verinice.iso27k.service.PasteService.IPostProcessor#process(
+         * java.util.Map)
          */
         @Override
-        public void process(List<String> copyUuidList,Map<String, String> sourceDestMap) {
+        public void process(List<String> copyUuidList, Map<String, String> sourceDestMap) {
             try {
-                MoveLinks moveLinksCommand = new MoveLinks(sourceDestMap,linkTo);          
+                MoveLinks moveLinksCommand = new MoveLinks(sourceDestMap, linkTo);
                 getCommandService().executeCommand(moveLinksCommand);
             } catch (CommandException e) {
                 LOG.error("Error while moving links on server.", e);
             }
         }
-       
+
     }
-    
+
     /**
      * @param group
      * @param elementList
      */
-    public AuditCutService(CnATreeElement group, CnATreeElement linkTo, List<CnATreeElement> elementList) {
+    public AuditCutService(CnATreeElement group, CnATreeElement linkTo,
+            List<CnATreeElement> elementList) {
         super(group, elementList);
         addPostProcessor(new LinkTask(linkTo));
     }

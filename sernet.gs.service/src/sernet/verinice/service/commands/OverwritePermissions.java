@@ -41,23 +41,26 @@ public abstract class OverwritePermissions implements IPostProcessor, Serializab
     private transient Logger log = Logger.getLogger(OverwritePermissions.class);
 
     private String uuidPermissionParent;
-    
+
     public Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(OverwritePermissions.class);
         }
         return log;
     }
-    
+
     Set<Permission> permissions;
-    
+
     public OverwritePermissions(String uuid) {
         super();
         this.uuidPermissionParent = uuid;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IPostProcessor#process(java.util.List, java.util.Map)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.IPostProcessor#process(java.util.List,
+     * java.util.Map)
      */
     @Override
     public void process(List<String> copyUuidList, Map<String, String> sourceDestMap) {
@@ -73,16 +76,17 @@ public abstract class OverwritePermissions implements IPostProcessor, Serializab
     }
 
     private void loadPermissions() throws CommandException {
-        RetrieveInfo ri  = new RetrieveInfo();
+        RetrieveInfo ri = new RetrieveInfo();
         ri.setPermissions(true);
-        LoadElementByUuid<CnATreeElement> loadCommand = new LoadElementByUuid<CnATreeElement>(uuidPermissionParent, ri);
+        LoadElementByUuid<CnATreeElement> loadCommand = new LoadElementByUuid<CnATreeElement>(
+                uuidPermissionParent, ri);
         loadCommand = getCommandService().executeCommand(loadCommand);
         permissions = loadCommand.getElement().getPermissions();
     }
 
-    private void overwritePermissions(String uuid) throws CommandException {      
+    private void overwritePermissions(String uuid) throws CommandException {
         UpdatePermissions updatePermissions = new UpdatePermissions(uuid, permissions, true, true);
-        updatePermissions = getCommandService().executeCommand(updatePermissions);       
+        updatePermissions = getCommandService().executeCommand(updatePermissions);
     }
 
     protected abstract ICommandService getCommandService();
