@@ -19,6 +19,7 @@ package sernet.verinice.iso27k.rcp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,8 +38,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -200,7 +201,7 @@ public class LdapImportDialog extends TitleAreaDialog {
         gridData.horizontalAlignment = SWT.RIGHT;
         gridData.horizontalSpan = 2;
         buttonAdd.setLayoutData(gridData);
-        buttonAdd.addSelectionListener(new SelectionListener() {
+        buttonAdd.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if (ldapQueryCache.containsKey(getParameter())) {
@@ -212,24 +213,18 @@ public class LdapImportDialog extends TitleAreaDialog {
                 }
             }
 
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-            }
         });
 
         createViewer(containerRoles);
 
         buttonRemove = new Button(containerRoles, SWT.PUSH | SWT.BORDER);
         buttonRemove.setText(Messages.LdapImportDialog_36);
-        buttonRemove.addSelectionListener(new SelectionListener() {
+        buttonRemove.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 removePerson();
             }
 
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-            }
         });
         gridData = new GridData();
         gridData.horizontalSpan = gridDataHorizontalSpan;
@@ -294,7 +289,7 @@ public class LdapImportDialog extends TitleAreaDialog {
             personSet.clear();
             List<PersonInfo> personList = loadLdapUser.getPersonList();
             if (personList != null) {
-                List<PersonInfo> accountList = new ArrayList<PersonInfo>(personList);
+                List<PersonInfo> accountList = new ArrayList<>(personList);
                 personSet.addAll(accountList);
                 ldapQueryCache.put(getParameter(), accountList);
             }
@@ -303,7 +298,7 @@ public class LdapImportDialog extends TitleAreaDialog {
             // contentProvider
             refreshTable();
         } catch (SizeLimitExceededException sizeLimitExceededException) {
-            LOG.warn("To many results ehen searching for LDAP users."); //$NON-NLS-1$
+            LOG.warn("Too many results when searching for LDAP users."); //$NON-NLS-1$
             if (LOG.isDebugEnabled()) {
                 LOG.debug("stacktrace: ", sizeLimitExceededException); //$NON-NLS-1$
             }
@@ -362,7 +357,7 @@ public class LdapImportDialog extends TitleAreaDialog {
 
     private String getPersonSurname(CnATreeElement person) {
         if (person instanceof Person) {
-            return ((Person) person).getEntity().getSimpleValue(Person.P_NAME);
+            return ((Person) person).getEntity().getPropertyValue(Person.P_NAME);
         } else if (person instanceof PersonIso) {
             return ((PersonIso) person).getSurname();
         }
@@ -371,7 +366,7 @@ public class LdapImportDialog extends TitleAreaDialog {
 
     private String getPersonName(CnATreeElement person) {
         if (person instanceof Person) {
-            return ((Person) person).getEntity().getSimpleValue(Person.P_VORNAME);
+            return ((Person) person).getEntity().getPropertyValue(Person.P_VORNAME);
         } else if (person instanceof PersonIso) {
             return ((PersonIso) person).getName();
         }
@@ -456,7 +451,6 @@ public class LdapImportDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
-        boolean importToITGS = radioButtonTargetPerspective[0].getSelection();
         SaveLdapUser saveLdapUser = new SaveLdapUser(personSet);
         try {
             saveLdapUser = ServiceFactory.lookupCommandService().executeCommand(saveLdapUser);
@@ -478,38 +472,39 @@ public class LdapImportDialog extends TitleAreaDialog {
                 Messages.LdapImportDialog_44, PreferenceConstants.INFO_IMPORT_LDAP);
     }
 
-    private void updateModel(CnATreeElement importRootObject, List<CnATreeElement> changedElement) {
+    private static void updateModel(CnATreeElement importRootObject,
+            List<CnATreeElement> changedElement) {
         final int maxNrOfElements = 9;
         if (changedElement != null && changedElement.size() > maxNrOfElements) {
             // if more than 9 elements changed or added do a complete reload
             CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
         } else {
             if (importRootObject != null) {
-                CnAElementFactory.getModel(importRootObject)
-                        .childAdded(importRootObject.getParent(), importRootObject);
-                CnAElementFactory.getModel(importRootObject).databaseChildAdded(importRootObject);
+                fireAddedEvents(importRootObject);
                 if (changedElement != null) {
-                    for (CnATreeElement cnATreeElement : changedElement) {
-                        CnAElementFactory.getModel(cnATreeElement)
-                                .childAdded(cnATreeElement.getParent(), cnATreeElement);
-                        CnAElementFactory.getModel(cnATreeElement)
-                                .databaseChildAdded(cnATreeElement);
-                    }
+                    changedElement.forEach(LdapImportDialog::fireAddedEvents);
                 }
             }
             if (changedElement != null) {
-                for (CnATreeElement cnATreeElement : changedElement) {
-                    CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement);
-                    CnAElementFactory.getModel(cnATreeElement).databaseChildChanged(cnATreeElement);
-                }
+                changedElement.forEach(LdapImportDialog::fireChangedEvents);
             }
         }
+    }
+
+    private static void fireChangedEvents(CnATreeElement element) {
+        CnAElementFactory.getModel(element).childChanged(element);
+        CnAElementFactory.getModel(element).databaseChildChanged(element);
+    }
+
+    private static void fireAddedEvents(CnATreeElement element) {
+        CnAElementFactory.getModel(element).childAdded(element.getParent(), element);
+        CnAElementFactory.getModel(element).databaseChildAdded(element);
     }
 
     private List<PersonInfo> getFromCache(PersonParameter parameter) {
         if (ldapQueryCache.containsKey(parameter)) {
             return ldapQueryCache.get(parameter);
         }
-        return Arrays.asList(new PersonInfo[] {});
+        return Collections.emptyList();
     }
 }

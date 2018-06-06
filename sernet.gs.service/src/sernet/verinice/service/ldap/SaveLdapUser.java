@@ -47,14 +47,13 @@ public class SaveLdapUser extends ChangeLoggingCommand
 
     private transient IAuthService authService;
 
-    Set<PersonInfo> personSet;
+    private Set<PersonInfo> personSet;
 
-    List<CnATreeElement> savedPersonList;
+    private List<CnATreeElement> savedPersonList;
 
-    CnATreeElement importRootObject;
+    private CnATreeElement importRootObject;
 
-    @SuppressWarnings("unchecked")
-    private Map<Class, CnATreeElement> containerMap = new HashMap<Class, CnATreeElement>(2);
+    private Map<Class<? extends CnATreeElement>, CnATreeElement> containerMap = new HashMap<>(2);
 
     public SaveLdapUser() {
         super();
@@ -68,59 +67,71 @@ public class SaveLdapUser extends ChangeLoggingCommand
 
     @Override
     public void execute() {
-        if (getPersonSet() != null) {
-            savedPersonList = new ArrayList<CnATreeElement>();
-            for (PersonInfo personInfo : getPersonSet()) {
-                // check username
-                checkUsername(personInfo.getLoginName());
-                // create person
-                CnATreeElement person = personInfo.getPerson();
-                CnATreeElement parent = loadContainer(person.getClass());
-                person.setParentAndScope(parent);
-                if (authService.isPermissionHandlingNeeded()) {
-                    person.setPermissions(
-                            Permission.clonePermissionSet(person, parent.getPermissions()));
-                }
-                setImportRootObject(parent);
 
-                IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory()
-                        .getDAO(CnATreeElement.class);
-
-                person = dao.merge(person);
-                dao.flush();
-                savedPersonList.add(person);
-                // create configuration for person
-                CreateConfiguration createConfiguration = new CreateConfiguration(person);
-                try {
-                    createConfiguration = getCommandService().executeCommand(createConfiguration);
-                } catch (CommandException e) {
-                    log.error("Error while creating configuration for user: "
-                            + personInfo.getLoginName(), e);
-                }
-                // save username in person
-                Configuration configuration = createConfiguration.getConfiguration();
-                configuration.setUser(personInfo.getLoginName());
-                String email = "";
-                if (person != null) {
-                    if (person instanceof Person) {
-                        email = ((Person) person).getEntity().getSimpleValue(Person.P_EMAIL);
-                    } else if (person instanceof PersonIso) {
-                        email = ((PersonIso) person).getEmail();
-                    }
-                    if (email != null && !email.isEmpty()) {
-                        configuration.setNotificationEmail(email);
-                    }
-                }
-                SaveConfiguration<Configuration> saveConfiguration = new SaveConfiguration<Configuration>(
-                        configuration, false);
-                try {
-                    saveConfiguration = getCommandService().executeCommand(saveConfiguration);
-                } catch (CommandException e) {
-                    log.error("Error while saving username in configuration for user: "
-                            + personInfo.getLoginName(), e);
-                }
+        if (personSet == null) {
+            return;
+        }
+        savedPersonList = new ArrayList<>();
+        for (PersonInfo personInfo : getPersonSet()) {
+            // check username
+            checkUsername(personInfo.getLoginName());
+            // create person
+            CnATreeElement person = createPerson(personInfo);
+            // create configuration for person
+            CreateConfiguration createConfiguration = new CreateConfiguration(person);
+            try {
+                createConfiguration = getCommandService().executeCommand(createConfiguration);
+            } catch (CommandException e) {
+                log.error(
+                        "Error while creating configuration for user: " + personInfo.getLoginName(),
+                        e);
+            }
+            // save username in person
+            Configuration configuration = createConfiguration.getConfiguration();
+            setUserAndEMail(personInfo, person, configuration);
+            SaveConfiguration<Configuration> saveConfiguration = new SaveConfiguration<>(
+                    configuration, false);
+            try {
+                getCommandService().executeCommand(saveConfiguration);
+            } catch (CommandException e) {
+                log.error("Error while saving username in configuration for user: "
+                        + personInfo.getLoginName(), e);
             }
         }
+
+    }
+
+    private static void setUserAndEMail(PersonInfo personInfo, CnATreeElement person,
+            Configuration configuration) {
+        configuration.setUser(personInfo.getLoginName());
+        String email = "";
+        if (person != null) {
+            if (person instanceof Person) {
+                email = ((Person) person).getEntity().getPropertyValue(Person.P_EMAIL);
+            } else if (person instanceof PersonIso) {
+                email = ((PersonIso) person).getEmail();
+            }
+            if (email != null && !email.isEmpty()) {
+                configuration.setNotificationEmail(email);
+            }
+        }
+    }
+
+    private CnATreeElement createPerson(PersonInfo personInfo) {
+        CnATreeElement person = personInfo.getPerson();
+        CnATreeElement parent = loadContainer(person.getClass());
+        person.setParentAndScope(parent);
+        if (authService.isPermissionHandlingNeeded()) {
+            person.setPermissions(Permission.clonePermissionSet(person, parent.getPermissions()));
+        }
+        setImportRootObject(parent);
+
+        IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
+
+        person = dao.merge(person);
+        dao.flush();
+        savedPersonList.add(person);
+        return person;
     }
 
     /**
@@ -139,7 +150,7 @@ public class SaveLdapUser extends ChangeLoggingCommand
      * 
      * @return
      */
-    private CnATreeElement loadContainer(Class clazz) {
+    private CnATreeElement loadContainer(Class<? extends CnATreeElement> clazz) {
         // Create the importRootObject if it does not exist yet
         // and set the 'importRootObject' variable.
         CnATreeElement container = containerMap.get(clazz);
@@ -163,7 +174,7 @@ public class SaveLdapUser extends ChangeLoggingCommand
         return container;
     }
 
-    private CnATreeElement createContainer(Class clazz) {
+    private CnATreeElement createContainer(Class<? extends CnATreeElement> clazz) {
         if (LoadImportObjectsHolder.isImplementation(clazz, IBSIStrukturElement.class)) {
             return createBsiContainer();
         } else {
@@ -172,7 +183,7 @@ public class SaveLdapUser extends ChangeLoggingCommand
     }
 
     private CnATreeElement createBsiContainer() {
-        LoadModel<BSIModel> cmdLoadModel = new LoadModel<BSIModel>(BSIModel.class);
+        LoadModel<BSIModel> cmdLoadModel = new LoadModel<>(BSIModel.class);
         try {
             cmdLoadModel = getCommandService().executeCommand(cmdLoadModel);
         } catch (CommandException e) {
@@ -223,7 +234,7 @@ public class SaveLdapUser extends ChangeLoggingCommand
     private void addPermissions(CnATreeElement element, String userName) {
         Set<Permission> permission = element.getPermissions();
         if (permission == null) {
-            permission = new HashSet<Permission>();
+            permission = new HashSet<>();
         }
         permission.add(Permission.createPermission(element, userName, true, true));
         element.setPermissions(permission);
@@ -240,28 +251,29 @@ public class SaveLdapUser extends ChangeLoggingCommand
      *             if username is not available
      */
     private void checkUsername(String username) throws UsernameExistsRuntimeException {
-        if (username != null) {
-            DetachedCriteria criteria = DetachedCriteria.forClass(Property.class);
-            criteria.add(Restrictions.eq("propertyType", Configuration.PROP_USERNAME));
-            criteria.add(Restrictions.like("propertyValue", username));
-            IBaseDao<Property, Integer> dao = getDaoFactory().getDAO(Property.TYPE_ID);
-            List<Property> resultList = dao.findByCriteria(criteria);
+        if (username == null) {
+            return;
+        }
+        DetachedCriteria criteria = DetachedCriteria.forClass(Property.class);
+        criteria.add(Restrictions.eq("propertyType", Configuration.PROP_USERNAME));
+        criteria.add(Restrictions.like("propertyValue", username));
+        IBaseDao<Property, Integer> dao = getDaoFactory().getDAO(Property.TYPE_ID);
+        List<Property> resultList = dao.findByCriteria(criteria);
 
-            if (resultList != null && !resultList.isEmpty()) {
-                for (Property property : resultList) {
-                    // check again to exclude name which start with the same
-                    // characters
-                    if (username.equals(property.getPropertyValue())) {
-                        if (log.isDebugEnabled()) {
-                            log.debug("Username exists: " + username);
-                        }
-                        throw new UsernameExistsRuntimeException(username,
-                                "Username already exists: " + username);
-                    }
+        if (resultList == null || resultList.isEmpty()) {
+            return;
+        }
+
+        for (Property property : resultList) {
+            // check again to exclude name which start with the same
+            // characters
+            if (username.equals(property.getPropertyValue())) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Username exists: " + username);
                 }
-
+                throw new UsernameExistsRuntimeException(username,
+                        "Username already exists: " + username);
             }
-
         }
     }
 
