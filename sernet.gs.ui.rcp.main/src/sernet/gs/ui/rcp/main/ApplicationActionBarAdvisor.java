@@ -505,11 +505,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         myToolbar.add(new Separator());
         // ISO 27k items
         myToolbar.add(this.openISMViewAction);
-        myToolbar.add(this.openCatalogAction);
         myToolbar.add(this.openTaskViewAction);
 
         myToolbar.add(new Separator());
         // common items
+        myToolbar.add(this.openCatalogViewAction);
         myToolbar.add(this.openAccountViewAction);
         myToolbar.add(this.openGroupViewAction);
         myToolbar.add(this.openReportdepositViewAction);
