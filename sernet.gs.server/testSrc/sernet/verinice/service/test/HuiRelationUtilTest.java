@@ -22,10 +22,10 @@ import static org.junit.Assert.assertThat;
 
 import java.util.Set;
 
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
-import org.junit.matchers.JUnitMatchers;
-import org.junit.matchers.TypeSafeMatcher;
 
 import sernet.hui.common.connect.DirectedHuiRelation;
 import sernet.hui.common.connect.HuiRelationUtil;
@@ -49,9 +49,9 @@ public class HuiRelationUtilTest extends ContextConfiguration {
             }
         }
 
-        assertThat(allRelations, JUnitMatchers
+        assertThat(allRelations, CoreMatchers
                 .hasItem(new DirectedRelationMatcher("rel_person_process_responsible", true)));
-        assertThat(allRelations, JUnitMatchers.hasItem(
+        assertThat(allRelations, CoreMatchers.hasItem(
                 new DirectedRelationMatcher("rel_process_person_zugriffsberechtigt", false)));
 
     }
@@ -68,13 +68,13 @@ public class HuiRelationUtilTest extends ContextConfiguration {
                 assertEquals(PersonIso.TYPE_ID, directedHuiRelation.getHuiRelation().getTo());
             }
         }
-        assertThat(allRelations, JUnitMatchers
+        assertThat(allRelations, CoreMatchers
                 .hasItem(new DirectedRelationMatcher("rel_person_process_responsible", true)));
-        assertThat(allRelations, JUnitMatchers.hasItem(
+        assertThat(allRelations, CoreMatchers.hasItem(
                 new DirectedRelationMatcher("rel_process_person_zugriffsberechtigt", false)));
-        assertThat(allRelations, JUnitMatchers
+        assertThat(allRelations, CoreMatchers
                 .hasItem(new DirectedRelationMatcher("rel_person_vulnerability_rep", true)));
-        assertThat(allRelations, JUnitMatchers
+        assertThat(allRelations, CoreMatchers
                 .hasItem(new DirectedRelationMatcher("rel_org_personiso_vv_bsig", false)));
     }
 

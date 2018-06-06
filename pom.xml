@@ -1,0 +1,116 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>sernet.verinice</groupId>
+	<artifactId>sernet.verinice.tycho.root</artifactId>
+	<version>1.0.0</version>
+	<packaging>pom</packaging>
+
+	<properties>
+		<tycho.version>1.1.0</tycho.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<modules>
+
+		<!-- Target platform definition -->
+		<module>target-platform</module>
+
+		<!-- products -->
+		<module>sernet.verinice.releng.client.product</module>
+		<module>sernet.verinice.releng.server.product</module>
+
+		<!-- Features -->
+		<module>org.eclipse.e4.rcp.sernet</module>
+		<module>sernet.birt.feature</module>
+		<module>sernet.datatools.feature</module>
+		<module>sernet.eclipse.feature</module>
+		<module>sernet.gs.server.feature</module>
+		<module>sernet.rcp.ui.feature</module>
+		<module>sernet.localdependencies</module>
+		<module>sernet.thirdparty.feature</module>
+
+
+		<!-- Bundles -->
+		<module>bouncycastle</module>
+		<module>jbpm</module>
+		<module>gnumail</module>
+		<module>sernet.gs.db.fragment</module>
+		<module>sernet.gs.ehcache.fragment</module>
+		<module>sernet.gs.hibernate.fragment</module>
+		<module>sernet.gs.log4j.fragment</module>
+		<module>sernet.gs.pax_web.fragment</module>
+		<module>sernet.gs.reveng</module>
+		<module>sernet.gs.server</module>
+		<module>sernet.gs.service</module>
+		<module>sernet.gs.springweb.fragment</module>
+		<module>sernet.gs.ui.rcp.main</module>
+		<module>sernet.hui.common</module>
+		<module>sernet.hui.server</module>
+		<module>sernet.hui.swtclient</module>
+		<module>sernet.springclient</module>
+		<module>sernet.verinice.bp.importer</module>
+		<module>sernet.verinice.fei.rcp</module>
+		<module>sernet.verinice.fei.service</module>
+		<module>sernet.verinice.kerberos</module>
+		<module>sernet.verinice.oda.driver</module>
+		<module>sernet.verinice.oda.driver.designer</module>
+		<module>sernet.verinice.report.service</module>
+		<module>sernet.verinice.samt.rcp</module>
+		<module>sernet.verinice.samt.service</module>
+		<module>waffle</module>
+	</modules>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-maven-plugin</artifactId>
+				<version>${tycho.version}</version>
+				<extensions>true</extensions>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<target>
+						<artifact>
+							<groupId>sernet.verinice</groupId>
+							<artifactId>target-platform</artifactId>
+							<version>1.0.0</version>
+						</artifact>
+					</target>
+					<environments>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>linux</os>
+							<ws>gtk</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86</arch>
+						</environment>
+						<environment>
+							<os>win32</os>
+							<ws>win32</ws>
+							<arch>x86_64</arch>
+						</environment>
+						<environment>
+							<os>macosx</os>
+							<ws>cocoa</ws>
+							<arch>x86_64</arch>
+						</environment>
+					</environments>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
+

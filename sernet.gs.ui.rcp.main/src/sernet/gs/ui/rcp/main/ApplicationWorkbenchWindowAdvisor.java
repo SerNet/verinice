@@ -71,6 +71,7 @@ import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.model.updateNews.UpdateNewsException;
 import sernet.verinice.model.updateNews.UpdateNewsMessageEntry;
 import sernet.verinice.rcp.UpdateNewsDialog;
+import sernet.verinice.rcp.bp.BaseProtectionPerspective;
 
 /**
  * Workbench Window advisor.
@@ -124,14 +125,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     }
     
     private String getInitialPerspectiveBarList() {
-        StringBuffer sb = new StringBuffer();
-        sb.append(Iso27kPerspective.ID);
-        sb.append(",");
-        sb.append(Perspective.ID); // IT Basline Protection perspective
-        sb.append(",");
-        sb.append("sernet.verinice.samt.rcp.SamtPerspective");
-        
-        return sb.toString();
+    	// as eclipse has change the behavior, only one perspective can be opened to display the welcome screen
+    	// see org.eclipse.ui.internal.WorkbenchWindow.setup() line 764
+    	return Perspective.ID;
     }
     
     private String getCurrentUserName(){

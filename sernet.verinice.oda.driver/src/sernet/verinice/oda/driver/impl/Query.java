@@ -102,7 +102,7 @@ public class Query implements IQuery
     }
 
     private void init() {
-        IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();  	
+    	IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
     	ReportClassLoader securedClassLoader = new ReportClassLoader(Query.class.getClassLoader());	
 
     	try {

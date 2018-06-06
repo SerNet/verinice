@@ -18,6 +18,7 @@
 package sernet.verinice.iso27k.rcp;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -617,7 +618,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     protected void toggleLinking(boolean checked) {
         this.linkingActive = checked;
         if (checked) {
-            editorActivated(getSite().getPage().getActiveEditor());
+            Optional.ofNullable(getSite().getPage().getActiveEditor()).ifPresent(this::editorActivated);
         }
     }
 

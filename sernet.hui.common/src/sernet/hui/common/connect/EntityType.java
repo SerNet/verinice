@@ -154,6 +154,16 @@ public class EntityType {
     }
 
     /**
+     * @return An array with all property type ID of this entity type including
+     *         the types which are contained in property groups.
+     * @deprecated Replaced by {@link #getAllPropertyTypeIds()}
+     */
+    @Deprecated
+    public String[] getAllPropertyTypeIDsIncludingGroups() {
+        return getAllPropertyTypeIds();
+    }
+
+    /**
      * @return An array with all property type titles of this entity type
      *         including the types which are contained in property groups.
      */
@@ -164,6 +174,16 @@ public class EntityType {
             result.add(getPropertyType(typeId).getName());
         }
         return result.toArray(new String[result.size()]);
+    }
+
+    /**
+     * @return An array with all property type titles of this entity type
+     *         including the types which are contained in property groups.
+     * @deprecated Replaced by {@link #getAllPropertyTypeTitles()}
+     */
+    @Deprecated
+    public String[] getAllPropertyTypeTitlesIncludingGroups() {
+        return getAllPropertyTypeTitles();
     }
 
     /**

@@ -65,4 +65,14 @@ public interface IVeriniceOdaDriver {
 	
 	Map<String, Object> getScriptVariables();
 	
+	
+	boolean getReportLoggingState();
+
+	String getLogLvl();
+
+	String getLogFile();
+
+	String getLocalReportLocation();
+
+	boolean isSandboxEnabled();
 }

@@ -123,11 +123,11 @@ public class CompletedLayerSummary extends MassnahmenSummary {
 					+ "and mup.propertytype = :muptype "
 					+ "and mup.propertyvalue in (:mupvalues) "
 					+ "group by bup.propertyvalue")
-					.addScalar("pv", Hibernate.STRING)
+					.addScalar("pv", sernet.gs.reveng.type.Types.STRING_TYPE)
 					.addScalar("amount", Hibernate.INTEGER)
 					.setString("buptype", BausteinUmsetzung.P_NR)
 					.setString("muptype", MassnahmenUmsetzung.P_UMSETZUNG)
-					.setParameterList("mupvalues", new Object[] { MassnahmenUmsetzung.P_UMSETZUNG_JA, MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH }, Hibernate.STRING);
+					.setParameterList("mupvalues", new Object[] { MassnahmenUmsetzung.P_UMSETZUNG_JA, MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH }, sernet.gs.reveng.type.Types.STRING_TYPE);
 			
 			if (LOG.isDebugEnabled()){
 				LOG.debug("generated query:" + query.getQueryString());

@@ -32,7 +32,6 @@ import org.apache.log4j.Logger;
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
 import org.junit.Test;
-import org.junit.matchers.JUnitMatchers;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
@@ -101,7 +100,7 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         assertNotNull(element.getValueFromResultString(SamtTopic.PROP_DESC), "Token \"" + longWord + "\" is not in the right column " + SamtTopic.PROP_DESC);
 
         String propertyId = element.getOccurence().getColumnIds().first();
-        assertThat("Token \"" + longWord + "\" is not in the right column " + propertyId, element.getValueFromResultString(propertyId), JUnitMatchers.containsString(longWord));
+        assertThat("Token \"" + longWord + "\" is not in the right column " + propertyId, element.getValueFromResultString(propertyId), CoreMatchers.containsString(longWord));
     }
 
     @Test
@@ -121,7 +120,7 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
 
         element.setTitel(NEW_TITEL);
         String json = jsonBuilder.getJson(element);
-        assertThat("JSON does not contain " + NEW_TITEL + ":VNA_FILENAME " + json, json, JUnitMatchers.containsString(NEW_TITEL));
+        assertThat("JSON does not contain " + NEW_TITEL + ":VNA_FILENAME " + json, json, CoreMatchers.containsString(NEW_TITEL));
 
         searchDao.update(uuid, json);
         result = findByTitle(NEW_TITEL);
@@ -157,7 +156,7 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         String propertyId = element.getOccurence().getColumnIds().first();
         
         assertNotNull(element.getValueFromResultString(propertyId), "Phrase \"" + phrase + "\" is not in the right column " + propertyId);
-        assertThat("Phrase \"" + phrase + "\" is not in the right column " + propertyId, element.getValueFromResultString(propertyId), JUnitMatchers.containsString(phrase));
+        assertThat("Phrase \"" + phrase + "\" is not in the right column " + propertyId, element.getValueFromResultString(propertyId), CoreMatchers.containsString(phrase));
     }
     
     @After

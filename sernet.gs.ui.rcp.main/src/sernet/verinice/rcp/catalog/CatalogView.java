@@ -23,6 +23,7 @@
 
 package sernet.verinice.rcp.catalog;
 
+import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -434,7 +435,7 @@ public class CatalogView extends RightsEnabledView
     protected void toggleLinking(boolean checked) {
         this.linkingActive = checked;
         if (checked) {
-            editorActivated(getSite().getPage().getActiveEditor());
+            Optional.ofNullable(getSite().getPage().getActiveEditor()).ifPresent(this::editorActivated);
         }
     }
 

@@ -1,24 +1,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
-	<packaging>eclipse-repository</packaging>
-
-	<artifactId>sernet.verinice.releng.client.product</artifactId>
 
 	<parent>
 		<groupId>sernet.verinice</groupId>
-		<artifactId>sernet.verinice.releng.parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-		<relativePath>../sernet.verinice.releng.parent/pom.xml</relativePath>
+		<artifactId>sernet.verinice.tycho.root</artifactId>
+		<version>1.0.0</version>
 	</parent>
+
+	<artifactId>sernet.verinice.releng.client.product</artifactId>
+	<packaging>eclipse-repository</packaging>
 
 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-repository-plugin</artifactId>
-				<version>${tycho-version}</version>
+				<version>${tycho.version}</version>
 				<configuration>
 					<includeAllDependencies>true</includeAllDependencies>
 					<!-- Whether or not to skip archiving the repository. False by default. -->
@@ -29,7 +27,7 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-director-plugin</artifactId>
-				<version>${tycho-version}</version>
+				<version>${tycho.version}</version>
 				<executions>
 					<execution>
 						<!-- install the product using the p2 director -->
@@ -46,7 +44,7 @@
 				<configuration>
 					<products>
 						<product>
-							<id>sernet.gs.ui.rcp.main.product</id>
+							<id>sernet.verinice.releng.client</id>
 							<rootFolder>verinice</rootFolder>
 						</product>
 					</products>

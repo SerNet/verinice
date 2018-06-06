@@ -102,8 +102,8 @@ public class FindHuiUrls extends GenericCommand {
 					"select propertyValue "
 					+ "from properties "
 					+ "where propertytype in (:types)")
-					.addScalar("propertyvalue", Hibernate.STRING)
-					.setParameterList("types", allIDs, Hibernate.STRING);
+					.addScalar("propertyvalue", sernet.gs.reveng.type.Types.STRING_TYPE)
+					.setParameterList("types", allIDs, sernet.gs.reveng.type.Types.STRING_TYPE);
 
 			if (LOG.isDebugEnabled()){
 				LOG.debug("created statement: " + query.getQueryString());

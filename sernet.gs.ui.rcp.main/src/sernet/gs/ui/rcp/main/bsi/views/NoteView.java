@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
@@ -374,7 +375,7 @@ public class NoteView extends RightsEnabledView implements ILinkedWithEditorView
     protected void toggleLinking(boolean checked) {
         this.linkingActive = checked;
         if (checked) {
-            editorActivated(getSite().getPage().getActiveEditor());
+            Optional.ofNullable(getSite().getPage().getActiveEditor()).ifPresent(this::editorActivated);
         }
     }
 
