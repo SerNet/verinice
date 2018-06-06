@@ -143,6 +143,9 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
             LOG.error("Error while creating catalog view", e); //$NON-NLS-1$
             ExceptionUtil.log(e, "Error while opening Catalog-View."); //$NON-NLS-1$
         }
+        MessageDialog.openWarning(Display.getCurrent().getActiveShell(), Messages.Deprecated_View,
+                Messages.ISM_Catalog_View_Is_Deprecated);
+
     }
 
     @Override

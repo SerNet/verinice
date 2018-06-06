@@ -114,6 +114,8 @@ public class Messages extends NLS {
     public static String SamtExportDialog_16;
     public static String SamtExportDialog_17;
     public static String JobScheduler_0;
+    public static String Deprecated_View;
+    public static String ISM_Catalog_View_Is_Deprecated;
 
     static {
         // initialize resource bundle
