@@ -2,6 +2,7 @@ package sernet.verinice.interfaces.ldap;
 
 import java.util.List;
 
+import sernet.verinice.model.common.Domain;
 import sernet.verinice.service.ldap.PersonInfo;
 
 public interface ILdapService {
@@ -10,5 +11,5 @@ public interface ILdapService {
 
     List<PersonInfo> getPersonList(PersonParameter parameter);
 
-    List<PersonInfo> getPersonList(PersonParameter parameter, boolean importToITGS);
+    List<PersonInfo> getPersonList(PersonParameter parameter, Domain importDomain);
 }

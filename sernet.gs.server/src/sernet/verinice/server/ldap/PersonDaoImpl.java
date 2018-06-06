@@ -12,6 +12,7 @@ import sernet.verinice.interfaces.ldap.IPersonDao;
 import sernet.verinice.interfaces.ldap.PersonParameter;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Domain;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.ldap.PersonInfo;
 
@@ -32,13 +33,13 @@ public class PersonDaoImpl implements IPersonDao {
     /*
      * @see
      * sernet.verinice.interfaces.ldap.IPersonDao#getPersonList(sernet.verinice.
-     * interfaces.ldap.PersonParameter, boolean)
+     * interfaces.ldap.PersonParameter, sernet.verinice.model.common.Domain)
      */
     @SuppressWarnings("unchecked")
     @Override
-    public List<PersonInfo> getPersonList(PersonParameter parameter, boolean importToITGS) {
+    public List<PersonInfo> getPersonList(PersonParameter parameter, Domain importDomain) {
         return ldapTemplate.search(getBase(), getUserFilter(parameter),
-                new LdapPersonMapper(importToITGS));
+                new LdapPersonMapper(importDomain));
     }
 
     private String getUserFilter(PersonParameter parameter) {
@@ -102,24 +103,30 @@ public class PersonDaoImpl implements IPersonDao {
     }
 
     private static final class LdapPersonMapper implements AttributesMapper {
-        private boolean useITGS = false;
+        private Domain importDomain = Domain.ISM;
 
         public LdapPersonMapper() {
             super();
         }
 
-        public LdapPersonMapper(boolean itgs) {
+        public LdapPersonMapper(Domain importDomain) {
             super();
-            this.useITGS = itgs;
+            this.importDomain = importDomain;
         }
 
         public Object mapFromAttributes(Attributes attrs) throws NamingException {
-            CnATreeElement person = null;
-            if (!useITGS) {
+            CnATreeElement person;
+            switch (importDomain) {
+            case ISM:
                 person = new PersonIso();
-            } else {
+                break;
+            case BASE_PROTECTION_OLD:
                 person = new Person(null);
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown domain " + importDomain);
             }
+
             String login = determineLogin(attrs);
             setGivenName(attrs, person);
             setSurname(attrs, person);

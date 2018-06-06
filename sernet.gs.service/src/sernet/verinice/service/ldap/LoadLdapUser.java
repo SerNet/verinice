@@ -7,6 +7,7 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ldap.ILdapCommand;
 import sernet.verinice.interfaces.ldap.ILdapService;
 import sernet.verinice.interfaces.ldap.PersonParameter;
+import sernet.verinice.model.common.Domain;
 
 @SuppressWarnings("serial")
 public class LoadLdapUser extends GenericCommand implements ILdapCommand, Serializable {
@@ -17,7 +18,7 @@ public class LoadLdapUser extends GenericCommand implements ILdapCommand, Serial
 
     private List<PersonInfo> personList;
 
-    private boolean importToGS = false; // default case
+    private Domain importDomain = Domain.ISM; // default case
 
     public LoadLdapUser() {
         super();
@@ -28,14 +29,14 @@ public class LoadLdapUser extends GenericCommand implements ILdapCommand, Serial
         this.parameter = parameter;
     }
 
-    public LoadLdapUser(PersonParameter paramater, boolean importToITGS) {
+    public LoadLdapUser(PersonParameter paramater, Domain importDomain) {
         this(paramater);
-        this.importToGS = importToITGS;
+        this.importDomain = importDomain;
     }
 
     @Override
     public void execute() {
-        personList = getLdapService().getPersonList(getParameter(), importToGS);
+        personList = getLdapService().getPersonList(getParameter(), importDomain);
     }
 
     public PersonParameter getParameter() {

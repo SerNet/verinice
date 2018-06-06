@@ -61,6 +61,7 @@ import sernet.verinice.interfaces.ldap.PersonParameter;
 import sernet.verinice.interfaces.ldap.SizeLimitExceededException;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Domain;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.service.ldap.LoadLdapUser;
@@ -284,7 +285,8 @@ public class LdapImportDialog extends TitleAreaDialog {
     private void loadLdapUser() {
         try {
             LoadLdapUser loadLdapUser = new LoadLdapUser(getParameter(),
-                    radioButtonTargetPerspective[0].getSelection());
+                    radioButtonTargetPerspective[0].getSelection() ? Domain.BASE_PROTECTION_OLD
+                            : Domain.ISM);
             loadLdapUser = ServiceFactory.lookupCommandService().executeCommand(loadLdapUser);
             personSet.clear();
             List<PersonInfo> personList = loadLdapUser.getPersonList();
