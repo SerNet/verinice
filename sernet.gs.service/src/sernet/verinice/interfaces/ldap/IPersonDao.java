@@ -10,9 +10,8 @@ import sernet.verinice.service.ldap.PersonInfo;
  */
 public interface IPersonDao {
 
-	List<PersonInfo> getPersonList(PersonParameter parameter);
+    List<PersonInfo> getPersonList(PersonParameter parameter);
 
-	List<PersonInfo> getPersonList(PersonParameter parameter, boolean importToITGS);
+    List<PersonInfo> getPersonList(PersonParameter parameter, boolean importToITGS);
 
-	
 }

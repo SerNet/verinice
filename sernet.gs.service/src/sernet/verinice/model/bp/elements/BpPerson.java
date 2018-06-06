@@ -31,39 +31,39 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  */
 public class BpPerson extends CnATreeElement implements IBpElement, ITaggableElement {
-    
+
     private static final long serialVersionUID = -1764245620965365934L;
-    
+
     public static final String TYPE_ID = "bp_person"; //$NON-NLS-1$
     public static final String PROP_LAST_NAME = "bp_person_last_name"; //$NON-NLS-1$
     public static final String PROP_FIRST_NAME = "bp_person_first_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_person_tag"; //$NON-NLS-1$
 
+    protected BpPerson() {
+    }
 
-    protected BpPerson() {}
-    
     public BpPerson(CnATreeElement parent) {
         super(parent);
         init();
     }
-    
+
     @Override
     public String getTitle() {
         StringBuilder sb = new StringBuilder();
         final String surname = getEntity().getPropertyValue(PROP_LAST_NAME);
-        if(surname!=null && !surname.isEmpty()) {
+        if (surname != null && !surname.isEmpty()) {
             sb.append(surname);
         }
         final String name = getEntity().getPropertyValue(PROP_FIRST_NAME);
-        if(name!=null && !name.isEmpty()) {
-            if(sb.length()>0) {
+        if (name != null && !name.isEmpty()) {
+            if (sb.length() > 0) {
                 sb.append(", ");
             }
             sb.append(name);
         }
         return sb.toString();
     }
-    
+
     @Override
     public void setTitel(String name) {
         // empty, otherwise title get scrambled while copying
