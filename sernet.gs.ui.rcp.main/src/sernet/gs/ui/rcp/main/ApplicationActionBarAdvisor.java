@@ -36,6 +36,7 @@ import org.eclipse.ui.IPerspectiveListener;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 import org.eclipse.ui.actions.ContributionItemFactory;
@@ -68,7 +69,6 @@ import sernet.gs.ui.rcp.main.bsi.views.AuditView;
 import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
 import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
 import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
-import sernet.gs.ui.rcp.main.bsi.views.DSModelView;
 import sernet.gs.ui.rcp.main.bsi.views.DocumentView;
 import sernet.gs.ui.rcp.main.bsi.views.FileView;
 import sernet.gs.ui.rcp.main.bsi.views.NoteView;
@@ -124,8 +124,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction closeAllAction;
 
     private IWorkbenchAction closeOthersAction;
-
-    private OpenViewAction openDSViewAction;
 
     private OpenViewAction openBSIModelViewAction;
 
@@ -204,7 +202,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
         removeExtraneousActions();
+        removeObsoletePerspectives();
     }
+
 
     @SuppressWarnings(WARNING_RESTRICTION)
     @Override
@@ -251,7 +251,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.openBSIViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_5, BSIMassnahmenView.ID, ImageCache.VIEW_MASSNAHMEN, ActionRightIDs.BSIMASSNAHMEN);
         this.openBSIModelViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_6, BsiModelView.ID, ImageCache.VIEW_BSIMODEL, ActionRightIDs.BSIMODELVIEW);
         this.openISMViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_7, ISMView.ID, ImageCache.VIEW_ISMVIEW, ActionRightIDs.ISMVIEW);
-        this.openDSViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_8, DSModelView.ID, ImageCache.VIEW_DSMODEL, ActionRightIDs.DSMODELVIEW);
         this.openTodoViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_9, TodoView.ID, ImageCache.VIEW_TODO, ActionRightIDs.TODO);
         this.openDocumentViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_10, DocumentView.ID, ImageCache.VIEW_DOCUMENT, ActionRightIDs.DOCUMENTVIEW);
         this.openAuditViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_12, AuditView.ID, ImageCache.VIEW_AUDIT, ActionRightIDs.AUDITVIEW);
@@ -293,7 +292,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 this.closeAction, this.closeAllAction,
                 this.closeOthersAction, this.openBSIBrowserAction, this.openNoteAction, this.openFileAction,
                 this.openCatalogAction, this.openRelationViewAction, this.openBSIViewAction,
-                this.openBSIModelViewAction, this.openISMViewAction, this.openDSViewAction,
+                this.openBSIModelViewAction, this.openISMViewAction,
                 this.openTodoViewAction, this.openAuditViewAction, this.openTaskViewAction,
                 this.openValidationViewAction, this.reloadAction, this.importGstoolAction,
                 this.importCSVAction, this.importPersonFromLdap, this.importGSNotesAction,
@@ -433,10 +432,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         // VDA - done by samt-plugin
         viewsMenu.add(new Separator());
         
-        // deprecated data-protection view
-        viewsMenu.add(this.openDSViewAction);
-        viewsMenu.add(new Separator());
-        
         // global
         viewsMenu.add(this.openDocumentViewAction);
         viewsMenu.add(this.openBSIBrowserAction);
@@ -555,6 +550,16 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         removeStandardAction(reg, "org.eclipse.ui.WorkingSetActionSet"); //$NON-NLS-1$
     }
 
+    private void removeObsoletePerspectives() {
+        for (IPerspectiveDescriptor perspective : PlatformUI.getWorkbench().getPerspectiveRegistry()
+                .getPerspectives()) {
+            String perspectiveId = perspective.getId();
+            if (perspectiveId.startsWith("<") && perspectiveId.endsWith(">")) {
+                PlatformUI.getWorkbench().getPerspectiveRegistry().deletePerspective(perspective);
+            }
+        }
+    }
+    
     @SuppressWarnings(WARNING_RESTRICTION)
     private void removeStandardAction(ActionSetRegistry reg, String actionSetId) {
         IActionSetDescriptor[] actionSets = reg.getActionSets();

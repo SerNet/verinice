@@ -22,11 +22,6 @@
             name="%perspective.name">
       </perspective>
       <perspective
-            class="sernet.gs.ui.rcp.main.PerspectiveDS"
-            icon="icons/shield.png"
-            id="sernet.gs.ui.rcp.main.dsperspective"
-            name="%perspective.name.0"/>
-      <perspective
             class="sernet.verinice.iso27k.rcp.Iso27kPerspective"
             icon="icons/sweetie-verinice/png/16-arrow-branch-bgr.png"
             id="sernet.verinice.iso27k.rcp.Iso27kPerspective"
@@ -96,13 +91,6 @@
             icon="icons/tree_explorer.gif"
             id="sernet.gs.ui.rcp.main.views.bsimodelview"
             name="%view.name.2"/>
-      <view
-            allowMultiple="false"
-            category="sernet.gs.ui.rcp.main.views"
-            class="sernet.gs.ui.rcp.main.bsi.views.DSModelView"
-            icon="icons/shield.png"
-            id="sernet.gs.ui.rcp.main.views.dsmodelview"
-            name="%view.name.3"/>
       <view
             allowMultiple="false"
             category="sernet.gs.ui.rcp.main.views"

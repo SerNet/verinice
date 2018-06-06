@@ -20,6 +20,10 @@ package sernet.verinice.model.ds;
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.common.CnATreeElement;
 
+/**
+ * @deprecated
+ */
+@Deprecated
 public class Datenverarbeitung extends CnATreeElement 
 	implements IDatenschutzElement {
 	// ID must correspond to entity definition in XML description
