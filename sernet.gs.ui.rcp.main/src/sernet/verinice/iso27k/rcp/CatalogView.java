@@ -41,8 +41,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -72,7 +72,6 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.iso27k.rcp.action.ControlDragListener;
 import sernet.verinice.model.bp.elements.BpModel;
@@ -131,8 +130,6 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
     private IModelLoadListener modelLoadListener;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
      * widgets .Composite)
      */
@@ -154,8 +151,6 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
@@ -209,26 +204,19 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
                 deleteCatalogAction.setEnabled(deleteCatalogAction.checkRights());
             }
         });
-        comboModel = new ComboModel<Attachment>(new IComboModelLabelProvider<Attachment>() {
-            @Override
-            public String getLabel(Attachment attachment) {
-                StringBuilder sb = new StringBuilder();
-                sb.append(attachment.getFileName());
-                DateFormat df = (DateFormat) DATE_TIME_FORMAT_SHORT.clone();
-                sb.append(" (").append(df.format(attachment.getDate())).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
-                return sb.toString();
-            }
+        comboModel = new ComboModel<>(attachment -> {
+            StringBuilder sb = new StringBuilder();
+            sb.append(attachment.getFileName());
+            DateFormat df = (DateFormat) DATE_TIME_FORMAT_SHORT.clone();
+            sb.append(" (").append(df.format(attachment.getDate())).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
+            return sb.toString();
         });
 
         labelFilter = new Label(compForm, SWT.NONE);
         labelFilter.setText(Messages.CatalogView_7);
         filter = new Text(compForm, SWT.BORDER);
         filter.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        filter.addKeyListener(new KeyListener() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-            }
-
+        filter.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 textFilter.setPattern(filter.getText());
@@ -243,7 +231,6 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         getSite().setSelectionProvider(viewer);
 
         makeActions();
-        hookActions();
         hookDNDListeners();
         fillLocalToolBar();
     }
@@ -264,12 +251,8 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
                 for (Attachment attachment : attachmentList) {
                     comboModel.add(attachment);
                 }
-                Display.getDefault().syncExec(new Runnable() {
-                    @Override
-                    public void run() {
-                        comboCatalog.setItems(comboModel.getLabelArray());
-                    }
-                });
+                Display.getDefault()
+                        .syncExec(() -> comboCatalog.setItems(comboModel.getLabelArray()));
             } else if (modelLoadListener == null) {
                 // model is not loaded yet: add a listener to load data when
                 // it's laoded
@@ -353,8 +336,6 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
     private void makeActions() {
         addCatalogAction = new RightsEnabledAction(ActionRightIDs.ADDCATALOG) {
             /*
-             * (non-Javadoc)
-             * 
              * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
              */
             @Override
@@ -367,14 +348,10 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
                 ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
         if (Activator.getDefault().isStandalone()
                 && !Activator.getDefault().getInternalServer().isRunning()) {
-            IInternalServerStartListener listener = new IInternalServerStartListener() {
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if (e.isStarted()) {
-                        addCatalogAction.setEnabled(addCatalogAction.checkRights());
-                    }
+            IInternalServerStartListener listener = e -> {
+                if (e.isStarted()) {
+                    addCatalogAction.setEnabled(addCatalogAction.checkRights());
                 }
-
             };
             Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
         } else {
@@ -382,8 +359,6 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         }
         deleteCatalogAction = new RightsEnabledAction(ActionRightIDs.DELETECATALOG) {
             /*
-             * (non-Javadoc)
-             * 
              * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
              */
             @Override
@@ -426,12 +401,6 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         dragListener = new ControlDragListener(viewer);
     }
 
-    /**
-     * 
-     */
-    private void hookActions() {
-    }
-
     private void hookDNDListeners() {
         Transfer[] types = new Transfer[] { ItemTransfer.getInstance() };
         int operations = DND.DROP_COPY | DND.DROP_MOVE;
@@ -465,6 +434,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
 
         @Override
         public void dispose() {
+            // no-op
         }
 
         @Override
@@ -484,11 +454,12 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
 
         @Override
         public boolean hasChildren(Object parent) {
-            return ((IItem) parent).getItems().size() > 0;
+            return !((IItem) parent).getItems().isEmpty();
         }
 
         @Override
         public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+            // no-op
         }
     }
 
@@ -499,7 +470,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
             IItem item = (IItem) obj;
             String image = ImageCache.UNKNOWN;
 
-            if (item.getDescription() != null && item.getItems().size() > 0) {
+            if (item.getDescription() != null && !item.getItems().isEmpty()) {
                 image = ImageCache.BAUSTEIN;
             } else if (item.getDescription() != null && item.getTypeId() == IItem.CONTROL) {
                 image = ImageCache.STUFE_NONE;
@@ -649,8 +620,6 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
      */
     @Override
