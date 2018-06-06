@@ -20,12 +20,12 @@
 package sernet.verinice.rcp.account;
 
 import org.apache.log4j.Logger;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.rcp.SelectionAdapter;
 
 /**
  * Wizard page of wizard {@link AccountWizard}.
