@@ -38,53 +38,48 @@ import sernet.verinice.model.common.Permission;
  */
 public abstract class OverwritePermissions implements IPostProcessor, Serializable {
 
-    private transient Logger log = Logger.getLogger(OverwritePermissions.class);
+    private static final Logger log = Logger.getLogger(OverwritePermissions.class);
 
     private String uuidPermissionParent;
-    
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(OverwritePermissions.class);
-        }
-        return log;
-    }
-    
+
     Set<Permission> permissions;
-    
+
     public OverwritePermissions(String uuid) {
         super();
         this.uuidPermissionParent = uuid;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IPostProcessor#process(java.util.List, java.util.Map)
+    /*
+     * @see sernet.verinice.interfaces.IPostProcessor#process(java.util.List,
+     * java.util.Map)
      */
     @Override
-    public void process(List<String> copyUuidList, Map<String, String> sourceDestMap) {
+    public void process(ICommandService commandService, List<String> copyUuidList,
+            Map<String, String> sourceDestMap) {
         try {
-            loadPermissions();
+            loadPermissions(commandService);
             for (String uuidSource : copyUuidList) {
                 String uuidDest = sourceDestMap.get(uuidSource);
-                overwritePermissions(uuidDest);
+                overwritePermissions(commandService, uuidDest);
             }
         } catch (CommandException e) {
-            getLog().error("Error while overwriting permissions", e);
+            log.error("Error while overwriting permissions", e);
         }
     }
 
-    private void loadPermissions() throws CommandException {
-        RetrieveInfo ri  = new RetrieveInfo();
+    private void loadPermissions(ICommandService commandService) throws CommandException {
+        RetrieveInfo ri = new RetrieveInfo();
         ri.setPermissions(true);
-        LoadElementByUuid<CnATreeElement> loadCommand = new LoadElementByUuid<CnATreeElement>(uuidPermissionParent, ri);
-        loadCommand = getCommandService().executeCommand(loadCommand);
+        LoadElementByUuid<CnATreeElement> loadCommand = new LoadElementByUuid<CnATreeElement>(
+                uuidPermissionParent, ri);
+        loadCommand = commandService.executeCommand(loadCommand);
         permissions = loadCommand.getElement().getPermissions();
     }
 
-    private void overwritePermissions(String uuid) throws CommandException {      
+    private void overwritePermissions(ICommandService commandService, String uuid)
+            throws CommandException {
         UpdatePermissions updatePermissions = new UpdatePermissions(uuid, permissions, true, true);
-        updatePermissions = getCommandService().executeCommand(updatePermissions);       
+        updatePermissions = commandService.executeCommand(updatePermissions);
     }
-
-    protected abstract ICommandService getCommandService();
 
 }

@@ -99,23 +99,10 @@ public class CopyCommand extends GenericCommand {
      */
     public CopyCommand(final String uuidGroup, final List<String> uuidList,
             final List<IPostProcessor> postProcessorList) {
-        this(uuidGroup, uuidList, postProcessorList, false);
-    }
-
-    /**
-     * @param uuid
-     * @param uuidList2
-     * @param postProcessorList2
-     */
-    public CopyCommand(final String uuidGroup, final List<String> uuidList,
-            final List<IPostProcessor> postProcessorList, final boolean copyLinks) {
         super();
         this.uuidGroup = uuidGroup;
         this.uuidList = uuidList;
         this.postProcessorList = postProcessorList;
-        if (copyLinks) {
-            addPostProcessor(new CopyLinks());
-        }
     }
 
     /**
@@ -147,7 +134,7 @@ public class CopyCommand extends GenericCommand {
                     copyElementUuidList.add(element.getUuid());
                 }
                 for (final IPostProcessor postProcessor : getPostProcessorList()) {
-                    postProcessor.process(copyElementUuidList, sourceDestMap);
+                    postProcessor.process(getCommandService(), copyElementUuidList, sourceDestMap);
                 }
             }
         } catch (final Exception e) {
@@ -496,31 +483,6 @@ public class CopyCommand extends GenericCommand {
 
     public List<String> getNewElements() {
         return newElements;
-    }
-
-    /**
-     * @author Daniel Murygin <dm[at]sernet[dot]de>
-     * 
-     */
-    @SuppressWarnings("serial")
-    public class CopyLinks implements IPostProcessor, Serializable {
-
-        /*
-         * @see
-         * sernet.verinice.iso27k.service.PasteService.IPostProcessor#process(
-         * java.util.Map)
-         */
-        @Override
-        public void process(final List<String> copyUuidList,
-                final Map<String, String> sourceDestMap) {
-            try {
-                final CopyLinksCommand copyLinksCommand = new CopyLinksCommand(sourceDestMap);
-                getCommandService().executeCommand(copyLinksCommand);
-            } catch (final CommandException e) {
-                logger.error("Error while copy links on server.", e);
-            }
-        }
-
     }
 
     public boolean isCopyChildren() {
