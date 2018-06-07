@@ -137,6 +137,8 @@ public class CutCommand extends ChangeLoggingCommand {
             }
         }
         if (isPersonMoved) {
+            // TODO discardUserData() will remove all user data from memory, but
+            // we only need to remove the user-specific data
             getCommandService().discardUserData();
         }
         updateScopeId(elementList);
