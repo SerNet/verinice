@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="target-platform-e4" sequenceNumber="91">
+<?pde version="3.8"?><target name="target-platform-e4" sequenceNumber="99">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.sdk.feature.group" version="3.13.4.v20180322-2228"/>
@@ -7,6 +7,11 @@
 <unit id="org.eclipse.platform.sdk" version="4.7.3.M20180330-0640"/>
 <unit id="org.eclipse.releng.tools.feature.group" version="3.9.100.v20170516-0717"/>
 <unit id="org.eclipse.sdk.ide" version="4.7.3.M20180330-0640"/>
+<repository location="http://download.eclipse.org/eclipse/updates/4.7"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.e4.core.tools.feature.source.feature.group" version="4.7.0.v20170515-1617"/>
+<unit id="org.eclipse.swt.tools.feature.feature.group" version="3.106.0.v20170503-0851"/>
 <repository location="http://download.eclipse.org/eclipse/updates/4.7"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -39,6 +44,10 @@
 <unit id="w3c.feature.group" version="0.6.0"/>
 <unit id="w3c.source.feature.group" version="0.6.0"/>
 <repository location="http://bob.sernet.private/updatesites/verinice-deps/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.birt.rcp.feature.group" version="4.7.0.v201706222054"/>
+<repository location="http://bob.sernet.private/updatesites/birt-rcp"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.birt.feature.group" version="4.7.0.v201706222054"/>
@@ -92,6 +101,12 @@
 <unit id="org.slf4j.api" version="1.7.10.v20170428-1633"/>
 <unit id="org.slf4j.api.source" version="1.7.10.v20170428-1633"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20180330011457/repository"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.birt.chart.cshelp.feature.group" version="4.7.0.v201706222054"/>
+<unit id="org.eclipse.birt.cshelp.feature.group" version="4.7.0.v201706222054"/>
+<unit id="org.eclipse.help.feature.group" version="2.2.104.v20180330-0640"/>
+<repository location="http://download.eclipse.org/releases/oxygen"/>
 </location>
 </locations>
 </target>

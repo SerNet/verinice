@@ -355,7 +355,7 @@
          id="org.apache.batik.css"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.7.0.v201011041433"
          unpack="false"/>
 
    <plugin
@@ -404,18 +404,25 @@
          id="org.apache.batik.util"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.7.0.v201011041433"
          unpack="false"/>
 
    <plugin
          id="org.apache.batik.util.gui"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.7.0.v200903091627"
          unpack="false"/>
 
    <plugin
          id="org.apache.batik.xml"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.javax.transaction"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -10,4 +11,39 @@
 
 	<artifactId>target-platform</artifactId>
 	<packaging>eclipse-target-definition</packaging>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+
+				<configuration>
+					<filters>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.apache.batik.css</id>
+							<restrictTo>
+								<version>1.7.0.v201011041433</version>
+							</restrictTo>
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.apache.batik.util</id>
+							<restrictTo>
+								<version>1.7.0.v201011041433</version>
+							</restrictTo>
+						</filter>
+						<filter>
+							<type>eclipse-plugin</type>
+							<id>org.apache.batik.util.gui</id>
+							<restrictTo>
+								<version>1.7.0.v200903091627</version>
+							</restrictTo>
+						</filter>
+					</filters>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
