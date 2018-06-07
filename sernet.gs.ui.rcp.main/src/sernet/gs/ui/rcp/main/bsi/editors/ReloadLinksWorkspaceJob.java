@@ -64,7 +64,11 @@ final class ReloadLinksWorkspaceJob extends WorkspaceJob {
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             final CnATreeElement linkElmt = command.getElmt();
 
-            Display.getDefault().asyncExec(() -> viewer.setInput(linkElmt));
+            Display.getDefault().asyncExec(() -> {
+                if (!viewer.getControl().isDisposed()) {
+                    viewer.setInput(linkElmt);
+                }
+            });
         } catch (Exception e) {
 
             Display.getDefault()

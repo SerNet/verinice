@@ -504,7 +504,12 @@ public class LinkMaker extends Composite implements IRelationTable {
         if (!CnAElementHome.getInstance().isOpen() || inputElmt == null) {
             return;
         }
-        Display.getDefault().asyncExec(() -> viewer.setInput(new PlaceHolder(Messages.LinkMaker_9)));
+
+        Display.getDefault().asyncExec(() -> {
+            if (!viewer.getControl().isDisposed()) {
+                viewer.setInput(new PlaceHolder(Messages.LinkMaker_9));
+            }
+        });
 
         WorkspaceJob job = new ReloadLinksWorkspaceJob(inputElmt, viewer, Messages.LinkMaker_10);
 
