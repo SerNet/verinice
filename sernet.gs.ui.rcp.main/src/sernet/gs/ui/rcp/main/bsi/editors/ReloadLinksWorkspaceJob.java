@@ -64,20 +64,11 @@ final class ReloadLinksWorkspaceJob extends WorkspaceJob {
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             final CnATreeElement linkElmt = command.getElmt();
 
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    viewer.setInput(linkElmt);
-                }
-            });
+            Display.getDefault().asyncExec(() -> viewer.setInput(linkElmt));
         } catch (Exception e) {
 
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    viewer.setInput(new PlaceHolder(Messages.LinkMaker_12));
-                }
-            });
+            Display.getDefault()
+                    .asyncExec(() -> viewer.setInput(new PlaceHolder(Messages.LinkMaker_12)));
 
             LOGGER.error("Error while searching relations", e);
             ExceptionUtil.log(e, Messages.LinkMaker_13);

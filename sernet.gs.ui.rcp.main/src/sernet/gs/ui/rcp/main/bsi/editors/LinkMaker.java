@@ -35,10 +35,8 @@ import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
@@ -268,7 +266,7 @@ public class LinkMaker extends Composite implements IRelationTable {
 
         relationViewLabelProvider = new RelationViewLabelProvider(this);
         viewer.setLabelProvider(relationViewLabelProvider);
-        viewer.setSorter(new RelationByNameSorter(this, IRelationTable.COLUMN_TITLE,
+        viewer.setComparator(new RelationByNameSorter(this, IRelationTable.COLUMN_TITLE,
                 IRelationTable.COLUMN_TYPE_IMG));
 
         part.getSite().setSelectionProvider(viewer);
@@ -376,20 +374,16 @@ public class LinkMaker extends Composite implements IRelationTable {
     }
 
     private void addRelationComboListener() {
-        relationComboViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+        relationComboViewer.addSelectionChangedListener(event -> {
 
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-
-                StructuredSelection selection = (StructuredSelection) relationComboViewer
-                        .getSelection();
-                DirectedHuiRelation selectedRelation = (DirectedHuiRelation) selection
-                        .getFirstElement();
-                if (selectedRelation != null) {
-                    addLinkButton.setEnabled(true);
-                } else {
-                    addLinkButton.setEnabled(false);
-                }
+            StructuredSelection selection = (StructuredSelection) relationComboViewer
+                    .getSelection();
+            DirectedHuiRelation selectedRelation = (DirectedHuiRelation) selection
+                    .getFirstElement();
+            if (selectedRelation != null) {
+                addLinkButton.setEnabled(true);
+            } else {
+                addLinkButton.setEnabled(false);
             }
         });
     }
@@ -510,12 +504,7 @@ public class LinkMaker extends Composite implements IRelationTable {
         if (!CnAElementHome.getInstance().isOpen() || inputElmt == null) {
             return;
         }
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                viewer.setInput(new PlaceHolder(Messages.LinkMaker_9));
-            }
-        });
+        Display.getDefault().asyncExec(() -> viewer.setInput(new PlaceHolder(Messages.LinkMaker_9)));
 
         WorkspaceJob job = new ReloadLinksWorkspaceJob(inputElmt, viewer, Messages.LinkMaker_10);
 
