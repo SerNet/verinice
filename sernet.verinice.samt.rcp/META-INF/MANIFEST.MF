@@ -15,7 +15,7 @@ Require-Bundle: sernet.gs.service,
  org.eclipse.ui.cheatsheets,
  sernet.gs.ui.rcp.main
 Bundle-ActivationPolicy: lazy
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Vendor: %Bundle-Vendor
 Import-Package: org.apache.commons.io,
  org.eclipse.core.runtime,
