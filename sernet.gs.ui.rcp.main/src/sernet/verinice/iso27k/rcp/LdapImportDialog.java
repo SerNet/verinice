@@ -59,6 +59,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.UsernameExistsException;
 import sernet.verinice.interfaces.ldap.PersonParameter;
 import sernet.verinice.interfaces.ldap.SizeLimitExceededException;
+import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Domain;
@@ -83,7 +84,7 @@ public class LdapImportDialog extends TitleAreaDialog {
 
     private Set<PersonInfo> personSet;
 
-    private Button[] radioButtonTargetPerspective = new Button[2];
+    private Button[] radioButtonTargetPerspective = new Button[3];
 
     private HashMap<PersonParameter, List<PersonInfo>> ldapQueryCache;
 
@@ -176,7 +177,7 @@ public class LdapImportDialog extends TitleAreaDialog {
         company.setLayoutData(gridData);
 
         Composite targetComposite = new Composite(containerRoles, SWT.NONE);
-        GridLayout targetLayout = new GridLayout(3, false);
+        GridLayout targetLayout = new GridLayout(radioButtonTargetPerspective.length + 1, false);
         targetLayout.marginWidth = defaultMarginHeight;
         targetLayout.marginHeight = defaultMarginHeight;
         targetComposite.setLayout(targetLayout);
@@ -194,6 +195,8 @@ public class LdapImportDialog extends TitleAreaDialog {
                 Messages.LdapImportDialog_48, Boolean.FALSE);
         radioButtonTargetPerspective[1] = generateButton(targetComposite, SWT.RADIO,
                 Messages.LdapImportDialog_49, Boolean.TRUE);
+        radioButtonTargetPerspective[2] = generateButton(targetComposite, SWT.RADIO,
+                Messages.Modernized_IT_Baseline_Protection, Boolean.FALSE);
 
         Button buttonAdd = new Button(containerRoles, SWT.PUSH | SWT.BORDER);
         buttonAdd.setText(Messages.LdapImportDialog_35);
@@ -284,9 +287,15 @@ public class LdapImportDialog extends TitleAreaDialog {
 
     private void loadLdapUser() {
         try {
-            LoadLdapUser loadLdapUser = new LoadLdapUser(getParameter(),
-                    radioButtonTargetPerspective[0].getSelection() ? Domain.BASE_PROTECTION_OLD
-                            : Domain.ISM);
+            Domain domain;
+            if (radioButtonTargetPerspective[0].getSelection()) {
+                domain = Domain.BASE_PROTECTION_OLD;
+            } else if (radioButtonTargetPerspective[1].getSelection()) {
+                domain = Domain.ISM;
+            } else {
+                domain = Domain.BASE_PROTECTION;
+            }
+            LoadLdapUser loadLdapUser = new LoadLdapUser(getParameter(), domain);
             loadLdapUser = ServiceFactory.lookupCommandService().executeCommand(loadLdapUser);
             personSet.clear();
             List<PersonInfo> personList = loadLdapUser.getPersonList();
@@ -362,6 +371,8 @@ public class LdapImportDialog extends TitleAreaDialog {
             return ((Person) person).getEntity().getPropertyValue(Person.P_NAME);
         } else if (person instanceof PersonIso) {
             return ((PersonIso) person).getSurname();
+        } else if (person instanceof BpPerson) {
+            return person.getEntity().getPropertyValue(BpPerson.PROP_LAST_NAME);
         }
         return "";
     }
@@ -371,6 +382,8 @@ public class LdapImportDialog extends TitleAreaDialog {
             return ((Person) person).getEntity().getPropertyValue(Person.P_VORNAME);
         } else if (person instanceof PersonIso) {
             return ((PersonIso) person).getName();
+        } else if (person instanceof BpPerson) {
+            return person.getEntity().getPropertyValue(BpPerson.PROP_FIRST_NAME);
         }
         return "";
     }

@@ -21,6 +21,8 @@ import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.IRightsService;
+import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.bsi.Person;
@@ -54,7 +56,7 @@ public class SaveLdapUser extends ChangeLoggingCommand
 
     private CnATreeElement importRootObject;
 
-    private Map<Domain, CnATreeElement> containerMap = new HashMap<>(2);
+    private Map<Domain, CnATreeElement> containerMap = new HashMap<>(3);
 
     public SaveLdapUser() {
         super();
@@ -182,6 +184,8 @@ public class SaveLdapUser extends ChangeLoggingCommand
             return createBsiContainer();
         case ISM:
             return createIsoContainer();
+        case BASE_PROTECTION:
+            return createITBPContainer();
         default:
             throw new IllegalArgumentException("Unsupported domain " + domain);
         }
@@ -212,6 +216,19 @@ public class SaveLdapUser extends ChangeLoggingCommand
                     "Fehler beim Anlegen des Behälters für importierte Objekte.");
         }
 
+    }
+
+    private CnATreeElement createITBPContainer() {
+        BpModel model = loadModel(BpModel.class);
+        try {
+            ImportBpGroup holder = new ImportBpGroup(model);
+            addDefaultPermissions(holder);
+            getDaoFactory().getDAO(ImportBpGroup.class).saveOrUpdate(holder);
+            return holder;
+        } catch (Exception e1) {
+            throw new RuntimeCommandException(
+                    "Fehler beim Anlegen des Behälters für importierte Objekte.");
+        }
     }
 
     private <T extends CnATreeElement> T loadModel(Class<T> modelClass) {

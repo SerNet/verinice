@@ -38,6 +38,8 @@ public class BpPerson extends CnATreeElement implements IBpElement, ITaggableEle
     public static final String PROP_LAST_NAME = "bp_person_last_name"; //$NON-NLS-1$
     public static final String PROP_FIRST_NAME = "bp_person_first_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_person_tag"; //$NON-NLS-1$
+    public static final String PROP_EMAIL = "bp_person_email"; //$NON-NLS-1$
+    public static final String PROP_PHONE = "bp_person_phone"; //$NON-NLS-1$
 
     protected BpPerson() {
     }

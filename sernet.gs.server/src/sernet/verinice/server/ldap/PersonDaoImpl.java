@@ -10,6 +10,7 @@ import org.springframework.ldap.core.LdapTemplate;
 
 import sernet.verinice.interfaces.ldap.IPersonDao;
 import sernet.verinice.interfaces.ldap.PersonParameter;
+import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Domain;
@@ -122,6 +123,9 @@ public class PersonDaoImpl implements IPersonDao {
                 break;
             case BASE_PROTECTION_OLD:
                 person = new Person(null);
+                break;
+            case BASE_PROTECTION:
+                person = new BpPerson(null);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown domain " + importDomain);
@@ -251,6 +255,8 @@ public class PersonDaoImpl implements IPersonDao {
                 setPersonProperty(person, Person.P_EMAIL, data);
             } else if (person instanceof PersonIso) {
                 setPersonProperty(person, PersonIso.PROP_EMAIL, data);
+            } else if (person instanceof BpPerson) {
+                setPersonProperty(person, BpPerson.PROP_EMAIL, data);
             } else {
                 throwUnsupportedType(person);
             }
@@ -262,6 +268,8 @@ public class PersonDaoImpl implements IPersonDao {
                 setPersonProperty(person, Person.P_NAME, data);
             } else if (person instanceof PersonIso) {
                 setPersonProperty(person, PersonIso.PROP_SURNAME, data);
+            } else if (person instanceof BpPerson) {
+                setPersonProperty(person, BpPerson.PROP_LAST_NAME, data);
             } else {
                 throwUnsupportedType(person);
             }
@@ -272,6 +280,8 @@ public class PersonDaoImpl implements IPersonDao {
                 setPersonProperty(person, Person.P_VORNAME, data);
             } else if (person instanceof PersonIso) {
                 setPersonProperty(person, PersonIso.PROP_NAME, data);
+            } else if (person instanceof BpPerson) {
+                setPersonProperty(person, BpPerson.PROP_FIRST_NAME, data);
             } else {
                 throwUnsupportedType(person);
             }
@@ -282,6 +292,8 @@ public class PersonDaoImpl implements IPersonDao {
                 setPersonProperty(person, Person.P_PHONE, data);
             } else if (person instanceof PersonIso) {
                 setPersonProperty(person, PersonIso.PROP_TELEFON, data);
+            } else if (person instanceof BpPerson) {
+                setPersonProperty(person, BpPerson.PROP_PHONE, data);
             } else {
                 throwUnsupportedType(person);
             }
