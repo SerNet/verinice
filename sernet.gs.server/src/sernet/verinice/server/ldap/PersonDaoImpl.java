@@ -101,7 +101,7 @@ public class PersonDaoImpl implements IPersonDao {
         this.ldapTemplate = ldapTemplate;
     }
 
-    private final class LdapPersonMapper implements AttributesMapper {
+    private static final class LdapPersonMapper implements AttributesMapper {
         private boolean useITGS = false;
 
         public LdapPersonMapper() {
@@ -241,41 +241,55 @@ public class PersonDaoImpl implements IPersonDao {
 
         private void setPersonEmail(CnATreeElement person, String data) {
             if (person instanceof Person) {
-                ((Person) person).getEntity().setSimpleValue(
-                        ((Person) person).getEntityType().getPropertyType(Person.P_EMAIL), data);
-
+                setPersonProperty(person, Person.P_EMAIL, data);
             } else if (person instanceof PersonIso) {
-                ((PersonIso) person).setEmail(data);
+                setPersonProperty(person, PersonIso.PROP_EMAIL, data);
+            } else {
+                throwUnsupportedType(person);
             }
 
         }
 
         private void setPersonSurname(CnATreeElement person, String data) {
             if (person instanceof Person) {
-                ((Person) person).getEntity().setSimpleValue(
-                        ((Person) person).getEntityType().getPropertyType(Person.P_NAME), data);
+                setPersonProperty(person, Person.P_NAME, data);
             } else if (person instanceof PersonIso) {
-                ((PersonIso) person).setSurname(data);
+                setPersonProperty(person, PersonIso.PROP_SURNAME, data);
+            } else {
+                throwUnsupportedType(person);
             }
         }
 
         private void setPersonName(CnATreeElement person, String data) {
             if (person instanceof Person) {
-                ((Person) person).getEntity().setSimpleValue(
-                        ((Person) person).getEntityType().getPropertyType(Person.P_VORNAME), data);
+                setPersonProperty(person, Person.P_VORNAME, data);
             } else if (person instanceof PersonIso) {
-                ((PersonIso) person).setName(data);
+                setPersonProperty(person, PersonIso.PROP_NAME, data);
+            } else {
+                throwUnsupportedType(person);
             }
         }
 
         private void setPersonPhone(CnATreeElement person, String data) {
             if (person instanceof Person) {
-                ((Person) person).getEntity().setSimpleValue(
-                        ((Person) person).getEntityType().getPropertyType(Person.P_PHONE), data);
+                setPersonProperty(person, Person.P_PHONE, data);
             } else if (person instanceof PersonIso) {
-                ((PersonIso) person).setPhone(data);
+                setPersonProperty(person, PersonIso.PROP_TELEFON, data);
+            } else {
+                throwUnsupportedType(person);
             }
 
+        }
+
+        private static void setPersonProperty(CnATreeElement person, String propertyName,
+                String value) {
+            person.getEntity().setSimpleValue(person.getEntityType().getPropertyType(propertyName),
+                    value);
+        }
+
+        private static void throwUnsupportedType(CnATreeElement person) {
+            throw new UnsupportedOperationException(
+                    "Cannot handle person with unsupported type " + person.getClass());
         }
 
     }

@@ -22,16 +22,17 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Domain;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.commands.CreateConfiguration;
 import sernet.verinice.service.commands.SaveConfiguration;
 import sernet.verinice.service.commands.UsernameExistsRuntimeException;
@@ -53,7 +54,7 @@ public class SaveLdapUser extends ChangeLoggingCommand
 
     private CnATreeElement importRootObject;
 
-    private Map<Class<? extends CnATreeElement>, CnATreeElement> containerMap = new HashMap<>(2);
+    private Map<Domain, CnATreeElement> containerMap = new HashMap<>(2);
 
     public SaveLdapUser() {
         super();
@@ -119,7 +120,8 @@ public class SaveLdapUser extends ChangeLoggingCommand
 
     private CnATreeElement createPerson(PersonInfo personInfo) {
         CnATreeElement person = personInfo.getPerson();
-        CnATreeElement parent = loadContainer(person.getClass());
+        Domain domain = CnATypeMapper.getDomainFromTypeId(person.getTypeId());
+        CnATreeElement parent = loadContainer(person.getClass(), domain);
         person.setParentAndScope(parent);
         if (authService.isPermissionHandlingNeeded()) {
             person.setPermissions(Permission.clonePermissionSet(person, parent.getPermissions()));
@@ -150,10 +152,10 @@ public class SaveLdapUser extends ChangeLoggingCommand
      * 
      * @return
      */
-    private CnATreeElement loadContainer(Class<? extends CnATreeElement> clazz) {
+    private CnATreeElement loadContainer(Class<? extends CnATreeElement> clazz, Domain domain) {
         // Create the importRootObject if it does not exist yet
         // and set the 'importRootObject' variable.
-        CnATreeElement container = containerMap.get(clazz);
+        CnATreeElement container = containerMap.get(domain);
         if (container == null) {
             LoadImportObjectsHolder cmdLoadContainer = new LoadImportObjectsHolder(clazz);
             try {
@@ -165,73 +167,72 @@ public class SaveLdapUser extends ChangeLoggingCommand
             }
             container = cmdLoadContainer.getHolder();
             if (container == null) {
-                container = createContainer(clazz);
+                container = createContainer(domain);
             }
             // load the parent
             container.getParent().getTitle();
-            containerMap.put(clazz, container);
+            containerMap.put(domain, container);
         }
         return container;
     }
 
-    private CnATreeElement createContainer(Class<? extends CnATreeElement> clazz) {
-        if (LoadImportObjectsHolder.isImplementation(clazz, IBSIStrukturElement.class)) {
+    private CnATreeElement createContainer(Domain domain) {
+        switch (domain) {
+        case BASE_PROTECTION_OLD:
             return createBsiContainer();
-        } else {
+        case ISM:
             return createIsoContainer();
+        default:
+            throw new IllegalArgumentException("Unsupported domain " + domain);
         }
     }
 
     private CnATreeElement createBsiContainer() {
-        LoadModel<BSIModel> cmdLoadModel = new LoadModel<>(BSIModel.class);
+        BSIModel model = loadModel(BSIModel.class);
         try {
-            cmdLoadModel = getCommandService().executeCommand(cmdLoadModel);
-        } catch (CommandException e) {
-            log.error("Error ehile creating model", e);
-            throw new RuntimeCommandException("Error ehile creating model", e);
-        }
-        BSIModel model = cmdLoadModel.getModel();
-        ImportBsiGroup holder = null;
-        try {
-            holder = new ImportBsiGroup(model);
-            addPermissions(holder);
-            addPermissions(holder, IRightsService.USERDEFAULTGROUPNAME);
+            ImportBsiGroup holder = new ImportBsiGroup(model);
+            addDefaultPermissions(holder);
             getDaoFactory().getDAO(ImportBsiGroup.class).saveOrUpdate(holder);
+            return holder;
         } catch (Exception e1) {
             throw new RuntimeCommandException(
                     "Fehler beim Anlegen des Behaelters für importierte Objekte.");
         }
-        return holder;
     }
 
     private CnATreeElement createIsoContainer() {
-        LoadModel<ISO27KModel> cmdLoadModel = new LoadModel<>(ISO27KModel.class);
+        ISO27KModel model = loadModel(ISO27KModel.class);
         try {
-            cmdLoadModel = getCommandService().executeCommand(cmdLoadModel);
-        } catch (CommandException e) {
-            log.error("Error while creating model", e);
-            throw new RuntimeCommandException("Error while creating model", e);
-        }
-        ISO27KModel model = cmdLoadModel.getModel();
-        ImportIsoGroup holder = null;
-        try {
-            holder = new ImportIsoGroup(model);
-            addPermissions(holder);
-            addPermissions(holder, IRightsService.USERDEFAULTGROUPNAME);
+            ImportIsoGroup holder = new ImportIsoGroup(model);
+            addDefaultPermissions(holder);
             getDaoFactory().getDAO(ImportIsoGroup.class).saveOrUpdate(holder);
+            return holder;
         } catch (Exception e1) {
             throw new RuntimeCommandException(
                     "Fehler beim Anlegen des Behälters für importierte Objekte.");
         }
-        return holder;
+
     }
 
-    private void addPermissions(/* not final */ CnATreeElement element) {
+    private <T extends CnATreeElement> T loadModel(Class<T> modelClass) {
+        LoadModel<T> cmdLoadModel = new LoadModel<>(modelClass);
+        try {
+            cmdLoadModel = getCommandService().executeCommand(cmdLoadModel);
+        } catch (CommandException e) {
+            log.error("Error while loading model", e);
+            throw new RuntimeCommandException("Error while loading model", e);
+        }
+        return cmdLoadModel.getModel();
+    }
+
+    private void addDefaultPermissions(/* not final */ CnATreeElement element) {
         String userName = authService.getUsername();
         addPermissions(element, userName);
+        addPermissions(element, IRightsService.USERDEFAULTGROUPNAME);
+
     }
 
-    private void addPermissions(CnATreeElement element, String userName) {
+    private static void addPermissions(CnATreeElement element, String userName) {
         Set<Permission> permission = element.getPermissions();
         if (permission == null) {
             permission = new HashSet<>();

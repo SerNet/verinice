@@ -355,7 +355,7 @@ public class LdapImportDialog extends TitleAreaDialog {
         viewer.getControl().setLayoutData(gridData);
     }
 
-    private String getPersonSurname(CnATreeElement person) {
+    private static String getPersonSurname(CnATreeElement person) {
         if (person instanceof Person) {
             return ((Person) person).getEntity().getPropertyValue(Person.P_NAME);
         } else if (person instanceof PersonIso) {
@@ -364,7 +364,7 @@ public class LdapImportDialog extends TitleAreaDialog {
         return "";
     }
 
-    private String getPersonName(CnATreeElement person) {
+    private static String getPersonName(CnATreeElement person) {
         if (person instanceof Person) {
             return ((Person) person).getEntity().getPropertyValue(Person.P_VORNAME);
         } else if (person instanceof PersonIso) {
