@@ -6,7 +6,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="src" path="src/"/>
 	<classpathentry exported="true" kind="lib" path="lib/mssql/jackcess-1.1.18.jar" sourcepath="sernet.gs.hibernate.fragmentsrc.zip"/>
 	<classpathentry exported="true" kind="lib" path="lib/mssql/jtds-1.2.2.jar" sourcepath="sernet.gs.hibernate.fragmentsrc.zip"/>
 	<classpathentry kind="output" path="bin"/>
