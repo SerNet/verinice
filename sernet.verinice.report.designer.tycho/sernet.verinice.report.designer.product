@@ -7,9 +7,9 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-consoleLog -data .
+      <programArgs>-data .
       </programArgs>
-      <vmArgs>-Xms64m -Xmx2048m -Djavax.activation.debug=true -Dosgi.parentClassloader=ext -Djavax.xml.soap.SOAPFactory=org.apache.axis.soap.SOAPFactoryImpl -Djavax.xml.soap.MessageFactory=org.apache.axis.soap.MessageFactoryImpl -Djavax.xml.soap.SOAPConnectionFactory=org.apache.axis.soap.SOAPConnectionFactoryImpl
+      <vmArgs>-Xms64m -Xmx2048m
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
