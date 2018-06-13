@@ -4,7 +4,7 @@ Bundle-Name: JDBC Driver Class Providing Fragment
 Bundle-SymbolicName: sernet.gs.db.fragment
 Bundle-Version: 1.1.0
 Fragment-Host: com.springsource.com.mchange.v2.c3p0
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ClassPath: .,
  lib/derby/derby.jar,
  lib/derby/derbyclient.jar,

@@ -5,4 +5,4 @@ Bundle-SymbolicName: sernet.gs.pax_web.fragment
 Bundle-Version: 1.0.0
 Bundle-Vendor: SerNet GmbH
 Fragment-Host: org.ops4j.pax.web.pax-web-bundle;bundle-version="0.6.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
