@@ -166,6 +166,9 @@ public class LinkTableElementComboViewer extends LinkTableComboViewer {
     @SuppressWarnings("deprecation")
     @Override
     protected String getLabelText(Object element) {
+        if (isDefault) {
+            return element.toString();
+        }
         String typeId = element.toString();
         IObjectModelService contentService = ltrColumn.getContentService();
         String typeLabel = contentService.getLabel(typeId);
