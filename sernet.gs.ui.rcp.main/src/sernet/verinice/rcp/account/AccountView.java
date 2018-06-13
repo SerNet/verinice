@@ -434,8 +434,7 @@ public class AccountView extends RightsEnabledView {
      * @return
      * @throws LicenseManagementException
      */
-    private int creatLMColumns(int columnIndex)
-            throws LicenseManagementException {
+    private int creatLMColumns(int columnIndex) throws LicenseManagementException {
         List<LicenseMessageInfos> licenseInfos = new ArrayList<>();
         licenseInfos.addAll(getLMService().getAllLicenseMessageInfos());
 
