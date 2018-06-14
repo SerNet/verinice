@@ -487,16 +487,16 @@ public class AccountView extends RightsEnabledView {
     }
 
     private void createTableColumn(String title, int width, int index, String tooltip) {
-        TableColumn scopeColumn = new TableColumn(viewer.getTable(), SWT.LEFT);
-        scopeColumn.setText(title);
-        scopeColumn.setWidth(width);
+        TableColumn column = new TableColumn(viewer.getTable(), SWT.LEFT);
+        column.setText(title);
+        column.setWidth(width);
         if (StringUtils.isEmpty(tooltip)) {
-            scopeColumn.setToolTipText(title);
+            column.setToolTipText(title);
         } else {
-            scopeColumn.setToolTipText(tooltip);
+            column.setToolTipText(tooltip);
         }
-        scopeColumn.addSelectionListener(new AccountSortSelectionAdapter(this, scopeColumn, index));
-        scopeColumn.pack();
+        column.addSelectionListener(new AccountSortSelectionAdapter(this, column, index));
+        column.pack();
     }
 
     private void makeActions() {
