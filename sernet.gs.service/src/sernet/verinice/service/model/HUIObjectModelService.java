@@ -88,8 +88,6 @@ public class HUIObjectModelService implements IObjectModelService {
     private Map<String, Set<String>> possibleParents = null;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.model.IObjectModelService#init()
      */
     @Override
@@ -122,9 +120,6 @@ public class HUIObjectModelService implements IObjectModelService {
             clazz = CnATypeMapper.getClassFromTypeId(typeId);
             if (clazz != null) {
                 try {
-                    if ("moditbp_room".equals(typeId)) {
-                        "".hashCode();
-                    }
                     parentInstance = createInstance(clazz, typeId);
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException
                         | NoSuchMethodException e) {
@@ -206,8 +201,6 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.linktable.ILinkTableContentService#
      * getRelationsFrom(java.lang.String)
      */
@@ -241,8 +234,6 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.linktable.ILinkTableContentService#
      * getPossibleRelationPartners(java.lang.String)
      */
@@ -283,8 +274,6 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.linktable.ILinkTableContentService#
      * getPossibleProperties(java.lang.String)
      */
@@ -307,8 +296,6 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.service.linktable.ILinkTableContentService#getLabel(java.
      * lang.String)
@@ -326,8 +313,6 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.service.linktable.ILinkTableContentService#getLabel(java.
      * lang.String)
@@ -339,8 +324,6 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.service.linktable.IObjectModelService#getPossibleChildren
      * (java.lang.String)
@@ -412,8 +395,6 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.service.linktable.IObjectModelService#getPossibleParents(
      * java.lang.String)
@@ -460,8 +441,6 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.service.model.IObjectModelService#getAllPossibleChildren(
      * )
@@ -472,8 +451,6 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.service.model.IObjectModelService#getAllPossibleParents()
      */
@@ -483,8 +460,6 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.model.IObjectModelService#loadAll()
      */
     @Override
