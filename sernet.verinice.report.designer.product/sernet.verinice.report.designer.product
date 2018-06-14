@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="verinice Report Designer" uid="sernet.verinice.report.designer" id="org.eclipse.birt.report.designer.ui.rcp.birt" application="org.eclipse.birt.report.designer.ui.rcp.DesignerApplication" version="1.0.0.qualifier" useFeatures="false" includeLaunchers="true">
-
+<product name="verinice Report Designer" uid="sernet.verinice.report.designer" id="org.eclipse.birt.report.designer.ui.rcp.BIRT" application="org.eclipse.birt.report.designer.ui.rcp.DesignerApplication" version="1.0.0.qualifier" useFeatures="false" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
@@ -10,105 +9,111 @@
    <launcherArgs>
       <programArgs>-data .
       </programArgs>
-      <programArgsMac>-vm ../../../jre/Contents/Home/jre/lib/jli/libjli.dylib
-      </programArgsMac>
-      <vmArgs>-Xms64m
--Xmx2048m
--XX:MaxPermSize=512m
+      <vmArgs>-Xms64m -Xmx2048m
       </vmArgs>
+      <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
+      </vmArgsMac>
    </launcherArgs>
 
    <windowImages/>
 
-
-   <launcher name="vdesigner">
-      <solaris/>
+   <launcher name="v-designer">
       <win useIco="false">
          <bmp/>
       </win>
    </launcher>
 
-
    <vm>
+      <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</linux>
    </vm>
 
    <plugins>
+      <plugin id="antlr"/>
+      <plugin id="bouncycastle"/>
+      <plugin id="ch.qos.logback.classic"/>
+      <plugin id="ch.qos.logback.core"/>
+      <plugin id="ch.qos.logback.slf4j" fragment="true"/>
+      <plugin id="com.google.gson"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="com.lowagie.text"/>
-      <plugin id="com.springsource.antlr"/>
+      <plugin id="com.opencsv"/>
       <plugin id="com.springsource.com.mchange.v2.c3p0"/>
       <plugin id="com.springsource.com.sun.xml.messaging.saaj"/>
       <plugin id="com.springsource.javassist"/>
       <plugin id="com.springsource.javax.activation"/>
       <plugin id="com.springsource.javax.el"/>
+      <plugin id="com.springsource.javax.jms"/>
       <plugin id="com.springsource.javax.mail"/>
-      <plugin id="com.springsource.javax.transaction"/>
+      <plugin id="com.springsource.javax.wsdl"/>
       <plugin id="com.springsource.javax.xml.rpc"/>
       <plugin id="com.springsource.javax.xml.stream"/>
       <plugin id="com.springsource.net.sf.cglib"/>
       <plugin id="com.springsource.net.sf.ehcache"/>
       <plugin id="com.springsource.org.aopalliance"/>
+      <plugin id="com.springsource.org.apache.commons.discovery"/>
       <plugin id="com.springsource.org.apache.commons.io"/>
-      <plugin id="com.springsource.org.apache.commons.logging"/>
+      <plugin id="com.springsource.org.apache.commons.lang"/>
+      <plugin id="com.springsource.org.apache.commons.net"/>
       <plugin id="com.springsource.org.apache.log4j"/>
       <plugin id="com.springsource.org.apache.ws.commons.schema"/>
       <plugin id="com.springsource.org.aspectj.runtime"/>
       <plugin id="com.springsource.org.aspectj.weaver"/>
       <plugin id="com.springsource.org.dom4j"/>
       <plugin id="com.springsource.org.hibernate"/>
-      <plugin id="com.springsource.org.jaxen"/>
       <plugin id="com.springsource.org.jdom"/>
       <plugin id="com.springsource.org.objectweb.asm"/>
       <plugin id="com.springsource.org.objectweb.asm.attrs"/>
       <plugin id="com.springsource.org.quartz"/>
       <plugin id="gnumail"/>
-      <plugin id="inetlib"/>
+      <plugin id="javax.annotation"/>
+      <plugin id="javax.el"/>
+      <plugin id="javax.inject"/>
       <plugin id="javax.servlet"/>
       <plugin id="javax.servlet.jsp"/>
+      <plugin id="javax.transaction" fragment="true"/>
       <plugin id="javax.wsdl"/>
       <plugin id="javax.xml"/>
       <plugin id="javax.xml.rpc"/>
       <plugin id="javax.xml.soap"/>
+      <plugin id="jaxen"/>
       <plugin id="jbpm"/>
-      <plugin id="jcommon-1.0.14"/>
-      <plugin id="jfreechart"/>
-      <plugin id="jfreechart-1.0.11-experimental"/>
-      <plugin id="jfreechart-1.0.11-swt"/>
-      <plugin id="jsf-api_2"/>
-      <plugin id="opencsv"/>
-      <plugin id="org.apache.ant"/>
+      <plugin id="jfree.jcommon"/>
+      <plugin id="jfree.jfreechart"/>
+      <plugin id="jfree.jfreechart-swt"/>
+      <plugin id="net.sf.ehcache"/>
       <plugin id="org.apache.axis"/>
       <plugin id="org.apache.batik.bridge"/>
-      <plugin id="org.apache.batik.css"/>
+      <plugin id="org.apache.batik.css" version="1.7.0.v201011041433"/>
       <plugin id="org.apache.batik.dom"/>
       <plugin id="org.apache.batik.dom.svg"/>
       <plugin id="org.apache.batik.ext.awt"/>
+      <plugin id="org.apache.batik.ext.awt.extension" fragment="true"/>
       <plugin id="org.apache.batik.parser"/>
-      <plugin id="org.apache.batik.pdf"/>
       <plugin id="org.apache.batik.svggen"/>
       <plugin id="org.apache.batik.transcoder"/>
-      <plugin id="org.apache.batik.util"/>
-      <plugin id="org.apache.batik.util.gui"/>
+      <plugin id="org.apache.batik.util" version="1.7.0.v201011041433"/>
+      <plugin id="org.apache.batik.util.gui" version="1.7.0.v200903091627"/>
       <plugin id="org.apache.batik.xml"/>
+      <plugin id="org.apache.commons.beanutils"/>
       <plugin id="org.apache.commons.codec"/>
       <plugin id="org.apache.commons.collections"/>
       <plugin id="org.apache.commons.discovery"/>
-      <plugin id="org.apache.commons.el"/>
       <plugin id="org.apache.commons.httpclient"/>
+      <plugin id="org.apache.commons.jxpath"/>
+      <plugin id="org.apache.commons.lang3"/>
       <plugin id="org.apache.commons.logging"/>
-      <plugin id="org.apache.derby.core"/>
-      <plugin id="org.apache.jasper"/>
-      <plugin id="org.apache.lucene"/>
-      <plugin id="org.apache.lucene.analysis"/>
+      <plugin id="org.apache.commons.text"/>
+      <plugin id="org.apache.felix.gogo.command"/>
+      <plugin id="org.apache.felix.gogo.runtime"/>
+      <plugin id="org.apache.felix.scr"/>
+      <plugin id="org.apache.jasper.glassfish"/>
+      <plugin id="org.apache.lucene.analyzers-common"/>
+      <plugin id="org.apache.lucene.analyzers-smartcn"/>
       <plugin id="org.apache.lucene.core"/>
-      <plugin id="org.apache.xerces"/>
-      <plugin id="org.apache.xml.resolver"/>
-      <plugin id="org.apache.xml.serializer"/>
-      <plugin id="org.eclipse.ant.core"/>
-      <plugin id="org.eclipse.ant.launching"/>
-      <plugin id="org.eclipse.ant.ui"/>
-      <plugin id="org.eclipse.birt"/>
-      <plugin id="org.eclipse.birt.chart"/>
+      <plugin id="org.apache.lucene.misc"/>
+      <plugin id="org.apache.servicemix.bundles.commons-beanutils"/>
+      <plugin id="org.apache.servicemix.bundles.elasticsearch"/>
+      <plugin id="org.eclipse.birt.axis.overlay" fragment="true"/>
       <plugin id="org.eclipse.birt.chart.cshelp"/>
       <plugin id="org.eclipse.birt.chart.device.extension"/>
       <plugin id="org.eclipse.birt.chart.device.pdf"/>
@@ -129,18 +134,7 @@
       <plugin id="org.eclipse.birt.data"/>
       <plugin id="org.eclipse.birt.data.aggregation"/>
       <plugin id="org.eclipse.birt.doc"/>
-      <plugin id="org.eclipse.birt.example"/>
       <plugin id="org.eclipse.birt.report.data.adapter"/>
-      <plugin id="org.eclipse.birt.report.data.bidi.utils"/>
-      <plugin id="org.eclipse.birt.report.data.bidi.utils.ui"/>
-      <plugin id="org.eclipse.birt.report.data.oda.hive"/>
-      <plugin id="org.eclipse.birt.report.data.oda.hive.ui"/>
-      <plugin id="org.eclipse.birt.report.data.oda.jdbc"/>
-      <plugin id="org.eclipse.birt.report.data.oda.jdbc.ui"/>
-      <plugin id="org.eclipse.birt.report.data.oda.sampledb"/>
-      <plugin id="org.eclipse.birt.report.data.oda.sampledb.ui"/>
-      <plugin id="org.eclipse.birt.report.data.oda.xml"/>
-      <plugin id="org.eclipse.birt.report.data.oda.xml.ui"/>
       <plugin id="org.eclipse.birt.report.designer.core"/>
       <plugin id="org.eclipse.birt.report.designer.samplereports"/>
       <plugin id="org.eclipse.birt.report.designer.ui"/>
@@ -158,199 +152,150 @@
       <plugin id="org.eclipse.birt.report.engine.dataextraction"/>
       <plugin id="org.eclipse.birt.report.engine.dataextraction.csv"/>
       <plugin id="org.eclipse.birt.report.engine.emitter.config"/>
-      <plugin id="org.eclipse.birt.report.engine.emitter.excel.config"/>
       <plugin id="org.eclipse.birt.report.engine.emitter.html"/>
-      <plugin id="org.eclipse.birt.report.engine.emitter.html.config"/>
-      <plugin id="org.eclipse.birt.report.engine.emitter.odp"/>
-      <plugin id="org.eclipse.birt.report.engine.emitter.odp.config"/>
-      <plugin id="org.eclipse.birt.report.engine.emitter.ods"/>
-      <plugin id="org.eclipse.birt.report.engine.emitter.ods.config"/>
-      <plugin id="org.eclipse.birt.report.engine.emitter.odt"/>
-      <plugin id="org.eclipse.birt.report.engine.emitter.odt.config"/>
       <plugin id="org.eclipse.birt.report.engine.emitter.pdf"/>
-      <plugin id="org.eclipse.birt.report.engine.emitter.pdf.config"/>
-      <plugin id="org.eclipse.birt.report.engine.emitter.postscript"/>
-      <plugin id="org.eclipse.birt.report.engine.emitter.postscript.config"/>
-      <plugin id="org.eclipse.birt.report.engine.emitter.ppt"/>
-      <plugin id="org.eclipse.birt.report.engine.emitter.ppt.config"/>
-      <plugin id="org.eclipse.birt.report.engine.emitter.prototype.excel"/>
       <plugin id="org.eclipse.birt.report.engine.emitter.wpml"/>
-      <plugin id="org.eclipse.birt.report.engine.emitter.wpml.config"/>
       <plugin id="org.eclipse.birt.report.engine.fonts"/>
-      <plugin id="org.eclipse.birt.report.engine.odf"/>
       <plugin id="org.eclipse.birt.report.engine.script.javascript"/>
       <plugin id="org.eclipse.birt.report.item.crosstab.core"/>
-      <plugin id="org.eclipse.birt.report.item.crosstab.ui"/>
       <plugin id="org.eclipse.birt.report.model"/>
       <plugin id="org.eclipse.birt.report.model.adapter.oda"/>
       <plugin id="org.eclipse.birt.report.viewer"/>
       <plugin id="org.eclipse.birt.resources"/>
-      <plugin id="org.eclipse.compare"/>
       <plugin id="org.eclipse.compare.core"/>
-      <plugin id="org.eclipse.compare.win32"/>
       <plugin id="org.eclipse.core.commands"/>
       <plugin id="org.eclipse.core.contenttype"/>
       <plugin id="org.eclipse.core.databinding"/>
       <plugin id="org.eclipse.core.databinding.observable"/>
       <plugin id="org.eclipse.core.databinding.property"/>
       <plugin id="org.eclipse.core.expressions"/>
-      <plugin id="org.eclipse.core.externaltools"/>
       <plugin id="org.eclipse.core.filebuffers"/>
       <plugin id="org.eclipse.core.filesystem"/>
-      <plugin id="org.eclipse.core.filesystem.linux.x86" fragment="true"/>
       <plugin id="org.eclipse.core.filesystem.linux.x86_64" fragment="true"/>
-      <plugin id="org.eclipse.core.filesystem.macosx" fragment="true"/>
-      <plugin id="org.eclipse.core.filesystem.win32.x86" fragment="true"/>
-      <plugin id="org.eclipse.core.filesystem.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.core.jobs"/>
       <plugin id="org.eclipse.core.net"/>
-      <plugin id="org.eclipse.core.net.win32.x86" fragment="true"/>
-      <plugin id="org.eclipse.core.net.win32.x86_64" fragment="true"/>
+      <plugin id="org.eclipse.core.net.linux.x86_64" fragment="true"/>
       <plugin id="org.eclipse.core.resources"/>
-      <plugin id="org.eclipse.core.resources.win32.x86" fragment="true"/>
       <plugin id="org.eclipse.core.runtime"/>
-      <plugin id="org.eclipse.core.runtime.compatibility"/>
-      <plugin id="org.eclipse.core.runtime.compatibility.auth"/>
-      <plugin id="org.eclipse.core.runtime.compatibility.registry" fragment="true"/>
       <plugin id="org.eclipse.core.variables"/>
       <plugin id="org.eclipse.datatools.connectivity"/>
-      <plugin id="org.eclipse.datatools.connectivity.db.generic"/>
       <plugin id="org.eclipse.datatools.connectivity.oda"/>
       <plugin id="org.eclipse.datatools.connectivity.oda.consumer"/>
       <plugin id="org.eclipse.datatools.connectivity.oda.design"/>
       <plugin id="org.eclipse.datatools.connectivity.oda.design.ui"/>
-      <plugin id="org.eclipse.datatools.connectivity.oda.flatfile"/>
-      <plugin id="org.eclipse.datatools.connectivity.oda.flatfile.ui"/>
       <plugin id="org.eclipse.datatools.connectivity.oda.profile"/>
-      <plugin id="org.eclipse.datatools.connectivity.oda.template.ui"/>
       <plugin id="org.eclipse.datatools.connectivity.sqm.core"/>
       <plugin id="org.eclipse.datatools.connectivity.ui"/>
-      <plugin id="org.eclipse.datatools.enablement.oda.ws"/>
-      <plugin id="org.eclipse.datatools.enablement.oda.ws.ui"/>
-      <plugin id="org.eclipse.datatools.enablement.oda.xml"/>
-      <plugin id="org.eclipse.datatools.enablement.oda.xml.ui"/>
       <plugin id="org.eclipse.datatools.help"/>
       <plugin id="org.eclipse.datatools.modelbase.dbdefinition"/>
       <plugin id="org.eclipse.datatools.modelbase.sql"/>
-      <plugin id="org.eclipse.datatools.oda.cshelp"/>
-      <plugin id="org.eclipse.debug.core"/>
-      <plugin id="org.eclipse.debug.ui"/>
       <plugin id="org.eclipse.draw2d"/>
+      <plugin id="org.eclipse.e4.core.commands"/>
+      <plugin id="org.eclipse.e4.core.contexts"/>
+      <plugin id="org.eclipse.e4.core.di"/>
+      <plugin id="org.eclipse.e4.core.di.annotations"/>
+      <plugin id="org.eclipse.e4.core.di.extensions"/>
+      <plugin id="org.eclipse.e4.core.di.extensions.supplier"/>
+      <plugin id="org.eclipse.e4.core.services"/>
+      <plugin id="org.eclipse.e4.emf.xpath"/>
+      <plugin id="org.eclipse.e4.ui.bindings"/>
+      <plugin id="org.eclipse.e4.ui.css.core"/>
+      <plugin id="org.eclipse.e4.ui.css.swt"/>
+      <plugin id="org.eclipse.e4.ui.css.swt.theme"/>
+      <plugin id="org.eclipse.e4.ui.di"/>
+      <plugin id="org.eclipse.e4.ui.model.workbench"/>
+      <plugin id="org.eclipse.e4.ui.services"/>
+      <plugin id="org.eclipse.e4.ui.swt.gtk" fragment="true"/>
+      <plugin id="org.eclipse.e4.ui.widgets"/>
+      <plugin id="org.eclipse.e4.ui.workbench"/>
+      <plugin id="org.eclipse.e4.ui.workbench.addons.swt"/>
+      <plugin id="org.eclipse.e4.ui.workbench.renderers.swt"/>
+      <plugin id="org.eclipse.e4.ui.workbench.swt"/>
+      <plugin id="org.eclipse.e4.ui.workbench3"/>
       <plugin id="org.eclipse.emf.common"/>
       <plugin id="org.eclipse.emf.ecore"/>
       <plugin id="org.eclipse.emf.ecore.change"/>
       <plugin id="org.eclipse.emf.ecore.xmi"/>
       <plugin id="org.eclipse.equinox.app"/>
+      <plugin id="org.eclipse.equinox.bidi"/>
       <plugin id="org.eclipse.equinox.common"/>
       <plugin id="org.eclipse.equinox.ds"/>
-      <plugin id="org.eclipse.equinox.frameworkadmin"/>
-      <plugin id="org.eclipse.equinox.frameworkadmin.equinox"/>
+      <plugin id="org.eclipse.equinox.event"/>
       <plugin id="org.eclipse.equinox.http.jetty"/>
       <plugin id="org.eclipse.equinox.http.registry"/>
       <plugin id="org.eclipse.equinox.http.servlet"/>
       <plugin id="org.eclipse.equinox.jsp.jasper"/>
       <plugin id="org.eclipse.equinox.jsp.jasper.registry"/>
-      <plugin id="org.eclipse.equinox.launcher"/>
-      <plugin id="org.eclipse.equinox.launcher.cocoa.macosx.x86_64" fragment="true"/>
-      <plugin id="org.eclipse.equinox.launcher.gtk.linux.x86_64" fragment="true"/>
-      <plugin id="org.eclipse.equinox.launcher.win32.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.equinox.p2.artifact.repository"/>
       <plugin id="org.eclipse.equinox.p2.console"/>
       <plugin id="org.eclipse.equinox.p2.core"/>
       <plugin id="org.eclipse.equinox.p2.director"/>
-      <plugin id="org.eclipse.equinox.p2.director.app"/>
       <plugin id="org.eclipse.equinox.p2.engine"/>
-      <plugin id="org.eclipse.equinox.p2.garbagecollector"/>
       <plugin id="org.eclipse.equinox.p2.jarprocessor"/>
       <plugin id="org.eclipse.equinox.p2.metadata"/>
       <plugin id="org.eclipse.equinox.p2.metadata.repository"/>
       <plugin id="org.eclipse.equinox.p2.operations"/>
-      <plugin id="org.eclipse.equinox.p2.publisher"/>
-      <plugin id="org.eclipse.equinox.p2.publisher.eclipse"/>
       <plugin id="org.eclipse.equinox.p2.repository"/>
-      <plugin id="org.eclipse.equinox.p2.repository.tools"/>
-      <plugin id="org.eclipse.equinox.p2.touchpoint.eclipse"/>
       <plugin id="org.eclipse.equinox.p2.ui"/>
       <plugin id="org.eclipse.equinox.p2.ui.sdk"/>
       <plugin id="org.eclipse.equinox.preferences"/>
+      <plugin id="org.eclipse.equinox.region" fragment="true"/>
       <plugin id="org.eclipse.equinox.registry"/>
       <plugin id="org.eclipse.equinox.security"/>
-      <plugin id="org.eclipse.equinox.security.macosx" fragment="true"/>
       <plugin id="org.eclipse.equinox.security.ui"/>
-      <plugin id="org.eclipse.equinox.security.win32.x86" fragment="true"/>
-      <plugin id="org.eclipse.equinox.security.win32.x86_64" fragment="true"/>
       <plugin id="org.eclipse.equinox.simpleconfigurator"/>
-      <plugin id="org.eclipse.equinox.simpleconfigurator.manipulator"/>
-      <plugin id="org.eclipse.equinox.util"/>
+      <plugin id="org.eclipse.equinox.transforms.hook" fragment="true"/>
+      <plugin id="org.eclipse.equinox.weaving.hook" fragment="true"/>
       <plugin id="org.eclipse.gef"/>
       <plugin id="org.eclipse.help"/>
-      <plugin id="org.eclipse.help.appserver"/>
       <plugin id="org.eclipse.help.base"/>
       <plugin id="org.eclipse.help.ui"/>
       <plugin id="org.eclipse.help.webapp"/>
-      <plugin id="org.eclipse.jdt.core"/>
-      <plugin id="org.eclipse.jdt.core.manipulation"/>
-      <plugin id="org.eclipse.jdt.debug"/>
-      <plugin id="org.eclipse.jdt.debug.ui"/>
-      <plugin id="org.eclipse.jdt.junit"/>
-      <plugin id="org.eclipse.jdt.junit.core"/>
-      <plugin id="org.eclipse.jdt.junit.runtime"/>
-      <plugin id="org.eclipse.jdt.launching"/>
-      <plugin id="org.eclipse.jdt.ui"/>
+      <plugin id="org.eclipse.jetty.continuation"/>
+      <plugin id="org.eclipse.jetty.deploy" version="9.4.5.v20170502"/>
+      <plugin id="org.eclipse.jetty.http" version="9.4.5.v20170502"/>
+      <plugin id="org.eclipse.jetty.io" version="9.4.5.v20170502"/>
+      <plugin id="org.eclipse.jetty.jndi" version="9.4.5.v20170502"/>
+      <plugin id="org.eclipse.jetty.osgi.boot" version="9.4.5.v20170502"/>
+      <plugin id="org.eclipse.jetty.security" version="9.4.5.v20170502"/>
+      <plugin id="org.eclipse.jetty.server" version="9.4.5.v20170502"/>
+      <plugin id="org.eclipse.jetty.servlet" version="9.4.5.v20170502"/>
+      <plugin id="org.eclipse.jetty.util" version="9.4.5.v20170502"/>
+      <plugin id="org.eclipse.jetty.webapp" version="9.4.5.v20170502"/>
+      <plugin id="org.eclipse.jetty.xml" version="9.4.5.v20170502"/>
       <plugin id="org.eclipse.jface"/>
       <plugin id="org.eclipse.jface.databinding"/>
       <plugin id="org.eclipse.jface.text"/>
       <plugin id="org.eclipse.ltk.core.refactoring"/>
-      <plugin id="org.eclipse.ltk.ui.refactoring"/>
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.osgi.services"/>
       <plugin id="org.eclipse.osgi.util"/>
-      <plugin id="org.eclipse.pde.build"/>
-      <plugin id="org.eclipse.pde.core"/>
-      <plugin id="org.eclipse.pde.launching"/>
-      <plugin id="org.eclipse.pde.ui"/>
-      <plugin id="org.eclipse.search"/>
+      <plugin id="org.eclipse.platform"/>
       <plugin id="org.eclipse.swt"/>
-      <plugin id="org.eclipse.swt.cocoa.macosx.x86_64" fragment="true"/>
-      <plugin id="org.eclipse.swt.gtk.linux.x86" fragment="true"/>
       <plugin id="org.eclipse.swt.gtk.linux.x86_64" fragment="true"/>
-      <plugin id="org.eclipse.swt.win32.win32.x86" fragment="true"/>
-      <plugin id="org.eclipse.swt.win32.win32.x86_64" fragment="true"/>
-      <plugin id="org.eclipse.team.core"/>
-      <plugin id="org.eclipse.team.ui"/>
       <plugin id="org.eclipse.text"/>
       <plugin id="org.eclipse.ui"/>
-      <plugin id="org.eclipse.ui.browser"/>
       <plugin id="org.eclipse.ui.cheatsheets"/>
-      <plugin id="org.eclipse.ui.cocoa" fragment="true"/>
-      <plugin id="org.eclipse.ui.console"/>
-      <plugin id="org.eclipse.ui.editors"/>
-      <plugin id="org.eclipse.ui.externaltools"/>
       <plugin id="org.eclipse.ui.forms"/>
       <plugin id="org.eclipse.ui.ide"/>
       <plugin id="org.eclipse.ui.intro"/>
       <plugin id="org.eclipse.ui.navigator"/>
-      <plugin id="org.eclipse.ui.navigator.resources"/>
       <plugin id="org.eclipse.ui.net"/>
       <plugin id="org.eclipse.ui.views"/>
-      <plugin id="org.eclipse.ui.views.log"/>
-      <plugin id="org.eclipse.ui.views.properties.tabbed"/>
       <plugin id="org.eclipse.ui.workbench"/>
       <plugin id="org.eclipse.ui.workbench.texteditor"/>
-      <plugin id="org.eclipse.update.configurator"/>
       <plugin id="org.hamcrest.core"/>
       <plugin id="org.junit"/>
-      <plugin id="org.junit4"/>
-      <plugin id="org.mortbay.jetty.server"/>
-      <plugin id="org.mortbay.jetty.util"/>
       <plugin id="org.mozilla.javascript"/>
       <plugin id="org.sat4j.core"/>
       <plugin id="org.sat4j.pb"/>
+      <plugin id="org.slf4j.api"/>
       <plugin id="org.springframework.aop"/>
       <plugin id="org.springframework.beans"/>
       <plugin id="org.springframework.context"/>
       <plugin id="org.springframework.context.support"/>
       <plugin id="org.springframework.core"/>
+      <plugin id="org.springframework.jdbc"/>
       <plugin id="org.springframework.orm"/>
       <plugin id="org.springframework.osgi.core"/>
       <plugin id="org.springframework.osgi.extender"/>
@@ -363,13 +308,21 @@
       <plugin id="org.springframework.web.servlet"/>
       <plugin id="org.springframework.ws"/>
       <plugin id="org.springframework.xml"/>
+      <plugin id="org.threeten.bp"/>
+      <plugin id="org.tukaani.xz"/>
       <plugin id="org.w3c.css.sac"/>
+      <plugin id="org.w3c.dom.events"/>
       <plugin id="org.w3c.dom.smil"/>
       <plugin id="org.w3c.dom.svg"/>
+      <plugin id="org.w3c.dom.svg.extension" fragment="true"/>
       <plugin id="org.w3c.sac"/>
+      <plugin id="sernet.gs.db.fragment" fragment="true"/>
+      <plugin id="sernet.gs.ehcache.fragment" fragment="true"/>
+      <plugin id="sernet.gs.hibernate.fragment" fragment="true"/>
+      <plugin id="sernet.gs.log4j.fragment" fragment="true"/>
       <plugin id="sernet.gs.reveng"/>
-      <plugin id="sernet.gs.server"/>
       <plugin id="sernet.gs.service"/>
+      <plugin id="sernet.gs.springweb.fragment" fragment="true"/>
       <plugin id="sernet.gs.ui.rcp.main"/>
       <plugin id="sernet.hui.common"/>
       <plugin id="sernet.hui.swtclient"/>
@@ -379,34 +332,16 @@
       <plugin id="sernet.verinice.oda.driver.designer"/>
       <plugin id="sernet.verinice.report.service"/>
       <plugin id="sernet.verinice.samt.service"/>
+      <plugin id="thirdparty.jgrapht-jdk1.6"/>
    </plugins>
 
    <configurations>
-      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="1" />
-      <plugin id="org.eclipse.datatools.connectivity" autoStart="true" startLevel="1" />
-      <plugin id="org.eclipse.datatools.connectivity.db.generic" autoStart="true" startLevel="1" />
-      <plugin id="org.eclipse.datatools.connectivity.oda" autoStart="true" startLevel="1" />
-      <plugin id="org.eclipse.datatools.connectivity.oda.consumer" autoStart="true" startLevel="1" />
-      <plugin id="org.eclipse.datatools.connectivity.oda.design" autoStart="true" startLevel="1" />
-      <plugin id="org.eclipse.datatools.connectivity.oda.design.ui" autoStart="true" startLevel="1" />
-      <plugin id="org.eclipse.datatools.connectivity.oda.flatfile" autoStart="true" startLevel="1" />
-      <plugin id="org.eclipse.datatools.connectivity.oda.flatfile.ui" autoStart="true" startLevel="1" />
-      <plugin id="org.eclipse.datatools.connectivity.oda.profile" autoStart="true" startLevel="1" />
-      <plugin id="org.eclipse.datatools.connectivity.sqm.core" autoStart="true" startLevel="1" />
-      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="1" />
-      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="5" />
+      <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
+      <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
+      <plugin id="org.eclipse.equinox.event" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
-      <plugin id="org.eclipse.equinox.util" autoStart="true" startLevel="1" />
-      <plugin id="sernet.gs.reveng" autoStart="true" startLevel="1" />
-      <plugin id="sernet.gs.service" autoStart="true" startLevel="1" />
-      <plugin id="sernet.gs.ui.rcp.main" autoStart="true" startLevel="1" />
-      <plugin id="sernet.hui.common" autoStart="true" startLevel="1" />
-      <plugin id="sernet.hui.swtclient" autoStart="true" startLevel="1" />
-      <plugin id="sernet.springclient" autoStart="true" startLevel="1" />
-      <plugin id="sernet.verinice.oda.driver" autoStart="true" startLevel="1" />
-      <plugin id="sernet.verinice.oda.driver.designer" autoStart="true" startLevel="1" />
-      <plugin id="sernet.verinice.report.service" autoStart="true" startLevel="1" />
-      <plugin id="sernet.verinice.samt.service" autoStart="true" startLevel="1" />
+      <plugin id="org.eclipse.osgi" autoStart="true" startLevel="-1" />
    </configurations>
 
 </product>

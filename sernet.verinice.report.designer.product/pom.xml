@@ -3,15 +3,12 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<packaging>eclipse-repository</packaging>
-	<name>verinice Report Designer Product</name>
-
-	<artifactId>report.designer.tycho</artifactId>
+	<artifactId>sernet.verinice.report.designer.product</artifactId>
 
 	<parent>
 		<groupId>sernet.verinice</groupId>
-		<artifactId>sernet.verinice.releng.parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-		<relativePath>../sernet.verinice.releng.parent/pom.xml</relativePath>
+		<artifactId>sernet.verinice.tycho.root</artifactId>
+		<version>1.0.0</version>
 	</parent>
 
 	<build>
@@ -19,7 +16,7 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-repository-plugin</artifactId>
-				<version>${tycho-version}</version>
+				<version>${tycho.version}</version>
 				<configuration>
 					<includeAllDependencies>true</includeAllDependencies>
 					<!-- Whether or not to skip archiving the repository. False by default. -->
@@ -30,7 +27,7 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-director-plugin</artifactId>
-				<version>${tycho-version}</version>
+				<version>${tycho.version}</version>
 				<executions>
 					<execution>
 						<!-- install the product using the p2 director -->

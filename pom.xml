@@ -19,6 +19,7 @@
 		<!-- products -->
 		<module>sernet.verinice.releng.client.product</module>
 		<module>sernet.verinice.releng.server.product</module>
+		<module>sernet.verinice.report.designer.product</module>
 
 		<!-- Features -->
 		<module>org.eclipse.e4.rcp.sernet</module>
