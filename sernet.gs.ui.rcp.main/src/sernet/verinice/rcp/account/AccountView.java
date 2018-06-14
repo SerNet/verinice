@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -208,7 +209,6 @@ public class AccountView extends RightsEnabledView {
     private Composite createContainerComposite(Composite parent) {
         Composite composite = new Composite(parent, SWT.FILL);
         composite.setLayout(new GridLayout());
-        composite.setLayoutData(new GridData(GridData.FILL_BOTH));
         return composite;
     }
 
@@ -496,7 +496,6 @@ public class AccountView extends RightsEnabledView {
             column.setToolTipText(tooltip);
         }
         column.addSelectionListener(new AccountSortSelectionAdapter(this, column, index));
-        column.pack();
     }
 
     private void makeActions() {
@@ -645,7 +644,10 @@ public class AccountView extends RightsEnabledView {
             LOG.debug("findAccounts called..."); //$NON-NLS-1$
         }
         final List<Configuration> accountList = getAccountService().findAccounts(parameter);
-        getDisplay().syncExec(() -> viewer.setInput(accountList));
+        getDisplay().syncExec(() -> {
+            viewer.setInput(accountList);
+            Stream.of(viewer.getTable().getColumns()).forEach(TableColumn::pack);
+        });
     }
 
     protected void deactivateAccount(Configuration account) {
