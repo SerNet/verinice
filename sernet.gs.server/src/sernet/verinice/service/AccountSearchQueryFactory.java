@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.hibernate.criterion.DetachedCriteria;
 
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.model.bsi.Person;
@@ -14,19 +13,17 @@ import sernet.verinice.model.iso27k.PersonIso;
 
 public final class AccountSearchQueryFactory {
 
+    private static final String FROM_CONFIGURATION_AS_CONF = "from Configuration as conf";
+
     private static final Logger LOG = Logger.getLogger(AccountSearchQueryFactory.class);
 
     private AccountSearchQueryFactory() {
         // do not create instances of this utility class
     }
 
-    public static DetachedCriteria createCriteria(IAccountSearchParameter parameter) {
-        return DetachedCriteria.forClass(Configuration.class);
-    }
-
     public static HqlQuery createHql(IAccountSearchParameter parameter) {
         StringBuilder sbHql = new StringBuilder();
-        sbHql.append("from Configuration as conf");
+        sbHql.append(FROM_CONFIGURATION_AS_CONF);
         createJoin(sbHql, parameter);
         createWhere(sbHql, parameter);
         List<Object> parameterList = addParameter(parameter);
@@ -75,7 +72,7 @@ public final class AccountSearchQueryFactory {
     }
 
     private static List<Object> addParameter(IAccountSearchParameter parameter) {
-        List<Object> parameterList = new ArrayList<Object>(10);
+        List<Object> parameterList = new ArrayList<>(10);
         if (parameter.getLogin() != null) {
             parameterList.add(Configuration.PROP_USERNAME);
             parameterList.add(addWildcards(parameter.getLogin()));
@@ -174,7 +171,7 @@ public final class AccountSearchQueryFactory {
     public static HqlQuery createRetrieveHql(Set<Integer> dbIds) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("from Configuration as conf");
+        sb.append(FROM_CONFIGURATION_AS_CONF);
         sb.append(" inner join fetch conf.entity as entity");
         sb.append(" inner join fetch entity.typedPropertyLists as propertyList");
         sb.append(" inner join fetch propertyList.properties as props");
@@ -200,7 +197,7 @@ public final class AccountSearchQueryFactory {
     public static final HqlQuery createRetrieveAllConfigurations() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("from Configuration as conf");
+        sb.append(FROM_CONFIGURATION_AS_CONF);
         sb.append(" inner join fetch conf.entity as entity");
         sb.append(" inner join fetch entity.typedPropertyLists as propertyList");
         sb.append(" inner join fetch propertyList.properties as props");
