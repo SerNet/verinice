@@ -41,7 +41,6 @@ public class Messages extends NLS {
     public static String ButtonRefresh;
     public static String ButtonCancel;
     public static String ComboModelTaskType_1;
-    public static String CompleteTaskAction_1;
     public static String CompleteTaskAction_6;
     public static String CompleteTaskAction_7;
     public static String ConfirmTaskDelete_0;
