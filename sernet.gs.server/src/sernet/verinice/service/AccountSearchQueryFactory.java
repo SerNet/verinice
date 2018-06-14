@@ -7,6 +7,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.IAccountSearchParameter;
+import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.PersonIso;
@@ -101,11 +102,13 @@ public final class AccountSearchQueryFactory {
         if (parameter.getFirstName() != null) {
             parameterList.add(PersonIso.PROP_NAME);
             parameterList.add(Person.P_VORNAME);
+            parameterList.add(BpPerson.PROP_FIRST_NAME);
             parameterList.add(addWildcards(parameter.getFirstName()));
         }
         if (parameter.getFamilyName() != null) {
             parameterList.add(PersonIso.PROP_SURNAME);
             parameterList.add(Person.P_NAME);
+            parameterList.add(BpPerson.PROP_LAST_NAME);
             parameterList.add(addWildcards(parameter.getFamilyName()));
         }
         if (parameter.getScopeId() != null) {
@@ -157,7 +160,7 @@ public final class AccountSearchQueryFactory {
     private static String createPersonPropertyWhere(int i) {
         StringBuilder sb = new StringBuilder();
         sb.append(" (pProps_").append(i).append(".propertyType = ? or pProps_").append(i)
-                .append(".propertyType = ?)");
+                .append(".propertyType = ? or pProps_").append(i).append(".propertyType = ?)");
         sb.append(" and lower(pProps_").append(i).append(".propertyValue) like lower(?)");
         return sb.toString();
     }
