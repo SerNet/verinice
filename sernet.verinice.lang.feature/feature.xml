@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="sernet.verinice.lang.feature"
+      label="Language Feature"
+      version="1.0.0.qualifier"
+      provider-name="SerNet">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <includes
+         id="org.eclipse.babel.nls_datatools_de"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_datatools_it"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_eclipse_de"
+         version="0.0.0"/>
+
+   <includes
+         id="org.eclipse.babel.nls_eclipse_it"
+         version="0.0.0"/>
+
+</feature>

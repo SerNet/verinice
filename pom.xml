@@ -30,6 +30,7 @@
 		<module>sernet.rcp.ui.feature</module>
 		<module>sernet.localdependencies</module>
 		<module>sernet.thirdparty.feature</module>
+		<module>sernet.verinice.lang.feature</module>
 
 
 		<!-- Bundles -->

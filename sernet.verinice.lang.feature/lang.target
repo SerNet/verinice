@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target name="lang" sequenceNumber="4">
+<locations>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.babel.nls_datatools_de.feature.group" version="4.7.0.v20171231020002"/>
+<unit id="org.eclipse.babel.nls_datatools_it.feature.group" version="4.7.0.v20171231020002"/>
+<unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="4.7.0.v20171231020002"/>
+<unit id="org.eclipse.babel.nls_eclipse_it.feature.group" version="4.7.0.v20171231020002"/>
+<repository location="http://download.eclipse.org/technology/babel/update-site/R0.15.1/oxygen/"/>
+</location>
+</locations>
+</target>
