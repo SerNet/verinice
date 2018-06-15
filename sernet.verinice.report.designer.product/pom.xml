@@ -41,6 +41,14 @@
 						</goals>
 					</execution>
 				</executions>
+        <configuration>
+            <products>
+                <product>
+                    <id>sernet.verinice.report.designer</id>
+                    <rootFolder>v.Designer</rootFolder>
+                </product>
+            </products>
+        </configuration>
 			</plugin>
 
 		</plugins>
