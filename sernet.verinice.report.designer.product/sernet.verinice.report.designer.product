@@ -9,7 +9,9 @@
    <launcherArgs>
       <programArgs>-data .
       </programArgs>
-      <vmArgs>-Xms64m -Xmx2048m
+      <programArgsMac>-vm ../../jre/Contents/Home/lib/jli/libjli.dylib
+      </programArgsMac>
+      <vmArgs>-Xms256m -Xmx2048m
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
