@@ -17,12 +17,9 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -67,11 +64,10 @@ import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.updatenews.IUpdateNewsService;
-import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.model.updateNews.UpdateNewsException;
 import sernet.verinice.model.updateNews.UpdateNewsMessageEntry;
+import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.UpdateNewsDialog;
-import sernet.verinice.rcp.bp.BaseProtectionPerspective;
 
 /**
  * Workbench Window advisor.
@@ -232,46 +228,27 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     
     private void initPerspective(){
         Activator.inheritVeriniceContextState();
-        Vector<String> openViews = new Vector<String>();
-        String rightID = "";
-        IViewReference chosenRef = null;
-        for(IViewReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences()){
-            openViews.add(ref.getId());
+        for (final IViewReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                .getActivePage().getViewReferences()) {
             final IViewPart part = ref.getView(true);
-            if (part!=null) {
-                for (Method m : part.getClass().getDeclaredMethods()){
-                    if (m.getName().equals("getRightID")){
-                        try {
-                            Object o = m.invoke(part, null);
-                            if (o instanceof String){
-                                rightID = (String)o;
-                                chosenRef = ref;
-                                break;
+            if (part instanceof RightsEnabledView) {
+                final String rightID = ((RightsEnabledView) part).getRightID();
+
+                if (Activator.getDefault().isStandalone()
+                        && !Activator.getDefault().getInternalServer().isRunning()) {
+                    IInternalServerStartListener listener = new IInternalServerStartListener() {
+                        @Override
+                        public void statusChanged(InternalServerEvent e) {
+                            if (e.isStarted()) {
+                                hideView(part, rightID, ref);
                             }
-                        } catch (InvocationTargetException e) {
-                            LOG.error("Error while retrieving rightID from view " + ref.getId(), e);
-                        } catch (IllegalArgumentException e) {
-                            LOG.error("Error while retrieving rightID from view " + ref.getId(), e);
-                        } catch (IllegalAccessException e) {
-                            LOG.error("Error while retrieving rightID from view " + ref.getId(), e);
                         }
-                    }
+                    };
+                    Activator.getDefault().getInternalServer()
+                            .addInternalServerStatusListener(listener);
+                } else {
+                    hideView(part, rightID, ref);
                 }
-            }
-            final String rID = rightID;
-            final IViewReference rRef = chosenRef;
-            if (Activator.getDefault().isStandalone() && !Activator.getDefault().getInternalServer().isRunning()){
-                IInternalServerStartListener listener = new IInternalServerStartListener(){
-                    @Override
-                    public void statusChanged(InternalServerEvent e) {
-                        if (e.isStarted()){
-                            hideView(part, rID, rRef);
-                        }
-                    }
-                };
-                Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-            }  else {
-                hideView(part, rID, rRef);
             }
         }
     }
