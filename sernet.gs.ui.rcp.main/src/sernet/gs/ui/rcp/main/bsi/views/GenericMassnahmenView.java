@@ -447,8 +447,6 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
     protected TableColumn siegelColumn;
     protected TableColumn dateColumn;
     protected TableColumn zielColumn;
-    private Action doubleClickAction;
-    private Action selectionAction;
     protected TableColumn bearbeiterColumn;
 
     private Action filterAction;
@@ -541,8 +539,7 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
         CnAElementFactory.getInstance().addLoadListener(loadListener);
 
         viewer.setComparator(createSorter());
-        makeActions();
-        hookActions();
+        attachListeners();
         fillLocalToolBar();
 
         getSite().setSelectionProvider(viewer);
@@ -722,34 +719,24 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
 
     protected abstract String[] getUmsetzungPattern();
 
-    private void makeActions() {
-        doubleClickAction = new Action() {
-            @Override
-            public void run() {
-                Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-                EditorFactory.getInstance().openEditor(sel);
-            }
-        };
-        selectionAction = new Action() {
-            @Override
-            public void run() {
-                Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-                if (sel instanceof PlaceHolder) {
-                    reloadMeasures();
-                }
-            }
-        };
-    }
-
     @Override
     public final void dispose() {
         CnAElementFactory.getInstance().removeLoadListener(loadListener);
         super.dispose();
     }
 
-    private void hookActions() {
-        viewer.addDoubleClickListener(event -> doubleClickAction.run());
-        viewer.addSelectionChangedListener(event -> selectionAction.run());
+    private void attachListeners() {
+        viewer.addDoubleClickListener(event -> {
+            Object sel = ((IStructuredSelection) event.getSelection()).getFirstElement();
+            EditorFactory.getInstance().openEditor(sel);
+
+        });
+        viewer.addSelectionChangedListener(event -> {
+            Object sel = ((IStructuredSelection) event.getSelection()).getFirstElement();
+            if (sel instanceof PlaceHolder) {
+                reloadMeasures();
+            }
+        });
     }
 
     @Override
