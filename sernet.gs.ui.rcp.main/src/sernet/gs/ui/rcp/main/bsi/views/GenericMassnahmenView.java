@@ -657,6 +657,7 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
 
         viewer.setInput(new PlaceHolder(getMeasureLoadPlaceholderLabel()));
         WorkspaceJob job = new LoadMeasures(getMeasureLoadJobLabel(), itVerbund);
+
         job.setUser(false);
         job.schedule();
 
@@ -1022,6 +1023,9 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
                     allMassnahmen.addAll(command.getAll());
                 }
                 Display.getDefault().asyncExec(() -> {
+                    if (viewer.getControl().isDisposed()) {
+                        return;
+                    }
                     viewer.setInput(allMassnahmen);
                     compoundChoser.setEnabled(true);
                     int loaded = loadBlockNumber * FindMassnahmenForITVerbund.LOAD_BLOCK_SIZE;
