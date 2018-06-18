@@ -7,7 +7,7 @@
    </configIni>
 
    <launcherArgs>
-      <programArgs>-data .
+      <programArgs>-data @user.home/v.Designer/workspace
       </programArgs>
       <programArgsMac>-vm ../../jre/Contents/Home/lib/jli/libjli.dylib
       </programArgsMac>
