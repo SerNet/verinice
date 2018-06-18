@@ -59,16 +59,14 @@ import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bpm.TodoViewItem;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.model.catalog.CatalogModel;
-import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.crud.LoadCnATreeElementTitles;
 import sernet.verinice.service.commands.task.FindMassnahmenForITVerbund;
@@ -384,7 +382,7 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
      * TODO rschuster: This class shares much functionality with
      * MassnahmenUmsetzungContentProvider. It would be better to move it there.
      */
-    private IModelLoadListener loadListener = new IModelLoadListener() {
+    private IModelLoadListener loadListener = new DefaultModelLoadListener() {
 
         private ITVerbund lastSelectedCompound;
 
@@ -440,20 +438,6 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
             });
         }
 
-        @Override
-        public void loaded(ISO27KModel model) {
-            // work is done in loaded(BSIModel model)
-        }
-
-        @Override
-        public void loaded(BpModel model) {
-            // work is done in loaded(BSIModel model)
-        }
-
-        @Override
-        public void loaded(CatalogModel model) {
-            // nothing to do
-        }
     };
 
     private TableViewer viewer;
