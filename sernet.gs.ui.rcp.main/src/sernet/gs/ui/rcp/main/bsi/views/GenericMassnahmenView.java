@@ -449,17 +449,12 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
     protected TableColumn zielColumn;
     protected TableColumn bearbeiterColumn;
 
-    private Action filterAction;
     private Action loadMoreAction;
-    private Action toggleDateAction;
 
     private MassnahmenUmsetzungFilter umsetzungFilter;
     private MassnahmenSiegelFilter siegelFilter;
 
     private MassnahmenCompoundChoser compoundChoser = new MassnahmenCompoundChoser();
-
-    private MassnahmenUmsetzungContentProvider contentProvider = new MassnahmenUmsetzungContentProvider(
-            this);
 
     protected abstract ILabelProvider createLabelProvider();
 
@@ -525,10 +520,13 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
         createPartControlImpl(parent);
 
         createFilters();
-        createPullDownMenu();
-        createLoadMoreAction();
-        createToggleDateAction();
+        Action filterAction = createFilterAction(umsetzungFilter, siegelFilter);
 
+        createPullDownMenu(filterAction);
+        createLoadMoreAction();
+        Action toggleDateAction = createToggleDateAction();
+        MassnahmenUmsetzungContentProvider contentProvider = new MassnahmenUmsetzungContentProvider(
+                this);
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(createLabelProvider());
         try {
@@ -540,7 +538,7 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
 
         viewer.setComparator(createSorter());
         attachListeners();
-        fillLocalToolBar();
+        fillLocalToolBar(toggleDateAction, filterAction);
 
         getSite().setSelectionProvider(viewer);
 
@@ -670,13 +668,12 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
     protected abstract Action createFilterAction(MassnahmenUmsetzungFilter umsetzungFilter,
             MassnahmenSiegelFilter siegelFilter);
 
-    private void createPullDownMenu() {
+    private void createPullDownMenu(Action filterAction) {
         IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
-        filterAction = createFilterAction(umsetzungFilter, siegelFilter);
         menuManager.add(filterAction);
     }
 
-    private void fillLocalToolBar() {
+    private void fillLocalToolBar(Action toggleDateAction, Action filterAction) {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
         ActionContributionItem item = new ActionContributionItem(loadMoreAction);
@@ -687,7 +684,7 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
         item2.setMode(ActionContributionItem.MODE_FORCE_TEXT);
         manager.add(item2);
 
-        manager.add(this.filterAction);
+        manager.add(filterAction);
         manager.add(compoundChoser);
     }
 
@@ -695,8 +692,8 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
         loadMoreAction = new LoadMoreAction(this, Messages.GenericMassnahmenView_11);
     }
 
-    private void createToggleDateAction() {
-        toggleDateAction = new Action() {
+    private Action createToggleDateAction() {
+        Action toggleDateAction = new Action() {
             @Override
             public void run() {
                 isDateSet = !isDateSet;
@@ -710,6 +707,7 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
         toggleDateAction.setText(Messages.GenericMassnahmenView_12);
         toggleDateAction.setImageDescriptor(ImageCache.getInstance()
                 .getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE));
+        return toggleDateAction;
     }
 
     private void createFilters() {
