@@ -145,9 +145,15 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
             ToolItem ti = new ToolItem(parent, SWT.SEPARATOR, index);
 
             combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
-            combo.setEnabled(false);
-            combo.add(Messages.GenericMassnahmenView_1);
-            combo.select(0);
+            if (elements != null) {
+                updateCombo();
+                combo.setEnabled(true);
+            } else {
+
+                combo.setEnabled(false);
+                combo.add(Messages.GenericMassnahmenView_1);
+                combo.select(0);
+            }
 
             combo.addSelectionListener(new SelectionListener() {
 
@@ -281,11 +287,16 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
          * @param elements
          */
         void setElements(List<ITVerbund> elements) {
+            this.elements = elements;
+            if (combo != null) {
+                updateCombo();
+            }
+        }
+
+        void updateCombo() {
             combo.removeAll();
             combo.add(Messages.GenericMassnahmenView_2);
             combo.select(0);
-
-            this.elements = elements;
 
             for (ITVerbund c : elements) {
                 combo.add(c.getTitle());
