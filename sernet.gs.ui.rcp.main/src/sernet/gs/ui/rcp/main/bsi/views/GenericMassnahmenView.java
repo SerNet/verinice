@@ -33,15 +33,11 @@ import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -83,7 +79,7 @@ import sernet.verinice.service.commands.task.FindMassnahmenForITVerbund;
  * 
  * <p>
  * The class provides all the necessary infrastructure to allow viewing those
- * elements and chosing the IT-Verbund to which they belong.
+ * elements and choosing the IT-Verbund to which they belong.
  * </p>
  * 
  * @author koderman[at]sernet[dot]de
@@ -96,30 +92,28 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
 
     private static final Logger LOG = Logger.getLogger(GenericMassnahmenView.class);
 
-    public static final String ID = "sernet.gs.ui.rcp.main.bsi.views." + "todoview"; //$NON-NLS-1$ //$NON-NLS-2$
-
     private int loadBlockNumber = 0;
 
     private boolean isDateSet = false;
 
-    private List allMassnahmen;
+    private List<TodoViewItem> allMassnahmen;
 
     /**
      * Implementation of {@link ContributionItem} which allows choosing one of
      * the potentially many {@link ITVerbund} instances.
      * 
      * <p>
-     * Besides chosing a specific compound the choser also knows a state where
+     * Besides choosing a specific compound the chooser also knows a state where
      * no compound is selected.
      * </p>
      * 
      * <p>
-     * The compound choser triggers actions (ie. loading of measures) when the
+     * The compound chooser triggers actions (i.e. loading of measures) when the
      * user interacted with the combo box that displays the compounds.
      * </p>
      * 
      * <p>
-     * On the other hand the choser needs to be kept updated about changes to
+     * On the other hand the chooser needs to be kept updated about changes to
      * the data model. E.g. if a new compound is added or an existing one is
      * deleted. The class provides all means to handle these situations on a
      * practical level.
@@ -140,10 +134,10 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
         private List<ITVerbund> elements;
 
         /**
-         * Called by the RCP framework then the component is initialized.
+         * Called by the RCP framework when the component is initialized.
          * 
          * <p>
-         * Creates the combo box and registers neccessary listeners.
+         * Creates the combo box and registers necessary listeners.
          * </p>
          * 
          */
@@ -263,8 +257,8 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
         }
 
         /**
-         * Disables the choser, ie. making it impossible for the user to select
-         * a different compound.
+         * Disables the chooser, i.e. making it impossible for the user to
+         * select a different compound.
          * 
          * <p>
          * This is used to prevent the user changing the compounds as long as
@@ -301,7 +295,7 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
         }
 
         /**
-         * Adds a compound to the choser (making it available for the user to
+         * Adds a compound to the chooser (making it available for the user to
          * select it).
          * 
          * <p>
@@ -317,7 +311,7 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
         }
 
         /**
-         * Removes a compound from the choser (preventing the user from
+         * Removes a compound from the chooser (preventing the user from
          * selecting it).
          * 
          * <p>
@@ -410,22 +404,19 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
          */
         @Override
         public void closed(BSIModel model) {
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    if (CnAElementHome.getInstance().isOpen()) {
-                        // Connection still open -> explicit reload
-                        lastSelectedCompound = compoundChoser.getSelectedCompound();
-                    } else {
-                        // Connection closed -> throw away compound information
-                        lastSelectedCompound = null;
-                    }
-
-                    compoundChoser.setSelectedCompound(null);
-                    compoundChoser.setEnabled(false);
-
-                    resetTable(false);
+            Display.getDefault().asyncExec(() -> {
+                if (CnAElementHome.getInstance().isOpen()) {
+                    // Connection still open -> explicit reload
+                    lastSelectedCompound = compoundChoser.getSelectedCompound();
+                } else {
+                    // Connection closed -> throw away compound information
+                    lastSelectedCompound = null;
                 }
+
+                compoundChoser.setSelectedCompound(null);
+                compoundChoser.setEnabled(false);
+
+                resetTable(false);
             });
         }
 
@@ -435,19 +426,16 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
          * <p>
          * In case this happened through an explicit reload the view is
          * initialized with the same compound that was selected before the
-         * reload occured.
+         * reload occurred.
          * </p>
          */
         @Override
         public void loaded(final BSIModel model) {
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        loadCompounds(lastSelectedCompound);
-                    } catch (RuntimeException e) {
-                        ExceptionUtil.log(e, Messages.GenericMassnahmenView_3);
-                    }
+            Display.getDefault().asyncExec(() -> {
+                try {
+                    loadCompounds(lastSelectedCompound);
+                } catch (RuntimeException e) {
+                    ExceptionUtil.log(e, Messages.GenericMassnahmenView_3);
                 }
             });
         }
@@ -568,7 +556,7 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
         }
         CnAElementFactory.getInstance().addLoadListener(loadListener);
 
-        viewer.setSorter(createSorter());
+        viewer.setComparator(createSorter());
         makeActions();
         hookActions();
         fillLocalToolBar();
@@ -582,16 +570,16 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
      * Removes whatever is in the table.
      * 
      * <p>
-     * If <code>choseMessage</code> is <code>true</code> then a placeholder is
-     * added which tells the user to chose an IT-Verbund.
+     * If <code>chooseMessage</code> is <code>true</code> then a placeholder is
+     * added which tells the user to choose an IT-Verbund.
      * </p>
      * 
      * <p>
      * If the value is <code>false</code> the list will really be empty.
      * </p>
      */
-    void resetTable(boolean choseMessage) {
-        if (choseMessage) {
+    void resetTable(boolean chooseMessage) {
+        if (chooseMessage) {
             viewer.setInput(new PlaceHolder(Messages.GenericMassnahmenView_5));
         } else {
             viewer.setInput(new ArrayList<Object>());
@@ -604,7 +592,7 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
      * <p>
      * In case the <code>compound</code> argument is <code>null</code> the combo
      * box will be set to an element which means 'no compound chosen'. A message
-     * in the table will inform the user that she has to chose one first.
+     * in the table will inform the user that she has to choose one first.
      * </p>
      * 
      * <p>
@@ -640,42 +628,38 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
 
                 try {
                     monitor.setTaskName(""); //$NON-NLS-1$
-                    LoadCnATreeElementTitles<ITVerbund> compoundLoader = new LoadCnATreeElementTitles<ITVerbund>(
+                    LoadCnATreeElementTitles<ITVerbund> compoundLoader = new LoadCnATreeElementTitles<>(
                             ITVerbund.class);
                     compoundLoader = ServiceFactory.lookupCommandService()
                             .executeCommand(compoundLoader);
                     final List<ITVerbund> elements = compoundLoader.getElements();
-                    Display.getDefault().asyncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            compoundChoser.setElements(elements);
-                            compoundChoser.setEnabled(true);
+                    Display.getDefault().asyncExec(() -> {
+                        compoundChoser.setElements(elements);
+                        compoundChoser.setEnabled(true);
 
-                            // Only try to preselect when a ITVerbund instance
-                            // was
-                            // given.
-                            if (compound != null) {
-                                compoundChoser.setSelectedCompound(compound);
+                        // Only try to preselect when a ITVerbund instance
+                        // was
+                        // given.
+                        if (compound != null) {
+                            compoundChoser.setSelectedCompound(compound);
 
-                                // If the compoundChoser returns false here,
-                                // then
-                                // the compound does not exist anymore.
-                                if (compoundChoser.isSelectedCompound(compound)) {
-                                    // Reload the measures belonging to the
-                                    // preselected compound.
-                                    loadMeasures(compound);
+                            // If the compoundChoser returns false here,
+                            // then
+                            // the compound does not exist anymore.
+                            if (compoundChoser.isSelectedCompound(compound)) {
+                                // Reload the measures belonging to the
+                                // preselected compound.
+                                loadMeasures(compound);
 
-                                    return;
-                                }
-
-                                // Compound not available anymore: Fall through.
+                                return;
                             }
 
-                            // Place a message that asks the user to chose a
-                            // compound.
-                            viewer.setInput(new PlaceHolder(Messages.GenericMassnahmenView_9));
+                            // Compound not available anymore: Fall through.
                         }
 
+                        // Place a message that asks the user to choose a
+                        // compound.
+                        viewer.setInput(new PlaceHolder(Messages.GenericMassnahmenView_9));
                     });
 
                 } catch (Exception e) {
@@ -719,7 +703,7 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
      * Loads the MassnahmenUmsetzung instances for the given IT-Verbund.
      * 
      * <p>
-     * This method is called when the user choses an IT-Verbund and when the
+     * This method is called when the user chooses an IT-Verbund and when the
      * content provider decides that all data has to be reloaded.
      * </p>
      * 
@@ -738,7 +722,6 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
 
         viewer.setInput(new PlaceHolder(getMeasureLoadPlaceholderLabel()));
         WorkspaceJob job = new WorkspaceJob(getMeasureLoadJobLabel()) {
-            @SuppressWarnings("unchecked")
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 Activator.inheritVeriniceContextState();
@@ -767,28 +750,19 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
                     } else {
                         allMassnahmen.addAll(command.getAll());
                     }
-                    Display.getDefault().asyncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            viewer.setInput(allMassnahmen);
-                            compoundChoser.setEnabled(true);
-                            int loaded = loadBlockNumber
-                                    * FindMassnahmenForITVerbund.LOAD_BLOCK_SIZE;
-                            if (loaded > number) {
-                                loaded = number;
-                                GenericMassnahmenView.this.loadMoreAction.setEnabled(false);
-                            }
-                            String info = "(" + loaded + " of " + number + ")";
-                            GenericMassnahmenView.this.loadMoreAction.setText(info);
+                    Display.getDefault().asyncExec(() -> {
+                        viewer.setInput(allMassnahmen);
+                        compoundChoser.setEnabled(true);
+                        int loaded = loadBlockNumber * FindMassnahmenForITVerbund.LOAD_BLOCK_SIZE;
+                        if (loaded > number) {
+                            loaded = number;
+                            GenericMassnahmenView.this.loadMoreAction.setEnabled(false);
                         }
+                        String info = "(" + loaded + " of " + number + ")";
+                        GenericMassnahmenView.this.loadMoreAction.setText(info);
                     });
                 } catch (Exception e) {
-                    Display.getDefault().asyncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            compoundChoser.setEnabled(true);
-                        }
-                    });
+                    Display.getDefault().asyncExec(() -> compoundChoser.setEnabled(true));
                     LOG.error("Error while loading massnahmen", e);
                     ExceptionUtil.log(e, getTaskErrorLabel());
                 }
@@ -800,14 +774,8 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
 
     }
 
-    /**
-     * @return
-     */
     protected abstract String getSortByProperty();
 
-    /**
-     * @return
-     */
     protected abstract String getDateProperty();
 
     protected abstract Action createFilterAction(MassnahmenUmsetzungFilter umsetzungFilter,
@@ -834,16 +802,10 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
         manager.add(compoundChoser);
     }
 
-    /**
-     * @return
-     */
     private void createLoadMoreAction() {
         loadMoreAction = new LoadMoreAction(this, Messages.GenericMassnahmenView_11);
     }
 
-    /**
-     * 
-     */
     private void createToggleDateAction() {
         toggleDateAction = new Action() {
             @Override
@@ -895,18 +857,8 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
     }
 
     private void hookActions() {
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                doubleClickAction.run();
-            }
-        });
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                selectionAction.run();
-            }
-        });
+        viewer.addDoubleClickListener(event -> doubleClickAction.run());
+        viewer.addSelectionChangedListener(event -> selectionAction.run());
     }
 
     @Override
@@ -916,52 +868,38 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
 
     @Override
     public final void compoundAdded(final ITVerbund compound) {
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("handling added compound: " + compound.getTitle()); //$NON-NLS-1$
-                }
-                compoundChoser.compoundAdded(compound);
+        Display.getDefault().asyncExec(() -> {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("handling added compound: " + compound.getTitle()); //$NON-NLS-1$
             }
+            compoundChoser.compoundAdded(compound);
         });
     }
 
     @Override
     public final void compoundRemoved(final ITVerbund compound) {
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("handling removed compound: " + compound.getTitle()); //$NON-NLS-1$
-                }
-                compoundChoser.compoundRemoved(compound);
+        Display.getDefault().asyncExec(() -> {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("handling removed compound: " + compound.getTitle()); //$NON-NLS-1$
             }
+            compoundChoser.compoundRemoved(compound);
         });
     }
 
     @Override
     public final void compoundChanged(final ITVerbund compound) {
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("handling changed compound: " + compound.getTitle()); //$NON-NLS-1$
-                }
-                compoundChoser.compoundChanged(compound);
+        Display.getDefault().asyncExec(() -> {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("handling changed compound: " + compound.getTitle()); //$NON-NLS-1$
             }
+            compoundChoser.compoundChanged(compound);
         });
     }
 
     @Override
     public final ITVerbund getCurrentCompound() {
         final ITVerbund[] retval = new ITVerbund[1];
-        Display.getDefault().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                retval[0] = compoundChoser.getSelectedCompound();
-            }
-        });
+        Display.getDefault().syncExec(() -> retval[0] = compoundChoser.getSelectedCompound());
 
         return retval[0];
     }
@@ -994,7 +932,7 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
 
     }
 
-    protected static class TableSorter extends ViewerSorter {
+    protected static class TableSorter extends ViewerComparator {
         private int propertyIndex;
         private static final int DEFAULT_SORT_COLUMN = 1;
         protected static final int DESCENDING = 1;
