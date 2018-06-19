@@ -158,10 +158,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
         showFirstSteps();
         preloadDBMapper();
-        for (IWorkbenchPage page : PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-                .getPages()) {
-            initPerspective();
-        }
+        checkOpenViews();
         closeUnallowedViews();
         showUpdateNews();
     }
@@ -219,19 +216,19 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
                     public void perspectiveActivated(IWorkbenchPage page,
                             IPerspectiveDescriptor descriptor) {
                         super.perspectiveActivated(page, descriptor);
-                        initPerspective();
+                        checkOpenViews();
                     }
 
                     @Override
                     public void perspectiveOpened(IWorkbenchPage page,
                             IPerspectiveDescriptor perspective) {
                         super.perspectiveOpened(page, perspective);
-                        initPerspective();
+                        checkOpenViews();
                     }
                 });
     }
 
-    private void initPerspective() {
+    private void checkOpenViews() {
         Activator.inheritVeriniceContextState();
         for (final IViewReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow()
                 .getActivePage().getViewReferences()) {
