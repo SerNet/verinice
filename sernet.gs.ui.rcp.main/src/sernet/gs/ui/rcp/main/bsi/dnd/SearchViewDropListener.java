@@ -47,20 +47,13 @@ public class SearchViewDropListener extends ViewerDropAdapter
         implements DropPerformer, RightEnabledUserInteraction {
 
 
-    private transient Logger log = Logger.getLogger(SearchViewDropListener.class);
+    private static final Logger log = Logger.getLogger(SearchViewDropListener.class);
 
     private boolean isActive = false;
     private Object target = null;
 
     public SearchViewDropListener(TableViewer viewer) {
         super(viewer);
-    }
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(SearchViewDropListener.class);
-        }
-        return log;
     }
 
     /* (non-Javadoc)
@@ -86,8 +79,8 @@ public class SearchViewDropListener extends ViewerDropAdapter
      */
     @Override
     public boolean validateDrop(Object target, int operation, TransferData transferType) {
-        if (getLog().isDebugEnabled()) {
-            getLog().debug(
+        if (log.isDebugEnabled()) {
+            log.debug(
                     "validateDrop, \n\t transfer type class: " + transferType.getClass().getName());
         }
         if (!checkRights()) {
@@ -95,7 +88,7 @@ public class SearchViewDropListener extends ViewerDropAdapter
         }
         if (target == null) {
             if (log.isDebugEnabled()) {
-                getLog().debug("target null - false");
+                log.debug("target null - false");
             }
             isActive = false;
             return isActive;
@@ -104,7 +97,7 @@ public class SearchViewDropListener extends ViewerDropAdapter
         }
         isActive = target instanceof VeriniceSearchResultRow;
         if (log.isDebugEnabled()) {
-            getLog().debug("validation returns " + isActive);
+            log.debug("validation returns " + isActive);
         }
         return isActive;
     }
@@ -127,18 +120,18 @@ public class SearchViewDropListener extends ViewerDropAdapter
     public boolean performDrop(Object toDrop) {
         Object[] dataToDrop = (Object[]) toDrop;
         if (dataToDrop == null || dataToDrop.length == 0) {
-            getLog().error("data missing");
+            log.error("data missing");
             return false;
         }
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("performDrop");
+        if (log.isDebugEnabled()) {
+            log.debug("performDrop");
         }
         Object firstObject = dataToDrop[0];
         if (isActive()) {
             return handleDrop(dataToDrop);
         } else {
-            if (getLog().isDebugEnabled()) {
-                getLog().debug(firstObject + " not supported element");
+            if (log.isDebugEnabled()) {
+                log.debug(firstObject + " not supported element");
             }
             return false;
         }
@@ -146,8 +139,8 @@ public class SearchViewDropListener extends ViewerDropAdapter
 
     private boolean handleDrop(Object[] data) {
 
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("BSI");
+        if (log.isDebugEnabled()) {
+            log.debug("BSI");
         }
 
         ArrayList<CnATreeElement> toDrop = new ArrayList<>(data.length);
@@ -164,7 +157,7 @@ public class SearchViewDropListener extends ViewerDropAdapter
 
         } catch (CommandException e) {
 
-            getLog().error(e);
+            log.error(e);
             return false;
         }
         LinkDropper dropper = new LinkDropper();
@@ -186,7 +179,7 @@ public class SearchViewDropListener extends ViewerDropAdapter
 
     @Override
     public void drop(DropTargetEvent event) {
-        getLog().debug("entered drop(DropTargetEvent event) with event:" + event.toString());
+        log.debug("entered drop(DropTargetEvent event) with event:" + event.toString());
         target = determineTarget(event);
         super.drop(event);
     }

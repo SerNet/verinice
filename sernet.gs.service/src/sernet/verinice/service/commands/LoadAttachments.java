@@ -49,17 +49,10 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("serial")
 public class LoadAttachments extends GenericCommand implements IAuthAwareCommand{
 
-	private transient Logger log = Logger.getLogger(LoadAttachments.class);
+	private static final Logger log = Logger.getLogger(LoadAttachments.class);
 	
 	private transient IAuthService authService;
 	
-	public Logger getLog() {
-		if(log==null) {
-			log = Logger.getLogger(LoadAttachments.class);
-		}
-		return log;
-	}
-
 	private Integer cnAElementId;
 	
 	private List<Attachment> attachmentList;
@@ -116,21 +109,21 @@ public class LoadAttachments extends GenericCommand implements IAuthAwareCommand
 	 */
 	@Override
 	public void execute() {
-	    if (getLog().isDebugEnabled()) {
-	        getLog().debug("executing, id is: " + getCnAElementId() + "...");
+	    if (log.isDebugEnabled()) {
+	        log.debug("executing, id is: " + getCnAElementId() + "...");
 	    }
 	    long startTime = System.currentTimeMillis();
 	    
 	    fillAttachmentList();
 
-	    if (getLog().isDebugEnabled()) {
-	        getLog().debug("number of attachments found: " + attachmentList.size());
+	    if (log.isDebugEnabled()) {
+	        log.debug("number of attachments found: " + attachmentList.size());
 	    }
 
 	    initializeAttachmentList();
 	    setAttachmentList(attachmentList);
-	    if(getLog().isDebugEnabled()){
-	        getLog().debug("It takes :\t" + TimeFormatter.getHumanRedableTime(System.currentTimeMillis()-startTime) + " to load " + attachmentList.size() + " attachments");
+	    if(log.isDebugEnabled()){
+	        log.debug("It takes :\t" + TimeFormatter.getHumanRedableTime(System.currentTimeMillis()-startTime) + " to load " + attachmentList.size() + " attachments");
 	    }
 	    
 	}

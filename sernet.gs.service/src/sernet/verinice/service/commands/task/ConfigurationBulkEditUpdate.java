@@ -46,7 +46,7 @@ import sernet.verinice.service.commands.crud.LoadChildrenForExpansion;
 @SuppressWarnings({"serial", "restriction"})
 public class ConfigurationBulkEditUpdate extends ChangeLoggingCommand  implements IChangeLoggingCommand, IAuthAwareCommand {
     
-    private transient Logger log;
+    private static final Logger log = Logger.getLogger(ConfigurationBulkEditUpdate.class);
     private List<Integer> dbIDs;
     private Entity dialogEntity;
     private transient IAuthService authService;
@@ -61,7 +61,6 @@ public class ConfigurationBulkEditUpdate extends ChangeLoggingCommand  implement
      * @param dialogEntity
      */
     public ConfigurationBulkEditUpdate(List<Integer> dbIDs, Entity dialogEntity, boolean updatePW, String newPassword) {
-        log = Logger.getLogger(ConfigurationBulkEditUpdate.class);
         this.dbIDs = dbIDs;
         this.dialogEntity = dialogEntity;
         this.updatePassword = updatePW;
@@ -85,12 +84,12 @@ public class ConfigurationBulkEditUpdate extends ChangeLoggingCommand  implement
                 command2 = getCommandService().executeCommand(command2);
                 pElmt = command2.getElementWithChildren();
             } catch (CommandException e) {
-                getLog().error("Error while retrieving children", e);
+                log.error("Error while retrieving children", e);
             }
             // username must be set, to be able to edit password, empty username isn't allowed also
             if(found.getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0) == null ||
                     found.getEntity().getProperties(Configuration.PROP_USERNAME).getProperty(0).getPropertyValue().equals("")){
-                getLog().warn("Property username not set, adding user to failed elements list");
+                log.warn("Property username not set, adding user to failed elements list");
                 String personInfoString = null;
                 if(pElmt instanceof Person){
                     personInfoString = getPersonInfoString((Person)pElmt);
@@ -202,14 +201,6 @@ public class ConfigurationBulkEditUpdate extends ChangeLoggingCommand  implement
     }
     
     
-    private Logger getLog(){
-        if(log == null){
-            log = Logger.getLogger(this.getClass());
-        }
-        return log;
-    }
-
-
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IAuthAwareCommand#setAuthService(sernet.verinice.interfaces.IAuthService)
      */

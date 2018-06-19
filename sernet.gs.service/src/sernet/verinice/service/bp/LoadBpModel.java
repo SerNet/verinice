@@ -40,7 +40,7 @@ public class LoadBpModel extends GenericCommand implements INoAccessControl {
 
     private static final long serialVersionUID = -7352618220257525973L;
 
-    private transient Logger log = Logger.getLogger(LoadBpModel.class);
+    private static final Logger log = Logger.getLogger(LoadBpModel.class);
 
 	private BpModel model;
 
@@ -52,8 +52,8 @@ public class LoadBpModel extends GenericCommand implements INoAccessControl {
     public void execute() {
 		List<BpModel> modelList = getDaoFactory().getDAO(BpModel.class).findAll(RetrieveInfo.getChildrenInstance());
 		if(modelList==null || modelList.isEmpty()) {
-		    if (getLog().isInfoEnabled()) {
-		        getLog().info("No base protection model found. Creating a new one...");
+		    if (log.isInfoEnabled()) {
+		        log.info("No base protection model found. Creating a new one...");
             }
 		    createBpModel();
 		} else if(modelList.size()>1) {
@@ -77,12 +77,5 @@ public class LoadBpModel extends GenericCommand implements INoAccessControl {
 	public BpModel getModel() {
 		return model;
 	}
-	
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(LoadBpModel.class);
-        }
-        return log;
-    }
 	
 }

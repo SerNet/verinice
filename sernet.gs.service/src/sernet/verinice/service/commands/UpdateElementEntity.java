@@ -45,15 +45,8 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("restriction")
 public class UpdateElementEntity<T extends CnATreeElement> extends ChangeLoggingCommand implements IChangeLoggingCommand {
 
-    private transient Logger log = Logger.getLogger(UpdateElementEntity.class);
+    private static final Logger log = Logger.getLogger(UpdateElementEntity.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(UpdateElementEntity.class);
-        }
-        return log;
-    }
-    
 	private T newElement;
 	
 	private String stationId;
@@ -69,9 +62,9 @@ public class UpdateElementEntity<T extends CnATreeElement> extends ChangeLogging
         try {
             elementDao.checkRights(this.newElement);
         } catch(SecurityException e) {
-            getLog().warn("Can not update entity of element: " + this.newElement + " security check fails:" + e.getMessage());
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("stacktrace: ", e);
+            log.warn("Can not update entity of element: " + this.newElement + " security check fails:" + e.getMessage());
+            if (log.isDebugEnabled()) {
+                log.debug("stacktrace: ", e);
             }
             throw e;
         }

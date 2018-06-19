@@ -44,18 +44,11 @@ import sernet.verinice.interfaces.INoAccessControl;
  */
 public class AddDefaultGroups extends GenericCommand implements INoAccessControl {
 
-    private transient Logger log = Logger.getLogger(AddDefaultGroups.class);
+    private static final Logger log = Logger.getLogger(AddDefaultGroups.class);
     
     IBaseDao<Configuration, Serializable> configurationDao;
     
     IBaseDao<Property, Serializable> propertyDao;
-    
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(AddDefaultGroups.class);
-        }
-        return log;
-    }
     
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICommand#execute()
@@ -68,13 +61,13 @@ public class AddDefaultGroups extends GenericCommand implements INoAccessControl
             checkGroupName(IRightsService.USERDEFAULTGROUPNAME);
             addUserGroup = true;
         } catch(GroupExistsException e) {
-            getLog().warn(e.getMessage());
+            log.warn(e.getMessage());
         }
         try {
             checkGroupName(IRightsService.ADMINDEFAULTGROUPNAME);
             addAdminGroup = true;
         } catch(GroupExistsException e) {
-            getLog().warn(e.getMessage());
+            log.warn(e.getMessage());
         }
         List<Configuration> configurationList = getConfigurationDao().findAll(RetrieveInfo.getPropertyInstance());
         for (Configuration conf : configurationList) {

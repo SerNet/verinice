@@ -96,7 +96,7 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
 
     private static volatile IModelLoadListener modelLoadListener;
 
-    private Logger LOG = Logger.getLogger(ReportTemplateSync.class);
+    private static final Logger LOG = Logger.getLogger(ReportTemplateSync.class);
 
     private IReportTemplateService reportDepositCache;
 

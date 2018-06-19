@@ -68,7 +68,7 @@ public class LoadElementImagesCommand extends GenericCommand {
 
     private int imageNr;
 
-    private transient Logger log;
+    private static final Logger log = LoggerFactory.getLogger(LoadElementImagesCommand.class);
 
     private byte[] result;
 
@@ -85,7 +85,6 @@ public class LoadElementImagesCommand extends GenericCommand {
 
     public LoadElementImagesCommand(int id) {
         this.id = id;
-        log = LoggerFactory.getLogger(LoadElementImagesCommand.class);
     }
 
     public LoadElementImagesCommand(int id, int imageNr) {
@@ -166,9 +165,6 @@ public class LoadElementImagesCommand extends GenericCommand {
             	setDummyImage();
             }
         } catch (CommandException e) {
-            if (log == null) {
-                log = LoggerFactory.getLogger(this.getClass());
-            }
             log.error("Error while executing command", e);
 
         } catch (IOException e) {

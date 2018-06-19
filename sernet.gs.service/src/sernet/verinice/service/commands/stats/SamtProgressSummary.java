@@ -23,13 +23,7 @@ import sernet.verinice.service.iso27k.ControlMaturityService;
  */
 public class SamtProgressSummary extends GenericCommand implements IAuthAwareCommand {
    
-    private transient Logger log = Logger.getLogger(SamtProgressSummary.class);
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(SamtProgressSummary.class);
-        }
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(SamtProgressSummary.class);
     
     public static final String ANSWERED = Messages.SamtProgressSummary_0;
 

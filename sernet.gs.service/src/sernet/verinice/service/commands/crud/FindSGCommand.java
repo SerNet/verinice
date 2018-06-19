@@ -44,14 +44,7 @@ import sernet.verinice.model.samt.SamtTopic;
 @SuppressWarnings("serial")
 public class FindSGCommand extends GenericCommand implements ICachedCommand{
 
-    private transient Logger log = Logger.getLogger(FindSGCommand.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(FindSGCommand.class);
-        }
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(FindSGCommand.class);
 
     private ControlGroup selfAssessmentGroup = null;
 
@@ -107,8 +100,8 @@ public class FindSGCommand extends GenericCommand implements ICachedCommand{
                 controlGroupList = Collections.emptyList();
             }
 
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("number of controlGroups " + FindSGCommand.nullSaveSize(controlGroupList));
+            if (log.isDebugEnabled()) {
+                log.debug("number of controlGroups " + FindSGCommand.nullSaveSize(controlGroupList));
             }
 
             // check if parent is Audit and children are SamtTopics

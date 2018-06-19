@@ -56,7 +56,7 @@ public class LoadWorstFindingsCommand extends GenericCommand {
 
     private int id;
 
-    private transient Logger log;
+    private static final Logger log = LoggerFactory.getLogger(LoadWorstFindingsCommand.class);
 
     public static final String SAMT_PROP_FINDING = "samt_topic_audit_findings";
     public static final String SAMT_PROP_MEASURE = "samt_topic_controlnote";
@@ -66,7 +66,6 @@ public class LoadWorstFindingsCommand extends GenericCommand {
     private transient Cache cache = null;
     
     public LoadWorstFindingsCommand(int id) {
-        log = LoggerFactory.getLogger(LoadWorstFindingsCommand.class);
         int id0 = -1;
         if(String.valueOf(id).startsWith(String.valueOf(LoadChapterListCommand.PLACEHOLDER_CONTROLGROUP_ID))){
             String chapterIdString = String.valueOf(id);

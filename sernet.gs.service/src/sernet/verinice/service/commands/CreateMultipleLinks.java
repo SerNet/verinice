@@ -36,15 +36,8 @@ import sernet.verinice.model.common.Link;
  */
 public class CreateMultipleLinks extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(CreateMultipleLinks.class);
+    private static final Logger log = Logger.getLogger(CreateMultipleLinks.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(CreateMultipleLinks.class);
-        }
-        return log;
-    }
-    
     private List<Link> linkList;
     private transient IBaseDao<CnATreeElement, Serializable> dao;
     private transient IBaseDao<CnALink, Serializable> linkDao;
@@ -89,18 +82,18 @@ public class CreateMultipleLinks extends GenericCommand {
                 dependant = getDao().findByUuid(dependant.getUuid(), ri);
             }
 
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Creating link from " + dependency.getTypeId() + " to " + dependant.getTypeId());
+            if (log.isDebugEnabled()) {
+                log.debug("Creating link from " + dependency.getTypeId() + " to " + dependant.getTypeId());
             }
             
             CnALink cnaLink = new CnALink(dependant, dependency, link.getRelationId(), link.getComment());
 
             getLinkDao().merge(cnaLink, true);
         } catch (RuntimeException e) {
-            getLog().error("RuntimeException while creating link.", e);
+            log.error("RuntimeException while creating link.", e);
             throw e;
         } catch (Exception e) {
-            getLog().error("Error while creating link", e);
+            log.error("Error while creating link", e);
             throw new RuntimeException("Error while creating link", e);
         }
     }

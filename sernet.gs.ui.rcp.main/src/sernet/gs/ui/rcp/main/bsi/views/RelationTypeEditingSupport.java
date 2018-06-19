@@ -54,7 +54,7 @@ import sernet.verinice.service.commands.crud.ChangeLinkType;
  */
 public class RelationTypeEditingSupport extends EditingSupport {
 
-    private Logger log = Logger.getLogger(RelationTypeEditingSupport.class);
+    private static final Logger log = Logger.getLogger(RelationTypeEditingSupport.class);
 
     private IRelationTable view;
     private TableViewer viewer;

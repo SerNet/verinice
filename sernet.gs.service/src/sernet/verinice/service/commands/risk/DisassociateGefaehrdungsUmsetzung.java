@@ -47,14 +47,7 @@ public class DisassociateGefaehrdungsUmsetzung extends GenericCommand {
 	private Integer listDbId;
 	private FinishedRiskAnalysisLists finishedRiskLists;
 	private FinishedRiskAnalysis finishedRiskAnalysis;
-    private transient Logger log = Logger.getLogger(RemoveElement.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(RemoveElement.class);
-        }
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(RemoveElement.class);
 
 	/**
 	 * @param finishedRiskAnalysis 
@@ -96,7 +89,7 @@ public class DisassociateGefaehrdungsUmsetzung extends GenericCommand {
                 RemoveElement<GefaehrdungsUmsetzung> command = new RemoveElement<>(removeMe);
                 getCommandService().executeCommand(command);
             } catch (CommandException e) {
-                getLog().error("could not remove GefaehrdunsUmsetzung " + removeMe.getUuid(), e);
+                log.error("could not remove GefaehrdunsUmsetzung " + removeMe.getUuid(), e);
             }
 
 		}

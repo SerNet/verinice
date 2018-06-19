@@ -38,14 +38,7 @@ import sernet.verinice.model.bsi.BSIModel;
  */
 public class GetDbVersionID extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(GetDbVersionID.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(GetDbVersionID.class);
-        }
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(GetDbVersionID.class);
 
     private Double version = null;
 
@@ -73,7 +66,7 @@ public class GetDbVersionID extends GenericCommand {
             }
 
         } catch (HibernateException he) {
-            getLog().error("Error during database migration.", he);
+            log.error("Error during database migration.", he);
         }
     }
 

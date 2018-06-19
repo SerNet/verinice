@@ -40,7 +40,7 @@ public class BpModel extends CnATreeElement implements IBpRoot {
     public static final String TYPE_ID = "bp_model"; //$NON-NLS-1$    
     public static final String TITLE = "Modernized ITBP Model"; //$NON-NLS-1$
     
-    private transient Logger log;
+    private static final Logger log = Logger.getLogger(BpModel.class);;
     
     private transient List<IBpModelListener> listeners;
     
@@ -167,15 +167,15 @@ public class BpModel extends CnATreeElement implements IBpRoot {
     public void modelReload(BpModel newModel) {
         for (IBpModelListener listener : getListeners()) {
             listener.modelReload(newModel);
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("modelReload, listener: " + listener); //$NON-NLS-1$
+            if (log.isDebugEnabled()) {
+                log.debug("modelReload, listener: " + listener); //$NON-NLS-1$
             }
         }
     }
     
     public void addModITBOModelListener(IBpModelListener listener) {
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Adding ISO model listener.");
+        if (log.isDebugEnabled()) {
+            log.debug("Adding ISO model listener.");
         }
         if (!getListeners().contains(listener)){
             getListeners().add(listener);
@@ -203,11 +203,4 @@ public class BpModel extends CnATreeElement implements IBpRoot {
         }      
     }    
     
-    private Logger getLog() {
-        if(log==null) {
-            log = Logger.getLogger(BpModel.class);
-        }
-        return log;
-    }
-
 }

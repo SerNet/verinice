@@ -65,7 +65,7 @@ public class LoadAllFindingsCommand extends GenericCommand {
 
     private Integer id;
 
-    private transient Logger log;
+    private static final Logger log = LoggerFactory.getLogger(LoadAllFindingsCommand.class);
 
     private transient CacheManager manager = null;
     private String cacheId = null;
@@ -84,7 +84,6 @@ public class LoadAllFindingsCommand extends GenericCommand {
             id0 = Integer.parseInt(chapterIdString);
         }
         this.id = (id0 > -1) ? id0 : id;
-        log = LoggerFactory.getLogger(LoadAllFindingsCommand.class);
     }
 
     public Object[][] getResult() {

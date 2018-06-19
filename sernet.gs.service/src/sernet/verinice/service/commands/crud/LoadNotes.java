@@ -37,15 +37,8 @@ import sernet.verinice.model.bsi.Note;
 
 public class LoadNotes extends GenericCommand {
 
-	private transient Logger log = Logger.getLogger(LoadNotes.class);
+	private static final Logger log = Logger.getLogger(LoadNotes.class);
 	
-	public Logger getLog() {
-		if(log==null) {
-			log = Logger.getLogger(LoadNotes.class);
-		}
-		return log;
-	}
-
 	private final NoteSorter sorter = new NoteSorter();
 
 	private Integer cnAElementId;
@@ -66,8 +59,8 @@ public class LoadNotes extends GenericCommand {
 	}
 
 	public void execute() {
-		if (getLog().isDebugEnabled()) {
-			getLog().debug("executing, id is: " + getCnAElementId() + "...");
+		if (log.isDebugEnabled()) {
+			log.debug("executing, id is: " + getCnAElementId() + "...");
 		}
 		if(getCnAElementId()!=null) {
 			IBaseDao<Note, Serializable> dao = getDaoFactory().getDAO(Note.class);
@@ -78,8 +71,8 @@ public class LoadNotes extends GenericCommand {
 			crit.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
 			crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			List<Note> internalNoteList = dao.findByCriteria(crit);
-			if (getLog().isDebugEnabled()) {
-				getLog().debug("number of notes found: " + internalNoteList.size());
+			if (log.isDebugEnabled()) {
+				log.debug("number of notes found: " + internalNoteList.size());
 			}
 			for (Note note : internalNoteList) {
 				Entity entity = note.getEntity();

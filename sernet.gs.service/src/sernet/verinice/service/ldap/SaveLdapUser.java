@@ -40,15 +40,8 @@ import sernet.verinice.service.model.LoadModel;
 
 public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLoggingCommand,IAuthAwareCommand {
 
-	 private transient Logger log = Logger.getLogger(SaveLdapUser.class);
+	 private static final Logger log = Logger.getLogger(SaveLdapUser.class);
 
-	    public Logger getLog() {
-	        if (log == null) {
-	            log = Logger.getLogger(SaveLdapUser.class);
-	        }
-	        return log;
-	    }
-	
 	private String stationId;
 	
     private transient IAuthService authService;
@@ -99,7 +92,7 @@ public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLogging
 				try {
 					createConfiguration = getCommandService().executeCommand(createConfiguration);
 				} catch (CommandException e) {
-					getLog().error("Error while creating configuration for user: " + personInfo.getLoginName(), e);
+					log.error("Error while creating configuration for user: " + personInfo.getLoginName(), e);
 				}
 				// save username in person
 				Configuration configuration = createConfiguration.getConfiguration();
@@ -119,7 +112,7 @@ public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLogging
 				try {
 					saveConfiguration = getCommandService().executeCommand(saveConfiguration);
 				} catch (CommandException e) {
-					getLog().error("Error while saving username in configuration for user: " + personInfo.getLoginName(), e);
+					log.error("Error while saving username in configuration for user: " + personInfo.getLoginName(), e);
 				}
 			}
 		}
@@ -150,7 +143,7 @@ public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLogging
             	
                 cmdLoadContainer = getCommandService().executeCommand(cmdLoadContainer);
             } catch (CommandException e) {
-            	getLog().error("Error while loading container", e);
+            	log.error("Error while loading container", e);
                 throw new RuntimeCommandException("Error while loading container",e);
             }
             container = cmdLoadContainer.getHolder();
@@ -177,7 +170,7 @@ public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLogging
         try {
             cmdLoadModel = getCommandService().executeCommand(cmdLoadModel);
         } catch (CommandException e) {
-        	getLog().error("Error ehile creating model", e);
+        	log.error("Error ehile creating model", e);
             throw new RuntimeCommandException("Error ehile creating model", e);
         }
         BSIModel model = cmdLoadModel.getModel();
@@ -198,7 +191,7 @@ public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLogging
         try {
             cmdLoadModel = getCommandService().executeCommand(cmdLoadModel);
         } catch (CommandException e) {
-        	getLog().error("Error while creating model", e);
+        	log.error("Error while creating model", e);
             throw new RuntimeCommandException("Error while creating model", e);
         }
         ISO27KModel model = cmdLoadModel.getModel();
@@ -252,8 +245,8 @@ public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLogging
 				for (Property property : resultList) {
 				    // check again to exclude name which start with the same characters
 				    if ( username.equals(property.getPropertyValue()) ) {
-				        if (getLog().isDebugEnabled()) {
-		                    getLog().debug("Username exists: " + username);
+				        if (log.isDebugEnabled()) {
+		                    log.debug("Username exists: " + username);
 		                }
 				        throw new UsernameExistsRuntimeException(username,"Username already exists: " + username);
 				    }

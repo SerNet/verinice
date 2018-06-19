@@ -59,13 +59,7 @@ import sernet.verinice.service.commands.RemoveLink;
 @SuppressWarnings("serial")
 public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand {
     
-    private transient Logger log = Logger.getLogger(Unify.class);
-    private Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(Unify.class);
-        }
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(Unify.class);
     
     /**
      * A list with property-ids from SNCA.xml.
@@ -144,7 +138,7 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
             try{
                 unify(source,destination);
             } catch (CommandException e){
-                getLog().error("Error unifying elements",e);
+                log.error("Error unifying elements",e);
             }
         }
     }

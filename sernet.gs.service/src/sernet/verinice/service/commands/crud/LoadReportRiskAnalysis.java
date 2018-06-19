@@ -31,7 +31,7 @@ public class LoadReportRiskAnalysis extends GenericCommand implements ICachedCom
 
     private boolean resultInjectedFromCache = false;
 
-    private transient Logger log = Logger.getLogger(LoadReportRiskAnalysis.class);
+    private static final Logger log = Logger.getLogger(LoadReportRiskAnalysis.class);
 
     private boolean getDbId = false;
 
@@ -163,8 +163,8 @@ public class LoadReportRiskAnalysis extends GenericCommand implements ICachedCom
             this.lists = (FinishedRiskAnalysisLists) array[0];
             this.zielobjektResult = (ArrayList<List<String>>) array[1];
             resultInjectedFromCache = true;
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+            if (log.isDebugEnabled()) {
+                log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
             }
         }
     }
@@ -180,13 +180,6 @@ public class LoadReportRiskAnalysis extends GenericCommand implements ICachedCom
         results[0] = this.lists;
         results[1] = this.zielobjektResult;
         return results;
-    }
-
-    private Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(LoadReportRiskAnalysis.class);
-        }
-        return log;
     }
 
 }

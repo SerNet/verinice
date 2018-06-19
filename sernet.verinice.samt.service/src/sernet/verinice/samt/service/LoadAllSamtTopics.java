@@ -45,15 +45,8 @@ import sernet.verinice.model.samt.SamtTopic;
 @SuppressWarnings("serial")
 public class LoadAllSamtTopics extends GenericCommand implements IAuthAwareCommand {
 
-    private transient Logger log = Logger.getLogger(LoadAllSamtTopics.class);
+    private static final Logger log = Logger.getLogger(LoadAllSamtTopics.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(LoadAllSamtTopics.class);
-        }
-        return log;
-    }
-    
     private transient IAuthService authService;
     
     private Integer id;

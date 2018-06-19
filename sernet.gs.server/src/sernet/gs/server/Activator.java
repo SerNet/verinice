@@ -30,7 +30,7 @@ import sernet.verinice.interfaces.IInternalServer;
 
 public class Activator extends Plugin {
 
-	private Logger log = Logger.getLogger(Activator.class);
+	private static final Logger log = Logger.getLogger(Activator.class);
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "veriniceServer";

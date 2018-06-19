@@ -43,7 +43,7 @@ public class LoadReportRemainingRiskWithImplControls extends GenericCommand impl
     private int rootObject;
     private int toleratedC, toleratedI, toleratedA;
     
-    private transient Logger log = Logger.getLogger(LoadReportRemainingRiskWithImplControls.class);
+    private static final Logger log = Logger.getLogger(LoadReportRemainingRiskWithImplControls.class);
 
     public static final String[] COLUMNS = new String[] { 
         "color_name",
@@ -180,7 +180,7 @@ public class LoadReportRemainingRiskWithImplControls extends GenericCommand impl
                 
                 
             } catch (CommandException e){
-                getLog().error("Error while executing command", e);
+                log.error("Error while executing command", e);
             }
         }
     }
@@ -222,11 +222,4 @@ public class LoadReportRemainingRiskWithImplControls extends GenericCommand impl
         return results;
     }
     
-    private Logger getLog(){
-        if(log == null){
-            log = Logger.getLogger(LoadReportRemainingRiskWithImplControls.class);
-        }
-        return log;
-    }
-
 }

@@ -46,15 +46,8 @@ import sernet.verinice.model.bsi.BSIModel;
 @SuppressWarnings("serial")
 public class MigrateDbTo0_94 extends DbMigration {
 	
-	private static transient Logger log = Logger.getLogger(MigrateDbTo0_94.class);
+	private static final Logger log = Logger.getLogger(MigrateDbTo0_94.class);
 
-    public static Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(MigrateDbTo0_94.class);
-        }
-        return log;
-    }
-	
 	private String[] tables = {
 			"cnatreeelement",
 			"finishedriskanalysislists",
@@ -85,7 +78,7 @@ public class MigrateDbTo0_94 extends DbMigration {
 			dao.executeCallback(new CreateUuidCallback(table, idIterator));
 			} catch (HibernateException he)
 			{
-				getLog().error("Error during database migration.", he);
+				log.error("Error during database migration.", he);
 			}
 		}
 		
@@ -109,7 +102,7 @@ public class MigrateDbTo0_94 extends DbMigration {
 						"select t.dbid as dbid from " + table +  " t")
 						.addScalar("dbid");
 				
-				getLog().debug("generated query: " + query.getQueryString());
+				log.debug("generated query: " + query.getQueryString());
 
 			return query.list();
 		}

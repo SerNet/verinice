@@ -94,14 +94,7 @@ import sernet.verinice.service.parser.GSScraperUtil;
 @SuppressWarnings("serial")
 public class ImportCreateBausteine extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(ImportCreateBausteine.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(ImportCreateBausteine.class);
-        }
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(ImportCreateBausteine.class);
 
     // attention dear reader: ud is an abbreviation for [u]ser[d]efined
 
@@ -172,7 +165,7 @@ public class ImportCreateBausteine extends GenericCommand {
             }
 
         } catch (Exception e) {
-            getLog().error("Error while importing: ", e);
+            log.error("Error while importing: ", e);
             throw new RuntimeCommandException(e);
         }
 
@@ -381,14 +374,14 @@ public class ImportCreateBausteine extends GenericCommand {
         }
 
         if(bausteinUmsetzung == null){
-            getLog().error("Bausteinumsetzung für " + baustein.getTitel() + " war null");
+            log.error("Bausteinumsetzung für " + baustein.getTitel() + " war null");
         }
 
         if(bausteinUmsetzung != null){
             bausteinUmsetzung.setSourceId(sourceId);
             bausteinUmsetzung.setExtId(createExtId(baustein, bausteinInformation.getZobId()));
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Creating baustein with sourceId and extId: " + sourceId + ", " + bausteinUmsetzung.getExtId());
+            if (log.isDebugEnabled()) {
+                log.debug("Creating baustein with sourceId and extId: " + sourceId + ", " + bausteinUmsetzung.getExtId());
             }
         }
 
@@ -415,7 +408,7 @@ public class ImportCreateBausteine extends GenericCommand {
         }
 
         if(bausteinUmsetzung == null){
-            getLog().error("Bausteinumsetzung für " + baustein.getTitel() + " war null");
+            log.error("Bausteinumsetzung für " + baustein.getTitel() + " war null");
         }
 
         // set zobID as extId to find baustein references linking to it later
@@ -423,8 +416,8 @@ public class ImportCreateBausteine extends GenericCommand {
         if(bausteinUmsetzung != null){
             bausteinUmsetzung.setSourceId(sourceId);
             bausteinUmsetzung.setExtId(createExtId(baustein, vorlage.obm.getId().getZobId()));
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Creating baustein with sourceId and extId: " + sourceId + ", " + bausteinUmsetzung.getExtId());
+            if (log.isDebugEnabled()) {
+                log.debug("Creating baustein with sourceId and extId: " + sourceId + ", " + bausteinUmsetzung.getExtId());
             }
         }
 

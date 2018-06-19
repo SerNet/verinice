@@ -45,18 +45,11 @@ public class CheckOwnGefaehrdungInUseCommand extends GenericCommand {
     private static final long serialVersionUID = 6512515989362442858L;
     private OwnGefaehrdung ownGefaehrdung;
     private boolean isInUse = true;
-    private transient Logger log = Logger.getLogger(CheckOwnGefaehrdungInUseCommand.class);
+    private static final Logger log = Logger.getLogger(CheckOwnGefaehrdungInUseCommand.class);
 
     public CheckOwnGefaehrdungInUseCommand(OwnGefaehrdung ownGefaehrdungToCheck) {
         super();
         ownGefaehrdung = ownGefaehrdungToCheck;
-    }
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(CheckOwnGefaehrdungInUseCommand.class);
-        }
-        return log;
     }
 
     @Override
@@ -66,11 +59,11 @@ public class CheckOwnGefaehrdungInUseCommand extends GenericCommand {
         List<?> entries = (List<?>) dao
                 .findByCallback(new Callback(ownGefaehrdung.getId()));
         isInUse = !entries.isEmpty();
-        if (getLog().isInfoEnabled()) {
+        if (log.isInfoEnabled()) {
             if (isInUse) {
-                getLog().info(ownGefaehrdung.getId() + " is in use");
+                log.info(ownGefaehrdung.getId() + " is in use");
             } else {
-                getLog().info(ownGefaehrdung.getId() + " is unused");
+                log.info(ownGefaehrdung.getId() + " is unused");
             }
         }
     }

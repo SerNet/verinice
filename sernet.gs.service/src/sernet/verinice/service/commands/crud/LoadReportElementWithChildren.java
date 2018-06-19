@@ -24,7 +24,7 @@ public class LoadReportElementWithChildren extends GenericCommand implements ICa
     private Integer rootElement;
     private List<CnATreeElement> result;
     
-    private transient Logger log = Logger.getLogger(LoadReportElementWithChildren.class);
+    private static final Logger log = Logger.getLogger(LoadReportElementWithChildren.class);
     
     private boolean resultInjectedFromCache = false;
     
@@ -126,8 +126,8 @@ public class LoadReportElementWithChildren extends GenericCommand implements ICa
     public void injectCacheResult(Object result) {
         this.result = (ArrayList<CnATreeElement>)result;
         this.resultInjectedFromCache = true;
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(log.isDebugEnabled()){
+            log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
@@ -139,10 +139,4 @@ public class LoadReportElementWithChildren extends GenericCommand implements ICa
         return this.result;
     }
 
-    private Logger getLog(){
-        if(log == null){
-            log = Logger.getLogger(LoadReportElementWithChildren.class);
-        }
-        return log;
-    }
 }

@@ -51,14 +51,7 @@ import sernet.verinice.model.iso27k.Organization;
 @SuppressWarnings("serial")
 public class AssignResponsiblePersonCommand extends GenericCommand {
     public static final String ID = "sernet.gs.ui.rcp.main.actions.assignresponsiblecommand"; //$NON-NLS-1$
-    private transient Logger log = Logger.getLogger(AssignResponsiblePersonCommand.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(AssignResponsiblePersonCommand.class);
-        }
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(AssignResponsiblePersonCommand.class);
 
     private List<MassnahmenUmsetzung> selectedElements;
     private Set<CnALink> changedElements;
@@ -200,7 +193,7 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
             try {
                 le = getCommandService().executeCommand(le);
             } catch (CommandException ce) {
-                getLog().error("Error while executing command: LoadCnAElementsByEntityIds", ce);
+                log.error("Error while executing command: LoadCnAElementsByEntityIds", ce);
                 throw new RuntimeException("Error while executing command: LoadCnAElementsByEntityIds", ce);
             }
 

@@ -63,7 +63,7 @@ public class LoadChapterListCommand extends GenericCommand {
 
     private CnATreeElement rootObject;
 
-    private transient Logger log;
+    private static final Logger log = LoggerFactory.getLogger(LoadChapterListCommand.class);
     
     private transient CacheManager manager = null;
     private String cacheId = null;
@@ -74,7 +74,6 @@ public class LoadChapterListCommand extends GenericCommand {
     private static final int OVERVIEW_PROPERTY_TARGET = 0;
     
     public LoadChapterListCommand(Integer chapterId) {
-        log = LoggerFactory.getLogger(LoadChapterListCommand.class);
         this.chapterId = chapterId;
     }
 

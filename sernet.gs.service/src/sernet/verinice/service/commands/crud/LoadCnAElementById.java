@@ -34,7 +34,7 @@ public class LoadCnAElementById extends GenericCommand implements ICachedCommand
     private String typeId;
     
     private boolean resultInjectedFromCache = false;
-    private static transient Logger LOG = Logger.getLogger(LoadCnAElementById.class);
+    private static final Logger LOG = Logger.getLogger(LoadCnAElementById.class);
 
 	public LoadCnAElementById(String typeId, int id) {
 		this.typeId= typeId;

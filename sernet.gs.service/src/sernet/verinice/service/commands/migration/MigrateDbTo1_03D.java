@@ -80,7 +80,7 @@ public class MigrateDbTo1_03D extends DbMigration {
             MassnahmenUmsetzung.TYPE_ID,
             BausteinUmsetzung.TYPE_ID};
     
-    private transient Logger log;
+    private static final Logger log = Logger.getLogger(MigrateDbTo1_03D.class);
 
     @Override
     public void execute() {
@@ -90,10 +90,10 @@ public class MigrateDbTo1_03D extends DbMigration {
         List<Object[]> hqlResultList = linkDao.findByQuery(HQL_ALL_LINKTYPES, new Object[] {});
         StringBuilder sb = new StringBuilder();
         
-        if(getLog().isDebugEnabled()){
+        if(log.isDebugEnabled()){
         	sb.setLength(0);
         	sb.append("Checking ").append(hqlResultList.size()).append(" Links for corrupted content");
-        	getLog().debug(sb.toString());
+        	log.debug(sb.toString());
         }
         
         for(Object[] result : hqlResultList) {
@@ -104,28 +104,28 @@ public class MigrateDbTo1_03D extends DbMigration {
             CnALink link = (CnALink)result[4];
             String relationId = link.getRelationId();
             if(StringUtils.isNotEmpty(relationId) && !isBSIUseCase(sourceEntityType, targetEntityType) && !isExistantId(sourceEntityType, targetEntityType, relationId)){
-                if(getLog().isDebugEnabled()) {
-                    getLog().debug("RelationId: <" + relationId + "> is not defined for [" + sourceEntityType + "]=>[" + targetEntityType + "]");
-                    getLog().debug("repairing relation");
+                if(log.isDebugEnabled()) {
+                    log.debug("RelationId: <" + relationId + "> is not defined for [" + sourceEntityType + "]=>[" + targetEntityType + "]");
+                    log.debug("repairing relation");
                 }
                 try {
                     // create new, corrected, link
                     // note that target and source are switched here on purpose
                     CreateLink createLinkCommand = new CreateLink(targetUuid, sourceUuid, relationId);
                     CnALink repairedLink = getCommandService().executeCommand(createLinkCommand).getLink();
-                    if(repairedLink != null && getLog().isDebugEnabled()) {
-                        getLog().debug("Operation succeeded. Link repaired and alive!");
+                    if(repairedLink != null && log.isDebugEnabled()) {
+                        log.debug("Operation succeeded. Link repaired and alive!");
                     }
 
                     // delete broken link
                     linkDao.delete(link);
                 } catch (CommandException e) {
-                    getLog().error("Error occurred while trying to repair a broken (wrong relationId) link", e);
+                    log.error("Error occurred while trying to repair a broken (wrong relationId) link", e);
                 }
 
             } else {
-                if(getLog().isDebugEnabled()) {
-                    getLog().debug("RelationId: <" + relationId + "> is well defined for [" + sourceEntityType + "]=>[" + targetEntityType + "]");
+                if(log.isDebugEnabled()) {
+                    log.debug("RelationId: <" + relationId + "> is well defined for [" + sourceEntityType + "]=>[" + targetEntityType + "]");
                 }
             }
         }
@@ -188,12 +188,6 @@ public class MigrateDbTo1_03D extends DbMigration {
     @Override
     public double getVersion() {
         return 1.03D;
-    }
-    
-    private Logger getLog() {
-        if (log == null)
-            log = Logger.getLogger(MigrateDbTo1_02D.class);
-        return log;
     }
     
 }

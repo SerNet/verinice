@@ -39,16 +39,9 @@ import sernet.verinice.interfaces.iso27k.IItem;
 @SuppressWarnings("serial")
 public class Item implements IItem {
 	
-	private transient Logger log = Logger.getLogger(Item.class);
+	private static final Logger log = Logger.getLogger(Item.class);
 	
 	public static final String NUMBER_REGEX_PATTERN = "\\d+(\\.\\d+)*(\\.)?";
-	
-	public Logger getLog() {
-		if(log==null) {
-			log = Logger.getLogger(Item.class);
-		}
-		return log;
-	}
 	
 	private String name;
 	
@@ -143,15 +136,15 @@ public class Item implements IItem {
 					child.setNumberString(itemName);
 					getItemMap().put(firstNumber-1, child);
 				}
-				if (getLog().isDebugEnabled()) {
-					getLog().debug(getName() + " - branch: " + child.getName() + " - child added: " + item.getName());
+				if (log.isDebugEnabled()) {
+					log.debug(getName() + " - branch: " + child.getName() + " - child added: " + item.getName());
 				}
 				child.processItem(item, numberTokens);
 			} else {
 				// add item here
 				getItemMap().put(firstNumber-1, item);
-				if (getLog().isDebugEnabled()) {
-					getLog().debug(getName() + " - new child: " + (firstNumber-1) + "-" + item.getName());
+				if (log.isDebugEnabled()) {
+					log.debug(getName() + " - new child: " + (firstNumber-1) + "-" + item.getName());
 				}
 			}
 		}	

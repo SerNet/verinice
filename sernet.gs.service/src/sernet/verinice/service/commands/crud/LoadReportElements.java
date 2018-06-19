@@ -55,17 +55,10 @@ import sernet.verinice.model.iso27k.Organization;
 
 public class LoadReportElements extends GenericCommand implements ICachedCommand{
 
-    private transient Logger log = Logger.getLogger(LoadReportElements.class);
+    private static final Logger log = Logger.getLogger(LoadReportElements.class);
     
     private boolean resultInjectedFromCache = false;
     
-    public Logger getLog() {
-        if(log==null) {
-            log = Logger.getLogger(LoadReportElements.class);
-        }
-        return log;
-    }
-
 	private String typeId;
     private Integer rootElement;
     private List<CnATreeElement> elements;
@@ -99,8 +92,8 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
 	public void execute() {
 	    elements = new ArrayList<CnATreeElement>(0);
 	    if(!resultInjectedFromCache){
-	        if(getLog().isDebugEnabled()){
-	            getLog().debug("LoadReportElements for root_object " + rootElement);
+	        if(log.isDebugEnabled()){
+	            log.debug("LoadReportElements for root_object " + rootElement);
 	        }
 
 	        LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement});
@@ -114,8 +107,8 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
 	            return;
 	        }
 	        CnATreeElement root = command.getElements().get(0);
-	        if(getLog().isDebugEnabled()){
-	            getLog().debug("Loading children(" + this.typeId +") of " + root.getTitle());
+	        if(log.isDebugEnabled()){
+	            log.debug("Loading children(" + this.typeId +") of " + root.getTitle());
 	        }
 
 	        if(!useScopeID || !hasScopeID(root)){
@@ -230,8 +223,8 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
     public void injectCacheResult(Object result) {
         this.elements = (ArrayList<CnATreeElement>)result;
         resultInjectedFromCache = true;
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(log.isDebugEnabled()){
+            log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
@@ -344,15 +337,15 @@ public class LoadReportElements extends GenericCommand implements ICachedCommand
                     }
                 }
             } catch (InstantiationException e) {
-                getLog().error("Error while instantiating Object", e);
+                log.error("Error while instantiating Object", e);
             } catch (IllegalAccessException e) {
-                getLog().error("Wrong element access", e);
+                log.error("Wrong element access", e);
             } catch (ClassNotFoundException e){
-                getLog().error("Wrong class selected", e);
+                log.error("Wrong class selected", e);
             } catch (NoSuchMethodException e){
-                getLog().error("Constructor not found", e);
+                log.error("Constructor not found", e);
             } catch (InvocationTargetException e){
-                getLog().error("Wrong invocation on target", e);
+                log.error("Wrong invocation on target", e);
             }
         }
         return potentialChild;

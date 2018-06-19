@@ -48,14 +48,8 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
 @SuppressWarnings("serial")
 public class LoadUnifyMapping extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(LoadUnifyMapping.class);
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(LoadUnifyMapping.class);
-        }
-        return log;
-    }
-    
+    private static final Logger log = Logger.getLogger(LoadUnifyMapping.class);
+
     public static final String NUMBER_REGEX_PATTERN = "^\\d+(\\.\\d+)*(\\.)? ";
     
     private String sourceUuid;   

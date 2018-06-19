@@ -24,17 +24,10 @@ import sernet.verinice.model.common.TransactionAbortedException;
  */
 public class LoadReportLinkedElements extends GenericCommand implements ICachedCommand{
 
-    private transient Logger log = Logger.getLogger(LoadReportLinkedElements.class);
+    private static final Logger log = Logger.getLogger(LoadReportLinkedElements.class);
     
     private boolean resultInjectedFromCache = false;
     
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(LoadReportLinkedElements.class);
-        }
-        return log;
-    }
-
     // get these types of elements:
 	private String typeId;
 	
@@ -159,8 +152,8 @@ public class LoadReportLinkedElements extends GenericCommand implements ICachedC
     public void injectCacheResult(Object result) {
         this.elements = (ArrayList<CnATreeElement>)result;
         resultInjectedFromCache = true;
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(log.isDebugEnabled()){
+            log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
