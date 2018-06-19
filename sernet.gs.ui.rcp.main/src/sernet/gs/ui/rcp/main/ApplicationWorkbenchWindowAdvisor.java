@@ -37,13 +37,13 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PerspectiveAdapter;
@@ -62,10 +62,10 @@ import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.updatenews.IUpdateNewsService;
 import sernet.verinice.model.updateNews.UpdateNewsException;
 import sernet.verinice.model.updateNews.UpdateNewsMessageEntry;
+import sernet.verinice.rcp.PartListenerAdapter;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.UpdateNewsDialog;
 
@@ -81,6 +81,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
     private static final Logger LOG = Logger.getLogger(ApplicationWorkbenchWindowAdvisor.class);
 
+    private static final Pattern VERINICE_VERSION = Pattern
+            .compile(IUpdateNewsService.VERINICE_VERSION_PATTERN);
+
     private IUpdateNewsService updateNewsService;
 
     public ApplicationWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
@@ -93,8 +96,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.application.WorkbenchWindowAdvisor#preWindowOpen()
      */
     @Override
@@ -180,18 +181,11 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
     private void showFirstSteps() {
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                .addPartListener(new IPartListener() {
+                .addPartListener(new PartListenerAdapter() {
 
                     @Override
-                    public void partActivated(IWorkbenchPart part) {
-                    }
-
-                    @Override
-                    public void partBroughtToTop(IWorkbenchPart part) {
-                    }
-
-                    @Override
-                    public void partClosed(IWorkbenchPart part) {
+                    public void partClosed(IWorkbenchPartReference reference) {
+                        IWorkbenchPart part = reference.getPart(false);
                         if (part instanceof ViewIntroAdapterPart
                                 && Activator.getDefault().getPluginPreferences()
                                         .getBoolean(PreferenceConstants.FIRSTSTART)) {
@@ -202,14 +196,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
                                     Messages.ApplicationWorkbenchWindowAdvisor_3);
                             action.run();
                         }
-                    }
-
-                    @Override
-                    public void partDeactivated(IWorkbenchPart part) {
-                    }
-
-                    @Override
-                    public void partOpened(IWorkbenchPart part) {
                     }
                 });
 
@@ -255,12 +241,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
                 if (Activator.getDefault().isStandalone()
                         && !Activator.getDefault().getInternalServer().isRunning()) {
-                    IInternalServerStartListener listener = new IInternalServerStartListener() {
-                        @Override
-                        public void statusChanged(InternalServerEvent e) {
-                            if (e.isStarted()) {
-                                hideView(part, rightID, ref);
-                            }
+                    IInternalServerStartListener listener = e -> {
+                        if (e.isStarted()) {
+                            hideView(part, rightID, ref);
                         }
                     };
                     Activator.getDefault().getInternalServer()
@@ -281,8 +264,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
             if (window != null) {
                 IWorkbenchPage page = window.getActivePage();
-                // IWorkbenchPage page =
-                // PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                 if (page.isPartVisible(part)) {
                     page.hideView(viewReference);
                 }
@@ -301,12 +282,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     private void handleOpenDialogByServerStatus() {
         if (Activator.getDefault().isStandalone()) {
             if (!Activator.getDefault().getInternalServer().isRunning()) {
-                IInternalServerStartListener listener = new IInternalServerStartListener() {
-                    @Override
-                    public void statusChanged(InternalServerEvent e) {
-                        if (e.isStarted()) {
-                            openNewsDialog();
-                        }
+                IInternalServerStartListener listener = e -> {
+                    if (e.isStarted()) {
+                        openNewsDialog();
                     }
                 };
                 Activator.getDefault().getInternalServer()
@@ -354,14 +332,10 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             LOG.error("Updatesite not parseable", e);
             throw new UpdateNewsException("Malformed URL of updatesite", e);
         }
-        Display.getDefault().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                Shell dialogShell = new Shell(Display.getCurrent().getActiveShell());
-                UpdateNewsDialog newsDialog = new UpdateNewsDialog(dialogShell, text,
-                        updateSiteURL);
-                newsDialog.open();
-            }
+        Display.getDefault().syncExec(() -> {
+            Shell dialogShell = new Shell(Display.getCurrent().getActiveShell());
+            UpdateNewsDialog newsDialog = new UpdateNewsDialog(dialogShell, text, updateSiteURL);
+            newsDialog.open();
         });
     }
 
@@ -386,20 +360,15 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         return repo;
     }
 
-    /**
-     * @param parent
-     * @return
-     */
-    private String getApplicationVersionFromAboutText() {
+    private static String getApplicationVersionFromAboutText() {
         final IProduct product = Platform.getProduct();
         final String aboutText = product.getProperty("aboutText");
         String version = "";
         if (aboutText != null) {
-            String lines[] = aboutText.split("\\r?\\n");
+            String[] lines = aboutText.split("\\r?\\n");
             if (lines != null && lines.length > 0) {
                 final String firstLine = lines[0];
-                final Pattern p = Pattern.compile(IUpdateNewsService.VERINICE_VERSION_PATTERN);
-                final Matcher matcher = p.matcher(firstLine);
+                final Matcher matcher = VERINICE_VERSION.matcher(firstLine);
                 if (matcher.find()) {
                     version = matcher.group();
                 }
