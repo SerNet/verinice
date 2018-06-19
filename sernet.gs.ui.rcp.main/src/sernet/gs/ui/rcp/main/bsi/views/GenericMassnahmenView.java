@@ -529,11 +529,7 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
                 this);
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(createLabelProvider());
-        try {
-            loadCompounds(null);
-        } catch (RuntimeException e) {
-            ExceptionUtil.log(e, Messages.GenericMassnahmenView_4);
-        }
+
         CnAElementFactory.getInstance().addLoadListener(loadListener);
 
         viewer.setComparator(createSorter());

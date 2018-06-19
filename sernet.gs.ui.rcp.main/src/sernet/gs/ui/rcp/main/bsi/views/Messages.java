@@ -183,8 +183,6 @@ public final class Messages extends NLS {
 
     public static String GenericMassnahmenView_3;
 
-    public static String GenericMassnahmenView_4;
-
     public static String GenericMassnahmenView_5;
 
     public static String GenericMassnahmenView_6;
