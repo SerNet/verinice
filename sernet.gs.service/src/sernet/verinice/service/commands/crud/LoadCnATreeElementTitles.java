@@ -25,32 +25,30 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Retrieves all instances of a {@link CnATreeElement} subclass
- * and hydrates their title property.
+ * Retrieves all instances of a {@link CnATreeElement} subclass and hydrates
+ * their title property.
  * 
  */
 @SuppressWarnings("serial")
 public class LoadCnATreeElementTitles<T extends CnATreeElement> extends GenericCommand {
 
-	private List<T> elements;
-	private Class<T> clazz;
+    private List<T> elements;
+    private Class<T> clazz;
 
-	public LoadCnATreeElementTitles(Class<T> type) {
-		this.clazz = type;
-	}
-	
-	public void execute() {
-		IBaseDao<T, Serializable> dao = getDaoFactory().getDAO(clazz);
-		elements = dao.findAll();
-		for (CnATreeElement elmt : elements) {
-			elmt.getTitle();
-		}
-	}
+    public LoadCnATreeElementTitles(Class<T> type) {
+        this.clazz = type;
+    }
 
-	public List<T> getElements() {
-		return elements;
-	}
-	
-	
+    public void execute() {
+        IBaseDao<T, Serializable> dao = getDaoFactory().getDAO(clazz);
+        elements = dao.findAll();
+        for (CnATreeElement elmt : elements) {
+            elmt.getTitle();
+        }
+    }
+
+    public List<T> getElements() {
+        return elements;
+    }
 
 }

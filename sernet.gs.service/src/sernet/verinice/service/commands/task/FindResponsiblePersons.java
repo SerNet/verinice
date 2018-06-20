@@ -40,7 +40,7 @@ import sernet.verinice.model.common.CnATreeElement;
 public class FindResponsiblePersons extends GenericCommand {
 
     private final Logger log = Logger.getLogger(FindResponsiblePersons.class);
-    
+
     private static final String STD_ERR_MSG = "findLinkedPersons - currentElement:";
 
     private String propertyId;
@@ -72,8 +72,8 @@ public class FindResponsiblePersons extends GenericCommand {
                 massnahme = getMassnahmeDao().findById(unresolvedItem.getDbId());
             }
             List<CnATreeElement> foundPersons = findPersonsInLinks(massnahme);
-            
-            if(foundPersons.isEmpty()) {
+
+            if (foundPersons.isEmpty()) {
                 // try to find someone responsible by role:
                 foundPersons = findPersonsInParent(massnahme);
             }
@@ -95,12 +95,12 @@ public class FindResponsiblePersons extends GenericCommand {
                     if (person.hasRole(role)) {
                         foundPersons.add(person);
                     }
-                }                  
+                }
             }
         }
         return foundPersons;
     }
-    
+
     /**
      * Go through linked persons of this target object or parents. If person's
      * role equals this control's role, add to list of responsible persons.
@@ -110,7 +110,8 @@ public class FindResponsiblePersons extends GenericCommand {
      */
     public List<CnATreeElement> findPersonsInParent(MassnahmenUmsetzung umsetzung) {
         if (log.isDebugEnabled()) {
-            log.debug("getLinkedPersonsByRoles - massnahme: " + umsetzung.getDbId() + ", propertyTypeId: " + propertyId);
+            log.debug("getLinkedPersonsByRoles - massnahme: " + umsetzung.getDbId()
+                    + ", propertyTypeId: " + propertyId);
         }
         Set<Person> result = new HashSet<Person>();
         Set<Property> rolesToSearch = getRoles(umsetzung);
@@ -120,7 +121,8 @@ public class FindResponsiblePersons extends GenericCommand {
         return new ArrayList<CnATreeElement>(result);
     }
 
-    private void findPersonsInParent(Set<Person> result, CnATreeElement currentElement, Set<Property> rolesToSearch) {
+    private void findPersonsInParent(Set<Person> result, CnATreeElement currentElement,
+            Set<Property> rolesToSearch) {
         Integer id = null;
         if (log.isDebugEnabled()) {
             StringBuffer sb = new StringBuffer();
@@ -134,17 +136,20 @@ public class FindResponsiblePersons extends GenericCommand {
         for (Property role : rolesToSearch) {
             findLinkedPersons(result, currentElement, role);
         }
-        if (!currentElement.isItVerbund() && !currentElement.isOrganization() && currentElement.getParent() != null) {
+        if (!currentElement.isItVerbund() && !currentElement.isOrganization()
+                && currentElement.getParent() != null) {
             findPersonsInParent(result, currentElement.getParent(), rolesToSearch);
         }
     }
 
-    protected void findLinkedPersons(Set<Person> result, CnATreeElement currentElement, Property role) {
+    protected void findLinkedPersons(Set<Person> result, CnATreeElement currentElement,
+            Property role) {
         Integer id = -1;
         if (log.isDebugEnabled() && (currentElement != null)) {
-            id =  currentElement.getDbId();
+            id = currentElement.getDbId();
         }
-        CacheRolePersonKey key = new CacheRolePersonKey(currentElement.getDbId(), role.getPropertyValue());
+        CacheRolePersonKey key = new CacheRolePersonKey(currentElement.getDbId(),
+                role.getPropertyValue());
         Set<Person> subResult = cacheRolePerson.get(key);
         if (subResult == null) {
             subResult = new HashSet<Person>();
@@ -161,7 +166,9 @@ public class FindResponsiblePersons extends GenericCommand {
                             // next role:
                             subResult.add(person);
                             if (log.isDebugEnabled()) {
-                                log.debug(STD_ERR_MSG + id + ", role match: " + role.getPropertyValue() + ", person: " + person.getDbId());
+                                log.debug(STD_ERR_MSG + id + ", role match: "
+                                        + role.getPropertyValue() + ", person: "
+                                        + person.getDbId());
                             }
                         }
                     }
@@ -183,13 +190,13 @@ public class FindResponsiblePersons extends GenericCommand {
         }
         return person;
     }
-    
+
     private String getNames(List<CnATreeElement> persons) {
         StringBuffer names = new StringBuffer();
         boolean first = true;
         for (CnATreeElement element : persons) {
-            if(!first) {
-                names.append(", ");              
+            if (!first) {
+                names.append(", ");
             }
             first = false;
             Person person = (Person) element;
@@ -197,7 +204,7 @@ public class FindResponsiblePersons extends GenericCommand {
         }
         return names.toString();
     }
-    
+
     protected Set<Property> getRoles(MassnahmenUmsetzung massnahme) {
         PropertyList roles = massnahme.getEntity().getProperties(propertyId);
         Set<Property> rolesToSearch = new HashSet<Property>();
@@ -215,7 +222,7 @@ public class FindResponsiblePersons extends GenericCommand {
         }
         return personDAO;
     }
-    
+
     private IBaseDao<MassnahmenUmsetzung, Serializable> getMassnahmeDao() {
         return getDaoFactory().getDAO(MassnahmenUmsetzung.class);
     }
