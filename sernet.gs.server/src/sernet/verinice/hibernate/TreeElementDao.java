@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
@@ -31,12 +32,10 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IElementTitleCache;
 import sernet.verinice.interfaces.IRetrieveInfo;
 import sernet.verinice.interfaces.search.IJsonBuilder;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.InheritLogger;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.search.IElementSearchDao;
 
 public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, ID> implements IBaseDao<T, ID> {
@@ -293,8 +292,8 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         }
     }
     
-    private boolean isScope(CnATreeElement element) {
-        return element instanceof ITVerbund || element instanceof Organization;
+    private static boolean isScope(@NonNull CnATreeElement element) {
+        return element.isItVerbund() || element.isOrganization();
     }
 
     protected void indexDelete(CnATreeElement element) {

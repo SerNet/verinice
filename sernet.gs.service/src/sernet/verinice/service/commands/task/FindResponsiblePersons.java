@@ -32,12 +32,10 @@ import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Organization;
 
 public class FindResponsiblePersons extends GenericCommand {
 
@@ -136,7 +134,7 @@ public class FindResponsiblePersons extends GenericCommand {
         for (Property role : rolesToSearch) {
             findLinkedPersons(result, currentElement, role);
         }
-        if (!ITVerbund.TYPE_ID.equals(currentElement.getTypeId()) && !Organization.TYPE_ID.equals(currentElement.getTypeId()) && currentElement.getParent() != null) {
+        if (!currentElement.isItVerbund() && !currentElement.isOrganization() && currentElement.getParent() != null) {
             findPersonsInParent(result, currentElement.getParent(), rolesToSearch);
         }
     }

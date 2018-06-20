@@ -54,7 +54,6 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
@@ -150,8 +149,7 @@ public class DeleteHandler extends RightsEnabledHandler {
     private Set<IEditorReference> getRelevantEditors(List<CnATreeElement> deleteList) throws PartInitException {
         Set<IEditorReference> closeableEditors = new HashSet();
         for(CnATreeElement elementToDelete : deleteList) {
-            String typeId = elementToDelete.getTypeId();
-            if (!isScope(typeId)) {
+            if (!elementToDelete.isScope()) {
                 IEditorReference reference = isElementOpen(elementToDelete);
                 if(reference != null) {
                     closeableEditors.add(reference);
@@ -163,11 +161,6 @@ public class DeleteHandler extends RightsEnabledHandler {
         return closeableEditors;
     }
 
-    private boolean isScope(String typeId) {
-        return Organization.TYPE_ID.equals(typeId) || ITVerbund.TYPE_ID.equals(typeId)
-                || ItNetwork.TYPE_ID.equals(typeId);
-    }
-    
     /**
      * returns all editors that shows elements with a given scope id
      * @param scopeId

@@ -32,13 +32,10 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 
-import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
-import sernet.verinice.model.iso27k.Organization;
 
 /**
  * This action expands all elements in a tree below the selectedElement.
@@ -129,9 +126,7 @@ public class ExpandAction extends Action implements ISelectionChangedListener {
      * Checks if the given element is a scope. Aka root node.
      */
     private boolean isScope(CnATreeElement element) {
-        return element instanceof Organization 
-                || element instanceof ItNetwork 
-                || element instanceof ITVerbund 
+        return element.isScope() 
                 || element instanceof ImportBsiGroup 
                 || element instanceof ImportIsoGroup 
                 || element instanceof ImportBpGroup;

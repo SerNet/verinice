@@ -37,12 +37,10 @@ import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Organization;
 
 /**
  * @author Julia Haas <jh[at]sernet[dot]de>
@@ -223,7 +221,7 @@ public class AssignResponsiblePersonCommand extends GenericCommand {
     				}
     			}
     		}
-    		if (!ITVerbund.TYPE_ID.equals(currentElement.getTypeId()) && !Organization.TYPE_ID.equals(currentElement.getTypeId()) && currentElement.getParent() != null && linkedPersons.isEmpty()) {
+    		if (!currentElement.isItVerbund() && !currentElement.isOrganization() && currentElement.getParent() != null && linkedPersons.isEmpty()) {
     			findLinkedPersonsUpTree(currentElement.getParent(), linkedPersons, rolesToSearch);
     		}
 

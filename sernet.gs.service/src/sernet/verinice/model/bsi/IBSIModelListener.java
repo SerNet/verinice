@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.verinice.model.bsi;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -29,7 +31,7 @@ public interface IBSIModelListener {
 	public static final String SOURCE_KONSOLIDATOR 	= "source konsolidator";
 	public static final String SOURCE_EDITOR 		= "source editor";
 
-	void childAdded(CnATreeElement category, CnATreeElement child);
+	void childAdded(CnATreeElement category, @NonNull CnATreeElement child);
 
 	void childRemoved(CnATreeElement category, CnATreeElement child);
 

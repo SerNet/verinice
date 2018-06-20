@@ -215,7 +215,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     private void removeAllRiskAnalyses() throws CommandException {
         if (ImportBsiGroup.TYPE_ID.equals(element.getTypeId())){
             removeRiskAnalysisFromBSIImportGroup(element.getDbId());
-        } else if (ITVerbund.TYPE_ID.equals(element.getTypeId())){
+        } else if (element.isItVerbund()){
             removeRiskAnalysisForScope(element.getScopeId());
         } else if (element instanceof IBSIStrukturKategorie){
             removeRiskAnalysesFromBSICategory();

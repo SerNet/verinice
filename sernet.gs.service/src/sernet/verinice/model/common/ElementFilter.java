@@ -189,7 +189,7 @@ public abstract class ElementFilter {
             if (ArrayUtils.isEmpty(tagArray)) {
                 return true;
             }
-            if (Organization.TYPE_ID.equals(element.getTypeId())) {
+            if (element.isOrganization()) {
                 if (filterOrgs) {
                     return checkTags(tagArray, (Organization) element);
                 } else {

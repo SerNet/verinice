@@ -53,7 +53,6 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.elements.BpModel;
-import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
@@ -61,7 +60,6 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
@@ -277,7 +275,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                     elementInDB.setExtId(extId);
                 }
 
-                if (isScope(elementInDB)) {
+                if (elementInDB.isScope()) {
                     addElement(elementInDB);
                 }
 
@@ -333,7 +331,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             elementInDB.setParentAndScope(parent);
 
             // set the scope id of scopes
-            if (isScope(elementInDB)) {
+            if (elementInDB.isScope()) {
                 elementInDB.setScopeId(elementInDB.getDbId());
             }
 
@@ -436,7 +434,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         }
 
         if (authService.isPermissionHandlingNeeded()) {
-            if (isScope(child)) {
+            if (child.isScope()) {
               // VN-1969, grant read/write permissions to the default user group when importing a new scope
               addPermissions(child, IRightsService.USERDEFAULTGROUPNAME);
             } else {
@@ -906,10 +904,6 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             elementSet = new HashSet<>();
         }
         elementSet.add(element);
-    }
-
-    protected static boolean isScope(CnATreeElement element) {
-        return element instanceof Organization || element instanceof ITVerbund || element instanceof ItNetwork;
     }
 
     public Risk getSyncRisk() {
