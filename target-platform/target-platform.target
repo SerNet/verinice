@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="target-platform-e4" sequenceNumber="102">
+<?pde version="3.8"?><target name="target-platform-e4" sequenceNumber="103">
 <locations>
 <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.equinox.sdk.feature.group" version="3.13.4.v20180322-2228"/>
@@ -112,6 +112,13 @@
 <unit id="org.eclipse.birt.cshelp.feature.group" version="4.7.0.v201706222054"/>
 <unit id="org.eclipse.help.feature.group" version="2.2.104.v20180330-0640"/>
 <repository location="http://download.eclipse.org/releases/oxygen"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.babel.nls_datatools_de.feature.group" version="4.7.0.v20171231020002"/>
+<unit id="org.eclipse.babel.nls_datatools_it.feature.group" version="4.7.0.v20171231020002"/>
+<unit id="org.eclipse.babel.nls_eclipse_de.feature.group" version="4.7.0.v20171231020002"/>
+<unit id="org.eclipse.babel.nls_eclipse_it.feature.group" version="4.7.0.v20171231020002"/>
+<repository location="http://download.eclipse.org/technology/babel/update-site/R0.15.1/oxygen/"/>
 </location>
 </locations>
 </target>
