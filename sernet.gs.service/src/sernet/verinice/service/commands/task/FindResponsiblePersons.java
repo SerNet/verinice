@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
@@ -39,7 +40,7 @@ import sernet.verinice.model.common.CnATreeElement;
 
 public class FindResponsiblePersons extends GenericCommand {
 
-    private final Logger log = Logger.getLogger(FindResponsiblePersons.class);
+    private static final Logger log = Logger.getLogger(FindResponsiblePersons.class);
 
     private static final String STD_ERR_MSG = "findLinkedPersons - currentElement:";
 
@@ -60,8 +61,8 @@ public class FindResponsiblePersons extends GenericCommand {
 
     @Override
     public void execute() {
-        cachePerson = new Hashtable<Integer, Person>();
-        cacheRolePerson = new Hashtable<CacheRolePersonKey, Set<Person>>();
+        cachePerson = new Hashtable<>();
+        cacheRolePerson = new Hashtable<>();
         findPersons();
     }
 
@@ -78,14 +79,14 @@ public class FindResponsiblePersons extends GenericCommand {
                 foundPersons = findPersonsInParent(massnahme);
             }
 
-            if (foundPersons != null && foundPersons.size() > 0) {
+            if (foundPersons != null && !foundPersons.isEmpty()) {
                 unresolvedItem.getItem().setUmsetzungDurch(getNames(foundPersons));
             }
         }
     }
 
     protected List<CnATreeElement> findPersonsInLinks(MassnahmenUmsetzung massnahme) {
-        List<CnATreeElement> foundPersons = new LinkedList<CnATreeElement>();
+        List<CnATreeElement> foundPersons = new LinkedList<>();
         Set<CnALink> links = massnahme.getLinksUp();
         Set<Property> rolesToSearch = getRoles(massnahme);
         for (CnALink link : links) {
@@ -113,19 +114,19 @@ public class FindResponsiblePersons extends GenericCommand {
             log.debug("getLinkedPersonsByRoles - massnahme: " + umsetzung.getDbId()
                     + ", propertyTypeId: " + propertyId);
         }
-        Set<Person> result = new HashSet<Person>();
+        Set<Person> result = new HashSet<>();
         Set<Property> rolesToSearch = getRoles(umsetzung);
         if (rolesToSearch != null && !rolesToSearch.isEmpty()) {
             findPersonsInParent(result, umsetzung.getParent().getParent(), rolesToSearch);
         }
-        return new ArrayList<CnATreeElement>(result);
+        return new ArrayList<>(result);
     }
 
     private void findPersonsInParent(Set<Person> result, CnATreeElement currentElement,
             Set<Property> rolesToSearch) {
         Integer id = null;
         if (log.isDebugEnabled()) {
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             for (Property role : rolesToSearch) {
                 sb.append(role.getPropertyValue()).append(", ");
             }
@@ -152,7 +153,7 @@ public class FindResponsiblePersons extends GenericCommand {
                 role.getPropertyValue());
         Set<Person> subResult = cacheRolePerson.get(key);
         if (subResult == null) {
-            subResult = new HashSet<Person>();
+            subResult = new HashSet<>();
             Set<CnALink> links = currentElement.getLinksUp();
             if (links != null) {
                 for (CnALink link : links) {
@@ -192,22 +193,13 @@ public class FindResponsiblePersons extends GenericCommand {
     }
 
     private String getNames(List<CnATreeElement> persons) {
-        StringBuffer names = new StringBuffer();
-        boolean first = true;
-        for (CnATreeElement element : persons) {
-            if (!first) {
-                names.append(", ");
-            }
-            first = false;
-            Person person = (Person) element;
-            names.append(person.getFullName());
-        }
-        return names.toString();
+        return persons.stream().map(Person.class::cast).map(Person::getFullName)
+                .collect(Collectors.joining(", "));
     }
 
     protected Set<Property> getRoles(MassnahmenUmsetzung massnahme) {
         PropertyList roles = massnahme.getEntity().getProperties(propertyId);
-        Set<Property> rolesToSearch = new HashSet<Property>();
+        Set<Property> rolesToSearch = new HashSet<>();
         rolesToSearch.addAll(roles.getProperties());
         return rolesToSearch;
     }

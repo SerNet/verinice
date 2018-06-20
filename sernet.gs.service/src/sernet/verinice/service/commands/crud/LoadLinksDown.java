@@ -23,6 +23,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnALink;
@@ -69,11 +70,11 @@ public class LoadLinksDown extends GenericCommand {
     public void execute() {
         if (this.parent == null) {
             LOG.error("Can not execute command, parent is null");
-            throw new RuntimeException("Can not execute command, parent is null");
+            throw new RuntimeCommandException("Can not execute command, parent is null");
         }
         if (this.parent.getDbId() == null) {
             LOG.error("Can not execute command, dbid of parent is null");
-            throw new RuntimeException("Can not execute command, dbif of parent is null");
+            throw new RuntimeCommandException("Can not execute command, dbif of parent is null");
         }
 
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory()

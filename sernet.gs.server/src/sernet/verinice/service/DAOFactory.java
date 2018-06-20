@@ -20,6 +20,7 @@ package sernet.verinice.service;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 
@@ -171,10 +172,10 @@ public class DAOFactory implements IDAOFactory {
     private IFinishedRiskAnalysisListsDao finishedRiskAnalysisListsDao;
 
     // injected by spring
-    @SuppressWarnings("unchecked")
-    private Map<Class, IBaseDao> daosByClass = new HashMap<Class, IBaseDao>();
-
-    private Map<String, IBaseDao> daosByTypeID = new HashMap<String, IBaseDao>();
+    @SuppressWarnings("rawtypes")
+    private Map<Class, IBaseDao> daosByClass = new HashMap<>();
+    @SuppressWarnings("rawtypes")
+    private Map<String, IBaseDao> daosByTypeID = new HashMap<>();
 
     /**
      * Setter method used by spring to inject DAO.
@@ -326,6 +327,7 @@ public class DAOFactory implements IDAOFactory {
      * Setter method used by spring to inject DAO.
      */
     @Override
+    @SuppressWarnings("deprecation")
     public void setDatenverarbeitungDAO(IBaseDao<Datenverarbeitung, Integer> daoToSet) {
         daosByClass.put(Datenverarbeitung.class, daoToSet);
         daosByTypeID.put(Datenverarbeitung.TYPE_ID, daoToSet);
@@ -434,6 +436,7 @@ public class DAOFactory implements IDAOFactory {
      * Setter method used by spring to inject DAO.
      */
     @Override
+    @SuppressWarnings("deprecation")
     public void setPersonengruppenDAO(IBaseDao<Personengruppen, Integer> daoToSet) {
         daosByClass.put(Personengruppen.class, daoToSet);
         daosByTypeID.put(Personengruppen.TYPE_ID, daoToSet);
@@ -506,6 +509,7 @@ public class DAOFactory implements IDAOFactory {
      * Setter method used by spring to inject DAO.
      */
     @Override
+    @SuppressWarnings("deprecation")
     public void setStellungnahmeDSBDAO(IBaseDao<StellungnahmeDSB, Integer> daoToSet) {
         daosByClass.put(StellungnahmeDSB.class, daoToSet);
         daosByTypeID.put(StellungnahmeDSB.TYPE_ID, daoToSet);
@@ -533,6 +537,7 @@ public class DAOFactory implements IDAOFactory {
      * Setter method used by spring to inject DAO.
      */
     @Override
+    @SuppressWarnings("deprecation")
     public void setVerantwortlicheStelleDAO(IBaseDao<VerantwortlicheStelle, Integer> daoToSet) {
         daosByClass.put(VerantwortlicheStelle.class, daoToSet);
         daosByTypeID.put(VerantwortlicheStelle.TYPE_ID, daoToSet);
@@ -542,6 +547,7 @@ public class DAOFactory implements IDAOFactory {
      * Setter method used by spring to inject DAO.
      */
     @Override
+    @SuppressWarnings("deprecation")
     public void setVerarbeitungsangabenDAO(IBaseDao<Verarbeitungsangaben, Integer> daoToSet) {
         daosByClass.put(Verarbeitungsangaben.class, daoToSet);
         daosByTypeID.put(Verarbeitungsangaben.TYPE_ID, daoToSet);
@@ -551,6 +557,7 @@ public class DAOFactory implements IDAOFactory {
      * Setter method used by spring to inject DAO.
      */
     @Override
+    @SuppressWarnings("deprecation")
     public void setZweckbestimmungDAO(IBaseDao<Zweckbestimmung, Integer> daoToSet) {
         daosByClass.put(Zweckbestimmung.class, daoToSet);
         daosByTypeID.put(Zweckbestimmung.TYPE_ID, daoToSet);
@@ -891,7 +898,6 @@ public class DAOFactory implements IDAOFactory {
      */
     @Override
     public IFinishedRiskAnalysisListsDao getFinishedRiskAnalysisListsDao() {
-        // TODO Auto-generated method stub
         return finishedRiskAnalysisListsDao;
     }
 
@@ -923,13 +929,15 @@ public class DAOFactory implements IDAOFactory {
      * method when you want to get a DAO for an instantiated object.
      */
     public <T> IBaseDao<T, Serializable> getDAO(Class<T> daotype) {
+        @SuppressWarnings("rawtypes")
         IBaseDao dao = daosByClass.get(daotype);
         if (dao != null) {
             return dao;
         }
-        for (Class clazz : daosByClass.keySet()) {
+        for (@SuppressWarnings("rawtypes") Entry<Class, IBaseDao> entry : daosByClass.entrySet()) {
+            Class<?> clazz = entry.getKey();
             if (clazz.isAssignableFrom(daotype)) {
-                return daosByClass.get(clazz);
+                return entry.getValue();
             }
         }
 
@@ -942,11 +950,13 @@ public class DAOFactory implements IDAOFactory {
     }
 
     @Override
+    @SuppressWarnings("rawtypes")
     public IBaseDao getDAOforTypedElement(ITypedElement object) {
         return daosByTypeID.get(object.getTypeId());
     }
 
     @Override
+    @SuppressWarnings("rawtypes")
     public IBaseDao getDAO(String typeId) {
         return daosByTypeID.get(typeId);
     }

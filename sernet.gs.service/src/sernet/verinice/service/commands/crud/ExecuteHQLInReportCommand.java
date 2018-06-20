@@ -21,12 +21,15 @@ import java.util.Collections;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.interfaces.IReportHQLService;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.report.HQLSecurityException;
+import sernet.verinice.service.commands.CnATypeMapper;
 
 /**
  * Command to enable report designers to execute hql from within a rptdesign
@@ -47,28 +50,26 @@ public class ExecuteHQLInReportCommand extends GenericCommand implements ICached
 
     private String[] paramNames;
 
-    private Object typeId;
+    private Class<CnATreeElement> typeClass;
 
     private Object results;
 
     public ExecuteHQLInReportCommand(String hql, Object[] params, String typeId) {
-        this.hql = hql;
-        setHqlParams(params);
-        this.typeId = typeId;
+        this(hql, params, CnATypeMapper.getClassFromTypeId(typeId));
     }
 
-    public ExecuteHQLInReportCommand(String hql, Object[] params, Class typeId) {
-        this.hql = hql;
-        setHqlParams(params);
-        this.typeId = typeId;
+    public ExecuteHQLInReportCommand(String hql, Object[] params, Class<CnATreeElement> typeClass) {
+        this(hql, null, params, typeClass);
     }
 
     public ExecuteHQLInReportCommand(String hql, String[] paramNames, Object[] params,
-            Class typeId) {
+            Class<CnATreeElement> typeClass) {
         this.hql = hql;
         setHqlParams(params);
-        this.typeId = typeId;
-        setParamNames(paramNames);
+        this.typeClass = typeClass;
+        if (paramNames != null) {
+            setParamNames(paramNames);
+        }
     }
 
     /*
@@ -81,12 +82,8 @@ public class ExecuteHQLInReportCommand extends GenericCommand implements ICached
 
         if (!resultInjectedFromCache) {
             try {
-                IBaseDao dao = null;
-                if (typeId instanceof String) {
-                    dao = getDaoFactory().getDAO((String) typeId);
-                } else if (typeId instanceof Class) {
-                    dao = getDaoFactory().getDAO((Class<?>) typeId);
-                }
+                IBaseDao<?, ?> dao = getDaoFactory().getDAO((Class<?>) typeClass);
+
                 if (getReportHQLService().isQueryAllowed(hql)) {
                     if (paramNames == null || paramNames.length == 0) {
                         results = dao.findByQuery(hql, hqlParams);
@@ -94,7 +91,8 @@ public class ExecuteHQLInReportCommand extends GenericCommand implements ICached
                         results = dao.findByQuery(hql, paramNames, hqlParams);
                     }
                 } else {
-                    throw new RuntimeException(new HQLSecurityException("HQL-Query:\n\t" + hql
+                    throw new RuntimeCommandException(new HQLSecurityException("HQL-Query:\n\t"
+                            + hql
                             + "\nviolates verinice security policies, execution of query denied"));
                 }
             } catch (Exception t) {
@@ -116,7 +114,7 @@ public class ExecuteHQLInReportCommand extends GenericCommand implements ICached
         for (Object param : this.hqlParams) {
             sb.append(String.valueOf(param));
         }
-        sb.append(typeId);
+        sb.append(typeClass.getName());
         return sb.toString();
     }
 

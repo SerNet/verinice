@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -156,54 +157,51 @@ public class ImportCreateBausteine extends GenericCommand {
     private BausteinUmsetzung createBaustein(CnATreeElement element, MbBaust mbBaust,
             List<BausteineMassnahmenResult> list) throws Exception {
         Baustein baustein = findBausteinForId(TransferData.getId(mbBaust));
-        Integer refZobId = null;
         for (BausteineMassnahmenResult bausteineMassnahmenResult : list) {
-            refZobId = bausteineMassnahmenResult.zoBst.getRefZobId();
+            Integer refZobId = bausteineMassnahmenResult.zoBst.getRefZobId();
             if (refZobId != null) {
-                break;
+                // if refzobid != null, baustein is created via reference later
+                // on, so skip this
+                return null;
             }
         }
 
-        if (refZobId == null) { // if refzobid != null, baustein is created via
-                                // reference later on, so skip this
-            if (baustein != null) { // if baustein != null, baustein is found in
-                                    // bsi catalogue
-                // BSIKatalogInvisibleRoot.getInstance().getLanguage() caused a
-                // classNotFound Exception here, fixed
-                // but import now only works for German.
-                // this should be loaded from BSIMassnahmenModel which is the
-                // ITGS main model class
+        if (baustein != null) { // if baustein != null, baustein is found in
+                                // bsi catalogue
+            // BSIKatalogInvisibleRoot.getInstance().getLanguage() caused a
+            // classNotFound Exception here, fixed
+            // but import now only works for German.
+            // this should be loaded from BSIMassnahmenModel which is the
+            // ITGS main model class
 
-                if (mbBaust.getId().getBauImpId() != 1) { // should always be !=
-                                                          // 1 for bausteine
-                                                          // from itgs catalogue
-                    CreateBaustein command = new CreateBaustein(element, baustein,
-                            GSScraper.CATALOG_LANGUAGE_GERMAN);
-                    command = getCommandService().executeCommand(command);
-                    BausteinUmsetzung bausteinUmsetzung = command.getNewElement();
+            if (mbBaust.getId().getBauImpId() != 1) { // should always be !=
+                                                      // 1 for bausteine
+                                                      // from itgs catalogue
+                CreateBaustein command = new CreateBaustein(element, baustein,
+                        GSScraper.CATALOG_LANGUAGE_GERMAN);
+                command = getCommandService().executeCommand(command);
+                BausteinUmsetzung bausteinUmsetzung = command.getNewElement();
 
-                    if (bausteinUmsetzung != null) {
-                        if (list.iterator().hasNext()) {
-                            BausteineMassnahmenResult queryresult = list.iterator().next();
-                            transferBaustein(baustein, bausteinUmsetzung, queryresult);
+                if (bausteinUmsetzung != null && !list.isEmpty()) {
+                    BausteineMassnahmenResult queryresult = list.iterator().next();
+                    transferBaustein(baustein, bausteinUmsetzung, queryresult);
 
-                            transferMassnahmen(bausteinUmsetzung, list, false);
-                        }
-                    }
-                    return bausteinUmsetzung;
-                } else if (mbBaust.getId().getBauImpId() == 1) { // user defined
-                                                                 // but in
-                                                                 // catalogue
-                                                                 // existant
-                    // import as userdefined
-                    return createUserDefinedBausteinUmsetzung(element, mbBaust, list);
+                    transferMassnahmen(bausteinUmsetzung, list, false);
                 }
-            } else { // baustein is null if mbBaust.getId().getBauImpId() == 1,
-                     // baustein not found in catalogue, lets assume its
-                     // userdefined
+                return bausteinUmsetzung;
+            } else if (mbBaust.getId().getBauImpId() == 1) { // user defined
+                                                             // but in
+                                                             // catalogue
+                                                             // existant
+                // import as userdefined
                 return createUserDefinedBausteinUmsetzung(element, mbBaust, list);
             }
+        } else { // baustein is null if mbBaust.getId().getBauImpId() == 1,
+                 // baustein not found in catalogue, lets assume its
+                 // userdefined
+            return createUserDefinedBausteinUmsetzung(element, mbBaust, list);
         }
+
         return null;
     }
 
@@ -294,8 +292,8 @@ public class ImportCreateBausteine extends GenericCommand {
     private Baustein importUserDefinedBaustein(MbBaust mbBaust,
             List<BausteineMassnahmenResult> list) throws CommandException {
         Baustein baustein = createBasicBaustein(mbBaust);
-        baustein = createMassnForBst(list, baustein);
-        baustein = createGefForBst(mbBaust, baustein);
+        createMassnForBst(list, baustein);
+        createGefForBst(mbBaust, baustein);
         return baustein;
     }
 
@@ -303,12 +301,10 @@ public class ImportCreateBausteine extends GenericCommand {
         Baustein baustein = new Baustein();
         BausteinInformationTransfer bausteinInformation = udBausteineTxtMap.get(mbBaust);
         baustein.setEncoding(
-                (bausteinInformation.getEncoding() != null) ? bausteinInformation.getEncoding()
-                        : "UTF-8");
+                Optional.ofNullable(bausteinInformation.getEncoding()).orElse("UTF-8"));
         baustein.setId(mbBaust.getNr());
-        baustein.setSchicht((bausteinInformation.getSchicht() != null)
-                ? Integer.valueOf(bausteinInformation.getSchicht())
-                : -1);
+        baustein.setSchicht(Optional.ofNullable(bausteinInformation.getSchicht())
+                .map(Integer::valueOf).orElse(-1));
         baustein.setTitel(bausteinInformation.getTitel());
         return baustein;
     }

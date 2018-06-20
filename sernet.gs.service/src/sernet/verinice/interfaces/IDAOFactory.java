@@ -216,6 +216,8 @@ public interface IDAOFactory {
     /**
      * Setter method used by spring to inject DAO.
      */
+    @SuppressWarnings("deprecation")
+
     void setDatenverarbeitungDAO(IBaseDao<Datenverarbeitung, Integer> daoToSet);
 
     /**
@@ -276,6 +278,7 @@ public interface IDAOFactory {
     /**
      * Setter method used by spring to inject DAO.
      */
+    @SuppressWarnings("deprecation")
     void setPersonengruppenDAO(IBaseDao<Personengruppen, Integer> daoToSet);
 
     /**
@@ -316,6 +319,7 @@ public interface IDAOFactory {
     /**
      * Setter method used by spring to inject DAO.
      */
+    @SuppressWarnings("deprecation")
     void setStellungnahmeDSBDAO(IBaseDao<StellungnahmeDSB, Integer> daoToSet);
 
     /**
@@ -331,16 +335,19 @@ public interface IDAOFactory {
     /**
      * Setter method used by spring to inject DAO.
      */
+    @SuppressWarnings("deprecation")
     void setVerantwortlicheStelleDAO(IBaseDao<VerantwortlicheStelle, Integer> daoToSet);
 
     /**
      * Setter method used by spring to inject DAO.
      */
+    @SuppressWarnings("deprecation")
     void setVerarbeitungsangabenDAO(IBaseDao<Verarbeitungsangaben, Integer> daoToSet);
 
     /**
      * Setter method used by spring to inject DAO.
      */
+    @SuppressWarnings("deprecation")
     void setZweckbestimmungDAO(IBaseDao<Zweckbestimmung, Integer> daoToSet);
 
     /**
@@ -532,7 +539,6 @@ public interface IDAOFactory {
 
     void setFinishedRiskAnalysisListsDao(IFinishedRiskAnalysisListsDao dao);
 
-    @SuppressWarnings("unchecked")
     /**
      * Tries to find a DAO by class. If you pass a proxy (class enhanced by
      * cglib), this method tries to find a DAO that works, but it still doesn't
@@ -547,7 +553,9 @@ public interface IDAOFactory {
      */
     <T> IBaseDao<T, Serializable> getDAO(Class<T> daotype);
 
+    @SuppressWarnings("rawtypes")
     IBaseDao getDAOforTypedElement(ITypedElement object);
-
+    
+    @SuppressWarnings("rawtypes")
     IBaseDao getDAO(String typeId);
 }
