@@ -83,6 +83,10 @@ public class LoadLinksDown extends GenericCommand {
         RetrieveInfo ri = new RetrieveInfo();
         ri.setLinksDown(true).setLinksDownProperties(true);
         CnATreeElement parentWithLinksDown = dao.retrieve(parent.getDbId(), ri);
+        if (parentWithLinksDown == null) {
+            throw new RuntimeCommandException(
+                    "Unable to retrieve element with id " + parent.getDbId() + " from DB.");
+        }
         linksDown = parentWithLinksDown.getLinksDown();
     }
 

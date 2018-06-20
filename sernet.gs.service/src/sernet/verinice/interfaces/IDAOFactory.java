@@ -19,6 +19,8 @@ package sernet.verinice.interfaces;
 
 import java.io.Serializable;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import sernet.gs.model.Gefaehrdung;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.ITypedElement;
@@ -540,10 +542,10 @@ public interface IDAOFactory {
     void setFinishedRiskAnalysisListsDao(IFinishedRiskAnalysisListsDao dao);
 
     /**
-     * Tries to find a DAO by class. If you pass a proxy (class enhanced by
-     * cglib), this method tries to find a DAO that works, but it still doesn't
-     * work when a proxied class is passed for a supertype of the actual type
-     * (i.e. CnaTreeElement for a Control).
+     * Retrieve a DAO for the given class. If you pass a proxy (class enhanced
+     * by cglib), this method tries to find a DAO that works, but it still
+     * doesn't work when a proxied class is passed for a supertype of the actual
+     * type (i.e. CnaTreeElement for a Control).
      * 
      * In short, when you're passing a Control.class this method will work. When
      * you're passing the result of control.getClass() it probably wont.
@@ -551,11 +553,14 @@ public interface IDAOFactory {
      * Instead of this method, you should always use the getDAOforTypedElement()
      * method when you want to get a DAO for an instantiated object.
      */
+    @NonNull
     <T> IBaseDao<T, Serializable> getDAO(Class<T> daotype);
 
     @SuppressWarnings("rawtypes")
+    @NonNull
     IBaseDao getDAOforTypedElement(ITypedElement object);
-    
+
     @SuppressWarnings("rawtypes")
+    @NonNull
     IBaseDao getDAO(String typeId);
 }

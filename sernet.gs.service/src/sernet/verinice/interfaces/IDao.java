@@ -22,6 +22,7 @@ package sernet.verinice.interfaces;
 import java.io.Serializable;
 import java.util.List;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.hibernate.criterion.DetachedCriteria;
 
 /**
@@ -40,7 +41,7 @@ public interface IDao<T, ID extends Serializable> {
 
     public abstract T findById(ID id);
 
-    public abstract List<T> findAll();
+    public abstract List<@NonNull T> findAll();
 
     public abstract List findByQuery(String hqlQuery, Object[] params);
 

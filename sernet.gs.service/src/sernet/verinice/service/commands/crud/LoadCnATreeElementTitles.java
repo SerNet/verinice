@@ -20,6 +20,8 @@ package sernet.verinice.service.commands.crud;
 import java.io.Serializable;
 import java.util.List;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
@@ -32,7 +34,7 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("serial")
 public class LoadCnATreeElementTitles<T extends CnATreeElement> extends GenericCommand {
 
-    private List<T> elements;
+    private List<@NonNull T> elements;
     private Class<T> clazz;
 
     public LoadCnATreeElementTitles(Class<T> type) {
@@ -42,7 +44,7 @@ public class LoadCnATreeElementTitles<T extends CnATreeElement> extends GenericC
     public void execute() {
         IBaseDao<T, Serializable> dao = getDaoFactory().getDAO(clazz);
         elements = dao.findAll();
-        for (CnATreeElement elmt : elements) {
+        for (@NonNull CnATreeElement elmt : elements) {
             elmt.getTitle();
         }
     }

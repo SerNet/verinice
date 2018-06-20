@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.hui.common.connect.Entity;
@@ -934,31 +935,34 @@ public class DAOFactory implements IDAOFactory {
         if (dao != null) {
             return dao;
         }
-        for (@SuppressWarnings("rawtypes") Entry<Class, IBaseDao> entry : daosByClass.entrySet()) {
-            Class<?> clazz = entry.getKey();
+        for (Class<?> clazz : daosByClass.keySet()) {
             if (clazz.isAssignableFrom(daotype)) {
-                return entry.getValue();
+                return daosByClass.get(clazz);
             }
         }
 
         if (daotype != null) {
-            log.error("No dao found for class: " + daotype.getName());
+            throw new IllegalArgumentException("No DAO registered for type " + daotype);
         } else {
             log.warn("dao-type-class is null, could not return dao");
+            return null;
         }
-        return null;
     }
 
     @Override
     @SuppressWarnings("rawtypes")
     public IBaseDao getDAOforTypedElement(ITypedElement object) {
-        return daosByTypeID.get(object.getTypeId());
+        return getDAO(object.getTypeId());
     }
 
     @Override
     @SuppressWarnings("rawtypes")
     public IBaseDao getDAO(String typeId) {
-        return daosByTypeID.get(typeId);
+        IBaseDao dao = daosByTypeID.get(typeId);
+        if (dao == null) {
+            throw new IllegalArgumentException("No DAO registered for typeId " + typeId);
+        }
+        return dao;
     }
 
     @Override

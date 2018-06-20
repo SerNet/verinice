@@ -28,6 +28,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
@@ -122,28 +123,28 @@ public class FindResponsiblePersons extends GenericCommand {
         return new ArrayList<>(result);
     }
 
-    private void findPersonsInParent(Set<Person> result, CnATreeElement currentElement,
+    private void findPersonsInParent(Set<Person> result, @NonNull CnATreeElement currentElement,
             Set<Property> rolesToSearch) {
-        Integer id = null;
         if (log.isDebugEnabled()) {
             StringBuilder sb = new StringBuilder();
             for (Property role : rolesToSearch) {
                 sb.append(role.getPropertyValue()).append(", ");
             }
-            id = (currentElement != null) ? currentElement.getDbId() : -1;
-            log.debug(STD_ERR_MSG + id + ", rollen:" + sb.toString());
+            log.debug(STD_ERR_MSG + currentElement.getDbId() + ", rollen:" + sb.toString());
         }
 
         for (Property role : rolesToSearch) {
             findLinkedPersons(result, currentElement, role);
         }
-        if (!currentElement.isItVerbund() && !currentElement.isOrganization()
-                && currentElement.getParent() != null) {
-            findPersonsInParent(result, currentElement.getParent(), rolesToSearch);
+        if (!currentElement.isItVerbund() && !currentElement.isOrganization()) {
+            CnATreeElement parent = currentElement.getParent();
+            if (parent != null) {
+                findPersonsInParent(result, parent, rolesToSearch);
+            }
         }
     }
 
-    protected void findLinkedPersons(Set<Person> result, CnATreeElement currentElement,
+    protected void findLinkedPersons(Set<Person> result, @NonNull CnATreeElement currentElement,
             Property role) {
         Integer id = -1;
         if (log.isDebugEnabled() && (currentElement != null)) {

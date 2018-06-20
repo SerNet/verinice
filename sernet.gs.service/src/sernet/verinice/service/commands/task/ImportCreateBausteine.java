@@ -30,6 +30,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
@@ -255,7 +256,7 @@ public class ImportCreateBausteine extends GenericCommand {
      * @throws IOException
      */
     private BausteinUmsetzung createBstUms(CnATreeElement element, MbBaust mbBaust,
-            List<BausteineMassnahmenResult> list, Baustein baustein)
+            List<BausteineMassnahmenResult> list, @NonNull Baustein baustein)
             throws CommandException, CnATreeElementBuildException, SQLException, IOException {
         CreateBaustein command = new CreateBaustein(element, baustein,
                 GSScraper.CATALOG_LANGUAGE_GERMAN);
@@ -299,7 +300,7 @@ public class ImportCreateBausteine extends GenericCommand {
      * @return
      * @throws CommandException
      */
-    private Baustein importUserDefinedBaustein(MbBaust mbBaust,
+    private @NonNull Baustein importUserDefinedBaustein(MbBaust mbBaust,
             List<BausteineMassnahmenResult> list) throws CommandException {
         Baustein baustein = createBasicBaustein(mbBaust);
         createMassnForBst(list, baustein);
@@ -307,7 +308,7 @@ public class ImportCreateBausteine extends GenericCommand {
         return baustein;
     }
 
-    private Baustein createBasicBaustein(MbBaust mbBaust) {
+    private @NonNull Baustein createBasicBaustein(MbBaust mbBaust) {
         Baustein baustein = new Baustein();
         BausteinInformationTransfer bausteinInformation = udBausteineTxtMap.get(mbBaust);
         baustein.setEncoding(
@@ -385,30 +386,27 @@ public class ImportCreateBausteine extends GenericCommand {
         return bausteineById.get(id);
     }
 
-    private void transferUserDefinedBaustein(Baustein baustein,
-            BausteinInformationTransfer bausteinInformation, BausteinUmsetzung bausteinUmsetzung) {
-        if (bausteinInformation != null && baustein != null && bausteinUmsetzung != null) {
-            bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERLAEUTERUNG,
-                    bausteinInformation.getDescription());
-            bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_BAUSTEIN_BESCHREIBUNG,
-                    bausteinInformation.getDescription());
-            bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERFASSTAM,
-                    parseDate(bausteinInformation.getErfasstAm()));
-            bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_NR,
-                    bausteinInformation.getNr());
+    private void transferUserDefinedBaustein(@NonNull Baustein baustein,
+            BausteinInformationTransfer bausteinInformation,
+            @NonNull BausteinUmsetzung bausteinUmsetzung) {
+        if (bausteinInformation == null) {
+            log.error("BausteinInformationTransfer für " + baustein.getTitel() + " was null");
+            return;
         }
+        bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERLAEUTERUNG,
+                bausteinInformation.getDescription());
+        bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_BAUSTEIN_BESCHREIBUNG,
+                bausteinInformation.getDescription());
+        bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERFASSTAM,
+                parseDate(bausteinInformation.getErfasstAm()));
+        bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_NR, bausteinInformation.getNr());
 
-        if (bausteinUmsetzung == null) {
-            log.error("Bausteinumsetzung für " + baustein.getTitel() + " war null");
-        }
+        bausteinUmsetzung.setSourceId(sourceId);
+        bausteinUmsetzung.setExtId(createExtId(baustein, bausteinInformation.getZobId()));
+        if (log.isDebugEnabled()) {
+            log.debug("Creating baustein with sourceId and extId: " + sourceId + ", "
+                    + bausteinUmsetzung.getExtId());
 
-        if (bausteinUmsetzung != null) {
-            bausteinUmsetzung.setSourceId(sourceId);
-            bausteinUmsetzung.setExtId(createExtId(baustein, bausteinInformation.getZobId()));
-            if (log.isDebugEnabled()) {
-                log.debug("Creating baustein with sourceId and extId: " + sourceId + ", "
-                        + bausteinUmsetzung.getExtId());
-            }
         }
 
         // remember baustein for later:
@@ -551,7 +549,7 @@ public class ImportCreateBausteine extends GenericCommand {
 
     // TODO: unify this
     private void transferMassnahme(MassnahmenUmsetzung massnahmenUmsetzung,
-            BausteineMassnahmenResult vorlage) {
+            @NonNull BausteineMassnahmenResult vorlage) {
         if (importUmsetzung) {
             // erlaeuterung und termin:
             if (vorlage != null) {
