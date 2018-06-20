@@ -72,11 +72,11 @@ VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilin
    </configIni>
 
    <launcherArgs>
-      <programArgs>-nl de -console -consoleLog
+      <programArgs>-data @user.home/verinice/workspace
       </programArgs>
-      <programArgsMac>-vm ../../../jre/Contents/Home/lib/jli/libjli.dylib
+      <programArgsMac>-vm ../../jre/Contents/Home/lib/jli/libjli.dylib
       </programArgsMac>
-      <vmArgs>-Xms512m -Xmx4096m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost -Djavax.activation.debug=true  -Dosgi.parentClassloader=ext
+      <vmArgs>-Xms512m -Xmx2048m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost -Djavax.activation.debug=true  -Dosgi.parentClassloader=ext
  -Djavax.xml.soap.SOAPFactory=org.apache.axis.soap.SOAPFactoryImpl -Djavax.xml.soap.MessageFactory=org.apache.axis.soap.MessageFactoryImpl -Djavax.xml.soap.SOAPConnectionFactory=org.apache.axis.soap.SOAPConnectionFactoryImpl
       </vmArgs>
       <vmArgsMac>-Djava.awt.headless=true
@@ -784,6 +784,7 @@ Public License instead of this License.  But first, please read
 &lt;http://www.gnu.org/philosophy/why-not-lgpl.html&gt;.
          </text>
    </license>
+
 
    <features>
       <feature id="org.eclipse.e4.rcp.sernet" version="1.6.100.qualifier"/>
