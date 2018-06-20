@@ -150,7 +150,6 @@ public class CatalogView extends RightsEnabledView
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
      * widgets.Composite)
@@ -168,7 +167,6 @@ public class CatalogView extends RightsEnabledView
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see sernet.verinice.rcp.RightsEnabledView#getRightID()
      */
@@ -178,7 +176,6 @@ public class CatalogView extends RightsEnabledView
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
@@ -444,7 +441,6 @@ public class CatalogView extends RightsEnabledView
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see
      * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.
@@ -505,11 +501,24 @@ public class CatalogView extends RightsEnabledView
             // that would add the menu entries from the CnATreeElement
             // objectContributions (such as change_icon), and we don't want
             // those in the catalog view.
-            CommandContributionItemParameter parameter = new CommandContributionItemParameter(
+            CommandContributionItemParameter copyParameter = new CommandContributionItemParameter(
                     PlatformUI.getWorkbench(), null, IWorkbenchCommandConstants.EDIT_COPY,
                     CommandContributionItem.STYLE_PUSH);
-            CommandContributionItem copyItem = new CommandContributionItem(parameter);
+            copyParameter.icon = ImageCache.getInstance()
+                    .getImageDescriptor(ImageCache.COPY);
+            CommandContributionItem copyItem = new CommandContributionItem(copyParameter);
             manager.add(copyItem);
+
+            CommandContributionItemParameter copyWithLinksParameter = new CommandContributionItemParameter(
+                    PlatformUI.getWorkbench(), null,
+                    "sernet.verinice.iso27k.rcp.commands.copywithlinks",
+                    CommandContributionItem.STYLE_PUSH);
+            copyWithLinksParameter.icon = ImageCache.getInstance()
+                    .getImageDescriptor(ImageCache.COPY);
+            CommandContributionItem copyWithLinksItem = new CommandContributionItem(
+                    copyWithLinksParameter);
+            manager.add(copyWithLinksItem);
+
             if (CnAElementFactory.selectionOnlyContainsScopes((IStructuredSelection) selection)) {
                 manager.add(deleteAction);
             }

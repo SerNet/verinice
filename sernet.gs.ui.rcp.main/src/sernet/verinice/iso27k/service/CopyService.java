@@ -30,6 +30,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.service.commands.CopyCommand;
 import sernet.verinice.service.commands.CopyLinks;
+import sernet.verinice.service.commands.CopyLinksCommand;
 
 /**
  * A CopyService is a job, which copies a list of elements to an
@@ -73,15 +74,17 @@ public class CopyService extends PasteService implements IProgressTask {
      *            an element group, elements are copied to this group
      * @param elementList
      *            a list of elements
-     * @param copyLinks
+     * 
+     * @param copyLinksMode
      */
     public CopyService(final IProgressObserver progressObserver, final CnATreeElement group,
-            final List<CnATreeElement> elementList, final boolean copyLinks) {
+            final List<CnATreeElement> elementList,
+            final CopyLinksCommand.CopyLinksMode copyLinksMode) {
         this.progressObserver = progressObserver;
         this.selectedGroup = group;
         this.elements = elementList;
-        if (copyLinks) {
-            addPostProcessor(new CopyLinks());
+        if (copyLinksMode != CopyLinksCommand.CopyLinksMode.NONE) {
+            addPostProcessor(new CopyLinks(copyLinksMode));
         }
     }
 
