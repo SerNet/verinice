@@ -76,11 +76,6 @@ public class GraphCommand extends GenericCommand implements IGraphCommand {
         this.graph = getGraphService().create(getLoader(), relationIds);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.interfaces.IGraphCommand#getLoader()
-     */
     @Override
     public List<IGraphElementLoader> getLoader() {
         if (elementLoaderList == null) {
@@ -89,32 +84,16 @@ public class GraphCommand extends GenericCommand implements IGraphCommand {
         return elementLoaderList;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.interfaces.IGraphCommand#setLoader(java.util.List)
-     */
     @Override
     public void setLoader(List<IGraphElementLoader> loader) {
         this.elementLoaderList = loader;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.interfaces.IGraphCommand#addLoader(sernet.verinice.
-     * interfaces.graph.IGraphElementLoader)
-     */
     @Override
     public void addLoader(IGraphElementLoader loader) {
         getLoader().add(loader);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.interfaces.IGraphCommand#getRelationIds()
-     */
     @Override
     public List<String> getRelationIds() {
         if (relationIdList == null) {
@@ -123,34 +102,16 @@ public class GraphCommand extends GenericCommand implements IGraphCommand {
         return relationIdList;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.interfaces.IGraphCommand#setRelationIds(java.util.List)
-     */
     @Override
     public void setRelationIds(List<String> relationIdList) {
         this.relationIdList = relationIdList;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.interfaces.IGraphCommand#addRelationId(java.lang.String)
-     */
     @Override
     public void addRelationId(String id) {
         getRelationIds().add(id);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.interfaces.IGraphCommand#getGraph()
-     */
-    @Override
     public VeriniceGraph getGraph() {
         return graph;
     }
@@ -159,26 +120,12 @@ public class GraphCommand extends GenericCommand implements IGraphCommand {
         this.graph = graph;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.interfaces.IGraphCommand#getGraphService()
-     */
-    @Override
     public IGraphService getGraphService() {
         return graphService;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.interfaces.IGraphCommand#setGraphService(sernet.verinice.
-     * interfaces.graph.IGraphService)
-     */
     @Override
     public void setGraphService(IGraphService graphService) {
         this.graphService = graphService;
     }
-
 }

@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Copyright (c) 2013 Daniel Murygin.
  *
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- * This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program. 
+ * along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
@@ -57,9 +57,6 @@ public class Cleaner {
 
     private ICommandService commandService;
 
-    /**
-     * @param orgId
-     */
     public void cleanUpOrganization(Integer orgId) {
         try {
             VeriniceGraph graph = initGraph(orgId);
@@ -85,18 +82,17 @@ public class Cleaner {
         Set<CnATreeElement> controlSet = graph.getLinkTargets(scenario,
                 Control.REL_CONTROL_INCSCEN);
         for (CnATreeElement control : controlSet) {
-            RemoveElement<CnATreeElement> command = new RemoveElement<CnATreeElement>(control);
-            command = getCommandService().executeCommand(command);
+            RemoveElement<CnATreeElement> command = new RemoveElement<>(control);
+            getCommandService().executeCommand(command);
         }
         Set<CnATreeElement> vulnerabilitySet = graph.getLinkTargets(scenario,
                 IncidentScenario.REL_INCSCEN_VULNERABILITY);
         for (CnATreeElement vulnerability : vulnerabilitySet) {
-            RemoveElement<CnATreeElement> command = new RemoveElement<CnATreeElement>(
-                    vulnerability);
-            command = getCommandService().executeCommand(command);
+            RemoveElement<CnATreeElement> command = new RemoveElement<>(vulnerability);
+            getCommandService().executeCommand(command);
         }
-        RemoveElement<CnATreeElement> command = new RemoveElement<CnATreeElement>(scenario);
-        command = getCommandService().executeCommand(command);
+        RemoveElement<CnATreeElement> command = new RemoveElement<>(scenario);
+        getCommandService().executeCommand(command);
     }
 
     private VeriniceGraph initGraph(Integer orgId) {
@@ -122,5 +118,4 @@ public class Cleaner {
     public void setCommandService(ICommandService commandService) {
         this.commandService = commandService;
     }
-
 }

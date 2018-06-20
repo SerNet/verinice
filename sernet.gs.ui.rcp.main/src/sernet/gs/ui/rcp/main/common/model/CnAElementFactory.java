@@ -823,9 +823,6 @@ public final class CnAElementFactory {
         return model;
     }
 
-    /**
-     * @return
-     */
     private ISO27KModel loadIsoModel() {
         ISO27KModel model = null;
         try {
@@ -842,9 +839,6 @@ public final class CnAElementFactory {
         return model;
     }
 
-    /**
-     * @return
-     */
     private void createIsoModel() {
         try {
             CreateIsoModel command = new CreateIsoModel();
