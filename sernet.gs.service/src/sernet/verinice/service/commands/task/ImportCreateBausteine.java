@@ -47,7 +47,6 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CnATreeElementBuildException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.interfaces.IBSIConfig;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
@@ -116,26 +115,6 @@ public class ImportCreateBausteine extends GenericCommand {
     private final String sourceId;
 
     private static final short BST_BEARBEITET_ENTBEHRLICH = 3;
-
-    public ImportCreateBausteine(String sourceId, CnATreeElement element,
-            Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap,
-            List<MbZeiteinheitenTxt> zeiten, boolean kosten, boolean importUmsetzung,
-            IBSIConfig bsiConfig, Map<MbBaust, BausteinInformationTransfer> udBstTxtMap,
-            Map<MbMassn, MassnahmeInformationTransfer> udBstMassTxtMap,
-            Map<MbBaust, List<GefaehrdungInformationTransfer>> udBaustGefMap,
-            List<Baustein> bausteine) {
-        this.element = element;
-        this.bausteineMassnahmenMap = bausteineMassnahmenMap;
-        this.kosten = kosten;
-        this.importUmsetzung = importUmsetzung;
-        this.zeiten = zeiten;
-        this.sourceId = sourceId;
-        this.udBausteineTxtMap = udBstTxtMap;
-        this.udBstMassTxtMap = udBstMassTxtMap;
-        this.udBaustGefMap = udBaustGefMap;
-        this.individualMassnahmenMap = new HashMap<BausteinUmsetzung, List<BausteineMassnahmenResult>>();
-        this.bausteine = bausteine;
-    }
 
     public ImportCreateBausteine(String sourceId, CnATreeElement element,
             Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap,
@@ -642,13 +621,4 @@ public class ImportCreateBausteine extends GenericCommand {
         zeiten = null;
         bausteine = null;
     }
-
-    public List<Baustein> getITGSCatalogueBausteine() {
-        if (bausteine != null) {
-            return bausteine;
-        } else {
-            return new ArrayList<Baustein>(0);
-        }
-    }
-
 }
