@@ -71,7 +71,8 @@ import sernet.verinice.service.commands.task.FindRelationsFor;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class RelationView extends RightsEnabledView implements IRelationTable, ILinkedWithEditorView {
+public class RelationView extends RightsEnabledView
+        implements IRelationTable, ILinkedWithEditorView {
 
     private static final Logger LOG = Logger.getLogger(ISMView.class);
 
@@ -92,9 +93,8 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
     private Action linkWithEditorAction;
 
     private boolean linkingActive = false;
-    
-    private boolean readOnly = false;
 
+    private boolean readOnly = false;
 
     /**
      * The constructor.
@@ -182,12 +182,14 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
 
         // init tooltip provider
         ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.RECREATE);
-        List<PathCellLabelProvider> cellLabelProviders = ((RelationTableViewer) viewer).initToolTips(relationViewLabelProvider, parent);
+        List<PathCellLabelProvider> cellLabelProviders = ((RelationTableViewer) viewer)
+                .initToolTips(relationViewLabelProvider, parent);
 
         // register resize listener for cutting the tooltips
         addResizeListener(parent, cellLabelProviders);
 
-        toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
+        toggleLinking(Activator.getDefault().getPreferenceStore()
+                .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
         // try to add listeners once on startup, and register for model changes:
         addBSIModelListeners();
@@ -205,14 +207,16 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
      * Tracks changes of viewpart size and delegates them to the tooltip
      * provider.
      */
-    private void addResizeListener(final Composite parent, final List<PathCellLabelProvider> cellLabelProviders) {
+    private void addResizeListener(final Composite parent,
+            final List<PathCellLabelProvider> cellLabelProviders) {
 
         parent.addControlListener(new ControlAdapter() {
 
             @Override
             public void controlResized(ControlEvent e) {
                 for (PathCellLabelProvider c : cellLabelProviders) {
-                    c.updateShellWidthAndX(parent.getShell().getBounds().width, parent.getShell().getBounds().x);
+                    c.updateShellWidthAndX(parent.getShell().getBounds().width,
+                            parent.getShell().getBounds().x);
                 }
             }
 
@@ -220,8 +224,8 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     private void hookModelLoadListener() {
         this.loadListener = new IModelLoadListener() {
 
@@ -254,7 +258,7 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
             public void loaded(BpModel model) {
                 synchronized (loadListener) {
                     addBpModelListeners();
-                }                
+                }
             }
 
             @Override
@@ -277,11 +281,13 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
                 try {
                     monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
                     if (CnAElementFactory.isModelLoaded()) {
-                        CnAElementFactory.getInstance().getLoadedModel().addBSIModelListener(contentProvider);
+                        CnAElementFactory.getInstance().getLoadedModel()
+                                .addBSIModelListener(contentProvider);
                     }
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.RelationView_7, e); //$NON-NLS-1$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
+                            Messages.RelationView_7, e);
                 } finally {
                     monitor.done();
                 }
@@ -299,36 +305,13 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
                 try {
                     monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
                     if (CnAElementFactory.isModelLoaded()) {
-                        CnAElementFactory.getInstance().getBpModel().addModITBOModelListener(contentProvider);
+                        CnAElementFactory.getInstance().getBpModel()
+                                .addModITBOModelListener(contentProvider);
                     }
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.RelationView_7, e); //$NON-NLS-1$
-                } finally {
-                    monitor.done();
-                }
-                return status;
-            }
-        };
-        JobScheduler.scheduleInitJob(initDataJob);
-    }
-    
-    /**
-	 * 
-	 */
-    protected void addISO27KModelListeners() {
-        WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
-            @Override
-            public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                IStatus status = Status.OK_STATUS;
-                try {
-                    monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
-                    if (CnAElementFactory.isIsoModelLoaded()) {
-                        CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(contentProvider);
-                    }
-                } catch (Exception e) {
-                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.RelationView_7, e); //$NON-NLS-1$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
+                            Messages.RelationView_7, e);
                 } finally {
                     monitor.done();
                 }
@@ -339,16 +322,44 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
+    protected void addISO27KModelListeners() {
+        WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+            @Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                IStatus status = Status.OK_STATUS;
+                try {
+                    monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+                    if (CnAElementFactory.isIsoModelLoaded()) {
+                        CnAElementFactory.getInstance().getISO27kModel()
+                                .addISO27KModelListener(contentProvider);
+                    }
+                } catch (Exception e) {
+                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
+                            Messages.RelationView_7, e);
+                } finally {
+                    monitor.done();
+                }
+                return status;
+            }
+        };
+        JobScheduler.scheduleInitJob(initDataJob);
+    }
+
+    /**
+     * 
+     */
     protected void removeModelListeners() {
         if (CnAElementFactory.isModelLoaded()) {
             CnAElementFactory.getLoadedModel().removeBSIModelListener(contentProvider);
         }
         if (CnAElementFactory.isIsoModelLoaded()) {
-            CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
+            CnAElementFactory.getInstance().getISO27kModel()
+                    .removeISO27KModelListener(contentProvider);
         }
-        if(CnAElementFactory.isBpModelLoaded()) {
+        if (CnAElementFactory.isBpModelLoaded()) {
             CnAElementFactory.getInstance().getBpModel().removeBpModelListener(contentProvider);
         }
     }
@@ -421,7 +432,7 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         }
         Object element = ((IStructuredSelection) selection).getFirstElement();
         if (element instanceof CnATreeElement) {
-            readOnly =  part instanceof CatalogView ? true : false;
+            readOnly = part instanceof CatalogView ? true : false;
             setNewInput((CnATreeElement) element);
         }
     }
@@ -473,7 +484,8 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         };
         jumpToAction.setText(Messages.RelationView_10);
         jumpToAction.setToolTipText(Messages.RelationView_11);
-        jumpToAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ARROW_IN));
+        jumpToAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.ARROW_IN));
 
         doubleClickAction = new Action() {
 
@@ -497,7 +509,8 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
                 toggleLinking(isChecked());
             }
         };
-        linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
+        linkWithEditorAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
         linkWithEditorAction.setChecked(isLinkingActive());
     }
 
@@ -519,8 +532,8 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     @Override
     public void reload(CnALink oldLink, CnALink newLink) {
         newLink.setDependant(oldLink.getDependant());
@@ -585,7 +598,8 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
     protected void toggleLinking(boolean checked) {
         this.linkingActive = checked;
         if (checked) {
-            Optional.ofNullable(getSite().getPage().getActiveEditor()).ifPresent(this::editorActivated);
+            Optional.ofNullable(getSite().getPage().getActiveEditor())
+                    .ifPresent(this::editorActivated);
         }
     }
 
@@ -610,7 +624,8 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
             return;
         }
         if (activeEditor.getEditorInput() instanceof BSIElementEditorInput) {
-            BSIElementEditorInput editorInput = (BSIElementEditorInput) activeEditor.getEditorInput();
+            BSIElementEditorInput editorInput = (BSIElementEditorInput) activeEditor
+                    .getEditorInput();
             readOnly = editorInput.isReadOnly();
         }
         setNewInput(element);
