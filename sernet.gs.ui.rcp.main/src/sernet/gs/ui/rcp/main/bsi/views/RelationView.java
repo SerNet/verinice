@@ -8,6 +8,7 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
@@ -493,17 +494,18 @@ public class RelationView extends RightsEnabledView
      */
     @Override
     public CnATreeElement getInputElmt() {
-        checkAndRetrieve();
-        return this.inputElmt;
+        if (inputElmt != null) {
+            checkAndRetrieve(this.inputElmt);
+        }
+        return inputElmt;
     }
 
-    private CnATreeElement checkAndRetrieve() {
+    private static void checkAndRetrieve(@NonNull CnATreeElement inputElmt) {
         CnATreeElement elementWithProperties = Retriever.checkRetrieveElement(inputElmt);
-        this.inputElmt.setEntity(elementWithProperties.getEntity());
+        inputElmt.setEntity(elementWithProperties.getEntity());
         CnATreeElement elementWithLinks = Retriever.checkRetrieveLinks(inputElmt, true);
-        this.inputElmt.setLinksDown(elementWithLinks.getLinksDown());
-        this.inputElmt.setLinksUp(elementWithLinks.getLinksUp());
-        return this.inputElmt;
+        inputElmt.setLinksDown(elementWithLinks.getLinksDown());
+        inputElmt.setLinksUp(elementWithLinks.getLinksUp());
     }
 
     /*
