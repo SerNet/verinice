@@ -115,35 +115,24 @@ public class RelationView extends RightsEnabledView
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 Activator.inheritVeriniceContextState();
-                try {
-                    Display.getDefault().asyncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            viewer.setInput(new PlaceHolder(Messages.RelationView_0));
-                        }
-                    });
+                Display.getDefault().syncExec(() -> {
+                    try {
+                        viewer.setInput(new PlaceHolder(Messages.RelationView_0));
 
-                    monitor.setTaskName(Messages.RelationView_0);
+                        monitor.setTaskName(Messages.RelationView_0);
 
-                    FindRelationsFor command = new FindRelationsFor(elmt);
-                    command = ServiceFactory.lookupCommandService().executeCommand(command);
-                    final CnATreeElement linkElmt = command.getElmt();
+                        FindRelationsFor command = new FindRelationsFor(elmt);
+                        command = ServiceFactory.lookupCommandService().executeCommand(command);
+                        final CnATreeElement linkElmt = command.getElmt();
 
-                    Display.getDefault().asyncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            viewer.setInput(linkElmt);
-                        }
-                    });
-                } catch (Exception e) {
-                    Display.getDefault().asyncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            viewer.setInput(new PlaceHolder(Messages.RelationView_3));
-                        }
-                    });
-                    ExceptionUtil.log(e, Messages.RelationView_4);
-                }
+                        viewer.setInput(linkElmt);
+                    } catch (Exception e) {
+                        viewer.setInput(new PlaceHolder(Messages.RelationView_3));
+                        ExceptionUtil.log(e, Messages.RelationView_4);
+                    }
+
+                });
+
                 return Status.OK_STATUS;
             }
         };
