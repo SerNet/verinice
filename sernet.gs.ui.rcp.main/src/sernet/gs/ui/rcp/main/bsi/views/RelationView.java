@@ -370,6 +370,9 @@ public class RelationView extends RightsEnabledView
         if (part == this) {
             return;
         }
+        if (!getSite().getPage().isPartVisible(this)) {
+            return;
+        }
         if (!(selection instanceof IStructuredSelection)) {
             return;
         }
