@@ -42,9 +42,8 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -85,11 +84,7 @@ public class LinkMaker extends Composite implements IRelationTable {
 
     static final String LAST_SELECTED_RELATION_PREF_PREFIX = "last_selected_relation_for";
 
-    private static final int RELATION_COMBO_WIDTH = 200;
-
-    private static final int FORM_ATTACHMENT_NUMERATOR_DEFAULT = 100;
-    private static final int FORM_ATTACHMENT_OFFSET_DEFAULT = 5;
-
+    private static final int COMPOSITE_WIDTH_HINT = 400;
     // SWT
     RelationTableViewer viewer;
     private WorkbenchPart part;
@@ -123,31 +118,29 @@ public class LinkMaker extends Composite implements IRelationTable {
 
     public LinkMaker(Composite parent, WorkbenchPart part) {
         super(parent, SWT.BORDER);
-        FormLayout formLayout = new FormLayout();
-        this.setLayout(formLayout);
+        this.setLayout(new GridLayout());
         this.part = part;
 
         composite = new Composite(this, SWT.NONE);
+
+        GridData gdComposite = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
+        gdComposite.widthHint = COMPOSITE_WIDTH_HINT;
+        gdComposite.verticalIndent = 1;
+        gdComposite.minimumWidth = COMPOSITE_WIDTH_HINT;
+        composite.setLayoutData(gdComposite);
+        composite.setLayout(new GridLayout(5, false));
+
         Label label = new Label(composite, SWT.NULL);
+        label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
         label.setText(Messages.LinkMaker_0);
-        FormData formData = new FormData();
-        formData.top = new FormAttachment(0, FORM_ATTACHMENT_OFFSET_DEFAULT);
-        formData.left = new FormAttachment(0, FORM_ATTACHMENT_OFFSET_DEFAULT);
-        label.setLayoutData(formData);
-        label.pack();
 
         comboElementType = new Combo(composite, SWT.READ_ONLY);
-        FormData formData1 = new FormData();
-        formData1.top = new FormAttachment(0, FORM_ATTACHMENT_OFFSET_DEFAULT);
-        formData1.left = new FormAttachment(label, FORM_ATTACHMENT_OFFSET_DEFAULT);
-        comboElementType.setLayoutData(formData1);
+        comboElementType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 
         relationComboViewer = new ComboViewer(composite, SWT.READ_ONLY);
-        FormData formData2 = new FormData();
-        formData2.top = new FormAttachment(0, FORM_ATTACHMENT_OFFSET_DEFAULT);
-        formData2.left = new FormAttachment(comboElementType, FORM_ATTACHMENT_OFFSET_DEFAULT);
-        formData2.width = RELATION_COMBO_WIDTH;
-        relationComboViewer.getCombo().setLayoutData(formData2);
+        Combo combo = relationComboViewer.getCombo();
+        GridData gdCombo1 = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+        combo.setLayoutData(gdCombo1);
 
         relationComboViewer.setContentProvider(new ArrayContentProvider());
 
@@ -168,20 +161,13 @@ public class LinkMaker extends Composite implements IRelationTable {
         addRelationComboListener();
 
         addLinkButton = new Button(composite, SWT.PUSH);
-        FormData formData3 = new FormData();
-        formData3.top = new FormAttachment(comboElementType, 0, SWT.CENTER);
-        formData3.left = new FormAttachment(relationComboViewer.getCombo(),
-                FORM_ATTACHMENT_OFFSET_DEFAULT);
-        addLinkButton.setLayoutData(formData3);
+
         addLinkButton.setText(Messages.LinkMaker_1);
         addLinkButton.setToolTipText(Messages.LinkMaker_2);
         addLinkButton.setEnabled(false);
 
         removeLinkButton = new Button(composite, SWT.PUSH);
-        FormData formData4 = new FormData();
-        formData4.top = new FormAttachment(comboElementType, 0, SWT.CENTER);
-        formData4.left = new FormAttachment(addLinkButton, FORM_ATTACHMENT_OFFSET_DEFAULT);
-        removeLinkButton.setLayoutData(formData4);
+
         removeLinkButton.setText(Messages.LinkMaker_3);
         removeLinkButton.setToolTipText(Messages.LinkMaker_4);
     }
@@ -228,18 +214,12 @@ public class LinkMaker extends Composite implements IRelationTable {
         this.removeLinkButton.addSelectionListener(unlinkAction);
 
         createFilter();
-
         hookDoubleClickAction();
     }
 
     private void initLinkTableViewer() {
         viewer = new RelationTableViewer(this, this, SWT.FULL_SELECTION | SWT.MULTI, true);
-        FormData formData = new FormData();
-        formData.top = new FormAttachment(addLinkButton, 2);
-        formData.left = new FormAttachment(0, 1);
-        formData.right = new FormAttachment(FORM_ATTACHMENT_NUMERATOR_DEFAULT, -1);
-        formData.bottom = new FormAttachment(FORM_ATTACHMENT_NUMERATOR_DEFAULT, -1);
-        viewer.getTable().setLayoutData(formData);
+        viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
         viewer.getTable().setEnabled(writeable);
         relationViewContentProvider = new RelationViewContentProvider(this, viewer);
         viewer.setContentProvider(relationViewContentProvider);
@@ -323,6 +303,7 @@ public class LinkMaker extends Composite implements IRelationTable {
         addLinkButton.setEnabled(relationItemCount > 0 && writeable && checkRights());
 
         selectRelationType();
+        composite.pack(true);
     }
 
     private void selectRelationType() {
