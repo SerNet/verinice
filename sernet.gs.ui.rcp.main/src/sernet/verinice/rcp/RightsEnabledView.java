@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.rcp;
 
+import java.util.stream.Stream;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IViewReference;
@@ -103,39 +105,32 @@ public abstract class RightsEnabledView extends ViewPart {
      *            The view class to close
      * @see IWorkbenchPage#hideView(org.eclipse.ui.IViewReference)
      */
-    @SuppressWarnings("rawtypes")
-    private static void closeAllViews(final Class viewType) {
-        final IWorkbenchWindow[] windows = PlatformUI.getWorkbench().getWorkbenchWindows();
+    private static void closeAllViews(final Class<? extends RightsEnabledView> viewType) {
+        Stream.of(PlatformUI.getWorkbench().getWorkbenchWindows())
+                .forEach(window -> Stream.of(window.getPages())
+                        .forEach(page -> Stream.of(page.getViewReferences()).forEach(viewRef -> {
 
-        // for all workbench windows
-        for (int w = 0; w < windows.length; w++) {
-            final IWorkbenchPage[] pages = windows[w].getPages();
+                            // for all view references
+                            // of a given workbench page
+                            // of a given workbench window
+                            final IWorkbenchPart viewPart = viewRef.getPart(false);
+                            final Class<?> partType = (viewPart != null) ? viewPart.getClass()
+                                    : null;
 
-            // for all workbench pages
-            // of a given workbench window
-            for (int p = 0; p < pages.length; p++) {
-                final IWorkbenchPage page = pages[p];
-                final IViewReference[] viewRefs = page.getViewReferences();
-
-                // for all view references
-                // of a given workbench page
-                // of a given workbench window
-                for (int v = 0; v < viewRefs.length; v++) {
-                    final IViewReference viewRef = viewRefs[v];
-                    final IWorkbenchPart viewPart = viewRef.getPart(false);
-                    final Class partType = (viewPart != null) ? viewPart.getClass() : null;
-
-                    if (viewType == null || viewType.equals(partType)) {
-                        try {
-                            page.hideView(viewRef);
-                        } catch (Exception e) {
-                            LOG.warn("Exception while closing view."); //$NON-NLS-1$
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("Stacktrace: ", e); //$NON-NLS-1$
+                            if (viewType == null || viewType.equals(partType)) {
+                                safeHideView(page, viewRef);
                             }
-                        }
-                    }
-                }
+                        })));
+
+    }
+
+    private static void safeHideView(IWorkbenchPage page, IViewReference viewRef) {
+        try {
+            page.hideView(viewRef);
+        } catch (Exception e) {
+            LOG.warn("Exception while closing view."); //$NON-NLS-1$
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Stacktrace: ", e); //$NON-NLS-1$
             }
         }
     }
