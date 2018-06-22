@@ -69,7 +69,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -121,7 +120,7 @@ import sernet.verinice.service.commands.LoadAncestors;
  * @see TaskViewDataLoader
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class TaskView extends RightsEnabledView implements IPartListener2 {
+public class TaskView extends RightsEnabledView {
 
     private static final Logger LOG = Logger.getLogger(TaskView.class);
     static final NumericStringComparator NSC = new NumericStringComparator();
