@@ -34,8 +34,6 @@ import org.eclipse.ui.part.ViewPart;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 
 /**
  * Abstract base class for rights enabled views. RightsEnabledView checks rights
@@ -62,8 +60,6 @@ public abstract class RightsEnabledView extends ViewPart {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
      * widgets.Composite)
      */
@@ -72,7 +68,6 @@ public abstract class RightsEnabledView extends ViewPart {
         if (!Activator.getDefault().isStandalone() && !checkRights()) {
             final IWorkbenchWindow workbenchWindow = getSite().getWorkbenchWindow();
             workbenchWindow.getPartService().addPartListener(new CheckPermissonListener());
-            return;
         }
     }
 
@@ -136,8 +131,6 @@ public abstract class RightsEnabledView extends ViewPart {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
      */
     @Override
@@ -168,17 +161,12 @@ public abstract class RightsEnabledView extends ViewPart {
             }
             if (getViewId().equals(partRef.getId())) {
                 if (!isServerRunning()) {
-                    IInternalServerStartListener listener = new IInternalServerStartListener() {
-                        @Override
-                        public void statusChanged(InternalServerEvent e) {
-                            if (e.isStarted()) {
-                                checkAndDecline();
-                            }
-                        }
-
-                    };
                     Activator.getDefault().getInternalServer()
-                            .addInternalServerStatusListener(listener);
+                            .addInternalServerStatusListener(e -> {
+                                if (e.isStarted()) {
+                                    checkAndDecline();
+                                }
+                            });
                 } else {
                     checkAndDecline();
                 }

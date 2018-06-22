@@ -91,14 +91,12 @@ import sernet.verinice.bpm.TaskLoader;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskListener;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.interfaces.bpm.KeyMessage;
 import sernet.verinice.interfaces.bpm.KeyValue;
 import sernet.verinice.iso27k.rcp.ComboModel;
-import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.iso27k.rcp.RegexComboModelFilter;
 import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.common.CnATreeElement;
@@ -359,7 +357,7 @@ public class TaskView extends RightsEnabledView {
         this.tableViewer.setContentProvider(this.contentProvider);
         TaskLabelProvider labelProvider = new TaskLabelProvider();
         this.tableViewer.setLabelProvider(labelProvider);
-        this.tableViewer.setSorter(tableSorter);
+        this.tableViewer.setComparator(tableSorter);
     }
 
     private void createInfoComposite(Composite container) {
@@ -408,14 +406,10 @@ public class TaskView extends RightsEnabledView {
     }
 
     private void createAssigneeControls(Composite searchComposite) {
-        comboModelAccount = new ComboModel<>(new IComboModelLabelProvider<Configuration>() {
-            @Override
-            public String getLabel(Configuration account) {
-                StringBuilder sb = new StringBuilder(
-                        PersonAdapter.getFullName(account.getPerson()));
-                sb.append(" [").append(account.getUser()).append("]"); //$NON-NLS-1$ //$NON-NLS-2$
-                return sb.toString();
-            }
+        comboModelAccount = new ComboModel<>(account -> {
+            StringBuilder sb = new StringBuilder(PersonAdapter.getFullName(account.getPerson()));
+            sb.append(" [").append(account.getUser()).append("]"); //$NON-NLS-1$ //$NON-NLS-2$
+            return sb.toString();
         });
         comboAccount = createComboBox(searchComposite);
         comboAccount.addSelectionListener(new SelectionAdapter() {
@@ -433,12 +427,7 @@ public class TaskView extends RightsEnabledView {
     }
 
     private void createProcessTypeControls(Composite searchComposite) {
-        comboModelProcessType = new ComboModel<>(new IComboModelLabelProvider<KeyMessage>() {
-            @Override
-            public String getLabel(KeyMessage object) {
-                return object.getValue();
-            }
-        });
+        comboModelProcessType = new ComboModel<>(KeyMessage::getValue);
         comboProcessType = createComboBox(searchComposite);
         comboProcessType.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -581,12 +570,9 @@ public class TaskView extends RightsEnabledView {
 
         if (Activator.getDefault().isStandalone()
                 && !Activator.getDefault().getInternalServer().isRunning()) {
-            IInternalServerStartListener listener = new IInternalServerStartListener() {
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if (e.isStarted()) {
-                        configureActions();
-                    }
+            IInternalServerStartListener listener = e -> {
+                if (e.isStarted()) {
+                    configureActions();
                 }
             };
             Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
@@ -615,13 +601,9 @@ public class TaskView extends RightsEnabledView {
     }
 
     private void configureActions() {
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                cancelTaskAction
-                        .setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKDELETE));
-                comboAccount.setEnabled(isTaskShowAllEnabled());
-            }
+        Display.getDefault().asyncExec(() -> {
+            cancelTaskAction.setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKDELETE));
+            comboAccount.setEnabled(isTaskShowAllEnabled());
         });
     }
 
@@ -652,12 +634,7 @@ public class TaskView extends RightsEnabledView {
 
             @Override
             public void newTasks() {
-                Display.getDefault().syncExec(new Runnable() {
-                    @Override
-                    public void run() {
-                        dataLoader.loadTasks();
-                    }
-                });
+                Display.getDefault().syncExec(() -> dataLoader.loadTasks());
             }
         };
         TaskChangeRegistry.addTaskChangeListener(taskListener);
@@ -805,6 +782,7 @@ public class TaskView extends RightsEnabledView {
         } else {
             newList = taskList;
         }
+        @SuppressWarnings("unchecked")
         List<ITask> currentTaskList = (List<ITask>) getViewer().getInput();
         if (currentTaskList != null) {
             for (ITask task : currentTaskList) {
@@ -813,12 +791,7 @@ public class TaskView extends RightsEnabledView {
                 }
             }
         }
-        Display.getDefault().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                getViewer().setInput(newList);
-            }
-        });
+        Display.getDefault().syncExec(() -> getViewer().setInput(newList));
     }
 
     private void cancelTask() throws InvocationTargetException, InterruptedException {
@@ -916,12 +889,7 @@ public class TaskView extends RightsEnabledView {
     }
 
     protected void showError(final String title, final String message) {
-        Display.getDefault().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                MessageDialog.openError(getShell(), title, message);
-            }
-        });
+        Display.getDefault().syncExec(() -> MessageDialog.openError(getShell(), title, message));
     }
 
     static Display getDisplay() {
