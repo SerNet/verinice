@@ -37,31 +37,34 @@ import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 
 /**
- * Abstract base class for rights enabled views.
- * RightsEnabledView checks rights whenever this view is getting visible. 
- * View is closed if user is not allowed to open this view.
+ * Abstract base class for rights enabled views. RightsEnabledView checks rights
+ * whenever this view is getting visible. View is closed if user is not allowed
+ * to open this view.
  *
- * If you extend this class and overwrite createPartControl 
- * call super.createPartControl(parent).
+ * If you extend this class and overwrite createPartControl call
+ * super.createPartControl(parent).
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public abstract class RightsEnabledView extends ViewPart implements IPartListener2 {
 
     private static final Logger LOG = Logger.getLogger(RightsEnabledView.class);
-    
-    protected void openingDeclined() { 
+
+    protected void openingDeclined() {
         LOG.error("Opening of view is not allowed, view-id: " + getViewId() + ", action-id: "
                 + getRightID());
         if (LOG.isDebugEnabled()) {
             LOG.debug("Stacktrace: ", new RuntimeException());
         }
         closeAllViews(this.getClass());
-        dispose();        
+        dispose();
     }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
+     * widgets.Composite)
      */
     @Override
     public void createPartControl(Composite parent) {
@@ -71,10 +74,11 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
             return;
         }
     }
-    
+
     private boolean checkRights() {
         Activator.inheritVeriniceContextState();
-        RightsServiceClient service = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
@@ -82,19 +86,22 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
      * @return The action-right-id of this view
      */
     public abstract String getRightID();
-    
+
     /**
      * @return The id of this view
      */
     public abstract String getViewId();
-    
+
     /**
      * Closes all instances of a given view type.
      * 
-     * <p>Searches for all views of a given type in all workbench windows and
-     * closes them.</p>
+     * <p>
+     * Searches for all views of a given type in all workbench windows and
+     * closes them.
+     * </p>
      * 
-     * @param viewType The view class to close
+     * @param viewType
+     *            The view class to close
      * @see IWorkbenchPage#hideView(org.eclipse.ui.IViewReference)
      */
     @SuppressWarnings("rawtypes")
@@ -122,62 +129,71 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
                     if (viewType == null || viewType.equals(partType)) {
                         try {
                             page.hideView(viewRef);
-                        } catch(Exception e) {
+                        } catch (Exception e) {
                             LOG.warn("Exception while closing view."); //$NON-NLS-1$
                             if (LOG.isDebugEnabled()) {
                                 LOG.debug("Stacktrace: ", e); //$NON-NLS-1$
                             }
-                        } 
+                        }
                     }
                 }
             }
         }
     }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IPartListener2#partVisible(org.eclipse.ui.IWorkbenchPartReference)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.IPartListener2#partVisible(org.eclipse.ui.
+     * IWorkbenchPartReference)
      */
     @Override
     public void partVisible(IWorkbenchPartReference partRef) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("partVisible: " + partRef.getId()); //$NON-NLS-1$
         }
-        if(getViewId().equals(partRef.getId())) {
-            if(!isServerRunning()){
-                IInternalServerStartListener listener = new IInternalServerStartListener(){
+        if (getViewId().equals(partRef.getId())) {
+            if (!isServerRunning()) {
+                IInternalServerStartListener listener = new IInternalServerStartListener() {
                     @Override
                     public void statusChanged(InternalServerEvent e) {
-                        if(e.isStarted()){
+                        if (e.isStarted()) {
                             checkAndDecline();
                         }
                     }
 
                 };
-                Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+                Activator.getDefault().getInternalServer()
+                        .addInternalServerStatusListener(listener);
             } else {
                 checkAndDecline();
-            }         
+            }
         }
     }
 
     private void checkAndDecline() {
-        if (!checkRights()) {         
+        if (!checkRights()) {
             openingDeclined();
         }
     }
-       
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IPartListener2#partActivated(org.eclipse.ui.IWorkbenchPartReference)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.IPartListener2#partActivated(org.eclipse.ui.
+     * IWorkbenchPartReference)
      */
     @Override
     public void partActivated(IWorkbenchPartReference partRef) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("partActivated: " + partRef.getId()); //$NON-NLS-1$
         }
-        
+
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
      */
     @Override
@@ -187,10 +203,11 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
         }
     }
 
-    
-
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IPartListener2#partBroughtToTop(org.eclipse.ui.IWorkbenchPartReference)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.IPartListener2#partBroughtToTop(org.eclipse.ui.
+     * IWorkbenchPartReference)
      */
     @Override
     public void partBroughtToTop(IWorkbenchPartReference partRef) {
@@ -199,8 +216,11 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IPartListener2#partClosed(org.eclipse.ui.IWorkbenchPartReference)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.IPartListener2#partClosed(org.eclipse.ui.
+     * IWorkbenchPartReference)
      */
     @Override
     public void partClosed(IWorkbenchPartReference partRef) {
@@ -209,8 +229,11 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IPartListener2#partDeactivated(org.eclipse.ui.IWorkbenchPartReference)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.IPartListener2#partDeactivated(org.eclipse.ui.
+     * IWorkbenchPartReference)
      */
     @Override
     public void partDeactivated(IWorkbenchPartReference partRef) {
@@ -219,8 +242,11 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IPartListener2#partOpened(org.eclipse.ui.IWorkbenchPartReference)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.IPartListener2#partOpened(org.eclipse.ui.
+     * IWorkbenchPartReference)
      */
     @Override
     public void partOpened(IWorkbenchPartReference partRef) {
@@ -229,8 +255,11 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IPartListener2#partHidden(org.eclipse.ui.IWorkbenchPartReference)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.IPartListener2#partHidden(org.eclipse.ui.
+     * IWorkbenchPartReference)
      */
     @Override
     public void partHidden(IWorkbenchPartReference partRef) {
@@ -239,10 +268,11 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
         }
     }
 
-
-
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IPartListener2#partInputChanged(org.eclipse.ui.IWorkbenchPartReference)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.IPartListener2#partInputChanged(org.eclipse.ui.
+     * IWorkbenchPartReference)
      */
     @Override
     public void partInputChanged(IWorkbenchPartReference partRef) {
@@ -250,12 +280,14 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
             LOG.debug("partInputChanged: " + partRef.getId()); //$NON-NLS-1$
         }
     }
-    
+
     /**
-     * @return false if operation mode is standalone and internal server is not running
+     * @return false if operation mode is standalone and internal server is not
+     *         running
      */
     protected boolean isServerRunning() {
-        return !(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning());
+        return !(Activator.getDefault().isStandalone()
+                && !Activator.getDefault().getInternalServer().isRunning());
     }
 
 }
