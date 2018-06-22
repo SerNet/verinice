@@ -10,14 +10,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -96,20 +93,12 @@ public class RelationView extends RightsEnabledView
 
     private boolean readOnly = false;
 
-    /**
-     * The constructor.
-     */
-    public RelationView() {
-    }
-
     @Override
     public String getRightID() {
         return ActionRightIDs.RELATIONS;
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
@@ -117,9 +106,6 @@ public class RelationView extends RightsEnabledView
         return ID;
     }
 
-    /**
-     * @param elmt
-     */
     public void loadLinks(final CnATreeElement elmt) {
         if (!CnAElementHome.getInstance().isOpen() || inputElmt == null) {
             return;
@@ -178,7 +164,7 @@ public class RelationView extends RightsEnabledView
 
         RelationViewLabelProvider relationViewLabelProvider = new RelationViewLabelProvider(this);
         viewer.setLabelProvider(relationViewLabelProvider);
-        viewer.setSorter(new RelationByNameSorter(this, COLUMN_TITLE, COLUMN_TYPE_IMG));
+        viewer.setComparator(new RelationByNameSorter(this, COLUMN_TITLE, COLUMN_TYPE_IMG));
 
         // init tooltip provider
         ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.RECREATE);
@@ -223,21 +209,13 @@ public class RelationView extends RightsEnabledView
         });
     }
 
-    /**
-     * 
-     */
     private void hookModelLoadListener() {
         this.loadListener = new IModelLoadListener() {
 
             @Override
             public void closed(BSIModel model) {
                 removeModelListeners();
-                Display.getDefault().asyncExec(new Runnable() {
-                    @Override
-                    public void run() {
-                        viewer.setInput(new PlaceHolder("")); //$NON-NLS-1$
-                    }
-                });
+                Display.getDefault().asyncExec(() -> viewer.setInput(new PlaceHolder("")));
             }
 
             @Override
@@ -270,9 +248,6 @@ public class RelationView extends RightsEnabledView
         CnAElementFactory.getInstance().addLoadListener(loadListener);
     }
 
-    /**
-     * 
-     */
     protected void addBSIModelListeners() {
         WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
             @Override
@@ -286,8 +261,8 @@ public class RelationView extends RightsEnabledView
                     }
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
-                            Messages.RelationView_7, e);
+                    status = new Status(Status.ERROR, Activator.PLUGIN_ID, Messages.RelationView_7,
+                            e);
                 } finally {
                     monitor.done();
                 }
@@ -310,8 +285,8 @@ public class RelationView extends RightsEnabledView
                     }
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
-                            Messages.RelationView_7, e);
+                    status = new Status(Status.ERROR, Activator.PLUGIN_ID, Messages.RelationView_7,
+                            e);
                 } finally {
                     monitor.done();
                 }
@@ -321,9 +296,6 @@ public class RelationView extends RightsEnabledView
         JobScheduler.scheduleInitJob(initDataJob);
     }
 
-    /**
-     * 
-     */
     protected void addISO27KModelListeners() {
         WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
             @Override
@@ -337,8 +309,8 @@ public class RelationView extends RightsEnabledView
                     }
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
-                            Messages.RelationView_7, e);
+                    status = new Status(Status.ERROR, Activator.PLUGIN_ID, Messages.RelationView_7,
+                            e);
                 } finally {
                     monitor.done();
                 }
@@ -348,9 +320,6 @@ public class RelationView extends RightsEnabledView
         JobScheduler.scheduleInitJob(initDataJob);
     }
 
-    /**
-     * 
-     */
     protected void removeModelListeners() {
         if (CnAElementFactory.isModelLoaded()) {
             CnAElementFactory.getLoadedModel().removeBSIModelListener(contentProvider);
@@ -371,12 +340,7 @@ public class RelationView extends RightsEnabledView
     private void hookContextMenu() {
         MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
         menuMgr.setRemoveAllWhenShown(true);
-        menuMgr.addMenuListener(new IMenuListener() {
-            @Override
-            public void menuAboutToShow(IMenuManager manager) {
-                RelationView.this.fillContextMenu(manager);
-            }
-        });
+        menuMgr.addMenuListener(RelationView.this::fillContextMenu);
         Menu menu = menuMgr.createContextMenu(viewer.getControl());
         viewer.getControl().setMenu(menu);
         getSite().registerContextMenu(menuMgr, viewer);
@@ -389,12 +353,7 @@ public class RelationView extends RightsEnabledView
     }
 
     private void hookPageSelection() {
-        selectionListener = new ISelectionListener() {
-            @Override
-            public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-                pageSelectionChanged(part, selection);
-            }
-        };
+        selectionListener = this::pageSelectionChanged;
         getSite().getPage().addPostSelectionListener(selectionListener);
 
         /**
@@ -407,8 +366,6 @@ public class RelationView extends RightsEnabledView
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.part.WorkbenchPart#dispose()
      */
     @Override
@@ -432,14 +389,11 @@ public class RelationView extends RightsEnabledView
         }
         Object element = ((IStructuredSelection) selection).getFirstElement();
         if (element instanceof CnATreeElement) {
-            readOnly = part instanceof CatalogView ? true : false;
+            readOnly = part instanceof CatalogView;
             setNewInput((CnATreeElement) element);
         }
     }
 
-    /**
-     * @param element
-     */
     private void setNewInput(CnATreeElement elmt) {
         this.inputElmt = elmt;
         loadLinks(elmt);
@@ -515,12 +469,7 @@ public class RelationView extends RightsEnabledView
     }
 
     private void hookDoubleClickAction() {
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                doubleClickAction.run();
-            }
-        });
+        viewer.addDoubleClickListener(event -> doubleClickAction.run());
     }
 
     /**
@@ -531,9 +480,6 @@ public class RelationView extends RightsEnabledView
         viewer.getControl().setFocus();
     }
 
-    /**
-     * 
-     */
     @Override
     public void reload(CnALink oldLink, CnALink newLink) {
         newLink.setDependant(oldLink.getDependant());
@@ -551,8 +497,6 @@ public class RelationView extends RightsEnabledView
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#getInputElmt()
      */
     @Override
@@ -561,9 +505,6 @@ public class RelationView extends RightsEnabledView
         return this.inputElmt;
     }
 
-    /**
-     * @return
-     */
     private CnATreeElement checkAndRetrieve() {
         CnATreeElement elementWithProperties = Retriever.checkRetrieveElement(inputElmt);
         this.inputElmt.setEntity(elementWithProperties.getEntity());
@@ -574,8 +515,6 @@ public class RelationView extends RightsEnabledView
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.gs.ui.rcp.main.bsi.views.IRelationTable#setInputElmt(sernet.gs
      * .ui.rcp.main.common.model.CnATreeElement)
@@ -586,8 +525,6 @@ public class RelationView extends RightsEnabledView
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#reloadAll()
      */
     @Override
@@ -608,8 +545,6 @@ public class RelationView extends RightsEnabledView
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.
      * eclipse.ui.IEditorPart)
