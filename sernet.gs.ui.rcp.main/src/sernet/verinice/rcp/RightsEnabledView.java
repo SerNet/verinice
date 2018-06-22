@@ -21,7 +21,6 @@ package sernet.verinice.rcp;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
@@ -46,7 +45,7 @@ import sernet.verinice.interfaces.InternalServerEvent;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public abstract class RightsEnabledView extends ViewPart implements IPartListener2 {
+public abstract class RightsEnabledView extends ViewPart {
 
     private static final Logger LOG = Logger.getLogger(RightsEnabledView.class);
 
@@ -70,7 +69,7 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
     public void createPartControl(Composite parent) {
         if (!Activator.getDefault().isStandalone() && !checkRights()) {
             final IWorkbenchWindow workbenchWindow = getSite().getWorkbenchWindow();
-            workbenchWindow.getPartService().addPartListener(this);
+            workbenchWindow.getPartService().addPartListener(new CheckPermissonListener());
             return;
         }
     }
@@ -144,140 +143,12 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
     /*
      * (non-Javadoc)
      * 
-     * @see org.eclipse.ui.IPartListener2#partVisible(org.eclipse.ui.
-     * IWorkbenchPartReference)
-     */
-    @Override
-    public void partVisible(IWorkbenchPartReference partRef) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("partVisible: " + partRef.getId()); //$NON-NLS-1$
-        }
-        if (getViewId().equals(partRef.getId())) {
-            if (!isServerRunning()) {
-                IInternalServerStartListener listener = new IInternalServerStartListener() {
-                    @Override
-                    public void statusChanged(InternalServerEvent e) {
-                        if (e.isStarted()) {
-                            checkAndDecline();
-                        }
-                    }
-
-                };
-                Activator.getDefault().getInternalServer()
-                        .addInternalServerStatusListener(listener);
-            } else {
-                checkAndDecline();
-            }
-        }
-    }
-
-    private void checkAndDecline() {
-        if (!checkRights()) {
-            openingDeclined();
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IPartListener2#partActivated(org.eclipse.ui.
-     * IWorkbenchPartReference)
-     */
-    @Override
-    public void partActivated(IWorkbenchPartReference partRef) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("partActivated: " + partRef.getId()); //$NON-NLS-1$
-        }
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
      */
     @Override
     public void setFocus() {
         if (LOG.isDebugEnabled()) {
             LOG.debug("setFocus..."); //$NON-NLS-1$
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IPartListener2#partBroughtToTop(org.eclipse.ui.
-     * IWorkbenchPartReference)
-     */
-    @Override
-    public void partBroughtToTop(IWorkbenchPartReference partRef) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("partBroughtToTop: " + partRef.getId()); //$NON-NLS-1$
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IPartListener2#partClosed(org.eclipse.ui.
-     * IWorkbenchPartReference)
-     */
-    @Override
-    public void partClosed(IWorkbenchPartReference partRef) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("partClosed: " + partRef.getId()); //$NON-NLS-1$
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IPartListener2#partDeactivated(org.eclipse.ui.
-     * IWorkbenchPartReference)
-     */
-    @Override
-    public void partDeactivated(IWorkbenchPartReference partRef) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("partDeactivated: " + partRef.getId()); //$NON-NLS-1$
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IPartListener2#partOpened(org.eclipse.ui.
-     * IWorkbenchPartReference)
-     */
-    @Override
-    public void partOpened(IWorkbenchPartReference partRef) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("partOpened: " + partRef.getId()); //$NON-NLS-1$
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IPartListener2#partHidden(org.eclipse.ui.
-     * IWorkbenchPartReference)
-     */
-    @Override
-    public void partHidden(IWorkbenchPartReference partRef) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("partHidden: " + partRef.getId()); //$NON-NLS-1$
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.IPartListener2#partInputChanged(org.eclipse.ui.
-     * IWorkbenchPartReference)
-     */
-    @Override
-    public void partInputChanged(IWorkbenchPartReference partRef) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("partInputChanged: " + partRef.getId()); //$NON-NLS-1$
         }
     }
 
@@ -288,6 +159,43 @@ public abstract class RightsEnabledView extends ViewPart implements IPartListene
     protected boolean isServerRunning() {
         return !(Activator.getDefault().isStandalone()
                 && !Activator.getDefault().getInternalServer().isRunning());
+    }
+
+    /**
+     * A listener that ensures that the required permissions are checked when
+     * the view is shown
+     */
+    private final class CheckPermissonListener extends PartListenerAdapter {
+        @Override
+        public void partVisible(IWorkbenchPartReference partRef) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("partVisible: " + partRef.getId()); //$NON-NLS-1$
+            }
+            if (getViewId().equals(partRef.getId())) {
+                if (!isServerRunning()) {
+                    IInternalServerStartListener listener = new IInternalServerStartListener() {
+                        @Override
+                        public void statusChanged(InternalServerEvent e) {
+                            if (e.isStarted()) {
+                                checkAndDecline();
+                            }
+                        }
+
+                    };
+                    Activator.getDefault().getInternalServer()
+                            .addInternalServerStatusListener(listener);
+                } else {
+                    checkAndDecline();
+                }
+            }
+        }
+
+        private void checkAndDecline() {
+            if (!checkRights()) {
+                openingDeclined();
+            }
+        }
+
     }
 
 }
