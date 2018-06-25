@@ -184,6 +184,11 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
             ti.setWidth(toolItemWidth);
         }
 
+        @Override
+        public boolean isDynamic() {
+            return true;
+        }
+
         /**
          * Returns the currently selected IT-Verbund.
          * 
