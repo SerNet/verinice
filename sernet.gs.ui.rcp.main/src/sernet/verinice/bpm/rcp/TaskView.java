@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
@@ -407,9 +408,9 @@ public class TaskView extends RightsEnabledView {
 
     private void createAssigneeControls(Composite searchComposite) {
         comboModelAccount = new ComboModel<>(account -> {
-            StringBuilder sb = new StringBuilder(PersonAdapter.getFullName(account.getPerson()));
-            sb.append(" [").append(account.getUser()).append("]"); //$NON-NLS-1$ //$NON-NLS-2$
-            return sb.toString();
+            String fullName = PersonAdapter.getFullName(account.getPerson());
+            String user = account.getUser();
+            return StringUtils.join(new Object[] { fullName, " [", user, "]" }); //$NON-NLS-1$ //$NON-NLS-2$
         });
         comboAccount = createComboBox(searchComposite);
         comboAccount.addSelectionListener(new SelectionAdapter() {
