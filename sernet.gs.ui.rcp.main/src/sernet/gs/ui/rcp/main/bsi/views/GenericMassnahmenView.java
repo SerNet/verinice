@@ -621,53 +621,7 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
 
         viewer.setInput(new PlaceHolder(Messages.GenericMassnahmenView_6));
 
-        WorkspaceJob job = new WorkspaceJob(Messages.GenericMassnahmenView_7) {
-            @Override
-            public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                Activator.inheritVeriniceContextState();
-
-                try {
-                    monitor.setTaskName(""); //$NON-NLS-1$
-                    LoadCnATreeElementTitles<ITVerbund> compoundLoader = new LoadCnATreeElementTitles<>(
-                            ITVerbund.class);
-                    compoundLoader = ServiceFactory.lookupCommandService()
-                            .executeCommand(compoundLoader);
-                    final List<ITVerbund> elements = compoundLoader.getElements();
-                    Display.getDefault().asyncExec(() -> {
-                        compoundChoser.setElements(elements);
-                        compoundChoser.setEnabled(true);
-
-                        // Only try to preselect when a ITVerbund instance
-                        // was
-                        // given.
-                        if (compound != null) {
-                            compoundChoser.setSelectedCompound(compound);
-
-                            // If the compoundChoser returns false here,
-                            // then
-                            // the compound does not exist anymore.
-                            if (compoundChoser.isSelectedCompound(compound)) {
-                                // Reload the measures belonging to the
-                                // preselected compound.
-                                loadMeasures(compound);
-
-                                return;
-                            }
-
-                            // Compound not available anymore: Fall through.
-                        }
-
-                        // Place a message that asks the user to choose a
-                        // compound.
-                        viewer.setInput(new PlaceHolder(Messages.GenericMassnahmenView_9));
-                    });
-
-                } catch (Exception e) {
-                    ExceptionUtil.log(e, Messages.GenericMassnahmenView_10);
-                }
-                return Status.OK_STATUS;
-            }
-        };
+        WorkspaceJob job = new LoadCompounds(Messages.GenericMassnahmenView_7, compound);
         job.setUser(false);
         job.schedule();
 
@@ -721,54 +675,7 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
         }
 
         viewer.setInput(new PlaceHolder(getMeasureLoadPlaceholderLabel()));
-        WorkspaceJob job = new WorkspaceJob(getMeasureLoadJobLabel()) {
-            @Override
-            public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                Activator.inheritVeriniceContextState();
-
-                try {
-                    monitor.setTaskName(getMeasureLoadTaskLabel());
-                    loadBlockNumber++;
-                    Properties filter = new Properties();
-                    filter.put(FindMassnahmenForITVerbund.FILTER_DATE, getDateProperty());
-                    if (isDateSet) {
-                        filter.put(getDateProperty(), getDateProperty());
-                    }
-                    if (umsetzungFilter.getUmsetzungPatternSet() != null) {
-                        filter.put(MassnahmenUmsetzung.P_UMSETZUNG,
-                                umsetzungFilter.getUmsetzungPatternSet());
-                    }
-                    if (siegelFilter.getPatternSet() != null) {
-                        filter.put(MassnahmenUmsetzung.P_SIEGEL, siegelFilter.getPatternSet());
-                    }
-                    FindMassnahmenForITVerbund command = new FindMassnahmenForITVerbund(
-                            itVerbund.getDbId(), loadBlockNumber, filter, getSortByProperty());
-                    command = ServiceFactory.lookupCommandService().executeCommand(command);
-                    final int number = command.getNumber();
-                    if (loadBlockNumber == 1) {
-                        allMassnahmen = command.getAll();
-                    } else {
-                        allMassnahmen.addAll(command.getAll());
-                    }
-                    Display.getDefault().asyncExec(() -> {
-                        viewer.setInput(allMassnahmen);
-                        compoundChoser.setEnabled(true);
-                        int loaded = loadBlockNumber * FindMassnahmenForITVerbund.LOAD_BLOCK_SIZE;
-                        if (loaded > number) {
-                            loaded = number;
-                            GenericMassnahmenView.this.loadMoreAction.setEnabled(false);
-                        }
-                        String info = "(" + loaded + " of " + number + ")";
-                        GenericMassnahmenView.this.loadMoreAction.setText(info);
-                    });
-                } catch (Exception e) {
-                    Display.getDefault().asyncExec(() -> compoundChoser.setEnabled(true));
-                    LOG.error("Error while loading massnahmen", e);
-                    ExceptionUtil.log(e, getTaskErrorLabel());
-                }
-                return Status.OK_STATUS;
-            }
-        };
+        WorkspaceJob job = new LoadMeasures(getMeasureLoadJobLabel(), itVerbund);
         job.setUser(false);
         job.schedule();
 
@@ -1050,6 +957,117 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
 
     public Action getLoadMoreAction() {
         return loadMoreAction;
+    }
+
+    private final class LoadCompounds extends WorkspaceJob {
+        private final ITVerbund compound;
+
+        private LoadCompounds(String name, ITVerbund compound) {
+            super(name);
+            this.compound = compound;
+        }
+
+        @Override
+        public IStatus runInWorkspace(final IProgressMonitor monitor) {
+            Activator.inheritVeriniceContextState();
+
+            try {
+                monitor.setTaskName(""); //$NON-NLS-1$
+                LoadCnATreeElementTitles<ITVerbund> compoundLoader = new LoadCnATreeElementTitles<>(
+                        ITVerbund.class);
+                compoundLoader = ServiceFactory.lookupCommandService()
+                        .executeCommand(compoundLoader);
+                final List<ITVerbund> elements = compoundLoader.getElements();
+                Display.getDefault().asyncExec(() -> {
+                    compoundChoser.setElements(elements);
+                    compoundChoser.setEnabled(true);
+
+                    // Only try to preselect when a ITVerbund instance
+                    // was
+                    // given.
+                    if (compound != null) {
+                        compoundChoser.setSelectedCompound(compound);
+
+                        // If the compoundChoser returns false here,
+                        // then
+                        // the compound does not exist anymore.
+                        if (compoundChoser.isSelectedCompound(compound)) {
+                            // Reload the measures belonging to the
+                            // preselected compound.
+                            loadMeasures(compound);
+
+                            return;
+                        }
+
+                        // Compound not available anymore: Fall through.
+                    }
+
+                    // Place a message that asks the user to choose a
+                    // compound.
+                    viewer.setInput(new PlaceHolder(Messages.GenericMassnahmenView_9));
+                });
+
+            } catch (Exception e) {
+                ExceptionUtil.log(e, Messages.GenericMassnahmenView_10);
+            }
+            return Status.OK_STATUS;
+        }
+    }
+
+    private final class LoadMeasures extends WorkspaceJob {
+        private final ITVerbund itVerbund;
+
+        private LoadMeasures(String name, ITVerbund itVerbund) {
+            super(name);
+            this.itVerbund = itVerbund;
+        }
+
+        @Override
+        public IStatus runInWorkspace(final IProgressMonitor monitor) {
+            Activator.inheritVeriniceContextState();
+
+            try {
+                monitor.setTaskName(getMeasureLoadTaskLabel());
+                loadBlockNumber++;
+                Properties filter = new Properties();
+                filter.put(FindMassnahmenForITVerbund.FILTER_DATE, getDateProperty());
+                if (isDateSet) {
+                    filter.put(getDateProperty(), getDateProperty());
+                }
+                if (umsetzungFilter.getUmsetzungPatternSet() != null) {
+                    filter.put(MassnahmenUmsetzung.P_UMSETZUNG,
+                            umsetzungFilter.getUmsetzungPatternSet());
+                }
+                if (siegelFilter.getPatternSet() != null) {
+                    filter.put(MassnahmenUmsetzung.P_SIEGEL, siegelFilter.getPatternSet());
+                }
+                FindMassnahmenForITVerbund command = new FindMassnahmenForITVerbund(
+                        itVerbund.getDbId(), loadBlockNumber, filter, getSortByProperty());
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
+                final int number = command.getNumber();
+                if (loadBlockNumber == 1) {
+                    allMassnahmen = command.getAll();
+                } else {
+                    allMassnahmen.addAll(command.getAll());
+                }
+                Display.getDefault().asyncExec(() -> {
+                    viewer.setInput(allMassnahmen);
+                    compoundChoser.setEnabled(true);
+                    int loaded = loadBlockNumber * FindMassnahmenForITVerbund.LOAD_BLOCK_SIZE;
+                    if (loaded > number) {
+                        loaded = number;
+                        GenericMassnahmenView.this.loadMoreAction.setEnabled(false);
+                    }
+                    String info = "(" + loaded + " of " + number + ")";
+                    GenericMassnahmenView.this.loadMoreAction.setText(info);
+                });
+            } catch (Exception e) {
+                Display.getDefault().asyncExec(() -> compoundChoser.setEnabled(true));
+                LOG.error("Error while loading massnahmen", e);
+                ExceptionUtil.log(e, getTaskErrorLabel());
+            }
+            return Status.OK_STATUS;
+        }
     }
 
 }
