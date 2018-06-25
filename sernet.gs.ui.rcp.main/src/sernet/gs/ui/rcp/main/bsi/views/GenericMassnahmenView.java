@@ -438,6 +438,47 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
             });
         }
 
+        /**
+         * Loads the ITVerbund instances and fills the combo box with them.
+         * 
+         * <p>
+         * In case the <code>compound</code> argument is <code>null</code> the
+         * combo box will be set to an element which means 'no compound chosen'.
+         * A message in the table will inform the user that she has to choose
+         * one first.
+         * </p>
+         * 
+         * <p>
+         * The above behavior is what is expected when the measure view is
+         * <em>first</em> opened (or filled with data).
+         * </p>
+         * 
+         * <p>
+         * When an {@link ITVerbund} instance is given then the combo box tries
+         * to select this one after loading them. In case the given instance
+         * does not exist anymore the first behavior is followed.
+         * </p>
+         * 
+         * <p>
+         * The second behavior is appropriate when the view is already in use
+         * and then a complete model reload occurs.
+         * </p>
+         * 
+         * @param compound
+         */
+        private void loadCompounds(final ITVerbund compound) {
+            if (!CnAElementHome.getInstance().isOpen()) {
+                compoundChoser.setEnabled(false);
+                return;
+            }
+
+            viewer.setInput(new PlaceHolder(Messages.GenericMassnahmenView_6));
+
+            WorkspaceJob job = new LoadCompounds(Messages.GenericMassnahmenView_7, compound);
+            job.setUser(false);
+            job.schedule();
+
+        }
     };
 
     private TableViewer viewer;
@@ -559,47 +600,6 @@ public abstract class GenericMassnahmenView extends RightsEnabledView
         } else {
             viewer.setInput(new ArrayList<Object>());
         }
-    }
-
-    /**
-     * Loads the ITVerbund instances and fills the combo box with them.
-     * 
-     * <p>
-     * In case the <code>compound</code> argument is <code>null</code> the combo
-     * box will be set to an element which means 'no compound chosen'. A message
-     * in the table will inform the user that she has to choose one first.
-     * </p>
-     * 
-     * <p>
-     * The above behavior is what is expected when the measure view is
-     * <em>first</em> opened (or filled with data).
-     * </p>
-     * 
-     * <p>
-     * When an {@link ITVerbund} instance is given then the combo box tries to
-     * select this one after loading them. In case the given instance does not
-     * exist anymore the first behavior is followed.
-     * </p>
-     * 
-     * <p>
-     * The second behavior is appropriate when the view is already in use and
-     * then a complete model reload occurs.
-     * </p>
-     * 
-     * @param compound
-     */
-    private void loadCompounds(final ITVerbund compound) {
-        if (!CnAElementHome.getInstance().isOpen()) {
-            compoundChoser.setEnabled(false);
-            return;
-        }
-
-        viewer.setInput(new PlaceHolder(Messages.GenericMassnahmenView_6));
-
-        WorkspaceJob job = new LoadCompounds(Messages.GenericMassnahmenView_7, compound);
-        job.setUser(false);
-        job.schedule();
-
     }
 
     /**
