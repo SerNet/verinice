@@ -97,33 +97,33 @@ import sernet.verinice.service.account.AccountLoader;
 public class AccountGroupView extends RightsEnabledView
         implements SelectionListener, KeyListener, MouseListener, IModelLoadListener {
 
-    private static final Logger LOG = Logger.getLogger(AccountGroupView.class);  
+    private static final Logger LOG = Logger.getLogger(AccountGroupView.class);
     private static final Collator COLLATOR = Collator.getInstance();
-    
+
     public static final String ID = "sernet.verinice.rcp.accountgroup.GroupView";
-    
+
     IAccountGroupViewDataService accountGroupDataService;
     IAccountService accountService;
-    
-    private String[] accountGroups;   
+
+    private String[] accountGroups;
     private Set<String> accountsInGroup = new TreeSet<>(COLLATOR);
     private String[] accounts;
-    
+
     private IModelLoadListener modelLoadListener;
     private AccountLabelProvider accountLabelProvider;
     private AccountLabelProvider groupLabelProvider;
-    
+
     // SWT & JFace
     static final Point ADD_REMOVE_BUTTON_SIZE = new Point(30, 30);
     static final Point MARGINS = new Point(5, 5);
     static final Point SPACING = new Point(5, 5);
     static final int GRID_COLUMNS = 4;
-    
+
     private static final String LEFTWARDS_ARROW = "←";
     private static final String RIGHTWARDS_ARROW = "→";
     private static final String LEFTWARDS_PAIRED_ARROWS = "⇇";
     private static final String RIGHTWARDS_PAIRED_ARROWS = "⇉";
-    
+
     private static final String EMPTY_STRING = "";
 
     Composite parent;
@@ -141,7 +141,7 @@ public class AccountGroupView extends RightsEnabledView
     private Action newGroup;
     private Action deleteGroup;
     private Action editGroup;
-    
+
     public AccountGroupView() {
         super();
         if (CnAElementFactory.isIsoModelLoaded()) {
@@ -150,7 +150,7 @@ public class AccountGroupView extends RightsEnabledView
             createModelLoadListener();
         }
     }
-    
+
     private void createModelLoadListener() {
 
         // model is not loaded yet: add a listener to load data when it's loaded
@@ -291,7 +291,7 @@ public class AccountGroupView extends RightsEnabledView
         GridLayoutFactory.fillDefaults().margins(MARGINS).spacing(SPACING)
                 .generateLayout(buttonsColumn);
     }
-    
+
     private void createAccountsColumn() {
 
         Group accountsColumn = new Group(container, SWT.NONE);
@@ -516,7 +516,7 @@ public class AccountGroupView extends RightsEnabledView
         removeAllButton.setEnabled(enabled);
         editAccountInAccountsListButton.setEnabled(enabled);
     }
-    
+
     private void updateAllLists() {
 
         try {
@@ -558,7 +558,7 @@ public class AccountGroupView extends RightsEnabledView
             accountsInGroup.clear();
             String group = getSelectedGroup();
             String[] names = accountGroupDataService.getAccountNamesForGroup(group);
-            accountsInGroup.addAll(Arrays.asList(names));                  
+            accountsInGroup.addAll(Arrays.asList(names));
             tableAccountsInGroup.setInput(accountsInGroup);
         }
     }
@@ -577,10 +577,12 @@ public class AccountGroupView extends RightsEnabledView
 
     private void applyFilterToAccountGroups(String text) {
         String[] allAccountGroups;
-        boolean isLocalAdmin = getAuthService().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        boolean isLocalAdmin = getAuthService()
+                .currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
         if (isLocalAdmin) {
             List<String> groupNamesForLocalAdmin = AccountLoader.loadGroupNamesForLocalAdmin();
-            allAccountGroups = groupNamesForLocalAdmin.toArray(new String[groupNamesForLocalAdmin.size()]);
+            allAccountGroups = groupNamesForLocalAdmin
+                    .toArray(new String[groupNamesForLocalAdmin.size()]);
         } else {
             allAccountGroups = accountGroupDataService.getAccountGroups();
         }
@@ -623,13 +625,13 @@ public class AccountGroupView extends RightsEnabledView
     }
 
     String getSelectedGroup() {
-        return (String)((StructuredSelection)tableAccountGroups.getSelection()).toList().get(0);
+        return (String) ((StructuredSelection) tableAccountGroups.getSelection()).toList().get(0);
     }
 
     boolean isGroupSelected() {
-        return !((StructuredSelection)tableAccountGroups.getSelection()).toList().isEmpty();
+        return !((StructuredSelection) tableAccountGroups.getSelection()).toList().isEmpty();
     }
-    
+
     String[] getAllGroupsFromTable() {
 
         return (String[]) tableAccountGroups.getInput();
@@ -708,7 +710,7 @@ public class AccountGroupView extends RightsEnabledView
     boolean isStandardGroup() {
         return ArrayUtils.contains(STANDARD_GROUPS, getSelectedGroup());
     }
-    
+
     private void initAccountWizard(EventObject event) {
 
         String selectedAccountName = EMPTY_STRING;
@@ -785,7 +787,7 @@ public class AccountGroupView extends RightsEnabledView
             initAccountWizard(event);
         }
     }
-    
+
     @Override
     public void mouseDown(MouseEvent event) {
         // do nothing
@@ -822,10 +824,10 @@ public class AccountGroupView extends RightsEnabledView
             }
         }
     }
-    
+
     @Override
     public void loaded(BSIModel model) {
-        //do nothing
+        // do nothing
     }
 
     @Override
@@ -833,8 +835,11 @@ public class AccountGroupView extends RightsEnabledView
         initDataService();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.gs.ui.rcp.main.common.model.IModelLoadListener#loaded(sernet.verinice.model.bp.elements.BpModel)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.common.model.IModelLoadListener#loaded(sernet.
+     * verinice.model.bp.elements.BpModel)
      */
     @Override
     public void loaded(BpModel model) {
@@ -845,14 +850,14 @@ public class AccountGroupView extends RightsEnabledView
     public void closed(BSIModel model) {
         // do nothing
     }
-        
+
     void refreshView() {
 
         updateAllLists();
     }
-   
+
     private class AccountComparator extends ViewerComparator {
-        
+
         @Override
         public int compare(Viewer viewer, Object e1, Object e2) {
 
