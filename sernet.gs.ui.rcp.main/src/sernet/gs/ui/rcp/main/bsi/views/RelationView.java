@@ -8,16 +8,14 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -71,7 +69,8 @@ import sernet.verinice.service.commands.task.FindRelationsFor;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class RelationView extends RightsEnabledView implements IRelationTable, ILinkedWithEditorView {
+public class RelationView extends RightsEnabledView
+        implements IRelationTable, ILinkedWithEditorView {
 
     private static final Logger LOG = Logger.getLogger(ISMView.class);
 
@@ -92,15 +91,8 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
     private Action linkWithEditorAction;
 
     private boolean linkingActive = false;
-    
+
     private boolean readOnly = false;
-
-
-    /**
-     * The constructor.
-     */
-    public RelationView() {
-    }
 
     @Override
     public String getRightID() {
@@ -108,8 +100,6 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
@@ -117,9 +107,6 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         return ID;
     }
 
-    /**
-     * @param elmt
-     */
     public void loadLinks(final CnATreeElement elmt) {
         if (!CnAElementHome.getInstance().isOpen() || inputElmt == null) {
             return;
@@ -129,35 +116,24 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 Activator.inheritVeriniceContextState();
-                try {
-                    Display.getDefault().asyncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            viewer.setInput(new PlaceHolder(Messages.RelationView_0));
-                        }
-                    });
+                Display.getDefault().syncExec(() -> {
+                    try {
+                        viewer.setInput(new PlaceHolder(Messages.RelationView_0));
 
-                    monitor.setTaskName(Messages.RelationView_0);
+                        monitor.setTaskName(Messages.RelationView_0);
 
-                    FindRelationsFor command = new FindRelationsFor(elmt);
-                    command = ServiceFactory.lookupCommandService().executeCommand(command);
-                    final CnATreeElement linkElmt = command.getElmt();
+                        FindRelationsFor command = new FindRelationsFor(elmt);
+                        command = ServiceFactory.lookupCommandService().executeCommand(command);
+                        final CnATreeElement linkElmt = command.getElmt();
 
-                    Display.getDefault().asyncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            viewer.setInput(linkElmt);
-                        }
-                    });
-                } catch (Exception e) {
-                    Display.getDefault().asyncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            viewer.setInput(new PlaceHolder(Messages.RelationView_3));
-                        }
-                    });
-                    ExceptionUtil.log(e, Messages.RelationView_4);
-                }
+                        viewer.setInput(linkElmt);
+                    } catch (Exception e) {
+                        viewer.setInput(new PlaceHolder(Messages.RelationView_3));
+                        ExceptionUtil.log(e, Messages.RelationView_4);
+                    }
+
+                });
+
                 return Status.OK_STATUS;
             }
         };
@@ -178,16 +154,18 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
 
         RelationViewLabelProvider relationViewLabelProvider = new RelationViewLabelProvider(this);
         viewer.setLabelProvider(relationViewLabelProvider);
-        viewer.setSorter(new RelationByNameSorter(this, COLUMN_TITLE, COLUMN_TYPE_IMG));
+        viewer.setComparator(new RelationByNameSorter(this, COLUMN_TITLE, COLUMN_TYPE_IMG));
 
         // init tooltip provider
         ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.RECREATE);
-        List<PathCellLabelProvider> cellLabelProviders = ((RelationTableViewer) viewer).initToolTips(relationViewLabelProvider, parent);
+        List<PathCellLabelProvider> cellLabelProviders = ((RelationTableViewer) viewer)
+                .initToolTips(relationViewLabelProvider, parent);
 
         // register resize listener for cutting the tooltips
         addResizeListener(parent, cellLabelProviders);
 
-        toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
+        toggleLinking(Activator.getDefault().getPreferenceStore()
+                .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
         // try to add listeners once on startup, and register for model changes:
         addBSIModelListeners();
@@ -205,35 +183,29 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
      * Tracks changes of viewpart size and delegates them to the tooltip
      * provider.
      */
-    private void addResizeListener(final Composite parent, final List<PathCellLabelProvider> cellLabelProviders) {
+    private void addResizeListener(final Composite parent,
+            final List<PathCellLabelProvider> cellLabelProviders) {
 
         parent.addControlListener(new ControlAdapter() {
 
             @Override
             public void controlResized(ControlEvent e) {
                 for (PathCellLabelProvider c : cellLabelProviders) {
-                    c.updateShellWidthAndX(parent.getShell().getBounds().width, parent.getShell().getBounds().x);
+                    c.updateShellWidthAndX(parent.getShell().getBounds().width,
+                            parent.getShell().getBounds().x);
                 }
             }
 
         });
     }
 
-    /**
-	 * 
-	 */
     private void hookModelLoadListener() {
         this.loadListener = new IModelLoadListener() {
 
             @Override
             public void closed(BSIModel model) {
                 removeModelListeners();
-                Display.getDefault().asyncExec(new Runnable() {
-                    @Override
-                    public void run() {
-                        viewer.setInput(new PlaceHolder("")); //$NON-NLS-1$
-                    }
-                });
+                Display.getDefault().asyncExec(() -> viewer.setInput(new PlaceHolder("")));
             }
 
             @Override
@@ -254,7 +226,7 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
             public void loaded(BpModel model) {
                 synchronized (loadListener) {
                     addBpModelListeners();
-                }                
+                }
             }
 
             @Override
@@ -266,9 +238,6 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         CnAElementFactory.getInstance().addLoadListener(loadListener);
     }
 
-    /**
-     * 
-     */
     protected void addBSIModelListeners() {
         WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
             @Override
@@ -277,11 +246,13 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
                 try {
                     monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
                     if (CnAElementFactory.isModelLoaded()) {
-                        CnAElementFactory.getInstance().getLoadedModel().addBSIModelListener(contentProvider);
+                        CnAElementFactory.getInstance().getLoadedModel()
+                                .addBSIModelListener(contentProvider);
                     }
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.RelationView_7, e); //$NON-NLS-1$
+                    status = new Status(Status.ERROR, Activator.PLUGIN_ID, Messages.RelationView_7,
+                            e);
                 } finally {
                     monitor.done();
                 }
@@ -299,36 +270,13 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
                 try {
                     monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
                     if (CnAElementFactory.isModelLoaded()) {
-                        CnAElementFactory.getInstance().getBpModel().addModITBOModelListener(contentProvider);
+                        CnAElementFactory.getInstance().getBpModel()
+                                .addModITBOModelListener(contentProvider);
                     }
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.RelationView_7, e); //$NON-NLS-1$
-                } finally {
-                    monitor.done();
-                }
-                return status;
-            }
-        };
-        JobScheduler.scheduleInitJob(initDataJob);
-    }
-    
-    /**
-	 * 
-	 */
-    protected void addISO27KModelListeners() {
-        WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
-            @Override
-            public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                IStatus status = Status.OK_STATUS;
-                try {
-                    monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
-                    if (CnAElementFactory.isIsoModelLoaded()) {
-                        CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(contentProvider);
-                    }
-                } catch (Exception e) {
-                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.RelationView_7, e); //$NON-NLS-1$
+                    status = new Status(Status.ERROR, Activator.PLUGIN_ID, Messages.RelationView_7,
+                            e);
                 } finally {
                     monitor.done();
                 }
@@ -338,17 +286,39 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         JobScheduler.scheduleInitJob(initDataJob);
     }
 
-    /**
-	 * 
-	 */
+    protected void addISO27KModelListeners() {
+        WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+            @Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                IStatus status = Status.OK_STATUS;
+                try {
+                    monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+                    if (CnAElementFactory.isIsoModelLoaded()) {
+                        CnAElementFactory.getInstance().getISO27kModel()
+                                .addISO27KModelListener(contentProvider);
+                    }
+                } catch (Exception e) {
+                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
+                    status = new Status(Status.ERROR, Activator.PLUGIN_ID, Messages.RelationView_7,
+                            e);
+                } finally {
+                    monitor.done();
+                }
+                return status;
+            }
+        };
+        JobScheduler.scheduleInitJob(initDataJob);
+    }
+
     protected void removeModelListeners() {
         if (CnAElementFactory.isModelLoaded()) {
             CnAElementFactory.getLoadedModel().removeBSIModelListener(contentProvider);
         }
         if (CnAElementFactory.isIsoModelLoaded()) {
-            CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
+            CnAElementFactory.getInstance().getISO27kModel()
+                    .removeISO27KModelListener(contentProvider);
         }
-        if(CnAElementFactory.isBpModelLoaded()) {
+        if (CnAElementFactory.isBpModelLoaded()) {
             CnAElementFactory.getInstance().getBpModel().removeBpModelListener(contentProvider);
         }
     }
@@ -360,12 +330,7 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
     private void hookContextMenu() {
         MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
         menuMgr.setRemoveAllWhenShown(true);
-        menuMgr.addMenuListener(new IMenuListener() {
-            @Override
-            public void menuAboutToShow(IMenuManager manager) {
-                RelationView.this.fillContextMenu(manager);
-            }
-        });
+        menuMgr.addMenuListener(RelationView.this::fillContextMenu);
         Menu menu = menuMgr.createContextMenu(viewer.getControl());
         viewer.getControl().setMenu(menu);
         getSite().registerContextMenu(menuMgr, viewer);
@@ -378,12 +343,7 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
     }
 
     private void hookPageSelection() {
-        selectionListener = new ISelectionListener() {
-            @Override
-            public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-                pageSelectionChanged(part, selection);
-            }
-        };
+        selectionListener = this::pageSelectionChanged;
         getSite().getPage().addPostSelectionListener(selectionListener);
 
         /**
@@ -396,8 +356,6 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.part.WorkbenchPart#dispose()
      */
     @Override
@@ -413,6 +371,9 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         if (part == this) {
             return;
         }
+        if (!getSite().getPage().isPartVisible(this)) {
+            return;
+        }
         if (!(selection instanceof IStructuredSelection)) {
             return;
         }
@@ -421,14 +382,11 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         }
         Object element = ((IStructuredSelection) selection).getFirstElement();
         if (element instanceof CnATreeElement) {
-            readOnly =  part instanceof CatalogView ? true : false;
+            readOnly = part instanceof CatalogView;
             setNewInput((CnATreeElement) element);
         }
     }
 
-    /**
-     * @param element
-     */
     private void setNewInput(CnATreeElement elmt) {
         this.inputElmt = elmt;
         loadLinks(elmt);
@@ -473,7 +431,8 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         };
         jumpToAction.setText(Messages.RelationView_10);
         jumpToAction.setToolTipText(Messages.RelationView_11);
-        jumpToAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ARROW_IN));
+        jumpToAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.ARROW_IN));
 
         doubleClickAction = new Action() {
 
@@ -497,17 +456,13 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
                 toggleLinking(isChecked());
             }
         };
-        linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
+        linkWithEditorAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
         linkWithEditorAction.setChecked(isLinkingActive());
     }
 
     private void hookDoubleClickAction() {
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                doubleClickAction.run();
-            }
-        });
+        viewer.addDoubleClickListener(event -> doubleClickAction.run());
     }
 
     /**
@@ -518,9 +473,6 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
         viewer.getControl().setFocus();
     }
 
-    /**
-	 * 
-	 */
     @Override
     public void reload(CnALink oldLink, CnALink newLink) {
         newLink.setDependant(oldLink.getDependant());
@@ -538,31 +490,25 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#getInputElmt()
      */
     @Override
     public CnATreeElement getInputElmt() {
-        checkAndRetrieve();
-        return this.inputElmt;
+        if (inputElmt != null) {
+            checkAndRetrieve(this.inputElmt);
+        }
+        return inputElmt;
     }
 
-    /**
-     * @return
-     */
-    private CnATreeElement checkAndRetrieve() {
+    private static void checkAndRetrieve(@NonNull CnATreeElement inputElmt) {
         CnATreeElement elementWithProperties = Retriever.checkRetrieveElement(inputElmt);
-        this.inputElmt.setEntity(elementWithProperties.getEntity());
+        inputElmt.setEntity(elementWithProperties.getEntity());
         CnATreeElement elementWithLinks = Retriever.checkRetrieveLinks(inputElmt, true);
-        this.inputElmt.setLinksDown(elementWithLinks.getLinksDown());
-        this.inputElmt.setLinksUp(elementWithLinks.getLinksUp());
-        return this.inputElmt;
+        inputElmt.setLinksDown(elementWithLinks.getLinksDown());
+        inputElmt.setLinksUp(elementWithLinks.getLinksUp());
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.gs.ui.rcp.main.bsi.views.IRelationTable#setInputElmt(sernet.gs
      * .ui.rcp.main.common.model.CnATreeElement)
@@ -573,8 +519,6 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#reloadAll()
      */
     @Override
@@ -585,7 +529,8 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
     protected void toggleLinking(boolean checked) {
         this.linkingActive = checked;
         if (checked) {
-            Optional.ofNullable(getSite().getPage().getActiveEditor()).ifPresent(this::editorActivated);
+            Optional.ofNullable(getSite().getPage().getActiveEditor())
+                    .ifPresent(this::editorActivated);
         }
     }
 
@@ -594,8 +539,6 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.
      * eclipse.ui.IEditorPart)
@@ -610,7 +553,8 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
             return;
         }
         if (activeEditor.getEditorInput() instanceof BSIElementEditorInput) {
-            BSIElementEditorInput editorInput = (BSIElementEditorInput) activeEditor.getEditorInput();
+            BSIElementEditorInput editorInput = (BSIElementEditorInput) activeEditor
+                    .getEditorInput();
             readOnly = editorInput.isReadOnly();
         }
         setNewInput(element);
