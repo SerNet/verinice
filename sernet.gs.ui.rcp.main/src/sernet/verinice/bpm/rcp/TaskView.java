@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
@@ -69,7 +70,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -92,14 +92,12 @@ import sernet.verinice.bpm.TaskLoader;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskListener;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.interfaces.bpm.KeyMessage;
 import sernet.verinice.interfaces.bpm.KeyValue;
 import sernet.verinice.iso27k.rcp.ComboModel;
-import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.iso27k.rcp.RegexComboModelFilter;
 import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.common.CnATreeElement;
@@ -121,7 +119,7 @@ import sernet.verinice.service.commands.LoadAncestors;
  * @see TaskViewDataLoader
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class TaskView extends RightsEnabledView implements IPartListener2 {
+public class TaskView extends RightsEnabledView {
 
     private static final Logger LOG = Logger.getLogger(TaskView.class);
     static final NumericStringComparator NSC = new NumericStringComparator();
@@ -360,7 +358,7 @@ public class TaskView extends RightsEnabledView implements IPartListener2 {
         this.tableViewer.setContentProvider(this.contentProvider);
         TaskLabelProvider labelProvider = new TaskLabelProvider();
         this.tableViewer.setLabelProvider(labelProvider);
-        this.tableViewer.setSorter(tableSorter);
+        this.tableViewer.setComparator(tableSorter);
     }
 
     private void createInfoComposite(Composite container) {
@@ -409,14 +407,10 @@ public class TaskView extends RightsEnabledView implements IPartListener2 {
     }
 
     private void createAssigneeControls(Composite searchComposite) {
-        comboModelAccount = new ComboModel<>(new IComboModelLabelProvider<Configuration>() {
-            @Override
-            public String getLabel(Configuration account) {
-                StringBuilder sb = new StringBuilder(
-                        PersonAdapter.getFullName(account.getPerson()));
-                sb.append(" [").append(account.getUser()).append("]"); //$NON-NLS-1$ //$NON-NLS-2$
-                return sb.toString();
-            }
+        comboModelAccount = new ComboModel<>(account -> {
+            String fullName = PersonAdapter.getFullName(account.getPerson());
+            String user = account.getUser();
+            return StringUtils.join(new Object[] { fullName, " [", user, "]" }); //$NON-NLS-1$ //$NON-NLS-2$
         });
         comboAccount = createComboBox(searchComposite);
         comboAccount.addSelectionListener(new SelectionAdapter() {
@@ -434,12 +428,7 @@ public class TaskView extends RightsEnabledView implements IPartListener2 {
     }
 
     private void createProcessTypeControls(Composite searchComposite) {
-        comboModelProcessType = new ComboModel<>(new IComboModelLabelProvider<KeyMessage>() {
-            @Override
-            public String getLabel(KeyMessage object) {
-                return object.getValue();
-            }
-        });
+        comboModelProcessType = new ComboModel<>(KeyMessage::getValue);
         comboProcessType = createComboBox(searchComposite);
         comboProcessType.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -582,12 +571,9 @@ public class TaskView extends RightsEnabledView implements IPartListener2 {
 
         if (Activator.getDefault().isStandalone()
                 && !Activator.getDefault().getInternalServer().isRunning()) {
-            IInternalServerStartListener listener = new IInternalServerStartListener() {
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if (e.isStarted()) {
-                        configureActions();
-                    }
+            IInternalServerStartListener listener = e -> {
+                if (e.isStarted()) {
+                    configureActions();
                 }
             };
             Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
@@ -616,13 +602,9 @@ public class TaskView extends RightsEnabledView implements IPartListener2 {
     }
 
     private void configureActions() {
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                cancelTaskAction
-                        .setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKDELETE));
-                comboAccount.setEnabled(isTaskShowAllEnabled());
-            }
+        Display.getDefault().asyncExec(() -> {
+            cancelTaskAction.setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKDELETE));
+            comboAccount.setEnabled(isTaskShowAllEnabled());
         });
     }
 
@@ -653,12 +635,7 @@ public class TaskView extends RightsEnabledView implements IPartListener2 {
 
             @Override
             public void newTasks() {
-                Display.getDefault().syncExec(new Runnable() {
-                    @Override
-                    public void run() {
-                        dataLoader.loadTasks();
-                    }
-                });
+                Display.getDefault().syncExec(() -> dataLoader.loadTasks());
             }
         };
         TaskChangeRegistry.addTaskChangeListener(taskListener);
@@ -806,6 +783,7 @@ public class TaskView extends RightsEnabledView implements IPartListener2 {
         } else {
             newList = taskList;
         }
+        @SuppressWarnings("unchecked")
         List<ITask> currentTaskList = (List<ITask>) getViewer().getInput();
         if (currentTaskList != null) {
             for (ITask task : currentTaskList) {
@@ -814,12 +792,7 @@ public class TaskView extends RightsEnabledView implements IPartListener2 {
                 }
             }
         }
-        Display.getDefault().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                getViewer().setInput(newList);
-            }
-        });
+        Display.getDefault().syncExec(() -> getViewer().setInput(newList));
     }
 
     private void cancelTask() throws InvocationTargetException, InterruptedException {
@@ -917,12 +890,7 @@ public class TaskView extends RightsEnabledView implements IPartListener2 {
     }
 
     protected void showError(final String title, final String message) {
-        Display.getDefault().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                MessageDialog.openError(getShell(), title, message);
-            }
-        });
+        Display.getDefault().syncExec(() -> MessageDialog.openError(getShell(), title, message));
     }
 
     static Display getDisplay() {
