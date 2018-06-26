@@ -32,15 +32,13 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -52,7 +50,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 
 import sernet.gs.ui.rcp.main.Activator;
@@ -74,9 +71,6 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.rcp.ReportTemplateSync;
 import sernet.verinice.rcp.RightsEnabledView;
 
-/**
- *
- */
 public class ReportDepositView extends RightsEnabledView {
 
     static final Logger LOG = Logger.getLogger(ReportDepositView.class);
@@ -101,32 +95,13 @@ public class ReportDepositView extends RightsEnabledView {
 
     private Action refreshAction;
 
-    private WorkspaceJob loadDataJob;
-
-    public ReportDepositView() {
-        super();
-        loadDataJob = new WorkspaceJob("load-deposit-content") {
-
-            @Override
-            public IStatus runInWorkspace(IProgressMonitor arg0) throws CoreException {
-
-                Activator.inheritVeriniceContextState();
-                IStatus status = Status.OK_STATUS;
-                Object content = getContent();
-                setInput(content);
-
-                return status;
-            }
-        };
-    }
-
     @Override
     public void createPartControl(Composite parent) {
         super.createPartControl(parent);
         parent.setLayout(new FillLayout());
         createTable(parent);
         getSite().setSelectionProvider(viewer);
-        hookPageSelection();
+        getSite().getPage().addPostSelectionListener(this::pageSelectionChanged);
 
         makeActions();
         hookActions();
@@ -169,26 +144,15 @@ public class ReportDepositView extends RightsEnabledView {
 
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
-        viewer.setSorter(tableSorter);
+        viewer.setComparator(tableSorter);
 
         // ensure initial table sorting (by filename)
-        ((TableSorter) viewer.getSorter()).setColumn(0);
+        ((TableSorter) viewer.getComparator()).setColumn(0);
 
-    }
-
-    private void hookPageSelection() {
-        ISelectionListener selectionListener = new ISelectionListener() {
-            @Override
-            public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-                pageSelectionChanged(part, selection);
-            }
-        };
-        getSite().getPage().addPostSelectionListener(selectionListener);
     }
 
     protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
         Object element = ((IStructuredSelection) selection).getFirstElement();
-        // elementSelected(element);
         if (element instanceof ReportTemplateMetaData) {
             editTemplateAction.setEnabled(true);
             deleteTemplateAction.setEnabled(true);
@@ -199,12 +163,7 @@ public class ReportDepositView extends RightsEnabledView {
     }
 
     private void hookActions() {
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                doubleclickAction.run();
-            }
-        });
+        viewer.addDoubleClickListener(event -> doubleclickAction.run());
     }
 
     private void makeActions() {
@@ -261,7 +220,6 @@ public class ReportDepositView extends RightsEnabledView {
                 } else {
                     MessageDialog.openWarning(Display.getDefault().getActiveShell(),
                             Messages.ReportDepositView_20, Messages.ReportDepositView_21);
-                    return;
                 }
             }
         };
@@ -276,7 +234,19 @@ public class ReportDepositView extends RightsEnabledView {
 
             @Override
             public void run() {
-                JobScheduler.scheduleInitJob(loadDataJob);
+                JobScheduler.scheduleInitJob(new WorkspaceJob("load-deposit-content") {
+
+                    @Override
+                    public IStatus runInWorkspace(IProgressMonitor arg0) throws CoreException {
+
+                        Activator.inheritVeriniceContextState();
+                        IStatus status = Status.OK_STATUS;
+                        Object content = getContent();
+                        setInput(content);
+
+                        return status;
+                    }
+                });
             }
         };
 
@@ -379,7 +349,7 @@ public class ReportDepositView extends RightsEnabledView {
 
     }
 
-    private static class TableSorter extends ViewerSorter {
+    private static class TableSorter extends ViewerComparator {
         private int propertyIndex;
         private static final int DEFAULT_SORT_COLUMN = 0;
         private static final int DESCENDING = 1;
@@ -404,8 +374,6 @@ public class ReportDepositView extends RightsEnabledView {
         }
 
         /*
-         * (non-Javadoc)
-         * 
          * @see
          * org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface
          * .viewers.Viewer, java.lang.Object, java.lang.Object)
@@ -545,14 +513,7 @@ public class ReportDepositView extends RightsEnabledView {
     }
 
     private void setInput(final Object content) {
-        getDisplay().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                viewer.setInput(content);
-
-            }
-        });
+        getDisplay().syncExec(() -> viewer.setInput(content));
     }
 
     private static Display getDisplay() {

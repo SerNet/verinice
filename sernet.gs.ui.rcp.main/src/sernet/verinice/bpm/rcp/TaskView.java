@@ -179,14 +179,7 @@ public class TaskView extends RightsEnabledView {
     private RightsServiceClient rightsService;
     private ITaskListener taskListener;
 
-    public TaskView() {
-        super();
-        dataLoader = new TaskViewDataLoader(this);
-    }
-
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.rcp.RightsEnabledView#createPartControl(org.eclipse.swt
      * .widgets.Composite)
@@ -195,6 +188,7 @@ public class TaskView extends RightsEnabledView {
     public void createPartControl(Composite parent) {
         try {
             super.createPartControl(parent);
+            dataLoader = new TaskViewDataLoader(this);
             initView(parent);
         } catch (Exception e) {
             LOG.error("Error while creating task view.", e); //$NON-NLS-1$
@@ -721,8 +715,6 @@ public class TaskView extends RightsEnabledView {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.part.WorkbenchPart#dispose()
      */
     @Override
@@ -922,8 +914,6 @@ public class TaskView extends RightsEnabledView {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.RightsEnabledView#setFocus()
      */
     @Override
@@ -932,8 +922,6 @@ public class TaskView extends RightsEnabledView {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getRightID()
      */
     @Override
@@ -942,8 +930,6 @@ public class TaskView extends RightsEnabledView {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override

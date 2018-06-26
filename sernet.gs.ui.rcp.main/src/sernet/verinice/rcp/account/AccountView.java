@@ -137,32 +137,6 @@ public class AccountView extends RightsEnabledView {
     private AccountTableSorter tableSorter = new AccountTableSorter();
     private AccountContentProvider contentProvider = new AccountContentProvider();
     private ISelectionListener selectionListener;
-    private WorkspaceJob initDataJob;
-
-    private Map<Integer, LicenseMessageInfos> lmColumnsMap;
-
-    public AccountView() {
-        super();
-        initDataJob = new WorkspaceJob(Messages.AccountView_0) {
-            @Override
-            public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                IStatus status = Status.OK_STATUS;
-                try {
-                    monitor.beginTask(Messages.AccountView_0, IProgressMonitor.UNKNOWN);
-                    Activator.inheritVeriniceContextState();
-                    init();
-                } catch (Exception e) {
-                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
-                            "Error while loading data.", e); //$NON-NLS-1$
-                } finally {
-                    monitor.done();
-                }
-                return status;
-            }
-        };
-        lmColumnsMap = new HashMap<>();
-    }
 
     private void init() throws CommandException {
         findAccounts();
@@ -411,6 +385,8 @@ public class AccountView extends RightsEnabledView {
         viewer.getControl().setLayoutData(gd);
 
         viewer.setContentProvider(contentProvider);
+        Map<Integer, LicenseMessageInfos> lmColumnsMap = new HashMap<>();
+
         viewer.setLabelProvider(new AccountLabelProvider(lmColumnsMap, viewer));
         Table table = viewer.getTable();
 
@@ -429,7 +405,7 @@ public class AccountView extends RightsEnabledView {
         createTableColumn(Messages.AccountView_21, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
 
         try {
-            creatLMColumns(columnIndex);
+            creatLMColumns(lmColumnsMap, columnIndex);
         } catch (LicenseManagementException e) {
             String msg = "Error creating license-mgmt-Colums";
             ExceptionUtil.log(e, msg);
@@ -448,7 +424,8 @@ public class AccountView extends RightsEnabledView {
      * @return
      * @throws LicenseManagementException
      */
-    private int creatLMColumns(int columnIndex) throws LicenseManagementException {
+    private int creatLMColumns(Map<Integer, LicenseMessageInfos> lmColumnsMap, int columnIndex)
+            throws LicenseManagementException {
         List<LicenseMessageInfos> licenseInfos = new ArrayList<>();
         licenseInfos.addAll(getLMService().getAllLicenseMessageInfos());
 
@@ -680,13 +657,31 @@ public class AccountView extends RightsEnabledView {
     }
 
     protected void startInitDataJob() {
+        WorkspaceJob initDataJob = new WorkspaceJob(Messages.AccountView_0) {
+            @Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                IStatus status = Status.OK_STATUS;
+                try {
+                    monitor.beginTask(Messages.AccountView_0, IProgressMonitor.UNKNOWN);
+                    Activator.inheritVeriniceContextState();
+                    init();
+                } catch (Exception e) {
+                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
+                            "Error while loading data.", e); //$NON-NLS-1$
+                } finally {
+                    monitor.done();
+                }
+                return status;
+            }
+        };
         if (CnAElementFactory.isIsoModelLoaded()) {
             JobScheduler.scheduleInitJob(initDataJob);
         } else if (modelLoadListener == null) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("No model loaded, adding model load listener."); //$NON-NLS-1$
             }
-            createModelLoadListener();
+            createModelLoadListener(initDataJob);
         }
     }
 
@@ -705,7 +700,7 @@ public class AccountView extends RightsEnabledView {
         combo.select(0);
     }
 
-    private void createModelLoadListener() {
+    private void createModelLoadListener(WorkspaceJob initDataJob) {
         // model is not loaded yet: add a listener to load data when it's loaded
         modelLoadListener = new DefaultModelLoadListener() {
 
