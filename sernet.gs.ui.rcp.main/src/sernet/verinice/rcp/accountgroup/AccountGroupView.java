@@ -56,8 +56,6 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
@@ -94,8 +92,7 @@ import sernet.verinice.service.account.AccountLoader;
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-public class AccountGroupView extends RightsEnabledView
-        implements SelectionListener, KeyListener, MouseListener, IModelLoadListener {
+public class AccountGroupView extends RightsEnabledView implements SelectionListener, KeyListener {
 
     private static final Logger LOG = Logger.getLogger(AccountGroupView.class);
     private static final Collator COLLATOR = Collator.getInstance();
@@ -775,30 +772,6 @@ public class AccountGroupView extends RightsEnabledView
     }
 
     @Override
-    public void mouseDoubleClick(MouseEvent event) {
-
-        if (event.getSource() == tableAccountGroups) {
-            EditGroupDialog dialog = new EditGroupDialog(this, parent.getShell(),
-                    Messages.GroupView_19);
-            dialog.open();
-        }
-
-        if (event.getSource() == tableAccounts || event.getSource() == tableAccountsInGroup) {
-            initAccountWizard(event);
-        }
-    }
-
-    @Override
-    public void mouseDown(MouseEvent event) {
-        // do nothing
-    }
-
-    @Override
-    public void mouseUp(MouseEvent event) {
-        // do nothing
-    }
-
-    @Override
     public void keyPressed(KeyEvent event) {
         // do nothing
     }
@@ -823,32 +796,6 @@ public class AccountGroupView extends RightsEnabledView
                 groupLabelProvider.setDataService(accountGroupDataService);
             }
         }
-    }
-
-    @Override
-    public void loaded(BSIModel model) {
-        // do nothing
-    }
-
-    @Override
-    public void loaded(ISO27KModel model) {
-        initDataService();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.gs.ui.rcp.main.common.model.IModelLoadListener#loaded(sernet.
-     * verinice.model.bp.elements.BpModel)
-     */
-    @Override
-    public void loaded(BpModel model) {
-        // do nothing
-    }
-
-    @Override
-    public void closed(BSIModel model) {
-        // do nothing
     }
 
     void refreshView() {
@@ -880,11 +827,6 @@ public class AccountGroupView extends RightsEnabledView
 
     private IAuthService getAuthService() {
         return ServiceFactory.lookupAuthService();
-    }
-
-    @Override
-    public void loaded(CatalogModel model) {
-        // nothing to do
     }
 
 }
