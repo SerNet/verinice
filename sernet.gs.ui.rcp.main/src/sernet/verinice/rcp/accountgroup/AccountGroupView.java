@@ -53,8 +53,9 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
@@ -89,7 +90,7 @@ import sernet.verinice.service.account.AccountLoader;
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-public class AccountGroupView extends RightsEnabledView implements SelectionListener, KeyListener {
+public class AccountGroupView extends RightsEnabledView {
 
     private static final Logger LOG = Logger.getLogger(AccountGroupView.class);
     private static final Collator COLLATOR = Collator.getInstance();
@@ -166,9 +167,17 @@ public class AccountGroupView extends RightsEnabledView implements SelectionList
 
         container = new Composite(parent, SWT.FILL);
         createAccountGroupsColumn();
-        createAccountsInGroupColumn();
-        createButtonsColumn();
-        createAccountsColumn();
+
+        SelectionListener scheduleUpdateGroups = new SelectionAdapter() {
+            @Override
+            public void widgetSelected(final SelectionEvent event) {
+                WorkspaceJob updateGroups = new UpdateGroupsJob(Messages.GroupView_13, event);
+                JobScheduler.scheduleInitJob(updateGroups);
+            }
+        };
+        createAccountsInGroupColumn(scheduleUpdateGroups);
+        createButtonsColumn(scheduleUpdateGroups);
+        createAccountsColumn(scheduleUpdateGroups);
         GridLayoutFactory.fillDefaults().numColumns(GRID_COLUMNS).margins(MARGINS).spacing(SPACING)
                 .generateLayout(container);
 
@@ -182,7 +191,12 @@ public class AccountGroupView extends RightsEnabledView implements SelectionList
         accountGroupsColumn.setText(Messages.GroupView_2);
 
         accountGroupsFilter = new Text(accountGroupsColumn, SWT.BORDER);
-        accountGroupsFilter.addKeyListener(this);
+        accountGroupsFilter.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent event) {
+                updateGroupList();
+            }
+        });
 
         tableAccountGroups = new TableViewer(accountGroupsColumn, SWT.SINGLE | SWT.BORDER);
         tableAccountGroups.setUseHashlookup(true);
@@ -199,7 +213,7 @@ public class AccountGroupView extends RightsEnabledView implements SelectionList
                 .generateLayout(accountGroupsColumn);
     }
 
-    private void createAccountsInGroupColumn() {
+    private void createAccountsInGroupColumn(SelectionListener scheduleUpdateGroups) {
 
         Group accountsInGroupColumn = new Group(container, SWT.NONE);
         accountsInGroupColumn.setText(Messages.GroupView_3);
@@ -213,38 +227,38 @@ public class AccountGroupView extends RightsEnabledView implements SelectionList
 
         editAccountInAccountsInGroupListButton = new Button(accountsInGroupColumn, SWT.PUSH);
         editAccountInAccountsInGroupListButton.setText(Messages.GroupView_9);
-        editAccountInAccountsInGroupListButton.addSelectionListener(this);
+        editAccountInAccountsInGroupListButton.addSelectionListener(scheduleUpdateGroups);
 
         GridLayoutFactory.fillDefaults().margins(MARGINS).spacing(SPACING)
                 .generateLayout(accountsInGroupColumn);
     }
 
-    private void createButtonsColumn() {
+    private void createButtonsColumn(SelectionListener scheduleUpdateGroups) {
 
         Composite buttonsColumn = new Composite(container, SWT.NONE);
 
         addButton = new Button(buttonsColumn, SWT.PUSH);
         addButton.setText(LEFTWARDS_ARROW);
         addButton.setToolTipText(Messages.GroupView_5);
-        addButton.addSelectionListener(this);
+        addButton.addSelectionListener(scheduleUpdateGroups);
         GridDataFactory.fillDefaults().hint(ADD_REMOVE_BUTTON_SIZE).applyTo(addButton);
 
         removeButton = new Button(buttonsColumn, SWT.PUSH);
         removeButton.setText(RIGHTWARDS_ARROW);
         removeButton.setToolTipText(Messages.GroupView_7);
-        removeButton.addSelectionListener(this);
+        removeButton.addSelectionListener(scheduleUpdateGroups);
         GridDataFactory.fillDefaults().hint(ADD_REMOVE_BUTTON_SIZE).applyTo(removeButton);
 
         addAllButton = new Button(buttonsColumn, SWT.PUSH);
         addAllButton.setText(LEFTWARDS_PAIRED_ARROWS);
         addAllButton.setToolTipText(Messages.GroupView_6);
-        addAllButton.addSelectionListener(this);
+        addAllButton.addSelectionListener(scheduleUpdateGroups);
         GridDataFactory.fillDefaults().hint(ADD_REMOVE_BUTTON_SIZE).applyTo(addAllButton);
 
         removeAllButton = new Button(buttonsColumn, SWT.PUSH);
         removeAllButton.setText(RIGHTWARDS_PAIRED_ARROWS);
         removeAllButton.setToolTipText(Messages.GroupView_8);
-        removeAllButton.addSelectionListener(this);
+        removeAllButton.addSelectionListener(scheduleUpdateGroups);
         GridDataFactory.fillDefaults().hint(ADD_REMOVE_BUTTON_SIZE).applyTo(removeAllButton);
 
         GridDataFactory.fillDefaults().align(SWT.CENTER, SWT.CENTER).applyTo(buttonsColumn);
@@ -252,7 +266,7 @@ public class AccountGroupView extends RightsEnabledView implements SelectionList
                 .generateLayout(buttonsColumn);
     }
 
-    private void createAccountsColumn() {
+    private void createAccountsColumn(SelectionListener scheduleUpdateGroups) {
 
         Group accountsColumn = new Group(container, SWT.NONE);
         accountsColumn.setText(Messages.GroupView_4);
@@ -267,7 +281,7 @@ public class AccountGroupView extends RightsEnabledView implements SelectionList
 
         editAccountInAccountsListButton = new Button(accountsColumn, SWT.PUSH);
         editAccountInAccountsListButton.setText(Messages.GroupView_9);
-        editAccountInAccountsListButton.addSelectionListener(this);
+        editAccountInAccountsListButton.addSelectionListener(scheduleUpdateGroups);
 
         GridLayoutFactory.fillDefaults().margins(MARGINS).spacing(SPACING)
                 .generateLayout(accountsColumn);
@@ -311,17 +325,6 @@ public class AccountGroupView extends RightsEnabledView implements SelectionList
         if (container != null) {
             container.setFocus();
         }
-    }
-
-    @Override
-    public void widgetSelected(final SelectionEvent event) {
-        WorkspaceJob updateGroups = new UpdateGroupsJob(Messages.GroupView_13, event);
-        JobScheduler.scheduleInitJob(updateGroups);
-    }
-
-    @Override
-    public void widgetDefaultSelected(SelectionEvent event) {
-        // do nothing
     }
 
     private final class SelectionEventHandler implements Runnable {
@@ -657,11 +660,6 @@ public class AccountGroupView extends RightsEnabledView implements SelectionList
     }
 
     @Override
-    public void keyReleased(KeyEvent event) {
-        updateGroupList();
-    }
-
-    @Override
     public String getRightID() {
         return ActionRightIDs.ACCOUNTSETTINGS;
     }
@@ -712,11 +710,6 @@ public class AccountGroupView extends RightsEnabledView implements SelectionList
 
     boolean isStandardGroup() {
         return ArrayUtils.contains(STANDARD_GROUPS, getSelectedGroup());
-    }
-
-    @Override
-    public void keyPressed(KeyEvent event) {
-        // do nothing
     }
 
     private void initDataService() {
