@@ -22,6 +22,7 @@ import java.net.URL;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -230,36 +231,37 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
     private void checkOpenViews() {
         Activator.inheritVeriniceContextState();
-        for (final IViewReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-                .getActivePage().getViewReferences()) {
-            final IViewPart part = ref.getView(true);
-            if (part instanceof RightsEnabledView) {
-                final String rightID = ((RightsEnabledView) part).getRightID();
+        Stream.of(PlatformUI.getWorkbench().getWorkbenchWindows())
+                .flatMap(window -> Stream.of(window.getPages()))
+                .flatMap(page -> Stream.of(page.getViewReferences())).forEach(ref -> {
+                    final IViewPart part = ref.getView(true);
+                    if (part instanceof RightsEnabledView) {
+                        final String rightID = ((RightsEnabledView) part).getRightID();
 
-                if (Activator.getDefault().isStandalone()
-                        && !Activator.getDefault().getInternalServer().isRunning()) {
-                    IInternalServerStartListener listener = e -> {
-                        if (e.isStarted()) {
-                            Display.getDefault().asyncExec(() -> hideView(rightID, ref));
+                        if (Activator.getDefault().isStandalone()
+                                && !Activator.getDefault().getInternalServer().isRunning()) {
+                            IInternalServerStartListener listener = e -> {
+                                if (e.isStarted()) {
+                                    Display.getDefault().asyncExec(() -> hideView(rightID, ref));
+                                }
+                            };
+                            Activator.getDefault().getInternalServer()
+                                    .addInternalServerStatusListener(listener);
+                        } else {
+                            hideView(rightID, ref);
                         }
-                    };
-                    Activator.getDefault().getInternalServer()
-                            .addInternalServerStatusListener(listener);
-                } else {
-                    hideView(rightID, ref);
-                }
-            }
-        }
+                    }
+                });
     }
 
     private void hideView(final String actionId, final IViewReference viewReference) {
         Activator.inheritVeriniceContextState();
         if (!((RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE))
                 .isEnabled(actionId)) {
-            IWorkbench workbench = PlatformUI.getWorkbench();
-            IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-            IWorkbenchPage page = window.getActivePage();
-            page.hideView(viewReference);
+            Stream.of(PlatformUI.getWorkbench().getWorkbenchWindows())
+                    .flatMap(window -> Stream.of(window.getPages()))
+                    .forEach(page -> Stream.of(page.getViewReferences())
+                            .forEach(ref -> page.hideView(viewReference)));
         }
     }
 
