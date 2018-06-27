@@ -271,7 +271,7 @@ public class BaseProtectionFilterAction extends Action {
          * Override this method to specify whether an element's children are
          * checked. For example, this can be used to abort the checks at a
          * specific level of the tree.
-         * 
+         *
          * @param cnATreeElement
          *            the current element
          * @return whether to check the elements of the given element

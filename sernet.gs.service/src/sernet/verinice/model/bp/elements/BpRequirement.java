@@ -190,7 +190,7 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
     /**
      * Sets the approach of securing. The approach is stored in the property
      * PROP_QUALIFIER.
-     * 
+     *
      * @param approach
      *            The approach of securing or qualifier
      */

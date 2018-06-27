@@ -30,7 +30,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * protection modeling.
  *
  * Don't instantiate this class, use public static methods.
- * 
+ *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
 public final class ModelingValidator {
@@ -48,7 +48,7 @@ public final class ModelingValidator {
      * Checks if a requirement is valid when modelling in an IT network. The
      * method checks whether the set proceeding of the requirement matches the
      * proceeding in the IT network.
-     * 
+     *
      * @param requirement
      *            A CnATreeElement that should be a requirement
      * @param itNetwork
@@ -65,7 +65,7 @@ public final class ModelingValidator {
      * Checks if a safeguard is valid when modelling in an IT network. The
      * method checks whether the set proceeding of the safeguard matches the
      * proceeding in the IT network.
-     * 
+     *
      * @param safeguard
      *            A CnATreeElement that should be a safeguard
      * @param itNetwork

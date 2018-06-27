@@ -46,9 +46,9 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  */
 public class ItNetwork extends CnATreeElement implements IBpElement, ITaggableElement, ITargetObject {
-    
+
     private static final long serialVersionUID = -542743048413632420L;
-       
+
     public static final String TYPE_ID = "bp_itnetwork"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_itnetwork_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_itnetwork_tag"; //$NON-NLS-1$
@@ -56,9 +56,9 @@ public class ItNetwork extends CnATreeElement implements IBpElement, ITaggableEl
     public static final String PROP_QUALIFIER_BASIC = "bp_itnetwork_qualifier_basic"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER_STANDARD = "bp_itnetwork_qualifier_standard"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER_HIGH = "bp_itnetwork_qualifier_high"; //$NON-NLS-1$
-    
+
     protected ItNetwork() {}
-    
+
     public ItNetwork(CnATreeElement parent) {
         this(parent, false);
     }
@@ -69,8 +69,8 @@ public class ItNetwork extends CnATreeElement implements IBpElement, ITaggableEl
         if (createChildren) {
             createNewCategories();
         }
-    }     
-    
+    }
+
     public void createNewCategories() {
         addChild(new ApplicationGroup(this));
         addChild(new BpPersonGroup(this));
@@ -87,7 +87,7 @@ public class ItNetwork extends CnATreeElement implements IBpElement, ITaggableEl
         addChild(new BpIncidentGroup(this));
         addChild(new BpRecordGroup(this));
     }
-    
+
     @Override
     public boolean canContain(Object object) {
         return object instanceof BpRequirement || object instanceof ApplicationGroup
@@ -104,7 +104,7 @@ public class ItNetwork extends CnATreeElement implements IBpElement, ITaggableEl
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);
     }
-    
+
     @Override
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
@@ -114,7 +114,7 @@ public class ItNetwork extends CnATreeElement implements IBpElement, ITaggableEl
     public String getTypeId() {
         return TYPE_ID;
     }
-    
+
     public String getQualifier() {
         return getEntity().getPropertyValue(PROP_QUALIFIER);
     }

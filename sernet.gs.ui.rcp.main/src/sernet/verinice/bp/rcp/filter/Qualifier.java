@@ -65,7 +65,7 @@ public enum Qualifier {
      * qualifier or if the qualifier is an unknown/custom value, the method will
      * return <code>null</code>. If the element supports but does not have a
      * qualifier, the method will return {@link Qualifier#PRISTINE}.
-     * 
+     *
      * @param element
      *            the element
      * @return the appropriate qualifier or <code>null</code> for unsupported

@@ -70,10 +70,10 @@ import sernet.verinice.service.bp.exceptions.GroupNotFoundInScopeException;
 import sernet.verinice.service.commands.bp.ModelCommand;
 
 /**
- * This drop performer class starts the modeling process
- * of IT base protection after one or more modules
- * are dragged from sernet.verinice.rcp.catalog.CatalogView
- * and dropped on an element in BaseProtectionView.
+ * This drop performer class starts the modeling process of IT base protection
+ * after one or more modules are dragged from
+ * sernet.verinice.rcp.catalog.CatalogView and dropped on an element in
+ * BaseProtectionView.
  *
  * @see CatalogDragListener
  * @see MetaDropAdapter
@@ -135,21 +135,20 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
     private void startModelingByProgressService(final List<CnATreeElement> draggedModules)
             throws InvocationTargetException, InterruptedException {
         closeEditors();
-        PlatformUI.getWorkbench().getProgressService()
-                .busyCursorWhile(new IRunnableWithProgress() {
-                    @Override
-                    public void run(IProgressMonitor monitor)
-                            throws InvocationTargetException, InterruptedException {
-                        try {
-                            monitor.beginTask(getTaskMessage(draggedModules, targetElement),
-                                    IProgressMonitor.UNKNOWN);
-                            modelModulesAndElement(draggedModules, targetElement);
-                            monitor.done();
-                        } catch (CommandException e) {
-                            showError(e, Messages.BbModelingDropPerformer_Error0);
-                        }
-                    }
-                });
+        PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+            @Override
+            public void run(IProgressMonitor monitor)
+                    throws InvocationTargetException, InterruptedException {
+                try {
+                    monitor.beginTask(getTaskMessage(draggedModules, targetElement),
+                            IProgressMonitor.UNKNOWN);
+                    modelModulesAndElement(draggedModules, targetElement);
+                    monitor.done();
+                } catch (CommandException e) {
+                    showError(e, Messages.BbModelingDropPerformer_Error0);
+                }
+            }
+        });
     }
 
     private void modelModulesAndElement(List<CnATreeElement> draggedModules, CnATreeElement element)
@@ -212,7 +211,8 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
                     continue;
                 }
                 if (er.getEditorInput() instanceof BSIElementEditorInput) {
-                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditor(er.getEditor(true), true);
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                            .closeEditor(er.getEditor(true), true);
                 }
             } catch (PartInitException e) {
                 ExceptionUtil.log(e, Messages.BbModelingDropPerformer_errorClosingEditors);
