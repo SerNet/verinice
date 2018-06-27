@@ -240,29 +240,26 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
                         && !Activator.getDefault().getInternalServer().isRunning()) {
                     IInternalServerStartListener listener = e -> {
                         if (e.isStarted()) {
-                            Display.getDefault().asyncExec(() -> hideView(part, rightID, ref));
+                            Display.getDefault().asyncExec(() -> hideView(rightID, ref));
                         }
                     };
                     Activator.getDefault().getInternalServer()
                             .addInternalServerStatusListener(listener);
                 } else {
-                    hideView(part, rightID, ref);
+                    hideView(rightID, ref);
                 }
             }
         }
     }
 
-    private void hideView(final IViewPart part, final String actionId,
-            final IViewReference viewReference) {
+    private void hideView(final String actionId, final IViewReference viewReference) {
         Activator.inheritVeriniceContextState();
         if (!((RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE))
                 .isEnabled(actionId)) {
             IWorkbench workbench = PlatformUI.getWorkbench();
             IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
             IWorkbenchPage page = window.getActivePage();
-            if (page.isPartVisible(part)) {
-                page.hideView(viewReference);
-            }
+            page.hideView(viewReference);
         }
     }
 
