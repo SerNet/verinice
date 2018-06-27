@@ -240,7 +240,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
                         && !Activator.getDefault().getInternalServer().isRunning()) {
                     IInternalServerStartListener listener = e -> {
                         if (e.isStarted()) {
-                            hideView(part, rightID, ref);
+                            Display.getDefault().asyncExec(() -> hideView(part, rightID, ref));
                         }
                     };
                     Activator.getDefault().getInternalServer()
@@ -259,11 +259,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
                 .isEnabled(actionId)) {
             IWorkbench workbench = PlatformUI.getWorkbench();
             IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
-            if (window != null) {
-                IWorkbenchPage page = window.getActivePage();
-                if (page.isPartVisible(part)) {
-                    page.hideView(viewReference);
-                }
+            IWorkbenchPage page = window.getActivePage();
+            if (page.isPartVisible(part)) {
+                page.hideView(viewReference);
             }
         }
     }
