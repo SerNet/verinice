@@ -24,6 +24,7 @@ import java.util.Collection;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.hui.common.connect.ITargetObject;
 import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
 import sernet.verinice.model.bp.groups.BpDocumentGroup;
 import sernet.verinice.model.bp.groups.BpIncidentGroup;
@@ -125,24 +126,32 @@ public class ItNetwork extends CnATreeElement implements IBpElement, ITaggableEl
     }
 
     /**
-     * @return The proceeding of securing. The proceeding is stored in the
-     *         property PROP_QUALIFIER.
+     * @return The property PROP_QUALIFIER parsed as Proceeding.
      */
-    public String getProceeding() {
-        return getQualifier();
+    public Proceeding getProceeding() {
+        // Parsing the string as Proceeding should actually be done
+        // in Proceeding. But every class has different
+        // localization keys. If unique keys, e.g. "QUALIFIER_BASIC"
+        // would be used everywhere this code can and should be moved to
+        // Proceeding.ofLocalizationKey.
+        String qualifier = getQualifier();
+        if (qualifier == null) {
+            return null;
+        }
+        switch (qualifier) {
+        case PROP_QUALIFIER_BASIC:
+            return Proceeding.BASIC;
+        case PROP_QUALIFIER_STANDARD:
+            return Proceeding.STANDARD;
+        case PROP_QUALIFIER_CORE:
+            return Proceeding.CORE;
+        case "":
+            return null;
+        default:
+            throw new IllegalStateException("Unknown proceeding '" + qualifier + "'");
+        }
     }
 
-    /**
-     * Sets the proceeding of securing. The proceeding is stored in the property
-     * PROP_QUALIFIER.
-     * 
-     * @param proceeding
-     *            The proceeding of securing or qualifier
-     */
-    public void setProceeding(String proceeding) {
-        setQualifier(proceeding);
-    }
-    
     public static boolean isItNetwork(CnATreeElement element) {
         if (element == null) {
             return false;
