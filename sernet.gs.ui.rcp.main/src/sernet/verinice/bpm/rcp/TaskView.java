@@ -186,8 +186,11 @@ public class TaskView extends RightsEnabledView {
      */
     @Override
     public void createPartControl(Composite parent) {
+        super.createPartControl(parent);
+        if (Activator.getDefault().isStandalone()) {
+            return;
+        }
         try {
-            super.createPartControl(parent);
             dataLoader = new TaskViewDataLoader(this);
             initView(parent);
         } catch (Exception e) {

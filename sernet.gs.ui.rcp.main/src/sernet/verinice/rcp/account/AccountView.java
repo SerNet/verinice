@@ -151,8 +151,11 @@ public class AccountView extends RightsEnabledView {
      */
     @Override
     public void createPartControl(Composite parent) {
+        super.createPartControl(parent);
+        if (Activator.getDefault().isStandalone()) {
+            return;
+        }
         try {
-            super.createPartControl(parent);
             initView(parent);
             hookPageSelection();
         } catch (Exception e) {

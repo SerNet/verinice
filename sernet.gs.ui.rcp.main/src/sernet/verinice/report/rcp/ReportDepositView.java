@@ -98,6 +98,9 @@ public class ReportDepositView extends RightsEnabledView {
     @Override
     public void createPartControl(Composite parent) {
         super.createPartControl(parent);
+        if (Activator.getDefault().isStandalone()) {
+            return;
+        }
         parent.setLayout(new FillLayout());
         createTable(parent);
         getSite().setSelectionProvider(viewer);

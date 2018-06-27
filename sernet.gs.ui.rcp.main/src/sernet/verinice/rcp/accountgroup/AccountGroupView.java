@@ -137,8 +137,10 @@ public class AccountGroupView extends RightsEnabledView {
 
     @Override
     public void createPartControl(Composite parent) {
-
         super.createPartControl(parent);
+        if (Activator.getDefault().isStandalone()) {
+            return;
+        }
         this.parent = parent;
         this.accountService = ServiceFactory.lookupAccountService();
         setupView();
