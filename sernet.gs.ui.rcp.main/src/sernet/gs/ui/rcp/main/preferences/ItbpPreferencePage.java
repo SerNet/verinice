@@ -144,7 +144,7 @@ public class ItbpPreferencePage extends FieldEditorPreferencePage
                 { Messages.getString("ItbpPreferencePage.unedited"), "" }, //$NON-NLS-1$ //$NON-NLS-2$
                 { Proceeding.BASIC.getLabel(), PreferenceConstants.BP_PROCEEDING_BASIC },
                 { Proceeding.STANDARD.getLabel(), PreferenceConstants.BP_PROCEEDING_STANDARD },
-                { Proceeding.HIGH.getLabel(), PreferenceConstants.BP_PROCEEDING_HIGH } };
+                { Proceeding.CORE.getLabel(), PreferenceConstants.BP_PROCEEDING_CORE } };
 
         FieldEditor proceeding = new RadioGroupFieldEditor(name, labelText, 4, labelAndValues,
                 getFieldEditorParent());

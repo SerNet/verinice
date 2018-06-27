@@ -104,7 +104,7 @@ public class PreferenceConstants {
 
     public static final String BP_PROCEEDING_BASIC = Proceeding.BASIC.name();
     public static final String BP_PROCEEDING_STANDARD = Proceeding.STANDARD.name();
-    public static final String BP_PROCEEDING_HIGH = Proceeding.HIGH.name();
+    public static final String BP_PROCEEDING_CORE = Proceeding.CORE.name();
 
     public static final String OPERATION_MODE = "gs_cna_operationmode";
     public static final String OPERATION_MODE_INTERNAL_SERVER = "gs_cna_operationmode_standalone";

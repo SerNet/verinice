@@ -22,7 +22,7 @@ package sernet.verinice.model.bp;
  */
 public enum Proceeding {
 
-    BASIC, STANDARD, HIGH;
+    BASIC, STANDARD, CORE;
 
     private String label;
 

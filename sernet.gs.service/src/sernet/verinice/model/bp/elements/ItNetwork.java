@@ -55,7 +55,8 @@ public class ItNetwork extends CnATreeElement implements IBpElement, ITaggableEl
     public static final String PROP_QUALIFIER = "bp_itnetwork_qualifier"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER_BASIC = "bp_itnetwork_qualifier_basic"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER_STANDARD = "bp_itnetwork_qualifier_standard"; //$NON-NLS-1$
-    public static final String PROP_QUALIFIER_HIGH = "bp_itnetwork_qualifier_high"; //$NON-NLS-1$
+    // the right hand side has to stay "_high" until a proper db-migration has been added
+    public static final String PROP_QUALIFIER_CORE = "bp_itnetwork_qualifier_high"; //$NON-NLS-1$
 
     protected ItNetwork() {}
 

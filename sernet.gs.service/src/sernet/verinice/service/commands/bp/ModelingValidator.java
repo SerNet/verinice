@@ -92,7 +92,7 @@ public final class ModelingValidator {
             return Safeguard.PROP_QUALIFIER_BASIC.equals(proceedingOfSafeguard);
         case STANDARD:
             return true;
-        case HIGH:
+        case CORE:
             return true;
         default: {
             // Proceeding is unknown, accept the requirement anyway
@@ -115,7 +115,7 @@ public final class ModelingValidator {
             return BpRequirement.PROP_QUALIFIER_BASIC.equals(proceedingOfRequirement);
         case STANDARD:
             return true;
-        case HIGH:
+        case CORE:
             return true;
         default: {
             // Proceeding is unknown, accept the requirement anyway
