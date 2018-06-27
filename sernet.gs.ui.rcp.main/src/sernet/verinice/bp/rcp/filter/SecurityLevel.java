@@ -24,16 +24,16 @@ import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * The qualifier of a safeguard or requirement
+ * The security level for basic protection (BP) requirements, safeguards etc.
  */
-public enum Qualifier {
+public enum SecurityLevel {
 
-    BASIC(Messages.Qualifier_BASIC), STANDARD(Messages.Qualifier_STANDARD), HIGH(
-            Messages.Qualifier_HIGH), PRISTINE(
+    BASIC(Messages.SecurityLevel_BASIC), STANDARD(Messages.SecurityLevel_STANDARD), HIGH(
+            Messages.SecurityLevel_HIGH), PRISTINE(
                     Messages.BaseProtectionFilterDialog_Property_Value_Null);
 
     static {
-        Map<String, Qualifier> m = new HashMap<>();
+        Map<String, SecurityLevel> m = new HashMap<>();
         m.put(Safeguard.PROP_QUALIFIER_BASIC, BASIC);
         m.put(BpRequirement.PROP_QUALIFIER_BASIC, BASIC);
 
@@ -49,10 +49,10 @@ public enum Qualifier {
         qualifiersByPropertyValue = Collections.unmodifiableMap(m);
     }
 
-    private static final Map<String, Qualifier> qualifiersByPropertyValue;
+    private static final Map<String, SecurityLevel> qualifiersByPropertyValue;
     private final String label;
 
-    private Qualifier(String label) {
+    private SecurityLevel(String label) {
         this.label = label;
     }
 
@@ -64,7 +64,7 @@ public enum Qualifier {
      * Find the qualifier of an element. If the given element does not support a
      * qualifier or if the qualifier is an unknown/custom value, the method will
      * return <code>null</code>. If the element supports but does not have a
-     * qualifier, the method will return {@link Qualifier#PRISTINE}.
+     * qualifier, the method will return {@link SecurityLevel#PRISTINE}.
      *
      * @param element
      *            the element
@@ -72,7 +72,7 @@ public enum Qualifier {
      *         element types
      */
 
-    public static Qualifier findValue(CnATreeElement element) {
+    public static SecurityLevel findValue(CnATreeElement element) {
         String qualifier;
 
         if (element instanceof Safeguard) {

@@ -36,9 +36,9 @@ public class Messages extends NLS {
     public static String ImplementationState_PARTIALLY;
     public static String ImplementationState_NOT_APPLICABLE;
 
-    public static String Qualifier_BASIC;
-    public static String Qualifier_STANDARD;
-    public static String Qualifier_HIGH;
+    public static String SecurityLevel_BASIC;
+    public static String SecurityLevel_STANDARD;
+    public static String SecurityLevel_HIGH;
 
     public static String BaseProtectionFilterDialog_Property_Value_Null;
 

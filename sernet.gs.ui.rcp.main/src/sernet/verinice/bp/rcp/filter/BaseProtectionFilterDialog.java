@@ -91,7 +91,7 @@ public class BaseProtectionFilterDialog extends Dialog {
 
     private Set<ImplementationStatus> selectedImplementationStatus;
 
-    private Set<Qualifier> selectedQualifiers;
+    private Set<SecurityLevel> selectedSecurityLevels;
 
     private Set<String> selectedElementTypes;
 
@@ -105,13 +105,13 @@ public class BaseProtectionFilterDialog extends Dialog {
 
     public BaseProtectionFilterDialog(Shell parentShell,
             Set<ImplementationStatus> selectedImplementationStatus,
-            Set<Qualifier> selectedQualifiers,
+            Set<SecurityLevel> selectedSecurityLevels,
             Set<String> selectedElementTypes, Set<String> selectedTags,
             boolean applyTagFilterToItNetworks, boolean hideEmptyGroups, boolean hideEmptyGroupsByDefault) {
         super(parentShell);
         this.hideEmptyGroupsByDefault = hideEmptyGroupsByDefault;
         this.selectedImplementationStatus = new HashSet<>(selectedImplementationStatus);
-        this.selectedQualifiers = new HashSet<>(selectedQualifiers);
+        this.selectedSecurityLevels = new HashSet<>(selectedSecurityLevels);
         this.selectedElementTypes = new HashSet<>(selectedElementTypes);
         this.selectedTags = new HashSet<>(selectedTags);
         this.applyTagFilterToItNetworks = applyTagFilterToItNetworks;
@@ -171,13 +171,13 @@ public class BaseProtectionFilterDialog extends Dialog {
         boxesComposite.setText(Messages.BaseProtectionFilterDialog_Qualifier);
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1);
         boxesComposite.setLayoutData(gridData);
-        GridLayout layout = new GridLayout(Qualifier.values().length, false);
+        GridLayout layout = new GridLayout(SecurityLevel.values().length, false);
         boxesComposite.setLayout(layout);
 
-        for (final Qualifier qualifier : Qualifier.values()) {
+        for (final SecurityLevel qualifier : SecurityLevel.values()) {
             final Button button = new Button(boxesComposite, SWT.CHECK);
             button.setText(qualifier.getLabel());
-            button.setSelection(selectedQualifiers.contains(qualifier));
+            button.setSelection(selectedSecurityLevels.contains(qualifier));
             button.setData(qualifier);
             qualifierButtons.add(button);
         }
@@ -307,10 +307,10 @@ public class BaseProtectionFilterDialog extends Dialog {
                 selectedImplementationStatus.add((ImplementationStatus) button.getData());
             }
         }
-        selectedQualifiers.clear();
+        selectedSecurityLevels.clear();
         for (Button button : qualifierButtons) {
             if (button.getSelection()) {
-                selectedQualifiers.add((Qualifier) button.getData());
+                selectedSecurityLevels.add((SecurityLevel) button.getData());
             }
         }
 
@@ -337,8 +337,8 @@ public class BaseProtectionFilterDialog extends Dialog {
         return Collections.unmodifiableSet(selectedImplementationStatus);
     }
 
-    public Set<Qualifier> getSelectedQualifiers() {
-        return Collections.unmodifiableSet(selectedQualifiers);
+    public Set<SecurityLevel> getSelectedSecurityLevels() {
+        return Collections.unmodifiableSet(selectedSecurityLevels);
     }
 
     public Set<String> getSelectedElementTypes() {

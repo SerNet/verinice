@@ -48,7 +48,7 @@ import sernet.verinice.model.iso27k.Group;
 public class BaseProtectionFilterAction extends Action {
     private StructuredViewer viewer;
 
-    private Set<Qualifier> selectedQualifiers = EnumSet.noneOf(Qualifier.class);
+    private Set<SecurityLevel> selectedSecurityLevels = EnumSet.noneOf(SecurityLevel.class);
     private Set<ImplementationStatus> selectedImplementationStatus = EnumSet
             .noneOf(ImplementationStatus.class);
     private Set<String> selectedElementTypes = new HashSet<>();
@@ -69,14 +69,14 @@ public class BaseProtectionFilterAction extends Action {
     public void run() {
         BaseProtectionFilterDialog dialog = new BaseProtectionFilterDialog(
                 Display.getCurrent().getActiveShell(), selectedImplementationStatus,
-                selectedQualifiers, selectedElementTypes, selectedTags, applyTagFilterToItNetworks,
-                hideEmptyGroups, hideEmptyGroupsByDefault);
+                selectedSecurityLevels, selectedElementTypes, selectedTags,
+                applyTagFilterToItNetworks, hideEmptyGroups, hideEmptyGroupsByDefault);
         if (dialog.open() != InputDialog.OK) {
             return;
         }
 
         selectedImplementationStatus = dialog.getSelectedImplementationStatus();
-        selectedQualifiers = dialog.getSelectedQualifiers();
+        selectedSecurityLevels = dialog.getSelectedSecurityLevels();
         selectedElementTypes = dialog.getSelectedElementTypes();
         selectedTags = dialog.getSelectedTags();
         applyTagFilterToItNetworks = dialog.isApplyTagFilterToItNetworks();
@@ -84,7 +84,7 @@ public class BaseProtectionFilterAction extends Action {
 
         List<ViewerFilter> viewerFilters = new LinkedList<>();
         addImplementationStateFilter(viewerFilters);
-        addQualifierFilter(viewerFilters);
+        addSecurityLevelFilter(viewerFilters);
         addTypeFilter(viewerFilters);
         addTagFilter(viewerFilters);
 
@@ -109,10 +109,10 @@ public class BaseProtectionFilterAction extends Action {
         }
     }
 
-    private void addQualifierFilter(List<ViewerFilter> viewerFilters) {
-        if (!selectedQualifiers.isEmpty()) {
-            viewerFilters.add(new RecursiveTreeFilter(new QualifierFilter(
-                    Collections.unmodifiableSet(selectedQualifiers), hideEmptyGroups)));
+    private void addSecurityLevelFilter(List<ViewerFilter> viewerFilters) {
+        if (!selectedSecurityLevels.isEmpty()) {
+            viewerFilters.add(new RecursiveTreeFilter(new SecurityLevelFilter(
+                    Collections.unmodifiableSet(selectedSecurityLevels), hideEmptyGroups)));
         }
     }
 
@@ -225,12 +225,13 @@ public class BaseProtectionFilterAction extends Action {
         }
     }
 
-    private static final class QualifierFilter extends ViewerFilter {
-        private final Collection<Qualifier> selectedQualifiers;
+    private static final class SecurityLevelFilter extends ViewerFilter {
+        private final Collection<SecurityLevel> selectedSecurityLevels;
         private final boolean hideEmptyGroups;
 
-        QualifierFilter(Collection<Qualifier> selectedQualifiers, boolean hideEmptyGroups) {
-            this.selectedQualifiers = selectedQualifiers;
+        SecurityLevelFilter(Collection<SecurityLevel> selectedSecurityLevels,
+                boolean hideEmptyGroups) {
+            this.selectedSecurityLevels = selectedSecurityLevels;
             this.hideEmptyGroups = hideEmptyGroups;
         }
 
@@ -239,8 +240,8 @@ public class BaseProtectionFilterAction extends Action {
             if (!hideEmptyGroups && element instanceof Group || element instanceof ItNetwork) {
                 return true;
             }
-            Qualifier qualifier = Qualifier.findValue((CnATreeElement) element);
-            return qualifier != null && selectedQualifiers.contains(qualifier);
+            SecurityLevel qualifier = SecurityLevel.findValue((CnATreeElement) element);
+            return qualifier != null && selectedSecurityLevels.contains(qualifier);
         }
     }
 
