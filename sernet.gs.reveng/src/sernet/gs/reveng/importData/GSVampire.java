@@ -379,6 +379,7 @@ public class GSVampire {
         return bausteininformation;
     }
 
+    // TODO faster!
     public MassnahmeInformationTransfer findTxtforMbMassn(MbMassn mbMassn, String encoding) {
         BaseHibernateDAO dao = new BaseHibernateDAO();
         Transaction transaction = dao.getSession().beginTransaction();
@@ -533,6 +534,7 @@ public class GSVampire {
         }
     }
 
+    // TODO faster!
     public Set<NZielobjekt> findVerantowrtlicheMitarbeiterForMassnahme(ModZobjBstMassId id) {
         Set<NZielobjekt> result = new HashSet<>();
         NZielobjektDAO dao = new NZielobjektDAO();
@@ -638,6 +640,7 @@ public class GSVampire {
         return result;
     }
 
+    // TODO faster!
     public List<BausteineMassnahmenResult> findBausteinMassnahmenByZielobjekt(
             NZielobjekt zielobjekt) {
         List<BausteineMassnahmenResult> result = new ArrayList<BausteineMassnahmenResult>();
@@ -770,6 +773,7 @@ public class GSVampire {
      * @param zielobjekt
      * @return
      */
+    // TODO faster!
     public List<RAGefaehrdungenResult> findRAGefaehrdungenForZielobjekt(NZielobjekt zielobjekt) {
         List<RAGefaehrdungenResult> result = new ArrayList<>();
         NZielobjektDAO dao = new NZielobjektDAO();
