@@ -56,6 +56,9 @@ public class BulkEditUpdate extends ChangeLoggingCommand implements IChangeLoggi
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(clazz);
         for (Integer id : dbIDs) {
             CnATreeElement found = dao.findById(id);
+            if (found == null) {
+                throw new IllegalArgumentException("Unable to retrieve element by id " + id);
+            }
             Entity editEntity = found.getEntity();
             editEntity.copyEntity(dialogEntity);
             changedEntities.add(editEntity);

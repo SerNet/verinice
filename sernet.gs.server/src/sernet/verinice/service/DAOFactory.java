@@ -20,8 +20,10 @@ package sernet.verinice.service;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.hui.common.connect.Entity;
@@ -150,121 +152,117 @@ import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.UpdateElementEntity;
 
 /**
- * Registry for DAOs for different types of objects. DAOs are managed by and injected by the Spring framework.
+ * Registry for DAOs for different types of objects. DAOs are managed by and
+ * injected by the Spring framework.
  *
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 public class DAOFactory implements IDAOFactory {
 
-	private final Logger log = Logger.getLogger(DAOFactory.class);
+    private final Logger log = Logger.getLogger(DAOFactory.class);
 
+    /**
+     * Special Dao for use in command {@link UpdateElementEntity}
+     */
+    private IElementEntityDao elementEntityDao;
 
-	/**
-	 * Special Dao for use in command {@link UpdateElementEntity}
-	 */
-	private IElementEntityDao elementEntityDao;
+    private IAttachmentDao attachmentDao;
 
-	private IAttachmentDao attachmentDao;
+    private IFinishedRiskAnalysisListsDao finishedRiskAnalysisListsDao;
 
-	private IFinishedRiskAnalysisListsDao finishedRiskAnalysisListsDao;
+    // injected by spring
+    @SuppressWarnings("rawtypes")
+    private Map<Class, IBaseDao> daosByClass = new HashMap<>();
+    @SuppressWarnings("rawtypes")
+    private Map<String, IBaseDao> daosByTypeID = new HashMap<>();
 
-	// injected by spring
-	@SuppressWarnings("unchecked")
-	private Map<Class, IBaseDao> daosByClass = new HashMap<Class, IBaseDao>();
-
-	private Map<String, IBaseDao> daosByTypeID = new HashMap<String, IBaseDao>();
-
-	/**
-	 * Setter method used by spring to inject DAO.
-	 */
-	@Override
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    @Override
     public void setEntityDao(IBaseDao<Entity, Integer> entityDao) {
-		daosByClass.put(Entity.class, entityDao);
-		daosByTypeID.put(Entity.TYPE_ID, entityDao);
-	}
+        daosByClass.put(Entity.class, entityDao);
+        daosByTypeID.put(Entity.TYPE_ID, entityDao);
+    }
 
-	/**
-	 * Setter method used by spring to inject DAO.
-	 */
-	@Override
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    @Override
     public void setGefaehrdungDao(IBaseDao<Gefaehrdung, Integer> dao) {
-		daosByClass.put(Gefaehrdung.class, dao);
-		daosByTypeID.put(Gefaehrdung.TYPE_ID, dao);
-	}
+        daosByClass.put(Gefaehrdung.class, dao);
+        daosByTypeID.put(Gefaehrdung.TYPE_ID, dao);
+    }
 
-	/**
-	 * Setter method used by spring to inject DAO.
-	 */
-	@Override
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    @Override
     public void setBausteinVorschlagDao(IBaseDao<BausteinVorschlag, Integer> dao) {
-		daosByClass.put(BausteinVorschlag.class, dao);
-		daosByTypeID.put(BausteinVorschlag.TYPE_ID, dao);
-	}
+        daosByClass.put(BausteinVorschlag.class, dao);
+        daosByTypeID.put(BausteinVorschlag.TYPE_ID, dao);
+    }
 
-	/**
-	 * Setter method used by spring to inject DAO.
-	 */
-	@Override
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    @Override
     public void setConfigurationDao(IBaseDao<Gefaehrdung, Integer> dao) {
-		daosByClass.put(Configuration.class, dao);
-		daosByTypeID.put(Configuration.TYPE_ID, dao);
-	}
+        daosByClass.put(Configuration.class, dao);
+        daosByTypeID.put(Configuration.TYPE_ID, dao);
+    }
 
+    @Override
+    public void setAccountGroupDao(IBaseDao<Gefaehrdung, Integer> dao) {
+        daosByClass.put(AccountGroup.class, dao);
+        daosByTypeID.put(AccountGroup.TYPE_ID, dao);
+    }
 
-	@Override
-	public void setAccountGroupDao(IBaseDao<Gefaehrdung, Integer> dao){
-	    daosByClass.put(AccountGroup.class, dao);
-	    daosByTypeID.put(AccountGroup.TYPE_ID, dao);
-	}
-
-	@Override
+    @Override
     public void setChangeLogEntryDAO(IBaseDao<ChangeLogEntry, Integer> dao) {
-		daosByClass.put(ChangeLogEntry.class, dao);
-		daosByTypeID.put(ChangeLogEntry.TYPE_ID, dao);
-	}
+        daosByClass.put(ChangeLogEntry.class, dao);
+        daosByTypeID.put(ChangeLogEntry.TYPE_ID, dao);
+    }
 
-
-
-	/**
-	 * Setter method used by spring to inject DAO.
-	 */
-	@Override
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    @Override
     public void setOwnGefaehrdungDao(IBaseDao<OwnGefaehrdung, Integer> dao) {
-		daosByClass.put(OwnGefaehrdung.class, dao);
-		daosByTypeID.put(OwnGefaehrdung.TYPE_ID, dao);
-	}
+        daosByClass.put(OwnGefaehrdung.class, dao);
+        daosByTypeID.put(OwnGefaehrdung.TYPE_ID, dao);
+    }
 
-	/**
-	 * Setter method used by spring to inject DAO.
-	 */
-	@Override
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    @Override
     public void setPropertyListDao(IBaseDao<PropertyList, Integer> propertyListDao) {
-		daosByClass.put(PropertyList.class, propertyListDao);
-		daosByTypeID.put(PropertyList.TYPE_ID, propertyListDao);
-	}
+        daosByClass.put(PropertyList.class, propertyListDao);
+        daosByTypeID.put(PropertyList.TYPE_ID, propertyListDao);
+    }
 
-	/**
-	 * Setter method used by spring to inject DAO.
-	 */
-	@Override
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    @Override
     public void setPropertyDao(IBaseDao<Property, Integer> propertyDao) {
-		daosByClass.put(Property.class, propertyDao);
-		daosByTypeID.put(Property.TYPE_ID, propertyDao);
-	}
+        daosByClass.put(Property.class, propertyDao);
+        daosByTypeID.put(Property.TYPE_ID, propertyDao);
+    }
 
-	/**
-	 * Setter method used by spring to inject DAO.
-	 */
-	@Override
+    /**
+     * Setter method used by spring to inject DAO.
+     */
+    @Override
     public void setCnaLinkDao(IBaseDao<CnALink, Integer> dao) {
-		daosByClass.put(CnALink.class, dao);
-		daosByTypeID.put(CnALink.TYPE_ID, dao);
-	}
+        daosByClass.put(CnALink.class, dao);
+        daosByTypeID.put(CnALink.TYPE_ID, dao);
+    }
 
-	/**
+    /**
      * Setter method used by spring to inject DAO.
      */
     public void setCnaTreeElementDao(IBaseDao<CnATreeElement, Integer> dao) {
@@ -286,9 +284,10 @@ public class DAOFactory implements IDAOFactory {
      */
     @Override
     public void setAnwendungenKategorieDAO(IBaseDao<AnwendungenKategorie, Integer> daoToSet) {
-    	daosByClass.put(AnwendungenKategorie.class, daoToSet);
-    	daosByTypeID.put(AnwendungenKategorie.TYPE_ID, daoToSet);
+        daosByClass.put(AnwendungenKategorie.class, daoToSet);
+        daosByTypeID.put(AnwendungenKategorie.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -297,6 +296,7 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(BausteinUmsetzung.class, daoToSet);
         daosByTypeID.put(BausteinUmsetzung.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -305,6 +305,7 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(BSIModel.class, daoToSet);
         daosByTypeID.put(BSIModel.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -313,6 +314,7 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(Client.class, daoToSet);
         daosByTypeID.put(Client.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -321,14 +323,17 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(ClientsKategorie.class, daoToSet);
         daosByTypeID.put(ClientsKategorie.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
     @Override
+    @SuppressWarnings("deprecation")
     public void setDatenverarbeitungDAO(IBaseDao<Datenverarbeitung, Integer> daoToSet) {
         daosByClass.put(Datenverarbeitung.class, daoToSet);
         daosByTypeID.put(Datenverarbeitung.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -337,6 +342,7 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(FinishedRiskAnalysis.class, daoToSet);
         daosByTypeID.put(FinishedRiskAnalysis.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -345,6 +351,7 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(Gebaeude.class, daoToSet);
         daosByTypeID.put(Gebaeude.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -353,6 +360,7 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(GebaeudeKategorie.class, daoToSet);
         daosByTypeID.put(GebaeudeKategorie.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -361,6 +369,7 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(GefaehrdungsUmsetzung.class, daoToSet);
         daosByTypeID.put(GefaehrdungsUmsetzung.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -379,7 +388,6 @@ public class DAOFactory implements IDAOFactory {
         daosByTypeID.put(ITVerbund.SECURE_TYPE_ID, daoToSet);
     }
 
-
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -388,6 +396,7 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(MassnahmenUmsetzung.class, daoToSet);
         daosByTypeID.put(MassnahmenUmsetzung.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -396,6 +405,7 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(NetzKomponente.class, daoToSet);
         daosByTypeID.put(NetzKomponente.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -404,6 +414,7 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(NKKategorie.class, daoToSet);
         daosByTypeID.put(NKKategorie.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -412,6 +423,7 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(Permission.class, daoToSet);
         daosByTypeID.put(Permission.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -420,14 +432,17 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(Person.class, daoToSet);
         daosByTypeID.put(Person.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
     @Override
+    @SuppressWarnings("deprecation")
     public void setPersonengruppenDAO(IBaseDao<Personengruppen, Integer> daoToSet) {
         daosByClass.put(Personengruppen.class, daoToSet);
         daosByTypeID.put(Personengruppen.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -436,6 +451,7 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(PersonenKategorie.class, daoToSet);
         daosByTypeID.put(PersonenKategorie.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -444,6 +460,7 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(RaeumeKategorie.class, daoToSet);
         daosByTypeID.put(RaeumeKategorie.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -452,6 +469,7 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(Raum.class, daoToSet);
         daosByTypeID.put(Raum.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -460,6 +478,7 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(Server.class, daoToSet);
         daosByTypeID.put(Server.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -468,6 +487,7 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(ServerKategorie.class, daoToSet);
         daosByTypeID.put(ServerKategorie.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -476,6 +496,7 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(SonstigeITKategorie.class, daoToSet);
         daosByTypeID.put(SonstigeITKategorie.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -484,14 +505,17 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(SonstIT.class, daoToSet);
         daosByTypeID.put(SonstIT.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
     @Override
+    @SuppressWarnings("deprecation")
     public void setStellungnahmeDSBDAO(IBaseDao<StellungnahmeDSB, Integer> daoToSet) {
         daosByClass.put(StellungnahmeDSB.class, daoToSet);
         daosByTypeID.put(StellungnahmeDSB.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -500,6 +524,7 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(TelefonKomponente.class, daoToSet);
         daosByTypeID.put(TelefonKomponente.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
@@ -508,18 +533,22 @@ public class DAOFactory implements IDAOFactory {
         daosByClass.put(TKKategorie.class, daoToSet);
         daosByTypeID.put(TKKategorie.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
     @Override
+    @SuppressWarnings("deprecation")
     public void setVerantwortlicheStelleDAO(IBaseDao<VerantwortlicheStelle, Integer> daoToSet) {
         daosByClass.put(VerantwortlicheStelle.class, daoToSet);
         daosByTypeID.put(VerantwortlicheStelle.TYPE_ID, daoToSet);
     }
+
     /**
      * Setter method used by spring to inject DAO.
      */
     @Override
+    @SuppressWarnings("deprecation")
     public void setVerarbeitungsangabenDAO(IBaseDao<Verarbeitungsangaben, Integer> daoToSet) {
         daosByClass.put(Verarbeitungsangaben.class, daoToSet);
         daosByTypeID.put(Verarbeitungsangaben.TYPE_ID, daoToSet);
@@ -529,6 +558,7 @@ public class DAOFactory implements IDAOFactory {
      * Setter method used by spring to inject DAO.
      */
     @Override
+    @SuppressWarnings("deprecation")
     public void setZweckbestimmungDAO(IBaseDao<Zweckbestimmung, Integer> daoToSet) {
         daosByClass.put(Zweckbestimmung.class, daoToSet);
         daosByTypeID.put(Zweckbestimmung.TYPE_ID, daoToSet);
@@ -548,252 +578,270 @@ public class DAOFactory implements IDAOFactory {
      */
     @Override
     public void setOwnGefaehrdungDAO(IBaseDao<OwnGefaehrdung, Integer> daoToSet) {
-    	daosByClass.put(OwnGefaehrdung.class, daoToSet);
-    	daosByTypeID.put(OwnGefaehrdung.TYPE_ID, daoToSet);
+        daosByClass.put(OwnGefaehrdung.class, daoToSet);
+        daosByTypeID.put(OwnGefaehrdung.TYPE_ID, daoToSet);
     }
 
     /**
      * Setter method used by spring to inject DAO.
      */
     @Override
-    public void setFinishedRiskAnalysisListsDAO(IBaseDao<FinishedRiskAnalysisLists, Integer> daoToSet) {
-    	daosByClass.put(FinishedRiskAnalysisLists.class, daoToSet);
-    	daosByTypeID.put(FinishedRiskAnalysisLists.TYPE_ID, daoToSet);
+    public void setFinishedRiskAnalysisListsDAO(
+            IBaseDao<FinishedRiskAnalysisLists, Integer> daoToSet) {
+        daosByClass.put(FinishedRiskAnalysisLists.class, daoToSet);
+        daosByTypeID.put(FinishedRiskAnalysisLists.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setNoteDAO(IBaseDao<Note, Integer> daoToSet) {
-    	daosByClass.put(Note.class, daoToSet);
-    	daosByTypeID.put(Note.TYPE_ID, daoToSet);
+        daosByClass.put(Note.class, daoToSet);
+        daosByTypeID.put(Note.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setAttachmentDAO(IBaseDao<Attachment, Integer> daoToSet) {
-    	daosByClass.put(Attachment.class, daoToSet);
-    	daosByTypeID.put(Attachment.TYPE_ID, daoToSet);
+        daosByClass.put(Attachment.class, daoToSet);
+        daosByTypeID.put(Attachment.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setAdditionDAO(IBaseDao<Addition, Integer> daoToSet) {
-    	daosByClass.put(Addition.class, daoToSet);
-    	daosByTypeID.put(Addition.TYPE_ID, daoToSet);
+        daosByClass.put(Addition.class, daoToSet);
+        daosByTypeID.put(Addition.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setAttachmentFileDAO(IBaseDao<AttachmentFile, Integer> daoToSet) {
-    	daosByClass.put(AttachmentFile.class, daoToSet);
-    	daosByTypeID.put(AttachmentFile.TYPE_ID, daoToSet);
+        daosByClass.put(AttachmentFile.class, daoToSet);
+        daosByTypeID.put(AttachmentFile.TYPE_ID, daoToSet);
     }
 
     /* ISO27000 Daos */
 
     @Override
     public void setISO27KModelDAO(IBaseDao<ISO27KModel, Integer> daoToSet) {
-    	daosByClass.put(ISO27KModel.class, daoToSet);
-    	daosByTypeID.put(ISO27KModel.TYPE_ID, daoToSet);
+        daosByClass.put(ISO27KModel.class, daoToSet);
+        daosByTypeID.put(ISO27KModel.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setOrganizationDAO(IBaseDao<Organization, Integer> daoToSet) {
-    	daosByClass.put(Organization.class, daoToSet);
-    	daosByTypeID.put(Organization.TYPE_ID, daoToSet);
+        daosByClass.put(Organization.class, daoToSet);
+        daosByTypeID.put(Organization.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setAssetGroupDAO(IBaseDao<AssetGroup, Integer> daoToSet) {
-    	daosByClass.put(AssetGroup.class, daoToSet);
-    	daosByTypeID.put(AssetGroup.TYPE_ID, daoToSet);
-    }
-    @Override
-    public void setAssetDAO(IBaseDao<Asset, Integer> daoToSet) {
-    	daosByClass.put(Asset.class, daoToSet);
-    	daosByTypeID.put(Asset.TYPE_ID, daoToSet);
+        daosByClass.put(AssetGroup.class, daoToSet);
+        daosByTypeID.put(AssetGroup.TYPE_ID, daoToSet);
     }
 
     @Override
-    public void setUnsecureAssetDAO(IBaseDao<Asset, Integer> daoToSet){
+    public void setAssetDAO(IBaseDao<Asset, Integer> daoToSet) {
+        daosByClass.put(Asset.class, daoToSet);
+        daosByTypeID.put(Asset.TYPE_ID, daoToSet);
+    }
+
+    @Override
+    public void setUnsecureAssetDAO(IBaseDao<Asset, Integer> daoToSet) {
         daosByTypeID.put(Asset.UNSECURE_TYPE_ID, daoToSet);
     }
 
     @Override
-    public void setUnsecureIncidentScenarioDAO(IBaseDao<IncidentScenario, Integer> daoToSet){
+    public void setUnsecureIncidentScenarioDAO(IBaseDao<IncidentScenario, Integer> daoToSet) {
         daosByTypeID.put(IncidentScenario.UNSECURE_TYPE_ID, daoToSet);
     }
 
     @Override
     public void setControlGroupDAO(IBaseDao<ControlGroup, Integer> daoToSet) {
-    	daosByClass.put(ControlGroup.class, daoToSet);
-    	daosByTypeID.put(ControlGroup.TYPE_ID, daoToSet);
+        daosByClass.put(ControlGroup.class, daoToSet);
+        daosByTypeID.put(ControlGroup.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setControlDAO(IBaseDao<Control, Integer> daoToSet) {
-    	daosByClass.put(Control.class, daoToSet);
-    	daosByTypeID.put(Control.TYPE_ID, daoToSet);
+        daosByClass.put(Control.class, daoToSet);
+        daosByTypeID.put(Control.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setAuditGroupDAO(IBaseDao<AuditGroup, Integer> daoToSet) {
-    	daosByClass.put(AuditGroup.class, daoToSet);
-    	daosByTypeID.put(AuditGroup.TYPE_ID, daoToSet);
+        daosByClass.put(AuditGroup.class, daoToSet);
+        daosByTypeID.put(AuditGroup.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setAuditDAO(IBaseDao<Audit, Integer> daoToSet) {
-    	daosByClass.put(Audit.class, daoToSet);
-    	daosByTypeID.put(Audit.TYPE_ID, daoToSet);
+        daosByClass.put(Audit.class, daoToSet);
+        daosByTypeID.put(Audit.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setExceptionGroupDAO(IBaseDao<ExceptionGroup, Integer> daoToSet) {
-    	daosByClass.put(ExceptionGroup.class, daoToSet);
-    	daosByTypeID.put(ExceptionGroup.TYPE_ID, daoToSet);
+        daosByClass.put(ExceptionGroup.class, daoToSet);
+        daosByTypeID.put(ExceptionGroup.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setExceptionDAO(IBaseDao<Exception, Integer> daoToSet) {
-    	daosByClass.put(Exception.class, daoToSet);
-    	daosByTypeID.put(Exception.TYPE_ID, daoToSet);
+        daosByClass.put(Exception.class, daoToSet);
+        daosByTypeID.put(Exception.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setPersonGroupDAO(IBaseDao<PersonGroup, Integer> daoToSet) {
-    	daosByClass.put(PersonGroup.class, daoToSet);
-    	daosByTypeID.put(PersonGroup.TYPE_ID, daoToSet);
+        daosByClass.put(PersonGroup.class, daoToSet);
+        daosByTypeID.put(PersonGroup.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setPersonIsoDAO(IBaseDao<PersonIso, Integer> daoToSet) {
-    	daosByClass.put(PersonIso.class, daoToSet);
-    	daosByTypeID.put(PersonIso.TYPE_ID, daoToSet);
+        daosByClass.put(PersonIso.class, daoToSet);
+        daosByTypeID.put(PersonIso.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setRequirementGroupDAO(IBaseDao<RequirementGroup, Integer> daoToSet) {
-    	daosByClass.put(RequirementGroup.class, daoToSet);
-    	daosByTypeID.put(RequirementGroup.TYPE_ID, daoToSet);
+        daosByClass.put(RequirementGroup.class, daoToSet);
+        daosByTypeID.put(RequirementGroup.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setRequirementDAO(IBaseDao<Requirement, Integer> daoToSet) {
-    	daosByClass.put(Requirement.class, daoToSet);
-    	daosByTypeID.put(Requirement.TYPE_ID, daoToSet);
+        daosByClass.put(Requirement.class, daoToSet);
+        daosByTypeID.put(Requirement.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setIncidentGroupDAO(IBaseDao<IncidentGroup, Integer> daoToSet) {
-    	daosByClass.put(IncidentGroup.class, daoToSet);
-    	daosByTypeID.put(IncidentGroup.TYPE_ID, daoToSet);
+        daosByClass.put(IncidentGroup.class, daoToSet);
+        daosByTypeID.put(IncidentGroup.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setIncidentDAO(IBaseDao<Incident, Integer> daoToSet) {
-    	daosByClass.put(Incident.class, daoToSet);
-    	daosByTypeID.put(Incident.TYPE_ID, daoToSet);
+        daosByClass.put(Incident.class, daoToSet);
+        daosByTypeID.put(Incident.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setIncidentScenarioGroupDAO(IBaseDao<IncidentScenarioGroup, Integer> daoToSet) {
-    	daosByClass.put(IncidentScenarioGroup.class, daoToSet);
-    	daosByTypeID.put(IncidentScenarioGroup.TYPE_ID, daoToSet);
+        daosByClass.put(IncidentScenarioGroup.class, daoToSet);
+        daosByTypeID.put(IncidentScenarioGroup.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setIncidentScenarioDAO(IBaseDao<IncidentScenario, Integer> daoToSet) {
-    	daosByClass.put(IncidentScenario.class, daoToSet);
-    	daosByTypeID.put(IncidentScenario.TYPE_ID, daoToSet);
+        daosByClass.put(IncidentScenario.class, daoToSet);
+        daosByTypeID.put(IncidentScenario.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setResponseGroupDAO(IBaseDao<ResponseGroup, Integer> daoToSet) {
-    	daosByClass.put(ResponseGroup.class, daoToSet);
-    	daosByTypeID.put(ResponseGroup.TYPE_ID, daoToSet);
+        daosByClass.put(ResponseGroup.class, daoToSet);
+        daosByTypeID.put(ResponseGroup.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setResponseDAO(IBaseDao<Response, Integer> daoToSet) {
-    	daosByClass.put(Response.class, daoToSet);
-    	daosByTypeID.put(Response.TYPE_ID, daoToSet);
+        daosByClass.put(Response.class, daoToSet);
+        daosByTypeID.put(Response.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setThreatGroupDAO(IBaseDao<ThreatGroup, Integer> daoToSet) {
-    	daosByClass.put(ThreatGroup.class, daoToSet);
-    	daosByTypeID.put(ThreatGroup.TYPE_ID, daoToSet);
+        daosByClass.put(ThreatGroup.class, daoToSet);
+        daosByTypeID.put(ThreatGroup.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setThreatDAO(IBaseDao<Threat, Integer> daoToSet) {
-    	daosByClass.put(Threat.class, daoToSet);
-    	daosByTypeID.put(Threat.TYPE_ID, daoToSet);
+        daosByClass.put(Threat.class, daoToSet);
+        daosByTypeID.put(Threat.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setVulnerabilityGroupDAO(IBaseDao<VulnerabilityGroup, Integer> daoToSet) {
-    	daosByClass.put(VulnerabilityGroup.class, daoToSet);
-    	daosByTypeID.put(VulnerabilityGroup.TYPE_ID, daoToSet);
+        daosByClass.put(VulnerabilityGroup.class, daoToSet);
+        daosByTypeID.put(VulnerabilityGroup.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setVulnerabilityDAO(IBaseDao<Vulnerability, Integer> daoToSet) {
-    	daosByClass.put(Vulnerability.class, daoToSet);
-    	daosByTypeID.put(Vulnerability.TYPE_ID, daoToSet);
+        daosByClass.put(Vulnerability.class, daoToSet);
+        daosByTypeID.put(Vulnerability.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setDocumentGroupDAO(IBaseDao<DocumentGroup, Integer> daoToSet) {
-    	daosByClass.put(DocumentGroup.class, daoToSet);
-    	daosByTypeID.put(DocumentGroup.TYPE_ID, daoToSet);
+        daosByClass.put(DocumentGroup.class, daoToSet);
+        daosByTypeID.put(DocumentGroup.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setDocumentDAO(IBaseDao<Document, Integer> daoToSet) {
-    	daosByClass.put(Document.class, daoToSet);
-    	daosByTypeID.put(Document.TYPE_ID, daoToSet);
+        daosByClass.put(Document.class, daoToSet);
+        daosByTypeID.put(Document.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setEvidenceGroupDAO(IBaseDao<EvidenceGroup, Integer> daoToSet) {
-    	daosByClass.put(EvidenceGroup.class, daoToSet);
-    	daosByTypeID.put(EvidenceGroup.TYPE_ID, daoToSet);
+        daosByClass.put(EvidenceGroup.class, daoToSet);
+        daosByTypeID.put(EvidenceGroup.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setEvidenceDAO(IBaseDao<Evidence, Integer> daoToSet) {
-    	daosByClass.put(Evidence.class, daoToSet);
-    	daosByTypeID.put(Evidence.TYPE_ID, daoToSet);
+        daosByClass.put(Evidence.class, daoToSet);
+        daosByTypeID.put(Evidence.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setInterviewGroupDAO(IBaseDao<InterviewGroup, Integer> daoToSet) {
-    	daosByClass.put(InterviewGroup.class, daoToSet);
-    	daosByTypeID.put(InterviewGroup.TYPE_ID, daoToSet);
+        daosByClass.put(InterviewGroup.class, daoToSet);
+        daosByTypeID.put(InterviewGroup.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setInterviewDAO(IBaseDao<Interview, Integer> daoToSet) {
-    	daosByClass.put(Interview.class, daoToSet);
-    	daosByTypeID.put(Interview.TYPE_ID, daoToSet);
+        daosByClass.put(Interview.class, daoToSet);
+        daosByTypeID.put(Interview.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setFindingGroupDAO(IBaseDao<FindingGroup, Integer> daoToSet) {
-    	daosByClass.put(FindingGroup.class, daoToSet);
-    	daosByTypeID.put(FindingGroup.TYPE_ID, daoToSet);
+        daosByClass.put(FindingGroup.class, daoToSet);
+        daosByTypeID.put(FindingGroup.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setFindingDAO(IBaseDao<Finding, Integer> daoToSet) {
-    	daosByClass.put(Finding.class, daoToSet);
-    	daosByTypeID.put(Finding.TYPE_ID, daoToSet);
+        daosByClass.put(Finding.class, daoToSet);
+        daosByTypeID.put(Finding.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setProcessGroupDAO(IBaseDao<ProcessGroup, Integer> daoToSet) {
-    	daosByClass.put(ProcessGroup.class, daoToSet);
-    	daosByTypeID.put(ProcessGroup.TYPE_ID, daoToSet);
+        daosByClass.put(ProcessGroup.class, daoToSet);
+        daosByTypeID.put(ProcessGroup.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setProcessDAO(IBaseDao<sernet.verinice.model.iso27k.Process, Integer> daoToSet) {
-    	daosByClass.put(sernet.verinice.model.iso27k.Process.class, daoToSet);
-    	daosByTypeID.put(sernet.verinice.model.iso27k.Process.TYPE_ID, daoToSet);
+        daosByClass.put(sernet.verinice.model.iso27k.Process.class, daoToSet);
+        daosByTypeID.put(sernet.verinice.model.iso27k.Process.TYPE_ID, daoToSet);
     }
 
     @Override
     public void setRecordGroupDAO(IBaseDao<RecordGroup, Integer> daoToSet) {
-    	daosByClass.put(RecordGroup.class, daoToSet);
-    	daosByTypeID.put(RecordGroup.TYPE_ID, daoToSet);
+        daosByClass.put(RecordGroup.class, daoToSet);
+        daosByTypeID.put(RecordGroup.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setRecordDAO(IBaseDao<Record, Integer> daoToSet) {
-    	daosByClass.put(Record.class, daoToSet);
-    	daosByTypeID.put(Record.TYPE_ID, daoToSet);
+        daosByClass.put(Record.class, daoToSet);
+        daosByTypeID.put(Record.TYPE_ID, daoToSet);
     }
 
     /* Self Assessment (SAMT) Daos */
@@ -818,13 +866,12 @@ public class DAOFactory implements IDAOFactory {
         daosByTypeID.put(ImportBsiGroup.TYPE_ID, daoToSet);
     }
 
-	/**
-     * Returns a special Dao for use
-     * in command {@link UpdateElementEntity}
+    /**
+     * Returns a special Dao for use in command {@link UpdateElementEntity}
      *
-	 * @return a UpdateElementEntity Dao
-	 */
-	@Override
+     * @return a UpdateElementEntity Dao
+     */
+    @Override
     public IElementEntityDao getElementEntityDao() {
         return elementEntityDao;
     }
@@ -844,17 +891,23 @@ public class DAOFactory implements IDAOFactory {
         this.attachmentDao = attachmentDao;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#getFinishedRiskAnalysisListsDao()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.IDAOFactory#getFinishedRiskAnalysisListsDao()
      */
     @Override
     public IFinishedRiskAnalysisListsDao getFinishedRiskAnalysisListsDao() {
-        // TODO Auto-generated method stub
         return finishedRiskAnalysisListsDao;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IDAOFactory#setFinishedRiskAnalysisListsDao(sernet.verinice.interfaces.IFinishedRiskAnalysisListsDao)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.IDAOFactory#setFinishedRiskAnalysisListsDao(
+     * sernet.verinice.interfaces.IFinishedRiskAnalysisListsDao)
      */
     @Override
     public void setFinishedRiskAnalysisListsDao(IFinishedRiskAnalysisListsDao dao) {
@@ -864,47 +917,52 @@ public class DAOFactory implements IDAOFactory {
 
     @Override
     @SuppressWarnings("unchecked")
-	/**
-	 *  Tries to find a DAO by class.
-	 *  If you pass a proxy (class enhanced by cglib), this method tries to find
-	 *  a DAO that works, but it still doesn't work when a proxied class is passed
-	 *  for a supertype of the actual type (i.e. CnaTreeElement for a Control).
-	 *
-	 *  In short, when you're passing a Control.class this method will work.
-	 *  When you're passing the result of control.getClass() it probably wont.
-	 *
-	 *  Instead of this method, you should always use the getDAOforTypedElement() method when you
-	 *  want to get a DAO for an instantiated object.
-	 */
-	public <T> IBaseDao<T, Serializable> getDAO(Class<T> daotype) {
-		IBaseDao dao = daosByClass.get(daotype);
-		if (dao != null){
-			return dao;
-		}
-		for (Class clazz : daosByClass.keySet()) {
-			if (clazz.isAssignableFrom(daotype)){
-				return daosByClass.get(clazz);
-			}
-		}
+    /**
+     * Tries to find a DAO by class. If you pass a proxy (class enhanced by
+     * cglib), this method tries to find a DAO that works, but it still doesn't
+     * work when a proxied class is passed for a supertype of the actual type
+     * (i.e. CnaTreeElement for a Control).
+     *
+     * In short, when you're passing a Control.class this method will work. When
+     * you're passing the result of control.getClass() it probably wont.
+     *
+     * Instead of this method, you should always use the getDAOforTypedElement()
+     * method when you want to get a DAO for an instantiated object.
+     */
+    public <T> IBaseDao<T, Serializable> getDAO(Class<T> daotype) {
+        @SuppressWarnings("rawtypes")
+        IBaseDao dao = daosByClass.get(daotype);
+        if (dao != null) {
+            return dao;
+        }
+        for (Class<?> clazz : daosByClass.keySet()) {
+            if (clazz.isAssignableFrom(daotype)) {
+                return daosByClass.get(clazz);
+            }
+        }
 
-		if(daotype!=null) {
-			log.error("No dao found for class: " + daotype.getName());
-		} else {
-			log.warn("dao-type-class is null, could not return dao");
-		}
-		return null;
-	}
-
-
-
-	@Override
-    public IBaseDao getDAOforTypedElement(ITypedElement object) {
-	    return daosByTypeID.get(object.getTypeId());
-	}
+        if (daotype != null) {
+            throw new IllegalArgumentException("No DAO registered for type " + daotype);
+        } else {
+            log.warn("dao-type-class is null, could not return dao");
+            return null;
+        }
+    }
 
     @Override
+    @SuppressWarnings("rawtypes")
+    public IBaseDao getDAOforTypedElement(ITypedElement object) {
+        return getDAO(object.getTypeId());
+    }
+
+    @Override
+    @SuppressWarnings("rawtypes")
     public IBaseDao getDAO(String typeId) {
-        return daosByTypeID.get(typeId);
+        IBaseDao dao = daosByTypeID.get(typeId);
+        if (dao == null) {
+            throw new IllegalArgumentException("No DAO registered for typeId " + typeId);
+        }
+        return dao;
     }
 
     @Override
@@ -1070,26 +1128,31 @@ public class DAOFactory implements IDAOFactory {
         daosByTypeID.put(BpDocument.TYPE_ID, daoToSet);
 
     }
+
     @Override
     public void setBpDocumentGroupDAO(IBaseDao<BpDocumentGroup, Integer> daoToSet) {
         daosByClass.put(BpDocumentGroup.class, daoToSet);
         daosByTypeID.put(BpDocumentGroup.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setBpIncidentDAO(IBaseDao<BpIncident, Integer> daoToSet) {
         daosByClass.put(BpIncident.class, daoToSet);
         daosByTypeID.put(BpIncident.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setBpIncidentGroupDAO(IBaseDao<BpIncidentGroup, Integer> daoToSet) {
         daosByClass.put(BpIncidentGroup.class, daoToSet);
         daosByTypeID.put(BpIncidentGroup.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setBpRecordDAO(IBaseDao<BpRecord, Integer> daoToSet) {
         daosByClass.put(BpRecord.class, daoToSet);
         daosByTypeID.put(BpRecord.TYPE_ID, daoToSet);
     }
+
     @Override
     public void setBpRecordGroupDAO(IBaseDao<BpRecordGroup, Integer> daoToSet) {
         daosByClass.put(BpRecordGroup.class, daoToSet);
