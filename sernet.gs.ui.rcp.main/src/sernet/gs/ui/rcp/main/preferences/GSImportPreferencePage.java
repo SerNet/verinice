@@ -161,8 +161,8 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage
                                                 Messages.getString("GSImportPreferencePage_15"), //$NON-NLS-1$
                                                 Messages.getString("GSImportPreferencePage_16")));
                             } else {
-                                ExceptionUtil.log(e1,
-                                        Messages.getString("GSImportPreferencePage_7") + urlString); //$NON-NLS-1$
+                                ExceptionUtil.log(e1, Messages.getString("GSImportPreferencePage_7") //$NON-NLS-1$
+                                        + " " + urlString);
                             }
                             return Status.CANCEL_STATUS;
                         }
