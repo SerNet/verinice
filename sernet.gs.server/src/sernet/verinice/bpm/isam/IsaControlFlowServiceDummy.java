@@ -37,8 +37,6 @@ import sernet.verinice.model.bpm.ProcessInformation;
 public class IsaControlFlowServiceDummy implements IIsaControlFlowService {
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
      * findProcessDefinitionId(java.lang.String)
      */
@@ -48,8 +46,6 @@ public class IsaControlFlowServiceDummy implements IIsaControlFlowService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.IProcessServiceGeneric#startProcess(java.
      * lang.String, java.util.Map)
@@ -59,8 +55,6 @@ public class IsaControlFlowServiceDummy implements IIsaControlFlowService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.IProcessServiceGeneric#deleteProcess(java.
      * lang.String)
@@ -70,8 +64,6 @@ public class IsaControlFlowServiceDummy implements IIsaControlFlowService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#isActive()
      */
     @Override
@@ -80,8 +72,6 @@ public class IsaControlFlowServiceDummy implements IIsaControlFlowService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.IIsaControlFlowService#
      * startProcessesForControls(java.util.List)
      */
@@ -91,8 +81,6 @@ public class IsaControlFlowServiceDummy implements IIsaControlFlowService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.IIsaControlFlowService#
      * startProcessesForGroups(java.util.List)
      */
@@ -102,8 +90,6 @@ public class IsaControlFlowServiceDummy implements IIsaControlFlowService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.IIsaControlFlowService#
      * startProcessesForAudits(java.util.List)
      */
@@ -113,8 +99,6 @@ public class IsaControlFlowServiceDummy implements IIsaControlFlowService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
      * findAllProcessDefinitions()
      */

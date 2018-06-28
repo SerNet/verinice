@@ -20,7 +20,6 @@
 package sernet.verinice.bpm.indi;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,8 +37,6 @@ import sernet.verinice.model.bpm.ProcessInformation;
 public class IndividualServiceDummy implements IIndividualService {
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.IIndividualService#startProcess(sernet.
      * verinice.interfaces.bpm.IndividualServiceParameter)
@@ -50,8 +47,6 @@ public class IndividualServiceDummy implements IIndividualService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
      * findProcessDefinitionId(java.lang.String)
      */
@@ -61,8 +56,6 @@ public class IndividualServiceDummy implements IIndividualService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.IProcessServiceGeneric#startProcess(java.
      * lang.String, java.util.Map)
@@ -72,8 +65,6 @@ public class IndividualServiceDummy implements IIndividualService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.IProcessServiceGeneric#deleteProcess(java.
      * lang.String)
@@ -83,8 +74,6 @@ public class IndividualServiceDummy implements IIndividualService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#isActive()
      */
     @Override
@@ -93,8 +82,6 @@ public class IndividualServiceDummy implements IIndividualService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
      * findAllProcessDefinitions()
      */
@@ -104,8 +91,6 @@ public class IndividualServiceDummy implements IIndividualService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.IIndividualService#createParameterMap(
      * sernet.verinice.interfaces.bpm.IndividualServiceParameter)

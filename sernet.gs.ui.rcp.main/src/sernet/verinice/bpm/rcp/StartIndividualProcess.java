@@ -225,7 +225,7 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
         selectedUuids.clear();
         selectedTitles.clear();
         selectedTypeIds.clear();
-        for (Iterator iterator = treeSelection.iterator(); iterator.hasNext();) {
+        for (Iterator<?> iterator = treeSelection.iterator(); iterator.hasNext();) {
             Object selectedElement = iterator.next();
             if (selectedElement instanceof CnATreeElement) {
                 CnATreeElement element = (CnATreeElement) selectedElement;

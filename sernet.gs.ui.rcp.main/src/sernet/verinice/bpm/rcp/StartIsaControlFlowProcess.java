@@ -61,17 +61,15 @@ public class StartIsaControlFlowProcess
 
     private static final Logger LOG = Logger.getLogger(StartIsaControlFlowProcess.class);
 
-    private List<String> selectedControlUuids = new LinkedList<String>();
-    private List<String> selectedControlGroupUuids = new LinkedList<String>();
-    private List<String> selectedAuditUuids = new LinkedList<String>();
+    private List<String> selectedControlUuids = new LinkedList<>();
+    private List<String> selectedControlGroupUuids = new LinkedList<>();
+    private List<String> selectedAuditUuids = new LinkedList<>();
 
     int numberOfProcess = 0;
 
     Boolean isActive = null;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
      * action.IAction, org.eclipse.ui.IWorkbenchPart)
@@ -83,8 +81,6 @@ public class StartIsaControlFlowProcess
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
     @Override
@@ -129,18 +125,9 @@ public class StartIsaControlFlowProcess
                 if (numberOfProcess > 0) {
                     TaskChangeRegistry.tasksAdded();
                 }
-                boolean infoDialogOpened = Activator.getDefault().getPreferenceStore()
-                        .getBoolean(PreferenceConstants.INFO_PROCESSES_STARTED);
                 if (numberOfProcess > 0) {
                     InfoDialogWithShowToggle.openInformation(Messages.StartIsaProcess_0,
-                            Messages.bind(Messages.StartIsaProcess_1, numberOfProcess), // "Succesfully
-                                                                                        // created
-                                                                                        // "
-                                                                                        // +
-                                                                                        // numberOfProcess
-                                                                                        // +
-                                                                                        // "
-                                                                                        // tasks.",;
+                            Messages.bind(Messages.StartIsaProcess_1, numberOfProcess),
                             Messages.StartIsaProcess_3, PreferenceConstants.INFO_PROCESSES_STARTED);
                 } else if (numberOfProcess == 0) {
                     MessageDialog.openInformation(Display.getDefault().getActiveShell(),
@@ -154,8 +141,6 @@ public class StartIsaControlFlowProcess
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
      * IAction, org.eclipse.jface.viewers.ISelection)
@@ -168,7 +153,7 @@ public class StartIsaControlFlowProcess
                 ITreeSelection treeSelection = (ITreeSelection) selection;
                 selectedControlUuids.clear();
                 selectedControlGroupUuids.clear();
-                for (Iterator iterator = treeSelection.iterator(); iterator.hasNext();) {
+                for (Iterator<?> iterator = treeSelection.iterator(); iterator.hasNext();) {
                     Object selectedElement = iterator.next();
                     if (selectedElement instanceof Control) {
                         selectedControlUuids.add(((CnATreeElement) selectedElement).getUuid());
@@ -196,8 +181,6 @@ public class StartIsaControlFlowProcess
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
@@ -208,8 +191,6 @@ public class StartIsaControlFlowProcess
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override

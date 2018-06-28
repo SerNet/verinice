@@ -20,7 +20,6 @@
 package sernet.verinice.bpm.qm;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,8 +36,6 @@ import sernet.verinice.model.bpm.ProcessInformation;
 public class IsaQmServiceDummy implements IIsaQmService {
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.IIsaQmService#startProcessesForElement(
      * java.lang.String, java.lang.Object, java.lang.String)
@@ -50,8 +47,6 @@ public class IsaQmServiceDummy implements IIsaQmService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.IIsaQmService#startProcessesForControl(
      * java.lang.String)
@@ -63,8 +58,6 @@ public class IsaQmServiceDummy implements IIsaQmService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
      * findProcessDefinitionId(java.lang.String)
      */
@@ -74,8 +67,6 @@ public class IsaQmServiceDummy implements IIsaQmService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.IProcessServiceGeneric#startProcess(java.
      * lang.String, java.util.Map)
@@ -85,8 +76,6 @@ public class IsaQmServiceDummy implements IIsaQmService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.IProcessServiceGeneric#deleteProcess(java.
      * lang.String)
@@ -96,8 +85,6 @@ public class IsaQmServiceDummy implements IIsaQmService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#isActive()
      */
     @Override
@@ -106,8 +93,6 @@ public class IsaQmServiceDummy implements IIsaQmService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
      * findAllProcessDefinitions()
      */

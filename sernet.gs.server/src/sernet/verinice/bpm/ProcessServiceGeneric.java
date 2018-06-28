@@ -21,9 +21,9 @@ package sernet.verinice.bpm;
 
 import java.io.InputStream;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -162,8 +162,6 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.IProcessServiceGeneric#startProcess(java.
      * lang.String, java.util.Map)
@@ -182,16 +180,14 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
                     + processInstance.getId());
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Variables: ");
-                for (String key : variables.keySet()) {
-                    LOG.debug(key + ": " + variables.get(key));
+                for (Entry<String, ?> entry : variables.entrySet()) {
+                    LOG.debug(entry.getKey() + ": " + entry.getValue());
                 }
             }
         }
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
      * findProcessDefinitionId(java.lang.String)
      */
@@ -208,8 +204,6 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
      * findAllProcessDefinitions()
      */
@@ -218,7 +212,7 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
         List<ProcessDefinition> processDefinitionList = getRepositoryService()
                 .createProcessDefinitionQuery().orderDesc(ProcessDefinitionQuery.PROPERTY_KEY)
                 .list();
-        Set<KeyMessage> keyMessageSet = new HashSet<KeyMessage>();
+        Set<KeyMessage> keyMessageSet = new HashSet<>();
         for (ProcessDefinition processDefinition : processDefinitionList) {
             keyMessageSet.add(new KeyMessage(processDefinition.getKey()));
         }
@@ -239,8 +233,6 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.IProcessServiceGeneric#deleteProcess(java.
      * lang.String)

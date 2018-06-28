@@ -20,7 +20,6 @@
 package sernet.verinice.bpm.gsm;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -38,8 +37,6 @@ import sernet.verinice.model.bpm.ProcessInformation;
 public class GsmServiceDummy implements IGsmService {
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
      * findProcessDefinitionId(java.lang.String)
      */
@@ -49,8 +46,6 @@ public class GsmServiceDummy implements IGsmService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.IGsmService#validateOrganization(java.lang
      * .Integer)
@@ -62,8 +57,6 @@ public class GsmServiceDummy implements IGsmService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.IProcessServiceGeneric#startProcess(java.
      * lang.String, java.util.Map)
@@ -73,8 +66,6 @@ public class GsmServiceDummy implements IGsmService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.IProcessServiceGeneric#deleteProcess(java.
      * lang.String)
@@ -84,8 +75,6 @@ public class GsmServiceDummy implements IGsmService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#isActive()
      */
     @Override
@@ -94,8 +83,6 @@ public class GsmServiceDummy implements IGsmService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.IGsmService#startProcessesForOrganization(
      * java.lang.Integer)
@@ -106,8 +93,6 @@ public class GsmServiceDummy implements IGsmService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.IGsmService#deleteAssetScenarioLinks(java.
      * util.Set)
@@ -118,8 +103,6 @@ public class GsmServiceDummy implements IGsmService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.bpm.IGsmService#cleanUpOrganization(java.lang.
      * Integer)
@@ -129,8 +112,6 @@ public class GsmServiceDummy implements IGsmService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
      * findAllProcessDefinitions()
      */

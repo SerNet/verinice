@@ -71,8 +71,6 @@ public class ProcessServiceDummy implements IProcessServiceIsa {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
      * findAllProcessDefinitions()
      */

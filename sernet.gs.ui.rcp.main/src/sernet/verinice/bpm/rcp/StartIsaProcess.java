@@ -61,8 +61,6 @@ public class StartIsaProcess implements IObjectActionDelegate, RightEnabledUserI
     Boolean isActive = null;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
      * action.IAction, org.eclipse.ui.IWorkbenchPart)
@@ -74,8 +72,6 @@ public class StartIsaProcess implements IObjectActionDelegate, RightEnabledUserI
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
     @Override
@@ -99,14 +95,7 @@ public class StartIsaProcess implements IObjectActionDelegate, RightEnabledUserI
                 });
                 if (numberOfProcess > 0) {
                     InfoDialogWithShowToggle.openInformation(Messages.StartIsaProcess_0,
-                            Messages.bind(Messages.StartIsaProcess_1, numberOfProcess), // "Succesfully
-                                                                                        // created
-                                                                                        // "
-                                                                                        // +
-                                                                                        // numberOfProcess
-                                                                                        // +
-                                                                                        // "
-                                                                                        // tasks.",;
+                            Messages.bind(Messages.StartIsaProcess_1, numberOfProcess),
                             Messages.StartIsaProcess_3, PreferenceConstants.INFO_PROCESSES_STARTED);
                 } else {
                     MessageDialog.openInformation(Display.getDefault().getActiveShell(),
@@ -120,8 +109,6 @@ public class StartIsaProcess implements IObjectActionDelegate, RightEnabledUserI
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
      * IAction, org.eclipse.jface.viewers.ISelection)
@@ -151,8 +138,6 @@ public class StartIsaProcess implements IObjectActionDelegate, RightEnabledUserI
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
@@ -163,8 +148,6 @@ public class StartIsaProcess implements IObjectActionDelegate, RightEnabledUserI
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override

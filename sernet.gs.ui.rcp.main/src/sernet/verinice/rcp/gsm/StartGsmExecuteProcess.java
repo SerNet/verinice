@@ -72,8 +72,6 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
     private String validationMessage = Messages.StartGsmExecuteProcess_10;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
      * action.IAction, org.eclipse.ui.IWorkbenchPart)
@@ -83,8 +81,6 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
     @Override
@@ -219,8 +215,6 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
      * IAction, org.eclipse.jface.viewers.ISelection)
@@ -251,8 +245,6 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
@@ -263,8 +255,6 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override

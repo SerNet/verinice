@@ -57,17 +57,15 @@ public class StartQmProcess implements IObjectActionDelegate, RightEnabledUserIn
 
     private static final Logger LOG = Logger.getLogger(StartQmProcess.class);
 
-    private List<String> selectedUuids = new LinkedList<String>();
+    private List<String> selectedUuids = new LinkedList<>();
 
-    private List<String> selectedTitles = new LinkedList<String>();
+    private List<String> selectedTitles = new LinkedList<>();
 
     int numberOfProcess = 0;
 
     Boolean isActive = null;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
      * action.IAction, org.eclipse.ui.IWorkbenchPart)
@@ -79,8 +77,6 @@ public class StartQmProcess implements IObjectActionDelegate, RightEnabledUserIn
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
     @Override
@@ -127,8 +123,6 @@ public class StartQmProcess implements IObjectActionDelegate, RightEnabledUserIn
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
      * IAction, org.eclipse.jface.viewers.ISelection)
@@ -141,7 +135,7 @@ public class StartQmProcess implements IObjectActionDelegate, RightEnabledUserIn
                 ITreeSelection treeSelection = (ITreeSelection) selection;
                 selectedUuids.clear();
                 selectedTitles.clear();
-                for (Iterator iterator = treeSelection.iterator(); iterator.hasNext();) {
+                for (Iterator<?> iterator = treeSelection.iterator(); iterator.hasNext();) {
                     Object selectedElement = iterator.next();
                     if (selectedElement instanceof CnATreeElement) {
                         selectedUuids.add(((CnATreeElement) selectedElement).getUuid());
@@ -164,8 +158,6 @@ public class StartQmProcess implements IObjectActionDelegate, RightEnabledUserIn
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
@@ -176,8 +168,6 @@ public class StartQmProcess implements IObjectActionDelegate, RightEnabledUserIn
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
