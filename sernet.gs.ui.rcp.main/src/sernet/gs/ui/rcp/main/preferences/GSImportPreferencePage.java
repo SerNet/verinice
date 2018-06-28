@@ -33,6 +33,7 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -41,9 +42,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Link;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -76,8 +75,6 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.jface.preference.FieldEditorPreferencePage#createContents
      * (org.eclipse.swt.widgets.Composite)
@@ -86,12 +83,7 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage
     protected Control createContents(Composite parent) {
         final Link link = new Link(parent, SWT.NONE);
         link.setText(Messages.getString("GSImportPreferencePage_10")); //$NON-NLS-1$
-        link.addListener(SWT.Selection, new Listener() {
-            public void handleEvent(Event event) {
-                Program.launch(event.text);
-            }
-
-        });
+        link.addListener(SWT.Selection, event -> Program.launch(event.text));
         return super.createContents(parent);
     }
 
@@ -126,10 +118,9 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage
         Button button = new Button((Composite) getControl(), SWT.PUSH);
         button.setText(Messages.getString("GSImportPreferencePage_0")); //$NON-NLS-1$
         button.setLayoutData(new GridData(GridData.END, GridData.BEGINNING, true, true));
-        button.addSelectionListener(new SelectionListener() {
-            public void widgetDefaultSelected(SelectionEvent e) {
-            }
+        button.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 final String urlString = url.getStringValue();
                 final String userString = user.getStringValue();
@@ -144,53 +135,37 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage
                         monitor.beginTask(Messages.getString("GSImportPreferencePage_1"), //$NON-NLS-1$
                                 IProgressMonitor.UNKNOWN);
                         monitor.setTaskName(Messages.getString("GSImportPreferencePage_1")); //$NON-NLS-1$
-                        Connection con = null;
-                        Statement stmt = null;
+
                         try {
                             LOG.debug("Loading MSSQL JDBC driver."); //$NON-NLS-1$
                             Class.forName("net.sourceforge.jtds.jdbc.Driver"); //$NON-NLS-1$
                             LOG.debug("Establishing database connection"); //$NON-NLS-1$
-                            con = DriverManager.getConnection(urlString, userString, passString);
-                            LOG.debug("Running test query."); //$NON-NLS-1$
-                            stmt = con.createStatement();
-                            stmt.executeQuery(TEST_QUERY);
-                            LOG.debug("Finished MSSQL connection test."); //$NON-NLS-1$
+                            try (Connection con = DriverManager.getConnection(urlString, userString,
+                                    passString); Statement stmt = con.createStatement();) {
+                                LOG.debug("Running test query."); //$NON-NLS-1$
 
-                            // success:
-                            Display.getDefault().syncExec(new Runnable() {
-                                public void run() {
-                                    MessageDialog.openInformation(getShell(),
-                                            Messages.getString("GSImportPreferencePage_5"), //$NON-NLS-1$
-                                            Messages.getString("GSImportPreferencePage_6")); //$NON-NLS-1$
-                                }
-                            });
+                                stmt.executeQuery(TEST_QUERY);
+                                LOG.debug("Finished MSSQL connection test."); //$NON-NLS-1$
+
+                                // success:
+                                Display.getDefault()
+                                        .syncExec(() -> MessageDialog.openInformation(getShell(),
+                                                Messages.getString("GSImportPreferencePage_5"), //$NON-NLS-1$
+                                                Messages.getString("GSImportPreferencePage_6")));
+                            }
+
                         } catch (Exception e1) {
                             if (e1.getMessage().indexOf("N_Zielobj") > -1) { //$NON-NLS-1$
-                                Display.getDefault().syncExec(new Runnable() {
-                                    public void run() {
-                                        MessageDialog.openInformation(getShell(),
+                                Display.getDefault()
+                                        .syncExec(() -> MessageDialog.openInformation(getShell(),
                                                 Messages.getString("GSImportPreferencePage_15"), //$NON-NLS-1$
-                                                Messages.getString("GSImportPreferencePage_16")); //$NON-NLS-1$
-                                    }
-                                });
+                                                Messages.getString("GSImportPreferencePage_16")));
                             } else {
                                 ExceptionUtil.log(e1,
                                         Messages.getString("GSImportPreferencePage_7") + urlString); //$NON-NLS-1$
                             }
                             return Status.CANCEL_STATUS;
-                        } finally {
-                            try {
-                                if (stmt != null) {
-                                    stmt.close();
-                                }
-                                if (con != null) {
-                                    con.close();
-                                }
-                            } catch (SQLException e) {
-                            }
-
                         }
-
                         return Status.OK_STATUS;
                     }
                 };
@@ -208,17 +183,7 @@ public class GSImportPreferencePage extends FieldEditorPreferencePage
         }
     }
 
-    @Override
-    protected void checkState() {
-        super.checkState();
-        if (!isValid()) {
-            return;
-        }
-    }
-
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
      */
