@@ -21,6 +21,7 @@ package sernet.verinice.service.commands.bp;
 
 import org.apache.log4j.Logger;
 
+import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.CnATreeElement;

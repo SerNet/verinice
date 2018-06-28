@@ -44,8 +44,8 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.interfaces.IInternalServer;
+import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.rcp.Preferences;
-import sernet.verinice.service.commands.bp.Proceeding;
 
 /**
  * Preference page for IT baseline protection (ITBP).

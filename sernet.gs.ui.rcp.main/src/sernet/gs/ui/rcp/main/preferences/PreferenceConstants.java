@@ -17,8 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
+import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.rcp.search.SearchView;
-import sernet.verinice.service.commands.bp.Proceeding;
 
 /**
  * Constant definitions for plug-in preferences
