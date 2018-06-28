@@ -88,8 +88,6 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
 
     private int numberOfProcess = 0;
 
-    private Boolean isActive = null;
-
     /*
      * @see
      * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
@@ -210,7 +208,7 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
         action.setEnabled(checkRights());
-        if (isActive()) {
+        if (!Activator.getDefault().isStandalone()) {
             if (selection instanceof ITreeSelection) {
                 ITreeSelection treeSelection = (ITreeSelection) selection;
                 handleNewSelection(treeSelection);
@@ -249,13 +247,6 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
                 selectedTypeIds.add(typeId);
             }
         }
-    }
-
-    private boolean isActive() {
-        if (isActive == null) {
-            isActive = ServiceFactory.lookupProcessServiceIsa().isActive();
-        }
-        return isActive.booleanValue();
     }
 
     /*

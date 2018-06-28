@@ -60,16 +60,6 @@ public class ProcessServiceDummy implements IProcessServiceIsa {
         return new ProcessInformation(0);
     }
 
-    /**
-     * False, because this is not a real implementation.
-     * 
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceIsa#isActive()
-     */
-    @Override
-    public boolean isActive() {
-        return false;
-    }
-
     /*
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
      * findAllProcessDefinitions()

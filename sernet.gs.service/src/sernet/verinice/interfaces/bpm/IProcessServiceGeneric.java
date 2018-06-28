@@ -66,14 +66,7 @@ public interface IProcessServiceGeneric {
     void deleteProcess(String id);
 
     /**
-     * Returns true id this process service is really active. Used to determine
-     * if it is dummy implementation.
      * 
-     * @return true id this process is really active
-     */
-    boolean isActive();
-
-    /**
      * Returns a set with all process definitions. Set contains
      * {@link KeyMessage}s with the process key and a label.
      * 

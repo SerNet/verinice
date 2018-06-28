@@ -116,7 +116,7 @@ public class StartIsaProcess implements IObjectActionDelegate, RightEnabledUserI
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
         action.setEnabled(checkRights());
-        if (isActive()) {
+        if (!Activator.getDefault().isStandalone()) {
             if (selection instanceof ITreeSelection) {
                 ITreeSelection treeSelection = (ITreeSelection) selection;
                 Object selectedElement = treeSelection.getFirstElement();
@@ -128,13 +128,6 @@ public class StartIsaProcess implements IObjectActionDelegate, RightEnabledUserI
             action.setEnabled(false);
         }
 
-    }
-
-    private boolean isActive() {
-        if (isActive == null) {
-            isActive = ServiceFactory.lookupProcessServiceIsa().isActive();
-        }
-        return isActive.booleanValue();
     }
 
     /*

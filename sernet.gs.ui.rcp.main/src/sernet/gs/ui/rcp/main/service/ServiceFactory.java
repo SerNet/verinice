@@ -138,6 +138,7 @@ public abstract class ServiceFactory {
      * 
      * @return
      */
+    @Deprecated
     public static IProcessServiceIsa lookupProcessServiceIsa() {
         return (IProcessServiceIsa) VeriniceContext.get(VeriniceContext.PROCESS_SERVICE_ISA);
     }

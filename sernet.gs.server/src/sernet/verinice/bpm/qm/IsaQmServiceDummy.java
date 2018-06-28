@@ -85,14 +85,6 @@ public class IsaQmServiceDummy implements IIsaQmService {
     }
 
     /*
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#isActive()
-     */
-    @Override
-    public boolean isActive() {
-        return false;
-    }
-
-    /*
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
      * findAllProcessDefinitions()
      */

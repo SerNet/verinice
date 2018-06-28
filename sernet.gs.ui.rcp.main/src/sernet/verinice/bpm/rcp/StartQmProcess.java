@@ -130,7 +130,7 @@ public class StartQmProcess implements IObjectActionDelegate, RightEnabledUserIn
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
         action.setEnabled(checkRights());
-        if (isActive()) {
+        if (!Activator.getDefault().isStandalone()) {
             if (selection instanceof ITreeSelection) {
                 ITreeSelection treeSelection = (ITreeSelection) selection;
                 selectedUuids.clear();
@@ -148,13 +148,6 @@ public class StartQmProcess implements IObjectActionDelegate, RightEnabledUserIn
             action.setEnabled(false);
         }
 
-    }
-
-    private boolean isActive() {
-        if (isActive == null) {
-            isActive = ServiceFactory.lookupProcessServiceIsa().isActive();
-        }
-        return isActive.booleanValue();
     }
 
     /*

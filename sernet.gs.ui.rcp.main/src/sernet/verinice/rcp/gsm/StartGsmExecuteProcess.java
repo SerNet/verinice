@@ -222,7 +222,7 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
         action.setEnabled(checkRights());
-        if (isActive()) {
+        if (!Activator.getDefault().isStandalone()) {
             if (selection instanceof ITreeSelection) {
                 ITreeSelection treeSelection = (ITreeSelection) selection;
                 for (Iterator<?> iterator = treeSelection.iterator(); iterator.hasNext();) {
@@ -235,13 +235,6 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
         } else {
             action.setEnabled(false);
         }
-    }
-
-    private boolean isActive() {
-        if (isActive == null) {
-            isActive = ServiceFactory.lookupGsmService().isActive();
-        }
-        return isActive.booleanValue();
     }
 
     /*

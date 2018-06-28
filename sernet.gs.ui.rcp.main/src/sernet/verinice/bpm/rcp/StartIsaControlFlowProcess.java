@@ -148,7 +148,7 @@ public class StartIsaControlFlowProcess
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
         action.setEnabled(checkRights());
-        if (isActive()) {
+        if (!Activator.getDefault().isStandalone()) {
             if (selection instanceof ITreeSelection) {
                 ITreeSelection treeSelection = (ITreeSelection) selection;
                 selectedControlUuids.clear();
@@ -171,13 +171,6 @@ public class StartIsaControlFlowProcess
             action.setEnabled(false);
         }
 
-    }
-
-    private boolean isActive() {
-        if (isActive == null) {
-            isActive = ServiceFactory.lookupProcessServiceIsa().isActive();
-        }
-        return isActive.booleanValue();
     }
 
     /*

@@ -90,15 +90,4 @@ public class ProcessServiceVerinice extends ProcessServiceGeneric {
     public void setElementDao(IBaseDao<CnATreeElement, Integer> elementDao) {
         this.elementDao = elementDao;
     }
-
-    /**
-     * True: This is a real implementation.
-     * 
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceIsa#isActive()
-     */
-    @Override
-    public boolean isActive() {
-        return true;
-    }
-
 }
