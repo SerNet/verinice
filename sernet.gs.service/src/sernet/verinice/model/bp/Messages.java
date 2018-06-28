@@ -15,26 +15,16 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  ******************************************************************************/
-package sernet.verinice.bp.rcp.filter;
+package sernet.verinice.model.bp;
 
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS {
-    private static final String BUNDLE_NAME = "sernet.verinice.bp.rcp.filter.messages"; //$NON-NLS-1$
-    public static String BaseProtectionFilterDialog_Title;
-    public static String BaseProtectionFilterDialog_ImplementationState;
-    public static String BaseProtectionFilterDialog_IntroText;
-    public static String BaseProtectionFilterDialog_Objects;
-    public static String BaseProtectionFilterDialog_Tags;
-    public static String BaseProtectionFilterDialog_Qualifier;
-    public static String BaseProtectionFilterDialog_Apply_Tag_Filter_To_IT_Networks;
-    public static String BaseProtectionFilterDialog_Hide_Empty_Groups;
-    public static String BaseProtectionFilterDialog_Clear;
+    private static final String BUNDLE_NAME = "sernet.verinice.model.bp.messages"; //$NON-NLS-1$
 
-    public static String ImplementationState_YES;
-    public static String ImplementationState_NO;
-    public static String ImplementationState_PARTIALLY;
-    public static String ImplementationState_NOT_APPLICABLE;
+    public static String SecurityLevel_BASIC;
+    public static String SecurityLevel_STANDARD;
+    public static String SecurityLevel_HIGH;
 
     public static String BaseProtectionFilterDialog_Property_Value_Null;
 

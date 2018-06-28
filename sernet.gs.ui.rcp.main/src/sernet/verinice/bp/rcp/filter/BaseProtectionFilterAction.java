@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Display;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpGroup;
+import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.common.CnATreeElement;

@@ -13,7 +13,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  ******************************************************************************/
-package sernet.verinice.bp.rcp.filter;
+package sernet.verinice.model.bp;
 
 import java.util.Collections;
 import java.util.HashMap;
