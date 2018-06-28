@@ -52,7 +52,8 @@ import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
 
 /**
- * RCP Action to start jBPM process "gsm-ism-execute" defined in gsm-ism-execute.jpdl.xml.
+ * RCP Action to start jBPM process "gsm-ism-execute" defined in
+ * gsm-ism-execute.jpdl.xml.
  * 
  * This action in configured in plugin.xml
  * 
@@ -61,93 +62,98 @@ import sernet.verinice.rcp.InfoDialogWithShowToggle;
 public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabledUserInteraction {
 
     private static final Logger LOG = Logger.getLogger(StartGsmExecuteProcess.class);
-   
+
     private Integer orgId;
-    
+
     private int numberOfProcess = 0;
-    
+
     private Boolean isActive = null;
 
     private String validationMessage = Messages.StartGsmExecuteProcess_10;
-    
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
+     * action.IAction, org.eclipse.ui.IWorkbenchPart)
      */
     @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
-    @Override  
+    @Override
     public void run(IAction action) {
         try {
-            if(orgId!=null) {
+            if (orgId != null) {
                 boolean startProcess = true;
-                boolean validateProcess = !Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.INFO_PROCESS_VALIDATE);
-                if(validateProcess) {
+                boolean validateProcess = !Activator.getDefault().getPreferenceStore()
+                        .getBoolean(PreferenceConstants.INFO_PROCESS_VALIDATE);
+                if (validateProcess) {
                     startProcess = (IDialogConstants.YES_ID == validateOrganization());
                 }
-                if(startProcess) {
+                if (startProcess) {
                     startProcess();
-                    if(numberOfProcess > 0) {
+                    if (numberOfProcess > 0) {
                         TaskChangeRegistry.tasksAdded();
                     }
                 }
             }
-        } catch( Exception e) {
-            LOG.error("Error while creating process.",e); //$NON-NLS-1$
+        } catch (Exception e) {
+            LOG.error("Error while creating process.", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.StartGsmExecuteProcess_3);
         }
     }
-    
+
     private void startProcess() {
-        IProgressService progressService = PlatformUI.getWorkbench().getProgressService();       
+        IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         try {
-            progressService.run(true, true, new IRunnableWithProgress() {  
+            progressService.run(true, true, new IRunnableWithProgress() {
                 @Override
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                public void run(IProgressMonitor monitor)
+                        throws InvocationTargetException, InterruptedException {
                     Activator.inheritVeriniceContextState();
-                    IProcessStartInformation info = ServiceFactory.lookupGsmService().startProcessesForOrganization(orgId);
-                    numberOfProcess = info.getNumber();                
+                    IProcessStartInformation info = ServiceFactory.lookupGsmService()
+                            .startProcessesForOrganization(orgId);
+                    numberOfProcess = info.getNumber();
                 }
-            }); 
+            });
             String message = Messages.bind(Messages.StartGsmExecuteProcess_1, numberOfProcess);
-            if(numberOfProcess==0) {
+            if (numberOfProcess == 0) {
                 message = Messages.StartGsmExecuteProcess_19;
             }
-            InfoDialogWithShowToggle.openInformation(
-                    Messages.StartGsmExecuteProcess_0,  
-                    message,
-                    Messages.StartGsmExecuteProcess_4,
-                    PreferenceConstants.INFO_PROCESSES_STARTED);
-            if(numberOfProcess > 0) {
+            InfoDialogWithShowToggle.openInformation(Messages.StartGsmExecuteProcess_0, message,
+                    Messages.StartGsmExecuteProcess_4, PreferenceConstants.INFO_PROCESSES_STARTED);
+            if (numberOfProcess > 0) {
                 TaskChangeRegistry.tasksAdded();
             }
         } catch (Exception t) {
-            LOG.error("Error while creating process.",t); //$NON-NLS-1$
-            ExceptionUtil.log(t, Messages.StartGsmExecuteProcess_3); 
+            LOG.error("Error while creating process.", t); //$NON-NLS-1$
+            ExceptionUtil.log(t, Messages.StartGsmExecuteProcess_3);
         }
-    } 
-    
+    }
+
     private int validateOrganization() throws InvocationTargetException, InterruptedException {
-        IProgressService progressService = PlatformUI.getWorkbench().getProgressService();    
-        progressService.run(true, true, new IRunnableWithProgress() {  
+        IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+        progressService.run(true, true, new IRunnableWithProgress() {
             @Override
-            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+            public void run(IProgressMonitor monitor)
+                    throws InvocationTargetException, InterruptedException {
                 Activator.inheritVeriniceContextState();
-                IGsmValidationResult validationResult = ServiceFactory.lookupGsmService().validateOrganization(orgId);
-                validationMessage = createValidationMessage(validationResult);               
+                IGsmValidationResult validationResult = ServiceFactory.lookupGsmService()
+                        .validateOrganization(orgId);
+                validationMessage = createValidationMessage(validationResult);
             }
-        });           
+        });
         MessageDialogWithToggle dialog = InfoDialogWithShowToggle.openYesNoCancelQuestion(
-                Messages.StartGsmExecuteProcess_0,  
-                validationMessage,
-                Messages.StartGsmExecuteProcess_2,
-                PreferenceConstants.INFO_PROCESS_VALIDATE);
-        return dialog.getReturnCode();                    
+                Messages.StartGsmExecuteProcess_0, validationMessage,
+                Messages.StartGsmExecuteProcess_2, PreferenceConstants.INFO_PROCESS_VALIDATE);
+        return dialog.getReturnCode();
     }
 
     /**
@@ -159,27 +165,29 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
         List<String> assetGroupNames = validationResult.getAssetGroupsWithoutLinkedPerson();
         List<String> ungroupedAssets = validationResult.getUngroupedAssets();
         List<String> ungroupedControls = validationResult.getUngroupedControls();
-        
-        if(assetGroupNames.isEmpty() && ungroupedAssets.isEmpty() && ungroupedControls.isEmpty()) {
+
+        if (assetGroupNames.isEmpty() && ungroupedAssets.isEmpty() && ungroupedControls.isEmpty()) {
             sb.append(Messages.StartGsmExecuteProcess_11);
         } else {
             sb.append(Messages.StartGsmExecuteProcess_12);
             sb.append("\n\n"); //$NON-NLS-1$
         }
-               
-        
-        if(!assetGroupNames.isEmpty()) {           
-            sb.append(NLS.bind(Messages.StartGsmExecuteProcess_9, assetGroupNames.size(), createList(assetGroupNames)));
+
+        if (!assetGroupNames.isEmpty()) {
+            sb.append(NLS.bind(Messages.StartGsmExecuteProcess_9, assetGroupNames.size(),
+                    createList(assetGroupNames)));
             sb.append("\n\n"); //$NON-NLS-1$
-        }      
-        if(!ungroupedAssets.isEmpty()) {
-            sb.append(NLS.bind(Messages.StartGsmExecuteProcess_8, ungroupedAssets.size(), createList(ungroupedAssets)));
-            sb.append("\n\n"); //$NON-NLS-1$
-        }       
-        if(!ungroupedControls.isEmpty()) {                     
-            sb.append(NLS.bind(Messages.StartGsmExecuteProcess_7, ungroupedControls.size(), createList(ungroupedControls)));
         }
-        
+        if (!ungroupedAssets.isEmpty()) {
+            sb.append(NLS.bind(Messages.StartGsmExecuteProcess_8, ungroupedAssets.size(),
+                    createList(ungroupedAssets)));
+            sb.append("\n\n"); //$NON-NLS-1$
+        }
+        if (!ungroupedControls.isEmpty()) {
+            sb.append(NLS.bind(Messages.StartGsmExecuteProcess_7, ungroupedControls.size(),
+                    createList(ungroupedControls)));
+        }
+
         sb.append("\n\n"); //$NON-NLS-1$
         sb.append(Messages.StartGsmExecuteProcess_5);
         return sb.toString();
@@ -188,71 +196,80 @@ public class StartGsmExecuteProcess implements IObjectActionDelegate, RightEnabl
     private String createList(List<String> assetGroupNames) {
         return createList(assetGroupNames, 10);
     }
-    
+
     private String createList(List<String> assetGroupNames, Integer limit) {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
-        int n=1;
-        for (String name : assetGroupNames) {         
-            if(!first) {
-                sb.append(", ");                  //$NON-NLS-1$
-            } 
+        int n = 1;
+        for (String name : assetGroupNames) {
+            if (!first) {
+                sb.append(", "); //$NON-NLS-1$
+            }
             first = false;
-            
-            if(limit!=null && limit<n) {
+
+            if (limit != null && limit < n) {
                 sb.append("..."); //$NON-NLS-1$
                 break;
             }
-            
-            sb.append(name);         
+
+            sb.append(name);
             n++;
         }
         return sb.toString();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
+     * IAction, org.eclipse.jface.viewers.ISelection)
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
         action.setEnabled(checkRights());
-        if(isActive()) {
-            if(selection instanceof ITreeSelection) {
+        if (isActive()) {
+            if (selection instanceof ITreeSelection) {
                 ITreeSelection treeSelection = (ITreeSelection) selection;
                 for (Iterator<?> iterator = treeSelection.iterator(); iterator.hasNext();) {
-                    Object selectedElement = iterator.next();         
-                    if(selectedElement instanceof Organization) {
+                    Object selectedElement = iterator.next();
+                    if (selectedElement instanceof Organization) {
                         orgId = ((Organization) selectedElement).getDbId();
                     }
-                }             
+                }
             }
         } else {
             action.setEnabled(false);
-        }       
+        }
     }
-    
+
     private boolean isActive() {
-        if(isActive==null) {
+        if (isActive == null) {
             isActive = ServiceFactory.lookupGsmService().isActive();
         }
         return isActive.booleanValue();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
     public String getRightID() {
         return ActionRightIDs.CREATE_GREENBONE_TASKS;
     }
-    
+
 }

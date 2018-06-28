@@ -16,43 +16,51 @@ import sernet.verinice.model.iso27k.ISO27KModel;
 public class OpenTaskViewAction extends OpenViewAction {
 
     Boolean isActive = null;
-    
+
     public OpenTaskViewAction(IWorkbenchWindow window) {
-        super(window, Messages.OpenTaskViewAction_0, TaskView.ID, ImageCache.VIEW_TASK, ActionRightIDs.TASKVIEW);
+        super(window, Messages.OpenTaskViewAction_0, TaskView.ID, ImageCache.VIEW_TASK,
+                ActionRightIDs.TASKVIEW);
         CnAElementFactory.getInstance().addLoadListener(new IModelLoadListener() {
-            public void closed(BSIModel model) {                
+            public void closed(BSIModel model) {
             }
-            public void loaded(BSIModel model) {             
+
+            public void loaded(BSIModel model) {
             }
+
             public void loaded(ISO27KModel model) {
-                if(checkRights()){
+                if (checkRights()) {
                     setEnabled(isActive());
                 }
             }
+
             @Override
             public void loaded(BpModel model) {
                 // nothing to do
-                
+
             }
+
             @Override
             public void loaded(CatalogModel model) {
                 // nothing to do
             }
         });
     }
-    
-    public OpenTaskViewAction(IWorkbenchWindow window, String rightID){
+
+    public OpenTaskViewAction(IWorkbenchWindow window, String rightID) {
         super(window, Messages.OpenTaskViewAction_0, TaskView.ID, ImageCache.VIEW_TASK, rightID);
         CnAElementFactory.getInstance().addLoadListener(new IModelLoadListener() {
-            public void closed(BSIModel model) {                
+            public void closed(BSIModel model) {
             }
-            public void loaded(BSIModel model) {             
+
+            public void loaded(BSIModel model) {
             }
+
             public void loaded(ISO27KModel model) {
-                if(checkRights()){
+                if (checkRights()) {
                     setEnabled(isActive());
                 }
             }
+
             @Override
             public void loaded(BpModel model) {
                 // nothing to do
@@ -62,11 +70,11 @@ public class OpenTaskViewAction extends OpenViewAction {
             public void loaded(CatalogModel model) {
                 // nothing to do
             }
-        });        
+        });
     }
-    
+
     private boolean isActive() {
-        if(isActive==null) {
+        if (isActive == null) {
             isActive = ServiceFactory.lookupProcessServiceIsa().isActive();
         }
         return isActive.booleanValue();

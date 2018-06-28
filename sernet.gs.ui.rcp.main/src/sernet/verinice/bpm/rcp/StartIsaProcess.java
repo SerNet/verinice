@@ -53,95 +53,118 @@ import sernet.verinice.rcp.InfoDialogWithShowToggle;
 public class StartIsaProcess implements IObjectActionDelegate, RightEnabledUserInteraction {
 
     private static final Logger LOG = Logger.getLogger(StartIsaProcess.class);
-    
+
     private Audit selectedAudit;
-    
+
     int numberOfProcess = 0;
-    
+
     Boolean isActive = null;
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
+     * action.IAction, org.eclipse.ui.IWorkbenchPart)
      */
     @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
         // TODO Auto-generated method stub
-        
+
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
-    @Override  
+    @Override
     public void run(IAction action) {
-        if(selectedAudit!=null) {
+        if (selectedAudit != null) {
             IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-            
+
             try {
-                progressService.run(true, true, new IRunnableWithProgress() {  
+                progressService.run(true, true, new IRunnableWithProgress() {
                     @Override
-                    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    public void run(IProgressMonitor monitor)
+                            throws InvocationTargetException, InterruptedException {
                         Activator.inheritVeriniceContextState();
-                        IProcessStartInformation info = ServiceFactory.lookupProcessServiceIsa().startProcessForIsa(selectedAudit.getUuid());           
-                        numberOfProcess=0;
-                        if(info!=null) {
-                            numberOfProcess=info.getNumber();
+                        IProcessStartInformation info = ServiceFactory.lookupProcessServiceIsa()
+                                .startProcessForIsa(selectedAudit.getUuid());
+                        numberOfProcess = 0;
+                        if (info != null) {
+                            numberOfProcess = info.getNumber();
                         }
                     }
                 });
-                if(numberOfProcess > 0){
-                InfoDialogWithShowToggle.openInformation(
-                        Messages.StartIsaProcess_0,  
-                        Messages.bind(Messages.StartIsaProcess_1, numberOfProcess),// "Succesfully created " + numberOfProcess + " tasks.",; 
-                        Messages.StartIsaProcess_3,
-                        PreferenceConstants.INFO_PROCESSES_STARTED);
+                if (numberOfProcess > 0) {
+                    InfoDialogWithShowToggle.openInformation(Messages.StartIsaProcess_0,
+                            Messages.bind(Messages.StartIsaProcess_1, numberOfProcess), // "Succesfully
+                                                                                        // created
+                                                                                        // "
+                                                                                        // +
+                                                                                        // numberOfProcess
+                                                                                        // +
+                                                                                        // "
+                                                                                        // tasks.",;
+                            Messages.StartIsaProcess_3, PreferenceConstants.INFO_PROCESSES_STARTED);
                 } else {
-                    MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.StartIsaProcess_0, Messages.StartIsaProcess_7);
+                    MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+                            Messages.StartIsaProcess_0, Messages.StartIsaProcess_7);
                 }
             } catch (Exception t) {
-                LOG.error("Error while creating tasks.",t); //$NON-NLS-1$
-                ExceptionUtil.log(t, sernet.verinice.bpm.rcp.Messages.StartIsaProcess_5); 
-            }   
-        }   
+                LOG.error("Error while creating tasks.", t); //$NON-NLS-1$
+                ExceptionUtil.log(t, sernet.verinice.bpm.rcp.Messages.StartIsaProcess_5);
+            }
+        }
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
+     * IAction, org.eclipse.jface.viewers.ISelection)
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
         action.setEnabled(checkRights());
-        if(isActive()) {
-            if(selection instanceof ITreeSelection) {
+        if (isActive()) {
+            if (selection instanceof ITreeSelection) {
                 ITreeSelection treeSelection = (ITreeSelection) selection;
                 Object selectedElement = treeSelection.getFirstElement();
-                if(selectedElement instanceof Audit) {
+                if (selectedElement instanceof Audit) {
                     selectedAudit = (Audit) selectedElement;
                 }
             }
         } else {
             action.setEnabled(false);
         }
-        
+
     }
-    
+
     private boolean isActive() {
-        if(isActive==null) {
+        if (isActive == null) {
             isActive = ServiceFactory.lookupProcessServiceIsa().isActive();
         }
         return isActive.booleanValue();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override

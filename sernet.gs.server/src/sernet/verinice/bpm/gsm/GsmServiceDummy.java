@@ -37,38 +37,55 @@ import sernet.verinice.model.bpm.ProcessInformation;
  */
 public class GsmServiceDummy implements IGsmService {
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findProcessDefinitionId(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
+     * findProcessDefinitionId(java.lang.String)
      */
     @Override
     public String findProcessDefinitionId(String processDefinitionKey) {
         return null;
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IGsmService#validateOrganization(java.lang.Integer)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.bpm.IGsmService#validateOrganization(java.lang
+     * .Integer)
      */
     @Override
     public IGsmValidationResult validateOrganization(Integer orgId) {
         // TODO Auto-generated method stub
         return null;
-    } 
+    }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#startProcess(java.lang.String, java.util.Map)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.bpm.IProcessServiceGeneric#startProcess(java.
+     * lang.String, java.util.Map)
      */
     @Override
     public void startProcess(String processDefinitionKey, Map<String, ?> variables) {
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#deleteProcess(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.bpm.IProcessServiceGeneric#deleteProcess(java.
+     * lang.String)
      */
     @Override
     public void deleteProcess(String id) {
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#isActive()
      */
     @Override
@@ -76,36 +93,50 @@ public class GsmServiceDummy implements IGsmService {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IGsmService#startProcessesForOrganization(java.lang.Integer)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.bpm.IGsmService#startProcessesForOrganization(
+     * java.lang.Integer)
      */
     @Override
     public IProcessStartInformation startProcessesForOrganization(Integer orgId) {
         return new ProcessInformation(0);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IGsmService#deleteAssetScenarioLinks(java.util.Set)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.bpm.IGsmService#deleteAssetScenarioLinks(java.
+     * util.Set)
      */
     @Override
     public int deleteAssetScenarioLinks(Set<String> elementUuidSet) {
         return 0;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IGsmService#cleanUpOrganization(java.lang.Integer)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.bpm.IGsmService#cleanUpOrganization(java.lang.
+     * Integer)
      */
     @Override
-    public void cleanUpOrganization(Integer orgId) { 
+    public void cleanUpOrganization(Integer orgId) {
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findAllProcessDefinitions()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
+     * findAllProcessDefinitions()
      */
     @Override
     public Set<KeyMessage> findAllProcessDefinitions() {
         return Collections.emptySet();
     }
-
 
 }

@@ -33,26 +33,27 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Extends {@link ProcessServiceGeneric} with generic methods which have dependencies
- * to verinice classes but have no relation to a specific process.
+ * Extends {@link ProcessServiceGeneric} with generic methods which have
+ * dependencies to verinice classes but have no relation to a specific process.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class ProcessServiceVerinice extends ProcessServiceGeneric {
 
     private static final Logger LOG = Logger.getLogger(ProcessServiceVerinice.class);
-    
+
     private IDao<ChangeLogEntry, Integer> changeLogEntryDao;
-    private IBaseDao<CnATreeElement,Integer> elementDao;
+    private IBaseDao<CnATreeElement, Integer> elementDao;
 
     /**
-     * Returns the owner (creator) of a {@link CnATreeElement}
-     * by querying table changelogentry.
+     * Returns the owner (creator) of a {@link CnATreeElement} by querying table
+     * changelogentry.
      * 
      * If no owner is found, default owner is returned:
      * IControlExecutionProcess.DEFAULT_OWNER_NAME
      * 
-     * @param element A CnATreeElement
+     * @param element
+     *            A CnATreeElement
      * @return The owner (creator) of the element
      */
     protected String getOwnerName(CnATreeElement element) {
@@ -62,13 +63,14 @@ public class ProcessServiceVerinice extends ProcessServiceGeneric {
         crit.add(Restrictions.eq("change", ChangeLogEntry.TYPE_INSERT));
         crit.addOrder(Order.asc("changetime"));
         List<ChangeLogEntry> result = getChangeLogEntryDao().findByCriteria(crit);
-        if(result!=null && !result.isEmpty() && result.get(0).getUsername()!=null) {
+        if (result != null && !result.isEmpty() && result.get(0).getUsername() != null) {
             owner = result.get(0).getUsername();
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Owner of control: " + element.getUuid() + " is: " + owner);
             }
         } else {
-            LOG.warn("Can not find owner of control: " + element.getUuid() + ", using default owner name: " + owner);
+            LOG.warn("Can not find owner of control: " + element.getUuid()
+                    + ", using default owner name: " + owner);
         }
         return owner;
     }
@@ -88,7 +90,7 @@ public class ProcessServiceVerinice extends ProcessServiceGeneric {
     public void setElementDao(IBaseDao<CnATreeElement, Integer> elementDao) {
         this.elementDao = elementDao;
     }
-    
+
     /**
      * True: This is a real implementation.
      * 

@@ -44,109 +44,131 @@ import sernet.verinice.service.model.IObjectModelService;
 
 @SuppressWarnings("restriction")
 public abstract class ServiceFactory {
-	
-	private static final String WORK_OBJECTS = "workObjects";
-	private static Boolean permissionHandlingNeeded = null;
 
-	public static void openCommandService() throws MalformedURLException {
-		SpringClientPlugin.getDefault().openBeanFactory();
-	}
+    private static final String WORK_OBJECTS = "workObjects";
+    private static Boolean permissionHandlingNeeded = null;
 
-	public static void closeCommandService() {
-		Logger.getLogger(ServiceFactory.class).debug("Closing bean factory.");
-		SpringClientPlugin.getDefault().closeBeanFactory();
-	}
+    public static void openCommandService() throws MalformedURLException {
+        SpringClientPlugin.getDefault().openBeanFactory();
+    }
 
-	/** Retrieves the application's ICommandService instance.
-	 * 
-	 * <p>The method works on the server as well as the client.</p>
-	 * 
-	 * <p>Note: Usage of this method is discouraged. If the class that needs
-	 * the command service is managed by Spring declare a property and
-	 * let the instance being injected by the IoC container.</p> 
-	 * 
-	 * @return
-	 */
-	public static ICommandService lookupCommandService() {
-		return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
-	}
-	
-	/** Retrieves the client's IAuthService instance.
-	 * 
-	 * <p>The method works only on the client.</p>
-	 * 
-	 * <p>Note: Usage of this method is discouraged. If the class that needs
-	 * the auth service is managed by Spring declare a property and
-	 * let the instance being injected by the IoC container.</p> 
-	 * 
-	 * @return
-	 */
-	public static IAuthService lookupAuthService() {
-		// Cache result of permission handling config for the configured service.
-		// Otherwise, the server was queried on every call to determine this:
-		
-		IAuthService authService = (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
-		
-		if (permissionHandlingNeeded == null){
-			permissionHandlingNeeded = authService.isPermissionHandlingNeeded();
-		}
-		return authService;
-	}
-	
-	/** Retrieves the application's ITaskService instance.
+    public static void closeCommandService() {
+        Logger.getLogger(ServiceFactory.class).debug("Closing bean factory.");
+        SpringClientPlugin.getDefault().closeBeanFactory();
+    }
+
+    /**
+     * Retrieves the application's ICommandService instance.
      * 
-     * <p>The method works on the server as well as the client.</p>
+     * <p>
+     * The method works on the server as well as the client.
+     * </p>
      * 
-     * <p>Note: Usage of this method is discouraged. If the class that needs
-     * the command service is managed by Spring declare a property and
-     * let the instance being injected by the IoC container.</p> 
+     * <p>
+     * Note: Usage of this method is discouraged. If the class that needs the
+     * command service is managed by Spring declare a property and let the
+     * instance being injected by the IoC container.
+     * </p>
+     * 
+     * @return
+     */
+    public static ICommandService lookupCommandService() {
+        return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
+    }
+
+    /**
+     * Retrieves the client's IAuthService instance.
+     * 
+     * <p>
+     * The method works only on the client.
+     * </p>
+     * 
+     * <p>
+     * Note: Usage of this method is discouraged. If the class that needs the
+     * auth service is managed by Spring declare a property and let the instance
+     * being injected by the IoC container.
+     * </p>
+     * 
+     * @return
+     */
+    public static IAuthService lookupAuthService() {
+        // Cache result of permission handling config for the configured
+        // service.
+        // Otherwise, the server was queried on every call to determine this:
+
+        IAuthService authService = (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
+
+        if (permissionHandlingNeeded == null) {
+            permissionHandlingNeeded = authService.isPermissionHandlingNeeded();
+        }
+        return authService;
+    }
+
+    /**
+     * Retrieves the application's ITaskService instance.
+     * 
+     * <p>
+     * The method works on the server as well as the client.
+     * </p>
+     * 
+     * <p>
+     * Note: Usage of this method is discouraged. If the class that needs the
+     * command service is managed by Spring declare a property and let the
+     * instance being injected by the IoC container.
+     * </p>
      * 
      * @return
      */
     public static ITaskService lookupTaskService() {
         return (ITaskService) VeriniceContext.get(VeriniceContext.TASK_SERVICE);
     }
-    
-    /** Retrieves the application's IProcessServiceIsa instance.
+
+    /**
+     * Retrieves the application's IProcessServiceIsa instance.
      * 
-     * <p>The method works on the server as well as the client.</p>
+     * <p>
+     * The method works on the server as well as the client.
+     * </p>
      * 
-     * <p>Note: Usage of this method is discouraged. If the class that needs
-     * the command service is managed by Spring declare a property and
-     * let the instance being injected by the IoC container.</p> 
+     * <p>
+     * Note: Usage of this method is discouraged. If the class that needs the
+     * command service is managed by Spring declare a property and let the
+     * instance being injected by the IoC container.
+     * </p>
      * 
      * @return
      */
     public static IProcessServiceIsa lookupProcessServiceIsa() {
         return (IProcessServiceIsa) VeriniceContext.get(VeriniceContext.PROCESS_SERVICE_ISA);
     }
-    
+
     public static IIsaControlFlowService lookupIsaControlFlowService() {
-        return (IIsaControlFlowService) VeriniceContext.get(VeriniceContext.ISA_CONTROL_FLOW_SERVICE);
+        return (IIsaControlFlowService) VeriniceContext
+                .get(VeriniceContext.ISA_CONTROL_FLOW_SERVICE);
     }
-    
+
     public static IIsaQmService lookupQmService() {
         return (IIsaQmService) VeriniceContext.get(VeriniceContext.ISA_QM_SERVICE);
     }
-    
+
     public static IIndividualService lookupIndividualService() {
         return (IIndividualService) VeriniceContext.get(VeriniceContext.INDIVIDUAL_SERVICE);
     }
-    
+
     public static IGsmService lookupGsmService() {
         return (IGsmService) VeriniceContext.get(VeriniceContext.GSM_SERVICE);
     }
-    
+
     public static IAccountService lookupAccountService() {
         return (IAccountService) VeriniceContext.get(VeriniceContext.ACCOUNT_SERVICE);
     }
-	
-	public static boolean isPermissionHandlingNeeded() {
-		if (permissionHandlingNeeded == null){
-			return true; /* return true, just to be safe */
-		}
-		return permissionHandlingNeeded;
-	}
+
+    public static boolean isPermissionHandlingNeeded() {
+        if (permissionHandlingNeeded == null) {
+            return true; /* return true, just to be safe */
+        }
+        return permissionHandlingNeeded;
+    }
 
     public static IValidationService lookupValidationService() {
         return (IValidationService) VeriniceContext.get(VeriniceContext.VALIDATION_SERVICE);
@@ -155,46 +177,47 @@ public abstract class ServiceFactory {
     public static IObjectModelService lookupObjectModelService() {
         return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
     }
-	
-	public static IReportDepositService lookupReportDepositService(){
-	    return (IReportDepositService)VeriniceContext.get(VeriniceContext.REPORT_DEPOSIT_SERVICE);
-	}
-	
-	public static IReportHQLService lookupReportHQLService(){
-	    return (IReportHQLService)VeriniceContext.get(VeriniceContext.REPORT_HQL_SERVICE);
-	}
-	
-	public static ISearchService lookupSearchService(){
-	    return (ISearchService)VeriniceContext.get(VeriniceContext.SEARCH_SERVICE);
-	}
-	
-	public static IRightsServiceClient lookupRightsServiceClient(){
-		return (IRightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
-	}
-	
-	public static IUpdateNewsService lookupUpdateNewsService(){
-	    return (IUpdateNewsService) VeriniceContext.get(VeriniceContext.UPDATE_NEWS_SERVICE);
-	}
 
-	public static ILicenseManagementService lookupLicenseManagementService(){
-	    return (ILicenseManagementService)VeriniceContext.get(VeriniceContext.LICENSE_SERVICE);
-	}
-	
-	public static IEncryptionService lookupEncryptionService(){
-	    return (IEncryptionService)VeriniceContext.get(VeriniceContext.ENCRYPTION_SERVICE);
-	}
-	
-	/**
-	 * Retrieves the work objects that have been configured for the client.
-	 * 
-	 * <p>This method must only be used from the applications' <code>Activator</code>
-	 * in order to retrieve the initial values for the {@link VeriniceContext} class.</p>
-	 */
-	public static VeriniceContext.State getClientWorkObjects()
-	{
-		return (VeriniceContext.State) SpringClientPlugin.getDefault()
-				.getBeanFactory()
-				.getBean(WORK_OBJECTS);
-	}
-	
+    public static IReportDepositService lookupReportDepositService() {
+        return (IReportDepositService) VeriniceContext.get(VeriniceContext.REPORT_DEPOSIT_SERVICE);
+    }
+
+    public static IReportHQLService lookupReportHQLService() {
+        return (IReportHQLService) VeriniceContext.get(VeriniceContext.REPORT_HQL_SERVICE);
+    }
+
+    public static ISearchService lookupSearchService() {
+        return (ISearchService) VeriniceContext.get(VeriniceContext.SEARCH_SERVICE);
+    }
+
+    public static IRightsServiceClient lookupRightsServiceClient() {
+        return (IRightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+    }
+
+    public static IUpdateNewsService lookupUpdateNewsService() {
+        return (IUpdateNewsService) VeriniceContext.get(VeriniceContext.UPDATE_NEWS_SERVICE);
+    }
+
+    public static ILicenseManagementService lookupLicenseManagementService() {
+        return (ILicenseManagementService) VeriniceContext.get(VeriniceContext.LICENSE_SERVICE);
+    }
+
+    public static IEncryptionService lookupEncryptionService() {
+        return (IEncryptionService) VeriniceContext.get(VeriniceContext.ENCRYPTION_SERVICE);
+    }
+
+    /**
+     * Retrieves the work objects that have been configured for the client.
+     * 
+     * <p>
+     * This method must only be used from the applications'
+     * <code>Activator</code> in order to retrieve the initial values for the
+     * {@link VeriniceContext} class.
+     * </p>
+     */
+    public static VeriniceContext.State getClientWorkObjects() {
+        return (VeriniceContext.State) SpringClientPlugin.getDefault().getBeanFactory()
+                .getBean(WORK_OBJECTS);
+    }
+
 }

@@ -36,29 +36,42 @@ import sernet.verinice.model.bpm.ProcessInformation;
  */
 public class IsaControlFlowServiceDummy implements IIsaControlFlowService {
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findProcessDefinitionId(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
+     * findProcessDefinitionId(java.lang.String)
      */
     @Override
     public String findProcessDefinitionId(String processDefinitionKey) {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#startProcess(java.lang.String, java.util.Map)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.bpm.IProcessServiceGeneric#startProcess(java.
+     * lang.String, java.util.Map)
      */
     @Override
     public void startProcess(String processDefinitionKey, Map<String, ?> variables) {
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#deleteProcess(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.bpm.IProcessServiceGeneric#deleteProcess(java.
+     * lang.String)
      */
     @Override
     public void deleteProcess(String id) {
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#isActive()
      */
     @Override
@@ -66,32 +79,44 @@ public class IsaControlFlowServiceDummy implements IIsaControlFlowService {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IIsaControlFlowService#startProcessesForControls(java.util.List)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.bpm.IIsaControlFlowService#
+     * startProcessesForControls(java.util.List)
      */
     @Override
     public IProcessStartInformation startProcessesForControls(List<String> controlUuids) {
         return new ProcessInformation(0);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IIsaControlFlowService#startProcessesForGroups(java.util.List)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.bpm.IIsaControlFlowService#
+     * startProcessesForGroups(java.util.List)
      */
     @Override
     public IProcessStartInformation startProcessesForGroups(List<String> groupUuids) {
         return new ProcessInformation(0);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IIsaControlFlowService#startProcessesForAudits(java.util.List)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.bpm.IIsaControlFlowService#
+     * startProcessesForAudits(java.util.List)
      */
     @Override
     public IProcessStartInformation startProcessesForAudits(List<String> auditUuids) {
         return new ProcessInformation(0);
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findAllProcessDefinitions()
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
+     * findAllProcessDefinitions()
      */
     @Override
     public Set<KeyMessage> findAllProcessDefinitions() {
