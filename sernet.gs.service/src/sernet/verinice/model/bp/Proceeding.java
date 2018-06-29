@@ -24,7 +24,13 @@ public enum Proceeding {
 
     BASIC, STANDARD, HIGH;
 
+    private String label;
+
+    private Proceeding() {
+        label = Messages.getString(getClass().getSimpleName() + "." + this.name());
+    }
+
     public String getLabel() {
-        return Messages.getString(getClass().getSimpleName() + "." + this.name());
+        return label;
     }
 }

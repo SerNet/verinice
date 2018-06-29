@@ -172,16 +172,22 @@ public class BaseProtectionFilterDialog extends Dialog {
         boxesComposite.setText(Messages.BaseProtectionFilterDialog_Qualifier);
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1);
         boxesComposite.setLayoutData(gridData);
-        GridLayout layout = new GridLayout(SecurityLevel.values().length, false);
+        GridLayout layout = new GridLayout(SecurityLevel.values().length + 1, false);
         boxesComposite.setLayout(layout);
 
         for (final SecurityLevel qualifier : SecurityLevel.values()) {
-            final Button button = new Button(boxesComposite, SWT.CHECK);
-            button.setText(qualifier.getLabel());
-            button.setSelection(selectedSecurityLevels.contains(qualifier));
-            button.setData(qualifier);
-            qualifierButtons.add(button);
+            addButton(boxesComposite, qualifier);
         }
+        addButton(boxesComposite, null);
+    }
+
+    private void addButton(Group boxesComposite, final SecurityLevel qualifier) {
+        final Button button = new Button(boxesComposite, SWT.CHECK);
+        button.setText(qualifier == null ? Messages.BaseProtectionFilterDialog_Property_Value_Null
+                : qualifier.getLabel());
+        button.setSelection(selectedSecurityLevels.contains(qualifier));
+        button.setData(qualifier);
+        qualifierButtons.add(button);
     }
 
     private void addElementTypesGroup(Composite container) {

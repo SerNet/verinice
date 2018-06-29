@@ -11,6 +11,9 @@
  *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * Contributors:
+ * - Jochen Kemnade
+ * - Alexander Ben Nasrallah
  *
  ******************************************************************************/
 package sernet.verinice.model.bp;
@@ -28,10 +31,9 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public enum SecurityLevel {
 
-    BASIC(Messages.SecurityLevel_BASIC), STANDARD(Messages.SecurityLevel_STANDARD), HIGH(
-            Messages.SecurityLevel_HIGH), PRISTINE(
-                    Messages.BaseProtectionFilterDialog_Property_Value_Null);
+    BASIC, STANDARD, HIGH;
 
+    private static final Map<String, SecurityLevel> qualifiersByPropertyValue;
     static {
         Map<String, SecurityLevel> m = new HashMap<>();
         m.put(Safeguard.PROP_QUALIFIER_BASIC, BASIC);
@@ -39,21 +41,19 @@ public enum SecurityLevel {
 
         m.put(Safeguard.PROP_QUALIFIER_STANDARD, STANDARD);
         m.put(BpRequirement.PROP_QUALIFIER_STANDARD, STANDARD);
-
         m.put(Safeguard.PROP_QUALIFIER_HIGH, HIGH);
         m.put(BpRequirement.PROP_QUALIFIER_HIGH, HIGH);
 
-        m.put(null, PRISTINE);
-        m.put("", PRISTINE);
+        m.put(null, null);
+        m.put("", null);
 
         qualifiersByPropertyValue = Collections.unmodifiableMap(m);
     }
 
-    private static final Map<String, SecurityLevel> qualifiersByPropertyValue;
-    private final String label;
+    private String label;
 
-    private SecurityLevel(String label) {
-        this.label = label;
+    private SecurityLevel() {
+        label = Messages.getString(getClass().getSimpleName() + "." + this.name());
     }
 
     public String getLabel() {

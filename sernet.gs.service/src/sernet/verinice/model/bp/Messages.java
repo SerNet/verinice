@@ -21,23 +21,10 @@ import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.eclipse.osgi.util.NLS;
-
-public class Messages extends NLS {
+public class Messages {
     private static final String BUNDLE_NAME = "sernet.verinice.model.bp.messages"; //$NON-NLS-1$
 
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
-
-    public static String SecurityLevel_BASIC;
-    public static String SecurityLevel_STANDARD;
-    public static String SecurityLevel_HIGH;
-
-    public static String BaseProtectionFilterDialog_Property_Value_Null;
-
-    static {
-        // initialize resource bundle
-        NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-    }
 
     private Messages() {
     }
