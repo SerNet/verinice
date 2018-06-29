@@ -33,4 +33,18 @@ public enum Proceeding {
     public String getLabel() {
         return label;
     }
+
+    public boolean requires(SecurityLevel level) {
+        if (level == null) {
+            return true;
+        }
+        switch (this) {
+        case BASIC:
+            return level == SecurityLevel.BASIC;
+        case STANDARD:
+        case CORE:
+            return true;
+        }
+        return true;
+    }
 }
