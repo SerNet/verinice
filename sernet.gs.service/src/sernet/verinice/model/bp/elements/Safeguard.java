@@ -44,7 +44,7 @@ import sernet.verinice.model.common.TransactionAbortedException;
  */
 public class Safeguard extends CnATreeElement implements IBpElement, IIdentifiableElement, ITaggableElement {
 
-    private static final long serialVersionUID = 1700573165647518995L;
+    private static final long serialVersionUID = -3597661958061483411L;
 
     public static final String TYPE_ID = "bp_safeguard"; //$NON-NLS-1$
     private static final String PROP_ABBR = "bp_safeguard_abbr"; //$NON-NLS-1$
@@ -144,24 +144,31 @@ public class Safeguard extends CnATreeElement implements IBpElement, IIdentifiab
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), title);
     }
 
-    public String getQualifier() {
-        return getEntity().getPropertyValue(PROP_QUALIFIER);
-    }
-
-    public void setQualifier(String qualifier) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
-    }
-
+    /**
+     * @return The Security level level represented by property PROP_QUALIFIER
+     */
     public SecurityLevel getSecurityLevel() {
-        switch (getQualifier()) {
+        // Parsing the string as SecurityLevel should actually be done
+        // in Proceeding. But every class has different
+        // localization keys. If unique keys, e.g. "QUALIFIER_BASIC"
+        // would be used everywhere this code can and should be moved to
+        // SecurityLevel.ofLocalizationKey.
+        String qualifier = getEntity().getRawPropertyValue(PROP_QUALIFIER);
+        if (qualifier == null) {
+            return null;
+        }
+        switch (qualifier) {
         case PROP_QUALIFIER_BASIC:
             return SecurityLevel.BASIC;
         case PROP_QUALIFIER_STANDARD:
             return SecurityLevel.STANDARD;
         case PROP_QUALIFIER_HIGH:
             return SecurityLevel.HIGH;
+        case "":
+            return null;
+        default:
+            throw new IllegalStateException("Unknown security level '" + qualifier + "'");
         }
-        return null;
     }
 
     /**

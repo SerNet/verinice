@@ -45,7 +45,7 @@ import sernet.verinice.model.common.TransactionAbortedException;
  */
 public class BpRequirement extends CnATreeElement implements IBpElement, IIdentifiableElement, ITaggableElement {
 
-    private static final long serialVersionUID = 9093386480754485211L;
+    private static final long serialVersionUID = 6621062615495040741L;
 
     public static final String TYPE_ID = "bp_requirement"; //$NON-NLS-1$
 
@@ -175,45 +175,6 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), id);
     }
 
-    public String getQualifier() {
-        return getEntity().getPropertyValue(PROP_QUALIFIER);
-    }
-
-    public void setQualifier(String qualifier) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
-    }
-
-    /**
-     * @return The approach of securing. The approach is stored in the property
-     *         PROP_QUALIFIER.
-     */
-    public String getApproach() {
-        return getQualifier();
-    }
-
-    /**
-     * Sets the approach of securing. The approach is stored in the property
-     * PROP_QUALIFIER.
-     *
-     * @param approach
-     *            The approach of securing or qualifier
-     */
-    public void setApproach(String approach) {
-        setQualifier(approach);
-    }
-
-    public SecurityLevel getSecurityLevel() {
-        switch (getQualifier()) {
-        case PROP_QUALIFIER_BASIC:
-            return SecurityLevel.BASIC;
-        case PROP_QUALIFIER_STANDARD:
-            return SecurityLevel.STANDARD;
-        case PROP_QUALIFIER_HIGH:
-            return SecurityLevel.HIGH;
-        }
-        return null;
-    }
-
     /**
      * Stores the appropriate property value id to PROP_QUALIFIER.
      */
@@ -229,8 +190,35 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
         case HIGH:
             qualifier = PROP_QUALIFIER_HIGH;
             break;
+       }
+       getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
+    }
+
+    /**
+     * @return The Security level level represented by property PROP_QUALIFIER
+     */
+    public SecurityLevel getSecurityLevel() {
+        // Parsing the string as SecurityLevel should actually be done
+        // in Proceeding. But every class has different
+        // localization keys. If unique keys, e.g. "QUALIFIER_BASIC"
+        // would be used everywhere this code can and should be moved to
+        // SecurityLevel.ofLocalizationKey.
+        String qualifier = getEntity().getRawPropertyValue(PROP_QUALIFIER);
+        if (qualifier == null) {
+            return null;
         }
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
+        switch (qualifier) {
+        case PROP_QUALIFIER_BASIC:
+            return SecurityLevel.BASIC;
+        case PROP_QUALIFIER_STANDARD:
+            return SecurityLevel.STANDARD;
+        case PROP_QUALIFIER_HIGH:
+            return SecurityLevel.HIGH;
+        case "":
+            return null;
+        default:
+            throw new IllegalStateException("Unknown security level '" + qualifier + "'");
+        }
     }
 
     public void setDeductionOfImplementation(boolean active) {

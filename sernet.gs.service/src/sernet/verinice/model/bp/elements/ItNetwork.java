@@ -48,7 +48,7 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class ItNetwork extends CnATreeElement implements IBpElement, ITaggableElement, ITargetObject {
 
-    private static final long serialVersionUID = -5360371273283942792L;
+    private static final long serialVersionUID = 6531710922463646931L;
 
     public static final String TYPE_ID = "bp_itnetwork"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_itnetwork_name"; //$NON-NLS-1$
@@ -119,16 +119,8 @@ public class ItNetwork extends CnATreeElement implements IBpElement, ITaggableEl
         return TYPE_ID;
     }
 
-    public String getQualifier() {
-        return getEntity().getPropertyValue(PROP_QUALIFIER);
-    }
-
-    public void setQualifier(String qualifier) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
-    }
-
     /**
-     * @return The property PROP_QUALIFIER parsed as Proceeding.
+     * @return The Proceeding level represented by property PROP_QUALIFIER
      */
     public Proceeding getProceeding() {
         // Parsing the string as Proceeding should actually be done
@@ -136,7 +128,7 @@ public class ItNetwork extends CnATreeElement implements IBpElement, ITaggableEl
         // localization keys. If unique keys, e.g. "QUALIFIER_BASIC"
         // would be used everywhere this code can and should be moved to
         // Proceeding.ofLocalizationKey.
-        String qualifier = getQualifier();
+        String qualifier = getEntity().getRawPropertyValue(PROP_QUALIFIER);
         if (qualifier == null) {
             return null;
         }
