@@ -47,6 +47,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.BpDocument;
 import sernet.verinice.model.bp.elements.BpIncident;
@@ -91,7 +92,7 @@ public class BaseProtectionFilterDialog extends Dialog {
 
     private Set<ImplementationStatus> selectedImplementationStatus;
 
-    private Set<Qualifier> selectedQualifiers;
+    private Set<SecurityLevel> selectedSecurityLevels;
 
     private Set<String> selectedElementTypes;
 
@@ -105,13 +106,13 @@ public class BaseProtectionFilterDialog extends Dialog {
 
     public BaseProtectionFilterDialog(Shell parentShell,
             Set<ImplementationStatus> selectedImplementationStatus,
-            Set<Qualifier> selectedQualifiers,
+            Set<SecurityLevel> selectedSecurityLevels,
             Set<String> selectedElementTypes, Set<String> selectedTags,
             boolean applyTagFilterToItNetworks, boolean hideEmptyGroups, boolean hideEmptyGroupsByDefault) {
         super(parentShell);
         this.hideEmptyGroupsByDefault = hideEmptyGroupsByDefault;
         this.selectedImplementationStatus = new HashSet<>(selectedImplementationStatus);
-        this.selectedQualifiers = new HashSet<>(selectedQualifiers);
+        this.selectedSecurityLevels = new HashSet<>(selectedSecurityLevels);
         this.selectedElementTypes = new HashSet<>(selectedElementTypes);
         this.selectedTags = new HashSet<>(selectedTags);
         this.applyTagFilterToItNetworks = applyTagFilterToItNetworks;
@@ -126,7 +127,7 @@ public class BaseProtectionFilterDialog extends Dialog {
 
     /**
      * Create contents of the dialog.
-     * 
+     *
      * @param parent
      */
     @Override
@@ -171,16 +172,22 @@ public class BaseProtectionFilterDialog extends Dialog {
         boxesComposite.setText(Messages.BaseProtectionFilterDialog_Qualifier);
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1);
         boxesComposite.setLayoutData(gridData);
-        GridLayout layout = new GridLayout(Qualifier.values().length, false);
+        GridLayout layout = new GridLayout(SecurityLevel.values().length + 1, false);
         boxesComposite.setLayout(layout);
 
-        for (final Qualifier qualifier : Qualifier.values()) {
-            final Button button = new Button(boxesComposite, SWT.CHECK);
-            button.setText(qualifier.getLabel());
-            button.setSelection(selectedQualifiers.contains(qualifier));
-            button.setData(qualifier);
-            qualifierButtons.add(button);
+        for (final SecurityLevel qualifier : SecurityLevel.values()) {
+            addButton(boxesComposite, qualifier);
         }
+        addButton(boxesComposite, null);
+    }
+
+    private void addButton(Group boxesComposite, final SecurityLevel qualifier) {
+        final Button button = new Button(boxesComposite, SWT.CHECK);
+        button.setText(qualifier == null ? Messages.BaseProtectionFilterDialog_Property_Value_Null
+                : qualifier.getLabel());
+        button.setSelection(selectedSecurityLevels.contains(qualifier));
+        button.setData(qualifier);
+        qualifierButtons.add(button);
     }
 
     private void addElementTypesGroup(Composite container) {
@@ -273,7 +280,7 @@ public class BaseProtectionFilterDialog extends Dialog {
 
     /**
      * Create contents of the button bar.
-     * 
+     *
      * @param parent
      */
     @Override
@@ -307,10 +314,10 @@ public class BaseProtectionFilterDialog extends Dialog {
                 selectedImplementationStatus.add((ImplementationStatus) button.getData());
             }
         }
-        selectedQualifiers.clear();
+        selectedSecurityLevels.clear();
         for (Button button : qualifierButtons) {
             if (button.getSelection()) {
-                selectedQualifiers.add((Qualifier) button.getData());
+                selectedSecurityLevels.add((SecurityLevel) button.getData());
             }
         }
 
@@ -337,8 +344,8 @@ public class BaseProtectionFilterDialog extends Dialog {
         return Collections.unmodifiableSet(selectedImplementationStatus);
     }
 
-    public Set<Qualifier> getSelectedQualifiers() {
-        return Collections.unmodifiableSet(selectedQualifiers);
+    public Set<SecurityLevel> getSelectedSecurityLevels() {
+        return Collections.unmodifiableSet(selectedSecurityLevels);
     }
 
     public Set<String> getSelectedElementTypes() {

@@ -30,6 +30,7 @@ import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.Reevaluator;
+import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.AbstractLinkChangeListener;
 import sernet.verinice.model.common.CascadingTransaction;
@@ -44,7 +45,7 @@ import sernet.verinice.model.common.TransactionAbortedException;
  */
 public class BpRequirement extends CnATreeElement implements IBpElement, IIdentifiableElement, ITaggableElement {
 
-    private static final long serialVersionUID = 436541703079680979L;
+    private static final long serialVersionUID = 6621062615495040741L;
 
     public static final String TYPE_ID = "bp_requirement"; //$NON-NLS-1$
 
@@ -53,14 +54,17 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
     public static final String PROP_NAME = "bp_requirement_name"; //$NON-NLS-1$
     public static final String PROP_ID = "bp_requirement_id"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_requirement_tag"; //$NON-NLS-1$
-    public static final String PROP_QUALIFIER = "bp_requirement_qualifier"; //$NON-NLS-1$
     public static final String PROP_LAST_CHANGE = "bp_requirement_last_change"; //$NON-NLS-1$
     public static final String PROP_CONFIDENTIALITY = "bp_requirement_value_method_confidentiality";//$NON-NLS-1$
     public static final String PROP_INTEGRITY = "bp_requirement_value_method_integrity";//$NON-NLS-1$
     public static final String PROP_AVAILABILITY = "bp_requirement_value_method_availability";//$NON-NLS-1$
-    public static final String PROP_QUALIFIER_BASIC = "bp_requirement_qualifier_basic"; //$NON-NLS-1$
-    public static final String PROP_QUALIFIER_STANDARD = "bp_requirement_qualifier_standard"; //$NON-NLS-1$
-    public static final String PROP_QUALIFIER_HIGH = "bp_requirement_qualifier_high"; //$NON-NLS-1$
+    public static final String PROP_QUALIFIER = "bp_requirement_qualifier"; //$NON-NLS-1$
+    // These keys shall not be used for localization but only to identify which
+    // ENUM value shall be used. Use the ENUMs getLabel() instead.
+    private static final String PROP_QUALIFIER_BASIC = "bp_requirement_qualifier_basic"; //$NON-NLS-1$
+    private static final String PROP_QUALIFIER_STANDARD = "bp_requirement_qualifier_standard"; //$NON-NLS-1$
+    private static final String PROP_QUALIFIER_HIGH = "bp_requirement_qualifier_high"; //$NON-NLS-1$
+
     public static final String PROP_IMPLEMENTATION_DEDUCE = "bp_requirement_implementation_deduce"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS = "bp_requirement_implementation_status"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS_NO = "bp_requirement_implementation_status_no"; //$NON-NLS-1$
@@ -171,31 +175,50 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), id);
     }
 
-    public String getQualifier() {
-        return getEntity().getPropertyValue(PROP_QUALIFIER);
-    }
-
-    public void setQualifier(String qualifier) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
+    /**
+     * Stores the appropriate property value id to PROP_QUALIFIER.
+     */
+    public void setSecurityLevel(SecurityLevel level) {
+        String qualifier = null;
+        switch (level) {
+        case BASIC:
+            qualifier = PROP_QUALIFIER_BASIC;
+            break;
+        case STANDARD:
+            qualifier = PROP_QUALIFIER_STANDARD;
+            break;
+        case HIGH:
+            qualifier = PROP_QUALIFIER_HIGH;
+            break;
+       }
+       getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
     }
 
     /**
-     * @return The approach of securing. The approach is stored in the property
-     *         PROP_QUALIFIER.
+     * @return The Security level level represented by property PROP_QUALIFIER
      */
-    public String getApproach() {
-        return getQualifier();
-    }
-
-    /**
-     * Sets the approach of securing. The approach is stored in the property
-     * PROP_QUALIFIER.
-     * 
-     * @param approach
-     *            The approach of securing or qualifier
-     */
-    public void setApproach(String approach) {
-        setQualifier(approach);
+    public SecurityLevel getSecurityLevel() {
+        // Parsing the string as SecurityLevel should actually be done
+        // in Proceeding. But every class has different
+        // localization keys. If unique keys, e.g. "QUALIFIER_BASIC"
+        // would be used everywhere this code can and should be moved to
+        // SecurityLevel.ofLocalizationKey.
+        String qualifier = getEntity().getRawPropertyValue(PROP_QUALIFIER);
+        if (qualifier == null) {
+            return null;
+        }
+        switch (qualifier) {
+        case PROP_QUALIFIER_BASIC:
+            return SecurityLevel.BASIC;
+        case PROP_QUALIFIER_STANDARD:
+            return SecurityLevel.STANDARD;
+        case PROP_QUALIFIER_HIGH:
+            return SecurityLevel.HIGH;
+        case "":
+            return null;
+        default:
+            throw new IllegalStateException("Unknown security level '" + qualifier + "'");
+        }
     }
 
     public void setDeductionOfImplementation(boolean active) {

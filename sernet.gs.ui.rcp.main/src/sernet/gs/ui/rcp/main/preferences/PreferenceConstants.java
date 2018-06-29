@@ -17,8 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
+import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.rcp.search.SearchView;
-import sernet.verinice.service.commands.bp.Proceeding;
 
 /**
  * Constant definitions for plug-in preferences
@@ -102,9 +102,9 @@ public class PreferenceConstants {
     public static final String BP_MODEL_SAFEGUARDS = "bp_model_safeguards";
     public static final String BP_MODEL_DUMMY_SAFEGUARDS = "bp_model_dummy_safeguards";
 
-    public static final String BP_PROCEEDING_BASIC = Proceeding.BASIC.toString();
-    public static final String BP_PROCEEDING_STANDARD = Proceeding.STANDARD.toString();
-    public static final String BP_PROCEEDING_HIGH = Proceeding.HIGH.toString();
+    public static final String BP_PROCEEDING_BASIC = Proceeding.BASIC.name();
+    public static final String BP_PROCEEDING_STANDARD = Proceeding.STANDARD.name();
+    public static final String BP_PROCEEDING_CORE = Proceeding.CORE.name();
 
     public static final String OPERATION_MODE = "gs_cna_operationmode";
     public static final String OPERATION_MODE_INTERNAL_SERVER = "gs_cna_operationmode_standalone";

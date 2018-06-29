@@ -27,11 +27,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -43,35 +45,35 @@ import sernet.verinice.service.bp.exceptions.BpModelingException;
  * information group. Supported types of target objects are: IT networks,
  * business processes, other/IoT systems, ICS systems, IT systems, networks and
  * rooms.
- * 
+ *
  * Modeling process:
- * 
+ *
  * Modules / Requirements
- * 
+ *
  * The module and all requirements in the module are copied from the ITBP
  * Compendium to the information network. The module is copied and pasted as
  * child of the element.
- * 
+ *
  * Safeguards (optional)
- * 
+ *
  * If there is a safeguard for a requirement in the compendium, optional the
  * safeguard is copied to the information network and pasted as child of the
  * element. Optional dummy safeguards are created if no safeguard is linked to a
  * requirement in compendium.
- * 
+ *
  * Elemental threats
- * 
+ *
  * If there is a elemental threats for a requirement in the compendium, the
  * threat is copied to the information network. The group structure of the
  * threats from the compendium is retained in the information network. Threats
  * and groups are only created once in the IT network.
- * 
+ *
  * Links
- * 
+ *
  * Links are generated from the target object to requirements. Links are
  * generated from the target object to all threats associated with the
  * requirements.
- * 
+ *
  * Links of modeled requirements are created according to the links in the
  * compendium. Two links are created: Requirement to safeguard and requirement
  * to elemental threat if the relevant objects exist.
@@ -96,7 +98,7 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     private boolean handleSafeguards = true;
     private boolean handleDummySafeguards = true;
-    private Proceeding proceeding = Proceeding.STANDARD;
+    private @NonNull Proceeding proceeding = Proceeding.STANDARD;
 
     // Return values
     private String proceedingLable;
@@ -264,7 +266,7 @@ public class ModelCommand extends ChangeLoggingCommand {
         this.proceedingLable = proceedingLable;
     }
 
-    public void setProceeding(Proceeding proceeding) {
+    public void setProceeding(@NonNull Proceeding proceeding) {
         this.proceeding = proceeding;
     }
 

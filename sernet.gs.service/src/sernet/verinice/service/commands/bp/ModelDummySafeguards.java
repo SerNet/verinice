@@ -21,11 +21,9 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -34,6 +32,7 @@ import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
@@ -54,17 +53,6 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
     private static final long serialVersionUID = -7408967723722365794L;
 
     private static final Logger LOG = Logger.getLogger(ModelDummySafeguards.class);
-
-    private static final Map<String, String> REQUIREMENT_SAFEGUARD_QUALIFIER = new HashMap<>();
-
-    static {
-        REQUIREMENT_SAFEGUARD_QUALIFIER.put(BpRequirement.PROP_QUALIFIER_BASIC,
-                Safeguard.PROP_QUALIFIER_BASIC);
-        REQUIREMENT_SAFEGUARD_QUALIFIER.put(BpRequirement.PROP_QUALIFIER_STANDARD,
-                Safeguard.PROP_QUALIFIER_STANDARD);
-        REQUIREMENT_SAFEGUARD_QUALIFIER.put(BpRequirement.PROP_QUALIFIER_HIGH,
-                Safeguard.PROP_QUALIFIER_HIGH);
-    }
 
     private Set<String> moduleUuidsFromScope;
     private Set<String> safeguardGroupUuidsFromScope;
@@ -166,8 +154,7 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
         createElement = getCommandService().executeCommand(createElement);
         Safeguard safeguard = createElement.getNewElement();
         safeguard.setIdentifier(getSafeguardForRequirementIdentifier(requirement.getIdentifier()));
-        safeguard.setQualifier(getSafeguardForRequirementQualifier(
-                requirement.getEntity().getRawPropertyValue(BpRequirement.PROP_QUALIFIER)));
+        safeguard.setSecurityLevel(requirement.getSecurityLevel());
         safeguard = (Safeguard) getMetaDao().save(safeguard);
         return safeguard;
     }
@@ -230,10 +217,6 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
 
     private String getSafeguardForRequirementIdentifier(String identifier) {
         return identifier.replace(".A", ".M"); //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    private String getSafeguardForRequirementQualifier(String qualifier) {
-        return REQUIREMENT_SAFEGUARD_QUALIFIER.get(qualifier);
     }
 
     @Override

@@ -27,6 +27,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 
 import sernet.gs.service.NumericStringCollator;
+import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.BpDocument;
 import sernet.verinice.model.bp.elements.BpIncident;
@@ -68,11 +69,6 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class BaseProtectionTreeSorter extends ViewerSorter {
     private static Map<String, Integer> typeSortCategoryMap = new HashMap<>();
-
-    //TODO: when the qualifier will be a number (an option) we do not need this anymore
-    private static final String HIGH = "high";
-    private static final String STANDARD = "standard";
-    private static final String BASIC = "basic";
 
     static {
         // Sort order of groups in IT network
@@ -128,34 +124,17 @@ public class BaseProtectionTreeSorter extends ViewerSorter {
     public int compare(Viewer viewer, Object o1, Object o2) {
         int result = 0;
         if (o1 instanceof Safeguard && o2 instanceof Safeguard) {
-            Safeguard sg1 = (Safeguard) o1;
-            Safeguard sg2 = (Safeguard) o2;
-            result = quallifierToValue(Safeguard.PROP_QUALIFIER, sg1)
-                    - quallifierToValue(Safeguard.PROP_QUALIFIER, sg2);
+            SecurityLevel sl1 = ((Safeguard) o1).getSecurityLevel();
+            SecurityLevel sl2 = ((Safeguard) o2).getSecurityLevel();
+            result = SecurityLevel.compare(sl1, sl2);
         } else if (o1 instanceof BpRequirement && o2 instanceof BpRequirement) {
-            BpRequirement br1 = (BpRequirement) o1;
-            BpRequirement br2 = (BpRequirement) o2;
-            result = quallifierToValue(BpRequirement.PROP_QUALIFIER, br1)
-                    - quallifierToValue(BpRequirement.PROP_QUALIFIER, br2);
+            SecurityLevel sl1 = ((BpRequirement) o1).getSecurityLevel();
+            SecurityLevel sl2 = ((BpRequirement) o2).getSecurityLevel();
+            result = SecurityLevel.compare(sl1, sl2);
         }
         if (result == 0) {
             result = super.compare(viewer, o1, o2);
         }
         return result;
-    }
-
-    private int quallifierToValue(String qualifier, CnATreeElement e) {
-        String propertyValue = e.getEntity().getRawPropertyValue(qualifier);
-        if (propertyValue == null) {
-            return 0;
-        }
-        if (propertyValue.contains(BASIC)) {
-            return 1;
-        } else if (propertyValue.contains(STANDARD)) {
-            return 2;
-        } else if (propertyValue.contains(HIGH)) {
-            return 3;
-        }
-        return 0;
     }
 }

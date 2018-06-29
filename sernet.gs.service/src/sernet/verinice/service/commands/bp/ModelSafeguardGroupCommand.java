@@ -24,7 +24,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 
+import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
@@ -45,10 +47,10 @@ public class ModelSafeguardGroupCommand extends ModelCopyCommand {
 
     private Set<String> moduleUuids;
     private transient Set<CnATreeElement> safeguardGroupsFromCompendium;
-    private Proceeding proceeding;
+    private @NonNull Proceeding proceeding;
 
     public ModelSafeguardGroupCommand(Set<String> moduleUuids, Set<CnATreeElement> targetElements,
-            Proceeding proceeding) {
+            @NonNull Proceeding proceeding) {
         super();
         this.moduleUuids = moduleUuids;
         this.targetElements = targetElements;
