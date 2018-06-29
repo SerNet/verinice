@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
@@ -97,7 +98,7 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     private boolean handleSafeguards = true;
     private boolean handleDummySafeguards = true;
-    private Proceeding proceeding = Proceeding.STANDARD;
+    private @NonNull Proceeding proceeding = Proceeding.STANDARD;
 
     // Return values
     private String proceedingLable;
@@ -265,7 +266,7 @@ public class ModelCommand extends ChangeLoggingCommand {
         this.proceedingLable = proceedingLable;
     }
 
-    public void setProceeding(Proceeding proceeding) {
+    public void setProceeding(@NonNull Proceeding proceeding) {
         this.proceeding = proceeding;
     }
 

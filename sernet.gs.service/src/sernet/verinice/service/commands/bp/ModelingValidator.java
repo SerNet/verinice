@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
@@ -53,7 +55,7 @@ public final class ModelingValidator {
      * @return true if the CnATreeElement is valid, false if not
      */
     public static boolean isRequirementValid(CnATreeElement requirement,
-            Proceeding proceeding) {
+            @NonNull Proceeding proceeding) {
         if (BpRequirement.isBpRequirement(requirement)) {
             BpRequirement r = (BpRequirement) requirement;
             return proceeding.requires(r.getSecurityLevel());
@@ -73,7 +75,7 @@ public final class ModelingValidator {
      * @return true if the CnATreeElement is valid, false if not
      */
     public static boolean isSafeguardValid(CnATreeElement safeguard,
-            Proceeding proceeding) {
+            @NonNull Proceeding proceeding) {
         if (Safeguard.isSafeguard(safeguard)) {
             Safeguard s = (Safeguard) safeguard;
             return proceeding.requires(s.getSecurityLevel());

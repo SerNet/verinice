@@ -29,6 +29,7 @@ import java.util.Set;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.Viewer;
@@ -53,6 +54,7 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.iso27k.rcp.action.DropPerformer;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
+import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.BusinessProcess;
 import sernet.verinice.model.bp.elements.Device;
@@ -115,8 +117,11 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
             if (log.isDebugEnabled()) {
                 logParameter(draggedModules, targetElement);
             }
-            if (isValid(draggedModules)) {
-                startModelingByProgressService(draggedModules);
+            Proceeding proceeding = Preferences.getBpProceeding();
+            if (proceeding == null) {
+                showModelingError(Messages.BbModelingDropPerformer_noSecuringApproach);
+            } else if (isValid(draggedModules)) {
+                startModelingByProgressService(draggedModules, proceeding);
                 showConfirmationDialog();
             }
             return true;
@@ -132,8 +137,8 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         }
     }
 
-    private void startModelingByProgressService(final List<CnATreeElement> draggedModules)
-            throws InvocationTargetException, InterruptedException {
+    private void startModelingByProgressService(final List<CnATreeElement> draggedModules,
+            @NonNull Proceeding proceeding) throws InvocationTargetException, InterruptedException {
         closeEditors();
         PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
             @Override
@@ -142,7 +147,7 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
                 try {
                     monitor.beginTask(getTaskMessage(draggedModules, targetElement),
                             IProgressMonitor.UNKNOWN);
-                    modelModulesAndElement(draggedModules, targetElement);
+                    modelModulesAndElement(draggedModules, targetElement, proceeding);
                     monitor.done();
                 } catch (CommandException e) {
                     showError(e, Messages.BbModelingDropPerformer_Error0);
@@ -151,22 +156,23 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         });
     }
 
-    private void modelModulesAndElement(List<CnATreeElement> draggedModules, CnATreeElement element)
-            throws CommandException {
+    private void modelModulesAndElement(List<CnATreeElement> draggedModules, CnATreeElement element,
+            @NonNull Proceeding proceeding) throws CommandException {
         Set<String> compendiumUuids = new HashSet<>(draggedModules.size());
         for (CnATreeElement module : draggedModules) {
             compendiumUuids.add(module.getUuid());
         }
-        executeModelCommand(compendiumUuids, Collections.singletonList(element.getUuid()));
+        executeModelCommand(compendiumUuids, Collections.singletonList(element.getUuid()),
+                proceeding);
         CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
     }
 
-    private void executeModelCommand(Set<String> compendiumUuids, List<String> targetUuids)
-            throws CommandException {
+    private void executeModelCommand(Set<String> compendiumUuids, List<String> targetUuids,
+            @NonNull Proceeding proceeding) throws CommandException {
         modelCommand = new ModelCommand(compendiumUuids, targetUuids);
         modelCommand.setHandleSafeguards(Preferences.isModelSafeguardsActive());
         modelCommand.setHandleDummySafeguards(Preferences.isModelDummySafeguardsActive());
-        modelCommand.setProceeding(Preferences.getBpProceeding());
+        modelCommand.setProceeding(proceeding);
         modelCommand = getCommandService().executeCommand(modelCommand);
         CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
     }
@@ -174,10 +180,6 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
     private boolean isValid(List<CnATreeElement> draggedModules) {
         if (draggedModules == null || draggedModules.isEmpty()) {
             log.warn("List of dragged modules is empty. Can not model element."); //$NON-NLS-1$
-            return false;
-        }
-        if (Preferences.getBpProceeding() == null) {
-            showModelingError(Messages.BbModelingDropPerformer_noSecuringApproach);
             return false;
         }
         return true;
