@@ -30,6 +30,7 @@ import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.Reevaluator;
+import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.AbstractLinkChangeListener;
 import sernet.verinice.model.common.CascadingTransaction;
@@ -196,6 +197,37 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
      */
     public void setApproach(String approach) {
         setQualifier(approach);
+    }
+
+    public SecurityLevel getSecurityLevel() {
+        switch (getQualifier()) {
+        case PROP_QUALIFIER_BASIC:
+            return SecurityLevel.BASIC;
+        case PROP_QUALIFIER_STANDARD:
+            return SecurityLevel.STANDARD;
+        case PROP_QUALIFIER_HIGH:
+            return SecurityLevel.HIGH;
+        }
+        return null;
+    }
+
+    /**
+     * Stores the appropriate property value id to PROP_QUALIFIER.
+     */
+    public void setSecurityLevel(SecurityLevel level) {
+        String qualifier = null;
+        switch (level) {
+        case BASIC:
+            qualifier = PROP_QUALIFIER_BASIC;
+            break;
+        case STANDARD:
+            qualifier = PROP_QUALIFIER_STANDARD;
+            break;
+        case HIGH:
+            qualifier = PROP_QUALIFIER_HIGH;
+            break;
+        }
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
     }
 
     public void setDeductionOfImplementation(boolean active) {
