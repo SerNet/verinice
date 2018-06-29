@@ -37,7 +37,9 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.SecurityLevel;
+import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementFilter;
@@ -241,8 +243,14 @@ public class BaseProtectionFilterAction extends Action {
             if (!hideEmptyGroups && element instanceof Group || element instanceof ItNetwork) {
                 return true;
             }
-            SecurityLevel qualifier = SecurityLevel.findValue((CnATreeElement) element);
-            return qualifier != null && selectedSecurityLevels.contains(qualifier);
+            if (element instanceof Safeguard) {
+                return selectedSecurityLevels.contains(((Safeguard) element).getSecurityLevel());
+            }
+            if (element instanceof BpRequirement) {
+                return selectedSecurityLevels
+                        .contains(((BpRequirement) element).getSecurityLevel());
+            }
+            return false;
         }
     }
 

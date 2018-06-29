@@ -17,11 +17,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -37,6 +37,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.model.bp.IBpGroup;
+import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
@@ -1030,9 +1031,9 @@ public class BpImporter {
             String lastChange, Safeguard safeguard) throws CreateBPElementException {
         safeguard.setIdentifier(bsiSafeguard.getIdentifier());
 
-        String qualifierOptionValue = getSafeguardQualifierOptionValue(qualifier);
+        SecurityLevel securityLevel = getSecurityLevelFromQualifier(qualifier);
 
-        safeguard.setQualifier(qualifierOptionValue);
+        safeguard.setSecurityLevel(securityLevel);
         safeguard.setTitle(bsiSafeguard.getTitle());
         safeguard.setLastChange(getBSIDate(lastChange));
         safeguard.setIsAffectsConfidentiality(
@@ -1056,26 +1057,15 @@ public class BpImporter {
         return safeguard;
     }
 
-    private String getSafeguardQualifierOptionValue(String qualifier) {
+    private SecurityLevel getSecurityLevelFromQualifier(String qualifier) {
         if ("BASIC".equals(qualifier)) {
-            return Safeguard.PROP_QUALIFIER_BASIC;
+            return SecurityLevel.BASIC;
         } else if ("STANDARD".equals(qualifier)) {
-            return Safeguard.PROP_QUALIFIER_STANDARD;
+            return SecurityLevel.STANDARD;
         } else if ("HIGH".equals(qualifier) || "HOCH".equals(qualifier)) {
-            return Safeguard.PROP_QUALIFIER_HIGH;
+            return SecurityLevel.HIGH;
         }
-        return "";
-    }
-
-    private String getRequirementQualifierOptionValue(String qualifier) {
-        if ("BASIC".equals(qualifier)) {
-            return BpRequirement.PROP_QUALIFIER_BASIC;
-        } else if ("STANDARD".equals(qualifier)) {
-            return BpRequirement.PROP_QUALIFIER_STANDARD;
-        } else if ("HIGH".equals(qualifier) || "HOCH".equals(qualifier)) {
-            return BpRequirement.PROP_QUALIFIER_HIGH;
-        }
-        return "";
+        return null;
     }
 
     /**
@@ -1213,9 +1203,9 @@ public class BpImporter {
             veriniceRequirement.setObjectBrowserDescription(HtmlHelper.getAnyElementDescription(
                     title.trim(), -1, -1, -1, bsiRequirement.getDescription().getAny()));
 
-            String qualifierOptionValue = getRequirementQualifierOptionValue(qualifier);
+            SecurityLevel level = getSecurityLevelFromQualifier(qualifier);
 
-            veriniceRequirement.setQualifier(qualifierOptionValue);
+            veriniceRequirement.setSecurityLevel(level);
             addedReqs.put(bsiRequirement.getIdentifier(), veriniceRequirement);
             return (BpRequirement) updateElement(veriniceRequirement);
         } else {

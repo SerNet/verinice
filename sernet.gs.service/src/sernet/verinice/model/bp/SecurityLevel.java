@@ -18,37 +18,12 @@
  ******************************************************************************/
 package sernet.verinice.model.bp;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
-import sernet.verinice.model.bp.elements.BpRequirement;
-import sernet.verinice.model.bp.elements.Safeguard;
-import sernet.verinice.model.common.CnATreeElement;
-
 /**
  * The security level for basic protection (BP) requirements, safeguards etc.
  */
 public enum SecurityLevel {
 
     BASIC, STANDARD, HIGH;
-
-    private static final Map<String, SecurityLevel> qualifiersByPropertyValue;
-    static {
-        Map<String, SecurityLevel> m = new HashMap<>();
-        m.put(Safeguard.PROP_QUALIFIER_BASIC, BASIC);
-        m.put(BpRequirement.PROP_QUALIFIER_BASIC, BASIC);
-
-        m.put(Safeguard.PROP_QUALIFIER_STANDARD, STANDARD);
-        m.put(BpRequirement.PROP_QUALIFIER_STANDARD, STANDARD);
-        m.put(Safeguard.PROP_QUALIFIER_HIGH, HIGH);
-        m.put(BpRequirement.PROP_QUALIFIER_HIGH, HIGH);
-
-        m.put(null, null);
-        m.put("", null);
-
-        qualifiersByPropertyValue = Collections.unmodifiableMap(m);
-    }
 
     private String label;
 
@@ -61,29 +36,18 @@ public enum SecurityLevel {
     }
 
     /**
-     * Find the qualifier of an element. If the given element does not support a
-     * qualifier or if the qualifier is an unknown/custom value, the method will
-     * return <code>null</code>. If the element supports but does not have a
-     * qualifier, the method will return {@link SecurityLevel#PRISTINE}.
-     *
-     * @param element
-     *            the element
-     * @return the appropriate qualifier or <code>null</code> for unsupported
-     *         element types
+     * Compare security levels null safe. null is defined to be the smallest
+     * value.
      */
-
-    public static SecurityLevel findValue(CnATreeElement element) {
-        String qualifier;
-
-        if (element instanceof Safeguard) {
-            qualifier = ((Safeguard) element).getEntity()
-                    .getRawPropertyValue(Safeguard.PROP_QUALIFIER);
-        } else if (element instanceof BpRequirement) {
-            qualifier = ((BpRequirement) element).getEntity()
-                    .getRawPropertyValue(BpRequirement.PROP_QUALIFIER);
+    public static int compare(SecurityLevel sl1, SecurityLevel sl2) {
+        if (sl1 == sl2) {
+            return 0;
+        } else if (sl1 == null) {
+            return -1;
+        } else if (sl2 == null) {
+            return 1;
         } else {
-            return null;
+            return sl1.compareTo(sl2);
         }
-        return qualifiersByPropertyValue.get(qualifier);
     }
 }

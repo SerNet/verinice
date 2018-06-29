@@ -19,8 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
-import org.apache.log4j.Logger;
-
 import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
@@ -35,8 +33,6 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
 public final class ModelingValidator {
-
-    private static final Logger LOG = Logger.getLogger(ModelingValidator.class);
 
     /**
      * Don't instantiate this class, use public static methods.
@@ -58,8 +54,11 @@ public final class ModelingValidator {
      */
     public static boolean isRequirementValid(CnATreeElement requirement,
             Proceeding proceeding) {
-        return BpRequirement.isBpRequirement(requirement)
-                && isRequirementValidTypeSafe((BpRequirement) requirement, proceeding);
+        if (BpRequirement.isBpRequirement(requirement)) {
+            BpRequirement r = (BpRequirement) requirement;
+            return proceeding.requires(r.getSecurityLevel());
+        }
+        return false;
     }
 
     /**
@@ -75,53 +74,10 @@ public final class ModelingValidator {
      */
     public static boolean isSafeguardValid(CnATreeElement safeguard,
             Proceeding proceeding) {
-        return Safeguard.isSafeguard(safeguard)
-                && isSafeguardValidTypeSafe((Safeguard) safeguard, proceeding);
-    }
-
-    private static boolean isSafeguardValidTypeSafe(Safeguard requirement,
-            Proceeding proceeding) {
-        String proceedingOfSafeguard = requirement.getEntity()
-                .getRawPropertyValue(Safeguard.PROP_QUALIFIER);
-        if (proceeding == null) {
-            return true;
+        if (Safeguard.isSafeguard(safeguard)) {
+            Safeguard s = (Safeguard) safeguard;
+            return proceeding.requires(s.getSecurityLevel());
         }
-
-        switch (proceeding) {
-        case BASIC:
-            return Safeguard.PROP_QUALIFIER_BASIC.equals(proceedingOfSafeguard);
-        case STANDARD:
-            return true;
-        case CORE:
-            return true;
-        default: {
-            // Proceeding is unknown, accept the requirement anyway
-            LOG.info("Unknown proceeding of securing: " + proceeding);
-            return true;
-        }
-        }
-    }
-
-    private static boolean isRequirementValidTypeSafe(BpRequirement requirement,
-            Proceeding proceeding) {
-        String proceedingOfRequirement = requirement.getEntity()
-                .getRawPropertyValue(BpRequirement.PROP_QUALIFIER);
-        if (proceeding == null) {
-            return true;
-        }
-
-        switch (proceeding) {
-        case BASIC:
-            return BpRequirement.PROP_QUALIFIER_BASIC.equals(proceedingOfRequirement);
-        case STANDARD:
-            return true;
-        case CORE:
-            return true;
-        default: {
-            // Proceeding is unknown, accept the requirement anyway
-            LOG.info("Unknown proceeding of securing: " + proceeding);
-            return true;
-            }
-        }
+        return false;
     }
 }
