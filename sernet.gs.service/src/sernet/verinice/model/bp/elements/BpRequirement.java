@@ -45,7 +45,7 @@ import sernet.verinice.model.common.TransactionAbortedException;
  */
 public class BpRequirement extends CnATreeElement implements IBpElement, IIdentifiableElement, ITaggableElement {
 
-    private static final long serialVersionUID = 436541703079680979L;
+    private static final long serialVersionUID = 9093386480754485211L;
 
     public static final String TYPE_ID = "bp_requirement"; //$NON-NLS-1$
 
@@ -54,14 +54,17 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
     public static final String PROP_NAME = "bp_requirement_name"; //$NON-NLS-1$
     public static final String PROP_ID = "bp_requirement_id"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_requirement_tag"; //$NON-NLS-1$
-    public static final String PROP_QUALIFIER = "bp_requirement_qualifier"; //$NON-NLS-1$
     public static final String PROP_LAST_CHANGE = "bp_requirement_last_change"; //$NON-NLS-1$
     public static final String PROP_CONFIDENTIALITY = "bp_requirement_value_method_confidentiality";//$NON-NLS-1$
     public static final String PROP_INTEGRITY = "bp_requirement_value_method_integrity";//$NON-NLS-1$
     public static final String PROP_AVAILABILITY = "bp_requirement_value_method_availability";//$NON-NLS-1$
-    public static final String PROP_QUALIFIER_BASIC = "bp_requirement_qualifier_basic"; //$NON-NLS-1$
-    public static final String PROP_QUALIFIER_STANDARD = "bp_requirement_qualifier_standard"; //$NON-NLS-1$
-    public static final String PROP_QUALIFIER_HIGH = "bp_requirement_qualifier_high"; //$NON-NLS-1$
+    public static final String PROP_QUALIFIER = "bp_requirement_qualifier"; //$NON-NLS-1$
+    // These keys shall not be used for localization but only to identify which
+    // ENUM value shall be used. Use the ENUMs getLabel() instead.
+    private static final String PROP_QUALIFIER_BASIC = "bp_requirement_qualifier_basic"; //$NON-NLS-1$
+    private static final String PROP_QUALIFIER_STANDARD = "bp_requirement_qualifier_standard"; //$NON-NLS-1$
+    private static final String PROP_QUALIFIER_HIGH = "bp_requirement_qualifier_high"; //$NON-NLS-1$
+
     public static final String PROP_IMPLEMENTATION_DEDUCE = "bp_requirement_implementation_deduce"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS = "bp_requirement_implementation_status"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS_NO = "bp_requirement_implementation_status_no"; //$NON-NLS-1$

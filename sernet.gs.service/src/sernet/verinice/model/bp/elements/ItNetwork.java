@@ -48,16 +48,18 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class ItNetwork extends CnATreeElement implements IBpElement, ITaggableElement, ITargetObject {
 
-    private static final long serialVersionUID = -542743048413632420L;
+    private static final long serialVersionUID = -5360371273283942792L;
 
     public static final String TYPE_ID = "bp_itnetwork"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_itnetwork_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_itnetwork_tag"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER = "bp_itnetwork_qualifier"; //$NON-NLS-1$
-    public static final String PROP_QUALIFIER_BASIC = "bp_itnetwork_qualifier_basic"; //$NON-NLS-1$
-    public static final String PROP_QUALIFIER_STANDARD = "bp_itnetwork_qualifier_standard"; //$NON-NLS-1$
+    // These keys shall not be used for localization but only to identify which
+    // ENUM value shall be used. Use the ENUMs getLabel() instead.
+    private static final String PROP_QUALIFIER_BASIC = "bp_itnetwork_qualifier_basic"; //$NON-NLS-1$
+    private static final String PROP_QUALIFIER_STANDARD = "bp_itnetwork_qualifier_standard"; //$NON-NLS-1$
     // the right hand side has to stay "_high" until a proper db-migration has been added
-    public static final String PROP_QUALIFIER_CORE = "bp_itnetwork_qualifier_high"; //$NON-NLS-1$
+    private static final String PROP_QUALIFIER_CORE = "bp_itnetwork_qualifier_high"; //$NON-NLS-1$
 
     protected ItNetwork() {}
 
