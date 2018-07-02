@@ -156,8 +156,8 @@ public class ModelCommand extends ChangeLoggingCommand {
     }
 
     private void handleThreats() throws CommandException {
-        ModelThreatsCommand modelThreatsCommand = new ModelThreatsCommand(moduleUuidsFromCompendium,
-                getTargetScopeId());
+        ModelThreatGroupCommand modelThreatsCommand = new ModelThreatGroupCommand(
+                moduleUuidsFromCompendium, targetElements);
         getCommandService().executeCommand(modelThreatsCommand);
     }
 

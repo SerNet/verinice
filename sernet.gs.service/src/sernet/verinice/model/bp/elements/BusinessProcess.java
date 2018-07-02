@@ -27,6 +27,7 @@ import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
@@ -47,7 +48,8 @@ public class BusinessProcess extends ElementWithChilds implements IBpElement, IB
     public static final String PROP_NAME = "bp_businessprocess_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_businessprocess_tag"; //$NON-NLS-1$
     
-    public static final String[] CHILD_TYPES = new String[] { BpRequirementGroup.TYPE_ID, SafeguardGroup.TYPE_ID };
+    public static final String[] CHILD_TYPES = new String[] { BpRequirementGroup.TYPE_ID,
+            SafeguardGroup.TYPE_ID, BpThreatGroup.TYPE_ID };
 
     private final ILinkChangeListener linkChangeListener = new MaximumProtectionRequirementsValueListener(this);
     private final IReevaluator protectionRequirementsProvider = new ProtectionRequirementsValueAdapter(this);
