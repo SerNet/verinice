@@ -22,6 +22,7 @@ package sernet.verinice.interfaces.graph;
 import java.util.HashMap;
 import java.util.Map;
 
+import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bsi.AnwendungenKategorie;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.ClientsKategorie;
@@ -39,7 +40,6 @@ import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
-import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.iso27k.IncidentGroup;
 
 /**
@@ -89,6 +89,8 @@ public abstract class HibernateTypeIdManager {
         
         TYPE_HIBERNATE_TYPE_MAP.put(IncidentGroup.TYPE_ID, IncidentGroup.TYPE_ID_HIBERNATE);
         
+        TYPE_HIBERNATE_TYPE_MAP.put(BpThreatGroup.TYPE_ID, BpThreatGroup.TYPE_ID_HIBERNATE);
+
     }
     
     private HibernateTypeIdManager() {

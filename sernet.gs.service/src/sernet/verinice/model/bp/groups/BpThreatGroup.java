@@ -36,6 +36,7 @@ public class BpThreatGroup extends Group<BpThreat> implements IBpGroup {
     private static final long serialVersionUID = 7752776589962581995L;
     
     public static final String TYPE_ID = "bp_threat_group"; //$NON-NLS-1$
+    public static final String TYPE_ID_HIBERNATE = "bp_treat_group"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_threat_group_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_threat_group_tag"; //$NON-NLS-1$
 
