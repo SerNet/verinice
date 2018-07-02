@@ -104,19 +104,21 @@ public class BaseProtectionFilterDialog extends Dialog {
 
     private final boolean hideEmptyGroupsByDefault;
 
+    /**
+     * @param hideEmptyGroupsByDefault
+     *            this value is used when the filter is cleared (reset button).
+     */
     public BaseProtectionFilterDialog(Shell parentShell,
-            Set<ImplementationStatus> selectedImplementationStatus,
-            Set<SecurityLevel> selectedSecurityLevels,
-            Set<String> selectedElementTypes, Set<String> selectedTags,
-            boolean applyTagFilterToItNetworks, boolean hideEmptyGroups, boolean hideEmptyGroupsByDefault) {
+            BaseProtectionFilterParameters filterParameter, boolean hideEmptyGroupsByDefault) {
         super(parentShell);
         this.hideEmptyGroupsByDefault = hideEmptyGroupsByDefault;
-        this.selectedImplementationStatus = new HashSet<>(selectedImplementationStatus);
-        this.selectedSecurityLevels = new HashSet<>(selectedSecurityLevels);
-        this.selectedElementTypes = new HashSet<>(selectedElementTypes);
-        this.selectedTags = new HashSet<>(selectedTags);
-        this.applyTagFilterToItNetworks = applyTagFilterToItNetworks;
-        this.hideEmptyGroups = hideEmptyGroups;
+        this.selectedImplementationStatus = new HashSet<>(
+                filterParameter.getImplementationStatuses());
+        this.selectedSecurityLevels = new HashSet<>(filterParameter.getSecurityLevels());
+        this.selectedElementTypes = new HashSet<>(filterParameter.getElementTypes());
+        this.selectedTags = new HashSet<>(filterParameter.getTags());
+        this.applyTagFilterToItNetworks = filterParameter.isApplyTagFilterToItNetworks();
+        this.hideEmptyGroups = filterParameter.isHideEmptyGroups();
     }
 
     @Override

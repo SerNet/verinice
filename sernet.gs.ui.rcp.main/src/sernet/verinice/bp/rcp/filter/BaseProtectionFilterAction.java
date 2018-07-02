@@ -70,10 +70,14 @@ public class BaseProtectionFilterAction extends Action {
 
     @Override
     public void run() {
+        BaseProtectionFilterParameters parameters = BaseProtectionFilterParameters.builder()
+                .withElementTypes(selectedElementTypes)
+                .withImplementationStatuses(selectedImplementationStatus)
+                .withApplyTagFilterToItNetworks(applyTagFilterToItNetworks)
+                .withHideEmptyGroups(hideEmptyGroups).withSecurityLevels(selectedSecurityLevels)
+                .withTags(selectedTags).build();
         BaseProtectionFilterDialog dialog = new BaseProtectionFilterDialog(
-                Display.getCurrent().getActiveShell(), selectedImplementationStatus,
-                selectedSecurityLevels, selectedElementTypes, selectedTags,
-                applyTagFilterToItNetworks, hideEmptyGroups, hideEmptyGroupsByDefault);
+                Display.getCurrent().getActiveShell(), parameters, hideEmptyGroupsByDefault);
         if (dialog.open() != InputDialog.OK) {
             return;
         }
