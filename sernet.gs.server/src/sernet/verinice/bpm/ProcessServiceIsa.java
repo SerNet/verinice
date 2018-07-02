@@ -46,43 +46,49 @@ import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
- * ProcessServiceIsa is the server side implementation of the IProcessServiceIsa interface
- * to handle ISA processes.
+ * ProcessServiceIsa is the server side implementation of the IProcessServiceIsa
+ * interface to handle ISA processes.
  * 
- * IProcessServiceIsa is accessible from verinice client by Spring remoting, configured in
- * springDispatcher-servlet.xml and veriniceclient.xml.
+ * IProcessServiceIsa is accessible from verinice client by Spring remoting,
+ * configured in springDispatcher-servlet.xml and veriniceclient.xml.
  * 
- * This class is created at runtime by Spring. 
- * See sernet/gs/server/spring/veriniceserver-jbpm.xml for configuration.
+ * This class is created at runtime by Spring. See
+ * sernet/gs/server/spring/veriniceserver-jbpm.xml for configuration.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class ProcessServiceIsa extends ProcessServiceVerinice implements IProcessServiceIsa {
 
     private static final Logger LOG = Logger.getLogger(ProcessServiceIsa.class);
-    
+
     // Dao members (injected by Spring)
-    private IBaseDao<Audit, Integer> auditDao;     
-    private IBaseDao<ControlGroup, Integer> controlGroupDao;     
+    private IBaseDao<Audit, Integer> auditDao;
+    private IBaseDao<ControlGroup, Integer> controlGroupDao;
     private IBaseDao<SamtTopic, Integer> samtTopicDao;
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceIsa#startProcessForIsa(java.lang.String)
+    /*
+     * @see
+     * sernet.verinice.interfaces.bpm.IProcessServiceIsa#startProcessForIsa(java
+     * .lang.String)
      */
     @Override
     public IProcessStartInformation startProcessForIsa(String uuidAudit) {
-        Audit isaAudit = getAuditDao().findByUuid(uuidAudit, RetrieveInfo.getChildrenInstance().setParent(true));  
+        Audit isaAudit = getAuditDao().findByUuid(uuidAudit,
+                RetrieveInfo.getChildrenInstance().setParent(true));
         IsaProcessContext context = new IsaProcessContext();
         context.setNumberOfProcesses(0);
         context.setUuidAudit(uuidAudit);
         context.setUuidOrganization(loadOrganization(isaAudit.getParent()).getUuid());
         context.setControlGroup(isaAudit.getControlGroup());
-        context=startProcessForControlGroup(context);
+        context = startProcessForControlGroup(context);
         return new ProcessInformation(context.getNumberOfProcesses());
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceIsa#handleControl(sernet.verinice.model.iso27k.Control)
+
+    /*
+     * 
+     * @see
+     * sernet.verinice.interfaces.bpm.IProcessServiceIsa#handleControl(sernet.
+     * verinice.model.iso27k.Control)
      */
     @Override
     public void handleSamtTopic(SamtTopic topic) {
@@ -90,21 +96,24 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
         context.setSamtTopic(topic);
         handleSamtTopic(context);
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceIsa#handleControl(sernet.verinice.model.iso27k.Control)
+
+    /*
+     * 
+     * @see
+     * sernet.verinice.interfaces.bpm.IProcessServiceIsa#handleControl(sernet.
+     * verinice.model.iso27k.Control)
      */
     @Override
     public void handleControl(Control control) {
         try {
             String uuidControl = control.getUuid();
             List<ExecutionImpl> executionList = findControlExecution(uuidControl);
-            if(executionList==null || executionList.isEmpty()) {
+            if (executionList == null || executionList.isEmpty()) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("No process for control: " + uuidControl);
                 }
                 // start process if control is not implemented
-                if(!Control.IMPLEMENTED_YES.equals(control.getImplementation())) {
+                if (!Control.IMPLEMENTED_YES.equals(control.getImplementation())) {
                     startControlExecution(control);
                 }
                 if (LOG.isInfoEnabled()) {
@@ -114,7 +123,7 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
                 LOG.debug("Process found for control: " + uuidControl);
                 for (ExecutionImpl executionImpl : executionList) {
                     LOG.debug("Process execution id: " + executionImpl.getId());
-                }            
+                }
             }
         } catch (RuntimeException re) {
             LOG.error("RuntimeException while handling control", re);
@@ -124,9 +133,12 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
             throw new RuntimeException(t);
         }
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IProcessService#findControlExecution(java.lang.String)
+
+    /*
+     * 
+     * @see
+     * sernet.verinice.interfaces.IProcessService#findControlExecution(java.lang
+     * .String)
      */
     @Override
     public List<ExecutionImpl> findControlExecution(final String uuidControl) {
@@ -141,34 +153,27 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
         variableCrit.add(Restrictions.eq("string", uuidControl));
         return getJbpmExecutionDao().findByCriteria(executionCrit);
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IProcessService#findControlExecution(java.lang.String)
+
+    /*
+     * @see
+     * sernet.verinice.interfaces.IProcessService#findControlExecution(java.lang
+     * .String)
      */
     @Override
     public List<ExecutionImpl> findIsaExecution(final String uuid) {
-        return findExecutionForElement(IIsaExecutionProcess.KEY,uuid);       
+        return findExecutionForElement(IIsaExecutionProcess.KEY, uuid);
     }
 
-    /**
-     * True: This is a real implementation.
-     * 
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceIsa#isActive()
-     */
-    @Override
-    public boolean isActive() {
-        return true;
-    }
-    
     /**
      * @param isaAudit
      * @return
      */
     private CnATreeElement loadOrganization(CnATreeElement element) {
-        if(element.isOrganization()) {
+        if (element.isOrganization()) {
             return element;
         } else {
-            element = getElementDao().findByUuid(element.getUuid(), RetrieveInfo.getPropertyInstance().setParent(true));
+            element = getElementDao().findByUuid(element.getUuid(),
+                    RetrieveInfo.getPropertyInstance().setParent(true));
             return loadOrganization(element.getParent());
         }
     }
@@ -179,23 +184,24 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
      */
     private IsaProcessContext startProcessForControlGroup(IsaProcessContext context) {
         ControlGroup controlGroup = context.getControlGroup();
-        controlGroup = getControlGroupDao().findByUuid(controlGroup.getUuid(), RetrieveInfo.getChildrenInstance());
+        controlGroup = getControlGroupDao().findByUuid(controlGroup.getUuid(),
+                RetrieveInfo.getChildrenInstance());
         for (CnATreeElement element : controlGroup.getChildren()) {
-            if(SamtTopic.TYPE_ID.equals(element.getTypeId())) {
+            if (SamtTopic.TYPE_ID.equals(element.getTypeId())) {
                 RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
                 ri.setLinksDown(true);
                 SamtTopic samtTopic = getSamtTopicDao().findByUuid(element.getUuid(), ri);
                 context.setSamtTopic(samtTopic);
                 context = handleSamtTopic(context);
             }
-            if(ControlGroup.TYPE_ID.equals(element.getTypeId())) {
+            if (ControlGroup.TYPE_ID.equals(element.getTypeId())) {
                 context.setControlGroup((ControlGroup) element);
                 context = startProcessForControlGroup(context);
-            }        
+            }
         }
         return context;
     }
-       
+
     /**
      * @param context
      * @return
@@ -205,12 +211,12 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
             SamtTopic samtTopic = context.getSamtTopic();
             String uuid = samtTopic.getUuid();
             List<ExecutionImpl> executionList = findIsaExecution(uuid);
-            if(executionList==null || executionList.isEmpty()) {
+            if (executionList == null || executionList.isEmpty()) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("No process for isa topic: " + uuid);
                 }
                 // start process if control is not implemented
-                if(SamtTopic.IMPLEMENTED_NOTEDITED_NUMERIC == samtTopic.getMaturity()) {
+                if (SamtTopic.IMPLEMENTED_NOTEDITED_NUMERIC == samtTopic.getMaturity()) {
                     startIsaExecution(context);
                     context.increaseProcessNumber();
                 }
@@ -221,7 +227,7 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
                 LOG.debug("Process found for isa topic: " + uuid);
                 for (ExecutionImpl executionImpl : executionList) {
                     LOG.debug("Process execution id: " + executionImpl.getId());
-                }            
+                }
             }
             return context;
         } catch (RuntimeException re) {
@@ -232,61 +238,60 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
             throw new RuntimeException(t);
         }
     }
-    
-      
+
     /**
      * @param control
-     * @throws CommandException 
+     * @throws CommandException
      */
-    private void startControlExecution(Control control) throws CommandException {      
+    private void startControlExecution(Control control) throws CommandException {
         Map<String, Object> props = new HashMap<String, Object>();
-        
+
         String username = getProcessDao().getAssignee(control);
-        
+
         props.put(IControlExecutionProcess.VAR_ASSIGNEE_NAME, username);
         props.put(IGenericProcess.VAR_UUID, control.getUuid());
-        props.put(IGenericProcess.VAR_TYPE_ID, control.getTypeId());    
+        props.put(IGenericProcess.VAR_TYPE_ID, control.getTypeId());
         props.put(IControlExecutionProcess.VAR_OWNER_NAME, getOwnerName(control));
         props.put(IControlExecutionProcess.VAR_IMPLEMENTATION, control.getImplementation());
         Date duedate = control.getDueDate();
         Date now = new Date(System.currentTimeMillis());
-        if(duedate!=null && now.before(duedate)) {
+        if (duedate != null && now.before(duedate)) {
             props.put(IControlExecutionProcess.VAR_DUEDATE, duedate);
         } else {
-            props.put(IControlExecutionProcess.VAR_DUEDATE, IControlExecutionProcess.DEFAULT_DUEDATE);
+            props.put(IControlExecutionProcess.VAR_DUEDATE,
+                    IControlExecutionProcess.DEFAULT_DUEDATE);
         }
-        
-        
-        startProcess(IControlExecutionProcess.KEY, props);     
+
+        startProcess(IControlExecutionProcess.KEY, props);
     }
-    
+
     /**
      * @param topic
-     * @throws CommandException 
+     * @throws CommandException
      */
-    private void startIsaExecution(IsaProcessContext context) throws CommandException {   
+    private void startIsaExecution(IsaProcessContext context) throws CommandException {
         SamtTopic topic = context.getSamtTopic();
-        Map<String, Object> props = new HashMap<String, Object>();      
-        String username = getProcessDao().getAssignee(topic);  
+        Map<String, Object> props = new HashMap<String, Object>();
+        String username = getProcessDao().getAssignee(topic);
         props.put(IIsaExecutionProcess.VAR_ASSIGNEE_NAME, username);
         props.put(IGenericProcess.VAR_UUID, topic.getUuid());
         props.put(IGenericProcess.VAR_TYPE_ID, topic.getTypeId());
         props.put(IIsaExecutionProcess.VAR_OWNER_NAME, getOwnerName(topic));
         props.put(IIsaExecutionProcess.VAR_IMPLEMENTATION, topic.getMaturity());
-        if(context.getUuidAudit()!=null) {
-            props.put(IIsaExecutionProcess.VAR_AUDIT_UUID, context.getUuidAudit()); 
+        if (context.getUuidAudit() != null) {
+            props.put(IIsaExecutionProcess.VAR_AUDIT_UUID, context.getUuidAudit());
         }
         Date duedate = topic.getCompleteUntil();
         Date now = new Date(System.currentTimeMillis());
-        if(duedate!=null && now.before(duedate)) {
+        if (duedate != null && now.before(duedate)) {
             props.put(IGenericProcess.VAR_DUEDATE, duedate);
         } else {
             props.put(IGenericProcess.VAR_DUEDATE, IControlExecutionProcess.DEFAULT_DUEDATE);
         }
-             
-        startProcess(IIsaExecutionProcess.KEY, props);     
+
+        startProcess(IIsaExecutionProcess.KEY, props);
     }
-    
+
     public IBaseDao<Audit, Integer> getAuditDao() {
         return auditDao;
     }
@@ -306,9 +311,9 @@ public class ProcessServiceIsa extends ProcessServiceVerinice implements IProces
     public IBaseDao<SamtTopic, Integer> getSamtTopicDao() {
         return samtTopicDao;
     }
-    
+
     public void setSamtTopicDao(IBaseDao<SamtTopic, Integer> samtTopicDao) {
         this.samtTopicDao = samtTopicDao;
     }
-    
+
 }
