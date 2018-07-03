@@ -17,11 +17,11 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp.filter;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -87,21 +87,9 @@ public class BaseProtectionFilterDialog extends Dialog {
     private CheckboxTableViewer tagsSelector;
 
     private Button applyTagFilterToItNetworksCheckbox;
-
     private Button hideEmptyGroupsCheckbox;
 
-    private Set<ImplementationStatus> selectedImplementationStatus;
-
-    private Set<SecurityLevel> selectedSecurityLevels;
-
-    private Set<String> selectedElementTypes;
-
-    private Set<String> selectedTags;
-
-    private boolean applyTagFilterToItNetworks;
-
-    private boolean hideEmptyGroups;
-
+    private @NonNull BaseProtectionFilterParameters filterParameters;
     private final boolean hideEmptyGroupsByDefault;
 
     /**
@@ -109,16 +97,11 @@ public class BaseProtectionFilterDialog extends Dialog {
      *            this value is used when the filter is cleared (reset button).
      */
     public BaseProtectionFilterDialog(Shell parentShell,
-            BaseProtectionFilterParameters filterParameter, boolean hideEmptyGroupsByDefault) {
+            @NonNull BaseProtectionFilterParameters filterParameters,
+            boolean hideEmptyGroupsByDefault) {
         super(parentShell);
+        this.filterParameters = filterParameters;
         this.hideEmptyGroupsByDefault = hideEmptyGroupsByDefault;
-        this.selectedImplementationStatus = new HashSet<>(
-                filterParameter.getImplementationStatuses());
-        this.selectedSecurityLevels = new HashSet<>(filterParameter.getSecurityLevels());
-        this.selectedElementTypes = new HashSet<>(filterParameter.getElementTypes());
-        this.selectedTags = new HashSet<>(filterParameter.getTags());
-        this.applyTagFilterToItNetworks = filterParameter.isApplyTagFilterToItNetworks();
-        this.hideEmptyGroups = filterParameter.isHideEmptyGroups();
     }
 
     @Override
@@ -164,7 +147,7 @@ public class BaseProtectionFilterDialog extends Dialog {
             final Button button = new Button(boxesComposite, SWT.CHECK);
             button.setText(status.getLabel());
             button.setData(status);
-            button.setSelection(selectedImplementationStatus.contains(status));
+            button.setSelection(filterParameters.getImplementationStatuses().contains(status));
             implementationStatusButtons.add(button);
         }
     }
@@ -187,7 +170,7 @@ public class BaseProtectionFilterDialog extends Dialog {
         final Button button = new Button(boxesComposite, SWT.CHECK);
         button.setText(qualifier == null ? Messages.BaseProtectionFilterDialog_Property_Value_Null
                 : qualifier.getLabel());
-        button.setSelection(selectedSecurityLevels.contains(qualifier));
+        button.setSelection(filterParameters.getSecurityLevels().contains(qualifier));
         button.setData(qualifier);
         qualifierButtons.add(button);
     }
@@ -223,7 +206,7 @@ public class BaseProtectionFilterDialog extends Dialog {
 
         scrolledComposite.setContent(table);
         table.setSize(VIEWER_TABLE_WIDTH, VIEWER_TABLE_HEIGHT);
-        elementTypeSelector.setCheckedElements(selectedElementTypes.toArray());
+        elementTypeSelector.setCheckedElements(filterParameters.getElementTypes().toArray());
 
     }
 
@@ -255,7 +238,7 @@ public class BaseProtectionFilterDialog extends Dialog {
 
         scrolledComposite.setContent(table);
         table.setSize(VIEWER_TABLE_WIDTH, VIEWER_TABLE_HEIGHT);
-        tagsSelector.setCheckedElements(selectedTags.toArray());
+        tagsSelector.setCheckedElements(filterParameters.getTags().toArray());
 
     }
 
@@ -267,7 +250,8 @@ public class BaseProtectionFilterDialog extends Dialog {
         applyTagFilterToItNetworksCheckbox = new Button(groupComposite, SWT.CHECK);
         applyTagFilterToItNetworksCheckbox
                 .setText(Messages.BaseProtectionFilterDialog_Apply_Tag_Filter_To_IT_Networks);
-        applyTagFilterToItNetworksCheckbox.setSelection(applyTagFilterToItNetworks);
+        applyTagFilterToItNetworksCheckbox
+                .setSelection(filterParameters.isApplyTagFilterToItNetworks());
     }
 
     private void addHideEmptyGroup(Composite parent) {
@@ -277,7 +261,7 @@ public class BaseProtectionFilterDialog extends Dialog {
         groupComposite.setLayout(new GridLayout(1, false));
         hideEmptyGroupsCheckbox = new Button(groupComposite, SWT.CHECK);
         hideEmptyGroupsCheckbox.setText(Messages.BaseProtectionFilterDialog_Hide_Empty_Groups);
-        hideEmptyGroupsCheckbox.setSelection(hideEmptyGroups);
+        hideEmptyGroupsCheckbox.setSelection(filterParameters.isHideEmptyGroups());
     }
 
     /**
@@ -310,30 +294,36 @@ public class BaseProtectionFilterDialog extends Dialog {
 
     @Override
     public boolean close() {
-        selectedImplementationStatus.clear();
+        Set<ImplementationStatus> statuses = new HashSet<>(ImplementationStatus.values().length);
         for (Button button : implementationStatusButtons) {
             if (button.getSelection()) {
-                selectedImplementationStatus.add((ImplementationStatus) button.getData());
+                statuses.add((ImplementationStatus) button.getData());
             }
         }
-        selectedSecurityLevels.clear();
+
+        Set<SecurityLevel> levels = new HashSet<>(ImplementationStatus.values().length);
         for (Button button : qualifierButtons) {
             if (button.getSelection()) {
-                selectedSecurityLevels.add((SecurityLevel) button.getData());
+                levels.add((SecurityLevel) button.getData());
             }
         }
 
-        selectedElementTypes.clear();
-        for (Object checkedElementType : elementTypeSelector.getCheckedElements()) {
-            selectedElementTypes.add((String) checkedElementType);
+        Object[] checkedElements = elementTypeSelector.getCheckedElements();
+        Set<String> types = new HashSet<>(checkedElements.length);
+        for (Object checkedElementType : checkedElements) {
+            types.add((String) checkedElementType);
         }
 
-        selectedTags.clear();
+        Set<String> tags = new HashSet<>();
         for (Object checkedTag : tagsSelector.getCheckedElements()) {
-            selectedTags.add((String) checkedTag);
+            tags.add((String) checkedTag);
         }
-        applyTagFilterToItNetworks = applyTagFilterToItNetworksCheckbox.getSelection();
-        hideEmptyGroups = hideEmptyGroupsCheckbox.getSelection();
+
+        filterParameters = BaseProtectionFilterParameters.builder()
+                .withImplementationStatuses(statuses).withSecurityLevels(levels)
+                .withElementTypes(types).withTags(tags)
+                .withApplyTagFilterToItNetworks(applyTagFilterToItNetworksCheckbox.getSelection())
+                .withHideEmptyGroups(hideEmptyGroupsCheckbox.getSelection()).build();
 
         return super.close();
     }
@@ -342,27 +332,7 @@ public class BaseProtectionFilterDialog extends Dialog {
         return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
     }
 
-    public Set<ImplementationStatus> getSelectedImplementationStatus() {
-        return Collections.unmodifiableSet(selectedImplementationStatus);
-    }
-
-    public Set<SecurityLevel> getSelectedSecurityLevels() {
-        return Collections.unmodifiableSet(selectedSecurityLevels);
-    }
-
-    public Set<String> getSelectedElementTypes() {
-        return Collections.unmodifiableSet(selectedElementTypes);
-    }
-
-    public Set<String> getSelectedTags() {
-        return Collections.unmodifiableSet(selectedTags);
-    }
-
-    public boolean isApplyTagFilterToItNetworks() {
-        return applyTagFilterToItNetworks;
-    }
-
-    public boolean isHideEmptyGroups() {
-        return hideEmptyGroups;
+    public @NonNull BaseProtectionFilterParameters getFilterParameters() {
+        return filterParameters;
     }
 }
