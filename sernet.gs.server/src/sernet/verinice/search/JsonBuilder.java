@@ -48,6 +48,8 @@ import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
+ * Creates JSON documents for indexing in ElasticSearch
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class JsonBuilder implements IJsonBuilder {
@@ -58,6 +60,9 @@ public class JsonBuilder implements IJsonBuilder {
 
     private IElementTitleCache titleCache;
 
+    /**
+     * @return A JSON document from an element for indexing in ElasticSearch
+     */
     public String getJson(CnATreeElement element) {
         if (!isIndexableElement(element)) {
             return null;
@@ -82,8 +87,8 @@ public class JsonBuilder implements IJsonBuilder {
         if (title == null) {
             LOG.warn("Scope title not found in cache for element: " + element.getUuid() + ", type: "
                     + element.getTypeId() + ". Loading all scope titles now...");
-            getTitleCache().load(new String[] { ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID,
-                    ItNetwork.TYPE_ID });
+            getTitleCache().load(ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID,
+                    ItNetwork.TYPE_ID);
             title = getTitleCache().get(element.getScopeId());
         }
         return title;
@@ -133,11 +138,6 @@ public class JsonBuilder implements IJsonBuilder {
         return builder.endObject().string();
     }
 
-    /**
-     * @param element
-     * @return
-     * @throws IOException
-     */
     private static void addPermissions(XContentBuilder builder, CnATreeElement element)
             throws IOException {
         element = Retriever.checkRetrievePermissions(element);
@@ -177,12 +177,12 @@ public class JsonBuilder implements IJsonBuilder {
     }
 
     private String mapPropertyString(Entity e, PropertyType pType) {
-        String value = e.getSimpleValue(pType.getId());
+        String value = e.getPropertyValue(pType.getId());
         String mappedValue = "";
         if (StringUtils.isEmpty(value)) {
             mappedValue = getNullValue();
         } else if (pType.isDate()) {
-            mappedValue = mapDateProperty(e.getValue(pType.getId()));
+            mappedValue = mapDateProperty(e.getRawPropertyValue(pType.getId()));
         } else if (pType.isSingleSelect() || pType.isMultiselect()) {
             mappedValue = mapMultiSelectProperty(value, pType);
         } else if (pType.isNumericSelect()) {
@@ -208,7 +208,7 @@ public class JsonBuilder implements IJsonBuilder {
 
     private static String mapMultiSelectProperty(String value, PropertyType type) {
         PropertyOption o = type.getOption(value);
-        if (value == null || type == null || o == null) {
+        if (value == null || o == null) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("No mapping for:\t" + value + "\t on <" + type.getId()
                         + "> found, returning value");
@@ -247,12 +247,8 @@ public class JsonBuilder implements IJsonBuilder {
     }
 
     private static boolean isIndexableElement(CnATreeElement element) {
-        if (element instanceof ImportIsoGroup || element instanceof ImportBsiGroup
-                || element instanceof ImportBpGroup) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(element instanceof ImportIsoGroup || element instanceof ImportBsiGroup
+                || element instanceof ImportBpGroup);
     }
 
     public IElementTitleCache getTitleCache() {
