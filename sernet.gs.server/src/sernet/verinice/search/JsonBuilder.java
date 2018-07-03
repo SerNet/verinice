@@ -29,6 +29,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 
+import sernet.gs.service.Retriever;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -138,6 +139,7 @@ public class JsonBuilder implements IJsonBuilder {
      */
     private static void addPermissions(XContentBuilder builder, CnATreeElement element)
             throws IOException {
+        element = Retriever.checkRetrievePermissions(element);
         if (element.getPermissions() == null || element.getPermissions().isEmpty()) {
             return;
         }
