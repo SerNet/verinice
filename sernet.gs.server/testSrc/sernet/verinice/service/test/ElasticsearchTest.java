@@ -213,18 +213,26 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
 
     private boolean isElementInResult(VeriniceSearchResult result, CnATreeElement element) {
         String uuid = element.getUuid();
+        boolean found = (getResultRow(result, uuid) != null);
+        if (found) {
+            LOG.debug("Element found, title: " + element.getTitle() + ", uuid: " + uuid);
+        } else {
+            LOG.debug("Element not found, title: " + element.getTitle() + ", uuid: " + uuid);
+        }
+        return found;
+    }
+
+    private VeriniceSearchResultRow getResultRow(VeriniceSearchResult result, String uuid) {
         for (VeriniceSearchResultTable resultTable : result.getAllVeriniceSearchTables()) {         
             Set<VeriniceSearchResultRow> resultRows = resultTable.getRows();
             for (VeriniceSearchResultRow resultRow : resultRows) {
                 String uuidFromResult = resultRow.getValueFromResultString(ISearchService.ES_FIELD_UUID);
-                if(uuid.equals(uuidFromResult)) {
-                    LOG.debug("Element found, title: " + element.getTitle() + ", uuid: " + uuid );
-                    return true;
+                if (uuid.equals(uuidFromResult)) {
+                    return resultRow;
                 }
             }  
         }
-        LOG.debug("Element not found, title: " + element.getTitle() + ", uuid: " + uuid );
-        return false;
+        return null;
     }
 
     private String getUuid(VeriniceSearchResultRow row) {
