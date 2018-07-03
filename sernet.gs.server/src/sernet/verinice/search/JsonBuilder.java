@@ -39,6 +39,7 @@ import sernet.verinice.interfaces.IElementTitleCache;
 import sernet.verinice.interfaces.search.IJsonBuilder;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnATreeElement;
@@ -246,7 +247,8 @@ public class JsonBuilder implements IJsonBuilder {
     }
 
     private static boolean isIndexableElement(CnATreeElement element) {
-        if (element instanceof ImportIsoGroup || element instanceof ImportBsiGroup) {
+        if (element instanceof ImportIsoGroup || element instanceof ImportBsiGroup
+                || element instanceof ImportBpGroup) {
             return false;
         } else {
             return true;
