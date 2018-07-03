@@ -98,13 +98,8 @@ public class PreferenceConstants {
     public static final String GS_DB_RESTOREDB_NAME = "gs_cna_restoredb_name";
     public static final String GS_DB_RESTOREDB_TODIR = "gs_cna_restoredb_todir";
 
-    public static final String BP_PROCEEDING = "bp_proceeding";
     public static final String BP_MODEL_SAFEGUARDS = "bp_model_safeguards";
     public static final String BP_MODEL_DUMMY_SAFEGUARDS = "bp_model_dummy_safeguards";
-
-    public static final String BP_PROCEEDING_BASIC = Proceeding.BASIC.name();
-    public static final String BP_PROCEEDING_STANDARD = Proceeding.STANDARD.name();
-    public static final String BP_PROCEEDING_CORE = Proceeding.CORE.name();
 
     public static final String OPERATION_MODE = "gs_cna_operationmode";
     public static final String OPERATION_MODE_INTERNAL_SERVER = "gs_cna_operationmode_standalone";

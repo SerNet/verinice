@@ -35,7 +35,6 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
@@ -61,7 +60,7 @@ import sernet.verinice.service.commands.CreateMultipleLinks;
  */
 public class ModelLinksCommand extends GenericCommand {
 
-    private static final long serialVersionUID = 3734973573896101608L;
+    private static final long serialVersionUID = -2954681557726115473L;
 
     private static final Logger LOG = Logger.getLogger(ModelLinksCommand.class);
 
@@ -107,7 +106,6 @@ public class ModelLinksCommand extends GenericCommand {
     private transient Set<String> moduleUuidsFromCompendium;
     private transient Set<String> newModuleUuidsFromScope;
     private transient ItNetwork itNetwork;
-    private Proceeding proceeding;
 
     private transient Set<CnATreeElement> elementsFromScope;
     private transient Set<CnATreeElement> requirementsFromCompendium;
@@ -284,14 +282,7 @@ public class ModelLinksCommand extends GenericCommand {
     }
 
     private Set<CnATreeElement> loadRequirementsFromCompendium(final Set<String> moduleUuids) {
-        Set<CnATreeElement> allRequirements = findRequirementsByModuleUuid(moduleUuids);
-        Set<CnATreeElement> validRequirements = new HashSet<>(allRequirements.size());
-        for (CnATreeElement requirement : allRequirements) {
-            if (ModelingValidator.isRequirementValid(requirement, proceeding)) {
-                validRequirements.add(requirement);
-            }
-        }
-        return validRequirements;
+        return findRequirementsByModuleUuid(moduleUuids);
     }
 
     private Set<CnATreeElement> findRequirementsByModuleUuid(final Set<String> moduleUuids) {
@@ -346,10 +337,6 @@ public class ModelLinksCommand extends GenericCommand {
 
     private boolean isNewModuleInScope() {
         return newModuleUuidsFromScope != null && !newModuleUuidsFromScope.isEmpty();
-    }
-
-    public void setProceeding(Proceeding proceeding) {
-        this.proceeding = proceeding;
     }
 
     public ModelingMetaDao getMetaDao() {

@@ -28,7 +28,6 @@ import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
-import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.program.Program;
@@ -44,7 +43,6 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.interfaces.IInternalServer;
-import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.rcp.Preferences;
 
 /**
@@ -117,7 +115,6 @@ public class ItbpPreferencePage extends FieldEditorPreferencePage
     }
 
     private void createModelingGroup() {
-        createProceedingField(getFieldEditorParent());
         createModelSafeguardsField(getFieldEditorParent());
         createModelDummySafeguardsField(getFieldEditorParent());
     }
@@ -135,20 +132,6 @@ public class ItbpPreferencePage extends FieldEditorPreferencePage
                 PreferenceConstants.BP_MODEL_DUMMY_SAFEGUARDS,
                 Messages.getString("ItbpPreferencePage.dummy-safeguards"), parent); //$NON-NLS-1$
         addField(modelDummySafeguards);
-    }
-
-    private void createProceedingField(Composite parent) {
-        String name = PreferenceConstants.BP_PROCEEDING;
-        String labelText = Messages.getString("ItbpPreferencePage.approach"); //$NON-NLS-1$
-        String[][] labelAndValues = new String[][] {
-                { Messages.getString("ItbpPreferencePage.unedited"), "" }, //$NON-NLS-1$ //$NON-NLS-2$
-                { Proceeding.BASIC.getLabel(), PreferenceConstants.BP_PROCEEDING_BASIC },
-                { Proceeding.STANDARD.getLabel(), PreferenceConstants.BP_PROCEEDING_STANDARD },
-                { Proceeding.CORE.getLabel(), PreferenceConstants.BP_PROCEEDING_CORE } };
-
-        FieldEditor proceeding = new RadioGroupFieldEditor(name, labelText, 4, labelAndValues,
-                getFieldEditorParent());
-        addField(proceeding);
     }
 
     private Group createGroup(String title) {

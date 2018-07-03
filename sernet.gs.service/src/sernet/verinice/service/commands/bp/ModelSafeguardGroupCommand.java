@@ -24,9 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jdt.annotation.NonNull;
 
-import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
@@ -41,20 +39,17 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class ModelSafeguardGroupCommand extends ModelCopyCommand {
 
-    private static final long serialVersionUID = 3441469690686712494L;
+    private static final long serialVersionUID = -2951549587964990571L;
 
     private static final Logger LOG = Logger.getLogger(ModelSafeguardGroupCommand.class);
 
     private Set<String> moduleUuids;
     private transient Set<CnATreeElement> safeguardGroupsFromCompendium;
-    private @NonNull Proceeding proceeding;
 
-    public ModelSafeguardGroupCommand(Set<String> moduleUuids, Set<CnATreeElement> targetElements,
-            @NonNull Proceeding proceeding) {
+    public ModelSafeguardGroupCommand(Set<String> moduleUuids, Set<CnATreeElement> targetElements) {
         super();
         this.moduleUuids = moduleUuids;
         this.targetElements = targetElements;
-        this.proceeding = proceeding;
     }
 
     @Override
@@ -62,21 +57,7 @@ public class ModelSafeguardGroupCommand extends ModelCopyCommand {
         if (safeguardGroupsFromCompendium == null) {
             loadCompendiumSafeguardGroups();
         }
-        validateSafeguardGroups(safeguardGroupsFromCompendium);
         return safeguardGroupsFromCompendium;
-    }
-
-    private void validateSafeguardGroups(Set<CnATreeElement> safeguardGroups) {
-        for (CnATreeElement group : safeguardGroups) {
-            Set<CnATreeElement> safeguards = group.getChildren();
-            Set<CnATreeElement> validSafeguards = new HashSet<>(safeguards.size());
-            for (CnATreeElement safeguard : safeguards) {
-                if (ModelingValidator.isSafeguardValid(safeguard, proceeding)) {
-                    validSafeguards.add(safeguard);
-                }
-            }
-            group.setChildren(validSafeguards);
-        }
     }
 
     @Override
@@ -107,10 +88,5 @@ public class ModelSafeguardGroupCommand extends ModelCopyCommand {
     private List<CnATreeElement> loadSafeguardGroupsByModuleUuids() {
         return getMetaDao().loadChildrenLinksParents(moduleUuids, SafeguardGroup.TYPE_ID);
     }
-
-    public void setProceeding(Proceeding proceeding) {
-        this.proceeding = proceeding;
-    }
-
 
 }
