@@ -282,6 +282,10 @@ the value between <param></param> will be used directly if no string is found fo
           <huirelation to="gebaeude" id="raum_gebaeude"
             name="befindet sich in" reversename="beinhaltet" />
 
+          <huirelation to="itverbund" id="raum_itverbund"
+            name="hängt ab von" reversename="ist nötig für" />
+
+
         <huiproperty
             name="Kürzel"
             id="raum_kuerzel"
@@ -446,6 +450,11 @@ the value between <param></param> will be used directly if no string is found fo
         <huirelation to="server" id="server_server_vm"
             name="virtualisiert auf" reversename="VM-Host für" />
 
+        <huirelation to="netzkomponente" id="server_netzkomponente"
+            name="hängt ab von" reversename="ist nötig für" />
+
+        <huirelation to="itverbund" id="server_itverbund"
+            name="hängt ab von" reversename="ist nötig für" />
 
         <huiproperty
             name="Kürzel"
@@ -677,6 +686,9 @@ the value between <param></param> will be used directly if no string is found fo
           <huirelation to="raum" id="tkkomponente_raum_located"
             name="befindet sich in" reversename="beinhaltet" />
 
+          <huirelation to="itverbund" id="tkkomponente_itverbund"
+            name="hängt ab von" reversename="ist nötig für" />
+
         <huiproperty
             name="Kürzel"
             id="tkkomponente_kuerzel"
@@ -889,6 +901,9 @@ the value between <param></param> will be used directly if no string is found fo
 
           <huirelation to="raum" id="netzkomponente_raum_located"
             name="befindet sich in" reversename="beinhaltet" />
+
+        <huirelation to="itverbund" id="netzkomponente_itverbund"
+            name="hängt ab von" reversename="ist nötig für" />
 
         <huiproperty
             name="Kürzel"
@@ -1610,6 +1625,12 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
           <huirelation to="raum" id="client_raum_located"
             name="befindet sich in" reversename="beinhaltet" />
 
+          <huirelation to="netzkomponente" id="client_netzkomponente"
+            name="hängt ab von" reversename="ist nötig für" />
+
+        <huirelation to="itverbund" id="client_itverbund"
+            name="hängt ab von" reversename="ist nötig für" />
+
         <huiproperty
             name="Kürzel"
             id="client_kuerzel"
@@ -1862,6 +1883,12 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
 
         <huirelation to="raum" id="sonstit_raum_located"
             name="Standort" reversename="beinhaltet" />
+
+        <huirelation to="netzkomponente" id="sonstit_netzkomponente"
+            name="hängt ab von" reversename="ist nötig für" />
+
+        <huirelation to="itverbund" id="sonstit_itverbund"
+            name="hängt ab von" reversename="ist nötig für" />
 
         <huiproperty
             name="Kürzel"
@@ -2388,6 +2415,10 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
     <huientity
         name="Gebäude"
         id="gebaeude">
+
+        <huirelation to="itverbund" id="gebaeude_itverbund"
+            name="hängt ab von" reversename="ist nötig für" />
+
         <huiproperty
             name="Kürzel"
             id="gebaeude_kuerzel"
@@ -3186,6 +3217,8 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             name="benötigt" reversename="nötig für" />
         <huirelation to="tkkomponente" id="anwendung_tkkomponente"
             name="benötigt" reversename="nötig für" />
+        <huirelation to="itverbund" id="anwendung_itverbund"
+            name="hängt ab von" reversename="ist nötig für" />
 
 
 
