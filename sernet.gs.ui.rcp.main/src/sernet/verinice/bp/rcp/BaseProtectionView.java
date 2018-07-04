@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp;
 
+import java.util.Collection;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
@@ -26,6 +27,7 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
@@ -40,6 +42,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -73,6 +76,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.bp.rcp.filter.BaseProtectionFilterAction;
+import sernet.verinice.bp.rcp.filter.BaseProtectionFilterBuilder;
 import sernet.verinice.bp.rcp.filter.BaseProtectionFilterParameters;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
@@ -110,7 +114,7 @@ public class BaseProtectionView extends RightsEnabledView
     private static final Logger LOG = Logger.getLogger(BaseProtectionView.class);
     public static final String ID = "sernet.verinice.bp.rcp.BaseProtectionView"; //$NON-NLS-1$
     private static int operations = DND.DROP_COPY | DND.DROP_MOVE;
-    public static final BaseProtectionFilterParameters defaultFilterParams = BaseProtectionFilterParameters
+    public static final @NonNull BaseProtectionFilterParameters defaultFilterParams = BaseProtectionFilterParameters
             .builder().build();
     private Object mutex = new Object();
 
@@ -170,6 +174,10 @@ public class BaseProtectionView extends RightsEnabledView
         viewer.setLabelProvider(new DecoratingLabelProvider(new TreeLabelProvider(),
                 workbench.getDecoratorManager()));
         viewer.setSorter(new BaseProtectionTreeSorter());
+        Collection<ViewerFilter> filters = BaseProtectionFilterBuilder
+                .makeFilters(defaultFilterParams);
+        viewer.setFilters(filters.toArray(new ViewerFilter[filters.size()]));
+
         toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
         toggleLinking(Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.LINK_TO_EDITOR));

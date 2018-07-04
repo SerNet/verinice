@@ -23,6 +23,7 @@
 
 package sernet.verinice.rcp.catalog;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -32,6 +33,7 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
@@ -47,6 +49,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -84,6 +87,7 @@ import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.bp.rcp.BaseProtectionTreeSorter;
 import sernet.verinice.bp.rcp.filter.BaseProtectionFilterAction;
+import sernet.verinice.bp.rcp.filter.BaseProtectionFilterBuilder;
 import sernet.verinice.bp.rcp.filter.BaseProtectionFilterParameters;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
@@ -93,7 +97,6 @@ import sernet.verinice.iso27k.rcp.Messages;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
 import sernet.verinice.iso27k.rcp.action.DeleteSelectionAction;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
-import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.catalog.CatalogModel;
@@ -120,7 +123,7 @@ public class CatalogView extends RightsEnabledView
 
     private static final Logger logger = Logger.getLogger(CatalogView.class);
 
-    private static final BaseProtectionFilterParameters defaultFilterParams = BaseProtectionFilterParameters
+    private static final @NonNull BaseProtectionFilterParameters defaultFilterParams = BaseProtectionFilterParameters
             .builder().withHideEmptyGroups(true).build();
 
     protected TreeViewer viewer;
@@ -199,6 +202,9 @@ public class CatalogView extends RightsEnabledView
                 return super.getText(obj);
             }
         });
+        Collection<ViewerFilter> filters = BaseProtectionFilterBuilder
+                .makeFilters(defaultFilterParams);
+        viewer.setFilters(filters.toArray(new ViewerFilter[filters.size()]));
 
         toggleLinking(Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
@@ -323,8 +329,6 @@ public class CatalogView extends RightsEnabledView
 
         makeExpandAndCollapseActions();
 
-        HideEmptyFilter hideEmptyFilter = new HideEmptyFilter(viewer);
-        hideEmptyFilter.setHideEmpty(true);
         filterAction = new BaseProtectionFilterAction(viewer, defaultFilterParams);
 
         linkWithEditorAction = new Action(Messages.ISMView_5, IAction.AS_CHECK_BOX) {
