@@ -41,6 +41,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
 
     private static final String PERSPECTIVE_ID = "sernet.gs.ui.rcp.main.perspective";
 
+    @Override
     public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(
             IWorkbenchWindowConfigurer configurer) {
         return new ApplicationWorkbenchWindowAdvisor(configurer);
@@ -64,7 +65,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
         Bundle bundle = Platform.getBundle("org.eclipse.ui.ide"); //$NON-NLS-1$
         Object proxyService = null;
         if (bundle != null) {
-            ServiceReference ref = bundle.getBundleContext()
+            ServiceReference<?> ref = bundle.getBundleContext()
                     .getServiceReference(IProxyService.class.getName());
             if (ref != null) {
                 proxyService = bundle.getBundleContext().getService(ref);
@@ -75,6 +76,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
         }
     }
 
+    @Override
     public void postStartup() {
         removeUnneededPrefPages();
     }
@@ -92,7 +94,7 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
                 "org.eclipse.datatools.connectivity.ui.preferences.dataNode",
                 "org.eclipse.birt.report.designer.ui.preferences",
                 "org.eclipse.birt.chart.ui.swt.fieldassist.preferences.FieldAssistPreferencePage" };
-        Set<String> idSet = new HashSet<String>();
+        Set<String> idSet = new HashSet<>();
         for (String s : prefPageIDsToRemove) {
             idSet.add(s);
         }
