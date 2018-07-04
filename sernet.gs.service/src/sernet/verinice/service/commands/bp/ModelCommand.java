@@ -97,7 +97,7 @@ public class ModelCommand extends ChangeLoggingCommand {
     private boolean handleDummySafeguards = true;
 
     // Return values
-    private String proceedingLable;
+    private String proceedingLabel;
 
     private String stationId;
 
@@ -171,7 +171,7 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     private void saveReturnValues() {
         if (itNetwork != null && itNetwork.getProceeding() != null) {
-            proceedingLable = itNetwork.getProceeding().getLabel();
+            proceedingLabel = itNetwork.getProceeding().getLabel();
         }
     }
 
@@ -238,12 +238,12 @@ public class ModelCommand extends ChangeLoggingCommand {
         return targetModuleId.equals(moduleId);
     }
 
-    public String getProceedingLable() {
-        return proceedingLable;
+    public String getProceedingLabel() {
+        return proceedingLabel;
     }
 
-    public void setProceedingLable(String proceedingLable) {
-        this.proceedingLable = proceedingLable;
+    public void setProceedingLabel(String proceedingLable) {
+        this.proceedingLabel = proceedingLable;
     }
 
     public boolean isHandleSafeguards() {

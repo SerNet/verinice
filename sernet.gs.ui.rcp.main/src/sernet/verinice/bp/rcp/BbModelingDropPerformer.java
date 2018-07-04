@@ -66,7 +66,6 @@ import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.rcp.Preferences;
 import sernet.verinice.rcp.catalog.CatalogDragListener;
 import sernet.verinice.service.bp.exceptions.BpModelingException;
-import sernet.verinice.service.bp.exceptions.GroupNotFoundInScopeException;
 import sernet.verinice.service.commands.bp.ModelCommand;
 
 /**
@@ -121,12 +120,12 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
             return true;
         } catch (InvocationTargetException e) {
             log.error(e);
-            showError(e, Messages.BbModelingDropPerformer_Error0);
+            showError(e);
             return false;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt(); // set interrupt flag
             log.error("InterruptedException occurred while model module and element", e); //$NON-NLS-1$
-            showError(e, Messages.BbModelingDropPerformer_Error1);
+            showError(e);
             return false;
         }
     }
@@ -144,7 +143,7 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
                     modelModulesAndElement(draggedModules, targetElement);
                     monitor.done();
                 } catch (CommandException e) {
-                    showError(e, Messages.BbModelingDropPerformer_Error0);
+                    showError(e);
                 }
             }
         });
@@ -188,7 +187,7 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         String message = Messages.BbModelingDropPerformerConfirmationNoProceeding;
         String proceedingLabel = null;
         if (modelCommand != null) {
-            proceedingLabel = modelCommand.getProceedingLable();
+            proceedingLabel = modelCommand.getProceedingLabel();
         }
         if (proceedingLabel != null && !proceedingLabel.isEmpty()) {
             message = NLS.bind(Messages.BbModelingDropPerformerConfirmation, proceedingLabel);
@@ -330,26 +329,20 @@ public class BbModelingDropPerformer implements DropPerformer, RightEnabledUserI
         return this.targetElement != null;
     }
 
-    private void showError(Exception e, String message) {
+    private void showError(Exception e) {
         final Throwable rootCause = ExceptionUtils.getRootCause(e);
-        if (rootCause instanceof GroupNotFoundInScopeException
-                || rootCause instanceof BpModelingException) {
+        if (rootCause instanceof BpModelingException) {
             showModelingError(rootCause.getMessage());
         } else {
-            ExceptionUtil.log(e, message);
+            ExceptionUtil.log(e, Messages.BbModelingDropPerformer_ModelingAborted);
         }
     }
 
     private void showModelingError(final String causeMessage) {
-        final String message = NLS.bind(Messages.BbModelingDropPerformer_ModelingAborted,
-                causeMessage);
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                MessageDialog.openError(Display.getDefault().getActiveShell(),
-                        Messages.BbModelingDropPerformerModelingError, message);
-            }
-        });
+        final String message = String.join("", causeMessage, " ",
+                Messages.BbModelingDropPerformer_ModelingAborted, causeMessage);
+        Display.getDefault().asyncExec(() -> MessageDialog.openError(Display.getDefault().getActiveShell(),
+                Messages.BbModelingDropPerformerModelingError, message));
     }
 
     protected VeriniceElementTransfer getTransfer() {
