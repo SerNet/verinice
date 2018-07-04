@@ -17,13 +17,16 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import java.io.InvalidClassException;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceManager;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -32,6 +35,7 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.ServiceReference;
+import org.springframework.remoting.RemoteAccessException;
 
 /**
  * This workbench advisor creates the window advisor, and specifies the
@@ -79,6 +83,19 @@ public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
     @Override
     public void postStartup() {
         removeUnneededPrefPages();
+    }
+
+    @Override
+    public void eventLoopException(Throwable exception) {
+        if (exception instanceof RemoteAccessException
+                && exception.getCause() instanceof InvalidClassException) {
+            Display.getDefault()
+                    .syncExec(() -> MessageDialog.openError(Display.getDefault().getActiveShell(),
+                            Messages.ExceptionUtilErrorPopupTitle,
+                            Messages.ClientAndServerIncompatible));
+        } else {
+            super.eventLoopException(exception);
+        }
     }
 
     /**

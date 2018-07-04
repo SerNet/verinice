@@ -105,6 +105,8 @@ public class Messages extends NLS {
     public static String ExceptionUtilErrorPopupTitle;
     public static String ExceptionUtilErrorMessageStandalone;
     public static String ExceptionUtilErrorMessageServerMode;
+    public static String ClientAndServerIncompatible;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
