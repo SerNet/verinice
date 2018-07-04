@@ -115,7 +115,7 @@ public class BaseProtectionView extends RightsEnabledView
     public static final String ID = "sernet.verinice.bp.rcp.BaseProtectionView"; //$NON-NLS-1$
     private static int operations = DND.DROP_COPY | DND.DROP_MOVE;
     public static final @NonNull BaseProtectionFilterParameters defaultFilterParams = BaseProtectionFilterParameters
-            .builder().build();
+            .builder().withFilterByNetworkProceeding(true).build();
     private Object mutex = new Object();
 
     protected TreeViewer viewer;
