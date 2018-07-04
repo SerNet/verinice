@@ -22,9 +22,14 @@ package sernet.verinice.interfaces.search;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
+ * Implementing classes creates JSON documents for indexing in ElasticSearch
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public interface IJsonBuilder {
-    
+
+    /**
+     * @return A JSON document from an element for indexing in ElasticSearch
+     */
     String getJson(CnATreeElement element);
 }
