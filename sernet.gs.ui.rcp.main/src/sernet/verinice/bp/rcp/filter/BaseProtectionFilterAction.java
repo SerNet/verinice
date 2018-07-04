@@ -18,13 +18,11 @@
 package sernet.verinice.bp.rcp.filter;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -51,39 +49,26 @@ import sernet.verinice.model.iso27k.Group;
 public class BaseProtectionFilterAction extends Action {
     private StructuredViewer viewer;
 
-    private Set<SecurityLevel> selectedSecurityLevels = EnumSet.noneOf(SecurityLevel.class);
-    private Set<ImplementationStatus> selectedImplementationStatus = EnumSet
-            .noneOf(ImplementationStatus.class);
-    private Set<String> selectedElementTypes = new HashSet<>();
-    private Set<String> selectedTags = new HashSet<>();
-    private boolean applyTagFilterToItNetworks;
+    private @NonNull BaseProtectionFilterParameters filterParameters;
     private final boolean hideEmptyGroupsByDefault;
-    private boolean hideEmptyGroups;
 
     public BaseProtectionFilterAction(StructuredViewer viewer, boolean hideEmptyGroupsByDefault) {
         super("Filter..."); // //$NON-NLS-1$
         this.viewer = viewer;
         this.hideEmptyGroupsByDefault = hideEmptyGroupsByDefault;
-        this.hideEmptyGroups = hideEmptyGroupsByDefault;
+        this.filterParameters = BaseProtectionFilterParameters.builder()
+                .withHideEmptyGroups(hideEmptyGroupsByDefault).build();
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.FILTER));
     }
 
     @Override
     public void run() {
         BaseProtectionFilterDialog dialog = new BaseProtectionFilterDialog(
-                Display.getCurrent().getActiveShell(), selectedImplementationStatus,
-                selectedSecurityLevels, selectedElementTypes, selectedTags,
-                applyTagFilterToItNetworks, hideEmptyGroups, hideEmptyGroupsByDefault);
+                Display.getCurrent().getActiveShell(), filterParameters, hideEmptyGroupsByDefault);
         if (dialog.open() != InputDialog.OK) {
             return;
         }
-
-        selectedImplementationStatus = dialog.getSelectedImplementationStatus();
-        selectedSecurityLevels = dialog.getSelectedSecurityLevels();
-        selectedElementTypes = dialog.getSelectedElementTypes();
-        selectedTags = dialog.getSelectedTags();
-        applyTagFilterToItNetworks = dialog.isApplyTagFilterToItNetworks();
-        hideEmptyGroups = dialog.isHideEmptyGroups();
+        filterParameters = dialog.getFilterParameters();
 
         List<ViewerFilter> viewerFilters = new LinkedList<>();
         addImplementationStateFilter(viewerFilters);
@@ -91,7 +76,8 @@ public class BaseProtectionFilterAction extends Action {
         addTypeFilter(viewerFilters);
         addTagFilter(viewerFilters);
 
-        if (!viewerFilters.isEmpty() || hideEmptyGroups != hideEmptyGroupsByDefault) {
+        if (!viewerFilters.isEmpty()
+                || filterParameters.isHideEmptyGroups() != hideEmptyGroupsByDefault) {
             setImageDescriptor(
                     ImageCache.getInstance().getImageDescriptor(ImageCache.FILTER_ACTIVE));
         } else {
@@ -106,35 +92,41 @@ public class BaseProtectionFilterAction extends Action {
     }
 
     private void addImplementationStateFilter(List<ViewerFilter> viewerFilters) {
-        if (!selectedImplementationStatus.isEmpty()) {
+        if (!filterParameters.getImplementationStatuses().isEmpty()) {
             viewerFilters.add(new RecursiveTreeFilter(new ImplementationStatusFilter(
-                    Collections.unmodifiableSet(selectedImplementationStatus), hideEmptyGroups)));
+                    filterParameters.getImplementationStatuses(),
+                    filterParameters.isHideEmptyGroups())));
         }
     }
 
     private void addSecurityLevelFilter(List<ViewerFilter> viewerFilters) {
-        if (!selectedSecurityLevels.isEmpty()) {
+        if (!filterParameters.getSecurityLevels().isEmpty()) {
             viewerFilters.add(new RecursiveTreeFilter(new SecurityLevelFilter(
-                    Collections.unmodifiableSet(selectedSecurityLevels), hideEmptyGroups)));
+                    filterParameters.getSecurityLevels(),
+                    filterParameters.isHideEmptyGroups())));
         }
     }
 
     private void addTypeFilter(List<ViewerFilter> viewerFilters) {
-        if (!selectedElementTypes.isEmpty()) {
+        if (!filterParameters.getElementTypes().isEmpty()) {
             viewerFilters.add(new RecursiveTreeFilter(new TypeFilter(
-                    Collections.unmodifiableSet(selectedElementTypes), hideEmptyGroups)));
+                    filterParameters.getElementTypes(),
+                    filterParameters.isHideEmptyGroups())));
         }
     }
 
     private void addTagFilter(List<ViewerFilter> viewerFilters) {
-        if (!selectedTags.isEmpty()) {
+        if (!filterParameters.getTags().isEmpty()) {
             viewerFilters.add(
-                    new RecursiveTreeFilter(new TagFilter(Collections.unmodifiableSet(selectedTags),
-                            applyTagFilterToItNetworks, hideEmptyGroups)) {
+                    new RecursiveTreeFilter(
+                            new TagFilter(filterParameters.getTags(),
+                                    filterParameters.isApplyTagFilterToItNetworks(),
+                                    filterParameters.isHideEmptyGroups())) {
 
                         @Override
                         protected boolean checkChildren(CnATreeElement cnATreeElement) {
-                            if (applyTagFilterToItNetworks && cnATreeElement instanceof ItNetwork) {
+                            if (filterParameters.isApplyTagFilterToItNetworks()
+                                    && cnATreeElement instanceof ItNetwork) {
                                 return false;
                             }
                             return super.checkChildren(cnATreeElement);
@@ -144,7 +136,7 @@ public class BaseProtectionFilterAction extends Action {
     }
 
     private void addHideEmptyGroupsFilter(List<ViewerFilter> viewerFilters) {
-        if (hideEmptyGroups) {
+        if (filterParameters.isHideEmptyGroups()) {
             viewerFilters.add(new RecursiveTreeFilter(HideEmptyGroupsFilter.INSTANCE));
         }
     }
