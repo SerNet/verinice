@@ -30,10 +30,10 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpGroup;
+import sernet.verinice.model.bp.ISecurityLevelProvider;
 import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.elements.BpRequirement;
-import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
@@ -241,19 +241,9 @@ public class BaseProtectionFilterBuilder {
     private static final class ProceedingFilter extends ViewerFilter {
         @Override
         public boolean select(Viewer viewer, Object parentElement, Object element) {
-            if (element instanceof Safeguard) {
-                Safeguard safeguard = (Safeguard) element;
-                SecurityLevel securityLevel = safeguard.getSecurityLevel();
-                return scopeRequiresSecurityLevel(safeguard, securityLevel);
-            }
-            if (element instanceof BpRequirement) {
-                BpRequirement requirement = (BpRequirement) element;
-                SecurityLevel securityLevel = requirement.getSecurityLevel();
-                return scopeRequiresSecurityLevel(requirement, securityLevel);
-            }
-            if (element instanceof BpThreat) {
-                BpThreat threat = (BpThreat) element;
-                return true;
+            if (element instanceof CnATreeElement && element instanceof ISecurityLevelProvider) {
+                SecurityLevel securityLevel = ((ISecurityLevelProvider) element).getSecurityLevel();
+                return scopeRequiresSecurityLevel(((CnATreeElement) element), securityLevel);
             }
             return true;
         }
@@ -269,7 +259,7 @@ public class BaseProtectionFilterBuilder {
                 }
                 return proceeding.requires(securityLevel);
             }
-            // requirement's scope is no it network. This state is
+            // scope is no it network. This state is
             // undefined.
             return true;
         }
