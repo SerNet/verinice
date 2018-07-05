@@ -45,6 +45,44 @@ public class BaseProtectionFilterParameters {
         return new Builder();
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (applyTagFilterToItNetworks ? 1231 : 1237);
+        result = prime * result + ((elementTypes == null) ? 0 : elementTypes.hashCode());
+        result = prime * result + (hideEmptyGroups ? 1231 : 1237);
+        result = prime * result
+                + ((implementationStatuses == null) ? 0 : implementationStatuses.hashCode());
+        result = prime * result + ((securityLevels == null) ? 0 : securityLevels.hashCode());
+        result = prime * result + ((tags == null) ? 0 : tags.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        BaseProtectionFilterParameters other = (BaseProtectionFilterParameters) obj;
+        if (applyTagFilterToItNetworks != other.applyTagFilterToItNetworks)
+            return false;
+        if (!elementTypes.equals(other.elementTypes))
+            return false;
+        if (hideEmptyGroups != other.hideEmptyGroups)
+            return false;
+        if (!implementationStatuses.equals(other.implementationStatuses))
+            return false;
+        if (!securityLevels.equals(other.securityLevels))
+            return false;
+        if (!tags.equals(other.tags))
+            return false;
+        return true;
+    }
+
     public @NonNull Set<ImplementationStatus> getImplementationStatuses() {
         return implementationStatuses;
     }
