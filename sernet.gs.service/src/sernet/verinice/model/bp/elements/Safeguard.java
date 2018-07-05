@@ -27,6 +27,7 @@ import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.ISecurityLevelProvider;
 import sernet.verinice.model.bp.Reevaluator;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bsi.TagHelper;
@@ -42,7 +43,7 @@ import sernet.verinice.model.common.TransactionAbortedException;
  *
  */
 public class Safeguard extends CnATreeElement
-        implements IBpElement, IIdentifiableElement, ITaggableElement {
+        implements IBpElement, IIdentifiableElement, ITaggableElement, ISecurityLevelProvider {
 
     private static final long serialVersionUID = -3597661958061483411L;
 
@@ -146,6 +147,7 @@ public class Safeguard extends CnATreeElement
     /**
      * @return The Security level level represented by property PROP_QUALIFIER
      */
+    @Override
     public SecurityLevel getSecurityLevel() {
         // Parsing the string as SecurityLevel should actually be done
         // in Proceeding. But every class has different
