@@ -21,17 +21,23 @@ package sernet.verinice.model.bp.elements;
 
 import java.util.Collection;
 
+import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.Retriever;
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.ISecurityLevelProvider;
+import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bsi.TagHelper;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
-public class BpThreat extends CnATreeElement implements IBpElement, IIdentifiableElement, ITaggableElement {
-    
+public class BpThreat extends CnATreeElement
+        implements IBpElement, IIdentifiableElement, ITaggableElement, ISecurityLevelProvider {
+
     private static final long serialVersionUID = -7182966153863832177L;
 
     private static final String PROP_ABBR = "bp_threat_abbr"; //$NON-NLS-1$
@@ -66,6 +72,21 @@ public class BpThreat extends CnATreeElement implements IBpElement, IIdentifiabl
     @Override
     public String getTypeId() {
         return TYPE_ID;
+    }
+
+    /**
+     * The security level of a threat is the minimum of the security levels of
+     * all linked requirements.
+     *
+     * This method is pretty costly since it triggers database calls.
+     */
+    @Override
+    public SecurityLevel getSecurityLevel() {
+        CnATreeElement element = Retriever.retrieveElement(this,
+                RetrieveInfo.getPropertyInstance().setLinksUpProperties(true));
+        return element.getLinksUp().stream().map(CnALink::getDependant)
+                .filter(BpRequirement.class::isInstance).map(BpRequirement.class::cast)
+                .map(BpRequirement::getSecurityLevel).min(SecurityLevel::compare).orElse(null);
     }
 
     public String getObjectBrowserDescription() {
