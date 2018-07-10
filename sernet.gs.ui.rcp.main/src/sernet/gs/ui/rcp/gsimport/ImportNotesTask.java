@@ -74,7 +74,7 @@ public class ImportNotesTask extends AbstractGstoolImportTask {
             Map<MbBaust, List<NotizenMassnahmeResult>> notizenMap = TransferData
                     .convertZielobjektNotizenMap(notesResults);
             ImportNotesForZielobjekt command = new ImportNotesForZielobjekt(name, notizenMap);
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            ServiceFactory.lookupCommandService().executeCommand(command);
         }
     }
 

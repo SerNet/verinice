@@ -68,24 +68,6 @@ public class GSVampire {
             + "			and (subtxt.id.sprId = 0 or subtxt.id.sprId = 1)"
             + "         and zo.loeschDatum = null";
 
-    // private static final String QUERY_ZIELOBJEKT_TYP_BY_ID = "select zo,
-    // txt.name, subtxt.name "
-    // + " from NZielobjekt zo, MbZielobjTypTxt txt, MbZielobjSubtypTxt subtxt "
-    // + " where zo.mbZielobjSubtyp.id.zotId = txt.id.zotId "
-    // + " and (txt.id.sprId = 0 or txt.id.sprId = 1) "
-    // + " and zo.mbZielobjSubtyp.id.zosId = subtxt.id.zosId "
-    // + " and (subtxt.id.sprId = 0 or subtxt.id.sprId = 1) "
-    // + " and zo.loeschDatum = null "
-    // + " and zo.id.zobId = 10637";
-
-    // private static final String QUERY_BAUSTEIN_ZIELOBJEKT = "select zo.name,
-    // zo.id.zobId, bst.nr, "
-    // + "zo_bst.begruendung, zo_bst.bearbeitet, zo_bst.datum "
-    // + "from ModZobjBst zo_bst, NZielobjekt zo, MbBaust bst "
-    // + "where zo_bst.id.bauId = bst.id.bauId "
-    // + "and zo_bst.id.zobId = zo.id.zobId " + "order by zo.id.zobId "
-    // + "and zo_bst.loeschDatum = null";
-
     private static final String QUERY_BAUSTEIN_ZIELOBJEKT_MASSNAHME_FOR_ZIELOBJEKT = "select bst, mn, umstxt, zo_bst, obm "
             + "from ModZobjBstMass obm, " + "	MUmsetzStatTxt umstxt, " + "	NZielobjekt zo, "
             + "	MbBaust bst, " + "	MbMassn mn, " + " ModZobjBst zo_bst  "
@@ -155,10 +137,6 @@ public class GSVampire {
             + " where mbMassn.id.masId = mbMassnTxt.id.masId" + " and mbMassn.id.masId = :masId"
             + " and (mbMassnTxt.id.sprId = 1 or mbMassnTxt.id.sprId = 0)";
 
-    // private static final String QUERY_ZEITEINHEITEN_TXT_ALL = "select zeittxt
-    // " +
-    // "from MbZeiteinheitenTxt zeittxt";
-
     private static final String QUERY_ALLSUBTYPES = "select txt.name, subtxt.name "
             + "			from MbZielobjTypTxt txt, MbZielobjSubtypTxt subtxt "
             + "			where txt.id.sprId = 1 " + "			and txt.id.zotId = subtxt.id.zotId "
@@ -209,21 +187,9 @@ public class GSVampire {
             + "   and stxt.id.sprId=1 " + "   and z.id.zobId = :zobId "
             + "   and g.id.gefId = :gefId ";
 
-    // private static final String QUERY_GEFTXT_FOR_BAUSTEIN = "select mbg from
-    // MbBaustGefaehr mbg, MbBaust mbb"
-    // + " where mbg.mbGefaehr.id.gefId = :gefId"
-    // + " and gTxt.id.gefId = mbg.mbGefaehr.id.gefId"
-    // + " and mbg.mbBaust.id.bauId = :bstId";
     private static final String QUERY_MBBSTGEF_FOR_BAUSTEIN = "select mbg from MbBaustGefaehr mbg, NZielobjekt z, ModZobjBst mzb"
             + " where mbg.mbBaust.id.bauId = :bstId" + " and mzb.id.bauId = :bstId"
             + " and mzb.id.zobId = :zobId" + " and z.id.zobId  = :zobId";
-
-    // private static final String QUERY_GEFS_FOR_BAUSTEIN = "select
-    // mbg.mbGefaehr"
-    // + " from MbBaustGefaehr mbg, ModZobjBst zo_bst"
-    // + " where mbg.mbBaust.id.bauId = :bstId "
-    // + " and zo_bst.id.bauId = mbg.mbBaust.id.bauId"
-    // + " and zo_bst.id.zobId = :zobId";
 
     private static final String QUERY_GEFS_FOR_BAUSTEIN = "select mbg.mbGefaehr.nr, mbg.mbGefaehr.id.gefImpId, mbg.mbGefaehr.gfkId,"
             + " mbg.mbGefaehr.id.gefId, gtxt.name, gtxt.beschreibung, mbg.mbGefaehr.guid"
@@ -239,7 +205,6 @@ public class GSVampire {
     private static final String QUERY_ZOBS_REF_BY_BAUSTEIN = "select nZob.id.zobId"
             + " from ModZobjBst mZBst, NZielobjekt nZob" + " where mZBst.id.bauId = :bauId"
             + " and mZBst.refZobId = :refZobId" + " and mZBst.id.zobId = nZob.id.zobId";
-    // + " and nZob.id.refZobId = ";
 
     public GSVampire(String configFile) {
         HibernateSessionFactory.setConfigFile(configFile);
@@ -258,11 +223,11 @@ public class GSVampire {
     }
 
     public List<ZielobjektTypeResult> findZielobjektTyp(String hql) {
-        List<ZielobjektTypeResult> result = new ArrayList<ZielobjektTypeResult>();
+        List<ZielobjektTypeResult> result = new ArrayList<>();
         NZielobjektDAO dao = new NZielobjektDAO();
         Transaction transaction = dao.getSession().beginTransaction();
         Query query = dao.getSession().createQuery(hql);
-        Iterator iterate = query.iterate();
+        Iterator<?> iterate = query.iterate();
 
         while (iterate.hasNext()) {
             Object[] next = (Object[]) iterate.next();
@@ -284,8 +249,8 @@ public class GSVampire {
         Query query = dao.getSession().createQuery(QUERY_ZOBS_REF_BY_BAUSTEIN);
         query.setParameter("bauId", mZobBst.getId().getBauId());
         query.setParameter("refZobId", refZobId);
-        List<Object> queryResult = query.list();
-        List<Integer> result = new ArrayList<Integer>(queryResult.size());
+        List<?> queryResult = query.list();
+        List<Integer> result = new ArrayList<>(queryResult.size());
         if (!queryResult.contains(mZobBst.getId().getZobId())) {
             for (Object o : queryResult) {
                 if (o instanceof Integer) {
@@ -298,7 +263,7 @@ public class GSVampire {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Time computing references for ModZobjBst <" + mZobBst.getId().getBauId()
                     + "|" + mZobBst.getId().getZobId() + ">:\t"
-                    + String.valueOf(((System.currentTimeMillis() - startTime) / 1000)) + "s");
+                    + ((System.currentTimeMillis() - startTime) / 1000) + "s");
         }
         return result;
     }
@@ -313,14 +278,14 @@ public class GSVampire {
      */
     public List<NotizenMassnahmeResult> findNotizenForZielobjekt(String name) {
 
-        List<NotizenMassnahmeResult> result = new ArrayList<NotizenMassnahmeResult>();
+        List<NotizenMassnahmeResult> result = new ArrayList<>();
         NZielobjektDAO dao = new NZielobjektDAO();
         Transaction transaction = dao.getSession().beginTransaction();
 
         // get notes for massnahmen:
         Query query = dao.getSession().createQuery(QUERY_NOTIZEN_FOR_ZIELOBJEKT_NAME);
         query.setParameter("name", name, sernet.gs.reveng.type.Types.STRING_TYPE);
-        Iterator iterate = query.iterate();
+        Iterator<?> iterate = query.iterate();
         while (iterate.hasNext()) {
             Object[] next = (Object[]) iterate.next();
             result.add(new NotizenMassnahmeResult((MbBaust) next[0], (MbMassn) next[1],
@@ -347,6 +312,7 @@ public class GSVampire {
     public List<MbZeiteinheitenTxt> findZeiteinheitenTxtAll() {
         MbZeiteinheitenTxtDAO dao = new MbZeiteinheitenTxtDAO();
         Transaction transaction = dao.getSession().beginTransaction();
+        @SuppressWarnings("unchecked")
         List<MbZeiteinheitenTxt> result = dao.findAll();
         transaction.commit();
         dao.getSession().close();
@@ -356,6 +322,8 @@ public class GSVampire {
     public List<MSchutzbedarfkategTxt> findSchutzbedarfAll() {
         MSchutzbedarfkategTxtDAO dao = new MSchutzbedarfkategTxtDAO();
         Transaction transaction = dao.getSession().beginTransaction();
+        @SuppressWarnings("unchecked")
+
         List<MSchutzbedarfkategTxt> all = dao.findAll();
         transaction.commit();
         dao.getSession().close();
@@ -365,6 +333,8 @@ public class GSVampire {
     public List<MbDringlichkeitTxt> findDringlichkeitAll() {
         MbDringlichkeitTxtDAO dao = new MbDringlichkeitTxtDAO();
         Transaction transaction = dao.getSession().beginTransaction();
+        @SuppressWarnings("unchecked")
+
         List<MbDringlichkeitTxt> all = dao.findAll();
         transaction.commit();
         dao.getSession().close();
@@ -379,7 +349,7 @@ public class GSVampire {
         Query qry = dao.getSession().createQuery(QUERY_MBBAUSTTXT_FOR_MBBAUST);
         qry.setParameter("bstId", mbBaust.getId().getBauId());
         qry.setParameter("zobId", z.getId().getZobId());
-        List<Object> hqlResult = qry.list();
+        List<?> hqlResult = qry.list();
         if (hqlResult.size() == 1 && hqlResult.get(0) instanceof Object[]) {
             Object[] resultArr = (Object[]) hqlResult.get(0);
             MbBaustTxt mTxt = (MbBaustTxt) resultArr[0];
@@ -393,7 +363,6 @@ public class GSVampire {
             }
             bausteininformation.setEncoding(encoding);
             bausteininformation.setId(mbBaust.getNr());
-            // bausteininformation.setKapitel("1"); // TODO
             bausteininformation
                     .setSchicht(String.valueOf(mbBaust.getMbSchicht().getId().getSchId()));
             bausteininformation.setTitel(mTxt.getName());
@@ -410,17 +379,15 @@ public class GSVampire {
         return bausteininformation;
     }
 
-    public MassnahmeInformationTransfer findTxtforMbMassn(MbBaust mBbaut, MbMassn mbMassn,
-            String encoding) {
+    public MassnahmeInformationTransfer findTxtforMbMassn(MbMassn mbMassn, String encoding) {
         BaseHibernateDAO dao = new BaseHibernateDAO();
         Transaction transaction = dao.getSession().beginTransaction();
         Query qry = dao.getSession().createQuery(QUERY_MBMASSTXT_FOR_MBMASS);
         qry.setParameter("masId", mbMassn.getId().getMasId());
-        List<Object> hqlResult = qry.list();
+        List<?> hqlResult = qry.list();
         MassnahmeInformationTransfer massnahmeinformation = new MassnahmeInformationTransfer();
         if (hqlResult.size() == 1 && hqlResult.get(0) instanceof MbMassnTxt) {
-            massnahmeinformation = processMassnahme(mbMassn, encoding, hqlResult,
-                    massnahmeinformation);
+            processMassnahme(mbMassn, encoding, hqlResult, massnahmeinformation);
 
         }
         transaction.commit();
@@ -435,7 +402,7 @@ public class GSVampire {
      * @param massnahmeinformation
      */
     private MassnahmeInformationTransfer processMassnahme(MbMassn mbMassn, String encoding,
-            List<Object> hqlResult, MassnahmeInformationTransfer massnahmeinformation) {
+            List<?> hqlResult, MassnahmeInformationTransfer massnahmeinformation) {
         MbMassnTxt mTxt = (MbMassnTxt) hqlResult.get(0);
 
         massnahmeinformation.setAbstract_(mTxt.getAbstract_());
@@ -456,22 +423,21 @@ public class GSVampire {
         if (mbMassn.getUserdef() == GSDBConstants.USERDEF_YES) {
             prefix = USER_DEFINED_CONTROL_IDENTIFIER;
         }
-        massnahmeinformation.setId(prefix + String.valueOf(mbMassn.getMskId().intValue()) + "."
-                + String.valueOf(mbMassn.getNr()));
+        massnahmeinformation.setId(prefix + mbMassn.getMskId().intValue() + "." + mbMassn.getNr());
         massnahmeinformation.setSiegelstufe('A'); // TODO
         massnahmeinformation.setZyklus("-1"); // TODO
         return massnahmeinformation;
     }
 
     public GefaehrdungInformationTransfer findGefaehrdungInformationForBausteinGefaehrdung(
-            MbBaust mbBaust, MbBaustGefaehr mbBstGef, NZielobjekt z, String encoding) {
+            MbBaustGefaehr mbBstGef, NZielobjekt z, String encoding) {
         BaseHibernateDAO dao = new BaseHibernateDAO();
         Transaction transaction = dao.getSession().beginTransaction();
         Query qry = dao.getSession().createQuery(QUERY_GEFS_FOR_BAUSTEIN);
         qry.setParameter("gefId", mbBstGef.getMbGefaehr().getId().getGefId());
-        List<Object> hqlResult = qry.list();
+        List<?> hqlResult = qry.list();
         GefaehrdungInformationTransfer gefaehrdungsInformation = null;
-        if (hqlResult.size() >= 1 && hqlResult.get(0) instanceof Object[]) {
+        if (!hqlResult.isEmpty() && hqlResult.get(0) instanceof Object[]) {
             gefaehrdungsInformation = processGefaehrdung(encoding, hqlResult);
             gefaehrdungsInformation.setExtId(generateGefaehrdungsUmsetzungExtid(
                     String.valueOf(((Object[]) hqlResult.get(0))[0]),
@@ -493,13 +459,11 @@ public class GSVampire {
      * @param hqlResult
      * @param gefaehrdungInformation
      */
-    private GefaehrdungInformationTransfer processGefaehrdung(String encoding,
-            List<Object> hqlResult) {
+    private GefaehrdungInformationTransfer processGefaehrdung(String encoding, List<?> hqlResult) {
         GefaehrdungInformationTransfer gefaehrdungInformation = new GefaehrdungInformationTransfer();
         Object[] resultArr = ((Object[]) hqlResult.get(0));
         String gefaehrdungNr = String.valueOf(resultArr[0]);
         String gefaehrdungKapitelId = String.valueOf(resultArr[2]);
-        String gefaehrdungId = String.valueOf(resultArr[3]);
         String gefaehrdungName = String.valueOf(resultArr[4]);
         try {
             gefaehrdungInformation
@@ -518,9 +482,9 @@ public class GSVampire {
      * @param encoding
      * @param hqlResult
      */
-    private void logDuplicates(String encoding, List<Object> hqlResult) {
+    private void logDuplicates(String encoding, List<?> hqlResult) {
         if (LOG.isDebugEnabled() && hqlResult.size() > 1) {
-            Map<String, String> tMap = new HashMap<String, String>();
+            Map<String, String> tMap = new HashMap<>();
             for (Object o : hqlResult) {
                 if (o instanceof Object[]) {
                     Object[] oArr = (Object[]) o;
@@ -559,23 +523,23 @@ public class GSVampire {
         Query qry = dao.getSession().createQuery(QUERY_MBBSTGEF_FOR_BAUSTEIN);
         qry.setParameter("bstId", mbBaust.getId().getBauId());
         qry.setParameter("zobId", zo.getId().getZobId());
-        List<Object> hqlResult = qry.list();
+        List<?> hqlResult = qry.list();
         transaction.commit();
         dao.getSession().close();
-        if (hqlResult != null && hqlResult.size() > 0) {
-            return (List<MbBaustGefaehr>) (List<?>) hqlResult;
+        if (hqlResult != null && !hqlResult.isEmpty()) {
+            return (List<MbBaustGefaehr>) hqlResult;
         } else {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 
     public Set<NZielobjekt> findVerantowrtlicheMitarbeiterForMassnahme(ModZobjBstMassId id) {
-        Set<NZielobjekt> result = new HashSet<NZielobjekt>();
+        Set<NZielobjekt> result = new HashSet<>();
         NZielobjektDAO dao = new NZielobjektDAO();
         Transaction transaction = dao.getSession().beginTransaction();
         Query query = dao.getSession().createQuery(QUERY_MITARBEITER_FOR_MASSNAHME);
         query.setProperties(id);
-        Iterator iterate = query.iterate();
+        Iterator<?> iterate = query.iterate();
         while (iterate.hasNext()) {
             result.add((NZielobjekt) iterate.next());
         }
@@ -660,12 +624,12 @@ public class GSVampire {
     public Set<NZielobjekt> findBefragteMitarbeiterForBaustein(ModZobjBstId id) {
         // fixme debug this, missing persons for verantwrotlich (mnums) and
         // baustein (befragter)
-        Set<NZielobjekt> result = new HashSet<NZielobjekt>();
+        Set<NZielobjekt> result = new HashSet<>();
         NZielobjektDAO dao = new NZielobjektDAO();
         Transaction transaction = dao.getSession().beginTransaction();
         Query query = dao.getSession().createQuery(QUERY_MITARBEITER_FOR_BAUSTEIN);
         query.setProperties(id);
-        Iterator iterate = query.iterate();
+        Iterator<?> iterate = query.iterate();
         while (iterate.hasNext()) {
             result.add((NZielobjekt) iterate.next());
         }
@@ -682,7 +646,7 @@ public class GSVampire {
         Query query = dao.getSession()
                 .createQuery(QUERY_BAUSTEIN_ZIELOBJEKT_MASSNAHME_FOR_ZIELOBJEKT);
         query.setProperties(zielobjekt.getId());
-        Iterator iterate = query.iterate();
+        Iterator<?> iterate = query.iterate();
         while (iterate.hasNext()) {
             Object[] next = (Object[]) iterate.next();
             result.add(new BausteineMassnahmenResult((MbBaust) next[0], (MbMassn) next[1],
@@ -703,12 +667,12 @@ public class GSVampire {
     }
 
     public List<MbRolleTxt> findRollenByZielobjekt(NZielobjekt zielobjekt) {
-        List<MbRolleTxt> result = new ArrayList<MbRolleTxt>();
+        List<MbRolleTxt> result = new ArrayList<>();
         NZielobjektDAO dao = new NZielobjektDAO();
         Transaction transaction = dao.getSession().beginTransaction();
         Query query = dao.getSession().createQuery(QUERY_ROLLE_FOR_MITARBEITER);
         query.setProperties(zielobjekt.getId());
-        Iterator iterate = query.iterate();
+        Iterator<?> iterate = query.iterate();
         while (iterate.hasNext()) {
             result.add((MbRolleTxt) iterate.next());
         }
@@ -718,12 +682,12 @@ public class GSVampire {
     }
 
     public List<NZielobjekt> findLinksByZielobjektId(NZielobjektId zielobjektId) {
-        List<NZielobjekt> result = new ArrayList<NZielobjekt>();
+        List<NZielobjekt> result = new ArrayList<>();
         NZielobjektDAO dao = new NZielobjektDAO();
         Transaction transaction = dao.getSession().beginTransaction();
         Query query = dao.getSession().createQuery(QUERY_LINKS_FOR_ZIELOBJEKT);
         query.setProperties(zielobjektId);
-        Iterator iterate = query.iterate();
+        Iterator<?> iterate = query.iterate();
         while (iterate.hasNext()) {
             result.add((NZielobjekt) iterate.next());
         }
@@ -733,12 +697,12 @@ public class GSVampire {
     }
 
     public List<NZobSb> findSchutzbedarfByZielobjektId(NZielobjektId zielobjektId) {
-        List<NZobSb> result = new ArrayList<NZobSb>();
+        List<NZobSb> result = new ArrayList<>();
         NZobSbDAO dao = new NZobSbDAO();
         Transaction transaction = dao.getSession().beginTransaction();
         Query query = dao.getSession().createQuery(QUERY_SCHUTZBEDARF_FOR_ZIELOBJEKT);
         query.setProperties(zielobjektId);
-        Iterator iterate = query.iterate();
+        Iterator<?> iterate = query.iterate();
         while (iterate.hasNext()) {
             result.add((NZobSb) iterate.next());
         }
@@ -760,11 +724,11 @@ public class GSVampire {
     }
 
     public List<String[]> findSubtypesAll() {
-        List<String[]> result = new ArrayList<String[]>();
+        List<String[]> result = new ArrayList<>();
         NZielobjektDAO dao = new NZielobjektDAO();
         Transaction transaction = dao.getSession().beginTransaction();
         Query query = dao.getSession().createQuery(QUERY_ALLSUBTYPES);
-        Iterator iterate = query.iterate();
+        Iterator<?> iterate = query.iterate();
         while (iterate.hasNext()) {
             Object[] next = (Object[]) iterate.next();
             result.add(new String[] { (String) next[0], (String) next[1] });
@@ -782,12 +746,12 @@ public class GSVampire {
      * @return
      */
     public List<ESAResult> findESAByZielobjekt(NZielobjekt zielobjekt) {
-        List result = new ArrayList();
+        List<ESAResult> result = new ArrayList<>();
         NZielobjektDAO dao = new NZielobjektDAO();
         Transaction transaction = dao.getSession().beginTransaction();
         Query query = dao.getSession().createQuery(QUERY_ESA_FOR_ZIELOBJEKT);
         query.setProperties(zielobjekt.getId());
-        Iterator iterate = query.iterate();
+        Iterator<?> iterate = query.iterate();
         while (iterate.hasNext()) {
             result.add((ESAResult) iterate.next());
         }
@@ -807,7 +771,7 @@ public class GSVampire {
      * @return
      */
     public List<RAGefaehrdungenResult> findRAGefaehrdungenForZielobjekt(NZielobjekt zielobjekt) {
-        List result = new ArrayList();
+        List<RAGefaehrdungenResult> result = new ArrayList<>();
         NZielobjektDAO dao = new NZielobjektDAO();
         Transaction transaction = dao.getSession().beginTransaction();
         Query query = dao.getSession().createQuery(QUERY_RA_GEFS_FOR_ZIELOBJEKT);
@@ -829,7 +793,7 @@ public class GSVampire {
      */
     public List<RAGefaehrdungsMassnahmenResult> findRAGefaehrdungsMassnahmenForZielobjekt(
             NZielobjekt zielobjekt, MbGefaehr gefaehrdung) {
-        List result = new ArrayList();
+        List<RAGefaehrdungsMassnahmenResult> result = new ArrayList<>();
         NZielobjektDAO dao = new NZielobjektDAO();
         Transaction transaction = dao.getSession().beginTransaction();
         Query query = dao.getSession().createQuery(QUERY_RA_GEF_MNS_FOR_ZIELOBJEKT);

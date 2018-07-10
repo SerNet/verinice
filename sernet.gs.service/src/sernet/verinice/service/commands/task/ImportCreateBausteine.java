@@ -17,8 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.task;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -46,7 +44,6 @@ import sernet.gs.reveng.importData.GefaehrdungInformationTransfer;
 import sernet.gs.reveng.importData.MassnahmeInformationTransfer;
 import sernet.gs.scraper.GSScraper;
 import sernet.gs.service.RuntimeCommandException;
-import sernet.verinice.interfaces.CnATreeElementBuildException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -216,18 +213,8 @@ public class ImportCreateBausteine extends GenericCommand {
         return null;
     }
 
-    /**
-     * @param element
-     * @param mbBaust
-     * @param list
-     * @throws CommandException
-     * @throws CnATreeElementBuildException
-     * @throws SQLException
-     * @throws IOException
-     */
     private BausteinUmsetzung createUserDefinedBausteinUmsetzung(CnATreeElement element,
-            MbBaust mbBaust, List<BausteineMassnahmenResult> list)
-            throws CommandException, CnATreeElementBuildException, SQLException, IOException {
+            MbBaust mbBaust, List<BausteineMassnahmenResult> list) throws CommandException {
         if (mbBaust.getId().getBauImpId() == 1 && mbBaust.getNrNum() == null) { // NrNum
                                                                                 // !=
                                                                                 // null
@@ -245,19 +232,11 @@ public class ImportCreateBausteine extends GenericCommand {
      * {@link BausteineMassnahmenResult} and {@link Baustein} only used, if
      * baustein (itgs module) is userdefined
      * 
-     * @param element
-     * @param mbBaust
-     * @param list
-     * @param baustein
-     * @return
      * @throws CommandException
-     * @throws CnATreeElementBuildException
-     * @throws SQLException
-     * @throws IOException
      */
     private BausteinUmsetzung createBstUms(CnATreeElement element, MbBaust mbBaust,
             List<BausteineMassnahmenResult> list, @NonNull Baustein baustein)
-            throws CommandException, CnATreeElementBuildException, SQLException, IOException {
+            throws CommandException {
         CreateBaustein command = new CreateBaustein(element, baustein,
                 GSScraper.CATALOG_LANGUAGE_GERMAN);
         command = getCommandService().executeCommand(command);
@@ -274,16 +253,9 @@ public class ImportCreateBausteine extends GenericCommand {
     /**
      * transfers instances of {@link Gefaehrdung} to instances of
      * {@link GefaehrdungsUmsetzung} within {@link BausteinUmsetzung}
-     * 
-     * @param baustein
-     * @param bausteinUmsetzung
-     * @throws SQLException
-     * @throws IOException
-     * @throws CommandException
      */
     @SuppressWarnings("unchecked")
-    private void transferGefForUDBst(Baustein baustein, BausteinUmsetzung bausteinUmsetzung)
-            throws SQLException, IOException, CommandException {
+    private void transferGefForUDBst(Baustein baustein, BausteinUmsetzung bausteinUmsetzung) {
         for (Gefaehrdung gefaehrdung : baustein.getGefaehrdungen()) {
             getDaoFactory().getDAO(GefaehrdungsUmsetzung.TYPE_ID).saveOrUpdate(
                     createGefaehrdung((OwnGefaehrdung) gefaehrdung, bausteinUmsetzung));
@@ -295,13 +267,9 @@ public class ImportCreateBausteine extends GenericCommand {
      * from the gstool in case baustein is not userdefined, data is read from
      * itgs-catalogue
      * 
-     * @param mbBaust
-     * @param list
-     * @return
-     * @throws CommandException
      */
     private @NonNull Baustein importUserDefinedBaustein(MbBaust mbBaust,
-            List<BausteineMassnahmenResult> list) throws CommandException {
+            List<BausteineMassnahmenResult> list) {
         Baustein baustein = createBasicBaustein(mbBaust);
         createMassnForBst(list, baustein);
         createGefForBst(mbBaust, baustein);
@@ -323,9 +291,6 @@ public class ImportCreateBausteine extends GenericCommand {
     /**
      * transfers data from the gstool db ({@link BausteineMassnahmenResult}) to
      * an instance of {@link Baustein}
-     * 
-     * @param list
-     * @param baustein
      */
     private Baustein createMassnForBst(List<BausteineMassnahmenResult> list, Baustein baustein) {
         List<Massnahme> massnahmen = new ArrayList<>(list.size());
@@ -346,10 +311,6 @@ public class ImportCreateBausteine extends GenericCommand {
         return baustein;
     }
 
-    /**
-     * @param mbBaust
-     * @param baustein
-     */
     private Baustein createGefForBst(MbBaust mbBaust, Baustein baustein) {
         if (udBaustGefMap.containsKey(mbBaust)) {
             List<GefaehrdungInformationTransfer> gefaehrdungenForBaustein = udBaustGefMap
@@ -375,9 +336,6 @@ public class ImportCreateBausteine extends GenericCommand {
         return baustein;
     }
 
-    /**
-     * @return
-     */
     private String createExtId(Baustein baustein, Integer refZobId) {
         return baustein.getId() + "-" + Integer.toString(refZobId);
     }
@@ -471,8 +429,7 @@ public class ImportCreateBausteine extends GenericCommand {
     }
 
     private void transferMassnahmen(BausteinUmsetzung bausteinUmsetzung,
-            List<BausteineMassnahmenResult> list, boolean isUserDefinedBaustein)
-            throws CommandException, CnATreeElementBuildException {
+            List<BausteineMassnahmenResult> list, boolean isUserDefinedBaustein) {
         List<MassnahmenUmsetzung> massnahmenUmsetzungen = null;
         List<BausteineMassnahmenResult> indiviualMassnahmen = new ArrayList<>();
         Set<BausteineMassnahmenResult> usedBausteineMassnahmenResult = new HashSet<>();
@@ -502,11 +459,6 @@ public class ImportCreateBausteine extends GenericCommand {
 
     }
 
-    /**
-     * @param list
-     * @param massnahmenUmsetzung
-     * @param vorlage
-     */
     private void createMassnahmenForBaustein(List<BausteineMassnahmenResult> list,
             MassnahmenUmsetzung massnahmenUmsetzung, BausteineMassnahmenResult vorlage) {
         if (vorlage != null) {
@@ -552,22 +504,21 @@ public class ImportCreateBausteine extends GenericCommand {
             @NonNull BausteineMassnahmenResult vorlage) {
         if (importUmsetzung) {
             // erlaeuterung und termin:
-            if (vorlage != null) {
-                if (vorlage.baustein.getId().getBauImpId() == 1) {
-                    if (udBstMassTxtMap.containsKey(vorlage.massnahme)) {
-                        massnahmenUmsetzung.setDescription(
-                                udBstMassTxtMap.get(vorlage.massnahme).getDescription());
-                    }
-                }
-                MassnahmenFactory massnahmenFactory = new MassnahmenFactory();
-                massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_ERLAEUTERUNG,
-                        vorlage.obm.getUmsBeschr());
-                massnahmenUmsetzung = massnahmenFactory.transferUmsetzungWithDate(
-                        massnahmenUmsetzung, vorlage.umstxt.getName(), vorlage.obm.getUmsDatBis());
-                massnahmenUmsetzung = massnahmenFactory.transferRevision(massnahmenUmsetzung,
-                        vorlage.obm.getRevDat(), vorlage.obm.getRevDatNext(),
-                        vorlage.obm.getRevBeschr());
+            if (vorlage.baustein.getId().getBauImpId() == 1
+                    && udBstMassTxtMap.containsKey(vorlage.massnahme)) {
+                massnahmenUmsetzung
+                        .setDescription(udBstMassTxtMap.get(vorlage.massnahme).getDescription());
             }
+
+            MassnahmenFactory massnahmenFactory = new MassnahmenFactory();
+            massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_ERLAEUTERUNG,
+                    vorlage.obm.getUmsBeschr());
+            massnahmenUmsetzung = massnahmenFactory.transferUmsetzungWithDate(massnahmenUmsetzung,
+                    vorlage.umstxt.getName(), vorlage.obm.getUmsDatBis());
+            massnahmenUmsetzung = massnahmenFactory.transferRevision(massnahmenUmsetzung,
+                    vorlage.obm.getRevDat(), vorlage.obm.getRevDatNext(),
+                    vorlage.obm.getRevBeschr());
+
         }
 
         // transfer kosten:
@@ -583,8 +534,7 @@ public class ImportCreateBausteine extends GenericCommand {
     }
 
     private GefaehrdungsUmsetzung createGefaehrdung(OwnGefaehrdung ownGefaehrdung,
-            BausteinUmsetzung bausteinUmsetzung)
-            throws SQLException, IOException, CommandException {
+            BausteinUmsetzung bausteinUmsetzung) {
 
         GefaehrdungsUmsetzung gefaehrdungsUmsetzung = GefaehrdungsUmsetzungFactory
                 .build(bausteinUmsetzung, ownGefaehrdung, GSScraper.CATALOG_LANGUAGE_GERMAN);

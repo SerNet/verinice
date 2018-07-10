@@ -430,8 +430,7 @@ public class ImportTask extends AbstractGstoolImportTask {
                     .createBausteineMassnahmenResultIdentifier(bausteineMassnahmenResult);
             if (!massnahmenInfos.containsKey(identifier)) {
                 MassnahmeInformationTransfer massnahmeInformationTransfer = getGstoolDao()
-                        .findTxtforMbMassn(bausteineMassnahmenResult.baustein,
-                                bausteineMassnahmenResult.massnahme,
+                        .findTxtforMbMassn(bausteineMassnahmenResult.massnahme,
                                 GSScraperUtil.getInstance().getModel().getEncoding());
                 massnahmenInfos.put(identifier, massnahmeInformationTransfer);
             }
@@ -921,7 +920,7 @@ public class ImportTask extends AbstractGstoolImportTask {
                 GSScraperUtil.getInstance().getModel().getEncoding()));
         List<BausteineMassnahmenResult> lr = bausteineMassnahmenMap.get(b);
         for (BausteineMassnahmenResult r : lr) {
-            udBstMassTxtMap.put(r.massnahme, getGstoolDao().findTxtforMbMassn(b, r.massnahme,
+            udBstMassTxtMap.put(r.massnahme, getGstoolDao().findTxtforMbMassn(r.massnahme,
                     GSScraperUtil.getInstance().getModel().getEncoding()));
         }
         List<GefaehrdungInformationTransfer> gefaehrdunInformationTransferList = new ArrayList<>();
@@ -929,7 +928,7 @@ public class ImportTask extends AbstractGstoolImportTask {
                 zielobjekt);
         for (MbBaustGefaehr gefaehr : mbBaustGefList) {
             GefaehrdungInformationTransfer git = getGstoolDao()
-                    .findGefaehrdungInformationForBausteinGefaehrdung(b, gefaehr, zielobjekt,
+                    .findGefaehrdungInformationForBausteinGefaehrdung(gefaehr, zielobjekt,
                             GSScraperUtil.getInstance().getModel().getEncoding());
             if (git.getTitel() != null && git.getId() != null) {
                 gefaehrdunInformationTransferList.add(git);

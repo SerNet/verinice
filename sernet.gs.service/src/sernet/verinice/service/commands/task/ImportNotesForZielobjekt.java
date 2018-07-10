@@ -27,6 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 
 import sernet.gs.reveng.MbBaust;
 import sernet.gs.reveng.importData.NotizenMassnahmeResult;
@@ -54,17 +55,14 @@ public class ImportNotesForZielobjekt extends GenericCommand {
 
     private static final Logger LOG = Logger.getLogger(ImportNotesForZielobjekt.class);
 
+    private static final Pattern onlyWhitespace = Pattern.compile("^\\s*$");
+
     private static final String QUERY = "from CnATreeElement elmt "
             + "where elmt.objectType != 'massnahmen-umsetzung'"
             + "and elmt.objectType != 'baustein-umsetzung' ";
 
     private String zielobjektName;
     private Map<MbBaust, List<NotizenMassnahmeResult>> notizenMap;
-
-    /**
-     * @param name
-     * @param notizen
-     */
 
     public ImportNotesForZielobjekt(String name,
             Map<MbBaust, List<NotizenMassnahmeResult>> notizenMap) {
@@ -88,7 +86,7 @@ public class ImportNotesForZielobjekt extends GenericCommand {
                         try {
                             List<NotizenMassnahmeResult> remainingNotes = addNotes(bstUms,
                                     massnahmenNotizen);
-                            if (remainingNotes != null && remainingNotes.size() > 0) {
+                            if (!remainingNotes.isEmpty()) {
                                 addNotes(cnATreeElement, remainingNotes);
                             }
                         } catch (CommandException e) {
@@ -102,30 +100,22 @@ public class ImportNotesForZielobjekt extends GenericCommand {
 
     /**
      * Add remaining notes to target object.
-     * 
-     * @param cnATreeElement
-     * @param remainingNotes
-     * @throws CommandException
      */
     private void addNotes(CnATreeElement cnATreeElement,
             List<NotizenMassnahmeResult> remainingNotes) throws CommandException {
         for (NotizenMassnahmeResult notiz : remainingNotes) {
-            LOG.debug("Adding note for " + cnATreeElement.getTitle());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Adding note for " + cnATreeElement.getTitle());
+            }
             saveNewNote(cnATreeElement.getDbId(), cnATreeElement.getTitle(),
                     cnATreeElement.getTitle(), notiz.notiz.getNotizText());
             appendDescription(cnATreeElement, notiz.notiz.getNotizText());
         }
     }
 
-    @SuppressWarnings("restriction")
     public void appendDescription(CnATreeElement element, String description) {
         // do not save empty text:
-        if (description == null || description.length() == 0) {
-            return;
-        }
-        Pattern pattern = Pattern.compile("^\\s+$");
-        Matcher matcher = pattern.matcher(description);
-        if (matcher.matches()) {
+        if (description == null || onlyWhitespace.matcher(description).matches()) {
             return;
         }
         String convertedText;
@@ -143,7 +133,7 @@ public class ImportNotesForZielobjekt extends GenericCommand {
             return;
         }
         PropertyList properties = element.getEntity().getProperties(descriptionPropId);
-        if (properties == null || properties.getProperties().size() == 0) {
+        if (properties == null || properties.getProperties().isEmpty()) {
             return;
         }
         Property property = properties.getProperty(0);
@@ -160,14 +150,13 @@ public class ImportNotesForZielobjekt extends GenericCommand {
      * Add notes to massnahmen of this bausteinumsetznug and to the bstumsetzung
      * itself.
      * 
-     * @param bstUms
-     * @param massnahmenNotizen
      * @return list of all notes that could not be applied
      * @throws CommandException
      */
+    @NonNull
     private List<NotizenMassnahmeResult> addNotes(BausteinUmsetzung bstUms,
             List<NotizenMassnahmeResult> massnahmenNotizen) throws CommandException {
-        List<NotizenMassnahmeResult> copy = new ArrayList<NotizenMassnahmeResult>();
+        List<NotizenMassnahmeResult> copy = new ArrayList<>();
         copy.addAll(massnahmenNotizen);
 
         List<MassnahmenUmsetzung> ums = bstUms.getMassnahmenUmsetzungen();
@@ -176,8 +165,9 @@ public class ImportNotesForZielobjekt extends GenericCommand {
                     .findMassnahmenVorlageNotiz(mnums, massnahmenNotizen);
             for (NotizenMassnahmeResult notizVorlage : notizVorlagen) {
                 copy.remove(notizVorlage);
-
-                LOG.debug("Adding note for " + bstUms.getTitle() + ", " + mnums.getKapitel());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Adding note for " + bstUms.getTitle() + ", " + mnums.getKapitel());
+                }
                 Integer dbId = mnums.getDbId();
                 String elmtTitle = mnums.getTitle();
                 String noteTitle = "Notiz " + mnums.getKapitel();
@@ -188,13 +178,14 @@ public class ImportNotesForZielobjekt extends GenericCommand {
             }
         }
 
-        if (copy.size() > 0) {
+        if (!copy.isEmpty()) {
             List<NotizenMassnahmeResult> bstNotizVorlagen = TransferData
                     .findBausteinVorlageNotiz(massnahmenNotizen);
             for (NotizenMassnahmeResult bstNotizVorlage : bstNotizVorlagen) {
                 copy.remove(bstNotizVorlage);
-
-                LOG.debug("Adding note for " + bstUms.getTitle());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Adding note for " + bstUms.getTitle());
+                }
                 Integer dbId = bstUms.getDbId();
                 String elmtTitle = bstUms.getTitle();
                 String noteTitle = "Notiz " + bstUms.getKapitel();
@@ -229,8 +220,7 @@ public class ImportNotesForZielobjekt extends GenericCommand {
         }
 
         // do not save empty notes:
-        Pattern pattern = Pattern.compile("^\\s+$");
-        Matcher matcher = pattern.matcher(convertedText);
+        Matcher matcher = onlyWhitespace.matcher(convertedText);
         if (matcher.matches()) {
             return;
         }
