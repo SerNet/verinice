@@ -57,7 +57,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.PasswordException;
 import sernet.verinice.model.bp.DeductionImplementationUtil;
-import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bpm.TodoViewItem;
 import sernet.verinice.model.bsi.DocumentReference;
@@ -425,8 +424,8 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
                         .setProperties(true).setLinksUp(true).setLinksUpProperties(true));
                 Set<CnALink> linksUp = cnATreeElement.getLinksUp();
                 for (CnALink cnALink : linksUp) {
-                    if (BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD
-                            .equals(cnALink.getRelationId())) {
+                    if (DeductionImplementationUtil
+                            .isRelevantLinkForImplementationStateDeduction(cnALink)) {
                         CnATreeElement requirement = cnALink.getDependant();
                         if (DeductionImplementationUtil
                                 .isDeductiveImplementationEnabled(requirement)) {
