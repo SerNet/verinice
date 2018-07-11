@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -658,12 +659,48 @@ public final class CnAElementFactory {
         return (getInstance().loadedModel != null);
     }
 
+    /**
+     * If there is a BSI model loaded, execute the given callback and return
+     * true. If the model is not loaded, return false.
+     */
+    public boolean ifModelLoaded(Consumer<BSIModel> callback) {
+        if (loadedModel == null) {
+            return false;
+        }
+        callback.accept(loadedModel);
+        return true;
+    }
+
     public static boolean isIsoModelLoaded() {
         return (getInstance().isoModel != null);
     }
 
+    /**
+     * If there is an ISO27k model loaded, execute the given callback and return
+     * true. If the model is not loaded, return false.
+     */
+    public boolean ifIsoModelLoaded(Consumer<ISO27KModel> callback) {
+        if (isoModel == null) {
+            return false;
+        }
+        callback.accept(isoModel);
+        return true;
+    }
+
     public static boolean isBpModelLoaded() {
         return (getInstance().boModel != null);
+    }
+
+    /**
+     * If there is a modernized base protection model loaded, execute the given
+     * callback and return true. If the model is not loaded, return false.
+     */
+    public boolean ifBpModelLoaded(Consumer<BpModel> callback) {
+        if (boModel == null) {
+            return false;
+        }
+        callback.accept(boModel);
+        return true;
     }
 
     public static boolean isModernizedBpCatalogLoaded() {
@@ -1058,15 +1095,10 @@ public final class CnAElementFactory {
      * @param changeLogEntry
      */
     public static void databaseChildRemoved(ChangeLogEntry changeLogEntry) {
-        if (isModelLoaded()) {
-            CnAElementFactory.getLoadedModel().databaseChildRemoved(changeLogEntry);
-        }
-        if (isIsoModelLoaded()) {
-            CnAElementFactory.getInstance().getISO27kModel().databaseChildRemoved(changeLogEntry);
-        }
-        if (isBpModelLoaded()) {
-            CnAElementFactory.getInstance().getBpModel().databaseChildRemoved(changeLogEntry);
-        }
+        getInstance().ifModelLoaded(model -> model.databaseChildRemoved(changeLogEntry));
+        getInstance().ifIsoModelLoaded(model -> model.databaseChildRemoved(changeLogEntry));
+        getInstance().ifBpModelLoaded(model -> model.databaseChildRemoved(changeLogEntry));
+
     }
 
     public static boolean selectionOnlyContainsScopes(IStructuredSelection selection) {
