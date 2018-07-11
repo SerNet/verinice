@@ -515,9 +515,12 @@ public final class CnAElementFactory {
         elementbuilders.put(RoomGroup.TYPE_ID, new DefaultElementBuilder(RoomGroup.TYPE_ID));
         elementbuilders.put(SafeguardGroup.TYPE_ID,
                 new DefaultElementBuilder(SafeguardGroup.TYPE_ID));
-        elementbuilders.put(BpDocumentGroup.TYPE_ID, new DefaultElementBuilder(BpDocumentGroup.TYPE_ID));
-        elementbuilders.put(BpIncidentGroup.TYPE_ID, new DefaultElementBuilder(BpIncidentGroup.TYPE_ID));
-        elementbuilders.put(BpRecordGroup.TYPE_ID, new DefaultElementBuilder(BpRecordGroup.TYPE_ID));
+        elementbuilders.put(BpDocumentGroup.TYPE_ID,
+                new DefaultElementBuilder(BpDocumentGroup.TYPE_ID));
+        elementbuilders.put(BpIncidentGroup.TYPE_ID,
+                new DefaultElementBuilder(BpIncidentGroup.TYPE_ID));
+        elementbuilders.put(BpRecordGroup.TYPE_ID,
+                new DefaultElementBuilder(BpRecordGroup.TYPE_ID));
 
     }
 
