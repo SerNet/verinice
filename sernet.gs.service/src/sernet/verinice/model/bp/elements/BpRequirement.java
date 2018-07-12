@@ -24,10 +24,13 @@ import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementa
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
+import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.Reevaluator;
 import sernet.verinice.model.bp.SecurityLevel;
@@ -98,12 +101,12 @@ public class BpRequirement extends CnATreeElement
                     || ta.hasBeenVisited(BpRequirement.this)) {
                 return;
             }
+            List<CnATreeElement> safeGuards = BpRequirement.this.getLinksDown().stream().filter(
+                    DeductionImplementationUtil::isRelevantLinkForImplementationStateDeduction)
+                    .map(CnALink::getDependency).collect(Collectors.toList());
 
-            for (CnALink cnALink : BpRequirement.this.getLinksUp()) {
-                CnATreeElement dependant = cnALink.getDependant();
-                if (Safeguard.TYPE_ID.equals(dependant.getTypeId())) {
-                    setImplementationStausToRequirement(dependant, BpRequirement.this);
-                }
+            if (!safeGuards.isEmpty()) {
+                setImplementationStausToRequirement(safeGuards, BpRequirement.this);
             }
         }
     };

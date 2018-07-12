@@ -22,6 +22,7 @@ package sernet.verinice.service.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_DEDUCE;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS;
@@ -32,6 +33,9 @@ import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATIO
 import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatus;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatusId;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementationStausToRequirement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Ignore;
@@ -133,7 +137,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         BpRequirement requirement = duo.b;
 
         CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
-                requirement, safeguard, null, null);
+                requirement, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, null);
         createLink = commandService.executeCommand(createLink);
         assertDeduction(safeguard, requirement);
     }
@@ -152,7 +156,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         BpRequirement requirement = duo.b;
 
         CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
-                safeguard, requirement, null, null);
+                requirement, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, null);
         createLink = commandService.executeCommand(createLink);
         assertDeduction(safeguard, requirement);
     }
@@ -176,7 +180,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
 
         CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
-                requirement, safeguard, null, null);
+                requirement, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, null);
         createLink = commandService.executeCommand(createLink);
 
         assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
@@ -221,7 +225,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
 
         CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
-                safeguard, requirement, null, null);
+                requirement, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, null);
         createLink = commandService.executeCommand(createLink);
 
         assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
@@ -265,7 +269,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
 
         CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
-                requirement, safeguard, null, null);
+                requirement, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, null);
         createLink = commandService.executeCommand(createLink);
         assertDisabledDeduction(safeguard, requirement);
     }
@@ -289,7 +293,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
 
         CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
-                safeguard, requirement, null, null);
+                requirement, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, null);
         createLink = commandService.executeCommand(createLink);
         assertDisabledDeduction(safeguard, requirement);
     }
@@ -309,7 +313,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
 
         CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
-                requirement, safeguard, null, null);
+                requirement, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, null);
         createLink = commandService.executeCommand(createLink);
 
         assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
@@ -343,8 +347,8 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         requirement1 = prepareRequirement(requirement1);
         requirement2 = prepareRequirement(requirement2);
 
-        createLink(requirement1, safeguard, null);
-        createLink(requirement2, safeguard, null);
+        createLink(requirement1, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+        createLink(requirement2, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
 
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
         assertDeduction(safeguard, requirement1);
@@ -368,12 +372,222 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         requirement1 = prepareRequirement(requirement1);
         requirement2 = prepareRequirement(requirement2);
 
-        createLink(safeguard, requirement1, null);
-        createLink(safeguard, requirement2, null);
+        createLink(requirement1, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+        createLink(requirement2, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
 
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
         assertDeduction(safeguard, requirement1);
         assertDeduction(safeguard, requirement2);
+    }
+
+    /**
+     * Test one requirement and n safeguards, safeguard with all the same value.
+     *
+     * @throws Exception
+     */
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void testOneRequirementNSafeguards() throws Exception {
+        Duo<BpRequirement, List<Safeguard>> duo = createNSafeguards(5);
+        BpRequirement requirement = duo.a;
+        List<Safeguard> safeGuards = duo.b;
+        assertNull("Must be unset", getImplementationStatus(requirement));
+
+        safeGuards = updateSafeguards(safeGuards, IMPLEMENTATION_STATUS_CODE_NO);
+        assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
+                getImplementationStatus(requirement));
+
+        safeGuards = updateSafeguards(safeGuards, IMPLEMENTATION_STATUS_CODE_YES);
+        assertEquals("Must be option 'yes'.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_YES,
+                getImplementationStatus(requirement));
+
+        safeGuards = updateSafeguards(safeGuards, IMPLEMENTATION_STATUS_CODE_PARTIALLY);
+        assertEquals("Must be option 'partial'.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_PARTIALLY,
+                getImplementationStatus(requirement));
+
+        safeGuards = updateSafeguards(safeGuards, IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        assertEquals("Must be option 'not applicable'.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
+                getImplementationStatus(requirement));
+    }
+
+    /**
+     * Test one requirement and n safeguards, some safeguard with yes all others
+     * with na.
+     *
+     * @throws Exception
+     */
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void testOneRequirementNSafeguards_Yes() throws Exception {
+        Duo<BpRequirement, List<Safeguard>> duo = createNSafeguards(5);
+        BpRequirement requirement = duo.a;
+        List<Safeguard> safeGuards = duo.b;
+        assertNull("Must be unset", getImplementationStatus(requirement));
+
+        safeGuards = updateSafeguards(safeGuards, IMPLEMENTATION_STATUS_CODE_YES);
+        assertEquals("Must be option 'yes'.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_YES,
+                getImplementationStatus(requirement));
+
+        Safeguard safeGuard = updateSafeguard(safeGuards.get(3),
+                IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        safeGuards.set(3, safeGuard);
+        safeGuard = updateSafeguard(safeGuards.get(4), IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        safeGuards.set(4, safeGuard);
+        assertEquals("Must be option 'yes'.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_YES,
+                getImplementationStatus(requirement));
+
+        safeGuards = updateSafeguards(safeGuards, IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        assertEquals("Must be option 'na'.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
+                getImplementationStatus(requirement));
+
+        safeGuard = updateSafeguard(safeGuards.get(0), IMPLEMENTATION_STATUS_CODE_YES);
+        safeGuards.set(0, safeGuard);
+        safeGuard = updateSafeguard(safeGuards.get(1), IMPLEMENTATION_STATUS_CODE_YES);
+        safeGuards.set(1, safeGuard);
+        safeGuard = updateSafeguard(safeGuards.get(2), IMPLEMENTATION_STATUS_CODE_YES);
+        safeGuards.set(2, safeGuard);
+        assertEquals("Must be option 'yes'.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_YES,
+                getImplementationStatus(requirement));
+    }
+
+    /**
+     * Test one requirement and n safeguards, some safeguard with no all others
+     * with na.
+     *
+     * @throws Exception
+     */
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void testOneRequirementNSafeguards_No() throws Exception {
+        Duo<BpRequirement, List<Safeguard>> duo = createNSafeguards(5);
+        BpRequirement requirement = duo.a;
+        List<Safeguard> safeGuards = duo.b;
+        assertNull("Must be unset", getImplementationStatus(requirement));
+
+        safeGuards = updateSafeguards(safeGuards, IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        assertEquals("Must be option 'na'.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
+                getImplementationStatus(requirement));
+
+        Safeguard safeGuard = updateSafeguard(safeGuards.get(0), IMPLEMENTATION_STATUS_CODE_NO);
+        safeGuards.set(0, safeGuard);
+        safeGuard = updateSafeguard(safeGuards.get(1), IMPLEMENTATION_STATUS_CODE_NO);
+        safeGuards.set(1, safeGuard);
+        safeGuard = updateSafeguard(safeGuards.get(2), IMPLEMENTATION_STATUS_CODE_NO);
+        safeGuards.set(2, safeGuard);
+        assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
+                getImplementationStatus(requirement));
+
+        safeGuard = updateSafeguard(safeGuards.get(1), IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        safeGuards.set(1, safeGuard);
+        assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
+                getImplementationStatus(requirement));
+
+        safeGuard = updateSafeguard(safeGuards.get(0), IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        safeGuards.set(0, safeGuard);
+        assertEquals("Must be option 'na'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
+                getImplementationStatus(requirement));
+    }
+
+    /**
+     * Test one requirement and n safeguards, some safeguard with no all others
+     * with na.
+     *
+     * @throws Exception
+     */
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void testOneRequirementNSafeguards_NoHalf() throws Exception {
+        Duo<BpRequirement, List<Safeguard>> duo = createNSafeguards(10);
+        BpRequirement requirement = duo.a;
+        List<Safeguard> safeGuards = duo.b;
+        assertNull("Must be unset", getImplementationStatus(requirement));
+
+        safeGuards = updateSafeguards(safeGuards, IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        assertEquals("Must be option 'na'.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
+                getImplementationStatus(requirement));
+
+        Safeguard safeGuard = updateSafeguard(safeGuards.get(0), IMPLEMENTATION_STATUS_CODE_NO);
+        safeGuards.set(0, safeGuard);
+        safeGuard = updateSafeguard(safeGuards.get(1), IMPLEMENTATION_STATUS_CODE_NO);
+        safeGuards.set(1, safeGuard);
+        safeGuard = updateSafeguard(safeGuards.get(2), IMPLEMENTATION_STATUS_CODE_NO);
+        safeGuards.set(2, safeGuard);
+        safeGuard = updateSafeguard(safeGuards.get(3), IMPLEMENTATION_STATUS_CODE_PARTIALLY);
+        safeGuards.set(3, safeGuard);
+        safeGuard = updateSafeguard(safeGuards.get(4), IMPLEMENTATION_STATUS_CODE_PARTIALLY);
+        safeGuards.set(4, safeGuard);
+        assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
+                getImplementationStatus(requirement));// 3/5->no
+
+        safeGuard = updateSafeguard(safeGuards.get(2), IMPLEMENTATION_STATUS_CODE_YES);
+        safeGuards.set(2, safeGuard);
+        assertEquals("Must be option 'partially'.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_PARTIALLY,
+                getImplementationStatus(requirement));// 2/5->pa
+
+        safeGuard = updateSafeguard(safeGuards.get(5), IMPLEMENTATION_STATUS_CODE_NO);
+        safeGuards.set(5, safeGuard);
+        assertEquals("Must be option 'no'.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_PARTIALLY,
+                getImplementationStatus(requirement));// 3/6->pa
+
+        safeGuard = updateSafeguard(safeGuards.get(6), IMPLEMENTATION_STATUS_CODE_NO);
+        safeGuards.set(6, safeGuard);
+        assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
+                getImplementationStatus(requirement));// 4/7->no
+
+        safeGuard = updateSafeguard(safeGuards.get(6), IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        safeGuards.set(6, safeGuard);
+        assertEquals("Must be option 'partially'.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_PARTIALLY,
+                getImplementationStatus(requirement));// 3/6->pa
+
+        safeGuard = updateSafeguard(safeGuards.get(2), IMPLEMENTATION_STATUS_CODE_NO);
+        safeGuards.set(2, safeGuard);
+        assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
+                getImplementationStatus(requirement));// 4/6->no
+    }
+
+    private List<Safeguard> updateSafeguards(List<Safeguard> safeGuards, String option)
+            throws CommandException {
+        List<Safeguard> list = new ArrayList<Safeguard>(safeGuards.size());
+        for (Safeguard safeguard : safeGuards) {
+            Safeguard updateSafeguard = updateSafeguard(safeguard, option);
+            list.add(updateSafeguard);
+        }
+        return list;
+    }
+
+    private Duo<BpRequirement, List<Safeguard>> createNSafeguards(int safeGuardNumber)
+            throws CommandException {
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
+        BpRequirement requirement = createBpRequirement(requirementGroup);
+        SafeguardGroup safeguardGroup = createSafeguardGroup(itNetwork);
+        requirement = prepareRequirement(requirement);
+
+        List<Safeguard> safeGuards = new ArrayList<>(safeGuardNumber);
+        for (int i = 0; i < safeGuardNumber; i++) {
+            Safeguard safeguard = createSafeguard(safeguardGroup);
+            createLink(requirement, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+            safeguard = updateSafeguard(safeguard, null);
+            safeGuards.add(safeguard);
+        }
+        return new Duo<BpRequirement, List<Safeguard>>(requirement, safeGuards);
     }
 
     /**
@@ -446,7 +660,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
                 getImplementationStatus(requirement));
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Switch deduction off for the requierment.");
+            LOG.debug("Switch deduction off for the requirement.");
         }
         requirement.setPropertyValue(requirement.getTypeId() + IMPLEMENTATION_DEDUCE, "0");
         requirement.setSimpleProperty(getImplementationStatusId(requirement),

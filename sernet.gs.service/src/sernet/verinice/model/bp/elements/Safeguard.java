@@ -19,14 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.model.bp.elements;
 
-import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementationStausToRequirement;
-
 import java.util.Collection;
 import java.util.Date;
 
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
+import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.Reevaluator;
 import sernet.verinice.model.bp.SecurityLevel;
@@ -82,12 +81,11 @@ public class Safeguard extends CnATreeElement
                 return;
             }
 
-            for (CnALink cnALink : Safeguard.this.getLinksUp()) {
-                CnATreeElement dependant = cnALink.getDependant();
-                if ((BpRequirement.TYPE_ID.equals(dependant.getTypeId()))) {
-                    setImplementationStausToRequirement(Safeguard.this, dependant);
-                }
-            }
+            Safeguard.this.getLinksUp().stream().filter(
+                    DeductionImplementationUtil::isRelevantLinkForImplementationStateDeduction)
+                    .map(CnALink::getDependant)
+                    .filter(DeductionImplementationUtil::isDeductiveImplementationEnabled)
+                    .forEach(DeductionImplementationUtil::setImplementationStausToRequirement);
         }
     };
 
