@@ -73,11 +73,11 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
      * @param <A>
      * @param <B>
      */
-    private class Dou<A, B> {
+    private class Duo<A, B> {
         A a;
         B b;
 
-        public Dou(A a, B b) {
+        public Duo(A a, B b) {
             super();
             this.a = a;
             this.b = b;
@@ -93,9 +93,9 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     @Rollback(true)
     @Test
     public void testSetImplementationStausToRequirement() throws CommandException {
-        Dou<Safeguard, BpRequirement> dou = createTestElements();
-        Safeguard safeguard = dou.a;
-        BpRequirement requirement = dou.b;
+        Duo<Safeguard, BpRequirement> duo = createTestElements();
+        Safeguard safeguard = duo.a;
+        BpRequirement requirement = duo.b;
 
         updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
         prepareRequirement(requirement);
@@ -128,9 +128,9 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     @Rollback(true)
     @Test
     public void testDefaultDeductionAfterLink() throws CommandException {
-        Dou<Safeguard, BpRequirement> dou = createTestElements();
-        Safeguard safeguard = dou.a;
-        BpRequirement requirement = dou.b;
+        Duo<Safeguard, BpRequirement> duo = createTestElements();
+        Safeguard safeguard = duo.a;
+        BpRequirement requirement = duo.b;
 
         CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
                 requirement, safeguard, null, null);
@@ -147,9 +147,9 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     @Rollback(true)
     @Test
     public void testDefaultDeductionAfterLinkOppositeDirection() throws CommandException {
-        Dou<Safeguard, BpRequirement> dou = createTestElements();
-        Safeguard safeguard = dou.a;
-        BpRequirement requirement = dou.b;
+        Duo<Safeguard, BpRequirement> duo = createTestElements();
+        Safeguard safeguard = duo.a;
+        BpRequirement requirement = duo.b;
 
         CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
                 safeguard, requirement, null, null);
@@ -165,9 +165,9 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     @Rollback(true)
     @Test
     public void testDefaultDeductionBeforeLink() throws CommandException {
-        Dou<Safeguard, BpRequirement> dou = createTestElements();
-        Safeguard safeguard = dou.a;
-        BpRequirement requirement = dou.b;
+        Duo<Safeguard, BpRequirement> duo = createTestElements();
+        Safeguard safeguard = duo.a;
+        BpRequirement requirement = duo.b;
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Change the safeguard implementation status to: "
@@ -209,9 +209,9 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     @Rollback(true)
     @Test
     public void testDefaultDeductionBeforeLinkOppositeDirection() throws CommandException {
-        Dou<Safeguard, BpRequirement> dou = createTestElements();
-        Safeguard safeguard = dou.a;
-        BpRequirement requirement = dou.b;
+        Duo<Safeguard, BpRequirement> duo = createTestElements();
+        Safeguard safeguard = duo.a;
+        BpRequirement requirement = duo.b;
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Change the safeguard implementation status to: "
@@ -252,9 +252,9 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     @Rollback(true)
     @Test
     public void testDefaultDeductionSwitchedOff() throws CommandException {
-        Dou<Safeguard, BpRequirement> dou = createTestElements();
-        Safeguard safeguard = dou.a;
-        BpRequirement requirement = dou.b;
+        Duo<Safeguard, BpRequirement> duo = createTestElements();
+        Safeguard safeguard = duo.a;
+        BpRequirement requirement = duo.b;
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Change the safeguard implementation status to: "
@@ -276,9 +276,9 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     @Rollback(true)
     @Test
     public void testDefaultDeductionSwitchedOffOppositeDirection() throws CommandException {
-        Dou<Safeguard, BpRequirement> dou = createTestElements();
-        Safeguard safeguard = dou.a;
-        BpRequirement requirement = dou.b;
+        Duo<Safeguard, BpRequirement> duo = createTestElements();
+        Safeguard safeguard = duo.a;
+        BpRequirement requirement = duo.b;
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Change the safeguard implementation status to: "
@@ -378,7 +378,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
      * groups for the target test objects. Returns the two objects under test.
      *
      */
-    private Dou<Safeguard, BpRequirement> createTestElements() throws CommandException {
+    private Duo<Safeguard, BpRequirement> createTestElements() throws CommandException {
         ItNetwork itNetwork = createNewBPOrganization();
 
         BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
@@ -387,7 +387,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         Safeguard safeguard = createSafeguard(safeguardGroup);
         requirement = prepareRequirement(requirement);
 
-        return new Dou<Safeguard, BpRequirement>(safeguard, requirement);
+        return new Duo<Safeguard, BpRequirement>(safeguard, requirement);
     }
 
     /**
