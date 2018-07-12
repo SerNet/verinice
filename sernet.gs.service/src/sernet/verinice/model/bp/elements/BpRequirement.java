@@ -43,7 +43,8 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class BpRequirement extends CnATreeElement implements IBpElement, IIdentifiableElement, ITaggableElement {
+public class BpRequirement extends CnATreeElement
+        implements IBpElement, IIdentifiableElement, ITaggableElement {
 
     private static final long serialVersionUID = 6621062615495040741L;
 
@@ -190,8 +191,8 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
         case HIGH:
             qualifier = PROP_QUALIFIER_HIGH;
             break;
-       }
-       getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
+        }
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
     }
 
     /**
@@ -263,7 +264,7 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
         return ((this.getNumericProperty(PROP_AVAILABILITY) == 1) ? true : false);
     }
 
-    public String getImplementationStatus(){
+    public String getImplementationStatus() {
         return getEntity().getRawPropertyValue(PROP_IMPLEMENTATION_STATUS);
     }
 

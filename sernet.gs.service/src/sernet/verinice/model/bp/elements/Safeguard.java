@@ -42,7 +42,8 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * @author Daniel Murygin dm[at]sernet.de
  *
  */
-public class Safeguard extends CnATreeElement implements IBpElement, IIdentifiableElement, ITaggableElement {
+public class Safeguard extends CnATreeElement
+        implements IBpElement, IIdentifiableElement, ITaggableElement {
 
     private static final long serialVersionUID = -3597661958061483411L;
 
@@ -186,8 +187,8 @@ public class Safeguard extends CnATreeElement implements IBpElement, IIdentifiab
         case HIGH:
             qualifier = PROP_QUALIFIER_HIGH;
             break;
-       }
-       getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
+        }
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
     }
 
     @Override
@@ -232,7 +233,7 @@ public class Safeguard extends CnATreeElement implements IBpElement, IIdentifiab
         return ((this.getNumericProperty(PROP_AVAILABILITY) == 1) ? true : false);
     }
 
-    public String getImplementationStatus(){
+    public String getImplementationStatus() {
         return getEntity().getRawPropertyValue(PROP_IMPLEMENTATION_STATUS);
     }
 

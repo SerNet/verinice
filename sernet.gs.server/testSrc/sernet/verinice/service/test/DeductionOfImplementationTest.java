@@ -47,7 +47,6 @@ import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.RemoveLink;
@@ -107,15 +106,15 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
         assertEquals(requirement.getTypeId() + IMPLEMENTATION_STATUS_CODE_NO,
                 getImplementationStatus(requirement));
-        
+
         assertTrue(setImplementationStausToRequirement(safeguard, requirement));
         assertEquals(requirement.getTypeId() + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
                 getImplementationStatus(requirement));
-        
+
         updateSafeguard(safeguard, null);
         assertEquals(requirement.getTypeId() + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
                 getImplementationStatus(requirement));
-        
+
         assertTrue(setImplementationStausToRequirement(safeguard, requirement));
         assertEquals(null, getImplementationStatus(requirement));
 
@@ -196,7 +195,8 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
                     + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
         }
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
-        assertEquals("Must be option not applicable.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
+        assertEquals("Must be option not applicable.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
                 getImplementationStatus(requirement));
     }
 
@@ -239,7 +239,8 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
                     + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
         }
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
-        assertEquals("Must be option not applicable.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
+        assertEquals("Must be option not applicable.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
                 getImplementationStatus(requirement));
     }
 
@@ -416,7 +417,8 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
                     + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
         }
         safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
-        assertEquals("Must be option not applicable.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
+        assertEquals("Must be option not applicable.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
                 getImplementationStatus(requirement));
     }
 
@@ -465,8 +467,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     private Safeguard updateSafeguard(Safeguard safeguard, String option) throws CommandException {
         String value = option != null ? Safeguard.TYPE_ID + option : null;
 
-        safeguard.setSimpleProperty(safeguard.getTypeId() + IMPLEMENTATION_STATUS,
-                value);
+        safeguard.setSimpleProperty(safeguard.getTypeId() + IMPLEMENTATION_STATUS, value);
         UpdateElement<Safeguard> command = new UpdateElement<>(safeguard, true, null);
         commandService.executeCommand(command);
         safeguard = command.getElement();

@@ -36,8 +36,8 @@ import sernet.verinice.model.iso27k.InheritLogger;
 /**
  * Association class for links between items.
  * 
- * This entity class is mapped to database by Hibernate.
- * Check Hibernate configuration in file CnALink.hbm.xml.
+ * This entity class is mapped to database by Hibernate. Check Hibernate
+ * configuration in file CnALink.hbm.xml.
  * 
  * @author koderman[at]sernet[dot]de
  */
@@ -49,13 +49,18 @@ public class CnALink implements Serializable, ITypedElement {
     public static final Map<String, String> riskTreatmentLabels;
     static {
         riskTreatmentLabels = new Hashtable<>();
-        riskTreatmentLabels.put(CnALink.RiskTreatment.ACCEPT.name(), Messages.getString("CnALink.RiskTreatment_ACCEPT")); //$NON-NLS-1$
-        riskTreatmentLabels.put(CnALink.RiskTreatment.AVOID.name(), Messages.getString("CnALink.RiskTreatment_AVOID")); //$NON-NLS-1$
-        riskTreatmentLabels.put(CnALink.RiskTreatment.MODIFY.name(), Messages.getString("CnALink.RiskTreatment_MODIFY")); //$NON-NLS-1$
-        riskTreatmentLabels.put(CnALink.RiskTreatment.TRANSFER.name(), Messages.getString("CnALink.RiskTreatment_TRANSFER")); //$NON-NLS-1$
-        riskTreatmentLabels.put(CnALink.RiskTreatment.UNEDITED.name(), Messages.getString("CnALink.RiskTreatment_UNEDITED")); //$NON-NLS-1$
+        riskTreatmentLabels.put(CnALink.RiskTreatment.ACCEPT.name(),
+                Messages.getString("CnALink.RiskTreatment_ACCEPT")); //$NON-NLS-1$
+        riskTreatmentLabels.put(CnALink.RiskTreatment.AVOID.name(),
+                Messages.getString("CnALink.RiskTreatment_AVOID")); //$NON-NLS-1$
+        riskTreatmentLabels.put(CnALink.RiskTreatment.MODIFY.name(),
+                Messages.getString("CnALink.RiskTreatment_MODIFY")); //$NON-NLS-1$
+        riskTreatmentLabels.put(CnALink.RiskTreatment.TRANSFER.name(),
+                Messages.getString("CnALink.RiskTreatment_TRANSFER")); //$NON-NLS-1$
+        riskTreatmentLabels.put(CnALink.RiskTreatment.UNEDITED.name(),
+                Messages.getString("CnALink.RiskTreatment_UNEDITED")); //$NON-NLS-1$
     }
-    
+
     // constants for link typeId, now replaced by relationIDs that can be
     // defined in SNCA.xml.
     // these can still be used to differentiate link categories such as "system
@@ -83,13 +88,16 @@ public class CnALink implements Serializable, ITypedElement {
     private Integer riskConfidentiality;
     private Integer riskIntegrity;
     private Integer riskAvailability;
-    
+
     // risk values with controls
     private Integer riskConfidentialityWithControls;
     private Integer riskIntegrityWithControls;
     private Integer riskAvailabilityWithControls;
 
-    public enum RiskTreatment {ACCEPT,TRANSFER,MODIFY,AVOID,UNEDITED};
+    public enum RiskTreatment {
+        ACCEPT, TRANSFER, MODIFY, AVOID, UNEDITED
+    };
+
     private String riskTreatmentValue = null;
 
     // user entered comment:
@@ -121,12 +129,15 @@ public class CnALink implements Serializable, ITypedElement {
     }
 
     /**
-     * Takes an object / element and a link/relation and gives back the correct display name for
-     * the element on the *other* side of the link. Which side is the other side,
-     * is determined on whether the link goes from or to the param inputElmt.
+     * Takes an object / element and a link/relation and gives back the correct
+     * display name for the element on the *other* side of the link. Which side
+     * is the other side, is determined on whether the link goes from or to the
+     * param inputElmt.
      * 
-     * @param inputElement Source element of the link
-     * @param link The link 
+     * @param inputElement
+     *            Source element of the link
+     * @param link
+     *            The link
      */
     public static String getRelationObjectTitle(CnATreeElement inputElement, CnALink link) {
         CnATreeElement element;
@@ -153,11 +164,14 @@ public class CnALink implements Serializable, ITypedElement {
      * Returns all elements which are linked to param element of type which the
      * given type id.
      * 
-     * @param element A verinice element
-     * @param typeId A type id from SNCA.xml
+     * @param element
+     *            A verinice element
+     * @param typeId
+     *            A type id from SNCA.xml
      * @returns map of linked elements and the corresponding link
      */
-    public static Map<CnATreeElement, CnALink> getLinkedElements(CnATreeElement element, String typeId) {
+    public static Map<CnATreeElement, CnALink> getLinkedElements(CnATreeElement element,
+            String typeId) {
         HashMap<CnATreeElement, CnALink> result = new HashMap<>();
 
         Set<CnALink> linksDown = element.getLinksDown();
@@ -177,12 +191,14 @@ public class CnALink implements Serializable, ITypedElement {
     }
 
     /**
-     * Takes an element / object and a link and gives back the object on the *other* side
-     * of the link. Which side is the other side, is determined on whether the
-     * link goes from or to the param element.
+     * Takes an element / object and a link and gives back the object on the
+     * *other* side of the link. Which side is the other side, is determined on
+     * whether the link goes from or to the param element.
      * 
-     * @param inputElement Source element of the link
-     * @param link The link
+     * @param inputElement
+     *            Source element of the link
+     * @param link
+     *            The link
      * @return The destination element of the link
      */
 
@@ -199,8 +215,10 @@ public class CnALink implements Serializable, ITypedElement {
      * link. The correct name is determined using the direction in which the
      * link points to the object.
      * 
-     * @param inputElement Source element of the link
-     * @param link The link
+     * @param inputElement
+     *            Source element of the link
+     * @param link
+     *            The link
      * @return The name of the link
      */
     public static String getRelationName(CnATreeElement fromElement, CnALink link) {
@@ -228,10 +246,12 @@ public class CnALink implements Serializable, ITypedElement {
         }
         return name;
     }
-    
+
     /**
-     * @param element An element
-     * @param link A link
+     * @param element
+     *            An element
+     * @param link
+     *            A link
      * @return True if element is the source of the link
      */
     public static boolean isDownwardLink(CnATreeElement element, CnALink link) {
@@ -291,9 +311,9 @@ public class CnALink implements Serializable, ITypedElement {
             return Messages.getString("CnALink.4"); //$NON-NLS-1$
         case LOCATED_IN:
             return Messages.getString("CnALink.1"); //$NON-NLS-1$
-        default: 
+        default:
             return ""; //$NON-NLS-1$
-        }    
+        }
     }
 
     /*
@@ -399,7 +419,7 @@ public class CnALink implements Serializable, ITypedElement {
     public void setRiskAvailabilityWithControls(Integer riskAvailabilityWithControls) {
         this.riskAvailabilityWithControls = riskAvailabilityWithControls;
     }
-    
+
     public RiskTreatment getRiskTreatment() {
         String value = getRiskTreatmentValue();
         if (value == null) {
@@ -408,15 +428,15 @@ public class CnALink implements Serializable, ITypedElement {
             return RiskTreatment.valueOf(value);
         }
     }
-    
+
     public void setRiskTreatment(RiskTreatment riskTreatment) {
-        if (riskTreatment==null || riskTreatment == RiskTreatment.UNEDITED) {
+        if (riskTreatment == null || riskTreatment == RiskTreatment.UNEDITED) {
             setRiskTreatmentValue(null);
         } else {
             setRiskTreatmentValue(riskTreatment.name());
         }
     }
-    
+
     private String getRiskTreatmentValue() {
         return riskTreatmentValue;
     }
@@ -432,7 +452,7 @@ public class CnALink implements Serializable, ITypedElement {
     public void setComment(String comment) {
         this.comment = comment;
     }
-    
+
     public static String[] getRiskTreatmentOptions() {
         RiskTreatment[] states = RiskTreatment.values();
         String[] names = new String[states.length];
