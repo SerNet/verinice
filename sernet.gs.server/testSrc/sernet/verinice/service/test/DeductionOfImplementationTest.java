@@ -21,7 +21,6 @@ package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_DEDUCE;
@@ -38,7 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -51,8 +49,10 @@ import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateLink;
+import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.RemoveLink;
 import sernet.verinice.service.commands.UpdateElement;
 
@@ -301,31 +301,101 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     @Transactional
     @Rollback(true)
     @Test
-    @Ignore
-    public void testDefaultDeductionBeforeLinkRemoveLink() throws CommandException {
+    public void testDeductionWorksWhenRemovingLink() throws CommandException {
         ItNetwork itNetwork = createNewBPOrganization();
 
         BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
-        BpRequirement requirement = createBpRequirement(requirementGroup);
+        CnATreeElement requirement = createBpRequirement(requirementGroup);
+        requirement = prepareRequirement((BpRequirement) requirement);
+
         SafeguardGroup safeguardGroup = createSafeguardGroup(itNetwork);
-        Safeguard safeguard = createSafeguard(safeguardGroup);
-        requirement = prepareRequirement(requirement);
-        safeguard = updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
+        Safeguard safeguard1 = createSafeguard(safeguardGroup);
+        safeguard1 = updateSafeguard(safeguard1, IMPLEMENTATION_STATUS_CODE_NO);
+        Safeguard safeguard2 = createSafeguard(safeguardGroup);
+        safeguard2 = updateSafeguard(safeguard2, IMPLEMENTATION_STATUS_CODE_YES);
 
-        CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
-                requirement, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, null);
-        createLink = commandService.executeCommand(createLink);
-
-        assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
+        CnALink link1 = createLink(requirement, safeguard1,
+                BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+        createLink(requirement, safeguard2, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+        assertEquals("Must be option 'partially'.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_PARTIALLY,
                 getImplementationStatus(requirement));
-
-        RemoveLink removeLink = new RemoveLink(createLink.getLink());
+        elementDao.flush();
+        elementDao.clear();
+        RemoveLink removeLink = new RemoveLink(link1);
         removeLink = commandService.executeCommand(removeLink);
 
-        assertNotSame("", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
-                getImplementationStatus(requirement));
+        requirement = reloadElement(requirement);
         assertEquals("Must be option 'yes'.",
                 BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_YES,
+                getImplementationStatus(requirement));
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void testDeductionWorksWhenRemovingSafeguard() throws CommandException {
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
+        CnATreeElement requirement = createBpRequirement(requirementGroup);
+        requirement = prepareRequirement((BpRequirement) requirement);
+
+        SafeguardGroup safeguardGroup = createSafeguardGroup(itNetwork);
+        Safeguard safeguard1 = createSafeguard(safeguardGroup);
+        safeguard1 = updateSafeguard(safeguard1, IMPLEMENTATION_STATUS_CODE_NO);
+        Safeguard safeguard2 = createSafeguard(safeguardGroup);
+        safeguard2 = updateSafeguard(safeguard2, IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+
+        createLink(requirement, safeguard1, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+        createLink(requirement, safeguard2, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+        assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
+                getImplementationStatus(requirement));
+        elementDao.flush();
+        elementDao.clear();
+
+        RemoveElement<Safeguard> removeSafeguard = new RemoveElement<>(safeguard1);
+
+        removeSafeguard = commandService.executeCommand(removeSafeguard);
+
+        requirement = reloadElement(requirement);
+        assertEquals("Must be option 'n/a'.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
+                getImplementationStatus(requirement));
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void testDeductionWorksWhenRemovingSafeguardGroup() throws CommandException {
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
+        CnATreeElement requirement = createBpRequirement(requirementGroup);
+        requirement = prepareRequirement((BpRequirement) requirement);
+
+        SafeguardGroup safeguardGroup1 = createSafeguardGroup(itNetwork);
+        Safeguard safeguard1 = createSafeguard(safeguardGroup1);
+        safeguard1 = updateSafeguard(safeguard1, IMPLEMENTATION_STATUS_CODE_NO);
+        SafeguardGroup safeguardGroup2 = createSafeguardGroup(itNetwork);
+        Safeguard safeguard2 = createSafeguard(safeguardGroup2);
+        safeguard2 = updateSafeguard(safeguard2, IMPLEMENTATION_STATUS_CODE_YES);
+
+        createLink(requirement, safeguard1, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+        createLink(requirement, safeguard2, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+        assertEquals("Must be option 'partially'.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_PARTIALLY,
+                getImplementationStatus(requirement));
+
+        RemoveElement<Safeguard> removeSafeguardgroup = new RemoveElement<>(safeguardGroup2);
+        elementDao.flush();
+        elementDao.clear();
+        removeSafeguardgroup = commandService.executeCommand(removeSafeguardgroup);
+
+        requirement = reloadElement(requirement);
+        assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
                 getImplementationStatus(requirement));
 
     }
