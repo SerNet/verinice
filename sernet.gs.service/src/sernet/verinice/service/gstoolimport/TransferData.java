@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -479,8 +480,8 @@ public class TransferData {
                         GSScraperUtil.getInstance().getModel().getEncoding()));
 
         gefaehrdungsUmsetzung.setTitel(ragResult.getGefaehrdungTxt().getName());
-        String url = transferUrl(ragResult.getGefaehrdung().getLink());
-        gefaehrdungsUmsetzung.setUrl(url);
+        Optional.ofNullable(ragResult.getGefaehrdung().getLink()).map(TransferData::transferUrl)
+                .ifPresent(gefaehrdungsUmsetzung::setUrl);
     }
 
     private static String transferUrl(String url) {
