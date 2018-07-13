@@ -97,31 +97,29 @@ import sernet.verinice.rcp.tree.TreeUpdateListener;
 import sernet.verinice.service.tree.ElementManager;
 
 /**
- * This view shows all elements of a base protection IT network
- * in a tree. It provides action to add, edit, delete and manage these elements.
+ * This view shows all elements of a base protection IT network in a tree. It
+ * provides action to add, edit, delete and manage these elements.
  * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  * @author Daniel Murygin dm[at]sernet.de
  */
-public class BaseProtectionView extends RightsEnabledView 
-    implements IAttachedToPerspective, ILinkedWithEditorView {
-    
+public class BaseProtectionView extends RightsEnabledView
+        implements IAttachedToPerspective, ILinkedWithEditorView {
+
     private static final Logger LOG = Logger.getLogger(BaseProtectionView.class);
-    
     public static final String ID = "sernet.verinice.bp.rcp.BaseProtectionView"; //$NON-NLS-1$
-    
-    private static int operations = DND.DROP_COPY | DND.DROP_MOVE;   
+    private static int operations = DND.DROP_COPY | DND.DROP_MOVE;
     private Object mutex = new Object();
-    
+
     protected TreeViewer viewer;
     private TreeContentProvider contentProvider;
     private ElementManager elementManager;
-    
+
     private DrillDownAdapter drillDownAdapter;
-    
+
     private IModelLoadListener modelLoadListener;
     private IBpModelListener modelUpdateListener;
-    private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);   
+    private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
 
     private Action doubleClickAction;
     private Action linkWithEditorAction;
@@ -133,11 +131,11 @@ public class BaseProtectionView extends RightsEnabledView
     private BaseProtectionFilterAction filterAction;
     private ShowAccessControlEditAction accessControlEditAction;
     private NaturalizeAction naturalizeAction;
-    
+
     private MetaDropAdapter metaDropAdapter;
-   
+
     private boolean linkingActive = false;
-    
+
     public BaseProtectionView() {
         super();
         elementManager = new ElementManager();
@@ -166,9 +164,12 @@ public class BaseProtectionView extends RightsEnabledView
         drillDownAdapter = new DrillDownAdapter(viewer);
         viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
         viewer.setContentProvider(contentProvider);
-        viewer.setLabelProvider(new DecoratingLabelProvider(new TreeLabelProvider(), workbench.getDecoratorManager()));
+        viewer.setLabelProvider(new DecoratingLabelProvider(new TreeLabelProvider(),
+                workbench.getDecoratorManager()));
         viewer.setSorter(new BaseProtectionTreeSorter());
         toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
+        toggleLinking(Activator.getDefault().getPreferenceStore()
+                .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
         getSite().setSelectionProvider(viewer);
         hookContextMenu();
@@ -190,11 +191,13 @@ public class BaseProtectionView extends RightsEnabledView
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 IStatus status = Status.OK_STATUS;
                 try {
-                    monitor.beginTask(Messages.BaseProtectionView_Loading_2, IProgressMonitor.UNKNOWN);
+                    monitor.beginTask(Messages.BaseProtectionView_Loading_2,
+                            IProgressMonitor.UNKNOWN);
                     initData();
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data",e); //$NON-NLS-1$ //$NON-NLS-2$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
+                            "Error while loading data", e); //$NON-NLS-1$
                 } finally {
                     monitor.done();
                 }
@@ -204,20 +207,22 @@ public class BaseProtectionView extends RightsEnabledView
         JobScheduler.scheduleInitJob(initDataJob);
     }
 
-    protected void initData() { 
+    protected void initData() {
         if (LOG.isDebugEnabled()) {
             LOG.debug("BaseProtectionView: initData"); //$NON-NLS-1$
         }
         synchronized (mutex) {
-            if(CnAElementFactory.isBpModelLoaded()) {
-                if (modelUpdateListener == null ) {
+            if (CnAElementFactory.isBpModelLoaded()) {
+                if (modelUpdateListener == null) {
                     // model listener should only be created once!
-                    if (LOG.isDebugEnabled()){
-                        Logger.getLogger(this.getClass()).debug("Creating modelUpdateListener for BaseProtectionView."); //$NON-NLS-1$
+                    if (LOG.isDebugEnabled()) {
+                        Logger.getLogger(this.getClass())
+                                .debug("Creating modelUpdateListener for BaseProtectionView."); //$NON-NLS-1$
                     }
-                    modelUpdateListener = new TreeUpdateListener(viewer,elementManager);
-                    CnAElementFactory.getInstance().getBpModel().addModITBOModelListener(modelUpdateListener);
-                    Display.getDefault().syncExec(new Runnable(){
+                    modelUpdateListener = new TreeUpdateListener(viewer, elementManager);
+                    CnAElementFactory.getInstance().getBpModel()
+                            .addModITBOModelListener(modelUpdateListener);
+                    Display.getDefault().syncExec(new Runnable() {
                         @Override
                         public void run() {
                             setInput(CnAElementFactory.getInstance().getBpModel());
@@ -225,18 +230,24 @@ public class BaseProtectionView extends RightsEnabledView
                         }
                     });
                 }
-            } else if(modelLoadListener==null) {
+            } else if (modelLoadListener == null) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("ISMView No model loaded, adding model load listener."); //$NON-NLS-1$
                 }
-                // model is not loaded yet: add a listener to load data when it's loaded
-                modelLoadListener = new IModelLoadListener() {                  
+                // model is not loaded yet: add a listener to load data when
+                // it's loaded
+                modelLoadListener = new IModelLoadListener() {
                     @Override
-                    public void closed(BSIModel model) { /* nothing to do*/ }
+                    public void closed(BSIModel model) {
+                        /* nothing to do */ }
+
                     @Override
-                    public void loaded(BSIModel model) { /* nothing to do*/ }
+                    public void loaded(BSIModel model) {
+                        /* nothing to do */ }
+
                     @Override
-                    public void loaded(ISO27KModel model) { /* nothing to do*/  }
+                    public void loaded(ISO27KModel model) {
+                        /* nothing to do */ }
 
                     @Override
                     public void loaded(BpModel model) {
@@ -244,7 +255,8 @@ public class BaseProtectionView extends RightsEnabledView
                     }
 
                     @Override
-                    public void loaded(CatalogModel model) { /* nothing to do */ }
+                    public void loaded(CatalogModel model) {
+                        /* nothing to do */ }
                 };
                 CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
             }
@@ -262,24 +274,25 @@ public class BaseProtectionView extends RightsEnabledView
             @Override
             public void menuAboutToShow(IMenuManager manager) {
                 fillContextMenu(manager);
-            }           
+            }
         });
         Menu menu = menuMgr.createContextMenu(viewer.getControl());
-        
+
         viewer.getControl().setMenu(menu);
         getSite().registerContextMenu(menuMgr, viewer);
     }
-    
+
     private void hookDndListeners() {
         Transfer[] dragTypes = new Transfer[] { BaseProtectionElementTransfer.getInstance() };
-        Transfer[] dropTypes = new Transfer[] { IGSModelElementTransfer.getInstance(),
+        Transfer[] dropTypes = new Transfer[] {
+                IGSModelElementTransfer.getInstance(),
                 BaseProtectionElementTransfer.getInstance(),
-                BaseProtectionModelingTransfer.getInstance()};
+                BaseProtectionModelingTransfer.getInstance() };
 
         viewer.addDragSupport(operations, dragTypes, new BSIModelViewDragListener(viewer));
         viewer.addDropSupport(operations, dropTypes, metaDropAdapter);
     }
-     
+
     protected void fillContextMenu(IMenuManager manager) {
         manager.add(new GroupMarker("content")); //$NON-NLS-1$
         manager.add(new Separator());
@@ -292,47 +305,48 @@ public class BaseProtectionView extends RightsEnabledView
         manager.add(new Separator());
         manager.add(expandAction);
         manager.add(collapseAction);
-        drillDownAdapter.addNavigationActions(manager); 
+        drillDownAdapter.addNavigationActions(manager);
     }
-    
+
     private void makeActions() {
-        
+
         doubleClickAction = new Action() {
             @Override
             public void run() {
-                if(viewer.getSelection() instanceof IStructuredSelection) {
+                if (viewer.getSelection() instanceof IStructuredSelection) {
                     Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
                     EditorFactory.getInstance().updateAndOpenObject(sel);
                 }
             }
         };
-        
+
         makeExpandAndCollapseActions();
-     
-        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), 
+
+        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(),
                 Messages.BaseProtectionView_BulkEdit);
-              
+
         BSIModelViewDropListener bsiDropAdapter;
         metaDropAdapter = new MetaDropAdapter(viewer);
         bsiDropAdapter = new BSIModelViewDropListener(viewer);
         BbModelingDropPerformer modelingDropPerformer = new BbModelingDropPerformer();
-        GsCatalogModelingDropPerformer gsCatalogModelingDropPerformer = 
-                new GsCatalogModelingDropPerformer();
+        GsCatalogModelingDropPerformer gsCatalogModelingDropPerformer = new GsCatalogModelingDropPerformer();
         metaDropAdapter.addAdapter(modelingDropPerformer);
         metaDropAdapter.addAdapter(bsiDropAdapter);
         metaDropAdapter.addAdapter(gsCatalogModelingDropPerformer);
-        
-        linkWithEditorAction = new Action(Messages.BaseProtectionView_LinkWithEditor, IAction.AS_CHECK_BOX) {
+
+        linkWithEditorAction = new Action(Messages.BaseProtectionView_LinkWithEditor,
+                IAction.AS_CHECK_BOX) {
             @Override
             public void run() {
                 toggleLinking(isChecked());
             }
         };
         linkWithEditorAction.setChecked(isLinkingActive());
-        linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
+        linkWithEditorAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
         naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
-        accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.BaseProtectionView_AccessControl);
-        
+        accessControlEditAction = new ShowAccessControlEditAction(
+                getViewSite().getWorkbenchWindow(), Messages.BaseProtectionView_AccessControl);
 
         makeFilterAction();
     }
@@ -344,12 +358,14 @@ public class BaseProtectionView extends RightsEnabledView
     protected void makeExpandAndCollapseActions() {
         expandAction = new ExpandAction(viewer, contentProvider);
         expandAction.setText(Messages.BaseProtectionView_ExpandChildren);
-        expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
-        
+        expandAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
+
         collapseAction = new CollapseAction(viewer);
         collapseAction.setText(Messages.BaseProtectionView_CollapseChildren);
-        collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
-        
+        collapseAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
+
         expandAllAction = new Action() {
             @Override
             public void run() {
@@ -357,7 +373,8 @@ public class BaseProtectionView extends RightsEnabledView
             }
         };
         expandAllAction.setText(Messages.BaseProtectionView_ExpandAll);
-        expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
+        expandAllAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
         collapseAllAction = new Action() {
             @Override
@@ -366,36 +383,37 @@ public class BaseProtectionView extends RightsEnabledView
             }
         };
         collapseAllAction.setText(Messages.BaseProtectionView_CollapseAll);
-        collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
+        collapseAllAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
     }
-    
+
     protected void expandAll() {
         viewer.expandAll();
     }
-    
+
     protected void toggleLinking(boolean checked) {
         this.linkingActive = checked;
         if (checked) {
-            Optional.ofNullable(getSite().getPage().getActiveEditor()).ifPresent(this::editorActivated);
+            Optional.ofNullable(getSite().getPage().getActiveEditor())
+                    .ifPresent(this::editorActivated);
         }
     }
-    
+
     protected boolean isLinkingActive() {
         return linkingActive;
     }
-    
-    
+
     private void addActions() {
         viewer.addDoubleClickListener(new IDoubleClickListener() {
             @Override
             public void doubleClick(DoubleClickEvent event) {
                 doubleClickAction.run();
             }
-        });     
+        });
         viewer.addSelectionChangedListener(expandAction);
         viewer.addSelectionChangedListener(collapseAction);
     }
-    
+
     protected void fillToolBar() {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
@@ -412,23 +430,25 @@ public class BaseProtectionView extends RightsEnabledView
             return;
         }
         CnATreeElement element = BSIElementEditorInput.extractElement(editor);
-        if(element == null && editor.getEditorInput() instanceof AttachmentEditorInput){
-            element = getElementFromAttachment(editor);                
+        if (element == null && editor.getEditorInput() instanceof AttachmentEditorInput) {
+            element = getElementFromAttachment(editor);
         }
-        if(element == null || !(element instanceof IBpElement)) {
+        if (element == null || !(element instanceof IBpElement)) {
             return;
-        }       
+        }
         if (LOG.isDebugEnabled()) {
             LOG.debug("Element in editor: " + element.getUuid()); //$NON-NLS-1$
             LOG.debug("Expanding tree now to show element..."); //$NON-NLS-1$
         }
-        viewer.setSelection(new StructuredSelection(element),true);        
+        viewer.setSelection(new StructuredSelection(element), true);
         LOG.debug("Tree is expanded."); //$NON-NLS-1$
     }
-    
+
     /**
      * gets Element that is referenced by attachment shown by editor
-     * @param editor - ({@link AttachmentEditor}) Editor of {@link Attachment}
+     * 
+     * @param editor
+     *            - ({@link AttachmentEditor}) Editor of {@link Attachment}
      * @return {@link CnATreeElement}
      */
     private CnATreeElement getElementFromAttachment(IEditorPart editor) {
@@ -439,18 +459,17 @@ public class BaseProtectionView extends RightsEnabledView
     public String getPerspectiveId() {
         return BaseProtectionPerspective.ID;
     }
-    
+
     @Override
     public void dispose() {
         elementManager.clearCache();
-        if(CnAElementFactory.isBpModelLoaded()) {
+        if (CnAElementFactory.isBpModelLoaded()) {
             CnAElementFactory.getInstance().getBpModel().removeBpModelListener(modelUpdateListener);
         }
         CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
-//        getSite().getPage().removePartListener(linkWithEditorPartListener);
+        // getSite().getPage().removePartListener(linkWithEditorPartListener);
         super.dispose();
     }
-    
 
     @Override
     public String getRightID() {
@@ -461,5 +480,5 @@ public class BaseProtectionView extends RightsEnabledView
     public String getViewId() {
         return ID;
     }
-    
+
 }

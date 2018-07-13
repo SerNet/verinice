@@ -33,7 +33,7 @@ import sernet.verinice.model.common.CnATreeElement;
 public class BpThreat extends CnATreeElement implements IBpElement, IIdentifiableElement, ITaggableElement {
     
     private static final long serialVersionUID = -7182966153863832177L;
-    
+
     private static final String PROP_ABBR = "bp_threat_abbr"; //$NON-NLS-1$
     private static final String PROP_OBJECTBROWSER_DESC = "bp_threat_objectbrowser_content"; //$NON-NLS-1$
     private static final String PROP_NAME = "bp_threat_name"; //$NON-NLS-1$
@@ -43,7 +43,7 @@ public class BpThreat extends CnATreeElement implements IBpElement, IIdentifiabl
     private static final String PROP_CONFIDENIALITY = "bp_threat_value_method_confidentiality"; //$NON-NLS-1$
     private static final String PROP_INTEGRITY = "bp_threat_value_method_integrity"; //$NON-NLS-1$
     private static final String PROP_AVAILABILITY = "bp_threat_value_method_availability"; //$NON-NLS-1$
-    
+
     public static final String TYPE_ID = "bp_threat"; //$NON-NLS-1$
 
     public static final String REL_BP_REQUIREMENT_BP_APPLICATION = "rel_bp_threat_bp_application"; //$NON-NLS-1$
@@ -54,9 +54,10 @@ public class BpThreat extends CnATreeElement implements IBpElement, IIdentifiabl
     public static final String REL_BP_REQUIREMENT_BP_ITSYSTEM = "rel_bp_threat_bp_itsystem"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_NETWORK = "rel_bp_threat_bp_network"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_ROOM = "rel_bp_threat_bp_room"; //$NON-NLS-1$
-    
-    protected BpThreat() {}
-    
+
+    protected BpThreat() {
+    }
+
     public BpThreat(CnATreeElement parent) {
         super(parent);
         init();
@@ -66,72 +67,73 @@ public class BpThreat extends CnATreeElement implements IBpElement, IIdentifiabl
     public String getTypeId() {
         return TYPE_ID;
     }
-    
+
     public String getObjectBrowserDescription() {
         return getEntity().getPropertyValue(PROP_OBJECTBROWSER_DESC);
     }
-    
+
     public void setObjectBrowserDescription(String description) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER_DESC), description);
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_OBJECTBROWSER_DESC),
+                description);
     }
-    
+
     public String getAbbreviation() {
         return getEntity().getPropertyValue(PROP_ABBR);
     }
-    
+
     public void setAbbreviation(String abbreviation) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ABBR), abbreviation);
     }
-    
+
     @Override
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);
     }
-    
+
     @Override
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
-    
+
     @Override
     public String getIdentifier() {
         return getEntity().getPropertyValue(PROP_ID);
     }
-    
+
     public void setIdentifier(String id) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), id);
     }
-    
+
     public boolean isConfidentiality() {
         String value = getEntity().getPropertyValue(PROP_CONFIDENIALITY);
         return Boolean.getBoolean(value);
     }
-    
+
     public void setConfidentiality(boolean isConfidentiality) {
         int value = (isConfidentiality) ? 1 : 0;
         setNumericProperty(PROP_CONFIDENIALITY, value);
     }
-    
+
     public boolean isIntegrity() {
         String value = getEntity().getPropertyValue(PROP_INTEGRITY);
         return Boolean.getBoolean(value);
     }
-    
+
     public void setIntegrity(boolean isIntegrity) {
         int value = (isIntegrity) ? 1 : 0;
         setNumericProperty(PROP_INTEGRITY, value);
     }
-    
+
     public boolean isAvailability() {
         String value = getEntity().getPropertyValue(PROP_AVAILABILITY);
         return Boolean.getBoolean(value);
     }
-    
+
     public void setAvailibility(boolean isAvailability) {
         int value = (isAvailability) ? 1 : 0;
         setNumericProperty(PROP_AVAILABILITY, value);
     }
-    
+
     public static String getIdentifierOfThreat(CnATreeElement requirement) {
         return requirement.getEntity().getPropertyValue(PROP_ID);
     }

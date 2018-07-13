@@ -64,7 +64,7 @@ import sernet.verinice.model.validation.CnAValidation;
 @SuppressWarnings("serial")
 public abstract class CnATreeElement implements Serializable, IBSIModelListener, ITypedElement {
 
-    private static final Logger log = Logger.getLogger(CnATreeElement.class); // NOPMD by dm on 07.02.12 12:36
+    private static final Logger log = Logger.getLogger(CnATreeElement.class);
 
     private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(CnATreeElement.class);
 
@@ -73,199 +73,197 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     public static final String PARENT_ID = "parent-id";
     public static final String SCOPE_ID = "scope-id";
 
-	private Integer dbId;
+    private Integer dbId;
 
-	private Integer scopeId;
+    private Integer scopeId;
 
-	private String extId;
+    private String extId;
 
-	private String sourceId;
+    private String sourceId;
 
-	private String objectType;
+    private String objectType;
 
-	private String iconPath;
+    private String iconPath;
 
-	public int getNumericProperty(String propertyTypeId) {
-	    PropertyList properties = getEntity().getProperties(propertyTypeId);
+    public int getNumericProperty(String propertyTypeId) {
+        PropertyList properties = getEntity().getProperties(propertyTypeId);
         if (properties == null || properties.getProperties().size() == 0) {
-	        return 0;
-	    } else {
-	        return properties.getProperty(0).getNumericPropertyValue();
-	    }
-	}
+            return 0;
+        } else {
+            return properties.getProperty(0).getNumericPropertyValue();
+        }
+    }
 
-	public void setNumericProperty(String propTypeId, int value) {
-	    EntityType type = getTypeFactory().getEntityType(getEntity().getEntityType());
+    public void setNumericProperty(String propTypeId, int value) {
+        EntityType type = getTypeFactory().getEntityType(getEntity().getEntityType());
         getEntity().setSimpleValue(type.getPropertyType(propTypeId), Integer.toString(value));
-	}
+    }
 
-	private Integer parentId;
+    private Integer parentId;
 
-	private CnATreeElement parent;
+    private CnATreeElement parent;
 
-	private Entity entity;
+    private Entity entity;
 
-	private transient IBSIModelListener modelChangeListener;
+    private transient IBSIModelListener modelChangeListener;
 
-	// bi-directional qualified link list between items:
+    // bi-directional qualified link list between items:
 
-	/**
-	 * dependant in linksDown is this {@link CnATreeElement}
-	 */
-	private Set<CnALink> linksDown = new HashSet<>(1);
+    /**
+     * dependant in linksDown is this {@link CnATreeElement}
+     */
+    private Set<CnALink> linksDown = new HashSet<>(1);
 
-	/**
-	 * dependency in linksUp is this {@link CnATreeElement}
-	 */
-	private Set<CnALink> linksUp = new HashSet<>(1);
+    /**
+     * dependency in linksUp is this {@link CnATreeElement}
+     */
+    private Set<CnALink> linksUp = new HashSet<>(1);
 
-	private LinkKategorie links = new LinkKategorie(this);
+    private LinkKategorie links = new LinkKategorie(this);
 
-	private Set<CnATreeElement> children;
+    private Set<CnATreeElement> children;
 
-	private Set<Permission> permissions = new HashSet<>();
+    private Set<Permission> permissions = new HashSet<>();
 
-	private boolean childrenLoaded = false;
+    private boolean childrenLoaded = false;
 
-	private Set<Attachment> files = new HashSet<>(1);
+    private Set<Attachment> files = new HashSet<>(1);
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj){
-			return true;
-		}
-		if (!(obj instanceof CnATreeElement)){
-			return false;
-		}
-		CnATreeElement that = (CnATreeElement) obj;
-		boolean result = false;
-		try {
-		    result = this.getUuid().equals(that.getUuid());
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof CnATreeElement)) {
+            return false;
+        }
+        CnATreeElement that = (CnATreeElement) obj;
+        boolean result = false;
+        try {
+            result = this.getUuid().equals(that.getUuid());
         } catch (Exception e) {
             log.error("Error in equals, this uuid: " + this.getUuid(), e);
         }
-		return result;
-	}
+        return result;
+    }
 
-	@Override
-	public int hashCode() {
-		if (getUuid() != null){
-			return getUuid().hashCode();
-		}
-		return super.hashCode(); // basically only used during migration of old objects (without hashcode)
-	}
+    @Override
+    public int hashCode() {
+        if (getUuid() != null) {
+            return getUuid().hashCode();
+        }
+        return super.hashCode(); // basically only used during migration of old
+                                 // objects (without hashcode)
+    }
 
-	public void addChild(CnATreeElement child) {
-		if (!children.contains(child) && canContain(child)) {
-			children.add(child);
-			if (getParent() != null) {
-				try {
+    public void addChild(CnATreeElement child) {
+        if (!children.contains(child) && canContain(child)) {
+            children.add(child);
+            if (getParent() != null) {
+                try {
                     getParent().childAdded(this, child);
                 } catch (Exception e) {
                     log.error("Error while adding child", e);
                 }
-			} else {
-				this.childAdded(this, child);
-			}
-		} else if (log.isDebugEnabled()) {
-		    log.debug("Element not added. Parent refuses " + child);
+            } else {
+                this.childAdded(this, child);
+            }
+        } else if (log.isDebugEnabled()) {
+            log.debug("Element not added. Parent refuses " + child);
         }
-	}
+    }
 
-	/**
-	 * Remove child and notify parents.
-	 *
-	 * @param child
-	 */
-	public void removeChild(CnATreeElement child) {
-	    try {
-    	    if (children.remove(child)) {
-    	        childRemoved(this, child);
-    		}
-	    } catch(Exception e) {
+    /**
+     * Remove child and notify parents.
+     *
+     * @param child
+     */
+    public void removeChild(CnATreeElement child) {
+        try {
+            if (children.remove(child)) {
+                childRemoved(this, child);
+            }
+        } catch (Exception e) {
             log.error("Error while removing child", e);
         }
-	}
+    }
 
-	/**
-	 * Remove this item from parent and all links from and to this item.
-	 *
-	 */
-	public void remove() {
-		if (getParent() != null) {
-			getParent().removeChild(this);
-		}
+    /**
+     * Remove this item from parent and all links from and to this item.
+     *
+     */
+    public void remove() {
+        if (getParent() != null) {
+            getParent().removeChild(this);
+        }
 
-		CopyOnWriteArrayList<CnALink> list2 = new CopyOnWriteArrayList<>(getLinksDown());
-		for (CnALink link : list2) {
-			link.remove();
-		}
+        CopyOnWriteArrayList<CnALink> list2 = new CopyOnWriteArrayList<>(getLinksDown());
+        for (CnALink link : list2) {
+            link.remove();
+        }
 
-		list2 = new CopyOnWriteArrayList<>(getLinksUp());
-		for (CnALink link : list2) {
-			link.remove();
-		}
-	}
+        list2 = new CopyOnWriteArrayList<>(getLinksUp());
+        for (CnALink link : list2) {
+            link.remove();
+        }
+    }
 
-	public CnATreeElement[] getChildrenAsArray() {
-		return children.toArray(new CnATreeElement[children.size()]);
-	}
+    public CnATreeElement[] getChildrenAsArray() {
+        return children.toArray(new CnATreeElement[children.size()]);
+    }
 
-	@Override
+    @Override
     public void childAdded(CnATreeElement category, @NonNull CnATreeElement child) {
-			getModelChangeListener().childAdded(category, child);
-	}
+        getModelChangeListener().childAdded(category, child);
+    }
 
-	/**
-	 * Propagate event upwards.
-	 *
-	 * @param category
-	 * @param child
-	 */
-	@Override
+    /**
+     * Propagate event upwards.
+     *
+     * @param category
+     * @param child
+     */
+    @Override
     public void childRemoved(CnATreeElement category, CnATreeElement child) {
-			getModelChangeListener().childRemoved(category, child);
-	}
+        getModelChangeListener().childRemoved(category, child);
+    }
 
-	@Override
+    @Override
     public void childChanged(CnATreeElement child) {
-			// child changed:
-			getModelChangeListener().childChanged(child);
-	}
+        // child changed:
+        getModelChangeListener().childChanged(child);
+    }
 
-	public boolean canContain(Object obj) { // NOPMD by dm on 07.02.12 12:39
-		return false;
-	}
+    public boolean canContain(Object obj) { // NOPMD by dm on 07.02.12 12:39
+        return false;
+    }
 
-	public void setChildren(Set<CnATreeElement> children) {
-		this.children = children;
-	}
+    public void setChildren(Set<CnATreeElement> children) {
+        this.children = children;
+    }
 
-	public Set<CnATreeElement> getChildren() {
-		return children;
-	}
+    public Set<CnATreeElement> getChildren() {
+        return children;
+    }
 
+    private String uuid;
 
+    private transient EntityType subEntityType;
 
-	private String uuid;
+    public CnATreeElement(CnATreeElement parent) {
+        this();
+        this.parent = parent;
+        inherit(parent);
+    }
 
-	private transient EntityType subEntityType;
+    protected CnATreeElement() {
+        if (this.uuid == null) {
+            UUID randomUUID = java.util.UUID.randomUUID();
+            uuid = randomUUID.toString();
+        }
 
-
-	public CnATreeElement(CnATreeElement parent) {
-		this();
-		this.parent = parent;
-		inherit(parent);
-	}
-
-	protected CnATreeElement() {
-		if (this.uuid == null) {
-			UUID randomUUID = java.util.UUID.randomUUID();
-			uuid = randomUUID.toString();
-		}
-
-		children = new HashSet<>();
-	}
+        children = new HashSet<>();
+    }
 
     protected void init() {
         setEntity(new Entity(getTypeId()));
@@ -292,11 +290,11 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         }
     }
 
-	public CnATreeElement getParent() {
-		return parent;
-	}
+    public CnATreeElement getParent() {
+        return parent;
+    }
 
-	/**
+    /**
      * @return the parentId
      */
     public Integer getParentId() {
@@ -304,7 +302,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     }
 
     /**
-     * @param parentId the parentId to set
+     * @param parentId
+     *            the parentId to set
      */
     public void setParentId(Integer parentId) {
         this.parentId = parentId;
@@ -314,19 +313,19 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         return getTypeFactory().getMessage(getTypeId());
     }
 
-	public void setTitel(String name) { // NOPMD by dm on 07.02.12 12:38
-		// override this method
-	}
+    public void setTitel(String name) { // NOPMD by dm on 07.02.12 12:38
+        // override this method
+    }
 
-	public String getId() {
-		if (getEntity() == null){
-			return Entity.TITLE + getUuid();
-		} else {
-			return getEntity().getId();
-		}
-	}
+    public String getId() {
+        if (getEntity() == null) {
+            return Entity.TITLE + getUuid();
+        } else {
+            return getEntity().getId();
+        }
+    }
 
-	/**
+    /**
      * @return the scopeId
      */
     public Integer getScopeId() {
@@ -334,121 +333,121 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     }
 
     /**
-     * @param scopeId the scopeId to set
+     * @param scopeId
+     *            the scopeId to set
      */
     public void setScopeId(Integer scopeId) {
         this.scopeId = scopeId;
     }
 
-	public String getObjectType() {
-		return objectType;
-	}
+    public String getObjectType() {
+        return objectType;
+    }
 
-	public void setObjectType(String objectType) {
-		this.objectType = objectType;
-	}
+    public void setObjectType(String objectType) {
+        this.objectType = objectType;
+    }
 
-	public Entity getEntity() {
-		return entity;
-	}
+    public Entity getEntity() {
+        return entity;
+    }
 
-	public EntityType getEntityType() {
-		if (subEntityType == null) {
-		    if (log.isDebugEnabled()) {
-		        log.debug("type-factory: " + getTypeFactory());
+    public EntityType getEntityType() {
+        if (subEntityType == null) {
+            if (log.isDebugEnabled()) {
+                log.debug("type-factory: " + getTypeFactory());
             }
-			subEntityType = getTypeFactory().getEntityType(getTypeId());
-			if (log.isDebugEnabled()) {
+            subEntityType = getTypeFactory().getEntityType(getTypeId());
+            if (log.isDebugEnabled()) {
                 log.debug("type: " + getTypeId() + ", subEntityType: " + subEntityType);
             }
-		}
-		return subEntityType;
-	}
+        }
+        return subEntityType;
+    }
 
-	public void setEntity(Entity newEntity) {
-		entity = newEntity;
-	}
+    public void setEntity(Entity newEntity) {
+        entity = newEntity;
+    }
 
-	public Integer getDbId() {
-		return dbId;
-	}
+    public Integer getDbId() {
+        return dbId;
+    }
 
-	public void setDbId(Integer dbId) {
-		this.dbId = dbId;
-	}
+    public void setDbId(Integer dbId) {
+        this.dbId = dbId;
+    }
 
-	public String getPropertyValue(String typeId) {
+    public String getPropertyValue(String typeId) {
         return getEntity().getPropertyValue(typeId);
     }
 
-	public void setPropertyValue(String typeId, String value) {
+    public void setPropertyValue(String typeId, String value) {
         getEntity().setPropertyValue(typeId, value);
     }
 
-	public void setSimpleProperty(String typeId, String value) {
-		EntityType entityType = getTypeFactory().getEntityType(getTypeId());
-		getEntity().setSimpleValue(entityType.getPropertyType(typeId), value);
-	}
+    public void setSimpleProperty(String typeId, String value) {
+        EntityType entityType = getTypeFactory().getEntityType(getTypeId());
+        getEntity().setSimpleValue(entityType.getPropertyType(typeId), value);
+    }
 
-	public void setParent(CnATreeElement parent) {
+    public void setParent(CnATreeElement parent) {
         this.parent = parent;
     }
 
-	public void setParentAndScope(CnATreeElement parent) {
-		setParent(parent);
-		if(parent!=null && parent.getScopeId()!=null) {
-		    this.setScopeId(parent.getScopeId());
-		}
-	}
+    public void setParentAndScope(CnATreeElement parent) {
+        setParent(parent);
+        if (parent != null && parent.getScopeId() != null) {
+            this.setScopeId(parent.getScopeId());
+        }
+    }
 
-	public boolean containsBausteinUmsetzung(String kapitel) {
-		for (CnATreeElement elmt : getChildren()) {
-			if (elmt instanceof BausteinUmsetzung) {
-				BausteinUmsetzung bu = (BausteinUmsetzung) elmt;
-				if (bu.getKapitel().equals(kapitel)){
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+    public boolean containsBausteinUmsetzung(String kapitel) {
+        for (CnATreeElement elmt : getChildren()) {
+            if (elmt instanceof BausteinUmsetzung) {
+                BausteinUmsetzung bu = (BausteinUmsetzung) elmt;
+                if (bu.getKapitel().equals(kapitel)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-
-	/**
+    /**
      * dependant in linksDown is this {@link CnATreeElement}
      * </p>
      * Might also been called getLinksToDependencies();
      *
      * @return
      */
-	public Set<CnALink> getLinksDown() {
-		return linksDown;
-	}
+    public Set<CnALink> getLinksDown() {
+        return linksDown;
+    }
 
-	public void setLinksDown(Set<CnALink> linkDown) {
-		this.linksDown = linkDown;
-	}
+    public void setLinksDown(Set<CnALink> linkDown) {
+        this.linksDown = linkDown;
+    }
 
-	/**
+    /**
      * dependency in linksUp is this {@link CnATreeElement}
      * </p>
      * Might also been called getLinksToDependants();
      *
      * @return
      */
-	public Set<CnALink> getLinksUp() {
-		return linksUp;
-	}
+    public Set<CnALink> getLinksUp() {
+        return linksUp;
+    }
 
-	public void setLinksUp(Set<CnALink> linkUp) {
-		this.linksUp = linkUp;
-	}
+    public void setLinksUp(Set<CnALink> linkUp) {
+        this.linksUp = linkUp;
+    }
 
-	public LinkKategorie getLinks() {
-		return links;
-	}
+    public LinkKategorie getLinks() {
+        return links;
+    }
 
-	public String getIconPath() {
+    public String getIconPath() {
         return iconPath;
     }
 
@@ -459,201 +458,209 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     /**
      * dependant in linksDown is this {@link CnATreeElement}
      */
-	public void addLinkDown(CnALink link) {
-		linksDown.add(link);
-	}
+    public void addLinkDown(CnALink link) {
+        linksDown.add(link);
+    }
 
-	@Override
+    @Override
     public void linkChanged(CnALink old, CnALink link, Object source) {
-		getModelChangeListener().linkChanged(old, link, source);
-	}
+        getModelChangeListener().linkChanged(old, link, source);
+    }
 
-	@Override
+    @Override
     public void linkRemoved(CnALink link) {
-		getModelChangeListener().linkRemoved(link);
-	}
+        getModelChangeListener().linkRemoved(link);
+    }
 
-	@Override
+    @Override
     public void linkAdded(CnALink link) {
-		getModelChangeListener().linkAdded(link);
-	}
+        getModelChangeListener().linkAdded(link);
+    }
 
-	public boolean removeLinkDown(CnALink link) {
-		return linksDown.remove(link);
-	}
+    public boolean removeLinkDown(CnALink link) {
+        return linksDown.remove(link);
+    }
 
-	/**
+    /**
      * dependency in linksUp is this {@link CnATreeElement}
      */
-	public void addLinkUp(CnALink link) {
-		linksUp.add(link);
-	}
+    public void addLinkUp(CnALink link) {
+        linksUp.add(link);
+    }
 
-	/**
-	 * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet werden
-	 */
-	@Deprecated
+    /**
+     * @deprecated Es soll stattdessen {@link #modelRefresh(Object)} verwendet
+     *             werden
+     */
+    @Deprecated
     @Override
     public void modelRefresh() {
-		modelRefresh(null);
-	}
+        modelRefresh(null);
+    }
 
-	@Override
+    @Override
     public void modelRefresh(Object source) {
-		getModelChangeListener().modelRefresh(null);
-	}
+        getModelChangeListener().modelRefresh(null);
+    }
 
-	public boolean removeLinkUp(CnALink link) {
-		return linksUp.remove(link);
-	}
+    public boolean removeLinkUp(CnALink link) {
+        return linksUp.remove(link);
+    }
 
-	public ILinkChangeListener getLinkChangeListener() {
-		return new AbstractLinkChangeListener(){
-		        // empty implementation
-		    };
-	}
+    public ILinkChangeListener getLinkChangeListener() {
+        return new AbstractLinkChangeListener() {
+            // empty implementation
+        };
+    }
 
-	public IReevaluator getProtectionRequirementsProvider() { // NOPMD by dm on 07.02.12 12:38
-		return null;
-	}
+    public IReevaluator getProtectionRequirementsProvider() { // NOPMD by dm on
+                                                              // 07.02.12 12:38
+        return null;
+    }
 
-	public boolean isProtectionRequirementsProvider() {
-		return getProtectionRequirementsProvider() != null;
-	}
+    public boolean isProtectionRequirementsProvider() {
+        return getProtectionRequirementsProvider() != null;
+    }
 
-	public boolean isAdditionalMgmtReviewNeeded() {
-		if (getEntity()==null){
-			return false;
-		}
-		PropertyList properties = getEntity().getProperties(
-				getTypeId() + Schutzbedarf.ERGAENZENDEANALYSE);
-		if (properties != null
-                && properties.getProperties() != null
-				&& !properties.getProperties().isEmpty()){
-			return Schutzbedarf.isMgmtReviewNeeded(properties.getProperty(0)
-					.getPropertyValue());
-		} else {
-			return false;
-		}
-	}
+    public boolean isAdditionalMgmtReviewNeeded() {
+        if (getEntity() == null) {
+            return false;
+        }
+        PropertyList properties = getEntity()
+                .getProperties(getTypeId() + Schutzbedarf.ERGAENZENDEANALYSE);
+        if (properties != null && properties.getProperties() != null
+                && !properties.getProperties().isEmpty()) {
+            return Schutzbedarf.isMgmtReviewNeeded(properties.getProperty(0).getPropertyValue());
+        } else {
+            return false;
+        }
+    }
 
-	/**
-	 * Set change listener to model root if one is present.
-	 *
-	 * @return
-	 */
-	public synchronized IBSIModelListener getModelChangeListener() {
-		if (modelChangeListener != null){
-			return modelChangeListener;
-		}
+    /**
+     * Set change listener to model root if one is present.
+     *
+     * @return
+     */
+    public synchronized IBSIModelListener getModelChangeListener() {
+        if (modelChangeListener != null) {
+            return modelChangeListener;
+        }
 
-		modelChangeListener = new NullListener();
-		return modelChangeListener;
-	}
+        modelChangeListener = new NullListener();
+        return modelChangeListener;
+    }
 
-	public String getUuid() {
-		return uuid;
-	}
+    public String getUuid() {
+        return uuid;
+    }
 
-	public void setUuid(String uuid) {
-		this.uuid = uuid;
-	}
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
-	protected HUITypeFactory getTypeFactory() {
-		return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
-	}
+    protected HUITypeFactory getTypeFactory() {
+        return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+    }
 
-	public void setLinks(LinkKategorie links) {
-		this.links = links;
-	}
+    public void setLinks(LinkKategorie links) {
+        this.links = links;
+    }
 
-	/**
-	 * Returns a child-group of this this element
-	 * which can contain elements of type childTypeId
-	 *
-	 * @param childTypeId a type id
-	 * @return a child-group of this this element
-	 */
-	public CnATreeElement getGroup(String childTypeId) {
+    /**
+     * Returns a child-group of this this element which can contain elements of
+     * type childTypeId
+     *
+     * @param childTypeId
+     *            a type id
+     * @return a child-group of this this element
+     */
+    public CnATreeElement getGroup(String childTypeId) {
         CnATreeElement group = null;
         for (CnATreeElement cnATreeElement : getChildren()) {
-            if(cnATreeElement instanceof IISO27kGroup &&
-                // true if: group can contain childTypeId
-                // or group.typeId == childTypeId
-                    (Arrays.binarySearch(((IISO27kGroup) cnATreeElement).getChildTypes(), childTypeId) > -1
+            if (cnATreeElement instanceof IISO27kGroup &&
+            // true if: group can contain childTypeId
+            // or group.typeId == childTypeId
+                    (Arrays.binarySearch(((IISO27kGroup) cnATreeElement).getChildTypes(),
+                            childTypeId) > -1
                             || ((IISO27kGroup) cnATreeElement).getTypeId().equals(childTypeId))) {
-                    group = cnATreeElement;
-                    break;
+                group = cnATreeElement;
+                break;
             }
         }
         return group;
     }
 
-	/**
-	 * Checks if a propertyId is the id of a static property which are
-	 * defined for every element: CnATreeElement.DBID, .PARENT_ID, .SCOPE_ID, .UUID
-	 *
-	 * @param propertyId The id of a "static" property.
-	 * @return Return true if the id is the id of a "static" property
-	 */
-	public static boolean isStaticProperty(String propertyId) {
-	        return(CnATreeElement.PARENT_ID.equals(propertyId)
-	            || CnATreeElement.SCOPE_ID.equals(propertyId)
-	            || CnATreeElement.DBID.equals(propertyId)
-	            || CnATreeElement.UUID.equals(propertyId));
-	    }
+    /**
+     * Checks if a propertyId is the id of a static property which are defined
+     * for every element: CnATreeElement.DBID, .PARENT_ID, .SCOPE_ID, .UUID
+     *
+     * @param propertyId
+     *            The id of a "static" property.
+     * @return Return true if the id is the id of a "static" property
+     */
+    public static boolean isStaticProperty(String propertyId) {
+        return (CnATreeElement.PARENT_ID.equals(propertyId)
+                || CnATreeElement.SCOPE_ID.equals(propertyId)
+                || CnATreeElement.DBID.equals(propertyId)
+                || CnATreeElement.UUID.equals(propertyId));
+    }
 
-	/**
-	 * Returns properties which are defined for every element. This method is a addition
-	 * to retrieve these values by property keys the same way as the properties
-	 * which are saved as dynamic properties
-	 *
-	 * @param element A CnATreeElement
-	 * @param propertyId The id of a "static" property:
-	 *     CnATreeElement.DBID, .PARENT_ID, .SCOPE_ID, .UUID
-	 * @return The value of the property or null if no value exists
-	 */
-	public static String getStaticProperty(CnATreeElement element, String propertyId) {
+    /**
+     * Returns properties which are defined for every element. This method is a
+     * addition to retrieve these values by property keys the same way as the
+     * properties which are saved as dynamic properties
+     *
+     * @param element
+     *            A CnATreeElement
+     * @param propertyId
+     *            The id of a "static" property: CnATreeElement.DBID,
+     *            .PARENT_ID, .SCOPE_ID, .UUID
+     * @return The value of the property or null if no value exists
+     */
+    public static String getStaticProperty(CnATreeElement element, String propertyId) {
         String value = null;
-        if(CnATreeElement.SCOPE_ID.equals(propertyId)) {
+        if (CnATreeElement.SCOPE_ID.equals(propertyId)) {
             value = String.valueOf(element.getScopeId());
         }
-        if(CnATreeElement.DBID.equals(propertyId)) {
+        if (CnATreeElement.DBID.equals(propertyId)) {
             value = String.valueOf(element.getDbId());
         }
-        if(CnATreeElement.PARENT_ID.equals(propertyId)) {
+        if (CnATreeElement.PARENT_ID.equals(propertyId)) {
             value = String.valueOf(element.getParentId());
         }
-        if(CnATreeElement.UUID.equals(propertyId)) {
+        if (CnATreeElement.UUID.equals(propertyId)) {
             value = element.getUuid();
         }
         return value;
     }
 
-	public void fireVertraulichkeitChanged(CascadingTransaction ta) {
-		if (isProtectionRequirementsProvider()) {
-		    if(LOG_INHERIT.isInfo()) {
-	            LOG_INHERIT.info(this.getTypeId() + " is provider, update confidentiality");
-	        }
-			getProtectionRequirementsProvider().updateConfidentiality(ta);
-		}
-	}
-	public void fireVerfuegbarkeitChanged(CascadingTransaction ta) {
-		if (isProtectionRequirementsProvider()) {
-            if(LOG_INHERIT.isInfo()) {
+    public void fireVertraulichkeitChanged(CascadingTransaction ta) {
+        if (isProtectionRequirementsProvider()) {
+            if (LOG_INHERIT.isInfo()) {
+                LOG_INHERIT.info(this.getTypeId() + " is provider, update confidentiality");
+            }
+            getProtectionRequirementsProvider().updateConfidentiality(ta);
+        }
+    }
+
+    public void fireVerfuegbarkeitChanged(CascadingTransaction ta) {
+        if (isProtectionRequirementsProvider()) {
+            if (LOG_INHERIT.isInfo()) {
                 LOG_INHERIT.info(this.getTypeId() + " is provider, update availability");
             }
-			getProtectionRequirementsProvider().updateAvailability(ta);
-		}
-	}
-	public void fireIntegritaetChanged(CascadingTransaction ta) {
-		if (isProtectionRequirementsProvider()) {
-            if(LOG_INHERIT.isInfo()) {
-                LOG_INHERIT.info(this.getTypeId() + " is provider, update integrity of: " + this.getTitle());
+            getProtectionRequirementsProvider().updateAvailability(ta);
+        }
+    }
+
+    public void fireIntegritaetChanged(CascadingTransaction ta) {
+        if (isProtectionRequirementsProvider()) {
+            if (LOG_INHERIT.isInfo()) {
+                LOG_INHERIT.info(
+                        this.getTypeId() + " is provider, update integrity of: " + this.getTitle());
             }
-			getProtectionRequirementsProvider().updateIntegrity(ta);
-		}
-	}
+            getProtectionRequirementsProvider().updateIntegrity(ta);
+        }
+    }
 
     /**
      * Signal a value change of this {@link CnATreeElement} to the
@@ -661,7 +668,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
      */
     public void fireValueChanged(CascadingTransaction ta) {
         if (isProtectionRequirementsProvider()) {
-            if(LOG_INHERIT.isInfo()) {
+            if (LOG_INHERIT.isInfo()) {
                 LOG_INHERIT.info(
                         this.getTypeId() + " is provider, update value of: " + this.getTitle());
             }
@@ -669,49 +676,48 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         }
     }
 
-
-	/**
-	 * Replace a displayed item in tree with another one. Used to replace
-	 * displaed objects with reloaded ones from thje database.
-	 *
-	 * @param newElement
-	 */
-	public void replace(CnATreeElement newElement) {
-		if (this == newElement) {
-		    if (log.isDebugEnabled()) {
-		        log.debug("NOT replacing, same instance: " + newElement);
+    /**
+     * Replace a displayed item in tree with another one. Used to replace
+     * displaed objects with reloaded ones from thje database.
+     *
+     * @param newElement
+     */
+    public void replace(CnATreeElement newElement) {
+        if (this == newElement) {
+            if (log.isDebugEnabled()) {
+                log.debug("NOT replacing, same instance: " + newElement);
             }
-			return;
-		}
-		if (getParent() == null) {
-			// replace children of root element:
-		    if (log.isDebugEnabled()) {
-		        log.debug("Replacing children of element " + this);
+            return;
+        }
+        if (getParent() == null) {
+            // replace children of root element:
+            if (log.isDebugEnabled()) {
+                log.debug("Replacing children of element " + this);
             }
-			this.children = newElement.getChildren();
-			this.setChildrenLoaded(true);
+            this.children = newElement.getChildren();
+            this.setChildrenLoaded(true);
 
-			return;
-		} else {
-		    if (log.isDebugEnabled()) {
-		        log.debug("Replacing child " + this + "in parent " + getParent());
+            return;
+        } else {
+            if (log.isDebugEnabled()) {
+                log.debug("Replacing child " + this + "in parent " + getParent());
             }
-			getParent().removeChild(this);
-			getParent().addChild(newElement);
-			newElement.setParentAndScope(getParent());
-		}
+            getParent().removeChild(this);
+            getParent().addChild(newElement);
+            newElement.setParentAndScope(getParent());
+        }
 
-	}
+    }
 
-	public boolean isChildrenLoaded() {
-		return childrenLoaded;
-	}
+    public boolean isChildrenLoaded() {
+        return childrenLoaded;
+    }
 
-	public void  setChildrenLoaded(boolean childrenLoaded) {
-		this.childrenLoaded = childrenLoaded;
-	}
+    public void setChildrenLoaded(boolean childrenLoaded) {
+        this.childrenLoaded = childrenLoaded;
+    }
 
-	public Set<Attachment> getFiles() {
+    public Set<Attachment> getFiles() {
         return files;
     }
 
@@ -721,56 +727,55 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     @Override
     public void databaseChildAdded(CnATreeElement child) {
-		getModelChangeListener().databaseChildAdded(child);
-	}
+        getModelChangeListener().databaseChildAdded(child);
+    }
 
-	@Override
+    @Override
     public void databaseChildChanged(CnATreeElement child) {
-		getModelChangeListener().databaseChildChanged(child);
-	}
+        getModelChangeListener().databaseChildChanged(child);
+    }
 
-	@Override
+    @Override
     public void databaseChildRemoved(CnATreeElement child) {
-		getModelChangeListener().databaseChildRemoved(child);
-	}
+        getModelChangeListener().databaseChildRemoved(child);
+    }
 
-	@Override
+    @Override
     public void databaseChildRemoved(ChangeLogEntry entry) {
-		getModelChangeListener().databaseChildRemoved(entry);
-	}
+        getModelChangeListener().databaseChildRemoved(entry);
+    }
 
-	@Override
+    @Override
     public void modelReload(BSIModel newModel) {
-		getModelChangeListener().modelReload(newModel);
-	}
+        getModelChangeListener().modelReload(newModel);
+    }
 
-	public Set<Permission> getPermissions() {
-		return permissions;
-	}
+    public Set<Permission> getPermissions() {
+        return permissions;
+    }
 
-	public void setPermissions(Set<Permission> permissions) {
-		this.permissions = permissions;
-	}
+    public void setPermissions(Set<Permission> permissions) {
+        this.permissions = permissions;
+    }
 
-	public void addPermission(Permission permission) {
-		permissions.add(permission);
-	}
+    public void addPermission(Permission permission) {
+        permissions.add(permission);
+    }
 
-	public boolean removePermission(Permission permission) {
-		return permissions.remove(permission);
-	}
+    public boolean removePermission(Permission permission) {
+        return permissions.remove(permission);
+    }
 
-	public void refreshAllListeners(Object source) { // NOPMD by dm on 07.02.12 12:39
-		// override this in model classes
-	}
+    public void refreshAllListeners(Object source) { // NOPMD by dm on 07.02.12
+                                                     // 12:39
+        // override this in model classes
+    }
 
-	public String getExtId()
-    {
+    public String getExtId() {
         return extId;
     }
 
-    public void setExtId(String extId)
-    {
+    public void setExtId(String extId) {
         this.extId = extId;
     }
 
@@ -782,20 +787,23 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         this.sourceId = sourceId;
     }
 
-	@Override
-	public String toString() {
-	    return new StringBuilder("type: ").append(getTypeId())
-	            .append(", uuid: ").append(getUuid()).toString();
-	}
+    @Override
+    public String toString() {
+        return new StringBuilder("type: ").append(getTypeId()).append(", uuid: ").append(getUuid())
+                .toString();
+    }
 
     @Override
-    public void validationAdded(Integer scopeId){};
+    public void validationAdded(Integer scopeId) {
+    };
 
     @Override
-    public void validationRemoved(Integer scopeId){};
+    public void validationRemoved(Integer scopeId) {
+    };
 
     @Override
-    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){}
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation) {
+    }
 
     /**
      * Indicates whether the instance is a scope element (short: scope).

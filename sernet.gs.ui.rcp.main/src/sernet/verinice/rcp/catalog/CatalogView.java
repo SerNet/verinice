@@ -416,7 +416,8 @@ public class CatalogView extends RightsEnabledView
     protected void toggleLinking(boolean checked) {
         this.linkingActive = checked;
         if (checked) {
-            Optional.ofNullable(getSite().getPage().getActiveEditor()).ifPresent(this::editorActivated);
+            Optional.ofNullable(getSite().getPage().getActiveEditor())
+                    .ifPresent(this::editorActivated);
         }
     }
 
@@ -482,8 +483,7 @@ public class CatalogView extends RightsEnabledView
             CommandContributionItemParameter copyParameter = new CommandContributionItemParameter(
                     PlatformUI.getWorkbench(), null, IWorkbenchCommandConstants.EDIT_COPY,
                     CommandContributionItem.STYLE_PUSH);
-            copyParameter.icon = ImageCache.getInstance()
-                    .getImageDescriptor(ImageCache.COPY);
+            copyParameter.icon = ImageCache.getInstance().getImageDescriptor(ImageCache.COPY);
             CommandContributionItem copyItem = new CommandContributionItem(copyParameter);
             manager.add(copyItem);
 
