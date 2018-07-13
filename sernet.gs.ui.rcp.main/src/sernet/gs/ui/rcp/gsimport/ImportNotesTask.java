@@ -71,13 +71,15 @@ public class ImportNotesTask extends AbstractGstoolImportTask {
             monitor.subTask(i + "/" + n + " - Zielobjekt: " + name);
             List<NotizenMassnahmeResult> notesResults = getGstoolDao()
                     .findNotizenForZielobjekt(name);
-            Map<MbBaust, List<NotizenMassnahmeResult>> notizenMap = TransferData
-                    .convertZielobjektNotizenMap(notesResults);
-            String importedObjectTypeId = GstoolTypeMapper.getVeriniceTypeOrDefault(zielobjekt.type,
-                    zielobjekt.subtype);
-            ImportNotesForZielobjekt command = new ImportNotesForZielobjekt(name,
-                    importedObjectTypeId, notizenMap);
-            ServiceFactory.lookupCommandService().executeCommand(command);
+            if (!notesResults.isEmpty()) {
+                Map<MbBaust, List<NotizenMassnahmeResult>> notizenMap = TransferData
+                        .convertZielobjektNotizenMap(notesResults);
+                String importedObjectTypeId = GstoolTypeMapper
+                        .getVeriniceTypeOrDefault(zielobjekt.type, zielobjekt.subtype);
+                ImportNotesForZielobjekt command = new ImportNotesForZielobjekt(name,
+                        importedObjectTypeId, notizenMap);
+                ServiceFactory.lookupCommandService().executeCommand(command);
+            }
         }
     }
 
