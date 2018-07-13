@@ -73,7 +73,10 @@ public class ImportNotesTask extends AbstractGstoolImportTask {
                     .findNotizenForZielobjekt(name);
             Map<MbBaust, List<NotizenMassnahmeResult>> notizenMap = TransferData
                     .convertZielobjektNotizenMap(notesResults);
-            ImportNotesForZielobjekt command = new ImportNotesForZielobjekt(name, notizenMap);
+            String importedObjectTypeId = GstoolTypeMapper.getVeriniceTypeOrDefault(zielobjekt.type,
+                    zielobjekt.subtype);
+            ImportNotesForZielobjekt command = new ImportNotesForZielobjekt(name,
+                    importedObjectTypeId, notizenMap);
             ServiceFactory.lookupCommandService().executeCommand(command);
         }
     }

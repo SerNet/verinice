@@ -57,22 +57,23 @@ public class ImportNotesForZielobjekt extends GenericCommand {
 
     private static final Pattern onlyWhitespace = Pattern.compile("^\\s*$");
 
-    private static final String QUERY = "from CnATreeElement elmt "
-            + "where elmt.objectType != 'massnahmen-umsetzung'"
-            + "and elmt.objectType != 'baustein-umsetzung' ";
+    private static final String QUERY = "from CnATreeElement elmt where elmt.objectType = ?";
 
     private String zielobjektName;
+    private String importedObjectTypeId;
     private Map<MbBaust, List<NotizenMassnahmeResult>> notizenMap;
 
-    public ImportNotesForZielobjekt(String name,
+    public ImportNotesForZielobjekt(String name, String importedObjectTypeId,
             Map<MbBaust, List<NotizenMassnahmeResult>> notizenMap) {
         this.zielobjektName = name;
+        this.importedObjectTypeId = importedObjectTypeId;
         this.notizenMap = notizenMap;
     }
 
     public void execute() {
         IBaseDao<BSIModel, Serializable> dao = getDaoFactory().getDAO(BSIModel.class);
-        List<CnATreeElement> allElements = dao.findByQuery(QUERY, new Object[] {});
+        List<CnATreeElement> allElements = dao.findByQuery(QUERY,
+                new Object[] { importedObjectTypeId });
 
         for (CnATreeElement cnATreeElement : allElements) {
             if (cnATreeElement.getTitle().equals(zielobjektName)) {
