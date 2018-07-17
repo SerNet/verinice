@@ -148,11 +148,7 @@ public class BaseProtectionFilterDialog extends Dialog {
         boxesComposite.setLayout(layout);
 
         for (final ImplementationStatus status : ImplementationStatus.values()) {
-            final Button button = new Button(boxesComposite, SWT.CHECK);
-            button.setText(status.getLabel());
-            button.setData(status);
-            button.setSelection(filterParameters.getImplementationStatuses().contains(status));
-            implementationStatusButtons.add(button);
+            implementationStatusButtons.add(addButton(boxesComposite, status, status.getLabel()));
         }
     }
 
