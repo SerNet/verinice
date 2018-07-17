@@ -1,4 +1,4 @@
-package sernet.verinice.bp.rcp.filter;
+package sernet.verinice.model.bp;
 
 /*******************************************************************************
  * Copyright (c) 2018 Jochen Kemnade.
@@ -28,9 +28,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * The implementation status of a safeguard or requirement
  */
 public enum ImplementationStatus {
-    YES(Messages.ImplementationState_YES), NO(Messages.ImplementationState_NO), PARTIALLY(
-            Messages.ImplementationState_PARTIALLY), NOT_APPLICABLE(
-                    Messages.ImplementationState_NOT_APPLICABLE);
+    YES, NO, PARTIALLY, NOT_APPLICABLE;
 
     static {
         Map<String, ImplementationStatus> m = new HashMap<>();
@@ -56,8 +54,8 @@ public enum ImplementationStatus {
 
     private final String label;
 
-    private ImplementationStatus(String label) {
-        this.label = label;
+    private ImplementationStatus() {
+        label = Messages.getString(getClass().getSimpleName() + "." + this.name());
     }
 
     public String getLabel() {

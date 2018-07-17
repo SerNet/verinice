@@ -24,6 +24,7 @@ import java.util.Set;
 import org.eclipse.jdt.annotation.NonNull;
 
 import sernet.gs.service.CollectionUtil;
+import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.SecurityLevel;
 
 public class BaseProtectionFilterParameters {

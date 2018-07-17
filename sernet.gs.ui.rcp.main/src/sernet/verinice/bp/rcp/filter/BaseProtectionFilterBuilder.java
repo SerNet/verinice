@@ -31,6 +31,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.ISecurityLevelProvider;
+import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.elements.BpRequirement;
