@@ -114,61 +114,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
             CnATreeElement[] children = element.getChildrenAsArray();
             checkRightForSubElements(children);
 
-            if (element instanceof Person || element instanceof PersonIso) {
-                removeConfiguration(element);
-            }
-
-            if (element instanceof IBSIStrukturElement
-                    || element instanceof IBSIStrukturKategorie) {
-                removeAllRiskAnalyses();
-            }
-
-            if (element instanceof ITVerbund) {
-                CnATreeElement cat = ((ITVerbund) element).getCategory(PersonenKategorie.TYPE_ID);
-
-                // A defect in the application allowed that ITVerbund instances
-                // without a category are
-                // created. With this tiny check we can ensure that they can be
-                // deleted.
-                if (cat != null) {
-                    Set<CnATreeElement> personen = cat.getChildren();
-                    for (CnATreeElement elmt : personen) {
-                        removeConfiguration(elmt);
-                    }
-                }
-            }
-
-            if (element instanceof FinishedRiskAnalysis) {
-                FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) element;
-                removeRiskAnalysis(analysis);
-            }
-
-            if (element instanceof GefaehrdungsUmsetzung && element.getParent() != null) {
-                GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) element;
-                removeFromLists(element.getParent().getDbId(), gef);
-            }
-
-            /*
-             * Special case the deletion of FinishedRiskAnalysis instances:
-             * Before the instance is deleted itself their children must be
-             * removed manually (otherwise referential integrity is violated and
-             * Hibernate reports an error).
-             *
-             * Using the children as an array ensure that there won't be a
-             * ConcurrentModificationException while deleting the elements.
-             */
-            for (int i = 0; i < children.length; i++) {
-                if (children[i] instanceof FinishedRiskAnalysis) {
-                    removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
-                }
-            }
-
-            if (element instanceof ITVerbund) {
-                removeAllGefaehrdungsUmsetzungen();
-            }
-
-            element.remove();
-            dao.delete(element);
+            removeElement(element);
         } catch (SecurityException e) {
             LOG.error("SecurityException while deleting element: " + element, e);
             throw e;
@@ -179,6 +125,77 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
             LOG.error("Exception while deleting element: " + element, e);
             throw new RuntimeCommandException(e);
         }
+    }
+
+    private void removeElement(T element) throws CommandException {
+        // We could be removing an element that has a safeguard as one
+        // of its children. Since we want our manual event listeners to be fired
+        // for those and their links as well (via element.remove()), we need to
+        // delete them by hand. This is not an optimal solution and should be
+        // replaced by Hibernate event listeners someday.
+        // (see VN-2084)
+        for (CnATreeElement child : element.getChildrenAsArray()) {
+            removeElement((T) child);
+        }
+
+        if (element instanceof Person || element instanceof PersonIso) {
+            removeConfiguration(element);
+        }
+
+        if (element instanceof IBSIStrukturElement || element instanceof IBSIStrukturKategorie) {
+            removeAllRiskAnalyses();
+        }
+
+        if (element instanceof ITVerbund) {
+            CnATreeElement cat = ((ITVerbund) element).getCategory(PersonenKategorie.TYPE_ID);
+
+            // A defect in the application allowed that ITVerbund instances
+            // without a category are
+            // created. With this tiny check we can ensure that they can be
+            // deleted.
+            if (cat != null) {
+                Set<CnATreeElement> personen = cat.getChildren();
+                for (CnATreeElement elmt : personen) {
+                    removeConfiguration(elmt);
+                }
+            }
+        }
+
+        if (element instanceof FinishedRiskAnalysis) {
+            FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) element;
+            removeRiskAnalysis(analysis);
+        }
+
+        if (element instanceof GefaehrdungsUmsetzung && element.getParent() != null) {
+            GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) element;
+            removeFromLists(element.getParent().getDbId(), gef);
+        }
+
+        /*
+         * Special case the deletion of FinishedRiskAnalysis instances: Before
+         * the instance is deleted itself their children must be removed
+         * manually (otherwise referential integrity is violated and Hibernate
+         * reports an error).
+         *
+         * Using the children as an array ensure that there won't be a
+         * ConcurrentModificationException while deleting the elements.
+         */
+        CnATreeElement[] children = element.getChildrenAsArray();
+
+        for (int i = 0; i < children.length; i++) {
+            if (children[i] instanceof FinishedRiskAnalysis) {
+                removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
+            }
+        }
+
+        if (element instanceof ITVerbund) {
+            removeAllGefaehrdungsUmsetzungen();
+        }
+
+        element.remove();
+        IBaseDao<T, Serializable> dao = getDaoFactory().getDAOforTypedElement(element);
+
+        dao.delete(element);
     }
 
     /**
