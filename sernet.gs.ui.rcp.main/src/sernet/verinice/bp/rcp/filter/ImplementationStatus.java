@@ -30,8 +30,7 @@ import sernet.verinice.model.common.CnATreeElement;
 public enum ImplementationStatus {
     YES(Messages.ImplementationState_YES), NO(Messages.ImplementationState_NO), PARTIALLY(
             Messages.ImplementationState_PARTIALLY), NOT_APPLICABLE(
-                    Messages.ImplementationState_NOT_APPLICABLE), PRISTINE(
-                            Messages.BaseProtectionFilterDialog_Property_Value_Null);
+                    Messages.ImplementationState_NOT_APPLICABLE);
 
     static {
         Map<String, ImplementationStatus> m = new HashMap<>();
@@ -47,8 +46,8 @@ public enum ImplementationStatus {
         m.put(Safeguard.PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE, NOT_APPLICABLE);
         m.put(BpRequirement.PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE, NOT_APPLICABLE);
 
-        m.put(null, PRISTINE);
-        m.put("", PRISTINE);
+        m.put(null, null);
+        m.put("", null);
 
         implementationStatusByPropertyValue = Collections.unmodifiableMap(m);
     }

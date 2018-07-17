@@ -144,12 +144,14 @@ public class BaseProtectionFilterDialog extends Dialog {
         boxesComposite.setText(Messages.BaseProtectionFilterDialog_ImplementationState);
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1);
         boxesComposite.setLayoutData(gridData);
-        GridLayout layout = new GridLayout(ImplementationStatus.values().length, false);
+        GridLayout layout = new GridLayout(ImplementationStatus.values().length + 1, false);
         boxesComposite.setLayout(layout);
 
         for (final ImplementationStatus status : ImplementationStatus.values()) {
             implementationStatusButtons.add(addButton(boxesComposite, status, status.getLabel()));
         }
+        implementationStatusButtons.add(addButton(boxesComposite, null,
+                Messages.BaseProtectionFilterDialog_Property_Value_Null));
     }
 
     private void addQualiferGroup(Composite parent) {
