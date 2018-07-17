@@ -318,7 +318,7 @@ public class BaseProtectionFilterDialog extends Dialog {
             }
         }
 
-        Set<SecurityLevel> levels = new HashSet<>(ImplementationStatus.values().length);
+        Set<SecurityLevel> levels = new HashSet<>(SecurityLevel.values().length);
         for (Button button : qualifierButtons) {
             if (button.getSelection()) {
                 levels.add((SecurityLevel) button.getData());
