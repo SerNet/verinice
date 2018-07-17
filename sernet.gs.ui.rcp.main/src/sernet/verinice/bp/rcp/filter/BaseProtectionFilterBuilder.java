@@ -140,9 +140,15 @@ public class BaseProtectionFilterBuilder {
             if (!hideEmptyGroups && element instanceof Group || element instanceof ItNetwork) {
                 return true;
             }
-            ImplementationStatus implementationStatus = ImplementationStatus
-                    .findValue((CnATreeElement) element);
-            return selectedImplementationStatus.contains(implementationStatus);
+            if (element instanceof BpRequirement) {
+                return selectedImplementationStatus
+                        .contains(((BpRequirement) element).getImplementationStatus());
+            }
+            if (element instanceof Safeguard) {
+                return selectedImplementationStatus
+                        .contains(((Safeguard) element).getImplementationStatus());
+            }
+            return false;
         }
     }
 

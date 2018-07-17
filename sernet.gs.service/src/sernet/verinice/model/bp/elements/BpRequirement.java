@@ -33,6 +33,7 @@ import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.ISecurityLevelProvider;
+import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.Reevaluator;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bsi.TagHelper;
@@ -72,10 +73,10 @@ public class BpRequirement extends CnATreeElement
 
     public static final String PROP_IMPLEMENTATION_DEDUCE = "bp_requirement_implementation_deduce"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS = "bp_requirement_implementation_status"; //$NON-NLS-1$
-    public static final String PROP_IMPLEMENTATION_STATUS_NO = "bp_requirement_implementation_status_no"; //$NON-NLS-1$
-    public static final String PROP_IMPLEMENTATION_STATUS_YES = "bp_requirement_implementation_status_yes"; //$NON-NLS-1$
-    public static final String PROP_IMPLEMENTATION_STATUS_PARTIALLY = "bp_requirement_implementation_status_partially"; //$NON-NLS-1$
-    public static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_requirement_implementation_status_na"; //$NON-NLS-1$
+    private static final String PROP_IMPLEMENTATION_STATUS_NO = "bp_requirement_implementation_status_no"; //$NON-NLS-1$
+    private static final String PROP_IMPLEMENTATION_STATUS_YES = "bp_requirement_implementation_status_yes"; //$NON-NLS-1$
+    private static final String PROP_IMPLEMENTATION_STATUS_PARTIALLY = "bp_requirement_implementation_status_partially"; //$NON-NLS-1$
+    private static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_requirement_implementation_status_na"; //$NON-NLS-1$
 
     public static final String REL_BP_REQUIREMENT_BP_THREAT = "rel_bp_requirement_bp_threat"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_SAFEGUARD = "rel_bp_requirement_bp_safeguard"; //$NON-NLS-1$
@@ -269,8 +270,23 @@ public class BpRequirement extends CnATreeElement
         return ((this.getNumericProperty(PROP_AVAILABILITY) == 1) ? true : false);
     }
 
-    public String getImplementationStatus() {
-        return getEntity().getRawPropertyValue(PROP_IMPLEMENTATION_STATUS);
+    public ImplementationStatus getImplementationStatus() {
+        String rawValue = getEntity().getRawPropertyValue(PROP_IMPLEMENTATION_STATUS);
+        if (rawValue == null || rawValue.isEmpty()) {
+            return null;
+        }
+        switch (rawValue) {
+        case PROP_IMPLEMENTATION_STATUS_NO:
+            return ImplementationStatus.NO;
+        case PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE:
+            return ImplementationStatus.NOT_APPLICABLE;
+        case PROP_IMPLEMENTATION_STATUS_PARTIALLY:
+            return ImplementationStatus.PARTIALLY;
+        case PROP_IMPLEMENTATION_STATUS_YES:
+            return ImplementationStatus.YES;
+        default:
+            throw new IllegalStateException("Unknown implementation status '" + rawValue + "'");
+        }
     }
 
     public static String getIdentifierOfRequirement(CnATreeElement requirement) {
