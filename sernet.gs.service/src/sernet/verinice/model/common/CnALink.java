@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -348,12 +349,14 @@ public class CnALink implements Serializable, ITypedElement {
         dependant.removeLinkDown(this);
         dependency.removeLinkUp(this);
 
-        if (dependency.isProtectionRequirementsProvider()) {
-            dependency.fireIntegritaetChanged(new CascadingTransaction());
-            dependency.fireVerfuegbarkeitChanged(new CascadingTransaction());
-            dependency.fireVertraulichkeitChanged(new CascadingTransaction());
-            dependency.fireValueChanged(new CascadingTransaction());
-        }
+        Stream.of(dependant, dependency).forEach(element -> {
+            if (element.isProtectionRequirementsProvider()) {
+                element.fireIntegritaetChanged(new CascadingTransaction());
+                element.fireVerfuegbarkeitChanged(new CascadingTransaction());
+                element.fireVertraulichkeitChanged(new CascadingTransaction());
+                element.fireValueChanged(new CascadingTransaction());
+            }
+        });
     }
 
     public CnATreeElement getDependant() {
