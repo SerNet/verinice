@@ -37,6 +37,7 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.IFinishedRiskAnalysisListsDao;
 import sernet.verinice.interfaces.INoAccessControl;
+import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
@@ -128,14 +129,16 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     }
 
     private void removeElement(T element) throws CommandException {
-        // We could be removing an element that has a safeguard as one
-        // of its children. Since we want our manual event listeners to be fired
-        // for those and their links as well (via element.remove()), we need to
-        // delete them by hand. This is not an optimal solution and should be
-        // replaced by Hibernate event listeners someday.
-        // (see VN-2084)
-        for (CnATreeElement child : element.getChildrenAsArray()) {
-            removeElement((T) child);
+        if (element instanceof IBpElement) {
+            // We could be removing an element that has a safeguard as one
+            // of its children. Since we want our manual event listeners to be
+            // fired for those and their links as well (via element.remove()),
+            // we need to delete them by hand. This is not an optimal solution
+            // and should be replaced by Hibernate event listeners someday.
+            // (see VN-2084)
+            for (CnATreeElement child : element.getChildrenAsArray()) {
+                removeElement((T) child);
+            }
         }
 
         if (element instanceof Person || element instanceof PersonIso) {
