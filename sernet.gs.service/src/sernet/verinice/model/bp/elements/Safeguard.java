@@ -236,6 +236,10 @@ public class Safeguard extends CnATreeElement
 
     public ImplementationStatus getImplementationStatus() {
         String rawValue = getEntity().getRawPropertyValue(PROP_IMPLEMENTATION_STATUS);
+        return getImplementationStatus(rawValue);
+    }
+
+    public static ImplementationStatus getImplementationStatus(String rawValue) {
         if (rawValue == null || rawValue.isEmpty()) {
             return null;
         }
@@ -251,6 +255,31 @@ public class Safeguard extends CnATreeElement
         default:
             throw new IllegalStateException("Unknown implementation status '" + rawValue + "'");
         }
+    }
+
+    public void setImplementationStatus(ImplementationStatus status) {
+        String rawValue;
+        if (status == null) {
+            rawValue = null;
+        } else {
+            switch (status) {
+            case NO:
+                rawValue = PROP_IMPLEMENTATION_STATUS_NO;
+                break;
+            case NOT_APPLICABLE:
+                rawValue = PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE;
+                break;
+            case PARTIALLY:
+                rawValue = PROP_IMPLEMENTATION_STATUS_PARTIALLY;
+                break;
+            case YES:
+                rawValue = PROP_IMPLEMENTATION_STATUS_YES;
+                break;
+            default:
+                throw new IllegalStateException("Unknown implementation status '" + status + "'");
+            }
+        }
+        setSimpleProperty(PROP_IMPLEMENTATION_STATUS, rawValue);
     }
 
     public static String getIdentifierOfSafeguard(CnATreeElement requirement) {

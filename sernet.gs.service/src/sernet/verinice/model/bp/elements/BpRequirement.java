@@ -272,6 +272,15 @@ public class BpRequirement extends CnATreeElement
 
     public ImplementationStatus getImplementationStatus() {
         String rawValue = getEntity().getRawPropertyValue(PROP_IMPLEMENTATION_STATUS);
+        return getImplementationStatus(rawValue);
+    }
+
+    public void setImplementationStatus(ImplementationStatus implementationStatus) {
+        String rawValue = toRawValue(implementationStatus);
+        setSimpleProperty(PROP_IMPLEMENTATION_STATUS, rawValue);
+    }
+
+    public static ImplementationStatus getImplementationStatus(String rawValue) {
         if (rawValue == null || rawValue.isEmpty()) {
             return null;
         }
@@ -287,6 +296,32 @@ public class BpRequirement extends CnATreeElement
         default:
             throw new IllegalStateException("Unknown implementation status '" + rawValue + "'");
         }
+    }
+
+    public static String toRawValue(ImplementationStatus status) {
+        String rawValue;
+        if (status == null) {
+            rawValue = null;
+        } else {
+            switch (status) {
+            case NO:
+                rawValue = PROP_IMPLEMENTATION_STATUS_NO;
+                break;
+            case NOT_APPLICABLE:
+                rawValue = PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE;
+                break;
+            case PARTIALLY:
+                rawValue = PROP_IMPLEMENTATION_STATUS_PARTIALLY;
+                break;
+            case YES:
+                rawValue = PROP_IMPLEMENTATION_STATUS_YES;
+                break;
+            default:
+                throw new IllegalStateException("Unknown implementation status '" + status + "'");
+            }
+        }
+        return rawValue;
+
     }
 
     public static String getIdentifierOfRequirement(CnATreeElement requirement) {
