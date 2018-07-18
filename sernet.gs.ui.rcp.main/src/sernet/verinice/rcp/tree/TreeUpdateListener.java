@@ -28,6 +28,10 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Display;
 
+import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.Retriever;
+import sernet.gs.ui.rcp.main.bsi.editors.EditorUtil;
+import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.IBpModelListener;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
@@ -217,7 +221,7 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
      */
     @Override
     public void linkAdded(CnALink link) {
-        // nothing to do, since links are displayed in relation view
+        linkAddedOrRemoved(link);
     }
 
     /*
@@ -227,7 +231,19 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
      */
     @Override
     public void linkRemoved(CnALink link) {
-        // nothing to do, since links are displayed in relation view
+        linkAddedOrRemoved(link);
+    }
+
+    private void linkAddedOrRemoved(CnALink link) {
+        if (DeductionImplementationUtil.isRelevantLinkForImplementationStateDeduction(link)
+                && DeductionImplementationUtil
+                        .isDeductiveImplementationEnabled(link.getDependant())) {
+            CnATreeElement requirement = link.getDependant();
+            RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance().setParent(true);
+            requirement = Retriever.retrieveElement(requirement, ri);
+            childChanged(requirement);
+            EditorUtil.closeEditorForElement(requirement.getUuid());
+        }
     }
 
     /*
