@@ -24,10 +24,13 @@ import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementa
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
+import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.Reevaluator;
 import sernet.verinice.model.bp.SecurityLevel;
@@ -43,7 +46,8 @@ import sernet.verinice.model.common.TransactionAbortedException;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class BpRequirement extends CnATreeElement implements IBpElement, IIdentifiableElement, ITaggableElement {
+public class BpRequirement extends CnATreeElement
+        implements IBpElement, IIdentifiableElement, ITaggableElement {
 
     private static final long serialVersionUID = 6621062615495040741L;
 
@@ -97,12 +101,12 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
                     || ta.hasBeenVisited(BpRequirement.this)) {
                 return;
             }
+            List<CnATreeElement> safeGuards = BpRequirement.this.getLinksDown().stream().filter(
+                    DeductionImplementationUtil::isRelevantLinkForImplementationStateDeduction)
+                    .map(CnALink::getDependency).collect(Collectors.toList());
 
-            for (CnALink cnALink : BpRequirement.this.getLinksUp()) {
-                CnATreeElement dependant = cnALink.getDependant();
-                if (Safeguard.TYPE_ID.equals(dependant.getTypeId())) {
-                    setImplementationStausToRequirement(dependant, BpRequirement.this);
-                }
+            if (!safeGuards.isEmpty()) {
+                setImplementationStausToRequirement(safeGuards, BpRequirement.this);
             }
         }
     };
@@ -190,8 +194,8 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
         case HIGH:
             qualifier = PROP_QUALIFIER_HIGH;
             break;
-       }
-       getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
+        }
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
     }
 
     /**
@@ -263,7 +267,7 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
         return ((this.getNumericProperty(PROP_AVAILABILITY) == 1) ? true : false);
     }
 
-    public String getImplementationStatus(){
+    public String getImplementationStatus() {
         return getEntity().getRawPropertyValue(PROP_IMPLEMENTATION_STATUS);
     }
 
