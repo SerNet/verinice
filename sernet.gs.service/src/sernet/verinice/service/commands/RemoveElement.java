@@ -143,7 +143,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         }
 
         if (element instanceof IBSIStrukturElement || element instanceof IBSIStrukturKategorie) {
-            removeAllRiskAnalyses();
+            removeAllRiskAnalyses(element);
         }
 
         if (element instanceof ITVerbund) {
@@ -189,7 +189,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         }
 
         if (element instanceof ITVerbund) {
-            removeAllGefaehrdungsUmsetzungen();
+            removeAllGefaehrdungsUmsetzungen(element);
         }
 
         element.remove();
@@ -223,7 +223,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
      * of type {@link ITVerbund} and always after all riskanalyses are removed /
      * deleted
      */
-    private void removeAllGefaehrdungsUmsetzungen() {
+    private void removeAllGefaehrdungsUmsetzungen(CnATreeElement element) {
         String hqlQuery = "from CnATreeElement element where element.objectType = ? AND element.scopeId = ?";
         Object[] params = new Object[] { GefaehrdungsUmsetzung.HIBERNATE_TYPE_ID,
                 element.getDbId() };
@@ -237,19 +237,19 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         }
     }
 
-    private void removeAllRiskAnalyses() throws CommandException {
+    private void removeAllRiskAnalyses(CnATreeElement element) throws CommandException {
         if (ImportBsiGroup.TYPE_ID.equals(element.getTypeId())) {
             removeRiskAnalysisFromBSIImportGroup(element.getDbId());
         } else if (element.isItVerbund()) {
             removeRiskAnalysisForScope(element.getScopeId());
         } else if (element instanceof IBSIStrukturKategorie) {
-            removeRiskAnalysesFromBSICategory();
+            removeRiskAnalysesFromBSICategory(element);
 
         }
         // handling for instances of ISBSIStrukturElement not necessary
     }
 
-    private void removeRiskAnalysesFromBSICategory() throws CommandException {
+    private void removeRiskAnalysesFromBSICategory(CnATreeElement element) throws CommandException {
         StringBuilder sb = new StringBuilder();
         sb.append("select element.dbId from CnATreeElement element where ");
         sb.append("element.scopeId = :scopeId and element.parentId = :parentId");
