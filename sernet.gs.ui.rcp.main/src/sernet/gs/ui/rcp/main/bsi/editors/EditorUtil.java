@@ -20,6 +20,12 @@
 package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.Set;
+import java.util.stream.Stream;
+
+import org.apache.log4j.Logger;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -36,10 +42,37 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public final class EditorUtil {
 
+    private static final Logger logger = Logger.getLogger(EditorUtil.class);
+
     private static final int MAX_TITLE_LENGTH = 20;
 
     private EditorUtil() {
         super();
+    }
+
+    /**
+     * Closes the editor for a given element by its uuid.
+     */
+    public static void closeEditorForElement(String uuid) {
+        Stream.of(PlatformUI.getWorkbench().getWorkbenchWindows())
+                .forEach(window -> Stream.of(window.getPages()).forEach(
+                        page -> Stream.of(page.getEditorReferences()).forEach(editorReference -> {
+                            try {
+
+                                if (editorReference
+                                        .getEditorInput() instanceof BSIElementEditorInput) {
+                                    CnATreeElement element = ((BSIElementEditorInput) editorReference
+                                            .getEditorInput()).getCnAElement();
+                                    if (uuid.equals(element.getUuid())) {
+                                        page.closeEditors(
+                                                new IEditorReference[] { editorReference }, true);
+                                    }
+                                }
+
+                            } catch (PartInitException e) {
+                                logger.error("Error while closing element editor.", e);
+                            }
+                        })));
     }
 
     /**
