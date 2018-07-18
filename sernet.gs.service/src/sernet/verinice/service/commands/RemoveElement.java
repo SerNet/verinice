@@ -297,22 +297,22 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         }
     }
 
-    private void removeRiskAnalysis(FinishedRiskAnalysis finishedRiskAnalysis)
-            throws CommandException {
-        removeChildren(finishedRiskAnalysis);
+    private void removeRiskAnalysis(FinishedRiskAnalysis finishedRiskAnalysis) {
         List<FinishedRiskAnalysisLists> list = getRaListDao()
                 .findByFinishedRiskAnalysisId(finishedRiskAnalysis.getDbId());
+
         for (FinishedRiskAnalysisLists ra : list) {
+            removeChildren(finishedRiskAnalysis, ra);
             getRaListDao().delete(ra);
         }
     }
 
-    private void removeChildren(FinishedRiskAnalysis analysis) throws CommandException {
+    private void removeChildren(FinishedRiskAnalysis analysis, FinishedRiskAnalysisLists lists) {
         Set<CnATreeElement> children = analysis.getChildren();
         for (CnATreeElement child : children) {
             if (child instanceof GefaehrdungsUmsetzung) {
                 GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) child;
-                removeFromLists(gef.getParent().getDbId(), gef);
+                lists.removeGefaehrdungCompletely(gef);
             }
         }
     }
