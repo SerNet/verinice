@@ -50,21 +50,21 @@ public class BaseProtectionFilterAction extends Action {
     private StructuredViewer viewer;
 
     private @NonNull BaseProtectionFilterParameters filterParameters;
-    private final boolean hideEmptyGroupsByDefault;
+    private final @NonNull BaseProtectionFilterParameters defaultFilterParams;
 
-    public BaseProtectionFilterAction(StructuredViewer viewer, boolean hideEmptyGroupsByDefault) {
+    public BaseProtectionFilterAction(StructuredViewer viewer,
+            @NonNull BaseProtectionFilterParameters defaultFilterParams) {
         super("Filter..."); // //$NON-NLS-1$
         this.viewer = viewer;
-        this.hideEmptyGroupsByDefault = hideEmptyGroupsByDefault;
-        this.filterParameters = BaseProtectionFilterParameters.builder()
-                .withHideEmptyGroups(hideEmptyGroupsByDefault).build();
+        this.defaultFilterParams = defaultFilterParams;
+        this.filterParameters = defaultFilterParams;
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.FILTER));
     }
 
     @Override
     public void run() {
         BaseProtectionFilterDialog dialog = new BaseProtectionFilterDialog(
-                Display.getCurrent().getActiveShell(), filterParameters, hideEmptyGroupsByDefault);
+                Display.getCurrent().getActiveShell(), filterParameters, defaultFilterParams);
         if (dialog.open() != InputDialog.OK) {
             return;
         }
@@ -76,12 +76,11 @@ public class BaseProtectionFilterAction extends Action {
         addTypeFilter(viewerFilters);
         addTagFilter(viewerFilters);
 
-        if (!viewerFilters.isEmpty()
-                || filterParameters.isHideEmptyGroups() != hideEmptyGroupsByDefault) {
+        if (defaultFilterParams.equals(filterParameters)) {
+            setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.FILTER));
+        } else {
             setImageDescriptor(
                     ImageCache.getInstance().getImageDescriptor(ImageCache.FILTER_ACTIVE));
-        } else {
-            setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.FILTER));
         }
 
         addHideEmptyGroupsFilter(viewerFilters);

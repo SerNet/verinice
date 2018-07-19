@@ -73,6 +73,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.bp.rcp.filter.BaseProtectionFilterAction;
+import sernet.verinice.bp.rcp.filter.BaseProtectionFilterParameters;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -109,6 +110,8 @@ public class BaseProtectionView extends RightsEnabledView
     private static final Logger LOG = Logger.getLogger(BaseProtectionView.class);
     public static final String ID = "sernet.verinice.bp.rcp.BaseProtectionView"; //$NON-NLS-1$
     private static int operations = DND.DROP_COPY | DND.DROP_MOVE;
+    public static final BaseProtectionFilterParameters defaultFilterParams = BaseProtectionFilterParameters
+            .builder().build();
     private Object mutex = new Object();
 
     protected TreeViewer viewer;
@@ -352,7 +355,7 @@ public class BaseProtectionView extends RightsEnabledView
     }
 
     private void makeFilterAction() {
-        filterAction = new BaseProtectionFilterAction(viewer, false);
+        filterAction = new BaseProtectionFilterAction(viewer, defaultFilterParams);
     }
 
     protected void makeExpandAndCollapseActions() {

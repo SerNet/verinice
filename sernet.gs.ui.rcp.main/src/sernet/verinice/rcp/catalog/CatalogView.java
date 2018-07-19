@@ -84,6 +84,7 @@ import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.bp.rcp.BaseProtectionTreeSorter;
 import sernet.verinice.bp.rcp.filter.BaseProtectionFilterAction;
+import sernet.verinice.bp.rcp.filter.BaseProtectionFilterParameters;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -118,6 +119,9 @@ public class CatalogView extends RightsEnabledView
         implements IAttachedToPerspective, ILinkedWithEditorView {
 
     private static final Logger logger = Logger.getLogger(CatalogView.class);
+
+    private static final BaseProtectionFilterParameters defaultFilterParams = BaseProtectionFilterParameters
+            .builder().withHideEmptyGroups(true).build();
 
     protected TreeViewer viewer;
     private TreeContentProvider contentProvider;
@@ -321,7 +325,7 @@ public class CatalogView extends RightsEnabledView
 
         HideEmptyFilter hideEmptyFilter = new HideEmptyFilter(viewer);
         hideEmptyFilter.setHideEmpty(true);
-        filterAction = new BaseProtectionFilterAction(viewer, true);
+        filterAction = new BaseProtectionFilterAction(viewer, defaultFilterParams);
 
         linkWithEditorAction = new Action(Messages.ISMView_5, IAction.AS_CHECK_BOX) {
             @Override
