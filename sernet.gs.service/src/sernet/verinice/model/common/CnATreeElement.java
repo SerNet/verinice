@@ -294,6 +294,19 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         return parent;
     }
 
+    public CnATreeElement getScope() {
+        if (this.getScopeId() == null) {
+            return null;
+        }
+        if (this.getScopeId().equals(this.getDbId())) {
+            return this;
+        }
+        if (this.getParent() == null) {
+            throw new IllegalStateException("element is not part if its scope");
+        }
+        return getParent().getScope();
+    }
+
     /**
      * @return the parentId
      */
