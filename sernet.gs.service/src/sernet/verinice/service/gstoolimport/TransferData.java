@@ -474,10 +474,11 @@ public class TransferData {
 
         String gefNr = translateGefaehrdungsNr(ragResult.getGefaehrdung());
         gefaehrdungsUmsetzung.setSimpleProperty("gefaehrdungsumsetzung_id", gefNr);
-
-        gefaehrdungsUmsetzung.setDescription(
-                convertClobToStringEncodingSave(ragResult.getGefaehrdungTxt().getBeschreibung(),
-                        GSScraperUtil.getInstance().getModel().getEncoding()));
+        Clob beschreibung = ragResult.getGefaehrdungTxt().getBeschreibung();
+        if (beschreibung != null) {
+            gefaehrdungsUmsetzung.setDescription(convertClobToStringEncodingSave(beschreibung,
+                    GSScraperUtil.getInstance().getModel().getEncoding()));
+        }
 
         gefaehrdungsUmsetzung.setTitel(ragResult.getGefaehrdungTxt().getName());
         Optional.ofNullable(ragResult.getGefaehrdung().getLink()).map(TransferData::transferUrl)
@@ -930,9 +931,12 @@ public class TransferData {
                 String.valueOf(ragResult.getZielobjekt().getId().getZobId()),
                 ragResult.getGefaehrdung().getGuid(), ragResult.getZielobjekt().getGuid()));
         ownGefaehrdung.setTitel(ragResult.getGefaehrdungTxt().getName());
-        ownGefaehrdung.setBeschreibung(
-                convertClobToStringEncodingSave(ragResult.getGefaehrdungTxt().getBeschreibung(),
-                        GSScraperUtil.getInstance().getModel().getEncoding()));
+        Clob beschreibung = ragResult.getGefaehrdungTxt().getBeschreibung();
+        if (beschreibung != null) {
+            ownGefaehrdung.setBeschreibung(convertClobToStringEncodingSave(beschreibung,
+                    GSScraperUtil.getInstance().getModel().getEncoding()));
+        }
+
     }
 
     public static String createBausteineMassnahmenResultIdentifier(
