@@ -784,14 +784,15 @@ public class ImportTask extends AbstractGstoolImportTask {
 
         monitor.beginTask("Verknüpfe Personen mit Bausteinen...",
                 alleBausteineToBausteinUmsetzungMap.size());
-        Set<MbBaust> keySet = alleBausteineToBausteinUmsetzungMap.keySet();
-        for (MbBaust mbBaust : keySet) {
+        for (Entry<MbBaust, BausteinUmsetzung> entry : alleBausteineToBausteinUmsetzungMap
+                .entrySet()) {
             monitor.worked(1);
-            BausteinUmsetzung bausteinUmsetzung = alleBausteineToBausteinUmsetzungMap.get(mbBaust);
-            if (bausteinUmsetzung != null) {
 
-                NZielobjekt interviewer = alleBausteineToZoBstMap.get(mbBaust)
-                        .getNZielobjektByFkZbZ2();
+            MbBaust mbBaust = entry.getKey();
+            BausteinUmsetzung bausteinUmsetzung = entry.getValue();
+            if (bausteinUmsetzung != null) {
+                ModZobjBst modZobjBst = alleBausteineToZoBstMap.get(mbBaust);
+                NZielobjekt interviewer = modZobjBst.getNZielobjektByFkZbZ2();
                 if (interviewer != null) {
                     HashSet<NZielobjekt> set = new HashSet<>();
                     set.add(interviewer);
@@ -807,8 +808,7 @@ public class ImportTask extends AbstractGstoolImportTask {
                 }
 
                 Set<NZielobjekt> befragteMitarbeiter = getGstoolDao()
-                        .findBefragteMitarbeiterForBaustein(
-                                alleBausteineToZoBstMap.get(mbBaust).getId());
+                        .findBefragteMitarbeiterForBaustein(modZobjBst.getId());
                 if (befragteMitarbeiter != null && !befragteMitarbeiter.isEmpty()) {
                     List<Person> dependencies = findPersonen(befragteMitarbeiter);
                     if (dependencies.size() != befragteMitarbeiter.size()) {
@@ -858,8 +858,8 @@ public class ImportTask extends AbstractGstoolImportTask {
                 .convertBausteinMap(findBausteinMassnahmenByZielobjekt);
 
         this.monitor.subTask(numberImported + "/" + numberOfElements + " - Erstelle "
-                + zielobjekt.getName() + " mit " + bausteineMassnahmenMap.keySet().size()
-                + " Baust. und " + getAnzahlMassnahmen(bausteineMassnahmenMap) + " Maßn...");
+                + zielobjekt.getName() + " mit " + bausteineMassnahmenMap.size() + " Baust. und "
+                + getAnzahlMassnahmen(bausteineMassnahmenMap) + " Maßn...");
 
         // maps needed for import of userdefined data, storing information
         // retrieved from itgs catalogues in non userdefined case
@@ -869,13 +869,18 @@ public class ImportTask extends AbstractGstoolImportTask {
 
         ImportCreateBausteine command;
         ServiceFactory.lookupAuthService();
-        for (MbBaust b : bausteineMassnahmenMap.keySet()) {
+
+        for (Entry<MbBaust, List<BausteineMassnahmenResult>> entry : bausteineMassnahmenMap
+                .entrySet()) {
+            MbBaust b = entry.getKey();
             if (b.getId().getBauImpId() == 1) {// is it possible for a catalog
-                                               // bst to have user defined gefs?
-                prepareUserDefinedBausteinImport(zielobjekt, bausteineMassnahmenMap,
-                        udBausteineTxtMap, udBstMassTxtMap, udBaustGefMap, b);
+                // bst to have user defined gefs?
+                prepareUserDefinedBausteinImport(zielobjekt, entry.getValue(), udBausteineTxtMap,
+                        udBstMassTxtMap, udBaustGefMap, b);
             }
+
         }
+
         command = new ImportCreateBausteine(sourceId, element, bausteineMassnahmenMap, zeiten,
                 kosten, importUmsetzung, udBausteineTxtMap, udBstMassTxtMap, udBaustGefMap,
                 allCatalogueBausteine);
@@ -903,23 +908,14 @@ public class ImportTask extends AbstractGstoolImportTask {
 
     }
 
-    /**
-     * @param zielobjekt
-     * @param bausteineMassnahmenMap
-     * @param udBausteineTxtMap
-     * @param udBstMassTxtMap
-     * @param udBaustGefMap
-     * @param b
-     */
     private void prepareUserDefinedBausteinImport(NZielobjekt zielobjekt,
-            Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap,
+            List<BausteineMassnahmenResult> bausteineMassnahmenResultList,
             Map<MbBaust, BausteinInformationTransfer> udBausteineTxtMap,
             Map<MbMassn, MassnahmeInformationTransfer> udBstMassTxtMap,
             Map<MbBaust, List<GefaehrdungInformationTransfer>> udBaustGefMap, MbBaust b) {
         udBausteineTxtMap.put(b, getGstoolDao().findTxtForMbBaust(b, zielobjekt,
                 GSScraperUtil.getInstance().getModel().getEncoding()));
-        List<BausteineMassnahmenResult> lr = bausteineMassnahmenMap.get(b);
-        for (BausteineMassnahmenResult r : lr) {
+        for (BausteineMassnahmenResult r : bausteineMassnahmenResultList) {
             udBstMassTxtMap.put(r.massnahme, getGstoolDao().findTxtforMbMassn(r.massnahme,
                     GSScraperUtil.getInstance().getModel().getEncoding()));
         }
@@ -942,10 +938,9 @@ public class ImportTask extends AbstractGstoolImportTask {
 
     private int getAnzahlMassnahmen(
             Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap) {
-        Set<MbBaust> keys = bausteineMassnahmenMap.keySet();
         int result = 0;
-        for (MbBaust baust : keys) {
-            result += bausteineMassnahmenMap.get(baust).size();
+        for (List<BausteineMassnahmenResult> list : bausteineMassnahmenMap.values()) {
+            result += list.size();
         }
         return result;
     }
