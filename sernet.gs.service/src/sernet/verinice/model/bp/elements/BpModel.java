@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 
 import sernet.verinice.model.bp.IBpModelListener;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -40,13 +41,11 @@ public class BpModel extends CnATreeElement implements IBpRoot {
     public static final String TYPE_ID = "bp_model"; //$NON-NLS-1$
     public static final String TITLE = "Modernized ITBP Model"; //$NON-NLS-1$
 
-    private static final Logger log = Logger.getLogger(BpModel.class);;
+    private static final Logger log = Logger.getLogger(BpModel.class);
 
     private transient List<IBpModelListener> listeners;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.model.common.CnATreeElement#getTitle()
      */
     @Override
@@ -55,8 +54,6 @@ public class BpModel extends CnATreeElement implements IBpRoot {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.model.common.CnATreeElement#getTypeId()
      */
     @Override
@@ -85,7 +82,7 @@ public class BpModel extends CnATreeElement implements IBpRoot {
     }
 
     @Override
-    public void childAdded(CnATreeElement category, CnATreeElement child) {
+    public void childAdded(CnATreeElement category, @NonNull CnATreeElement child) {
         for (IBpModelListener listener : getListeners()) {
             listener.childAdded(category, child);
             if (child instanceof ItNetwork) {

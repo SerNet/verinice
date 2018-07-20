@@ -91,6 +91,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
     private List<Integer> dbIDs;
     private ArrayList<CnATreeElement> selectedElements;
     private EntityType entType = null;
+    @SuppressWarnings("rawtypes")
     private Class clazz;
     private Dialog chosenDialog;
 

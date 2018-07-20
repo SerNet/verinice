@@ -72,8 +72,6 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.model.IISO27KModelListener#databaseChildRemoved
      * (sernet.gs.ui.rcp.main.common.model.CnATreeElement)
@@ -89,8 +87,6 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.model.IISO27KModelListener#databaseChildRemoved
      * (sernet.gs.ui.rcp.main.common.model.ChangeLogEntry)
@@ -108,8 +104,6 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.model.IISO27KModelListener#childAdded(sernet.gs
      * .ui.rcp.main.common.model.CnATreeElement,
@@ -127,8 +121,6 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.model.IISO27KModelListener#databaseChildAdded(
      * sernet.gs.ui.rcp.main.common.model.CnATreeElement)
@@ -154,8 +146,6 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.model.IISO27KModelListener#modelRefresh(java.lang
      * .Object)
@@ -170,8 +160,6 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.model.IISO27KModelListener#childChanged(sernet
      * .gs.ui.rcp.main.common.model.CnATreeElement,
@@ -188,8 +176,6 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.model.IISO27KModelListener#childRemoved(sernet
      * .gs.ui.rcp.main.common.model.CnATreeElement,
@@ -200,8 +186,6 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.model.IISO27KModelListener#databaseChildChanged
      * (sernet.gs.ui.rcp.main.common.model.CnATreeElement)
@@ -217,8 +201,6 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.model.IISO27KModelListener#linkChanged(sernet.
      * gs.ui.rcp.main.common.model.CnALink)
@@ -229,8 +211,6 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.model.IISO27KModelListener#linkAdded(sernet.gs
      * .ui.rcp.main.common.model.CnALink)
@@ -241,8 +221,6 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.model.IISO27KModelListener#linkRemoved(sernet.
      * gs.ui.rcp.main.common.model.CnALink)
@@ -253,8 +231,6 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.model.IISO27KModelListener#modelReload(sernet.
      * gs.ui.rcp.main.bsi.model.BSIModel)
@@ -265,8 +241,6 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.model.bsi.IBSIModelListener#modelReload(sernet.verinice.
      * model.bsi.BSIModel)
@@ -278,15 +252,15 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
 
     @Override
     public void validationAdded(Integer scopeId) {
-    };
+    }
 
     @Override
     public void validationRemoved(Integer scopeId) {
-    };
+    }
 
     @Override
     public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation) {
-    };
+    }
 
     /**
      * @param model
@@ -294,14 +268,11 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
      */
     private void doModelReload(Object model) {
         try {
-            Display.getDefault().syncExec(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        expandedElements = viewer.getExpandedElements();
-                    } catch (Exception e) {
-                        LOG.error(e.getMessage(), e);
-                    }
+            Display.getDefault().syncExec(() -> {
+                try {
+                    expandedElements = viewer.getExpandedElements();
+                } catch (Exception e) {
+                    LOG.error(e.getMessage(), e);
                 }
             });
 
@@ -361,14 +332,11 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
         @Override
         protected IStatus run(IProgressMonitor monitor) {
             monitor.setTaskName("Expanding element tree...");
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        viewer.setExpandedElements(elements);
-                    } catch (Exception e) {
-                        LOG.error(e.getMessage(), e);
-                    }
+            Display.getDefault().asyncExec(() -> {
+                try {
+                    viewer.setExpandedElements(elements);
+                } catch (Exception e) {
+                    LOG.error(e.getMessage(), e);
                 }
             });
             return Status.OK_STATUS;
@@ -376,8 +344,6 @@ public class TreeUpdateListener implements IISO27KModelListener, IBSIModelListen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.model.iso27k.IBpModelListener#modelReload(sernet.verinice
      * .model.bp.elements.BpModel)

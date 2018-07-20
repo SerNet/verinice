@@ -192,7 +192,8 @@ public class BSIElementEditor extends EditorPart {
             task = editorInput.getTask();
 
             CnATreeElement elementWithChildren = Retriever.checkRetrieveChildren(element);
-            LoadElementForEditor command = new LoadElementForEditor(element, false);
+            LoadElementForEditor<CnATreeElement> command = new LoadElementForEditor<>(element,
+                    false);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             cnAElement = command.getElement();
             cnAElement.setChildren(elementWithChildren.getChildren());
@@ -407,8 +408,6 @@ public class BSIElementEditor extends EditorPart {
     }
 
     /*
-     * (non-Javadoc)
-     *
      * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
      * widgets .Composite)
      */

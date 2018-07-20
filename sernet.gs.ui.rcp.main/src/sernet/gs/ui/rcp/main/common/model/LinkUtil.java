@@ -26,7 +26,6 @@ import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateLink;
 
@@ -52,8 +51,6 @@ public final class LinkUtil {
         try {
             commandService.executeCommand(command);
         } catch (CommandException e) {
-            // SonarLint 1.0.0 is not satisfied with this. Looks like a false
-            // positive to me.
             LOGGER.error("Link creation failed", e);
         }
     }
@@ -61,30 +58,15 @@ public final class LinkUtil {
     public static void createLinks(Set<CnATreeElement> sources, CnATreeElement target,
             String relationId) {
         for (CnATreeElement source : sources) {
-            CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source, target,
-                    relationId);
-            try {
-                commandService.executeCommand(command);
-            } catch (CommandException e) {
-                // SonarLint 1.0.0 is not satisfied with this. Looks like a
-                // false positive to me.
-                LOGGER.error("Link creation failed", e);
-            }
+            createLink(source, target, relationId);
         }
     }
 
     public static void createLinks(CnATreeElement source, Set<CnATreeElement> targets,
             String relationId) {
         for (CnATreeElement target : targets) {
-            CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source, target,
-                    relationId);
-            try {
-                commandService.executeCommand(command);
-            } catch (CommandException e) {
-                // SonarLint 1.0.0 is not satisfied with this. Looks like a
-                // false positive to me.
-                LOGGER.error("Link creation failed", e);
-            }
+            createLink(source, target, relationId);
         }
     }
+
 }
