@@ -90,7 +90,7 @@ public class BaseProtectionFilterDialog extends Dialog {
     private Button hideEmptyGroupsCheckbox;
 
     private @NonNull BaseProtectionFilterParameters filterParameters;
-    private final boolean hideEmptyGroupsByDefault;
+    private final @NonNull BaseProtectionFilterParameters defaultFilterParams;
 
     /**
      * @param hideEmptyGroupsByDefault
@@ -98,10 +98,10 @@ public class BaseProtectionFilterDialog extends Dialog {
      */
     public BaseProtectionFilterDialog(Shell parentShell,
             @NonNull BaseProtectionFilterParameters filterParameters,
-            boolean hideEmptyGroupsByDefault) {
+            @NonNull BaseProtectionFilterParameters defaultFilterParams) {
         super(parentShell);
         this.filterParameters = filterParameters;
-        this.hideEmptyGroupsByDefault = hideEmptyGroupsByDefault;
+        this.defaultFilterParams = defaultFilterParams;
     }
 
     @Override
@@ -132,6 +132,8 @@ public class BaseProtectionFilterDialog extends Dialog {
         }
         addApplyTagFilterToItNetworksGroup(container);
         addHideEmptyGroup(container);
+
+        setValues(filterParameters);
         return container;
     }
 
@@ -170,7 +172,6 @@ public class BaseProtectionFilterDialog extends Dialog {
         final Button button = new Button(boxesComposite, SWT.CHECK);
         button.setText(qualifier == null ? Messages.BaseProtectionFilterDialog_Property_Value_Null
                 : qualifier.getLabel());
-        button.setSelection(filterParameters.getSecurityLevels().contains(qualifier));
         button.setData(qualifier);
         qualifierButtons.add(button);
     }
@@ -206,7 +207,6 @@ public class BaseProtectionFilterDialog extends Dialog {
 
         scrolledComposite.setContent(table);
         table.setSize(VIEWER_TABLE_WIDTH, VIEWER_TABLE_HEIGHT);
-        elementTypeSelector.setCheckedElements(filterParameters.getElementTypes().toArray());
 
     }
 
@@ -238,7 +238,6 @@ public class BaseProtectionFilterDialog extends Dialog {
 
         scrolledComposite.setContent(table);
         table.setSize(VIEWER_TABLE_WIDTH, VIEWER_TABLE_HEIGHT);
-        tagsSelector.setCheckedElements(filterParameters.getTags().toArray());
 
     }
 
@@ -250,8 +249,6 @@ public class BaseProtectionFilterDialog extends Dialog {
         applyTagFilterToItNetworksCheckbox = new Button(groupComposite, SWT.CHECK);
         applyTagFilterToItNetworksCheckbox
                 .setText(Messages.BaseProtectionFilterDialog_Apply_Tag_Filter_To_IT_Networks);
-        applyTagFilterToItNetworksCheckbox
-                .setSelection(filterParameters.isApplyTagFilterToItNetworks());
     }
 
     private void addHideEmptyGroup(Composite parent) {
@@ -261,7 +258,23 @@ public class BaseProtectionFilterDialog extends Dialog {
         groupComposite.setLayout(new GridLayout(1, false));
         hideEmptyGroupsCheckbox = new Button(groupComposite, SWT.CHECK);
         hideEmptyGroupsCheckbox.setText(Messages.BaseProtectionFilterDialog_Hide_Empty_Groups);
-        hideEmptyGroupsCheckbox.setSelection(filterParameters.isHideEmptyGroups());
+    }
+
+    private void setValues(BaseProtectionFilterParameters params) {
+        for (Button button : implementationStatusButtons) {
+            boolean isSelected = params.getImplementationStatuses().contains(button.getData());
+            button.setSelection(isSelected);
+        }
+        for (Button button : qualifierButtons) {
+            boolean isSelected = params.getSecurityLevels().contains(button.getData());
+            button.setSelection(isSelected);
+        }
+        elementTypeSelector.setCheckedElements(
+                params.getElementTypes().toArray(new String[params.getElementTypes().size()]));
+        tagsSelector.setCheckedElements(
+                params.getTags().toArray(new String[params.getTags().size()]));
+        applyTagFilterToItNetworksCheckbox.setSelection(params.isApplyTagFilterToItNetworks());
+        hideEmptyGroupsCheckbox.setSelection(params.isHideEmptyGroups());
     }
 
     /**
@@ -276,16 +289,7 @@ public class BaseProtectionFilterDialog extends Dialog {
         clearFilterButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                for (Button button : implementationStatusButtons) {
-                    button.setSelection(false);
-                }
-                for (Button button : qualifierButtons) {
-                    button.setSelection(false);
-                }
-                elementTypeSelector.setCheckedElements(new Object[0]);
-                tagsSelector.setCheckedElements(new Object[0]);
-                applyTagFilterToItNetworksCheckbox.setSelection(false);
-                hideEmptyGroupsCheckbox.setSelection(hideEmptyGroupsByDefault);
+                setValues(defaultFilterParams);
             }
         });
         createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
