@@ -32,7 +32,6 @@ import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
@@ -50,13 +49,12 @@ import sernet.verinice.service.commands.CreateMultipleLinks;
  */
 public class ModelDummySafeguards extends ChangeLoggingCommand {
 
-    private static final long serialVersionUID = -7408967723722365794L;
+    private static final long serialVersionUID = -5967763349544568712L;
 
     private static final Logger LOG = Logger.getLogger(ModelDummySafeguards.class);
 
     private Set<String> moduleUuidsFromScope;
     private Set<String> safeguardGroupUuidsFromScope;
-    private Proceeding proceeding;
     private List<CnATreeElement> safeguardGroups;
 
     private transient List<Link> linkList;
@@ -65,11 +63,10 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
     private String stationId;
 
     public ModelDummySafeguards(Set<String> moduleUuidsFromScope,
-            Set<String> safeguardGroupUuidsFromScope, Proceeding proceeding) {
+            Set<String> safeguardGroupUuidsFromScope) {
         super();
         this.moduleUuidsFromScope = moduleUuidsFromScope;
         this.safeguardGroupUuidsFromScope = safeguardGroupUuidsFromScope;
-        this.proceeding = proceeding;
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 
@@ -88,9 +85,7 @@ public class ModelDummySafeguards extends ChangeLoggingCommand {
         Set<CnATreeElement> requirements = findSafeguardsByModuleUuid(uuid);
         linkList = new LinkedList<>();
         for (CnATreeElement requirement : requirements) {
-            if (ModelingValidator.isRequirementValid(requirement, proceeding)) {
-                handleRequirement(requirement);
-            }
+            handleRequirement(requirement);
         }
         if (!linkList.isEmpty()) {
             CreateMultipleLinks createMultipleLinks = new CreateMultipleLinks(linkList);

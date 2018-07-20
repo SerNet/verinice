@@ -27,7 +27,6 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.verinice.model.bp.Proceeding;
 
 /**
  * This class provides methods for convenient read-only access to the
@@ -80,12 +79,6 @@ public final class Preferences {
 
     public static boolean isModelDummySafeguardsActive() {
         return getPreferenceStore().getBoolean(PreferenceConstants.BP_MODEL_DUMMY_SAFEGUARDS);
-    }
-
-    public static Proceeding getBpProceeding() {
-        String stringValue = getPreferenceStore().getString(PreferenceConstants.BP_PROCEEDING);
-        return (stringValue != null && !stringValue.isEmpty()) ? Proceeding.valueOf(stringValue)
-                : null;
     }
 
     public static String getPrivacyCatalogFilePath() {

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 Daniel Murygin <dm{a}sernet{dot}de>.
+ * Copyright (c) 2018 Daniel Murygin <dm{a}sernet{dot}de>.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -25,28 +25,29 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.verinice.model.bp.elements.Safeguard;
-import sernet.verinice.model.bp.groups.SafeguardGroup;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * This command models modules (requirements groups) from the ITBP compendium
- * with certain target object types of an IT network.
+ * This command models threat groups from the ITBP compendium with certain
+ * target object types of an IT network.
  * 
  * See {@link ModelCommand} for more documentation about the modeling process.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class ModelSafeguardGroupCommand extends ModelCopyCommand {
+public class ModelThreatGroupCommand extends ModelCopyCommand {
 
-    private static final long serialVersionUID = -2951549587964990571L;
+    private static final long serialVersionUID = 1220698466409148043L;
 
     private static final Logger LOG = Logger.getLogger(ModelSafeguardGroupCommand.class);
 
     private Set<String> moduleUuids;
-    private transient Set<CnATreeElement> safeguardGroupsFromCompendium;
+    private transient Set<CnATreeElement> threatGroupsFromCompendium;
 
-    public ModelSafeguardGroupCommand(Set<String> moduleUuids, Set<CnATreeElement> targetElements) {
+
+    public ModelThreatGroupCommand(Set<String> moduleUuids, Set<CnATreeElement> targetElements) {
         super();
         this.moduleUuids = moduleUuids;
         this.targetElements = targetElements;
@@ -54,39 +55,39 @@ public class ModelSafeguardGroupCommand extends ModelCopyCommand {
 
     @Override
     public Set<CnATreeElement> getElementsFromCompendium() {
-        if (safeguardGroupsFromCompendium == null) {
-            loadCompendiumSafeguardGroups();
+        if (threatGroupsFromCompendium == null) {
+            loadCompendiumThreatGroups();
         }
-        return safeguardGroupsFromCompendium;
+        return threatGroupsFromCompendium;
     }
 
     @Override
     protected String getIdentifier(CnATreeElement element) {
-        if (element instanceof Safeguard) {
-            return ((Safeguard) element).getIdentifier();
+        if (element instanceof BpThreat) {
+            return ((BpThreat) element).getIdentifier();
         }
-        if (element instanceof SafeguardGroup) {
-            return ((SafeguardGroup) element).getTitle();
+        if (element instanceof BpThreatGroup) {
+            return ((BpThreatGroup) element).getTitle();
         }
         return null;
     }
 
     @Override
     protected boolean isSuitableType(CnATreeElement e1, CnATreeElement e2) {
-        return SafeguardGroup.TYPE_ID.equals(e2.getTypeId())
-                && SafeguardGroup.TYPE_ID.equals(e1.getTypeId());
+        return BpThreatGroup.TYPE_ID.equals(e2.getTypeId())
+                && BpThreatGroup.TYPE_ID.equals(e1.getTypeId());
     }
 
-    private void loadCompendiumSafeguardGroups() {
-        safeguardGroupsFromCompendium = new HashSet<>(loadSafeguardGroupsByModuleUuids());
+    private void loadCompendiumThreatGroups() {
+        threatGroupsFromCompendium = new HashSet<>(loadThreatGroupsByModuleUuids());
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Safeguards linked to modules: ");
-            logElements(safeguardGroupsFromCompendium);
+            LOG.debug("Threat groups linked to modules: ");
+            logElements(threatGroupsFromCompendium);
         }
     }
 
-    private List<CnATreeElement> loadSafeguardGroupsByModuleUuids() {
-        return getMetaDao().loadChildrenLinksParents(moduleUuids, SafeguardGroup.TYPE_ID);
+    private List<CnATreeElement> loadThreatGroupsByModuleUuids() {
+        return getMetaDao().loadChildrenLinksParents(moduleUuids, BpThreatGroup.TYPE_ID_HIBERNATE);
     }
 
 }

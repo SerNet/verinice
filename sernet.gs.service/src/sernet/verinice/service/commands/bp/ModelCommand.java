@@ -27,13 +27,11 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jdt.annotation.NonNull;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -64,9 +62,8 @@ import sernet.verinice.service.bp.exceptions.BpModelingException;
  * Elemental threats
  *
  * If there is a elemental threats for a requirement in the compendium, the
- * threat is copied to the information network. The group structure of the
- * threats from the compendium is retained in the information network. Threats
- * and groups are only created once in the IT network.
+ * threat is copied to the information network. The threat is copied and pasted
+ * as child of the element in a group called "Elemental threats".
  *
  * Links
  *
@@ -82,7 +79,7 @@ import sernet.verinice.service.bp.exceptions.BpModelingException;
  */
 public class ModelCommand extends ChangeLoggingCommand {
 
-    private static final long serialVersionUID = 5392127862582051541L;
+    private static final long serialVersionUID = -7021777504561600179L;
 
     private static final Logger LOG = Logger.getLogger(ModelCommand.class);
 
@@ -98,10 +95,9 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     private boolean handleSafeguards = true;
     private boolean handleDummySafeguards = true;
-    private @NonNull Proceeding proceeding = Proceeding.STANDARD;
 
     // Return values
-    private String proceedingLable;
+    private String proceedingLabel;
 
     private String stationId;
 
@@ -144,7 +140,7 @@ public class ModelCommand extends ChangeLoggingCommand {
 
     private void handleSafeguards() throws CommandException {
         ModelSafeguardGroupCommand modelSafeguardsCommand = new ModelSafeguardGroupCommand(
-                moduleUuidsFromCompendium, targetElements, proceeding);
+                moduleUuidsFromCompendium, targetElements);
         modelSafeguardsCommand = getCommandService().executeCommand(modelSafeguardsCommand);
         safeguardGroupUuidsFromScope = modelSafeguardsCommand.getGroupUuidsFromScope();
     }
@@ -156,27 +152,26 @@ public class ModelCommand extends ChangeLoggingCommand {
     }
 
     private void handleThreats() throws CommandException {
-        ModelThreatsCommand modelThreatsCommand = new ModelThreatsCommand(moduleUuidsFromCompendium,
-                getTargetScopeId());
+        ModelThreatGroupCommand modelThreatsCommand = new ModelThreatGroupCommand(
+                moduleUuidsFromCompendium, targetElements);
         getCommandService().executeCommand(modelThreatsCommand);
     }
 
     private void createLinks() throws CommandException {
         ModelLinksCommand modelLinksCommand = new ModelLinksCommand(moduleUuidsFromCompendium,
                 moduleUuidsFromScope, itNetwork, targetElements);
-        modelLinksCommand.setProceeding(proceeding);
         getCommandService().executeCommand(modelLinksCommand);
     }
 
     private void createDummySafeguards() throws CommandException {
         ModelDummySafeguards modelDummySafeguards = new ModelDummySafeguards(moduleUuidsFromScope,
-                safeguardGroupUuidsFromScope, proceeding);
+                safeguardGroupUuidsFromScope);
         getCommandService().executeCommand(modelDummySafeguards);
     }
 
     private void saveReturnValues() {
-        if (proceeding != null) {
-            proceedingLable = proceeding.getLabel();
+        if (itNetwork != null && itNetwork.getProceeding() != null) {
+            proceedingLabel = itNetwork.getProceeding().getLabel();
         }
     }
 
@@ -193,21 +188,6 @@ public class ModelCommand extends ChangeLoggingCommand {
         elements = getMetaDao().loadElementsWithChildrenProperties(targetUuids);
         targetElements = new HashSet<>(elements);
         loadItNetwork();
-        validateModules(requirementGroups);
-    }
-
-    private void validateModules(Set<CnATreeElement> requirementGroups) {
-        for (CnATreeElement module : requirementGroups) {
-            Set<CnATreeElement> requirements = module.getChildren();
-            Set<CnATreeElement> validRequirements = new HashSet<>(requirements.size());
-            for (CnATreeElement requirement : requirements) {
-                if (ModelingValidator.isRequirementValid(requirement,
-                        proceeding)) {
-                    validRequirements.add(requirement);
-                }
-            }
-            module.setChildren(validRequirements);
-        }
     }
 
     protected void distributeElements(Collection<CnATreeElement> elements) {
@@ -258,16 +238,12 @@ public class ModelCommand extends ChangeLoggingCommand {
         return targetModuleId.equals(moduleId);
     }
 
-    public String getProceedingLable() {
-        return proceedingLable;
+    public String getProceedingLabel() {
+        return proceedingLabel;
     }
 
-    public void setProceedingLable(String proceedingLable) {
-        this.proceedingLable = proceedingLable;
-    }
-
-    public void setProceeding(@NonNull Proceeding proceeding) {
-        this.proceeding = proceeding;
+    public void setProceedingLabel(String proceedingLable) {
+        this.proceedingLabel = proceedingLable;
     }
 
     public boolean isHandleSafeguards() {
