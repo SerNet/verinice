@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Consumer;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -170,25 +171,26 @@ import sernet.verinice.service.model.LoadModel;
  */
 public final class CnAElementFactory {
 
-    private final Logger log = Logger.getLogger(CnAElementFactory.class);
-
-    private Object mutex = new Object();
-
-    private static List<IModelLoadListener> listeners = new CopyOnWriteArrayList<>();
+    private static final Logger logger = Logger.getLogger(CnAElementFactory.class);
 
     private static volatile CnAElementFactory instance;
 
+    private Object mutex = new Object();
+
+    private List<IModelLoadListener> listeners = new CopyOnWriteArrayList<>();
+
+    @SuppressWarnings(WARNING_RAWTYPES)
     private Map<String, IElementBuilder> elementbuilders = new HashMap<>();
 
     private CnAElementHome dbHome;
 
-    private static BSIModel loadedModel;
+    private BSIModel loadedModel;
 
-    private static ISO27KModel isoModel;
+    private ISO27KModel isoModel;
 
-    private static BpModel boModel;
+    private BpModel boModel;
 
-    private static CatalogModel catalogModel;
+    private CatalogModel catalogModel;
 
     private ICommandService commandService;
 
@@ -219,8 +221,8 @@ public final class CnAElementFactory {
         }
 
         @Override
-        public CnATreeElement build(CnATreeElement container, BuildInput input)
-                throws CommandException {
+        public CnATreeElement build(CnATreeElement container,
+                @SuppressWarnings(WARNING_RAWTYPES) BuildInput input) throws CommandException {
             CnATreeElement child = dbHome.save(container, elementClass, typeId);
             init(container, child);
             return child;
@@ -228,8 +230,8 @@ public final class CnAElementFactory {
     }
 
     public void addLoadListener(IModelLoadListener listener) {
-        if (log.isDebugEnabled()) {
-            log.debug("Adding model load listener.");
+        if (logger.isDebugEnabled()) {
+            logger.debug("Adding model load listener.");
         }
         if (!listeners.contains(listener)) {
             listeners.add(listener);
@@ -239,20 +241,20 @@ public final class CnAElementFactory {
         // the process of registering
         // himself here (race condition):
         if (loadedModel != null) {
-            if (log.isDebugEnabled()) {
-                log.debug("Firing safety event: bsi model loaded.");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Firing safety event: bsi model loaded.");
             }
             listener.loaded(loadedModel);
         }
         if (isoModel != null) {
-            if (log.isDebugEnabled()) {
-                log.debug("Firing safety event: iso27k model");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Firing safety event: iso27k model");
             }
             listener.loaded(isoModel);
         }
         if (boModel != null) {
-            if (log.isDebugEnabled()) {
-                log.debug("Firing safety event: bo model");
+            if (logger.isDebugEnabled()) {
+                logger.debug("Firing safety event: bo model");
             }
             listener.loaded(boModel);
         }
@@ -328,7 +330,7 @@ public final class CnAElementFactory {
             public CnATreeElement build(CnATreeElement container, BuildInput input)
                     throws CommandException {
 
-                log.debug("Creating new Anwendung in " + container); //$NON-NLS-1$
+                logger.debug("Creating new Anwendung in " + container); //$NON-NLS-1$
                 CreateAnwendung saveCommand = new CreateAnwendung(container, Anwendung.class);
                 saveCommand = ServiceFactory.lookupCommandService().executeCommand(saveCommand);
                 Anwendung child = saveCommand.getNewElement();
@@ -373,7 +375,7 @@ public final class CnAElementFactory {
             public ITVerbund build(CnATreeElement container, BuildInput input)
                     throws CommandException {
 
-                log.debug("Creating new ITVerbund in " + container); //$NON-NLS-1$
+                logger.debug("Creating new ITVerbund in " + container); //$NON-NLS-1$
                 boolean createChildren = true;
                 if (input != null) {
                     createChildren = (Boolean) input.getInput();
@@ -465,7 +467,7 @@ public final class CnAElementFactory {
             @Override
             public CnATreeElement build(CnATreeElement container, BuildInput input)
                     throws CommandException {
-                log.debug("Creating new ItNetwork in " + container); //$NON-NLS-1$
+                logger.debug("Creating new ItNetwork in " + container); //$NON-NLS-1$
                 boolean createChildren = true;
                 if (input != null) {
                     createChildren = (Boolean) input.getInput();
@@ -515,9 +517,12 @@ public final class CnAElementFactory {
         elementbuilders.put(RoomGroup.TYPE_ID, new DefaultElementBuilder(RoomGroup.TYPE_ID));
         elementbuilders.put(SafeguardGroup.TYPE_ID,
                 new DefaultElementBuilder(SafeguardGroup.TYPE_ID));
-        elementbuilders.put(BpDocumentGroup.TYPE_ID, new DefaultElementBuilder(BpDocumentGroup.TYPE_ID));
-        elementbuilders.put(BpIncidentGroup.TYPE_ID, new DefaultElementBuilder(BpIncidentGroup.TYPE_ID));
-        elementbuilders.put(BpRecordGroup.TYPE_ID, new DefaultElementBuilder(BpRecordGroup.TYPE_ID));
+        elementbuilders.put(BpDocumentGroup.TYPE_ID,
+                new DefaultElementBuilder(BpDocumentGroup.TYPE_ID));
+        elementbuilders.put(BpIncidentGroup.TYPE_ID,
+                new DefaultElementBuilder(BpIncidentGroup.TYPE_ID));
+        elementbuilders.put(BpRecordGroup.TYPE_ID,
+                new DefaultElementBuilder(BpRecordGroup.TYPE_ID));
 
     }
 
@@ -601,14 +606,14 @@ public final class CnAElementFactory {
             throws CnATreeElementBuildException, CommandException {
         IElementBuilder builder = elementbuilders.get(buildableTypeId);
         if (builder == null) {
-            log.error(Messages.getString("CnAElementFactory.0") + buildableTypeId);
+            logger.error(Messages.getString("CnAElementFactory.0") + buildableTypeId);
             throw new CnATreeElementBuildException(
                     Messages.getString("CnAElementFactory.0") + buildableTypeId); //$NON-NLS-1$
         }
         CnATreeElement child = builder.build(container, input);
 
         if (inheritIcon) {
-            child = inheritIcon(container.getIconPath(), container.getTypeId(), inheritIcon, child);
+            inheritIcon(container.getIconPath(), container.getTypeId(), inheritIcon, child);
         }
 
         // notify all listeners:
@@ -630,9 +635,10 @@ public final class CnAElementFactory {
             UpdateElement<CnATreeElement> updateCommand = new UpdateElement<>(child, false,
                     ChangeLogEntry.STATION_ID);
             getCommandService().executeCommand(updateCommand);
-            if (log.isDebugEnabled()) {
-                log.debug("IconPath of containerElement:\t" + iconPath);
-                log.debug("IconPath of child (after setter was called):\t" + child.getIconPath());
+            if (logger.isDebugEnabled()) {
+                logger.debug("IconPath of containerElement:\t" + iconPath);
+                logger.debug(
+                        "IconPath of child (after setter was called):\t" + child.getIconPath());
             }
         }
         return child;
@@ -646,23 +652,59 @@ public final class CnAElementFactory {
     }
 
     public static BSIModel getLoadedModel() {
-        return loadedModel;
+        return getInstance().loadedModel;
     }
 
     public static boolean isModelLoaded() {
-        return (loadedModel != null);
+        return (getInstance().loadedModel != null);
+    }
+
+    /**
+     * If there is a BSI model loaded, execute the given callback and return
+     * true. If the model is not loaded, return false.
+     */
+    public boolean ifModelLoaded(Consumer<BSIModel> callback) {
+        if (loadedModel == null) {
+            return false;
+        }
+        callback.accept(loadedModel);
+        return true;
     }
 
     public static boolean isIsoModelLoaded() {
-        return (isoModel != null);
+        return (getInstance().isoModel != null);
+    }
+
+    /**
+     * If there is an ISO27k model loaded, execute the given callback and return
+     * true. If the model is not loaded, return false.
+     */
+    public boolean ifIsoModelLoaded(Consumer<ISO27KModel> callback) {
+        if (isoModel == null) {
+            return false;
+        }
+        callback.accept(isoModel);
+        return true;
     }
 
     public static boolean isBpModelLoaded() {
-        return (boModel != null);
+        return (getInstance().boModel != null);
+    }
+
+    /**
+     * If there is a modernized base protection model loaded, execute the given
+     * callback and return true. If the model is not loaded, return false.
+     */
+    public boolean ifBpModelLoaded(Consumer<BpModel> callback) {
+        if (boModel == null) {
+            return false;
+        }
+        callback.accept(boModel);
+        return true;
     }
 
     public static boolean isModernizedBpCatalogLoaded() {
-        return (catalogModel != null);
+        return (getInstance().catalogModel != null);
     }
 
     public void closeModel() {
@@ -672,7 +714,7 @@ public final class CnAElementFactory {
     }
 
     private static void dereferenceModel() {
-        loadedModel = null;
+        getInstance().loadedModel = null;
     }
 
     private void fireClosed() {
@@ -796,14 +838,14 @@ public final class CnAElementFactory {
             CreateCatalogModel command = new CreateCatalogModel();
             command = getCommandService().executeCommand(command);
             catalogModel = command.getElement();
-            if (log.isInfoEnabled()) {
-                log.info("Catalog Model created"); //$NON-NLS-1$
+            if (logger.isInfoEnabled()) {
+                logger.info("Catalog Model created"); //$NON-NLS-1$
             }
             if (catalogModel != null) {
                 fireLoad(catalogModel);
             }
         } catch (CommandException e) {
-            log.error("Error creating CatalogModel", e); //$NON-NLS-1$
+            logger.error("Error creating CatalogModel", e); //$NON-NLS-1$
         }
     }
 
@@ -817,7 +859,7 @@ public final class CnAElementFactory {
                 fireLoad(model);
             }
         } catch (Exception e) {
-            log.error("Error loading the CatalogModel", e); //$NON-NLS-1$
+            logger.error("Error loading the CatalogModel", e); //$NON-NLS-1$
             throw new RuntimeException("Error loading the CatalogModel", e);
         }
         return model;
@@ -833,7 +875,7 @@ public final class CnAElementFactory {
                 fireLoad(model);
             }
         } catch (Exception e) {
-            log.error(Messages.getString("CnAElementFactory.1"), e); //$NON-NLS-1$
+            logger.error(Messages.getString("CnAElementFactory.1"), e); //$NON-NLS-1$
             throw new RuntimeException(Messages.getString("CnAElementFactory.1"), e);
         }
         return model;
@@ -844,14 +886,14 @@ public final class CnAElementFactory {
             CreateIsoModel command = new CreateIsoModel();
             command = getCommandService().executeCommand(command);
             isoModel = command.getElement();
-            if (log.isInfoEnabled()) {
-                log.info("ISO27KModel created"); //$NON-NLS-1$
+            if (logger.isInfoEnabled()) {
+                logger.info("ISO27KModel created"); //$NON-NLS-1$
             }
             if (isoModel != null) {
                 fireLoad(isoModel);
             }
         } catch (CommandException e) {
-            log.error(Messages.getString("CnAElementFactory.2"), e); //$NON-NLS-1$
+            logger.error(Messages.getString("CnAElementFactory.2"), e); //$NON-NLS-1$
         }
     }
 
@@ -865,7 +907,7 @@ public final class CnAElementFactory {
                 fireLoad(model);
             }
         } catch (CommandException e) {
-            log.error("Error loading model for modernized ITBP", e);
+            logger.error("Error loading model for modernized ITBP", e);
             throw new RuntimeException("Error loading model for modernized ITBP", e);
         }
         return model;
@@ -876,15 +918,15 @@ public final class CnAElementFactory {
             CreateBpModel modelCreationCommand = new CreateBpModel();
             modelCreationCommand = getCommandService().executeCommand(modelCreationCommand);
             boModel = modelCreationCommand.getElement();
-            if (log.isInfoEnabled()) {
-                log.info("Model for modernized ITBP created"); //$NON-NLS-1$
+            if (logger.isInfoEnabled()) {
+                logger.info("Model for modernized ITBP created"); //$NON-NLS-1$
             }
             if (boModel != null) {
                 fireLoad(boModel);
             }
 
         } catch (CommandException e) {
-            log.error(Messages.getString("CnAElementFactory.2"), e); //$NON-NLS-1$
+            logger.error(Messages.getString("CnAElementFactory.2"), e); //$NON-NLS-1$
         }
 
     }
@@ -906,7 +948,7 @@ public final class CnAElementFactory {
         }
 
         // none found, create new model:
-        log.debug("Creating new model in DB."); //$NON-NLS-1$
+        logger.debug("Creating new model in DB."); //$NON-NLS-1$
         monitor.setTaskName(Messages.getString("CnAElementFactory.4")); //$NON-NLS-1$
         loadedModel = new BSIModel();
 
@@ -941,7 +983,7 @@ public final class CnAElementFactory {
             reloadBpModelFromDatabasePrivate();
             reloadCatalogModelFromDatabasePrivate();
         } catch (Exception e) {
-            log.error(Messages.getString("CnAElementFactory.5"), e); //$NON-NLS-1$
+            logger.error(Messages.getString("CnAElementFactory.5"), e); //$NON-NLS-1$
         }
     }
 
@@ -950,7 +992,7 @@ public final class CnAElementFactory {
         try {
             reloadBsiModelFromDatabasePrivate();
         } catch (Exception e) {
-            log.error("Could not reload BSI (old base protection) model from database", e); //$NON-NLS-1$
+            logger.error("Could not reload BSI (old base protection) model from database", e); //$NON-NLS-1$
         }
     }
 
@@ -969,15 +1011,15 @@ public final class CnAElementFactory {
         try {
             reloadIsoModelFromDatabasePrivate();
         } catch (Exception e) {
-            log.error("Could not reload iso model from database", e); //$NON-NLS-1$
+            logger.error("Could not reload iso model from database", e); //$NON-NLS-1$
         }
     }
 
     private void reloadIsoModelFromDatabasePrivate() {
         if (isIsoModelLoaded()) {
             ISO27KModel newModel = loadIsoModel();
-            if (log.isDebugEnabled()) {
-                log.debug("reloadModelFromDatabase, ISO-model loaded"); //$NON-NLS-1$
+            if (logger.isDebugEnabled()) {
+                logger.debug("reloadModelFromDatabase, ISO-model loaded"); //$NON-NLS-1$
             }
             isoModel.modelReload(newModel);
             isoModel.moveListener(newModel);
@@ -991,15 +1033,15 @@ public final class CnAElementFactory {
         try {
             reloadBpModelFromDatabasePrivate();
         } catch (Exception e) {
-            log.error("Could not reload (renewed) base protection model from database", e); //$NON-NLS-1$
+            logger.error("Could not reload (renewed) base protection model from database", e); //$NON-NLS-1$
         }
     }
 
     private void reloadBpModelFromDatabasePrivate() {
         if (isBpModelLoaded()) {
             BpModel newModel = loadBpModel();
-            if (log.isDebugEnabled()) {
-                log.debug(
+            if (logger.isDebugEnabled()) {
+                logger.debug(
                         "reloadBpModelFromDatabasePrivate, (renewed) base protection model loaded"); //$NON-NLS-1$
             }
             boModel.modelReload(newModel);
@@ -1014,15 +1056,15 @@ public final class CnAElementFactory {
         try {
             reloadCatalogModelFromDatabasePrivate();
         } catch (Exception e) {
-            log.error("Could not reload catalog model from database", e); //$NON-NLS-1$
+            logger.error("Could not reload catalog model from database", e); //$NON-NLS-1$
         }
     }
 
     private void reloadCatalogModelFromDatabasePrivate() {
         if (isModernizedBpCatalogLoaded()) {
             CatalogModel newModel = loadCatalogModel();
-            if (log.isDebugEnabled()) {
-                log.debug("reloadCatalogModelFromDatabasePrivate,catalog model loaded"); //$NON-NLS-1$
+            if (logger.isDebugEnabled()) {
+                logger.debug("reloadCatalogModelFromDatabasePrivate,catalog model loaded"); //$NON-NLS-1$
             }
             catalogModel.modelReload(newModel);
             catalogModel.moveListener(newModel);
@@ -1042,7 +1084,7 @@ public final class CnAElementFactory {
         try {
             ServiceFactory.openCommandService();
         } catch (MalformedURLException e) {
-            log.error(Messages.getString("CnAElementFactory.6"), e); //$NON-NLS-1$
+            logger.error(Messages.getString("CnAElementFactory.6"), e); //$NON-NLS-1$
             throw new RuntimeException(Messages.getString("CnAElementFactory.7"), e); //$NON-NLS-1$
         }
         commandService = ServiceFactory.lookupCommandService();
@@ -1053,15 +1095,10 @@ public final class CnAElementFactory {
      * @param changeLogEntry
      */
     public static void databaseChildRemoved(ChangeLogEntry changeLogEntry) {
-        if (isModelLoaded()) {
-            CnAElementFactory.getLoadedModel().databaseChildRemoved(changeLogEntry);
-        }
-        if (isIsoModelLoaded()) {
-            CnAElementFactory.getInstance().getISO27kModel().databaseChildRemoved(changeLogEntry);
-        }
-        if (isBpModelLoaded()) {
-            CnAElementFactory.getInstance().getBpModel().databaseChildRemoved(changeLogEntry);
-        }
+        getInstance().ifModelLoaded(model -> model.databaseChildRemoved(changeLogEntry));
+        getInstance().ifIsoModelLoaded(model -> model.databaseChildRemoved(changeLogEntry));
+        getInstance().ifBpModelLoaded(model -> model.databaseChildRemoved(changeLogEntry));
+
     }
 
     public static boolean selectionOnlyContainsScopes(IStructuredSelection selection) {
