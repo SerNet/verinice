@@ -565,10 +565,59 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
 
         safeGuard = updateSafeguard(safeGuards.get(0), IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
         safeGuards.set(0, safeGuard);
-        assertEquals("Must be option 'na'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
+        assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
+                getImplementationStatus(requirement));
+
+        safeGuard = updateSafeguard(safeGuards.get(1), IMPLEMENTATION_STATUS_CODE_NO);
+        safeGuards.set(1, safeGuard);
+        safeGuard = updateSafeguard(safeGuards.get(0), IMPLEMENTATION_STATUS_CODE_YES);
+        safeGuards.set(0, safeGuard);
+        assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
                 getImplementationStatus(requirement));
     }
 
+    /**
+     * Test one requirement and n safeguards, some safeguard with no all others
+     * with na.
+     *
+     * @throws Exception
+     */
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void testOneRequirementNSafeguards_No_with_no_not_applicable() throws Exception {
+        Duo<BpRequirement, List<Safeguard>> duo = createNSafeguards(5);
+        BpRequirement requirement = duo.a;
+        List<Safeguard> safeGuards = duo.b;
+        assertNull("Must be unset", getImplementationStatus(requirement));
+
+        safeGuards = updateSafeguards(safeGuards, IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        assertEquals("Must be option 'na'.",
+                BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
+                getImplementationStatus(requirement));
+
+        Safeguard safeGuard = updateSafeguard(safeGuards.get(0), IMPLEMENTATION_STATUS_CODE_YES);
+        safeGuards.set(0, safeGuard);
+        safeGuard = updateSafeguard(safeGuards.get(1), IMPLEMENTATION_STATUS_CODE_YES);
+        safeGuards.set(1, safeGuard);
+        safeGuard = updateSafeguard(safeGuards.get(2), IMPLEMENTATION_STATUS_CODE_YES);
+        safeGuards.set(2, safeGuard);
+        assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_YES,
+                getImplementationStatus(requirement));
+
+        safeGuard = updateSafeguard(safeGuards.get(0), IMPLEMENTATION_STATUS_CODE_NO);
+        safeGuards.set(0, safeGuard);
+        assertEquals("Must be option 'partial'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_PARTIALLY,
+                getImplementationStatus(requirement));
+        
+        safeGuard = updateSafeguard(safeGuards.get(1), IMPLEMENTATION_STATUS_CODE_NO);
+        safeGuards.set(1, safeGuard);
+        assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
+                getImplementationStatus(requirement));
+    }
+
+    
+    
     /**
      * Test one requirement and n safeguards, some safeguard with no all others
      * with na.

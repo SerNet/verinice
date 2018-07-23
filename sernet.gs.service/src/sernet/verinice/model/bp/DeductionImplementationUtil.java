@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.bp.elements.BpRequirement;
@@ -137,12 +138,8 @@ public final class DeductionImplementationUtil {
         Map<String, Integer> statusMap = new HashMap<>(safeGuards.size());
         for (CnATreeElement cnATreeElement : safeGuards) {
             String implementationStatus = getImplementationStatus(cnATreeElement);
-            Integer counter = statusMap.get(implementationStatus);
-            if (counter == null) {
-                counter = 0;
-            }
-            counter = counter + 1;
-            statusMap.put(implementationStatus, counter);
+            statusMap.compute(implementationStatus,
+                    (key, value) -> Optional.ofNullable(value).orElse(0) + 1);
         }
         // all the same
         if (statusMap.size() == 1) {
@@ -150,16 +147,16 @@ public final class DeductionImplementationUtil {
             return setImplementationStausToRequirement(safeguard, requirement);
         }
         Integer stateNA = statusMap
-                .get(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
-        Integer stateYES = statusMap.get(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS_CODE_YES);
-        Integer stateNO = statusMap.get(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO);
+                .getOrDefault(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE, 0);
+        Integer stateYES = statusMap.getOrDefault(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS_CODE_YES, 0);
+        Integer stateNO = statusMap.getOrDefault(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO, 0);
         // only na and yes=>yes
-        if (stateNA != null && stateYES != null && statusMap.size() == 2) {
+        if (stateNA != 0 && stateYES != 0 && statusMap.size() == 2) {
             return setImplementationStatus(requirement, IMPLEMENTATION_STATUS_CODE_YES);
         }
         // half of not_na must be no=>no
-        if (stateNO != null && stateNA != null) {
-            int notNA = safeGuards.size() - stateNA.intValue();
+        if (stateNO != 0) {
+            int notNA = safeGuards.size() - stateNA;
             if (stateNO > (notNA / 2.0f)) {
                 return setImplementationStatus(requirement, IMPLEMENTATION_STATUS_CODE_NO);
             }
