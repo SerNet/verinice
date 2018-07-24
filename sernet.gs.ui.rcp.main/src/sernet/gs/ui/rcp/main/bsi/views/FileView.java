@@ -21,7 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -39,18 +39,14 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.CellLabelProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -60,15 +56,12 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener2;
-import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 
 import sernet.gs.service.NumericStringComparator;
@@ -81,6 +74,7 @@ import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -92,13 +86,10 @@ import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
-import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachments;
@@ -114,7 +105,6 @@ import sernet.verinice.service.commands.crud.DeleteNote;
  * @see LoadAttachments - Command for loading files
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings("restriction")
 public class FileView extends RightsEnabledView
         implements ILinkedWithEditorView, IPropertyChangeListener {
 
@@ -124,7 +114,7 @@ public class FileView extends RightsEnabledView
 
     private static final int DEFAULT_THUMBNAIL_SIZE = 0;
 
-    private static Map<String, String> mimeImageMap = new Hashtable<String, String>();
+    private static Map<String, String> mimeImageMap = new HashMap<>();
     static {
         for (int i = 0; i < Attachment.getArchiveMimeTypes().length; i++) {
             mimeImageMap.put(Attachment.getArchiveMimeTypes()[i], ImageCache.MIME_ARCHIVE);
@@ -169,19 +159,15 @@ public class FileView extends RightsEnabledView
 
     private TableViewerColumn imageColumn;
 
-    private TableSorter tableSorter = new TableSorter();
+    private TableComparator tableSorter = new TableComparator();
 
     private List<Attachment> attachmentList;
 
     private AttachmentContentProvider contentProvider = new AttachmentContentProvider(this);
 
-    private ISelectionListener selectionListener;
-
     private RightsEnabledAction addFileAction;
 
     private RightsEnabledAction deleteFileAction;
-
-    private Action doubleClickAction;
 
     private Action saveCopyAction;
 
@@ -212,8 +198,6 @@ public class FileView extends RightsEnabledView
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
@@ -232,7 +216,7 @@ public class FileView extends RightsEnabledView
         try {
             createTable(parent);
             getSite().setSelectionProvider(viewer);
-            hookPageSelection();
+            getSite().getPage().addPostSelectionListener(this::pageSelectionChanged);
             viewer.setInput(new PlaceHolder(Messages.FileView_0));
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.BrowserView_3);
@@ -277,13 +261,8 @@ public class FileView extends RightsEnabledView
         viewer.setLabelProvider(new AttachmentLabelProvider());
         Table table = viewer.getTable();
 
-        table.addListener(SWT.MeasureItem, new Listener() {
-            @Override
-            public void handleEvent(Event event) {
-                // height cannot be per row so simply set
-                event.height = getThumbnailSize() + widthHeightPadding;
-            }
-        });
+        table.addListener(SWT.MeasureItem,
+                event -> event.height = getThumbnailSize() + widthHeightPadding);
 
         imageColumn = new TableViewerColumn(viewer, SWT.LEFT);
         imageColumn.setLabelProvider(getImageCellProvider());
@@ -331,9 +310,9 @@ public class FileView extends RightsEnabledView
 
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
-        viewer.setSorter(tableSorter);
+        viewer.setComparator(tableSorter);
         // ensure initial table sorting (by filename)
-        ((TableSorter) viewer.getSorter()).setColumn(1);
+        ((TableComparator) viewer.getComparator()).setColumn(1);
     }
 
     /**
@@ -360,30 +339,15 @@ public class FileView extends RightsEnabledView
     }
 
     private void hookActions() {
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                doubleClickAction.run();
-            }
+        viewer.addDoubleClickListener(event -> {
+            Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+            EditorFactory.getInstance().openEditor(sel);
         });
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                saveCopyAction.setEnabled(true);
-                openAction.setEnabled(true);
-                deleteFileAction.setEnabled(isCnATreeElementEditable());
-            }
+        viewer.addSelectionChangedListener(event -> {
+            saveCopyAction.setEnabled(true);
+            openAction.setEnabled(true);
+            deleteFileAction.setEnabled(isCnATreeElementEditable());
         });
-    }
-
-    private void hookPageSelection() {
-        selectionListener = new ISelectionListener() {
-            @Override
-            public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-                pageSelectionChanged(part, selection);
-            }
-        };
-        getSite().getPage().addPostSelectionListener(selectionListener);
     }
 
     protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
@@ -459,7 +423,6 @@ public class FileView extends RightsEnabledView
         JobScheduler.scheduleInitJob(initDataJob);
     }
 
-    @SuppressWarnings("unused")
     public void loadFiles() {
         try {
             Integer id = null;
@@ -474,25 +437,13 @@ public class FileView extends RightsEnabledView
             command = getCommandService().executeCommand(command);
             attachmentList = command.getResult();
             if (attachmentList != null && !attachmentList.isEmpty()) {
-                Display defaultDisplay = Display.getDefault();
-                Display currentDisplay = Display.getCurrent();
-                Display.getDefault().syncExec(new Runnable() {
-                    @Override
-                    public void run() {
-                        viewer.setInput(attachmentList);
-                    }
-                });
+                Display.getDefault().syncExec(() -> viewer.setInput(attachmentList));
                 for (final Attachment attachment : attachmentList) {
                     // set transient cna-element-titel
                     if (getCurrentCnaElement() != null) {
                         attachment.setCnAElementTitel(getCurrentCnaElement().getTitle());
                     }
-                    attachment.addListener(new Attachment.INoteChangedListener() {
-                        @Override
-                        public void noteChanged() {
-                            loadFiles();
-                        }
-                    });
+                    attachment.addListener(this::loadFiles);
                 }
             } else {
                 viewer.setInput(new PlaceHolder(Messages.FileView_0));
@@ -530,8 +481,6 @@ public class FileView extends RightsEnabledView
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse
      * .jface.util.PropertyChangeEvent)
@@ -603,14 +552,6 @@ public class FileView extends RightsEnabledView
         deleteFileAction
                 .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.DELETE));
         deleteFileAction.setEnabled(false);
-
-        doubleClickAction = new Action() {
-            @Override
-            public void run() {
-                Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-                EditorFactory.getInstance().openEditor(sel);
-            }
-        };
 
         saveCopyAction = new Action() {
             @Override
@@ -722,7 +663,7 @@ public class FileView extends RightsEnabledView
     @Override
     public void dispose() {
         super.dispose();
-        getSite().getPage().removePostSelectionListener(selectionListener);
+        getSite().getPage().removePostSelectionListener(this::pageSelectionChanged);
         getSite().getPage().removePartListener(linkWithEditorPartListener);
         Activator.getDefault().getPreferenceStore().removePropertyChangeListener(this);
         if (attachmentList != null) {
@@ -811,16 +752,26 @@ public class FileView extends RightsEnabledView
             }
         }
 
+        private static String humanReadableByteCount(long bytes, boolean si) {
+            int unit = si ? 1000 : 1024;
+            if (bytes < unit)
+                return bytes + " B";
+            int exp = (int) (Math.log(bytes) / Math.log(unit));
+
+            String pre = String.valueOf((si ? "kMGTPE" : "KMGTPE").charAt(exp - 1));
+            return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+        }
+
     }
 
-    private static class TableSorter extends ViewerSorter {
+    private static class TableComparator extends ViewerComparator {
         private int propertyIndex;
         private static final int DEFAULT_SORT_COLUMN = 0;
         private static final int DESCENDING = 1;
         private static final int ASCENDING = 0;
         private int direction = ASCENDING;
 
-        public TableSorter() {
+        public TableComparator() {
             super();
             this.propertyIndex = DEFAULT_SORT_COLUMN;
             this.direction = ASCENDING;
@@ -838,8 +789,6 @@ public class FileView extends RightsEnabledView
         }
 
         /*
-         * (non-Javadoc)
-         * 
          * @see
          * org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.
          * viewers.Viewer, java.lang.Object, java.lang.Object)
@@ -949,8 +898,6 @@ public class FileView extends RightsEnabledView
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.
      * eclipse.ui.IEditorPart)
@@ -1003,12 +950,7 @@ public class FileView extends RightsEnabledView
         attachment.setDate(Calendar.getInstance().getTime());
         attachment.setFilePath(selected);
         attachment.setFileSize(String.valueOf(size));
-        attachment.addListener(new Attachment.INoteChangedListener() {
-            @Override
-            public void noteChanged() {
-                loadFiles();
-            }
-        });
+        attachment.addListener(this::loadFiles);
         EditorFactory.getInstance().openEditor(attachment);
     }
 
@@ -1020,24 +962,22 @@ public class FileView extends RightsEnabledView
     }
 
     private Integer loadFileSizeMax() {
-        int result = LoadFileSizeLimit.FILE_SIZE_MAX_DEFAULT;
         LoadFileSizeLimit loadFileSizeLimit = new LoadFileSizeLimit();
         try {
             loadFileSizeLimit = getCommandService().executeCommand(loadFileSizeLimit);
         } catch (CommandException e) {
             LOG.error("Error while saving note", e); //$NON-NLS-1$
         }
-        result = loadFileSizeLimit.getFileSizeMax();
-        return result;
+        return loadFileSizeLimit.getFileSizeMax();
     }
 
     private void deleteAttachments() {
-        Iterator iterator = ((IStructuredSelection) viewer.getSelection()).iterator();
+        Iterator<?> iterator = ((IStructuredSelection) viewer.getSelection()).iterator();
         while (iterator.hasNext()) {
             Attachment sel = (Attachment) iterator.next();
             DeleteNote command = new DeleteNote(sel);
             try {
-                command = getCommandService().executeCommand(command);
+                getCommandService().executeCommand(command);
             } catch (CommandException e) {
                 LOG.error("Error while saving note", e); //$NON-NLS-1$
                 ExceptionUtil.log(e, Messages.FileView_22);
@@ -1050,51 +990,17 @@ public class FileView extends RightsEnabledView
             loadFiles();
         } else if (modelLoadListener == null) {
             // model is not loaded yet: add a listener to load data when
-            // it's laoded
-            modelLoadListener = new IModelLoadListener() {
-                @Override
-                public void closed(BSIModel model) {
-                }
+            // it's loaded
+            modelLoadListener = new DefaultModelLoadListener() {
 
                 @Override
                 public void loaded(BSIModel model) {
                     startInitDataJob();
                 }
 
-                @Override
-                public void loaded(ISO27KModel model) {
-                    // work is done in loaded(BSIModel model)
-                }
-
-                @Override
-                public void loaded(BpModel model) {
-                    // work is done in loaded(BSIModel model)
-
-                }
-
-                @Override
-                public void loaded(CatalogModel model) {
-                    // nothing to do
-                }
             };
             CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
         }
-    }
-
-    /**
-     * @param bytes
-     * @param si
-     * @return
-     */
-    private static String humanReadableByteCount(long bytes, boolean si) {
-        int unit = si ? 1000 : 1024;
-        if (bytes < unit)
-            return bytes + " B";
-        int exp = (int) (Math.log(bytes) / Math.log(unit));
-        // String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" :
-        // "i");
-        String pre = String.valueOf((si ? "kMGTPE" : "KMGTPE").charAt(exp - 1));
-        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
 }
