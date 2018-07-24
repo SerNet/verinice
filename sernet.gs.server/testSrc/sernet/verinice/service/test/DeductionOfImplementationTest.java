@@ -31,9 +31,10 @@ import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATIO
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS_CODE_YES;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatus;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatusId;
-import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementationStausToRequirement;
+import static sernet.verinice.model.bp.DeductionImplementationUtil.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -596,28 +597,17 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
                 BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
                 getImplementationStatus(requirement));
 
-        Safeguard safeGuard = updateSafeguard(safeGuards.get(0), IMPLEMENTATION_STATUS_CODE_YES);
+        Safeguard safeGuard = updateSafeguard(safeGuards.get(0), IMPLEMENTATION_STATUS_CODE_NO);
         safeGuards.set(0, safeGuard);
-        safeGuard = updateSafeguard(safeGuards.get(1), IMPLEMENTATION_STATUS_CODE_YES);
-        safeGuards.set(1, safeGuard);
-        safeGuard = updateSafeguard(safeGuards.get(2), IMPLEMENTATION_STATUS_CODE_YES);
-        safeGuards.set(2, safeGuard);
-        assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_YES,
+        assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
                 getImplementationStatus(requirement));
 
-        safeGuard = updateSafeguard(safeGuards.get(0), IMPLEMENTATION_STATUS_CODE_NO);
-        safeGuards.set(0, safeGuard);
-        assertEquals("Must be option 'partial'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_PARTIALLY,
-                getImplementationStatus(requirement));
-        
         safeGuard = updateSafeguard(safeGuards.get(1), IMPLEMENTATION_STATUS_CODE_NO);
         safeGuards.set(1, safeGuard);
         assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
                 getImplementationStatus(requirement));
     }
 
-    
-    
     /**
      * Test one requirement and n safeguards, some safeguard with no all others
      * with na.
@@ -678,6 +668,136 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         safeGuards.set(2, safeGuard);
         assertEquals("Must be option 'no'.", BpRequirement.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO,
                 getImplementationStatus(requirement));// 4/6->no
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void testThreeSafeguard() {
+        Safeguard safeguard1 = new Safeguard(null);
+        Safeguard safeguard2 = new Safeguard(null);
+        Safeguard safeguard3 = new Safeguard(null);
+
+        List<CnATreeElement> safeGuards = Arrays.asList(safeguard1, safeguard2, safeguard3);
+        String implementationStatus = getComputedImplementationStatus(safeGuards);
+        assertEquals(null, implementationStatus);
+
+        safeguard1.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NO);
+        safeguard2.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NO);
+        safeguard3.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NO);
+        implementationStatus = getComputedImplementationStatus(safeGuards);
+        assertEquals(IMPLEMENTATION_STATUS_CODE_NO, implementationStatus);
+
+        safeguard1.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_YES);
+        safeguard2.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_YES);
+        safeguard3.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NO);
+        implementationStatus = getComputedImplementationStatus(safeGuards);
+        assertEquals(IMPLEMENTATION_STATUS_CODE_PARTIALLY, implementationStatus);
+
+        safeguard1.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_YES);
+        safeguard2.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NO);
+        safeguard3.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NO);
+        implementationStatus = getComputedImplementationStatus(safeGuards);
+        assertEquals(IMPLEMENTATION_STATUS_CODE_NO, implementationStatus);
+
+        safeguard1.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_YES);
+        safeguard2.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NO);
+        safeguard3.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        implementationStatus = getComputedImplementationStatus(safeGuards);
+        assertEquals(IMPLEMENTATION_STATUS_CODE_PARTIALLY, implementationStatus);
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void testFiveSafeguard() {
+        Safeguard safeguard1 = new Safeguard(null);
+        Safeguard safeguard2 = new Safeguard(null);
+        Safeguard safeguard3 = new Safeguard(null);
+        Safeguard safeguard4 = new Safeguard(null);
+        Safeguard safeguard5 = new Safeguard(null);
+
+        List<CnATreeElement> safeGuards = Arrays.asList(safeguard1, safeguard2, safeguard3,
+                safeguard4, safeguard5);
+        String implementationStatus = getComputedImplementationStatus(safeGuards);
+        assertEquals(null, implementationStatus);
+
+        safeguard1.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NO);
+        safeguard2.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NO);
+        safeguard3.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NO);
+        safeguard4.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NO);
+        safeguard5.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NO);
+        implementationStatus = getComputedImplementationStatus(safeGuards);
+        assertEquals(IMPLEMENTATION_STATUS_CODE_NO, implementationStatus);
+
+        safeguard1.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_YES);
+        safeguard2.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NO);
+        safeguard3.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NO);
+        safeguard4.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        safeguard5.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        implementationStatus = getComputedImplementationStatus(safeGuards);
+        assertEquals(IMPLEMENTATION_STATUS_CODE_NO, implementationStatus);
+
+        safeguard1.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_YES);
+        safeguard2.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NO);
+        safeguard3.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NO);
+        safeguard4.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_YES);
+        safeguard5.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        implementationStatus = getComputedImplementationStatus(safeGuards);
+        assertEquals(IMPLEMENTATION_STATUS_CODE_PARTIALLY, implementationStatus);
+
+        safeguard1.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_YES);
+        safeguard2.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_YES);
+        safeguard3.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        safeguard4.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        safeguard5.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        implementationStatus = getComputedImplementationStatus(safeGuards);
+        assertEquals(IMPLEMENTATION_STATUS_CODE_YES, implementationStatus);
+
+        safeguard1.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_YES);
+        safeguard2.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_YES);
+        safeguard3.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NO);
+        safeguard4.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        safeguard5.setSimpleProperty(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS,
+                IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
+        implementationStatus = getComputedImplementationStatus(safeGuards);
+        assertEquals(IMPLEMENTATION_STATUS_CODE_PARTIALLY, implementationStatus);
     }
 
     private List<Safeguard> updateSafeguards(List<Safeguard> safeGuards, String option)
