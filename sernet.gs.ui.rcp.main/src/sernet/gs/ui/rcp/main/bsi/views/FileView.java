@@ -115,14 +115,15 @@ import sernet.verinice.service.commands.crud.DeleteNote;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("restriction")
-public class FileView extends RightsEnabledView implements ILinkedWithEditorView, IPropertyChangeListener {
-    
+public class FileView extends RightsEnabledView
+        implements ILinkedWithEditorView, IPropertyChangeListener {
+
     static final Logger LOG = Logger.getLogger(FileView.class);
 
     public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.FileView"; //$NON-NLS-1$
-    
+
     private static final int DEFAULT_THUMBNAIL_SIZE = 0;
-    
+
     private static Map<String, String> mimeImageMap = new Hashtable<String, String>();
     static {
         for (int i = 0; i < Attachment.getArchiveMimeTypes().length; i++) {
@@ -144,7 +145,8 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
             mimeImageMap.put(Attachment.getPdfMimeTypes()[i], ImageCache.MIME_PDF);
         }
         for (int i = 0; i < Attachment.getPresentationMimeTypes().length; i++) {
-            mimeImageMap.put(Attachment.getPresentationMimeTypes()[i], ImageCache.MIME_PRESENTATION);
+            mimeImageMap.put(Attachment.getPresentationMimeTypes()[i],
+                    ImageCache.MIME_PRESENTATION);
         }
         for (int i = 0; i < Attachment.getSpreadsheetMimeTypes().length; i++) {
             mimeImageMap.put(Attachment.getSpreadsheetMimeTypes()[i], ImageCache.MIME_SPREADSHEET);
@@ -166,7 +168,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
     private TableViewer viewer;
 
     private TableViewerColumn imageColumn;
-    
+
     private TableSorter tableSorter = new TableSorter();
 
     private List<Attachment> attachmentList;
@@ -196,9 +198,9 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
     private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
 
     private AttachmentImageCellProvider imageCellProvider = null;
-    
+
     private Integer fileSizeMax;
-    
+
     public FileView() {
         super();
         Activator.getDefault().getPreferenceStore().addPropertyChangeListener(this);
@@ -208,15 +210,16 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
     public String getRightID() {
         return ActionRightIDs.FILES;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
     public String getViewId() {
         return ID;
     }
-    
 
     @Override
     public void createPartControl(Composite parent) {
@@ -244,8 +247,8 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     private void hookDND() {
         new FileDropTarget(this);
     }
@@ -258,7 +261,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         TableColumn dateColumn;
         TableColumn versionColumn;
         TableColumn sizeColumn;
-        
+
         final int widthHeightPadding = 4;
         final int itemColumnWidth = 26;
         final int filenameColumnWidth = 152;
@@ -267,29 +270,30 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         final int dateColumnWidth = 120;
         final int versionColumnWidth = 60;
         final int sizeColumnWidth = 50;
-        
-        viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
+
+        viewer = new TableViewer(parent,
+                SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(new AttachmentLabelProvider());
         Table table = viewer.getTable();
-        
-        table.addListener(SWT.MeasureItem, new Listener() {   
+
+        table.addListener(SWT.MeasureItem, new Listener() {
             @Override
             public void handleEvent(Event event) {
-               // height cannot be per row so simply set
-               event.height = getThumbnailSize() + widthHeightPadding;
+                // height cannot be per row so simply set
+                event.height = getThumbnailSize() + widthHeightPadding;
             }
-         });
-           
+        });
+
         imageColumn = new TableViewerColumn(viewer, SWT.LEFT);
         imageColumn.setLabelProvider(getImageCellProvider());
-        if(getThumbnailSize()>0) {         
-            imageColumn.getColumn().setWidth(getThumbnailSize() + widthHeightPadding);          
+        if (getThumbnailSize() > 0) {
+            imageColumn.getColumn().setWidth(getThumbnailSize() + widthHeightPadding);
         } else {
             // dummy column
             imageColumn.getColumn().setWidth(0);
         }
-        
+
         iconColumn = new TableColumn(table, SWT.LEFT);
         iconColumn.setWidth(itemColumnWidth);
         iconColumn.addSelectionListener(new SortSelectionAdapter(this, iconColumn, 0));
@@ -298,7 +302,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         fileNameColumn.setText(Messages.FileView_2);
         fileNameColumn.setWidth(filenameColumnWidth);
         fileNameColumn.addSelectionListener(new SortSelectionAdapter(this, fileNameColumn, 1));
-        
+
         mimeTypeColumn = new TableColumn(table, SWT.LEFT);
         mimeTypeColumn.setText(Messages.FileView_3);
         mimeTypeColumn.setWidth(mimeTypeColumnWidth);
@@ -312,13 +316,14 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         dateColumn = new TableColumn(table, SWT.LEFT);
         dateColumn.setText(Messages.FileView_5);
         dateColumn.setWidth(dateColumnWidth);
-        dateColumn.addSelectionListener(new SortSelectionAdapter(this, dateColumn, widthHeightPadding));
+        dateColumn.addSelectionListener(
+                new SortSelectionAdapter(this, dateColumn, widthHeightPadding));
 
         versionColumn = new TableColumn(table, SWT.LEFT);
         versionColumn.setText(Messages.FileView_6);
         versionColumn.setWidth(versionColumnWidth);
         versionColumn.addSelectionListener(new SortSelectionAdapter(this, versionColumn, 5));
-        
+
         sizeColumn = new TableColumn(table, SWT.LEFT);
         sizeColumn.setText(Messages.FileView_35);
         sizeColumn.setWidth(sizeColumnWidth);
@@ -328,14 +333,14 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         table.setLinesVisible(true);
         viewer.setSorter(tableSorter);
         // ensure initial table sorting (by filename)
-        ((TableSorter)viewer.getSorter()).setColumn(1);
+        ((TableSorter) viewer.getSorter()).setColumn(1);
     }
 
     /**
      * @return
      */
     private CellLabelProvider getImageCellProvider() {
-        if(imageCellProvider==null) {
+        if (imageCellProvider == null) {
             imageCellProvider = new AttachmentImageCellProvider(getThumbnailSize());
         }
         return imageCellProvider;
@@ -346,10 +351,11 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
      */
     private int getThumbnailSize() {
         int size = DEFAULT_THUMBNAIL_SIZE;
-        String sizeString = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.THUMBNAIL_SIZE);
-        if(sizeString!=null && !sizeString.isEmpty()) {
+        String sizeString = Activator.getDefault().getPreferenceStore()
+                .getString(PreferenceConstants.THUMBNAIL_SIZE);
+        if (sizeString != null && !sizeString.isEmpty()) {
             size = Integer.parseInt(sizeString);
-        }    
+        }
         return size;
     }
 
@@ -385,7 +391,8 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         if (part == this) {
             openAction.setEnabled(element != null);
             saveCopyAction.setEnabled(element != null);
-            deleteFileAction.setEnabled(element != null && deleteFileAction.checkRights() && isCnATreeElementEditable());
+            deleteFileAction.setEnabled(element != null && deleteFileAction.checkRights()
+                    && isCnATreeElementEditable());
             return;
         }
 
@@ -410,13 +417,15 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
             } else {
                 addFileAction.setEnabled(false);
             }
-            
-            Object selectedElement = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+
+            Object selectedElement = ((IStructuredSelection) viewer.getSelection())
+                    .getFirstElement();
             if (selectedElement instanceof Attachment) {
                 Attachment att = (Attachment) selectedElement;
                 openAction.setEnabled(att != null);
                 saveCopyAction.setEnabled(att != null);
-                deleteFileAction.setEnabled(att != null && deleteFileAction.checkRights() && isCnATreeElementEditable());
+                deleteFileAction.setEnabled(att != null && deleteFileAction.checkRights()
+                        && isCnATreeElementEditable());
             }
         } catch (Exception e) {
             LOG.error("Error while loading notes", e); //$NON-NLS-1$
@@ -424,7 +433,8 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
     }
 
     private boolean isCnATreeElementEditable() {
-        return currentCnaElement != null && CnAElementHome.getInstance().isNewChildAllowed(currentCnaElement);
+        return currentCnaElement != null
+                && CnAElementHome.getInstance().isNewChildAllowed(currentCnaElement);
     }
 
     protected void startInitDataJob() {
@@ -438,7 +448,8 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
                     loadFiles();
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.", e); //$NON-NLS-1$ //$NON-NLS-2$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
+                            "Error while loading data.", e); //$NON-NLS-1$
                 } finally {
                     monitor.done();
                 }
@@ -452,8 +463,8 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
     public void loadFiles() {
         try {
             Integer id = null;
-            if(isLinkingActive()) {
-                if(getCurrentCnaElement() != null) {
+            if (isLinkingActive()) {
+                if (getCurrentCnaElement() != null) {
                     id = getCurrentCnaElement().getDbId();
                 } else {
                     return;
@@ -517,18 +528,23 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
     public void setFocus() {
         viewer.getControl().setFocus();
     }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.util.IPropertyChangeListener#propertyChange(org.eclipse
+     * .jface.util.PropertyChangeEvent)
      */
     @Override
     public void propertyChange(PropertyChangeEvent changeEvent) {
         final int thumbnailWidthPadding = 4;
-        if(changeEvent.getProperty().equals(PreferenceConstants.THUMBNAIL_SIZE) && imageCellProvider!=null
+        if (changeEvent.getProperty().equals(PreferenceConstants.THUMBNAIL_SIZE)
+                && imageCellProvider != null
                 && !changeEvent.getNewValue().equals(changeEvent.getOldValue())) {
             imageCellProvider.setThumbSize(Integer.valueOf(changeEvent.getNewValue().toString()));
             imageCellProvider.clearCache();
-            if(getThumbnailSize()>0) {
+            if (getThumbnailSize() > 0) {
                 imageColumn.getColumn().setWidth(getThumbnailSize() + thumbnailWidthPadding);
             } else {
                 imageColumn.getColumn().setWidth(0);
@@ -566,15 +582,17 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         };
         addFileAction.setText(Messages.FileView_16);
         addFileAction.setToolTipText(Messages.FileView_17);
-        addFileAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
+        addFileAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
         addFileAction.setEnabled(false);
 
         deleteFileAction = new RightsEnabledAction(ActionRightIDs.DELETEFILE) {
             @Override
             public void doRun() {
                 int count = ((IStructuredSelection) viewer.getSelection()).size();
-                boolean confirm = MessageDialog.openConfirm(getViewer().getControl().getShell(), Messages.FileView_18, NLS.bind(Messages.FileView_19, count));
-                if (!confirm){
+                boolean confirm = MessageDialog.openConfirm(getViewer().getControl().getShell(),
+                        Messages.FileView_18, NLS.bind(Messages.FileView_19, count));
+                if (!confirm) {
                     return;
                 }
                 deleteAttachments();
@@ -582,7 +600,8 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
             }
         };
         deleteFileAction.setText(Messages.FileView_23);
-        deleteFileAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.DELETE));
+        deleteFileAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.DELETE));
         deleteFileAction.setEnabled(false);
 
         doubleClickAction = new Action() {
@@ -596,11 +615,13 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         saveCopyAction = new Action() {
             @Override
             public void run() {
-                Attachment attachment = (Attachment) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+                Attachment attachment = (Attachment) ((IStructuredSelection) viewer.getSelection())
+                        .getFirstElement();
                 saveCopy(attachment);
             }
         };
-        saveCopyAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SAVE));
+        saveCopyAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SAVE));
         saveCopyAction.setEnabled(false);
 
         openAction = new Action() {
@@ -613,7 +634,8 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         openAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.VIEW));
         openAction.setEnabled(false);
 
-        toggleLinkAction = new RightsEnabledAction(ActionRightIDs.SHOWALLFILES, Messages.FileView_24, SWT.TOGGLE){
+        toggleLinkAction = new RightsEnabledAction(ActionRightIDs.SHOWALLFILES,
+                Messages.FileView_24, SWT.TOGGLE) {
             @Override
             public void doRun() {
                 isLinkingActive = !isLinkingActive;
@@ -621,20 +643,22 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
                 checkModelAndLoadFiles();
             }
         };
-        toggleLinkAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
+        toggleLinkAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
         toggleLinkAction.setChecked(isLinkingActive());
     }
 
     private void openFile() {
-        Attachment attachment = (Attachment) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+        Attachment attachment = (Attachment) ((IStructuredSelection) viewer.getSelection())
+                .getFirstElement();
         if (attachment != null) {
             try {
                 LoadAttachmentFile command = new LoadAttachmentFile(attachment.getDbId());
                 command = getCommandService().executeCommand(command);
                 AttachmentFile attachmentFile = command.getAttachmentFile();
-                String tempDir = System.getProperty(IVeriniceConstants.JAVA_IO_TMPDIR); //$NON-NLS-1$
+                String tempDir = System.getProperty(IVeriniceConstants.JAVA_IO_TMPDIR); // $NON-NLS-1$
                 if (attachmentFile != null && tempDir != null) {
-                   if (!tempDir.endsWith(String.valueOf(File.separatorChar))) {
+                    if (!tempDir.endsWith(String.valueOf(File.separatorChar))) {
                         tempDir = tempDir + File.separatorChar;
                     }
                     String path = tempDir + attachment.getFileName();
@@ -701,12 +725,12 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         getSite().getPage().removePostSelectionListener(selectionListener);
         getSite().getPage().removePartListener(linkWithEditorPartListener);
         Activator.getDefault().getPreferenceStore().removePropertyChangeListener(this);
-        if(attachmentList!=null) {
+        if (attachmentList != null) {
             for (Attachment attachment : attachmentList) {
                 attachment.removeAllListener();
             }
         }
-        if(imageCellProvider!=null) {
+        if (imageCellProvider != null) {
             imageCellProvider.shutdownCache();
         }
     }
@@ -717,15 +741,16 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
 
     public static Display getDisplay() {
         Display display = Display.getCurrent();
-        //may be null if outside the UI thread
-        if (display == null){
-           display = Display.getDefault();
+        // may be null if outside the UI thread
+        if (display == null) {
+            display = Display.getDefault();
         }
-        return display;       
-     }
-    
-    private static class AttachmentLabelProvider extends LabelProvider implements ITableLabelProvider {      
-        
+        return display;
+    }
+
+    private static class AttachmentLabelProvider extends LabelProvider
+            implements ITableLabelProvider {
+
         @Override
         public Image getColumnImage(Object element, int columnIndex) {
             if (element instanceof PlaceHolder) {
@@ -733,7 +758,9 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
             }
             Attachment attachment = (Attachment) element;
             if (columnIndex == 1) {
-                String mimeType = (attachment.getMimeType() != null) ? attachment.getMimeType().toLowerCase() : ""; //$NON-NLS-1$
+                String mimeType = (attachment.getMimeType() != null)
+                        ? attachment.getMimeType().toLowerCase()
+                        : ""; //$NON-NLS-1$
                 String imageType = mimeImageMap.get(mimeType);
                 if (imageType != null) {
                     return ImageCache.getInstance().getImage(mimeImageMap.get(mimeType));
@@ -753,21 +780,23 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
                     }
                     return ""; //$NON-NLS-1$
                 }
-                DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+                DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT,
+                        DateFormat.SHORT);
                 Attachment attachment = (Attachment) element;
                 switch (columnIndex) {
                 case 2:
-                    return attachment.getTitel(); //$NON-NLS-1$
+                    return attachment.getTitel(); // $NON-NLS-1$
                 case 3:
-                    return attachment.getMimeType(); //$NON-NLS-1$
+                    return attachment.getMimeType(); // $NON-NLS-1$
                 case 4:
-                    return attachment.getText(); //$NON-NLS-1$
+                    return attachment.getText(); // $NON-NLS-1$
                 case 5:
-                    return (attachment.getDate() != null) ? dateFormat.format(attachment.getDate()) : null; //$NON-NLS-1$
+                    return (attachment.getDate() != null) ? dateFormat.format(attachment.getDate())
+                            : null; // $NON-NLS-1$
                 case 6:
-                    return attachment.getVersion(); //$NON-NLS-1$
+                    return attachment.getVersion(); // $NON-NLS-1$
                 case 7:
-                    if(attachment.getFileSize() != null){
+                    if (attachment.getFileSize() != null) {
                         String size = attachment.getFileSize();
                         return humanReadableByteCount(Integer.parseInt(size), false);
                     } else {
@@ -781,10 +810,9 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
                 throw new RuntimeException(e);
             }
         }
- 
 
     }
-    
+
     private static class TableSorter extends ViewerSorter {
         private int propertyIndex;
         private static final int DEFAULT_SORT_COLUMN = 0;
@@ -809,8 +837,12 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
             }
         }
 
-        /* (non-Javadoc)
-         * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.
+         * viewers.Viewer, java.lang.Object, java.lang.Object)
          */
         @Override
         public int compare(Viewer viewer, Object e1, Object e2) {
@@ -838,7 +870,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
             case 0:
                 String mimeType1 = a1.getMimeType();
                 String mimeType2 = a2.getMimeType();
-                if (mimeType1 == null || mimeType2 == null){
+                if (mimeType1 == null || mimeType2 == null) {
                     return 0;
                 }
                 String image1 = mimeImageMap.get(mimeType1);
@@ -849,13 +881,14 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
                 break;
             case 1:
                 NumericStringComparator nsc = new NumericStringComparator();
-                // use lowercase here, to avoid separation of lowercase and uppercase words
+                // use lowercase here, to avoid separation of lowercase and
+                // uppercase words
                 rc = nsc.compare(a1.getFileName().toLowerCase(), a2.getFileName().toLowerCase());
                 break;
             case 2:
                 mimeType1 = a1.getMimeType();
                 mimeType2 = a2.getMimeType();
-                if (mimeType1 == null || mimeType2 == null){
+                if (mimeType1 == null || mimeType2 == null) {
                     return 0;
                 }
                 rc = mimeType1.compareTo(mimeType2);
@@ -869,10 +902,10 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
             case 5:
                 rc = a1.getVersion().compareTo(a2.getVersion());
                 break;
-            case 6 :
+            case 6:
                 int a1Size = (a1.getFileSize() != null) ? Integer.parseInt(a1.getFileSize()) : 0;
-                int a2Size = (a2.getFileSize() != null) ? Integer.parseInt(a2.getFileSize()) : 0; 
-                rc = (a2Size > a1Size) ? 1 : ((a1Size > a2Size) ? -1 : 0); 
+                int a2Size = (a2.getFileSize() != null) ? Integer.parseInt(a2.getFileSize()) : 0;
+                rc = (a2Size > a1Size) ? 1 : ((a1Size > a2Size) ? -1 : 0);
                 break;
             default:
                 rc = 0;
@@ -915,9 +948,12 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         return this.viewer;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * 
-     * @see sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.eclipse.ui.IEditorPart)
+     * @see
+     * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.
+     * eclipse.ui.IEditorPart)
      */
     @Override
     public void editorActivated(IEditorPart editor) {
@@ -950,17 +986,15 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
 
     private void createAndOpenAttachment(String selected) {
         File file = new File(selected);
-        if (file.isDirectory()){
+        if (file.isDirectory()) {
             return;
         }
         long size = file.length();
-        if(AttachmentFile.convertByteToMB(size) > getMaxFileSizeInMB()) {
-           String readableSize = AttachmentFile.formatByteToMB(size);
-           MessageDialog.openError(
-                   getSite().getShell(), 
-                   Messages.FileView_10, 
-                   NLS.bind(Messages.FileView_11, readableSize, getMaxFileSizeInMB())); 
-           return;
+        if (AttachmentFile.convertByteToMB(size) > getMaxFileSizeInMB()) {
+            String readableSize = AttachmentFile.formatByteToMB(size);
+            MessageDialog.openError(getSite().getShell(), Messages.FileView_10,
+                    NLS.bind(Messages.FileView_11, readableSize, getMaxFileSizeInMB()));
+            return;
         }
         Attachment attachment = new Attachment();
         attachment.setCnATreeElementId(getCurrentCnaElement().getDbId());
@@ -979,7 +1013,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
     }
 
     private int getMaxFileSizeInMB() {
-        if(fileSizeMax==null) {
+        if (fileSizeMax == null) {
             fileSizeMax = loadFileSizeMax();
         }
         return fileSizeMax;
@@ -987,7 +1021,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
 
     private Integer loadFileSizeMax() {
         int result = LoadFileSizeLimit.FILE_SIZE_MAX_DEFAULT;
-        LoadFileSizeLimit loadFileSizeLimit = new LoadFileSizeLimit(); 
+        LoadFileSizeLimit loadFileSizeLimit = new LoadFileSizeLimit();
         try {
             loadFileSizeLimit = getCommandService().executeCommand(loadFileSizeLimit);
         } catch (CommandException e) {
@@ -997,7 +1031,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         return result;
     }
 
- private void deleteAttachments() {
+    private void deleteAttachments() {
         Iterator iterator = ((IStructuredSelection) viewer.getSelection()).iterator();
         while (iterator.hasNext()) {
             Attachment sel = (Attachment) iterator.next();
@@ -1019,19 +1053,23 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
             // it's laoded
             modelLoadListener = new IModelLoadListener() {
                 @Override
-                public void closed(BSIModel model) {}
+                public void closed(BSIModel model) {
+                }
+
                 @Override
                 public void loaded(BSIModel model) {
                     startInitDataJob();
                 }
+
                 @Override
                 public void loaded(ISO27KModel model) {
                     // work is done in loaded(BSIModel model)
                 }
+
                 @Override
                 public void loaded(BpModel model) {
-                 // work is done in loaded(BSIModel model)
-                    
+                    // work is done in loaded(BSIModel model)
+
                 }
 
                 @Override
@@ -1042,7 +1080,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
             CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
         }
     }
-    
+
     /**
      * @param bytes
      * @param si
@@ -1050,10 +1088,12 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
      */
     private static String humanReadableByteCount(long bytes, boolean si) {
         int unit = si ? 1000 : 1024;
-        if (bytes < unit) return bytes + " B";
+        if (bytes < unit)
+            return bytes + " B";
         int exp = (int) (Math.log(bytes) / Math.log(unit));
-//        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
-        String pre = String.valueOf((si ? "kMGTPE" : "KMGTPE").charAt(exp-1));
+        // String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" :
+        // "i");
+        String pre = String.valueOf((si ? "kMGTPE" : "KMGTPE").charAt(exp - 1));
         return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
