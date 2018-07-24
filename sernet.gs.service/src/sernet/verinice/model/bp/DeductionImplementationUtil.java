@@ -59,9 +59,9 @@ public final class DeductionImplementationUtil {
      *
      * @return true when the state was changed
      */
-    public static boolean setImplementationStausToRequirement(CnATreeElement requirement) {
+    public static boolean setImplementationStatusToRequirement(CnATreeElement requirement) {
         List<CnATreeElement> safeGuards = getSafeguardsFromRequirement(requirement);
-        return setImplementationStausToRequirement(safeGuards, requirement);
+        return setImplementationStatusToRequirement(safeGuards, requirement);
     }
 
     /**
@@ -80,13 +80,13 @@ public final class DeductionImplementationUtil {
      *
      * @return true if the status has changed
      */
-    public static boolean setImplementationStausToRequirement(CnATreeElement safeguard,
+    public static boolean setImplementationStatusToRequirement(CnATreeElement safeguard,
             CnATreeElement requirement) {
         if (!isDeductiveImplementationEnabled(requirement)) {
             return false;
         }
         String optionValue = getImplementationStatus(safeguard);
-        return setImplementationStausToRequirement(requirement, optionValue);
+        return setImplementationStatusToRequirement(requirement, optionValue);
     }
 
     /**
@@ -97,7 +97,7 @@ public final class DeductionImplementationUtil {
      *
      * @return true if the state was changed
      */
-    public static boolean setImplementationStausToRequirement(CnATreeElement requirement,
+    public static boolean setImplementationStatusToRequirement(CnATreeElement requirement,
             String optionValue) {
         String propertyType = getImplementationStatusId(requirement);
         String propertyValue = getImplementationStatus(requirement);
@@ -120,7 +120,7 @@ public final class DeductionImplementationUtil {
      *
      * @return true when the state was changed
      */
-    public static boolean setImplementationStausToRequirement(List<CnATreeElement> safeGuards,
+    public static boolean setImplementationStatusToRequirement(List<CnATreeElement> safeGuards,
             CnATreeElement requirement) {
         if (safeGuards == null || safeGuards.isEmpty() || requirement == null
                 || !isDeductiveImplementationEnabled(requirement)) {

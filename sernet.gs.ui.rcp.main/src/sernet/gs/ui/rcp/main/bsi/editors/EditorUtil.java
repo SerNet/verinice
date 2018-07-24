@@ -129,7 +129,7 @@ public final class EditorUtil {
             if (DeductionImplementationUtil
                     .isRelevantLinkForImplementationStateDeduction(cnALink)) {
                 DeductionImplementationUtil
-                        .setImplementationStausToRequirement(cnALink.getDependency(), cnAElement);
+                        .setImplementationStatusToRequirement(cnALink.getDependency(), cnAElement);
             }
         }
     }

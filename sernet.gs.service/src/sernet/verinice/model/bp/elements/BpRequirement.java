@@ -20,7 +20,7 @@
 package sernet.verinice.model.bp.elements;
 
 import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeductiveImplementationEnabled;
-import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementationStausToRequirement;
+import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementationStatusToRequirement;
 
 import java.util.Collection;
 import java.util.Date;
@@ -107,7 +107,7 @@ public class BpRequirement extends CnATreeElement
                     .map(CnALink::getDependency).collect(Collectors.toList());
 
             if (!safeGuards.isEmpty()) {
-                setImplementationStausToRequirement(safeGuards, BpRequirement.this);
+                setImplementationStatusToRequirement(safeGuards, BpRequirement.this);
             }
         }
     };

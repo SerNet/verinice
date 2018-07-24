@@ -29,9 +29,10 @@ import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATIO
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS_CODE_PARTIALLY;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.IMPLEMENTATION_STATUS_CODE_YES;
+import static sernet.verinice.model.bp.DeductionImplementationUtil.getComputedImplementationStatus;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatus;
 import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementationStatusId;
-import static sernet.verinice.model.bp.DeductionImplementationUtil.*;
+import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementationStatusToRequirement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,7 +98,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     @Transactional
     @Rollback(true)
     @Test
-    public void testSetImplementationStausToRequirement() throws CommandException {
+    public void testSetImplementationStatusToRequirement() throws CommandException {
         Duo<Safeguard, BpRequirement> duo = createTestElements();
         Safeguard safeguard = duo.a;
         BpRequirement requirement = duo.b;
@@ -105,14 +106,14 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NO);
         prepareRequirement(requirement);
 
-        assertTrue(setImplementationStausToRequirement(safeguard, requirement));
-        assertFalse(setImplementationStausToRequirement(safeguard, requirement));
+        assertTrue(setImplementationStatusToRequirement(safeguard, requirement));
+        assertFalse(setImplementationStatusToRequirement(safeguard, requirement));
 
         updateSafeguard(safeguard, IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
         assertEquals(requirement.getTypeId() + IMPLEMENTATION_STATUS_CODE_NO,
                 getImplementationStatus(requirement));
 
-        assertTrue(setImplementationStausToRequirement(safeguard, requirement));
+        assertTrue(setImplementationStatusToRequirement(safeguard, requirement));
         assertEquals(requirement.getTypeId() + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
                 getImplementationStatus(requirement));
 
@@ -120,7 +121,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         assertEquals(requirement.getTypeId() + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE,
                 getImplementationStatus(requirement));
 
-        assertTrue(setImplementationStausToRequirement(safeguard, requirement));
+        assertTrue(setImplementationStatusToRequirement(safeguard, requirement));
         assertEquals(null, getImplementationStatus(requirement));
 
     }

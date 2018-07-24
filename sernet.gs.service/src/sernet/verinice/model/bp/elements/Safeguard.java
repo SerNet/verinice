@@ -86,7 +86,7 @@ public class Safeguard extends CnATreeElement
                     DeductionImplementationUtil::isRelevantLinkForImplementationStateDeduction)
                     .map(CnALink::getDependant)
                     .filter(DeductionImplementationUtil::isDeductiveImplementationEnabled)
-                    .forEach(DeductionImplementationUtil::setImplementationStausToRequirement);
+                    .forEach(DeductionImplementationUtil::setImplementationStatusToRequirement);
         }
     };
 
