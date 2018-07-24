@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -258,8 +259,9 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                             + getDbId());
                 }
             } catch (Exception e) {
+                String propertyValue = propertyList.getProperties().stream().map(Property::getPropertyValue).collect(Collectors.joining(", "));
                 String message = "Error reading Entity:" + entityType + " uuid:" + this.uuid
-                        + " propertytype:" + propertyTypeId;
+                        + " propertytype:" + propertyTypeId+" propertyValue: ["+propertyValue+"]"  ;
                 logger.error(message, e);
                 throw new RuntimeException("Error loading reference property.\n" + message, e);
             }
