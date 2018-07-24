@@ -49,7 +49,13 @@ public abstract class RightsEnabledView extends ViewPart {
 
     private static final Logger LOG = Logger.getLogger(RightsEnabledView.class);
 
+    private boolean openingDeclined = false;
+
     protected void openingDeclined() {
+        if (openingDeclined) {
+            return;
+        }
+        openingDeclined = true;
         LOG.error("Opening of view is not allowed, view-id: " + getViewId() + ", action-id: "
                 + getRightID());
         if (LOG.isDebugEnabled()) {
@@ -65,6 +71,7 @@ public abstract class RightsEnabledView extends ViewPart {
      */
     @Override
     public void createPartControl(Composite parent) {
+
         if (!Activator.getDefault().isStandalone() && !checkRights()) {
             final IWorkbenchWindow workbenchWindow = getSite().getWorkbenchWindow();
             workbenchWindow.getPartService().addPartListener(new CheckPermissonListener());
