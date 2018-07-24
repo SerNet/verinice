@@ -130,29 +130,29 @@ public final class DeductionImplementationUtil {
             CnATreeElement safeguard = safeGuards.get(0);
             return getImplementationStatus(safeguard);
         }
-        Map<ImplementationStatus, Integer> statusMap = new HashMap<>(
+        Map<ImplementationStatus, Integer> statusCounterMap = new HashMap<>(
                 ImplementationStatus.values().length + 1);
         for (CnATreeElement cnATreeElement : safeGuards) {
             ImplementationStatus implementationStatus = getImplementationStatus(cnATreeElement);
-            statusMap.compute(implementationStatus,
+            statusCounterMap.compute(implementationStatus,
                     (key, value) -> Optional.ofNullable(value).orElse(0) + 1);
         }
         // all the same
-        if (statusMap.size() == 1) {
+        if (statusCounterMap.size() == 1) {
             CnATreeElement safeguard = safeGuards.get(0);
             return getImplementationStatus(safeguard);
         }
-        Integer stateNA = statusMap.getOrDefault(ImplementationStatus.NOT_APPLICABLE, 0);
-        Integer stateYES = statusMap.getOrDefault(ImplementationStatus.YES, 0);
-        Integer stateNO = statusMap.getOrDefault(ImplementationStatus.NO, 0);
+        Integer countNA = statusCounterMap.getOrDefault(ImplementationStatus.NOT_APPLICABLE, 0);
+        Integer countYES = statusCounterMap.getOrDefault(ImplementationStatus.YES, 0);
+        Integer countNO = statusCounterMap.getOrDefault(ImplementationStatus.NO, 0);
         // only na and yes => yes
-        if (stateNA != 0 && stateYES != 0 && statusMap.size() == 2) {
+        if (countNA != 0 && countYES != 0 && statusCounterMap.size() == 2) {
             return ImplementationStatus.YES;
         }
         // half of not_na is no => no
-        if (stateNO != 0) {
-            int notNA = safeGuards.size() - stateNA;
-            if (stateNO > (notNA / 2.0f)) {
+        if (countNO != 0) {
+            int notNA = safeGuards.size() - countNA;
+            if (countNO > (notNA / 2.0f)) {
                 return ImplementationStatus.NO;
             }
         }
