@@ -157,18 +157,18 @@ public final class DeductionImplementationUtil {
         Integer stateNA = statusMap.getOrDefault(IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE, 0);
         Integer stateYES = statusMap.getOrDefault(IMPLEMENTATION_STATUS_CODE_YES, 0);
         Integer stateNO = statusMap.getOrDefault(IMPLEMENTATION_STATUS_CODE_NO, 0);
-        // only na and yes=>yes
+        // only na and yes => yes
         if (stateNA != 0 && stateYES != 0 && statusMap.size() == 2) {
             return IMPLEMENTATION_STATUS_CODE_YES;
         }
-        // half of not_na must be no=>no
+        // half of not_na must be no => no
         if (stateNO != 0) {
             int notNA = safeGuards.size() - stateNA;
             if (stateNO > (notNA / 2.0f)) {
                 return IMPLEMENTATION_STATUS_CODE_NO;
             }
         }
-        // every other combination=>partially
+        // every other combination => partially
         return IMPLEMENTATION_STATUS_CODE_PARTIALLY;
     }
 

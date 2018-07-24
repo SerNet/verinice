@@ -50,7 +50,8 @@ public class BaseProtectionFilterBuilder {
     private BaseProtectionFilterBuilder() {
     }
 
-    public static @NonNull Collection<ViewerFilter> makeFilters(BaseProtectionFilterParameters params) {
+    public static @NonNull Collection<ViewerFilter> makeFilters(
+            BaseProtectionFilterParameters params) {
         Collection<ViewerFilter> viewerFilters = new ArrayList<>(7);
         Optional.ofNullable(createImplementationStateFilter(params)).ifPresent(viewerFilters::add);
         Optional.ofNullable(createSecurityLevelFilter(params)).ifPresent(viewerFilters::add);

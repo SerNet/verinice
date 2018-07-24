@@ -273,8 +273,8 @@ public class BaseProtectionFilterDialog extends Dialog {
         }
         elementTypeSelector.setCheckedElements(
                 params.getElementTypes().toArray(new String[params.getElementTypes().size()]));
-        tagsSelector.setCheckedElements(
-                params.getTags().toArray(new String[params.getTags().size()]));
+        tagsSelector
+                .setCheckedElements(params.getTags().toArray(new String[params.getTags().size()]));
         applyTagFilterToItNetworksCheckbox.setSelection(params.isApplyTagFilterToItNetworks());
         hideEmptyGroupsCheckbox.setSelection(params.isHideEmptyGroups());
     }
