@@ -17,15 +17,24 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
-import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
+import sernet.gs.service.Retriever;
+import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElementScopeUtils;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.model.bp.IBpModelListener;
+import sernet.verinice.model.bp.ISecurityLevelProvider;
+import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.common.CnALink;
@@ -57,6 +66,7 @@ public class RelationViewContentProvider extends NullListener implements IStruct
         }
         CnATreeElement inputElmt = (CnATreeElement) newInput;
         view.setInputElmt(inputElmt);
+
         viewer.refresh();
     }
 
@@ -68,11 +78,44 @@ public class RelationViewContentProvider extends NullListener implements IStruct
         if (view == null || view.getInputElmt() == null) {
             return new Object[] {};
         }
+        CnATreeElement inputElement = view.getInputElmt();
+        Set<CnALink> linksDown = inputElement.getLinksDown();
+        Set<CnALink> linksUp = inputElement.getLinksUp();
+        if (linksDown.isEmpty() && linksUp.isEmpty()) {
+            return new Object[] {};
+        }
+        Stream<CnALink> linksDownStream = linksDown.stream();
+        Stream<CnALink> linksUpStream = linksUp.stream();
+        boolean filterByProceeding = Activator.getDefault().getPreferenceStore()
+                .getBoolean(PreferenceConstants.FILTER_INFORMATION_NETWORKS_BY_PROCEEDING);
+        if (filterByProceeding) {
+            CnATreeElement scope = CnATreeElementScopeUtils.getScope(inputElement);
 
-        HashSet<CnALink> result = new HashSet<>();
-        result.addAll(view.getInputElmt().getLinksDown());
-        result.addAll(view.getInputElmt().getLinksUp());
-        return result.toArray(new CnALink[result.size()]);
+            if (scope instanceof ItNetwork) {
+                ItNetwork itNetwork = (ItNetwork) scope;
+                itNetwork = (ItNetwork) Retriever.checkRetrieveElement(itNetwork);
+                Proceeding proceeding = itNetwork.getProceeding();
+                if (proceeding != null) {
+                    linksDownStream = filterLinksByProceeding(linksDownStream,
+                            CnALink::getDependency, proceeding);
+                    linksUpStream = filterLinksByProceeding(linksUpStream, CnALink::getDependant,
+                            proceeding);
+                }
+            }
+        }
+        return Stream.concat(linksDownStream, linksUpStream).toArray();
+    }
+
+    private static Stream<CnALink> filterLinksByProceeding(Stream<CnALink> links,
+            Function<CnALink, CnATreeElement> elementExtractor, Proceeding proceeding) {
+        return links.filter(link -> {
+            CnATreeElement element = elementExtractor.apply(link);
+            if (element instanceof ISecurityLevelProvider) {
+                return proceeding.requires(((ISecurityLevelProvider) element).getSecurityLevel());
+            }
+            return true;
+        });
+
     }
 
     /*
