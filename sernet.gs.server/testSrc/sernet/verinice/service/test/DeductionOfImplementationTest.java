@@ -29,8 +29,9 @@ import static sernet.verinice.model.bp.DeductionImplementationUtil.getImplementa
 import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementationStatusToRequirement;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -640,35 +641,28 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     @Rollback(true)
     @Test
     public void testThreeSafeguard() {
-        Safeguard safeguard1 = new Safeguard(null);
-        Safeguard safeguard2 = new Safeguard(null);
-        Safeguard safeguard3 = new Safeguard(null);
 
-        List<CnATreeElement> safeGuards = Arrays.asList(safeguard1, safeguard2, safeguard3);
+        List<CnATreeElement> safeGuards = createSafeguards(null, null, null);
         ImplementationStatus implementationStatus = getComputedImplementationStatus(safeGuards);
         assertEquals(null, implementationStatus);
 
-        safeguard1.setImplementationStatus(ImplementationStatus.NO);
-        safeguard2.setImplementationStatus(ImplementationStatus.NO);
-        safeguard3.setImplementationStatus(ImplementationStatus.NO);
+        safeGuards = createSafeguards(ImplementationStatus.NO, ImplementationStatus.NO,
+                ImplementationStatus.NO);
         implementationStatus = getComputedImplementationStatus(safeGuards);
         assertEquals(ImplementationStatus.NO, implementationStatus);
 
-        safeguard1.setImplementationStatus(ImplementationStatus.YES);
-        safeguard2.setImplementationStatus(ImplementationStatus.YES);
-        safeguard3.setImplementationStatus(ImplementationStatus.NO);
+        safeGuards = createSafeguards(ImplementationStatus.YES, ImplementationStatus.YES,
+                ImplementationStatus.NO);
         implementationStatus = getComputedImplementationStatus(safeGuards);
         assertEquals(ImplementationStatus.PARTIALLY, implementationStatus);
 
-        safeguard1.setImplementationStatus(ImplementationStatus.YES);
-        safeguard2.setImplementationStatus(ImplementationStatus.NO);
-        safeguard3.setImplementationStatus(ImplementationStatus.NO);
+        safeGuards = createSafeguards(ImplementationStatus.YES, ImplementationStatus.NO,
+                ImplementationStatus.NO);
         implementationStatus = getComputedImplementationStatus(safeGuards);
         assertEquals(ImplementationStatus.NO, implementationStatus);
 
-        safeguard1.setImplementationStatus(ImplementationStatus.YES);
-        safeguard2.setImplementationStatus(ImplementationStatus.NO);
-        safeguard3.setImplementationStatus(ImplementationStatus.NOT_APPLICABLE);
+        safeGuards = createSafeguards(ImplementationStatus.YES, ImplementationStatus.NO,
+                ImplementationStatus.NOT_APPLICABLE);
         implementationStatus = getComputedImplementationStatus(safeGuards);
         assertEquals(ImplementationStatus.PARTIALLY, implementationStatus);
     }
@@ -677,56 +671,49 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     @Rollback(true)
     @Test
     public void testFiveSafeguard() {
-        Safeguard safeguard1 = new Safeguard(null);
-        Safeguard safeguard2 = new Safeguard(null);
-        Safeguard safeguard3 = new Safeguard(null);
-        Safeguard safeguard4 = new Safeguard(null);
-        Safeguard safeguard5 = new Safeguard(null);
 
-        List<CnATreeElement> safeGuards = Arrays.asList(safeguard1, safeguard2, safeguard3,
-                safeguard4, safeguard5);
+        List<CnATreeElement> safeGuards = createSafeguards(null, null, null, null, null);
         ImplementationStatus implementationStatus = getComputedImplementationStatus(safeGuards);
         assertEquals(null, implementationStatus);
 
-        safeguard1.setImplementationStatus(ImplementationStatus.NO);
-        safeguard2.setImplementationStatus(ImplementationStatus.NO);
-        safeguard3.setImplementationStatus(ImplementationStatus.NO);
-        safeguard4.setImplementationStatus(ImplementationStatus.NO);
-        safeguard5.setImplementationStatus(ImplementationStatus.NO);
+        safeGuards = createSafeguards(ImplementationStatus.NO, ImplementationStatus.NO,
+                ImplementationStatus.NO, ImplementationStatus.NO, ImplementationStatus.NO);
         implementationStatus = getComputedImplementationStatus(safeGuards);
         assertEquals(ImplementationStatus.NO, implementationStatus);
 
-        safeguard1.setImplementationStatus(ImplementationStatus.YES);
-        safeguard2.setImplementationStatus(ImplementationStatus.NO);
-        safeguard3.setImplementationStatus(ImplementationStatus.NO);
-        safeguard4.setImplementationStatus(ImplementationStatus.NOT_APPLICABLE);
-        safeguard5.setImplementationStatus(ImplementationStatus.NOT_APPLICABLE);
+        safeGuards = createSafeguards(ImplementationStatus.YES, ImplementationStatus.NO,
+                ImplementationStatus.NO, ImplementationStatus.NOT_APPLICABLE,
+                ImplementationStatus.NOT_APPLICABLE);
         implementationStatus = getComputedImplementationStatus(safeGuards);
         assertEquals(ImplementationStatus.NO, implementationStatus);
 
-        safeguard1.setImplementationStatus(ImplementationStatus.YES);
-        safeguard2.setImplementationStatus(ImplementationStatus.NO);
-        safeguard3.setImplementationStatus(ImplementationStatus.NO);
-        safeguard4.setImplementationStatus(ImplementationStatus.YES);
-        safeguard5.setImplementationStatus(ImplementationStatus.NOT_APPLICABLE);
+        safeGuards = createSafeguards(ImplementationStatus.YES, ImplementationStatus.NO,
+                ImplementationStatus.NO, ImplementationStatus.YES,
+                ImplementationStatus.NOT_APPLICABLE);
         implementationStatus = getComputedImplementationStatus(safeGuards);
         assertEquals(ImplementationStatus.PARTIALLY, implementationStatus);
 
-        safeguard1.setImplementationStatus(ImplementationStatus.YES);
-        safeguard2.setImplementationStatus(ImplementationStatus.YES);
-        safeguard3.setImplementationStatus(ImplementationStatus.NOT_APPLICABLE);
-        safeguard4.setImplementationStatus(ImplementationStatus.NOT_APPLICABLE);
-        safeguard5.setImplementationStatus(ImplementationStatus.NOT_APPLICABLE);
+        safeGuards = createSafeguards(ImplementationStatus.YES, ImplementationStatus.YES,
+                ImplementationStatus.NOT_APPLICABLE, ImplementationStatus.NOT_APPLICABLE,
+                ImplementationStatus.NOT_APPLICABLE);
         implementationStatus = getComputedImplementationStatus(safeGuards);
         assertEquals(ImplementationStatus.YES, implementationStatus);
 
-        safeguard1.setImplementationStatus(ImplementationStatus.YES);
-        safeguard2.setImplementationStatus(ImplementationStatus.YES);
-        safeguard3.setImplementationStatus(ImplementationStatus.NO);
-        safeguard4.setImplementationStatus(ImplementationStatus.NOT_APPLICABLE);
-        safeguard5.setImplementationStatus(ImplementationStatus.NOT_APPLICABLE);
+        safeGuards = createSafeguards(ImplementationStatus.YES, ImplementationStatus.YES,
+                ImplementationStatus.NO, ImplementationStatus.NOT_APPLICABLE,
+                ImplementationStatus.NOT_APPLICABLE);
         implementationStatus = getComputedImplementationStatus(safeGuards);
         assertEquals(ImplementationStatus.PARTIALLY, implementationStatus);
+    }
+
+    private List<CnATreeElement> createSafeguards(ImplementationStatus... implementationStatuses) {
+        return Stream.of(implementationStatuses).map(status -> {
+            Safeguard safeguard = new Safeguard(null);
+            if (status != null) {
+                safeguard.setImplementationStatus(status);
+            }
+            return safeguard;
+        }).collect(Collectors.toList());
     }
 
     private List<Safeguard> updateSafeguards(List<Safeguard> safeGuards,
