@@ -40,163 +40,226 @@ import sernet.verinice.model.validation.CnAValidation;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class RelationViewContentProvider implements IStructuredContentProvider,
-    IBSIModelListener, IISO27KModelListener, IBpModelListener {
+public class RelationViewContentProvider implements IStructuredContentProvider, IBSIModelListener,
+        IISO27KModelListener, IBpModelListener {
 
+    private IRelationTable view;
+    private TableViewer viewer;
 
-	private IRelationTable view;
-	private TableViewer viewer;
+    public RelationViewContentProvider(IRelationTable view, TableViewer viewer) {
+        this.view = view;
+        this.viewer = viewer;
+    }
 
-	public RelationViewContentProvider(IRelationTable view, TableViewer viewer) {
-		this.view = view;
-		this.viewer = viewer;
-	}
+    public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+        if (newInput instanceof PlaceHolder) {
+            return;
+        }
+        CnATreeElement inputElmt = (CnATreeElement) newInput;
+        view.setInputElmt(inputElmt);
+        viewer.refresh();
+    }
 
-	public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-		if (newInput instanceof PlaceHolder){
-			return;
-		}
-		CnATreeElement inputElmt = (CnATreeElement) newInput;
-		view.setInputElmt(inputElmt);
-		viewer.refresh();
-	}
+    public void dispose() {
+    }
 
-	public void dispose() {
-	}
+    public Object[] getElements(Object obj) {
+        if (obj instanceof PlaceHolder) {
+            return new Object[] { obj };
+        }
 
-	public Object[] getElements(Object obj) {
-		if (obj instanceof PlaceHolder) {
-			return new Object[] { obj };
-		}
+        if (view == null || view.getInputElmt() == null) {
+            return new Object[] {};
+        }
 
-		if (view == null || view.getInputElmt() == null) {
-		    return new Object[] {};
-		}
-		
-		HashSet<CnALink> result = new HashSet<CnALink>();
-		result.addAll(view.getInputElmt().getLinksDown());
-		result.addAll(view.getInputElmt().getLinksUp());
-		return (CnALink[]) result.toArray(new CnALink[result.size()]);
-	}
+        HashSet<CnALink> result = new HashSet<CnALink>();
+        result.addAll(view.getInputElmt().getLinksDown());
+        result.addAll(view.getInputElmt().getLinksUp());
+        return (CnALink[]) result.toArray(new CnALink[result.size()]);
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#childAdded(sernet.gs.ui.rcp.main.common.model.CnATreeElement, sernet.gs.ui.rcp.main.common.model.CnATreeElement)
-	 */
-	public void childAdded(CnATreeElement category, CnATreeElement child) {
-		// only react to link changes
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#childAdded(sernet.gs.ui
+     * .rcp.main.common.model.CnATreeElement,
+     * sernet.gs.ui.rcp.main.common.model.CnATreeElement)
+     */
+    public void childAdded(CnATreeElement category, CnATreeElement child) {
+        // only react to link changes
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#childChanged(sernet.gs.ui.rcp.main.common.model.CnATreeElement, sernet.gs.ui.rcp.main.common.model.CnATreeElement)
-	 */
-	public void childChanged(CnATreeElement child) {
-	    // reload because a title may have changed
-	    view.reloadAll();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#childChanged(sernet.gs.
+     * ui.rcp.main.common.model.CnATreeElement,
+     * sernet.gs.ui.rcp.main.common.model.CnATreeElement)
+     */
+    public void childChanged(CnATreeElement child) {
+        // reload because a title may have changed
+        view.reloadAll();
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#childRemoved(sernet.gs.ui.rcp.main.common.model.CnATreeElement, sernet.gs.ui.rcp.main.common.model.CnATreeElement)
-	 */
-	public void childRemoved(CnATreeElement category, CnATreeElement child) {
-	 // only react to link changes
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#childRemoved(sernet.gs.
+     * ui.rcp.main.common.model.CnATreeElement,
+     * sernet.gs.ui.rcp.main.common.model.CnATreeElement)
+     */
+    public void childRemoved(CnATreeElement category, CnATreeElement child) {
+        // only react to link changes
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildAdded(sernet.gs.ui.rcp.main.common.model.CnATreeElement)
-	 */
-	public void databaseChildAdded(CnATreeElement child) {
-	 // only react to link changes
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildAdded(
+     * sernet.gs.ui.rcp.main.common.model.CnATreeElement)
+     */
+    public void databaseChildAdded(CnATreeElement child) {
+        // only react to link changes
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildChanged(sernet.gs.ui.rcp.main.common.model.CnATreeElement)
-	 */
-	public void databaseChildChanged(CnATreeElement child) {
-	 // only react to link changes
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildChanged(
+     * sernet.gs.ui.rcp.main.common.model.CnATreeElement)
+     */
+    public void databaseChildChanged(CnATreeElement child) {
+        // only react to link changes
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(sernet.gs.ui.rcp.main.common.model.CnATreeElement)
-	 */
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(
+     * sernet.gs.ui.rcp.main.common.model.CnATreeElement)
+     */
     public void databaseChildRemoved(CnATreeElement child) {
         view.reloadAll();
     }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(sernet.gs.ui.rcp.main.common.model.ChangeLogEntry)
-	 */
-	public void databaseChildRemoved(ChangeLogEntry entry) {
-	 // only react to link changes
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(
+     * sernet.gs.ui.rcp.main.common.model.ChangeLogEntry)
+     */
+    public void databaseChildRemoved(ChangeLogEntry entry) {
+        // only react to link changes
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#linkAdded(sernet.gs.ui.rcp.main.common.model.CnALink)
-	 */
-	public void linkAdded(CnALink link) {
-		view.reloadAll();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#linkAdded(sernet.gs.ui.
+     * rcp.main.common.model.CnALink)
+     */
+    public void linkAdded(CnALink link) {
+        view.reloadAll();
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#linkChanged(sernet.gs.ui.rcp.main.common.model.CnALink)
-	 */
-	public void linkChanged(CnALink old, CnALink link, Object source) {
-	    if (view.equals(source)) {
-	        view.reload(old, link);
-	    } else {
-	        view.reloadAll();
-	    }
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#linkChanged(sernet.gs.
+     * ui.rcp.main.common.model.CnALink)
+     */
+    public void linkChanged(CnALink old, CnALink link, Object source) {
+        if (view.equals(source)) {
+            view.reload(old, link);
+        } else {
+            view.reloadAll();
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#linkRemoved(sernet.gs.ui.rcp.main.common.model.CnALink)
-	 */
-	public void linkRemoved(CnALink link) {
-		view.reloadAll();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#linkRemoved(sernet.gs.
+     * ui.rcp.main.common.model.CnALink)
+     */
+    public void linkRemoved(CnALink link) {
+        view.reloadAll();
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#modelRefresh()
-	 */
-	public void modelRefresh() {
-	 // only react to link changes
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#modelRefresh()
+     */
+    public void modelRefresh() {
+        // only react to link changes
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#modelRefresh(java.lang.Object)
-	 */
-	public void modelRefresh(Object source) {
-	    view.reloadAll();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#modelRefresh(java.lang.
+     * Object)
+     */
+    public void modelRefresh(Object source) {
+        view.reloadAll();
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#modelReload(sernet.gs.ui.rcp.main.bsi.model.BSIModel)
-	 */
-	public void modelReload(BSIModel newModel) {
-	    view.reloadAll();
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#modelReload(sernet.gs.
+     * ui.rcp.main.bsi.model.BSIModel)
+     */
+    public void modelReload(BSIModel newModel) {
+        view.reloadAll();
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.verinice.iso27k.model.IISO27KModelListener#modelReload(sernet.verinice.iso27k.model.ISO27KModel)
-	 */
-	public void modelReload(ISO27KModel newModel) {
-	    view.reloadAll();
-	}
-	
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.iso27k.model.IISO27KModelListener#modelReload(sernet.
+     * verinice.iso27k.model.ISO27KModel)
+     */
+    public void modelReload(ISO27KModel newModel) {
+        view.reloadAll();
+    }
+
     @Override
-    public void validationAdded(Integer scopeId){};
-    
-    @Override
-    public void validationRemoved(Integer scopeId){};
-    
-    @Override
-    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){}
+    public void validationAdded(Integer scopeId) {
+    };
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.model.iso27k.IBpModelListener#modelReload(sernet.verinice.model.bp.elements.BpModel)
+    @Override
+    public void validationRemoved(Integer scopeId) {
+    };
+
+    @Override
+    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation) {
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.model.iso27k.IBpModelListener#modelReload(sernet.verinice
+     * .model.bp.elements.BpModel)
      */
     @Override
     public void modelReload(BpModel newModel) {
         view.reloadAll();
-        
+
     };
 }
