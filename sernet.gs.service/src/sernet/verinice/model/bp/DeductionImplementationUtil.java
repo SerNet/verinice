@@ -161,7 +161,7 @@ public final class DeductionImplementationUtil {
         if (stateNA != 0 && stateYES != 0 && statusMap.size() == 2) {
             return IMPLEMENTATION_STATUS_CODE_YES;
         }
-        // half of not_na must be no => no
+        // half of not_na is no => no
         if (stateNO != 0) {
             int notNA = safeGuards.size() - stateNA;
             if (stateNO > (notNA / 2.0f)) {
