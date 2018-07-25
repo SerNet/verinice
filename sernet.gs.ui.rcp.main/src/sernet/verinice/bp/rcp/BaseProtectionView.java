@@ -178,7 +178,6 @@ public class BaseProtectionView extends RightsEnabledView
                 .makeFilters(defaultFilterParams);
         viewer.setFilters(filters.toArray(new ViewerFilter[filters.size()]));
 
-        toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
         toggleLinking(Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
