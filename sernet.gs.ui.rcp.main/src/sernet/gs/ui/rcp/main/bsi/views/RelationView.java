@@ -245,10 +245,8 @@ public class RelationView extends RightsEnabledView
                 IStatus status = Status.OK_STATUS;
                 try {
                     monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
-                    if (CnAElementFactory.isModelLoaded()) {
-                        CnAElementFactory.getInstance().getLoadedModel()
-                                .addBSIModelListener(contentProvider);
-                    }
+                    CnAElementFactory.getInstance()
+                            .ifModelLoaded(model -> model.addBSIModelListener(contentProvider));
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
                     status = new Status(Status.ERROR, Activator.PLUGIN_ID, Messages.RelationView_7,
@@ -495,7 +493,7 @@ public class RelationView extends RightsEnabledView
     @Override
     public CnATreeElement getInputElmt() {
         if (inputElmt != null) {
-            checkAndRetrieve(this.inputElmt);
+            checkAndRetrieve(inputElmt);
         }
         return inputElmt;
     }

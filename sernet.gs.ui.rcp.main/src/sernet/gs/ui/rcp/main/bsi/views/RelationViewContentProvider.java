@@ -28,20 +28,19 @@ import sernet.verinice.model.bp.IBpModelListener;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
-import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.NullListener;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.validation.CnAValidation;
 
 /**
  * @author koderman[at]sernet[dot]de
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
-public class RelationViewContentProvider implements IStructuredContentProvider, IBSIModelListener,
-        IISO27KModelListener, IBpModelListener {
+public class RelationViewContentProvider extends NullListener implements IStructuredContentProvider,
+        IBSIModelListener, IISO27KModelListener, IBpModelListener {
 
     private IRelationTable view;
     private TableViewer viewer;
@@ -51,6 +50,7 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
         this.viewer = viewer;
     }
 
+    @Override
     public void inputChanged(Viewer v, Object oldInput, Object newInput) {
         if (newInput instanceof PlaceHolder) {
             return;
@@ -58,9 +58,6 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
         CnATreeElement inputElmt = (CnATreeElement) newInput;
         view.setInputElmt(inputElmt);
         viewer.refresh();
-    }
-
-    public void dispose() {
     }
 
     public Object[] getElements(Object obj) {
@@ -72,27 +69,13 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
             return new Object[] {};
         }
 
-        HashSet<CnALink> result = new HashSet<CnALink>();
+        HashSet<CnALink> result = new HashSet<>();
         result.addAll(view.getInputElmt().getLinksDown());
         result.addAll(view.getInputElmt().getLinksUp());
-        return (CnALink[]) result.toArray(new CnALink[result.size()]);
+        return result.toArray(new CnALink[result.size()]);
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#childAdded(sernet.gs.ui
-     * .rcp.main.common.model.CnATreeElement,
-     * sernet.gs.ui.rcp.main.common.model.CnATreeElement)
-     */
-    public void childAdded(CnATreeElement category, CnATreeElement child) {
-        // only react to link changes
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#childChanged(sernet.gs.
      * ui.rcp.main.common.model.CnATreeElement,
@@ -104,42 +87,6 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#childRemoved(sernet.gs.
-     * ui.rcp.main.common.model.CnATreeElement,
-     * sernet.gs.ui.rcp.main.common.model.CnATreeElement)
-     */
-    public void childRemoved(CnATreeElement category, CnATreeElement child) {
-        // only react to link changes
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildAdded(
-     * sernet.gs.ui.rcp.main.common.model.CnATreeElement)
-     */
-    public void databaseChildAdded(CnATreeElement child) {
-        // only react to link changes
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildChanged(
-     * sernet.gs.ui.rcp.main.common.model.CnATreeElement)
-     */
-    public void databaseChildChanged(CnATreeElement child) {
-        // only react to link changes
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(
      * sernet.gs.ui.rcp.main.common.model.CnATreeElement)
@@ -149,19 +96,6 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(
-     * sernet.gs.ui.rcp.main.common.model.ChangeLogEntry)
-     */
-    public void databaseChildRemoved(ChangeLogEntry entry) {
-        // only react to link changes
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#linkAdded(sernet.gs.ui.
      * rcp.main.common.model.CnALink)
@@ -171,8 +105,6 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#linkChanged(sernet.gs.
      * ui.rcp.main.common.model.CnALink)
@@ -186,8 +118,6 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#linkRemoved(sernet.gs.
      * ui.rcp.main.common.model.CnALink)
@@ -197,17 +127,6 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#modelRefresh()
-     */
-    public void modelRefresh() {
-        // only react to link changes
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#modelRefresh(java.lang.
      * Object)
@@ -217,8 +136,6 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#modelReload(sernet.gs.
      * ui.rcp.main.bsi.model.BSIModel)
@@ -228,8 +145,6 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.model.IISO27KModelListener#modelReload(sernet.
      * verinice.iso27k.model.ISO27KModel)
@@ -238,21 +153,7 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
         view.reloadAll();
     }
 
-    @Override
-    public void validationAdded(Integer scopeId) {
-    };
-
-    @Override
-    public void validationRemoved(Integer scopeId) {
-    };
-
-    @Override
-    public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation) {
-    }
-
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.model.iso27k.IBpModelListener#modelReload(sernet.verinice
      * .model.bp.elements.BpModel)
@@ -260,6 +161,5 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
     @Override
     public void modelReload(BpModel newModel) {
         view.reloadAll();
-
-    };
+    }
 }

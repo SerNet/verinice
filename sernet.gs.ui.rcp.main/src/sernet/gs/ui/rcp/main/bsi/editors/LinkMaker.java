@@ -27,13 +27,10 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -94,7 +91,6 @@ public class LinkMaker extends Composite implements IRelationTable {
     // SWT
     RelationTableViewer viewer;
     private WorkbenchPart part;
-    private Action doubleClickAction;
 
     // SWT widgets
     Combo comboElementType;
@@ -167,7 +163,6 @@ public class LinkMaker extends Composite implements IRelationTable {
 
         createFilter();
 
-        createDoubleClickAction();
         hookDoubleClickAction();
     }
 
@@ -425,31 +420,17 @@ public class LinkMaker extends Composite implements IRelationTable {
         allPossibleRelations.addAll(huiTypeFactory.getPossibleRelationsTo(entityTypeID));
     }
 
-    private void createDoubleClickAction() {
-        doubleClickAction = new Action() {
-
-            @Override
-            public void run() {
-                ISelection selection = viewer.getSelection();
-                Object obj = ((IStructuredSelection) selection).getFirstElement();
-                CnALink link = (CnALink) obj;
-
-                // open the object on the other side of the link:
-                if (CnALink.isDownwardLink(getInputElmt(), link)) {
-                    EditorFactory.getInstance().updateAndOpenObject(link.getDependency());
-                } else {
-                    EditorFactory.getInstance().updateAndOpenObject(link.getDependant());
-                }
-            }
-        };
-    }
-
     private void hookDoubleClickAction() {
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
+        viewer.addDoubleClickListener(event -> {
+            ISelection selection = viewer.getSelection();
+            Object obj = ((IStructuredSelection) selection).getFirstElement();
+            CnALink link = (CnALink) obj;
 
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                doubleClickAction.run();
+            // open the object on the other side of the link:
+            if (CnALink.isDownwardLink(getInputElmt(), link)) {
+                EditorFactory.getInstance().updateAndOpenObject(link.getDependency());
+            } else {
+                EditorFactory.getInstance().updateAndOpenObject(link.getDependant());
             }
         });
     }
