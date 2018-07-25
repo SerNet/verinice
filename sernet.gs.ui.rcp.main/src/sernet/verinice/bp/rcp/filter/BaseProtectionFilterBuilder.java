@@ -30,6 +30,8 @@ import org.eclipse.jface.viewers.ViewerFilter;
 
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpGroup;
+import sernet.verinice.model.bp.ISecurityLevelProvider;
+import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.ItNetwork;
@@ -55,6 +57,7 @@ public class BaseProtectionFilterBuilder {
         Optional.ofNullable(createTypeFilter(params)).ifPresent(viewerFilters::add);
         Optional.ofNullable(createTagFilter(params)).ifPresent(viewerFilters::add);
         Optional.ofNullable(createHideEmptyGroupsFilter(params)).ifPresent(viewerFilters::add);
+        Optional.ofNullable(createProceedingFilter(params)).ifPresent(viewerFilters::add);
         return viewerFilters;
     }
 
@@ -81,6 +84,14 @@ public class BaseProtectionFilterBuilder {
         if (!filterParameters.getElementTypes().isEmpty()) {
             return new RecursiveTreeFilter(new TypeFilter(filterParameters.getElementTypes(),
                     filterParameters.isHideEmptyGroups()));
+        }
+        return null;
+    }
+
+    private static ViewerFilter createProceedingFilter(
+            BaseProtectionFilterParameters filterParameters) {
+        if (filterParameters.isFilterByNetworkProceeding()) {
+            return new ProceedingFilter();
         }
         return null;
     }
@@ -224,6 +235,33 @@ public class BaseProtectionFilterBuilder {
         @Override
         public boolean select(Viewer viewer, Object parentElement, Object element) {
             return !(element instanceof Group);
+        }
+    }
+
+    private static final class ProceedingFilter extends ViewerFilter {
+        @Override
+        public boolean select(Viewer viewer, Object parentElement, Object element) {
+            if (element instanceof CnATreeElement && element instanceof ISecurityLevelProvider) {
+                SecurityLevel securityLevel = ((ISecurityLevelProvider) element).getSecurityLevel();
+                return scopeRequiresSecurityLevel(((CnATreeElement) element), securityLevel);
+            }
+            return true;
+        }
+
+        private boolean scopeRequiresSecurityLevel(CnATreeElement element,
+                SecurityLevel securityLevel) {
+            CnATreeElement scope = element.getScope();
+            if (scope instanceof ItNetwork) {
+                ItNetwork itNetwork = (ItNetwork) scope;
+                Proceeding proceeding = itNetwork.getProceeding();
+                if (proceeding == null) {
+                    return true; // undefined state
+                }
+                return proceeding.requires(securityLevel);
+            }
+            // scope is no it network. This state is
+            // undefined.
+            return true;
         }
     }
 

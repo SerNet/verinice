@@ -33,6 +33,7 @@ public class BaseProtectionFilterParameters {
     private @NonNull Set<String> tags;
     private boolean applyTagFilterToItNetworks;
     private boolean hideEmptyGroups;
+    private boolean filterByNetworkProceeding;
 
     private BaseProtectionFilterParameters() {
         implementationStatuses = new HashSet<>();
@@ -51,6 +52,7 @@ public class BaseProtectionFilterParameters {
         int result = 1;
         result = prime * result + (applyTagFilterToItNetworks ? 1231 : 1237);
         result = prime * result + ((elementTypes == null) ? 0 : elementTypes.hashCode());
+        result = prime * result + (filterByNetworkProceeding ? 1231 : 1237);
         result = prime * result + (hideEmptyGroups ? 1231 : 1237);
         result = prime * result
                 + ((implementationStatuses == null) ? 0 : implementationStatuses.hashCode());
@@ -71,6 +73,8 @@ public class BaseProtectionFilterParameters {
         if (applyTagFilterToItNetworks != other.applyTagFilterToItNetworks)
             return false;
         if (!elementTypes.equals(other.elementTypes))
+            return false;
+        if (filterByNetworkProceeding != other.filterByNetworkProceeding)
             return false;
         if (hideEmptyGroups != other.hideEmptyGroups)
             return false;
@@ -107,6 +111,10 @@ public class BaseProtectionFilterParameters {
         return hideEmptyGroups;
     }
 
+    public boolean isFilterByNetworkProceeding() {
+        return filterByNetworkProceeding;
+    }
+
     public static class Builder {
         private @NonNull BaseProtectionFilterParameters parameters;
 
@@ -125,6 +133,11 @@ public class BaseProtectionFilterParameters {
 
         public Builder withApplyTagFilterToItNetworks(boolean applyTagFilterToItNetworks) {
             parameters.applyTagFilterToItNetworks = applyTagFilterToItNetworks;
+            return this;
+        }
+
+        public Builder withFilterByNetworkProceeding(boolean shallFilterByNetworkProceeding) {
+            parameters.filterByNetworkProceeding = shallFilterByNetworkProceeding;
             return this;
         }
 
