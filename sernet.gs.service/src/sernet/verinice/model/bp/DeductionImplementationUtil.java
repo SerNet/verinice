@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.bp.elements.BpRequirement;
@@ -130,42 +132,49 @@ public final class DeductionImplementationUtil {
             return false;
         }
 
+        String implementationStatus = getComputedImplementationStatus(safeGuards);
+        return setImplementationStatus(requirement, implementationStatus);
+    }
+
+    /**
+     * Return the calculated implementation status from the given safeguards.
+     */
+    public static String getComputedImplementationStatus(List<CnATreeElement> safeGuards) {
+        if (safeGuards == null || safeGuards.isEmpty()) {
+            throw new IllegalArgumentException("Safeguard list is null or empty.");
+        }
+
         if (safeGuards.size() == 1) {
             CnATreeElement safeguard = safeGuards.get(0);
-            return setImplementationStausToRequirement(safeguard, requirement);
+            return getImplementationStatusFromSafeguard(safeguard);
         }
         Map<String, Integer> statusMap = new HashMap<>(safeGuards.size());
         for (CnATreeElement cnATreeElement : safeGuards) {
-            String implementationStatus = getImplementationStatus(cnATreeElement);
-            Integer counter = statusMap.get(implementationStatus);
-            if (counter == null) {
-                counter = 0;
-            }
-            counter = counter + 1;
-            statusMap.put(implementationStatus, counter);
+            String implementationStatus = getImplementationStatusFromSafeguard(cnATreeElement);
+            statusMap.compute(implementationStatus,
+                    (key, value) -> Optional.ofNullable(value).orElse(0) + 1);
         }
         // all the same
         if (statusMap.size() == 1) {
             CnATreeElement safeguard = safeGuards.get(0);
-            return setImplementationStausToRequirement(safeguard, requirement);
+            return getImplementationStatusFromSafeguard(safeguard);
         }
-        Integer stateNA = statusMap
-                .get(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE);
-        Integer stateYES = statusMap.get(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS_CODE_YES);
-        Integer stateNO = statusMap.get(Safeguard.TYPE_ID + IMPLEMENTATION_STATUS_CODE_NO);
+        Integer stateNA = statusMap.getOrDefault(IMPLEMENTATION_STATUS_CODE_NOT_APPLICABLE, 0);
+        Integer stateYES = statusMap.getOrDefault(IMPLEMENTATION_STATUS_CODE_YES, 0);
+        Integer stateNO = statusMap.getOrDefault(IMPLEMENTATION_STATUS_CODE_NO, 0);
         // only na and yes=>yes
-        if (stateNA != null && stateYES != null && statusMap.size() == 2) {
-            return setImplementationStatus(requirement, IMPLEMENTATION_STATUS_CODE_YES);
+        if (stateNA != 0 && stateYES != 0 && statusMap.size() == 2) {
+            return IMPLEMENTATION_STATUS_CODE_YES;
         }
         // half of not_na must be no=>no
-        if (stateNO != null && stateNA != null) {
-            int notNA = safeGuards.size() - stateNA.intValue();
+        if (stateNO != 0) {
+            int notNA = safeGuards.size() - stateNA;
             if (stateNO > (notNA / 2.0f)) {
-                return setImplementationStatus(requirement, IMPLEMENTATION_STATUS_CODE_NO);
+                return IMPLEMENTATION_STATUS_CODE_NO;
             }
         }
         // every other combination=>partially
-        return setImplementationStatus(requirement, IMPLEMENTATION_STATUS_CODE_PARTIALLY);
+        return IMPLEMENTATION_STATUS_CODE_PARTIALLY;
     }
 
     /**
@@ -175,9 +184,12 @@ public final class DeductionImplementationUtil {
      */
     private static boolean setImplementationStatus(CnATreeElement requirement, String statusCode) {
         String oldValue = getImplementationStatus(requirement);
-        String newValue = BpRequirement.TYPE_ID + statusCode;
+        String newValue = statusCode == null ? null : BpRequirement.TYPE_ID + statusCode;
+        if (Objects.equals(newValue, oldValue)) {
+            return false;
+        }
         requirement.setSimpleProperty(getImplementationStatusId(requirement), newValue);
-        return !newValue.equals(oldValue);
+        return true;
     }
 
     /**
@@ -189,6 +201,21 @@ public final class DeductionImplementationUtil {
     public static String getImplementationStatus(CnATreeElement element) {
         Entity entity = element.getEntity();
         return entity.getOptionValue(getImplementationStatusId(element));
+    }
+
+    /**
+     * Return the implementation status of the given {@link CnATreeElement}.
+     *
+     * @param element
+     *            - must not be null
+     */
+    public static String getImplementationStatusFromSafeguard(CnATreeElement element) {
+        Entity entity = element.getEntity();
+        String optionValue = entity.getOptionValue(getImplementationStatusId(element));
+        if (optionValue != null && optionValue.startsWith(Safeguard.TYPE_ID)) {
+            return optionValue.substring(Safeguard.TYPE_ID.length());
+        }
+        return optionValue;
     }
 
     /**
