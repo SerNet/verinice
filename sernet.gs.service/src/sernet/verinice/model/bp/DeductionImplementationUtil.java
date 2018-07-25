@@ -19,12 +19,12 @@
  ******************************************************************************/
 package sernet.verinice.model.bp;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.bp.elements.BpRequirement;
@@ -68,14 +68,9 @@ public final class DeductionImplementationUtil {
      * Get the connected safeguards from a requirement.
      */
     public static List<CnATreeElement> getSafeguardsFromRequirement(CnATreeElement requirement) {
-        List<CnATreeElement> safeGuards = new ArrayList<>(requirement.getLinksDown().size());
-        for (CnALink cnALink : requirement.getLinksDown()) {
-            CnATreeElement dependant = cnALink.getDependency();
-            if (Safeguard.TYPE_ID.equals(dependant.getTypeId())) {
-                safeGuards.add(dependant);
-            }
-        }
-        return safeGuards;
+        return requirement.getLinksDown().stream()
+                .filter(DeductionImplementationUtil::isRelevantLinkForImplementationStateDeduction)
+                .map(CnALink::getDependency).collect(Collectors.toList());
     }
 
     /**
