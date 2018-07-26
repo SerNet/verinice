@@ -300,10 +300,10 @@ public final class CnATypeMapper {
                     EvidenceGroup.TYPE_ID, InterviewGroup.TYPE_ID, FindingGroup.TYPE_ID));
 
     public static final List<String> BP_ELEMENT_TYPES = Collections
-            .unmodifiableList(Arrays.asList(ApplicationGroup.TYPE_ID, BpPersonGroup.TYPE_ID,
-                    BpRequirementGroup.TYPE_ID, BpThreatGroup.TYPE_ID, BusinessProcessGroup.TYPE_ID,
-                    DeviceGroup.TYPE_ID, IcsSystemGroup.TYPE_ID, ItSystemGroup.TYPE_ID,
-                    NetworkGroup.TYPE_ID, RoomGroup.TYPE_ID, SafeguardGroup.TYPE_ID,
+            .unmodifiableList(Arrays.asList(BusinessProcessGroup.TYPE_ID, ApplicationGroup.TYPE_ID,
+                    ItSystemGroup.TYPE_ID, IcsSystemGroup.TYPE_ID, DeviceGroup.TYPE_ID,
+                    NetworkGroup.TYPE_ID, RoomGroup.TYPE_ID, BpPersonGroup.TYPE_ID,
+                    BpRequirementGroup.TYPE_ID, BpThreatGroup.TYPE_ID, SafeguardGroup.TYPE_ID,
                     BpDocumentGroup.TYPE_ID, BpIncidentGroup.TYPE_ID, BpRecordGroup.TYPE_ID));
 
     public static boolean isStrukturElement(CnATreeElement child) {
