@@ -133,7 +133,6 @@ public abstract class UpdatingAddGroupHandler extends AddGroupHandler implements
         boolean allowed = CnAElementHome.getInstance().isNewChildAllowed(selectedElement);
         boolean enabled = false;
         if (selectedElement instanceof Audit) {
-            enabled = false;
             menu.setText(Messages.AddGroupHandler_new_group);
         } else if (selectedElement instanceof Group<?>) {
             enabled = true;

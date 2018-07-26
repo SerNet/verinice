@@ -81,8 +81,6 @@ public class AddAction extends Action implements ISelectionListener {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
@@ -127,9 +125,7 @@ public class AddAction extends Action implements ISelectionListener {
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @seeorg.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.
+     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.
      * IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
     @Override

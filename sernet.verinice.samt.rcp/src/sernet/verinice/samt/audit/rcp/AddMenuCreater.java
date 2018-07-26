@@ -59,8 +59,6 @@ public class AddMenuCreater implements IViewActionDelegate, IMenuCreator, ISelec
     private AddAction addGroupAction;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.IViewActionDelegate#init(org.eclipse.ui.IViewPart)
      */
     @Override
@@ -83,8 +81,6 @@ public class AddMenuCreater implements IViewActionDelegate, IMenuCreator, ISelec
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
     @Override
@@ -93,8 +89,6 @@ public class AddMenuCreater implements IViewActionDelegate, IMenuCreator, ISelec
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
      * IAction, org.eclipse.jface.viewers.ISelection)
@@ -109,8 +103,6 @@ public class AddMenuCreater implements IViewActionDelegate, IMenuCreator, ISelec
     // IMenuCreator methods
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.jface.action.IMenuCreator#dispose()
      */
     public void dispose() {
@@ -120,8 +112,6 @@ public class AddMenuCreater implements IViewActionDelegate, IMenuCreator, ISelec
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets.
      * Control)
@@ -136,8 +126,6 @@ public class AddMenuCreater implements IViewActionDelegate, IMenuCreator, ISelec
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * org.eclipse.jface.action.IMenuCreator#getMenu(org.eclipse.swt.widgets.
      * Menu)
@@ -148,9 +136,7 @@ public class AddMenuCreater implements IViewActionDelegate, IMenuCreator, ISelec
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @seeorg.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.
+     * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.
      * IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
     @Override
