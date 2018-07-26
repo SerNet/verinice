@@ -17,7 +17,10 @@
  ******************************************************************************/
 package sernet.verinice.service.commands;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -283,36 +286,32 @@ public final class CnATypeMapper {
 
     // this is necessary because hibernate returns proxy objects that will not
     // implement the marker interface IBSIStrukturelement
-    private static final String[] STRUKTUR_ELEMENT_TYPES = new String[] { Anwendung.TYPE_ID,
-            BSIModel.TYPE_ID, Client.TYPE_ID, Gebaeude.TYPE_ID, ITVerbund.TYPE_ID,
-            NetzKomponente.TYPE_ID, Person.TYPE_ID, Raum.TYPE_ID, Server.TYPE_ID, SonstIT.TYPE_ID,
-            TelefonKomponente.TYPE_ID };
+    public static final List<String> STRUKTUR_ELEMENT_TYPES = Collections
+            .unmodifiableList(Arrays.asList(Anwendung.TYPE_ID, BSIModel.TYPE_ID, Client.TYPE_ID,
+                    Gebaeude.TYPE_ID, ITVerbund.TYPE_ID, NetzKomponente.TYPE_ID, Person.TYPE_ID,
+                    Raum.TYPE_ID, Server.TYPE_ID, SonstIT.TYPE_ID, TelefonKomponente.TYPE_ID));
 
-    private static final String[] IISO27K_ELEMENT_TYPES = new String[] { ResponseGroup.TYPE_ID,
-            ExceptionGroup.TYPE_ID, VulnerabilityGroup.TYPE_ID, PersonGroup.TYPE_ID,
-            IncidentGroup.TYPE_ID, ThreatGroup.TYPE_ID, Organization.TYPE_ID, ProcessGroup.TYPE_ID,
-            AuditGroup.TYPE_ID, IncidentScenarioGroup.TYPE_ID, RecordGroup.TYPE_ID,
-            RequirementGroup.TYPE_ID, ControlGroup.TYPE_ID, DocumentGroup.TYPE_ID,
-            AssetGroup.TYPE_ID, EvidenceGroup.TYPE_ID, InterviewGroup.TYPE_ID,
-            FindingGroup.TYPE_ID };
+    public static final List<String> IISO27K_ELEMENT_TYPES = Collections.unmodifiableList(
+            Arrays.asList(ResponseGroup.TYPE_ID, ExceptionGroup.TYPE_ID, VulnerabilityGroup.TYPE_ID,
+                    PersonGroup.TYPE_ID, IncidentGroup.TYPE_ID, ThreatGroup.TYPE_ID,
+                    Organization.TYPE_ID, ProcessGroup.TYPE_ID, AuditGroup.TYPE_ID,
+                    IncidentScenarioGroup.TYPE_ID, RecordGroup.TYPE_ID, RequirementGroup.TYPE_ID,
+                    ControlGroup.TYPE_ID, DocumentGroup.TYPE_ID, AssetGroup.TYPE_ID,
+                    EvidenceGroup.TYPE_ID, InterviewGroup.TYPE_ID, FindingGroup.TYPE_ID));
 
-    private static final String[] BP_ELEMENT_TYPES = new String[] { ApplicationGroup.TYPE_ID,
-            BpPersonGroup.TYPE_ID, BpRequirementGroup.TYPE_ID, BpThreatGroup.TYPE_ID,
-            BusinessProcessGroup.TYPE_ID, DeviceGroup.TYPE_ID, IcsSystemGroup.TYPE_ID,
-            ItSystemGroup.TYPE_ID, NetworkGroup.TYPE_ID, RoomGroup.TYPE_ID, SafeguardGroup.TYPE_ID,
-            BpDocumentGroup.TYPE_ID, BpIncidentGroup.TYPE_ID, BpRecordGroup.TYPE_ID };
+    public static final List<String> BP_ELEMENT_TYPES = Collections
+            .unmodifiableList(Arrays.asList(ApplicationGroup.TYPE_ID, BpPersonGroup.TYPE_ID,
+                    BpRequirementGroup.TYPE_ID, BpThreatGroup.TYPE_ID, BusinessProcessGroup.TYPE_ID,
+                    DeviceGroup.TYPE_ID, IcsSystemGroup.TYPE_ID, ItSystemGroup.TYPE_ID,
+                    NetworkGroup.TYPE_ID, RoomGroup.TYPE_ID, SafeguardGroup.TYPE_ID,
+                    BpDocumentGroup.TYPE_ID, BpIncidentGroup.TYPE_ID, BpRecordGroup.TYPE_ID));
 
     public static boolean isStrukturElement(CnATreeElement child) {
         EntityType entityType = child.getEntityType();
         if (entityType == null) {
             return false;
         }
-        for (String strukturType : STRUKTUR_ELEMENT_TYPES) {
-            if (entityType.getId().equals(strukturType)) {
-                return true;
-            }
-        }
-        return false;
+        return STRUKTUR_ELEMENT_TYPES.contains(entityType.getId());
     }
 
     public static boolean isIiso27kElement(CnATreeElement child) {
@@ -320,12 +319,7 @@ public final class CnATypeMapper {
         if (entityType == null) {
             return false;
         }
-        for (String strukturType : IISO27K_ELEMENT_TYPES) {
-            if (entityType.getId().equals(strukturType)) {
-                return true;
-            }
-        }
-        return false;
+        return IISO27K_ELEMENT_TYPES.contains(entityType.getId());
     }
 
     public static boolean isBpElement(CnATreeElement child) {
@@ -333,12 +327,7 @@ public final class CnATypeMapper {
         if (entityType == null) {
             return false;
         }
-        for (String strukturType : BP_ELEMENT_TYPES) {
-            if (entityType.getId().equals(strukturType)) {
-                return true;
-            }
-        }
-        return false;
+        return BP_ELEMENT_TYPES.contains(entityType.getId());
     }
 
     /************************************************************
