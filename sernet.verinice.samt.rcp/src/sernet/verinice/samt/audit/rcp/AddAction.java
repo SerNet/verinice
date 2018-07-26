@@ -75,7 +75,8 @@ public class AddAction extends Action implements ISelectionListener {
             title_0 = AddGroup.TITLE_FOR_TYPE.get(typeId);
         }
         setText(title_0);
-        setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getImageForTypeId(objectTypeId)));
+        setImageDescriptor(ImageDescriptor
+                .createFromImage(ImageCache.getInstance().getImageForTypeId(objectTypeId)));
         this.groupView = groupView;
     }
 
@@ -90,18 +91,24 @@ public class AddAction extends Action implements ISelectionListener {
             CnATreeElement newElement = null;
             CnATreeElement group = this.groupView.getGroupToAdd();
             if (group != null) {
-                group = Retriever.retrieveElement(group, new RetrieveInfo().setProperties(true).setChildren(true).setParent(true));
-                newElement = CnAElementFactory.getInstance().saveNew(group, this.objectTypeId, null, false);
+                group = Retriever.retrieveElement(group,
+                        new RetrieveInfo().setProperties(true).setChildren(true).setParent(true));
+                newElement = CnAElementFactory.getInstance().saveNew(group, this.objectTypeId, null,
+                        false);
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("New element - type: " + newElement.getObjectType() + ", title: " + newElement.getTitle() + ", group: " + group.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    LOG.debug("New element - type: " + newElement.getObjectType() + ", title: " //$NON-NLS-1$ //$NON-NLS-2$
+                            + newElement.getTitle() + ", group: " + group.getTitle()); //$NON-NLS-1$
                 }
                 // create a link to last selected (foreign) element
                 // if no group in this view is selected
                 if (groupView.getElementToLink() != null && groupView.getSelectedGroup() == null) {
                     // this method also fires events for added links:
-                    CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(newElement, Arrays.asList(groupView.getElementToLink()));
+                    CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(newElement,
+                            Arrays.asList(groupView.getElementToLink()));
                     if (LOG.isDebugEnabled()) {
-                        LOG.debug("New element linked - type: " + groupView.getElementToLink().getObjectType() + ", title: " + groupView.getElementToLink().getTitle()); //$NON-NLS-1$ //$NON-NLS-2$
+                        LOG.debug("New element linked - type: " //$NON-NLS-1$
+                                + groupView.getElementToLink().getObjectType() + ", title: " //$NON-NLS-1$
+                                + groupView.getElementToLink().getTitle());
                     }
                     // link is created asynchron
                     // editor is opened in TreeUpdateListener of ElmentView
@@ -134,12 +141,13 @@ public class AddAction extends Action implements ISelectionListener {
                 String elementType = groupView.getCommandFactory().getElementTypeId();
                 String groupType = groupView.getCommandFactory().getGroupTypeId();
                 String type = elementType;
-                if(objectTypeId.equals(groupType)) {
+                if (objectTypeId.equals(groupType)) {
                     // this is an add group action
                     type = groupType;
                 }
                 String selectedElementType = ((CnATreeElement) element).getTypeId();
-                EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(selectedElementType);
+                EntityType entityType = HitroUtil.getInstance().getTypeFactory()
+                        .getEntityType(selectedElementType);
                 Set<HuiRelation> relationSet = entityType.getPossibleRelations();
                 for (HuiRelation huiRelation : relationSet) {
                     if (huiRelation.getTo().equals(type)) {

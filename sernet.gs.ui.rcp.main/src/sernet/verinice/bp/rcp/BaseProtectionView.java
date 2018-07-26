@@ -294,8 +294,7 @@ public class BaseProtectionView extends RightsEnabledView
 
     private void hookDndListeners() {
         Transfer[] dragTypes = new Transfer[] { BaseProtectionElementTransfer.getInstance() };
-        Transfer[] dropTypes = new Transfer[] {
-                IGSModelElementTransfer.getInstance(),
+        Transfer[] dropTypes = new Transfer[] { IGSModelElementTransfer.getInstance(),
                 BaseProtectionElementTransfer.getInstance(),
                 BaseProtectionModelingTransfer.getInstance() };
 

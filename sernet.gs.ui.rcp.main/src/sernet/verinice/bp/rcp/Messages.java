@@ -54,7 +54,7 @@ public class Messages extends NLS {
     public static String BbModelingDropPerformerConfirmation;
     public static String BbModelingDropPerformerConfirmationTitle;
     public static String BbModelingDropPerformerConfirmationToggleMessage;
-    
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
