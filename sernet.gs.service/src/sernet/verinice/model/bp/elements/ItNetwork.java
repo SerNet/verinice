@@ -81,15 +81,12 @@ public class ItNetwork extends CnATreeElement
     public void createNewCategories() {
         addChild(new ApplicationGroup(this));
         addChild(new BpPersonGroup(this));
-        addChild(new BpRequirementGroup(this));
-        addChild(new BpThreatGroup(this));
         addChild(new BusinessProcessGroup(this));
         addChild(new DeviceGroup(this));
         addChild(new IcsSystemGroup(this));
         addChild(new ItSystemGroup(this));
         addChild(new NetworkGroup(this));
         addChild(new RoomGroup(this));
-        addChild(new SafeguardGroup(this));
         addChild(new BpDocumentGroup(this));
         addChild(new BpIncidentGroup(this));
         addChild(new BpRecordGroup(this));
