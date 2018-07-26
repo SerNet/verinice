@@ -305,6 +305,12 @@
       </command>
       <command
             categoryId="sernet.gs.ui.rcp.commands"
+            description="%command.description.newThreatGroup"
+            id="sernet.verinice.bp.rcp.commands.newThreatGroup"
+            name="%command.name.newThreatGroup">
+      </command>
+      <command
+            categoryId="sernet.gs.ui.rcp.commands"
             description="%command.description.newSafeguardGroup"
             id="sernet.verinice.bp.rcp.commands.newSafeguardGroup"
             name="%command.name.newSafeguardGroup">
@@ -1406,10 +1412,10 @@
       </menuContribution>
       <menuContribution locationURI="popup:sernet.verinice.bp.rcp.BaseProtectionView?after=content">	  
    	  	 <command
-               commandId="sernet.verinice.bp.rcp.commands.newRequirementGroup"
-               disabledIcon="icons/base-protection/bp_requirement.png"
-               icon="icons/base-protection/bp_requirement.png"
-               label="%command.label.newRequirementGroup">
+               commandId="sernet.verinice.bp.rcp.commands.newSafeguardGroup"
+               disabledIcon="icons/base-protection/safeguard.png"
+               icon="icons/base-protection/safeguard.png"
+               label="%command.label.newSafeguardGroup">
          	<visibleWhen>
          		<with variable="activeMenuSelection">
          	    	<and>
@@ -1423,12 +1429,31 @@
          	</visibleWhen>
          </command>
       </menuContribution>
+      <menuContribution locationURI="popup:sernet.verinice.bp.rcp.BaseProtectionView?after=content">
+   	     <command
+               commandId="sernet.verinice.bp.rcp.commands.newThreatGroup"
+               disabledIcon="icons/base-protection/bp_threat.png"
+               icon="icons/base-protection/bp_threat.png"
+               label="%command.label.newThreatGroup">
+           <visibleWhen>
+         	  <with variable="activeMenuSelection">
+         	    	<and>
+	         	    	<count value="1" />
+	         	    	<iterate operator="and">
+	                        <instanceof value="sernet.verinice.model.bp.IBpElement" />
+		                    <instanceof value="sernet.hui.common.connect.ITargetObject" />
+	                </iterate>
+               </and>            
+		        </with>
+         	</visibleWhen>
+         </command>
+      </menuContribution>
       <menuContribution locationURI="popup:sernet.verinice.bp.rcp.BaseProtectionView?after=content">	  
    	  	 <command
-               commandId="sernet.verinice.bp.rcp.commands.newSafeguardGroup"
-               disabledIcon="icons/base-protection/safeguard.png"
-               icon="icons/base-protection/safeguard.png"
-               label="%command.label.newSafeguardGroup">
+               commandId="sernet.verinice.bp.rcp.commands.newRequirementGroup"
+               disabledIcon="icons/base-protection/bp_requirement.png"
+               icon="icons/base-protection/bp_requirement.png"
+               label="%command.label.newRequirementGroup">
          	<visibleWhen>
          		<with variable="activeMenuSelection">
          	    	<and>
@@ -2328,6 +2353,23 @@
       </handler>
       <handler class="sernet.verinice.bp.rcp.action.AddRequirementGroupHandler"
             commandId="sernet.verinice.bp.rcp.commands.newRequirementGroup">
+				<activeWhen>
+					<with variable="activePartId">
+						<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
+					</with>
+				</activeWhen> 
+				<enabledWhen>
+					<with variable="selection">
+						<iterate operator="and">
+							<instanceof value="sernet.verinice.model.bp.IBpElement"/>
+							<instanceof value="sernet.hui.common.connect.ITargetObject"/>
+							<test property="sernet.verinice.iso27k.model.isWritable"/>            
+						</iterate>
+					</with>
+				</enabledWhen>
+      </handler>
+      <handler class="sernet.verinice.bp.rcp.action.AddThreatGroupHandler"
+            commandId="sernet.verinice.bp.rcp.commands.newThreatGroup">
 				<activeWhen>
 					<with variable="activePartId">
 						<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
