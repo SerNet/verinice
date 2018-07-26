@@ -36,6 +36,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -71,6 +72,7 @@ import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.bp.rcp.filter.BaseProtectionFilterAction;
@@ -80,12 +82,14 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
+import sernet.verinice.iso27k.rcp.action.AddGroup;
 import sernet.verinice.iso27k.rcp.action.CollapseAction;
 import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.IBpModelListener;
 import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.IAttachedToPerspective;
@@ -94,6 +98,7 @@ import sernet.verinice.rcp.bp.BaseProtectionPerspective;
 import sernet.verinice.rcp.tree.TreeContentProvider;
 import sernet.verinice.rcp.tree.TreeLabelProvider;
 import sernet.verinice.rcp.tree.TreeUpdateListener;
+import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.tree.ElementManager;
 
 /**
@@ -274,6 +279,24 @@ public class BaseProtectionView extends RightsEnabledView
     }
 
     protected void fillContextMenu(IMenuManager manager) {
+        ISelection selection = viewer.getSelection();
+        if (selection instanceof IStructuredSelection
+                && ((IStructuredSelection) selection).size() == 1) {
+            Object sel = ((IStructuredSelection) selection).getFirstElement();
+            if (sel instanceof ItNetwork) {
+                ItNetwork element = (ItNetwork) sel;
+                if (CnAElementHome.getInstance().isNewChildAllowed(element)) {
+                    MenuManager submenuNew = new MenuManager(Messages.NewObjectMenu, "content/new"); //$NON-NLS-1$ //$NON-NLS-2$
+
+                    for (String groupTypeId : CnATypeMapper.BP_ELEMENT_TYPES) {
+                        String elementTypeId = CnATypeMapper
+                                .getElementTypeIdFromGroupTypeId(groupTypeId);
+                        submenuNew.add(new AddGroup(element, groupTypeId, elementTypeId));
+                    }
+                    manager.add(submenuNew);
+                }
+            }
+        }
         manager.add(new GroupMarker("content")); //$NON-NLS-1$
         manager.add(new Separator());
         manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
