@@ -66,9 +66,7 @@ public class BaseProtectionFilterBuilder {
     private static ViewerFilter createImplementationStateFilter(
             BaseProtectionFilterParameters filterParameters) {
         if (!filterParameters.getImplementationStatuses().isEmpty()) {
-            return new RecursiveTreeFilter(
-                    new ImplementationStatusFilter(filterParameters.getImplementationStatuses(),
-                            filterParameters.isHideEmptyGroups()));
+            return new ImplementationStatusFilter(filterParameters.getImplementationStatuses());
         }
         return null;
     }
@@ -127,19 +125,13 @@ public class BaseProtectionFilterBuilder {
 
     private static final class ImplementationStatusFilter extends ViewerFilter {
         private final Collection<ImplementationStatus> selectedImplementationStatus;
-        private final boolean hideEmptyGroups;
 
-        ImplementationStatusFilter(Set<ImplementationStatus> selectedImplementationStatus,
-                boolean hideEmptyGroups) {
+        ImplementationStatusFilter(Set<ImplementationStatus> selectedImplementationStatus) {
             this.selectedImplementationStatus = selectedImplementationStatus;
-            this.hideEmptyGroups = hideEmptyGroups;
         }
 
         @Override
         public boolean select(Viewer viewer, Object parentElement, Object element) {
-            if (!hideEmptyGroups && element instanceof Group || element instanceof ItNetwork) {
-                return true;
-            }
             if (element instanceof BpRequirement) {
                 return selectedImplementationStatus
                         .contains(((BpRequirement) element).getImplementationStatus());
@@ -148,7 +140,7 @@ public class BaseProtectionFilterBuilder {
                 return selectedImplementationStatus
                         .contains(((Safeguard) element).getImplementationStatus());
             }
-            return false;
+            return true;
         }
     }
 
