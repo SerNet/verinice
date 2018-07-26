@@ -19,9 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp.action;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import org.apache.log4j.Logger;
@@ -49,27 +46,12 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.AssetGroup;
 import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.AuditGroup;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
-import sernet.verinice.model.iso27k.DocumentGroup;
-import sernet.verinice.model.iso27k.EvidenceGroup;
-import sernet.verinice.model.iso27k.ExceptionGroup;
-import sernet.verinice.model.iso27k.FindingGroup;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kGroup;
-import sernet.verinice.model.iso27k.IncidentGroup;
-import sernet.verinice.model.iso27k.IncidentScenarioGroup;
-import sernet.verinice.model.iso27k.InterviewGroup;
-import sernet.verinice.model.iso27k.PersonGroup;
-import sernet.verinice.model.iso27k.ProcessGroup;
-import sernet.verinice.model.iso27k.RecordGroup;
-import sernet.verinice.model.iso27k.RequirementGroup;
-import sernet.verinice.model.iso27k.ResponseGroup;
-import sernet.verinice.model.iso27k.ThreatGroup;
-import sernet.verinice.model.iso27k.VulnerabilityGroup;
+import sernet.verinice.rcp.AddGroupMessageHelper;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -81,34 +63,7 @@ public class AddGroup extends Action implements IObjectActionDelegate, RightEnab
 
     private static final Logger logger = Logger.getLogger(AddGroup.class);
 
-    public static final Map<String, String> TITLE_FOR_TYPE;
-
     private IWorkbenchPart targetPart;
-
-    static {
-        Map<String, String> m = new HashMap<>();
-        m.put(AssetGroup.TYPE_ID, Messages.getString("AddGroup.0")); //$NON-NLS-1$
-        m.put(AuditGroup.TYPE_ID, Messages.getString("AddGroup.1")); //$NON-NLS-1$
-        m.put(ControlGroup.TYPE_ID, Messages.getString("AddGroup.2")); //$NON-NLS-1$
-        m.put(DocumentGroup.TYPE_ID, Messages.getString("AddGroup.3")); //$NON-NLS-1$
-        m.put(EvidenceGroup.TYPE_ID, Messages.getString("AddGroup.4")); //$NON-NLS-1$
-        m.put(ExceptionGroup.TYPE_ID, Messages.getString("AddGroup.5")); //$NON-NLS-1$
-        m.put(FindingGroup.TYPE_ID, Messages.getString("AddGroup.6")); //$NON-NLS-1$
-        m.put(IncidentGroup.TYPE_ID, Messages.getString("AddGroup.7")); //$NON-NLS-1$
-        m.put(IncidentScenarioGroup.TYPE_ID, Messages.getString("AddGroup.8")); //$NON-NLS-1$
-        m.put(InterviewGroup.TYPE_ID, Messages.getString("AddGroup.9")); //$NON-NLS-1$
-        m.put(PersonGroup.TYPE_ID, Messages.getString("AddGroup.10")); //$NON-NLS-1$
-        m.put(ProcessGroup.TYPE_ID, Messages.getString("AddGroup.11")); //$NON-NLS-1$
-        m.put(RecordGroup.TYPE_ID, Messages.getString("AddGroup.12")); //$NON-NLS-1$
-        m.put(RequirementGroup.TYPE_ID, Messages.getString("AddGroup.13")); //$NON-NLS-1$
-        m.put(ResponseGroup.TYPE_ID, Messages.getString("AddGroup.14")); //$NON-NLS-1$
-        m.put(ThreatGroup.TYPE_ID, Messages.getString("AddGroup.15")); //$NON-NLS-1$
-        m.put(VulnerabilityGroup.TYPE_ID, Messages.getString("AddGroup.16")); //$NON-NLS-1$
-        m.put(Asset.TYPE_ID, Messages.getString("AddGroup.17")); //$NON-NLS-1$
-
-        TITLE_FOR_TYPE = Collections.unmodifiableMap(m);
-
-    }
 
     private CnATreeElement parent;
 
@@ -124,8 +79,8 @@ public class AddGroup extends Action implements IObjectActionDelegate, RightEnab
         this.typeId = typeId;
         this.setImageDescriptor(ImageDescriptor
                 .createFromImage(ImageCache.getInstance().getImageForTypeId(childTypeId)));
-        this.setText(TITLE_FOR_TYPE.get(typeId) != null ? TITLE_FOR_TYPE.get(typeId)
-                : Messages.getString(MESSAGE_KEY_NEW_ELEMENT_GROUP)); // $NON-NLS-1$
+        this.setText(Optional.ofNullable(AddGroupMessageHelper.getMessageForAddGroup(typeId))
+                .orElse(Messages.getString(MESSAGE_KEY_NEW_ELEMENT_GROUP)));
     }
 
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
@@ -210,9 +165,9 @@ public class AddGroup extends Action implements IObjectActionDelegate, RightEnab
                 }
                 action.setImageDescriptor(ImageDescriptor
                         .createFromImage(ImageCache.getInstance().getImageForTypeId(typeId0)));
-                action.setText(TITLE_FOR_TYPE.get(group.getTypeId()) != null
-                        ? TITLE_FOR_TYPE.get(group.getTypeId())
-                        : Messages.getString(MESSAGE_KEY_NEW_ELEMENT_GROUP)); // $NON-NLS-1$
+                action.setText(Optional
+                        .ofNullable(AddGroupMessageHelper.getMessageForAddGroup(group.getTypeId()))
+                        .orElse(Messages.getString(MESSAGE_KEY_NEW_ELEMENT_GROUP))); // $NON-NLS-1$
             }
             // Only change state when it is enabled, since we do not want to
             // trash the enablement settings of plugin.xml

@@ -39,8 +39,8 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.iso27k.rcp.action.AddElement;
-import sernet.verinice.iso27k.rcp.action.AddGroup;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.rcp.AddGroupMessageHelper;
 
 /**
  * Creates a pulldown menu in a view toolbar to switch the
@@ -72,7 +72,7 @@ public class AddMenuCreater implements IViewActionDelegate, IMenuCreator, ISelec
             addElementAction = new AddAction(typeId, title, groupView);
             addElementAction.setImageDescriptor(ImageDescriptor
                     .createFromImage(ImageCache.getInstance().getImageForTypeId(typeId)));
-            title = AddGroup.TITLE_FOR_TYPE.get(groupId);
+            title = AddGroupMessageHelper.getMessageForAddGroup(groupId);
             addGroupAction = new AddAction(groupId, title, groupView);
             addGroupAction.setImageDescriptor(ImageDescriptor
                     .createFromImage(ImageCache.getInstance().getImageForTypeId(groupId)));

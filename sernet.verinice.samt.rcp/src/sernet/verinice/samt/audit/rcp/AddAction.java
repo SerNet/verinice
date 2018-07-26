@@ -40,8 +40,8 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
-import sernet.verinice.iso27k.rcp.action.AddGroup;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.rcp.AddGroupMessageHelper;
 
 /**
  * Set the {@link CnATreeElement} type which is displayed in a
@@ -72,7 +72,7 @@ public class AddAction extends Action implements ISelectionListener {
         this.objectTypeId = typeId;
         String title_0 = title;
         if (title_0 == null) {
-            title_0 = AddGroup.TITLE_FOR_TYPE.get(typeId);
+            title_0 = AddGroupMessageHelper.getMessageForAddGroup(typeId);
         }
         setText(title_0);
         setImageDescriptor(ImageDescriptor
