@@ -19,6 +19,10 @@ package sernet.verinice.service.commands;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+
+import org.apache.commons.collections.BidiMap;
+import org.apache.commons.collections.bidimap.DualHashBidiMap;
 
 import sernet.hui.common.connect.EntityType;
 import sernet.verinice.model.bp.IBpElement;
@@ -141,6 +145,8 @@ public final class CnATypeMapper {
 
     private static final Map<String, String> descriptionPropertyMap = new HashMap<>();
 
+    private static final BidiMap elementTypeIdToGroupTypeId = new DualHashBidiMap();
+
     static {
         typeIdClass.put(Anwendung.TYPE_ID, Anwendung.class);
         typeIdClass.put(Gebaeude.TYPE_ID, Gebaeude.class);
@@ -259,6 +265,20 @@ public final class CnATypeMapper {
         descriptionPropertyMap.put(BausteinUmsetzung.TYPE_ID, BausteinUmsetzung.P_ERLAEUTERUNG);
         descriptionPropertyMap.put(MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.P_ERLAEUTERUNG);
 
+        elementTypeIdToGroupTypeId.put(Application.TYPE_ID, ApplicationGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(BpPerson.TYPE_ID, BpPersonGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(BpThreat.TYPE_ID, BpThreatGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(BpRequirement.TYPE_ID, BpRequirementGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(BusinessProcess.TYPE_ID, BusinessProcessGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(Device.TYPE_ID, DeviceGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(IcsSystem.TYPE_ID, IcsSystemGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(ItSystem.TYPE_ID, ItSystemGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(Network.TYPE_ID, NetworkGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(Room.TYPE_ID, RoomGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(Safeguard.TYPE_ID, SafeguardGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(BpDocument.TYPE_ID, BpDocumentGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(BpIncident.TYPE_ID, BpIncidentGroup.TYPE_ID);
+        elementTypeIdToGroupTypeId.put(BpRecord.TYPE_ID, BpRecordGroup.TYPE_ID);
     }
 
     // this is necessary because hibernate returns proxy objects that will not
@@ -362,6 +382,17 @@ public final class CnATypeMapper {
 
     public static String getDescriptionPropertyForType(String typeId) {
         return descriptionPropertyMap.get(typeId);
+    }
+
+    public static String getGroupTypeIdFromElementTypeId(String typeId) {
+        return (String) Optional.ofNullable(elementTypeIdToGroupTypeId.get(typeId))
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
+    public static String getElementTypeIdFromGroupTypeId(String typeId) {
+        return (String) Optional.ofNullable(elementTypeIdToGroupTypeId.getKey(typeId))
+                .orElseThrow(IllegalArgumentException::new);
+
     }
 
     private CnATypeMapper() {
