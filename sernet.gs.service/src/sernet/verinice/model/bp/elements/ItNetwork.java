@@ -46,7 +46,8 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class ItNetwork extends CnATreeElement implements IBpElement, ITaggableElement, ITargetObject {
+public class ItNetwork extends CnATreeElement
+        implements IBpElement, ITaggableElement, ITargetObject {
 
     private static final long serialVersionUID = 6531710922463646931L;
 
@@ -58,10 +59,12 @@ public class ItNetwork extends CnATreeElement implements IBpElement, ITaggableEl
     // ENUM value shall be used. Use the ENUMs getLabel() instead.
     private static final String PROP_QUALIFIER_BASIC = "bp_itnetwork_qualifier_basic"; //$NON-NLS-1$
     private static final String PROP_QUALIFIER_STANDARD = "bp_itnetwork_qualifier_standard"; //$NON-NLS-1$
-    // the right hand side has to stay "_high" until a proper db-migration has been added
+    // the right hand side has to stay "_high" until a proper db-migration has
+    // been added
     private static final String PROP_QUALIFIER_CORE = "bp_itnetwork_qualifier_high"; //$NON-NLS-1$
 
-    protected ItNetwork() {}
+    protected ItNetwork() {
+    }
 
     public ItNetwork(CnATreeElement parent) {
         this(parent, false);
@@ -78,15 +81,12 @@ public class ItNetwork extends CnATreeElement implements IBpElement, ITaggableEl
     public void createNewCategories() {
         addChild(new ApplicationGroup(this));
         addChild(new BpPersonGroup(this));
-        addChild(new BpRequirementGroup(this));
-        addChild(new BpThreatGroup(this));
         addChild(new BusinessProcessGroup(this));
         addChild(new DeviceGroup(this));
         addChild(new IcsSystemGroup(this));
         addChild(new ItSystemGroup(this));
         addChild(new NetworkGroup(this));
         addChild(new RoomGroup(this));
-        addChild(new SafeguardGroup(this));
         addChild(new BpDocumentGroup(this));
         addChild(new BpIncidentGroup(this));
         addChild(new BpRecordGroup(this));
