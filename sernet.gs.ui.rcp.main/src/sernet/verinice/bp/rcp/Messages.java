@@ -24,7 +24,6 @@ import org.eclipse.osgi.util.NLS;
 /**
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-@SuppressWarnings("restriction")
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.bp.rcp.messages"; //$NON-NLS-1$
     public static String GsCatalogModelingDropPerformer_exception_dialog_message;
@@ -54,7 +53,8 @@ public class Messages extends NLS {
     public static String BbModelingDropPerformerConfirmation;
     public static String BbModelingDropPerformerConfirmationTitle;
     public static String BbModelingDropPerformerConfirmationToggleMessage;
-    
+    public static String NewObjectMenu;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
