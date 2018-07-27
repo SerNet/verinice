@@ -22,6 +22,7 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.bp.rcp.filter.messages"; //$NON-NLS-1$
     public static String BaseProtectionFilterDialog_Title;
+    public static String BaseProtectionFilterDialog_FiltersForRequirementsAndSafeguards;
     public static String BaseProtectionFilterDialog_ImplementationState;
     public static String BaseProtectionFilterDialog_IntroText;
     public static String BaseProtectionFilterDialog_Objects;

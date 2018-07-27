@@ -125,8 +125,7 @@ public class BaseProtectionFilterDialog extends Dialog {
         intro.setText(Messages.BaseProtectionFilterDialog_IntroText);
 
         addFilterByProceeding(container);
-        addImplementationStatusGroup(container);
-        addQualiferGroup(container);
+        addFiltersForRequirementsAndSafeguards(container);
         addElementTypesGroup(container);
         try {
             addTagsGroup(container);
@@ -140,8 +139,19 @@ public class BaseProtectionFilterDialog extends Dialog {
         return container;
     }
 
-    private void addImplementationStatusGroup(Composite parent) {
+    private void addFiltersForRequirementsAndSafeguards(Composite parent) {
         Group boxesComposite = new Group(parent, SWT.BORDER);
+        GridLayout layout = new GridLayout();
+        boxesComposite.setLayout(layout);
+        boxesComposite
+                .setText(Messages.BaseProtectionFilterDialog_FiltersForRequirementsAndSafeguards);
+        addImplementationStatusGroup(boxesComposite);
+        addQualiferGroup(boxesComposite);
+
+    }
+
+    private void addImplementationStatusGroup(Composite parent) {
+        Group boxesComposite = new Group(parent, SWT.NONE);
         boxesComposite.setText(Messages.BaseProtectionFilterDialog_ImplementationState);
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1);
         boxesComposite.setLayoutData(gridData);
@@ -156,7 +166,7 @@ public class BaseProtectionFilterDialog extends Dialog {
     }
 
     private void addQualiferGroup(Composite parent) {
-        Group boxesComposite = new Group(parent, SWT.BORDER);
+        Group boxesComposite = new Group(parent, SWT.NONE);
         boxesComposite.setText(Messages.BaseProtectionFilterDialog_Qualifier);
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1);
         boxesComposite.setLayoutData(gridData);
