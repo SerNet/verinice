@@ -25,6 +25,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
@@ -69,7 +72,6 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
-import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -92,7 +94,6 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.LoadAttachmentFile;
-import sernet.verinice.service.commands.LoadAttachments;
 import sernet.verinice.service.commands.LoadAttachmentsUserFiltered;
 import sernet.verinice.service.commands.LoadFileSizeLimit;
 import sernet.verinice.service.commands.crud.DeleteNote;
@@ -101,8 +102,10 @@ import sernet.verinice.service.commands.crud.DeleteNote;
  * Lists files {@link Attachment} attached to a CnATreeElement. User can view,
  * save, delete and add files by toolbar buttons.
  * 
- * @see AttachmentEditor - Editor for metadata of files
- * @see LoadAttachments - Command for loading files
+ * @see {@link sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor} - Editor for
+ *      metadata of files
+ * @see {@link sernet.verinice.service.commands.LoadAttachments} - Command for
+ *      loading files
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class FileView extends RightsEnabledView
@@ -116,41 +119,28 @@ public class FileView extends RightsEnabledView
 
     private static Map<String, String> mimeImageMap = new HashMap<>();
     static {
-        for (int i = 0; i < Attachment.getArchiveMimeTypes().length; i++) {
-            mimeImageMap.put(Attachment.getArchiveMimeTypes()[i], ImageCache.MIME_ARCHIVE);
-        }
-        for (int i = 0; i < Attachment.getAudioMimeTypes().length; i++) {
-            mimeImageMap.put(Attachment.getAudioMimeTypes()[i], ImageCache.MIME_AUDIO);
-        }
-        for (int i = 0; i < Attachment.getDocumentMimeTypes().length; i++) {
-            mimeImageMap.put(Attachment.getDocumentMimeTypes()[i], ImageCache.MIME_DOCUMENT);
-        }
-        for (int i = 0; i < Attachment.getHtmlMimeTypes().length; i++) {
-            mimeImageMap.put(Attachment.getHtmlMimeTypes()[i], ImageCache.MIME_HTML);
-        }
-        for (int i = 0; i < Attachment.getImageMimeTypes().length; i++) {
-            mimeImageMap.put(Attachment.getImageMimeTypes()[i], ImageCache.MIME_IMAGE);
-        }
-        for (int i = 0; i < Attachment.getPdfMimeTypes().length; i++) {
-            mimeImageMap.put(Attachment.getPdfMimeTypes()[i], ImageCache.MIME_PDF);
-        }
-        for (int i = 0; i < Attachment.getPresentationMimeTypes().length; i++) {
-            mimeImageMap.put(Attachment.getPresentationMimeTypes()[i],
-                    ImageCache.MIME_PRESENTATION);
-        }
-        for (int i = 0; i < Attachment.getSpreadsheetMimeTypes().length; i++) {
-            mimeImageMap.put(Attachment.getSpreadsheetMimeTypes()[i], ImageCache.MIME_SPREADSHEET);
-        }
-        for (int i = 0; i < Attachment.getTextMimeTypes().length; i++) {
-            mimeImageMap.put(Attachment.getTextMimeTypes()[i], ImageCache.MIME_TEXT);
-        }
-        for (int i = 0; i < Attachment.getVideoMimeTypes().length; i++) {
-            mimeImageMap.put(Attachment.getVideoMimeTypes()[i], ImageCache.MIME_VIDEO);
-        }
-        for (int i = 0; i < Attachment.getXmlMimeTypes().length; i++) {
-            mimeImageMap.put(Attachment.getXmlMimeTypes()[i], ImageCache.MIME_XML);
-        }
-
+        mimeImageMap.putAll(Stream.of(Attachment.getArchiveMimeTypes())
+                .collect(Collectors.toMap(Function.identity(), k -> ImageCache.MIME_ARCHIVE)));
+        mimeImageMap.putAll(Stream.of(Attachment.getAudioMimeTypes())
+                .collect(Collectors.toMap(Function.identity(), k -> ImageCache.MIME_AUDIO)));
+        mimeImageMap.putAll(Stream.of(Attachment.getDocumentMimeTypes())
+                .collect(Collectors.toMap(Function.identity(), k -> ImageCache.MIME_DOCUMENT)));
+        mimeImageMap.putAll(Stream.of(Attachment.getHtmlMimeTypes())
+                .collect(Collectors.toMap(Function.identity(), k -> ImageCache.MIME_HTML)));
+        mimeImageMap.putAll(Stream.of(Attachment.getImageMimeTypes())
+                .collect(Collectors.toMap(Function.identity(), k -> ImageCache.MIME_IMAGE)));
+        mimeImageMap.putAll(Stream.of(Attachment.getPdfMimeTypes())
+                .collect(Collectors.toMap(Function.identity(), k -> ImageCache.MIME_PDF)));
+        mimeImageMap.putAll(Stream.of(Attachment.getPdfMimeTypes())
+                .collect(Collectors.toMap(Function.identity(), k -> ImageCache.MIME_PDF)));
+        mimeImageMap.putAll(Stream.of(Attachment.getSpreadsheetMimeTypes())
+                .collect(Collectors.toMap(Function.identity(), k -> ImageCache.MIME_SPREADSHEET)));
+        mimeImageMap.putAll(Stream.of(Attachment.getTextMimeTypes())
+                .collect(Collectors.toMap(Function.identity(), k -> ImageCache.MIME_TEXT)));
+        mimeImageMap.putAll(Stream.of(Attachment.getVideoMimeTypes())
+                .collect(Collectors.toMap(Function.identity(), k -> ImageCache.MIME_VIDEO)));
+        mimeImageMap.putAll(Stream.of(Attachment.getXmlMimeTypes())
+                .collect(Collectors.toMap(Function.identity(), k -> ImageCache.MIME_XML)));
     }
 
     private ICommandService commandService;
@@ -273,40 +263,50 @@ public class FileView extends RightsEnabledView
             imageColumn.getColumn().setWidth(0);
         }
 
+        int columnIndex = 0;
         iconColumn = new TableColumn(table, SWT.LEFT);
         iconColumn.setWidth(itemColumnWidth);
-        iconColumn.addSelectionListener(new SortSelectionAdapter(this, iconColumn, 0));
+        iconColumn.addSelectionListener(new SortSelectionAdapter(this, iconColumn, columnIndex));
+        columnIndex++;
 
         fileNameColumn = new TableColumn(table, SWT.LEFT);
         fileNameColumn.setText(Messages.FileView_2);
         fileNameColumn.setWidth(filenameColumnWidth);
-        fileNameColumn.addSelectionListener(new SortSelectionAdapter(this, fileNameColumn, 1));
+        fileNameColumn
+                .addSelectionListener(new SortSelectionAdapter(this, fileNameColumn, columnIndex));
+        columnIndex++;
 
         mimeTypeColumn = new TableColumn(table, SWT.LEFT);
         mimeTypeColumn.setText(Messages.FileView_3);
         mimeTypeColumn.setWidth(mimeTypeColumnWidth);
-        mimeTypeColumn.addSelectionListener(new SortSelectionAdapter(this, mimeTypeColumn, 2));
+        mimeTypeColumn
+                .addSelectionListener(new SortSelectionAdapter(this, mimeTypeColumn, columnIndex));
+        columnIndex++;
 
         textColumn = new TableColumn(table, SWT.LEFT);
         textColumn.setText(Messages.FileView_4);
         textColumn.setWidth(textColumnWidth);
-        textColumn.addSelectionListener(new SortSelectionAdapter(this, textColumn, 3));
+        textColumn.addSelectionListener(new SortSelectionAdapter(this, textColumn, columnIndex));
+        columnIndex++;
 
         dateColumn = new TableColumn(table, SWT.LEFT);
         dateColumn.setText(Messages.FileView_5);
         dateColumn.setWidth(dateColumnWidth);
         dateColumn.addSelectionListener(
                 new SortSelectionAdapter(this, dateColumn, widthHeightPadding));
+        columnIndex++;
 
         versionColumn = new TableColumn(table, SWT.LEFT);
         versionColumn.setText(Messages.FileView_6);
         versionColumn.setWidth(versionColumnWidth);
-        versionColumn.addSelectionListener(new SortSelectionAdapter(this, versionColumn, 5));
+        versionColumn
+                .addSelectionListener(new SortSelectionAdapter(this, versionColumn, columnIndex));
+        columnIndex++;
 
         sizeColumn = new TableColumn(table, SWT.LEFT);
         sizeColumn.setText(Messages.FileView_35);
         sizeColumn.setWidth(sizeColumnWidth);
-        sizeColumn.addSelectionListener(new SortSelectionAdapter(this, sizeColumn, 6));
+        sizeColumn.addSelectionListener(new SortSelectionAdapter(this, sizeColumn, columnIndex));
 
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
@@ -754,8 +754,9 @@ public class FileView extends RightsEnabledView
 
         private static String humanReadableByteCount(long bytes, boolean si) {
             int unit = si ? 1000 : 1024;
-            if (bytes < unit)
+            if (bytes < unit) {
                 return bytes + " B";
+            }
             int exp = (int) (Math.log(bytes) / Math.log(unit));
 
             String pre = String.valueOf((si ? "kMGTPE" : "KMGTPE").charAt(exp - 1));
