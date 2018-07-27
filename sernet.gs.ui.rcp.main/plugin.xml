@@ -1445,6 +1445,9 @@
 	         	    	<iterate operator="and">
 	                        <instanceof value="sernet.verinice.model.bp.IBpElement" />
 		                    <instanceof value="sernet.hui.common.connect.ITargetObject" />
+		                    <not>
+		                        <instanceof value="sernet.verinice.model.bp.elements.ItNetwork" />
+		                    </not>
 	                </iterate>
                </and>            
 		        </with>
