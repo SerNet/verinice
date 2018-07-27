@@ -21,7 +21,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jdt.annotation.NonNull;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
@@ -287,19 +286,13 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
 
     private void updateTitleCache(CnATreeElement element) {
         try {
-            if (getTitleCache() != null) {
-                if (isScope(element)) {
-                    getTitleCache().update(element.getDbId(), element.getTitle());
-                }
+            if (getTitleCache() != null && element.isScope()) {
+                getTitleCache().update(element.getDbId(), element.getTitle());
             }
         } catch (Exception e) {
             String uuid = (element != null) ? element.getUuid() : null;
             LOG.error("Error while updating title cache, element: " + uuid, e);
         }
-    }
-
-    private static boolean isScope(@NonNull CnATreeElement element) {
-        return element.isItVerbund() || element.isOrganization();
     }
 
     protected void indexDelete(CnATreeElement element) {
