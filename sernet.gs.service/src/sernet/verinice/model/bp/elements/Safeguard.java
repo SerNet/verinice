@@ -28,6 +28,7 @@ import sernet.verinice.interfaces.IReevaluator;
 import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bp.ISecurityLevelProvider;
+import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.Reevaluator;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bsi.TagHelper;
@@ -86,7 +87,7 @@ public class Safeguard extends CnATreeElement
                     DeductionImplementationUtil::isRelevantLinkForImplementationStateDeduction)
                     .map(CnALink::getDependant)
                     .filter(DeductionImplementationUtil::isDeductiveImplementationEnabled)
-                    .forEach(DeductionImplementationUtil::setImplementationStausToRequirement);
+                    .forEach(DeductionImplementationUtil::setImplementationStatusToRequirement);
         }
     };
 
@@ -233,8 +234,52 @@ public class Safeguard extends CnATreeElement
         return ((this.getNumericProperty(PROP_AVAILABILITY) == 1) ? true : false);
     }
 
-    public String getImplementationStatus() {
-        return getEntity().getRawPropertyValue(PROP_IMPLEMENTATION_STATUS);
+    public ImplementationStatus getImplementationStatus() {
+        String rawValue = getEntity().getRawPropertyValue(PROP_IMPLEMENTATION_STATUS);
+        return getImplementationStatus(rawValue);
+    }
+
+    public static ImplementationStatus getImplementationStatus(String rawValue) {
+        if (rawValue == null || rawValue.isEmpty()) {
+            return null;
+        }
+        switch (rawValue) {
+        case PROP_IMPLEMENTATION_STATUS_NO:
+            return ImplementationStatus.NO;
+        case PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE:
+            return ImplementationStatus.NOT_APPLICABLE;
+        case PROP_IMPLEMENTATION_STATUS_PARTIALLY:
+            return ImplementationStatus.PARTIALLY;
+        case PROP_IMPLEMENTATION_STATUS_YES:
+            return ImplementationStatus.YES;
+        default:
+            throw new IllegalStateException("Unknown implementation status '" + rawValue + "'");
+        }
+    }
+
+    public void setImplementationStatus(ImplementationStatus status) {
+        String rawValue;
+        if (status == null) {
+            rawValue = null;
+        } else {
+            switch (status) {
+            case NO:
+                rawValue = PROP_IMPLEMENTATION_STATUS_NO;
+                break;
+            case NOT_APPLICABLE:
+                rawValue = PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE;
+                break;
+            case PARTIALLY:
+                rawValue = PROP_IMPLEMENTATION_STATUS_PARTIALLY;
+                break;
+            case YES:
+                rawValue = PROP_IMPLEMENTATION_STATUS_YES;
+                break;
+            default:
+                throw new IllegalStateException("Unknown implementation status '" + status + "'");
+            }
+        }
+        setSimpleProperty(PROP_IMPLEMENTATION_STATUS, rawValue);
     }
 
     public static String getIdentifierOfSafeguard(CnATreeElement requirement) {

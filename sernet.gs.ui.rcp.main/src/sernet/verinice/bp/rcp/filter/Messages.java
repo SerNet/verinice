@@ -32,11 +32,6 @@ public class Messages extends NLS {
     public static String BaseProtectionFilterDialog_Filter_By_Proceeding;
     public static String BaseProtectionFilterDialog_Clear;
 
-    public static String ImplementationState_YES;
-    public static String ImplementationState_NO;
-    public static String ImplementationState_PARTIALLY;
-    public static String ImplementationState_NOT_APPLICABLE;
-
     public static String BaseProtectionFilterDialog_Property_Value_Null;
 
     static {

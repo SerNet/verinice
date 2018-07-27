@@ -31,6 +31,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.ISecurityLevelProvider;
+import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.elements.BpRequirement;
@@ -50,7 +51,8 @@ public class BaseProtectionFilterBuilder {
     private BaseProtectionFilterBuilder() {
     }
 
-    public static @NonNull Collection<ViewerFilter> makeFilters(BaseProtectionFilterParameters params) {
+    public static @NonNull Collection<ViewerFilter> makeFilters(
+            BaseProtectionFilterParameters params) {
         Collection<ViewerFilter> viewerFilters = new ArrayList<>(7);
         Optional.ofNullable(createImplementationStateFilter(params)).ifPresent(viewerFilters::add);
         Optional.ofNullable(createSecurityLevelFilter(params)).ifPresent(viewerFilters::add);
@@ -138,9 +140,15 @@ public class BaseProtectionFilterBuilder {
             if (!hideEmptyGroups && element instanceof Group || element instanceof ItNetwork) {
                 return true;
             }
-            ImplementationStatus implementationStatus = ImplementationStatus
-                    .findValue((CnATreeElement) element);
-            return selectedImplementationStatus.contains(implementationStatus);
+            if (element instanceof BpRequirement) {
+                return selectedImplementationStatus
+                        .contains(((BpRequirement) element).getImplementationStatus());
+            }
+            if (element instanceof Safeguard) {
+                return selectedImplementationStatus
+                        .contains(((Safeguard) element).getImplementationStatus());
+            }
+            return false;
         }
     }
 

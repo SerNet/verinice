@@ -47,6 +47,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.BpDocument;
@@ -144,16 +145,14 @@ public class BaseProtectionFilterDialog extends Dialog {
         boxesComposite.setText(Messages.BaseProtectionFilterDialog_ImplementationState);
         GridData gridData = new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1);
         boxesComposite.setLayoutData(gridData);
-        GridLayout layout = new GridLayout(ImplementationStatus.values().length, false);
+        GridLayout layout = new GridLayout(ImplementationStatus.values().length + 1, false);
         boxesComposite.setLayout(layout);
 
         for (final ImplementationStatus status : ImplementationStatus.values()) {
-            final Button button = new Button(boxesComposite, SWT.CHECK);
-            button.setText(status.getLabel());
-            button.setData(status);
-            button.setSelection(filterParameters.getImplementationStatuses().contains(status));
-            implementationStatusButtons.add(button);
+            implementationStatusButtons.add(addButton(boxesComposite, status, status.getLabel()));
         }
+        implementationStatusButtons.add(addButton(boxesComposite, null,
+                Messages.BaseProtectionFilterDialog_Property_Value_Null));
     }
 
     private void addQualiferGroup(Composite parent) {
@@ -165,17 +164,17 @@ public class BaseProtectionFilterDialog extends Dialog {
         boxesComposite.setLayout(layout);
 
         for (final SecurityLevel qualifier : SecurityLevel.values()) {
-            addButton(boxesComposite, qualifier);
+            qualifierButtons.add(addButton(boxesComposite, qualifier, qualifier.getLabel()));
         }
-        addButton(boxesComposite, null);
+        qualifierButtons.add(addButton(boxesComposite, null,
+                Messages.BaseProtectionFilterDialog_Property_Value_Null));
     }
 
-    private void addButton(Group boxesComposite, final SecurityLevel qualifier) {
-        final Button button = new Button(boxesComposite, SWT.CHECK);
-        button.setText(qualifier == null ? Messages.BaseProtectionFilterDialog_Property_Value_Null
-                : qualifier.getLabel());
-        button.setData(qualifier);
-        qualifierButtons.add(button);
+    private Button addButton(Group container, final Object value, String label) {
+        final Button button = new Button(container, SWT.CHECK);
+        button.setText(label);
+        button.setData(value);
+        return button;
     }
 
     private void addElementTypesGroup(Composite container) {
@@ -273,8 +272,8 @@ public class BaseProtectionFilterDialog extends Dialog {
         }
         elementTypeSelector.setCheckedElements(
                 params.getElementTypes().toArray(new String[params.getElementTypes().size()]));
-        tagsSelector.setCheckedElements(
-                params.getTags().toArray(new String[params.getTags().size()]));
+        tagsSelector
+                .setCheckedElements(params.getTags().toArray(new String[params.getTags().size()]));
         applyTagFilterToItNetworksCheckbox.setSelection(params.isApplyTagFilterToItNetworks());
         hideEmptyGroupsCheckbox.setSelection(params.isHideEmptyGroups());
     }
@@ -318,7 +317,7 @@ public class BaseProtectionFilterDialog extends Dialog {
             }
         }
 
-        Set<SecurityLevel> levels = new HashSet<>(ImplementationStatus.values().length);
+        Set<SecurityLevel> levels = new HashSet<>(SecurityLevel.values().length);
         for (Button button : qualifierButtons) {
             if (button.getSelection()) {
                 levels.add((SecurityLevel) button.getData());
