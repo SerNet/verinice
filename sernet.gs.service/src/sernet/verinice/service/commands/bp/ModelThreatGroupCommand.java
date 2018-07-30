@@ -46,7 +46,6 @@ public class ModelThreatGroupCommand extends ModelCopyCommand {
     private Set<String> moduleUuids;
     private transient Set<CnATreeElement> threatGroupsFromCompendium;
 
-
     public ModelThreatGroupCommand(Set<String> moduleUuids, Set<CnATreeElement> targetElements) {
         super();
         this.moduleUuids = moduleUuids;

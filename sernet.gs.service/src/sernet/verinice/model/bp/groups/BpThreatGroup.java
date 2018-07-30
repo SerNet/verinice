@@ -32,29 +32,29 @@ import sernet.verinice.model.iso27k.Group;
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
 public class BpThreatGroup extends Group<BpThreat> implements IBpGroup {
-    
+
     private static final long serialVersionUID = 7752776589962581995L;
-    
+
     public static final String TYPE_ID = "bp_threat_group"; //$NON-NLS-1$
     public static final String TYPE_ID_HIBERNATE = "bp_treat_group"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_threat_group_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_threat_group_tag"; //$NON-NLS-1$
 
-    
-    public static final String[] CHILD_TYPES = new String[] {BpThreat.TYPE_ID};
-    
-    protected BpThreatGroup() {}
-    
+    public static final String[] CHILD_TYPES = new String[] { BpThreat.TYPE_ID };
+
+    protected BpThreatGroup() {
+    }
+
     public BpThreatGroup(CnATreeElement parent) {
         super(parent);
         init();
     }
-    
+
     @Override
     public String getTitle() {
         return getEntity().getPropertyValue(PROP_NAME);
     }
-    
+
     @Override
     public void setTitel(String name) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
@@ -64,7 +64,7 @@ public class BpThreatGroup extends Group<BpThreat> implements IBpGroup {
     public String getTypeId() {
         return TYPE_ID;
     }
-    
+
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;
