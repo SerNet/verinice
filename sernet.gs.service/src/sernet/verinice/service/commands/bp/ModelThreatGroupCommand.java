@@ -86,7 +86,7 @@ public class ModelThreatGroupCommand extends ModelCopyCommand {
     }
 
     private List<CnATreeElement> loadThreatGroupsByModuleUuids() {
-        return getMetaDao().loadChildrenLinksParents(moduleUuids, BpThreatGroup.TYPE_ID_HIBERNATE);
+        return getMetaDao().loadChildrenLinksParents(moduleUuids, BpThreatGroup.TYPE_ID);
     }
 
 }
