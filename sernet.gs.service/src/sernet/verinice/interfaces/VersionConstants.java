@@ -23,7 +23,7 @@ package sernet.verinice.interfaces;
  * @author Daniel Murygin <dm@sernet.de>
  *
  */
-public interface IVersionConstants {
+public final class VersionConstants {
 
     /**
      * Version number of DB that can be used:
@@ -43,5 +43,9 @@ public interface IVersionConstants {
      * version number will always be the same.
      */
     public static final double COMPATIBLE_CLIENT_VERSION = 0.97D;
+
+    private VersionConstants() {
+
+    }
 
 }

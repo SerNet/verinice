@@ -105,11 +105,6 @@ public abstract class HibernateTypeIdManager {
      * @return A Hibernate type id for a type id
      */
     public static final String getHibernateTypeId(String typeId) {
-        String hibernateTypeIdFromMap = TYPE_HIBERNATE_TYPE_MAP.get(typeId);
-        if (hibernateTypeIdFromMap != null) {
-            return hibernateTypeIdFromMap;
-        } else {
-            return typeId;
-        }
+        return TYPE_HIBERNATE_TYPE_MAP.getOrDefault(typeId, typeId);
     }
 }

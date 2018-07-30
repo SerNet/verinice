@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.interfaces.IVersionConstants;
+import sernet.verinice.interfaces.VersionConstants;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.service.model.LoadModel;
 
@@ -114,14 +114,14 @@ public class DbVersion extends GenericCommand {
 
     public void execute() {
         final double tolerableDiff = 0.01;
-        if (!(Math.abs(
-                clientVersion - IVersionConstants.COMPATIBLE_CLIENT_VERSION) < tolerableDiff)) {
+        if (Math.abs(
+                clientVersion - VersionConstants.COMPATIBLE_CLIENT_VERSION) >= tolerableDiff) {
             throw new RuntimeCommandException("Inkompatible Client Version. "
-                    + "Server akzeptiert nur V " + IVersionConstants.COMPATIBLE_CLIENT_VERSION
+                    + "Server akzeptiert nur V " + VersionConstants.COMPATIBLE_CLIENT_VERSION
                     + ". Vorhandene Client Version: " + clientVersion);
         }
 
-        LoadModel<BSIModel> command = new LoadModel<BSIModel>(BSIModel.class);
+        LoadModel<BSIModel> command = new LoadModel<>(BSIModel.class);
         double dbVersion;
         try {
             command = getCommandService().executeCommand(command);

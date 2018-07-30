@@ -76,7 +76,7 @@ import sernet.verinice.interfaces.ILogPathService;
 import sernet.verinice.interfaces.IMain;
 import sernet.verinice.interfaces.IReportLocalTemplateDirectoryService;
 import sernet.verinice.interfaces.IVeriniceConstants;
-import sernet.verinice.interfaces.IVersionConstants;
+import sernet.verinice.interfaces.VersionConstants;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportService;
@@ -661,7 +661,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
         };
         timeout.start();
         try {
-            DbVersion command = new DbVersion(IVersionConstants.COMPATIBLE_CLIENT_VERSION);
+            DbVersion command = new DbVersion(VersionConstants.COMPATIBLE_CLIENT_VERSION);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             done[0] = true;
         } catch (CommandException e) {
