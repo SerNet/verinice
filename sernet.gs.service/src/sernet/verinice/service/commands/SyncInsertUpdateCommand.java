@@ -31,6 +31,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import de.sernet.sync.data.SyncAttribute;
 import de.sernet.sync.data.SyncData;
@@ -124,6 +126,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
     private transient Map<Class<?>, IBaseDao> daoMap = new HashMap<>();
 
+    private transient Map<Integer, Map<Integer, Set<String>>> existingLinksForScope;
+
     private ImportReferenceTypes importReferenceTypes;
 
     public SyncInsertUpdateCommand(String sourceId, SyncData syncData, SyncMapping syncMapping,
@@ -166,6 +170,21 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             sourceIdExists = false;
             if (!parameter.isImportAsCatalog()) {
                 sourceIdExists = isSourceIdInDatabase(sourceId);
+                if (sourceIdExists) {
+                    existingLinksForScope = new HashMap<>();
+                    log.info("Loading existing links for scope " + sourceId);
+                    DetachedCriteria criteria = DetachedCriteria.forClass(CnALink.class)
+                            .createAlias("dependant", "dependant")
+                            .createAlias("dependency", "dependency")
+                            .add(Restrictions.or(Restrictions.eq("dependant.sourceId", sourceId),
+                                    Restrictions.eq("dependency.sourceId", sourceId)));
+                    @SuppressWarnings("unchecked")
+                    List<CnALink> result = getDao(CnALink.class).findByCriteria(criteria);
+                    result.forEach(link -> existingLinksForScope
+                            .computeIfAbsent(link.getDependant().getDbId(), id -> new HashMap<>())
+                            .computeIfAbsent(link.getDependency().getDbId(), id -> new HashSet<>())
+                            .add(link.getRelationId()));
+                }
             }
             List<SyncObject> soList = syncData.getSyncObject();
 
@@ -639,20 +658,17 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     }
 
     private boolean isNew(CnALink link) {
-        String hql = "from CnALink as link where link.id.dependantId=? and "
-                + "link.id.dependencyId=? and (link.id.typeId=? " + "or link.id.typeId=?)";
-        String relationId = link.getRelationId();
-        String relationId2 = relationId;
-        if (CnALink.Id.NO_TYPE.equals(relationId)) {
-            relationId2 = "";
+        Map<Integer, Set<String>> linksForDependant = existingLinksForScope
+                .get(link.getDependant().getDbId());
+        if (linksForDependant == null) {
+            return true;
         }
-        if (relationId != null && relationId.isEmpty()) {
-            relationId2 = CnALink.Id.NO_TYPE;
+        Set<String> linksBetweenDependencyAndDependant = linksForDependant
+                .get(link.getDependency().getDbId());
+        if (linksBetweenDependencyAndDependant == null) {
+            return true;
         }
-        Object[] paramArray = new Object[] { link.getDependant().getDbId(),
-                link.getDependency().getDbId(), relationId, relationId2 };
-        List<?> result = getDao(CnALink.class).findByQuery(hql, paramArray);
-        return result == null || result.isEmpty();
+        return !linksBetweenDependencyAndDependant.contains(link.getRelationId());
     }
 
     private void importRiskAnalysis() {
@@ -1041,6 +1057,12 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
     private static HUITypeFactory getHuiTypeFactory() {
         return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+        existingLinksForScope = null;
     }
 
 }
