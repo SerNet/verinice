@@ -624,7 +624,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             }
         }
 
-        if (parameter.isImportAsCatalog() || isNew(link)) {
+        if (parameter.isImportAsCatalog() || !sourceIdExists || isNew(link)) {
             dependant.addLinkDown(link);
             dependency.addLinkUp(link);
             if (log.isDebugEnabled()) {
