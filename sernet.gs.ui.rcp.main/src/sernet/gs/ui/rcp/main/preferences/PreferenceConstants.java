@@ -180,6 +180,8 @@ public class PreferenceConstants {
 
     public static final String STANDALONE_UPDATENEWS_URL = "standalone_updatenews_url";
 
+    public static final String FILTER_INFORMATION_NETWORKS_BY_PROCEEDING = "filter_information_networks_by_proceeding";
+
     /**
      * Returns the DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name for a view
      * class.

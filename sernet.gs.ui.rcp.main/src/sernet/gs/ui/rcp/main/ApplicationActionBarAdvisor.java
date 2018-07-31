@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main;
 
 import org.eclipse.core.runtime.IExtension;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IContributionItem;
@@ -508,6 +509,19 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         windowMenu.add(new Separator());
         windowMenu.add(perspectivesMenu);
         windowMenu.add(viewsMenu);
+        Action toggleFilterByProceeding = new Action(Messages.FilterInformationNetworksByProceeding,
+                IAction.AS_CHECK_BOX) {
+            @Override
+            public void run() {
+                super.run();
+                boolean active = isChecked();
+                getPreferenceStore().setValue(
+                        PreferenceConstants.FILTER_INFORMATION_NETWORKS_BY_PROCEEDING, active);
+            }
+        };
+        toggleFilterByProceeding.setChecked(getPreferenceStore()
+                .getBoolean(PreferenceConstants.FILTER_INFORMATION_NETWORKS_BY_PROCEEDING));
+        windowMenu.add(toggleFilterByProceeding);
         return windowMenu;
     }
 

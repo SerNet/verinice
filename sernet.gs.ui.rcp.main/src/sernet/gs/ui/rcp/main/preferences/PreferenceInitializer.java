@@ -119,5 +119,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(PreferenceConstants.INFO_CONTROLS_TRANSFORMED_TO_MODERNIZED_GS, true);
         store.setDefault(PreferenceConstants.BP_MODEL_SAFEGUARDS, true);
         store.setDefault(PreferenceConstants.BP_MODEL_DUMMY_SAFEGUARDS, false);
+        store.setDefault(PreferenceConstants.FILTER_INFORMATION_NETWORKS_BY_PROCEEDING, true);
     }
 }
