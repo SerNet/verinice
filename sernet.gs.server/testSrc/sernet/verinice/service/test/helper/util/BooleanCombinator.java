@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.jgrapht.alg.BellmanFordShortestPath;
 import org.junit.Assert;
 import org.junit.Test;
 
