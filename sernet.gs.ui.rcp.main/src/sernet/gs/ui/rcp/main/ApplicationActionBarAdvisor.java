@@ -192,7 +192,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private ServerConnectionToggleAction serverConnectionToggleAction;
 
     private OpenViewAction openGSToolMappingViewAction;
-    
+
     private OpenViewAction openBpViewAction;
 
     private TestAction testAction;
@@ -205,22 +205,23 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         removeObsoletePerspectives();
     }
 
-
     @SuppressWarnings(WARNING_RESTRICTION)
     @Override
     protected void makeActions(final IWorkbenchWindow window) {
         window.addPerspectiveListener(new IPerspectiveListener() {
-            
+
             @Override
-            public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective, String arg2) {
+            public void perspectiveChanged(IWorkbenchPage page, IPerspectiveDescriptor perspective,
+                    String arg2) {
             }
-            
+
             @Override
-            public void perspectiveActivated(IWorkbenchPage page, IPerspectiveDescriptor perspective) {
+            public void perspectiveActivated(IWorkbenchPage page,
+                    IPerspectiveDescriptor perspective) {
                 runRiskAnalysisAction.setEnabled(!Perspective.ID.equals(perspective.getId()));
             }
         });
-         
+
         BausteinZuordnungAction bausteinZuordnungAction;
         GSMBausteinZuordnungAction gsmbausteinZuordnungAction;
         GSMBasicSecurityCheckAction gsmbasicsecuritycheckAction;
@@ -242,75 +243,114 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.closeAction = ActionFactory.CLOSE.create(window);
         this.closeAllAction = ActionFactory.CLOSE_ALL.create(window);
         this.closeOthersAction = ActionFactory.CLOSE_OTHERS.create(window);
-        this.openGroupViewAction = new OpenViewAction(window,Messages.ApplicationActionBarAdvisor_36, AccountGroupView.ID, ImageCache.GROUP_VIEW, ActionRightIDs.ACCOUNTSETTINGS); //$NON-NLS-1$
-        this.openBSIBrowserAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_0, BrowserView.ID, ImageCache.VIEW_BROWSER, ActionRightIDs.BSIBROWSER);
-        this.openNoteAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_1, NoteView.ID, ImageCache.VIEW_NOTE, ActionRightIDs.NOTES);
-        this.openFileAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_2, FileView.ID, ImageCache.ATTACH, ActionRightIDs.FILES);
-        this.openCatalogAction = new OpenMultipleViewAction(window, Messages.ApplicationActionBarAdvisor_3, CatalogView.ID, ImageCache.WRENCH, ActionRightIDs.ISMCATALOG);
-        this.openRelationViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_4, RelationView.ID, ImageCache.LINKS, ActionRightIDs.RELATIONS);
-        this.openBSIViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_5, BSIMassnahmenView.ID, ImageCache.VIEW_MASSNAHMEN, ActionRightIDs.BSIMASSNAHMEN);
-        this.openBSIModelViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_6, BsiModelView.ID, ImageCache.VIEW_BSIMODEL, ActionRightIDs.BSIMODELVIEW);
-        this.openISMViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_7, ISMView.ID, ImageCache.VIEW_ISMVIEW, ActionRightIDs.ISMVIEW);
-        this.openTodoViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_9, TodoView.ID, ImageCache.VIEW_TODO, ActionRightIDs.TODO);
-        this.openDocumentViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_10, DocumentView.ID, ImageCache.VIEW_DOCUMENT, ActionRightIDs.DOCUMENTVIEW);
-        this.openAuditViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_12, AuditView.ID, ImageCache.VIEW_AUDIT, ActionRightIDs.AUDITVIEW);
+        this.openGroupViewAction = new OpenViewAction(window,
+                Messages.ApplicationActionBarAdvisor_36, AccountGroupView.ID, ImageCache.GROUP_VIEW,
+                ActionRightIDs.ACCOUNTSETTINGS); // $NON-NLS-1$
+        this.openBSIBrowserAction = new OpenViewAction(window,
+                Messages.ApplicationActionBarAdvisor_0, BrowserView.ID, ImageCache.VIEW_BROWSER,
+                ActionRightIDs.BSIBROWSER);
+        this.openNoteAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_1,
+                NoteView.ID, ImageCache.VIEW_NOTE, ActionRightIDs.NOTES);
+        this.openFileAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_2,
+                FileView.ID, ImageCache.ATTACH, ActionRightIDs.FILES);
+        this.openCatalogAction = new OpenMultipleViewAction(window,
+                Messages.ApplicationActionBarAdvisor_3, CatalogView.ID, ImageCache.WRENCH,
+                ActionRightIDs.ISMCATALOG);
+        this.openRelationViewAction = new OpenViewAction(window,
+                Messages.ApplicationActionBarAdvisor_4, RelationView.ID, ImageCache.LINKS,
+                ActionRightIDs.RELATIONS);
+        this.openBSIViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_5,
+                BSIMassnahmenView.ID, ImageCache.VIEW_MASSNAHMEN, ActionRightIDs.BSIMASSNAHMEN);
+        this.openBSIModelViewAction = new OpenViewAction(window,
+                Messages.ApplicationActionBarAdvisor_6, BsiModelView.ID, ImageCache.VIEW_BSIMODEL,
+                ActionRightIDs.BSIMODELVIEW);
+        this.openISMViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_7,
+                ISMView.ID, ImageCache.VIEW_ISMVIEW, ActionRightIDs.ISMVIEW);
+        this.openTodoViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_9,
+                TodoView.ID, ImageCache.VIEW_TODO, ActionRightIDs.TODO);
+        this.openDocumentViewAction = new OpenViewAction(window,
+                Messages.ApplicationActionBarAdvisor_10, DocumentView.ID, ImageCache.VIEW_DOCUMENT,
+                ActionRightIDs.DOCUMENTVIEW);
+        this.openAuditViewAction = new OpenViewAction(window,
+                Messages.ApplicationActionBarAdvisor_12, AuditView.ID, ImageCache.VIEW_AUDIT,
+                ActionRightIDs.AUDITVIEW);
         this.openTaskViewAction = new OpenTaskViewAction(window, ActionRightIDs.TASKVIEW);
-        this.openValidationViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_35, CnAValidationView.ID, ImageCache.VIEW_VALIDATION, ActionRightIDs.CNAVALIDATION);
-        this.openAccountViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_38, AccountView.ID, ImageCache.PERSON, ActionRightIDs.ACCOUNTSETTINGS);
-        this.openReportdepositViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_41, ReportDepositView.ID, ImageCache.REPORT_DEPOSIT, ActionRightIDs.REPORTDEPOSIT);
-        this.openSearchViewAction = new OpenSearchViewAction(window, Messages.ApplicationActionBarAdvisor_42);
-        this.openGSToolMappingViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_43, GstoolImportMappingView.ID, ImageCache.VIEW_GSMAPPING, ActionRightIDs.GSTOOLIMPORT);
-        this.openBpViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_45, BaseProtectionView.ID, ImageCache.VIEW_BASE_PROTECTION, ActionRightIDs.BASEPROTECTIONVIEW);
+        this.openValidationViewAction = new OpenViewAction(window,
+                Messages.ApplicationActionBarAdvisor_35, CnAValidationView.ID,
+                ImageCache.VIEW_VALIDATION, ActionRightIDs.CNAVALIDATION);
+        this.openAccountViewAction = new OpenViewAction(window,
+                Messages.ApplicationActionBarAdvisor_38, AccountView.ID, ImageCache.PERSON,
+                ActionRightIDs.ACCOUNTSETTINGS);
+        this.openReportdepositViewAction = new OpenViewAction(window,
+                Messages.ApplicationActionBarAdvisor_41, ReportDepositView.ID,
+                ImageCache.REPORT_DEPOSIT, ActionRightIDs.REPORTDEPOSIT);
+        this.openSearchViewAction = new OpenSearchViewAction(window,
+                Messages.ApplicationActionBarAdvisor_42);
+        this.openGSToolMappingViewAction = new OpenViewAction(window,
+                Messages.ApplicationActionBarAdvisor_43, GstoolImportMappingView.ID,
+                ImageCache.VIEW_GSMAPPING, ActionRightIDs.GSTOOLIMPORT);
+        this.openBpViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_45,
+                BaseProtectionView.ID, ImageCache.VIEW_BASE_PROTECTION,
+                ActionRightIDs.BASEPROTECTIONVIEW);
         this.reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
-        this.importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
+        this.importGstoolAction = new ImportGstoolAction(window,
+                Messages.ApplicationActionBarAdvisor_15);
         this.importCSVAction = new ImportCSVAction(window, Messages.ApplicationActionBarAdvisor_30);
-        this.importPersonFromLdap = new ImportPersonFromLdap(window,Messages.ApplicationActionBarAdvisor_32);
-        this.importGSNotesAction = new ImportGstoolNotesAction(window, Messages.ApplicationActionBarAdvisor_27);
+        this.importPersonFromLdap = new ImportPersonFromLdap(window,
+                Messages.ApplicationActionBarAdvisor_32);
+        this.importGSNotesAction = new ImportGstoolNotesAction(window,
+                Messages.ApplicationActionBarAdvisor_27);
         this.showPreferencesAction = new ShowPreferencesAction();
-        this.bulkEditAction = new ShowBulkEditAction(window, Messages.ApplicationActionBarAdvisor_16);
+        this.bulkEditAction = new ShowBulkEditAction(window,
+                Messages.ApplicationActionBarAdvisor_16);
         this.runRiskAnalysisAction = new RiskAnalysisAction(window);
-        this.accessControlEditAction = new ShowAccessControlEditAction(window, Messages.ApplicationActionBarAdvisor_17);
-        this.profileEditAction = new ProfileEditAction(window, Messages.ApplicationActionBarAdvisor_33);
-        this.konsolidatorAction = new ShowKonsolidatorAction(window, Messages.ApplicationActionBarAdvisor_18);
-        gsmbasicsecuritycheckAction = new GSMBasicSecurityCheckAction(window, Messages.ApplicationActionBarAdvisor_34);
+        this.accessControlEditAction = new ShowAccessControlEditAction(window,
+                Messages.ApplicationActionBarAdvisor_17);
+        this.profileEditAction = new ProfileEditAction(window,
+                Messages.ApplicationActionBarAdvisor_33);
+        this.konsolidatorAction = new ShowKonsolidatorAction(window,
+                Messages.ApplicationActionBarAdvisor_18);
+        gsmbasicsecuritycheckAction = new GSMBasicSecurityCheckAction(window,
+                Messages.ApplicationActionBarAdvisor_34);
         bausteinZuordnungAction = new BausteinZuordnungAction(window);
         gsmbausteinZuordnungAction = new GSMBausteinZuordnungAction(window);
-        this.changeOwnPasswordAction = new ChangeOwnPasswordAction(window, Messages.ApplicationActionBarAdvisor_31);
+        this.changeOwnPasswordAction = new ChangeOwnPasswordAction(window,
+                Messages.ApplicationActionBarAdvisor_31);
 
-        this.showCheatSheetListAction = new CheatSheetCategoryBasedSelectionAction(Messages.ApplicationActionBarAdvisor_20);
+        this.showCheatSheetListAction = new CheatSheetCategoryBasedSelectionAction(
+                Messages.ApplicationActionBarAdvisor_20);
 
         this.serverConnectionToggleAction = new ServerConnectionToggleAction();
 
         this.testAction = new TestAction(window, "Import BSI-Compendium", "asset", 152); //$NON-NLS-1$ //$NON-NLS-2$
         this.introAction = ActionFactory.INTRO.create(window);
-        
-        this.openCatalogViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_CatalogView, 
-                sernet.verinice.rcp.catalog.CatalogView.ID, ImageCache.VIEW_CATALOG, ActionRightIDs.CATALOGVIEW);
 
-        IAction actions[] = new IAction[]{this.exitAction, this.copyAction, this.pasteAction,
+        this.openCatalogViewAction = new OpenViewAction(window,
+                Messages.ApplicationActionBarAdvisor_CatalogView,
+                sernet.verinice.rcp.catalog.CatalogView.ID, ImageCache.VIEW_CATALOG,
+                ActionRightIDs.CATALOGVIEW);
+
+        IAction actions[] = new IAction[] { this.exitAction, this.copyAction, this.pasteAction,
                 this.aboutAction, this.newWindowAction, this.saveAction, this.saveAsAction,
-                this.closeAction, this.closeAllAction,
-                this.closeOthersAction, this.openBSIBrowserAction, this.openNoteAction, this.openFileAction,
+                this.closeAction, this.closeAllAction, this.closeOthersAction,
+                this.openBSIBrowserAction, this.openNoteAction, this.openFileAction,
                 this.openCatalogAction, this.openRelationViewAction, this.openBSIViewAction,
-                this.openBSIModelViewAction, this.openISMViewAction,
-                this.openTodoViewAction, this.openAuditViewAction, this.openTaskViewAction,
-                this.openValidationViewAction, this.reloadAction, this.importGstoolAction,
-                this.importCSVAction, this.importPersonFromLdap, this.importGSNotesAction,
-                this.showPreferencesAction, this.bulkEditAction, this.runRiskAnalysisAction,
-                this.accessControlEditAction, this.profileEditAction, this.konsolidatorAction,
-                gsmbasicsecuritycheckAction,bausteinZuordnungAction,
-                gsmbausteinZuordnungAction, this.openDocumentViewAction,
+                this.openBSIModelViewAction, this.openISMViewAction, this.openTodoViewAction,
+                this.openAuditViewAction, this.openTaskViewAction, this.openValidationViewAction,
+                this.reloadAction, this.importGstoolAction, this.importCSVAction,
+                this.importPersonFromLdap, this.importGSNotesAction, this.showPreferencesAction,
+                this.bulkEditAction, this.runRiskAnalysisAction, this.accessControlEditAction,
+                this.profileEditAction, this.konsolidatorAction, gsmbasicsecuritycheckAction,
+                bausteinZuordnungAction, gsmbausteinZuordnungAction, this.openDocumentViewAction,
                 this.introAction, this.openGroupViewAction, this.openReportdepositViewAction,
                 this.openSearchViewAction, this.openGSToolMappingViewAction, this.openBpViewAction,
-                this.openCatalogViewAction,
-                this.testAction
-         };
+                this.openCatalogViewAction, this.testAction };
         registerActions(actions);
 
     }
 
-    private void registerActions(IAction[] actions){
-        for(IAction action : actions){
+    private void registerActions(IAction[] actions) {
+        for (IAction action : actions) {
             register(action);
         }
     }
@@ -329,8 +369,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     @Override
     protected void fillStatusLine(IStatusLineManager statusLine) {
         final int statusItemCharWidth = 100;
-        if(isServerMode()) {
-            StatusLineContributionItem statusItem = new StatusLineContributionItem("server-url",statusItemCharWidth); //$NON-NLS-1$
+        if (isServerMode()) {
+            StatusLineContributionItem statusItem = new StatusLineContributionItem("server-url", //$NON-NLS-1$
+                    statusItemCharWidth);
             statusItem.setText(Messages.ApplicationActionBarAdvisor_40 + getShortServerUrl());
             statusLine.add(statusItem);
         }
@@ -340,11 +381,11 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         final int httpURLLength = 7;
         final int httpsURLLength = 8;
         String url = getServerUrlPreference();
-        if(url!=null && !url.isEmpty()) {
-            if(url.startsWith("http://")) { //$NON-NLS-1$
+        if (url != null && !url.isEmpty()) {
+            if (url.startsWith("http://")) { //$NON-NLS-1$
                 url = url.substring(httpURLLength);
             }
-            if(url.startsWith("https://")) { //$NON-NLS-1$
+            if (url.startsWith("https://")) { //$NON-NLS-1$
                 url = url.substring(httpsURLLength);
             }
         }
@@ -352,7 +393,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     }
 
     private IContributionItem createHelpMenu() {
-        MenuManager helpMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_21,IWorkbenchActionConstants.M_HELP);
+        MenuManager helpMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_21,
+                IWorkbenchActionConstants.M_HELP);
         helpMenu.add(this.introAction);
         helpMenu.add(this.showCheatSheetListAction);
         helpMenu.add(this.aboutAction);
@@ -362,7 +404,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     }
 
     private IContributionItem createEditMenu() {
-        MenuManager editMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_22, IWorkbenchActionConstants.M_EDIT);
+        MenuManager editMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_22,
+                IWorkbenchActionConstants.M_EDIT);
 
         editMenu.add(this.bulkEditAction);
         editMenu.add(this.runRiskAnalysisAction);
@@ -379,7 +422,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     }
 
     private IContributionItem createFileMenu() {
-        MenuManager fileMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_23, IWorkbenchActionConstants.M_FILE);
+        MenuManager fileMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_23,
+                IWorkbenchActionConstants.M_FILE);
 
         fileMenu.add(this.saveAction);
         fileMenu.add(this.saveAsAction);
@@ -403,10 +447,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private IContributionItem createWindowMenu(IWorkbenchWindow window) {
         // View:
-        MenuManager windowMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_24, IWorkbenchActionConstants.M_WINDOW);
+        MenuManager windowMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_24,
+                IWorkbenchActionConstants.M_WINDOW);
 
-        MenuManager viewsMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_25, VeriniceActionConstants.MENU_VIEWS);
-        
+        MenuManager viewsMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_25,
+                VeriniceActionConstants.MENU_VIEWS);
+
         // old IT-Baseline protection
 
         viewsMenu.add(this.openBSIModelViewAction);
@@ -417,20 +463,20 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(new Separator());
 
         // modernized IT-Baseline protection
-        
+
         viewsMenu.add(this.openBpViewAction);
         viewsMenu.add(new Separator());
 
         // ISM
-        
+
         viewsMenu.add(this.openISMViewAction);
         viewsMenu.add(this.openCatalogAction);
         viewsMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
         // marker for including views from samt-plugin
-        
+
         // VDA - done by samt-plugin
         viewsMenu.add(new Separator());
-        
+
         // global
         viewsMenu.add(this.openCatalogViewAction);
         viewsMenu.add(this.openDocumentViewAction);
@@ -441,7 +487,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(this.openValidationViewAction);
         viewsMenu.add(this.openSearchViewAction);
         viewsMenu.add(new Separator());
-        
+
         viewsMenu.add(this.openAccountViewAction);
         viewsMenu.add(this.openGroupViewAction);
         viewsMenu.add(this.openTaskViewAction);
@@ -450,15 +496,15 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         viewsMenu.add(new Separator());
 
-
-        
-        MenuManager perspectivesMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_26, VeriniceActionConstants.MENU_PERSPECTIVES);
+        MenuManager perspectivesMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_26,
+                VeriniceActionConstants.MENU_PERSPECTIVES);
         addPerspectiveMenu(window, perspectivesMenu, Iso27kPerspective.ID);
         addPerspectiveMenu(window, perspectivesMenu, Perspective.ID);
         addPerspectiveMenu(window, perspectivesMenu, BaseProtectionPerspective.ID);
         perspectivesMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
-        IContributionItem perspectiveList = ContributionItemFactory.PERSPECTIVES_SHORTLIST.create(window);
+        IContributionItem perspectiveList = ContributionItemFactory.PERSPECTIVES_SHORTLIST
+                .create(window);
         perspectivesMenu.add(perspectiveList);
 
         windowMenu.add(this.newWindowAction);
@@ -475,14 +521,17 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
      * @param id
      */
     @SuppressWarnings(WARNING_RESTRICTION)
-    private void addPerspectiveMenu(IWorkbenchWindow window, MenuManager perspectivesMenu, String perspectiveId) {
-        perspectivesMenu.add(new OpenPerspectiveAction(window, window.getWorkbench().getPerspectiveRegistry().findPerspectiveWithId(perspectiveId), new ChangeToPerspectiveMenu(window, perspectiveId)));
+    private void addPerspectiveMenu(IWorkbenchWindow window, MenuManager perspectivesMenu,
+            String perspectiveId) {
+        perspectivesMenu.add(new OpenPerspectiveAction(window,
+                window.getWorkbench().getPerspectiveRegistry().findPerspectiveWithId(perspectiveId),
+                new ChangeToPerspectiveMenu(window, perspectiveId)));
     }
 
     @Override
     protected void fillCoolBar(ICoolBarManager coolBar) {
         IToolBarManager myToolbar = new ToolBarManager(coolBar.getStyle());
-        coolBar.add(new ToolBarContributionItem(myToolbar,VeriniceActionConstants.TOOLBAR));
+        coolBar.add(new ToolBarContributionItem(myToolbar, VeriniceActionConstants.TOOLBAR));
         myToolbar.add(this.saveAction);
         myToolbar.add(this.saveAsAction);
         myToolbar.add(new Separator(VeriniceActionConstants.TOOLBAR_REPORT));
@@ -559,7 +608,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
             }
         }
     }
-    
+
     @SuppressWarnings(WARNING_RESTRICTION)
     private void removeStandardAction(ActionSetRegistry reg, String actionSetId) {
         IActionSetDescriptor[] actionSets = reg.getActionSets();
@@ -573,7 +622,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     }
 
     public static boolean isServerMode() {
-        return PreferenceConstants.OPERATION_MODE_REMOTE_SERVER.equals(getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE));
+        return PreferenceConstants.OPERATION_MODE_REMOTE_SERVER
+                .equals(getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE));
     }
 
     private String getServerUrlPreference() {
