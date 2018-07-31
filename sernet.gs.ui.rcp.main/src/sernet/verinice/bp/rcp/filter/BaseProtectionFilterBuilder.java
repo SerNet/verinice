@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElementScopeUtils;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpGroup;
@@ -244,7 +245,7 @@ public class BaseProtectionFilterBuilder {
 
         private boolean scopeRequiresSecurityLevel(CnATreeElement element,
                 SecurityLevel securityLevel) {
-            CnATreeElement scope = element.getScope();
+            CnATreeElement scope = CnATreeElementScopeUtils.getScope(element);
             if (scope instanceof ItNetwork) {
                 ItNetwork itNetwork = (ItNetwork) scope;
                 Proceeding proceeding = itNetwork.getProceeding();
