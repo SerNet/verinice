@@ -108,12 +108,16 @@ public final class DeductionImplementationUtil {
      */
     public static boolean setImplementationStatusToRequirement(List<CnATreeElement> safeGuards,
             CnATreeElement requirement) {
-        if (safeGuards == null || safeGuards.isEmpty() || requirement == null
+        if (safeGuards == null || requirement == null
                 || !isDeductiveImplementationEnabled(requirement)) {
             return false;
         }
-
-        ImplementationStatus implementationStatus = getComputedImplementationStatus(safeGuards);
+        ImplementationStatus implementationStatus;
+        if (safeGuards.isEmpty()) {
+            implementationStatus = null;
+        } else {
+            implementationStatus = getComputedImplementationStatus(safeGuards);
+        }
         return setImplementationStatus(requirement, implementationStatus);
     }
 

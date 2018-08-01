@@ -307,6 +307,32 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     @Transactional
     @Rollback(true)
     @Test
+    public void resetImplementationStatusWhenRemovingLastLink() throws CommandException {
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
+        BpRequirement requirement = createBpRequirement(requirementGroup);
+        requirement = prepareRequirement(requirement);
+
+        SafeguardGroup safeguardGroup = createSafeguardGroup(itNetwork);
+        Safeguard safeguard1 = createSafeguard(safeguardGroup);
+        safeguard1 = updateSafeguard(safeguard1, ImplementationStatus.NO);
+
+        CnALink link1 = createLink(requirement, safeguard1);
+        assertEquals(ImplementationStatus.NO, getImplementationStatus(requirement));
+        elementDao.flush();
+        elementDao.clear();
+        RemoveLink removeLink = new RemoveLink(link1);
+        removeLink = commandService.executeCommand(removeLink);
+
+        CnATreeElement requirementReloaded = reloadElement(requirement);
+        assertEquals(null, getImplementationStatus(requirementReloaded));
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
     public void testDeductionWorksWhenRemovingSafeguard() throws CommandException {
         ItNetwork itNetwork = createNewBPOrganization();
 
@@ -334,6 +360,59 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         CnATreeElement requirementReloaded = reloadElement(requirement);
         assertEquals("Must be option 'n/a'.", ImplementationStatus.NOT_APPLICABLE,
                 getImplementationStatus(requirementReloaded));
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void resetImplementationStatusWhenRemovingLastSafeguard() throws CommandException {
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
+        BpRequirement requirement = createBpRequirement(requirementGroup);
+        requirement = prepareRequirement(requirement);
+
+        SafeguardGroup safeguardGroup = createSafeguardGroup(itNetwork);
+        Safeguard safeguard1 = createSafeguard(safeguardGroup);
+        safeguard1 = updateSafeguard(safeguard1, ImplementationStatus.NO);
+
+        createLink(requirement, safeguard1);
+        assertEquals(ImplementationStatus.NO, getImplementationStatus(requirement));
+        elementDao.flush();
+        elementDao.clear();
+
+        RemoveElement<Safeguard> removeSafeguard = new RemoveElement<>(safeguard1);
+
+        removeSafeguard = commandService.executeCommand(removeSafeguard);
+
+        CnATreeElement requirementReloaded = reloadElement(requirement);
+        assertEquals(null, getImplementationStatus(requirementReloaded));
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void resetImplementationStatusWhenEnablingStatusDeductionAndNoSafeguardsAreLinked()
+            throws CommandException {
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
+        BpRequirement requirement = createBpRequirement(requirementGroup);
+        requirement.setDeductionOfImplementation(false);
+        requirement.setImplementationStatus(ImplementationStatus.YES);
+        requirement = (BpRequirement) updateElement(requirement);
+
+        assertFalse(DeductionImplementationUtil.isDeductiveImplementationEnabled(requirement));
+        assertEquals(ImplementationStatus.YES, getImplementationStatus(requirement));
+        elementDao.flush();
+        elementDao.clear();
+        requirement.setDeductionOfImplementation(true);
+
+        requirement = (BpRequirement) updateElement(requirement);
+        assertTrue(DeductionImplementationUtil.isDeductiveImplementationEnabled(requirement));
+        assertEquals(null, getImplementationStatus(requirement));
 
     }
 
@@ -832,17 +911,15 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     }
 
     /**
-     * Prepare a requirement for the test. The field 'implementation_status'
-     * will be set to yes and deduction of the implementation is enabled.
+     * Prepare a requirement for the test. The implementation state deduction
+     * will be enabled.
      *
      */
     private BpRequirement prepareRequirement(BpRequirement requirement) throws CommandException {
-        requirement.setImplementationStatus(ImplementationStatus.YES);
         UpdateElement<BpRequirement> command1 = new UpdateElement<>(requirement, true, null);
         commandService.executeCommand(command1);
         requirement = command1.getElement();
-        assertEquals("Must be option 'yes'.", ImplementationStatus.YES,
-                requirement.getImplementationStatus());
+        assertEquals(null, requirement.getImplementationStatus());
 
         assertTrue("Deduction should be enabled.",
                 DeductionImplementationUtil.isDeductiveImplementationEnabled(requirement));
