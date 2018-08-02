@@ -65,6 +65,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener2;
+import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 
 import sernet.gs.service.NumericStringComparator;
@@ -177,9 +178,12 @@ public class FileView extends RightsEnabledView
 
     private Integer fileSizeMax;
 
+    private ISelectionListener postSelectionListener;
+
     public FileView() {
         super();
         Activator.getDefault().getPreferenceStore().addPropertyChangeListener(this);
+        this.postSelectionListener = this::pageSelectionChanged;
     }
 
     @Override
@@ -206,7 +210,7 @@ public class FileView extends RightsEnabledView
         try {
             createTable(parent);
             getSite().setSelectionProvider(viewer);
-            getSite().getPage().addPostSelectionListener(this::pageSelectionChanged);
+            getSite().getPage().addPostSelectionListener(postSelectionListener);
             viewer.setInput(new PlaceHolder(Messages.FileView_0));
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.BrowserView_3);
@@ -663,7 +667,7 @@ public class FileView extends RightsEnabledView
     @Override
     public void dispose() {
         super.dispose();
-        getSite().getPage().removePostSelectionListener(this::pageSelectionChanged);
+        getSite().getPage().removePostSelectionListener(postSelectionListener);
         getSite().getPage().removePartListener(linkWithEditorPartListener);
         Activator.getDefault().getPreferenceStore().removePropertyChangeListener(this);
         if (attachmentList != null) {
