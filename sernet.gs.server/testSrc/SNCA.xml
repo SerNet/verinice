@@ -9076,57 +9076,6 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="bp_itnetwork_version" name="Version" tags="Dok.mgmt." />
             <huiproperty id="bp_itnetwork_approved" name="Approved by" tags="Dok.mgmt." />
         </huipropertygroup>
-        <huipropertygroup id="bp_itnetwork_group_business_impact" name="Protection Requirement"
-            tags="Risk">
-            <huiproperty defaultValue="0" id="bp_itnetwork_value_method_confidentiality" inputtype="booleanoption" name="Deduce confidentiality with maximumpriciple" tags="Risk"/>
-            <huiproperty defaultValue="0" id="bp_itnetwork_method_confidentiality" inputtype="numericoption" max="2" min="0" name="Deduce confidentiality (other)" tags="Risk">
-              <depends option="bp_itnetwork_value_method_confidentiality" value="0"/>
-              <option id="bp_itnetwork_value_method_confidentiality_none" name="unedited" value="0"/>
-              <option id="bp_itnetwork_value_method_confidentiality_dist" name="distribution effect" value="1"/>
-              <option id="bp_itnetwork_value_method_confidentiality_acc" name="accumulation effect" value="2"/>
-            </huiproperty>
-            <huiproperty id="bp_itnetwork_value_confidentiality" inputtype="numericoption" max="4" min="0" name="confidentiality" tags="Risk">
-              <depends option="bp_itnetwork_value_method_confidentiality" value="0"/>
-              <option id="bp_itnetwork_value_confidentiality_unedited" name="Unedited" value="0"/>
-              <option id="bp_itnetwork_value_confidentiality_low" name="Insignificant" value="1"/>
-              <option id="bp_itnetwork_value_confidentiality_normal" name="Normal" value="2"/>
-              <option id="bp_itnetwork_value_confidentiality_high" name="High" value="3"/>
-              <option id="bp_itnetwork_value_confidentiality_very_high" name="Very High" value="4"/>
-            </huiproperty>
-            <huiproperty id="bp_itnetwork_value_comment_c" inputtype="text" name="Explanation Confidentiality" tags="Risk"/>
-            <huiproperty defaultValue="0" id="bp_itnetwork_value_method_integrity" inputtype="booleanoption" name="Deduce integrity with maximumpriciple" tags="Risk"/>
-            <huiproperty defaultValue="0" id="bp_itnetwork_method_integrity" inputtype="numericoption" max="2" min="0" name="Deduce integrity (other)" tags="Risk">
-              <depends option="bp_itnetwork_value_method_integrity" value="0"/>
-              <option id="bp_itnetwork_value_method_integrity_none" name="unedited" value="0"/>
-              <option id="bp_itnetwork_value_method_integrity_dist" name="distribution effect" value="1"/>
-              <option id="bp_itnetwork_value_method_integrity_acc" name="accumulation effect" value="2"/>
-            </huiproperty>
-            <huiproperty id="bp_itnetwork_value_integrity" inputtype="numericoption" max="4" min="0" name="integrity" tags="Risk">
-              <depends option="bp_itnetwork_value_method_integrity" value="0"/>
-              <option id="bp_itnetwork_value_integrity_unedited" name="Unedited" value="0"/>
-              <option id="bp_itnetwork_value_integrity_low" name="Insignificant" value="1"/>
-              <option id="bp_itnetwork_value_integrity_normal" name="Normal" value="2"/>
-              <option id="bp_itnetwork_value_integrity_high" name="High" value="3"/>
-              <option id="bp_itnetwork_value_integrity_very_high" name="Very High" value="4"/>
-            </huiproperty>
-            <huiproperty id="bp_itnetwork_value_comment_i" inputtype="text" name="Explanation integrity" tags="Risk"/>
-            <huiproperty defaultValue="0" id="bp_itnetwork_value_method_availability" inputtype="booleanoption" name="Deduce availability with maximumpriciple" tags="Risk"/>
-            <huiproperty defaultValue="0" id="bp_itnetwork_method_availability" inputtype="numericoption" max="2" min="0" name="Deduce availability (other)" tags="Risk">
-              <depends option="bp_itnetwork_value_method_availability" value="0"/>
-              <option id="bp_itnetwork_value_method_availability_none" name="unedited" value="0"/>
-              <option id="bp_itnetwork_value_method_availability_dist" name="distribution effect" value="1"/>
-              <option id="bp_itnetwork_value_method_availability_acc" name="accumulation effect" value="2"/>
-            </huiproperty>
-            <huiproperty id="bp_itnetwork_value_availability" inputtype="numericoption" max="4" min="0" name="availability" tags="Risk">
-              <depends option="bp_itnetwork_value_method_availability" value="0"/>
-              <option id="bp_itnetwork_value_availability_unedited" name="Unedited" value="0"/>
-              <option id="bp_itnetwork_value_availability_low" name="Insignificant" value="1"/>
-              <option id="bp_itnetwork_value_availability_normal" name="Normal" value="2"/>
-              <option id="bp_itnetwork_value_availability_high" name="High" value="3"/>
-              <option id="bp_itnetwork_value_availability_very_high" name="Very High" value="4"/>
-            </huiproperty>
-            <huiproperty id="bp_itnetwork_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
-        </huipropertygroup>
         <huipropertygroup id="bp_itnetwork_group_protection_level_insignificant"
             name="Protection Level Category: Insignificant">
             <huiproperty id="bp_itnetwork_pl_insignificant_laws" inputtype="text"
