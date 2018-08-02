@@ -108,9 +108,13 @@ public class LinkWithEditorPartListener implements IPartListener2 {
 
     private void refreshLinkedState(IWorkbenchPartReference ref) {
         // This refreshes the linked state on startup and delayed opening
-        if (ref.getPart(true) == this.view) {
+        if (ref.getId().equals(this.view.getViewSite().getId())) {
             IEditorPart editor = view.getViewSite().getPage().getActiveEditor();
-            Optional.ofNullable(editor).ifPresent(view::editorActivated);
+            if (editor != null) {
+                if (ref.getPart(true) == this.view) {
+                    view.editorActivated(editor);
+                }
+            }
         }
     }
 
