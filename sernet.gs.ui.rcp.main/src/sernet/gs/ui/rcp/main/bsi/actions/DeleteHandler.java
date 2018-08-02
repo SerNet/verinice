@@ -44,6 +44,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -55,8 +56,11 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.bp.DeductionImplementationUtil;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
@@ -155,12 +159,35 @@ public class DeleteHandler extends RightsEnabledHandler {
             if (!elementToDelete.isScope()) {
                 Optional<IEditorReference> reference = findOpenEditor(elementToDelete);
                 reference.ifPresent(closeableEditors::add);
+                if (Safeguard.isSafeguard(elementToDelete)) {
+                    addEditorsForLinkedRequirements(elementToDelete, closeableEditors);
+                }
             } else { // if element is a scope, add all editors that shows
                      // children of that scope
                 closeableEditors.addAll(findOpenEditors(elementToDelete.getScopeId()));
             }
         }
         return closeableEditors;
+    }
+
+    private void addEditorsForLinkedRequirements(CnATreeElement elementToDelete,
+            Set<IEditorReference> closeableEditors) throws PartInitException {
+        CnATreeElement safeguard = elementToDelete;
+        if (!Retriever.areLinksInitizialized(safeguard, true)) {
+            RetrieveInfo retrieveInfo = new RetrieveInfo().setLinksUp(true)
+                    .setLinksUpProperties(true);
+            safeguard = Retriever.retrieveElement(safeguard, retrieveInfo);
+        }
+        for (CnALink link : safeguard.getLinksUp()) {
+            if (DeductionImplementationUtil.isRelevantLinkForImplementationStateDeduction(link)) {
+                CnATreeElement requirement = link.getDependant();
+                if (DeductionImplementationUtil.isDeductiveImplementationEnabled(requirement)) {
+                    Optional<IEditorReference> editor = findOpenEditor(requirement);
+                    editor.ifPresent(closeableEditors::add);
+
+                }
+            }
+        }
     }
 
     /**
