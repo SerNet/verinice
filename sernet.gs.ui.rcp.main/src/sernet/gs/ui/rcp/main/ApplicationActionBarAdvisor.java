@@ -62,7 +62,6 @@ import sernet.gs.ui.rcp.main.actions.ReloadAction;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
 import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
-import sernet.gs.ui.rcp.main.actions.TestAction;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.actions.GSMBausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.views.AuditView;
@@ -195,8 +194,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private OpenViewAction openBpViewAction;
 
-    private TestAction testAction;
-
     private OpenViewAction openCatalogViewAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
@@ -322,7 +319,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         this.serverConnectionToggleAction = new ServerConnectionToggleAction();
 
-        this.testAction = new TestAction(window, "Import BSI-Compendium", "asset", 152); //$NON-NLS-1$ //$NON-NLS-2$
         this.introAction = ActionFactory.INTRO.create(window);
 
         this.openCatalogViewAction = new OpenViewAction(window,
@@ -344,7 +340,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 bausteinZuordnungAction, gsmbausteinZuordnungAction, this.openDocumentViewAction,
                 this.introAction, this.openGroupViewAction, this.openReportdepositViewAction,
                 this.openSearchViewAction, this.openGSToolMappingViewAction, this.openBpViewAction,
-                this.openCatalogViewAction, this.testAction };
+                this.openCatalogViewAction };
         registerActions(actions);
 
     }

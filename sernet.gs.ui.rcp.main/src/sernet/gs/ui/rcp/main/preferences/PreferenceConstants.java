@@ -41,7 +41,7 @@ public class PreferenceConstants {
     public static final String INFO_CONTROLS_TRANSFORMED_TO_MODERNIZED_GS = "info_controls_transformed_to_modernized_gs"; //$NON-NLS-1$
     public static final String INFO_ELEMENTS_COPIED = "info_elements_copied"; //$NON-NLS-1$
     public static final String INFO_ELEMENTS_CUT = "info_elements_cut"; //$NON-NLS-1$
-    public static final String INFO_IMPORT_LDAP = "info_import_ldap"; //$NON-NLS-1$ v
+    public static final String INFO_IMPORT_LDAP = "info_import_ldap"; //$NON-NLS-1$
     public static final String INFO_PROCESSES_STARTED = "info_processes_started"; //$NON-NLS-1$
     public static final String INFO_PROCESS_VALIDATE = "info_processes_validate"; //$NON-NLS-1$
     public static final String INFO_STATUS_DERIVED = "info_status_derived"; //$NON-NLS-1$
