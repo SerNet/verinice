@@ -35,6 +35,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -71,8 +72,8 @@ import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.bp.rcp.filter.BaseProtectionFilterAction;
@@ -115,7 +116,7 @@ public class BaseProtectionView extends RightsEnabledView
     public static final String ID = "sernet.verinice.bp.rcp.BaseProtectionView"; //$NON-NLS-1$
     private static int operations = DND.DROP_COPY | DND.DROP_MOVE;
     public static final @NonNull BaseProtectionFilterParameters defaultFilterParams = BaseProtectionFilterParameters
-            .builder().withFilterByNetworkProceeding(true).build();
+            .builder().build();
     private Object mutex = new Object();
 
     protected TreeViewer viewer;
@@ -127,6 +128,7 @@ public class BaseProtectionView extends RightsEnabledView
     private IModelLoadListener modelLoadListener;
     private IBpModelListener modelUpdateListener;
     private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
+    private IPropertyChangeListener proceedingFilterDisabledToggleListener;
 
     private Action linkWithEditorAction;
     private ShowBulkEditAction bulkEditAction;
@@ -189,6 +191,14 @@ public class BaseProtectionView extends RightsEnabledView
 
         getSite().getPage().addPartListener(linkWithEditorPartListener);
         viewer.refresh(true);
+        proceedingFilterDisabledToggleListener = event -> {
+            if (PreferenceConstants.FILTER_INFORMATION_NETWORKS_BY_PROCEEDING
+                    .equals(event.getProperty())) {
+                viewer.refresh();
+            }
+        };
+        Activator.getDefault().getPreferenceStore()
+                .addPropertyChangeListener(proceedingFilterDisabledToggleListener);
     }
 
     protected void startInitDataJob() {
@@ -458,6 +468,8 @@ public class BaseProtectionView extends RightsEnabledView
         CnAElementFactory.getInstance()
                 .ifBpModelLoaded(model -> model.removeBpModelListener(modelUpdateListener));
         CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
+        Activator.getDefault().getPreferenceStore()
+                .removePropertyChangeListener(proceedingFilterDisabledToggleListener);
         super.dispose();
     }
 

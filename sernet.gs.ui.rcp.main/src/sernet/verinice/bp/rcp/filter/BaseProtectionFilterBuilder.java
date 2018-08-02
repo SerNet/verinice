@@ -28,6 +28,8 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
+import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpGroup;
 import sernet.verinice.model.bp.ISecurityLevelProvider;
@@ -59,7 +61,7 @@ public class BaseProtectionFilterBuilder {
         Optional.ofNullable(createTypeFilter(params)).ifPresent(viewerFilters::add);
         Optional.ofNullable(createTagFilter(params)).ifPresent(viewerFilters::add);
         Optional.ofNullable(createHideEmptyGroupsFilter(params)).ifPresent(viewerFilters::add);
-        Optional.ofNullable(createProceedingFilter(params)).ifPresent(viewerFilters::add);
+        viewerFilters.add(createProceedingFilter());
         return viewerFilters;
     }
 
@@ -87,12 +89,8 @@ public class BaseProtectionFilterBuilder {
         return null;
     }
 
-    private static ViewerFilter createProceedingFilter(
-            BaseProtectionFilterParameters filterParameters) {
-        if (filterParameters.isFilterByNetworkProceeding()) {
-            return new ProceedingFilter();
-        }
-        return null;
+    private static ViewerFilter createProceedingFilter() {
+        return new ProceedingFilter();
     }
 
     private static ViewerFilter createTagFilter(BaseProtectionFilterParameters filterParameters) {
@@ -234,7 +232,10 @@ public class BaseProtectionFilterBuilder {
     private static final class ProceedingFilter extends ViewerFilter {
         @Override
         public boolean select(Viewer viewer, Object parentElement, Object element) {
-            if (element instanceof CnATreeElement && element instanceof ISecurityLevelProvider) {
+            boolean filterByProceeding = Activator.getDefault().getPreferenceStore()
+                    .getBoolean(PreferenceConstants.FILTER_INFORMATION_NETWORKS_BY_PROCEEDING);
+            if (filterByProceeding && element instanceof CnATreeElement
+                    && element instanceof ISecurityLevelProvider) {
                 SecurityLevel securityLevel = ((ISecurityLevelProvider) element).getSecurityLevel();
                 return scopeRequiresSecurityLevel(((CnATreeElement) element), securityLevel);
             }

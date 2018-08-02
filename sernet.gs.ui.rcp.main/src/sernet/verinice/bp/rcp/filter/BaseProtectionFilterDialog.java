@@ -89,7 +89,6 @@ public class BaseProtectionFilterDialog extends Dialog {
 
     private Button applyTagFilterToItNetworksCheckbox;
     private Button hideEmptyGroupsCheckbox;
-    private Button filterByProceedingCheckbox;
 
     private @NonNull BaseProtectionFilterParameters filterParameters;
     private final @NonNull BaseProtectionFilterParameters defaultFilterParams;
@@ -124,7 +123,6 @@ public class BaseProtectionFilterDialog extends Dialog {
         Label intro = new Label(container, SWT.NONE);
         intro.setText(Messages.BaseProtectionFilterDialog_IntroText);
 
-        addFilterByProceeding(container);
         addFiltersForRequirementsAndSafeguards(container);
         addElementTypesGroup(container);
         try {
@@ -288,17 +286,6 @@ public class BaseProtectionFilterDialog extends Dialog {
         hideEmptyGroupsCheckbox.setSelection(params.isHideEmptyGroups());
     }
 
-    private void addFilterByProceeding(Composite parent) {
-        Group groupComposite = new Group(parent, SWT.BORDER);
-        GridData gridData = new GridData(GridData.FILL, GridData.END, true, false);
-        groupComposite.setLayoutData(gridData);
-        groupComposite.setLayout(new GridLayout(1, false));
-        filterByProceedingCheckbox = new Button(groupComposite, SWT.CHECK);
-        filterByProceedingCheckbox
-                .setText(Messages.BaseProtectionFilterDialog_Filter_By_Proceeding);
-        filterByProceedingCheckbox.setSelection(filterParameters.isFilterByNetworkProceeding());
-    }
-
     /**
      * Create contents of the button bar.
      *
@@ -349,7 +336,6 @@ public class BaseProtectionFilterDialog extends Dialog {
                 .withImplementationStatuses(statuses).withSecurityLevels(levels)
                 .withElementTypes(types).withTags(tags)
                 .withApplyTagFilterToItNetworks(applyTagFilterToItNetworksCheckbox.getSelection())
-                .withFilterByNetworkProceeding(filterByProceedingCheckbox.getSelection())
                 .withHideEmptyGroups(hideEmptyGroupsCheckbox.getSelection()).build();
 
         return super.close();
