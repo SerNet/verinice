@@ -38,6 +38,7 @@ public class VeriniceLinkTable {
 
     public static final String VLT = ".vlt"; //$NON-NLS-1$
     
+    private boolean followLinksOutsideOfScope = false;
     private boolean useAllScopes;
     private List<Integer> scopeIds;
     private List<String> columnPaths;
@@ -53,6 +54,7 @@ public class VeriniceLinkTable {
         this.scopeIds = builder.getScopeIds();
         this.columnPaths = builder.getColumnPaths();
         this.relationIds = builder.getRelationIds();
+        this.followLinksOutsideOfScope = builder.followLinksOutsideOfScope();
     }
 
     public List<Integer> getScopeIds() {
@@ -111,6 +113,14 @@ public class VeriniceLinkTable {
     }
 
 
+    public boolean followLinksOutsideOfScope() {
+        return followLinksOutsideOfScope;
+    }
+
+    public void setFollowLinksOutsideOfScope(boolean followLinksOutsideOfScope) {
+        this.followLinksOutsideOfScope = followLinksOutsideOfScope;
+    }
+
     @Override
     public String toString() {
         return "VeriniceLinkTable [useAllScopes=" + useAllScopes
@@ -119,6 +129,7 @@ public class VeriniceLinkTable {
     }
 
     public static class Builder {
+        private boolean followLinksOutsideOfScope = false;
         private boolean allScopes;
         private List<Integer> scopeIds = new LinkedList<>();
         private List<String> columnPaths = new LinkedList<>();
@@ -182,7 +193,14 @@ public class VeriniceLinkTable {
             return this;
         }
 
+        public Builder setFollowLinksOutsideOfScope(boolean followLinksOutsideOfScope) {
+            this.followLinksOutsideOfScope = followLinksOutsideOfScope;
+            return this;
+        }
 
+        public boolean followLinksOutsideOfScope() {
+            return followLinksOutsideOfScope;
+        }
     }
 
 }

@@ -158,13 +158,15 @@ public abstract class VeriniceLinkTableIO {
         LinkTableConfiguration.Builder builder = new LinkTableConfiguration.Builder();
         return builder.setColumnPathes(new LinkedHashSet<>(vlr.getColumnPaths()))
         .setLinkTypeIds(relationIds)
-        .setScopeIds(scopeIds).build();
+        .setScopeIds(scopeIds)
+        .setFollowLinksOutsideOfScope(vlr.followLinksOutsideOfScope()).build();
     }
 
-    private static void doWrite(VeriniceLinkTable vlt, String fullPath) throws IOException, JsonParseException {
-        FileWriter writer = new FileWriter(fullPath);
-        writer.write(getContent(vlt));
-        writer.close();
+    private static void doWrite(VeriniceLinkTable vlt, String fullPath)
+            throws IOException {
+        try (FileWriter writer = new FileWriter(fullPath)) {
+            writer.write(getContent(vlt));
+        }
     }
 
     private static VeriniceLinkTable createVeriniceLinkTable(ILinkTableConfiguration configuration) {
@@ -172,6 +174,7 @@ public abstract class VeriniceLinkTableIO {
         builder.setColumnPaths(new LinkedList<>(configuration.getColumnPaths()));
         builder.setRelationIds(new LinkedList<>(configuration.getLinkTypeIds()));
         builder.setScopeIds(Arrays.asList(configuration.getScopeIdArray()));
+        builder.setFollowLinksOutsideOfScope(configuration.followLinksOutsideOfScope());
         return builder.build();
     }
 }
