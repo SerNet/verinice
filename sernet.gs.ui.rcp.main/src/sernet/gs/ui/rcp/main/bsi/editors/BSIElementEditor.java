@@ -423,7 +423,6 @@ public class BSIElementEditor extends EditorPart {
             linkMaker = new LinkMaker(sashForm, this);
             sashForm.setWeights(new int[] { sashWeight1, sashWeight2 });
             sashForm.setSashWidth(sashWidth);
-            sashForm.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GRAY));
         }
 
         initContent();
