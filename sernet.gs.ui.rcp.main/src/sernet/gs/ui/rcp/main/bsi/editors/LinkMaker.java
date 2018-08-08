@@ -101,7 +101,7 @@ public class LinkMaker extends Composite implements IRelationTable {
     private Button removeLinkButton;
 
     // JFaces
-    final ComboViewer relationComboViewer = new ComboViewer(this, SWT.READ_ONLY);
+    final ComboViewer relationComboViewer;
 
     // Utilities
     static IPreferenceStore prefStore = Activator.getDefault().getPreferenceStore();
@@ -126,17 +126,20 @@ public class LinkMaker extends Composite implements IRelationTable {
         FormLayout formLayout = new FormLayout();
         this.setLayout(formLayout);
         this.part = part;
+
+        createLabel();
+        createElementTypeCombo();
+        relationComboViewer = new ComboViewer(this, SWT.READ_ONLY);
+        createRelationCombo();
+        createButtonAddLink();
+        createButtonRemoveLink();
     }
 
     public void createPartControl(Boolean isWriteAllowed) {
 
         this.writeable = isWriteAllowed;
 
-        createLabel();
-        createElementTypeCombo();
-        createRelationCombo();
-        createButtonAddLink();
-        createButtonRemoveLink();
+        removeLinkButton.setEnabled(writeable && checkRights());
         initLinkTableViewer();
 
         // listeners to reload view:
@@ -242,7 +245,6 @@ public class LinkMaker extends Composite implements IRelationTable {
         formData.left = new FormAttachment(addLinkButton, FORM_ATTACHMENT_OFFSET_DEFAULT);
         removeLinkButton.setLayoutData(formData);
         removeLinkButton.setText(Messages.LinkMaker_3);
-        removeLinkButton.setEnabled(writeable && checkRights());
         removeLinkButton.setToolTipText(Messages.LinkMaker_4);
     }
 
