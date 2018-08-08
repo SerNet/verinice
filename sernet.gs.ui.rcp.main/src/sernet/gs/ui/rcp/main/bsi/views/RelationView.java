@@ -15,6 +15,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -87,6 +88,7 @@ public class RelationView extends RightsEnabledView
     private IModelLoadListener loadListener;
 
     private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
+    private IPropertyChangeListener proceedingFilterDisabledToggleListener;
 
     private Action linkWithEditorAction;
 
@@ -171,6 +173,14 @@ public class RelationView extends RightsEnabledView
         addBSIModelListeners();
         addISO27KModelListeners();
         hookModelLoadListener();
+        proceedingFilterDisabledToggleListener = event -> {
+            if (PreferenceConstants.FILTER_INFORMATION_NETWORKS_BY_PROCEEDING
+                    .equals(event.getProperty())) {
+                viewer.refresh();
+            }
+        };
+        Activator.getDefault().getPreferenceStore()
+                .addPropertyChangeListener(proceedingFilterDisabledToggleListener);
 
         makeActions();
         hookContextMenu();
@@ -245,10 +255,8 @@ public class RelationView extends RightsEnabledView
                 IStatus status = Status.OK_STATUS;
                 try {
                     monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
-                    if (CnAElementFactory.isModelLoaded()) {
-                        CnAElementFactory.getInstance().getLoadedModel()
-                                .addBSIModelListener(contentProvider);
-                    }
+                    CnAElementFactory.getInstance()
+                            .ifModelLoaded(model -> model.addBSIModelListener(contentProvider));
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
                     status = new Status(Status.ERROR, Activator.PLUGIN_ID, Messages.RelationView_7,
@@ -364,6 +372,8 @@ public class RelationView extends RightsEnabledView
         removeModelListeners();
         getSite().getPage().removePostSelectionListener(selectionListener);
         getSite().getPage().removePartListener(linkWithEditorPartListener);
+        Activator.getDefault().getPreferenceStore()
+                .removePropertyChangeListener(proceedingFilterDisabledToggleListener);
         super.dispose();
     }
 
@@ -495,7 +505,7 @@ public class RelationView extends RightsEnabledView
     @Override
     public CnATreeElement getInputElmt() {
         if (inputElmt != null) {
-            checkAndRetrieve(this.inputElmt);
+            checkAndRetrieve(inputElmt);
         }
         return inputElmt;
     }

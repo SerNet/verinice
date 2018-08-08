@@ -27,13 +27,11 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.ComboViewer;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -64,6 +62,7 @@ import sernet.gs.ui.rcp.main.bsi.views.RelationViewLabelProvider;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.DirectedHuiRelation;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -94,7 +93,6 @@ public class LinkMaker extends Composite implements IRelationTable {
     // SWT
     RelationTableViewer viewer;
     private WorkbenchPart part;
-    private Action doubleClickAction;
 
     // SWT widgets
     Combo comboElementType;
@@ -121,6 +119,7 @@ public class LinkMaker extends Composite implements IRelationTable {
     //
     private int oldSelection = -1;
     private boolean writeable;
+    private IPropertyChangeListener proceedingFilterDisabledToggleListener;
 
     public LinkMaker(Composite parent, WorkbenchPart part) {
         super(parent, SWT.BORDER);
@@ -146,6 +145,15 @@ public class LinkMaker extends Composite implements IRelationTable {
                 .addISO27KModelListener(relationViewContentProvider);
         CnAElementFactory.getInstance().getBpModel()
                 .addModITBOModelListener(relationViewContentProvider);
+        proceedingFilterDisabledToggleListener = event -> {
+            if (PreferenceConstants.FILTER_INFORMATION_NETWORKS_BY_PROCEEDING
+                    .equals(event.getProperty())) {
+                viewer.refresh();
+            }
+        };
+        Activator.getDefault().getPreferenceStore()
+                .addPropertyChangeListener(proceedingFilterDisabledToggleListener);
+
         // listeners to remove stale links from currently open object in editor
         // to prevent conflicts when saving:
         linkRemover = new LinkRemover(this);
@@ -167,7 +175,6 @@ public class LinkMaker extends Composite implements IRelationTable {
 
         createFilter();
 
-        createDoubleClickAction();
         hookDoubleClickAction();
     }
 
@@ -425,31 +432,17 @@ public class LinkMaker extends Composite implements IRelationTable {
         allPossibleRelations.addAll(huiTypeFactory.getPossibleRelationsTo(entityTypeID));
     }
 
-    private void createDoubleClickAction() {
-        doubleClickAction = new Action() {
-
-            @Override
-            public void run() {
-                ISelection selection = viewer.getSelection();
-                Object obj = ((IStructuredSelection) selection).getFirstElement();
-                CnALink link = (CnALink) obj;
-
-                // open the object on the other side of the link:
-                if (CnALink.isDownwardLink(getInputElmt(), link)) {
-                    EditorFactory.getInstance().updateAndOpenObject(link.getDependency());
-                } else {
-                    EditorFactory.getInstance().updateAndOpenObject(link.getDependant());
-                }
-            }
-        };
-    }
-
     private void hookDoubleClickAction() {
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
+        viewer.addDoubleClickListener(event -> {
+            ISelection selection = viewer.getSelection();
+            Object obj = ((IStructuredSelection) selection).getFirstElement();
+            CnALink link = (CnALink) obj;
 
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                doubleClickAction.run();
+            // open the object on the other side of the link:
+            if (CnALink.isDownwardLink(getInputElmt(), link)) {
+                EditorFactory.getInstance().updateAndOpenObject(link.getDependency());
+            } else {
+                EditorFactory.getInstance().updateAndOpenObject(link.getDependant());
             }
         });
     }
@@ -529,6 +522,8 @@ public class LinkMaker extends Composite implements IRelationTable {
         CnAElementFactory.getLoadedModel().removeBSIModelListener(linkRemover);
         CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(linkRemover);
         CnAElementFactory.getInstance().getBpModel().removeBpModelListener(linkRemover);
+        Activator.getDefault().getPreferenceStore()
+                .removePropertyChangeListener(proceedingFilterDisabledToggleListener);
 
         super.dispose();
     }
