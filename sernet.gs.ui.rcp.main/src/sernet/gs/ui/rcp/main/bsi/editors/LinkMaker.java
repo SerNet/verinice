@@ -119,6 +119,7 @@ public class LinkMaker extends Composite implements IRelationTable {
     private int oldSelection = -1;
     private boolean writeable;
     private IPropertyChangeListener proceedingFilterDisabledToggleListener;
+    private Composite composite;
 
     public LinkMaker(Composite parent, WorkbenchPart part) {
         super(parent, SWT.BORDER);
@@ -126,7 +127,8 @@ public class LinkMaker extends Composite implements IRelationTable {
         this.setLayout(formLayout);
         this.part = part;
 
-        Label label = new Label(this, SWT.NULL);
+        composite = new Composite(this, SWT.NONE);
+        Label label = new Label(composite, SWT.NULL);
         label.setText(Messages.LinkMaker_0);
         FormData formData = new FormData();
         formData.top = new FormAttachment(0, FORM_ATTACHMENT_OFFSET_DEFAULT);
@@ -134,13 +136,13 @@ public class LinkMaker extends Composite implements IRelationTable {
         label.setLayoutData(formData);
         label.pack();
 
-        comboElementType = new Combo(this, SWT.READ_ONLY);
+        comboElementType = new Combo(composite, SWT.READ_ONLY);
         FormData formData1 = new FormData();
         formData1.top = new FormAttachment(0, FORM_ATTACHMENT_OFFSET_DEFAULT);
         formData1.left = new FormAttachment(label, FORM_ATTACHMENT_OFFSET_DEFAULT);
         comboElementType.setLayoutData(formData1);
 
-        relationComboViewer = new ComboViewer(this, SWT.READ_ONLY);
+        relationComboViewer = new ComboViewer(composite, SWT.READ_ONLY);
         FormData formData2 = new FormData();
         formData2.top = new FormAttachment(0, FORM_ATTACHMENT_OFFSET_DEFAULT);
         formData2.left = new FormAttachment(comboElementType, FORM_ATTACHMENT_OFFSET_DEFAULT);
@@ -165,7 +167,7 @@ public class LinkMaker extends Composite implements IRelationTable {
 
         addRelationComboListener();
 
-        addLinkButton = new Button(this, SWT.PUSH);
+        addLinkButton = new Button(composite, SWT.PUSH);
         FormData formData3 = new FormData();
         formData3.top = new FormAttachment(comboElementType, 0, SWT.CENTER);
         formData3.left = new FormAttachment(relationComboViewer.getCombo(),
@@ -175,7 +177,7 @@ public class LinkMaker extends Composite implements IRelationTable {
         addLinkButton.setToolTipText(Messages.LinkMaker_2);
         addLinkButton.setEnabled(false);
 
-        removeLinkButton = new Button(this, SWT.PUSH);
+        removeLinkButton = new Button(composite, SWT.PUSH);
         FormData formData4 = new FormData();
         formData4.top = new FormAttachment(comboElementType, 0, SWT.CENTER);
         formData4.left = new FormAttachment(addLinkButton, FORM_ATTACHMENT_OFFSET_DEFAULT);
