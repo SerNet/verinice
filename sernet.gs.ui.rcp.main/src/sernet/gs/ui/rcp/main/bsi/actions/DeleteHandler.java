@@ -75,22 +75,26 @@ import sernet.verinice.service.commands.crud.PrepareObjectWithAccountDataForDele
 public class DeleteHandler extends RightsEnabledHandler {
 
     private static final Logger LOG = Logger.getLogger(DeleteHandler.class);
-    
+
     protected static final String DEFAULT_ERR_MSG = "Error while deleting element.";
-    
+
     protected IWorkbenchPart targetPart;
-    
-    
+
     public DeleteHandler() {
         super();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.
+     * ExecutionEvent)
      */
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        final IStructuredSelection selection = (IStructuredSelection) HandlerUtil.getCurrentSelection(event);
+        final IStructuredSelection selection = (IStructuredSelection) HandlerUtil
+                .getCurrentSelection(event);
         return execute(selection);
     }
 
@@ -98,15 +102,17 @@ public class DeleteHandler extends RightsEnabledHandler {
         changeSelection(selection);
         try {
             Activator.inheritVeriniceContextState();
-           
-            if (!MessageDialog.openQuestion(Display.getCurrent().getActiveShell(), Messages.DeleteActionDelegate_0, NLS.bind(Messages.DeleteActionDelegate_1, selection.size()))) {
+
+            if (!MessageDialog.openQuestion(Display.getCurrent().getActiveShell(),
+                    Messages.DeleteActionDelegate_0,
+                    NLS.bind(Messages.DeleteActionDelegate_1, selection.size()))) {
                 return null;
             }
 
-            final List<CnATreeElement> deleteList = createList(selection.toList());       
+            final List<CnATreeElement> deleteList = createList(selection.toList());
 
             closeOpenEditors(deleteList);
-            
+
             if (!deleteList.isEmpty() && deleteList.get(0) instanceof IISO27kElement) {
                 doDeleteIso(deleteList);
             } else {
@@ -124,9 +130,10 @@ public class DeleteHandler extends RightsEnabledHandler {
         }
         return null;
     }
-    
+
     /**
      * closes editors of elements that are going to be deleted
+     * 
      * @param deleteList
      * @throws PartInitException
      */
@@ -134,27 +141,31 @@ public class DeleteHandler extends RightsEnabledHandler {
         Set<IEditorReference> editorsToCloseSet = getRelevantEditors(deleteList);
         List<IEditorReference> editorsToCloseList = new ArrayList(editorsToCloseSet.size());
         editorsToCloseList.addAll(editorsToCloseSet);
-        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditors(
-                (IEditorReference[]) editorsToCloseList.toArray(new IEditorReference[editorsToCloseList.size()]), true);
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                .closeEditors((IEditorReference[]) editorsToCloseList
+                        .toArray(new IEditorReference[editorsToCloseList.size()]), true);
     }
-    
 
     /**
-     * iterates all elements that are going to be deleted, checks if an editor for this element
-     * is currently open (special handling for {@link ITVerbund} and {@link Organization}) and returns
-     * a set of editors that needs to be closed because their content is going to be deleted
+     * iterates all elements that are going to be deleted, checks if an editor
+     * for this element is currently open (special handling for
+     * {@link ITVerbund} and {@link Organization}) and returns a set of editors
+     * that needs to be closed because their content is going to be deleted
+     * 
      * @param deleteList
      * @throws PartInitException
      */
-    private Set<IEditorReference> getRelevantEditors(List<CnATreeElement> deleteList) throws PartInitException {
+    private Set<IEditorReference> getRelevantEditors(List<CnATreeElement> deleteList)
+            throws PartInitException {
         Set<IEditorReference> closeableEditors = new HashSet();
-        for(CnATreeElement elementToDelete : deleteList) {
+        for (CnATreeElement elementToDelete : deleteList) {
             if (!elementToDelete.isScope()) {
                 IEditorReference reference = isElementOpen(elementToDelete);
-                if(reference != null) {
+                if (reference != null) {
                     closeableEditors.add(reference);
                 }
-            } else { // if element is a scope, add all editors that shows children of that scope
+            } else { // if element is a scope, add all editors that shows
+                     // children of that scope
                 closeableEditors.addAll(isScopeIdOpen(elementToDelete.getScopeId()));
             }
         }
@@ -163,49 +174,55 @@ public class DeleteHandler extends RightsEnabledHandler {
 
     /**
      * returns all editors that shows elements with a given scope id
+     * 
      * @param scopeId
      * @return
      * @throws PartInitException
      */
-    private Set<IEditorReference> isScopeIdOpen(int scopeId) throws PartInitException{
+    private Set<IEditorReference> isScopeIdOpen(int scopeId) throws PartInitException {
         Set<IEditorReference> closeableEditors = new HashSet();
-        for(IEditorReference editorReference : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()) {
+        for (IEditorReference editorReference : PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                .getActivePage().getEditorReferences()) {
             Object o = editorReference.getEditorInput();
-            if(o instanceof BSIElementEditorInput) {
-                BSIElementEditorInput bsiElementEditorInput = (BSIElementEditorInput)o;
-                if(scopeId ==  bsiElementEditorInput.getCnAElement().getScopeId()){
+            if (o instanceof BSIElementEditorInput) {
+                BSIElementEditorInput bsiElementEditorInput = (BSIElementEditorInput) o;
+                if (scopeId == bsiElementEditorInput.getCnAElement().getScopeId()) {
                     closeableEditors.add(editorReference);
                 }
             }
         }
         return closeableEditors;
     }
-    
+
     /**
-     * returns {@link IEditorReference} of given {@link CnATreeElement} if element is currently opened by an editor
+     * returns {@link IEditorReference} of given {@link CnATreeElement} if
+     * element is currently opened by an editor
+     * 
      * @param element
      * @return
-     * @throws PartInitException 
+     * @throws PartInitException
      */
     private IEditorReference isElementOpen(CnATreeElement element) throws PartInitException {
-        for(IEditorReference editorReference : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()) {
+        for (IEditorReference editorReference : PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                .getActivePage().getEditorReferences()) {
             Object o = editorReference.getEditorInput();
-            if(o instanceof BSIElementEditorInput) {
-                BSIElementEditorInput bsiElementEditorInput = (BSIElementEditorInput)o;
-                if(element.equals(bsiElementEditorInput.getCnAElement())){
+            if (o instanceof BSIElementEditorInput) {
+                BSIElementEditorInput bsiElementEditorInput = (BSIElementEditorInput) o;
+                if (element.equals(bsiElementEditorInput.getCnAElement())) {
                     return editorReference;
                 }
             }
         }
         return null;
-        
+
     }
-    
-    
-    protected void doDelete(final List<CnATreeElement> deleteList) throws InvocationTargetException, InterruptedException {
+
+    protected void doDelete(final List<CnATreeElement> deleteList)
+            throws InvocationTargetException, InterruptedException {
         PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
             @Override
-            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+            public void run(IProgressMonitor monitor)
+                    throws InvocationTargetException, InterruptedException {
                 Object sel = null;
                 try {
                     Activator.inheritVeriniceContextState();
@@ -214,8 +231,10 @@ public class DeleteHandler extends RightsEnabledHandler {
                         sel = iter.next();
 
                         // do not delete last ITVerbund:
-                        if (sel instanceof ITVerbund && CnAElementHome.getInstance().getItverbuende().size() < 2) {
-                            ExceptionUtil.log(new Exception(Messages.DeleteActionDelegate_12), Messages.DeleteActionDelegate_13);
+                        if (sel instanceof ITVerbund
+                                && CnAElementHome.getInstance().getItverbuende().size() < 2) {
+                            ExceptionUtil.log(new Exception(Messages.DeleteActionDelegate_12),
+                                    Messages.DeleteActionDelegate_13);
                             return;
                         }
 
@@ -228,18 +247,20 @@ public class DeleteHandler extends RightsEnabledHandler {
                     LOG.error(DEFAULT_ERR_MSG, e);
                     ExceptionUtil.log(e, Messages.DeleteActionDelegate_15);
                 } finally {
-                    if(monitor!=null) {
+                    if (monitor != null) {
                         monitor.done();
                     }
                 }
-            }             
+            }
         });
     }
-    
-    protected void doDeleteIso(final List<CnATreeElement> deleteList) throws InvocationTargetException, InterruptedException {
+
+    protected void doDeleteIso(final List<CnATreeElement> deleteList)
+            throws InvocationTargetException, InterruptedException {
         PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
             @Override
-            public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+            public void run(IProgressMonitor monitor)
+                    throws InvocationTargetException, InterruptedException {
                 Object sel = null;
                 try {
                     Activator.inheritVeriniceContextState();
@@ -262,15 +283,15 @@ public class DeleteHandler extends RightsEnabledHandler {
             }
         });
     }
-    
+
     protected List<CnATreeElement> createList(List<CnATreeElement> elementList) {
         List<CnATreeElement> tempList = new ArrayList<CnATreeElement>();
         List<CnATreeElement> insertList = new ArrayList<CnATreeElement>();
         int depth = 0;
-        int removed = 0;  
-        if(elementList.size()>1) {
+        int removed = 0;
+        if (elementList.size() > 1) {
             for (CnATreeElement element : elementList) {
-                createList(element, tempList, insertList, depth, removed);       
+                createList(element, tempList, insertList, depth, removed);
             }
         } else {
             // add last element
@@ -278,8 +299,9 @@ public class DeleteHandler extends RightsEnabledHandler {
         }
         return insertList;
     }
-    
-    private void createList(CnATreeElement element, List<CnATreeElement> tempList, List<CnATreeElement> insertList, int depth, int removed) {
+
+    private void createList(CnATreeElement element, List<CnATreeElement> tempList,
+            List<CnATreeElement> insertList, int depth, int removed) {
         if (!tempList.contains(element)) {
             tempList.add(element);
             if (depth == 0) {
@@ -297,7 +319,7 @@ public class DeleteHandler extends RightsEnabledHandler {
             removed++;
         }
     }
-    
+
     protected void deleteElementWithAccountAsync(final CnATreeElement element) {
         Display.getDefault().asyncExec(new Runnable() {
             @Override
@@ -316,11 +338,12 @@ public class DeleteHandler extends RightsEnabledHandler {
             }
         });
     }
-    
+
     protected void deleteElementWithAccount(final CnATreeElement element) throws CommandException {
         GenericCommand command = null;
         if (loadConfiguration(element)) {
-            if (MessageDialog.openConfirm(Display.getDefault().getActiveShell(), Messages.DeleteActionDelegate_0, Messages.DeleteActionDelegate_18)) {
+            if (MessageDialog.openConfirm(Display.getDefault().getActiveShell(),
+                    Messages.DeleteActionDelegate_0, Messages.DeleteActionDelegate_18)) {
                 command = new PrepareObjectWithAccountDataForDeletion(element);
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
             } else {
@@ -329,7 +352,7 @@ public class DeleteHandler extends RightsEnabledHandler {
         }
         removeElement(element);
     }
-    
+
     protected void removeElement(CnATreeElement elementToRemove) throws CommandException {
         CnAElementHome.getInstance().remove(elementToRemove);
         CnAElementFactory.getModel(elementToRemove).databaseChildRemoved(elementToRemove);
@@ -357,7 +380,7 @@ public class DeleteHandler extends RightsEnabledHandler {
 
         return false;
     }
-    
+
     protected CnATreeElement loadChildren(CnATreeElement element) throws CommandException {
         LoadChildrenForExpansion command = new LoadChildrenForExpansion(element);
         command = ServiceFactory.lookupCommandService().executeCommand(command);
@@ -366,27 +389,28 @@ public class DeleteHandler extends RightsEnabledHandler {
         return element;
     }
 
-
     private void changeSelection(ISelection selection) {
         boolean allowed = checkRights();
         boolean isWriteAllowed = true;
-        
+
         // Realizes that the action to delete an element is greyed out,
         // when there is no right to do so.
         Object sel = ((IStructuredSelection) selection).getFirstElement();
         if (allowed && sel instanceof CnATreeElement) {
             CnATreeElement element = (CnATreeElement) sel;
-            isWriteAllowed = CnAElementHome.getInstance().isDeleteAllowed(element);         
+            isWriteAllowed = CnAElementHome.getInstance().isDeleteAllowed(element);
         }
-        
+
         // Only change state when it is enabled, since we do not want to
         // trash the enablement settings of plugin.xml
         if (this.isEnabled()) {
             this.setEnabled(isWriteAllowed & allowed);
         }
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
