@@ -20,6 +20,11 @@
 
 package sernet.verinice.rcp.linktable.ui;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ISelection;
@@ -39,11 +44,6 @@ import sernet.verinice.rcp.linktable.ui.multiselectiondialog.LinkTableMultiSelec
 import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.model.IObjectModelService;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Composite to edit or create instances of {@link VeriniceLinkTable} (VLT).
@@ -79,6 +79,7 @@ public class LinkTableComposite extends Composite {
 
     private int numCols = 0;
     private boolean useAllScopes = true;
+    private boolean followLinksOutsideOfScope;
 
     public LinkTableComposite(VeriniceLinkTable vltContent, IObjectModelService objectModelService,
             Composite parent) {
@@ -93,6 +94,7 @@ public class LinkTableComposite extends Composite {
         this.veriniceLinkTable = vltContent;
         useAllScopes = vltContent.useAllScopes();
         this.showScopeSelection = showScopeSelection;
+        this.followLinksOutsideOfScope = vltContent.followLinksOutsideOfScope();
         createContent();
     }
 
@@ -137,14 +139,18 @@ public class LinkTableComposite extends Composite {
     
     private void setScopeComposite(Composite head) {
         Composite scopeButtons = new Composite(head, getStyle());
-        final Button[] scopeRadios = new Button[2];
-        scopeRadios[0] = new Button(scopeButtons, SWT.RADIO);
-        final Button useAllScopesButton = scopeRadios[0];
-        scopeRadios[0].setText(Messages.VeriniceLinkTableComposite_0);
-        scopeRadios[1] = new Button(scopeButtons, SWT.RADIO);
-
-        final Button useSelectedScopes = scopeRadios[1];
-        useSelectedScopes.setText(Messages.VeriniceLinkTableComposite_1);
+        
+        Button useAllScopesButton = new Button(scopeButtons, SWT.RADIO);
+        useAllScopesButton.setText(Messages.VeriniceLinkTableComposite_0);
+        useAllScopesButton.setToolTipText(Messages.VeriniceLinkTableComposite_Query_All_Scopes_ToolTip);
+        
+        Button useSelectedScopesButton = new Button(scopeButtons, SWT.RADIO);
+        useSelectedScopesButton.setText(Messages.VeriniceLinkTableComposite_1);
+        useSelectedScopesButton.setToolTipText(Messages.VeriniceLinkTableComposite_Query_Selected_Scopes_Only_ToolTip);
+        
+        Button followLinksButton = new Button(scopeButtons, SWT.RADIO);
+        followLinksButton.setText(Messages.VeriniceLinkTableComposite_Follow_Links_To_Other_Scopes);
+        followLinksButton.setToolTipText(Messages.VeriniceLinkTableComposite_Follow_Links_To_Other_Scopes_ToolTip);
 
         SelectionAdapter listener = new SelectionAdapter() {
 
@@ -156,15 +162,18 @@ public class LinkTableComposite extends Composite {
                 }
 
                 useAllScopes = selected == useAllScopesButton;
-                updateAndValidateVeriniceContent(UpdateLinkTable.USE_ALL_SCOPES);
-
+                followLinksOutsideOfScope = selected == followLinksButton;
+                updateAndValidateVeriniceContent(UpdateLinkTable.USE_ALL_SCOPES,
+                        UpdateLinkTable.FOLLOW_LINKS_BUTTON);
             }
         };
 
         useAllScopesButton.addSelectionListener(listener);
-        useSelectedScopes.addSelectionListener(listener);
-        useAllScopesButton.setSelection(useAllScopes);
-        useSelectedScopes.setSelection(!useAllScopes);
+        useSelectedScopesButton.addSelectionListener(listener);
+        followLinksButton.addSelectionListener(listener);
+        useAllScopesButton.setSelection(useAllScopes && !followLinksOutsideOfScope);
+        useSelectedScopesButton.setSelection(!useAllScopes && !followLinksOutsideOfScope);
+        followLinksButton.setSelection(!useAllScopes && followLinksOutsideOfScope);
 
         getDefaultLayoutFactory().margins(DEFAULT_MARGIN).numColumns(1)
                                  .generateLayout(scopeButtons);
@@ -360,6 +369,9 @@ public class LinkTableComposite extends Composite {
         if (set.contains(UpdateLinkTable.USE_ALL_SCOPES)) {
             updateUseAllScopes();
         }
+        if (set.contains(UpdateLinkTable.FOLLOW_LINKS_BUTTON)) {
+            updateFollowLinksOutsideOfScope();
+        }
         if (set.contains(UpdateLinkTable.RELATION_IDS)) {
             updateRelationIds();
         }
@@ -395,6 +407,13 @@ public class LinkTableComposite extends Composite {
             if (useAllScopes) {
                 veriniceLinkTable.getScopeIds().clear();
             }
+            fireUpdate = true;
+        }
+    }
+
+    private void updateFollowLinksOutsideOfScope() {
+        if (veriniceLinkTable.followLinksOutsideOfScope() != followLinksOutsideOfScope) {
+            veriniceLinkTable.setFollowLinksOutsideOfScope(followLinksOutsideOfScope);
             fireUpdate = true;
         }
     }

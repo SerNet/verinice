@@ -26,5 +26,5 @@ package sernet.verinice.rcp.linktable.ui;
  */
 public enum UpdateLinkTable {
 
-    RELATION_IDS, USE_ALL_SCOPES, COLUMN_PATHS
+    RELATION_IDS, USE_ALL_SCOPES, FOLLOW_LINKS_BUTTON, COLUMN_PATHS
 }
