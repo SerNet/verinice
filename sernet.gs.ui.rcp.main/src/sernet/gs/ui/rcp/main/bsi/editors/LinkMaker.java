@@ -204,20 +204,7 @@ public class LinkMaker extends Composite implements IRelationTable {
         formData.width = RELATION_COMBO_WIDTH;
         relationComboViewer.getCombo().setLayoutData(formData);
 
-        relationComboViewer.setContentProvider(new ArrayContentProvider() {
-            @Override
-            public Object[] getElements(Object inputElement) {
-                ArrayList<DirectedHuiRelation> relations = new ArrayList<>();
-                if (inputElement instanceof Set) {
-                    @SuppressWarnings("unchecked")
-                    Set<DirectedHuiRelation> input = (Set<DirectedHuiRelation>) inputElement;
-                    relations.addAll(input);
-                    return relations.toArray();
-                }
-
-                return relations.toArray();
-            }
-        });
+        relationComboViewer.setContentProvider(new ArrayContentProvider());
 
         relationComboViewer.setLabelProvider(new LabelProvider() {
 
