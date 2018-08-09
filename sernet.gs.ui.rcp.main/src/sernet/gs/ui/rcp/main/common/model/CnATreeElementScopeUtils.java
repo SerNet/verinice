@@ -19,8 +19,11 @@ package sernet.gs.ui.rcp.main.common.model;
 
 import java.util.stream.Stream;
 
+import sernet.verinice.model.bp.groups.ImportBpGroup;
+import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Domain;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.service.commands.CnATypeMapper;
 
 /**
@@ -36,15 +39,36 @@ public final class CnATreeElementScopeUtils {
             return element;
         }
         Domain elementDomain = CnATypeMapper.getDomainFromTypeId(element.getTypeId());
+        Class<?> importGroupClass = getImportGroupClassForDomain(elementDomain);
         CnATreeElement modelForDomain = getModelForDomain(elementDomain);
 
-        Stream<CnATreeElement> potentialScopes = modelForDomain.getChildren().stream();
+        Stream<CnATreeElement> potentialScopes = modelForDomain.getChildren().stream()
+                .flatMap(child -> {
+                    if (importGroupClass.isInstance(child)) {
+                        return child.getChildren().stream();
+                    } else {
+                        return Stream.of(child);
+                    }
+                });
 
         potentialScopes = Stream.concat(potentialScopes,
                 cnAElementFactory.getCatalogModel().getChildren().stream());
         return potentialScopes.filter(scope -> scope.getDbId().equals(scopeElementId)).findFirst()
                 .orElseThrow(
                         () -> new IllegalArgumentException("Unable to find scope for " + element));
+    }
+
+    private static Class<?> getImportGroupClassForDomain(Domain domain) {
+        switch (domain) {
+        case BASE_PROTECTION:
+            return ImportBpGroup.class;
+        case BASE_PROTECTION_OLD:
+            return ImportBsiGroup.class;
+        case ISM:
+            return ImportIsoGroup.class;
+        default:
+            throw new IllegalArgumentException("Unsupported domain " + domain);
+        }
     }
 
     private static CnATreeElement getModelForDomain(Domain domain) {
