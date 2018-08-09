@@ -31,6 +31,8 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import de.sernet.sync.data.SyncAttribute;
 import de.sernet.sync.data.SyncData;
@@ -91,7 +93,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
     private static final Logger log = Logger.getLogger(SyncInsertUpdateCommand.class);
 
-    private static final Logger logrt = Logger.getLogger(SyncInsertUpdateCommand.class.getName() + ".rt");
+    private static final Logger logrt = Logger
+            .getLogger(SyncInsertUpdateCommand.class.getName() + ".rt");
 
     private static final int FLUSH_LEVEL = 50;
 
@@ -123,9 +126,12 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
     private transient Map<Class<?>, IBaseDao> daoMap = new HashMap<>();
 
+    private transient Map<Integer, Map<Integer, Set<String>>> existingLinksForScope;
+
     private ImportReferenceTypes importReferenceTypes;
 
-    public SyncInsertUpdateCommand(String sourceId, SyncData syncData, SyncMapping syncMapping, String userName, SyncParameter parameter, List<String> errorList) {
+    public SyncInsertUpdateCommand(String sourceId, SyncData syncData, SyncMapping syncMapping,
+            String userName, SyncParameter parameter, List<String> errorList) {
         super();
         this.sourceId = sourceId;
         this.syncData = syncData;
@@ -153,7 +159,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     public void execute() {
 
         IBaseDao<CnATreeElement, Serializable> iBaseDao = getDao(CnATreeElement.class);
-        importReferenceTypes = new ImportReferenceTypes(iBaseDao, getCommandService(), idElementMap);
+        importReferenceTypes = new ImportReferenceTypes(iBaseDao, getCommandService(),
+                idElementMap);
 
         try {
             if (logrt.isDebugEnabled()) {
@@ -163,6 +170,21 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             sourceIdExists = false;
             if (!parameter.isImportAsCatalog()) {
                 sourceIdExists = isSourceIdInDatabase(sourceId);
+                if (sourceIdExists) {
+                    existingLinksForScope = new HashMap<>();
+                    log.info("Loading existing links for scope " + sourceId);
+                    DetachedCriteria criteria = DetachedCriteria.forClass(CnALink.class)
+                            .createAlias("dependant", "dependant")
+                            .createAlias("dependency", "dependency")
+                            .add(Restrictions.or(Restrictions.eq("dependant.sourceId", sourceId),
+                                    Restrictions.eq("dependency.sourceId", sourceId)));
+                    @SuppressWarnings("unchecked")
+                    List<CnALink> result = getDao(CnALink.class).findByCriteria(criteria);
+                    result.forEach(link -> existingLinksForScope
+                            .computeIfAbsent(link.getDependant().getDbId(), id -> new HashMap<>())
+                            .computeIfAbsent(link.getDependency().getDbId(), id -> new HashSet<>())
+                            .add(link.getRelationId()));
+                }
             }
             List<SyncObject> soList = syncData.getSyncObject();
 
@@ -210,7 +232,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             start = System.currentTimeMillis();
         }
         if (log.isDebugEnabled()) {
-            log.debug("Importing element type: " + extObjectType + "," + " extId: " + extId + "...");
+            log.debug(
+                    "Importing element type: " + extObjectType + "," + " extId: " + extId + "...");
         }
 
         boolean setAttributes = false;
@@ -218,7 +241,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         MapObjectType mot = getMap(extObjectType);
 
         if (mot == null) {
-            final String message = "Could not find mapObjectType-Element" + " for XML type: " + extObjectType;
+            final String message = "Could not find mapObjectType-Element" + " for XML type: "
+                    + extObjectType;
             log.error(message);
             errorList.add(message);
             return;
@@ -250,7 +274,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 potentiallyUpdated++;
             } else {
                 if (log.isDebugEnabled()) {
-                    log.debug("Element found in db, update disabled," + " uuid: " + elementInDB.getUuid());
+                    log.debug("Element found in db, update disabled," + " uuid: "
+                            + elementInDB.getUuid());
                 }
                 // do not update this object's attributes!
                 setAttributes = false;
@@ -285,7 +310,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                     log.debug("Element inserted, uuid: " + elementInDB.getUuid());
                 }
             } catch (Exception e) {
-                log.error("Error while inserting element, type: " + extObjectType + ", extId: " + extId, e);
+                log.error("Error while inserting element, type: " + extObjectType + ", extId: "
+                        + extId, e);
                 errorList.add("Konnte " + veriniceObjectType + "-Objekt nicht erzeugen.");
             }
         }
@@ -310,17 +336,22 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
                 String attrIntId = null;
                 if (mat == null) {
-                    final String message = "Could not find mapObjectType-" + "Element for XML attribute type: " + attrExtId + " of type: " + extObjectType + ". Using extern-id.";
+                    final String message = "Could not find mapObjectType-"
+                            + "Element for XML attribute type: " + attrExtId + " of type: "
+                            + extObjectType + ". Using extern-id.";
                     log.warn(message);
                     attrIntId = attrExtId;
                 } else {
                     attrIntId = mat.getIntId();
                 }
 
-                boolean licenseManagementValid = validateInformation(licenseManagement, syncaAttribute);
+                boolean licenseManagementValid = validateInformation(licenseManagement,
+                        syncaAttribute);
                 importReferenceTypes.trackReferences(elementInDB, syncaAttribute, attrIntId);
                 try {
-                    elementInDB.getEntity().importProperties(huiTypeFactory, attrIntId, attrValues, syncaAttribute.getLimitedLicense(), syncaAttribute.getLicenseContentId(), licenseManagementValid);
+                    elementInDB.getEntity().importProperties(huiTypeFactory, attrIntId, attrValues,
+                            syncaAttribute.getLimitedLicense(),
+                            syncaAttribute.getLicenseContentId(), licenseManagementValid);
                 } catch (IndexOutOfBoundsException e) {
                     log.error("wrong number of arguments while importing", e);
                 }
@@ -358,7 +389,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             // this method call is the parent for the import of the
             // child elements.
             if (log.isDebugEnabled() && child != null) {
-                log.debug("Child found, type: " + child.getExtObjectType() + ", extId: " + child.getExtId());
+                log.debug("Child found, type: " + child.getExtObjectType() + ", extId: "
+                        + child.getExtId());
             }
             importObject(elementInDB, child);
         }
@@ -376,7 +408,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         boolean licenseManagementValid = licenseManagement && licenseListCardinality;
 
         if (licenseManagement && !licenseListCardinality) {
-            throw new RuntimeException("count of attributes and " + "licenseinformation is not equal, " + "skipping importing properties");
+            throw new RuntimeException("count of attributes and "
+                    + "licenseinformation is not equal, " + "skipping importing properties");
 
         }
         return licenseManagementValid;
@@ -390,7 +423,9 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      * @return true if cardinalities are equal, false otherwise
      */
     private boolean checkEqualCardinalityOfLists(SyncAttribute syncAttribute) {
-        return syncAttribute.getValue().size() == syncAttribute.getLimitedLicense().size() && syncAttribute.getLimitedLicense().size() == syncAttribute.getLicenseContentId().size();
+        return syncAttribute.getValue().size() == syncAttribute.getLimitedLicense().size()
+                && syncAttribute.getLimitedLicense().size() == syncAttribute.getLicenseContentId()
+                        .size();
     }
 
     /**
@@ -402,7 +437,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      */
     private boolean isLicenseManagementSupported(SyncObject syncObject) {
         for (SyncAttribute syncAttribute : syncObject.getSyncAttribute()) {
-            if (syncAttribute.getLicenseContentId() != null && !syncAttribute.getLicenseContentId().isEmpty()) {
+            if (syncAttribute.getLicenseContentId() != null
+                    && !syncAttribute.getLicenseContentId().isEmpty()) {
                 return true;
             }
         }
@@ -424,7 +460,9 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    private CnATreeElement createElement(CnATreeElement parent, Class clazz) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+    private CnATreeElement createElement(CnATreeElement parent, Class clazz)
+            throws InstantiationException, IllegalAccessException, InvocationTargetException,
+            NoSuchMethodException {
         CnATreeElement child;
         if (clazz.equals(Organization.class)) {
             child = new Organization(parent, false);
@@ -435,10 +473,11 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
         if (authService.isPermissionHandlingNeeded()) {
             if (child.isScope()) {
-              // VN-1969, grant read/write permissions to the default user group when importing a new scope
-              addPermissions(child, IRightsService.USERDEFAULTGROUPNAME);
+                // VN-1969, grant read/write permissions to the default user
+                // group when importing a new scope
+                addPermissions(child, IRightsService.USERDEFAULTGROUPNAME);
             } else {
-              child.setPermissions(Permission.clonePermissionSet(child, parent.getPermissions()));
+                child.setPermissions(Permission.clonePermissionSet(child, parent.getPermissions()));
             }
         }
 
@@ -466,10 +505,12 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      * @param file
      * @throws CommandException
      */
-    private void importFileList(CnATreeElement elementInDB, List<SyncFile> fileList) throws CommandException {
+    private void importFileList(CnATreeElement elementInDB, List<SyncFile> fileList)
+            throws CommandException {
         HUITypeFactory huiTypeFactory = getHuiTypeFactory();
         for (SyncFile fileXml : fileList) {
-            LoadAttachmentByExternalId loadAttachment = new LoadAttachmentByExternalId(sourceId, fileXml.getExtId());
+            LoadAttachmentByExternalId loadAttachment = new LoadAttachmentByExternalId(sourceId,
+                    fileXml.getExtId());
             loadAttachment = getCommandService().executeCommand(loadAttachment);
             Attachment attachment = loadAttachment.getAttachment();
             if (attachment == null) {
@@ -498,16 +539,20 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 MapAttributeType mat = getMapAttribute(mot, attrExtId);
 
                 if (mat == null) {
-                    final String message = "Could not find " + "mapObjectType-Element for XML attribute type: " + attrExtId + " of type: " + Attachment.TYPE_ID;
+                    final String message = "Could not find "
+                            + "mapObjectType-Element for XML attribute type: " + attrExtId
+                            + " of type: " + Attachment.TYPE_ID;
                     log.error(message);
                     this.errorList.add(message);
                 } else {
                     String attrIntId = mat.getIntId();
-                    attachment.getEntity().importProperties(huiTypeFactory, attrIntId, attrValues, sa.getLimitedLicense(), sa.getLicenseContentId(), false);
+                    attachment.getEntity().importProperties(huiTypeFactory, attrIntId, attrValues,
+                            sa.getLimitedLicense(), sa.getLicenseContentId(), false);
                 }
             }
             if (log.isDebugEnabled()) {
-                log.debug("Attachment file size (after properties save): " + attachment.getFileSize());
+                log.debug("Attachment file size (after properties save): "
+                        + attachment.getFileSize());
             }
 
         }
@@ -562,7 +607,9 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         if (dependant == null) {
             dependant = findDbElement(this.sourceId, dependantId, true, true);
             if (dependant == null) {
-                log.error("Can not import link. dependant not found in " + "xml file and db, dependant ext-id: " + dependantId + " dependency ext-id: " + dependencyId);
+                log.error("Can not import link. dependant not found in "
+                        + "xml file and db, dependant ext-id: " + dependantId
+                        + " dependency ext-id: " + dependencyId);
                 return;
             } else if (log.isDebugEnabled()) {
                 log.debug("dependant not found in XML file but in db, " + "ext-id: " + dependantId);
@@ -572,14 +619,18 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         if (dependency == null) {
             dependency = findDbElement(this.sourceId, dependencyId, true, true);
             if (dependency == null) {
-                log.error("Can not import link. dependency not found in " + "xml file and db, dependency ext-id: " + dependencyId + " dependant ext-id: " + dependantId);
+                log.error("Can not import link. dependency not found in "
+                        + "xml file and db, dependency ext-id: " + dependencyId
+                        + " dependant ext-id: " + dependantId);
                 return;
             } else if (log.isDebugEnabled()) {
-                log.debug("dependency not found in XML file but in db, " + "ext-id: " + dependencyId);
+                log.debug(
+                        "dependency not found in XML file but in db, " + "ext-id: " + dependencyId);
             }
         }
 
-        CnALink link = new CnALink(dependant, dependency, syncLink.getRelationId(), syncLink.getComment());
+        CnALink link = new CnALink(dependant, dependency, syncLink.getRelationId(),
+                syncLink.getComment());
 
         String titleDependant = "unknown";
         String titleDependency = "unknown";
@@ -592,11 +643,12 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             }
         }
 
-        if (isNew(link)) {
+        if (parameter.isImportAsCatalog() || !sourceIdExists || isNew(link)) {
             dependant.addLinkDown(link);
             dependency.addLinkUp(link);
             if (log.isDebugEnabled()) {
-                log.debug("Creating new link from: " + titleDependant + " to: " + titleDependency + "...");
+                log.debug("Creating new link from: " + titleDependant + " to: " + titleDependency
+                        + "...");
             }
             getDao(CnALink.class).saveOrUpdate(link);
         } else if (log.isDebugEnabled()) {
@@ -606,26 +658,27 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     }
 
     private boolean isNew(CnALink link) {
-        String hql = "from CnALink as link where link.id.dependantId=? and " + "link.id.dependencyId=? and (link.id.typeId=? " + "or link.id.typeId=?)";
-        String relationId = link.getRelationId();
-        String relationId2 = relationId;
-        if (CnALink.Id.NO_TYPE.equals(relationId)) {
-            relationId2 = "";
+        Map<Integer, Set<String>> linksForDependant = existingLinksForScope
+                .get(link.getDependant().getDbId());
+        if (linksForDependant == null) {
+            return true;
         }
-        if (relationId != null && relationId.isEmpty()) {
-            relationId2 = CnALink.Id.NO_TYPE;
+        Set<String> linksBetweenDependencyAndDependant = linksForDependant
+                .get(link.getDependency().getDbId());
+        if (linksBetweenDependencyAndDependant == null) {
+            return true;
         }
-        Object[] paramArray = new Object[] { link.getDependant().getDbId(), link.getDependency().getDbId(), relationId, relationId2 };
-        List<?> result = getDao(CnALink.class).findByQuery(hql, paramArray);
-        return result == null || result.isEmpty();
+        return !linksBetweenDependencyAndDependant.contains(link.getRelationId());
     }
 
     private void importRiskAnalysis() {
         if (risk == null) {
             return;
         }
-        RiskAnalysisImporter riskAnalysisImporter = new RiskAnalysisImporter(risk.getAnalysis(), risk.getScenario(), risk.getControl());
-        riskAnalysisImporter.setFinishedRiskAnalysisListsDao(getDaoFactory().getDAO(FinishedRiskAnalysisLists.class));
+        RiskAnalysisImporter riskAnalysisImporter = new RiskAnalysisImporter(risk.getAnalysis(),
+                risk.getScenario(), risk.getControl());
+        riskAnalysisImporter.setFinishedRiskAnalysisListsDao(
+                getDaoFactory().getDAO(FinishedRiskAnalysisLists.class));
         riskAnalysisImporter.setOwnGefaehrdungDao(getDaoFactory().getDAO(OwnGefaehrdung.class));
         riskAnalysisImporter.setRisikoMassnahmeDao(getDaoFactory().getDAO(RisikoMassnahme.class));
         riskAnalysisImporter.setElementDao(getDaoFactory().getDAO(CnATreeElement.class));
@@ -702,7 +755,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             gUms.setScopeId(null);
 
             @SuppressWarnings("unchecked")
-            IBaseDao<GefaehrdungsUmsetzung, Serializable> dao = (IBaseDao<GefaehrdungsUmsetzung, Serializable>) getDaoFactory().getDAO(gUms.getClass());
+            IBaseDao<GefaehrdungsUmsetzung, Serializable> dao = (IBaseDao<GefaehrdungsUmsetzung, Serializable>) getDaoFactory()
+                    .getDAO(gUms.getClass());
 
             dao.merge(gUms);
         }
@@ -738,10 +792,12 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      * @throws RuntimeException
      *             if more than one element is found
      */
-    private CnATreeElement findDbElement(String sourceId, String externalId, boolean fetchLinksDown, boolean fetchLinksUp) {
+    private CnATreeElement findDbElement(String sourceId, String externalId, boolean fetchLinksDown,
+            boolean fetchLinksUp) {
         CnATreeElement result = null;
         // use a new crudCommand (load by external, source id):
-        LoadCnAElementByExternalID command = new LoadCnAElementByExternalID(sourceId, externalId, fetchLinksDown, fetchLinksUp);
+        LoadCnAElementByExternalID command = new LoadCnAElementByExternalID(sourceId, externalId,
+                fetchLinksDown, fetchLinksUp);
         command.setParent(true);
         try {
             command = getCommandService().executeCommand(command);
@@ -756,7 +812,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 result = foundElements.get(0);
             }
             if (foundElements.size() > 1) {
-                final String message = "Found more than one element with source-id: " + sourceId + " and external ID: " + externalId;
+                final String message = "Found more than one element with source-id: " + sourceId
+                        + " and external ID: " + externalId;
                 log.error(message);
                 throw new RuntimeCommandException(message);
             }
@@ -801,7 +858,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             } catch (CommandException e) {
                 log.error("Error while accessing container.", e);
                 errorList.add("Fehler beim Ausführen von LoadBSIModel.");
-                throw new RuntimeCommandException("Fehler beim Anlegen des " + "Behälters für importierte Objekte.", e);
+                throw new RuntimeCommandException(
+                        "Fehler beim Anlegen des " + "Behälters für importierte Objekte.", e);
             }
             container = cmdLoadContainer.getHolder();
             if (container == null) {
@@ -821,7 +879,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     }
 
     private CnATreeElement createContainer(Class<?> clazz) {
-        if (LoadImportObjectsHolder.isImplementation(clazz, IBSIStrukturElement.class, IMassnahmeUmsetzung.class)) {
+        if (LoadImportObjectsHolder.isImplementation(clazz, IBSIStrukturElement.class,
+                IMassnahmeUmsetzung.class)) {
             return createBsiContainer();
         } else if (BausteinUmsetzung.class.equals(clazz)) {
             return createBsiContainer();
@@ -998,6 +1057,12 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
     private static HUITypeFactory getHuiTypeFactory() {
         return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+        existingLinksForScope = null;
     }
 
 }
