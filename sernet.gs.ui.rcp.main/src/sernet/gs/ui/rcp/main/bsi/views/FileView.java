@@ -224,9 +224,6 @@ public class FileView extends RightsEnabledView
         getSite().getPage().addPartListener(linkWithEditorPartListener);
     }
 
-    /**
-     * 
-     */
     private void hookDND() {
         new FileDropTarget(this);
     }
@@ -319,9 +316,6 @@ public class FileView extends RightsEnabledView
         ((TableComparator) viewer.getComparator()).setColumn(1);
     }
 
-    /**
-     * @return
-     */
     private CellLabelProvider getImageCellProvider() {
         if (imageCellProvider == null) {
             imageCellProvider = new AttachmentImageCellProvider(getThumbnailSize());
@@ -329,9 +323,6 @@ public class FileView extends RightsEnabledView
         return imageCellProvider;
     }
 
-    /**
-     * @return
-     */
     private int getThumbnailSize() {
         int size = DEFAULT_THUMBNAIL_SIZE;
         String sizeString = Activator.getDefault().getPreferenceStore()
@@ -344,8 +335,11 @@ public class FileView extends RightsEnabledView
 
     private void hookActions() {
         viewer.addDoubleClickListener(event -> {
-            Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-            EditorFactory.getInstance().openEditor(sel);
+            ISelection selection = event.getViewer().getSelection();
+            if (!selection.isEmpty()) {
+                Object sel = ((IStructuredSelection) selection).getFirstElement();
+                EditorFactory.getInstance().openEditor(sel);
+            }
         });
         viewer.addSelectionChangedListener(event -> {
             saveCopyAction.setEnabled(true);

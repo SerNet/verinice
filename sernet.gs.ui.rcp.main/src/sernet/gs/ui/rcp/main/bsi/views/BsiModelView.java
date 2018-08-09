@@ -30,15 +30,13 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -92,6 +90,7 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RiskAnalysisWizard;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -100,7 +99,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
-import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -108,10 +106,8 @@ import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.NullModel;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
-import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.IDatenschutzElement;
-import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.tree.TreeContentProvider;
@@ -133,8 +129,6 @@ public class BsiModelView extends RightsEnabledView
 
     public static final String ID = "sernet.gs.ui.rcp.main.views.bsimodelview"; //$NON-NLS-1$
 
-    private Action doubleClickAction;
-
     private DrillDownAdapter drillDownAdapter;
 
     private BSIModel model;
@@ -148,7 +142,7 @@ public class BsiModelView extends RightsEnabledView
     private Action expandAllAction;
 
     private Action collapseAction;
-    
+
     private Action linkWithEditorAction;
 
     private ShowBulkEditAction bulkEditAction;
@@ -172,16 +166,15 @@ public class BsiModelView extends RightsEnabledView
     private TreeUpdateListener bsiModelListener;
 
     private boolean linkingActive = false;
-    
-    private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
+
+    private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
 
     public BsiModelView() {
-        
+
         elementManager = new ElementManager();
     }
-    
+
     /*
-     * (non-Javadoc)
      * 
      * @see org.eclipse.ui.part.WorkbenchPart#dispose()
      */
@@ -202,27 +195,22 @@ public class BsiModelView extends RightsEnabledView
 
     private void refreshModelAsync() {
 
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    viewer.setInput(model);
-                    viewer.refresh();
-                } catch (Exception e) {
-                    ExceptionUtil.log(e, Messages.BsiModelView_18);
-                }
+        Display.getDefault().asyncExec(() -> {
+            try {
+                viewer.setInput(model);
+                viewer.refresh();
+            } catch (Exception e) {
+                ExceptionUtil.log(e, Messages.BsiModelView_18);
             }
         });
     }
 
     @Override
-    public String getRightID(){
+    public String getRightID() {
         return ActionRightIDs.BSIMODELVIEW;
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
@@ -234,17 +222,12 @@ public class BsiModelView extends RightsEnabledView
         viewer.addFilter(new ViewerFilter() {
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
-                if (element instanceof IDatenschutzElement) {
-                    return false;
-                }
-                return true;
+                return !(element instanceof IDatenschutzElement);
             }
-
         });
     }
 
     /*
-     * (non-Javadoc)
      * 
      * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
      * widgets.Composite)
@@ -269,13 +252,13 @@ public class BsiModelView extends RightsEnabledView
 
         viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
         drillDownAdapter = new DrillDownAdapter(viewer);
-        
+
         TreeContentProvider contentProvider = new TreeContentProvider(elementManager);
         viewer.setContentProvider(contentProvider);
-                
+
         viewer.setLabelProvider(new DecoratingLabelProvider(new BSIModelViewLabelProvider(),
                 workbench.getDecoratorManager()));
-        viewer.setSorter(new CnAElementByTitelSorter());
+        viewer.setComparator(new CnAElementByTitelSorter());
         toggleLinking(Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
@@ -318,31 +301,10 @@ public class BsiModelView extends RightsEnabledView
         } else if (modelLoadListener == null) {
             // model is not loaded yet: add a listener to load data when it's
             // laoded
-            modelLoadListener = new IModelLoadListener() {
-                @Override
-                public void closed(BSIModel model) {
-                    // nothing to do
-                }
-
+            modelLoadListener = new DefaultModelLoadListener() {
                 @Override
                 public void loaded(BSIModel model) {
                     startInitDataJob();
-                }
-
-                @Override
-                public void loaded(ISO27KModel model) {
-                    // nothing to do            
-                }
-
-                @Override
-                public void loaded(BpModel model) {
-                 // nothing to do
-                    
-                }
-
-                @Override
-                public void loaded(CatalogModel model) {
-                    // do nothing
                 }
             };
             CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
@@ -378,11 +340,7 @@ public class BsiModelView extends RightsEnabledView
 
     private boolean bausteinSelected() {
         IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
-        if (!sel.isEmpty() && sel.size() == 1
-                && sel.getFirstElement() instanceof BausteinUmsetzung) {
-            return true;
-        }
-        return false;
+        return sel.size() == 1 && sel.getFirstElement() instanceof BausteinUmsetzung;
     }
 
     private void fillLocalToolBar() {
@@ -397,12 +355,7 @@ public class BsiModelView extends RightsEnabledView
     private void hookContextMenu() {
         MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
         menuMgr.setRemoveAllWhenShown(true);
-        menuMgr.addMenuListener(new IMenuListener() {
-            @Override
-            public void menuAboutToShow(IMenuManager manager) {
-                fillContextMenu(manager);
-            }
-        });
+        menuMgr.addMenuListener(this::fillContextMenu);
         Menu menu = menuMgr.createContextMenu(viewer.getControl());
 
         viewer.getControl().setMenu(menu);
@@ -412,10 +365,8 @@ public class BsiModelView extends RightsEnabledView
     private void hookDNDListeners() {
 
         Transfer[] dropTypes = new Transfer[] { IGSModelElementTransfer.getInstance(),
-                BausteinUmsetzungTransfer.getInstance(),
-                IBSIStrukturElementTransfer.getInstance(),
-                SearchViewElementTransfer.getInstance(),
-                ISO27kElementTransfer.getInstance() };
+                BausteinUmsetzungTransfer.getInstance(), IBSIStrukturElementTransfer.getInstance(),
+                SearchViewElementTransfer.getInstance(), ISO27kElementTransfer.getInstance() };
         Transfer[] dragTypes = new Transfer[] { IBSIStrukturElementTransfer.getInstance(),
                 BausteinUmsetzungTransfer.getInstance() };
 
@@ -425,11 +376,31 @@ public class BsiModelView extends RightsEnabledView
     }
 
     private void hookDoubleClickAction() {
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                doubleClickAction.run();
+        viewer.addDoubleClickListener(event -> {
+            ISelection selection = event.getViewer().getSelection();
+            if (!selection.isEmpty()) {
+                Object sel = ((IStructuredSelection) selection).getFirstElement();
+
+                if (sel instanceof FinishedRiskAnalysis) {
+                    FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) sel;
+                    if (CnAElementHome.getInstance().isWriteAllowed(analysis)) {
+                        RiskAnalysisWizard wizard = new RiskAnalysisWizard(analysis.getParent(),
+                                analysis);
+                        wizard.init(PlatformUI.getWorkbench(), null);
+                        WizardDialog wizDialog = new org.eclipse.jface.wizard.WizardDialog(
+                                new Shell(), wizard);
+                        wizDialog.setPageSize(wizard.getWidth(), wizard.getHeight());
+
+                        wizDialog.open();
+                    } else {
+                        MessageDialog.openError(viewer.getTree().getShell(),
+                                Messages.BsiModelView_RA_0, Messages.BsiModelView_RA_1);
+                    }
+                } else {
+                    EditorFactory.getInstance().updateAndOpenObject(sel);
+                }
             }
+
         });
     }
 
@@ -449,7 +420,7 @@ public class BsiModelView extends RightsEnabledView
                     newsel.add(sourceBst);
 
                     try {
-                        LoadCnAElementByType<BausteinUmsetzung> command = new LoadCnAElementByType<BausteinUmsetzung>(
+                        LoadCnAElementByType<BausteinUmsetzung> command = new LoadCnAElementByType<>(
                                 BausteinUmsetzung.class);
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
                         List<BausteinUmsetzung> bausteine = command.getElements();
@@ -487,34 +458,6 @@ public class BsiModelView extends RightsEnabledView
 
         gsmbausteinZuordnungAction = new GSMBausteinZuordnungAction(
                 getViewSite().getWorkbenchWindow());
-
-        doubleClickAction = new Action() {
-
-            @Override
-            public void run() {
-                
-                Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-
-                if (sel instanceof FinishedRiskAnalysis) {
-                    FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) sel;
-                    if (CnAElementHome.getInstance().isWriteAllowed(analysis)) {
-                        RiskAnalysisWizard wizard = new RiskAnalysisWizard(analysis.getParent(),
-                                analysis);
-                        wizard.init(PlatformUI.getWorkbench(), null);
-                        WizardDialog wizDialog = new org.eclipse.jface.wizard.WizardDialog(
-                                new Shell(), wizard);
-                        wizDialog.setPageSize(wizard.getWidth(), wizard.getHeight());
-
-                        wizDialog.open();
-                    } else {
-                        MessageDialog.openError(viewer.getTree().getShell(),
-                                Messages.BsiModelView_RA_0, Messages.BsiModelView_RA_1);
-                    }
-                } else {
-                    EditorFactory.getInstance().updateAndOpenObject(sel);
-                }
-            }
-        };
 
         BSIModelElementFilter modelElementFilter = new BSIModelElementFilter(viewer);
 
@@ -568,7 +511,8 @@ public class BsiModelView extends RightsEnabledView
         ArrayList<BausteinUmsetzung> newsel = new ArrayList<>(newSelDefaultSize);
         newsel.add(sourceBst);
         try {
-            LoadCnAElementByType<BausteinUmsetzung> command = new LoadCnAElementByType<>(BausteinUmsetzung.class);
+            LoadCnAElementByType<BausteinUmsetzung> command = new LoadCnAElementByType<>(
+                    BausteinUmsetzung.class);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             List<BausteinUmsetzung> bausteine = command.getElements();
 
@@ -632,8 +576,6 @@ public class BsiModelView extends RightsEnabledView
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
      */
     @Override
@@ -642,8 +584,6 @@ public class BsiModelView extends RightsEnabledView
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.
      * eclipse.ui.IEditorPart)
@@ -654,28 +594,28 @@ public class BsiModelView extends RightsEnabledView
             return;
         }
         CnATreeElement element = BSIElementEditorInput.extractElement(editor);
-        if(element == null){
+        if (element == null) {
             element = getElementFromAttachment(editor);
         }
         if (element != null && ((element instanceof IBSIStrukturElement)
                 || (element instanceof MassnahmenUmsetzung)
                 || (element instanceof BausteinUmsetzung))) {
-           viewer.setSelection(new StructuredSelection(element),true);          
-        }      
-        return;    
+            viewer.setSelection(new StructuredSelection(element), true);
+        }
     }
-    
+
     protected void toggleLinking(boolean checked) {
         this.linkingActive = checked;
         if (checked) {
-            Optional.ofNullable(getSite().getPage().getActiveEditor()).ifPresent(this::editorActivated);
+            Optional.ofNullable(getSite().getPage().getActiveEditor())
+                    .ifPresent(this::editorActivated);
         }
     }
-    
+
     protected boolean isLinkingActive() {
         return linkingActive;
     }
-    
+
     /**
      * gets Element that is referenced by attachment shown by editor
      * 

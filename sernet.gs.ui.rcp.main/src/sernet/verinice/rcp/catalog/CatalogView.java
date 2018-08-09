@@ -40,8 +40,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -279,8 +278,6 @@ public class CatalogView extends RightsEnabledView
 
     /**
      * Set the input to the viewer.
-     * 
-     * @param catalogModel
      */
     public void setInput(CatalogModel catalogModel) {
         viewer.setInput(catalogModel);
@@ -300,8 +297,9 @@ public class CatalogView extends RightsEnabledView
         doubleClickAction = new Action() {
             @Override
             public void run() {
-                if (viewer.getSelection() instanceof IStructuredSelection) {
-                    Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+                ISelection selection = viewer.getSelection();
+                if (!selection.isEmpty() && selection instanceof IStructuredSelection) {
+                    Object sel = ((IStructuredSelection) selection).getFirstElement();
                     try {
                         openEditorReadOnly(sel);
                     } catch (PartInitException e) {
@@ -384,12 +382,7 @@ public class CatalogView extends RightsEnabledView
     }
 
     private void addActions() {
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                doubleClickAction.run();
-            }
-        });
+        viewer.addDoubleClickListener(event -> doubleClickAction.run());
 
         viewer.addSelectionChangedListener(expandAction);
         viewer.addSelectionChangedListener(collapseAction);
