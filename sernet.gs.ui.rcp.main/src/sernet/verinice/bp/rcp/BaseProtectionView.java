@@ -408,8 +408,9 @@ public class BaseProtectionView extends RightsEnabledView
 
     private void addActions() {
         viewer.addDoubleClickListener(event -> {
-            if (viewer.getSelection() instanceof IStructuredSelection) {
-                Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+            ISelection selection = event.getViewer().getSelection();
+            if (!selection.isEmpty() && selection instanceof IStructuredSelection) {
+                Object sel = ((IStructuredSelection) selection).getFirstElement();
                 EditorFactory.getInstance().updateAndOpenObject(sel);
             }
         });

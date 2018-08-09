@@ -335,8 +335,11 @@ public class FileView extends RightsEnabledView
 
     private void hookActions() {
         viewer.addDoubleClickListener(event -> {
-            Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-            EditorFactory.getInstance().openEditor(sel);
+            ISelection selection = event.getViewer().getSelection();
+            if (!selection.isEmpty()) {
+                Object sel = ((IStructuredSelection) selection).getFirstElement();
+                EditorFactory.getInstance().openEditor(sel);
+            }
         });
         viewer.addSelectionChangedListener(event -> {
             saveCopyAction.setEnabled(true);

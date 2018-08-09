@@ -393,15 +393,17 @@ public class LinkMaker extends Composite implements IRelationTable {
 
     private void hookDoubleClickAction() {
         viewer.addDoubleClickListener(event -> {
-            ISelection selection = viewer.getSelection();
-            Object obj = ((IStructuredSelection) selection).getFirstElement();
-            CnALink link = (CnALink) obj;
+            ISelection selection = event.getViewer().getSelection();
+            if (!selection.isEmpty()) {
+                Object obj = ((IStructuredSelection) selection).getFirstElement();
+                CnALink link = (CnALink) obj;
 
-            // open the object on the other side of the link:
-            if (CnALink.isDownwardLink(getInputElmt(), link)) {
-                EditorFactory.getInstance().updateAndOpenObject(link.getDependency());
-            } else {
-                EditorFactory.getInstance().updateAndOpenObject(link.getDependant());
+                // open the object on the other side of the link:
+                if (CnALink.isDownwardLink(getInputElmt(), link)) {
+                    EditorFactory.getInstance().updateAndOpenObject(link.getDependency());
+                } else {
+                    EditorFactory.getInstance().updateAndOpenObject(link.getDependant());
+                }
             }
         });
     }

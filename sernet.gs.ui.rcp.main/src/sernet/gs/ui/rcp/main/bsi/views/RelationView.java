@@ -451,15 +451,17 @@ public class RelationView extends RightsEnabledView
 
     private void hookDoubleClickAction() {
         viewer.addDoubleClickListener(event -> {
-            ISelection selection = viewer.getSelection();
-            Object obj = ((IStructuredSelection) selection).getFirstElement();
-            CnALink link = (CnALink) obj;
+            ISelection selection = event.getViewer().getSelection();
+            if (!selection.isEmpty()) {
+                Object obj = ((IStructuredSelection) selection).getFirstElement();
+                CnALink link = (CnALink) obj;
 
-            // open the object on the other side of the link:
-            if (CnALink.isDownwardLink(inputElmt, link))
-                EditorFactory.getInstance().updateAndOpenObject(link.getDependency(), readOnly);
-            else
-                EditorFactory.getInstance().updateAndOpenObject(link.getDependant(), readOnly);
+                // open the object on the other side of the link:
+                if (CnALink.isDownwardLink(inputElmt, link))
+                    EditorFactory.getInstance().updateAndOpenObject(link.getDependency(), readOnly);
+                else
+                    EditorFactory.getInstance().updateAndOpenObject(link.getDependant(), readOnly);
+            }
         });
     }
 
