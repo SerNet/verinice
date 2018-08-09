@@ -157,6 +157,7 @@ public class LinkMaker extends Composite implements IRelationTable {
             }
 
         });
+        combo.setEnabled(false);
 
         addRelationComboListener();
 
