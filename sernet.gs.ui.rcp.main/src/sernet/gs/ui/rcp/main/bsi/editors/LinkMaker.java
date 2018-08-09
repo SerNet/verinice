@@ -20,6 +20,7 @@
 package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -42,9 +43,8 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -85,23 +85,18 @@ public class LinkMaker extends Composite implements IRelationTable {
 
     static final String LAST_SELECTED_RELATION_PREF_PREFIX = "last_selected_relation_for";
 
-    private static final int RELATION_COMBO_WIDTH = 200;
-
-    private static final int FORM_ATTACHMENT_NUMERATOR_DEFAULT = 100;
-    private static final int FORM_ATTACHMENT_OFFSET_DEFAULT = 5;
-
+    private static final int COMPOSITE_WIDTH_HINT = 400;
     // SWT
     RelationTableViewer viewer;
     private WorkbenchPart part;
 
     // SWT widgets
     Combo comboElementType;
-    private Label label;
     private Button addLinkButton;
     private Button removeLinkButton;
 
     // JFaces
-    final ComboViewer relationComboViewer = new ComboViewer(this, SWT.READ_ONLY);
+    final ComboViewer relationComboViewer;
 
     // Utilities
     static IPreferenceStore prefStore = Activator.getDefault().getPreferenceStore();
@@ -120,23 +115,73 @@ public class LinkMaker extends Composite implements IRelationTable {
     private int oldSelection = -1;
     private boolean writeable;
     private IPropertyChangeListener proceedingFilterDisabledToggleListener;
+    private Composite composite;
 
     public LinkMaker(Composite parent, WorkbenchPart part) {
         super(parent, SWT.BORDER);
-        FormLayout formLayout = new FormLayout();
-        this.setLayout(formLayout);
+        this.setLayout(new GridLayout());
         this.part = part;
+
+        composite = new Composite(this, SWT.NONE);
+
+        GridData gdComposite = new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1);
+        gdComposite.widthHint = COMPOSITE_WIDTH_HINT;
+        gdComposite.verticalIndent = 1;
+        gdComposite.minimumWidth = COMPOSITE_WIDTH_HINT;
+        composite.setLayoutData(gdComposite);
+        composite.setLayout(new GridLayout(5, false));
+
+        Label label = new Label(composite, SWT.NULL);
+        label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+        label.setText(Messages.LinkMaker_0);
+
+        comboElementType = new Combo(composite, SWT.READ_ONLY);
+        comboElementType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+
+        relationComboViewer = new ComboViewer(composite, SWT.READ_ONLY);
+        Combo combo = relationComboViewer.getCombo();
+        GridData gdCombo1 = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+        combo.setLayoutData(gdCombo1);
+
+        relationComboViewer.setContentProvider(new ArrayContentProvider());
+
+        relationComboViewer.setLabelProvider(new LabelProvider() {
+
+            @Override
+            public String getText(Object element) {
+                if (element instanceof DirectedHuiRelation) {
+                    DirectedHuiRelation relation = (DirectedHuiRelation) element;
+                    return relation.getLabel();
+                } else {
+                    return "unknown object type";
+                }
+            }
+
+        });
+        combo.setEnabled(false);
+
+        // add a "fake" element to set an initial/minimum width for the combo
+        relationComboViewer.setInput(Collections.singleton(""));
+
+        addRelationComboListener();
+
+        addLinkButton = new Button(composite, SWT.PUSH);
+
+        addLinkButton.setText(Messages.LinkMaker_1);
+        addLinkButton.setToolTipText(Messages.LinkMaker_2);
+        addLinkButton.setEnabled(false);
+
+        removeLinkButton = new Button(composite, SWT.PUSH);
+
+        removeLinkButton.setText(Messages.LinkMaker_3);
+        removeLinkButton.setToolTipText(Messages.LinkMaker_4);
     }
 
     public void createPartControl(Boolean isWriteAllowed) {
 
         this.writeable = isWriteAllowed;
 
-        createLabel();
-        createElementTypeCombo();
-        createRelationCombo();
-        createButtonAddLink();
-        createButtonRemoveLink();
+        removeLinkButton.setEnabled(writeable && checkRights());
         initLinkTableViewer();
 
         // listeners to reload view:
@@ -174,99 +219,12 @@ public class LinkMaker extends Composite implements IRelationTable {
         this.removeLinkButton.addSelectionListener(unlinkAction);
 
         createFilter();
-
         hookDoubleClickAction();
-    }
-
-    private void createLabel() {
-        label = new Label(this, SWT.NULL);
-        label.setText(Messages.LinkMaker_0);
-        FormData formData = new FormData();
-        formData.top = new FormAttachment(0, FORM_ATTACHMENT_OFFSET_DEFAULT);
-        formData.left = new FormAttachment(0, FORM_ATTACHMENT_OFFSET_DEFAULT);
-        label.setLayoutData(formData);
-        label.pack();
-    }
-
-    private void createElementTypeCombo() {
-        comboElementType = new Combo(this, SWT.READ_ONLY);
-        FormData formData = new FormData();
-        formData.top = new FormAttachment(0, FORM_ATTACHMENT_OFFSET_DEFAULT);
-        formData.left = new FormAttachment(label, FORM_ATTACHMENT_OFFSET_DEFAULT);
-        comboElementType.setLayoutData(formData);
-    }
-
-    private void createRelationCombo() {
-
-        FormData formData = new FormData();
-        formData.top = new FormAttachment(0, FORM_ATTACHMENT_OFFSET_DEFAULT);
-        formData.left = new FormAttachment(comboElementType, FORM_ATTACHMENT_OFFSET_DEFAULT);
-        formData.width = RELATION_COMBO_WIDTH;
-        relationComboViewer.getCombo().setLayoutData(formData);
-
-        relationComboViewer.setContentProvider(new ArrayContentProvider() {
-            @Override
-            public Object[] getElements(Object inputElement) {
-                ArrayList<DirectedHuiRelation> relations = new ArrayList<>();
-                if (inputElement instanceof Set) {
-                    @SuppressWarnings("unchecked")
-                    Set<DirectedHuiRelation> input = (Set<DirectedHuiRelation>) inputElement;
-                    relations.addAll(input);
-                    return relations.toArray();
-                }
-
-                return relations.toArray();
-            }
-        });
-
-        relationComboViewer.setLabelProvider(new LabelProvider() {
-
-            @Override
-            public String getText(Object element) {
-                if (element instanceof DirectedHuiRelation) {
-                    DirectedHuiRelation relation = (DirectedHuiRelation) element;
-                    return relation.getLabel();
-                } else {
-                    return "unknown object type";
-                }
-            }
-
-        });
-
-        addRelationComboListener();
-    }
-
-    private void createButtonAddLink() {
-        addLinkButton = new Button(this, SWT.PUSH);
-        FormData formData = new FormData();
-        formData.top = new FormAttachment(comboElementType, 0, SWT.CENTER);
-        formData.left = new FormAttachment(relationComboViewer.getCombo(),
-                FORM_ATTACHMENT_OFFSET_DEFAULT);
-        addLinkButton.setLayoutData(formData);
-        addLinkButton.setText(Messages.LinkMaker_1);
-        addLinkButton.setToolTipText(Messages.LinkMaker_2);
-        addLinkButton.setEnabled(false);
-    }
-
-    private void createButtonRemoveLink() {
-        removeLinkButton = new Button(this, SWT.PUSH);
-        FormData formData = new FormData();
-        formData.top = new FormAttachment(comboElementType, 0, SWT.CENTER);
-        formData.left = new FormAttachment(addLinkButton, FORM_ATTACHMENT_OFFSET_DEFAULT);
-        removeLinkButton.setLayoutData(formData);
-        removeLinkButton.setText(Messages.LinkMaker_3);
-        removeLinkButton.setEnabled(writeable && checkRights());
-        removeLinkButton.setToolTipText(Messages.LinkMaker_4);
     }
 
     private void initLinkTableViewer() {
         viewer = new RelationTableViewer(this, this, SWT.FULL_SELECTION | SWT.MULTI, true);
-        FormData formData = new FormData();
-        formData.top = new FormAttachment(addLinkButton, 2);
-        formData.left = new FormAttachment(0, 1);
-        formData.right = new FormAttachment(FORM_ATTACHMENT_NUMERATOR_DEFAULT, -1);
-        formData.bottom = new FormAttachment(FORM_ATTACHMENT_NUMERATOR_DEFAULT, -1);
-        viewer.getTable().setLayoutData(formData);
+        viewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
         viewer.getTable().setEnabled(writeable);
         relationViewContentProvider = new RelationViewContentProvider(this, viewer);
         viewer.setContentProvider(relationViewContentProvider);
@@ -350,6 +308,7 @@ public class LinkMaker extends Composite implements IRelationTable {
         addLinkButton.setEnabled(relationItemCount > 0 && writeable && checkRights());
 
         selectRelationType();
+        composite.pack(true);
     }
 
     private void selectRelationType() {
