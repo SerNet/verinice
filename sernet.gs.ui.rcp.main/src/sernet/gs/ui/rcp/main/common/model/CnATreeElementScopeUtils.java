@@ -28,34 +28,37 @@ import sernet.verinice.service.commands.CnATypeMapper;
  */
 public final class CnATreeElementScopeUtils {
 
+    private static final CnAElementFactory cnAElementFactory = CnAElementFactory.getInstance();
+
     public static CnATreeElement getScope(CnATreeElement element) {
         Integer scopeElementId = element.getScopeId();
         if (element.getDbId() == scopeElementId) {
             return element;
         }
         Domain elementDomain = CnATypeMapper.getDomainFromTypeId(element.getTypeId());
+        CnATreeElement modelForDomain = getModelForDomain(elementDomain);
 
-        CnAElementFactory cnAElementFactory = CnAElementFactory.getInstance();
-        Stream<CnATreeElement> potentialScopes;
-        switch (elementDomain) {
-        case BASE_PROTECTION:
-            potentialScopes = cnAElementFactory.getBpModel().getChildren().stream();
-            break;
-        case BASE_PROTECTION_OLD:
-            potentialScopes = CnAElementFactory.getLoadedModel().getChildren().stream();
-            break;
-        case ISM:
-            potentialScopes = cnAElementFactory.getISO27kModel().getChildren().stream();
-            break;
+        Stream<CnATreeElement> potentialScopes = modelForDomain.getChildren().stream();
 
-        default:
-            throw new IllegalArgumentException("Unsupported domain " + elementDomain);
-        }
         potentialScopes = Stream.concat(potentialScopes,
                 cnAElementFactory.getCatalogModel().getChildren().stream());
         return potentialScopes.filter(scope -> scope.getDbId().equals(scopeElementId)).findFirst()
                 .orElseThrow(
                         () -> new IllegalArgumentException("Unable to find scope for " + element));
+    }
+
+    private static CnATreeElement getModelForDomain(Domain domain) {
+        switch (domain) {
+        case BASE_PROTECTION:
+            return cnAElementFactory.getBpModel();
+        case BASE_PROTECTION_OLD:
+            return CnAElementFactory.getLoadedModel();
+        case ISM:
+            return cnAElementFactory.getISO27kModel();
+
+        default:
+            throw new IllegalArgumentException("Unsupported domain " + domain);
+        }
     }
 
     private CnATreeElementScopeUtils() {
