@@ -29,8 +29,11 @@ import sernet.verinice.service.commands.CnATypeMapper;
 public final class CnATreeElementScopeUtils {
 
     public static CnATreeElement getScope(CnATreeElement element) {
-        Domain elementDomain = CnATypeMapper.getDomainFromTypeId(element.getTypeId());
         Integer scopeElementId = element.getScopeId();
+        if (element.getDbId() == scopeElementId) {
+            return element;
+        }
+        Domain elementDomain = CnATypeMapper.getDomainFromTypeId(element.getTypeId());
 
         CnAElementFactory cnAElementFactory = CnAElementFactory.getInstance();
         Stream<CnATreeElement> potentialScopes;
