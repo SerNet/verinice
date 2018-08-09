@@ -148,7 +148,7 @@ public class BsiModelView extends RightsEnabledView
     private Action expandAllAction;
 
     private Action collapseAction;
-    
+
     private Action linkWithEditorAction;
 
     private ShowBulkEditAction bulkEditAction;
@@ -172,14 +172,14 @@ public class BsiModelView extends RightsEnabledView
     private TreeUpdateListener bsiModelListener;
 
     private boolean linkingActive = false;
-    
-    private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
+
+    private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
 
     public BsiModelView() {
-        
+
         elementManager = new ElementManager();
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -216,7 +216,7 @@ public class BsiModelView extends RightsEnabledView
     }
 
     @Override
-    public String getRightID(){
+    public String getRightID() {
         return ActionRightIDs.BSIMODELVIEW;
     }
 
@@ -269,10 +269,10 @@ public class BsiModelView extends RightsEnabledView
 
         viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
         drillDownAdapter = new DrillDownAdapter(viewer);
-        
+
         TreeContentProvider contentProvider = new TreeContentProvider(elementManager);
         viewer.setContentProvider(contentProvider);
-                
+
         viewer.setLabelProvider(new DecoratingLabelProvider(new BSIModelViewLabelProvider(),
                 workbench.getDecoratorManager()));
         viewer.setSorter(new CnAElementByTitelSorter());
@@ -331,13 +331,13 @@ public class BsiModelView extends RightsEnabledView
 
                 @Override
                 public void loaded(ISO27KModel model) {
-                    // nothing to do            
+                    // nothing to do
                 }
 
                 @Override
                 public void loaded(BpModel model) {
-                 // nothing to do
-                    
+                    // nothing to do
+
                 }
 
                 @Override
@@ -412,10 +412,8 @@ public class BsiModelView extends RightsEnabledView
     private void hookDNDListeners() {
 
         Transfer[] dropTypes = new Transfer[] { IGSModelElementTransfer.getInstance(),
-                BausteinUmsetzungTransfer.getInstance(),
-                IBSIStrukturElementTransfer.getInstance(),
-                SearchViewElementTransfer.getInstance(),
-                ISO27kElementTransfer.getInstance() };
+                BausteinUmsetzungTransfer.getInstance(), IBSIStrukturElementTransfer.getInstance(),
+                SearchViewElementTransfer.getInstance(), ISO27kElementTransfer.getInstance() };
         Transfer[] dragTypes = new Transfer[] { IBSIStrukturElementTransfer.getInstance(),
                 BausteinUmsetzungTransfer.getInstance() };
 
@@ -492,7 +490,7 @@ public class BsiModelView extends RightsEnabledView
 
             @Override
             public void run() {
-                
+
                 Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
 
                 if (sel instanceof FinishedRiskAnalysis) {
@@ -568,7 +566,8 @@ public class BsiModelView extends RightsEnabledView
         ArrayList<BausteinUmsetzung> newsel = new ArrayList<>(newSelDefaultSize);
         newsel.add(sourceBst);
         try {
-            LoadCnAElementByType<BausteinUmsetzung> command = new LoadCnAElementByType<>(BausteinUmsetzung.class);
+            LoadCnAElementByType<BausteinUmsetzung> command = new LoadCnAElementByType<>(
+                    BausteinUmsetzung.class);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             List<BausteinUmsetzung> bausteine = command.getElements();
 
@@ -654,28 +653,29 @@ public class BsiModelView extends RightsEnabledView
             return;
         }
         CnATreeElement element = BSIElementEditorInput.extractElement(editor);
-        if(element == null){
+        if (element == null) {
             element = getElementFromAttachment(editor);
         }
         if (element != null && ((element instanceof IBSIStrukturElement)
                 || (element instanceof MassnahmenUmsetzung)
                 || (element instanceof BausteinUmsetzung))) {
-           viewer.setSelection(new StructuredSelection(element),true);          
-        }      
-        return;    
+            viewer.setSelection(new StructuredSelection(element), true);
+        }
+        return;
     }
-    
+
     protected void toggleLinking(boolean checked) {
         this.linkingActive = checked;
         if (checked) {
-            Optional.ofNullable(getSite().getPage().getActiveEditor()).ifPresent(this::editorActivated);
+            Optional.ofNullable(getSite().getPage().getActiveEditor())
+                    .ifPresent(this::editorActivated);
         }
     }
-    
+
     protected boolean isLinkingActive() {
         return linkingActive;
     }
-    
+
     /**
      * gets Element that is referenced by attachment shown by editor
      * 
