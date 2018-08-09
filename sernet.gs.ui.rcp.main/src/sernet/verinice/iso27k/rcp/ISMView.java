@@ -28,14 +28,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -76,6 +73,7 @@ import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -89,10 +87,7 @@ import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.FileDropPerformer;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
-import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.Attachment;
-import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TagParameter;
 import sernet.verinice.model.common.TypeParameter;
@@ -158,8 +153,6 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 
     private DrillDownAdapter drillDownAdapter;
 
-    private Action doubleClickAction;
-
     private ShowBulkEditAction bulkEditAction;
 
     private ExpandAction expandAction;
@@ -203,8 +196,6 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
@@ -213,8 +204,6 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
      * widgets.Composite)
      */
@@ -230,12 +219,9 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
         }
     }
 
-    /**
-     * @param parent
-     */
     protected void initView(Composite parent) {
         IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
-        if (CnAElementFactory.getInstance().isIsoModelLoaded()) {
+        if (CnAElementFactory.isIsoModelLoaded()) {
             CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
         }
 
@@ -259,9 +245,6 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
         getSite().getPage().addPartListener(linkWithEditorPartListener);
     }
 
-    /**
-     *
-     */
     protected void startInitDataJob() {
         if (LOG.isDebugEnabled()) {
             LOG.debug("ISMview: startInitDataJob"); //$NON-NLS-1$
@@ -301,12 +284,8 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
                     modelUpdateListener = new TreeUpdateListener(viewer, elementManager);
                     CnAElementFactory.getInstance().getISO27kModel()
                             .addISO27KModelListener(modelUpdateListener);
-                    Display.getDefault().syncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            setInput(CnAElementFactory.getInstance().getISO27kModel());
-                        }
-                    });
+                    Display.getDefault().syncExec(
+                            () -> setInput(CnAElementFactory.getInstance().getISO27kModel()));
                 }
             } else if (modelLoadListener == null) {
                 if (LOG.isDebugEnabled()) {
@@ -314,33 +293,11 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
                 }
                 // model is not loaded yet: add a listener to load data when
                 // it's loaded
-                modelLoadListener = new IModelLoadListener() {
-
-                    @Override
-                    public void closed(BSIModel model) {
-                        // nothing to do
-                    }
-
-                    @Override
-                    public void loaded(BSIModel model) {
-                        // nothing to do
-                    }
-
+                modelLoadListener = new DefaultModelLoadListener() {
                     @Override
                     public void loaded(ISO27KModel model) {
                         startInitDataJob();
                     }
-
-                    @Override
-                    public void loaded(BpModel model) {
-                        // nothing to do
-                    }
-
-                    @Override
-                    public void loaded(CatalogModel model) {
-                        // nothing to do
-                    }
-
                 };
                 CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
 
@@ -349,8 +306,6 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.part.WorkbenchPart#dispose()
      */
     @Override
@@ -380,15 +335,6 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     private void makeActions() {
         ControlDropPerformer controlDropAdapter;
         BSIModelViewDropListener bsiDropAdapter;
-        doubleClickAction = new Action() {
-            @Override
-            public void run() {
-                if (viewer.getSelection() instanceof IStructuredSelection) {
-                    Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-                    EditorFactory.getInstance().updateAndOpenObject(sel);
-                }
-            }
-        };
 
         bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(),
                 Messages.ISMView_6);
@@ -493,12 +439,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     private void hookContextMenu() {
         MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
         menuMgr.setRemoveAllWhenShown(true);
-        menuMgr.addMenuListener(new IMenuListener() {
-            @Override
-            public void menuAboutToShow(IMenuManager manager) {
-                fillContextMenu(manager);
-            }
-        });
+        menuMgr.addMenuListener(this::fillContextMenu);
         Menu menu = menuMgr.createContextMenu(viewer.getControl());
 
         viewer.getControl().setMenu(menu);
@@ -524,10 +465,10 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     }
 
     private void addActions() {
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                doubleClickAction.run();
+        viewer.addDoubleClickListener(event -> {
+            if (viewer.getSelection() instanceof IStructuredSelection) {
+                Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+                EditorFactory.getInstance().updateAndOpenObject(sel);
             }
         });
 
@@ -535,9 +476,6 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
         viewer.addSelectionChangedListener(collapseAction);
     }
 
-    /**
-     * @param manager
-     */
     protected void fillContextMenu(IMenuManager manager) {
         ISelection selection = viewer.getSelection();
         if (selection instanceof IStructuredSelection
@@ -590,8 +528,6 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.
      * eclipse.ui.IEditorPart)

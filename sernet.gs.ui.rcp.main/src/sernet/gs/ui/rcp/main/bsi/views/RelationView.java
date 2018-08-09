@@ -43,6 +43,7 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.views.RelationTableViewer.PathCellLabelProvider;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -54,7 +55,6 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
@@ -79,7 +79,6 @@ public class RelationView extends RightsEnabledView
 
     private TableViewer viewer;
     private Action jumpToAction;
-    private Action doubleClickAction;
     private ISelectionListener selectionListener;
     private CnATreeElement inputElmt;
 
@@ -210,7 +209,7 @@ public class RelationView extends RightsEnabledView
     }
 
     private void hookModelLoadListener() {
-        this.loadListener = new IModelLoadListener() {
+        this.loadListener = new DefaultModelLoadListener() {
 
             @Override
             public void closed(BSIModel model) {
@@ -237,11 +236,6 @@ public class RelationView extends RightsEnabledView
                 synchronized (loadListener) {
                     addBpModelListeners();
                 }
-            }
-
-            @Override
-            public void loaded(CatalogModel model) {
-                // nothing to do
             }
 
         };
@@ -444,22 +438,6 @@ public class RelationView extends RightsEnabledView
         jumpToAction.setImageDescriptor(
                 ImageCache.getInstance().getImageDescriptor(ImageCache.ARROW_IN));
 
-        doubleClickAction = new Action() {
-
-            @Override
-            public void run() {
-                ISelection selection = viewer.getSelection();
-                Object obj = ((IStructuredSelection) selection).getFirstElement();
-                CnALink link = (CnALink) obj;
-
-                // open the object on the other side of the link:
-                if (CnALink.isDownwardLink(inputElmt, link))
-                    EditorFactory.getInstance().updateAndOpenObject(link.getDependency(), readOnly);
-                else
-                    EditorFactory.getInstance().updateAndOpenObject(link.getDependant(), readOnly);
-            }
-        };
-
         linkWithEditorAction = new Action(Messages.RelationView_2, IAction.AS_CHECK_BOX) {
             @Override
             public void run() {
@@ -472,7 +450,17 @@ public class RelationView extends RightsEnabledView
     }
 
     private void hookDoubleClickAction() {
-        viewer.addDoubleClickListener(event -> doubleClickAction.run());
+        viewer.addDoubleClickListener(event -> {
+            ISelection selection = viewer.getSelection();
+            Object obj = ((IStructuredSelection) selection).getFirstElement();
+            CnALink link = (CnALink) obj;
+
+            // open the object on the other side of the link:
+            if (CnALink.isDownwardLink(inputElmt, link))
+                EditorFactory.getInstance().updateAndOpenObject(link.getDependency(), readOnly);
+            else
+                EditorFactory.getInstance().updateAndOpenObject(link.getDependant(), readOnly);
+        });
     }
 
     /**
