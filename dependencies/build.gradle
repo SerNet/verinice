@@ -56,36 +56,8 @@ platform {
 		plugin('net.sf.ehcache:ehcache:2.10.4')
 	}
 
-	feature(id: 'jgrapht', name: 'jgrapht', version: '0.8.1') {
-		plugin('thirdparty:jgrapht-jdk1.6:0.8.1') {
-			bnd {
-				optionalImport 'com.touchgraph.graphlayout'
-				optionalImport 'com.touchgraph.graphlayout.interaction'
-				optionalImport 'javax.swing'
-				optionalImport 'javax.swing.border'
-				optionalImport 'javax.swing.tree'
-				optionalImport 'javax.swing.undo'
-				optionalImport 'javax.xml.transform'
-				optionalImport 'javax.xml.transform.sax'
-				optionalImport 'javax.xml.transform.stream'
-				optionalImport 'org.jgraph'
-				optionalImport 'org.jgraph.event'
-				optionalImport 'org.jgraph.graph'
-				optionalImport 'org.jgrapht'
-				optionalImport 'org.jgrapht.alg.util'
-				optionalImport 'org.jgrapht.event'
-				optionalImport 'org.jgrapht.experimental.alg'
-				optionalImport 'org.jgrapht.experimental.equivalence'
-				optionalImport 'org.jgrapht.experimental.permutation'
-				optionalImport 'org.jgrapht.ext'
-				optionalImport 'org.jgrapht.generate'
-				optionalImport 'org.jgrapht.graph'
-				optionalImport 'org.jgrapht.traverse'
-				optionalImport 'org.jgrapht.util'
-				optionalImport 'org.xml.sax'
-				optionalImport 'org.xml.sax.helpers'
-			}
-		}
+	feature(id: 'org.jgrapht', name: 'jgrapht-core', version: '1.2.0') {
+		plugin('org.jgrapht:jgrapht-core:1.2.0') 
 	}
 
 	feature(id: 'org.jdom', name: 'jdom', version: '2.0.2') {

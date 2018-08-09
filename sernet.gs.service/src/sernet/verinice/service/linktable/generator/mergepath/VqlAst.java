@@ -30,7 +30,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.jgrapht.DirectedGraph;
+import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 
 import antlr.CommonAST;
@@ -80,7 +80,7 @@ public class VqlAst {
 
     private static final int NO_EDGE_TYPE = -1;
     private ILinkTableConfiguration linkTableConfiguration;
-    private DirectedGraph<VqlNode, VqlEdge> vqlGraph;
+    private Graph<VqlNode, VqlEdge> vqlGraph;
     private VqlNode root;
 
     // keep track of already created nodes.
@@ -279,7 +279,7 @@ public class VqlAst {
         return vqlGraph.outgoingEdgesOf(node);
     }
 
-    public DirectedGraph<VqlNode, VqlEdge> getVqlGraph() {
+    public Graph<VqlNode, VqlEdge> getVqlGraph() {
         return vqlGraph;
     }
 }

@@ -22,7 +22,6 @@ package sernet.verinice.interfaces.graph;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DirectedMultigraph;
 
@@ -38,7 +37,7 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class DirectedVeriniceGraph extends AbstractVeriniceGraph {
 
-    DirectedGraph<CnATreeElement, Edge>  directedGraph;
+    Graph<CnATreeElement, Edge>  directedGraph;
 
     public DirectedVeriniceGraph() {
         directedGraph = new DirectedMultigraph<>(Edge.class);
