@@ -20,12 +20,9 @@
 package sernet.verinice.model.bp.elements;
 
 import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeductiveImplementationEnabled;
-import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementationStatusToRequirement;
 
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
@@ -39,7 +36,6 @@ import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.AbstractLinkChangeListener;
 import sernet.verinice.model.common.CascadingTransaction;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.common.TransactionAbortedException;
@@ -103,13 +99,8 @@ public class BpRequirement extends CnATreeElement
                     || ta.hasBeenVisited(BpRequirement.this)) {
                 return;
             }
-            List<CnATreeElement> safeGuards = BpRequirement.this.getLinksDown().stream().filter(
-                    DeductionImplementationUtil::isRelevantLinkForImplementationStateDeduction)
-                    .map(CnALink::getDependency).collect(Collectors.toList());
+            DeductionImplementationUtil.setImplementationStatusToRequirement(BpRequirement.this);
 
-            if (!safeGuards.isEmpty()) {
-                setImplementationStatusToRequirement(safeGuards, BpRequirement.this);
-            }
         }
     };
 

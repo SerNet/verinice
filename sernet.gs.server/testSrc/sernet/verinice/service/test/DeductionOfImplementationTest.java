@@ -49,7 +49,6 @@ import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.RemoveLink;
 import sernet.verinice.service.commands.UpdateElement;
@@ -131,9 +130,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         Safeguard safeguard = duo.a;
         BpRequirement requirement = duo.b;
 
-        CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
-                requirement, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, null);
-        createLink = commandService.executeCommand(createLink);
+        createLink(requirement, safeguard);
         assertDeduction(safeguard, requirement);
     }
 
@@ -150,9 +147,8 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         Safeguard safeguard = duo.a;
         BpRequirement requirement = duo.b;
 
-        CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
-                requirement, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, null);
-        createLink = commandService.executeCommand(createLink);
+        createLink(requirement, safeguard);
+
         assertDeduction(safeguard, requirement);
     }
 
@@ -173,9 +169,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         }
         safeguard = updateSafeguard(safeguard, ImplementationStatus.NO);
 
-        CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
-                requirement, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, null);
-        createLink = commandService.executeCommand(createLink);
+        createLink(requirement, safeguard);
 
         assertEquals("Must be option 'no'.", ImplementationStatus.NO,
                 requirement.getImplementationStatus());
@@ -214,9 +208,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         }
         safeguard = updateSafeguard(safeguard, ImplementationStatus.NO);
 
-        CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
-                requirement, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, null);
-        createLink = commandService.executeCommand(createLink);
+        createLink(requirement, safeguard);
 
         assertEquals("Must be option 'no'.", ImplementationStatus.NO,
                 requirement.getImplementationStatus());
@@ -254,9 +246,8 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         }
         safeguard = updateSafeguard(safeguard, ImplementationStatus.NO);
 
-        CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
-                requirement, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, null);
-        createLink = commandService.executeCommand(createLink);
+        createLink(requirement, safeguard);
+
         assertDisabledDeduction(safeguard, requirement);
     }
 
@@ -277,9 +268,8 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         }
         safeguard = updateSafeguard(safeguard, ImplementationStatus.NO);
 
-        CreateLink<CnATreeElement, CnATreeElement> createLink = new CreateLink<CnATreeElement, CnATreeElement>(
-                requirement, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD, null);
-        createLink = commandService.executeCommand(createLink);
+        createLink(requirement, safeguard);
+
         assertDisabledDeduction(safeguard, requirement);
     }
 
@@ -290,8 +280,8 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         ItNetwork itNetwork = createNewBPOrganization();
 
         BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
-        CnATreeElement requirement = createBpRequirement(requirementGroup);
-        requirement = prepareRequirement((BpRequirement) requirement);
+        BpRequirement requirement = createBpRequirement(requirementGroup);
+        requirement = prepareRequirement(requirement);
 
         SafeguardGroup safeguardGroup = createSafeguardGroup(itNetwork);
         Safeguard safeguard1 = createSafeguard(safeguardGroup);
@@ -299,9 +289,8 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         Safeguard safeguard2 = createSafeguard(safeguardGroup);
         safeguard2 = updateSafeguard(safeguard2, ImplementationStatus.YES);
 
-        CnALink link1 = createLink(requirement, safeguard1,
-                BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
-        createLink(requirement, safeguard2, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+        CnALink link1 = createLink(requirement, safeguard1);
+        createLink(requirement, safeguard2);
         assertEquals("Must be option 'partially'.", ImplementationStatus.PARTIALLY,
                 getImplementationStatus(requirement));
         elementDao.flush();
@@ -309,9 +298,35 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         RemoveLink removeLink = new RemoveLink(link1);
         removeLink = commandService.executeCommand(removeLink);
 
-        requirement = reloadElement(requirement);
+        CnATreeElement requirementReloaded = reloadElement(requirement);
         assertEquals("Must be option 'yes'.", ImplementationStatus.YES,
-                getImplementationStatus(requirement));
+                getImplementationStatus(requirementReloaded));
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void resetImplementationStatusWhenRemovingLastLink() throws CommandException {
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
+        BpRequirement requirement = createBpRequirement(requirementGroup);
+        requirement = prepareRequirement(requirement);
+
+        SafeguardGroup safeguardGroup = createSafeguardGroup(itNetwork);
+        Safeguard safeguard1 = createSafeguard(safeguardGroup);
+        safeguard1 = updateSafeguard(safeguard1, ImplementationStatus.NO);
+
+        CnALink link1 = createLink(requirement, safeguard1);
+        assertEquals(ImplementationStatus.NO, getImplementationStatus(requirement));
+        elementDao.flush();
+        elementDao.clear();
+        RemoveLink removeLink = new RemoveLink(link1);
+        removeLink = commandService.executeCommand(removeLink);
+
+        CnATreeElement requirementReloaded = reloadElement(requirement);
+        assertEquals(null, getImplementationStatus(requirementReloaded));
 
     }
 
@@ -322,8 +337,8 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         ItNetwork itNetwork = createNewBPOrganization();
 
         BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
-        CnATreeElement requirement = createBpRequirement(requirementGroup);
-        requirement = prepareRequirement((BpRequirement) requirement);
+        BpRequirement requirement = createBpRequirement(requirementGroup);
+        requirement = prepareRequirement(requirement);
 
         SafeguardGroup safeguardGroup = createSafeguardGroup(itNetwork);
         Safeguard safeguard1 = createSafeguard(safeguardGroup);
@@ -331,8 +346,8 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         Safeguard safeguard2 = createSafeguard(safeguardGroup);
         safeguard2 = updateSafeguard(safeguard2, ImplementationStatus.NOT_APPLICABLE);
 
-        createLink(requirement, safeguard1, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
-        createLink(requirement, safeguard2, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+        createLink(requirement, safeguard1);
+        createLink(requirement, safeguard2);
         assertEquals("Must be option 'no'.", ImplementationStatus.NO,
                 getImplementationStatus(requirement));
         elementDao.flush();
@@ -342,9 +357,62 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
 
         removeSafeguard = commandService.executeCommand(removeSafeguard);
 
-        requirement = reloadElement(requirement);
+        CnATreeElement requirementReloaded = reloadElement(requirement);
         assertEquals("Must be option 'n/a'.", ImplementationStatus.NOT_APPLICABLE,
-                getImplementationStatus(requirement));
+                getImplementationStatus(requirementReloaded));
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void resetImplementationStatusWhenRemovingLastSafeguard() throws CommandException {
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
+        BpRequirement requirement = createBpRequirement(requirementGroup);
+        requirement = prepareRequirement(requirement);
+
+        SafeguardGroup safeguardGroup = createSafeguardGroup(itNetwork);
+        Safeguard safeguard1 = createSafeguard(safeguardGroup);
+        safeguard1 = updateSafeguard(safeguard1, ImplementationStatus.NO);
+
+        createLink(requirement, safeguard1);
+        assertEquals(ImplementationStatus.NO, getImplementationStatus(requirement));
+        elementDao.flush();
+        elementDao.clear();
+
+        RemoveElement<Safeguard> removeSafeguard = new RemoveElement<>(safeguard1);
+
+        removeSafeguard = commandService.executeCommand(removeSafeguard);
+
+        CnATreeElement requirementReloaded = reloadElement(requirement);
+        assertEquals(null, getImplementationStatus(requirementReloaded));
+
+    }
+
+    @Transactional
+    @Rollback(true)
+    @Test
+    public void resetImplementationStatusWhenEnablingStatusDeductionAndNoSafeguardsAreLinked()
+            throws CommandException {
+        ItNetwork itNetwork = createNewBPOrganization();
+
+        BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
+        BpRequirement requirement = createBpRequirement(requirementGroup);
+        requirement.setDeductionOfImplementation(false);
+        requirement.setImplementationStatus(ImplementationStatus.YES);
+        requirement = (BpRequirement) updateElement(requirement);
+
+        assertFalse(DeductionImplementationUtil.isDeductiveImplementationEnabled(requirement));
+        assertEquals(ImplementationStatus.YES, getImplementationStatus(requirement));
+        elementDao.flush();
+        elementDao.clear();
+        requirement.setDeductionOfImplementation(true);
+
+        requirement = (BpRequirement) updateElement(requirement);
+        assertTrue(DeductionImplementationUtil.isDeductiveImplementationEnabled(requirement));
+        assertEquals(null, getImplementationStatus(requirement));
 
     }
 
@@ -355,8 +423,8 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         ItNetwork itNetwork = createNewBPOrganization();
 
         BpRequirementGroup requirementGroup = createRequirementGroup(itNetwork);
-        CnATreeElement requirement = createBpRequirement(requirementGroup);
-        requirement = prepareRequirement((BpRequirement) requirement);
+        BpRequirement requirement = createBpRequirement(requirementGroup);
+        requirement = prepareRequirement(requirement);
 
         SafeguardGroup safeguardGroup1 = createSafeguardGroup(itNetwork);
         Safeguard safeguard1 = createSafeguard(safeguardGroup1);
@@ -365,8 +433,8 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         Safeguard safeguard2 = createSafeguard(safeguardGroup2);
         safeguard2 = updateSafeguard(safeguard2, ImplementationStatus.YES);
 
-        createLink(requirement, safeguard1, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
-        createLink(requirement, safeguard2, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+        createLink(requirement, safeguard1);
+        createLink(requirement, safeguard2);
         assertEquals("Must be option 'partially'.", ImplementationStatus.PARTIALLY,
                 getImplementationStatus(requirement));
 
@@ -375,9 +443,9 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         elementDao.clear();
         removeSafeguardgroup = commandService.executeCommand(removeSafeguardgroup);
 
-        requirement = reloadElement(requirement);
+        CnATreeElement requirementReloaded = reloadElement(requirement);
         assertEquals("Must be option 'no'.", ImplementationStatus.NO,
-                getImplementationStatus(requirement));
+                getImplementationStatus(requirementReloaded));
 
     }
 
@@ -398,8 +466,8 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         requirement1 = prepareRequirement(requirement1);
         requirement2 = prepareRequirement(requirement2);
 
-        createLink(requirement1, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
-        createLink(requirement2, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+        createLink(requirement1, safeguard);
+        createLink(requirement2, safeguard);
 
         safeguard = updateSafeguard(safeguard, ImplementationStatus.NO);
         assertDeduction(safeguard, requirement1);
@@ -423,8 +491,8 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         requirement1 = prepareRequirement(requirement1);
         requirement2 = prepareRequirement(requirement2);
 
-        createLink(requirement1, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
-        createLink(requirement2, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+        createLink(requirement1, safeguard);
+        createLink(requirement2, safeguard);
 
         safeguard = updateSafeguard(safeguard, ImplementationStatus.NO);
         assertDeduction(safeguard, requirement1);
@@ -738,7 +806,7 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
         List<Safeguard> safeGuards = new ArrayList<>(safeGuardNumber);
         for (int i = 0; i < safeGuardNumber; i++) {
             Safeguard safeguard = createSafeguard(safeguardGroup);
-            createLink(requirement, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
+            createLink(requirement, safeguard);
             safeguard = updateSafeguard(safeguard, null);
             safeGuards.add(safeguard);
         }
@@ -843,21 +911,24 @@ public class DeductionOfImplementationTest extends AbstractModernizedBaseProtect
     }
 
     /**
-     * Prepare a requirement for the test. The field 'implementation_status'
-     * will be set to yes and deduction of the implementation is enabled.
+     * Prepare a requirement for the test. The implementation state deduction
+     * will be enabled.
      *
      */
     private BpRequirement prepareRequirement(BpRequirement requirement) throws CommandException {
-        requirement.setImplementationStatus(ImplementationStatus.YES);
         UpdateElement<BpRequirement> command1 = new UpdateElement<>(requirement, true, null);
         commandService.executeCommand(command1);
         requirement = command1.getElement();
-        assertEquals("Must be option 'yes'.", ImplementationStatus.YES,
-                requirement.getImplementationStatus());
+        assertEquals(null, requirement.getImplementationStatus());
 
         assertTrue("Deduction should be enabled.",
                 DeductionImplementationUtil.isDeductiveImplementationEnabled(requirement));
         return requirement;
+    }
+
+    private CnALink createLink(BpRequirement requirement, Safeguard safeguard)
+            throws CommandException {
+        return createLink(requirement, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
     }
 
 }

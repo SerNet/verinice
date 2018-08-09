@@ -21,7 +21,6 @@ package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -124,14 +123,7 @@ public final class EditorUtil {
      * need to change the state in our local copy.
      */
     private static void updateRequirementImplementationStatus(CnATreeElement cnAElement) {
-        Set<CnALink> linksDown = cnAElement.getLinksDown();
-        for (CnALink cnALink : linksDown) {
-            if (DeductionImplementationUtil
-                    .isRelevantLinkForImplementationStateDeduction(cnALink)) {
-                DeductionImplementationUtil
-                        .setImplementationStatusToRequirement(cnALink.getDependency(), cnAElement);
-            }
-        }
+        DeductionImplementationUtil.setImplementationStatusToRequirement(cnAElement);
     }
 
     public static String getEditorName(CnATreeElement cnATreeElement) {

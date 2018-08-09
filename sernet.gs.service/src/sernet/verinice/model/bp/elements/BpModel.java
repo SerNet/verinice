@@ -117,12 +117,11 @@ public class BpModel extends CnATreeElement implements IBpRoot {
 
     @Override
     public void databaseChildRemoved(CnATreeElement child) {
-        if (isOrContainsSafeguard(child)) {
-            modelReload(this);
-            return;
-        }
         for (IBpModelListener listener : getListeners()) {
             listener.databaseChildRemoved(child);
+        }
+        if (isOrContainsSafeguard(child)) {
+            modelReload(this);
         }
     }
 
