@@ -3,7 +3,6 @@
 
 <product name="verinice Report Designer" uid="sernet.verinice.report.designer" id="org.eclipse.birt.report.designer.ui.rcp.BIRT" application="org.eclipse.birt.report.designer.ui.rcp.DesignerApplication" version="1.0.0.qualifier" useFeatures="false" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
@@ -31,7 +30,6 @@
          <bmp/>
       </win>
    </launcher>
-
 
    <vm>
       <linux include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8</linux>
@@ -295,6 +293,7 @@
       <plugin id="org.eclipse.ui.workbench"/>
       <plugin id="org.eclipse.ui.workbench.texteditor"/>
       <plugin id="org.hamcrest.core"/>
+      <plugin id="org.jgrapht.core"/>
       <plugin id="org.junit"/>
       <plugin id="org.mozilla.javascript"/>
       <plugin id="org.sat4j.core"/>
@@ -342,7 +341,6 @@
       <plugin id="sernet.verinice.oda.driver.designer"/>
       <plugin id="sernet.verinice.report.service"/>
       <plugin id="sernet.verinice.samt.service"/>
-      <plugin id="thirdparty.jgrapht-jdk1.6"/>
    </plugins>
 
    <configurations>
