@@ -20,6 +20,7 @@
 package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -158,6 +159,9 @@ public class LinkMaker extends Composite implements IRelationTable {
 
         });
         combo.setEnabled(false);
+
+        // add a "fake" element to set an initial/minimum width for the combo
+        relationComboViewer.setInput(Collections.singleton(""));
 
         addRelationComboListener();
 
