@@ -22,12 +22,14 @@ package sernet.verinice.service.linktable;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GraphCommand;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.graph.FirstLinkedElementsLoader;
 import sernet.verinice.interfaces.graph.GraphElementLoader;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.service.linktable.generator.GraphLinkedTableCreator;
@@ -85,6 +87,12 @@ public class LinkTableService implements ILinkTableService {
         Set<String> objectTypeIds = configuration.getObjectTypeIds();
         loader.setTypeIds(objectTypeIds.toArray(new String[objectTypeIds.size()]));
         command.addLoader(loader);
+        if (configuration.followLinksOutsideOfScope()
+                && !ArrayUtils.isEmpty(configuration.getScopeIdArray())) {
+            FirstLinkedElementsLoader firstLinkedElementsLoader = new FirstLinkedElementsLoader();
+            firstLinkedElementsLoader.setScopeIds(configuration.getScopeIdArray());
+            command.addLoader(firstLinkedElementsLoader);
+        }
         for (String relation : configuration.getLinkTypeIds()) {
             command.addRelationId(relation);
         }

@@ -21,7 +21,7 @@
       "description": "At least one VQL column path",
       "items": {
         "type": "string"
-      }
+      },
       "minItems": 1
     },
     "relationIds": {
@@ -34,7 +34,7 @@
     }
   },
   "required": [
-    "name"
+    "name",
     "columnPaths"
   ]
 }

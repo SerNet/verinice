@@ -41,7 +41,8 @@ public class LinkTableConfiguration implements ILinkTableConfiguration {
 
 
     private static final long serialVersionUID = 5296374920424255723L;
-    
+
+    private boolean followLinksOutsideOfScope = false;
     private Set<String> columnPathes;
     private Set<String> linkTypeIds;
     private Set<Integer> scopeIds;
@@ -55,6 +56,7 @@ public class LinkTableConfiguration implements ILinkTableConfiguration {
         setColumnPathes(builder.getColumnPathes());
         setLinkTypeIds(builder.getLinkTypeIds());
         setScopeIds(builder.getScopeIds());
+        setFollowLinksOutsideOfScope(builder.followLinksOutsideOfScope());
     }
 
     /* (non-Javadoc)
@@ -165,7 +167,17 @@ public class LinkTableConfiguration implements ILinkTableConfiguration {
         getLinkTypeIds().add(linkTypeId);
     }
 
+    @Override
+    public boolean followLinksOutsideOfScope() {
+        return followLinksOutsideOfScope;
+    }
+
+    public void setFollowLinksOutsideOfScope(boolean followLinksOutsideOfScope) {
+        this.followLinksOutsideOfScope = followLinksOutsideOfScope;
+    }
+
     public static class Builder {
+        private boolean followLinksOutsideOfScope = false;
         private Set<String> columnPathes = new LinkedHashSet<>();
         private Set<String> linkTypeIds = new HashSet<>();
         private Set<Integer> scopeIds = new HashSet<>();
@@ -231,6 +243,15 @@ public class LinkTableConfiguration implements ILinkTableConfiguration {
         public Set<Integer> getScopeIds() {
             return scopeIds;
         }
+
+        public boolean followLinksOutsideOfScope() {
+            return followLinksOutsideOfScope;
+        }
+
+        public Builder setFollowLinksOutsideOfScope(boolean followLinksOutsideOfScope) {
+            this.followLinksOutsideOfScope = followLinksOutsideOfScope;
+            return this;
+        }
     }
 
     @Override
@@ -238,6 +259,7 @@ public class LinkTableConfiguration implements ILinkTableConfiguration {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((columnPathes == null) ? 0 : columnPathes.hashCode());
+        result = prime * result + (followLinksOutsideOfScope ? 1231 : 1237);
         result = prime * result + ((linkTypeIds == null) ? 0 : linkTypeIds.hashCode());
         result = prime * result + ((scopeIds == null) ? 0 : scopeIds.hashCode());
         return result;
@@ -256,6 +278,8 @@ public class LinkTableConfiguration implements ILinkTableConfiguration {
             if (other.columnPathes != null)
                 return false;
         } else if (!columnPathes.equals(other.columnPathes))
+            return false;
+        if (followLinksOutsideOfScope != other.followLinksOutsideOfScope)
             return false;
         if (linkTypeIds == null) {
             if (other.linkTypeIds != null)
