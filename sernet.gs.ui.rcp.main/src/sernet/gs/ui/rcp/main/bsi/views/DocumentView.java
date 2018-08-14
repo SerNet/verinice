@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IWorkbenchPartReference;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -174,8 +175,10 @@ public class DocumentView extends RightsEnabledView {
                 return 0;
             }
         });
-
-        setInput();
+        if (!Activator.getDefault().isStandalone()
+                || Activator.getDefault().getInternalServer().isRunning()) {
+            setInput();
+        }
 
         column.getColumn().setWidth(colum1Width);
         column2.getColumn().setWidth(colum2Width);
@@ -228,7 +231,10 @@ public class DocumentView extends RightsEnabledView {
                      */
                     @Override
                     public void partActivated(IWorkbenchPartReference reference) {
-                        setInput();
+                        if (!Activator.getDefault().isStandalone()
+                                || Activator.getDefault().getInternalServer().isRunning()) {
+                            setInput();
+                        }
                     }
                 });
     }
