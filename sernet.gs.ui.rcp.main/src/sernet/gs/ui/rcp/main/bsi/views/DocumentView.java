@@ -17,42 +17,38 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.TreeViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchPartReference;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.DocumentLink;
 import sernet.verinice.model.bsi.DocumentReference;
-import sernet.verinice.model.catalog.CatalogModel;
-import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.rcp.PartListenerAdapter;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.task.FindURLs;
 
@@ -62,11 +58,9 @@ public class DocumentView extends RightsEnabledView {
 
     private TreeViewer viewer;
 
-    private Action doubleClickAction;
-
     private Action refreshAction;
 
-    private IModelLoadListener loadListener = new IModelLoadListener() {
+    private IModelLoadListener loadListener = new DefaultModelLoadListener() {
         @Override
         public void closed(BSIModel model) {
             setInputAsync();
@@ -77,25 +71,14 @@ public class DocumentView extends RightsEnabledView {
             setInputAsync();
         }
 
-        @Override
-        public void loaded(ISO27KModel model) {
-            // work is done in loaded(BSIModel model)
-        }
-
-        @Override
-        public void loaded(BpModel model) {
-            // work is done in loaded(BSIModel model)
-
-        }
-
-        @Override
-        public void loaded(CatalogModel model) {
-            // nothing to do
+        private void setInputAsync() {
+            Display.getDefault().asyncExec(() -> {
+                if (viewer.getContentProvider() != null) {
+                    setInput();
+                }
+            });
         }
     };
-
-    public DocumentView() {
-    }
 
     @Override
     public String getRightID() {
@@ -103,8 +86,6 @@ public class DocumentView extends RightsEnabledView {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
@@ -113,19 +94,15 @@ public class DocumentView extends RightsEnabledView {
     }
 
     protected void setInput() {
-        Set<String> allIDs = new HashSet<String>();
         try {
-            List<PropertyType> types;
-            types = HUITypeFactory.getInstance().getURLPropertyTypes();
-            for (PropertyType type : types) {
-                allIDs.add(type.getId());
-            }
-
+            List<PropertyType> types = HUITypeFactory.getInstance().getURLPropertyTypes();
+            Set<String> allIDs = types.stream().map(PropertyType::getId)
+                    .collect(Collectors.toSet());
             FindURLs command = new FindURLs(allIDs);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             viewer.setInput(command.getUrls());
         } catch (Exception e) {
-            return;
+            // there's nothing we can do here
         }
 
     }
@@ -180,7 +157,7 @@ public class DocumentView extends RightsEnabledView {
         column3.getColumn().setText(Messages.DocumentView_6);
 
         viewer.setContentProvider(new DocumentContentProvider(viewer));
-        viewer.setSorter(new ViewerSorter() {
+        viewer.setComparator(new ViewerComparator() {
             @Override
             public int compare(Viewer viewer, Object e1, Object e2) {
                 if (e1 instanceof DocumentLink && e2 instanceof DocumentLink) {
@@ -205,7 +182,7 @@ public class DocumentView extends RightsEnabledView {
         column3.getColumn().setWidth(colum3Width);
 
         makeActions();
-        hookActions();
+        addDoubleClickListener();
         getSite().setSelectionProvider(viewer);
         CnAElementFactory.getInstance().addLoadListener(loadListener);
         fillLocalToolBar();
@@ -214,23 +191,10 @@ public class DocumentView extends RightsEnabledView {
 
     @Override
     public void setFocus() {
-
+        // we don't handle the focus event
     }
 
     private void makeActions() {
-        doubleClickAction = new Action() {
-            @Override
-            public void run() {
-                Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-                if (sel instanceof DocumentReference) {
-                    DocumentReference ref = (DocumentReference) sel;
-                    EditorFactory.getInstance().openEditor(ref.getCnaTreeElement());
-                } else if (sel instanceof DocumentLink) {
-                    DocumentLink link = (DocumentLink) sel;
-                    Program.launch(link.getHref());
-                }
-            }
-        };
 
         refreshAction = new Action(Messages.DocumentView_7, SWT.NONE) {
             @Override
@@ -243,55 +207,30 @@ public class DocumentView extends RightsEnabledView {
                 .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
     }
 
-    private void hookActions() {
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                doubleClickAction.run();
+    private void addDoubleClickListener() {
+        viewer.addDoubleClickListener(event -> {
+            Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+            if (sel instanceof DocumentReference) {
+                DocumentReference ref = (DocumentReference) sel;
+                EditorFactory.getInstance().openEditor(ref.getCnaTreeElement());
+            } else if (sel instanceof DocumentLink) {
+                DocumentLink link = (DocumentLink) sel;
+                Program.launch(link.getHref());
             }
-        });
-    }
-
-    private void setInputAsync() {
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                if (viewer.getContentProvider() != null) {
-                    setInput();
-                }
-            }
-
         });
     }
 
     private void addPartLister() {
-        this.getSite().getWorkbenchWindow().getPartService().addPartListener(new IPartListener() {
-
-            /**
-             * this ensures a refresh on reopening the view
-             */
-            @Override
-            public void partActivated(IWorkbenchPart arg0) {
-                setInput();
-            }
-
-            // other events does not matter here
-            @Override
-            public void partBroughtToTop(IWorkbenchPart arg0) {
-            }
-
-            @Override
-            public void partClosed(IWorkbenchPart arg0) {
-            }
-
-            @Override
-            public void partDeactivated(IWorkbenchPart arg0) {
-            }
-
-            @Override
-            public void partOpened(IWorkbenchPart arg0) {
-            }
-        });
+        this.getSite().getWorkbenchWindow().getPartService()
+                .addPartListener(new PartListenerAdapter() {
+                    /**
+                     * this ensures a refresh on reopening the view
+                     */
+                    @Override
+                    public void partActivated(IWorkbenchPartReference reference) {
+                        setInput();
+                    }
+                });
     }
 
     private void fillLocalToolBar() {
