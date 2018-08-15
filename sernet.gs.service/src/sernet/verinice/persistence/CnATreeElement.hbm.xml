@@ -568,7 +568,7 @@
   <subclass 
     name="sernet.verinice.model.bp.groups.BpThreatGroup"
     extends="CnATreeElement"
-    discriminator-value="bp_treat_group" />
+    discriminator-value="bp_threat_group" />
 	
 	<subclass 
 		name="sernet.verinice.model.bp.groups.BusinessProcessGroup"

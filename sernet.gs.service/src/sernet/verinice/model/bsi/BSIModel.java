@@ -27,7 +27,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jdt.annotation.NonNull;
-import sernet.verinice.interfaces.IVersionConstants;
+import sernet.verinice.interfaces.VersionConstants;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
@@ -59,7 +59,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
         super(null);
         // current version number for new models, wil be saved in database:
 
-        dbVersion = IVersionConstants.COMPATIBLE_DB_VERSION;
+        dbVersion = VersionConstants.COMPATIBLE_DB_VERSION;
     }
 
     @Override
