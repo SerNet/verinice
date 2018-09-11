@@ -86,19 +86,19 @@ public class ModelLinksCommand extends GenericCommand {
                 BpRequirement.REL_BP_REQUIREMENT_BP_ROOM);
 
         ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(Application.TYPE_ID,
-                BpThreat.REL_BP_REQUIREMENT_BP_APPLICATION);
+                BpThreat.REL_BP_THREAT_BP_APPLICATION);
         ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(BusinessProcess.TYPE_ID,
-                BpThreat.REL_BP_REQUIREMENT_BP_BUSINESSPROCESS);
-        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(Device.TYPE_ID, BpThreat.REL_BP_REQUIREMENT_BP_DEVICE);
+                BpThreat.REL_BP_THREAT_BP_BUSINESSPROCESS);
+        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(Device.TYPE_ID, BpThreat.REL_BP_THREAT_BP_DEVICE);
         ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(IcsSystem.TYPE_ID,
-                BpThreat.REL_BP_REQUIREMENT_BP_ICSSYSTEM);
+                BpThreat.REL_BP_THREAT_BP_ICSSYSTEM);
         ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(ItNetwork.TYPE_ID,
-                BpThreat.REL_BP_REQUIREMENT_BP_ITNETWORK);
+                BpThreat.REL_BP_THREAT_BP_ITNETWORK);
         ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(ItSystem.TYPE_ID,
-                BpThreat.REL_BP_REQUIREMENT_BP_ITSYSTEM);
+                BpThreat.REL_BP_THREAT_BP_ITSYSTEM);
         ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(Network.TYPE_ID,
-                BpThreat.REL_BP_REQUIREMENT_BP_NETWORK);
-        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(Room.TYPE_ID, BpThreat.REL_BP_REQUIREMENT_BP_ROOM);
+                BpThreat.REL_BP_THREAT_BP_NETWORK);
+        ELEMENT_TO_THREAT_LINK_TYPE_IDS.put(Room.TYPE_ID, BpThreat.REL_BP_THREAT_BP_ROOM);
     }
 
     private transient ModelingMetaDao metaDao;
