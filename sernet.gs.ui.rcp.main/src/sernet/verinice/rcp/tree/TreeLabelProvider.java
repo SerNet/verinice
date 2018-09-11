@@ -27,12 +27,12 @@ import org.eclipse.swt.graphics.Image;
 import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.CnAImageProvider;
+import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.IISO27kElement;
 
 /**
  * Label provider for ISO 27000 model elements.
@@ -93,8 +93,8 @@ public class TreeLabelProvider extends LabelProvider {
             return ((IIdentifiableElement) element).getFullTitle();
         }
         StringBuilder sb = new StringBuilder();
-        if (element instanceof IISO27kElement) {
-            String abbreviation = ((IISO27kElement) element).getAbbreviation();
+        if (element instanceof IAbbreviatedElement) {
+            String abbreviation = ((IAbbreviatedElement) element).getAbbreviation();
             if (!StringUtils.isEmpty(abbreviation)) {
                 sb.append(abbreviation);
                 sb.append(" ");

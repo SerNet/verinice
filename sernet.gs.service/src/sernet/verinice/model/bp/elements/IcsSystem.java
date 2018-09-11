@@ -21,6 +21,7 @@ package sernet.verinice.model.bp.elements;
 
 import java.util.Collection;
 
+import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.hui.common.connect.ITargetObject;
 import sernet.verinice.interfaces.IReevaluator;
@@ -40,13 +41,15 @@ import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
  * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
-public class IcsSystem extends ElementWithChilds implements IBpElement, IBpGroup, ITaggableElement, ITargetObject {
+public class IcsSystem extends ElementWithChilds
+        implements IBpElement, IAbbreviatedElement, IBpGroup, ITaggableElement, ITargetObject {
 
     private static final long serialVersionUID = -378707208518355065L;
     
     public static final String TYPE_ID = "bp_icssystem"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_icssystem_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_icssystem_tag"; //$NON-NLS-1$
+    public static final String PROP_ABBR = "bp_icssystem_abbr"; //$NON-NLS-1$
     
     public static final String[] CHILD_TYPES = new String[] { BpRequirementGroup.TYPE_ID,
             SafeguardGroup.TYPE_ID, BpThreatGroup.TYPE_ID };
@@ -96,4 +99,8 @@ public class IcsSystem extends ElementWithChilds implements IBpElement, IBpGroup
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
+    @Override
+    public String getAbbreviation() {
+        return getEntity().getPropertyValue(PROP_ABBR);
+    }
 }

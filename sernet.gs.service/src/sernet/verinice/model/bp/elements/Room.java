@@ -21,6 +21,7 @@ package sernet.verinice.model.bp.elements;
 
 import java.util.Collection;
 
+import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.hui.common.connect.ITargetObject;
 import sernet.verinice.interfaces.IReevaluator;
@@ -40,13 +41,15 @@ import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class Room extends ElementWithChilds implements IBpElement, IBpGroup, ITaggableElement, ITargetObject {
+public class Room extends ElementWithChilds
+        implements IBpElement, IAbbreviatedElement, IBpGroup, ITaggableElement, ITargetObject {
     
     private static final long serialVersionUID = 5536521845334891964L;
     
     public static final String TYPE_ID = "bp_room"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_room_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_room_tag"; //$NON-NLS-1$
+    public static final String PROP_ABBR = "bp_room_abbr"; //$NON-NLS-1$
 
     public static final String[] CHILD_TYPES = new String[] { BpRequirementGroup.TYPE_ID,
             SafeguardGroup.TYPE_ID, BpThreatGroup.TYPE_ID };
@@ -94,5 +97,10 @@ public class Room extends ElementWithChilds implements IBpElement, IBpGroup, ITa
     @Override
     public Collection<String> getTags() {
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
+    }
+
+    @Override
+    public String getAbbreviation() {
+        return getEntity().getPropertyValue(PROP_ABBR);
     }
 }

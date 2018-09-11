@@ -20,13 +20,15 @@ package sernet.verinice.model.bp.elements;
 
 import java.util.Collection;
 
+import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpElement;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 @SuppressWarnings("serial")
-public class BpDocument extends CnATreeElement implements IBpElement, ITaggableElement {
+public class BpDocument extends CnATreeElement
+        implements IBpElement, IAbbreviatedElement, ITaggableElement {
 
     public static final String TYPE_ID = "bp_document"; //$NON-NLS-1$
     public static final String PROP_ABBR = "bp_document_abbr"; //$NON-NLS-1$
@@ -63,6 +65,7 @@ public class BpDocument extends CnATreeElement implements IBpElement, ITaggableE
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
     }
 
+    @Override
     public String getAbbreviation() {
         return getEntity().getPropertyValue(PROP_ABBR);
     }
