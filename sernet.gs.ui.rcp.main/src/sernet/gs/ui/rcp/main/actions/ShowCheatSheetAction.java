@@ -31,18 +31,20 @@ public class ShowCheatSheetAction extends Action {
     private static final String ID = "sernet.gs.ui.rcp.main.showcheatsheetaction"; //$NON-NLS-1$
     private String cheatSheetId;
     private static final String CHEATSHEET_DEFAULT_ID = "sernet.gs.ui.rcp.main.cheatsheet1"; //$NON-NLS-1$
-    
+
     public ShowCheatSheetAction(String title) {
-        this(title,CHEATSHEET_DEFAULT_ID);
+        this(title, CHEATSHEET_DEFAULT_ID);
     }
-    
+
     public ShowCheatSheetAction(String title, String cheatSheetId) {
         setText(title);
         setId(ID);
         this.cheatSheetId = cheatSheetId;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
@@ -50,8 +52,10 @@ public class ShowCheatSheetAction extends Action {
         IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         if (window != null) {
             try {
-                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages()[0].showView("org.eclipse.ui.cheatsheets.views.CheatSheetView"); //$NON-NLS-1$
-                IViewPart part = window.getActivePage().findView("org.eclipse.ui.cheatsheets.views.CheatSheetView"); //$NON-NLS-1$
+                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages()[0]
+                        .showView("org.eclipse.ui.cheatsheets.views.CheatSheetView"); //$NON-NLS-1$
+                IViewPart part = window.getActivePage()
+                        .findView("org.eclipse.ui.cheatsheets.views.CheatSheetView"); //$NON-NLS-1$
                 if (part != null) {
                     CheatSheetView view = (CheatSheetView) part;
                     view.setInput(cheatSheetId);
