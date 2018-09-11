@@ -43,8 +43,6 @@ public class ShowCheatSheetAction extends Action {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
@@ -52,10 +50,9 @@ public class ShowCheatSheetAction extends Action {
         IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         if (window != null) {
             try {
-                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages()[0]
+                IViewPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getPages()[0]
                         .showView("org.eclipse.ui.cheatsheets.views.CheatSheetView"); //$NON-NLS-1$
-                IViewPart part = window.getActivePage()
-                        .findView("org.eclipse.ui.cheatsheets.views.CheatSheetView"); //$NON-NLS-1$
+
                 if (part != null) {
                     CheatSheetView view = (CheatSheetView) part;
                     view.setInput(cheatSheetId);

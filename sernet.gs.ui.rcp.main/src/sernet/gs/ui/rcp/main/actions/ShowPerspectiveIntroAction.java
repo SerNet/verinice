@@ -32,7 +32,7 @@ import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 
 /**
- * Show perspecitve and open cheatsheet.
+ * Show perspective and open cheat sheet.
  * 
  * @author ak@sernet.de
  */
@@ -41,8 +41,6 @@ public abstract class ShowPerspectiveIntroAction implements IIntroAction {
     private static final Logger LOG = Logger.getLogger(ShowPerspectiveIntroAction.class);
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.intro.config.IIntroAction#run(org.eclipse.ui.intro.
      * IIntroSite, java.util.Properties)
      */
@@ -54,15 +52,13 @@ public abstract class ShowPerspectiveIntroAction implements IIntroAction {
                 .getActiveWorkbenchWindow();
         IPerspectiveDescriptor activePerspective = workbenchWindow.getActivePage().getPerspective();
         if (activePerspective == null || !activePerspective.getId().equals(getPerspectiveId())) {
-            Display.getCurrent().asyncExec(new Runnable() {
-                public void run() {
-                    // switch perspective
-                    try {
-                        workbenchWindow.getWorkbench().showPerspective(getPerspectiveId(),
-                                workbenchWindow);
-                    } catch (WorkbenchException e) {
-                        LOG.error("Can not switch to perspective: " + getPerspectiveId(), e);
-                    }
+            Display.getCurrent().asyncExec(() -> {
+                // switch perspective
+                try {
+                    workbenchWindow.getWorkbench().showPerspective(getPerspectiveId(),
+                            workbenchWindow);
+                } catch (WorkbenchException e) {
+                    LOG.error("Can not switch to perspective: " + getPerspectiveId(), e);
                 }
             });
         }
@@ -77,9 +73,6 @@ public abstract class ShowPerspectiveIntroAction implements IIntroAction {
         action.run();
     }
 
-    /**
-     * @return
-     */
     public abstract String getCheatSheetId();
 
     public abstract String getPerspectiveId();
