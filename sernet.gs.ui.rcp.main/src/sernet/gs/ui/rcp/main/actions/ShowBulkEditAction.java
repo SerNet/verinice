@@ -417,31 +417,36 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             List<CnATreeElement> changedElements = command.getChangedElements();
             for (CnATreeElement cnATreeElement : changedElements) {
-                if (!(cnATreeElement instanceof Safeguard)) {
-                    continue;
-                }
-                cnATreeElement = Retriever.retrieveElement(cnATreeElement, new RetrieveInfo()
-                        .setProperties(true).setLinksUp(true).setLinksUpProperties(true));
-                Set<CnALink> linksUp = cnATreeElement.getLinksUp();
-                for (CnALink cnALink : linksUp) {
-                    if (DeductionImplementationUtil
-                            .isRelevantLinkForImplementationStateDeduction(cnALink)) {
-                        CnATreeElement requirement = cnALink.getDependant();
-                        if (DeductionImplementationUtil
-                                .isDeductiveImplementationEnabled(requirement)) {
-                            // the requirements' implementation status could
-                            // have been updated if state deduction is
-                            // enabled, so better refresh them (VN-2067)
-                            CnAElementFactory.getModel(requirement).childChanged(requirement);
-                        }
-                    }
-
-                }
+                updateRelatedProperties(cnATreeElement);
             }
         } catch (Exception e) {
             logger.error("Error while bulk update", e);
             ExceptionUtil.log(e, Messages.ShowBulkEditAction_13);
         }
 
+    }
+
+    private void updateRelatedProperties(CnATreeElement cnATreeElement) {
+        if (cnATreeElement instanceof Safeguard) {
+            updateSafeguardRelatedProperties((Safeguard) cnATreeElement);
+        }
+    }
+
+    private void updateSafeguardRelatedProperties(Safeguard safeguard) {
+        CnATreeElement fetchedSafeguard = Retriever.retrieveElement(safeguard,
+                new RetrieveInfo().setProperties(true).setLinksUp(true).setLinksUpProperties(true));
+        Set<CnALink> linksUp = fetchedSafeguard.getLinksUp();
+        for (CnALink cnALink : linksUp) {
+            if (DeductionImplementationUtil
+                    .isRelevantLinkForImplementationStateDeduction(cnALink)) {
+                CnATreeElement requirement = cnALink.getDependant();
+                if (DeductionImplementationUtil.isDeductiveImplementationEnabled(requirement)) {
+                    // the requirements' implementation status could
+                    // have been updated if state deduction is
+                    // enabled, so better refresh them (VN-2067)
+                    CnAElementFactory.getModel(requirement).childChanged(requirement);
+                }
+            }
+        }
     }
 }

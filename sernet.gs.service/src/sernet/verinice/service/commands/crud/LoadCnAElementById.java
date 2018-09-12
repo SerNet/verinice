@@ -27,62 +27,57 @@ import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
 
-public class LoadCnAElementById extends GenericCommand implements ICachedCommand{
+public class LoadCnAElementById extends GenericCommand implements ICachedCommand {
 
-	private int id;
-	private CnATreeElement found;
+    private int id;
+    private CnATreeElement found;
     private String typeId;
-    
+
     private boolean resultInjectedFromCache = false;
     private static final Logger LOG = Logger.getLogger(LoadCnAElementById.class);
 
-	public LoadCnAElementById(String typeId, int id) {
-		this.typeId= typeId;
-		this.id = id;
-	}
-	
-	public LoadCnAElementById(String typeId, String id){
-		this.typeId = typeId;
-		try {
-			this.id = Integer.parseInt(id);
-		} catch(NumberFormatException e) {
-			this.id=-1;
-		}
-	}
-	
-	public LoadCnAElementById(String typeId, Integer id){
-	    this(typeId, id.intValue());
-	}
-	
-	public LoadCnAElementById(){
-		// default constructor for use with JavaScript within BIRT
-	}
-	
-	public void setId(int id) {
-		this.id = id;
-	}
+    public LoadCnAElementById(String typeId, int id) {
+        this.typeId = typeId;
+        this.id = id;
+    }
 
-	public void setTypeId(String typeId) {
-		this.typeId = typeId;
-	}
+    public LoadCnAElementById(String typeId, String id) {
+        this.typeId = typeId;
+        try {
+            this.id = Integer.parseInt(id);
+        } catch (NumberFormatException e) {
+            this.id = -1;
+        }
+    }
 
-	public void execute() {
-	    if(!resultInjectedFromCache){
-	        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
-	        found = dao.findById(id);
-	        HydratorUtil.hydrateElement(dao, found, false);
-	    }
-	}
+    public LoadCnAElementById(String typeId, Integer id) {
+        this(typeId, id.intValue());
+    }
 
-	public CnATreeElement getFound() {
-		return found;
-	}
+    public LoadCnAElementById() {
+        // default constructor for use with JavaScript within BIRT
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
+    public void setTypeId(String typeId) {
+        this.typeId = typeId;
+    }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
-     */
+    public void execute() {
+        if (!resultInjectedFromCache) {
+            IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
+            found = dao.findById(id);
+            HydratorUtil.hydrateElement(dao, found, false);
+        }
+    }
+
+    public CnATreeElement getFound() {
+        return found;
+    }
+
     @Override
     public String getCacheID() {
         StringBuilder cacheID = new StringBuilder();
@@ -92,24 +87,17 @@ public class LoadCnAElementById extends GenericCommand implements ICachedCommand
         return cacheID.toString();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
-     */
     @Override
     public void injectCacheResult(Object result) {
-        found = (CnATreeElement)result;
+        found = (CnATreeElement) result;
         resultInjectedFromCache = true;
-        if(LOG.isDebugEnabled()){
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
-     */
     @Override
     public Object getCacheableResult() {
         return found;
     }
-	
 }
