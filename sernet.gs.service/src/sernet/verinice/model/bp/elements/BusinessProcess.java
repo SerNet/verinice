@@ -21,6 +21,7 @@ package sernet.verinice.model.bp.elements;
 
 import java.util.Collection;
 
+import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.hui.common.connect.ITargetObject;
 import sernet.verinice.interfaces.IReevaluator;
@@ -40,13 +41,15 @@ import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class BusinessProcess extends ElementWithChilds implements IBpElement, IBpGroup, ITaggableElement, ITargetObject {
+public class BusinessProcess extends ElementWithChilds
+        implements IBpElement, IAbbreviatedElement, IBpGroup, ITaggableElement, ITargetObject {
     
     private static final long serialVersionUID = 8636558522661263370L;
     
     public static final String TYPE_ID = "bp_businessprocess"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_businessprocess_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_businessprocess_tag"; //$NON-NLS-1$
+    public static final String PROP_ABBR = "bp_businessprocess_abbr"; //$NON-NLS-1$
     
     public static final String[] CHILD_TYPES = new String[] { BpRequirementGroup.TYPE_ID,
             SafeguardGroup.TYPE_ID, BpThreatGroup.TYPE_ID };
@@ -95,5 +98,9 @@ public class BusinessProcess extends ElementWithChilds implements IBpElement, IB
     public Collection<String> getTags() {
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
-    
+
+    @Override
+    public String getAbbreviation() {
+        return getEntity().getPropertyValue(PROP_ABBR);
+    }
 }

@@ -21,6 +21,7 @@ package sernet.verinice.model.bp.elements;
 
 import java.util.Collection;
 
+import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.hui.common.connect.ITargetObject;
 import sernet.verinice.model.bp.IBpElement;
@@ -47,13 +48,14 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  */
 public class ItNetwork extends CnATreeElement
-        implements IBpElement, ITaggableElement, ITargetObject {
+        implements IBpElement, IAbbreviatedElement, ITaggableElement, ITargetObject {
 
     private static final long serialVersionUID = 6531710922463646931L;
 
     public static final String TYPE_ID = "bp_itnetwork"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_itnetwork_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_itnetwork_tag"; //$NON-NLS-1$
+    public static final String PROP_ABBR = "bp_itnetwork_abbr"; //$NON-NLS-1$
     public static final String PROP_QUALIFIER = "bp_itnetwork_qualifier"; //$NON-NLS-1$
     // These keys shall not be used for localization but only to identify which
     // ENUM value shall be used. Use the ENUMs getLabel() instead.
@@ -158,4 +160,8 @@ public class ItNetwork extends CnATreeElement
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
+    @Override
+    public String getAbbreviation() {
+        return getEntity().getPropertyValue(PROP_ABBR);
+    }
 }

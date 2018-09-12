@@ -21,6 +21,7 @@ package sernet.verinice.model.bp.elements;
 
 import java.util.Collection;
 
+import sernet.hui.common.connect.IAbbreviatedElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.hui.common.connect.ITargetObject;
 import sernet.verinice.interfaces.IReevaluator;
@@ -40,13 +41,15 @@ import sernet.verinice.model.iso27k.ProtectionRequirementsValueAdapter;
  * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
-public class Application extends ElementWithChilds implements IBpElement, IBpGroup, ITaggableElement, ITargetObject {
+public class Application extends ElementWithChilds
+        implements IAbbreviatedElement, IBpElement, IBpGroup, ITaggableElement, ITargetObject {
 
     private static final long serialVersionUID = -2569916837421863187L;
     
     public static final String TYPE_ID = "bp_application"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_application_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_application_tag"; //$NON-NLS-1$
+    public static final String PROP_ABBR = "bp_application_abbr"; //$NON-NLS-1$
 
     
     public static final String[] CHILD_TYPES = new String[] { BpRequirementGroup.TYPE_ID,
@@ -97,4 +100,8 @@ public class Application extends ElementWithChilds implements IBpElement, IBpGro
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
     }
 
+    @Override
+    public String getAbbreviation() {
+        return getEntity().getPropertyValue(PROP_ABBR);
+    }
 }
