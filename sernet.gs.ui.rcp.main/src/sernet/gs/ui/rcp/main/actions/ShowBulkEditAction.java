@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.naming.ConfigurationException;
@@ -52,6 +53,8 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.swt.widgets.IHuiControlFactory;
+import sernet.verinice.bp.rcp.risk.ui.RiskUiUtils;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -130,9 +133,12 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         readSelection(selection);
         Dialog dialog = null;
 
+        Map<String, IHuiControlFactory> overrides = RiskUiUtils
+                .createHuiControlFactories(selectedElements.get(0));
+
         if (entType != null && !(entType.getId().equals(Person.TYPE_ID)
                 || entType.getId().equals(PersonIso.TYPE_ID))) {
-            dialog = new BulkEditDialog(window.getShell(), entType);
+            dialog = new BulkEditDialog(window.getShell(), entType, overrides);
         } else {
             dialog = new PersonBulkEditDialog(window.getShell(), Messages.ShowBulkEditAction_14);
         }

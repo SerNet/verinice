@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
@@ -37,6 +38,7 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.swt.widgets.HitroUIComposite;
+import sernet.hui.swt.widgets.IHuiControlFactory;
 import sernet.snutils.DBException;
 
 public class BulkEditDialog extends Dialog {
@@ -48,8 +50,12 @@ public class BulkEditDialog extends Dialog {
     private boolean useRules = false;
     private String title = Messages.BulkEditDialog_0;
 
-    public BulkEditDialog(Shell parent, EntityType entType) {
+    private final Map<String, IHuiControlFactory> overrides;
+
+    public BulkEditDialog(Shell parent, EntityType entType,
+            Map<String, IHuiControlFactory> overrides) {
         super(parent);
+        this.overrides = overrides;
         setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
         this.entType = entType;
     }
@@ -90,7 +96,8 @@ public class BulkEditDialog extends Dialog {
                 // no validation here, so empty list is passed
                 huiComposite.createView(entity, true, useRules, tags, strict,
                         new ArrayList<String>(0), Activator.getDefault().getPreferenceStore()
-                                .getBoolean(PreferenceConstants.USE_VALIDATION_GUI_HINTS));
+                                .getBoolean(PreferenceConstants.USE_VALIDATION_GUI_HINTS),
+                        overrides);
                 InputHelperFactory.setInputHelpers(entType, huiComposite);
                 return huiComposite;
             } catch (DBException e) {
