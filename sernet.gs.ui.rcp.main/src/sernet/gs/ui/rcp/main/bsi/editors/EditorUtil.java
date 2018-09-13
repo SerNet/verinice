@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.editors;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +27,9 @@ import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
@@ -46,6 +50,7 @@ public final class EditorUtil {
     private static final Logger logger = Logger.getLogger(EditorUtil.class);
 
     private static final int MAX_TITLE_LENGTH = 20;
+	public static final String EMPTY_EDITOR_ID = "org.eclipse.ui.internal.emptyEditorTab"; //$NON-NLS-1$
 
     private EditorUtil() {
         super();
@@ -141,5 +146,30 @@ public final class EditorUtil {
         }
         return cnATreeElement.getTitle();
     }
+
+    /**
+     * Cleans the old editorref. A patch for https://bugs.eclipse.org/bugs/show_bug.cgi?id=386648 .
+     */
+   	public static void cleanOldEditors() {
+   		try {
+   			IWorkbench wb = PlatformUI.getWorkbench();
+   			IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
+   			if (win == null)
+   				return;
+
+   			IWorkbenchWindow[] workbenchWindows = wb.getWorkbenchWindows();
+   			Arrays.stream(workbenchWindows).forEach(ww -> {
+   				IWorkbenchPage page = ww.getActivePage();
+   				Arrays.stream(page.getEditorReferences()).forEach(ref -> {
+   					String editorId = ref.getId();
+   					if (EMPTY_EDITOR_ID.equals(editorId)) {
+   						page.closeEditors(new IEditorReference[] { ref }, false);
+   					}
+   				});
+   			});
+   		} catch (Exception e) {
+   			logger.error("Error closing editors", e);
+   		}
+   	}
 
 }
