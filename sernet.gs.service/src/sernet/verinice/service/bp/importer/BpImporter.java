@@ -410,11 +410,9 @@ public class BpImporter {
      */
     private void prepareITNetwork() throws CreateBPElementException {
 
-        BpRequirementGroup rootReqGroup = getRootReqGroup();
-        if (rootReqGroup == null) {
-            rootReqGroup = (BpRequirementGroup) createElement(BpRequirementGroup.TYPE_ID,
-                    getRootItNetwork(), Messages.Root_Requirement_Group_Name);
-        }
+        BpRequirementGroup rootReqGroup = (BpRequirementGroup) createElement(
+                BpRequirementGroup.TYPE_ID, getRootItNetwork(),
+                Messages.Root_Requirement_Group_Name);
 
         systemReqGroup = (BpRequirementGroup) createElement(BpRequirementGroup.TYPE_ID,
                 rootReqGroup, Messages.System_Requirement_Group_Name);
@@ -422,43 +420,13 @@ public class BpImporter {
         processReqGroup = (BpRequirementGroup) createElement(BpRequirementGroup.TYPE_ID,
                 rootReqGroup, Messages.Process_Requirement_Group_Name);
 
-        BpThreatGroup rootThreatGroup = null;
-        SafeguardGroup safeguardRootGroup = null;
-        for (CnATreeElement child : getRootItNetwork().getChildren()) {
-            if (BpThreatGroup.TYPE_ID.equals(child.getTypeId())) {
-                if (rootThreatGroup != null) {
-                    LOG.warn("Found more than one root-Threat-Group");
-                }
-                rootThreatGroup = (BpThreatGroup) child;
-            } else if (SafeguardGroup.TYPE_ID.equals(child.getTypeId())) {
-                if (safeguardRootGroup != null) {
-                    LOG.warn("Found more than one root-Requirement-Group");
-                }
-                safeguardRootGroup = (SafeguardGroup) child;
-                safeguardRootGroup.setTitel(Messages.Root_Safeguard_Group_Name);
-            }
-        }
+        BpThreatGroup rootThreatGroup = (BpThreatGroup) createElement(BpThreatGroup.TYPE_ID,
+                getRootItNetwork(), Messages.Root_Threat_Group_Name);
 
-        if (rootThreatGroup != null) {
-            rootThreatGroup.setTitel(Messages.Root_Threat_Group_Name);
-            if (safeguardRootGroup != null) {
-                createStructuredSubGroups(rootThreatGroup, safeguardRootGroup);
-            }
-        }
-    }
+        SafeguardGroup safeguardRootGroup = (SafeguardGroup) createElement(SafeguardGroup.TYPE_ID,
+                getRootItNetwork(), Messages.Root_Safeguard_Group_Name);
 
-    /**
-     * gets the {@link BpRequirementGroup} which is child of the root-IT-Network
-     * (root-Location of all {@link BpRequirement} in the Catalogue)
-     */
-    private BpRequirementGroup getRootReqGroup() throws CreateBPElementException {
-        for (CnATreeElement element : getRootItNetwork().getChildren()) {
-            if (BpRequirementGroup.TYPE_ID.equals(element.getTypeId())
-                    && Messages.Root_Requirement_Group_Name.equals(element.getTitle())) {
-                return (BpRequirementGroup) element;
-            }
-        }
-        return null;
+        createStructuredSubGroups(rootThreatGroup, safeguardRootGroup);
     }
 
     /**
@@ -1127,7 +1095,7 @@ public class BpImporter {
             BpModel model = modelLoader.getModel();
 
             if (rootNetwork == null && model != null) {
-                CreateITNetwork command = new CreateITNetwork(model, true);
+                CreateITNetwork command = new CreateITNetwork(model, false);
                 command = getCommandService().executeCommand(command);
                 rootNetwork = command.getNewElement();
                 StringBuilder titleBuilder = new StringBuilder();
