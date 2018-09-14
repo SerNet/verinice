@@ -16,11 +16,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -238,7 +242,7 @@ public class BpImporter {
         long elementalThreatsReady = System.currentTimeMillis();
         LOG.debug("Elementalthreats ready, took :\t"
                 + (elementalThreatsReady - itnetworkReady) / MILLIS_PER_SECOND);
-        transferModules(modules);
+        transferModules(modules, implementationHints);
 
         Set<String> moduleIdentifiersStrayImplementationOrder = new HashSet<>();
         moduleIdentifiersStrayImplementationOrder
@@ -530,7 +534,7 @@ public class BpImporter {
      * to find relating requirements to link to, the identifier has to changed
      * from '$group.$x.M.$y' to '$group.$x.A.$y'
      */
-    private String getRequirementIdentifierForSafeguardLink(String safeguardIdentifier) {
+    private static String getRequirementIdentifierForSafeguardLink(String safeguardIdentifier) {
         StringTokenizer tokenizer = new StringTokenizer(safeguardIdentifier, ".");
         StringBuilder sb = new StringBuilder();
         while (tokenizer.hasMoreTokens()) {
@@ -601,25 +605,33 @@ public class BpImporter {
      * transfers the parsed {@link Document} object into {@link CnATreeElement}
      * (and calls related methods)
      */
-    private void transferModules(Set<Document> modules) throws CreateBPElementException {
+    private void transferModules(Set<Document> modules,
+            Set<ITBP2VNA.generated.implementationhint.Document> implementationHints)
+            throws CreateBPElementException {
 
         if (rootNetwork == null) {
             LOG.error("Root-IT-Network not initialized. Ending import");
             return;
         }
-
+        Map<String, ITBP2VNA.generated.implementationhint.Document> implementationHintsByIdentifier = implementationHints
+                .stream()
+                .collect(Collectors.toMap(
+                        ITBP2VNA.generated.implementationhint.Document::getIdentifier,
+                        Function.identity()));
         for (Document bsiModule : modules) {
-            String groupIdentifier = getIdentifierPrefix(bsiModule.getIdentifier());
+            String moduleIdentifier = bsiModule.getIdentifier();
+            String groupIdentifier = getIdentifierPrefix(moduleIdentifier);
 
             BpRequirementGroup parent = (BpRequirementGroup) getRequirementParentGroup(
                     groupIdentifier, BpRequirementGroup.TYPE_ID, systemReqGroup, processReqGroup);
 
             BpRequirementGroup veriniceModule = null;
 
-            if (!addedModules.containsKey(bsiModule.getIdentifier()) && parent != null) {
-                veriniceModule = createModule(bsiModule, parent);
+            if (!addedModules.containsKey(moduleIdentifier) && parent != null) {
+                veriniceModule = createModule(bsiModule, parent,
+                        implementationHintsByIdentifier.get(moduleIdentifier));
                 linkElementalThreats(bsiModule);
-                addedModules.put(bsiModule.getIdentifier(), veriniceModule);
+                addedModules.put(moduleIdentifier, veriniceModule);
             }
         }
     }
@@ -628,7 +640,8 @@ public class BpImporter {
      * transform a single given {@link Document} into a
      * {@link BpRequirementGroup}
      */
-    private BpRequirementGroup createModule(Document bsiModule, BpRequirementGroup parent)
+    private BpRequirementGroup createModule(Document bsiModule, BpRequirementGroup parent,
+            ITBP2VNA.generated.implementationhint.Document implementationHint)
             throws CreateBPElementException {
         BpRequirementGroup veriniceModule = null;
         if (parent != null) {
@@ -658,7 +671,7 @@ public class BpImporter {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Module : \t" + veriniceModule.getTitle() + " created");
             }
-            createRequirementsForModule(bsiModule, veriniceModule);
+            createRequirementsForModule(bsiModule, veriniceModule, implementationHint);
         }
         return veriniceModule;
     }
@@ -779,7 +792,7 @@ public class BpImporter {
         return group;
     }
 
-    private String getIdentifierPrefix(String id) {
+    private static String getIdentifierPrefix(String id) {
         if (id != null && id.length() >= 3 && id.contains(".")) {
             return id.substring(0, id.indexOf('.'));
         } else {
@@ -990,19 +1003,43 @@ public class BpImporter {
      * qualifier, given bei the list they are sorted into within the
      * {@link Document}
      */
-    private void createRequirementsForModule(Document bsiModule, BpRequirementGroup parent)
+    private void createRequirementsForModule(Document bsiModule, BpRequirementGroup parent,
+            ITBP2VNA.generated.implementationhint.Document implementationHint)
             throws CreateBPElementException {
+
+        Optional<Map<String, ITBP2VNA.generated.implementationhint.Safeguard>> safeguardsByCorrespondingRequirementIdentifier = Optional
+                .ofNullable(implementationHint)
+                .map(value -> Stream
+                        .concat(Stream.concat(
+                                value.getSafeguards().getBasicSafeguards().getSafeguard().stream(),
+                                value.getSafeguards().getStandardSafeguards().getSafeguard()
+                                        .stream()),
+                                value.getSafeguards().getHighLevelSafeguards().getSafeguard()
+                                        .stream())
+                        .collect(Collectors
+                                .toMap(safeguard -> getRequirementIdentifierForSafeguardLink(
+                                        safeguard.getIdentifier()), Function.identity())));
+
         for (Requirement bsiRequirement : bsiModule.getRequirements().getBasicRequirements()
                 .getRequirement()) {
-            createRequirement(parent, bsiRequirement, Messages.Qualifier_Basic);
+            createRequirement(parent, bsiRequirement,
+                    safeguardsByCorrespondingRequirementIdentifier
+                            .map(map -> map.get(bsiRequirement.getIdentifier())).orElse(null),
+                    Messages.Qualifier_Basic);
         }
         for (Requirement bsiRequirement : bsiModule.getRequirements().getStandardRequirements()
                 .getRequirement()) {
-            createRequirement(parent, bsiRequirement, Messages.Qualifier_Standard);
+            createRequirement(parent, bsiRequirement,
+                    safeguardsByCorrespondingRequirementIdentifier
+                            .map(map -> map.get(bsiRequirement.getIdentifier())).orElse(null),
+                    Messages.Qualifier_Standard);
         }
         for (Requirement bsiRequirement : bsiModule.getRequirements().getHighLevelRequirements()
                 .getRequirement()) {
-            createRequirement(parent, bsiRequirement, Messages.Qualifier_High);
+            createRequirement(parent, bsiRequirement,
+                    safeguardsByCorrespondingRequirementIdentifier
+                            .map(map -> map.get(bsiRequirement.getIdentifier())).orElse(null),
+                    Messages.Qualifier_High);
         }
 
     }
@@ -1013,7 +1050,8 @@ public class BpImporter {
      * 
      */
     private BpRequirement createRequirement(BpRequirementGroup parent, Requirement bsiRequirement,
-            String qualifier) throws CreateBPElementException {
+            ITBP2VNA.generated.implementationhint.Safeguard bsiSafeguard, String qualifier)
+            throws CreateBPElementException {
         if (!addedReqs.containsKey(bsiRequirement.getIdentifier())) {
             BpRequirement veriniceRequirement = null;
             veriniceRequirement = (BpRequirement) createElement(BpRequirement.TYPE_ID, parent,
@@ -1034,8 +1072,17 @@ public class BpImporter {
                             veriniceRequirement.IsAffectsIntegrity(),
                             veriniceRequirement.IsAffectsAvailability()));
 
-            veriniceRequirement.setObjectBrowserDescription(HtmlHelper.getAnyElementDescription(
-                    title.trim(), -1, -1, -1, bsiRequirement.getDescription().getAny()));
+            String requirementDescription = HtmlHelper.getAnyElementDescription(title.trim(), -1,
+                    -1, -1, bsiRequirement.getDescription().getAny());
+            if (bsiSafeguard != null) {
+                String safeguardDescription = HtmlHelper.getAnyObjectDescription(
+                        Messages.Implementation_Hint, 3,
+                        bsiSafeguard.getDescription().getContent());
+                requirementDescription = String.join("", requirementDescription,
+                        safeguardDescription);
+            }
+
+            veriniceRequirement.setObjectBrowserDescription(requirementDescription);
 
             SecurityLevel level = getSecurityLevelFromQualifier(qualifier);
 
