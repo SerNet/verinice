@@ -9973,6 +9973,24 @@ Wurden bereits weitere Stellen informiert?
             name="Affects Integrity" tags="Risk" />
         <huiproperty defaultValue="1" id="bp_threat_value_method_availability"
             inputtype="booleanoption" name="Affects Availability" tags="Risk" />
+            
+
+        <huipropertygroup id="bp_threat_risk_treatment_option_group" name="Risk treatment options"
+           tags="BSI-200-3">
+            <huiproperty id="bp_threat_risk_treatment_option"
+                inputtype="singleoption" name="Risk treatment options" tags="BSI-200-3" >
+                <option id="bp_threat_risk_treatment_option_risk_avoidance" name="risk avoidance"/>
+                <option id="bp_threat_risk_treatment_option_risk_reduction" name="risk reduction"/>
+                <option id="bp_threat_risk_treatment_option_transfer_of_risk" name="risk transfer"/>
+                <option id="bp_threat_risk_treatment_option_risk_acceptance" name="risk acceptance"/>
+            </huiproperty>
+            
+	        <huiproperty
+	            name="Explanation of risk treatment"
+	            id="bp_threat_risk_treatment_explanation"
+	            inputtype="text"
+	            tags="BSI-200-3" />
+        </huipropertygroup>
     </huientity>
 
     <huientity id="bp_threat_group" name="bp_threat-Group">
