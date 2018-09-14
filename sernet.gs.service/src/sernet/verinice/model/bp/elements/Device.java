@@ -49,7 +49,7 @@ public class Device extends ElementWithChilds
     public static final String TYPE_ID = "bp_device"; //$NON-NLS-1$
     public static final String PROP_NAME = "bp_device_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_device_tag"; //$NON-NLS-1$
-    public static final String PROP_ABBR = "bp_cevice_abbr"; //$NON-NLS-1$
+    public static final String PROP_ABBR = "bp_device_abbr"; //$NON-NLS-1$
     
     public static final String[] CHILD_TYPES = new String[] { BpRequirementGroup.TYPE_ID,
             SafeguardGroup.TYPE_ID, BpThreatGroup.TYPE_ID };
