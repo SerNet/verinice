@@ -20,8 +20,13 @@
 package sernet.verinice.iso27k.rcp.action;
 
 import org.eclipse.ui.IStartup;
+import org.eclipse.ui.IWindowListener;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.bsi.editors.EditorUtil;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.rcp.StatusResult;
 
@@ -35,9 +40,47 @@ public class Initializer implements IStartup {
 	 * @see org.eclipse.ui.IStartup#earlyStartup()
 	 */
 	public void earlyStartup() {
+		registerEditorCleaner();
 		final StatusResult result = Activator.startServer();
+		
 		Activator.initDatabase(JobScheduler.getInitMutex(),result);
 		Activator.createModel(JobScheduler.getInitMutex(),result);
+	}
+
+	/**
+	 * Calls clean old editors. When the Workbench windows is not active at the
+	 * time, register a listener to be called when it is ready.
+	 */
+	private void registerEditorCleaner() {
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+		if (window != null) {
+			EditorUtil.cleanOldEditors();
+		} else {
+			workbench.addWindowListener(new IWindowListener() {
+
+				@Override
+				public void windowOpened(IWorkbenchWindow window) {
+					// no impl
+				}
+
+				@Override
+				public void windowDeactivated(IWorkbenchWindow window) {
+					// no impl
+				}
+
+				@Override
+				public void windowClosed(IWorkbenchWindow window) {
+					// no impl
+				}
+
+				@Override
+				public void windowActivated(IWorkbenchWindow window) {
+					EditorUtil.cleanOldEditors();
+					workbench.removeWindowListener(this);
+				}
+			});
+		}
 	}
 
 }
