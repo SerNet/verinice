@@ -36,6 +36,10 @@ public class LoadCnAElementById extends GenericCommand implements ICachedCommand
     private boolean resultInjectedFromCache = false;
     private static final Logger LOG = Logger.getLogger(LoadCnAElementById.class);
 
+    public LoadCnAElementById(int id) {
+        this(null, id);
+    }
+
     public LoadCnAElementById(String typeId, int id) {
         this.typeId = typeId;
         this.id = id;
@@ -68,7 +72,12 @@ public class LoadCnAElementById extends GenericCommand implements ICachedCommand
 
     public void execute() {
         if (!resultInjectedFromCache) {
-            IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
+            IBaseDao<? extends CnATreeElement, Serializable> dao;
+            if (typeId == null) {
+                dao = getDaoFactory().getDAO(CnATreeElement.class);
+            } else {
+                dao = getDaoFactory().getDAO(typeId);
+            }
             found = dao.findById(id);
             HydratorUtil.hydrateElement(dao, found, false);
         }
