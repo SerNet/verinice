@@ -17,24 +17,19 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp.risk.ui;
 
-import java.util.Collections;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
 import sernet.gs.ui.rcp.main.common.model.CnATreeElementScopeUtils;
-import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.risk.Risk;
 import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.bp.risk.RiskDeductionUtil;
 
 public final class RiskInputValueChanged extends SelectionAdapter {
     private final CnATreeElement element;
@@ -50,6 +45,9 @@ public final class RiskInputValueChanged extends SelectionAdapter {
         String frequency = threat.getFrequencyWithoutAdditionalSafeguards();
         String impact = threat.getImpactWithoutAdditionalSafeguards();
 
+        // These checks are done is the RiskDeductionUtil, too
+        // but we do them here to for performance reasons. we don't have to
+        // fetch the scope in these cases.
         if (frequency == null || frequency.isEmpty()) {
             threat.setFrequencyWithAdditionalSafeguards(null);
             threat.setRiskWithoutAdditionalSafeguards(null);
@@ -66,46 +64,7 @@ public final class RiskInputValueChanged extends SelectionAdapter {
             Risk risk = riskConfiguration.getRisk(frequency, impact);
             threat.setRiskWithoutAdditionalSafeguards(risk.getId());
 
-            // TODO extract this into a utility method and reuse it for
-            // VN-2197
-            Set<CnATreeElement> linkedRequirements = threat.getLinksUp().stream()
-                    .filter(link -> BpRequirement.REL_BP_REQUIREMENT_BP_THREAT
-                            .equals(link.getRelationId())
-                            && BpRequirement.TYPE_ID.equals(link.getDependant().getTypeId()))
-                    .map(CnALink::getDependant).collect(Collectors.toSet());
-
-            Set<String> allFrequencies = Stream
-                    .concat(Stream.of(frequency), linkedRequirements.stream()
-                            .map(requirement -> requirement.getEntity().getRawPropertyValue(
-                                    BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY)))
-                    .filter(value -> value != null && !value.isEmpty())
-                    .collect(Collectors.toSet());
-            Set<String> allImpacts = Stream
-                    .concat(Stream.of(impact), linkedRequirements.stream()
-                            .map(requirement -> requirement.getEntity().getRawPropertyValue(
-                                    BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT)))
-                    .filter(value -> value != null && !value.isEmpty())
-                    .collect(Collectors.toSet());
-
-            String frequencyWithAdditionalSafeguards = allFrequencies.contains(null) ? null
-                    : Collections.min(allFrequencies);
-            String impactWithAdditionalSafeguards = allImpacts.contains(null) ? null
-                    : Collections.min(allImpacts);
-            threat.setFrequencyWithAdditionalSafeguards(
-                    frequencyWithAdditionalSafeguards);
-            threat.setImpactWithAdditionalSafeguards(impactWithAdditionalSafeguards);
-            if (frequencyWithAdditionalSafeguards == null
-                    || impactWithAdditionalSafeguards == null) {
-                threat.setRiskWithAdditionalSafeguards(null);
-            } else {
-                Risk riskWithAdditionalSafeguards = riskConfiguration
-                        .getRisk(frequencyWithAdditionalSafeguards,
-                                impactWithAdditionalSafeguards);
-                threat.setRiskWithAdditionalSafeguards(
-                        riskWithAdditionalSafeguards.getId());
-            }
-
+            RiskDeductionUtil.deduceRisk(threat, riskConfiguration);
         }
-
     }
 }
