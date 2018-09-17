@@ -26,11 +26,16 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.SecurityException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.IElementEntityDao;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.bp.risk.RiskDeductionUtil;
+import sernet.verinice.service.commands.crud.LoadCnAElementById;
 
 /**
  * Update the entity of an element only, leaving all collections as they were.
@@ -59,6 +64,11 @@ public class UpdateElementEntity<T extends CnATreeElement> extends ChangeLogging
 
     public void execute() {
         beforeUpdate();
+        updateElement();
+        afterUpdate();
+    }
+
+    private void updateElement() {
         IBaseDao<T, Serializable> elementDao = getDaoFactory().getDAO(this.elementToUpdate.getTypeId());
         try {
             elementDao.checkRights(this.elementToUpdate);
@@ -73,8 +83,6 @@ public class UpdateElementEntity<T extends CnATreeElement> extends ChangeLogging
 
         IElementEntityDao elementEntityDao = getDaoFactory().getElementEntityDao();
         this.mergedElement = (T) elementEntityDao.mergeEntityOfElement(elementToUpdate, true);
-
-        afterUpdate();
     }
 
     /**
@@ -90,7 +98,22 @@ public class UpdateElementEntity<T extends CnATreeElement> extends ChangeLogging
      * subclassed to add additional functionality
      */
     protected void afterUpdate() {
-        // empty
+        if (mergedElement instanceof BpThreat) {
+            BpThreat fetchedThreat = RiskDeductionUtil
+                    .retreiveProperties((BpThreat) mergedElement);
+
+            LoadCnAElementById loadModel = new LoadCnAElementById(ItNetwork.TYPE_ID,
+                    fetchedThreat.getScopeId());
+            try {
+                loadModel = getCommandService().executeCommand(loadModel);
+                ItNetwork scope = (ItNetwork) loadModel.getFound();
+                mergedElement = (T) RiskDeductionUtil.deduceRisk((BpThreat) fetchedThreat,
+                        scope.getRiskConfiguration());
+            } catch (CommandException e) {
+                log.error("Can not update entity of BpThreat: " + fetchedThreat.getUuid() + ": "
+                        + e.getMessage());
+            }
+        }
     }
 
     public T getMergedElement() {
