@@ -22,6 +22,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.Retriever;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.risk.Risk;
@@ -101,5 +103,11 @@ public class RiskDeductionUtil {
                 .filter(value -> value != null && !value.isEmpty()).collect(Collectors.toSet());
 
         return allImpacts.contains(null) ? null : Collections.min(allImpacts);
+    }
+
+    public static BpThreat retreiveProperties(BpThreat threat) {
+        return (BpThreat) Retriever.retrieveElement(threat,
+                new RetrieveInfo()
+                .setProperties(true).setLinksUp(true).setLinksUpProperties(true));
     }
 }
