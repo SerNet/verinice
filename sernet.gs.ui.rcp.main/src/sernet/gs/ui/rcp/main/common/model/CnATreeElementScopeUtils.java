@@ -27,7 +27,9 @@ import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.service.commands.CnATypeMapper;
 
 /**
- * Utility class to retrieve an element's scope via its model
+ * Utility class to retrieve an element's scope via its model.
+ *
+ * This Utility class avoids using remote calls for performance reason.
  */
 public final class CnATreeElementScopeUtils {
 
