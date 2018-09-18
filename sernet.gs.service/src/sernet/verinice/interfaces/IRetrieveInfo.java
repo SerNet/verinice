@@ -17,6 +17,10 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.criterion.DetachedCriteria;
+
 public interface IRetrieveInfo {
 
     /**
@@ -96,5 +100,77 @@ public interface IRetrieveInfo {
     boolean isInnerJoin();
 
     IRetrieveInfo setInnerJoin(boolean innerJoin);
+
+    default void configureCriteria(DetachedCriteria criteria) {
+        if (isProperties()) {
+            criteria.setFetchMode("entity", FetchMode.JOIN);
+            criteria.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
+            criteria.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
+        }
+        if (isPermissions()) {
+            criteria.setFetchMode("permissions", FetchMode.JOIN);
+        }
+
+        if (isLinksDown()) {
+            criteria.setFetchMode("linksDown", FetchMode.JOIN);
+            criteria.setFetchMode("linksDown.dependency", FetchMode.JOIN);
+            if (isLinksDownProperties()) {
+                criteria.setFetchMode("linksDown.dependency.entity", FetchMode.JOIN);
+                criteria.setFetchMode("linksDown.dependency.entity.typedPropertyLists",
+                        FetchMode.JOIN);
+                criteria.setFetchMode("linksDown.dependency.entity.typedPropertyLists.properties",
+                        FetchMode.JOIN);
+            }
+        }
+        if (isLinksUp()) {
+            criteria.setFetchMode("linksUp", FetchMode.JOIN);
+            criteria.setFetchMode("linksUp.dependant", FetchMode.JOIN);
+            if (isLinksUpProperties()) {
+                criteria.setFetchMode("linksUp.dependant.entity", FetchMode.JOIN);
+                criteria.setFetchMode("linksUp.dependant.entity.typedPropertyLists",
+                        FetchMode.JOIN);
+                criteria.setFetchMode("linksUp.dependant.entity.typedPropertyLists.properties",
+                        FetchMode.JOIN);
+            }
+        }
+        if (isParent()) {
+            criteria.setFetchMode("parent", FetchMode.JOIN);
+            if (isSiblings()) {
+                criteria.setFetchMode("parent.children", FetchMode.JOIN);
+            }
+            if (isParentPermissions()) {
+                criteria.setFetchMode("parent.permissions", FetchMode.JOIN);
+            }
+        }
+        if (isChildren()) {
+            criteria.setFetchMode("children", FetchMode.JOIN);
+            DetachedCriteria criteriaChildren = null, criteriaEntity = null;
+            if (isInnerJoin()) {
+                criteriaChildren = criteria.createCriteria("children");
+            }
+            if (isChildrenProperties()) {
+                criteria.setFetchMode("children.entity", FetchMode.JOIN);
+                if (isInnerJoin()) {
+                    criteriaEntity = criteriaChildren.createCriteria("entity");
+                }
+                criteria.setFetchMode("children.entity.typedPropertyLists", FetchMode.JOIN);
+                if (isInnerJoin()) {
+                    criteriaEntity.createCriteria("typedPropertyLists");
+                }
+                criteria.setFetchMode("children.entity.typedPropertyLists.properties",
+                        FetchMode.JOIN);
+            }
+            if (isChildrenPermissions()) {
+                criteria.setFetchMode("children.permissions", FetchMode.JOIN);
+                if (isInnerJoin()) {
+                    criteriaChildren.createCriteria("permissions");
+                }
+            }
+        }
+        if (isGrandchildren()) {
+            criteria.setFetchMode("children.children", FetchMode.JOIN);
+        }
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+    }
 
 }
