@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
+import java.util.Objects;
+
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
@@ -144,18 +146,20 @@ public interface IRetrieveInfo {
         }
         if (isChildren()) {
             criteria.setFetchMode("children", FetchMode.JOIN);
-            DetachedCriteria criteriaChildren = null, criteriaEntity = null;
+            DetachedCriteria criteriaChildren = null;
+            DetachedCriteria criteriaEntity = null;
             if (isInnerJoin()) {
                 criteriaChildren = criteria.createCriteria("children");
             }
             if (isChildrenProperties()) {
                 criteria.setFetchMode("children.entity", FetchMode.JOIN);
                 if (isInnerJoin()) {
-                    criteriaEntity = criteriaChildren.createCriteria("entity");
+                    criteriaEntity = Objects.requireNonNull(criteriaChildren)
+                            .createCriteria("entity");
                 }
                 criteria.setFetchMode("children.entity.typedPropertyLists", FetchMode.JOIN);
                 if (isInnerJoin()) {
-                    criteriaEntity.createCriteria("typedPropertyLists");
+                    Objects.requireNonNull(criteriaEntity).createCriteria("typedPropertyLists");
                 }
                 criteria.setFetchMode("children.entity.typedPropertyLists.properties",
                         FetchMode.JOIN);
@@ -163,7 +167,7 @@ public interface IRetrieveInfo {
             if (isChildrenPermissions()) {
                 criteria.setFetchMode("children.permissions", FetchMode.JOIN);
                 if (isInnerJoin()) {
-                    criteriaChildren.createCriteria("permissions");
+                    Objects.requireNonNull(criteriaChildren).createCriteria("permissions");
                 }
             }
         }
