@@ -24,6 +24,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.rcp.TextEventAdapter;
@@ -64,7 +65,7 @@ public class AuthenticationPage extends BaseWizardPage {
         textLogin.addKeyListener(new TextEventAdapter() {   
             @Override
             public void keyReleased(KeyEvent e) {
-                login = avoidEmptyStrings(textLogin.getText());
+                login = StringUtil.replaceEmptyStringByNull(textLogin.getText());
                 setPageComplete(isPageComplete());
             }
         });
@@ -75,7 +76,7 @@ public class AuthenticationPage extends BaseWizardPage {
             textPassword.addKeyListener(new TextEventAdapter() {   
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    password = avoidEmptyStrings(textPassword.getText());
+                    password = StringUtil.replaceEmptyStringByNull(textPassword.getText());
                     setPageComplete(isPageComplete());
                 }
             });
@@ -85,7 +86,7 @@ public class AuthenticationPage extends BaseWizardPage {
             textPassword2.addKeyListener(new TextEventAdapter() {   
                 @Override
                 public void keyReleased(KeyEvent e) {
-                    password2 = avoidEmptyStrings(textPassword2.getText());
+                    password2 = StringUtil.replaceEmptyStringByNull(textPassword2.getText());
                     setPageComplete(isPageComplete());
                 }
             });
@@ -97,7 +98,7 @@ public class AuthenticationPage extends BaseWizardPage {
         textEmail.addKeyListener(new TextEventAdapter() {   
             @Override
             public void keyReleased(KeyEvent e) {
-                email = avoidEmptyStrings(textEmail.getText());
+                email = StringUtil.replaceEmptyStringByNull(textEmail.getText());
                 setPageComplete(isPageComplete());
             }
         });
@@ -159,7 +160,7 @@ public class AuthenticationPage extends BaseWizardPage {
     }
 
     public void setLogin(String login) {
-        this.login = avoidEmptyStrings(login);
+        this.login = StringUtil.replaceEmptyStringByNull(login);
     }
 
     public String getPassword() {
@@ -167,7 +168,7 @@ public class AuthenticationPage extends BaseWizardPage {
     }
 
     public void setPassword(String password) {
-        this.password = avoidEmptyStrings(password);
+        this.password = StringUtil.replaceEmptyStringByNull(password);
     }
 
     public String getPassword2() {
@@ -175,7 +176,7 @@ public class AuthenticationPage extends BaseWizardPage {
     }
 
     public void setPassword2(String password2) {
-        this.password2 = avoidEmptyStrings(password2);
+        this.password2 = StringUtil.replaceEmptyStringByNull(password2);
     }
 
     public String getEmail() {
@@ -183,7 +184,7 @@ public class AuthenticationPage extends BaseWizardPage {
     }
 
     public void setEmail(String email) {
-        this.email = avoidEmptyStrings(email);
+        this.email = StringUtil.replaceEmptyStringByNull(email);
     }
     
     private IAuthService getAuthService() {
