@@ -44,6 +44,18 @@ public class Messages extends NLS {
     
     public static String BSIElementEditor_9;
 
+    public static String BSIElementEditorMultiPage_page_name_data;
+
+    public static String BSIElementEditorMultiPage_page_name_links;
+
+    public static String BSIElementEditorMultiPage_page_name_risk_frequency;
+
+    public static String BSIElementEditorMultiPage_page_name_risk_impact;
+
+    public static String BSIElementEditorMultiPage_page_name_risk_matrix;
+
+    public static String BSIElementEditorMultiPage_page_name_risk_values;
+
     public static String EditorFactory_0;
 
     public static String EditorFactory_2;

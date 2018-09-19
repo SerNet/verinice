@@ -31,8 +31,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
@@ -42,7 +40,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.part.EditorPart;
+import org.eclipse.ui.part.MultiPageEditorPart;
 import org.hibernate.StaleObjectStateException;
 
 import sernet.gs.service.Retriever;
@@ -66,11 +64,15 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
+import sernet.hui.swt.widgets.IHuiControlFactory;
 import sernet.snutils.AssertException;
 import sernet.snutils.FormInputParser;
+import sernet.verinice.bp.rcp.risk.ui.RiskConfigurationUtil;
+import sernet.verinice.bp.rcp.risk.ui.RiskUiUtils;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.crud.LoadElementForEditor;
 
@@ -83,9 +85,9 @@ import sernet.verinice.service.commands.crud.LoadElementForEditor;
  * @author koderman[at]sernet[dot]de
  *
  */
-public class BSIElementEditor extends EditorPart {
+public class BSIElementEditorMultiPage extends MultiPageEditorPart {
 
-    private static final Logger LOG = Logger.getLogger(BSIElementEditor.class);
+    private static final Logger LOG = Logger.getLogger(BSIElementEditorMultiPage.class);
 
     public static final String EDITOR_ID = "sernet.gs.ui.rcp.main.bsi.editors.bsielementeditor"; //$NON-NLS-1$
     private HitroUIComposite huiComposite;
@@ -96,10 +98,10 @@ public class BSIElementEditor extends EditorPart {
 
     private Boolean isWriteAllowed = null;
 
-    public static final String SAMT_PERSPECTIVE_ID = "sernet.verinice.samt.rcp.SamtPerspective";
+    public static final String SAMT_PERSPECTIVE_ID = "sernet.verinice.samt.rcp.SamtPerspective"; //$NON-NLS-1$
     // limit display in SAMT perspective to properties tagged as "VDA-ISA"
     // (simplified view):
-    private static final String SAMT_PERSPECTIVE_DEFAULT_TAGS = "VDA-ISA";
+    private static final String SAMT_PERSPECTIVE_DEFAULT_TAGS = "VDA-ISA"; //$NON-NLS-1$
 
     private IEntityChangedListener modelListener = new IEntityChangedListener() {
 
@@ -140,7 +142,7 @@ public class BSIElementEditor extends EditorPart {
                         new java.sql.Date(Long.parseLong(event.getProperty().getPropertyValue())));
                 changedElementProperties.put(event.getProperty().getPropertyType(), date);
             } catch (NumberFormatException | AssertException e) {
-                LOG.error("Exception while getting the value of a date property", e);
+                LOG.error("Exception while getting the value of a date property", e); //$NON-NLS-1$
             }
         }
 
@@ -153,7 +155,7 @@ public class BSIElementEditor extends EditorPart {
 
                 StringBuilder sb = new StringBuilder();
                 for (Property property : properties) {
-                    sb.append(property.getPropertyValue()).append(",");
+                    sb.append(property.getPropertyValue()).append(","); //$NON-NLS-1$
                 }
                 changedElementProperties.put(propertyType.getId(), sb.toString());
             }
@@ -171,6 +173,8 @@ public class BSIElementEditor extends EditorPart {
     };
     private CnATreeElement cnAElement;
     private LinkMaker linkMaker;
+
+    private RiskConfigurationUtil riskConfigurationUtil;
 
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
@@ -218,7 +222,7 @@ public class BSIElementEditor extends EditorPart {
                 setPartName(getPartName() + Messages.BSIElementEditor_7);
             }
 
-            String[] tags = BSIElementEditor.getEditorTags();
+            String[] tags = BSIElementEditorMultiPage.getEditorTags();
 
             boolean strict = Activator.getDefault().getPluginPreferences()
                     .getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
@@ -230,13 +234,18 @@ public class BSIElementEditor extends EditorPart {
                 strict = true;
             }
 
+            Map<String, IHuiControlFactory> overrides = RiskUiUtils
+                    .createHuiControlFactories(element);
+
             // create view of all properties, read only or read/write:
             huiComposite.createView(entity, getIsWriteAllowed(), true, tags, strict,
                     ServiceFactory.lookupValidationService().getPropertyTypesToValidate(entity,
                             cnAElement.getDbId()),
                     Activator.getDefault().getPreferenceStore()
-                            .getBoolean(PreferenceConstants.USE_VALIDATION_GUI_HINTS));
+                            .getBoolean(PreferenceConstants.USE_VALIDATION_GUI_HINTS),
+                    overrides);
             InputHelperFactory.setInputHelpers(entityType, huiComposite);
+            RiskUiUtils.addSelectionListener(huiComposite, cnAElement);
             huiComposite.resetInitialFocus();
 
             // create in place editor for links to other objects
@@ -269,7 +278,8 @@ public class BSIElementEditor extends EditorPart {
 
     @Override
     public void doSave(IProgressMonitor monitor) {
-        if (isModelModified) {
+        if (isModelModified || (riskConfigurationUtil != null && riskConfigurationUtil.isDirty())) {
+            Activator.inheritVeriniceContextState();
             if (isTaskEditorContext()) {
                 updateTaskWithChangedElementProperties();
                 LOG.info("Sciped save cnAElement."); //$NON-NLS-1$
@@ -324,6 +334,10 @@ public class BSIElementEditor extends EditorPart {
             return;
         }
         try {
+            if (riskConfigurationUtil != null && riskConfigurationUtil.isDirty()) {
+                riskConfigurationUtil.doSave();
+            }
+
             // save element, refresh etc:
             CnAElementHome.getInstance().updateEntity(cnAElement);
             EditorUtil.updateDependentObjects(cnAElement);
@@ -370,8 +384,8 @@ public class BSIElementEditor extends EditorPart {
             return new String[] {};
         }
 
-        String tags0 = tags.replaceAll("\\s+", "");
-        return tags0.split(",");
+        String tags0 = tags.replaceAll("\\s+", ""); //$NON-NLS-1$ //$NON-NLS-2$
+        return tags0.split(","); //$NON-NLS-1$
     }
 
     private void setIcon() {
@@ -384,6 +398,9 @@ public class BSIElementEditor extends EditorPart {
 
     @Override
     public boolean isDirty() {
+        if (riskConfigurationUtil != null && riskConfigurationUtil.isDirty()) {
+            return true;
+        }
         return isModelModified;
     }
 
@@ -406,32 +423,6 @@ public class BSIElementEditor extends EditorPart {
     public Boolean createIsWriteAllowed() {
         isWriteAllowed = CnAElementHome.getInstance().isWriteAllowed(cnAElement);
         return isWriteAllowed;
-    }
-
-    /*
-     * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
-     * widgets .Composite)
-     */
-    @Override
-    public void createPartControl(Composite parent) {
-        final int sashWeight1 = 66;
-        final int sashWeight2 = 33;
-        final int sashWidth = 4;
-        SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
-        huiComposite = new HitroUIComposite(sashForm, false);
-        if (showLinkMaker()) {
-            linkMaker = new LinkMaker(sashForm, this);
-            sashForm.setWeights(new int[] { sashWeight1, sashWeight2 });
-            sashForm.setSashWidth(sashWidth);
-        }
-
-        initContent();
-        setIcon();
-
-        // if opened the first time, save initialized entity:
-        if (isDirty()) {
-            save();
-        }
     }
 
     private boolean showLinkMaker() {
@@ -537,12 +528,57 @@ public class BSIElementEditor extends EditorPart {
                         CnAElementHome.getInstance().refresh(cnATreeElement);
                         CnAElementFactory.getModel(cnATreeElement).childChanged(cnATreeElement);
                     } catch (CommandException e) {
-                        LOG.error("Error synchronizing dependent model elements.");
+                        LOG.error("Error synchronizing dependent model elements."); //$NON-NLS-1$
                     }
 
                 }
             }
         }
+    }
+
+    @Override
+    protected void createPages() {
+        createBsiPage();
+        createLinkMakerPage();
+
+        if (cnAElement instanceof ItNetwork && RiskConfigurationUtil.checkRights()) {
+            ItNetwork itn = (ItNetwork) cnAElement;
+            riskConfigurationUtil = new RiskConfigurationUtil(itn, ()->
+                    firePropertyChange(PROP_DIRTY)                   
+            );
+            
+            addNewPage(riskConfigurationUtil
+                    .createRiskMatrixPage(getContainer()), Messages.BSIElementEditorMultiPage_page_name_risk_matrix);
+            addNewPage(riskConfigurationUtil.createRiskValuePage(getContainer()), Messages.BSIElementEditorMultiPage_page_name_risk_values);
+            addNewPage(riskConfigurationUtil.createRiskImpact(getContainer()), Messages.BSIElementEditorMultiPage_page_name_risk_impact);
+            addNewPage(riskConfigurationUtil.createRiskFrequency(getContainer()), Messages.BSIElementEditorMultiPage_page_name_risk_frequency);
+
+            riskConfigurationUtil.updateConfiguration();
+        }
+    }
+
+    private void addNewPage(Composite matrixPage, String titel) {
+        int index = addPage(matrixPage);
+        setPageText(index, titel);
+    }
+
+    private void createLinkMakerPage() {
+        linkMaker = new LinkMaker(getContainer(), this);
+        linkMaker.createPartControl(getIsWriteAllowed());
+        linkMaker.setInputElmt(cnAElement);
+        addNewPage(linkMaker, Messages.BSIElementEditorMultiPage_page_name_links);
+    }
+
+    private void createBsiPage() {
+        huiComposite = new HitroUIComposite(getContainer(), false);
+        initContent();
+        setIcon();
+
+        // if opened the first time, save initialized entity:
+        if (isDirty()) {
+            save();
+        }
+        addNewPage(huiComposite, Messages.BSIElementEditorMultiPage_page_name_data);
     }
 
 }

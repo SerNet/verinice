@@ -72,7 +72,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BaseProtectionModelingTransfer;
-import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditor;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorMultiPage;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorRegistry;
@@ -377,7 +377,7 @@ public class CatalogView extends RightsEnabledView
         if (editor == null) {
             EditorFactory.getInstance().updateAndOpenObject(element, true);
         } else {
-            getSite().getPage().openEditor(editor.getEditorInput(), BSIElementEditor.EDITOR_ID);
+            getSite().getPage().openEditor(editor.getEditorInput(), BSIElementEditorMultiPage.EDITOR_ID);
         }
     }
 

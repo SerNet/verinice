@@ -41,8 +41,8 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.StatusLine;
-import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorMultiPage;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
@@ -162,7 +162,7 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
                 if (element instanceof CnALink) {
                     element = determineLinkedElement((CnALink) element);
                 }
-            } else if (part instanceof BSIElementEditor && element instanceof CnALink
+            } else if (part instanceof BSIElementEditorMultiPage && element instanceof CnALink
                     && isLinkingActive()) {
                 element = determineLinkedElement((CnALink) element);
             }

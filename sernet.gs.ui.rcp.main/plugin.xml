@@ -807,7 +807,7 @@
                style="push"
                tooltip="%action.tooltip.exportItNetwork">
          </action>
-      </objectContribution>     
+      </objectContribution>
       <objectContribution
             adaptable="false"
             id="sernet.verinice.bpm.rcp.CreateIsaControl.controlgroup"
@@ -1676,7 +1676,7 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditor"
+            class="sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorMultiPage"
             default="false"
             icon="icons/24-tool-a.png"
             id="sernet.gs.ui.rcp.main.bsi.editors.bsielementeditor"

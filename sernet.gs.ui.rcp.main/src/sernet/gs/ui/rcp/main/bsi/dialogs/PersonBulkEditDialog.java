@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditor;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorMultiPage;
 import sernet.gs.ui.rcp.main.bsi.editors.InputHelperFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
@@ -124,7 +124,7 @@ public class PersonBulkEditDialog extends TitleAreaDialog {
                 // is always Configuration here
                 entity = new Entity(Configuration.TYPE_ID);
 
-                String[] tags = BSIElementEditor.getEditorTags();
+                String[] tags = BSIElementEditorMultiPage.getEditorTags();
 
                 boolean strict = Activator.getDefault().getPluginPreferences()
                         .getBoolean(PreferenceConstants.HUI_TAGS_STRICT);
