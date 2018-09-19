@@ -21,8 +21,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
@@ -105,7 +103,7 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         // return results;
         IRetrieveInfo ri0 = (ri == null) ? new RetrieveInfo() : ri;
         DetachedCriteria criteria = DetachedCriteria.forClass(type);
-        configureCriteria(criteria, ri0);
+        ri0.configureCriteria(criteria);
         return findByCriteria(criteria);
     }
 
@@ -120,7 +118,7 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         IRetrieveInfo ri0 = (ri == null) ? new RetrieveInfo() : ri;
         DetachedCriteria criteria = DetachedCriteria.forClass(type);
         criteria.add(Restrictions.eq("uuid", uuid));
-        configureCriteria(criteria, ri0);
+        ri0.configureCriteria(criteria);
         return loadByCriteria(criteria);
     }
 
@@ -141,81 +139,9 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         } else {
             criteria.add(Restrictions.eq("dbId", id));
         }
-        configureCriteria(criteria, ri0);
+        ri0.configureCriteria(criteria);
 
         return loadByCriteria(criteria);
-    }
-
-    private void configureCriteria(DetachedCriteria criteria, IRetrieveInfo ri) {
-        if (ri.isProperties()) {
-            criteria.setFetchMode("entity", FetchMode.JOIN);
-            criteria.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
-            criteria.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
-        }
-        if (ri.isPermissions()) {
-            criteria.setFetchMode("permissions", FetchMode.JOIN);
-        }
-
-        if (ri.isLinksDown()) {
-            criteria.setFetchMode("linksDown", FetchMode.JOIN);
-            criteria.setFetchMode("linksDown.dependency", FetchMode.JOIN);
-            if (ri.isLinksDownProperties()) {
-                criteria.setFetchMode("linksDown.dependency.entity", FetchMode.JOIN);
-                criteria.setFetchMode("linksDown.dependency.entity.typedPropertyLists",
-                        FetchMode.JOIN);
-                criteria.setFetchMode("linksDown.dependency.entity.typedPropertyLists.properties",
-                        FetchMode.JOIN);
-            }
-        }
-        if (ri.isLinksUp()) {
-            criteria.setFetchMode("linksUp", FetchMode.JOIN);
-            criteria.setFetchMode("linksUp.dependant", FetchMode.JOIN);
-            if (ri.isLinksUpProperties()) {
-                criteria.setFetchMode("linksUp.dependant.entity", FetchMode.JOIN);
-                criteria.setFetchMode("linksUp.dependant.entity.typedPropertyLists",
-                        FetchMode.JOIN);
-                criteria.setFetchMode("linksUp.dependant.entity.typedPropertyLists.properties",
-                        FetchMode.JOIN);
-            }
-        }
-        if (ri.isParent()) {
-            criteria.setFetchMode("parent", FetchMode.JOIN);
-            if (ri.isSiblings()) {
-                criteria.setFetchMode("parent.children", FetchMode.JOIN);
-            }
-            if (ri.isParentPermissions()) {
-                criteria.setFetchMode("parent.permissions", FetchMode.JOIN);
-            }
-        }
-        if (ri.isChildren()) {
-            criteria.setFetchMode("children", FetchMode.JOIN);
-            DetachedCriteria criteriaChildren = null, criteriaEntity = null;
-            if (ri.isInnerJoin()) {
-                criteriaChildren = criteria.createCriteria("children");
-            }
-            if (ri.isChildrenProperties()) {
-                criteria.setFetchMode("children.entity", FetchMode.JOIN);
-                if (ri.isInnerJoin()) {
-                    criteriaEntity = criteriaChildren.createCriteria("entity");
-                }
-                criteria.setFetchMode("children.entity.typedPropertyLists", FetchMode.JOIN);
-                if (ri.isInnerJoin()) {
-                    criteriaEntity.createCriteria("typedPropertyLists");
-                }
-                criteria.setFetchMode("children.entity.typedPropertyLists.properties",
-                        FetchMode.JOIN);
-            }
-            if (ri.isChildrenPermissions()) {
-                criteria.setFetchMode("children.permissions", FetchMode.JOIN);
-                if (ri.isInnerJoin()) {
-                    criteriaChildren.createCriteria("permissions");
-                }
-            }
-        }
-        if (ri.isGrandchildren()) {
-            criteria.setFetchMode("children.children", FetchMode.JOIN);
-        }
-        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
     }
 
     private T loadByCriteria(DetachedCriteria criteria) {
