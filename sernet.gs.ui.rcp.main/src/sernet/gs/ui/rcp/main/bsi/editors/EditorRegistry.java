@@ -23,37 +23,38 @@ import java.util.Map;
 import org.eclipse.ui.IEditorPart;
 
 /**
- * All open editors must register with this class with the object
- * that is being edited.
+ * All open editors must register with this class with the object that is being
+ * edited.
  * 
- * This class is used by the EditorFactory to get references to editors
- * for objects that are already open.
+ * This class is used by the EditorFactory to get references to editors for
+ * objects that are already open.
  * 
  * @author koderman[at]sernet[dot]de
  *
  */
 public final class EditorRegistry {
-	private static EditorRegistry instance;
-	private Map<String, IEditorPart> openEditors = new HashMap<String, IEditorPart>();
-	
-	private EditorRegistry() {}
-	
-	public static EditorRegistry getInstance() {
-		if (instance == null){
-			instance = new EditorRegistry();
-		}
-		return instance;
-	}
-	
-	public IEditorPart getOpenEditor(String key) {
-		return (IEditorPart)openEditors.get(key);
-	}
-	
-	public void registerOpenEditor(String key, IEditorPart editor) {
-		openEditors.put(key,editor);
-	}
-	
-	public void closeEditor(String key) {
-		openEditors.remove(key);
-	}
+    private static EditorRegistry instance;
+    private Map<String, IEditorPart> openEditors = new HashMap<>();
+
+    private EditorRegistry() {
+    }
+
+    public static EditorRegistry getInstance() {
+        if (instance == null) {
+            instance = new EditorRegistry();
+        }
+        return instance;
+    }
+
+    public IEditorPart getOpenEditor(String key) {
+        return openEditors.get(key);
+    }
+
+    public void registerOpenEditor(String key, IEditorPart editor) {
+        openEditors.put(key, editor);
+    }
+
+    public void closeEditor(String key) {
+        openEditors.remove(key);
+    }
 }
