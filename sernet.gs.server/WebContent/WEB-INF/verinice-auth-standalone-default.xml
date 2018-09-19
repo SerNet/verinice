@@ -100,7 +100,8 @@
 	        <action id="xmlimport"/>
 	        <action id="cnavalidation" />
 	        <action id="showallfiles" />
-	        <action id="migrate_data_protection" />
+            <action id="migrate_data_protection" />
+            <action id="editriskconfiguration" />
         </profile>
     </profiles>
     <userprofiles>

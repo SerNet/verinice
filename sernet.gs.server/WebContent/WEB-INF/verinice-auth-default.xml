@@ -105,6 +105,7 @@
             <action id="unify" />
             <action id="xmlexport" />
             <action id="xmlimport" />
+            <action id="editriskconfiguration" />
         </profile>
         <profile name="user-scope-default-profile" origin="default">
         <!-- missing actions: 
@@ -245,6 +246,7 @@
             <action id="todo"/>
             <action id="unify" />
             <action id="xmlexport"/>
+            <action id="editriskconfiguration" />
         </profile>
         <profile name="admin-scope-default-profile" origin="default">
         <!-- missing actions:
@@ -331,6 +333,7 @@
 	        <action id="todo"/>
           <action id="unify" />
 	        <action id="xmlexport"/>
+            <action id="editriskconfiguration" />
         </profile>
         
         <profile name="admin-local-default-profile" origin="default" > 
@@ -418,6 +421,7 @@
           	<action id="unify" /> 
             <action id="xmlexport"/> 
             <action id="xmlimport" />
+            <action id="editriskconfiguration" />
         </profile> 
         
         <profile name="admin-default-profile" origin="default" >
@@ -505,6 +509,7 @@
 	        <action id="xmlexport"/>
 	        <action id="xmlimport"/>
 	        <action id="showallfiles" />
+            <action id="editriskconfiguration" />
         </profile>
     </profiles>
     <userprofiles>

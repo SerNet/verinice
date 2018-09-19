@@ -103,6 +103,7 @@ public final class ActionRightIDs {
     public static final String TASKCHANGEASSIGNEE = "taskchangeassignee";
     public static final String TASKCHANGEDUEDATE = "taskchangeduedate";
     public static final String TASKWITHRELEASEPROCESS = "taskwithreleaseprocess";
+    public static final String EDITRISKCONFIGURATION = "editriskconfiguration";
     // value "bsidnd" kept due to historical reasons
     public static final String TREEDND = "bsidnd";
     public static final String UNIFY = "unify";
