@@ -40,6 +40,8 @@ import sernet.verinice.model.bp.groups.ItSystemGroup;
 import sernet.verinice.model.bp.groups.NetworkGroup;
 import sernet.verinice.model.bp.groups.RoomGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
+import sernet.verinice.model.bp.risk.configuration.ConfigurationSerializer;
+import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -64,6 +66,8 @@ public class ItNetwork extends CnATreeElement
     // the right hand side has to stay "_high" until a proper db-migration has
     // been added
     private static final String PROP_QUALIFIER_CORE = "bp_itnetwork_qualifier_high"; //$NON-NLS-1$
+
+    private static final String PROP_RISK_CONFIGURATION = "bp_itnetwork_risk_configuration"; //$NON-NLS-1$
 
     protected ItNetwork() {
     }
@@ -163,5 +167,22 @@ public class ItNetwork extends CnATreeElement
     @Override
     public String getAbbreviation() {
         return getEntity().getPropertyValue(PROP_ABBR);
+    }
+    
+   public RiskConfiguration getRiskConfiguration() {
+        String rawPropertyValue = getEntity().getRawPropertyValue(PROP_RISK_CONFIGURATION);
+        if (rawPropertyValue == null) {
+            return null;
+        }
+        return ConfigurationSerializer.configurationFromString(rawPropertyValue);
+    }
+
+    public void setRiskConfiguration(RiskConfiguration riskConfiguration) {
+        String rawPropertyValue = null;
+        if (riskConfiguration != null) {
+            rawPropertyValue = ConfigurationSerializer.configurationToString(riskConfiguration);
+        }
+        getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_RISK_CONFIGURATION),
+                rawPropertyValue);
     }
 }

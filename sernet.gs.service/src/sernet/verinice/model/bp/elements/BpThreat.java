@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.Retriever;
+import sernet.gs.service.StringUtil;
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.model.bp.IBpElement;
@@ -49,6 +50,12 @@ public class BpThreat extends CnATreeElement
     private static final String PROP_CONFIDENIALITY = "bp_threat_value_method_confidentiality"; //$NON-NLS-1$
     private static final String PROP_INTEGRITY = "bp_threat_value_method_integrity"; //$NON-NLS-1$
     private static final String PROP_AVAILABILITY = "bp_threat_value_method_availability"; //$NON-NLS-1$
+    public static final String PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS = "bp_threat_risk_without_additional_safeguards_frequency";//$NON-NLS-1$
+    public static final String PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS = "bp_threat_risk_without_additional_safeguards_impact";//$NON-NLS-1$
+    public static final String PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS = "bp_threat_risk_without_additional_safeguards_risk";//$NON-NLS-1$
+    public static final String PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS = "bp_threat_risk_with_additional_safeguards_frequency";//$NON-NLS-1$
+    public static final String PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS = "bp_threat_risk_with_additional_safeguards_impact";//$NON-NLS-1$
+    public static final String PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS = "bp_threat_risk_with_additional_safeguards_risk";//$NON-NLS-1$
 
     public static final String TYPE_ID = "bp_threat"; //$NON-NLS-1$
 
@@ -167,6 +174,67 @@ public class BpThreat extends CnATreeElement
     @Override
     public Collection<String> getTags() {
         return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
+    }
+
+    public String getFrequencyWithAdditionalSafeguards() {
+        return StringUtil.replaceEmptyStringByNull(
+                getEntity().getRawPropertyValue(PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS));
+    }
+
+    public String getFrequencyWithoutAdditionalSafeguards() {
+        return StringUtil.replaceEmptyStringByNull(
+                getEntity()
+                .getRawPropertyValue(PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS));
+    }
+
+    public String getImpactWithAdditionalSafeguards() {
+        return StringUtil.replaceEmptyStringByNull(
+                getEntity().getRawPropertyValue(PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS));
+
+    }
+
+    public String getImpactWithoutAdditionalSafeguards() {
+        return StringUtil.replaceEmptyStringByNull(
+                getEntity().getRawPropertyValue(PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS));
+    }
+
+    public String getRiskWithoutAdditionalSafeguards() {
+        return StringUtil.replaceEmptyStringByNull(
+                getEntity().getRawPropertyValue(PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS));
+    }
+
+    public String getRiskWithAdditionalSafeguards() {
+        return StringUtil.replaceEmptyStringByNull(
+                getEntity().getRawPropertyValue(PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS));
+    }
+
+    public void setRiskWithoutAdditionalSafeguards(String risk) {
+        getEntity().setSimpleValue(
+                getEntityType().getPropertyType(PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS),
+                risk);
+
+    }
+
+    public void setFrequencyWithAdditionalSafeguards(String frequency) {
+        getEntity().setSimpleValue(
+                getEntityType()
+                        .getPropertyType(PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS),
+                frequency);
+
+    }
+
+    public void setImpactWithAdditionalSafeguards(String impact) {
+        getEntity().setSimpleValue(
+                getEntityType().getPropertyType(PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS),
+                impact);
+
+    }
+
+    public void setRiskWithAdditionalSafeguards(String risk) {
+        getEntity().setSimpleValue(
+                getEntityType().getPropertyType(PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS),
+                risk);
+
     }
 
 }
