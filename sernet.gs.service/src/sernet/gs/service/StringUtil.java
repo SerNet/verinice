@@ -75,4 +75,11 @@ public abstract class StringUtil {
         sb.append(text, 0, maxWidth - 1).append("…");
         return sb.toString();
     }
+
+    public static String replaceEmptyStringByNull(String s) {
+        if (s == null || s.isEmpty()) {
+            return null;
+        }
+        return s;
+    }
 }
