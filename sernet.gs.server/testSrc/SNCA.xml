@@ -9257,6 +9257,7 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="bp_itnetwork_data_protection_telephone" name="Phone" />
             <huiproperty id="bp_itnetwork_data_protection_email" name="Email" />
         </huipropertygroup>
+        <huiproperty id="bp_itnetwork_risk_configuration" name="Risk configuration" visible="false" inputtype="text"/>
     </huientity>
 
     <huientity id="bp_application" name="Application">
@@ -9832,18 +9833,12 @@ Wurden bereits weitere Stellen informiert?
             inputtype="booleanoption" name="Affects Availability" tags="Risk" />
         <huipropertygroup id="bp_requirement_safeguard_strength" name="Safeguard Strength" tags="BSI-200-3">
             <huiproperty id="bp_requirement_safeguard_strength_frequency" name="Reduces frequency of occurrence to"
-                required="true" inputtype="numericoption" min="0" max="3">
-                <option id="bp_requirement_safeguard_strength_frequency_none" name="Unedited" value="0"/>
-                <option id="bp_requirement_safeguard_strength_frequency_rarely" name="Rarely" value="1"/>
-                <option id="bp_requirement_safeguard_strength_frequency_medium" name="Medium" value="2"/>
-                <option id="bp_requirement_safeguard_strength_frequency_frequently" name="Frequently" value="3"/>
+                required="true" inputtype="singleoption">
+                <!-- options will be populated dynamically in the application -->
             </huiproperty>
-            <huiproperty id="bp_requirement_safeguard_strength_damage" name="Reduces potential extent of damage to"
-                required="true" inputtype="numericoption" min="0" max="3">
-                <option id="bp_requirement_safeguard_strength_damage_none" name="Unedited" value="0"/>
-                <option id="bp_requirement_safeguard_strength_damage_negligible" name="Negligible" value="1"/>
-                <option id="bp_requirement_safeguard_strength_damage_limited" name="Limited" value="2"/>
-                <option id="bp_requirement_safeguard_strength_damage_considerable" name="Considerable" value="3"/>
+            <huiproperty id="bp_requirement_safeguard_strength_impact" name="Reduces potential extent of damage to"
+                required="true" inputtype="singleoption">
+                <!-- options will be populated dynamically in the application -->
             </huiproperty>
         </huipropertygroup>
         <huipropertygroup id="bp_requirement_implementation" name="Implementation">
@@ -9973,6 +9968,32 @@ Wurden bereits weitere Stellen informiert?
             name="Affects Integrity" tags="Risk" />
         <huiproperty defaultValue="1" id="bp_threat_value_method_availability"
             inputtype="booleanoption" name="Affects Availability" tags="Risk" />
+        <huipropertygroup id="bp_threat_risk_without_additional_safeguards" name="Risk without additional safeguards" tags="BSI-200-3">
+            <huiproperty id="bp_threat_risk_without_additional_safeguards_frequency" name="Frequency of occurrence"
+                required="true" inputtype="singleoption">
+               <!-- options will be populated dynamically in the application -->
+            </huiproperty>
+            <huiproperty id="bp_threat_risk_without_additional_safeguards_impact" name="Potential extent of damage"
+                required="true" inputtype="singleoption">
+                <!-- options will be populated dynamically in the application -->
+            </huiproperty>
+            <huiproperty id="bp_threat_risk_without_additional_safeguards_risk" name="Risk"
+                required="true" inputtype="singleoption" editable="false">
+            </huiproperty>
+        </huipropertygroup>
+        <huipropertygroup id="bp_threat_risk_with_additional_safeguards" name="Risk with additional safeguards" tags="BSI-200-3">
+            <huiproperty id="bp_threat_risk_with_additional_safeguards_frequency" name="Frequency of occurrence"
+                required="true" inputtype="singleoption" editable="false">
+               <!-- options will be populated dynamically in the application -->
+            </huiproperty>
+            <huiproperty id="bp_threat_risk_with_additional_safeguards_impact" name="Potential extent of damage"
+                required="true" inputtype="singleoption" editable="false">
+                <!-- options will be populated dynamically in the application -->
+            </huiproperty>
+            <huiproperty id="bp_threat_risk_with_additional_safeguards_risk" name="Risk"
+                required="true" inputtype="singleoption" editable="false">
+            </huiproperty>
+        </huipropertygroup>
     </huientity>
 
     <huientity id="bp_threat_group" name="bp_threat-Group">
@@ -10359,18 +10380,12 @@ Wurden bereits weitere Stellen informiert?
             inputtype="booleanoption" name="Affects Availability" tags="Risk" />
         <huipropertygroup id="bp_safeguard_safeguard_strength" name="Safeguard Strength" tags="BSI-200-3">
             <huiproperty id="bp_safeguard_safeguard_strength_frequency" name="Reduces frequency of occurrence to"
-                required="true" inputtype="numericoption" min="0" max="3">
-                <option id="bp_safeguard_safeguard_strength_frequency_none" name="Unedited" value="0"/>
-                <option id="bp_safeguard_safeguard_strength_frequency_rarely" name="Rarely" value="1"/>
-                <option id="bp_safeguard_safeguard_strength_frequency_medium" name="Medium" value="2"/>
-                <option id="bp_safeguard_safeguard_strength_frequency_frequently" name="Frequently" value="3"/>
+                required="true" inputtype="singleoption">
+               <!-- options will be populated dynamically in the application -->
             </huiproperty>
-            <huiproperty id="bp_safeguard_safeguard_strength_damage" name="Reduces potential extent of damage to"
-                required="true" inputtype="numericoption" min="0" max="3">
-                <option id="bp_safeguard_safeguard_strength_damage_none" name="Unedited" value="0"/>
-                <option id="bp_safeguard_safeguard_strength_damage_negligible" name="Negligible" value="1"/>
-                <option id="bp_safeguard_safeguard_strength_damage_limited" name="Limited" value="2"/>
-                <option id="bp_safeguard_safeguard_strength_damage_considerable" name="Considerable" value="3"/>
+            <huiproperty id="bp_safeguard_safeguard_strength_impact" name="Reduces potential extent of damage to"
+                required="true" inputtype="singleoption">
+                <!-- options will be populated dynamically in the application -->
             </huiproperty>
         </huipropertygroup>
         <huipropertygroup id="bp_safeguard_implementation" name="Implementation">
