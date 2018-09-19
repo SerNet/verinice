@@ -2,7 +2,7 @@
 <!--                                                                                  -->
 <!-- Spring Framework configuration file                                              -->
 <!--                                                                                  -->
-<!-- This file contains the configuration of the ISO/IEC 27005 risk analysis service  -->
+<!-- This file contains the configuration of the risk analysis services               -->
 <!-- and it is used if verinice is running in operation mode standalone. See file     -->
 <!-- veriniceserver-risk-analysis.xml for the configuration of the service if the     -->
 <!-- verinice server is running in Tomcat.                                            -->
@@ -25,13 +25,41 @@
         <property name="cnaLinkDao" ref="cnaLinkDao" />
     </bean>
     
-    <!-- Proxy bean for transaction management -->
+    <!-- Proxy bean for transaction management      -->
+    <!-- of the ISO/IEC 27005 risk analysis service -->
     <bean id="riskAnalysisService" parent="baseTxProxy">
         <property name="target" ref="riskAnalysisServiceImpl" />
         <property name="transactionAttributes">
             <props merge="true">
+                <!-- Methods to be executed in a transaction -->
                 <prop key="runRiskAnalysis">PROPAGATION_REQUIRED</prop>
             </props>
         </property>
     </bean>
+    
+    <!-- A service to run and configure a IT base protection (ITBP) risk analysis -->
+    <bean name="itbpRiskServiceImpl"
+        class="sernet.verinice.service.bp.risk.RiskServiceImpl">
+        <property name="metaDao" ref="itbpRiskServiceMetaDao" />
+        <property name="propertyListDao" ref="propertyListDao" />
+    </bean>
+    
+    <!-- Proxy bean for transaction management -->
+    <!-- of the ITBP risk service              -->
+    <bean id="itbpRiskService" parent="baseTxProxy">
+        <property name="target" ref="itbpRiskServiceImpl" />
+        <property name="transactionAttributes">
+            <props merge="true">
+                <!-- Methods to be executed in a transaction -->
+                <prop key="updateRiskConfiguration">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <bean name="itbpRiskServiceMetaDao"
+        class="sernet.verinice.service.bp.risk.RiskServiceMetaDao">        
+        <property name="elementDao" ref="cnaTreeElementDao" />
+        <property name="itNetworkDao" ref="itNetworkDAO" />
+    </bean>
+    
 </beans>

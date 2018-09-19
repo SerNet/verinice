@@ -204,15 +204,26 @@
 	</bean>
   
     <bean name="/riskAnalysisServiceHttpInvoker"
-	    class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
-	    lazy-init="false">
-	    <property name="service">
-	        <ref bean="riskAnalysisService"/>
-	    </property>
+        class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+        lazy-init="false">
+        <property name="service">
+            <ref bean="riskAnalysisService"/>
+        </property>
         <property name="serviceInterface">
-	        <value>sernet.verinice.service.risk.RiskAnalysisService</value>
-	    </property>
-	</bean>
+            <value>sernet.verinice.service.risk.RiskAnalysisService</value>
+        </property>
+    </bean>
+    
+    <bean name="/itbpRiskServiceHttpInvoker"
+        class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+        lazy-init="false">
+        <property name="service">
+            <ref bean="itbpRiskService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.service.bp.risk.RiskService</value>
+        </property>
+    </bean>
 	
 </beans>
 
