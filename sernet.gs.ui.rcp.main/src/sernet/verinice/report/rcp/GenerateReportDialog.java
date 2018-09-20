@@ -113,8 +113,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     private String defaultFolder;
 
-    private String defaultTemplateFolder;
-
     private IReportType chosenReportType;
 
     // estimated size of dialog for placement (doesnt have to be exact):
@@ -123,12 +121,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     private IReportSupplier supplier;
 
-    /**
-     * @wbp.parser.constructor
-     */
     public GenerateReportDialog(Shell parentShell) {
         super(parentShell);
-        setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
+        setShellStyle(getShellStyle() | SWT.MAX);
         this.auditId = null;
         this.auditName = null;
         reportTypes = ServiceComponent.getDefault().getReportService().getReportTypes();
@@ -281,22 +276,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                getButton(IDialogConstants.OK_ID).setEnabled(true);
-                int s = scopeCombo.getSelectionIndex();
-                if (chosenReportMetaData != null && chosenReportMetaData.isMultipleRootObjects()) {
-                    if (s == 0) {
-                        Integer[] roots = new Integer[scopes.size()];
-                        for (int i = 0; i < scopes.size(); i++) {
-                            roots[i] = scopes.get(i).getDbId();
-                        }
-                        rootElements = roots;
-                        rootElement = null;
-                    } else {
-                        rootElement = scopes.get(s - 1).getDbId();
-                    }
-                } else {
-                    rootElement = scopes.get(s).getDbId();
-                }
+                selectScope();
             }
         });
 
@@ -627,34 +607,17 @@ public class GenerateReportDialog extends TitleAreaDialog {
                         Messages.GenerateReportDialog_6);
                 return;
             }
-            List<Integer> scopeIds = new ArrayList<>(0);
-            if (getRootElement() != null) {
-                scopeIds.add(getRootElement());
-            }
-            if (getRootElements() != null) {
-                for (Integer scopeId : getRootElements()) {
-                    if (scopeId != null) {
-                        scopeIds.add(scopeId);
-                    }
-                }
-            }
+            List<Integer> scopeIds = collectScopeIds();
             IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
-            boolean dontShow = preferenceStore
+            boolean dontShowValidationWarning = preferenceStore
                     .getBoolean(PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING);
-            IValidationService vService = ServiceFactory.lookupValidationService();
-            boolean validationsExistant = false;
-            for (Integer scopeId : scopeIds) {
-                if (!vService.getValidations(scopeId, (Integer) null).isEmpty()) {
-                    validationsExistant = true;
-                    break;
-                }
-            }
+            boolean validationsExistant = validateScopes(scopeIds);
 
-            if (!dontShow && validationsExistant) {
+            if (!dontShowValidationWarning && validationsExistant) {
                 MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoQuestion(
                         getParentShell(), Messages.GenerateReportDialog_5,
                         Messages.GenerateReportDialog_21, Messages.GenerateReportDialog_23,
-                        dontShow, preferenceStore,
+                        dontShowValidationWarning, preferenceStore,
                         PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING);
                 preferenceStore.setValue(PreferenceConstants.SHOW_REPORT_VALIDATION_WARNING,
                         dialog.getToggleState());
@@ -695,6 +658,31 @@ public class GenerateReportDialog extends TitleAreaDialog {
         }
         super.okPressed();
     }
+
+	private List<Integer> collectScopeIds() {
+		List<Integer> scopeIds = new ArrayList<>();
+		if (getRootElement() != null) {
+		    scopeIds.add(getRootElement());
+		}
+		if (getRootElements() != null) {
+		    for (Integer scopeId : getRootElements()) {
+		        if (scopeId != null) {
+		            scopeIds.add(scopeId);
+		        }
+		    }
+		}
+		return scopeIds;
+	}
+	
+	private boolean validateScopes(List<Integer> scopeIds) {
+		IValidationService vService = ServiceFactory.lookupValidationService();
+		for (Integer scopeId : scopeIds) {
+		    if (!vService.getValidations(scopeId, (Integer) null).isEmpty()) {
+		        return true;
+		    }
+		}
+		return false;
+	}
 
     @Override
     protected void cancelPressed() {
@@ -886,5 +874,27 @@ public class GenerateReportDialog extends TitleAreaDialog {
             return nsc.compare(o1.getOutputname(), o2.getOutputname());
         });
     }
+    
+    /**
+     * Select the scope aka root element.
+     */
+	private void selectScope() {
+		getButton(IDialogConstants.OK_ID).setEnabled(true);
+		int s = scopeCombo.getSelectionIndex();
+		if (chosenReportMetaData != null && chosenReportMetaData.isMultipleRootObjects()) {
+		    if (s == 0) {
+		        Integer[] roots = new Integer[scopes.size()];
+		        for (int i = 0; i < scopes.size(); i++) {
+		            roots[i] = scopes.get(i).getDbId();
+		        }
+		        rootElements = roots;
+		        rootElement = null;
+		    } else {
+		        rootElement = scopes.get(s - 1).getDbId();
+		    }
+		} else {
+		    rootElement = scopes.get(s).getDbId();
+		}
+	}
 
 }
