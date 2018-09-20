@@ -24,7 +24,6 @@ import java.util.List;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
@@ -35,7 +34,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
@@ -58,14 +57,13 @@ import sernet.gs.ui.rcp.main.bsi.dnd.CopyBSIMassnahmenViewAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.filter.GefaehrdungenFilter;
 import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
+import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot.ISelectionListener;
 import sernet.gs.ui.rcp.main.bsi.views.actions.MassnahmenViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.JobScheduler;
-import sernet.verinice.model.bp.elements.BpModel;
-import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
@@ -95,14 +93,14 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
 
     private IModelLoadListener modelLoadListener;
 
+    private ISelectionListener catalogChangeListener;
+
     @Override
     public String getRightID() {
         return ActionRightIDs.BSIMASSNAHMEN;
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
@@ -116,18 +114,13 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
         viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         viewer.setContentProvider(new ViewContentProvider());
         viewer.setLabelProvider(new ViewLabelProvider());
-        viewer.setSorter(new KapitelSorter());
+        viewer.setComparator(new KapitelComparator());
 
         startInitDataJob();
 
         viewer.setInput(BSIKatalogInvisibleRoot.getInstance());
-        BSIKatalogInvisibleRoot.getInstance()
-                .addListener(new BSIKatalogInvisibleRoot.ISelectionListener() {
-                    @Override
-                    public void cataloguesChanged() {
-                        refresh();
-                    }
-                });
+        catalogChangeListener = this::refresh;
+        BSIKatalogInvisibleRoot.getInstance().addListener(catalogChangeListener);
 
         createActions();
         createFilters();
@@ -148,30 +141,11 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
         } else if (modelLoadListener == null) {
             // model is not loaded yet: add a listener to load data when it's
             // laoded
-            modelLoadListener = new IModelLoadListener() {
-                @Override
-                public void closed(BSIModel model) {
-                    // nothing to do
-                }
-
-                @Override
-                public void loaded(BSIModel model) {
-                    // work is done in loaded(ISO27KModel model)
-                }
+            modelLoadListener = new DefaultModelLoadListener() {
 
                 @Override
                 public void loaded(ISO27KModel model) {
                     startInitDataJob();
-                }
-
-                @Override
-                public void loaded(BpModel model) {
-                    // work is done in loaded(ISO27KModel model)
-                }
-
-                @Override
-                public void loaded(CatalogModel model) {
-                    // do nothing
                 }
 
             };
@@ -181,12 +155,7 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
     }
 
     private void refresh() {
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                viewer.refresh();
-            }
-        });
+        Display.getDefault().asyncExec(() -> viewer.refresh());
     }
 
     private void hookGlobalActions() {
@@ -240,12 +209,7 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
     private void hookContextMenu() {
         MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
         menuMgr.setRemoveAllWhenShown(true);
-        menuMgr.addMenuListener(new IMenuListener() {
-            @Override
-            public void menuAboutToShow(IMenuManager manager) {
-                BSIMassnahmenView.this.fillContextMenu(manager);
-            }
-        });
+        menuMgr.addMenuListener(BSIMassnahmenView.this::fillContextMenu);
         Menu menu = menuMgr.createContextMenu(viewer.getControl());
         viewer.getControl().setMenu(menu);
         getSite().registerContextMenu(menuMgr, viewer);
@@ -282,7 +246,7 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
     }
 
     public List<Baustein> getSelectedBausteine() {
-        ArrayList<Baustein> result = new ArrayList<Baustein>();
+        ArrayList<Baustein> result = new ArrayList<>();
         IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
         for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
             Object o = iter.next();
@@ -298,8 +262,6 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
      */
     @Override
@@ -307,7 +269,7 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
         return Perspective.ID;
     }
 
-    private static class KapitelSorter extends ViewerSorter {
+    private static class KapitelComparator extends ViewerComparator {
         @Override
         public int compare(Viewer viewer, Object e1, Object e2) {
 
@@ -350,7 +312,7 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
         public Object[] getChildren(Object parent) {
             final int childrenListSize = 100;
             if (parent instanceof Baustein) {
-                ArrayList<IGSModel> children = new ArrayList<IGSModel>(childrenListSize);
+                ArrayList<IGSModel> children = new ArrayList<>(childrenListSize);
                 children.addAll(((Baustein) parent).getGefaehrdungen());
                 children.addAll(((Baustein) parent).getMassnahmen());
                 return children.toArray();
@@ -372,17 +334,11 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
 
         @Override
         public boolean hasChildren(Object parent) {
-            // Please be careful when refactoring this. For an unknown reason
-            // "size() > 0"
-            // behaves different then "isEmpty()" here. Replacing the former
-            // with the latter
-            // as Sonar suggests breaks the tree in the IT Baseline Protection
-            // Catalog View.
             if (parent instanceof Baustein) {
                 Baustein baustein = (Baustein) parent;
                 return baustein.hasSafequardsOrThreats();
             } else if (parent instanceof BSIKatalogInvisibleRoot) {
-                return ((BSIKatalogInvisibleRoot) parent).getBausteine().size() > 0;
+                return !((BSIKatalogInvisibleRoot) parent).getBausteine().isEmpty();
             }
             return false;
         }
