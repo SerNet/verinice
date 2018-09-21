@@ -83,7 +83,7 @@ public class BpThreat extends CnATreeElement
     @Override
     public SecurityLevel getSecurityLevel() {
         CnATreeElement element = Retriever.retrieveElement(this,
-                RetrieveInfo.getPropertyInstance().setLinksUpProperties(true));
+                new RetrieveInfo().setLinksUpProperties(true));
         return element.getLinksUp().stream().map(CnALink::getDependant)
                 .filter(BpRequirement.class::isInstance).map(BpRequirement.class::cast)
                 .map(BpRequirement::getSecurityLevel).min(SecurityLevel::compare).orElse(null);
