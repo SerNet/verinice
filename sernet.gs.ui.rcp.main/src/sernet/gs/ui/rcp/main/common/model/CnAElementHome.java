@@ -281,9 +281,9 @@ public final class CnAElementHome {
         UpdateElementEntity<? extends CnATreeElement> command = createCommand(element);
         command = getCommandService().executeCommand(command);
         if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
-            validateElement(command.getElement());
+            validateElement(command.getMergedElement());
         }
-        return command.getElement(); 
+        return command.getMergedElement(); 
     }
 
     public void update(List<? extends CnATreeElement> elements) throws StaleObjectStateException, CommandException {

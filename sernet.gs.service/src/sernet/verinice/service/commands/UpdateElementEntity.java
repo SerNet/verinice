@@ -47,22 +47,23 @@ public class UpdateElementEntity<T extends CnATreeElement> extends ChangeLogging
 
     private static final Logger log = Logger.getLogger(UpdateElementEntity.class);
 
-    private T newElement;
-
+    private final T elementToUpdate;
+    private T mergedElement;
     private String stationId;
 
     public UpdateElementEntity(T element, String stationId) {
-        this.newElement = element;
+        this.elementToUpdate = element;
+        this.mergedElement = null;
         this.stationId = stationId;
     }
 
     public void execute() {
         beforeUpdate();
-        IBaseDao<T, Serializable> elementDao = getDaoFactory().getDAO(this.newElement.getTypeId());
+        IBaseDao<T, Serializable> elementDao = getDaoFactory().getDAO(this.elementToUpdate.getTypeId());
         try {
-            elementDao.checkRights(this.newElement);
+            elementDao.checkRights(this.elementToUpdate);
         } catch (SecurityException e) {
-            log.warn("Can not update entity of element: " + this.newElement
+            log.warn("Can not update entity of element: " + this.elementToUpdate
                     + " security check fails:" + e.getMessage());
             if (log.isDebugEnabled()) {
                 log.debug("stacktrace: ", e);
@@ -71,7 +72,7 @@ public class UpdateElementEntity<T extends CnATreeElement> extends ChangeLogging
         }
 
         IElementEntityDao elementEntityDao = getDaoFactory().getElementEntityDao();
-        this.newElement = (T) elementEntityDao.mergeEntityOfElement(newElement, true);
+        this.mergedElement = (T) elementEntityDao.mergeEntityOfElement(elementToUpdate, true);
 
         afterUpdate();
     }
@@ -92,8 +93,8 @@ public class UpdateElementEntity<T extends CnATreeElement> extends ChangeLogging
         // empty
     }
 
-    public T getElement() {
-        return newElement;
+    public T getMergedElement() {
+        return mergedElement;
     }
 
     public String getStationId() {
@@ -113,6 +114,6 @@ public class UpdateElementEntity<T extends CnATreeElement> extends ChangeLogging
      * derived properties etc. The updated element itself it contained.
      */
     public List<CnATreeElement> getChangedElements() {
-        return Collections.singletonList(newElement);
+        return Collections.singletonList(elementToUpdate);
     }
 }

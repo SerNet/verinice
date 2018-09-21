@@ -59,7 +59,7 @@ public class UpdateMultipleElementEntities extends ChangeLoggingCommand {
                 command = getCommandService().executeCommand(command);
                 dao.flush();
                 dao.clear();
-                processed.add(command.getElement());
+                processed.add(command.getMergedElement());
             } catch (CommandException e) {
                 logger.error("Error while updating element entity", e);
             }
