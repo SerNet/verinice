@@ -269,6 +269,12 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
         return Perspective.ID;
     }
 
+    @Override
+    public void dispose() {
+        super.dispose();
+        BSIKatalogInvisibleRoot.getInstance().removeListener(catalogChangeListener);
+    }
+
     private static class KapitelComparator extends ViewerComparator {
         @Override
         public int compare(Viewer viewer, Object e1, Object e2) {
