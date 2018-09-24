@@ -31,7 +31,7 @@
 		<module>sernet.localdependencies</module>
 		<module>sernet.thirdparty.feature</module>
 		<module>sernet.verinice.lang.feature</module>
-
+		<module>sernet.verinice.extraresources.feature</module>
 
 		<!-- Bundles -->
 		<module>bouncycastle</module>

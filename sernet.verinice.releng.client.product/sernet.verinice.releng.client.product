@@ -805,6 +805,7 @@ Public License instead of this License.  But first, please read
       <feature id="sernet.rcp.ui.feature" version="1.0.0.qualifier"/>
       <feature id="sernet.verinice.lang.feature" version="1.0.0"/>
       <feature id="org.jgrapht" version="1.2.0"/>
+      <feature id="sernet.verinice.extraresources.feature" version="1.0.0.qualifier"/>
    </features>
 
    <configurations>
