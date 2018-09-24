@@ -22,6 +22,7 @@ import java.util.Set;
 import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
@@ -61,8 +62,12 @@ public class RiskServiceImpl implements RiskService {
         // because of the class VeriniceContextListener
         ServerInitializer.inheritVeriniceContextState();
         updateItNetwork(updateContext);
-        RiskConfigurationUpdateResult result = updateRiskValuesInThreats(updateContext);
-        return result;
+        RiskConfigurationUpdateResult updateResult = updateRiskValuesInThreats(updateContext);
+        RiskConfigurationUpdateResult updateRequirementsResult = updateRiskValuesInRequirements(
+                updateContext);
+        updateResult.setNumberOfChangedRequirements(
+                updateRequirementsResult.getNumberOfChangedRequirements());
+        return updateResult;
     }
 
     private void updateItNetwork(RiskConfigurationUpdateContext updateContext) {
@@ -79,6 +84,16 @@ public class RiskServiceImpl implements RiskService {
         UpdateRiskValuesInThreatsJob updateRiskValuesJob = new UpdateRiskValuesInThreatsJob(
                 updateContext, threatsFromScope);
         updateRiskValuesJob.setPropertyListDao(propertyListDao);
+        updateRiskValuesJob.run();
+        return updateRiskValuesJob.getRiskConfigurationUpdateResult();
+    }
+
+    private RiskConfigurationUpdateResult updateRiskValuesInRequirements(
+            RiskConfigurationUpdateContext updateContext) {
+        Set<BpRequirement> requirementsFromScope = getMetaDao()
+                .loadRequirementsFromScope(updateContext.getItNetwork().getDbId());
+        UpdateRiskValuesInRequirementsJob updateRiskValuesJob = new UpdateRiskValuesInRequirementsJob(
+                updateContext, requirementsFromScope);
         updateRiskValuesJob.run();
         return updateRiskValuesJob.getRiskConfigurationUpdateResult();
     }

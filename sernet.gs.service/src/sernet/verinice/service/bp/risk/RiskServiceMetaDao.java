@@ -25,6 +25,7 @@ import org.hibernate.Query;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.common.CnATreeElement;
@@ -67,10 +68,20 @@ public class RiskServiceMetaDao {
     }
 
     @SuppressWarnings("unchecked")
+    public Set<BpRequirement> loadRequirementsFromScope(Integer scopeId) {
+        return (Set<BpRequirement>) loadElementsFromScope(scopeId, BpRequirement.TYPE_ID);
+    }
+
+    @SuppressWarnings("unchecked")
     public Set<BpThreat> loadThreatsFromScope(Integer scopeId) {
+        return (Set<BpThreat>) loadElementsFromScope(scopeId, BpThreat.TYPE_ID);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Set<? extends CnATreeElement> loadElementsFromScope(Integer scopeId, String typeId) {
         List<BpThreat> resultList = getElementDao().findByCallback(session -> {
             Query query = session.createQuery(HQL_LOAD_BY_TYPE_AND_SCOPE)
-                    .setParameter(TYPE_ID, BpThreat.TYPE_ID).setParameter(SCOPE_ID, scopeId);
+                    .setParameter(TYPE_ID, typeId).setParameter(SCOPE_ID, scopeId);
             query.setReadOnly(true);
             return query.list();
         });

@@ -24,6 +24,7 @@ import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeductiveIm
 import java.util.Collection;
 import java.util.Date;
 
+import sernet.gs.service.StringUtil;
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
@@ -272,6 +273,16 @@ public class BpRequirement extends CnATreeElement
     public void setImplementationStatus(ImplementationStatus implementationStatus) {
         String rawValue = toRawValue(implementationStatus);
         setSimpleProperty(PROP_IMPLEMENTATION_STATUS, rawValue);
+    }
+
+    public String getSafeguardStrengthFrequency() {
+        return StringUtil.replaceEmptyStringByNull(
+                getEntity().getRawPropertyValue(PROP_SAFEGUARD_STRENGTH_FREQUENCY));
+    }
+
+    public String getSafeguardStrengthImpact() {
+        return StringUtil.replaceEmptyStringByNull(
+                getEntity().getRawPropertyValue(PROP_SAFEGUARD_STRENGTH_IMPACT));
     }
 
     public static ImplementationStatus getImplementationStatus(String rawValue) {

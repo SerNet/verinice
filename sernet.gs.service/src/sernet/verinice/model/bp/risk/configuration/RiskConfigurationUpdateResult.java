@@ -26,6 +26,7 @@ public class RiskConfigurationUpdateResult implements Serializable {
 
     private static final long serialVersionUID = -7491469845332080130L;
 
+    private int numberOfChangedRequirements;
     private int numberOfChangedThreats;
     private int numberOfRemovedFrequencies;
     private int numberOfRemovedImpacts;
@@ -33,6 +34,14 @@ public class RiskConfigurationUpdateResult implements Serializable {
 
     public RiskConfigurationUpdateResult() {
         super();
+    }
+
+    public int getNumberOfChangedRequirements() {
+        return numberOfChangedRequirements;
+    }
+
+    public void setNumberOfChangedRequirements(int numberOfChangedRequirements) {
+        this.numberOfChangedRequirements = numberOfChangedRequirements;
     }
 
     public int getNumberOfChangedThreats() {
