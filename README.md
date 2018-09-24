@@ -82,19 +82,18 @@ people to work on one ISMS - even across different locations.
   GitHub mirror
 
 # How to build
-
 To build the Verinice client, client update site, server and
-report designer all at once execute the following commands:
+report designer all at once execute the following command:
 
-1. `./mvnw -Dtycho.disableP2Mirrors=true clean verify`
+	./mvnw -Dtycho.disableP2Mirrors=true clean verify
 
 To see where the Verinice client, client update site, server
 and report designer build artifacts can then be found
 read the following sections.
 
-If you want to skip the junit tests you need to add the -Dmaven.antrun.skip=true parameter.
+If you want to skip the junit tests you need to add the `-Dmaven.antrun.skip=true` parameter.
 
-1. `./mvnw -Dtycho.disableP2Mirrors=true -Dmaven.antrun.skip=true  clean verify`
+	./mvnw -Dtycho.disableP2Mirrors=true -Dmaven.antrun.skip=true  clean verify
 
 ## Verinice client
 
@@ -105,6 +104,20 @@ Artifacts for the following platforms will be produced:
 * Linux GTK 32 and 64 bit
 * Windows 32 and 64 bit
 * Mac OS X 64 bit
+
+If you want to pack a JRE into the build, you can copy the JRE to
+
+* sernet.thirdparty.feature/linux
+* sernet.thirdparty.feature/linux-32
+* sernet.thirdparty.feature/macos
+* sernet.thirdparty.feature/windows
+* sernet.thirdparty.feature/windows-32
+
+Packing the JRE is required for macOS builds. It is
+[best practice](https://docs.oracle.com/javase/7/docs/technotes/guides/jweb/packagingAppsForMac.html),
+to bundle a JRE into an Application.app folder. Hence in order to
+obtain a valid verinice.app a proper macOS JRE has to be present in
+sernet.thirdparty.feature/macos.
 
 ## Verinice client update site
 
