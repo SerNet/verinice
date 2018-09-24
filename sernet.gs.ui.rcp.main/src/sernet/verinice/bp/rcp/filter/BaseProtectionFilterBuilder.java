@@ -38,6 +38,7 @@ import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
@@ -235,10 +236,15 @@ public class BaseProtectionFilterBuilder {
         public boolean select(Viewer viewer, Object parentElement, Object element) {
             boolean filterByProceeding = Activator.getDefault().getPreferenceStore()
                     .getBoolean(PreferenceConstants.FILTER_INFORMATION_NETWORKS_BY_PROCEEDING);
-            if (filterByProceeding && element instanceof CnATreeElement
-                    && element instanceof ISecurityLevelProvider) {
-                SecurityLevel securityLevel = ((ISecurityLevelProvider) element).getSecurityLevel();
-                return scopeRequiresSecurityLevel(((CnATreeElement) element), securityLevel);
+            if (filterByProceeding && element instanceof CnATreeElement) {
+                if (element instanceof BpThreat) {
+                    return ThreatByProceedingFilterUtil
+                            .showThreatWhenProceedingFilterIsEnabled((BpThreat) element);
+                } else if (element instanceof ISecurityLevelProvider) {
+                    SecurityLevel securityLevel = ((ISecurityLevelProvider) element)
+                            .getSecurityLevel();
+                    return scopeRequiresSecurityLevel(((CnATreeElement) element), securityLevel);
+                }
             }
             return true;
         }

@@ -30,10 +30,12 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElementScopeUtils;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.verinice.bp.rcp.filter.ThreatByProceedingFilterUtil;
 import sernet.verinice.model.bp.IBpModelListener;
 import sernet.verinice.model.bp.ISecurityLevelProvider;
 import sernet.verinice.model.bp.Proceeding;
 import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
@@ -110,6 +112,10 @@ public class RelationViewContentProvider extends NullListener implements IStruct
             Function<CnALink, CnATreeElement> elementExtractor, Proceeding proceeding) {
         return links.filter(link -> {
             CnATreeElement element = elementExtractor.apply(link);
+            if (element instanceof BpThreat) {
+                return ThreatByProceedingFilterUtil
+                        .showThreatWhenProceedingFilterIsEnabled((BpThreat) element);
+            }
             if (element instanceof ISecurityLevelProvider) {
                 return proceeding.requires(((ISecurityLevelProvider) element).getSecurityLevel());
             }
