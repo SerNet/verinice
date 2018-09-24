@@ -112,6 +112,10 @@ public class Messages extends NLS {
 
     public static String NoteEditor_5;
 
+    public static String RiskConfigurationEditorInput_name;
+
+    public static String RiskConfigurationEditorInput_tooltip;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

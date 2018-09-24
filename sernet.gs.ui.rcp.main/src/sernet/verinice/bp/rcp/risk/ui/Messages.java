@@ -31,6 +31,8 @@ public class Messages extends NLS {
 	public static String riskConfigurationMatrixFrequencyAxis;
 	public static String riskConfigurationMatrixImpactAxis;
 
+    public static String RiskValuesConfigurator_chooseColor;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

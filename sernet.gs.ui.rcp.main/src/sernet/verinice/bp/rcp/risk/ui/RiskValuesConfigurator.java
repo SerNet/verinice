@@ -103,7 +103,7 @@ final class RiskValuesConfigurator extends StackConfigurator<Risk> {
 
     @Override
     protected void refresh(List<Risk> risks) {
-        throw new UnsupportedOperationException("call setRiskConfiguration instead");
+        throw new UnsupportedOperationException("call setRiskConfiguration instead"); //$NON-NLS-1$
     }
 
     private final class DescriptionFocusListener extends FocusAdapter {
@@ -171,8 +171,7 @@ final class RiskValuesConfigurator extends StackConfigurator<Risk> {
             ColorDialog dlg = new ColorDialog(getDisplay().getActiveShell());
 
             dlg.setRGB(rgb);
-            // FIXME i18n
-            dlg.setText("Choose a Color");
+            dlg.setText(Messages.RiskValuesConfigurator_chooseColor);
 
             RGB newColor = dlg.open();
             if (!Objects.equals(rgb, newColor)) {
