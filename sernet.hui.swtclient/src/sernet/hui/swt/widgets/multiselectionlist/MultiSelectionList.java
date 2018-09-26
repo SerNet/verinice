@@ -110,7 +110,7 @@ public class MultiSelectionList {
         GridData gd = (GridData) group.getLayoutData();
         gd.heightHint = height;
         list.pack();
-        parent.getParent().pack();
+        group.pack();
     }
 
     private Group createGroup() {
