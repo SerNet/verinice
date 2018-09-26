@@ -3,8 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Swtclient
 Bundle-SymbolicName: sernet.hui.swtclient
 Bundle-Version: 1.1.2.qualifier
-Export-Package: sernet.hui.swt.dialogs,
- sernet.hui.swt.widgets,
+Export-Package: sernet.hui.swt.widgets,
  sernet.hui.swt.widgets.URL,
  sernet.hui.swt.widgets.multiselectionlist
 Bundle-ClassPath: .,
