@@ -112,7 +112,7 @@ public class SingleSelectionControl implements IHuiControl {
                     : null;
 
             combo = new Combo(composite, SWT.BORDER | SWT.READ_ONLY);
-            options = fieldType.getOptions();
+            options = getOptions();
             labels = new String[options.size() + 1];
             labels[0] = Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE);
             int i = 1;
@@ -164,6 +164,10 @@ public class SingleSelectionControl implements IHuiControl {
             Logger.getLogger(SingleSelectionControl.class).error(e1);
         }
 
+    }
+
+    protected List<IMLPropertyOption> getOptions() {
+        return fieldType.getOptions();
     }
 
     private int indexForOption(String propertyValue) {

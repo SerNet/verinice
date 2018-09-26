@@ -41,6 +41,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -108,6 +109,8 @@ public class HitroUIView implements IEntityChangedListener {
     private List<String> validationList;
 
     private boolean useValidationGuiHints = false;
+
+    private Map<String, IHuiControlFactory> overrides;
 
     /**
      * Create a new view for dynamic documentation.
@@ -247,10 +250,12 @@ public class HitroUIView implements IEntityChangedListener {
      */
     public void createView(Entity entity, boolean edit, boolean useRules, String[] tags,
             boolean taggedPropertiesOnly, List<String> validationList,
-            boolean useValidationGuiHints) throws DBException {
+            boolean useValidationGuiHints, Map<String, IHuiControlFactory> overrides)
+            throws DBException {
 
         this.editable = edit;
         this.useRules = useRules;
+        this.overrides = overrides;
         this.filterTags = (tags != null) ? tags.clone() : null;
         this.taggedOnly = taggedPropertiesOnly;
         this.validationList = validationList;
@@ -305,7 +310,16 @@ public class HitroUIView implements IEntityChangedListener {
         if (!type.isVisible() || hideBecauseOfTags(type.getTags())) {
             return;
         }
-        if (type.isURL()) {
+        if (overrides.containsKey(type.getId())) {
+
+            IHuiControl control = overrides.get(type.getId()).createControl(entity, type,
+                    editableField, parent, type.isFocus(), showValidationHint,
+                    useValidationGuiHints);
+            control.create();
+            fields.put(type.getId(), control);
+            control.validate();
+            setFirstField(control);
+        } else if (type.isURL()) {
             createURLField(type, parent, showValidationHint, useValidationGuiHints);
         } else if (type.isLine()) {
             createTextField(type, editableField, parent, type.isFocus(),
@@ -582,7 +596,7 @@ public class HitroUIView implements IEntityChangedListener {
         try {
             closeView();
             createView(entity, editable, useRules, filterTags, taggedOnly, validationList,
-                    useValidationGuiHints);
+                    useValidationGuiHints, overrides);
         } catch (DBException e) {
             ExceptionHandlerFactory.getDefaultHandler().handleException(e);
         }
@@ -617,9 +631,13 @@ public class HitroUIView implements IEntityChangedListener {
 
     public void addSelectionListener(String id, SelectionListener listener) {
         IHuiControl huiControl = fields.get(id);
-        if (huiControl != null && huiControl.getControl() != null
-                && huiControl.getControl() instanceof Button) {
-            ((Button) huiControl.getControl()).addSelectionListener(listener);
+        if (huiControl != null) {
+            Control control = huiControl.getControl();
+            if (control instanceof Button) {
+                ((Button) huiControl.getControl()).addSelectionListener(listener);
+            } else if (control instanceof Combo) {
+                ((Combo) huiControl.getControl()).addSelectionListener(listener);
+            }
         }
     }
 

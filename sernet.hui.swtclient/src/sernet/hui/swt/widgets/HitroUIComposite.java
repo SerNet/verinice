@@ -17,7 +17,9 @@
  ******************************************************************************/
 package sernet.hui.swt.widgets;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -197,8 +199,8 @@ public class HitroUIComposite extends ScrolledComposite {
     public void createView(Entity entity, boolean editable, boolean useRules, String[] tags,
             boolean taggedOnly, List<String> validationList, boolean useValidationGuiHints)
             throws DBException {
-        huiView.createView(entity, editable, useRules, tags, taggedOnly, validationList,
-                useValidationGuiHints);
+        createView(entity, editable, useRules, tags, taggedOnly, validationList,
+                useValidationGuiHints, Collections.emptyMap());
     }
 
     public void createView(Entity entity, boolean editable, boolean useRules, String tags,
@@ -206,8 +208,16 @@ public class HitroUIComposite extends ScrolledComposite {
             throws DBException {
         String tags_ = tags.replaceAll("\\s+", "");
         String[] individualTags = tags_.split(",");
-        huiView.createView(entity, editable, useRules, individualTags, taggedOnly, validationList,
+        createView(entity, editable, useRules, individualTags, taggedOnly, validationList,
                 useValidationGuiHints);
+    }
+
+    public void createView(Entity entity, boolean editable, boolean useRules, String[] tags,
+            boolean taggedOnly, List<String> validationList, boolean useValidationGuiHints,
+            Map<String, IHuiControlFactory> overrides) throws DBException {
+        huiView.createView(entity, editable, useRules, tags, taggedOnly, validationList,
+                useValidationGuiHints, overrides);
+
     }
 
     public void addSelectionListener(String id, SelectionListener listener) {
