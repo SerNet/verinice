@@ -197,7 +197,7 @@ public class MultiSelectionControl implements IHuiControl {
 
     void showSelectionDialog() {
         Display display = Display.getDefault();
-        Shell shell = new Shell(display);
+        Shell shell = display.getActiveShell();
         if (cnalinkreference) {
             createLinks();
         } else {

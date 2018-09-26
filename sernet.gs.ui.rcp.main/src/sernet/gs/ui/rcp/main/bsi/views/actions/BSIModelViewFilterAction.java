@@ -19,7 +19,7 @@ package sernet.gs.ui.rcp.main.bsi.views.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.BSIModelFilterDialog;
@@ -36,7 +36,6 @@ import sernet.gs.ui.rcp.main.bsi.filter.TagFilter;
  *
  */
 public class BSIModelViewFilterAction extends Action {
-    private Shell shell;
     private MassnahmenUmsetzungFilter umsetzungFilter;
     private MassnahmenSiegelFilter siegelFilter;
     private StringPropertyFilter lebenszyklusFilter;
@@ -48,7 +47,6 @@ public class BSIModelViewFilterAction extends Action {
             MassnahmenSiegelFilter filter2, StringPropertyFilter filter3,
             StringPropertyFilter filter5, BSIModelElementFilter filter4, TagFilter filter6) {
         super(title);
-        shell = new Shell();
 
         this.umsetzungFilter = filter1;
         this.siegelFilter = filter2;
@@ -62,11 +60,11 @@ public class BSIModelViewFilterAction extends Action {
 
     @Override
     public void run() {
-        BSIModelFilterDialog dialog = new BSIModelFilterDialog(shell,
-                umsetzungFilter.getUmsetzungPattern(), siegelFilter.getPattern(),
-                lebenszyklusFilter.getPattern(), objektLebenszyklusFilter.getPattern(),
-                elementFilter.getFilteredClasses(), tagFilter.getPattern(),
-                tagFilter.isFilterItVerbund());
+        BSIModelFilterDialog dialog = new BSIModelFilterDialog(
+                Display.getDefault().getActiveShell(), umsetzungFilter.getUmsetzungPattern(),
+                siegelFilter.getPattern(), lebenszyklusFilter.getPattern(),
+                objektLebenszyklusFilter.getPattern(), elementFilter.getFilteredClasses(),
+                tagFilter.getPattern(), tagFilter.isFilterItVerbund());
 
         if (dialog.open() != InputDialog.OK) {
             return;

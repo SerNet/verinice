@@ -114,7 +114,7 @@ public class LinkTableMultiSelectionControl {
 
     public void showSelectionDialog() {
         Display display = Display.getDefault();
-        Shell shell = new Shell(display);
+        Shell shell = display.getActiveShell();
         if (dialog == null) {
             dialog = new LinkTableMultiSelectionDialog(shell, this, SWT.NULL);
         }

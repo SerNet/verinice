@@ -49,7 +49,6 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPartListener2;
@@ -388,7 +387,7 @@ public class BsiModelView extends RightsEnabledView
                                 analysis);
                         wizard.init(PlatformUI.getWorkbench(), null);
                         WizardDialog wizDialog = new org.eclipse.jface.wizard.WizardDialog(
-                                new Shell(), wizard);
+                                Display.getDefault().getActiveShell(), wizard);
                         wizDialog.setPageSize(wizard.getWidth(), wizard.getHeight());
 
                         wizDialog.open();

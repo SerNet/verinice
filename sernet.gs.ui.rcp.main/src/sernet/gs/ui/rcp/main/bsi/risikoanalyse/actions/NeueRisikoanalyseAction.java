@@ -94,7 +94,7 @@ public class NeueRisikoanalyseAction implements IObjectActionDelegate {
                                     Activator.inheritVeriniceContextState();
 
                                     CnATreeElement element = (CnATreeElement) selection;
-                                    Shell shell = new Shell();
+                                    Shell shell = Display.getDefault().getActiveShell();
                                     RiskAnalysisWizard wizard = new RiskAnalysisWizard(element);
                                     wizard.init(PlatformUI.getWorkbench(), null);
                                     WizardDialog wizardDialog = new org.eclipse.jface.wizard.WizardDialog(

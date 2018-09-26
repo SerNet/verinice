@@ -25,7 +25,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -98,7 +98,6 @@ public class ViewFilterAction extends Action {
 
     private String[][] types = ISO_TYPES;
 
-    private Shell shell;
     private TagParameter tagParameter;
     private HideEmptyFilter hideEmptyFilter;
     private TypeParameter typeParameter;
@@ -106,7 +105,6 @@ public class ViewFilterAction extends Action {
     public ViewFilterAction(String title, TagParameter tagFilter, HideEmptyFilter hideEmptyFilter,
             TypeParameter typeFilter) {
         super(title, SWT.TOGGLE);
-        shell = new Shell();
         this.tagParameter = tagFilter;
         this.hideEmptyFilter = hideEmptyFilter;
         this.typeParameter = typeFilter;
@@ -120,7 +118,7 @@ public class ViewFilterAction extends Action {
 
     @Override
     public void run() {
-        ViewFilterDialog dialog = new ViewFilterDialog(shell, this);
+        ViewFilterDialog dialog = new ViewFilterDialog(Display.getCurrent().getActiveShell(), this);
         dialog.setTypes(types);
         if (dialog.open() == InputDialog.OK) {
             tagParameter.setPattern(dialog.getCheckedElements());
