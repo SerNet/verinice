@@ -103,10 +103,7 @@ public class ViewFilterAction extends Action {
     private HideEmptyFilter hideEmptyFilter;
     private TypeParameter typeParameter;
 
-    public ViewFilterAction(
-            String title,
-            TagParameter tagFilter,
-            HideEmptyFilter hideEmptyFilter,
+    public ViewFilterAction(String title, TagParameter tagFilter, HideEmptyFilter hideEmptyFilter,
             TypeParameter typeFilter) {
         super(title, SWT.TOGGLE);
         shell = new Shell();
@@ -131,13 +128,15 @@ public class ViewFilterAction extends Action {
             hideEmptyFilter.setHideEmpty(dialog.getHideEmpty());
             typeParameter.setVisibleTypeSet(dialog.getVisibleTypes());
             try {
-                PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-                    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        monitor.beginTask("Activating filter...", IProgressMonitor.UNKNOWN);
-                        CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
-                        monitor.done();
-                    }
-                 });
+                PlatformUI.getWorkbench().getProgressService()
+                        .busyCursorWhile(new IRunnableWithProgress() {
+                            public void run(IProgressMonitor monitor)
+                                    throws InvocationTargetException, InterruptedException {
+                                monitor.beginTask("Activating filter...", IProgressMonitor.UNKNOWN);
+                                CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
+                                monitor.done();
+                            }
+                        });
             } catch (Exception e) {
                 LOG.error("Error while activating filter", e);
             }

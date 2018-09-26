@@ -18,7 +18,6 @@
  ******************************************************************************/
 package sernet.verinice.rcp.linktable.ui.multiselectiondialog;
 
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,7 +27,12 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
 
 import sernet.hui.swt.widgets.multiselectionlist.MultiSelectionControl;
 import sernet.verinice.rcp.linktable.ui.LinkTableComposite;
@@ -43,18 +47,16 @@ import sernet.verinice.rcp.linktable.ui.Messages;
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public class LinkTableMultiSelectionControl {
-	
-	
-	private Composite parent;
-	private Text text;
+
+    private Composite parent;
+    private Text text;
     private LinkTableMultiSelectionDialog dialog;
     private LinkTableComposite vltComposite;
 
     private Set<String> selectedItems = new HashSet<>();
     private boolean useAllRelations = false;
 
-    public LinkTableMultiSelectionControl(Composite parent,
-            LinkTableComposite vltParent) {
+    public LinkTableMultiSelectionControl(Composite parent, LinkTableComposite vltParent) {
         this.parent = parent;
         this.vltComposite = vltParent;
         this.useAllRelations = vltParent.getVeriniceLinkTable() == null
@@ -65,35 +67,35 @@ public class LinkTableMultiSelectionControl {
     private void create() {
         Label header = new Label(parent, SWT.NULL);
         header.setText(Messages.MultiSelectionControl_5);
-		
+
         Composite container = new Composite(parent, SWT.NULL);
         GridLayoutFactory.swtDefaults().numColumns(2).generateLayout(container);
         GridDataFactory.swtDefaults().align(GridData.FILL, GridData.CENTER).grab(true, false)
                 .applyTo(container);
 
-		text = new Text(container, SWT.BORDER);
-		text.setEditable(false);
-		text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        text = new Text(container, SWT.BORDER);
+        text.setEditable(false);
+        text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         text.getBackground();
         text.getForeground();
-		
-		Button editBtn = new Button(container, SWT.PUSH);
+
+        Button editBtn = new Button(container, SWT.PUSH);
         editBtn.setText(Messages.MultiSelectionControl_0);
         editBtn.setEnabled(true);
-		editBtn.addSelectionListener(new SelectionListener() {
+        editBtn.addSelectionListener(new SelectionListener() {
 
-			public void widgetSelected(SelectionEvent arg0) {
-				showSelectionDialog();
-			}
-			
-			public void widgetDefaultSelected(SelectionEvent arg0) {
-				showSelectionDialog();
-			}
-		});
+            public void widgetSelected(SelectionEvent arg0) {
+                showSelectionDialog();
+            }
+
+            public void widgetDefaultSelected(SelectionEvent arg0) {
+                showSelectionDialog();
+            }
+        });
         writeToTextField();
-	}
+    }
 
-	public void writeToTextField() {
+    public void writeToTextField() {
 
         if (useAllRelations) {
             text.setText(Messages.MultiSelectionControl_3);
@@ -102,7 +104,7 @@ public class LinkTableMultiSelectionControl {
 
         }
         refresh();
-	}
+    }
 
     private void refresh() {
         text.pack();
@@ -114,15 +116,14 @@ public class LinkTableMultiSelectionControl {
         Display display = Display.getDefault();
         Shell shell = new Shell(display);
         if (dialog == null) {
-            dialog = new LinkTableMultiSelectionDialog(
-                    shell, this, SWT.NULL);
+            dialog = new LinkTableMultiSelectionDialog(shell, this, SWT.NULL);
         }
         dialog.open();
-	}
+    }
 
-	public void setFocus() {
-		this.text.setFocus();
-	}
+    public void setFocus() {
+        this.text.setFocus();
+    }
 
     public LinkTableComposite getVltParent() {
         return vltComposite;
