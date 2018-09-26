@@ -10,8 +10,7 @@
    <launcherArgs>
       <programArgs>-data @user.home/v.Designer/workspace
       </programArgs>
-      <programArgsMac>-vm ../../jre/Contents/Home/lib/jli/libjli.dylib
-      </programArgsMac>
+      <programArgsMac>-vm ../Eclipse/jre/lib/jli/libjli.dylib</programArgsMac>
       <vmArgs>-Xms256m -Xmx2048m
       </vmArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
