@@ -32,6 +32,7 @@
 		<module>sernet.thirdparty.feature</module>
 		<module>sernet.verinice.lang.feature</module>
 		<module>sernet.verinice.extraresources.feature</module>
+		<module>sernet.verinice.report.designer.feature</module>
 
 		<!-- Bundles -->
 		<module>bouncycastle</module>

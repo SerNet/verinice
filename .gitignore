@@ -45,3 +45,4 @@ sernet.gs.server/WebContent/WEB-INF/elasticsearch/data/
 .gitmodules
 
 */target/*
+/.recommenders/
