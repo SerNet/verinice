@@ -99,7 +99,7 @@ final class VeriniceGraphResultEntry {
 
     private void writeNodeToRow(Map<String, String> row) {
         for (String propertyType : vqlNode.getPropertyTypes()) {
-            IPropertyAdapter adapter = PropertyAdapterFactory.getAdapter(element,
+            IPropertyAdapter adapter = PropertyAdapterFactory.getAdapter(element, propertyType,
                     riskConfigurationCache);
             String propertyValue = adapter.getPropertyValue(propertyType);
             String keyInRow = vqlNode.getPathForProperty(propertyType);
