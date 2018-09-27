@@ -19,42 +19,38 @@ package sernet.verinice.service.bp.risk;
 
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
-import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Purposes of this class:
  * 
- * Remove frequencies and impacts from requirements that are no longer in the
+ * Remove frequencies and impacts from safeguards that are no longer in the
  * configuration.
  * 
- * The changes made to requirements in this class are not saved directly by this
+ * The changes made to safeguards in this class are not saved directly by this
  * class, they are saved indirectly by Hibernate. To ensure that the changes are
  * really saved, this class must be used in a JDBC transaction. The JDBC
  * transaction management is configured by Spring.
  */
-public class RiskValueFromRequirementRemover extends RiskValueRemover {
+public class RiskValueFromSafeguardRemover extends RiskValueRemover {
 
-    static final Logger log = Logger.getLogger(RiskValueFromRequirementRemover.class);
-
-    public RiskValueFromRequirementRemover(RiskConfigurationUpdateContext updateContext,
+    public RiskValueFromSafeguardRemover(RiskConfigurationUpdateContext updateContext,
             Set<CnATreeElement> requirementsFromScope) {
         super(updateContext, requirementsFromScope);
     }
 
     protected String getFrequencyPropertyId() {
-        return BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY;
+        return Safeguard.PROP_STRENGTH_FREQUENCY;
     }
 
     protected String getImpactPropertyId() {
-        return BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT;
+        return Safeguard.PROP_STRENGTH_IMPACT;
     }
 
     protected void saveNumberOfChangedElements(int numberOfChangedElements) {
-        updateResult.setNumberOfChangedRequirements(numberOfChangedElements);
+        updateResult.setNumberOfChangedSafeguards(numberOfChangedElements);
     }
 
 }

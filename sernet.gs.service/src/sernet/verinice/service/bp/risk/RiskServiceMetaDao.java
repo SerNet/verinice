@@ -28,6 +28,7 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -70,6 +71,11 @@ public class RiskServiceMetaDao {
     @SuppressWarnings("unchecked")
     public Set<CnATreeElement> loadRequirementsFromScope(Integer scopeId) {
         return (Set<CnATreeElement>) loadElementsFromScope(scopeId, BpRequirement.TYPE_ID);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Set<CnATreeElement> loadSafeguardsFromScope(Integer scopeId) {
+        return (Set<CnATreeElement>) loadElementsFromScope(scopeId, Safeguard.TYPE_ID);
     }
 
     @SuppressWarnings("unchecked")
