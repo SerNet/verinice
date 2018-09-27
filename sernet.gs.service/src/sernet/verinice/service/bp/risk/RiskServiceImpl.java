@@ -22,11 +22,11 @@ import java.util.Set;
 import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateResult;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Service implementation to run and configure an IT base protection (ITBP) risk
@@ -58,15 +58,13 @@ public class RiskServiceImpl implements RiskService {
     @Override
     public RiskConfigurationUpdateResult updateRiskConfiguration(
             RiskConfigurationUpdateContext updateContext) {
-        // FIXME: Try to find out if this call is really necessary or redundant
-        // because of the class VeriniceContextListener
         ServerInitializer.inheritVeriniceContextState();
         updateItNetwork(updateContext);
         RiskConfigurationUpdateResult updateResult = updateRiskValuesInThreats(updateContext);
-        RiskConfigurationUpdateResult updateRequirementsResult = updateRiskValuesInRequirements(
+        RiskConfigurationUpdateResult removeRequirementsResult = removeRiskValuesFromRequirements(
                 updateContext);
         updateResult.setNumberOfChangedRequirements(
-                updateRequirementsResult.getNumberOfChangedRequirements());
+                removeRequirementsResult.getNumberOfChangedRequirements());
         return updateResult;
     }
 
@@ -81,21 +79,21 @@ public class RiskServiceImpl implements RiskService {
             RiskConfigurationUpdateContext updateContext) {
         Set<BpThreat> threatsFromScope = getMetaDao()
                 .loadThreatsFromScope(updateContext.getItNetwork().getDbId());
-        UpdateRiskValuesInThreatsJob updateRiskValuesJob = new UpdateRiskValuesInThreatsJob(
+        RiskValueInThreatUpdater riskValueUpdater = new RiskValueInThreatUpdater(
                 updateContext, threatsFromScope);
-        updateRiskValuesJob.setPropertyListDao(propertyListDao);
-        updateRiskValuesJob.run();
-        return updateRiskValuesJob.getRiskConfigurationUpdateResult();
+        riskValueUpdater.setPropertyListDao(propertyListDao);
+        riskValueUpdater.execute();
+        return riskValueUpdater.getRiskConfigurationUpdateResult();
     }
 
-    private RiskConfigurationUpdateResult updateRiskValuesInRequirements(
+    private RiskConfigurationUpdateResult removeRiskValuesFromRequirements(
             RiskConfigurationUpdateContext updateContext) {
-        Set<BpRequirement> requirementsFromScope = getMetaDao()
+        Set<CnATreeElement> requirementsFromScope = getMetaDao()
                 .loadRequirementsFromScope(updateContext.getItNetwork().getDbId());
-        UpdateRiskValuesInRequirementsJob updateRiskValuesJob = new UpdateRiskValuesInRequirementsJob(
+        RiskValueRemover riskValueRemover = new RiskValueFromRequirementRemover(
                 updateContext, requirementsFromScope);
-        updateRiskValuesJob.run();
-        return updateRiskValuesJob.getRiskConfigurationUpdateResult();
+        riskValueRemover.execute();
+        return riskValueRemover.getRiskConfigurationUpdateResult();
     }
 
     public RiskServiceMetaDao getMetaDao() {

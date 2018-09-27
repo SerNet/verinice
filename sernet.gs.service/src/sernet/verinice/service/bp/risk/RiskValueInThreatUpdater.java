@@ -50,9 +50,9 @@ import sernet.verinice.model.common.CnATreeElement;
  * really saved, this class must be used in a JDBC transaction. The JDBC
  * transaction management is configured by Spring.
  */
-public class UpdateRiskValuesInThreatsJob {
+public class RiskValueInThreatUpdater {
 
-    private static final Logger log = Logger.getLogger(UpdateRiskValuesInThreatsJob.class);
+    private static final Logger log = Logger.getLogger(RiskValueInThreatUpdater.class);
 
     private Set<BpThreat> threatsFromScope;
 
@@ -63,14 +63,14 @@ public class UpdateRiskValuesInThreatsJob {
 
     private IBaseDao<PropertyList, Integer> propertyListDao;
 
-    public UpdateRiskValuesInThreatsJob(RiskConfigurationUpdateContext updateContext,
+    public RiskValueInThreatUpdater(RiskConfigurationUpdateContext updateContext,
             Set<BpThreat> threatsFromScope) {
         super();
         this.updateContext = updateContext;
         this.threatsFromScope = threatsFromScope;
     }
 
-    public void run() {
+    public void execute() {
         uuidsOfChangedThreats.clear();
         removeFrequencies();
         removeImpacts();

@@ -68,8 +68,8 @@ public class RiskServiceMetaDao {
     }
 
     @SuppressWarnings("unchecked")
-    public Set<BpRequirement> loadRequirementsFromScope(Integer scopeId) {
-        return (Set<BpRequirement>) loadElementsFromScope(scopeId, BpRequirement.TYPE_ID);
+    public Set<CnATreeElement> loadRequirementsFromScope(Integer scopeId) {
+        return (Set<CnATreeElement>) loadElementsFromScope(scopeId, BpRequirement.TYPE_ID);
     }
 
     @SuppressWarnings("unchecked")
