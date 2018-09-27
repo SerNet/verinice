@@ -61,7 +61,7 @@ final class RiskValuesConfigurator extends StackConfigurator<Risk> {
 
         leftComposite.setLayout(
                 RowLayoutFactory.createFrom(new RowLayout(SWT.VERTICAL)).spacing(5).create());
-        Text riskLabel = new Text(leftComposite, SWT.NONE);
+        Text riskLabel = new Text(leftComposite, SWT.BORDER);
         riskLabel.setLayoutData(new RowData(LABEL_WIDTH, SWT.DEFAULT));
         riskLabel.setText(risk.getLabel());
         riskLabel.addFocusListener(new LabelFocusListener(updateListener, riskConfiguration, risk));
@@ -75,7 +75,7 @@ final class RiskValuesConfigurator extends StackConfigurator<Risk> {
         riskColor.addMouseListener(
                 new ColorSelectionAdapter(updateListener, riskConfiguration, rgb, risk));
 
-        Text riskDescription = new Text(parent, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+        Text riskDescription = new Text(parent, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
         riskDescription.setLayoutData(new RowData(450, 80));
         riskDescription.setText(risk.getDescription());
         riskDescription.addFocusListener(

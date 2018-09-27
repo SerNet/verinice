@@ -55,7 +55,7 @@ final class ImpactConfigurator extends StackConfigurator<Impact> {
 
         currentItemLeft.setLayout(
                 RowLayoutFactory.createFrom(new RowLayout(SWT.VERTICAL)).spacing(5).create());
-        Text labelField = new Text(currentItemLeft, SWT.NONE);
+        Text labelField = new Text(currentItemLeft, SWT.BORDER);
         labelField.setLayoutData(new RowData(LABEL_WIDTH, SWT.DEFAULT));
         labelField.setText(impact.getLabel());
         labelField.addFocusListener(new FocusAdapter() {
@@ -70,7 +70,7 @@ final class ImpactConfigurator extends StackConfigurator<Impact> {
             }
         });
 
-        Text descriptionField = new Text(parent, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+        Text descriptionField = new Text(parent, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL | SWT.BORDER);
         descriptionField.setLayoutData(new RowData(450, 80));
         descriptionField.setText(impact.getDescription());
         descriptionField.addFocusListener(new FocusAdapter() {
