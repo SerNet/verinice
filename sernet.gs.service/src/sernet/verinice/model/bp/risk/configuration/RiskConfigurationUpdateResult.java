@@ -27,6 +27,7 @@ public class RiskConfigurationUpdateResult implements Serializable {
     private static final long serialVersionUID = -7491469845332080130L;
 
     private int numberOfChangedRequirements;
+    private int numberOfChangedSafeguards;
     private int numberOfChangedThreats;
     private int numberOfRemovedFrequencies;
     private int numberOfRemovedImpacts;
@@ -42,6 +43,14 @@ public class RiskConfigurationUpdateResult implements Serializable {
 
     public void setNumberOfChangedRequirements(int numberOfChangedRequirements) {
         this.numberOfChangedRequirements = numberOfChangedRequirements;
+    }
+
+    public int getNumberOfChangedSafeguards() {
+        return numberOfChangedSafeguards;
+    }
+
+    public void setNumberOfChangedSafeguards(int numberOfChangedSafeguards) {
+        this.numberOfChangedSafeguards = numberOfChangedSafeguards;
     }
 
     public int getNumberOfChangedThreats() {
@@ -74,6 +83,17 @@ public class RiskConfigurationUpdateResult implements Serializable {
 
     public void setNumberOfRemovedRisks(int numberOfRemovedRisks) {
         this.numberOfRemovedRisks = numberOfRemovedRisks;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Removed frequencies: ").append(getNumberOfRemovedFrequencies());
+        sb.append(", Removed impacts: ").append(getNumberOfRemovedImpacts());
+        sb.append(", Changed threats: ").append(getNumberOfChangedThreats());
+        sb.append(", Changed requirements: ").append(getNumberOfChangedRequirements());
+        sb.append(", Changed safeguards: ").append(getNumberOfChangedSafeguards());
+        return sb.toString();
     }
 
 }

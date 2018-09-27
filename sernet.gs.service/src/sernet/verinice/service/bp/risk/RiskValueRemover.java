@@ -45,14 +45,14 @@ public abstract class RiskValueRemover {
 
     protected Set<CnATreeElement> elements;
     protected RiskConfigurationUpdateContext updateContext;
-    private RiskConfigurationUpdateResult updateResult;
+    protected RiskConfigurationUpdateResult updateResult;
     private Set<String> uuidsOfChangedElements = new HashSet<>();
 
     public RiskValueRemover(RiskConfigurationUpdateContext updateContext,
-            Set<CnATreeElement> requirementsFromScope) {
+            Set<CnATreeElement> elements) {
         super();
         this.updateContext = updateContext;
-        this.elements = requirementsFromScope;
+        this.elements = elements;
     }
 
     public void execute() {
@@ -60,7 +60,7 @@ public abstract class RiskValueRemover {
         removeFrequencies();
         removeImpacts();
         updateResult = new RiskConfigurationUpdateResult();
-        updateResult.setNumberOfChangedRequirements(uuidsOfChangedElements.size());
+        saveNumberOfChangedElements(uuidsOfChangedElements.size());
         updateResult.setNumberOfRemovedFrequencies(updateContext.getDeletedFrequencies().size());
         updateResult.setNumberOfRemovedImpacts(updateContext.getDeletedImpacts().size());
         if (log.isInfoEnabled()) {
@@ -68,7 +68,6 @@ public abstract class RiskValueRemover {
         }
         uuidsOfChangedElements.clear();
     }
-
     private void removeFrequencies() {
         List<Frequency> removedFrequencies = updateContext.getDeletedFrequencies();
         List<String> removedFrequencyIds = removedFrequencies.stream().map(Frequency::getId)
@@ -86,6 +85,8 @@ public abstract class RiskValueRemover {
     protected abstract String getFrequencyPropertyId();
 
     protected abstract String getImpactPropertyId();
+
+    protected abstract void saveNumberOfChangedElements(int numberOfChangedElements);
 
     protected void removeProperty(List<String> removedIdsFromConfiguration, String propertyId) {
         if (removedIdsFromConfiguration.isEmpty()) {
@@ -118,9 +119,7 @@ public abstract class RiskValueRemover {
     }
 
     private static void logStatistic(RiskConfigurationUpdateResult updateResult) {
-        log.debug("Removed frequencies: " + updateResult.getNumberOfRemovedFrequencies());
-        log.debug("Removed impacts: " + updateResult.getNumberOfRemovedImpacts());
-        log.debug("Changed threats: " + updateResult.getNumberOfChangedThreats());
+        log.debug(updateResult);
     }
 
 }
