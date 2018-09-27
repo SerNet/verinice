@@ -68,7 +68,8 @@ final class VeriniceGraphResult {
 
     void addValue(VqlNode vqlNode, VqlEdge vqlEdge, Edge edge, CnATreeElement element, int depth) {
 
-        VeriniceGraphResultEntry veriniceGraphResultEntry = new VeriniceGraphResultEntry(vqlNode, vqlEdge, edge, element, depth);
+        VeriniceGraphResultEntry veriniceGraphResultEntry = new VeriniceGraphResultEntry(vqlNode,
+                vqlEdge, edge, element, depth);
 
         currentLinkedTableRow.addEntry(veriniceGraphResultEntry);
 

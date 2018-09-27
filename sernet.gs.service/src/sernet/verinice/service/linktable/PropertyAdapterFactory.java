@@ -44,7 +44,9 @@ public abstract class PropertyAdapterFactory {
         if (element instanceof CnATreeElement) {
             return new EntityPropertyAdapter((CnATreeElement) element);
         }
-        throw new NoPropertyAdapterFoundException("No property adapter found for element class: " + element.getClass().getName(), element.getClass());
+        throw new NoPropertyAdapterFoundException(
+                "No property adapter found for element class: " + element.getClass().getName(),
+                element.getClass());
     }
 
 }

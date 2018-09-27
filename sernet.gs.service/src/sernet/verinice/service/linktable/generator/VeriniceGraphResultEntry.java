@@ -76,7 +76,8 @@ final class VeriniceGraphResultEntry {
     // all rows this object is stored in.
     private List<VeriniceGraphResultRow> rows = new ArrayList<>();
 
-    VeriniceGraphResultEntry(VqlNode node, VqlEdge vqlEdge, Edge edge, CnATreeElement element, int depth) {
+    VeriniceGraphResultEntry(VqlNode node, VqlEdge vqlEdge, Edge edge, CnATreeElement element,
+            int depth) {
         this.vqlEdge = vqlEdge;
         this.edge = edge;
         this.element = element;
@@ -103,7 +104,7 @@ final class VeriniceGraphResultEntry {
             LOG.debug("expand final row entry: " + keyInRow + " -> " + propertyValue);
         }
     }
-    
+
     private void writeEdgeToRow(Map<String, String> row) {
         if (vqlEdge != null) {
             for (String propertyType : vqlEdge.getPropertyTypes()) {
@@ -114,11 +115,10 @@ final class VeriniceGraphResultEntry {
         }
     }
 
-
     private String printColumn(Edge edge, String propertyType) {
-        
+
         String column = "";
-        
+
         if (TYPE_RISK_VALUE_C.equals(propertyType)) {
             column = getString(edge.getRiskConfidentiality());
         }
@@ -168,8 +168,10 @@ final class VeriniceGraphResultEntry {
 
     static boolean isAssetAndSzenario(CnATreeElement dependant, CnATreeElement dependency) {
         try {
-            return (Asset.TYPE_ID.equals(dependant.getTypeId()) && IncidentScenario.TYPE_ID.equals(dependency.getTypeId())) 
-                    || (Asset.TYPE_ID.equals(dependency.getTypeId()) && IncidentScenario.TYPE_ID.equals(dependant.getTypeId()));
+            return (Asset.TYPE_ID.equals(dependant.getTypeId())
+                    && IncidentScenario.TYPE_ID.equals(dependency.getTypeId()))
+                    || (Asset.TYPE_ID.equals(dependency.getTypeId())
+                            && IncidentScenario.TYPE_ID.equals(dependant.getTypeId()));
         } catch (Exception e) {
             LOG.error("Error while checking link.", e); //$NON-NLS-1$
             return false;
@@ -190,7 +192,8 @@ final class VeriniceGraphResultEntry {
         if (relation == null) {
             return linkType;
         }
-        return direction.equals(Direction.OUTCOMING) ? relation.getName() : relation.getReversename();
+        return direction.equals(Direction.OUTCOMING) ? relation.getName()
+                : relation.getReversename();
     }
 
     @Override
