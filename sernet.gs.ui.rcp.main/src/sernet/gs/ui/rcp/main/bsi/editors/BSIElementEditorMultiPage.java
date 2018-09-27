@@ -425,15 +425,6 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
         return isWriteAllowed;
     }
 
-    private boolean showLinkMaker() {
-        boolean showLinkMaker = Activator.getDefault().getPreferenceStore()
-                .getBoolean(PreferenceConstants.SHOW_LINK_MAKER_IN_EDITOR);
-        return showLinkMaker && !isSamtPerspective();
-    }
-
-    /**
-     * @return
-     */
     private boolean isSamtPerspective() {
         IPerspectiveDescriptor perspective = getSite().getWorkbenchWindow().getActivePage()
                 .getPerspective();
