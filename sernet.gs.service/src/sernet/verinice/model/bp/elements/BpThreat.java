@@ -183,8 +183,7 @@ public class BpThreat extends CnATreeElement
 
     public String getFrequencyWithoutAdditionalSafeguards() {
         return StringUtil.replaceEmptyStringByNull(
-                getEntity()
-                .getRawPropertyValue(PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS));
+                getEntity().getRawPropertyValue(PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS));
     }
 
     public String getImpactWithAdditionalSafeguards() {
@@ -210,30 +209,26 @@ public class BpThreat extends CnATreeElement
 
     public void setRiskWithoutAdditionalSafeguards(String risk) {
         getEntity().setSimpleValue(
-                getEntityType().getPropertyType(PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS),
-                risk);
+                getEntityType().getPropertyType(PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS), risk);
 
     }
 
     public void setFrequencyWithAdditionalSafeguards(String frequency) {
         getEntity().setSimpleValue(
-                getEntityType()
-                        .getPropertyType(PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS),
+                getEntityType().getPropertyType(PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS),
                 frequency);
 
     }
 
     public void setImpactWithAdditionalSafeguards(String impact) {
         getEntity().setSimpleValue(
-                getEntityType().getPropertyType(PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS),
-                impact);
+                getEntityType().getPropertyType(PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS), impact);
 
     }
 
     public void setRiskWithAdditionalSafeguards(String risk) {
         getEntity().setSimpleValue(
-                getEntityType().getPropertyType(PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS),
-                risk);
+                getEntityType().getPropertyType(PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS), risk);
 
     }
 
