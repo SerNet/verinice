@@ -70,6 +70,7 @@
             <action id="derivestatus" />
             <action id="documentview" />
             <action id="editlinks" />
+            <action id="editriskconfiguration" />
             <action id="exportlinktable" />
             <action id="files" />
             <action id="generateauditreport" />
@@ -462,8 +463,9 @@
             <action id="derivestatus"/>
             <action id="documentview" />
             <action id="editlinks" />
-          <action id="editprofile" />
-          <action id="exportlinktable" />
+            <action id="editprofile" />
+            <action id="editriskconfiguration" />
+            <action id="exportlinktable" />
             <action id="files" />
             <action id="generateauditreport" />
             <action id="generateorgreport" />
