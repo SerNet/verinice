@@ -10926,6 +10926,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty defaultValue="1" id="bp_safeguard_value_method_availability"
             inputtype="booleanoption" name="Affects Availability" tags="Risk" />
         <huipropertygroup id="bp_safeguard_safeguard_strength" name="Safeguard Strength" tags="BSI-200-3">
+            <huiproperty defaultValue="1" id="bp_safeguard_reduce_risk"
+                inputtype="booleanoption" name="Reduce Risk" tags="Risk" />
             <huiproperty id="bp_safeguard_safeguard_strength_frequency" name="Reduces frequency of occurrence to"
                 required="true" inputtype="singleoption">
                <!-- options will be populated dynamically in the application -->
