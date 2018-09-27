@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018 Daniel Murygin.
+ * Copyright (c) 2018 <Vorname> <Nachname>.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 
-import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.gs.service.StringUtil;
 import sernet.verinice.model.bp.risk.Frequency;
 import sernet.verinice.model.bp.risk.Impact;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
@@ -32,86 +32,81 @@ import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateResult
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Purposes of this class:
+ * Removes risk properties from elements when these properties have been deleted
+ * from a risk configuration.
  * 
- * 1. Remove frequencies, impacts and risk values from threats that are no
- * longer in the configuration.
- * 
- * 2. Update of the risk properties in threats after the matrix in the
- * configuration has changed.
- * 
- * The changes made to threats in this class are not saved directly by this
- * class, they are saved indirectly by Hibernate. To ensure that the changes are
- * really saved, this class must be used in a JDBC transaction. The JDBC
- * transaction management is configured by Spring.
+ * Extend this abstract class and overwrite abstract methods
+ * getFrequencyPropertyId() and getImpactPropertyId(). Both methods must return
+ * a property ID from the SNCA.xml.
  */
-public class UpdateRiskValuesInRequirementsJob {
+public abstract class RiskValueRemover {
 
-    private static final Logger log = Logger.getLogger(UpdateRiskValuesInRequirementsJob.class);
+    private static final Logger log = Logger.getLogger(RiskValueRemover.class);
 
-    private Set<BpRequirement> requirementsFromScope;
-
-    private RiskConfigurationUpdateContext updateContext;
+    protected Set<CnATreeElement> elements;
+    protected RiskConfigurationUpdateContext updateContext;
     private RiskConfigurationUpdateResult updateResult;
+    private Set<String> uuidsOfChangedElements = new HashSet<>();
 
-    private Set<String> uuidsOfChangedRequirements = new HashSet<>();
-
-    public UpdateRiskValuesInRequirementsJob(RiskConfigurationUpdateContext updateContext,
-            Set<BpRequirement> requirementsFromScope) {
+    public RiskValueRemover(RiskConfigurationUpdateContext updateContext,
+            Set<CnATreeElement> requirementsFromScope) {
         super();
         this.updateContext = updateContext;
-        this.requirementsFromScope = requirementsFromScope;
+        this.elements = requirementsFromScope;
     }
 
-    public void run() {
-        uuidsOfChangedRequirements.clear();
+    public void execute() {
+        uuidsOfChangedElements.clear();
         removeFrequencies();
         removeImpacts();
         updateResult = new RiskConfigurationUpdateResult();
-        updateResult.setNumberOfChangedRequirements(uuidsOfChangedRequirements.size());
+        updateResult.setNumberOfChangedRequirements(uuidsOfChangedElements.size());
         updateResult.setNumberOfRemovedFrequencies(updateContext.getDeletedFrequencies().size());
         updateResult.setNumberOfRemovedImpacts(updateContext.getDeletedImpacts().size());
         if (log.isInfoEnabled()) {
             logStatistic(updateResult);
         }
-        uuidsOfChangedRequirements.clear();
+        uuidsOfChangedElements.clear();
     }
 
     private void removeFrequencies() {
         List<Frequency> removedFrequencies = updateContext.getDeletedFrequencies();
         List<String> removedFrequencyIds = removedFrequencies.stream().map(Frequency::getId)
                 .collect(Collectors.toList());
-        if (removedFrequencyIds.isEmpty()) {
-            return;
-        }
-        for (BpRequirement requirement : requirementsFromScope) {
-            String selectedId = requirement.getSafeguardStrengthFrequency();
-            if (removedFrequencyIds.contains(selectedId)) {
-                removeProperty(requirement,
-                        BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY);
-            }
-        }
+        removeProperty(removedFrequencyIds, getFrequencyPropertyId());
     }
 
     private void removeImpacts() {
         List<Impact> removedImpacts = updateContext.getDeletedImpacts();
         List<String> removedImpactIds = removedImpacts.stream().map(Impact::getId)
                 .collect(Collectors.toList());
-        if (removedImpactIds.isEmpty()) {
+        removeProperty(removedImpactIds, getImpactPropertyId());
+    }
+
+    protected abstract String getFrequencyPropertyId();
+
+    protected abstract String getImpactPropertyId();
+
+    protected void removeProperty(List<String> removedIdsFromConfiguration, String propertyId) {
+        if (removedIdsFromConfiguration.isEmpty()) {
             return;
         }
-        for (BpRequirement requirement : requirementsFromScope) {
-            String selectedId = requirement.getSafeguardStrengthImpact();
-            if (removedImpactIds.contains(selectedId)) {
-                removeProperty(requirement,
-                        BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT);
+        for (CnATreeElement requirement : elements) {
+            String selectedId = getSelectedId(requirement, propertyId);
+            if (removedIdsFromConfiguration.contains(selectedId)) {
+                removeProperty(requirement, propertyId);
             }
         }
     }
 
+    private String getSelectedId(CnATreeElement element, String propertyId) {
+        return StringUtil
+                .replaceEmptyStringByNull(element.getEntity().getRawPropertyValue(propertyId));
+    }
+
     private void removeProperty(CnATreeElement element, String propertyId) {
         element.getEntity().getTypedPropertyLists().remove(propertyId);
-        uuidsOfChangedRequirements.add(element.getUuid());
+        uuidsOfChangedElements.add(element.getUuid());
         if (log.isDebugEnabled()) {
             log.debug("Property " + propertyId + " removed from " + element.getTypeId()
                     + " with uuid " + element.getUuid());
