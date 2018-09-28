@@ -52,7 +52,7 @@ public class TreeViewerUpdater {
             return;
         }
 
-         if (parent != null && child != null) {
+        if (parent != null && child != null) {
             if (Display.getCurrent() != null) {
                 viewer.add(parent, child);
             } else {
@@ -168,11 +168,14 @@ public class TreeViewerUpdater {
     private Object getNewInput(final Object newModel) {
         Object returnValue = newModel;
         Object oldInput = viewer.getInput();
-        if (oldInput != null && !oldInput.getClass().equals(newModel.getClass()) && oldInput instanceof CnATreeElement) {
+        if (oldInput != null && !oldInput.getClass().equals(newModel.getClass())
+                && oldInput instanceof CnATreeElement) {
             CnATreeElement element = (CnATreeElement) oldInput;
             RetrieveInfo ri = new RetrieveInfo();
-            ri.setProperties(true).setPermissions(true).setParent(true).setChildren(true).setSiblings(true);
-            LoadElementByUuid<CnATreeElement> loadByUuid = new LoadElementByUuid<CnATreeElement>(element.getUuid(), ri);
+            ri.setProperties(true).setPermissions(true).setParent(true).setChildren(true)
+                    .setSiblings(true);
+            LoadElementByUuid<CnATreeElement> loadByUuid = new LoadElementByUuid<CnATreeElement>(
+                    element.getUuid(), ri);
             try {
                 Activator.inheritVeriniceContextState();
                 loadByUuid = ServiceFactory.lookupCommandService().executeCommand(loadByUuid);
