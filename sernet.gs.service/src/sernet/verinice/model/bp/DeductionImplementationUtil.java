@@ -172,8 +172,9 @@ public final class DeductionImplementationUtil {
             return BpRequirement.getImplementationStatus(element.getEntity()
                     .getRawPropertyValue(BpRequirement.PROP_IMPLEMENTATION_STATUS));
         }
-        if (element instanceof Safeguard) {
-            return ((Safeguard) element).getImplementationStatus();
+        if (Safeguard.TYPE_ID.equals(element.getTypeId())) {
+            return Safeguard.getImplementationStatus(
+                    element.getEntity().getRawPropertyValue(Safeguard.PROP_IMPLEMENTATION_STATUS));
         }
         throw new IllegalArgumentException("Unhandled element type " + element.getTypeId());
     }
