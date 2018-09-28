@@ -27,7 +27,6 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
@@ -48,123 +47,41 @@ public class TreeViewerUpdater {
     }
 
     public void add(final Object parent, final Object child) {
-        if (viewer.getControl().isDisposed()) {
-            return;
-        }
-
         if (parent != null && child != null) {
-            if (Display.getCurrent() != null) {
-                viewer.add(parent, child);
-            } else {
-                Display.getDefault().asyncExec(new Runnable() {
-                    @Override
-                    public void run() {
-                        viewer.add(parent, child);
-                    }
-                });
-
-            }
+            executeInRenderThread(() -> viewer.add(parent, child));
         }
-
     }
 
     public void refresh(final Object child) {
-        if (viewer.getControl().isDisposed()) {
-            return;
-        }
-
-        if (Display.getCurrent() != null) {
-            viewer.refresh(child);
-        } else {
-
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    viewer.refresh(child);
-                }
-            });
-        }
+        executeInRenderThread(() -> viewer.refresh(child));
     }
 
     public void remove(final Object child) {
-        if (viewer.getControl().isDisposed()) {
-            return;
-        }
-
-        if (Display.getCurrent() != null) {
-            viewer.remove(child);
-        } else {
-
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    viewer.remove(child);
-                }
-            });
-        }
+        executeInRenderThread(() -> viewer.remove(child));
     }
 
     public void refresh() {
-
-        if (Display.getCurrent() != null) {
-            viewer.refresh();
-        } else {
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    if (viewer != null) {
-                        viewer.refresh();
-                    }
-                }
-            });
-        }
-    }
-
-    public void reveal(final Object child) {
-        if (viewer.getControl().isDisposed()) {
-            return;
-        }
-
-        if (Display.getCurrent() != null) {
-            if (!(child instanceof MassnahmenUmsetzung)) {
-                viewer.reveal(child);
-            }
-            return;
-        }
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                if (!(child instanceof MassnahmenUmsetzung)) {
-                    viewer.reveal(child);
-                }
+        executeInRenderThread(() -> {
+            if (viewer != null) {
+                viewer.refresh();
             }
         });
     }
 
     public void setInput(final Object newModel) {
-        // dmurygin, 2010-09-16:
-        if (viewer.getControl().isDisposed()) {
-            return;
-        }
-
         final Object newInput = getNewInput(newModel);
-
-        if (Display.getCurrent() != null) {
-            viewer.setInput(newInput);
-            return;
-        }
-        Display.getDefault().asyncExec(new Runnable() {
-            @Override
-            public void run() {
-                viewer.setInput(newInput);
-            }
-        });
+        executeInRenderThread(() -> viewer.setInput(newInput));
     }
 
-    /**
-     * @param newModel
-     * @throws CommandException
-     */
+    private static void executeInRenderThread(Runnable r) {
+        if (Display.getCurrent() != null) {
+            // the current thread is a render thread
+            r.run();
+        } else {
+            Display.getDefault().asyncExec(r);
+        }
+    }
+
     private Object getNewInput(final Object newModel) {
         Object returnValue = newModel;
         Object oldInput = viewer.getInput();
@@ -174,7 +91,7 @@ public class TreeViewerUpdater {
             RetrieveInfo ri = new RetrieveInfo();
             ri.setProperties(true).setPermissions(true).setParent(true).setChildren(true)
                     .setSiblings(true);
-            LoadElementByUuid<CnATreeElement> loadByUuid = new LoadElementByUuid<CnATreeElement>(
+            LoadElementByUuid<CnATreeElement> loadByUuid = new LoadElementByUuid<>(
                     element.getUuid(), ri);
             try {
                 Activator.inheritVeriniceContextState();
