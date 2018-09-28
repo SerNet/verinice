@@ -67,6 +67,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     private static final Logger logger = Logger.getLogger(Entity.class);
 
     private static final Pattern EPOCH_STRING = Pattern.compile("-?\\d+");
+    private static final String FLAG_ENABLED = "1"; //$NON-NLS-1$
+    private static final String FLAG_DISABLED = "0"; //$NON-NLS-1$
 
     private String uuid;
     private Integer dbId;
@@ -610,6 +612,14 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             }
         }
         return false;
+    }
+
+    public boolean isFlagged(String propertyTypeId) {
+        return FLAG_ENABLED.equals(getPropertyValue(propertyTypeId));
+    }
+
+    public void setFlag(String propertyTypeId, boolean flag) {
+        setPropertyValue(propertyTypeId, flag ? FLAG_ENABLED : FLAG_DISABLED);
     }
 
     public boolean isSelected(String propertyTypeId, String optionId) {

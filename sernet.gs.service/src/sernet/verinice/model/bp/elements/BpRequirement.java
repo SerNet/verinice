@@ -89,9 +89,6 @@ public class BpRequirement extends CnATreeElement
     public static final String REL_BP_REQUIREMENT_BP_NETWORK = "rel_bp_requirement_bp_network"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_ROOM = "rel_bp_requirement_bp_room"; //$NON-NLS-1$
 
-    private static final String TRUE = "1"; //$NON-NLS-1$
-    private static final String FALSE = "0"; //$NON-NLS-1$
-
     private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
     private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
 
@@ -224,12 +221,11 @@ public class BpRequirement extends CnATreeElement
     }
 
     public void setDeductionOfImplementation(boolean active) {
-        String value = (active) ? TRUE : FALSE;
-        getEntity().setPropertyValue(PROP_IMPLEMENTATION_DEDUCE, value);
+        getEntity().setFlag(PROP_IMPLEMENTATION_DEDUCE, active);
     }
 
     public boolean isDeductionOfImplementation() {
-        return TRUE.equals(getEntity().getPropertyValue(PROP_IMPLEMENTATION_DEDUCE));
+        return getEntity().isFlagged(PROP_IMPLEMENTATION_DEDUCE);
     }
 
     public Date getLastChange() {
