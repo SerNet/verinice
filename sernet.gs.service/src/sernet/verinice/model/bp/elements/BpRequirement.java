@@ -40,6 +40,7 @@ import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.common.TransactionAbortedException;
+import sernet.verinice.service.bp.risk.RiskDeductionUtil;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -102,6 +103,7 @@ public class BpRequirement extends CnATreeElement
             }
             DeductionImplementationUtil.setImplementationStatusToRequirement(BpRequirement.this);
 
+            RiskDeductionUtil.deduceSafeguardStrength(BpRequirement.this);
         }
     };
 
