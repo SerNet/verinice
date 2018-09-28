@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import sernet.verinice.interfaces.graph.Edge;
+import sernet.verinice.model.bp.risk.configuration.RiskConfigurationCache;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.linktable.generator.mergepath.VqlEdge;
 import sernet.verinice.service.linktable.generator.mergepath.VqlNode;
@@ -60,16 +61,20 @@ final class VeriniceGraphResult {
 
     private Deque<VeriniceGraphResultEntry> entryStack = new LinkedList<>();
 
+    private RiskConfigurationCache riskConfigurationCache;
+
     VeriniceGraphResult() {
         linkedTableRows = new ArrayList<>();
         currentLinkedTableRow = new VeriniceGraphResultRow();
         linkedTableRows.add(currentLinkedTableRow);
+        riskConfigurationCache = new RiskConfigurationCache();
     }
 
     void addValue(VqlNode vqlNode, VqlEdge vqlEdge, Edge edge, CnATreeElement element, int depth) {
 
         VeriniceGraphResultEntry veriniceGraphResultEntry = new VeriniceGraphResultEntry(vqlNode,
                 vqlEdge, edge, element, depth);
+        veriniceGraphResultEntry.setRiskConfigurationCache(riskConfigurationCache);
 
         currentLinkedTableRow.addEntry(veriniceGraphResultEntry);
 

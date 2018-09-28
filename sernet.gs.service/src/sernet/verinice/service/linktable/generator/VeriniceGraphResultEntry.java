@@ -38,6 +38,7 @@ import org.apache.log4j.Logger;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.graph.Edge;
+import sernet.verinice.model.bp.risk.configuration.RiskConfigurationCache;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
@@ -66,6 +67,7 @@ final class VeriniceGraphResultEntry {
     private VqlNode vqlNode;
     private VqlEdge vqlEdge;
     private int depth;
+    private RiskConfigurationCache riskConfigurationCache;
 
     private enum Direction {
         INCOMING, OUTCOMING
@@ -97,7 +99,8 @@ final class VeriniceGraphResultEntry {
 
     private void writeNodeToRow(Map<String, String> row) {
         for (String propertyType : vqlNode.getPropertyTypes()) {
-            IPropertyAdapter adapter = PropertyAdapterFactory.getAdapter(element);
+            IPropertyAdapter adapter = PropertyAdapterFactory.getAdapter(element,
+                    riskConfigurationCache);
             String propertyValue = adapter.getPropertyValue(propertyType);
             String keyInRow = vqlNode.getPathForProperty(propertyType);
             row.put(keyInRow, propertyValue);
@@ -284,5 +287,10 @@ final class VeriniceGraphResultEntry {
 
     public boolean isParentRelation() {
         return vqlEdge != null ? vqlEdge.getEdgeType() == EdgeType.PARENT : false;
+    }
+
+    public void setRiskConfigurationCache(RiskConfigurationCache riskConfigurationCache) {
+        this.riskConfigurationCache = riskConfigurationCache;
+
     }
 }

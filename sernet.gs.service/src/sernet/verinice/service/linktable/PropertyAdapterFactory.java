@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable;
 
+import sernet.verinice.model.bp.risk.configuration.RiskConfigurationCache;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.common.CnATreeElement;
@@ -34,7 +35,8 @@ public abstract class PropertyAdapterFactory {
         super();
     }
 
-    public static IPropertyAdapter getAdapter(Object element) {
+    public static IPropertyAdapter getAdapter(Object element,
+            RiskConfigurationCache riskConfigurationCache) {
         if (element instanceof IBSIStrukturKategorie) {
             return new ItbpGroupPropertyAdapter((IBSIStrukturKategorie) element);
         }
