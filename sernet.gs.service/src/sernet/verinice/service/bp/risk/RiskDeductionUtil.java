@@ -28,6 +28,7 @@ import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.risk.Risk;
+import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -38,6 +39,9 @@ public class RiskDeductionUtil {
     }
 
     public static BpThreat deduceRisk(BpThreat threat, RiskConfiguration riskConfiguration) {
+        if (riskConfiguration == null) {
+            riskConfiguration = DefaultRiskConfiguration.getInstance();
+        }
         String frequency = threat.getFrequencyWithoutAdditionalSafeguards();
         String impact = threat.getImpactWithoutAdditionalSafeguards();
 
