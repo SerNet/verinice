@@ -28,8 +28,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.events.ExpansionEvent;
-import org.eclipse.ui.forms.events.IExpansionListener;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 import sernet.hui.common.connect.Entity;
@@ -94,18 +92,6 @@ public class HitroUIComposite extends ScrolledComposite {
         huiTwistieLD.horizontalSpan = 4;
         huiTwistie.setLayoutData(huiTwistieLD);
 
-        huiTwistie.addExpansionListener(new IExpansionListener() {
-            @Override
-            public void expansionStateChanged(ExpansionEvent arg0) {
-                huiView.resizeContainer();
-            }
-
-            @Override
-            public void expansionStateChanging(ExpansionEvent arg0) {
-                // nothing
-            }
-        });
-
         Composite fieldsComposite = new Composite(huiTwistie, SWT.NULL);
 
         // set comp layout:
@@ -157,18 +143,6 @@ public class HitroUIComposite extends ScrolledComposite {
         huiTwistieLD.horizontalAlignment = GridData.FILL;
         huiTwistieLD.horizontalSpan = 4;
         huiTwistie.setLayoutData(huiTwistieLD);
-
-        huiTwistie.addExpansionListener(new IExpansionListener() {
-            @Override
-            public void expansionStateChanged(ExpansionEvent arg0) {
-                huiView.resizeContainer();
-            }
-
-            @Override
-            public void expansionStateChanging(ExpansionEvent arg0) {
-                // nothing
-            }
-        });
 
         Composite fieldsComposite = new Composite(huiTwistie, SWT.NULL);
 
