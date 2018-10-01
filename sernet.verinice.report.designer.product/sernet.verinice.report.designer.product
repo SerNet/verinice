@@ -20,7 +20,7 @@
    <windowImages i16="/sernet.gs.ui.rcp.main/verinice_icons/v-16.png" i32="/sernet.gs.ui.rcp.main/verinice_icons/v-32.png" i48="/sernet.gs.ui.rcp.main/verinice_icons/v-48.png" i64="/sernet.gs.ui.rcp.main/verinice_icons/v-64.png" i128="/sernet.gs.ui.rcp.main/verinice_icons/v-128.png"/>
 
    <splash
-      location="sernet.gs.ui.rcp.main"
+      location="sernet.verinice.oda.driver.designer"
       handlerType="extensible" />
    <launcher name="v-designer">
       <linux icon="verinice_icons/v.xpm"/>
