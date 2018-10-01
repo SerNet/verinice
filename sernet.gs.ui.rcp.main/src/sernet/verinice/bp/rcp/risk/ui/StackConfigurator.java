@@ -37,10 +37,10 @@ import org.eclipse.swt.widgets.Composite;
  * Rows which are present on construction are watched for deletion.
  */
 public abstract class StackConfigurator<T> extends Composite {
-	public static final int ELEMENT_SPACING = 10;
-	public static final int ELEMENT_MARGINS = (int)(ELEMENT_SPACING * 2.5);
-	public static final int LABLE_SIZE = 180;
-	
+    public static final int ELEMENT_SPACING = 10;
+    public static final int ELEMENT_MARGINS = (int) (ELEMENT_SPACING * 2.5);
+    public static final int LABLE_SIZE = 180;
+
     private Composite pane;
     private int maxValues;
     private int numberOfNewElements;
@@ -92,8 +92,8 @@ public abstract class StackConfigurator<T> extends Composite {
             dataComposite.setLayout(new FillLayout());
 
             Composite buttonComposite = new Composite(rowComposite, SWT.NONE);
-            buttonComposite.setLayout(
-                    RowLayoutFactory.createFrom(new RowLayout(SWT.VERTICAL)).spacing(ELEMENT_SPACING).create());
+            buttonComposite.setLayout(RowLayoutFactory.createFrom(new RowLayout(SWT.VERTICAL))
+                    .spacing(ELEMENT_SPACING).create());
 
             addRow(dataComposite, rowData.get(i));
             if (i == rowData.size() - 1) {

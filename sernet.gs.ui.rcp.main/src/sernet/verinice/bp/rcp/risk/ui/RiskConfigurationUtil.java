@@ -73,10 +73,9 @@ public class RiskConfigurationUtil {
 
     public void dispose() {
         scrolledFrequenciesTab.dispose();
-        
 
     }
-    
+
     public void doSave() {
         itNetwork.setRiskConfiguration(currentRiskConfiguration);
         RiskConfigurationUpdateContext updateContext = new RiskConfigurationUpdateContext(
@@ -136,10 +135,10 @@ public class RiskConfigurationUtil {
 
     public static boolean checkRights() {
         Activator.inheritVeriniceContextState();
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(ActionRightIDs.EDITRISKCONFIGURATION);
     }
-
 
     private ScrolledComposite createScrollableComposite(Composite parent) {
         ScrolledComposite scrolledComposite = new ScrolledComposite(parent,

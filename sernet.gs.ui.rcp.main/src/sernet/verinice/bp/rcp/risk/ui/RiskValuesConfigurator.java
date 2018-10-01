@@ -46,8 +46,7 @@ final class RiskValuesConfigurator extends StackConfigurator<Risk> {
     private RiskConfiguration riskConfiguration;
     private Consumer<RiskConfiguration> updateListener;
 
-    RiskValuesConfigurator(Composite parent,
-            Consumer<RiskConfiguration> updateListener) {
+    RiskValuesConfigurator(Composite parent, Consumer<RiskConfiguration> updateListener) {
         super(parent, MAX_NUMBER_OF_RISKS);
         this.updateListener = updateListener;
     }
