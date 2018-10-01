@@ -77,7 +77,7 @@ public class RiskMatrixConfigurator extends Composite {
             GridData layoutData = new GridData();
             layoutData.widthHint = StackConfigurator.LABEL_WIDTH;
             label.setLayoutData(layoutData);
-            String text = cutLable(impact.getLabel(), label,
+            String text = cutLabel(impact.getLabel(), label,
                     StackConfigurator.LABEL_WIDTH + StackConfigurator.ELEMENT_MARGINS);
             label.setText(text);
             frequencyValues.forEach(frequency -> addRiskButton(riskConfiguration, updateListener,
@@ -86,7 +86,7 @@ public class RiskMatrixConfigurator extends Composite {
         new Label(this, SWT.NONE);
         frequencyValues.forEach(frequency -> {
             Label label = new Label(this, SWT.NONE);
-            String text = cutLable(frequency.getLabel(), label, BUTTON_SIZE);
+            String text = cutLabel(frequency.getLabel(), label, BUTTON_SIZE);
             label.setText(text);
         });
         new Label(this, SWT.NONE);
@@ -119,7 +119,7 @@ public class RiskMatrixConfigurator extends Composite {
             text = sernet.hui.swt.widgets.Messages.getString("SingleSelectDummyValue");
             textColor = new Color(button.getDisplay(), BLACK);
         } else {
-            text = cutLable(risk.getLabel(), button,
+            text = cutLabel(risk.getLabel(), button,
                     BUTTON_SIZE - StackConfigurator.ELEMENT_MARGINS);
             RGB riskColor = ColorConverter.toRGB(risk.getColor());
             if (riskColor != null) {
@@ -136,7 +136,7 @@ public class RiskMatrixConfigurator extends Composite {
         button.setForeground(textColor);
     }
 
-    private String cutLable(String text, Control button, int size) {
+    private String cutLabel(String text, Control button, int size) {
         GC gc = new GC(button);
         int stringWidth = gc.stringExtent(text).x;
         String newText = text;
