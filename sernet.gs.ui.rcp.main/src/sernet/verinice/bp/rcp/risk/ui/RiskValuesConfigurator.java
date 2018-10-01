@@ -61,7 +61,7 @@ final class RiskValuesConfigurator extends StackConfigurator<Risk> {
         leftComposite.setLayout(
                 RowLayoutFactory.createFrom(new RowLayout(SWT.VERTICAL)).spacing(5).create());
         Text riskLabel = new Text(leftComposite, SWT.NONE);
-        riskLabel.setLayoutData(new RowData(LABLE_SIZE, SWT.DEFAULT));
+        riskLabel.setLayoutData(new RowData(LABEL_WIDTH, SWT.DEFAULT));
         riskLabel.setText(risk.getLabel());
         riskLabel.addFocusListener(new LabelFocusListener(updateListener, riskConfiguration, risk));
 

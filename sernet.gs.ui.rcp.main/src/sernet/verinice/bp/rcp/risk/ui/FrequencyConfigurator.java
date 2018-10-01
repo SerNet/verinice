@@ -56,7 +56,7 @@ final class FrequencyConfigurator extends StackConfigurator<Frequency> {
         currentItemLeft.setLayout(
                 RowLayoutFactory.createFrom(new RowLayout(SWT.VERTICAL)).spacing(5).create());
         Text labelField = new Text(currentItemLeft, SWT.NONE);
-        labelField.setLayoutData(new RowData(LABLE_SIZE, SWT.DEFAULT));
+        labelField.setLayoutData(new RowData(LABEL_WIDTH, SWT.DEFAULT));
         labelField.setText(frequency.getLabel());
         labelField.addFocusListener(new FocusAdapter() {
 

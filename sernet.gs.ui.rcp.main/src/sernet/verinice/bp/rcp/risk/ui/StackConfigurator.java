@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Composite;
 public abstract class StackConfigurator<T> extends Composite {
     public static final int ELEMENT_SPACING = 10;
     public static final int ELEMENT_MARGINS = (int) (ELEMENT_SPACING * 2.5);
-    public static final int LABLE_SIZE = 180;
+    public static final int LABEL_WIDTH = 180;
 
     private Composite pane;
     private int maxValues;

@@ -75,10 +75,10 @@ public class RiskMatrixConfigurator extends Composite {
         impactValuesReverse.forEach(impact -> {
             Label label = new Label(this, SWT.NONE);
             GridData layoutData = new GridData();
-            layoutData.widthHint = StackConfigurator.LABLE_SIZE;
+            layoutData.widthHint = StackConfigurator.LABEL_WIDTH;
             label.setLayoutData(layoutData);
             String text = cutLable(impact.getLabel(), label,
-                    StackConfigurator.LABLE_SIZE + StackConfigurator.ELEMENT_MARGINS);
+                    StackConfigurator.LABEL_WIDTH + StackConfigurator.ELEMENT_MARGINS);
             label.setText(text);
             frequencyValues.forEach(frequency -> addRiskButton(riskConfiguration, updateListener,
                     impact, frequency));
