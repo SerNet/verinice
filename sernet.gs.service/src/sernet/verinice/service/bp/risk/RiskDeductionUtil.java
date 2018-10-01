@@ -59,7 +59,7 @@ public class RiskDeductionUtil {
         Risk risk = riskConfiguration.getRisk(frequency, impact);
         threat.setRiskWithoutAdditionalSafeguards(risk.getId());
 
-        Set<CnATreeElement> linkedRequirements = getLinkedRequirements(threat);
+        Set<CnATreeElement> linkedRequirements = getLinkedRequirementsForRiskDeduction(threat);
 
         String frequencyWithAdditionalSafeguards = getFrequencyWithAdditionalSafeguards(
                 Stream.of(frequency), linkedRequirements);
@@ -78,11 +78,13 @@ public class RiskDeductionUtil {
         return threat;
     }
 
-    private static Set<CnATreeElement> getLinkedRequirements(BpThreat threat) {
+    private static Set<CnATreeElement> getLinkedRequirementsForRiskDeduction(BpThreat threat) {
         Set<CnATreeElement> linkedRequirements = threat.getLinksUp().stream().filter(
                 link -> BpRequirement.REL_BP_REQUIREMENT_BP_THREAT.equals(link.getRelationId())
                         && BpRequirement.TYPE_ID.equals(link.getDependant().getTypeId()))
-                .map(CnALink::getDependant).collect(Collectors.toSet());
+                .map(CnALink::getDependant)
+                .filter(r -> r.getEntity().isFlagged(BpRequirement.PROP_SAFEGUARD_REDUCE_RISK))
+                .collect(Collectors.toSet());
         return Collections.unmodifiableSet(linkedRequirements);
     }
 
