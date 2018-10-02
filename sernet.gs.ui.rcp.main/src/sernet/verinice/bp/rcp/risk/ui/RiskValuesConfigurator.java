@@ -23,15 +23,15 @@ import java.util.function.Consumer;
 
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
@@ -42,6 +42,7 @@ import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 final class RiskValuesConfigurator extends StackConfigurator<Risk> {
 
     private static final int MAX_NUMBER_OF_RISKS = 5;
+    private static final int COLOR_BUTTON_WIDTH = 30;
 
     private RiskConfiguration riskConfiguration;
     private Consumer<RiskConfiguration> updateListener;
@@ -65,12 +66,13 @@ final class RiskValuesConfigurator extends StackConfigurator<Risk> {
         riskLabel.setText(risk.getLabel());
         riskLabel.addFocusListener(new LabelFocusListener(updateListener, riskConfiguration, risk));
 
-        Button riskColor = new Button(leftComposite, SWT.NONE);
+        CLabel riskColor = new CLabel(leftComposite, SWT.SHADOW_OUT | SWT.CENTER);
+        riskColor.setLayoutData(new RowData(COLOR_BUTTON_WIDTH, SWT.DEFAULT));
         RGB rgb = ColorConverter.toRGB(risk.getColor());
         if (rgb != null) {
             riskColor.setBackground(new Color(getDisplay(), rgb));
         }
-        riskColor.addSelectionListener(
+        riskColor.addMouseListener(
                 new ColorSelectionAdapter(updateListener, riskConfiguration, rgb, risk));
 
         Text riskDescription = new Text(parent, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
@@ -150,7 +152,7 @@ final class RiskValuesConfigurator extends StackConfigurator<Risk> {
         }
     }
 
-    private final class ColorSelectionAdapter extends SelectionAdapter {
+    private final class ColorSelectionAdapter extends MouseAdapter {
 
         private final Consumer<RiskConfiguration> updateListener;
         private final RiskConfiguration riskConfiguration;
@@ -166,7 +168,7 @@ final class RiskValuesConfigurator extends StackConfigurator<Risk> {
         }
 
         @Override
-        public void widgetSelected(SelectionEvent e) {
+        public void mouseDown(MouseEvent e) {
             ColorDialog dlg = new ColorDialog(getDisplay().getActiveShell());
 
             dlg.setRGB(rgb);
