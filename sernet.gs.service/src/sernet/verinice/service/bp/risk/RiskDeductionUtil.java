@@ -78,6 +78,37 @@ public class RiskDeductionUtil {
         return threat;
     }
 
+    public static CnATreeElement deduceSafeguardStrength(CnATreeElement requirement) {
+        if (!requirement.getEntity().isFlagged(BpRequirement.PROP_IMPLEMENTATION_DEDUCE)) {
+            return requirement;
+        }
+        String impactStrength = getLinkedSafeguards(requirement)
+                .filter(s -> s.getEntity().isFlagged(Safeguard.PROP_REDUCE_RISK))
+                .map(s -> s.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_IMPACT))
+                .filter(s -> s != null && !s.isEmpty()).min(String::compareTo).orElse(null);
+
+        String frequencyStrength = getLinkedSafeguards(requirement)
+                .filter(s -> s.getEntity().isFlagged(Safeguard.PROP_REDUCE_RISK))
+                .map(s -> s.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_FREQUENCY))
+                .filter(s -> s != null && !s.isEmpty()).min(String::compareTo).orElse(null);
+
+        requirement.getEntity().setPropertyValue(BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT,
+                impactStrength);
+        requirement.getEntity().setPropertyValue(BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY,
+                frequencyStrength);
+        return requirement;
+    }
+
+    public static BpThreat retreiveProperties(BpThreat threat) {
+        return (BpThreat) Retriever.retrieveElement(threat,
+                new RetrieveInfo().setProperties(true).setLinksUp(true).setLinksUpProperties(true));
+    }
+
+    public static BpRequirement retreiveProperties(BpRequirement requirement) {
+        return (BpRequirement) Retriever.retrieveElement(requirement, new RetrieveInfo()
+                .setProperties(true).setLinksDown(true).setLinksDownProperties(true));
+    }
+
     private static Set<CnATreeElement> getLinkedRequirementsForRiskDeduction(BpThreat threat) {
         Set<CnATreeElement> linkedRequirements = threat.getLinksUp().stream().filter(
                 link -> BpRequirement.REL_BP_REQUIREMENT_BP_THREAT.equals(link.getRelationId())
@@ -110,43 +141,6 @@ public class RiskDeductionUtil {
                 .filter(value -> value != null && !value.isEmpty()).collect(Collectors.toSet());
 
         return allImpacts.contains(null) ? null : Collections.min(allImpacts);
-    }
-
-    public static BpThreat retreiveProperties(BpThreat threat) {
-        return (BpThreat) Retriever.retrieveElement(threat,
-                new RetrieveInfo()
-                .setProperties(true).setLinksUp(true).setLinksUpProperties(true));
-    }
-
-    public static CnATreeElement deduceSafeguardStrength(CnATreeElement requirement) {
-        if (!requirement.getEntity().isFlagged(BpRequirement.PROP_IMPLEMENTATION_DEDUCE)) {
-            return requirement;
-        }
-        String impactStrength = getLinkedSafeguards(requirement)
-                .filter(s -> s.getEntity().isFlagged(Safeguard.PROP_REDUCE_RISK))
-                .map(s -> s
-                .getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_IMPACT))
-                .filter(s -> s != null && !s.isEmpty())
-                .min(String::compareTo).orElse(null);
-
-        String frequencyStrength = getLinkedSafeguards(requirement)
-                .filter(s -> s.getEntity().isFlagged(Safeguard.PROP_REDUCE_RISK))
-                .map(s -> s.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_FREQUENCY))
-                .filter(s -> s != null && !s.isEmpty())
-                .min(String::compareTo).orElse(null);
-
-        requirement.getEntity()
-                .setPropertyValue(BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT,
-                impactStrength);
-        requirement.getEntity().setPropertyValue(BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY,
-                frequencyStrength);
-        return requirement;
-    }
-
-    public static BpRequirement retreiveProperties(BpRequirement requirement) {
-        return (BpRequirement) Retriever.retrieveElement(requirement,
-                new RetrieveInfo().setProperties(true).setLinksDown(true)
-                        .setLinksDownProperties(true));
     }
 
     private static Stream<CnATreeElement> getLinkedSafeguards(CnATreeElement requirement) {
