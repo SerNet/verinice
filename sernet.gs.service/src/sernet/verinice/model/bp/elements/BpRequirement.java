@@ -78,6 +78,7 @@ public class BpRequirement extends CnATreeElement
 
     public static final String PROP_SAFEGUARD_STRENGTH_FREQUENCY = "bp_requirement_safeguard_strength_frequency";//$NON-NLS-1$
     public static final String PROP_SAFEGUARD_STRENGTH_IMPACT = "bp_requirement_safeguard_strength_impact";//$NON-NLS-1$
+    public static final String PROP_SAFEGUARD_REDUCE_RISK = "bp_requirement_reduce_risk";//$NON-NLS-1$
 
     public static final String REL_BP_REQUIREMENT_BP_THREAT = "rel_bp_requirement_bp_threat"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_SAFEGUARD = "rel_bp_requirement_bp_safeguard"; //$NON-NLS-1$
