@@ -98,13 +98,14 @@ public class BpRequirement extends CnATreeElement
 
         @Override
         public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
-            if (!isDeductiveImplementationEnabled(BpRequirement.this)
-                    || ta.hasBeenVisited(BpRequirement.this)) {
-                return;
+            if (isDeductiveImplementationEnabled(BpRequirement.this)
+                    && !ta.hasBeenVisited(BpRequirement.this)) {
+                DeductionImplementationUtil
+                        .setImplementationStatusToRequirement(BpRequirement.this);
             }
-            DeductionImplementationUtil.setImplementationStatusToRequirement(BpRequirement.this);
-
-            RiskDeductionUtil.deduceSafeguardStrength(BpRequirement.this);
+            if (BpRequirement.this.getEntity().isFlagged(PROP_SAFEGUARD_REDUCE_RISK)) {
+                RiskDeductionUtil.deduceRiskForLinkedThreats(BpRequirement.this);
+            }
         }
     };
 
