@@ -39,6 +39,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.common.TransactionAbortedException;
 import sernet.verinice.service.bp.risk.RiskDeductionUtil;
+import sernet.verinice.service.hibernate.HibernateUtil;
 
 /**
  * @author Daniel Murygin dm[at]sernet.de
@@ -94,8 +95,16 @@ public class Safeguard extends CnATreeElement
             Safeguard.this.getLinksUp().stream()
                     .filter(link -> BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD
                             .equals(link.getRelationId()))
-                    .map(CnALink::getDependant).forEach(RiskDeductionUtil::deduceSafeguardStrength);
-
+                    .map(CnALink::getDependant).map(HibernateUtil::unproxy)
+                    .map(BpRequirement.class::cast)
+                    .forEach(r -> {
+                        try {
+                            RiskDeductionUtil.deduceSafeguardStrength(r);
+                            r.getLinkChangeListener().determineValue(ta);
+                        } catch (TransactionAbortedException e) {
+                            e.printStackTrace();
+                        }
+                    });
         }
     };
 
