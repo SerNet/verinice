@@ -25,14 +25,14 @@ import java.util.function.Consumer;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -48,7 +48,7 @@ import sernet.verinice.model.common.CnATreeElement;
 
 public class RiskMatrixConfigurator extends Composite {
 
-    private static final int BUTTON_SIZE = 100;
+    private static final int SELECTOR_SIZE = 100;
 
     private static final RGB WHITE = new RGB(255, 255, 255);
     private static final RGB BLACK = new RGB(0, 0, 0);
@@ -80,13 +80,13 @@ public class RiskMatrixConfigurator extends Composite {
             String text = cutLabel(impact.getLabel(), label,
                     StackConfigurator.LABEL_WIDTH + StackConfigurator.ELEMENT_MARGINS);
             label.setText(text);
-            frequencyValues.forEach(frequency -> addRiskButton(riskConfiguration, updateListener,
+            frequencyValues.forEach(frequency -> addRiskSelector(riskConfiguration, updateListener,
                     impact, frequency));
         });
         new Label(this, SWT.NONE);
         frequencyValues.forEach(frequency -> {
             Label label = new Label(this, SWT.NONE);
-            String text = cutLabel(frequency.getLabel(), label, BUTTON_SIZE);
+            String text = cutLabel(frequency.getLabel(), label, SELECTOR_SIZE);
             label.setText(text);
         });
         new Label(this, SWT.NONE);
@@ -104,40 +104,40 @@ public class RiskMatrixConfigurator extends Composite {
         helpText.setText(Messages.riskConfigurationMatrixUsage);
     }
 
-    private void addRiskButton(RiskConfiguration riskConfiguration,
+    private void addRiskSelector(RiskConfiguration riskConfiguration,
             Consumer<RiskConfiguration> updateListener, Impact impact, Frequency frequency) {
-        Button button = new Button(this, SWT.BORDER);
+        CLabel selector = new CLabel(this, SWT.SHADOW_OUT | SWT.CENTER);
 
-        button.setLayoutData(new GridData(BUTTON_SIZE, BUTTON_SIZE));
-        button.addSelectionListener(new RiskButtonSelectionListener(impact, updateListener,
-                riskConfiguration, frequency));
+        selector.setLayoutData(new GridData(SELECTOR_SIZE, SELECTOR_SIZE));
+        selector.addMouseListener(
+                new RiskSelectorListener(impact, updateListener, riskConfiguration, frequency));
         Risk risk = riskConfiguration.getRisk(frequency, impact);
         String text;
         Color backgroundColor = null;
         Color textColor = null;
         if (risk == null) {
             text = sernet.hui.swt.widgets.Messages.getString("SingleSelectDummyValue");
-            textColor = new Color(button.getDisplay(), BLACK);
+            textColor = new Color(selector.getDisplay(), BLACK);
         } else {
-            text = cutLabel(risk.getLabel(), button,
-                    BUTTON_SIZE - StackConfigurator.ELEMENT_MARGINS);
+            text = cutLabel(risk.getLabel(), selector,
+                    SELECTOR_SIZE - StackConfigurator.ELEMENT_MARGINS);
             RGB riskColor = ColorConverter.toRGB(risk.getColor());
             if (riskColor != null) {
-                backgroundColor = new Color(button.getDisplay(), riskColor);
-                textColor = new Color(button.getDisplay(),
+                backgroundColor = new Color(selector.getDisplay(), riskColor);
+                textColor = new Color(selector.getDisplay(),
                         determineOptimalTextColor(riskColor, WHITE, BLACK));
             }
         }
 
-        button.setText(text);
-        button.getBackground().dispose();
-        button.setBackground(backgroundColor);
-        button.getForeground().dispose();
-        button.setForeground(textColor);
+        selector.setText(text);
+        selector.getBackground().dispose();
+        selector.setBackground(backgroundColor);
+        selector.getForeground().dispose();
+        selector.setForeground(textColor);
     }
 
-    private String cutLabel(String text, Control button, int size) {
-        GC gc = new GC(button);
+    private String cutLabel(String text, Control control, int size) {
+        GC gc = new GC(control);
         int stringWidth = gc.stringExtent(text).x;
         String newText = text;
         int x = newText.length();
@@ -196,15 +196,14 @@ public class RiskMatrixConfigurator extends Composite {
     /**
      * TODO meaningful comment
      */
-    private final class RiskButtonSelectionListener extends SelectionAdapter {
+    private final class RiskSelectorListener extends MouseAdapter {
         private final Impact impact;
         private final Consumer<RiskConfiguration> updateListener;
         private final RiskConfiguration riskConfiguration;
         private final Frequency frequency;
 
-        private RiskButtonSelectionListener(Impact impact,
-                Consumer<RiskConfiguration> updateListener, RiskConfiguration riskConfiguration,
-                Frequency frequency) {
+        private RiskSelectorListener(Impact impact, Consumer<RiskConfiguration> updateListener,
+                RiskConfiguration riskConfiguration, Frequency frequency) {
             this.impact = impact;
             this.updateListener = updateListener;
             this.riskConfiguration = riskConfiguration;
@@ -212,7 +211,7 @@ public class RiskMatrixConfigurator extends Composite {
         }
 
         @Override
-        public void widgetSelected(SelectionEvent e) {
+        public void mouseDown(MouseEvent e) {
             boolean modifierPressed = (e.stateMask & SWT.MODIFIER_MASK) != 0;
             int numberOfRisks = riskConfiguration.getRisks().size();
 
@@ -229,8 +228,6 @@ public class RiskMatrixConfigurator extends Composite {
                 newRisk = riskConfiguration.getRisks().get(newIndex);
             }
             updateListener.accept(riskConfiguration.withRisk(frequency, impact, newRisk));
-            super.widgetSelected(e);
-
         }
     }
 }
