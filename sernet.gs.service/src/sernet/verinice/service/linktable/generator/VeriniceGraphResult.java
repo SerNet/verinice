@@ -63,11 +63,11 @@ final class VeriniceGraphResult {
 
     private RiskConfigurationCache riskConfigurationCache;
 
-    VeriniceGraphResult() {
+    VeriniceGraphResult(RiskConfigurationCache riskConfigurationCache) {
         linkedTableRows = new ArrayList<>();
         currentLinkedTableRow = new VeriniceGraphResultRow();
         linkedTableRows.add(currentLinkedTableRow);
-        riskConfigurationCache = new RiskConfigurationCache();
+        this.riskConfigurationCache = riskConfigurationCache;
     }
 
     void addValue(VqlNode vqlNode, VqlEdge vqlEdge, Edge edge, CnATreeElement element, int depth) {

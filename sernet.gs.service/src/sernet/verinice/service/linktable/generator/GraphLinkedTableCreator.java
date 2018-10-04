@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 import sernet.verinice.interfaces.graph.DepthFirstConditionalSearchPathes;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.interfaces.graph.VeriniceGraphFilter;
+import sernet.verinice.model.bp.risk.configuration.RiskConfigurationCache;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.linktable.ILinkTableConfiguration;
@@ -125,18 +126,21 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
 
     private List<Map<String, String>> doCreateTable(Set<CnATreeElement> roots) {
         List<Map<String, String>> table = new ArrayList<>();
+        RiskConfigurationCache riskConfigurationCache = new RiskConfigurationCache();
         for (CnATreeElement potentialRoot : roots) {
-            VeriniceGraphResult scanVeriniceGraph = scanVeriniceGraph(potentialRoot);
+            VeriniceGraphResult scanVeriniceGraph = scanVeriniceGraph(potentialRoot,
+                    riskConfigurationCache);
             table.addAll(scanVeriniceGraph.getResult());
         }
         return table;
     }
 
-    private VeriniceGraphResult scanVeriniceGraph(CnATreeElement potentialRoot) {
+    private VeriniceGraphResult scanVeriniceGraph(CnATreeElement potentialRoot,
+            RiskConfigurationCache riskConfigurationCache) {
 
         VqlContext vqlNavigator = new VqlContext(vqlAst);
         filter = new LtrTraversalFilter(vqlNavigator);
-        VeriniceGraphResult result = new VeriniceGraphResult();
+        VeriniceGraphResult result = new VeriniceGraphResult(riskConfigurationCache);
         traversalListener = new LtrPrintRowsTraversalListener(vqlNavigator, filter, veriniceDataGraph, result);
 
         traverse(veriniceDataGraph, potentialRoot, filter, traversalListener);
