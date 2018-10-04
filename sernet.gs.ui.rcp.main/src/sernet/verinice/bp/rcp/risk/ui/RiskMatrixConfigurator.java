@@ -25,14 +25,14 @@ import java.util.function.Consumer;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -48,7 +48,7 @@ import sernet.verinice.model.common.CnATreeElement;
 
 public class RiskMatrixConfigurator extends Composite {
 
-    private static final int BUTTON_SIZE = 100;
+    private static final int SELECTOR_SIZE = 100;
 
     private static final RGB WHITE = new RGB(255, 255, 255);
     private static final RGB BLACK = new RGB(0, 0, 0);
@@ -66,87 +66,91 @@ public class RiskMatrixConfigurator extends Composite {
 
         List<Frequency> frequencyValues = riskConfiguration.getFrequencies();
         setLayout(new GridLayout(frequencyValues.size() + 1, false));
-        
+
         Label labels = new Label(this, SWT.NONE);
-        labels.setLayoutData(GridDataFactory.swtDefaults().span(frequencyValues.size()+1, 1).create());
+        labels.setLayoutData(
+                GridDataFactory.swtDefaults().span(frequencyValues.size() + 1, 1).create());
         labels.setText(Messages.riskConfigurationMatrixImpactAxis);
-        
+
         impactValuesReverse.forEach(impact -> {
             Label label = new Label(this, SWT.NONE);
             GridData layoutData = new GridData();
-            layoutData.widthHint = StackConfigurator.LABLE_SIZE;
-			label.setLayoutData(layoutData);
-            String text = cutLable(impact.getLabel(), label, StackConfigurator.LABLE_SIZE + StackConfigurator.ELEMENT_MARGINS);
+            layoutData.widthHint = StackConfigurator.LABEL_WIDTH;
+            label.setLayoutData(layoutData);
+            String text = cutLabel(impact.getLabel(), label,
+                    StackConfigurator.LABEL_WIDTH + StackConfigurator.ELEMENT_MARGINS);
             label.setText(text);
-            frequencyValues.forEach(frequency -> addRiskButton(riskConfiguration, updateListener,
+            frequencyValues.forEach(frequency -> addRiskSelector(riskConfiguration, updateListener,
                     impact, frequency));
         });
         new Label(this, SWT.NONE);
         frequencyValues.forEach(frequency -> {
             Label label = new Label(this, SWT.NONE);
-            String text = cutLable(frequency.getLabel(), label, BUTTON_SIZE);
+            String text = cutLabel(frequency.getLabel(), label, SELECTOR_SIZE);
             label.setText(text);
         });
         new Label(this, SWT.NONE);
         Label axisLabel = new Label(this, SWT.NONE);
         axisLabel.setLayoutData(GridDataFactory.swtDefaults()//
-        		.align(SWT.CENTER, SWT.BEGINNING)//
-        		.span(frequencyValues.size(), 1).create());
+                .align(SWT.CENTER, SWT.BEGINNING)//
+                .span(frequencyValues.size(), 1).create());
         axisLabel.setText(Messages.riskConfigurationMatrixFrequencyAxis);
 
-		new Label(this, SWT.NONE)
-		.setLayoutData(GridDataFactory.swtDefaults().span(frequencyValues.size() + 1, 1).create());
+        new Label(this, SWT.NONE).setLayoutData(
+                GridDataFactory.swtDefaults().span(frequencyValues.size() + 1, 1).create());
         Label helpText = new Label(this, SWT.NONE);
         helpText.setLayoutData(
-                GridDataFactory.swtDefaults().span(frequencyValues.size()+1, 1).create());
+                GridDataFactory.swtDefaults().span(frequencyValues.size() + 1, 1).create());
         helpText.setText(Messages.riskConfigurationMatrixUsage);
     }
 
-    private void addRiskButton(RiskConfiguration riskConfiguration,
-            Consumer<RiskConfiguration> updateListener, Impact impact,
-            Frequency frequency) {
-        Button button = new Button(this, SWT.BORDER);
+    private void addRiskSelector(RiskConfiguration riskConfiguration,
+            Consumer<RiskConfiguration> updateListener, Impact impact, Frequency frequency) {
+        CLabel selector = new CLabel(this, SWT.SHADOW_OUT | SWT.CENTER);
 
-        button.setLayoutData(new GridData(BUTTON_SIZE, BUTTON_SIZE));
-        button.addSelectionListener(new RiskButtonSelectionListener(impact, updateListener, riskConfiguration, frequency));
+        selector.setLayoutData(new GridData(SELECTOR_SIZE, SELECTOR_SIZE));
+        selector.addMouseListener(
+                new RiskSelectorListener(impact, updateListener, riskConfiguration, frequency));
         Risk risk = riskConfiguration.getRisk(frequency, impact);
         String text;
         Color backgroundColor = null;
         Color textColor = null;
         if (risk == null) {
             text = sernet.hui.swt.widgets.Messages.getString("SingleSelectDummyValue");
-            textColor = new Color(button.getDisplay(), BLACK);
+            textColor = new Color(selector.getDisplay(), BLACK);
         } else {
-			text = cutLable(risk.getLabel(), button, BUTTON_SIZE - StackConfigurator.ELEMENT_MARGINS);
-			RGB riskColor = ColorConverter.toRGB(risk.getColor());
-			if (riskColor != null) {
-				backgroundColor = new Color(button.getDisplay(), riskColor);
-				textColor = new Color(button.getDisplay(), determineOptimalTextColor(riskColor, WHITE, BLACK));
-			}
+            text = cutLabel(risk.getLabel(), selector,
+                    SELECTOR_SIZE - StackConfigurator.ELEMENT_MARGINS);
+            RGB riskColor = ColorConverter.toRGB(risk.getColor());
+            if (riskColor != null) {
+                backgroundColor = new Color(selector.getDisplay(), riskColor);
+                textColor = new Color(selector.getDisplay(),
+                        determineOptimalTextColor(riskColor, WHITE, BLACK));
+            }
         }
 
-        button.setText(text);
-        button.getBackground().dispose();
-        button.setBackground(backgroundColor);
-        button.getForeground().dispose();
-        button.setForeground(textColor);
+        selector.setText(text);
+        selector.getBackground().dispose();
+        selector.setBackground(backgroundColor);
+        selector.getForeground().dispose();
+        selector.setForeground(textColor);
     }
 
-	private String cutLable(String text, Control button, int size) {
-		GC gc = new GC(button);
-		int stringWidth = gc.stringExtent(text).x;
-		String newText = text;
-		int x = newText.length();
-		while (stringWidth > size) {
-			newText = text.substring(0, x)+ "...";
-			stringWidth = gc.stringExtent(newText).x;
-			x--;
-		}
-		gc.dispose();
-		return newText;
-	}
+    private String cutLabel(String text, Control control, int size) {
+        GC gc = new GC(control);
+        int stringWidth = gc.stringExtent(text).x;
+        String newText = text;
+        int x = newText.length();
+        while (stringWidth > size) {
+            newText = text.substring(0, x) + "...";
+            stringWidth = gc.stringExtent(newText).x;
+            x--;
+        }
+        gc.dispose();
+        return newText;
+    }
 
-	public RiskConfiguration getRiskConfiguration() {
+    public RiskConfiguration getRiskConfiguration() {
         return riskConfiguration;
     }
 
@@ -192,15 +196,14 @@ public class RiskMatrixConfigurator extends Composite {
     /**
      * TODO meaningful comment
      */
-    private final class RiskButtonSelectionListener extends SelectionAdapter {
+    private final class RiskSelectorListener extends MouseAdapter {
         private final Impact impact;
         private final Consumer<RiskConfiguration> updateListener;
         private final RiskConfiguration riskConfiguration;
         private final Frequency frequency;
 
-        private RiskButtonSelectionListener(Impact impact,
-                Consumer<RiskConfiguration> updateListener, RiskConfiguration riskConfiguration,
-                Frequency frequency) {
+        private RiskSelectorListener(Impact impact, Consumer<RiskConfiguration> updateListener,
+                RiskConfiguration riskConfiguration, Frequency frequency) {
             this.impact = impact;
             this.updateListener = updateListener;
             this.riskConfiguration = riskConfiguration;
@@ -208,7 +211,7 @@ public class RiskMatrixConfigurator extends Composite {
         }
 
         @Override
-        public void widgetSelected(SelectionEvent e) {
+        public void mouseDown(MouseEvent e) {
             boolean modifierPressed = (e.stateMask & SWT.MODIFIER_MASK) != 0;
             int numberOfRisks = riskConfiguration.getRisks().size();
 
@@ -220,15 +223,11 @@ public class RiskMatrixConfigurator extends Composite {
             if (newIndex >= numberOfRisks || newIndex == -1) {
                 newRisk = null;
             } else if (newIndex < -1) {
-                newRisk = riskConfiguration.getRisks()
-                        .get(numberOfRisks - 1);
+                newRisk = riskConfiguration.getRisks().get(numberOfRisks - 1);
             } else {
                 newRisk = riskConfiguration.getRisks().get(newIndex);
             }
-            updateListener
-                    .accept(riskConfiguration.withRisk(frequency, impact, newRisk));
-            super.widgetSelected(e);
-
+            updateListener.accept(riskConfiguration.withRisk(frequency, impact, newRisk));
         }
     }
 }

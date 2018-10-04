@@ -543,15 +543,17 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
 
         if (cnAElement instanceof ItNetwork && RiskConfigurationUtil.checkRights()) {
             ItNetwork itn = (ItNetwork) cnAElement;
-            riskConfigurationUtil = new RiskConfigurationUtil(itn, ()->
-                    firePropertyChange(PROP_DIRTY)                   
-            );
-            
-            addNewPage(riskConfigurationUtil
-                    .createRiskMatrixPage(getContainer()), Messages.BSIElementEditorMultiPage_page_name_risk_matrix);
-            addNewPage(riskConfigurationUtil.createRiskValuePage(getContainer()), Messages.BSIElementEditorMultiPage_page_name_risk_values);
-            addNewPage(riskConfigurationUtil.createRiskImpact(getContainer()), Messages.BSIElementEditorMultiPage_page_name_risk_impact);
-            addNewPage(riskConfigurationUtil.createRiskFrequency(getContainer()), Messages.BSIElementEditorMultiPage_page_name_risk_frequency);
+            riskConfigurationUtil = new RiskConfigurationUtil(itn,
+                    () -> firePropertyChange(PROP_DIRTY));
+
+            addNewPage(riskConfigurationUtil.createRiskMatrixPage(getContainer()),
+                    Messages.BSIElementEditorMultiPage_page_name_risk_matrix);
+            addNewPage(riskConfigurationUtil.createRiskValuePage(getContainer()),
+                    Messages.BSIElementEditorMultiPage_page_name_risk_values);
+            addNewPage(riskConfigurationUtil.createRiskImpact(getContainer()),
+                    Messages.BSIElementEditorMultiPage_page_name_risk_impact);
+            addNewPage(riskConfigurationUtil.createRiskFrequency(getContainer()),
+                    Messages.BSIElementEditorMultiPage_page_name_risk_frequency);
 
             riskConfigurationUtil.updateConfiguration();
         }
