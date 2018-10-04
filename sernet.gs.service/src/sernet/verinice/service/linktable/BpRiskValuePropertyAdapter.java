@@ -21,8 +21,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
-import sernet.gs.service.Retriever;
+import org.apache.log4j.Logger;
+
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.StringUtil;
+import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
@@ -33,8 +38,11 @@ import sernet.verinice.model.bp.risk.Risk;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationCache;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.RetrieveCnATreeElement;
 
 public class BpRiskValuePropertyAdapter implements IPropertyAdapter {
+
+    private static final Logger log = Logger.getLogger(BpRiskValuePropertyAdapter.class);
 
     public static final Collection<String> riskPropertiesThreat = Collections
             .unmodifiableList(Arrays.asList(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
@@ -54,6 +62,8 @@ public class BpRiskValuePropertyAdapter implements IPropertyAdapter {
     private CnATreeElement element;
 
     private RiskConfigurationCache riskConfigurationCache;
+
+    private ICommandService commandService;
 
     public BpRiskValuePropertyAdapter(CnATreeElement element,
             RiskConfigurationCache riskConfigurationCache) {
@@ -141,13 +151,54 @@ public class BpRiskValuePropertyAdapter implements IPropertyAdapter {
         if (riskConfigurationFromCache != null) {
             return riskConfigurationFromCache;
         }
-        CnATreeElement currentParent = Retriever.checkRetrieveParent(element).getParent();
-        while (!(currentParent instanceof ItNetwork)) {
-            currentParent = Retriever.checkRetrieveParent(currentParent).getParent();
-        }
-        RiskConfiguration riskConfiguration = ((ItNetwork) Retriever
-                .checkRetrieveElement(currentParent)).getRiskConfiguration();
+        RiskConfiguration riskConfiguration = loadRiskConfiguration(element);
         riskConfigurationCache.putRiskConfiguration(element.getScopeId(), riskConfiguration);
         return riskConfiguration;
+    }
+
+    private RiskConfiguration loadRiskConfiguration(CnATreeElement element) {
+        validateScopeId(element);
+        Integer scopeId = element.getScopeId();
+        if (log.isInfoEnabled()) {
+            log.info(
+                    "Loading scope with id: " + scopeId + ". Element with scope id is: " + element);
+        }
+        RetrieveCnATreeElement retrieveCommand = new RetrieveCnATreeElement(ItNetwork.TYPE_ID,
+                scopeId,
+                RetrieveInfo.getPropertyInstance());
+        try {
+            retrieveCommand = getCommandService().executeCommand(retrieveCommand);
+        } catch (CommandException e) {
+            String message = "Error while loading risk configuration";
+            log.error(message, e);
+            throw new RuntimeException(message, e);
+        }
+        RiskConfiguration riskConfiguration = ((ItNetwork) retrieveCommand.getElement())
+                .getRiskConfiguration();
+        if (log.isDebugEnabled()) {
+            log.debug("Risk configuration of scope with id: " + scopeId + " is: "
+                    + riskConfiguration);
+        }
+        return riskConfiguration;
+    }
+
+    private void validateScopeId(CnATreeElement element) {
+        if (element.getScopeId() == null) {
+            String message = "Scope ID of element is null: " + element
+                    + ". Can not load risk configuration.";
+            log.error(message);
+            throw new IllegalStateException(message);
+        }
+    }
+
+    private ICommandService getCommandService() {
+        if (commandService == null) {
+            commandService = createCommandServive();
+        }
+        return commandService;
+    }
+
+    private ICommandService createCommandServive() {
+        return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
     }
 }
