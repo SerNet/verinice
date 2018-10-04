@@ -90,8 +90,7 @@ public class BpRiskValuePropertyAdapter implements IPropertyAdapter {
             case BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS:
                 return getLabelForRisk(threat.getRiskWithAdditionalSafeguards(), element);
             default:
-                throw new IllegalArgumentException(
-                        "Unhandled combination: " + element + ", " + propertyId);
+                throwUnhandledCombinationException(propertyId);
             }
         }
         if (element instanceof BpRequirement) {
@@ -102,8 +101,7 @@ public class BpRiskValuePropertyAdapter implements IPropertyAdapter {
             case BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT:
                 return getLabelForFrequency(requirement.getSafeguardStrengthImpact(), element);
             default:
-                throw new IllegalArgumentException(
-                        "Unhandled combination: " + element + ", " + propertyId);
+                throwUnhandledCombinationException(propertyId);
             }
         }
         if (element instanceof Safeguard) {
@@ -118,8 +116,7 @@ public class BpRiskValuePropertyAdapter implements IPropertyAdapter {
                         safeguard.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_IMPACT));
                 return getLabelForFrequency(impactId, element);
             default:
-                throw new IllegalArgumentException(
-                        "Unhandled combination: " + element + ", " + propertyId);
+                throwUnhandledCombinationException(propertyId);
             }
         }
         throw new IllegalArgumentException("Unhandled element type: " + element);
@@ -189,6 +186,10 @@ public class BpRiskValuePropertyAdapter implements IPropertyAdapter {
             log.error(message);
             throw new IllegalStateException(message);
         }
+    }
+
+    private void throwUnhandledCombinationException(String propertyId) {
+        throw new IllegalArgumentException("Unhandled combination: " + element + ", " + propertyId);
     }
 
     private ICommandService getCommandService() {
