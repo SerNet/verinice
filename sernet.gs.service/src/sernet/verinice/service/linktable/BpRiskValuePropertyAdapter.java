@@ -146,6 +146,9 @@ public class BpRiskValuePropertyAdapter implements IPropertyAdapter {
         RiskConfiguration riskConfigurationFromCache = riskConfigurationCache
                 .findRiskConfiguration(element.getScopeId());
         if (riskConfigurationFromCache != null) {
+            if (log.isDebugEnabled()) {
+                log.debug("Returning risk configuration from cache: " + riskConfigurationFromCache);
+            }
             return riskConfigurationFromCache;
         }
         RiskConfiguration riskConfiguration = loadRiskConfiguration(element);
