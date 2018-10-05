@@ -17,16 +17,16 @@
       </vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="/sernet.gs.ui.rcp.main/verinice_icons/v-16.png" i32="/sernet.gs.ui.rcp.main/verinice_icons/v-32.png" i48="/sernet.gs.ui.rcp.main/verinice_icons/v-48.png" i64="/sernet.gs.ui.rcp.main/verinice_icons/v-64.png" i128="/sernet.gs.ui.rcp.main/verinice_icons/v-128.png"/>
+   <windowImages i16="/sernet.verinice.oda.driver.designer/window-images/v-16.png" i32="/sernet.verinice.oda.driver.designer/window-images/v-32.png" i48="/sernet.verinice.oda.driver.designer/window-images/v-48.png" i64="/sernet.verinice.oda.driver.designer/window-images/v-64.png" i128="/sernet.verinice.oda.driver.designer/window-images/v-128.png" i256="/sernet.verinice.oda.driver.designer/window-images/v-256.png"/>
 
    <splash
-      location="sernet.gs.ui.rcp.main"
+      location="sernet.verinice.oda.driver.designer"
       handlerType="extensible" />
-   <launcher name="v-designer">
-      <linux icon="verinice_icons/v.xpm"/>
-      <macosx icon="verinice_icons/v.icns"/>
+   <launcher name="vDesigner">
+      <linux icon="icons/linux/icon.xpm"/>
+      <macosx icon="icons/macosx/icon.icns"/>
       <win useIco="true">
-         <ico path="verinice_icons/v-128-16.ico"/>
+         <ico path="icons/win32/icon.ico"/>
          <bmp/>
       </win>
    </launcher>
