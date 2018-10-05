@@ -102,7 +102,7 @@ public class Safeguard extends CnATreeElement
                             RiskDeductionUtil.deduceSafeguardStrength(r);
                             r.getLinkChangeListener().determineValue(ta);
                         } catch (TransactionAbortedException e) {
-                            e.printStackTrace();
+                            //swallow this exception
                         }
                     });
         }
