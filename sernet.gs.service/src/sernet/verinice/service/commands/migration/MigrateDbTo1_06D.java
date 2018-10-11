@@ -451,6 +451,9 @@ public class MigrateDbTo1_06D extends DbMigration {
     }
 
     private void deleteLink(final CnALink link) {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Deleting link: " + link + "...");
+        }
         link.remove();
         cnALinkDao.delete(link);
     }

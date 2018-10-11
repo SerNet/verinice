@@ -244,7 +244,9 @@ public abstract class CommandServiceProvider extends UuidLoader {
     protected CnALink createLink(CnATreeElement source, CnATreeElement destination, String linkType) throws CommandException {
         CreateLink command = new CreateLink(source, destination, linkType, this.getClass().getSimpleName());
         command = commandService.executeCommand(command);
-        return command.getLink();
+        CnALink link = command.getLink();
+        LOG.debug("Created: " + link);
+        return link;
     }
 
     protected void checkOrganization(Organization organization) {

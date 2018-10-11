@@ -23,6 +23,8 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Objects;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.elements.Application;
@@ -51,6 +53,8 @@ import sernet.verinice.service.model.LoadModel;
  *
  */
 public abstract class AbstractModernizedBaseProtection extends CommandServiceProvider {
+
+    private static final Logger log = Logger.getLogger(AbstractModernizedBaseProtection.class);
 
     public AbstractModernizedBaseProtection() {
         super();
@@ -97,7 +101,9 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
         CreateElement<T> saveCommand = new CreateElement<>(container, type, title);
         saveCommand.setInheritAuditPermissions(true);
         saveCommand = commandService.executeCommand(saveCommand);
-        return saveCommand.getNewElement();
+        T newElement = saveCommand.getNewElement();
+        log.debug("Created: " + newElement);
+        return newElement;
     }
 
     /**
