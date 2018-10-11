@@ -563,10 +563,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
         return odaDriver;
     }
 
-    public static void initDatabase() {
-        initDatabase(JobScheduler.getInitMutex(), new StatusResult());
-    }
-
     public static void initDatabase(ISchedulingRule mutex, final StatusResult result) {
         WorkspaceJob initDbJob = new WorkspaceJob(Messages.Activator_InitDatabase) {
             @Override
@@ -582,7 +578,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
                     } else {
                         CnAWorkspace.getInstance().createDatabaseConfig();
                         Activator.inheritVeriniceContextState();
-                        Activator.checkDbVersion();
                     }
                 } catch (Exception e) {
                     LOG.error("Error while initializing database.", e); //$NON-NLS-1$
