@@ -54,6 +54,7 @@ public abstract class StringUtil {
             filename = filename.replace("ß", "\u00DF"); //$NON-NLS-1$ //$NON-NLS-2$
             filename = filename.replace(":", ""); //$NON-NLS-1$ //$NON-NLS-2$
             filename = filename.replace("\\", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("/", ""); //$NON-NLS-1$ //$NON-NLS-2$
             filename = filename.replace(";", ""); //$NON-NLS-1$ //$NON-NLS-2$
             filename = filename.replace("<", ""); //$NON-NLS-1$ //$NON-NLS-2$
             filename = filename.replace(">", ""); //$NON-NLS-1$ //$NON-NLS-2$
