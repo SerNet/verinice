@@ -601,7 +601,7 @@ public class ModernizedBaseProtectionModelingMigrationTest
         Assert.assertEquals(2, linksDownFromSecondRequirement.size());
         dependencies = getDependenciesFromLinks(linksDownFromSecondRequirement);
         Assert.assertThat(dependencies,
-                JUnitMatchers.<CnATreeElement> hasItems(server1, firstSafeguardServer1));
+                JUnitMatchers.<CnATreeElement> hasItems(server1, secondSafeguardServer1));
 
         server2 = reloadElement(server2);
         Set<CnATreeElement> childrenOfServer2 = server2.getChildren();
@@ -615,12 +615,15 @@ public class ModernizedBaseProtectionModelingMigrationTest
                 findChildWithTypeId(server2, SafeguardGroup.TYPE_ID));
         Assert.assertNotNull(firstSafeguardGroupServer2);
         Assert.assertEquals("global safeguards", firstSafeguardGroupServer2.getTitle());
-        Assert.assertEquals(1l, firstSafeguardGroupServer2.getChildren().size());
+        Assert.assertEquals(2, firstSafeguardGroupServer2.getChildren().size());
 
         CnATreeElement firstSafeguardServer2 = reloadElement(
-                findChildWithTypeId(firstSafeguardGroupServer2, Safeguard.TYPE_ID));
+                findChildWithTitle(firstSafeguardGroupServer2, "safeguard 1"));
         Assert.assertNotNull(firstSafeguardServer2);
-        Assert.assertEquals("safeguard", firstSafeguardServer2.getTitle());
+
+        CnATreeElement secondSafeguardServer2 = reloadElement(
+                findChildWithTitle(firstSafeguardGroupServer2, "safeguard 2"));
+        Assert.assertNotNull(secondSafeguardServer2);
 
         firstRequirement = reloadElement(findChildWithTitle(firstModule, "requirement 1"));
         Assert.assertEquals(BpRequirement.TYPE_ID, firstRequirement.getTypeId());

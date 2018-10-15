@@ -790,6 +790,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     @Override
     public String toString() {
         return new StringBuilder("type: ").append(getTypeId()).append(", uuid: ").append(getUuid())
+                .append(", dbid: ").append(getDbId())
                 .toString();
     }
 

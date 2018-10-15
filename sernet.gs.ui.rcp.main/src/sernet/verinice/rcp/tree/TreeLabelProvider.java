@@ -71,7 +71,8 @@ public class TreeLabelProvider extends LabelProvider {
             String title = getElementTitle(element);
             text = StringUtil.truncate(title, MAX_TEXT_WIDTH);
             if (LOG.isDebugEnabled()) {
-                text = text + " (scope: " + element.getScopeId() + "," + " uu: " + element.getUuid()
+                text = text + " (db: " + element.getDbId() + ", uu: " + element.getUuid()
+                        + ", scope: " + element.getScopeId() 
                         + ", ext: " + element.getExtId() + ")";
             }
         } catch (Exception e) {
