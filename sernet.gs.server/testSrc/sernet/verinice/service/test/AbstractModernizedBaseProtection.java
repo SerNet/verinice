@@ -23,11 +23,15 @@ import static org.junit.Assert.assertNotNull;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.groups.ApplicationGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
@@ -105,7 +109,7 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
      */
     protected SafeguardGroup createSafeguardGroup(CnATreeElement container)
             throws CommandException {
-        return createGroup(container, SafeguardGroup.class);// saveCommand.getNewElement();
+        return createGroup(container, SafeguardGroup.class);
     }
 
     /**
@@ -124,10 +128,39 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
     }
 
     /**
+	 * Create a {@link SafeguardGroup} in the given container.
+	 */
+	protected BpRequirement createBpRequirement(CnATreeElement container) throws CommandException {
+	    return createElement(container, BpRequirement.class);
+	}
+
+	/**
+     * Create a {@link BpRequirementGroup} in the given container.
+     */
+    protected ApplicationGroup createBpApplicationGroup(CnATreeElement container)
+            throws CommandException {
+        return createGroup(container, ApplicationGroup.class);
+    }
+
+    /**
      * Create a {@link SafeguardGroup} in the given container.
      */
-    protected BpRequirement createBpRequirement(CnATreeElement container) throws CommandException {
-        return createElement(container, BpRequirement.class);
+    protected Application createBpApplication(CnATreeElement container) throws CommandException {
+        return createElement(container, Application.class);
+    }
+
+    /**
+     * Create a {@link BpThreatGroup} in the given container.
+     */
+    protected BpThreatGroup createBpTreatGroup(CnATreeElement container) throws CommandException {
+        return createElement(container, BpThreatGroup.class);
+    }
+
+    /**
+     * Create a {@link BpThreatGroup} in the given container.
+     */
+    protected BpThreat createBpTreat(CnATreeElement container) throws CommandException {
+        return createElement(container, BpThreat.class);
     }
 
     protected <T extends CnATreeElement> T reloadElement(T element) throws CommandException {

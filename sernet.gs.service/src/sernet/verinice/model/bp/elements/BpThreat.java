@@ -221,6 +221,19 @@ public class BpThreat extends CnATreeElement
 
     }
 
+    public void setFrequencyWithoutAdditionalSafeguards(String frequency) {
+        getEntity().setSimpleValue(
+                getEntityType().getPropertyType(PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS),
+                frequency);
+
+    }
+
+    public void setImpactWithoutAdditionalSafeguards(String impact) {
+        getEntity().setSimpleValue(
+                getEntityType().getPropertyType(PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS), impact);
+
+    }
+
     public void setFrequencyWithAdditionalSafeguards(String frequency) {
         getEntity().setSimpleValue(
                 getEntityType().getPropertyType(PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS),
