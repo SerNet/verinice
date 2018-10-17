@@ -26,8 +26,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -43,18 +41,17 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.common.multiselectionlist.OptionSelectionHelper;
+import sernet.hui.swt.widgets.AbstractHuiControl;
 import sernet.hui.swt.widgets.Colors;
-import sernet.hui.swt.widgets.IHuiControl;
 import sernet.snutils.AssertException;
 
 /**
  * @author prack
  */
-public class MultiSelectionControl implements IHuiControl {
+public class MultiSelectionControl extends AbstractHuiControl {
 
     private Entity entity;
     private PropertyType type;
-    private Composite parent;
     private Text text;
     private boolean editable = false;
     private Color bgColor;
@@ -64,8 +61,6 @@ public class MultiSelectionControl implements IHuiControl {
     private boolean cnalinkreference;
     private boolean showValidationHint;
     private boolean useValidationGUIHints;
-
-    private Label label;
 
     public Control getControl() {
         return text;
@@ -81,9 +76,9 @@ public class MultiSelectionControl implements IHuiControl {
     public MultiSelectionControl(Entity entity, PropertyType type, Composite parent, boolean edit,
             boolean reference, boolean crudButtons, boolean cnalinkreference,
             boolean showValidationHint, boolean useValidationGuiHints) {
+    	super(parent);
         this.entity = entity;
         this.type = type;
-        this.parent = parent;
         this.editable = edit;
         this.referencesEntities = reference;
         this.crudButtons = crudButtons;
@@ -96,11 +91,11 @@ public class MultiSelectionControl implements IHuiControl {
      * 
      */
     public void create() {
-        label = new Label(parent, SWT.NULL);
+        label = new Label(composite, SWT.NULL);
 
         label.setText(type.getName());
 
-        Composite container = new Composite(parent, SWT.NULL);
+        Composite container = new Composite(composite, SWT.NULL);
         GridLayout contLayout = new GridLayout(2, false);
         contLayout.horizontalSpacing = 5;
         contLayout.marginLeft = 0;
@@ -277,22 +272,4 @@ public class MultiSelectionControl implements IHuiControl {
     public void update() {
         validate();
     }
-
-    private void refontLabel(boolean dye) {
-        FontData fontData = label.getFont().getFontData()[0];
-        Font font;
-        int color;
-        if (dye) {
-            font = new Font(label.getParent().getDisplay(),
-                    new FontData(fontData.getName(), fontData.getHeight(), SWT.BOLD));
-            color = SWT.COLOR_RED;
-        } else {
-            font = new Font(label.getParent().getDisplay(),
-                    new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
-            color = SWT.COLOR_WIDGET_FOREGROUND;
-        }
-        label.setForeground(label.getParent().getDisplay().getSystemColor(color));
-        label.setFont(font);
-    }
-
 }

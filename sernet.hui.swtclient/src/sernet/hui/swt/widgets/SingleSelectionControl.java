@@ -26,8 +26,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -48,13 +46,11 @@ import sernet.snutils.AssertException;
  * 
  * @author koderman[at]sernet[dot]de
  */
-public class SingleSelectionControl implements IHuiControl {
+public class SingleSelectionControl extends AbstractHuiControl {
 
     private Entity entity;
 
     private PropertyType fieldType;
-
-    private Composite composite;
 
     private Combo combo;
 
@@ -67,8 +63,6 @@ public class SingleSelectionControl implements IHuiControl {
     private boolean showValidationHint;
 
     private boolean useValidationGUIHints;
-
-    private Label label;
 
     public Control getControl() {
         return combo;
@@ -85,9 +79,9 @@ public class SingleSelectionControl implements IHuiControl {
      */
     public SingleSelectionControl(Entity dyndoc, PropertyType type, Composite parent, boolean edit,
             boolean showValidationHint, boolean useValidationGuiHints) {
+    	super(parent);
         this.entity = dyndoc;
         this.fieldType = type;
-        this.composite = parent;
         this.editable = edit;
         this.showValidationHint = showValidationHint;
         this.useValidationGUIHints = useValidationGuiHints;
@@ -228,22 +222,4 @@ public class SingleSelectionControl implements IHuiControl {
 
         }
     }
-
-    private void refontLabel(boolean dye) {
-        FontData fontData = label.getFont().getFontData()[0];
-        Font font;
-        int color;
-        if (dye) {
-            font = new Font(composite.getDisplay(),
-                    new FontData(fontData.getName(), fontData.getHeight(), SWT.BOLD));
-            color = SWT.COLOR_RED;
-        } else {
-            font = new Font(composite.getDisplay(),
-                    new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
-            color = SWT.COLOR_WIDGET_FOREGROUND;
-        }
-        label.setForeground(composite.getDisplay().getSystemColor(color));
-        label.setFont(font);
-    }
-
 }
