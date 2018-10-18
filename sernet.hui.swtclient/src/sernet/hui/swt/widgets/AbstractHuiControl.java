@@ -29,40 +29,37 @@ import org.eclipse.swt.widgets.Label;
  */
 public abstract class AbstractHuiControl implements IHuiControl {
 
+	protected Composite composite;
+	protected Label label;
+	protected Font currentFont;
+
 	public AbstractHuiControl(Composite composite) {
 		super();
 		this.composite = composite;
 		this.composite.addDisposeListener(l->{
-			if (oldfont != null && !oldfont.isDisposed()) {
-				oldfont.dispose();
+			if (currentFont != null && !currentFont.isDisposed()) {
+				currentFont.dispose();
 			}
 		});
 	}
 
-	protected Composite composite;
-	protected Label label;
-	protected Font oldfont;
-
-	protected void refontLabel(boolean dye) {
-	    FontData fontData = label.getFont().getFontData()[0];
-	    Font font;
-	    int color;
-		if (dye) {
-			if (oldfont != null && !oldfont.isDisposed()) {
-				oldfont.dispose();
+	protected void refontLabel(boolean showValidationHint) {
+		if (showValidationHint) {
+			FontData fontData = label.getFont().getFontData()[0];
+			if (currentFont != null && !currentFont.isDisposed()) {
+				currentFont.dispose();
 			}
-			font = new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.BOLD));
-			color = SWT.COLOR_RED;
-			label.setForeground(composite.getDisplay().getSystemColor(color));
-			label.setFont(font);
-			oldfont = font;
-		} else  if (oldfont != null && !oldfont.isDisposed()) {
-	    	oldfont.dispose();
-	        font = new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
-	        color = SWT.COLOR_WIDGET_FOREGROUND;
-	        label.setForeground(composite.getDisplay().getSystemColor(color));
-	        label.setFont(font);
-	        oldfont = font;
+			Font newFont = new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.BOLD));
+			label.setForeground(composite.getDisplay().getSystemColor(SWT.COLOR_RED));
+			label.setFont(newFont);
+			currentFont = newFont;
+		} else  if (currentFont != null && !currentFont.isDisposed()) {
+			FontData fontData = label.getFont().getFontData()[0];
+	    	currentFont.dispose();
+	    	Font newFont = new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
+	        label.setForeground(composite.getDisplay().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND));
+	        label.setFont(newFont);
+	        currentFont = newFont;
 	    }
 	}
 
