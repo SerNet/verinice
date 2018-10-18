@@ -497,8 +497,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                     propertyTypeId);
             Property p = new Property();
 
-            if (propertyType == null) {
-                logger.warn("Property-type was not found in SNCA.xml: " + propertyTypeId
+            if (propertyType == null && logger.isInfoEnabled()) {
+                logger.info("Property-type was not found in SNCA.xml: " + propertyTypeId
                         + ", entity type: " + this.entityType);
             }
 
@@ -514,8 +514,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                         found = true;
                     }
                 }
-                if (!found) {
-                    logger.warn(
+                if (!found && logger.isInfoEnabled()) {
+                    logger.info(
                             "No value found for option property: " + propertyTypeId + " of entity: "
                                     + this.entityType + ". Importing unmapped value: " + value);
                 }
@@ -798,8 +798,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                     propertyTypeId);
             Property p = new Property();
 
-            if (propertyType == null) {
-                logger.warn("Property-type was not found in SNCA.xml: " + propertyTypeId
+            if (propertyType == null && logger.isInfoEnabled()) {
+                logger.info("Property-type was not found in SNCA.xml: " + propertyTypeId
                         + ", entity type: " + this.entityType);
             }
 
@@ -814,8 +814,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                         found = true;
                     }
                 }
-                if (!found) {
-                    logger.warn(
+                if (!found && logger.isInfoEnabled()) {
+                    logger.info(
                             "No value found for option property: " + propertyTypeId + " of entity: "
                                     + this.entityType + ". Importing unmapped value: " + value);
                 }
