@@ -69,6 +69,7 @@
 	        <action id="derivestatus"/>
 	        <action id="documentview" />
 	        <action id="editlinks" />
+          <action id="editriskconfiguration" />
           	<action id="exportlinktable" />
 	        <action id="files" />
 	        <action id="generateauditreport" />
@@ -101,7 +102,6 @@
 	        <action id="cnavalidation" />
 	        <action id="showallfiles" />
             <action id="migrate_data_protection" />
-            <action id="editriskconfiguration" />
         </profile>
     </profiles>
     <userprofiles>
