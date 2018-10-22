@@ -8484,7 +8484,6 @@ Wurden bereits weitere Stellen informiert?
         <option id="process_bg_benachrichtigung_nichterfolgt" name="Nicht erfolgt"/>
       </huiproperty>
       <huiproperty id="process_pg_benachrichtigung_begruendung" inputtype="multioption" name="Grund für Nichtbenachrichtigung" tags="Privacy" visible="false">
-        <depends option="process_pg_benachrichtigung" value="process_bg_benachrichtigung_nichterfolgt"/>
         <option id="process_bg_benachrichtigung_begruendung_0" name="Keine Erstspeicherung"/>
         <option id="process_bg_benachrichtigung_begruendung_1" name="Kenntnis auf andere Weise"/>
         <option id="process_bg_benachrichtigung_begruendung_2" name="Speicherung aufg. Aufbewahrungsvorschriften / unverh. Aufwand"/>
@@ -9925,7 +9924,6 @@ Wurden bereits weitere Stellen informiert?
 	       <option id="bp_businessprocess_bg_benachrichtigung_nichterfolgt" name="Nicht erfolgt"/>
 	     </huiproperty>
 	     <huiproperty id="bp_businessprocess_pg_benachrichtigung_begruendung" inputtype="multioption" name="Grund für Nichtbenachrichtigung" tags="Privacy" visible="false">
-	       <depends option="bp_businessprocess_pg_benachrichtigung" value="bp_businessprocess_bg_benachrichtigung_nichterfolgt"/>
 	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_0" name="Keine Erstspeicherung"/>
 	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_1" name="Kenntnis auf andere Weise"/>
 	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_2" name="Speicherung aufg. Aufbewahrungsvorschriften / unverh. Aufwand"/>
