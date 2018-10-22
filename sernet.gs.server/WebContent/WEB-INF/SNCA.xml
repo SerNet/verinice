@@ -10318,6 +10318,67 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_person_org_unit" name="=Org. unit" />
         <huiproperty id="bp_person_explanation" name="Explanation" />
         <huiproperty id="bp_person_tag" name="Tags" />
+		<huiproperty id="bp_person_roles" inputtype="multioption" name="Roles" required="false" >
+			<option id="bp_person_role_0" name="Administrator" />
+			<option id="bp_person_role_2" name="Anwendungsentwickler" />
+			<option id="bp_person_role_3" name="Archivverwalter" />
+			<option id="bp_person_role_4" name="Bauleiter" />
+			<option id="bp_person_role_5"
+				name="Behörden-/Unternehmensleitung" />
+			<option id="bp_person_role_6" name="Benutzer" />
+			<option id="bp_person_role_7" name="Beschaffer" />
+			<option id="bp_person_role_8" name="Brandschutzbeauftragter" />
+			<option id="bp_person_role_9" name="Datenschutzbeauftragter" />
+			<option id="bp_person_role_43" name="Entwickler" />
+			<option id="bp_person_role_10" name="Errichterfirma" />
+			<option id="bp_person_role_11" name="Fachabteilung" />
+			<option id="bp_person_role_42" name="Fachverantwortliche" />
+			<option id="bp_person_role_12" name="Fax-Poststelle" />
+			<option id="bp_person_role_13" name="Fax-Verantwortlicher" />
+			<option id="bp_person_role_14" name="Haustechnik" />
+			<option id="bp_person_role_16" name="Innerer Dienst" />
+			<option id="bp_person_role_17" name="IT-Benutzer" />
+			<option id="bp_person_role_18"
+				name="IT-Sicherheitsbeauftragter" />
+			<option id="bp_person_role_19" name="IT-Sicherheitsmanagement" />
+			<option id="bp_person_role_20"
+				name="IT-Verfahrensverantwortlicher" />
+			<option id="bp_person_role_46" name="Leiter Beschaffung" />
+			<option id="bp_person_role_44" name="Leiter Entwicklung" />
+			<option id="bp_person_role_47" name="Leiter Fachabteilung" />
+			<option id="bp_person_role_48" name="Leiter Haustechnik" />
+			<option id="bp_person_role_49" name="Leiter Innerer Dienst" />
+			<option id="bp_person_role_45" name="Leiter IT" />
+			<option id="bp_person_role_50" name="Leiter Organisation" />
+			<option id="bp_person_role_51" name="Leiter Personal" />
+			<option id="bp_person_role_22" name="Mitarbeiter" />
+			<option id="bp_person_role_24" name="Notfall-Verantwortliche" />
+			<option id="bp_person_role_25" name="Personalabteilung" />
+			<option id="bp_person_role_26" name="Personalrat/Betriebsrat" />
+			<option id="bp_person_role_1" name="Planer" />
+			<option id="bp_person_role_27" name="Poststelle" />
+			<option id="bp_person_role_40" name="Pressestelle" />
+			<option id="bp_person_role_28" name="Revisor" />
+			<option id="bp_person_role_29" name="Telearbeiter" />
+			<option id="bp_person_role_35" name="Tester" />
+			<option id="bp_person_role_30"
+				name="TK-Anlagen-Verantwortlicher" />
+			<option id="bp_person_role_32"
+				name="Verantwortliche der einzelnen IT-Anwendungen" />
+			<option id="bp_person_role_33"
+				name="Verantwortliche für die Datensicherung" />
+			<option id="bp_person_role_34" name="Vorgesetzte" />
+			<option id="bp_person_role_39" name="Fax-Absender" />
+			<option id="bp_person_role_38" name="Fax-Empfänger" />
+			<option id="bp_person_role_36" name="IT Helpdesk" />
+			<option id="bp_person_role_37" name="Hersteller" />
+			<option id="bp_person_role_15" name="Hausverwaltung" />
+			<option id="bp_person_role_21" name="Leitung" />
+			<option id="bp_person_role_23" name="Netzplaner" />
+			<option id="bp_person_role_31" name="Unternehmensleitung" />
+			<option id="bp_person_role_41" name="Vertretung" />
+		</huiproperty>
+        
         <huiproperty id="bp_person_document" isURL="true" name="Document" />
     </huientity>
     <huientity id="bp_person_group" name="Person Group">
