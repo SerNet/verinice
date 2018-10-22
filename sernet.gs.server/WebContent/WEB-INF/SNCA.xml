@@ -10338,6 +10338,9 @@ Wurden bereits weitere Stellen informiert?
         <huirelation to="bp_device" id="rel_bp_requirement_bp_device" name="models"  reversename="modeled with" />
         <huirelation to="bp_network" id="rel_bp_requirement_bp_network" name="models"  reversename="modeled with" />
         <huirelation to="bp_room" id="rel_bp_requirement_bp_room" name="models"  reversename="modeled with" />
+   		<huirelation id="rel_bp_requirement_next_revision_by" name="next revision by" reversename="next revision of" to="bp_person"/>
+   		<huirelation id="rel_bp_requirement_last_revision_by" name="last revision by" reversename="last revision of" to="bp_person"/>
+   		<huirelation id="rel_bp_requirement_implementation_by" name="implementation by" reversename="implementation of" to="bp_person"/>
 
         <huiproperty id="bp_requirement_id" name="Identifier" />
         <huiproperty id="bp_requirement_name" name="Title" required="true" />
@@ -10885,6 +10888,10 @@ Wurden bereits weitere Stellen informiert?
     </huientity>
 
     <huientity id="bp_safeguard" name="Safeguard">
+       	<huirelation id="rel_bp_safeguard_next_revision_by" name="next revision by" reversename="next revision of" to="bp_person"/>
+   		<huirelation id="rel_bp_safeguard_last_revision_by" name="last revision by" reversename="last revision of" to="bp_person"/>
+   		<huirelation id="rel_bp_safeguard_implementation_by" name="implementation by" reversename="implementation of" to="bp_person"/>
+    
         <huiproperty id="bp_safeguard_id" name="Identifier" />
         <huiproperty id="bp_safeguard_name" name="Title" required="true" />
         <huiproperty id="bp_safeguard_qualifier" name="Qualifier" required="true" inputtype="singleoption" >
