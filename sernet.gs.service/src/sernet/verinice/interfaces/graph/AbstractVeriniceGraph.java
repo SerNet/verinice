@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.jgrapht.Graph;
 
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -119,6 +118,10 @@ public abstract  class AbstractVeriniceGraph implements VeriniceGraph {
 
     @Override
     public CnATreeElement getParent(CnATreeElement element) {
+        if (log.isDebugEnabled()) {
+            log.debug("Getting parent of element: " + element + ", parent DB ID is: "
+                    + element.getParentId());
+        }
         CnATreeElement parent = null;
         int parentId = element.getParentId();
         Set<CnATreeElement> relatives = getLinkTargets(element, Edge.RELATIVES);

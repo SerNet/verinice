@@ -34,16 +34,18 @@
 		<level value="INFO" />
 	</logger>
 
-	<!-- Add settings for packages here -->
-	<!-- <logger name="sernet.gs.ui.rcp.main.service"> 
-		<level value="DEBUG" /> 
-	</logger> -->
+	<!-- Log the migration to the new modeling in ITBP -->  
+	<logger name="sernet.verinice.service.bp.migration.MigrateItNetworkJob">
+		<level value="INFO" />
+	</logger>
+	<logger name="sernet.verinice.service.bp.migration.MigrateElementJobImpl">
+		<level value="INFO" />
+	</logger>
 
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />
 		<appender-ref ref="FILE" />
-		<appender-ref ref="STDOUT" />
 	</root>
 
 </log4j:configuration>

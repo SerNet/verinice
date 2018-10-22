@@ -1,13 +1,11 @@
 package sernet.verinice.service.test;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.annotation.Resource;
+
 import org.apache.log4j.Logger;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.matchers.JUnitMatchers;
@@ -27,8 +25,7 @@ import sernet.verinice.model.bp.groups.ItSystemGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.RemoveElement;
-import sernet.verinice.service.commands.migration.MigrateDbTo1_06D;
+import sernet.verinice.service.bp.migration.ModelingMigrationService;
 
 @TransactionConfiguration(transactionManager = "txManager", defaultRollback = false)
 @Transactional
@@ -38,68 +35,10 @@ public class ModernizedBaseProtectionModelingMigrationTest
     private static final Logger log = Logger
             .getLogger(ModernizedBaseProtectionModelingMigrationTest.class);
 
+    @Resource(name = "modelingMigrationServiceImpl")
+    private ModelingMigrationService migrationService;
+
     private ItNetwork network;
-
-    @After
-    public void tearDown() throws CommandException {
-        RemoveElement<CnATreeElement> removeElementCmd = new RemoveElement<>(network);
-        commandService.executeCommand(removeElementCmd);
-        elementDao.clear();
-    }
-
-    @Test
-    @Transactional
-    @Rollback(true)
-    public void migrate_it_network_with_single_requirement_and_safeguard_without_identifiers()
-            throws CommandException {
-        network = createNewBPOrganization();
-        BpRequirementGroup globalModules = createRequirementGroup(network, "global modules");
-        BpRequirementGroup module1 = createRequirementGroup(globalModules, "module 1");
-        BpRequirement requirement1 = createBpRequirement(module1, "requirement 1");
-        createLink(requirement1, network, BpRequirement.REL_BP_REQUIREMENT_BP_ITNETWORK);
-        SafeguardGroup globalSafeguards = createSafeguardGroup(network, "global safeguards");
-        SafeguardGroup safeguardGroup1 = createSafeguardGroup(globalSafeguards, "safeguards 1");
-        Safeguard safeguard = createSafeguard(safeguardGroup1, "safeguard");
-        createLink(requirement1, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
-
-        elementDao.flush();
-        elementDao.clear();
-
-        MigrateDbTo1_06D migrationCommand = new MigrateDbTo1_06D(
-                Collections.singletonList(network.getDbId()));
-        commandService.executeCommand(migrationCommand);
-
-        network = reloadElement(network);
-
-        Set<CnATreeElement> childrenOfNetwork = network.getChildren();
-        Assert.assertEquals(1l, childrenOfNetwork.stream()
-                .filter(item -> item.getTypeId().equals(BpRequirementGroup.TYPE_ID)).count());
-        CnATreeElement firstModule = reloadElement(
-                findChildWithTypeId(network, BpRequirementGroup.TYPE_ID));
-        Assert.assertEquals("module 1", firstModule.getTitle());
-        Set<CnATreeElement> childrenOfModule1 = firstModule.getChildren();
-        Assert.assertEquals(1, childrenOfModule1.size());
-        CnATreeElement firstRequirement = reloadElement(
-                findChildWithTypeId(firstModule, BpRequirement.TYPE_ID));
-        Assert.assertEquals("requirement 1", firstRequirement.getTitle());
-        Set<CnALink> linksDownFromFirstRequirement = firstRequirement.getLinksDown();
-        Assert.assertEquals(2, linksDownFromFirstRequirement.size());
-        Set<CnATreeElement> dependencies = getDependenciesFromLinks(linksDownFromFirstRequirement);
-        Assert.assertThat(dependencies,
-                JUnitMatchers.<CnATreeElement> hasItems(network, safeguard));
-
-        Assert.assertEquals(1l, childrenOfNetwork.stream()
-                .filter(item -> item.getTypeId().equals(SafeguardGroup.TYPE_ID)).count());
-        CnATreeElement firstSafeguardGroup = reloadElement(
-                findChildWithTypeId(network, SafeguardGroup.TYPE_ID));
-        Assert.assertEquals("safeguards 1", firstSafeguardGroup.getTitle());
-        Set<CnATreeElement> childrenOfFirstSafeguardGroup = firstSafeguardGroup.getChildren();
-        Assert.assertEquals(1, childrenOfFirstSafeguardGroup.size());
-        CnATreeElement firstSafeguard = reloadElement(
-                findChildWithTypeId(firstSafeguardGroup, Safeguard.TYPE_ID));
-        Assert.assertEquals("safeguard", firstSafeguard.getTitle());
-
-    }
 
     @Test
     @Transactional
@@ -118,20 +57,15 @@ public class ModernizedBaseProtectionModelingMigrationTest
         Safeguard safeguard = createSafeguard(safeguardGroup1, "S1S1", "safeguard");
         createLink(requirement1, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
 
-        elementDao.flush();
-        elementDao.clear();
+        flushAndClear();
 
-        MigrateDbTo1_06D migrationCommand = new MigrateDbTo1_06D(
-                Collections.singletonList(network.getDbId()));
-        commandService.executeCommand(migrationCommand);
+        migrateModelingOfItNetwork(network.getDbId());
 
         network = reloadElement(network);
 
-        Set<CnATreeElement> childrenOfNetwork = network.getChildren();
-        Assert.assertEquals(1l, childrenOfNetwork.stream()
-                .filter(item -> item.getTypeId().equals(BpRequirementGroup.TYPE_ID)).count());
         CnATreeElement firstModule = reloadElement(
-                findChildWithTypeId(network, BpRequirementGroup.TYPE_ID));
+                findChildWithTitle(network, "module 1"));
+        Assert.assertNotNull(firstModule);
         Assert.assertEquals("module 1", firstModule.getTitle());
         Set<CnATreeElement> childrenOfModule1 = firstModule.getChildren();
         Assert.assertEquals(1, childrenOfModule1.size());
@@ -139,10 +73,9 @@ public class ModernizedBaseProtectionModelingMigrationTest
                 findChildWithTypeId(firstModule, BpRequirement.TYPE_ID));
         Assert.assertEquals("requirement 1", firstRequirement.getTitle());
 
-        Assert.assertEquals(1l, childrenOfNetwork.stream()
-                .filter(item -> item.getTypeId().equals(SafeguardGroup.TYPE_ID)).count());
         CnATreeElement firstSafeguardGroup = reloadElement(
-                findChildWithTypeId(network, SafeguardGroup.TYPE_ID));
+                findChildWithTitle(network, "safeguards 1"));
+        Assert.assertNotNull(firstSafeguardGroup);
         Assert.assertEquals("safeguards 1", firstSafeguardGroup.getTitle());
         Set<CnATreeElement> childrenOfFirstSafeguardGroup = firstSafeguardGroup.getChildren();
         Assert.assertEquals(1, childrenOfFirstSafeguardGroup.size());
@@ -163,19 +96,16 @@ public class ModernizedBaseProtectionModelingMigrationTest
     @Rollback(true)
     public void migrate_single_it_system_with_single_requirement() throws CommandException {
         network = createNewBPOrganization();
-        ItSystemGroup itSystems = createGroup(network, ItSystemGroup.class);
+        ItSystemGroup itSystems = createGroup(network, ItSystemGroup.class, "ItSystemGroup");
         ItSystem server1 = createElement(itSystems, ItSystem.class, "server 1");
         BpRequirementGroup globalModules = createRequirementGroup(network, "global modules");
         BpRequirementGroup module1 = createRequirementGroup(globalModules, "module 1");
         BpRequirement requirement1 = createBpRequirement(module1, "requirement 1");
         createLink(requirement1, server1, BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
 
-        elementDao.flush();
-        elementDao.clear();
+        flushAndClear();
 
-        MigrateDbTo1_06D migrationCommand = new MigrateDbTo1_06D(
-                Collections.singletonList(network.getDbId()));
-        commandService.executeCommand(migrationCommand);
+        migrateModelingOfItNetwork(network.getDbId());
 
         server1 = reloadElement(server1);
         Set<CnATreeElement> childrenOfServer1 = server1.getChildren();
@@ -195,6 +125,16 @@ public class ModernizedBaseProtectionModelingMigrationTest
 
     }
 
+    private void migrateModelingOfItNetwork(Integer itNetworkId) {
+        migrationService.migrateModelingOfItNetwork(itNetworkId);
+        elementDao.clear();
+    }
+
+    private void flushAndClear() {
+        elementDao.flush();
+        elementDao.clear();
+    }
+
     @Test
     @Transactional
     @Rollback(true)
@@ -202,17 +142,14 @@ public class ModernizedBaseProtectionModelingMigrationTest
         network = createNewBPOrganization();
         ItSystemGroup itSystems = createGroup(network, ItSystemGroup.class);
         ItSystem server1 = createElement(itSystems, ItSystem.class, "server 1");
-        BpThreatGroup globalThreats = createThreatGroup(network, "global threats");
-        BpThreatGroup threatGroup1 = createThreatGroup(globalThreats, "threats 1");
-        BpThreat threat1 = createThreat(threatGroup1, "threat 1");
+        BpThreatGroup globalThreats = createBpThreatGroup(network, "global threats");
+        BpThreatGroup threatGroup1 = createBpThreatGroup(globalThreats, "threats 1");
+        BpThreat threat1 = createBpThreat(threatGroup1, "threat 1");
         createLink(threat1, server1, BpThreat.REL_BP_THREAT_BP_ITSYSTEM);
 
-        elementDao.flush();
-        elementDao.clear();
+        flushAndClear();
 
-        MigrateDbTo1_06D migrationCommand = new MigrateDbTo1_06D(
-                Collections.singletonList(network.getDbId()));
-        commandService.executeCommand(migrationCommand);
+        migrateModelingOfItNetwork(network.getDbId());
 
         server1 = reloadElement(server1);
         Set<CnATreeElement> childrenOfServer1 = server1.getChildren();
@@ -246,12 +183,9 @@ public class ModernizedBaseProtectionModelingMigrationTest
         createLink(requirement1, server1, BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
         createLink(requirement1, server2, BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
 
-        elementDao.flush();
-        elementDao.clear();
+        flushAndClear();
 
-        MigrateDbTo1_06D migrationCommand = new MigrateDbTo1_06D(
-                Collections.singletonList(network.getDbId()));
-        commandService.executeCommand(migrationCommand);
+        migrateModelingOfItNetwork(network.getDbId());
 
         server1 = reloadElement(server1);
         Set<CnATreeElement> childrenOfServer1 = server1.getChildren();
@@ -293,18 +227,15 @@ public class ModernizedBaseProtectionModelingMigrationTest
         ItSystemGroup itSystems = createGroup(network, ItSystemGroup.class);
         ItSystem server1 = createElement(itSystems, ItSystem.class, "server 1");
         ItSystem server2 = createElement(itSystems, ItSystem.class, "server 2");
-        BpThreatGroup globalThreats = createThreatGroup(network, "global threats");
-        BpThreatGroup threatGroup1 = createThreatGroup(globalThreats, "threats 1");
-        BpThreat threat1 = createThreat(threatGroup1, "threat 1");
+        BpThreatGroup globalThreats = createBpThreatGroup(network, "global threats");
+        BpThreatGroup threatGroup1 = createBpThreatGroup(globalThreats, "threats 1");
+        BpThreat threat1 = createBpThreat(threatGroup1, "threat 1");
         createLink(threat1, server1, BpThreat.REL_BP_THREAT_BP_ITSYSTEM);
         createLink(threat1, server2, BpThreat.REL_BP_THREAT_BP_ITSYSTEM);
 
-        elementDao.flush();
-        elementDao.clear();
+        flushAndClear();
 
-        MigrateDbTo1_06D migrationCommand = new MigrateDbTo1_06D(
-                Collections.singletonList(network.getDbId()));
-        commandService.executeCommand(migrationCommand);
+        migrateModelingOfItNetwork(network.getDbId());
 
         server1 = reloadElement(server1);
         Set<CnATreeElement> childrenOfServer1 = server1.getChildren();
@@ -341,185 +272,6 @@ public class ModernizedBaseProtectionModelingMigrationTest
     @Test
     @Transactional
     @Rollback(true)
-    public void migrate_server_with_two_requirements_and_one_safeguard() throws CommandException {
-
-        network = createNewBPOrganization();
-        ItSystemGroup itSystems = createGroup(network, ItSystemGroup.class);
-        CnATreeElement server1 = createElement(itSystems, ItSystem.class, "server 1");
-        BpRequirementGroup globalModules = createRequirementGroup(network, "global modules");
-        BpRequirementGroup module1 = createRequirementGroup(globalModules, "M1", "module 1");
-        BpRequirement requirement1 = createBpRequirement(module1, "requirement 1");
-        BpRequirement requirement2 = createBpRequirement(module1, "requirement 2");
-        SafeguardGroup globalSafeguards = createSafeguardGroup(network, "GS", "global safeguards");
-        Safeguard safeguard = createSafeguard(globalSafeguards, "S1", "safeguard");
-        createLink(requirement1, server1, BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
-        createLink(requirement2, server1, BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
-        createLink(requirement1, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
-        createLink(requirement2, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
-
-        elementDao.flush();
-        elementDao.clear();
-
-        MigrateDbTo1_06D migrationCommand = new MigrateDbTo1_06D(
-                Collections.singletonList(network.getDbId()));
-        commandService.executeCommand(migrationCommand);
-
-        server1 = reloadElement(server1);
-        Set<CnATreeElement> childrenOfServer1 = server1.getChildren();
-        Assert.assertEquals(2, childrenOfServer1.size());
-
-        CnATreeElement firstModule = reloadElement(
-                findChildWithTypeId(server1, BpRequirementGroup.TYPE_ID));
-        Assert.assertEquals("module 1", firstModule.getTitle());
-        Set<CnATreeElement> childrenOfModule1 = firstModule.getChildren();
-        Assert.assertEquals(2, childrenOfModule1.size());
-        CnATreeElement firstRequirement = reloadElement(
-                findChildWithTitle(firstModule, "requirement 1"));
-        Assert.assertNotNull(firstRequirement);
-
-        CnATreeElement firstSafeguardGroup = reloadElement(
-                findChildWithTypeId(server1, SafeguardGroup.TYPE_ID));
-        Assert.assertNotNull(firstSafeguardGroup);
-        Assert.assertEquals("global safeguards", firstSafeguardGroup.getTitle());
-
-        CnATreeElement firstSafeguard = reloadElement(
-                findChildWithTypeId(firstSafeguardGroup, Safeguard.TYPE_ID));
-        Assert.assertNotNull(firstSafeguard);
-        Assert.assertEquals("safeguard", firstSafeguard.getTitle());
-
-        Set<CnALink> linksDownFromFirstRequirement = firstRequirement.getLinksDown();
-
-        Assert.assertEquals(2, linksDownFromFirstRequirement.size());
-        Set<CnATreeElement> dependencies = getDependenciesFromLinks(linksDownFromFirstRequirement);
-        Assert.assertThat(dependencies,
-                JUnitMatchers.<CnATreeElement> hasItems(server1, firstSafeguard));
-
-        CnATreeElement secondRequirement = reloadElement(
-                findChildWithTitle(firstModule, "requirement 2"));
-        Assert.assertNotNull(secondRequirement);
-        Set<CnALink> linksDownFromSecondRequirement = secondRequirement.getLinksDown();
-
-        Assert.assertEquals(2, linksDownFromSecondRequirement.size());
-        dependencies = getDependenciesFromLinks(linksDownFromSecondRequirement);
-        Assert.assertThat(dependencies,
-                JUnitMatchers.<CnATreeElement> hasItems(server1, firstSafeguard));
-
-    }
-
-    @Test
-    @Transactional
-    @Rollback(true)
-    public void migrate_two_servers_sharing_two_requirements_and_one_safeguard()
-            throws CommandException {
-        network = createNewBPOrganization();
-
-        ItSystemGroup itSystems = createGroup(network, ItSystemGroup.class);
-        ItSystem server1 = createElement(itSystems, ItSystem.class, "server 1");
-        ItSystem server2 = createElement(itSystems, ItSystem.class, "server 2");
-
-        BpRequirementGroup globalModules = createRequirementGroup(network, "global modules");
-        BpRequirementGroup module1 = createRequirementGroup(globalModules, "M1", "module 1");
-        BpRequirement requirement1 = createBpRequirement(module1, "M1R2", "requirement 1");
-        BpRequirement requirement2 = createBpRequirement(module1, "M1R2", "requirement 2");
-
-        SafeguardGroup globalSafeguards = createSafeguardGroup(network, "S", "global safeguards");
-        Safeguard safeguard = createSafeguard(globalSafeguards, "S1", "safeguard");
-
-        createLink(requirement1, server1, BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
-        createLink(requirement1, server2, BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
-        createLink(requirement1, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
-
-        createLink(requirement2, server1, BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
-        createLink(requirement2, server2, BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
-        createLink(requirement2, safeguard, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
-
-        elementDao.flush();
-        elementDao.clear();
-
-        MigrateDbTo1_06D migrationCommand = new MigrateDbTo1_06D(
-                Collections.singletonList(network.getDbId()));
-        commandService.executeCommand(migrationCommand);
-
-        assertEquals(2, getNumberOfItemsInScope(SafeguardGroup.TYPE_ID, network.getScopeId()));
-        assertEquals(2, getNumberOfItemsInScope(BpRequirementGroup.TYPE_ID, network.getScopeId()));
-        assertEquals(2, getNumberOfItemsInScope(Safeguard.TYPE_ID, network.getScopeId()));
-        assertEquals(4, getNumberOfItemsInScope(BpRequirement.TYPE_ID, network.getScopeId()));
-
-        server1 = reloadElement(server1);
-        Set<CnATreeElement> childrenOfServer1 = server1.getChildren();
-
-        Assert.assertEquals(2, childrenOfServer1.size());
-        Assert.assertEquals(1l, childrenOfServer1.stream()
-                .filter(child -> child.getTypeId().equals(BpRequirementGroup.TYPE_ID)).count());
-        CnATreeElement firstModule = reloadElement(
-                findChildWithTypeId(server1, BpRequirementGroup.TYPE_ID));
-        Assert.assertEquals("module 1", firstModule.getTitle());
-        Set<CnATreeElement> childrenOfModule1 = firstModule.getChildren();
-        Assert.assertEquals(2, childrenOfModule1.size());
-        CnATreeElement firstRequirement = reloadElement(
-                findChildWithTitle(firstModule, "requirement 1"));
-
-        CnATreeElement firstSafeguardGroupServer1 = reloadElement(
-                findChildWithTypeId(server1, SafeguardGroup.TYPE_ID));
-        Assert.assertNotNull(firstSafeguardGroupServer1);
-        Assert.assertEquals("global safeguards", firstSafeguardGroupServer1.getTitle());
-        Assert.assertEquals(1l, firstSafeguardGroupServer1.getChildren().size());
-
-        CnATreeElement firstSafeguardServer1 = reloadElement(
-                findChildWithTypeId(firstSafeguardGroupServer1, Safeguard.TYPE_ID));
-        Assert.assertNotNull(firstSafeguardServer1);
-        Assert.assertEquals("safeguard", firstSafeguardServer1.getTitle());
-
-        Assert.assertNotNull(firstRequirement);
-        Set<CnALink> linksDownFromFirstRequirement = firstRequirement.getLinksDown();
-
-        Assert.assertEquals(2, linksDownFromFirstRequirement.size());
-
-        Set<CnATreeElement> dependencies = getDependenciesFromLinks(linksDownFromFirstRequirement);
-        Assert.assertThat(dependencies,
-                JUnitMatchers.<CnATreeElement> hasItems(server1, firstSafeguardServer1));
-
-        CnATreeElement secondRequirement = reloadElement(
-                findChildWithTitle(firstModule, "requirement 2"));
-        Assert.assertNotNull(secondRequirement);
-        Set<CnALink> linksDownFromSecondRequirement = secondRequirement.getLinksDown();
-
-        Assert.assertEquals(2, linksDownFromSecondRequirement.size());
-        dependencies = getDependenciesFromLinks(linksDownFromSecondRequirement);
-        Assert.assertThat(dependencies,
-                JUnitMatchers.<CnATreeElement> hasItems(server1, firstSafeguardServer1));
-
-        server2 = reloadElement(server2);
-        Set<CnATreeElement> childrenOfServer2 = server2.getChildren();
-        Assert.assertEquals(2, childrenOfServer2.size());
-        firstModule = reloadElement(findChildWithTypeId(server2, BpRequirementGroup.TYPE_ID));
-        Assert.assertEquals("module 1", firstModule.getTitle());
-        childrenOfModule1 = firstModule.getChildren();
-        Assert.assertEquals(2, childrenOfModule1.size());
-
-        CnATreeElement firstSafeguardGroupServer2 = reloadElement(
-                findChildWithTypeId(server2, SafeguardGroup.TYPE_ID));
-        Assert.assertNotNull(firstSafeguardGroupServer2);
-        Assert.assertEquals("global safeguards", firstSafeguardGroupServer2.getTitle());
-        Assert.assertEquals(1l, firstSafeguardGroupServer2.getChildren().size());
-
-        CnATreeElement firstSafeguardServer2 = reloadElement(
-                findChildWithTypeId(firstSafeguardGroupServer2, Safeguard.TYPE_ID));
-        Assert.assertNotNull(firstSafeguardServer2);
-        Assert.assertEquals("safeguard", firstSafeguardServer2.getTitle());
-
-        firstRequirement = reloadElement(findChildWithTitle(firstModule, "requirement 1"));
-        Assert.assertEquals(BpRequirement.TYPE_ID, firstRequirement.getTypeId());
-        linksDownFromFirstRequirement = firstRequirement.getLinksDown();
-        Assert.assertEquals(2, linksDownFromFirstRequirement.size());
-        dependencies = getDependenciesFromLinks(linksDownFromFirstRequirement);
-        Assert.assertThat(dependencies,
-                JUnitMatchers.<CnATreeElement> hasItems(server2, firstSafeguardServer2));
-    }
-
-    @Test
-    @Transactional
-    @Rollback(true)
     public void migrate_two_servers_sharing_two_requirements_and_two_safeguard()
             throws CommandException {
         network = createNewBPOrganization();
@@ -530,12 +282,14 @@ public class ModernizedBaseProtectionModelingMigrationTest
 
         BpRequirementGroup globalModules = createRequirementGroup(network, "global modules");
         BpRequirementGroup module1 = createRequirementGroup(globalModules, "M1", "module 1");
-        BpRequirement requirement1 = createBpRequirement(module1, "M1R2", "requirement 1");
+        BpRequirement requirement1 = createBpRequirement(module1, "M1R1", "requirement 1");
         BpRequirement requirement2 = createBpRequirement(module1, "M1R2", "requirement 2");
 
         SafeguardGroup globalSafeguards = createSafeguardGroup(network, "S", "global safeguards");
-        Safeguard safeguard1 = createSafeguard(globalSafeguards, "S1", "safeguard 1");
-        Safeguard safeguard2 = createSafeguard(globalSafeguards, "S2", "safeguard 2");
+        SafeguardGroup safeguardGroup1 = createSafeguardGroup(globalSafeguards, "SG1",
+                "safeguard group 1");
+        Safeguard safeguard1 = createSafeguard(safeguardGroup1, "S1", "safeguard 1");
+        Safeguard safeguard2 = createSafeguard(safeguardGroup1, "S2", "safeguard 2");
 
         createLink(requirement1, server1, BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
         createLink(requirement1, server2, BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
@@ -545,17 +299,9 @@ public class ModernizedBaseProtectionModelingMigrationTest
         createLink(requirement2, server2, BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
         createLink(requirement2, safeguard2, BpRequirement.REL_BP_REQUIREMENT_BP_SAFEGUARD);
 
-        elementDao.flush();
-        elementDao.clear();
+        flushAndClear();
 
-        MigrateDbTo1_06D migrationCommand = new MigrateDbTo1_06D(
-                Collections.singletonList(network.getDbId()));
-        commandService.executeCommand(migrationCommand);
-
-        assertEquals(2, getNumberOfItemsInScope(SafeguardGroup.TYPE_ID, network.getScopeId()));
-        assertEquals(2, getNumberOfItemsInScope(BpRequirementGroup.TYPE_ID, network.getScopeId()));
-        assertEquals(4, getNumberOfItemsInScope(Safeguard.TYPE_ID, network.getScopeId()));
-        assertEquals(4, getNumberOfItemsInScope(BpRequirement.TYPE_ID, network.getScopeId()));
+        migrateModelingOfItNetwork(network.getDbId());
 
         server1 = reloadElement(server1);
         Set<CnATreeElement> childrenOfServer1 = server1.getChildren();
@@ -574,7 +320,7 @@ public class ModernizedBaseProtectionModelingMigrationTest
         CnATreeElement firstSafeguardGroupServer1 = reloadElement(
                 findChildWithTypeId(server1, SafeguardGroup.TYPE_ID));
         Assert.assertNotNull(firstSafeguardGroupServer1);
-        Assert.assertEquals("global safeguards", firstSafeguardGroupServer1.getTitle());
+        Assert.assertEquals("safeguard group 1", firstSafeguardGroupServer1.getTitle());
         Assert.assertEquals(2l, firstSafeguardGroupServer1.getChildren().size());
 
         CnATreeElement firstSafeguardServer1 = reloadElement(
@@ -614,7 +360,7 @@ public class ModernizedBaseProtectionModelingMigrationTest
         CnATreeElement firstSafeguardGroupServer2 = reloadElement(
                 findChildWithTypeId(server2, SafeguardGroup.TYPE_ID));
         Assert.assertNotNull(firstSafeguardGroupServer2);
-        Assert.assertEquals("global safeguards", firstSafeguardGroupServer2.getTitle());
+        Assert.assertEquals("safeguard group 1", firstSafeguardGroupServer2.getTitle());
         Assert.assertEquals(2, firstSafeguardGroupServer2.getChildren().size());
 
         CnATreeElement firstSafeguardServer2 = reloadElement(
@@ -653,12 +399,9 @@ public class ModernizedBaseProtectionModelingMigrationTest
                 "server requirement 1");
         createLink(serverRequirement1, server, BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
 
-        elementDao.flush();
-        elementDao.clear();
+        flushAndClear();
 
-        MigrateDbTo1_06D migrationCommand = new MigrateDbTo1_06D(
-                Collections.singletonList(network.getDbId()));
-        commandService.executeCommand(migrationCommand);
+        migrateModelingOfItNetwork(network.getDbId());
 
         server = reloadElement(server);
         Set<CnATreeElement> childrenOfServer1 = server.getChildren();
@@ -705,28 +448,19 @@ public class ModernizedBaseProtectionModelingMigrationTest
         createLink(requirement1, server1, BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
         createLink(requirement1, server2, BpRequirement.REL_BP_REQUIREMENT_BP_ITSYSTEM);
 
-        BpThreatGroup globalThreats = createThreatGroup(network, "global threats");
-        BpThreatGroup threatGroup1 = createThreatGroup(globalThreats, "threats 1");
+        BpThreatGroup globalThreats = createBpThreatGroup(network, "global threats");
+        BpThreatGroup threatGroup1 = createBpThreatGroup(globalThreats, "threats 1");
         BpThreat threat1 = createThreat(threatGroup1, "T1", "threat 1");
         createLink(requirement1, threat1, BpRequirement.REL_BP_REQUIREMENT_BP_THREAT);
 
         createLink(threat1, server1, BpThreat.REL_BP_THREAT_BP_ITSYSTEM);
         createLink(threat1, server2, BpThreat.REL_BP_THREAT_BP_ITSYSTEM);
 
-        elementDao.flush();
-        elementDao.clear();
+        flushAndClear();
 
-        MigrateDbTo1_06D migrationCommand = new MigrateDbTo1_06D(
-                Collections.singletonList(network.getDbId()));
-        commandService.executeCommand(migrationCommand);
+        migrateModelingOfItNetwork(network.getDbId());
 
         network = reloadElement(network);
-
-        Set<CnATreeElement> childrenOfNetwork = network.getChildren();
-        Assert.assertEquals(0l, childrenOfNetwork.stream()
-                .filter(item -> item.getTypeId().equals(BpRequirementGroup.TYPE_ID)).count());
-        Assert.assertEquals(0l, childrenOfNetwork.stream()
-                .filter(item -> item.getTypeId().equals(BpThreatGroup.TYPE_ID)).count());
 
         server1 = reloadElement(server1);
         Set<CnATreeElement> childrenOfServer1 = server1.getChildren();
@@ -842,7 +576,7 @@ public class ModernizedBaseProtectionModelingMigrationTest
 
     private BpThreat createThreat(CnATreeElement container, String identifier, String title)
             throws CommandException {
-        BpThreat element = setIdentifier(createThreat(container, title), "bp_threat_id",
+        BpThreat element = setIdentifier(createBpThreat(container, title), "bp_threat_id",
                 identifier);
         log.debug("Created: " + element);
         return element;

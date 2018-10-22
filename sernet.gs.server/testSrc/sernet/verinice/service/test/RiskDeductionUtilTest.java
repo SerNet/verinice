@@ -304,8 +304,8 @@ public class RiskDeductionUtilTest extends AbstractModernizedBaseProtection {
 			String lastImpact = impacts.get(impacts.size()-1).getId();
 			String lastFrequency = frequencies.get(frequencies.size()-1).getId();
 	
-			BpThreatGroup bpThreatGroup = createBpTreatGroup(itNetwork);
-			bpThreat = createBpTreat(bpThreatGroup);
+			BpThreatGroup bpThreatGroup = createBpThreatGroup(itNetwork);
+			bpThreat = createBpThreat(bpThreatGroup);
 			bpThreat.setTitel("Test-Threat");
 			bpThreat = update(bpThreat);
 			

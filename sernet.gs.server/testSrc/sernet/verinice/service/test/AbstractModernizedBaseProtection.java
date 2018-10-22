@@ -137,6 +137,14 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
     }
 
     /**
+     * Create a {@link SafeguardGroup} in the given container.
+     */
+    protected SafeguardGroup createSafeguardGroup(CnATreeElement container, String title)
+            throws CommandException {
+        return createGroup(container, SafeguardGroup.class, title);
+    }
+
+    /**
      * Create a {@link Safeguard} in the given container.
      */
     protected Safeguard createSafeguard(CnATreeElement container) throws CommandException {
@@ -160,11 +168,27 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
     }
 
     /**
+     * Create a {@link BpRequirementGroup} in the given container.
+     */
+    protected BpRequirementGroup createRequirementGroup(CnATreeElement container, String title)
+            throws CommandException {
+        return createGroup(container, BpRequirementGroup.class, title);
+    }
+
+    /**
 	 * Create a {@link SafeguardGroup} in the given container.
 	 */
 	protected BpRequirement createBpRequirement(CnATreeElement container) throws CommandException {
 	    return createElement(container, BpRequirement.class);
 	}
+
+    /**
+     * Create a {@link SafeguardGroup} in the given container.
+     */
+    protected BpRequirement createBpRequirement(CnATreeElement container, String title)
+            throws CommandException {
+        return createElement(container, BpRequirement.class, title);
+    }
 
 	/**
      * Create a {@link BpRequirementGroup} in the given container.
@@ -184,30 +208,31 @@ public abstract class AbstractModernizedBaseProtection extends CommandServicePro
     /**
      * Create a {@link BpThreatGroup} in the given container.
      */
-    protected BpThreatGroup createBpTreatGroup(CnATreeElement container) throws CommandException {
+    protected BpThreatGroup createBpThreatGroup(CnATreeElement container) throws CommandException {
         return createElement(container, BpThreatGroup.class);
     }
 
     /**
      * Create a {@link BpThreatGroup} in the given container.
      */
-    protected BpThreat createBpTreat(CnATreeElement container) throws CommandException {
+    protected BpThreatGroup createBpThreatGroup(CnATreeElement container, String title)
+            throws CommandException {
+        return createElement(container, BpThreatGroup.class, title);
+    }
+
+    /**
+     * Create a {@link BpThreatGroup} in the given container.
+     */
+    protected BpThreat createBpThreat(CnATreeElement container) throws CommandException {
         return createElement(container, BpThreat.class);
     }
 
     /**
-     * Create a {@link BpRequirementGroup} in the given container.
+     * Create a {@link BpThreatGroup} in the given container.
      */
-    protected BpRequirementGroup createRequirementGroup(CnATreeElement container)
+    protected BpThreat createBpThreat(CnATreeElement container, String title)
             throws CommandException {
-        return createGroup(container, BpRequirementGroup.class);
-    }
-
-    /**
-     * Create a {@link SafeguardGroup} in the given container.
-     */
-    protected BpRequirement createBpRequirement(CnATreeElement container) throws CommandException {
-        return createElement(container, BpRequirement.class);
+        return createElement(container, BpThreat.class, title);
     }
 
     protected <T extends CnATreeElement> T reloadElement(T element) throws CommandException {

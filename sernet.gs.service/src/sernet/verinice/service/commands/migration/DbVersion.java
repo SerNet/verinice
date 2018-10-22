@@ -114,10 +114,6 @@ public class DbVersion extends GenericCommand {
             DbMigration migration = new MigrateDbTo1_05D();
             getCommandService().executeCommand(migration);
         }
-        if (dbVersion < MigrateDbTo1_06D.VERSION) {
-            DbMigration migration = new MigrateDbTo1_06D();
-            getCommandService().executeCommand(migration);
-        }
     }
 
     public void execute() {

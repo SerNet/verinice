@@ -224,6 +224,18 @@
             <value>sernet.verinice.service.bp.risk.RiskService</value>
         </property>
     </bean>
+    
+    <!-- This service migrates the modeling data in ITBP from version 1.16 to 1.17 -->
+    <bean name="/modelingMigrationServiceHttpInvoker"
+        class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+        lazy-init="false">
+        <property name="service">
+            <ref bean="modelingMigrationService"/>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.service.bp.migration.ModelingMigrationDatabaseService</value>
+        </property>
+    </bean>
 	
 </beans>
 
