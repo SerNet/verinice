@@ -103,6 +103,7 @@ public class BooleanSelectionControl implements IHuiControl {
     private void createCheckbox() {
         button = new Button(composite, SWT.CHECK);
         button.setEnabled(editable);
+        button.setToolTipText(fieldType.getTooltiptext());
         
         if (savedProp == null) {
             // create property in which to save entered value:
