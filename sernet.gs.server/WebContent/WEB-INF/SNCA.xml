@@ -9360,6 +9360,10 @@ Wurden bereits weitere Stellen informiert?
 	    </huiproperty>
 	    <huiproperty id="bp_application_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
 	   </huipropertygroup>
+       <huipropertygroup columns="1" id="bp_application_group_riskanalysis" name="riskanalysis" tags="Risk">
+          <huiproperty defaultValue="1" id="bp_application_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
+          <huiproperty id="bp_application_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
+       </huipropertygroup>
     </huientity>
 
     <huientity id="bp_application_group" name="Application Group">
@@ -9466,6 +9470,10 @@ Wurden bereits weitere Stellen informiert?
 		    </huiproperty>
 		    <huiproperty id="bp_businessprocess_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
         </huipropertygroup>
+    	<huipropertygroup columns="1" id="bp_businessprocess_group_riskanalysis" name="riskanalysis" tags="Risk">
+      		<huiproperty defaultValue="1" id="bp_businessprocess_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
+      		<huiproperty id="bp_businessprocess_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
+    	</huipropertygroup>
         <huiproperty id="bp_businessprocess_privacy_yesno" name="Aufnahme in das Verzeichnis der Verarbeitungstätigkeiten" inputtype="booleanoption" />
 
         <huipropertygroup tags="Privacy" id="bp_businessprocess_va_group" name="Verarbeitungsangaben">
@@ -10099,6 +10107,10 @@ Wurden bereits weitere Stellen informiert?
 		    </huiproperty>
 		    <huiproperty id="bp_icssystem_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
         </huipropertygroup>
+    	<huipropertygroup columns="1" id="bp_icssystem_group_riskanalysis" name="riskanalysis" tags="Risk">
+      		<huiproperty defaultValue="1" id="bp_icssystem_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
+      		<huiproperty id="bp_icssystem_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
+    	</huipropertygroup>
         <huipropertygroup name="KIX" id="bp_icssystem_kix" tags="KIX" >
             <huiproperty name="KIX Ticket 1" id="bp_icssystem_kix_ticket1" isURL="true"/>
             <huiproperty name="KIX Ticket 2" id="bp_icssystem_kix_ticket2" isURL="true"/>
@@ -10224,6 +10236,10 @@ Wurden bereits weitere Stellen informiert?
 		    </huiproperty>
 		    <huiproperty id="bp_itsystem_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
         </huipropertygroup>
+       <huipropertygroup columns="1" id="bp_itsystem_group_riskanalysis" name="riskanalysis" tags="Risk">
+      		<huiproperty defaultValue="1" id="bp_itsystem_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
+      		<huiproperty id="bp_itsystem_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
+    	</huipropertygroup>
         <huipropertygroup name="KIX" id="bp_itsystem_kix" tags="KIX" >
             <huiproperty name="KIX Ticket 1" id="bp_itsystem_kix_ticket1" isURL="true"/>
             <huiproperty name="KIX Ticket 2" id="bp_itsystem_kix_ticket2" isURL="true"/>
@@ -10726,6 +10742,10 @@ Wurden bereits weitere Stellen informiert?
 		    </huiproperty>
 		    <huiproperty id="bp_network_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
         </huipropertygroup>
+    	<huipropertygroup columns="1" id="bp_network_group_riskanalysis" name="riskanalysis" tags="Risk">
+      		<huiproperty defaultValue="1" id="bp_network_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
+      		<huiproperty id="bp_network_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
+    	</huipropertygroup>
         <huipropertygroup name="KIX" id="bp_network_kix" tags="KIX" >
             <huiproperty name="KIX Ticket 1" id="bp_network_kix_ticket1" isURL="true"/>
             <huiproperty name="KIX Ticket 2" id="bp_network_kix_ticket2" isURL="true"/>
@@ -10845,6 +10865,10 @@ Wurden bereits weitere Stellen informiert?
 		    </huiproperty>
 		    <huiproperty id="bp_device_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
         </huipropertygroup>
+    	<huipropertygroup columns="1" id="bp_device_group_riskanalysis" name="riskanalysis" tags="Risk">
+      		<huiproperty defaultValue="1" id="bp_device_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
+      		<huiproperty id="bp_device_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
+    	</huipropertygroup>
         <huipropertygroup name="KIX" id="bp_device_kix" tags="KIX" >
             <huiproperty name="KIX Ticket 1" id="bp_device_kix_ticket1" isURL="true"/>
             <huiproperty name="KIX Ticket 2" id="bp_device_kix_ticket2" isURL="true"/>
@@ -10960,6 +10984,10 @@ Wurden bereits weitere Stellen informiert?
 		    </huiproperty>
 		    <huiproperty id="bp_room_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
         </huipropertygroup>
+     	<huipropertygroup columns="1" id="bp_room_group_riskanalysis" name="riskanalysis" tags="Risk">
+      		<huiproperty defaultValue="1" id="bp_room_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
+      		<huiproperty id="bp_room_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
+    	</huipropertygroup>
     </huientity>
 
     <huientity id="bp_room_group" name="Room Group">
