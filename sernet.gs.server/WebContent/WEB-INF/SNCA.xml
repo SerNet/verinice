@@ -8477,31 +8477,32 @@ Wurden bereits weitere Stellen informiert?
         </huipropertygroup>
 
 
-        <huipropertygroup tags="Privacy" id="process_dv_group_benachrichtigung" name="Benachrichtigung Betroffener">
-            <depends option="process_privacy_yesno" value="1" />
-            <huiproperty id="process_pg_benachrichtigung" name="Benachrichtigung Betroffener Art.13, 14 DSGVO" tags="Privacy" inputtype="singleoption">
-                <option id="process_bg_benachrichtigung_erfolgt" name="Erfolgt" />
-                <option id="process_bg_benachrichtigung_nichterfolgt" name="Nicht erfolgt" />
-            </huiproperty>
-            <huiproperty id="process_pg_benachrichtigung_begruendung" name="Grund für Nichtbenachrichtigung" tags="Privacy" inputtype="multioption">
-                <depends option="process_pg_benachrichtigung" value="process_bg_benachrichtigung_nichterfolgt" />
-                <option id="process_bg_benachrichtigung_begruendung_0" name="Keine Erstspeicherung" />
-                <option id="process_bg_benachrichtigung_begruendung_1" name="Kenntnis auf andere Weise" />
-                <option id="process_bg_benachrichtigung_begruendung_2" name="Speicherung aufg. Aufbewahrungsvorschriften / unverh. Aufwand" />
-                <option id="process_bg_benachrichtigung_begruendung_3" name="Ausschließliche Speicherung zur Datensicherung / unverh. Aufwand" />
-                <option id="process_bg_benachrichtigung_begruendung_4" name="Ausschließliche Speicherung zur Datenschutzkontrolle / unverh. Aufwand" />
-                <option id="process_bg_benachrichtigung_begruendung_5" name="Rechtliche Geheimhaltungspflicht" />
-                <option id="process_bg_benachrichtigung_begruendung_6" name="Speicherung durch Gesetz vorgesehen" />
-                <option id="process_bg_benachrichtigung_begruendung_7" name="Wissenschaftliche Forschung / unverh. Aufwand" />
-                <option id="process_bg_benachrichtigung_begruendung_8" name="Gefährdung öff. Sicherheit oder Ordnung" />
-                <option id="process_bg_benachrichtigung_begruendung_9" name="Eig. Zwecke / aus allg. zugänglichen Quellen" />
-                <option id="process_bg_benachrichtigung_begruendung_10" name="Eig. Zwecke / Gefährdung der Geschäftszwecke" />
-                <option id="process_bg_benachrichtigung_begruendung_11" name="Nur zur Übermittlung / allg. zugäng. Quellen" />
-                <option id="process_bg_benachrichtigung_begruendung_12" name="Nur zur Übermittlung / listenmäßig od. zusg. Daten" />
-                <option id="process_bg_benachrichtigung_begruendung_13" name="Allg. zug. Quellen / Markt- und Meinungsforschung" />
-            </huiproperty>
-        </huipropertygroup>
-
+     <huipropertygroup id="process_dv_group_benachrichtigung" name="Benachrichtigung Betroffener" tags="Privacy">
+      <depends option="process_privacy_yesno" value="1" />
+      <huiproperty id="process_pg_benachrichtigung" inputtype="singleoption" name="Informationspflichten" tags="Privacy">
+        <option id="process_bg_benachrichtigung_erfolgt" name="Erfolgt"/>
+        <option id="process_bg_benachrichtigung_nichterfolgt" name="Nicht erfolgt"/>
+      </huiproperty>
+      <huiproperty id="process_pg_benachrichtigung_begruendung" inputtype="multioption" name="Grund für Nichtbenachrichtigung" tags="Privacy" visible="false">
+        <depends option="process_pg_benachrichtigung" value="process_bg_benachrichtigung_nichterfolgt"/>
+        <option id="process_bg_benachrichtigung_begruendung_0" name="Keine Erstspeicherung"/>
+        <option id="process_bg_benachrichtigung_begruendung_1" name="Kenntnis auf andere Weise"/>
+        <option id="process_bg_benachrichtigung_begruendung_2" name="Speicherung aufg. Aufbewahrungsvorschriften / unverh. Aufwand"/>
+        <option id="process_bg_benachrichtigung_begruendung_3" name="Ausschließliche Speicherung zur Datensicherung / unverh. Aufwand"/>
+        <option id="process_bg_benachrichtigung_begruendung_4" name="Ausschließliche Speicherung zur Datenschutzkontrolle / unverh. Aufwand"/>
+        <option id="process_bg_benachrichtigung_begruendung_5" name="Rechtliche Geheimhaltungspflicht"/>
+        <option id="process_bg_benachrichtigung_begruendung_6" name="Speicherung durch Gesetz vorgesehen"/>
+        <option id="process_bg_benachrichtigung_begruendung_7" name="Wissenschaftliche Forschung / unverh. Aufwand"/>
+        <option id="process_bg_benachrichtigung_begruendung_8" name="Gefährdung öff. Sicherheit oder Ordnung"/>
+        <option id="process_bg_benachrichtigung_begruendung_9" name="Eig. Zwecke / aus allg. zugänglichen Quellen"/>
+        <option id="process_bg_benachrichtigung_begruendung_10" name="Eig. Zwecke / Gefährdung der Geschäftszwecke"/>
+        <option id="process_bg_benachrichtigung_begruendung_11" name="Nur zur Übermittlung / allg. zugäng. Quellen"/>
+        <option id="process_bg_benachrichtigung_begruendung_12" name="Nur zur Übermittlung / listenmäßig od. zusg. Daten"/>
+        <option id="process_bg_benachrichtigung_begruendung_13" name="Allg. zug. Quellen / Markt- und Meinungsforschung"/>
+      </huiproperty>
+      <huiproperty id="process_pg_benachrichtigung_erlaeuterung" inputtype="text" name="Erläuterung"/>
+      <huiproperty id="process_pg_benachrichtigung_dokument" isURL="true" name="Dokument"/>
+    </huipropertygroup>
 
         <huipropertygroup tags="Privacy" id="process_dv_group_loesch" name="Löschfristen">
             <depends option="process_privacy_yesno" value="1" />
@@ -9917,32 +9918,32 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty tags="Privacy" id="bp_businessprocess_pg_sonstbetr" name="Ergänzende Angaben" />
         </huipropertygroup>
 
-
-        <huipropertygroup tags="Privacy" id="bp_businessprocess_dv_group_benachrichtigung" name="Benachrichtigung Betroffener">
-            <depends option="bp_businessprocess_privacy_yesno" value="1" />
-            <huiproperty id="bp_businessprocess_pg_benachrichtigung" name="Benachrichtigung Betroffener Art.13, 14 DSGVO" tags="Privacy" inputtype="singleoption">
-                <option id="bp_businessprocess_bg_benachrichtigung_erfolgt" name="Erfolgt" />
-                <option id="bp_businessprocess_bg_benachrichtigung_nichterfolgt" name="Nicht erfolgt" />
-            </huiproperty>
-            <huiproperty id="bp_businessprocess_pg_benachrichtigung_begruendung" name="Grund für Nichtbenachrichtigung" tags="Privacy" inputtype="multioption">
-                <depends option="bp_businessprocess_pg_benachrichtigung" value="bp_businessprocess_bg_benachrichtigung_nichterfolgt" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_0" name="Keine Erstspeicherung" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_1" name="Kenntnis auf andere Weise" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_2" name="Speicherung aufg. Aufbewahrungsvorschriften / unverh. Aufwand" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_3" name="Ausschließliche Speicherung zur Datensicherung / unverh. Aufwand" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_4" name="Ausschließliche Speicherung zur Datenschutzkontrolle / unverh. Aufwand" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_5" name="Rechtliche Geheimhaltungspflicht" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_6" name="Speicherung durch Gesetz vorgesehen" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_7" name="Wissenschaftliche Forschung / unverh. Aufwand" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_8" name="Gefährdung öff. Sicherheit oder Ordnung" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_9" name="Eig. Zwecke / aus allg. zugänglichen Quellen" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_10" name="Eig. Zwecke / Gefährdung der Geschäftszwecke" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_11" name="Nur zur Übermittlung / allg. zugäng. Quellen" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_12" name="Nur zur Übermittlung / listenmäßig od. zusg. Daten" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_13" name="Allg. zug. Quellen / Markt- und Meinungsforschung" />
-            </huiproperty>
-        </huipropertygroup>
-
+	   <huipropertygroup id="bp_businessprocess_dv_group_benachrichtigung" name="Benachrichtigung Betroffener" tags="Privacy">
+         <depends option="bp_businessprocess_privacy_yesno" value="1" />
+	     <huiproperty id="bp_businessprocess_pg_benachrichtigung" inputtype="singleoption" name="Informationspflichten" tags="Privacy">
+	       <option id="bp_businessprocess_bg_benachrichtigung_erfolgt" name="Erfolgt"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_nichterfolgt" name="Nicht erfolgt"/>
+	     </huiproperty>
+	     <huiproperty id="bp_businessprocess_pg_benachrichtigung_begruendung" inputtype="multioption" name="Grund für Nichtbenachrichtigung" tags="Privacy" visible="false">
+	       <depends option="bp_businessprocess_pg_benachrichtigung" value="bp_businessprocess_bg_benachrichtigung_nichterfolgt"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_0" name="Keine Erstspeicherung"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_1" name="Kenntnis auf andere Weise"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_2" name="Speicherung aufg. Aufbewahrungsvorschriften / unverh. Aufwand"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_3" name="Ausschließliche Speicherung zur Datensicherung / unverh. Aufwand"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_4" name="Ausschließliche Speicherung zur Datenschutzkontrolle / unverh. Aufwand"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_5" name="Rechtliche Geheimhaltungspflicht"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_6" name="Speicherung durch Gesetz vorgesehen"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_7" name="Wissenschaftliche Forschung / unverh. Aufwand"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_8" name="Gefährdung öff. Sicherheit oder Ordnung"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_9" name="Eig. Zwecke / aus allg. zugänglichen Quellen"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_10" name="Eig. Zwecke / Gefährdung der Geschäftszwecke"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_11" name="Nur zur Übermittlung / allg. zugäng. Quellen"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_12" name="Nur zur Übermittlung / listenmäßig od. zusg. Daten"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_13" name="Allg. zug. Quellen / Markt- und Meinungsforschung"/>
+	     </huiproperty>
+	     <huiproperty id="bp_businessprocess_pg_benachrichtigung_erlaeuterung" inputtype="text" name="Erläuterung"/>
+	     <huiproperty id="bp_businessprocess_pg_benachrichtigung_dokument" isURL="true" name="Dokument"/>
+	   </huipropertygroup>
 
         <huipropertygroup tags="Privacy" id="bp_businessprocess_dv_group_loesch" name="Löschfristen">
             <depends option="bp_businessprocess_privacy_yesno" value="1" />
