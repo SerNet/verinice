@@ -10427,20 +10427,6 @@ Wurden bereits weitere Stellen informiert?
             inputtype="booleanoption" name="Affects Integrity" tags="Risk" />
         <huiproperty defaultValue="1" id="bp_requirement_value_method_availability"
             inputtype="booleanoption" name="Affects Availability" tags="Risk" />
-        <huipropertygroup id="bp_requirement_safeguard_strength" name="Safeguard Strength" tags="BSI-200-3">
-            <huiproperty defaultValue="0" id="bp_requirement_reduce_risk"
-                inputtype="booleanoption" name="Reduce Risk" tags="Risk" />
-            <huiproperty id="bp_requirement_safeguard_strength_frequency" name="Reduces frequency of occurrence to"
-                required="true" inputtype="singleoption">
-                <depends option="bp_requirement_implementation_deduce" value="0" />
-                <!-- options will be populated dynamically in the application -->
-            </huiproperty>
-            <huiproperty id="bp_requirement_safeguard_strength_impact" name="Reduces potential extent of damage to"
-                required="true" inputtype="singleoption">
-                <depends option="bp_requirement_implementation_deduce" value="0" />
-                <!-- options will be populated dynamically in the application -->
-            </huiproperty>
-        </huipropertygroup>
         <huipropertygroup id="bp_requirement_implementation" name="Implementation">
             <huiproperty defaultValue="1" id="bp_requirement_implementation_deduce"
                 inputtype="booleanoption" name="Deduce Implementation Status from Safeguard" tags="Risk" />
@@ -10455,6 +10441,21 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="bp_requirement_implementation_desc" name="Description"
                 required="false" inputtype="text" focus="true" />
         </huipropertygroup>
+        <huipropertygroup id="bp_requirement_safeguard_strength" name="Safeguard Strength" tags="BSI-200-3">
+            <huiproperty defaultValue="0" id="bp_requirement_reduce_risk"
+                inputtype="booleanoption" name="Reduce Risk" tags="Risk" />
+            <huiproperty id="bp_requirement_safeguard_strength_frequency" name="Reduces frequency of occurrence to"
+                required="true" inputtype="singleoption">
+                <depends option="bp_requirement_implementation_deduce" value="0" />
+                <!-- options will be populated dynamically in the application -->
+            </huiproperty>
+            <huiproperty id="bp_requirement_safeguard_strength_impact" name="Reduces potential extent of damage to"
+                required="true" inputtype="singleoption">
+                <depends option="bp_requirement_implementation_deduce" value="0" />
+                <!-- options will be populated dynamically in the application -->
+            </huiproperty>
+        </huipropertygroup>
+        
         <huipropertygroup id="bp_requirement_data_protection_objectives_eugdpr" name="Data privacy control objectives according to Art. 32 EU GDPR"
            tags="Privacy">
             <huiproperty id="bp_requirement_data_protection_objectives_eugdpr_pseudonymization"
@@ -10977,6 +10978,17 @@ Wurden bereits weitere Stellen informiert?
             inputtype="booleanoption" name="Affects Integrity" tags="Risk" />
         <huiproperty defaultValue="1" id="bp_safeguard_value_method_availability"
             inputtype="booleanoption" name="Affects Availability" tags="Risk" />
+        <huipropertygroup id="bp_safeguard_implementation" name="Implementation">
+            <huiproperty id="bp_safeguard_implementation_status" name="Implementation Status"
+                required="true" inputtype="singleoption">
+                <option id="bp_safeguard_implementation_status_no" name="No" />
+                <option id="bp_safeguard_implementation_status_yes" name="Yes" />
+                <option id="bp_safeguard_implementation_status_partially" name="Partially" />
+                <option id="bp_safeguard_implementation_status_na" name="Not Applicable" />
+            </huiproperty>
+            <huiproperty id="bp_safeguard_implementation_desc" name="Description"
+                required="false" inputtype="text" focus="true" />
+        </huipropertygroup>
         <huipropertygroup id="bp_safeguard_safeguard_strength" name="Safeguard Strength" tags="BSI-200-3">
             <huiproperty defaultValue="0" id="bp_safeguard_reduce_risk"
                 inputtype="booleanoption" name="Reduce Risk" tags="Risk" />
@@ -10989,17 +11001,7 @@ Wurden bereits weitere Stellen informiert?
                 <!-- options will be populated dynamically in the application -->
             </huiproperty>
         </huipropertygroup>
-        <huipropertygroup id="bp_safeguard_implementation" name="Implementation">
-            <huiproperty id="bp_safeguard_implementation_status" name="Implementation Status"
-                required="true" inputtype="singleoption">
-                <option id="bp_safeguard_implementation_status_no" name="No" />
-                <option id="bp_safeguard_implementation_status_yes" name="Yes" />
-                <option id="bp_safeguard_implementation_status_partially" name="Partially" />
-                <option id="bp_safeguard_implementation_status_na" name="Not Applicable" />
-            </huiproperty>
-            <huiproperty id="bp_safeguard_implementation_desc" name="Description"
-                required="false" inputtype="text" focus="true" />
-        </huipropertygroup>
+        
         <huipropertygroup id="bp_safeguard_data_protection_objectives_eugdpr" name="Data privacy control objectives according to Art. 32 EU GDPR"
            tags="Privacy">
             <huiproperty id="bp_safeguard_data_protection_objectives_eugdpr_pseudonymization"
