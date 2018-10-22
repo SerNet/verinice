@@ -10455,7 +10455,26 @@ Wurden bereits weitere Stellen informiert?
                 <!-- options will be populated dynamically in the application -->
             </huiproperty>
         </huipropertygroup>
-        
+    <huipropertygroup id="bp_requirement_group_kosten" name="Kosten" tags="Finance">
+      <huiproperty id="bp_requirement_kosten_ptfix" name="Personalkosten fix EUR" tags="Finance"/>
+      <huiproperty id="bp_requirement_kosten_ptvar" name="Personalkosten var. EUR" tags="Finance"/>
+      <huiproperty id="bp_requirement_kosten_ptperiod" inputtype="singleoption" name="Zeitraum" tags="Finance">
+        <option id="bp_requirement_kosten_ptperiod_tag" name="Tag"/>
+        <option id="bp_requirement_kosten_ptperiod_woche" name="Woche"/>
+        <option id="bp_requirement_kosten_ptperiod_monat" name="Monat"/>
+        <option id="bp_requirement_kosten_ptperiod_quartal" name="Quartal"/>
+        <option id="bp_requirement_kosten_ptperiod_jahr" name="Jahr"/>
+      </huiproperty>
+      <huiproperty id="bp_requirement_kosten_sachfix" name="Sachkosten fix EUR" tags="Finance"/>
+      <huiproperty id="bp_requirement_kosten_sachvar" name="Sachkosten var. EUR" tags="Finance"/>
+      <huiproperty id="bp_requirement_kosten_sachperiod" inputtype="singleoption" name="Zeitraum" tags="Finance">
+        <option id="bp_requirement_kosten_sachperiod_tag" name="Tag"/>
+        <option id="bp_requirement_kosten_sachperiod_woche" name="Woche"/>
+        <option id="bp_requirement_kosten_sachperiod_monat" name="Monat"/>
+        <option id="bp_requirement_kosten_sachperiod_quartal" name="Quartal"/>
+        <option id="bp_requirement_kosten_sachperiod_jahr" name="Jahr"/>
+      </huiproperty>
+    </huipropertygroup>
         <huipropertygroup id="bp_requirement_data_protection_objectives_eugdpr" name="Data privacy control objectives according to Art. 32 EU GDPR"
            tags="Privacy">
             <huiproperty id="bp_requirement_data_protection_objectives_eugdpr_pseudonymization"
@@ -11001,7 +11020,26 @@ Wurden bereits weitere Stellen informiert?
                 <!-- options will be populated dynamically in the application -->
             </huiproperty>
         </huipropertygroup>
-        
+    <huipropertygroup id="bp_safeguard_group_kosten" name="Kosten" tags="Finance">
+      <huiproperty id="bp_safeguard_kosten_ptfix" name="Personalkosten fix EUR" tags="Finance"/>
+      <huiproperty id="bp_safeguard_kosten_ptvar" name="Personalkosten var. EUR" tags="Finance"/>
+      <huiproperty id="bp_safeguard_kosten_ptperiod" inputtype="singleoption" name="Zeitraum" tags="Finance">
+        <option id="bp_safeguard_kosten_ptperiod_tag" name="Tag"/>
+        <option id="bp_safeguard_kosten_ptperiod_woche" name="Woche"/>
+        <option id="bp_safeguard_kosten_ptperiod_monat" name="Monat"/>
+        <option id="bp_safeguard_kosten_ptperiod_quartal" name="Quartal"/>
+        <option id="bp_safeguard_kosten_ptperiod_jahr" name="Jahr"/>
+      </huiproperty>
+      <huiproperty id="bp_safeguard_kosten_sachfix" name="Sachkosten fix EUR" tags="Finance"/>
+      <huiproperty id="bp_safeguard_kosten_sachvar" name="Sachkosten var. EUR" tags="Finance"/>
+      <huiproperty id="bp_safeguard_kosten_sachperiod" inputtype="singleoption" name="Zeitraum" tags="Finance">
+        <option id="bp_safeguard_kosten_sachperiod_tag" name="Tag"/>
+        <option id="bp_safeguard_kosten_sachperiod_woche" name="Woche"/>
+        <option id="bp_safeguard_kosten_sachperiod_monat" name="Monat"/>
+        <option id="bp_safeguard_kosten_sachperiod_quartal" name="Quartal"/>
+        <option id="bp_safeguard_kosten_sachperiod_jahr" name="Jahr"/>
+      </huiproperty>
+    </huipropertygroup>
         <huipropertygroup id="bp_safeguard_data_protection_objectives_eugdpr" name="Data privacy control objectives according to Art. 32 EU GDPR"
            tags="Privacy">
             <huiproperty id="bp_safeguard_data_protection_objectives_eugdpr_pseudonymization"
