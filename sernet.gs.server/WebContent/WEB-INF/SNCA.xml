@@ -8478,7 +8478,6 @@ Wurden bereits weitere Stellen informiert?
 
 
      <huipropertygroup id="process_dv_group_benachrichtigung" name="Benachrichtigung Betroffener" tags="Privacy">
-      <depends option="process_privacy_yesno" value="1" />
       <huiproperty id="process_pg_benachrichtigung" inputtype="singleoption" name="Informationspflichten" tags="Privacy">
         <option id="process_bg_benachrichtigung_erfolgt" name="Erfolgt"/>
         <option id="process_bg_benachrichtigung_nichterfolgt" name="Nicht erfolgt"/>
@@ -9918,7 +9917,6 @@ Wurden bereits weitere Stellen informiert?
         </huipropertygroup>
 
 	   <huipropertygroup id="bp_businessprocess_dv_group_benachrichtigung" name="Benachrichtigung Betroffener" tags="Privacy">
-         <depends option="bp_businessprocess_privacy_yesno" value="1" />
 	     <huiproperty id="bp_businessprocess_pg_benachrichtigung" inputtype="singleoption" name="Informationspflichten" tags="Privacy">
 	       <option id="bp_businessprocess_bg_benachrichtigung_erfolgt" name="Erfolgt"/>
 	       <option id="bp_businessprocess_bg_benachrichtigung_nichterfolgt" name="Nicht erfolgt"/>
