@@ -4,9 +4,12 @@ import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.Period;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -35,9 +38,13 @@ public class DateCheckerTest {
 
     @Test
     public void testCheckIfDateIsPastYesterday() {
-        Date yesterday = Date.from(Instant.now().minus(Duration.ofDays(1l)));
-        Date yesterdayPlusSevenDays = Date.from(yesterday.toInstant().plus(Duration.ofDays(7l)));
-        Assert.assertEquals(yesterdayPlusSevenDays, dateChecker.checkIfDateIsPast(yesterday, "7"));
+    	Instant now = Instant.now();
+    	GregorianCalendar gregorianCalendar = new GregorianCalendar();
+    	gregorianCalendar.setTime(Date.from(now));
+    	gregorianCalendar.add(Calendar.DAY_OF_YEAR, 6);
+    	Date time = gregorianCalendar.getTime();
+		Date yesterday = Date.from(now.minus(Duration.ofDays(1l)));
+		Assert.assertEquals(time, dateChecker.checkIfDateIsPast(yesterday, "7"));
     }
 
     @Test
