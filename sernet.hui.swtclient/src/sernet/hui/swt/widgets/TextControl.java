@@ -127,8 +127,10 @@ public class TextControl extends AbstractHuiControl {
             }
         }
 		if (valid) {
-			text.setForeground(fgColor);
-			text.setBackground(bgColor);
+			if (Colors.YELLOW.getRGB().equals(text.getBackground().getRGB())) {
+				text.setForeground(fgColor);
+				text.setBackground(bgColor);
+			}
 			refontLabel(false);
 			return true;
 		}
