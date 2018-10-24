@@ -8527,7 +8527,80 @@ Wurden bereits weitere Stellen informiert?
                     id="loeschfrist_dokument"
                     isURL="true" />
         </huipropertygroup>
-
+	     <huipropertygroup id="process_dsfa_needed_group" name="Datenschutzfolgenabschätzung (DSFA) erfoderlich" tags="Privacy">
+	      <huiproperty id="process_is_dsgvo_blacklisted" inputtype="singleoption" max="1" name="Verarbeitung ist auf Negativliste geführt" tags="Privacy">
+	        <option id="process_is_dsgvo_blacklisted_yes" name="Ja" value="0"/>
+	        <option id="process_is_dsgvo_blacklisted_no" name="Nein" value="1"/>
+	      </huiproperty>
+	      <huiproperty id="process_joined_dataprocessing" inputtype="singleoption" max="1" name="Verarbeitung ist Teil eines gemeinsamen Verarbeitungsvorganges" tags="Privacy">
+	        <depends option="process_is_dsgvo_blacklisted" value="process_is_dsgvo_blacklisted_no"/>
+	        <option id="process_joined_dataprocessing_yes" name="Ja" value="1"/>
+	        <option id="process_joined_dataprocessing_no" name="Nein" value="0"/>
+	      </huiproperty>
+	      <huiproperty id="process_joined_dataprocessing_comments" inputtype="text" name="Bemerkungen" tags="Privacy">
+	        <depends option="process_is_dsgvo_blacklisted" value="process_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="process_joined_dataprocessing_document" isURL="true" name="Dokument">
+	        <depends option="process_is_dsgvo_blacklisted" value="process_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="process_other_dataprocessing" inputtype="singleoption" max="1" name="Sonstiger Ausschlusstatbestand" tags="Privacy">
+	        <depends option="process_is_dsgvo_blacklisted" value="process_is_dsgvo_blacklisted_no"/>
+	        <option id="process_other_dataprocessing_yes" name="Ja" value="1"/>
+	        <option id="process_other_dataprocessing_no" name="Nein" value="0"/>
+	      </huiproperty>
+	      <huiproperty id="process_other_dataprocessing_comments" inputtype="text" name="Bemerkungen" tags="Privacy">
+	        <depends option="process_is_dsgvo_blacklisted" value="process_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="process_whitelist_dataprocessing" inputtype="singleoption" max="1" name="Verarbeitung ist auf Positivliste geführt" tags="Privacy">
+	        <depends option="process_is_dsgvo_blacklisted" value="process_is_dsgvo_blacklisted_no"/>
+	        <option id="process_whitelist_dataprocessing_yes" name="Ja"/>
+	        <option id="process_whitelist_dataprocessing_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="process_whitelist_dataprocessing_comments" inputtype="text" name="Bemerkungen" tags="Privacy">
+	        <depends option="process_is_dsgvo_blacklisted" value="process_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="process_whitelist_dataprocessing_document" isURL="true" name="Dokument">
+	        <depends option="process_is_dsgvo_blacklisted" value="process_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="process_dsfa_criteria_test" inputtype="multioption" name="Entspricht die Verarbeitung folgenden Kriterien" tags="Privacy">
+	        <depends option="process_is_dsgvo_blacklisted" value="process_is_dsgvo_blacklisted_no"/>
+	        <option id="process_dsfa_criteria_test_1" name="Bewertung oder Einstufung (Scoring), Profilbildung und Prognosen Betroffenen"/>
+	        <option id="process_dsfa_criteria_test_2" name="Automatisierte Entscheidungen mit rechtlicher oder ähnlich beeinträchtigender Wirkung"/>
+	        <option id="process_dsfa_criteria_test_3" name="Systematische Überwachung"/>
+	        <option id="process_dsfa_criteria_test_4" name="Verarbeitung besonderer Kategorien personenbezogener Daten gemäß Art. 9"/>
+	        <option id="process_dsfa_criteria_test_5" name="Verarbeitung personenbezogener Daten über strafrechtliche Verurteilungen oder Straftaten gemäß Art 10"/>
+	        <option id="process_dsfa_criteria_test_6" name="Datenverarbeitung im großen Umfang"/>
+	        <option id="process_dsfa_criteria_test_7" name="Abgleich oder Zusammenführen von Datensätzen"/>
+	        <option id="process_dsfa_criteria_test_8" name="Daten zu schutzbedürftigen Betroffenen"/>
+	        <option id="process_dsfa_criteria_test_9" name="Innovative Nutzung oder Verwendung von technologischen und organisatorischen Lösungen"/>
+	        <option id="process_dsfa_criteria_test_10" name="Datentransfer außerhalb der EU"/>
+	        <option id="process_dsfa_criteria_test_11" name="Systematische Überwachung"/>
+	      </huiproperty>
+	      <huiproperty id="process_dsfa_criteria_match" inputtype="singleoption" max="1" name="Zwei oder mehr o.g Kriterien zu" tags="Privacy">
+	        <option id="process_dsfa_criteria_match_yes" name="Ja"/>
+	        <option id="process_dsfa_criteria_match_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="process_dsfa_criteria_match_comments" inputtype="text" name="Bemerkungen" tags="Privacy"/>
+	      <huiproperty id="process_dsfa_criteria_match_document" isURL="true" name="Dokument"/>
+	      <huiproperty id="process_dsfa_criteria_other" inputtype="singleoption" max="1" name="Erfordernis aus sonstigen Gründen" tags="Privacy">
+	        <option id="process_dsfa_criteria_other_yes" name="Ja"/>
+	        <option id="process_dsfa_criteria_other_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="process_dsfa_criteria_other_comments" inputtype="text" name="Bemerkungen" tags="Privacy"/>
+	      <huiproperty id="process_dsfa_criteria_other_document" isURL="true" name="Dokument"/>
+	      <huiproperty id="process_dsfa_oversight" inputtype="singleoption" max="1" name="Konsultation der Aufsichtsbehörde erforderlich" tags="Privacy">
+	        <option id="process_dsfa_oversight_yes" name="Ja"/>
+	        <option id="process_dsfa_oversight_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="process_dsfa_oversight_comments" inputtype="text" name="Bemerkungen" tags="Privacy"/>
+	      <huiproperty id="process_dsfa_oversight_document" isURL="true" name="Dokument"/>
+	      <huiproperty id="process_dsfa_clearance" inputtype="singleoption" max="1" name="Freigabe der Verarbeitung" tags="Privacy">
+	        <option id="process_dsfa_clearance_yes" name="Ja"/>
+	        <option id="process_dsfa_clearance_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="process_dsfa_clearance_comments" inputtype="text" name="Bemerkungen" tags="Privacy"/>
+	      <huiproperty id="process_dsfa_clearance_document" isURL="true" name="Dokument"/>
+	    </huipropertygroup>
         <huipropertygroup tags="Privacy" id="process_stellungnahmedsb_group" name="Stellungnahme DSB">
             <depends option="process_privacy_yesno" value="1" />
             <huiproperty tags="Privacy" id="process_stellungnahmedsb_vorpruefung" name="Datenschutzfolgeabschätzung erforderlich?" inputtype="singleoption">
@@ -9966,7 +10039,80 @@ Wurden bereits weitere Stellen informiert?
                     id="bp_businessprocess_loeschfrist_dokument"
                     isURL="true" />
         </huipropertygroup>
-
+	    <huipropertygroup id="bp_businessprocess_dsfa_needed_group" name="Datenschutzfolgenabschätzung (DSFA) erfoderlich" tags="Privacy">
+	      <huiproperty id="bp_businessprocess_is_dsgvo_blacklisted" inputtype="singleoption" max="1" name="Verarbeitung ist auf Negativliste geführt" tags="Privacy">
+	        <option id="bp_businessprocess_is_dsgvo_blacklisted_yes" name="Ja" value="0"/>
+	        <option id="bp_businessprocess_is_dsgvo_blacklisted_no" name="Nein" value="1"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_joined_dataprocessing" inputtype="singleoption" max="1" name="Verarbeitung ist Teil eines gemeinsamen Verarbeitungsvorganges" tags="Privacy">
+	        <depends option="bp_businessprocess_is_dsgvo_blacklisted" value="bp_businessprocess_is_dsgvo_blacklisted_no"/>
+	        <option id="bp_businessprocess_joined_dataprocessing_yes" name="Ja" value="1"/>
+	        <option id="bp_businessprocess_joined_dataprocessing_no" name="Nein" value="0"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_joined_dataprocessing_comments" inputtype="text" name="Bemerkungen" tags="Privacy">
+	        <depends option="bp_businessprocess_is_dsgvo_blacklisted" value="bp_businessprocess_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_joined_dataprocessing_document" isURL="true" name="Dokument">
+	        <depends option="bp_businessprocess_is_dsgvo_blacklisted" value="bp_businessprocess_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_other_dataprocessing" inputtype="singleoption" max="1" name="Sonstiger Ausschlusstatbestand" tags="Privacy">
+	        <depends option="bp_businessprocess_is_dsgvo_blacklisted" value="bp_businessprocess_is_dsgvo_blacklisted_no"/>
+	        <option id="bp_businessprocess_other_dataprocessing_yes" name="Ja" value="1"/>
+	        <option id="bp_businessprocess_other_dataprocessing_no" name="Nein" value="0"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_other_dataprocessing_comments" inputtype="text" name="Bemerkungen" tags="Privacy">
+	        <depends option="bp_businessprocess_is_dsgvo_blacklisted" value="bp_businessprocess_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_whitelist_dataprocessing" inputtype="singleoption" max="1" name="Verarbeitung ist auf Positivliste geführt" tags="Privacy">
+	        <depends option="bp_businessprocess_is_dsgvo_blacklisted" value="bp_businessprocess_is_dsgvo_blacklisted_no"/>
+	        <option id="bp_businessprocess_whitelist_dataprocessing_yes" name="Ja"/>
+	        <option id="bp_businessprocess_whitelist_dataprocessing_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_whitelist_dataprocessing_comments" inputtype="text" name="Bemerkungen" tags="Privacy">
+	        <depends option="bp_businessprocess_is_dsgvo_blacklisted" value="bp_businessprocess_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_whitelist_dataprocessing_document" isURL="true" name="Dokument">
+	        <depends option="bp_businessprocess_is_dsgvo_blacklisted" value="bp_businessprocess_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_dsfa_criteria_test" inputtype="multioption" name="Entspricht die Verarbeitung folgenden Kriterien" tags="Privacy">
+	        <depends option="bp_businessprocess_is_dsgvo_blacklisted" value="bp_businessprocess_is_dsgvo_blacklisted_no"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_1" name="Bewertung oder Einstufung (Scoring), Profilbildung und Prognosen Betroffenen"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_2" name="Automatisierte Entscheidungen mit rechtlicher oder ähnlich beeinträchtigender Wirkung"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_3" name="Systematische Überwachung"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_4" name="Verarbeitung besonderer Kategorien personenbezogener Daten gemäß Art. 9"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_5" name="Verarbeitung personenbezogener Daten über strafrechtliche Verurteilungen oder Straftaten gemäß Art 10"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_6" name="Datenverarbeitung im großen Umfang"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_7" name="Abgleich oder Zusammenführen von Datensätzen"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_8" name="Daten zu schutzbedürftigen Betroffenen"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_9" name="Innovative Nutzung oder Verwendung von technologischen und organisatorischen Lösungen"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_10" name="Datentransfer außerhalb der EU"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_11" name="Systematische Überwachung"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_dsfa_criteria_match" inputtype="singleoption" max="1" name="Zwei oder mehr o.g Kriterien zu" tags="Privacy">
+	        <option id="bp_businessprocess_dsfa_criteria_match_yes" name="Ja"/>
+	        <option id="bp_businessprocess_dsfa_criteria_match_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_dsfa_criteria_match_comments" inputtype="text" name="Bemerkungen" tags="Privacy"/>
+	      <huiproperty id="bp_businessprocess_dsfa_criteria_match_document" isURL="true" name="Dokument"/>
+	      <huiproperty id="bp_businessprocess_dsfa_criteria_other" inputtype="singleoption" max="1" name="Erfordernis aus sonstigen Gründen" tags="Privacy">
+	        <option id="bp_businessprocess_dsfa_criteria_other_yes" name="Ja"/>
+	        <option id="bp_businessprocess_dsfa_criteria_other_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_dsfa_criteria_other_comments" inputtype="text" name="Bemerkungen" tags="Privacy"/>
+	      <huiproperty id="bp_businessprocess_dsfa_criteria_other_document" isURL="true" name="Dokument"/>
+	      <huiproperty id="bp_businessprocess_dsfa_oversight" inputtype="singleoption" max="1" name="Konsultation der Aufsichtsbehörde erforderlich" tags="Privacy">
+	        <option id="bp_businessprocess_dsfa_oversight_yes" name="Ja"/>
+	        <option id="bp_businessprocess_dsfa_oversight_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_dsfa_oversight_comments" inputtype="text" name="Bemerkungen" tags="Privacy"/>
+	      <huiproperty id="bp_businessprocess_dsfa_oversight_document" isURL="true" name="Dokument"/>
+	      <huiproperty id="bp_businessprocess_dsfa_clearance" inputtype="singleoption" max="1" name="Freigabe der Verarbeitung" tags="Privacy">
+	        <option id="bp_businessprocess_dsfa_clearance_yes" name="Ja"/>
+	        <option id="bp_businessprocess_dsfa_clearance_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_dsfa_clearance_comments" inputtype="text" name="Bemerkungen" tags="Privacy"/>
+	      <huiproperty id="bp_businessprocess_dsfa_clearance_document" isURL="true" name="Dokument"/>
+	    </huipropertygroup>
         <huipropertygroup tags="Privacy" id="bp_businessprocess_stellungnahmedsb_group" name="Stellungnahme DSB">
             <depends option="bp_businessprocess_privacy_yesno" value="1" />
             <huiproperty tags="Privacy" id="bp_businessprocess_stellungnahmedsb_vorpruefung" name="Datenschutzfolgeabschätzung erforderlich?" inputtype="singleoption">
