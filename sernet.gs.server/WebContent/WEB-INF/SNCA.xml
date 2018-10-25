@@ -5613,6 +5613,9 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
                 id="person-iso_9"
                 name="Datenschutzbeauftragter" />
             <option
+                id="person-iso_52"
+                name="Datenschutzkoordinator" />
+            <option
                 id="person-iso_43"
                 name="Entwickler" />
             <option
@@ -10488,6 +10491,7 @@ Wurden bereits weitere Stellen informiert?
 			<option id="bp_person_role_7" name="Beschaffer" />
 			<option id="bp_person_role_8" name="Brandschutzbeauftragter" />
 			<option id="bp_person_role_9" name="Datenschutzbeauftragter" />
+			<option id="bp_person_role_52" name="Datenschutzkoordinator" />
 			<option id="bp_person_role_43" name="Entwickler" />
 			<option id="bp_person_role_10" name="Errichterfirma" />
 			<option id="bp_person_role_11" name="Fachabteilung" />
