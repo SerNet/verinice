@@ -4867,7 +4867,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             <huiproperty name="E-Mail-Adresse" id="org_ds_email" />
         </huipropertygroup>
 
-        <huipropertygroup tags="Privacy" id="org_ds_eu" name="Vertreter innerhalb der Europäischen Union">
+    <huipropertygroup tags="Privacy" id="org_ds_eu" name="Vertreter innerhalb der Europäischen Union">
         <huiproperty id="org_ds_eu_ausserh" name="Sitz des Verantwortlichen außerhalb der EU?" inputtype="singleoption">
             <option id="org_ds_eu_1" name="Ja"  />
             <option id="org_ds_eu_2" name="Nein" />
@@ -9333,6 +9333,22 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="bp_itnetwork_data_protection_email" name="Email" />
         </huipropertygroup>
         <huiproperty id="bp_itnetwork_risk_configuration" name="Risk configuration" visible="false" inputtype="text"/>
+
+	    <huipropertygroup tags="Privacy" id="bp_itnetwork_ds_eu" name="Vertreter innerhalb der Europäischen Union">
+	        <huiproperty id="bp_itnetwork_ds_eu_ausserh" name="Sitz des Verantwortlichen außerhalb der EU?" inputtype="singleoption">
+	            <option id="bp_itnetwork_ds_eu_1" name="Ja"  />
+	            <option id="bp_itnetwork_ds_eu_2" name="Nein" />
+	        </huiproperty>
+	
+	        <huiproperty id="bp_itnetwork_ds_eu_Kontaktd" name="Angaben zum Vertreter des Verantwortlichen" />
+	        <huiproperty id="bp_itnetwork_ds_eu_name" name="Name" />
+	        <huiproperty id="bp_itnetwork_ds_eu_ansprech" name="Ansprechpartner" />
+	        <huiproperty id="bp_itnetwork_ds_eu_strass" name="Straße" />
+	        <huiproperty id="bp_itnetwork_ds_eu_plz" name="Postleitzahl" />
+	        <huiproperty id="bp_itnetwork_ds_eu_ort" name="Ort" />
+	        <huiproperty id="bp_itnetwork_ds_eu_tel" name="Telefonnummer" />
+	        <huiproperty id="bp_itnetwork_ds_eu_email" name="E-Mail-Adresse" />
+	    </huipropertygroup>
     </huientity>
 
     <huientity id="bp_application" name="Application">
