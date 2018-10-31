@@ -9326,6 +9326,14 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="bp_itnetwork_vv_bsig_enquiry_phone" name="Enquiry Phone" />
             <huiproperty id="bp_itnetwork_vv_bsig_equiry_email" name="Enquiry E-Mail" />
         </huipropertygroup>
+        <huipropertygroup id="bp_itnetwork_contact_info_group" name="ContactInfo">
+		    <huiproperty name="Address" id="bp_itnetwork_addr" inputtype="text" />
+	        <huiproperty name="Website" id="bp_itnetwork_web" />
+	    	<huiproperty name="Allg. E-Mail Kontakt" id="bp_itnetwork_allg_Mail"  />
+	        <huiproperty name="Contact" id="bp_itnetwork_cont" />
+	        <huiproperty name="Contact Phone" id="bp_itnetwork_contphone" />
+	        <huiproperty name="Contact email" id="bp_itnetwork_contmail" />
+	    </huipropertygroup>
         <huipropertygroup id="bp_itnetwork_data_protection_group" name="Data protection supervisory authority">
             <huiproperty id="bp_itnetwork_data_protection_authority" name="Competent supervisory authority" />
             <huiproperty id="bp_itnetwork_data_protection_adress" name="Address" />
