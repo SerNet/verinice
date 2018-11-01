@@ -179,7 +179,7 @@
                 <security:intercept-url pattern="/auth/j_verinice_security_check"
                     access="ROLE_ANONYMOUS" />
                 <security:intercept-url pattern="/auth/login.xhtml"
-                    access="ROLE_ANONYMOUS" />
+                    access="ROLE_ANONYMOUS,ROLE_USER,ROLE_WEB" />
                 <security:intercept-url pattern="/edit/**"
                     access="ROLE_WEB" />
                 <security:intercept-url pattern="/dashboard/**"
