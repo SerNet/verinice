@@ -150,7 +150,7 @@
 
     <bean id="accessDeniedHandler"
         class="org.springframework.security.ui.AccessDeniedHandlerImpl">
-        <property name="errorPage" value="/auth/login.xhtml" />
+        <property name="errorPage" value="/auth/access-denied.xhtml" />
     </bean>
 
     <bean id="logoutFilter" class="org.springframework.security.ui.logout.LogoutFilter">
