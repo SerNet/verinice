@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<cheatsheet title="Risikoanalyse nach 200-3">
+
+  <intro>
+    <description>
+      <b>Willkommen bei verinice.</b>
+      <br/>
+      <br/>
+        In diesem Tutorial lernen Sie, wie Sie Risikoanalysen in verinice durchführen.
+    </description>
+  </intro>
+
+  <item title="Parameter/Definitionen zur Risikoanalys">
+     <description>
+          Sie können die Parameter/Definitionen zur Risikoanalyse
+          (Eintrittswahrscheinlichkeits-/Schadensauswirkungs-Matrix) je Informationsverbund in
+          einer graphischen Oberfläche definieren. Öffnen Sie dazu durch Doppelklick Ihren
+          Informationsverbund. Im Editor können Sie nun im unteren Bereich durch Auswahl eines
+          Reiters folgende Einstellungen vornehmen (von rechts nach links):
+          <br/>
+          1. Eintrittshäufigkeit: Standardmäßig sind vier Eintrittshäufigkeiten
+          definiert. Diese können von Ihnen aber erweitert (Klick auf +) bzw. gekürzt (Klick
+          auf -) werden. Des Weiteren bestimmen Sie die Definitionen und die Bezeichnungen. Dazu
+          tragen Sie lediglich Ihre Texte in die dafür vorgesehenen Felder ein und speichern
+          (<b>Strg+S</b>) anschließend.
+          <br/>
+          2. Auswirkung: Standardmäßig sind vier Auswirkungen definiert. Diese können von
+          Ihnen aber erweitert (Klick auf +) bzw. gekürzt (Klick auf -) werden. Des Weiteren
+          bestimmen Sie die Definitionen und die Bezeichnungen. Dazu tragen Sie lediglich Ihre
+          Texte in die dafür vorgesehenen Felder ein und speichern (<b>Strg+S</b>) anschließend.
+          <br/>
+          3. Risikokategorie: Standardmäßig sind vier Risikokategorien definiert. Diese können
+          von Ihnen aber erweitert (Klick auf +) bzw. gekürzt (Klick auf -) werden. Zusätzlich
+          können Sie Ihrer Risikokategorie eine Farbe zuordnen. Hierfür klicken Sie auf das
+          Farbfeld unterhalb der Bezeichnung der Risikokategorie und wählen Ihre gewünschte
+          Farbe aus der Farbpalette aus. Des Weiteren bestimmen Sie die Definitionen und die
+          Bezeichnungen. Dazu tragen Sie lediglich Ihre Texte in die dafür vorgesehenen Felder
+          ein und speichern (<b>Strg+S</b>) anschließend.
+          <br/>
+          4. Risikomatrix: An dieser Stelle sehen Sie die Risikomatrix für den
+          Informationsverbund. Durch <b>Klick</b> (erhöhenSie die Risikokategorie)
+          bzw. <b>Shift+Klick</b> (reduzieren Sie die Risikokategorie) auf die einzelnen Felder
+          der Matrix können Sie über die Risikokategorie bestimmen.
+     </description>
+  </item>
+
+  <item title="Risikobewertung">
+     <description>
+          Die Risikobewertung nehmen Sie für jedes Zielobjekt in den jeweils modellierten
+          Gefährdungen vor. Öffnen Sie dazu die erste Gefährdung durch Doppelklick. Der Text
+          der Gefährdung erscheint im Browserfenster.
+          <br/>
+          In der Gruppe <b>Risiko ohne zusätzliche Maßnahmen</b> können Sie die
+          <b>Eintrittshäufigkeit</b> und <b>Auswirkung</b> für die Gefährdung bestimmen. Unterhalb
+          dieser finden Sie das berechnete <b>Risiko</b> (auf Basis Ihrer benutzerdefinierten
+          Risikomatrix).
+     </description>
+  </item>
+
+  <item title="Risikobehandlungsoption">
+     <description>
+        In der nachfolgenden Gruppe <b>Risikobehandlungsoption</b> können Sie über den
+        weiteren Umgang mit dem Risiko bestimmen. Schließen und Speichern Sie die Gefährdung
+        (<b>Strg+W</b>).
+     </description>
+  </item>
+
+  <item title="Risikobehandlung">
+     <description>
+        In Anforderungen bzw. Maßnahmen (sofern verwendet) kann definiert werden,
+        ob Anforderungen/Maßnahmen eine Risikoreduktion bewirken und welchen Effekt
+        (<b>Maßnahmenstärke</b>) diese haben. Öffnen Sie dazu eine Anforderung (bzw. bei
+        Verwendung von Maßnahmen: die damit verknüpfte Maßnahme), die mit Ihrer Gefährdung
+        verknüpft ist. Die Maßnahmenstärke <b>Reduziert die Eintrittshäufigkeit</b> oder
+        <b>Reduziert die Auswirkung</b> auf einen niedrigeren Wert, das Risiko selbst wird auf
+        Basis der definierten Risikomatrix berechnet und kann nicht direkt geändert werden. Sind
+        mehrere Anforderungen/Maßnahmen verknüpft, die eine Risikoreduktion bewirken, so wird
+        das Risiko in Bezug auf Eintrittshäufigkeit auf den jeweils kleinsten Wert gesetzt
+        (Minimumprinzip). Bei explizierter Verwendung von Maßnahmen kann die Maßnahmenstärke
+        von der Maßnahme auf die Anforderung vererbt werden.
+     </description>
+  </item>
+
+  <item title="Risikowerte">
+     <description>
+        Nachdem Sie die Risikobehandlung auf den Anforderungen/Maßnahmen durchgeführt haben,
+        können Sie das neu errechnete <b>Risiko mit ergänzender Maßnahme</b> in der Gefährdung
+        ersehen.
+     </description>
+  </item>
+
+</cheatsheet>

@@ -1,19 +1,14 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <cheatsheet title="Berichterstellung">
-
-  <intro>
-    <description>
-      <b>Willkommen bei verinice.</b>
-      <br/>
-      <br/>
+    <intro>
+        <description><b>Willkommen bei verinice.</b><br/><br/>
       Mit verinice können Sie alle nötigen Referenzdokumente (A.1 bis A.7) erzeugen, die benötigt
       werden. Die Dokumente können in den Formaten PDF, HTML, Microsoft Office oder OpenOffice/LibreOffice
       erzeugt werden.
     </description>
-  </intro>
-
-  <item title="Ausgabe der Referenzdokumente">
-     <description>
+    </intro>
+    <item title="Ausgabe der Referenzdokumente">
+        <description>
         Rufen Sie über das Menü <b>Datei &gt; Report erzeugen</b> … auf. Alternativ kann in der
         oberen Leiste der Button Bericht (<b>Report erzeugen…</b>) oder über einen <b>Informationsverbund
         &gt; rechte Maustaste &gt; Kontextmenü &gt; Erzeuge Report …</b> ausgewählt werden. Wählen
@@ -24,10 +19,9 @@
         mehrere Minuten dauern kann. Nachdem der Bericht vollständig erzeugt wurde, können Sie
         diesen an dem Ablageort einsehen.
      </description>
-  </item>
-
-  <item title="Verwendung des Abfrageassistenten">
-     <description>
+    </item>
+    <item title="Verwendung des Abfrageassistenten">
+        <description>
         Mit dem Abfrageassistenten können Sie eigene Berichte im .CSV-Format ausgeben lassen.
         Um den Abfrageassistenten zu starten wählen Sie im Menü <b>Datei &gt; Report-Abfrage &gt;
         Neue Abfrage</b> aus. Nun können Sie Ihren individuellen Bericht erzeugen, indem Sie die einzelnen
@@ -51,10 +45,7 @@
         Eine umfangreiche Präsentation der Funktionen des Abfrageassistenten erhalten Sie
         auf dem verinice YouTube Channel unter:
         <br/>
-        <b>https://youtu.be/CL8-1sC_ZSw</b>
+        <b>https://www.youtube.com/watch?v=CL8-1sC_ZSw&amp;list=PLYG8Ez-PzQxt3MVLvnFFRXS59YWzDlbGN&amp;index=6</b>
      </description>
-  </item>
-
-
-
+    </item>
 </cheatsheet>

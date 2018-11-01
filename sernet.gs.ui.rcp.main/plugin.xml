@@ -1979,6 +1979,22 @@
         </cheatsheet>
         <cheatsheet
             category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.workflow-engine"
+            composite="false"
+            contentFile="%cheatsheets.mogs.workflow-engine.file"
+            name="%cheatsheets.mogs.workflow-engine.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.risk-analysis"
+            composite="false"
+            contentFile="%cheatsheets.mogs.risk-analysis.file"
+            name="%cheatsheets.mogs.risk-analysis.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
             id="sernet.verinice.cheatsheets.mogs.documents"
             composite="false"
             contentFile="%cheatsheets.mogs.documents.file"

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cheatsheet title="Unterstützung des IT-Grundschutz-Checks durch Workflow-Engine">
+    <intro>
+        <description><b>Willkommen bei verinice.</b><br/><br/>
+      Mit der Workflow-Engine können Sie Aufgaben an andere Personen delegieren. In diesem
+      Tutorial lernen Sie mit der Workflow-Engine zu arbeiten.
+      <br/>
+      Hinweis: Um Aufgaben einer anderen Personen zuweisen zu können, benötigt diese Person
+      einen Account in verinice.
+    </description>
+    </intro>
+    <item title="Aufgaben erstellen">
+        <description>
+              Zunächst ist es notwendig Aufgaben zu erzeugen. Dazu wählen Sie eine oder mehrere
+              gleichartige Objekte (z.B. Maßnahmen) aus. Über die rechte Maustaste gelangen
+              Sie im Kontextmenü zum Menüpunkt <b>Aufgaben &gt; Erzeuge eine Aufgabe …</b>
+              Im anschließenden Wizard können Sie die Aufgabe definieren.
+              <br/>
+              1. Titel und Beschreibung: Hinterlegen Sie im ersten Schritt einen Titel und
+              die dazugehörige Beschreibung. Zusätzlich kann hier der <b>Freigabeprozess
+              aktiviert</b> werden. Mit klick auf <b>Weiter &gt;</b> gelangen Sie zum nächsten
+              Schritt.
+              <br/>
+              Hinweis: Mit dem aktiven Freigabeprozess werden die Inhalte der bearbeiteten Aufgaben
+              erst nach Freigabe durch den Aufgabenerzeuger für alle Nutzer ersichtlich. Wird
+              der Freigabeprozess nicht aktiviert, so sind die Inhalte der bearbeiteten Aufgaben
+              ohne die Bestätigung des Aufgabenerstellers für alle Nutzer ersichtlich.
+              <br/>
+              2. Termin und Erinnerungsfrist: Hier bestimmen Sie bis wann die Bearbeitung der
+              Aufgabe erfolgen soll und definieren zusätzlich eine <b>Erinnerungsfrist</b>. Über
+              den Button <b>Weiter &gt;</b> geht es zum nächsten Schritt.
+              <br/>
+              3. Verantwortliche Person: Bestimmen Sie nun die <b>Person</b>, welche die Aufgabe
+              bearbeiten soll und klicken auf <b>Weiter &gt;</b>.
+              <br/>
+              4. Properties: In diesem Schritt können Sie bestimmen welche <b>Properties</b>
+              (Abschnitte des Editors) die verantwortliche Person sehen/bearbeiten darf. Mit
+              den Button <b>Entfernen-&gt;</b> und <b>&lt;-Auswählen</b> können Sie die
+              Bearbeitung verbieten/erlauben. Nachdem die Festlegung erfolgt ist, klicken Sie
+              auf <b>Weiter &gt;</b>.
+              <br/>
+              5. Zusammenfassung: Im letzten Schritt erhalten Sie eine Zusammenfassung der
+              Aufgabe und können mit Klick auf <b>Fertigstellen</b> die Aufgabe erzeugen. Nun
+              ist die Aufgabe erzeugt und die zugeordnete Person kann diese bearbeiten. Es
+              wird jeweils eine Aufgabe pro markiertes Objekt erstellt. Die Bearbeitung kann
+              im Webfrontend oder im verinice Client erfolgen.
+         </description>
+    </item>
+    <item title="Bearbeitung im Webfrontend">
+        <description>
+            Zur Bearbeitung der Aufgaben im Webfrontend logen Sie sich zunächst im Webfrontend
+            ein.
+            <br/>
+            Über den Menüpunkt <b>Aufgaben</b> gelangen Sie zu einer Übersicht
+            aller Ihrer zu bearbeitenden Aufgaben. Wählen Sie mit einem Klick eine der
+            Aufgaben aus. Dadurch öffnet sich der Editor, wo Sie Ihre Daten hinterlegen
+            können. Oberhalb der Liste können Sie den Titel und die Beschreibung der Aufgabe
+            entnehmen. Nachdem Sie alle Informationen vervollständigt haben, klicken Sie auf
+            <b>Speichern</b>. Beachten Sie, dass durch diese Aktion die Aufgabe noch nicht erledigt
+            wurde. Um diese abzuschließen müssen Sie <b>Erledigt</b> klicken. Nun ist die
+            Aufgabe bearbeitet und geht an den Aufgabenerzeuger zur Prüfung zurück. Neben
+            der Erledigung der Aufgabe haben Sie noch zwei weitere Möglichkeiten den Status
+            einer Aufgabe zu verändern.
+            <br/>
+            1. Verlängerung beantragen: Sollten Sie mehr Zeit für die Bearbeitung
+            dieser Aufgabe benötigen, klicken Sie auf <b>Verlängerung beantragen</b>,
+            füllen das anschließende Pop-up Fenster mit Begründung und neuem Datum
+            aus und bestätigen dieses mit <b>OK</b>. Diese Aufgabe bleibt weiterhin in Ihrer
+            Übersicht, der Aufgabenerzeuger hat die Möglichkeit Ihnen die Verlängerung
+            zu genehmigen und ein neues Datum zu setzen.
+            <br/>
+            2. Nicht verantwortlich: Sind Sie der Meinung, dass Sie für die Bearbeitung der
+            Aufgabe nicht verantwortlich sind, so geben Sie die Aufgabe an den Aufgabenerzeuger
+            zurück indem Sie den Button <b>Nicht verantwortlich</b> betätigen. Der
+            Aufgabenerzeuger kann somit diese Aufgabe einer anderen Person zuweisen.
+        </description>
+    </item>
+    <item title="Bearbeitung im verinice Client">
+        <description>
+            Zur Bearbeitung der Aufgaben im verinice Client öffnen Sie die Aufgaben-View
+            über <b>Ansicht &gt; Zeige View... &gt; Aufgaben</b> oder Klick auf den Button
+            <b>Klemmbrett</b> in der oberen Leiste. In der Aufgaben-View haben Sie nun eine
+            Übersicht Ihrer Aufgaben, mit <b>Klick</b> auf eine Aufgabe sehen Sie im oberen
+            Bereich den Titel und die Beschreibung. Durch <b>Doppelklick</b> auf die Aufgabe
+            öffnet sich der Editor, wo Sie Ihre Daten hinterlegen können. Nachdem Sie alle
+            Informationen vervollständigt haben, schließen und speichern Sie den Editor
+            (<b>Strg+W</b>). Beachten Sie, dass durch diese Aktion die Aufgabe noch nicht
+            erledigt wurde. Um diese abzuschließen müssen Sie <b>Erledigt</b> klicken. Nun ist
+            die Aufgabe bearbeitet und geht an den Aufgabenerzeuger zur Prüfung zurück. Neben
+            der Erledigung der Aufgabe haben Sie noch zwei weitere Möglichkeiten die Aufgabe
+            zu bearbeiten.
+            <br/>
+            1. Verlängerung beantragen: Sollten Sie mehr Zeit für die Bearbeitung dieser
+            Aufgabe benötigen, klicken Sie auf <b>Verlängerung beantragen</b>, füllen das
+            anschließende Pop-up-Fenster mit Begründung und neuem Datum aus und bestätigen
+            dieses mit <b>OK</b>. Diese Aufgabe bleibt weiterhin in Ihrer Übersicht, der
+            Aufgabenerzeuger hat die Möglichkeit Ihnen die Verlängerung zu genehmigen und
+            ein neues Datum zu setzen.
+            <br/>
+            2. Nicht verantwortlich: Sind Sie der Meinung, dass Sie für die Bearbeitung der
+            Aufgabe nicht verantwortlich sind, so geben Sie die Aufgabe an den Aufgabenerzeuger
+            zurück indem Sie den Button <b>Nicht verantwortlich</b> betätigen. Der
+            Aufgabenerzeuger kann somit diese Aufgabe einer anderen Person zuweisen.
+         </description>
+    </item>
+    <item title="Überprüfung der bearbeiteten Aufgaben">
+        <description>
+            Zur Überprüfung der bearbeiteten Aufgaben öffnen Sie die Aufgaben-View
+            über <b>Ansicht &gt; Zeige View... &gt; Aufgaben</b> oder Klick auf den Button
+            <b>Klemmbrett</b> in der oberen Leiste. Im Aufgaben-View haben Sie nun eine Übersicht
+            Ihrer zu prüfenden Aufgaben mit unterschiedlichem Aufgaben-Typ.
+            <br/>
+            1. Prüfen: Nach der Auswahl (durch <b>Klick</b>) der Aufgabe des Typs Prüfen,
+            haben Sie die Möglichkeit die Bearbeitung der Aufgabe zu <b>Akzeptieren</b> oder
+            <b>Zurückweisen</b>. Natürlich sollten Sie zuerst überprüfen, ob die Angaben
+            tatsächlich Ihren Anforderungen entsprechen. Dazu klicken Sie auf den Button
+            <b>Vergleich</b> (links neben Akzeptieren). Dadurch öffnet sich ein Fenster in
+            dem Ihnen alle Änderungen in diesem Objekt aufgezeigt werden. Durch <b>OK</b>
+            schließen Sie das Fenster wieder.
+            <br/>
+            2. Verlängerung beantragt: Mit <b>Klick</b> auf eine Aufgabe diesen Typs, sehen Sie
+            im oberen Bereich die Begründung, die der Aufgabenbearbeiter hinterlegt hat. Sollten
+            Sie einer Verlängerung zustimmen, so wählen Sie nach <b>Rechtsklick &gt; Datum
+            ändern</b> ein neues Datum aus und bestätigen dieses mit <b>OK</b>. Anschließend
+            können Sie es <b>Akzeptieren</b>. Sollten Sie die Verlängerung nicht befürworten,
+            so betätigen Sie <b>Ablehnen</b>.
+            <br/>
+            3. Nicht zuständig: Die Aufgabe des Typs <b>Nicht zuständig</b> können Sie
+            einer anderen Person zuweisen indem Sie <b>Rechtsklick &gt; Person zuordnen &gt;
+            Modernisierter IT-Grundschutz &gt; OK &gt; eine Person auswählen &gt; OK</b>
+            klicken. Damit ist die Aufgabe einem anderen Verantwortlichen zugewiesen.
+        </description>
+    </item>
+</cheatsheet>
