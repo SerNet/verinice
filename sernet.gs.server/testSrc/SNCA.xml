@@ -4867,7 +4867,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             <huiproperty name="E-Mail-Adresse" id="org_ds_email" />
         </huipropertygroup>
 
-        <huipropertygroup tags="Privacy" id="org_ds_eu" name="Vertreter innerhalb der Europäischen Union">
+    <huipropertygroup tags="Privacy" id="org_ds_eu" name="Vertreter innerhalb der Europäischen Union">
         <huiproperty id="org_ds_eu_ausserh" name="Sitz des Verantwortlichen außerhalb der EU?" inputtype="singleoption">
             <option id="org_ds_eu_1" name="Ja"  />
             <option id="org_ds_eu_2" name="Nein" />
@@ -5612,6 +5612,9 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
             <option
                 id="person-iso_9"
                 name="Datenschutzbeauftragter" />
+            <option
+                id="person-iso_52"
+                name="Datenschutzkoordinator" />
             <option
                 id="person-iso_43"
                 name="Entwickler" />
@@ -8477,31 +8480,30 @@ Wurden bereits weitere Stellen informiert?
         </huipropertygroup>
 
 
-        <huipropertygroup tags="Privacy" id="process_dv_group_benachrichtigung" name="Benachrichtigung Betroffener">
-            <depends option="process_privacy_yesno" value="1" />
-            <huiproperty id="process_pg_benachrichtigung" name="Benachrichtigung Betroffener Art.13, 14 DSGVO" tags="Privacy" inputtype="singleoption">
-                <option id="process_bg_benachrichtigung_erfolgt" name="Erfolgt" />
-                <option id="process_bg_benachrichtigung_nichterfolgt" name="Nicht erfolgt" />
-            </huiproperty>
-            <huiproperty id="process_pg_benachrichtigung_begruendung" name="Grund für Nichtbenachrichtigung" tags="Privacy" inputtype="multioption">
-                <depends option="process_pg_benachrichtigung" value="process_bg_benachrichtigung_nichterfolgt" />
-                <option id="process_bg_benachrichtigung_begruendung_0" name="Keine Erstspeicherung" />
-                <option id="process_bg_benachrichtigung_begruendung_1" name="Kenntnis auf andere Weise" />
-                <option id="process_bg_benachrichtigung_begruendung_2" name="Speicherung aufg. Aufbewahrungsvorschriften / unverh. Aufwand" />
-                <option id="process_bg_benachrichtigung_begruendung_3" name="Ausschließliche Speicherung zur Datensicherung / unverh. Aufwand" />
-                <option id="process_bg_benachrichtigung_begruendung_4" name="Ausschließliche Speicherung zur Datenschutzkontrolle / unverh. Aufwand" />
-                <option id="process_bg_benachrichtigung_begruendung_5" name="Rechtliche Geheimhaltungspflicht" />
-                <option id="process_bg_benachrichtigung_begruendung_6" name="Speicherung durch Gesetz vorgesehen" />
-                <option id="process_bg_benachrichtigung_begruendung_7" name="Wissenschaftliche Forschung / unverh. Aufwand" />
-                <option id="process_bg_benachrichtigung_begruendung_8" name="Gefährdung öff. Sicherheit oder Ordnung" />
-                <option id="process_bg_benachrichtigung_begruendung_9" name="Eig. Zwecke / aus allg. zugänglichen Quellen" />
-                <option id="process_bg_benachrichtigung_begruendung_10" name="Eig. Zwecke / Gefährdung der Geschäftszwecke" />
-                <option id="process_bg_benachrichtigung_begruendung_11" name="Nur zur Übermittlung / allg. zugäng. Quellen" />
-                <option id="process_bg_benachrichtigung_begruendung_12" name="Nur zur Übermittlung / listenmäßig od. zusg. Daten" />
-                <option id="process_bg_benachrichtigung_begruendung_13" name="Allg. zug. Quellen / Markt- und Meinungsforschung" />
-            </huiproperty>
-        </huipropertygroup>
-
+     <huipropertygroup id="process_dv_group_benachrichtigung" name="Benachrichtigung Betroffener" tags="Privacy">
+      <huiproperty id="process_pg_benachrichtigung" inputtype="singleoption" name="Informationspflichten" tags="Privacy">
+        <option id="process_bg_benachrichtigung_erfolgt" name="Erfolgt"/>
+        <option id="process_bg_benachrichtigung_nichterfolgt" name="Nicht erfolgt"/>
+      </huiproperty>
+      <huiproperty id="process_pg_benachrichtigung_begruendung" inputtype="multioption" name="Grund für Nichtbenachrichtigung" tags="Privacy" visible="false">
+        <option id="process_bg_benachrichtigung_begruendung_0" name="Keine Erstspeicherung"/>
+        <option id="process_bg_benachrichtigung_begruendung_1" name="Kenntnis auf andere Weise"/>
+        <option id="process_bg_benachrichtigung_begruendung_2" name="Speicherung aufg. Aufbewahrungsvorschriften / unverh. Aufwand"/>
+        <option id="process_bg_benachrichtigung_begruendung_3" name="Ausschließliche Speicherung zur Datensicherung / unverh. Aufwand"/>
+        <option id="process_bg_benachrichtigung_begruendung_4" name="Ausschließliche Speicherung zur Datenschutzkontrolle / unverh. Aufwand"/>
+        <option id="process_bg_benachrichtigung_begruendung_5" name="Rechtliche Geheimhaltungspflicht"/>
+        <option id="process_bg_benachrichtigung_begruendung_6" name="Speicherung durch Gesetz vorgesehen"/>
+        <option id="process_bg_benachrichtigung_begruendung_7" name="Wissenschaftliche Forschung / unverh. Aufwand"/>
+        <option id="process_bg_benachrichtigung_begruendung_8" name="Gefährdung öff. Sicherheit oder Ordnung"/>
+        <option id="process_bg_benachrichtigung_begruendung_9" name="Eig. Zwecke / aus allg. zugänglichen Quellen"/>
+        <option id="process_bg_benachrichtigung_begruendung_10" name="Eig. Zwecke / Gefährdung der Geschäftszwecke"/>
+        <option id="process_bg_benachrichtigung_begruendung_11" name="Nur zur Übermittlung / allg. zugäng. Quellen"/>
+        <option id="process_bg_benachrichtigung_begruendung_12" name="Nur zur Übermittlung / listenmäßig od. zusg. Daten"/>
+        <option id="process_bg_benachrichtigung_begruendung_13" name="Allg. zug. Quellen / Markt- und Meinungsforschung"/>
+      </huiproperty>
+      <huiproperty id="process_pg_benachrichtigung_erlaeuterung" inputtype="text" name="Erläuterung"/>
+      <huiproperty id="process_pg_benachrichtigung_dokument" isURL="true" name="Dokument"/>
+    </huipropertygroup>
 
         <huipropertygroup tags="Privacy" id="process_dv_group_loesch" name="Löschfristen">
             <depends option="process_privacy_yesno" value="1" />
@@ -8528,7 +8530,80 @@ Wurden bereits weitere Stellen informiert?
                     id="loeschfrist_dokument"
                     isURL="true" />
         </huipropertygroup>
-
+	     <huipropertygroup id="process_dsfa_needed_group" name="Datenschutzfolgenabschätzung (DSFA) erfoderlich" tags="Privacy">
+	      <huiproperty id="process_is_dsgvo_blacklisted" inputtype="singleoption" max="1" name="Verarbeitung ist auf Negativliste geführt" tags="Privacy">
+	        <option id="process_is_dsgvo_blacklisted_yes" name="Ja" value="0"/>
+	        <option id="process_is_dsgvo_blacklisted_no" name="Nein" value="1"/>
+	      </huiproperty>
+	      <huiproperty id="process_joined_dataprocessing" inputtype="singleoption" max="1" name="Verarbeitung ist Teil eines gemeinsamen Verarbeitungsvorganges" tags="Privacy">
+	        <depends option="process_is_dsgvo_blacklisted" value="process_is_dsgvo_blacklisted_no"/>
+	        <option id="process_joined_dataprocessing_yes" name="Ja" value="1"/>
+	        <option id="process_joined_dataprocessing_no" name="Nein" value="0"/>
+	      </huiproperty>
+	      <huiproperty id="process_joined_dataprocessing_comments" inputtype="text" name="Bemerkungen" tags="Privacy">
+	        <depends option="process_is_dsgvo_blacklisted" value="process_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="process_joined_dataprocessing_document" isURL="true" name="Dokument">
+	        <depends option="process_is_dsgvo_blacklisted" value="process_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="process_other_dataprocessing" inputtype="singleoption" max="1" name="Sonstiger Ausschlusstatbestand" tags="Privacy">
+	        <depends option="process_is_dsgvo_blacklisted" value="process_is_dsgvo_blacklisted_no"/>
+	        <option id="process_other_dataprocessing_yes" name="Ja" value="1"/>
+	        <option id="process_other_dataprocessing_no" name="Nein" value="0"/>
+	      </huiproperty>
+	      <huiproperty id="process_other_dataprocessing_comments" inputtype="text" name="Bemerkungen" tags="Privacy">
+	        <depends option="process_is_dsgvo_blacklisted" value="process_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="process_whitelist_dataprocessing" inputtype="singleoption" max="1" name="Verarbeitung ist auf Positivliste geführt" tags="Privacy">
+	        <depends option="process_is_dsgvo_blacklisted" value="process_is_dsgvo_blacklisted_no"/>
+	        <option id="process_whitelist_dataprocessing_yes" name="Ja"/>
+	        <option id="process_whitelist_dataprocessing_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="process_whitelist_dataprocessing_comments" inputtype="text" name="Bemerkungen" tags="Privacy">
+	        <depends option="process_is_dsgvo_blacklisted" value="process_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="process_whitelist_dataprocessing_document" isURL="true" name="Dokument">
+	        <depends option="process_is_dsgvo_blacklisted" value="process_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="process_dsfa_criteria_test" inputtype="multioption" name="Entspricht die Verarbeitung folgenden Kriterien" tags="Privacy">
+	        <depends option="process_is_dsgvo_blacklisted" value="process_is_dsgvo_blacklisted_no"/>
+	        <option id="process_dsfa_criteria_test_1" name="Bewertung oder Einstufung (Scoring), Profilbildung und Prognosen Betroffenen"/>
+	        <option id="process_dsfa_criteria_test_2" name="Automatisierte Entscheidungen mit rechtlicher oder ähnlich beeinträchtigender Wirkung"/>
+	        <option id="process_dsfa_criteria_test_3" name="Systematische Überwachung"/>
+	        <option id="process_dsfa_criteria_test_4" name="Verarbeitung besonderer Kategorien personenbezogener Daten gemäß Art. 9"/>
+	        <option id="process_dsfa_criteria_test_5" name="Verarbeitung personenbezogener Daten über strafrechtliche Verurteilungen oder Straftaten gemäß Art 10"/>
+	        <option id="process_dsfa_criteria_test_6" name="Datenverarbeitung im großen Umfang"/>
+	        <option id="process_dsfa_criteria_test_7" name="Abgleich oder Zusammenführen von Datensätzen"/>
+	        <option id="process_dsfa_criteria_test_8" name="Daten zu schutzbedürftigen Betroffenen"/>
+	        <option id="process_dsfa_criteria_test_9" name="Innovative Nutzung oder Verwendung von technologischen und organisatorischen Lösungen"/>
+	        <option id="process_dsfa_criteria_test_10" name="Datentransfer außerhalb der EU"/>
+	        <option id="process_dsfa_criteria_test_11" name="Systematische Überwachung"/>
+	      </huiproperty>
+	      <huiproperty id="process_dsfa_criteria_match" inputtype="singleoption" max="1" name="Zwei oder mehr o.g Kriterien zu" tags="Privacy">
+	        <option id="process_dsfa_criteria_match_yes" name="Ja"/>
+	        <option id="process_dsfa_criteria_match_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="process_dsfa_criteria_match_comments" inputtype="text" name="Bemerkungen" tags="Privacy"/>
+	      <huiproperty id="process_dsfa_criteria_match_document" isURL="true" name="Dokument"/>
+	      <huiproperty id="process_dsfa_criteria_other" inputtype="singleoption" max="1" name="Erfordernis aus sonstigen Gründen" tags="Privacy">
+	        <option id="process_dsfa_criteria_other_yes" name="Ja"/>
+	        <option id="process_dsfa_criteria_other_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="process_dsfa_criteria_other_comments" inputtype="text" name="Bemerkungen" tags="Privacy"/>
+	      <huiproperty id="process_dsfa_criteria_other_document" isURL="true" name="Dokument"/>
+	      <huiproperty id="process_dsfa_oversight" inputtype="singleoption" max="1" name="Konsultation der Aufsichtsbehörde erforderlich" tags="Privacy">
+	        <option id="process_dsfa_oversight_yes" name="Ja"/>
+	        <option id="process_dsfa_oversight_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="process_dsfa_oversight_comments" inputtype="text" name="Bemerkungen" tags="Privacy"/>
+	      <huiproperty id="process_dsfa_oversight_document" isURL="true" name="Dokument"/>
+	      <huiproperty id="process_dsfa_clearance" inputtype="singleoption" max="1" name="Freigabe der Verarbeitung" tags="Privacy">
+	        <option id="process_dsfa_clearance_yes" name="Ja"/>
+	        <option id="process_dsfa_clearance_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="process_dsfa_clearance_comments" inputtype="text" name="Bemerkungen" tags="Privacy"/>
+	      <huiproperty id="process_dsfa_clearance_document" isURL="true" name="Dokument"/>
+	    </huipropertygroup>
         <huipropertygroup tags="Privacy" id="process_stellungnahmedsb_group" name="Stellungnahme DSB">
             <depends option="process_privacy_yesno" value="1" />
             <huiproperty tags="Privacy" id="process_stellungnahmedsb_vorpruefung" name="Datenschutzfolgeabschätzung erforderlich?" inputtype="singleoption">
@@ -9251,6 +9326,14 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="bp_itnetwork_vv_bsig_enquiry_phone" name="Enquiry Phone" />
             <huiproperty id="bp_itnetwork_vv_bsig_equiry_email" name="Enquiry E-Mail" />
         </huipropertygroup>
+        <huipropertygroup id="bp_itnetwork_contact_info_group" name="ContactInfo">
+		    <huiproperty name="Address" id="bp_itnetwork_addr" inputtype="text" />
+	        <huiproperty name="Website" id="bp_itnetwork_web" />
+	    	<huiproperty name="Allg. E-Mail Kontakt" id="bp_itnetwork_allg_Mail"  />
+	        <huiproperty name="Contact" id="bp_itnetwork_cont" />
+	        <huiproperty name="Contact Phone" id="bp_itnetwork_contphone" />
+	        <huiproperty name="Contact email" id="bp_itnetwork_contmail" />
+	    </huipropertygroup>
         <huipropertygroup id="bp_itnetwork_data_protection_group" name="Data protection supervisory authority">
             <huiproperty id="bp_itnetwork_data_protection_authority" name="Competent supervisory authority" />
             <huiproperty id="bp_itnetwork_data_protection_adress" name="Address" />
@@ -9258,6 +9341,22 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="bp_itnetwork_data_protection_email" name="Email" />
         </huipropertygroup>
         <huiproperty id="bp_itnetwork_risk_configuration" name="Risk configuration" visible="false" inputtype="text"/>
+
+	    <huipropertygroup tags="Privacy" id="bp_itnetwork_ds_eu" name="Vertreter innerhalb der Europäischen Union">
+	        <huiproperty id="bp_itnetwork_ds_eu_ausserh" name="Sitz des Verantwortlichen außerhalb der EU?" inputtype="singleoption">
+	            <option id="bp_itnetwork_ds_eu_1" name="Ja"  />
+	            <option id="bp_itnetwork_ds_eu_2" name="Nein" />
+	        </huiproperty>
+	
+	        <huiproperty id="bp_itnetwork_ds_eu_Kontaktd" name="Angaben zum Vertreter des Verantwortlichen" />
+	        <huiproperty id="bp_itnetwork_ds_eu_name" name="Name" />
+	        <huiproperty id="bp_itnetwork_ds_eu_ansprech" name="Ansprechpartner" />
+	        <huiproperty id="bp_itnetwork_ds_eu_strass" name="Straße" />
+	        <huiproperty id="bp_itnetwork_ds_eu_plz" name="Postleitzahl" />
+	        <huiproperty id="bp_itnetwork_ds_eu_ort" name="Ort" />
+	        <huiproperty id="bp_itnetwork_ds_eu_tel" name="Telefonnummer" />
+	        <huiproperty id="bp_itnetwork_ds_eu_email" name="E-Mail-Adresse" />
+	    </huipropertygroup>
     </huientity>
 
     <huientity id="bp_application" name="Application">
@@ -9360,6 +9459,10 @@ Wurden bereits weitere Stellen informiert?
 	    </huiproperty>
 	    <huiproperty id="bp_application_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
 	   </huipropertygroup>
+       <huipropertygroup columns="1" id="bp_application_group_riskanalysis" name="riskanalysis" tags="Risk">
+          <huiproperty defaultValue="1" id="bp_application_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
+          <huiproperty id="bp_application_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
+       </huipropertygroup>
     </huientity>
 
     <huientity id="bp_application_group" name="Application Group">
@@ -9466,6 +9569,10 @@ Wurden bereits weitere Stellen informiert?
 		    </huiproperty>
 		    <huiproperty id="bp_businessprocess_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
         </huipropertygroup>
+    	<huipropertygroup columns="1" id="bp_businessprocess_group_riskanalysis" name="riskanalysis" tags="Risk">
+      		<huiproperty defaultValue="1" id="bp_businessprocess_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
+      		<huiproperty id="bp_businessprocess_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
+    	</huipropertygroup>
         <huiproperty id="bp_businessprocess_privacy_yesno" name="Aufnahme in das Verzeichnis der Verarbeitungstätigkeiten" inputtype="booleanoption" />
 
         <huipropertygroup tags="Privacy" id="bp_businessprocess_va_group" name="Verarbeitungsangaben">
@@ -9909,32 +10016,30 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty tags="Privacy" id="bp_businessprocess_pg_sonstbetr" name="Ergänzende Angaben" />
         </huipropertygroup>
 
-
-        <huipropertygroup tags="Privacy" id="bp_businessprocess_dv_group_benachrichtigung" name="Benachrichtigung Betroffener">
-            <depends option="bp_businessprocess_privacy_yesno" value="1" />
-            <huiproperty id="bp_businessprocess_pg_benachrichtigung" name="Benachrichtigung Betroffener Art.13, 14 DSGVO" tags="Privacy" inputtype="singleoption">
-                <option id="bp_businessprocess_bg_benachrichtigung_erfolgt" name="Erfolgt" />
-                <option id="bp_businessprocess_bg_benachrichtigung_nichterfolgt" name="Nicht erfolgt" />
-            </huiproperty>
-            <huiproperty id="bp_businessprocess_pg_benachrichtigung_begruendung" name="Grund für Nichtbenachrichtigung" tags="Privacy" inputtype="multioption">
-                <depends option="bp_businessprocess_pg_benachrichtigung" value="bp_businessprocess_bg_benachrichtigung_nichterfolgt" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_0" name="Keine Erstspeicherung" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_1" name="Kenntnis auf andere Weise" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_2" name="Speicherung aufg. Aufbewahrungsvorschriften / unverh. Aufwand" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_3" name="Ausschließliche Speicherung zur Datensicherung / unverh. Aufwand" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_4" name="Ausschließliche Speicherung zur Datenschutzkontrolle / unverh. Aufwand" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_5" name="Rechtliche Geheimhaltungspflicht" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_6" name="Speicherung durch Gesetz vorgesehen" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_7" name="Wissenschaftliche Forschung / unverh. Aufwand" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_8" name="Gefährdung öff. Sicherheit oder Ordnung" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_9" name="Eig. Zwecke / aus allg. zugänglichen Quellen" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_10" name="Eig. Zwecke / Gefährdung der Geschäftszwecke" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_11" name="Nur zur Übermittlung / allg. zugäng. Quellen" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_12" name="Nur zur Übermittlung / listenmäßig od. zusg. Daten" />
-                <option id="bp_businessprocess_bg_benachrichtigung_begruendung_13" name="Allg. zug. Quellen / Markt- und Meinungsforschung" />
-            </huiproperty>
-        </huipropertygroup>
-
+	   <huipropertygroup id="bp_businessprocess_dv_group_benachrichtigung" name="Benachrichtigung Betroffener" tags="Privacy">
+	     <huiproperty id="bp_businessprocess_pg_benachrichtigung" inputtype="singleoption" name="Informationspflichten" tags="Privacy">
+	       <option id="bp_businessprocess_bg_benachrichtigung_erfolgt" name="Erfolgt"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_nichterfolgt" name="Nicht erfolgt"/>
+	     </huiproperty>
+	     <huiproperty id="bp_businessprocess_pg_benachrichtigung_begruendung" inputtype="multioption" name="Grund für Nichtbenachrichtigung" tags="Privacy" visible="false">
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_0" name="Keine Erstspeicherung"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_1" name="Kenntnis auf andere Weise"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_2" name="Speicherung aufg. Aufbewahrungsvorschriften / unverh. Aufwand"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_3" name="Ausschließliche Speicherung zur Datensicherung / unverh. Aufwand"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_4" name="Ausschließliche Speicherung zur Datenschutzkontrolle / unverh. Aufwand"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_5" name="Rechtliche Geheimhaltungspflicht"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_6" name="Speicherung durch Gesetz vorgesehen"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_7" name="Wissenschaftliche Forschung / unverh. Aufwand"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_8" name="Gefährdung öff. Sicherheit oder Ordnung"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_9" name="Eig. Zwecke / aus allg. zugänglichen Quellen"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_10" name="Eig. Zwecke / Gefährdung der Geschäftszwecke"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_11" name="Nur zur Übermittlung / allg. zugäng. Quellen"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_12" name="Nur zur Übermittlung / listenmäßig od. zusg. Daten"/>
+	       <option id="bp_businessprocess_bg_benachrichtigung_begruendung_13" name="Allg. zug. Quellen / Markt- und Meinungsforschung"/>
+	     </huiproperty>
+	     <huiproperty id="bp_businessprocess_pg_benachrichtigung_erlaeuterung" inputtype="text" name="Erläuterung"/>
+	     <huiproperty id="bp_businessprocess_pg_benachrichtigung_dokument" isURL="true" name="Dokument"/>
+	   </huipropertygroup>
 
         <huipropertygroup tags="Privacy" id="bp_businessprocess_dv_group_loesch" name="Löschfristen">
             <depends option="bp_businessprocess_privacy_yesno" value="1" />
@@ -9961,7 +10066,80 @@ Wurden bereits weitere Stellen informiert?
                     id="bp_businessprocess_loeschfrist_dokument"
                     isURL="true" />
         </huipropertygroup>
-
+	    <huipropertygroup id="bp_businessprocess_dsfa_needed_group" name="Datenschutzfolgenabschätzung (DSFA) erfoderlich" tags="Privacy">
+	      <huiproperty id="bp_businessprocess_is_dsgvo_blacklisted" inputtype="singleoption" max="1" name="Verarbeitung ist auf Negativliste geführt" tags="Privacy">
+	        <option id="bp_businessprocess_is_dsgvo_blacklisted_yes" name="Ja" value="0"/>
+	        <option id="bp_businessprocess_is_dsgvo_blacklisted_no" name="Nein" value="1"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_joined_dataprocessing" inputtype="singleoption" max="1" name="Verarbeitung ist Teil eines gemeinsamen Verarbeitungsvorganges" tags="Privacy">
+	        <depends option="bp_businessprocess_is_dsgvo_blacklisted" value="bp_businessprocess_is_dsgvo_blacklisted_no"/>
+	        <option id="bp_businessprocess_joined_dataprocessing_yes" name="Ja" value="1"/>
+	        <option id="bp_businessprocess_joined_dataprocessing_no" name="Nein" value="0"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_joined_dataprocessing_comments" inputtype="text" name="Bemerkungen" tags="Privacy">
+	        <depends option="bp_businessprocess_is_dsgvo_blacklisted" value="bp_businessprocess_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_joined_dataprocessing_document" isURL="true" name="Dokument">
+	        <depends option="bp_businessprocess_is_dsgvo_blacklisted" value="bp_businessprocess_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_other_dataprocessing" inputtype="singleoption" max="1" name="Sonstiger Ausschlusstatbestand" tags="Privacy">
+	        <depends option="bp_businessprocess_is_dsgvo_blacklisted" value="bp_businessprocess_is_dsgvo_blacklisted_no"/>
+	        <option id="bp_businessprocess_other_dataprocessing_yes" name="Ja" value="1"/>
+	        <option id="bp_businessprocess_other_dataprocessing_no" name="Nein" value="0"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_other_dataprocessing_comments" inputtype="text" name="Bemerkungen" tags="Privacy">
+	        <depends option="bp_businessprocess_is_dsgvo_blacklisted" value="bp_businessprocess_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_whitelist_dataprocessing" inputtype="singleoption" max="1" name="Verarbeitung ist auf Positivliste geführt" tags="Privacy">
+	        <depends option="bp_businessprocess_is_dsgvo_blacklisted" value="bp_businessprocess_is_dsgvo_blacklisted_no"/>
+	        <option id="bp_businessprocess_whitelist_dataprocessing_yes" name="Ja"/>
+	        <option id="bp_businessprocess_whitelist_dataprocessing_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_whitelist_dataprocessing_comments" inputtype="text" name="Bemerkungen" tags="Privacy">
+	        <depends option="bp_businessprocess_is_dsgvo_blacklisted" value="bp_businessprocess_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_whitelist_dataprocessing_document" isURL="true" name="Dokument">
+	        <depends option="bp_businessprocess_is_dsgvo_blacklisted" value="bp_businessprocess_is_dsgvo_blacklisted_no"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_dsfa_criteria_test" inputtype="multioption" name="Entspricht die Verarbeitung folgenden Kriterien" tags="Privacy">
+	        <depends option="bp_businessprocess_is_dsgvo_blacklisted" value="bp_businessprocess_is_dsgvo_blacklisted_no"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_1" name="Bewertung oder Einstufung (Scoring), Profilbildung und Prognosen Betroffenen"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_2" name="Automatisierte Entscheidungen mit rechtlicher oder ähnlich beeinträchtigender Wirkung"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_3" name="Systematische Überwachung"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_4" name="Verarbeitung besonderer Kategorien personenbezogener Daten gemäß Art. 9"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_5" name="Verarbeitung personenbezogener Daten über strafrechtliche Verurteilungen oder Straftaten gemäß Art 10"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_6" name="Datenverarbeitung im großen Umfang"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_7" name="Abgleich oder Zusammenführen von Datensätzen"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_8" name="Daten zu schutzbedürftigen Betroffenen"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_9" name="Innovative Nutzung oder Verwendung von technologischen und organisatorischen Lösungen"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_10" name="Datentransfer außerhalb der EU"/>
+	        <option id="bp_businessprocess_dsfa_criteria_test_11" name="Systematische Überwachung"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_dsfa_criteria_match" inputtype="singleoption" max="1" name="Zwei oder mehr o.g Kriterien zu" tags="Privacy">
+	        <option id="bp_businessprocess_dsfa_criteria_match_yes" name="Ja"/>
+	        <option id="bp_businessprocess_dsfa_criteria_match_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_dsfa_criteria_match_comments" inputtype="text" name="Bemerkungen" tags="Privacy"/>
+	      <huiproperty id="bp_businessprocess_dsfa_criteria_match_document" isURL="true" name="Dokument"/>
+	      <huiproperty id="bp_businessprocess_dsfa_criteria_other" inputtype="singleoption" max="1" name="Erfordernis aus sonstigen Gründen" tags="Privacy">
+	        <option id="bp_businessprocess_dsfa_criteria_other_yes" name="Ja"/>
+	        <option id="bp_businessprocess_dsfa_criteria_other_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_dsfa_criteria_other_comments" inputtype="text" name="Bemerkungen" tags="Privacy"/>
+	      <huiproperty id="bp_businessprocess_dsfa_criteria_other_document" isURL="true" name="Dokument"/>
+	      <huiproperty id="bp_businessprocess_dsfa_oversight" inputtype="singleoption" max="1" name="Konsultation der Aufsichtsbehörde erforderlich" tags="Privacy">
+	        <option id="bp_businessprocess_dsfa_oversight_yes" name="Ja"/>
+	        <option id="bp_businessprocess_dsfa_oversight_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_dsfa_oversight_comments" inputtype="text" name="Bemerkungen" tags="Privacy"/>
+	      <huiproperty id="bp_businessprocess_dsfa_oversight_document" isURL="true" name="Dokument"/>
+	      <huiproperty id="bp_businessprocess_dsfa_clearance" inputtype="singleoption" max="1" name="Freigabe der Verarbeitung" tags="Privacy">
+	        <option id="bp_businessprocess_dsfa_clearance_yes" name="Ja"/>
+	        <option id="bp_businessprocess_dsfa_clearance_no" name="Nein"/>
+	      </huiproperty>
+	      <huiproperty id="bp_businessprocess_dsfa_clearance_comments" inputtype="text" name="Bemerkungen" tags="Privacy"/>
+	      <huiproperty id="bp_businessprocess_dsfa_clearance_document" isURL="true" name="Dokument"/>
+	    </huipropertygroup>
         <huipropertygroup tags="Privacy" id="bp_businessprocess_stellungnahmedsb_group" name="Stellungnahme DSB">
             <depends option="bp_businessprocess_privacy_yesno" value="1" />
             <huiproperty tags="Privacy" id="bp_businessprocess_stellungnahmedsb_vorpruefung" name="Datenschutzfolgeabschätzung erforderlich?" inputtype="singleoption">
@@ -10099,6 +10277,10 @@ Wurden bereits weitere Stellen informiert?
 		    </huiproperty>
 		    <huiproperty id="bp_icssystem_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
         </huipropertygroup>
+    	<huipropertygroup columns="1" id="bp_icssystem_group_riskanalysis" name="riskanalysis" tags="Risk">
+      		<huiproperty defaultValue="1" id="bp_icssystem_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
+      		<huiproperty id="bp_icssystem_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
+    	</huipropertygroup>
         <huipropertygroup name="KIX" id="bp_icssystem_kix" tags="KIX" >
             <huiproperty name="KIX Ticket 1" id="bp_icssystem_kix_ticket1" isURL="true"/>
             <huiproperty name="KIX Ticket 2" id="bp_icssystem_kix_ticket2" isURL="true"/>
@@ -10224,6 +10406,10 @@ Wurden bereits weitere Stellen informiert?
 		    </huiproperty>
 		    <huiproperty id="bp_itsystem_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
         </huipropertygroup>
+       <huipropertygroup columns="1" id="bp_itsystem_group_riskanalysis" name="riskanalysis" tags="Risk">
+      		<huiproperty defaultValue="1" id="bp_itsystem_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
+      		<huiproperty id="bp_itsystem_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
+    	</huipropertygroup>
         <huipropertygroup name="KIX" id="bp_itsystem_kix" tags="KIX" >
             <huiproperty name="KIX Ticket 1" id="bp_itsystem_kix_ticket1" isURL="true"/>
             <huiproperty name="KIX Ticket 2" id="bp_itsystem_kix_ticket2" isURL="true"/>
@@ -10318,6 +10504,68 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty id="bp_person_org_unit" name="=Org. unit" />
         <huiproperty id="bp_person_explanation" name="Explanation" />
         <huiproperty id="bp_person_tag" name="Tags" />
+		<huiproperty id="bp_person_roles" inputtype="multioption" name="Roles" required="false" >
+			<option id="bp_person_role_0" name="Administrator" />
+			<option id="bp_person_role_2" name="Anwendungsentwickler" />
+			<option id="bp_person_role_3" name="Archivverwalter" />
+			<option id="bp_person_role_4" name="Bauleiter" />
+			<option id="bp_person_role_5"
+				name="Behörden-/Unternehmensleitung" />
+			<option id="bp_person_role_6" name="Benutzer" />
+			<option id="bp_person_role_7" name="Beschaffer" />
+			<option id="bp_person_role_8" name="Brandschutzbeauftragter" />
+			<option id="bp_person_role_9" name="Datenschutzbeauftragter" />
+			<option id="bp_person_role_52" name="Datenschutzkoordinator" />
+			<option id="bp_person_role_43" name="Entwickler" />
+			<option id="bp_person_role_10" name="Errichterfirma" />
+			<option id="bp_person_role_11" name="Fachabteilung" />
+			<option id="bp_person_role_42" name="Fachverantwortliche" />
+			<option id="bp_person_role_12" name="Fax-Poststelle" />
+			<option id="bp_person_role_13" name="Fax-Verantwortlicher" />
+			<option id="bp_person_role_14" name="Haustechnik" />
+			<option id="bp_person_role_16" name="Innerer Dienst" />
+			<option id="bp_person_role_17" name="IT-Benutzer" />
+			<option id="bp_person_role_18"
+				name="IT-Sicherheitsbeauftragter" />
+			<option id="bp_person_role_19" name="IT-Sicherheitsmanagement" />
+			<option id="bp_person_role_20"
+				name="IT-Verfahrensverantwortlicher" />
+			<option id="bp_person_role_46" name="Leiter Beschaffung" />
+			<option id="bp_person_role_44" name="Leiter Entwicklung" />
+			<option id="bp_person_role_47" name="Leiter Fachabteilung" />
+			<option id="bp_person_role_48" name="Leiter Haustechnik" />
+			<option id="bp_person_role_49" name="Leiter Innerer Dienst" />
+			<option id="bp_person_role_45" name="Leiter IT" />
+			<option id="bp_person_role_50" name="Leiter Organisation" />
+			<option id="bp_person_role_51" name="Leiter Personal" />
+			<option id="bp_person_role_22" name="Mitarbeiter" />
+			<option id="bp_person_role_24" name="Notfall-Verantwortliche" />
+			<option id="bp_person_role_25" name="Personalabteilung" />
+			<option id="bp_person_role_26" name="Personalrat/Betriebsrat" />
+			<option id="bp_person_role_1" name="Planer" />
+			<option id="bp_person_role_27" name="Poststelle" />
+			<option id="bp_person_role_40" name="Pressestelle" />
+			<option id="bp_person_role_28" name="Revisor" />
+			<option id="bp_person_role_29" name="Telearbeiter" />
+			<option id="bp_person_role_35" name="Tester" />
+			<option id="bp_person_role_30"
+				name="TK-Anlagen-Verantwortlicher" />
+			<option id="bp_person_role_32"
+				name="Verantwortliche der einzelnen IT-Anwendungen" />
+			<option id="bp_person_role_33"
+				name="Verantwortliche für die Datensicherung" />
+			<option id="bp_person_role_34" name="Vorgesetzte" />
+			<option id="bp_person_role_39" name="Fax-Absender" />
+			<option id="bp_person_role_38" name="Fax-Empfänger" />
+			<option id="bp_person_role_36" name="IT Helpdesk" />
+			<option id="bp_person_role_37" name="Hersteller" />
+			<option id="bp_person_role_15" name="Hausverwaltung" />
+			<option id="bp_person_role_21" name="Leitung" />
+			<option id="bp_person_role_23" name="Netzplaner" />
+			<option id="bp_person_role_31" name="Unternehmensleitung" />
+			<option id="bp_person_role_41" name="Vertretung" />
+		</huiproperty>
+        
         <huiproperty id="bp_person_document" isURL="true" name="Document" />
     </huientity>
     <huientity id="bp_person_group" name="Person Group">
@@ -10338,6 +10586,9 @@ Wurden bereits weitere Stellen informiert?
         <huirelation to="bp_device" id="rel_bp_requirement_bp_device" name="models"  reversename="modeled with" />
         <huirelation to="bp_network" id="rel_bp_requirement_bp_network" name="models"  reversename="modeled with" />
         <huirelation to="bp_room" id="rel_bp_requirement_bp_room" name="models"  reversename="modeled with" />
+   		<huirelation id="rel_bp_requirement_next_revision_by" name="next revision by" reversename="next revision of" to="bp_person"/>
+   		<huirelation id="rel_bp_requirement_last_revision_by" name="last revision by" reversename="last revision of" to="bp_person"/>
+   		<huirelation id="rel_bp_requirement_implementation_by" name="implementation by" reversename="implementation of" to="bp_person"/>
 
         <huiproperty id="bp_requirement_id" name="Identifier" />
         <huiproperty id="bp_requirement_name" name="Title" required="true" />
@@ -10363,20 +10614,6 @@ Wurden bereits weitere Stellen informiert?
             inputtype="booleanoption" name="Affects Integrity" tags="Risk" />
         <huiproperty defaultValue="1" id="bp_requirement_value_method_availability"
             inputtype="booleanoption" name="Affects Availability" tags="Risk" />
-        <huipropertygroup id="bp_requirement_safeguard_strength" name="Safeguard Strength" tags="BSI-200-3">
-            <huiproperty defaultValue="0" id="bp_requirement_reduce_risk"
-                inputtype="booleanoption" name="Reduce Risk" tags="Risk" />
-            <huiproperty id="bp_requirement_safeguard_strength_frequency" name="Reduces frequency of occurrence to"
-                required="true" inputtype="singleoption">
-                <depends option="bp_requirement_implementation_deduce" value="0" />
-                <!-- options will be populated dynamically in the application -->
-            </huiproperty>
-            <huiproperty id="bp_requirement_safeguard_strength_impact" name="Reduces potential extent of damage to"
-                required="true" inputtype="singleoption">
-                <depends option="bp_requirement_implementation_deduce" value="0" />
-                <!-- options will be populated dynamically in the application -->
-            </huiproperty>
-        </huipropertygroup>
         <huipropertygroup id="bp_requirement_implementation" name="Implementation">
             <huiproperty defaultValue="1" id="bp_requirement_implementation_deduce"
                 inputtype="booleanoption" name="Deduce Implementation Status from Safeguard" tags="Risk" />
@@ -10391,26 +10628,40 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="bp_requirement_implementation_desc" name="Description"
                 required="false" inputtype="text" focus="true" />
         </huipropertygroup>
-
-        <huipropertygroup id="bp_requirement_revision" name="Revision" tags="Revision">
-            <huiproperty id="bp_requirement_revision_previousRevisionBy_link" inputtype="reference" name="Previous revision by" required="true" tags="Revision">
-                <references entitytype="bp_person"/>
+        <huipropertygroup id="bp_requirement_safeguard_strength" name="Safeguard Strength" tags="BSI-200-3">
+            <huiproperty defaultValue="0" id="bp_requirement_reduce_risk"
+                inputtype="booleanoption" name="Reduce Risk" tags="Risk" />
+            <huiproperty id="bp_requirement_safeguard_strength_frequency" name="Reduces frequency of occurrence to"
+                required="true" inputtype="singleoption">
+                <depends option="bp_requirement_implementation_deduce" value="0" />
+                <!-- options will be populated dynamically in the application -->
             </huiproperty>
-            <huiproperty id="bp_requirement_revision_previousRevisionDate" inputtype="date" name="Previous revision date" tags="Revision">
-                <defaultRule class="Today"/>
-            </huiproperty>
-            <huiproperty id="bp_requirement_revision_revisionRemark" inputtype="text" name="Remark" tags="Revision"/>
-            <huiproperty id="bp_requirement_revision_nextRevisionBy_link" inputtype="reference" name="Next revision by" required="true" tags="Revision">
-                <references entitytype="bp_person"/>
-            </huiproperty>
-            <huiproperty id="bp_requirement_revision_nextRevisionDate" inputtype="date" name="Next revision date" tags="Revision">
-                <defaultRule class="Today">
-                    <param id="bp_requirement_revision_nextRevisionDate_changeField">YEAR</param>
-                    <param id="bp_requirement_revision_nextRevisionDate_timeDifference">2</param>
-                </defaultRule>
+            <huiproperty id="bp_requirement_safeguard_strength_impact" name="Reduces potential extent of damage to"
+                required="true" inputtype="singleoption">
+                <depends option="bp_requirement_implementation_deduce" value="0" />
+                <!-- options will be populated dynamically in the application -->
             </huiproperty>
         </huipropertygroup>
-
+    <huipropertygroup id="bp_requirement_group_kosten" name="Kosten" tags="Finance">
+      <huiproperty id="bp_requirement_kosten_ptfix" name="Personalkosten fix EUR" tags="Finance"/>
+      <huiproperty id="bp_requirement_kosten_ptvar" name="Personalkosten var. EUR" tags="Finance"/>
+      <huiproperty id="bp_requirement_kosten_ptperiod" inputtype="singleoption" name="Zeitraum" tags="Finance">
+        <option id="bp_requirement_kosten_ptperiod_tag" name="Tag"/>
+        <option id="bp_requirement_kosten_ptperiod_woche" name="Woche"/>
+        <option id="bp_requirement_kosten_ptperiod_monat" name="Monat"/>
+        <option id="bp_requirement_kosten_ptperiod_quartal" name="Quartal"/>
+        <option id="bp_requirement_kosten_ptperiod_jahr" name="Jahr"/>
+      </huiproperty>
+      <huiproperty id="bp_requirement_kosten_sachfix" name="Sachkosten fix EUR" tags="Finance"/>
+      <huiproperty id="bp_requirement_kosten_sachvar" name="Sachkosten var. EUR" tags="Finance"/>
+      <huiproperty id="bp_requirement_kosten_sachperiod" inputtype="singleoption" name="Zeitraum" tags="Finance">
+        <option id="bp_requirement_kosten_sachperiod_tag" name="Tag"/>
+        <option id="bp_requirement_kosten_sachperiod_woche" name="Woche"/>
+        <option id="bp_requirement_kosten_sachperiod_monat" name="Monat"/>
+        <option id="bp_requirement_kosten_sachperiod_quartal" name="Quartal"/>
+        <option id="bp_requirement_kosten_sachperiod_jahr" name="Jahr"/>
+      </huiproperty>
+    </huipropertygroup>
         <huipropertygroup id="bp_requirement_data_protection_objectives_eugdpr" name="Data privacy control objectives according to Art. 32 EU GDPR"
            tags="Privacy">
             <huiproperty id="bp_requirement_data_protection_objectives_eugdpr_pseudonymization"
@@ -10662,6 +10913,10 @@ Wurden bereits weitere Stellen informiert?
 		    </huiproperty>
 		    <huiproperty id="bp_network_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
         </huipropertygroup>
+    	<huipropertygroup columns="1" id="bp_network_group_riskanalysis" name="riskanalysis" tags="Risk">
+      		<huiproperty defaultValue="1" id="bp_network_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
+      		<huiproperty id="bp_network_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
+    	</huipropertygroup>
         <huipropertygroup name="KIX" id="bp_network_kix" tags="KIX" >
             <huiproperty name="KIX Ticket 1" id="bp_network_kix_ticket1" isURL="true"/>
             <huiproperty name="KIX Ticket 2" id="bp_network_kix_ticket2" isURL="true"/>
@@ -10781,6 +11036,10 @@ Wurden bereits weitere Stellen informiert?
 		    </huiproperty>
 		    <huiproperty id="bp_device_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
         </huipropertygroup>
+    	<huipropertygroup columns="1" id="bp_device_group_riskanalysis" name="riskanalysis" tags="Risk">
+      		<huiproperty defaultValue="1" id="bp_device_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
+      		<huiproperty id="bp_device_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
+    	</huipropertygroup>
         <huipropertygroup name="KIX" id="bp_device_kix" tags="KIX" >
             <huiproperty name="KIX Ticket 1" id="bp_device_kix_ticket1" isURL="true"/>
             <huiproperty name="KIX Ticket 2" id="bp_device_kix_ticket2" isURL="true"/>
@@ -10896,6 +11155,10 @@ Wurden bereits weitere Stellen informiert?
 		    </huiproperty>
 		    <huiproperty id="bp_room_value_comment_a" inputtype="text" name="Explanation availability" tags="Risk"/>
         </huipropertygroup>
+     	<huipropertygroup columns="1" id="bp_room_group_riskanalysis" name="riskanalysis" tags="Risk">
+      		<huiproperty defaultValue="1" id="bp_room_riskanalysis_necessary" inputtype="booleanoption" name="Riskanalysis necessary" tags="Risk"/>
+      		<huiproperty id="bp_room_riskanalysis_explanation" inputtype="text" name="Explanation riskanalysis" tags="Risk"/>
+    	</huipropertygroup>
     </huientity>
 
     <huientity id="bp_room_group" name="Room Group">
@@ -10905,6 +11168,10 @@ Wurden bereits weitere Stellen informiert?
     </huientity>
 
     <huientity id="bp_safeguard" name="Safeguard">
+       	<huirelation id="rel_bp_safeguard_next_revision_by" name="next revision by" reversename="next revision of" to="bp_person"/>
+   		<huirelation id="rel_bp_safeguard_last_revision_by" name="last revision by" reversename="last revision of" to="bp_person"/>
+   		<huirelation id="rel_bp_safeguard_implementation_by" name="implementation by" reversename="implementation of" to="bp_person"/>
+    
         <huiproperty id="bp_safeguard_id" name="Identifier" />
         <huiproperty id="bp_safeguard_name" name="Title" required="true" />
         <huiproperty id="bp_safeguard_qualifier" name="Qualifier" required="true" inputtype="singleoption" >
@@ -10929,6 +11196,17 @@ Wurden bereits weitere Stellen informiert?
             inputtype="booleanoption" name="Affects Integrity" tags="Risk" />
         <huiproperty defaultValue="1" id="bp_safeguard_value_method_availability"
             inputtype="booleanoption" name="Affects Availability" tags="Risk" />
+        <huipropertygroup id="bp_safeguard_implementation" name="Implementation">
+            <huiproperty id="bp_safeguard_implementation_status" name="Implementation Status"
+                required="true" inputtype="singleoption">
+                <option id="bp_safeguard_implementation_status_no" name="No" />
+                <option id="bp_safeguard_implementation_status_yes" name="Yes" />
+                <option id="bp_safeguard_implementation_status_partially" name="Partially" />
+                <option id="bp_safeguard_implementation_status_na" name="Not Applicable" />
+            </huiproperty>
+            <huiproperty id="bp_safeguard_implementation_desc" name="Description"
+                required="false" inputtype="text" focus="true" />
+        </huipropertygroup>
         <huipropertygroup id="bp_safeguard_safeguard_strength" name="Safeguard Strength" tags="BSI-200-3">
             <huiproperty defaultValue="0" id="bp_safeguard_reduce_risk"
                 inputtype="booleanoption" name="Reduce Risk" tags="Risk" />
@@ -10941,37 +11219,26 @@ Wurden bereits weitere Stellen informiert?
                 <!-- options will be populated dynamically in the application -->
             </huiproperty>
         </huipropertygroup>
-        <huipropertygroup id="bp_safeguard_implementation" name="Implementation">
-            <huiproperty id="bp_safeguard_implementation_status" name="Implementation Status"
-                required="true" inputtype="singleoption">
-                <option id="bp_safeguard_implementation_status_no" name="No" />
-                <option id="bp_safeguard_implementation_status_yes" name="Yes" />
-                <option id="bp_safeguard_implementation_status_partially" name="Partially" />
-                <option id="bp_safeguard_implementation_status_na" name="Not Applicable" />
-            </huiproperty>
-            <huiproperty id="bp_safeguard_implementation_desc" name="Description"
-                required="false" inputtype="text" focus="true" />
-        </huipropertygroup>
-
-        <huipropertygroup id="bp_safeguard_revision" name="Revision" tags="Revision">
-            <huiproperty id="bp_safeguard_revision_previousRevisionBy_link" inputtype="reference" name="Previous revision by" required="true" tags="Revision">
-                <references entitytype="bp_person"/>
-            </huiproperty>
-            <huiproperty id="bp_safeguard_revision_previousRevisionDate" inputtype="date" name="Previous revision date" tags="Revision">
-                <defaultRule class="Today"/>
-            </huiproperty>
-            <huiproperty id="bp_safeguard_revision_revisionRemark" inputtype="text" name="Remark" tags="Revision"/>
-            <huiproperty id="bp_safeguard_revision_nextRevisionBy_link" inputtype="reference" name="Next revision by" required="true" tags="Revision">
-                <references entitytype="bp_person"/>
-            </huiproperty>
-            <huiproperty id="bp_safeguard_revision_nextRevisionDate" inputtype="date" name="Next revision date" tags="Revision">
-                <defaultRule class="Today">
-                    <param id="bp_safeguard_revision_nextRevisionDate_changeField">YEAR</param>
-                    <param id="bp_safeguard_revision_nextRevisionDate_timeDifference">2</param>
-                </defaultRule>
-            </huiproperty>
-        </huipropertygroup>
-
+    <huipropertygroup id="bp_safeguard_group_kosten" name="Kosten" tags="Finance">
+      <huiproperty id="bp_safeguard_kosten_ptfix" name="Personalkosten fix EUR" tags="Finance"/>
+      <huiproperty id="bp_safeguard_kosten_ptvar" name="Personalkosten var. EUR" tags="Finance"/>
+      <huiproperty id="bp_safeguard_kosten_ptperiod" inputtype="singleoption" name="Zeitraum" tags="Finance">
+        <option id="bp_safeguard_kosten_ptperiod_tag" name="Tag"/>
+        <option id="bp_safeguard_kosten_ptperiod_woche" name="Woche"/>
+        <option id="bp_safeguard_kosten_ptperiod_monat" name="Monat"/>
+        <option id="bp_safeguard_kosten_ptperiod_quartal" name="Quartal"/>
+        <option id="bp_safeguard_kosten_ptperiod_jahr" name="Jahr"/>
+      </huiproperty>
+      <huiproperty id="bp_safeguard_kosten_sachfix" name="Sachkosten fix EUR" tags="Finance"/>
+      <huiproperty id="bp_safeguard_kosten_sachvar" name="Sachkosten var. EUR" tags="Finance"/>
+      <huiproperty id="bp_safeguard_kosten_sachperiod" inputtype="singleoption" name="Zeitraum" tags="Finance">
+        <option id="bp_safeguard_kosten_sachperiod_tag" name="Tag"/>
+        <option id="bp_safeguard_kosten_sachperiod_woche" name="Woche"/>
+        <option id="bp_safeguard_kosten_sachperiod_monat" name="Monat"/>
+        <option id="bp_safeguard_kosten_sachperiod_quartal" name="Quartal"/>
+        <option id="bp_safeguard_kosten_sachperiod_jahr" name="Jahr"/>
+      </huiproperty>
+    </huipropertygroup>
         <huipropertygroup id="bp_safeguard_data_protection_objectives_eugdpr" name="Data privacy control objectives according to Art. 32 EU GDPR"
            tags="Privacy">
             <huiproperty id="bp_safeguard_data_protection_objectives_eugdpr_pseudonymization"
