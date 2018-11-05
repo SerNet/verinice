@@ -17,17 +17,10 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp.risk.ui;
 
-import java.util.Optional;
-
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
-import sernet.gs.ui.rcp.main.common.model.CnATreeElementScopeUtils;
 import sernet.verinice.model.bp.elements.BpThreat;
-import sernet.verinice.model.bp.elements.ItNetwork;
-import sernet.verinice.model.bp.risk.Risk;
-import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
-import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.bp.risk.RiskDeductionUtil;
 
@@ -40,31 +33,6 @@ public final class RiskInputValueChanged extends SelectionAdapter {
 
     @Override
     public void widgetSelected(SelectionEvent e) {
-        BpThreat threat = (BpThreat) element;
-
-        String frequency = threat.getFrequencyWithoutAdditionalSafeguards();
-        String impact = threat.getImpactWithoutAdditionalSafeguards();
-
-        // These checks are done is the RiskDeductionUtil, too
-        // but we do them here to for performance reasons. we don't have to
-        // fetch the scope in these cases.
-        if (frequency == null || frequency.isEmpty()) {
-            threat.setFrequencyWithAdditionalSafeguards(null);
-            threat.setRiskWithoutAdditionalSafeguards(null);
-            threat.setRiskWithAdditionalSafeguards(null);
-        } else if (impact == null || impact.isEmpty()) {
-            threat.setImpactWithAdditionalSafeguards(null);
-            threat.setRiskWithoutAdditionalSafeguards(null);
-            threat.setRiskWithAdditionalSafeguards(null);
-        } else {
-            ItNetwork itNetwork = (ItNetwork) CnATreeElementScopeUtils.getScope(element);
-            RiskConfiguration riskConfiguration = Optional
-                    .ofNullable(itNetwork.getRiskConfiguration())
-                    .orElseGet(DefaultRiskConfiguration::getInstance);
-            Risk risk = riskConfiguration.getRisk(frequency, impact);
-            threat.setRiskWithoutAdditionalSafeguards(risk.getId());
-
-            RiskDeductionUtil.deduceRisk(threat, riskConfiguration);
-        }
+        RiskDeductionUtil.deduceRisk((BpThreat) element);
     }
 }
