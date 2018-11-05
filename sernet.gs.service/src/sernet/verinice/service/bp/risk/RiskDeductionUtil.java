@@ -54,6 +54,14 @@ public class RiskDeductionUtil {
      * scope/risk configuration.
      */
     public static BpThreat deduceRisk(BpThreat threat) {
+
+        boolean frequencyIsUnset = resetRiskValuesIfFrequencyIsUnset(threat);
+        boolean impactIsUnset = resetRiskValuesIfImpactIsUnset(threat);
+
+        if (frequencyIsUnset || impactIsUnset) {
+            return threat;
+        }
+
         try {
             ItNetwork scope = loadScopeFromContext(threat.getScopeId());
             return RiskDeductionUtil.deduceRisk(threat, scope.getRiskConfiguration());
@@ -64,23 +72,19 @@ public class RiskDeductionUtil {
     }
 
     public static BpThreat deduceRisk(BpThreat threat, RiskConfiguration riskConfiguration) {
-        if (riskConfiguration == null) {
-            riskConfiguration = DefaultRiskConfiguration.getInstance();
+        boolean frequencyIsUnset = resetRiskValuesIfFrequencyIsUnset(threat);
+        boolean impactIsUnset = resetRiskValuesIfImpactIsUnset(threat);
+
+        if (frequencyIsUnset || impactIsUnset) {
+            return threat;
         }
         String frequency = threat.getFrequencyWithoutAdditionalSafeguards();
         String impact = threat.getImpactWithoutAdditionalSafeguards();
 
-        if (frequency == null || frequency.isEmpty()) {
-            threat.setFrequencyWithAdditionalSafeguards(null);
-            threat.setRiskWithoutAdditionalSafeguards(null);
-            threat.setRiskWithAdditionalSafeguards(null);
-            return threat;
-        } else if (impact == null || impact.isEmpty()) {
-            threat.setImpactWithAdditionalSafeguards(null);
-            threat.setRiskWithoutAdditionalSafeguards(null);
-            threat.setRiskWithAdditionalSafeguards(null);
-            return threat;
+        if (riskConfiguration == null) {
+            riskConfiguration = DefaultRiskConfiguration.getInstance();
         }
+
         Risk risk = riskConfiguration.getRisk(frequency, impact);
         threat.setRiskWithoutAdditionalSafeguards(risk.getId());
 
@@ -163,6 +167,26 @@ public class RiskDeductionUtil {
     public static BpRequirement retreiveProperties(BpRequirement requirement) {
         return (BpRequirement) Retriever.retrieveElement(requirement, new RetrieveInfo()
                 .setProperties(true).setLinksDown(true).setLinksDownProperties(true));
+    }
+
+    private static boolean resetRiskValuesIfImpactIsUnset(BpThreat threat) {
+        if (nullOrEmpty(threat.getImpactWithoutAdditionalSafeguards())) {
+            threat.setImpactWithAdditionalSafeguards(null);
+            threat.setRiskWithoutAdditionalSafeguards(null);
+            threat.setRiskWithAdditionalSafeguards(null);
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean resetRiskValuesIfFrequencyIsUnset(BpThreat threat) {
+        if (nullOrEmpty(threat.getFrequencyWithAdditionalSafeguards())) {
+            threat.setFrequencyWithAdditionalSafeguards(null);
+            threat.setRiskWithoutAdditionalSafeguards(null);
+            threat.setRiskWithAdditionalSafeguards(null);
+            return true;
+        }
+        return false;
     }
 
     private static Set<CnATreeElement> getLinkedRequirementsForRiskDeduction(BpThreat threat) {
