@@ -216,8 +216,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
             @Override
             public void perspectiveActivated(IWorkbenchPage page,
                     IPerspectiveDescriptor perspective) {
-                runRiskAnalysisAction.setEnabled(!Perspective.ID.equals(perspective.getId()));
+                enableOrDisableActionsForPerspective(perspective);
             }
+
         });
 
         BausteinZuordnungAction bausteinZuordnungAction;
@@ -344,6 +345,16 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 this.openCatalogViewAction };
         registerActions(actions);
 
+        IPerspectiveDescriptor activePerspective = window.getActivePage().getPerspective();
+        enableOrDisableActionsForPerspective(activePerspective);
+
+    }
+
+    private void enableOrDisableActionsForPerspective(IPerspectiveDescriptor perspective) {
+        boolean isOldBpPerspective = Perspective.ID.equals(perspective.getId());
+        openAuditViewAction.setEnabled(isOldBpPerspective);
+        openTodoViewAction.setEnabled(isOldBpPerspective);
+        runRiskAnalysisAction.setEnabled(!isOldBpPerspective);
     }
 
     private void registerActions(IAction[] actions) {
