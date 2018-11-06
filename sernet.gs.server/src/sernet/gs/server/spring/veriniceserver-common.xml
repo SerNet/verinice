@@ -102,6 +102,7 @@ This variant:
             <entry key="countService" value-ref="countService" />
             <entry key="individualService" value-ref="individualService" />
             <entry key="layoutConfig" value-ref="layoutConfig" />
+            <entry key="itbpRiskService" value-ref="itbpRiskService" />
         </map>
     </property>
 	</bean>

@@ -17,13 +17,18 @@
  ******************************************************************************/
 package sernet.verinice.service.bp.risk;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.PropertyList;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateResult;
 import sernet.verinice.model.common.CnATreeElement;
@@ -48,6 +53,17 @@ public class RiskServiceImpl implements RiskService {
 
     private RiskServiceMetaDao metaDao;
     private IBaseDao<PropertyList, Integer> propertyListDao;
+
+    private Map<Integer, RiskConfiguration> riskConfigurationCache = Collections
+            .synchronizedMap(new LinkedHashMap<Integer, RiskConfiguration>() {
+
+                private static final long serialVersionUID = -5796349016191394354L;
+
+                @Override
+                protected boolean removeEldestEntry(Map.Entry<Integer, RiskConfiguration> eldest) {
+                    return size() > 500;
+                }
+            });
 
     /**
      * Update the IT network with the new risk configuration. Delete frequencies
@@ -80,14 +96,16 @@ public class RiskServiceImpl implements RiskService {
         updateContext.setItNetwork(itNetwork);
         itNetwork.setRiskConfiguration(updateContext.getRiskConfiguration());
         getMetaDao().updateItNetwork(itNetwork);
+        riskConfigurationCache.computeIfPresent(itNetwork.getDbId(),
+                (id, oldValue) -> updateContext.getRiskConfiguration());
     }
 
     private RiskConfigurationUpdateResult updateRiskValuesInThreats(
             RiskConfigurationUpdateContext updateContext) {
         Set<BpThreat> threatsFromScope = getMetaDao()
                 .loadThreatsFromScope(updateContext.getItNetwork().getDbId());
-        RiskValueInThreatUpdater riskValueUpdater = new RiskValueInThreatUpdater(
-                updateContext, threatsFromScope);
+        RiskValueInThreatUpdater riskValueUpdater = new RiskValueInThreatUpdater(updateContext,
+                threatsFromScope);
         riskValueUpdater.setPropertyListDao(propertyListDao);
         riskValueUpdater.execute();
         return riskValueUpdater.getRiskConfigurationUpdateResult();
@@ -97,8 +115,8 @@ public class RiskServiceImpl implements RiskService {
             RiskConfigurationUpdateContext updateContext) {
         Set<CnATreeElement> requirementsFromScope = getMetaDao()
                 .loadRequirementsFromScope(updateContext.getItNetwork().getDbId());
-        RiskValueRemover riskValueRemover = new RiskValueFromRequirementRemover(
-                updateContext, requirementsFromScope);
+        RiskValueRemover riskValueRemover = new RiskValueFromRequirementRemover(updateContext,
+                requirementsFromScope);
         riskValueRemover.execute();
         return riskValueRemover.getRiskConfigurationUpdateResult();
     }
@@ -111,6 +129,20 @@ public class RiskServiceImpl implements RiskService {
                 safeguardsFromScope);
         riskValueRemover.execute();
         return riskValueRemover.getRiskConfigurationUpdateResult();
+    }
+
+    @Override
+    public RiskConfiguration findRiskConfiguration(Integer itNetworkID) throws CommandException {
+        RiskConfiguration riskConfiguration = riskConfigurationCache.get(itNetworkID);
+        if (riskConfiguration == null
+                // null is a valid value for a RiskConfiguration and therefore
+                // does not imply "not found".
+                && !riskConfigurationCache.containsKey(itNetworkID)) {
+            riskConfiguration = getMetaDao().getItNetworkDao().findById(itNetworkID)
+                    .getRiskConfiguration();
+            riskConfigurationCache.put(itNetworkID, riskConfiguration);
+        }
+        return riskConfiguration;
     }
 
     public RiskServiceMetaDao getMetaDao() {

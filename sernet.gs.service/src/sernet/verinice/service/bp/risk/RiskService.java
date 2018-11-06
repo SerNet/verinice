@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.verinice.service.bp.risk;
 
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateResult;
 
@@ -35,4 +37,11 @@ public interface RiskService {
      */
     public RiskConfigurationUpdateResult updateRiskConfiguration(
             RiskConfigurationUpdateContext updateContext);
+
+    /**
+     * Return the risk configuration for a given IT network's ID. If there is no
+     * explicit configuration for the given network, <code>null</code> is
+     * returned.
+     */
+    RiskConfiguration findRiskConfiguration(Integer itNetworkID) throws CommandException;
 }

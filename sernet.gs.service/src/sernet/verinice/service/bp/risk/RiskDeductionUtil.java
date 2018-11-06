@@ -28,17 +28,14 @@ import org.eclipse.jdt.annotation.NonNull;
 import sernet.gs.service.Retriever;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
-import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.risk.Risk;
 import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.crud.LoadCnAElementById;
 import sernet.verinice.service.hibernate.HibernateUtil;
 
 public class RiskDeductionUtil {
@@ -63,15 +60,14 @@ public class RiskDeductionUtil {
         }
 
         try {
-            ItNetwork scope = loadScopeFromContext(threat.getScopeId());
-            return RiskDeductionUtil.deduceRisk(threat, scope.getRiskConfiguration());
+            return RiskDeductionUtil.deduceRisk(threat, findRiskConfiguration(threat.getScopeId()));
         } catch (CommandException e) {
             logger.error("error fetching scope for bp_threat", e);
         }
         return threat;
     }
 
-    public static BpThreat deduceRisk(BpThreat threat, RiskConfiguration riskConfiguration) {
+    private static BpThreat deduceRisk(BpThreat threat, RiskConfiguration riskConfiguration) {
         boolean frequencyIsUnset = resetRiskValuesIfFrequencyIsUnset(threat);
         boolean impactIsUnset = resetRiskValuesIfImpactIsUnset(threat);
 
@@ -131,9 +127,10 @@ public class RiskDeductionUtil {
                     .map(CnALink::getDependency).map(HibernateUtil::unproxy)
                     .map(BpThreat.class::cast).collect(Collectors.toSet());
             if (!affectedThreats.isEmpty()) {
-                ItNetwork scope = loadScopeFromContext(requirement.getScopeId());
-                affectedThreats.forEach(threat -> RiskDeductionUtil.deduceRisk(threat,
-                        scope.getRiskConfiguration()));
+                RiskConfiguration riskConfiguration = findRiskConfiguration(
+                        requirement.getScopeId());
+                affectedThreats
+                        .forEach(threat -> RiskDeductionUtil.deduceRisk(threat, riskConfiguration));
             }
         } catch (CommandException e) {
             logger.error("error fetching scope for bp_requirement", e);
@@ -222,11 +219,11 @@ public class RiskDeductionUtil {
                 .map(CnALink::getDependency);
     }
 
-    private static ItNetwork loadScopeFromContext(Integer scopeId) throws CommandException {
-        ICommandService cs = (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
-        LoadCnAElementById loadModel = new LoadCnAElementById(ItNetwork.TYPE_ID, scopeId);
-        loadModel = cs.executeCommand(loadModel);
-        return (ItNetwork) loadModel.getFound();
+    private static RiskConfiguration findRiskConfiguration(Integer scopeId)
+            throws CommandException {
+        RiskService riskService = (RiskService) VeriniceContext
+                .get(VeriniceContext.ITBP_RISK_SERVICE);
+        return riskService.findRiskConfiguration(scopeId);
     }
 
     private static boolean notNullAndNotEmpty(String s) {
@@ -242,4 +239,5 @@ public class RiskDeductionUtil {
         String i = e.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_FREQUENCY);
         return notNullAndNotEmpty(i) && notNullAndNotEmpty(f);
     }
+
 }
