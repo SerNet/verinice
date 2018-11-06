@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.Retriever;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
@@ -125,13 +125,16 @@ public class RiskDeductionUtil {
      */
     public static void deduceRiskForLinkedThreats(BpRequirement requirement) {
         try {
-            ItNetwork scope = loadScopeFromContext(requirement.getScopeId());
-            requirement.getLinksDown().stream()
+            Set<@NonNull BpThreat> affectedThreats = requirement.getLinksDown().stream()
                     .filter(link -> BpRequirement.REL_BP_REQUIREMENT_BP_THREAT
                             .equals(link.getRelationId()))
                     .map(CnALink::getDependency).map(HibernateUtil::unproxy)
-                    .map(BpThreat.class::cast).forEach(threat -> RiskDeductionUtil
-                            .deduceRisk(threat, scope.getRiskConfiguration()));
+                    .map(BpThreat.class::cast).collect(Collectors.toSet());
+            if (!affectedThreats.isEmpty()) {
+                ItNetwork scope = loadScopeFromContext(requirement.getScopeId());
+                affectedThreats.forEach(threat -> RiskDeductionUtil.deduceRisk(threat,
+                        scope.getRiskConfiguration()));
+            }
         } catch (CommandException e) {
             logger.error("error fetching scope for bp_requirement", e);
         }
@@ -159,16 +162,6 @@ public class RiskDeductionUtil {
         return requirement;
     }
 
-    public static BpThreat retreiveProperties(BpThreat threat) {
-        return (BpThreat) Retriever.retrieveElement(threat,
-                new RetrieveInfo().setProperties(true).setLinksUp(true).setLinksUpProperties(true));
-    }
-
-    public static BpRequirement retreiveProperties(BpRequirement requirement) {
-        return (BpRequirement) Retriever.retrieveElement(requirement, new RetrieveInfo()
-                .setProperties(true).setLinksDown(true).setLinksDownProperties(true));
-    }
-
     private static boolean resetRiskValuesIfImpactIsUnset(BpThreat threat) {
         if (nullOrEmpty(threat.getImpactWithoutAdditionalSafeguards())) {
             threat.setImpactWithAdditionalSafeguards(null);
@@ -193,8 +186,7 @@ public class RiskDeductionUtil {
         Set<CnATreeElement> linkedRequirements = threat.getLinksUp().stream().filter(
                 link -> BpRequirement.REL_BP_REQUIREMENT_BP_THREAT.equals(link.getRelationId())
                         && BpRequirement.TYPE_ID.equals(link.getDependant().getTypeId()))
-                .map(CnALink::getDependant).map(HibernateUtil::unproxy)
-                .map(r -> retreiveProperties((BpRequirement) r))
+                .map(CnALink::getDependant).map(Retriever::checkRetrieveElement)
                 .filter(r -> r.getEntity().isFlagged(BpRequirement.PROP_SAFEGUARD_REDUCE_RISK))
                 .collect(Collectors.toSet());
         return Collections.unmodifiableSet(linkedRequirements);
