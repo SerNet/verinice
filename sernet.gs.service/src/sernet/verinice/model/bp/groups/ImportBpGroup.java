@@ -42,33 +42,24 @@ import sernet.verinice.model.iso27k.Organization;
  *
  */
 public class ImportBpGroup extends Group<Organization> implements IBpGroup {
-    
-    private static final long serialVersionUID = -7286059698308443978L;
-    
-    public static final String TYPE_ID = "bp_import_group";
-    
-    public static final String[] CHILD_TYPES = new String[] { 
-            ItNetwork.TYPE_ID,
-            Application.TYPE_ID,
-            BpPerson.TYPE_ID,
-            BpRequirement.TYPE_ID,
-            BpThreat.TYPE_ID,
-            BusinessProcess.TYPE_ID,
-            Device.TYPE_ID,
-            IcsSystem.TYPE_ID,
-            ItSystem.TYPE_ID,
-            Network.TYPE_ID,
-            Room.TYPE_ID,
-            Safeguard.TYPE_ID
-    };
 
-    protected ImportBpGroup() {}
-    
+    private static final long serialVersionUID = -7286059698308443978L;
+
+    public static final String TYPE_ID = "bp_import_group";
+
+    public static final String[] CHILD_TYPES = new String[] { ItNetwork.TYPE_ID,
+            Application.TYPE_ID, BpPerson.TYPE_ID, BpRequirement.TYPE_ID, BpThreat.TYPE_ID,
+            BusinessProcess.TYPE_ID, Device.TYPE_ID, IcsSystem.TYPE_ID, ItSystem.TYPE_ID,
+            Network.TYPE_ID, Room.TYPE_ID, Safeguard.TYPE_ID };
+
+    protected ImportBpGroup() {
+    }
+
     public ImportBpGroup(CnATreeElement model) {
         super(model);
         setEntity(new Entity(TYPE_ID));
     }
-    
+
     @Override
     public String getTitle() {
         return "imported Objects"; // TODO internationalize
@@ -78,17 +69,17 @@ public class ImportBpGroup extends Group<Organization> implements IBpGroup {
     public String getTypeId() {
         return TYPE_ID;
     }
-    
+
     @Override
-    public boolean canContain(Object obj) {      
+    public boolean canContain(Object obj) {
         return isNotImportBpGroup(obj) && super.canContain(obj);
     }
 
     protected boolean isNotImportBpGroup(Object obj) {
-        CnATreeElement element = (CnATreeElement)obj;
+        CnATreeElement element = (CnATreeElement) obj;
         return !(this.getTypeId().equals(element.getTypeId()));
     }
-    
+
     @Override
     public String[] getChildTypes() {
         return CHILD_TYPES;
