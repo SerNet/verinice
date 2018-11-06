@@ -21,6 +21,7 @@ package sernet.verinice.model.bp.groups;
 
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.bp.IBpGroup;
+import sernet.verinice.model.bp.Messages;
 import sernet.verinice.model.bp.elements.Application;
 import sernet.verinice.model.bp.elements.BpPerson;
 import sernet.verinice.model.bp.elements.BpRequirement;
@@ -62,7 +63,7 @@ public class ImportBpGroup extends Group<Organization> implements IBpGroup {
 
     @Override
     public String getTitle() {
-        return "imported Objects"; // TODO internationalize
+        return Messages.getString("ImportedObjects");
     }
 
     @Override
