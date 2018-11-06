@@ -180,7 +180,7 @@ public class RiskDeductionUtil {
     }
 
     private static boolean resetRiskValuesIfFrequencyIsUnset(BpThreat threat) {
-        if (nullOrEmpty(threat.getFrequencyWithAdditionalSafeguards())) {
+        if (nullOrEmpty(threat.getFrequencyWithoutAdditionalSafeguards())) {
             threat.setFrequencyWithAdditionalSafeguards(null);
             threat.setRiskWithoutAdditionalSafeguards(null);
             threat.setRiskWithAdditionalSafeguards(null);
