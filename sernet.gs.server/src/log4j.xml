@@ -28,7 +28,11 @@
 	<logger name="org.hibernate.cache.ReadWriteCache">
 		<level value="ERROR" />
 	</logger>
-
+	<!-- Avoid harmless warning :
+		Narrowing proxy to class - this operation breaks) -->
+	<logger name="org.hibernate.engine.StatefulPersistenceContext.ProxyWarnLog">
+		<level value="ERROR" />
+	</logger>
 	<logger name="org.springframework">
 		<level value="ERROR" />
 	</logger>

@@ -107,7 +107,8 @@ public final class ExportFactory {
 
             PropertyType propertyType = huiTypeFactory.getPropertyType(typeId, propertyTypeId);
             if (propertyType == null) {
-                LOG.warn("Property type not found in SNCA.xml: " + propertyTypeId + ", typeId: " + typeId);
+                LOG.info("Property type not found in SNCA.xml: " + propertyTypeId + ", typeId: "
+                        + typeId);
             }
 
             if (propertyType == null || propertyType.isReportable()) {
