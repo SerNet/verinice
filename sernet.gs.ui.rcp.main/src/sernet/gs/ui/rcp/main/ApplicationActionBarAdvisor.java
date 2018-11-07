@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import java.util.Optional;
+
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
@@ -345,8 +347,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 this.openCatalogViewAction };
         registerActions(actions);
 
-        IPerspectiveDescriptor activePerspective = window.getActivePage().getPerspective();
-        enableOrDisableActionsForPerspective(activePerspective);
+        Optional.ofNullable(window.getActivePage()).map(IWorkbenchPage::getPerspective)
+                .ifPresent(this::enableOrDisableActionsForPerspective);
 
     }
 
