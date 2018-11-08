@@ -1,0 +1,48 @@
+# Troubleshooting
+## Error when starting vDesigner in macOS
+Starting the vDesigner on may fail with one of the following errors:
+
+### The vDesigner executable launcher was unable to locate its companion shared library.
+In this case, please remove the Extended File Attributes of the directory
+`vdesigner. app` with the following command (in the terminal):
+
+-	Open the "Terminal.app"
+-	Enter the following command:
+
+		xattr -cr /path/to/vdesigner/vdesigner.app
+
+-	close the Terminal application (clicking the "x")
+-	double-clicking the file "vdesigner.app" from the Finder should start the
+	application now
+
+### The application "vDesigner" can't be opened
+In this case the executable file of the vDesigner needs the "x" flag to be set.
+To do this, follow this steps:
+
+-	open the "Terminal.app"
+-	navigate into the installation directory of the vDesigner (directory that
+	contains the file "vdesigner.app") by using the command "cd"
+-	enter the following command to switch to the inside of the vdesigner.app-package:
+
+		cd vdesigner.app/Contents/MacOS
+
+-	set the executable flag (x) for the binary file by entering:
+
+		chmod +x vdesigner
+
+-	close the Terminal application (clicking the "x")
+-	double-clicking the file "vdesigner.app" from the Finder should start the
+	application now
+
+# Questions?
+Have a look at our verinice.FORUM:
+https://verinice.com/forum/
+
+# Contact
+SerNet GmbH
+Bahnhofsallee 1b
+37081 Göttingen
+Germany
+
+verinice@sernet.de
+https://www.sernet.de
