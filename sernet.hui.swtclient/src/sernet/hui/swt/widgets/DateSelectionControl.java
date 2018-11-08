@@ -24,8 +24,6 @@ import java.util.Map.Entry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -44,19 +42,15 @@ import sernet.snutils.AssertException;
  * 
  * @author koderman[at]sernet[dot]de
  */
-public class DateSelectionControl implements IHuiControl {
+public class DateSelectionControl extends AbstractHuiControl {
 
 	private Entity entity;
 
 	private PropertyType fieldType;
 
-	private Composite composite;
-
 	private boolean editable = false;
 
 	private Property savedProp;
-
-	private Label label;
 
 	private DateTime dateTime;
 
@@ -78,9 +72,9 @@ public class DateSelectionControl implements IHuiControl {
 	 */
 	public DateSelectionControl(Entity dyndoc, PropertyType type,
 			Composite parent, boolean edit, boolean rules, boolean showValidationHint, boolean useValidationGuiHints) {
+		super(parent);
 		this.entity = dyndoc;
 		this.fieldType = type;
-		this.composite = parent;
 		this.editable = edit;
 		this.useRule = rules;
 		this.showValidationHint = showValidationHint;
@@ -174,22 +168,6 @@ public class DateSelectionControl implements IHuiControl {
 		dateTime.setToolTipText(fieldType.getTooltiptext());
 	}
 
-    private void refontLabel(boolean dye) {
-        FontData fontData = label.getFont().getFontData()[0];
-        Font font;
-        int color;
-        if(dye){
-            font= new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(),
-                    SWT.BOLD));
-            color = SWT.COLOR_RED;
-        } else {
-            font = new Font(composite.getDisplay(), new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
-            color = SWT.COLOR_WIDGET_FOREGROUND;
-        }
-        label.setForeground(composite.getDisplay().getSystemColor(color));
-        label.setFont(font);
-    }
-
 	protected boolean isSameDay(String propertyValue, long dateInMillis2) {
 		try {
 			long dateInMillis1 = Long.parseLong(propertyValue);
@@ -253,5 +231,4 @@ public class DateSelectionControl implements IHuiControl {
         }
         return false;
 	}
-
 }

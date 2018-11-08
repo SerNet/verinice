@@ -20,6 +20,7 @@
 package sernet.verinice.bpm.gsm;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -52,23 +53,21 @@ import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.PersonIso;
 
 /**
- * Abstract class to create a list of parameters for the creation of
- * a GSM process. At the moment there two classes extends this class:
+ * Abstract class to create a list of parameters for the creation of a GSM
+ * process. At the moment there two classes extends this class:
  * 
- * {@link ProcessCreatorForAssetGroups}
- * Creates one process for each asset group and control group which are
- * connected.
+ * {@link ProcessCreatorForAssetGroups} Creates one process for each asset group
+ * and control group which are connected.
  * 
- * {@link ProcessCreaterForPersons}
- * Creates one process for each person and control group which are
- * connected.
+ * {@link ProcessCreaterForPersons} Creates one process for each person and
+ * control group which are connected.
  * 
- * GsmProcessParameterCreater uses an instance of 
- * sernet.verinice.graph.IGraphService to collect information
- * about verinice elements.
+ * GsmProcessParameterCreater uses an instance of
+ * sernet.verinice.graph.IGraphService to collect information about verinice
+ * elements.
  * 
- * Configured in veriniceserver-jbpm.xml.
- * Used by sernet.verinice.bpm.gsm.GsmService
+ * Configured in veriniceserver-jbpm.xml. Used by
+ * sernet.verinice.bpm.gsm.GsmService
  *
  * @see IGraphService
  * @see GsmService
@@ -77,74 +76,66 @@ import sernet.verinice.model.iso27k.PersonIso;
 public abstract class GsmProcessParameterCreater {
 
     private static final Logger LOG = Logger.getLogger(GsmProcessParameterCreater.class);
-    
-    private static final String[] typeIds = {Asset.TYPE_ID,
-        AssetGroup.TYPE_ID,
-        Control.TYPE_ID,
-        ControlGroup.TYPE_ID,
-        IncidentScenario.TYPE_ID};
 
-    private static final String[] relationIds = {Control.REL_CONTROL_INCSCEN,
-        AssetGroup.REL_PERSON_ISO,
-        IncidentScenario.REL_INCSCEN_ASSET};
-   
+    private static final String[] typeIds = { Asset.TYPE_ID, AssetGroup.TYPE_ID, Control.TYPE_ID,
+            ControlGroup.TYPE_ID, IncidentScenario.TYPE_ID };
+
+    private static final String[] relationIds = { Control.REL_CONTROL_INCSCEN,
+            AssetGroup.REL_PERSON_ISO, IncidentScenario.REL_INCSCEN_ASSET };
+
     /*
-     * Configure this in veriniceserver-jbpm.xml
-     * Process with risk value below lowPriorityRiskLimit: priority low
-     * Process with risk value above lowPriorityRiskLimit: priority normal
+     * Configure this in veriniceserver-jbpm.xml Process with risk value below
+     * lowPriorityRiskLimit: priority low Process with risk value above
+     * lowPriorityRiskLimit: priority normal
      */
     private int lowPriorityRiskLimit;
     public static final int LOW_PRIORITY_RISK_LIMIT_DEFAULT = 100;
-    
+
     /*
-     * Configure this in veriniceserver-jbpm.xml
-     * Process with risk value below normalPriorityRiskLimit: priority normal
-     * Process with risk value above normalPriorityRiskLimit: priority high
+     * Configure this in veriniceserver-jbpm.xml Process with risk value below
+     * normalPriorityRiskLimit: priority normal Process with risk value above
+     * normalPriorityRiskLimit: priority high
      */
     private int normalPriorityRiskLimit;
     public static final int NORMAL_PRIORITY_RISK_LIMIT_DEFAULT = 500;
-    
-    
-    /**
-     * Every instance of GsmProcessStarter has an exclusive instance of a IGraphService
-     * Spring scope of graphService in veriniceserver-jbpm.xml is 'prototype'
-     */
+
     private IGraphService graphService;
     private VeriniceGraph graph;
-    
+
     private IGsmService gsmService;
-    
+
     private IBaseDao<CnATreeElement, Integer> elementDao;
-    
+
     private IDao<ExecutionImpl, Long> jbpmExecutionDao;
 
     /**
-     * Creates a list of parameters for the creation of
-     * a GSM process.
+     * Creates a list of parameters for the creation of a GSM process.
      * 
-     * @param orgId db-id of an organization
+     * @param orgId
+     *            db-id of an organization
      * @return A list of parameters to create a GSM-process
      */
     public List<GsmServiceParameter> createProcessParameterForOrganization(Integer orgId) {
-        
+
         initGraph(orgId);
-      
-        List<CnATreeElement> rightElementList = getRightHandElements(orgId); 
+
+        List<CnATreeElement> rightElementList = getRightHandElements(orgId);
         List<CnATreeElement> leftElementList = getLeftHandElements(orgId);
-        
+
         if (LOG.isInfoEnabled()) {
-            LOG.info( rightElementList.size() + " control groups");
-            LOG.info( leftElementList.size() + " persons");
+            LOG.info(rightElementList.size() + " control groups");
+            LOG.info(leftElementList.size() + " persons");
         }
-        
+
         List<GsmServiceParameter> allParameterList = new LinkedList<GsmServiceParameter>();
-        for (CnATreeElement controlGroup : rightElementList) {           
+        for (CnATreeElement controlGroup : rightElementList) {
             for (CnATreeElement leftElement : leftElementList) {
                 List<ExecutionImpl> processList = findProcesses(leftElement, controlGroup);
-                if(processList!=null && !processList.isEmpty()) {
+                if (processList != null && !processList.isEmpty()) {
                     deleteProcesses(processList);
                 }
-                List<GsmServiceParameter> parameterList = createParameter(leftElement, controlGroup);
+                List<GsmServiceParameter> parameterList = createParameter(leftElement,
+                        controlGroup);
                 String uuidOrg = loadOrgUuid(orgId);
                 for (GsmServiceParameter parameter : parameterList) {
                     parameter.setUuidOrg(uuidOrg);
@@ -152,16 +143,17 @@ public abstract class GsmProcessParameterCreater {
                 }
             }
         }
-        
+
         if (LOG.isInfoEnabled()) {
-            LOG.info( allParameterList.size() + " process parameter objects created");
+            LOG.info(allParameterList.size() + " process parameter objects created");
         }
 
         return allParameterList;
     }
 
     protected String loadOrgUuid(Integer orgId) {
-        List<String> uuidList = getElementDao().findByQuery("select e.uuid from CnATreeElement e where e.dbId = ?", new Object[]{orgId});
+        List<String> uuidList = getElementDao().findByQuery(
+                "select e.uuid from CnATreeElement e where e.dbId = ?", new Object[] { orgId });
         return uuidList.get(0);
     }
 
@@ -171,44 +163,49 @@ public abstract class GsmProcessParameterCreater {
     private void deleteProcesses(List<ExecutionImpl> processList) {
         for (ExecutionImpl executionImpl : processList) {
             getGsmService().deleteProcess(executionImpl.getId());
-        }     
+        }
     }
 
     /**
-     * Returns the left hand ends of the element grid which is loaded by this class
-     * for process creation (persons or asset-groups). The right hand element is a control group.
+     * Returns the left hand ends of the element grid which is loaded by this
+     * class for process creation (persons or asset-groups). The right hand
+     * element is a control group.
      * 
-     * @param orgId Db-id of an organization
+     * @param orgId
+     *            Db-id of an organization
      * @return A set of tree elements
      */
     protected abstract List<CnATreeElement> getLeftHandElements(Integer orgId);
-    
+
     /**
      * Returns all elements ehich are connected to the left hand end.
      * 
-     * @param leftElement Left hand end (a person are asset-group)
+     * @param leftElement
+     *            Left hand end (a person are asset-group)
      * @return A set of tree elements
      */
     protected abstract Set<CnATreeElement> getObjectsForLeftElement(CnATreeElement leftElement);
-    
+
     /**
-     * Returns the responsible person(s) for the left hand element.
-     * The left hand element is a person or asset-group.
+     * Returns the responsible person(s) for the left hand element. The left
+     * hand element is a person or asset-group.
      * 
-     * @param leftElement A person or asset-group
+     * @param leftElement
+     *            A person or asset-group
      * @return A {@link Set} of persons, usually one person
      */
     protected abstract Set<CnATreeElement> getPersonForLeftElement(CnATreeElement leftElement);
-    
+
     protected List<CnATreeElement> getRightHandElements(Integer orgId) {
         return get2ndLevelControlGroups(orgId);
     }
 
-    private List<GsmServiceParameter> createParameter(CnATreeElement leftElement, CnATreeElement controlGroup) {
+    private List<GsmServiceParameter> createParameter(CnATreeElement leftElement,
+            CnATreeElement controlGroup) {
         List<GsmServiceParameter> parameterList = new LinkedList<GsmServiceParameter>();
         Set<CnATreeElement> elementSet = getAllElements(controlGroup, leftElement);
         Set<CnATreeElement> personSet = getPersonForLeftElement(leftElement);
-        if(!elementSet.isEmpty() && personSet!=null) {
+        if (!elementSet.isEmpty() && personSet != null) {
             for (CnATreeElement person : personSet) {
                 GsmServiceParameter parameter = new GsmServiceParameter(controlGroup, person);
                 parameter.setProcessId(GsmService.createProcessId(leftElement, controlGroup));
@@ -218,24 +215,27 @@ public abstract class GsmProcessParameterCreater {
                 parameter.setPriority(convertRiskValueToPriority(riskValueDouble));
                 parameterList.add(parameter);
             }
-           
+
         }
         return parameterList;
     }
-    
+
     /**
      * Returns all processes for a person or asset-group and a control-group.
      * 
-     * @param leftElement A person or asset-group
-     * @param controlGroup A control-group 
+     * @param leftElement
+     *            A person or asset-group
+     * @param controlGroup
+     *            A control-group
      * @return A list of processes (ExecutionImpl)
      */
-    private List<ExecutionImpl> findProcesses(CnATreeElement leftElement, CnATreeElement controlGroup) {
-        String value = GsmService.createProcessId(leftElement,controlGroup);
+    private List<ExecutionImpl> findProcesses(CnATreeElement leftElement,
+            CnATreeElement controlGroup) {
+        String value = GsmService.createProcessId(leftElement, controlGroup);
         return searchProcessByVariable(IGenericProcess.VAR_PROCESS_ID, value);
     }
 
-    private List<ExecutionImpl> searchProcessByVariable(String key, String value) {        
+    private List<ExecutionImpl> searchProcessByVariable(String key, String value) {
         DetachedCriteria executionCrit = DetachedCriteria.forClass(ExecutionImpl.class);
         DetachedCriteria variableCrit = executionCrit.createCriteria("variables");
         variableCrit.add(Restrictions.eq("key", key));
@@ -246,50 +246,52 @@ public abstract class GsmProcessParameterCreater {
     /**
      * Calculate the risk value of a process.
      * 
-     * CVSS value of incidentScenario: CVSS
-     * Number of assets linked to incidentScenario: NUMBER_OF_LINKED_ASSETS
+     * CVSS value of incidentScenario: CVSS Number of assets linked to
+     * incidentScenario: NUMBER_OF_LINKED_ASSETS
      * 
-     * RISK_VALUE = [[CVSS_1 * NUMBER_OF_LINKED_ASSETS_1] + [CVSS_2 * NUMBER_OF_LINKED_ASSETS_2] + ...]
+     * RISK_VALUE = [[CVSS_1 * NUMBER_OF_LINKED_ASSETS_1] + [CVSS_2 *
+     * NUMBER_OF_LINKED_ASSETS_2] + ...]
      * 
-     * RISK_VALUE is rounded and has two digits to the right of the decimal point.
-     * All CVSS are null (no CVSS is set at all): RISK_VALUE = "not determinable"
-     * Total number of linked assets is 0: RISK_VALUE = 0
+     * RISK_VALUE is rounded and has two digits to the right of the decimal
+     * point. All CVSS are null (no CVSS is set at all): RISK_VALUE = "not
+     * determinable" Total number of linked assets is 0: RISK_VALUE = 0
      * 
-     * @param elementSet Elements of process
+     * @param elementSet
+     *            Elements of process
      * @return risk value of a process
      */
     private Double getRiskValue(Set<CnATreeElement> elementSet) {
         Double riskValueDouble = null;
         for (CnATreeElement element : elementSet) {
-            if(IncidentScenario.TYPE_ID.equals(element.getTypeId())) {
+            if (IncidentScenario.TYPE_ID.equals(element.getTypeId())) {
                 Double currentValue = getRiskValue(element, elementSet);
-                if(riskValueDouble==null) {
+                if (riskValueDouble == null) {
                     riskValueDouble = currentValue;
                 } else {
                     riskValueDouble += currentValue;
-                }             
+                }
             }
         }
         return riskValueDouble;
     }
-    
+
     private String convertRiskValueToString(Double riskValueDouble) {
         String riskValue = Messages.getString("GsmService.5"); //$NON-NLS-1$
-        if(riskValueDouble!=null) {
+        if (riskValueDouble != null) {
             DecimalFormat formatterAndRounder = new DecimalFormat("###.##"); //$NON-NLS-1$
             riskValue = formatterAndRounder.format(riskValueDouble);
         }
         return riskValue;
     }
-    
+
     private String convertRiskValueToPriority(Double riskValueDouble) {
         String priority = ITask.PRIO_NORMAL;
-        if(riskValueDouble!=null) {
+        if (riskValueDouble != null) {
             priority = ITask.PRIO_LOW;
-            if(riskValueDouble.doubleValue() > getNormalPriorityRiskLimit()) {
+            if (riskValueDouble.doubleValue() > getNormalPriorityRiskLimit()) {
                 priority = ITask.PRIO_HIGH;
-            } else if(riskValueDouble.doubleValue() > getLowPriorityRiskLimit()) {
-                priority = ITask.PRIO_NORMAL;              
+            } else if (riskValueDouble.doubleValue() > getLowPriorityRiskLimit()) {
+                priority = ITask.PRIO_NORMAL;
             }
         }
         return priority;
@@ -299,11 +301,12 @@ public abstract class GsmProcessParameterCreater {
         Double riskValue = null;
         IncidentScenario scenario = (IncidentScenario) element;
         Double cvss = scenario.getGsmCvss();
-        if(cvss!=null) {
-            Set<CnATreeElement> allAssetList = getGraph().getLinkTargets(scenario, IncidentScenario.REL_INCSCEN_ASSET);      
+        if (cvss != null) {
+            Set<CnATreeElement> allAssetList = getGraph().getLinkTargets(scenario,
+                    IncidentScenario.REL_INCSCEN_ASSET);
             int numberOfLinkedAssets = 0;
             for (CnATreeElement linkedAsset : allAssetList) {
-                if(processElementSet.contains(linkedAsset)) {
+                if (processElementSet.contains(linkedAsset)) {
                     numberOfLinkedAssets++;
                 }
             }
@@ -311,40 +314,42 @@ public abstract class GsmProcessParameterCreater {
         }
         return riskValue;
     }
-    
+
     private void initGraph(Integer orgId) {
-        try { 
+        try {
             IGraphElementLoader loader1 = new GraphElementLoader();
             loader1.setTypeIds(typeIds);
             loader1.setScopeId(orgId);
             loader1.setElementFilter(new TopElementFilter(orgId));
-            
+
             IGraphElementLoader loader2 = new GraphElementLoader();
-            loader2.setTypeIds(new String[]{PersonIso.TYPE_ID});
-           
-            getGraphService().setLoader(loader1, loader2);
-            
-            getGraphService().setRelationIds(relationIds);
-            graph = getGraphService().create(); 
-        } catch(Exception e) {
+            loader2.setTypeIds(new String[] { PersonIso.TYPE_ID });
+
+            List<IGraphElementLoader> loaders = new ArrayList<>(2);
+            loaders.add(loader1);
+            loaders.add(loader2);
+
+            graph = getGraphService().create(loaders, relationIds);
+        } catch (Exception e) {
             LOG.error("Error while initialization", e);
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     private List<CnATreeElement> get2ndLevelControlGroups(Integer orgId) {
-        StringBuffer hql = new StringBuffer("select e.dbId from CnATreeElement e "); //$NON-NLS-1$      
-        hql.append("where e.objectType = ? and e.parent.parent.dbId = ?"); //$NON-NLS-1$ 
-        List<Integer> dbIdResult = getElementDao().findByQuery(hql.toString(),new Object[]{ControlGroup.TYPE_ID,orgId});
-        if(dbIdResult==null || dbIdResult.isEmpty()) {
+        StringBuffer hql = new StringBuffer("select e.dbId from CnATreeElement e "); //$NON-NLS-1$
+        hql.append("where e.objectType = ? and e.parent.parent.dbId = ?"); //$NON-NLS-1$
+        List<Integer> dbIdResult = getElementDao().findByQuery(hql.toString(),
+                new Object[] { ControlGroup.TYPE_ID, orgId });
+        if (dbIdResult == null || dbIdResult.isEmpty()) {
             return Collections.emptyList();
         }
         DetachedCriteria crit = createDefaultCriteria();
         Integer[] dbIdArray = dbIdResult.toArray(new Integer[dbIdResult.size()]);
         crit.add(Restrictions.in("dbId", dbIdArray));
-        return getElementDao().findByCriteria(crit);   
+        return getElementDao().findByCriteria(crit);
     }
-    
+
     protected DetachedCriteria createDefaultCriteria() {
         DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
         crit.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
@@ -352,20 +357,22 @@ public abstract class GsmProcessParameterCreater {
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return crit;
     }
-    
-    private Set<CnATreeElement> getAllElements(CnATreeElement controlGroup, CnATreeElement leftElement) {       
+
+    private Set<CnATreeElement> getAllElements(CnATreeElement controlGroup,
+            CnATreeElement leftElement) {
         Set<CnATreeElement> setA = getObjectsForControlGroup(controlGroup);
         Set<CnATreeElement> setB = getObjectsForLeftElement(leftElement);
-        Set<CnATreeElement> result = createIntersection(setA,setB);
+        Set<CnATreeElement> result = createIntersection(setA, setB);
         if (LOG.isDebugEnabled() && !result.isEmpty()) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Task for \"" + leftElement.getTitle() + "\" and group \"" + controlGroup.getTitle() + "\"");
+                LOG.debug("Task for \"" + leftElement.getTitle() + "\" and group \""
+                        + controlGroup.getTitle() + "\"");
             }
             logElementSet(result);
         }
         return result;
     }
-    
+
     private Set<CnATreeElement> getObjectsForControlGroup(CnATreeElement controlGroup) {
         // elements is a set of controls
         Set<CnATreeElement> elements = getGraph().getLinkTargets(controlGroup);
@@ -386,12 +393,13 @@ public abstract class GsmProcessParameterCreater {
         elements.addAll(assetGroups);
         return elements;
     }
-    
-    private Set<CnATreeElement> createIntersection(Set<CnATreeElement> elementList1, Set<CnATreeElement> elementList2) {
+
+    private Set<CnATreeElement> createIntersection(Set<CnATreeElement> elementList1,
+            Set<CnATreeElement> elementList2) {
         elementList1.retainAll(elementList2);
         return elementList1;
     }
-    
+
     private void logElementSet(Set<CnATreeElement> elementSet) {
         LOG.debug(GsmService.createElementInformation(elementSet));
     }

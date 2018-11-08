@@ -16,9 +16,8 @@ Require-Bundle: org.eclipse.ui,
  org.springframework.core;bundle-version="2.5.6",
  sernet.gs.service,
  sernet.hui.common,
- sernet.gs.server,
  sernet.gs.ui.rcp.main
-Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: SerNet
 Import-Package: org.apache.log4j,

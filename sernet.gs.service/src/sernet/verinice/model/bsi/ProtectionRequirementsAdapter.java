@@ -43,14 +43,7 @@ import sernet.verinice.model.common.TransactionAbortedException;
 public class ProtectionRequirementsAdapter implements IReevaluator, Serializable {
 
 
-    private transient Logger log = Logger.getLogger(ProtectionRequirementsAdapter.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(ProtectionRequirementsAdapter.class);
-        }
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(ProtectionRequirementsAdapter.class);
 
     private CnATreeElement cnaTreeElement;
 
@@ -167,7 +160,7 @@ public class ProtectionRequirementsAdapter implements IReevaluator, Serializable
             }
 
         } catch (TransactionAbortedException tae) {
-            getLog().debug("Reeavluation of availability aborted."); //$NON-NLS-1$
+            log.debug("Reeavluation of availability aborted."); //$NON-NLS-1$
             throw new RuntimeException(tae);
         } catch (RuntimeException e) {
             ta.abort();
@@ -196,7 +189,7 @@ public class ProtectionRequirementsAdapter implements IReevaluator, Serializable
             }
 
         } catch (TransactionAbortedException tae) {
-            getLog().debug("Reeavluation of confidentiality aborted."); //$NON-NLS-1$
+            log.debug("Reeavluation of confidentiality aborted."); //$NON-NLS-1$
             throw new RuntimeException(tae);
         } catch (RuntimeException e) {
             ta.abort();
@@ -225,7 +218,7 @@ public class ProtectionRequirementsAdapter implements IReevaluator, Serializable
             }
 
         } catch (TransactionAbortedException tae) {
-            getLog().debug("Reeavluation of integrity aborted."); //$NON-NLS-1$
+            log.debug("Reeavluation of integrity aborted."); //$NON-NLS-1$
             throw new RuntimeException(tae);
         } catch (RuntimeException e) {
             ta.abort();

@@ -9,9 +9,8 @@
 
 	<parent>
 		<groupId>sernet.verinice</groupId>
-		<artifactId>sernet.verinice.releng.parent</artifactId>
-		<version>1.0.0-SNAPSHOT</version>
-		<relativePath>../sernet.verinice.releng.parent/pom.xml</relativePath>
+		<artifactId>sernet.verinice.tycho.root</artifactId>
+		<version>1.0.0</version>
 	</parent>
 
 	<!-- we also compile the test classes here and execute the junit tests -->
@@ -60,8 +59,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.5.1</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 				<executions>
 					<execution>

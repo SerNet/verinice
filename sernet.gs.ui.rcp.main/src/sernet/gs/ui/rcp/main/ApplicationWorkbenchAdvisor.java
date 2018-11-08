@@ -17,13 +17,16 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import java.io.InvalidClassException;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceNode;
 import org.eclipse.jface.preference.PreferenceManager;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -32,75 +35,91 @@ import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ide.IDEWorkbenchPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.ServiceReference;
+import org.springframework.remoting.RemoteAccessException;
 
 /**
- * This workbench advisor creates the window advisor, and specifies
- * the perspective id for the initial window.
+ * This workbench advisor creates the window advisor, and specifies the
+ * perspective id for the initial window.
  */
 public class ApplicationWorkbenchAdvisor extends WorkbenchAdvisor {
-	
-	private static final String PERSPECTIVE_ID = "sernet.gs.ui.rcp.main.perspective";
 
-    public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
+    private static final String PERSPECTIVE_ID = "sernet.gs.ui.rcp.main.perspective";
+
+    @Override
+    public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(
+            IWorkbenchWindowConfigurer configurer) {
         return new ApplicationWorkbenchWindowAdvisor(configurer);
     }
 
-	public String getInitialWindowPerspectiveId() {
-		return PERSPECTIVE_ID;
-	} 
-	
-	@Override
-	public void initialize(IWorkbenchConfigurer configurer) {
-		configurer.setSaveAndRestore(true);
-		activateProxyService();
-	}
-	
-	/**
-	 * Activate the proxy service by obtaining it.
-	 * Copied from IDEWorkbenchAdvisor.
-	 */
-	private void activateProxyService() {
-		Bundle bundle = Platform.getBundle("org.eclipse.ui.ide"); //$NON-NLS-1$
-		Object proxyService = null;
-		if (bundle != null) {
-			ServiceReference ref = bundle.getBundleContext().getServiceReference(IProxyService.class.getName());
-			if (ref != null){
-				proxyService = bundle.getBundleContext().getService(ref);
-			}
-		}
-		if (proxyService == null) {
-			IDEWorkbenchPlugin.log("Proxy service could not be found."); //$NON-NLS-1$
-		}
-	}
-	
-	public void postStartup(){
-	    removeUnneededPrefPages();
-	}
-	
-	/**
-	 * removes prefPages that were loaded from plugins but not needed
-	 * currently thats:
-	 *     -   org.eclipse.datatools.connectivity.ui.preferences.dataNode
-	 *     -   org.eclipse.birt.report.designer.ui.preferences
-	 *     -   org.eclipse.birt.chart.ui.swt.fieldassist.preferences.FieldAssistPreferencePage
-	 */
-	private void removeUnneededPrefPages(){
-	    PreferenceManager pm = PlatformUI.getWorkbench().getPreferenceManager();
-	    // add id of prefPage to remove here
-	    String[] prefPageIDsToRemove = new String[]{
-	            "org.eclipse.datatools.connectivity.ui.preferences.dataNode",
-	            "org.eclipse.birt.report.designer.ui.preferences",
-	            "org.eclipse.birt.chart.ui.swt.fieldassist.preferences.FieldAssistPreferencePage"
-	    };
-	    Set<String> idSet = new HashSet<String>();
-	    for(String s : prefPageIDsToRemove){
-	        idSet.add(s);
-	    }
-	    for (IPreferenceNode node : pm.getRootSubNodes()){
-	        if(idSet.contains(node.getId())){
-	            // removing prefPages
-	            pm.remove(node);
-	        }
-	    }
-	}
+    public String getInitialWindowPerspectiveId() {
+        return PERSPECTIVE_ID;
+    }
+
+    @Override
+    public void initialize(IWorkbenchConfigurer configurer) {
+        configurer.setSaveAndRestore(true);
+        activateProxyService();
+    }
+
+    /**
+     * Activate the proxy service by obtaining it. Copied from
+     * IDEWorkbenchAdvisor.
+     */
+    private void activateProxyService() {
+        Bundle bundle = Platform.getBundle("org.eclipse.ui.ide"); //$NON-NLS-1$
+        Object proxyService = null;
+        if (bundle != null) {
+            ServiceReference<?> ref = bundle.getBundleContext()
+                    .getServiceReference(IProxyService.class.getName());
+            if (ref != null) {
+                proxyService = bundle.getBundleContext().getService(ref);
+            }
+        }
+        if (proxyService == null) {
+            IDEWorkbenchPlugin.log("Proxy service could not be found."); //$NON-NLS-1$
+        }
+    }
+
+    @Override
+    public void postStartup() {
+        removeUnneededPrefPages();
+    }
+
+    @Override
+    public void eventLoopException(Throwable exception) {
+        if (exception instanceof RemoteAccessException
+                && exception.getCause() instanceof InvalidClassException) {
+            Display.getDefault()
+                    .syncExec(() -> MessageDialog.openError(Display.getDefault().getActiveShell(),
+                            Messages.ExceptionUtilErrorPopupTitle,
+                            Messages.ClientAndServerIncompatible));
+        } else {
+            super.eventLoopException(exception);
+        }
+    }
+
+    /**
+     * removes prefPages that were loaded from plugins but not needed currently
+     * thats: - org.eclipse.datatools.connectivity.ui.preferences.dataNode -
+     * org.eclipse.birt.report.designer.ui.preferences -
+     * org.eclipse.birt.chart.ui.swt.fieldassist.preferences.FieldAssistPreferencePage
+     */
+    private void removeUnneededPrefPages() {
+        PreferenceManager pm = PlatformUI.getWorkbench().getPreferenceManager();
+        // add id of prefPage to remove here
+        String[] prefPageIDsToRemove = new String[] {
+                "org.eclipse.datatools.connectivity.ui.preferences.dataNode",
+                "org.eclipse.birt.report.designer.ui.preferences",
+                "org.eclipse.birt.chart.ui.swt.fieldassist.preferences.FieldAssistPreferencePage" };
+        Set<String> idSet = new HashSet<>();
+        for (String s : prefPageIDsToRemove) {
+            idSet.add(s);
+        }
+        for (IPreferenceNode node : pm.getRootSubNodes()) {
+            if (idSet.contains(node.getId())) {
+                // removing prefPages
+                pm.remove(node);
+            }
+        }
+    }
 }

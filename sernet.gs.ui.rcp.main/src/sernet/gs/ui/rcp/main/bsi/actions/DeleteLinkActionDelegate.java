@@ -80,6 +80,9 @@ public class DeleteLinkActionDelegate implements IObjectActionDelegate, RightEna
                         CnAElementFactory.getLoadedModel().linkRemoved(link);
                     }
                     CnAElementFactory.getInstance().getISO27kModel().linkRemoved(link);
+                    if (CnAElementFactory.isBpModelLoaded()) {
+                        CnAElementFactory.getInstance().getBpModel().linkRemoved(link);
+                    }
                 } catch (Exception e) {
                     ExceptionUtil.log(e, Messages.DeleteLinkActionDelegate_2);
                 }

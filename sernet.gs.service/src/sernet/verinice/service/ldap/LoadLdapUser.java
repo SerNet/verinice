@@ -7,57 +7,58 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ldap.ILdapCommand;
 import sernet.verinice.interfaces.ldap.ILdapService;
 import sernet.verinice.interfaces.ldap.PersonParameter;
+import sernet.verinice.model.common.Domain;
 
 @SuppressWarnings("serial")
-public class LoadLdapUser extends GenericCommand implements ILdapCommand,Serializable {
+public class LoadLdapUser extends GenericCommand implements ILdapCommand, Serializable {
 
-	private transient ILdapService ldapService;
-	
-	private PersonParameter parameter;
-	
-	private List<PersonInfo> personList;
-	
-	private boolean importToGS = false; // default case
+    private transient ILdapService ldapService;
 
-	public LoadLdapUser() {
-		super();
-	}
+    private PersonParameter parameter;
 
-	public LoadLdapUser(PersonParameter parameter) {
-		super();
-		this.parameter = parameter;
-	}
-	
-	public LoadLdapUser(PersonParameter paramater, boolean importToITGS){
-	    this(paramater);
-	    this.importToGS = importToITGS;
-	}
+    private List<PersonInfo> personList;
 
-	@Override
-	public void execute() {
-		personList = getLdapService().getPersonList(getParameter(), importToGS);		
-	}
-	
-	public PersonParameter getParameter() {
-		return parameter;
-	}
+    private Domain importDomain = Domain.ISM; // default case
 
-	public void setParameter(PersonParameter parameter) {
-		this.parameter = parameter;
-	}
+    public LoadLdapUser() {
+        super();
+    }
 
-	public List<PersonInfo> getPersonList() {
-		return personList;
-	}
-	
-	@Override
-	public ILdapService getLdapService() {
-		return ldapService;
-	}
+    public LoadLdapUser(PersonParameter parameter) {
+        super();
+        this.parameter = parameter;
+    }
 
-	@Override
-	public void setLdapService(ILdapService ldapService) {
-		this.ldapService = ldapService;
-	}
+    public LoadLdapUser(PersonParameter paramater, Domain importDomain) {
+        this(paramater);
+        this.importDomain = importDomain;
+    }
+
+    @Override
+    public void execute() {
+        personList = getLdapService().getPersonList(getParameter(), importDomain);
+    }
+
+    public PersonParameter getParameter() {
+        return parameter;
+    }
+
+    public void setParameter(PersonParameter parameter) {
+        this.parameter = parameter;
+    }
+
+    public List<PersonInfo> getPersonList() {
+        return personList;
+    }
+
+    @Override
+    public ILdapService getLdapService() {
+        return ldapService;
+    }
+
+    @Override
+    public void setLdapService(ILdapService ldapService) {
+        this.ldapService = ldapService;
+    }
 
 }

@@ -40,7 +40,7 @@ import sernet.verinice.model.iso27k.PersonIso;
  */
 public class LoadReportISAInterviews extends GenericCommand implements ICachedCommand {
     
-    private transient Logger log = Logger.getLogger(LoadReportISAInterviews.class);
+    private static final Logger log = Logger.getLogger(LoadReportISAInterviews.class);
     
     private SimpleDateFormat dateFormat =  new SimpleDateFormat("dd.MM.yy");
     
@@ -92,8 +92,8 @@ public class LoadReportISAInterviews extends GenericCommand implements ICachedCo
                     if(c.getTypeId().equals(Interview.TYPE_ID)){
                         i = (Interview)Retriever.checkRetrieveElement(c);
                         // is audit action of allowed type?
-                        if(getLog().isDebugEnabled()){
-                            getLog().debug("AuditActionType of " + i.getTitle() + ":\t" + getAuditActionType(i));
+                        if(log.isDebugEnabled()){
+                            log.debug("AuditActionType of " + i.getTitle() + ":\t" + getAuditActionType(i));
                         }
                         if(Arrays.asList(ALLOWED_AUDIT_ACTION_TYPES).contains(getAuditActionType(i))){
                             // create local result
@@ -134,7 +134,7 @@ public class LoadReportISAInterviews extends GenericCommand implements ICachedCo
                     }
                 }
             } catch (CommandException e ){
-                getLog().error("Error while executing command", e);
+                log.error("Error while executing command", e);
             }
         }
     }
@@ -175,10 +175,4 @@ public class LoadReportISAInterviews extends GenericCommand implements ICachedCo
         return results;
     }
     
-    private Logger getLog(){
-        if(log == null){
-            log = Logger.getLogger(LoadReportISAInterviews.class);
-        }
-        return log;
-    }
 }

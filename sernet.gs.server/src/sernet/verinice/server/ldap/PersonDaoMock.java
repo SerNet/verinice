@@ -5,6 +5,7 @@ import java.util.List;
 
 import sernet.verinice.interfaces.ldap.IPersonDao;
 import sernet.verinice.interfaces.ldap.PersonParameter;
+import sernet.verinice.model.common.Domain;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.ldap.PersonInfo;
 
@@ -54,10 +55,10 @@ public class PersonDaoMock implements IPersonDao {
 	}
 
     /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ldap.IPersonDao#getPersonList(sernet.verinice.interfaces.ldap.PersonParameter, boolean)
+     * @see sernet.verinice.interfaces.ldap.IPersonDao#getPersonList(sernet.verinice.interfaces.ldap.PersonParameter, sernet.verinice.model.common.Domain)
      */
     @Override
-    public List<PersonInfo> getPersonList(PersonParameter parameter, boolean importToITGS) {
+    public List<PersonInfo> getPersonList(PersonParameter parameter, Domain importDomain) {
         return getPersonList(parameter);
     }
 

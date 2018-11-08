@@ -20,7 +20,8 @@ package sernet.verinice.report.service.commands;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
@@ -36,7 +37,7 @@ import sernet.verinice.service.commands.crud.LoadReportElements;
  */
 public class LoadISAQuestionRadarChartData extends GenericCommand implements ICachedCommand{
     
-    private static transient Logger log = Logger.getLogger(LoadISAQuestionRadarChartData.class);
+    private static final Logger log = LoggerFactory.getLogger(LoadISAQuestionRadarChartData.class);
     private static final int THRESHOLD_VALUE = 3;
     
     public static final String[] COLUMNS = new String[]{"title", 
@@ -85,7 +86,7 @@ public class LoadISAQuestionRadarChartData extends GenericCommand implements ICa
                     }
                 }
             } catch (CommandException e) {
-                getLog().error("Error while determing samt topics", e);
+                log.error("Error while determing samt topics", e);
             }
         } 
     }
@@ -177,17 +178,11 @@ public class LoadISAQuestionRadarChartData extends GenericCommand implements ICa
     public void injectCacheResult(Object result) {
         this.result = (ArrayList<List<String>>)result;
         resultInjectedFromCache = true;
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(log.isDebugEnabled()){
+            log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
     
-    private Logger getLog(){
-        if(log == null){
-            log = Logger.getLogger(LoadISAQuestionRadarChartData.class);
-        }
-        return log;
-    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()

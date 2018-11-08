@@ -40,7 +40,7 @@ public class CheckUserName extends GenericCommand implements IAuthAwareCommand {
     
     private transient IAuthService authService;
     
-    private transient Logger LOG = Logger.getLogger(CheckUserName.class);
+    private static final Logger LOG = Logger.getLogger(CheckUserName.class);
     
     private boolean result = false;
     
@@ -85,8 +85,8 @@ public class CheckUserName extends GenericCommand implements IAuthAwareCommand {
      */
     private void checkUsername(String username) throws UsernameExistsRuntimeException {
         if(getAuthService().getAdminUsername().equals(username)) {
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Username is admin name: " + username);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Username is admin name: " + username);
             }
             result = true;
             return;
@@ -112,8 +112,8 @@ public class CheckUserName extends GenericCommand implements IAuthAwareCommand {
                 }
             }
             if (doubleUsername) {
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Username exists: " + username);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Username exists: " + username);
                 }
                 result = true;
             }
@@ -122,13 +122,6 @@ public class CheckUserName extends GenericCommand implements IAuthAwareCommand {
     
     public boolean getResult(){
         return result;
-    }
-    
-    private Logger getLog(){
-        if(LOG == null){
-            LOG = Logger.getLogger(CheckUserName.class);
-        } 
-        return LOG;
     }
     
     public IBaseDao<Configuration, Serializable> getDao() {

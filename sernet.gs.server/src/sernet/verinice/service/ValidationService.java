@@ -53,7 +53,7 @@ import sernet.verinice.service.commands.crud.LoadScopeElementsById;
  */
 public class ValidationService implements IValidationService {
     
-    private Logger log = Logger.getLogger(ValidationService.class);
+    private static final Logger log = Logger.getLogger(ValidationService.class);
     
     private ICommandService commandService;
     private IDao<CnAValidation, Long> cnaValidationDAO;

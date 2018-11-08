@@ -20,61 +20,58 @@ package sernet.hui.common.connect;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 /**
- * This class represents an entity type in the dynamic object model (Hitro UI, HUI).
- * Use this class to get information about a verinice element (CnATreeElement).
- * Instances of this class are defined in configuration file SNCA.xml. Content
- * of SNCA.xml is defined in schema hitro.xsd.
+ * This class represents an entity type in the dynamic object model (Hitro UI,
+ * HUI). Use this class to get information about a verinice element
+ * (CnATreeElement). Instances of this class are defined in configuration file
+ * SNCA.xml. Content of SNCA.xml is defined in schema hitro.xsd.
  *
  * @author Alexander Koderman
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
 public class EntityType {
 
-	private String id;
-	private String name;
-	private String inheritingEntity;
-	
-	private List<IEntityElement> elements = new ArrayList<>();
-	private List<PropertyGroup> propertyGroups = new ArrayList<>();
-	
-	// All properties of an entity type, Map of property ID : PropertyType
-    private Map<String, PropertyType> propertyTypes = new HashMap<>();
-	
-	// map of target EntityType ID : set of HuiRelations (links to EntityTypes)
-	private Map<String, Set<HuiRelation>> relations = new HashMap<>();
-	
-	/**
-	 * A list with all property types of this entity type.
-	 *
-	 * This method does not return the property types from the
-	 * property groups.
-	 *
-	 * @return A list with the property types of this entity type
-	 */
-	public List<PropertyType> getPropertyTypes() {
-		ArrayList<PropertyType> types = new ArrayList<>(propertyTypes.values().size());
-		types.addAll(propertyTypes.values());
-		return types;
-	}
+    private String id;
+    private String name;
+    private String inheritingEntity;
 
-	/**
-	 * Returns a list with the property types of this entity type.
-	 * The properties in the list are sorted the same way as in SNCA.xml.
-	 *
-	 * This method does not return the property types from the
-     * property groups.
-	 *
+    private List<IEntityElement> elements = new ArrayList<>();
+    private List<PropertyGroup> propertyGroups = new ArrayList<>();
+
+    // All properties of an entity type, Map of property ID : PropertyType
+    private Map<String, PropertyType> propertyTypes = new HashMap<>();
+
+    // map of target EntityType ID : set of HuiRelations (links to EntityTypes)
+    private Map<String, Set<HuiRelation>> relations = new HashMap<>();
+
+    /**
+     * A list with all property types of this entity type.
+     *
+     * This method does not return the property types from the property groups.
+     *
+     * @return A list with the property types of this entity type
+     */
+    public List<PropertyType> getPropertyTypes() {
+        ArrayList<PropertyType> types = new ArrayList<>(propertyTypes.values().size());
+        types.addAll(propertyTypes.values());
+        return types;
+    }
+
+    /**
+     * Returns a list with the property types of this entity type. The
+     * properties in the list are sorted the same way as in SNCA.xml.
+     *
+     * This method does not return the property types from the property groups.
+     *
      * @return A SNCA sorted list with the property types of this entity type
      */
-	public List<PropertyType> getPropertyTypesSorted() {
-	    List<PropertyType> propertyTypesSorted = new ArrayList<>();
+    public List<PropertyType> getPropertyTypesSorted() {
+        List<PropertyType> propertyTypesSorted = new ArrayList<>();
         for (IEntityElement entity : getElements()) {
             if (entity instanceof PropertyType) {
                 propertyTypesSorted.add((PropertyType) entity);
@@ -82,23 +79,23 @@ public class EntityType {
         }
         return propertyTypesSorted;
     }
-	
-	/**
-	 * Returns a list with all property types of this entity type
-	 * including the types which are contained in property groups.
-	 * 
-	 * @return A list with all property types of this entity type and property groups.
-	 */
-	public List<PropertyType> getAllPropertyTypes() {
-		List<PropertyType> types = getPropertyTypes();
-		for (PropertyGroup pg : propertyGroups)
-		{
-			types.addAll(pg.getPropertyTypes());
-		}
-		
-		return types;
-	}
-	
+
+    /**
+     * Returns a list with all property types of this entity type including the
+     * types which are contained in property groups.
+     * 
+     * @return A list with all property types of this entity type and property
+     *         groups.
+     */
+    public List<PropertyType> getAllPropertyTypes() {
+        List<PropertyType> types = getPropertyTypes();
+        for (PropertyGroup pg : propertyGroups) {
+            types.addAll(pg.getPropertyTypes());
+        }
+
+        return types;
+    }
+
     /**
      * Returns a list with all property types of this entity type including the
      * types which are contained in property groups.
@@ -121,27 +118,28 @@ public class EntityType {
     }
 
     /**
-     * Returns the property type of this entity type with the given ID.
-     * Id no property type with the given ID exists null is returned.
+     * Returns the property type of this entity type with the given ID. Id no
+     * property type with the given ID exists null is returned.
      *
-     * @param id The ID of a property type.
+     * @param id
+     *            The ID of a property type.
      * @return The property type with the given ID or null
      */
     public PropertyType getPropertyType(String id) {
         PropertyType type = this.propertyTypes.get(id);
-        if (type != null){
+        if (type != null) {
             return type;
         }
         // search in groups:
         for (PropertyGroup group : this.propertyGroups) {
-            if ((type = group.getPropertyType(id)) != null){
+            if ((type = group.getPropertyType(id)) != null) {
                 return type;
             }
         }
         // none found:
         return null;
     }
-	
+
     /**
      * @return An array with all property type ID of this entity type including
      *         the types which are contained in property groups.
@@ -154,22 +152,22 @@ public class EntityType {
         }
         return ids.toArray(new String[ids.size()]);
     }
-	
-	/**
+
+    /**
      * @return An array with all property type ID of this entity type including
      *         the types which are contained in property groups.
-	 * @deprecated Replaced by {@link #getAllPropertyTypeIds()}
-	 */
-	@Deprecated
-	public String[] getAllPropertyTypeIDsIncludingGroups() {
-	    return getAllPropertyTypeIds();
-	}
-	
-	/**
-     * @return An array with all property type titles of this entity type including
-     *         the types which are contained in property groups.
+     * @deprecated Replaced by {@link #getAllPropertyTypeIds()}
      */
-	public String[] getAllPropertyTypeTitles() {
+    @Deprecated
+    public String[] getAllPropertyTypeIDsIncludingGroups() {
+        return getAllPropertyTypeIds();
+    }
+
+    /**
+     * @return An array with all property type titles of this entity type
+     *         including the types which are contained in property groups.
+     */
+    public String[] getAllPropertyTypeTitles() {
         ArrayList<String> result = new ArrayList<>();
         String[] typeIDs = getAllPropertyTypeIds();
         for (String typeId : typeIDs) {
@@ -177,16 +175,16 @@ public class EntityType {
         }
         return result.toArray(new String[result.size()]);
     }
-	
-	/**
-     * @return An array with all property type titles of this entity type including
-     *         the types which are contained in property groups.
+
+    /**
+     * @return An array with all property type titles of this entity type
+     *         including the types which are contained in property groups.
      * @deprecated Replaced by {@link #getAllPropertyTypeTitles()}
      */
-	@Deprecated
-	public String[] getAllPropertyTypeTitlesIncludingGroups() {
-	    return getAllPropertyTypeTitles();
-	}
+    @Deprecated
+    public String[] getAllPropertyTypeTitlesIncludingGroups() {
+        return getAllPropertyTypeTitles();
+    }
 
     /**
      * Returns all links (relations) from this entity type to another entity
@@ -201,10 +199,10 @@ public class EntityType {
         return relations.get(entityTypeId) != null ? relations.get(entityTypeId)
                 : new HashSet<HuiRelation>(0);
     }
-	
+
     /**
-     * Adds a HuiRelation to this entity type. A HuiRelation is a link (relation)
-     * from this entity type to another entity type.
+     * Adds a HuiRelation to this entity type. A HuiRelation is a link
+     * (relation) from this entity type to another entity type.
      *
      * @param relation
      *            A HuiRelation, link from this entity type to another entity
@@ -254,18 +252,18 @@ public class EntityType {
         return null;
     }
 
-	public LinkedList<PropertyType> getObjectBrowserPropertyTypes(){
-	    LinkedList<PropertyType> linkedList = new LinkedList<>();
-	    for (IEntityElement entityElement : elements){
-	        if (entityElement instanceof PropertyType && 
-	                ((PropertyType)entityElement).isShowInObjectBrowser()){
-	            linkedList.add((PropertyType)entityElement);
-	        }
-	    }
-	    return linkedList;
-	}
-	
-	public void addPropertyType(PropertyType prop) {
+    public List<PropertyType> getObjectBrowserPropertyTypes() {
+        List<PropertyType> allPropertyTypesSorted = getAllPropertyTypesSorted();
+        List<PropertyType> result = new ArrayList<>(allPropertyTypesSorted.size());
+        for (PropertyType propertyType : allPropertyTypesSorted) {
+            if (propertyType.isShowInObjectBrowser()) {
+                result.add(propertyType);
+            }
+        }
+        return result;
+    }
+
+    public void addPropertyType(PropertyType prop) {
         propertyTypes.put(prop.getId(), prop);
         elements.add(prop);
     }
@@ -282,16 +280,19 @@ public class EntityType {
     public List<PropertyGroup> getPropertyGroups() {
         return propertyGroups;
     }
-	
-	public String getId() {
+
+    public String getId() {
         return id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -304,14 +305,15 @@ public class EntityType {
     }
 
     /**
-     * @param inheritingEntity the inheritingEntity to set
+     * @param inheritingEntity
+     *            the inheritingEntity to set
      */
     public void setInheritingEntity(String inheritingEntity) {
         this.inheritingEntity = inheritingEntity;
     }
-    
+
     public boolean isInheritingEntity() {
         return this.inheritingEntity != null;
     }
-	
+
 }

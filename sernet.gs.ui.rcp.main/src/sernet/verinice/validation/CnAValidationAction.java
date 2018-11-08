@@ -40,7 +40,7 @@ import sernet.verinice.rcp.RightsEnabledActionDelegate;
 
 public class CnAValidationAction extends RightsEnabledActionDelegate implements RightEnabledUserInteraction {
 
-    private static transient Logger LOG = Logger.getLogger(CnAValidationAction.class);
+    private static final Logger LOG = Logger.getLogger(CnAValidationAction.class);
     
     private List<Object> rootObjects;
     

@@ -62,7 +62,7 @@ public class Query implements IQuery
     public static final String ODA_DATA_SOURCE_ID = "verinice.oda.driver.dataSource.id";  //$NON-NLS-1$
     public static final String ODA_DATA_SET_ID = "verinice.oda.driver.dataSet.id";  //$NON-NLS-1$
     
-	private Logger log = Logger.getLogger(Query.class);
+	private static final Logger log = Logger.getLogger(Query.class);
 	
 	private int maxRows;
     private String queryText;
@@ -102,7 +102,7 @@ public class Query implements IQuery
     }
 
     private void init() {
-        IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();  	
+    	IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
     	ReportClassLoader securedClassLoader = new ReportClassLoader(Query.class.getClassLoader());	
 
     	try {
@@ -220,7 +220,7 @@ public class Query implements IQuery
         
         public String[] getAllPropertyTypes(String entityTypeId, boolean withId) {
             HUITypeFactory htf = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
-            String[] props = htf.getEntityType(entityTypeId).getAllPropertyTypeIDsIncludingGroups();
+            String[] props = htf.getEntityType(entityTypeId).getAllPropertyTypeIds();
             if (withId) {
                 String[] arr = new String[props.length+1];
                 System.arraycopy(props, 0, arr, 0, props.length);

@@ -108,7 +108,6 @@
     </bean>
     
     <bean id="gsmProcessValidator" class="sernet.verinice.bpm.gsm.GsmProcessValidator" scope="prototype">
-        <!-- Scope of graphService is prototype -->
         <property name="graphService" ref="graphService" />
     </bean>
     
@@ -118,7 +117,6 @@
     <!-- Set class sernet.verinice.bpm.gsm.ProcessCreatorForAssetGroups to create one process -->
     <!-- for each asset-group and control group which are connected. -->
     <bean id="gsmProcessParameterCreater" class="sernet.verinice.bpm.gsm.ProcessCreatorForAssetGroups" scope="prototype">
-        <!-- Scope of graphService is prototype -->
         <property name="graphService" ref="graphService" />
         <property name="gsmService" ref="gsmService" />
         <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
@@ -131,14 +129,12 @@
     </bean>
     
     <bean id="gsmAssetScenarioRemover" class="sernet.verinice.bpm.gsm.GsmAssetScenarioRemover" scope="prototype">
-        <!-- Scope of graphService is prototype -->
         <property name="graphService" ref="graphService" />  
         <property name="linkDao" ref="cnaLinkDao" /> 
         <property name="elementDao" ref="cnaTreeElementDao" />
     </bean>
     
     <bean id="gsmCleaner" class="sernet.verinice.bpm.gsm.Cleaner" scope="prototype">
-        <!-- Scope of graphService is prototype -->
         <property name="graphService" ref="graphService" />
         <property name="commandService" ref="commandService" />
     </bean>

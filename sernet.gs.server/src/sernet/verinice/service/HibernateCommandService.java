@@ -65,7 +65,7 @@ import sernet.verinice.service.sync.VnaSchemaVersion;
  */
 public class HibernateCommandService implements ICommandService, IHibernateCommandService {
 	
-	private Logger log = Logger.getLogger(HibernateCommandService.class);
+	private static final Logger log = Logger.getLogger(HibernateCommandService.class);
 
 	// injected by spring
 	private DAOFactory daoFactory;

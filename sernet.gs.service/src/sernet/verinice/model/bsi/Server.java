@@ -29,15 +29,8 @@ import sernet.verinice.model.common.ILinkChangeListener;
 public class Server extends CnATreeElement 
 	implements IBSIStrukturElement {
 	
-    private transient Logger log = Logger.getLogger(Server.class);
+    private static final Logger log = Logger.getLogger(Server.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(Server.class);
-        }
-        return log;
-    }
-    
 	// ID must correspond to entity definition in XML description
 	public static final String TYPE_ID = "server"; //$NON-NLS-1$
 	public static final String PROP_NAME = "server_name"; //$NON-NLS-1$

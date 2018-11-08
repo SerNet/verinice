@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.jgrapht.Graph;
 
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -36,16 +35,7 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public abstract  class AbstractVeriniceGraph implements VeriniceGraph {
 
-
-    private transient Logger log = Logger.getLogger(UndirectedVeriniceGraph.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(UndirectedVeriniceGraph.class);
-        }
-        return log;
-    }
-
+    protected final Logger log = Logger.getLogger(getClass());
 
     @Override
     public void addEdge(Edge edge) {
@@ -128,6 +118,10 @@ public abstract  class AbstractVeriniceGraph implements VeriniceGraph {
 
     @Override
     public CnATreeElement getParent(CnATreeElement element) {
+        if (log.isDebugEnabled()) {
+            log.debug("Getting parent of element: " + element + ", parent DB ID is: "
+                    + element.getParentId());
+        }
         CnATreeElement parent = null;
         int parentId = element.getParentId();
         Set<CnATreeElement> relatives = getLinkTargets(element, Edge.RELATIVES);
@@ -204,32 +198,32 @@ public abstract  class AbstractVeriniceGraph implements VeriniceGraph {
 
 
     public void log() {
-        if (getLog().isInfoEnabled()) {
+        if (log.isInfoEnabled()) {
             logStatistics();
         }
-        if (getLog().isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             logVertices();
         }
     }
 
     private void logStatistics() {
         if (getGraph() != null) {
-            getLog().info("Number vertices: " + getGraph().vertexSet().size());
-            getLog().info("Number edges: " + getGraph().edgeSet().size());
+            log.info("Number vertices: " + getGraph().vertexSet().size());
+            log.info("Number edges: " + getGraph().edgeSet().size());
         }
     }
 
     private void logVertices() {
         if (getGraph() != null) {
             for (CnATreeElement element : getGraph().vertexSet()) {
-                getLog().debug(element.getTitle());
+                log.debug(element.getTitle());
                 Set<Edge> edges = getGraph().edgesOf(element);
                 for (Edge edge : edges) {
                     CnATreeElement target = edge.getTarget();
                     if (target.equals(element)) {
                         target = edge.getSource();
                     }
-                    getLog().debug("  |-" + edge.getType() + " -> " + target.getTitle());
+                    log.debug("  |-" + edge.getType() + " -> " + target.getTitle());
                 }
             }
         }

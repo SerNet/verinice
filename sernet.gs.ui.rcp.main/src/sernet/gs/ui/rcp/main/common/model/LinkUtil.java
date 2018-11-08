@@ -20,6 +20,7 @@
 
 package sernet.gs.ui.rcp.main.common.model;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -28,6 +29,8 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Domain;
+import sernet.verinice.service.commands.CnATypeMapper;
 import sernet.verinice.service.commands.CreateLink;
 
 /**
@@ -37,7 +40,7 @@ import sernet.verinice.service.commands.CreateLink;
  * @author Moritz Reiter
  */
 public final class LinkUtil {
-    
+
     private static final Logger LOGGER = Logger.getLogger(LinkUtil.class);
 
     private static final ICommandService commandService = CnAElementHome.getInstance()
@@ -47,12 +50,29 @@ public final class LinkUtil {
     }
 
     public static void createLink(CnATreeElement source, CnATreeElement target, String relationId) {
-        CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source,
-                target, relationId);
+        CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source, target,
+                relationId);
         try {
-            commandService.executeCommand(command);
+            command = commandService.executeCommand(command);
+            CnALink link = command.getLink();
+            Domain dependantDomain = CnATypeMapper
+                    .getDomainFromTypeId(link.getDependant().getTypeId());
+            Domain dependencyDomain = CnATypeMapper
+                    .getDomainFromTypeId(link.getDependency().getTypeId());
+            Set<Domain> relevantDomains = EnumSet.of(dependantDomain, dependencyDomain);
+
+            if (relevantDomains.contains(Domain.BASE_PROTECTION_OLD)
+                    && CnAElementFactory.isModelLoaded()) {
+                CnAElementFactory.getLoadedModel().linkAdded(link);
+            }
+            if (relevantDomains.contains(Domain.ISM) && CnAElementFactory.isIsoModelLoaded()) {
+                CnAElementFactory.getInstance().getISO27kModel().linkAdded(link);
+            }
+            if (relevantDomains.contains(Domain.BASE_PROTECTION)
+                    && CnAElementFactory.isBpModelLoaded()) {
+                CnAElementFactory.getInstance().getBpModel().linkAdded(link);
+            }
         } catch (CommandException e) {
-            // SonarLint 1.0.0 is not satisfied with this. Looks like a false positive to me.
             LOGGER.error("Link creation failed", e);
         }
     }
@@ -60,28 +80,15 @@ public final class LinkUtil {
     public static void createLinks(Set<CnATreeElement> sources, CnATreeElement target,
             String relationId) {
         for (CnATreeElement source : sources) {
-            CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source,
-                    target, relationId);
-            try {
-                commandService.executeCommand(command);
-            } catch (CommandException e) {
-                // SonarLint 1.0.0 is not satisfied with this. Looks like a false positive to me.
-                LOGGER.error("Link creation failed", e);
-            }
+            createLink(source, target, relationId);
         }
     }
 
     public static void createLinks(CnATreeElement source, Set<CnATreeElement> targets,
             String relationId) {
         for (CnATreeElement target : targets) {
-            CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source,
-                    target, relationId);
-            try {
-                commandService.executeCommand(command);
-            } catch (CommandException e) {
-                // SonarLint 1.0.0 is not satisfied with this. Looks like a false positive to me.
-                LOGGER.error("Link creation failed", e);
-            }
+            createLink(source, target, relationId);
         }
     }
+
 }

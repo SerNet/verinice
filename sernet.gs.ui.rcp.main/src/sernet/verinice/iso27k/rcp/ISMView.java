@@ -18,6 +18,7 @@
 package sernet.verinice.iso27k.rcp;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -27,14 +28,11 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -75,6 +73,7 @@ import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.DefaultModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -88,10 +87,7 @@ import sernet.verinice.iso27k.rcp.action.ExpandAction;
 import sernet.verinice.iso27k.rcp.action.FileDropPerformer;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
-import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.Attachment;
-import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.catalog.CatalogModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TagParameter;
 import sernet.verinice.model.common.TypeParameter;
@@ -144,64 +140,62 @@ import sernet.verinice.service.tree.ElementManager;
  */
 public class ISMView extends RightsEnabledView implements ILinkedWithEditorView {
 
-	private static final Logger LOG = Logger.getLogger(ISMView.class);
+    private static final Logger LOG = Logger.getLogger(ISMView.class);
 
-	public static final String ID = "sernet.verinice.iso27k.rcp.ISMView"; //$NON-NLS-1$
+    public static final String ID = "sernet.verinice.iso27k.rcp.ISMView"; //$NON-NLS-1$
 
-	private static int operations = DND.DROP_COPY | DND.DROP_MOVE;
+    private static int operations = DND.DROP_COPY | DND.DROP_MOVE;
 
-	protected TreeViewer viewer;
+    protected TreeViewer viewer;
 
-	private TreeContentProvider contentProvider;
-	private ElementManager elementManager;
+    private TreeContentProvider contentProvider;
+    private ElementManager elementManager;
 
-	private DrillDownAdapter drillDownAdapter;
+    private DrillDownAdapter drillDownAdapter;
 
-	private Action doubleClickAction;
+    private ShowBulkEditAction bulkEditAction;
 
-	private ShowBulkEditAction bulkEditAction;
+    private ExpandAction expandAction;
 
-	private ExpandAction expandAction;
+    private CollapseAction collapseAction;
 
-	private CollapseAction collapseAction;
+    private Action expandAllAction;
 
-	private Action expandAllAction;
+    private Action collapseAllAction;
 
-	private Action collapseAllAction;
+    private Action linkWithEditorAction;
 
-	private Action linkWithEditorAction;
+    private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
 
-	private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
+    private ViewFilterAction filterAction;
 
-	private ViewFilterAction filterAction;
+    private MetaDropAdapter metaDropAdapter;
 
-	private MetaDropAdapter metaDropAdapter;
-
-	private ShowAccessControlEditAction accessControlEditAction;
+    private ShowAccessControlEditAction accessControlEditAction;
 
     private NaturalizeAction naturalizeAction;
 
-	private IModelLoadListener modelLoadListener;
+    private IModelLoadListener modelLoadListener;
 
-	private Object mutex = new Object();
+    private Object mutex = new Object();
 
-	private IISO27KModelListener modelUpdateListener;
+    private IISO27KModelListener modelUpdateListener;
 
-	private boolean linkingActive = false;
+    private boolean linkingActive = false;
 
-	private ICommandService commandService;
+    private ICommandService commandService;
 
     public ISMView() {
         super();
         elementManager = new ElementManager();
     }
 
-	@Override
-    public String getRightID(){
-	    return ActionRightIDs.ISMVIEW;
-	}
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.ISMVIEW;
+    }
 
-	/* (non-Javadoc)
+    /*
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
@@ -209,244 +203,213 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
         return ID;
     }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
-	public void createPartControl(final Composite parent) {
-	    super.createPartControl(parent);
-		try {
-			initView(parent);
-			startInitDataJob();
-		} catch (Exception e) {
-			LOG.error("Error while creating organization view", e); //$NON-NLS-1$
-			ExceptionUtil.log(e, Messages.ISMView_2);
-		}
-	}
+    /*
+     * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
+     * widgets.Composite)
+     */
+    @Override
+    public void createPartControl(final Composite parent) {
+        super.createPartControl(parent);
+        try {
+            initView(parent);
+            startInitDataJob();
+        } catch (Exception e) {
+            LOG.error("Error while creating organization view", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.ISMView_2);
+        }
+    }
 
-	/**
-	 * @param parent
-	 */
-	protected void initView(Composite parent) {
-	    IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
-	    if(CnAElementFactory.getInstance().isIsoModelLoaded()) {
-	        CnAElementFactory.getInstance().reloadModelFromDatabase();
-	    }
+    protected void initView(Composite parent) {
+        IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
+        if (CnAElementFactory.isIsoModelLoaded()) {
+            CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
+        }
 
+        contentProvider = new TreeContentProvider(elementManager);
+        viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        drillDownAdapter = new DrillDownAdapter(viewer);
+        viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
+        viewer.setContentProvider(contentProvider);
+        viewer.setLabelProvider(new DecoratingLabelProvider(new TreeLabelProvider(),
+                workbench.getDecoratorManager()));
+        toggleLinking(Activator.getDefault().getPreferenceStore()
+                .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
-	    contentProvider = new TreeContentProvider(elementManager);
-		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-		drillDownAdapter = new DrillDownAdapter(viewer);
-		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
-		viewer.setContentProvider(contentProvider);
-		viewer.setLabelProvider(new DecoratingLabelProvider(new TreeLabelProvider(), workbench.getDecoratorManager()));
-		toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
+        getSite().setSelectionProvider(viewer);
+        hookContextMenu();
+        makeActions();
+        addActions();
+        fillToolBar();
+        hookDNDListeners();
 
-		getSite().setSelectionProvider(viewer);
-		hookContextMenu();
-		makeActions();
-		addActions();
-		fillToolBar();
-		hookDNDListeners();
+        getSite().getPage().addPartListener(linkWithEditorPartListener);
+    }
 
-		getSite().getPage().addPartListener(linkWithEditorPartListener);
-	}
-
-    /**
-	 *
-	 */
-	protected void startInitDataJob() {
-	    if (LOG.isDebugEnabled()) {
+    protected void startInitDataJob() {
+        if (LOG.isDebugEnabled()) {
             LOG.debug("ISMview: startInitDataJob"); //$NON-NLS-1$
         }
-		WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
-			@Override
+        WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+            @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
-				IStatus status = Status.OK_STATUS;
-				try {
-					monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
-					initData();
-				} catch (Exception e) {
-					LOG.error("Error while loading data.", e); //$NON-NLS-1$
-					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.ISMView_4,e); //$NON-NLS-1$
-				} finally {
-					monitor.done();
-				}
-				return status;
-			}
-		};
-		JobScheduler.scheduleInitJob(initDataJob);
-	}
+                IStatus status = Status.OK_STATUS;
+                try {
+                    monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+                    initData();
+                } catch (Exception e) {
+                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.ISMView_4, //$NON-NLS-1$
+                            e);
+                } finally {
+                    monitor.done();
+                }
+                return status;
+            }
+        };
+        JobScheduler.scheduleInitJob(initDataJob);
+    }
 
-	protected void initData() {
-	    if (LOG.isDebugEnabled()) {
+    protected void initData() {
+        if (LOG.isDebugEnabled()) {
             LOG.debug("ISMVIEW: initData"); //$NON-NLS-1$
         }
-	    synchronized (mutex) {
-	        if(CnAElementFactory.isIsoModelLoaded()) {
-	            if (modelUpdateListener == null ) {
-	                // modellistener should only be created once!
-	                if (LOG.isDebugEnabled()){
-	                    Logger.getLogger(this.getClass()).debug("Creating modelUpdateListener for ISMView."); //$NON-NLS-1$
-	                }
-	                modelUpdateListener = new TreeUpdateListener(viewer,elementManager);
-	                CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(modelUpdateListener);
-	                Display.getDefault().syncExec(new Runnable(){
-	                    @Override
-                        public void run() {
-	                        setInput(CnAElementFactory.getInstance().getISO27kModel());
-	                    }
-	                });
-	            }
-	        } else if(modelLoadListener==null) {
-	            if (LOG.isDebugEnabled()) {
+        synchronized (mutex) {
+            if (CnAElementFactory.isIsoModelLoaded()) {
+                if (modelUpdateListener == null) {
+                    // modellistener should only be created once!
+                    if (LOG.isDebugEnabled()) {
+                        Logger.getLogger(this.getClass())
+                                .debug("Creating modelUpdateListener for ISMView."); //$NON-NLS-1$
+                    }
+                    modelUpdateListener = new TreeUpdateListener(viewer, elementManager);
+                    CnAElementFactory.getInstance().getISO27kModel()
+                            .addISO27KModelListener(modelUpdateListener);
+                    Display.getDefault().syncExec(
+                            () -> setInput(CnAElementFactory.getInstance().getISO27kModel()));
+                }
+            } else if (modelLoadListener == null) {
+                if (LOG.isDebugEnabled()) {
                     LOG.debug("ISMView No model loaded, adding model load listener."); //$NON-NLS-1$
                 }
-	            // model is not loaded yet: add a listener to load data when it's loaded
-	            modelLoadListener = new IModelLoadListener() {
-
-	                @Override
-                    public void closed(BSIModel model) {
-	                    // nothing to do
-	                }
-
-	                @Override
-                    public void loaded(BSIModel model) {
-	                    // nothing to do
-	                }
-
-	                @Override
-	                public void loaded(ISO27KModel model) {
-	                    startInitDataJob();
-	                }
-
+                // model is not loaded yet: add a listener to load data when
+                // it's loaded
+                modelLoadListener = new DefaultModelLoadListener() {
                     @Override
-                    public void loaded(BpModel model) {
-                        // nothing to do
+                    public void loaded(ISO27KModel model) {
+                        startInitDataJob();
                     }
+                };
+                CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
 
-                    @Override
-                    public void loaded(CatalogModel model) {
-                        // nothing to do
-                    }
+            }
+        }
+    }
 
-	            };
-	            CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
+    /*
+     * @see org.eclipse.ui.part.WorkbenchPart#dispose()
+     */
+    @Override
+    public void dispose() {
+        elementManager.clearCache();
+        if (CnAElementFactory.isIsoModelLoaded()) {
+            CnAElementFactory.getInstance().getISO27kModel()
+                    .removeISO27KModelListener(modelUpdateListener);
+        }
+        CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
+        getSite().getPage().removePartListener(linkWithEditorPartListener);
+        super.dispose();
+    }
 
-	        }
-	    }
-	}
+    public void setInput(ISO27KModel model) {
+        viewer.setInput(model);
+    }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.part.WorkbenchPart#dispose()
-	 */
-	@Override
-	public void dispose() {
-	    elementManager.clearCache();
-	    if(CnAElementFactory.isIsoModelLoaded()) {
-	        CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(modelUpdateListener);
-	    }
-		CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
-		getSite().getPage().removePartListener(linkWithEditorPartListener);
-		super.dispose();
-	}
+    public void setInput(List<Organization> organizationList) {
+        viewer.setInput(organizationList);
+    }
 
-	public void setInput(ISO27KModel model) {
-		viewer.setInput(model);
-	}
+    public void setInput(Organization organization) {
+        viewer.setInput(organization);
+    }
 
-	public void setInput(List<Organization> organizationList) {
-		viewer.setInput(organizationList);
-	}
+    private void makeActions() {
+        ControlDropPerformer controlDropAdapter;
+        BSIModelViewDropListener bsiDropAdapter;
 
-	public void setInput(Organization organization) {
-		viewer.setInput(organization);
-	}
+        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(),
+                Messages.ISMView_6);
 
-	private void makeActions() {
-	    ControlDropPerformer controlDropAdapter;
-	    BSIModelViewDropListener bsiDropAdapter;
-		doubleClickAction = new Action() {
-			@Override
+        expandAction = new ExpandAction(viewer, contentProvider);
+        expandAction.setText(Messages.ISMView_7);
+        expandAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
+
+        collapseAction = new CollapseAction(viewer);
+        collapseAction.setText(Messages.ISMView_8);
+        collapseAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
+
+        expandAllAction = new Action() {
+            @Override
             public void run() {
-				if(viewer.getSelection() instanceof IStructuredSelection) {
-					Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-					EditorFactory.getInstance().updateAndOpenObject(sel);
-				}
-			}
-		};
+                expandAll();
+            }
+        };
+        expandAllAction.setText(Messages.ISMView_9);
+        expandAllAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
-		bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_6);
+        collapseAllAction = new Action() {
+            @Override
+            public void run() {
+                viewer.collapseAll();
+            }
+        };
+        collapseAllAction.setText(Messages.ISMView_10);
+        collapseAllAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 
-		expandAction = new ExpandAction(viewer, contentProvider);
-		expandAction.setText(Messages.ISMView_7);
-		expandAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
-
-		collapseAction = new CollapseAction(viewer);
-		collapseAction.setText(Messages.ISMView_8);
-		collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
-
-		expandAllAction = new Action() {
-			@Override
-			public void run() {
-				expandAll();
-			}
-		};
-		expandAllAction.setText(Messages.ISMView_9);
-		expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
-
-		collapseAllAction = new Action() {
-			@Override
-			public void run() {
-				viewer.collapseAll();
-			}
-		};
-		collapseAllAction.setText(Messages.ISMView_10);
-		collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
-
-		HideEmptyFilter hideEmptyFilter = createHideEmptyFilter();
-		TypeParameter typeParameter = createTypeParameter();
-		TagParameter tagParameter = new TagParameter();
-        filterAction = new ViewFilterAction(viewer,
-				Messages.ISMView_12,
-				tagParameter,
-				hideEmptyFilter,
-				typeParameter);
+        HideEmptyFilter hideEmptyFilter = createHideEmptyFilter();
+        TypeParameter typeParameter = createTypeParameter();
+        TagParameter tagParameter = new TagParameter();
+        filterAction = new ViewFilterAction(Messages.ISMView_12, tagParameter, hideEmptyFilter,
+                typeParameter);
 
         elementManager.addParameter(tagParameter);
-        if(typeParameter!=null) {
+        if (typeParameter != null) {
             elementManager.addParameter(typeParameter);
         }
 
-		metaDropAdapter = new MetaDropAdapter(viewer);
-		controlDropAdapter = new ControlDropPerformer(viewer);
-		bsiDropAdapter = new BSIModelViewDropListener(viewer);
-		BSIModelDropPerformer bsi2IsmDropAdapter = new BSIModelDropPerformer(viewer);
-		FileDropPerformer fileDropPerformer = new FileDropPerformer(viewer);
-		metaDropAdapter.addAdapter(controlDropAdapter);
-		metaDropAdapter.addAdapter(bsiDropAdapter);
+        metaDropAdapter = new MetaDropAdapter(viewer);
+        controlDropAdapter = new ControlDropPerformer(viewer);
+        bsiDropAdapter = new BSIModelViewDropListener(viewer);
+        BSIModelDropPerformer bsi2IsmDropAdapter = new BSIModelDropPerformer(viewer);
+        FileDropPerformer fileDropPerformer = new FileDropPerformer(viewer);
+        metaDropAdapter.addAdapter(controlDropAdapter);
+        metaDropAdapter.addAdapter(bsiDropAdapter);
 
-		metaDropAdapter.addAdapter(bsi2IsmDropAdapter);
+        metaDropAdapter.addAdapter(bsi2IsmDropAdapter);
         metaDropAdapter.addAdapter(fileDropPerformer);
 
-		accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.ISMView_11);
+        accessControlEditAction = new ShowAccessControlEditAction(
+                getViewSite().getWorkbenchWindow(), Messages.ISMView_11);
 
-		naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
+        naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
 
-		linkWithEditorAction = new Action(Messages.ISMView_5, IAction.AS_CHECK_BOX) {
+        linkWithEditorAction = new Action(Messages.ISMView_5, IAction.AS_CHECK_BOX) {
             @Override
             public void run() {
                 toggleLinking(isChecked());
             }
         };
         linkWithEditorAction.setChecked(isLinkingActive());
-        linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
+        linkWithEditorAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
 
-	}
+    }
 
     /**
-     * Override this in subclasses to hide empty groups
-     * on startup.
+     * Override this in subclasses to hide empty groups on startup.
      *
      * @return a HideEmptyFilter
      */
@@ -455,8 +418,7 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     }
 
     /**
-     * Override this in subclasses to hide empty groups
-     * on startup.
+     * Override this in subclasses to hide empty groups on startup.
      *
      * @return a {@link TypeParameter}
      */
@@ -464,117 +426,112 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
         return new TypeParameter();
     }
 
-	protected void fillToolBar() {
-		IActionBars bars = getViewSite().getActionBars();
-		IToolBarManager manager = bars.getToolBarManager();
-		manager.add(expandAllAction);
-		manager.add(collapseAllAction);
-		drillDownAdapter.addNavigationActions(manager);
-		manager.add(filterAction);
-		manager.add(linkWithEditorAction);
-	}
+    protected void fillToolBar() {
+        IActionBars bars = getViewSite().getActionBars();
+        IToolBarManager manager = bars.getToolBarManager();
+        manager.add(expandAllAction);
+        manager.add(collapseAllAction);
+        drillDownAdapter.addNavigationActions(manager);
+        manager.add(filterAction);
+        manager.add(linkWithEditorAction);
+    }
 
+    private void hookContextMenu() {
+        MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
+        menuMgr.setRemoveAllWhenShown(true);
+        menuMgr.addMenuListener(this::fillContextMenu);
+        Menu menu = menuMgr.createContextMenu(viewer.getControl());
 
-	private void hookContextMenu() {
-		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			@Override
-            public void menuAboutToShow(IMenuManager manager) {
-				fillContextMenu(manager);
-			}
-		});
-		Menu menu = menuMgr.createContextMenu(viewer.getControl());
+        viewer.getControl().setMenu(menu);
+        getSite().registerContextMenu(menuMgr, viewer);
+    }
 
-		viewer.getControl().setMenu(menu);
-		getSite().registerContextMenu(menuMgr, viewer);
-	}
+    private void hookDNDListeners() {
+        Transfer[] dragTypes = new Transfer[] { ISO27kElementTransfer.getInstance(),
+                ISO27kGroupTransfer.getInstance() };
+        Transfer[] dropTypes = new Transfer[] { IGSModelElementTransfer.getInstance(),
+                BausteinUmsetzungTransfer.getInstance(), ItemTransfer.getInstance(),
+                ISO27kElementTransfer.getInstance(), ISO27kGroupTransfer.getInstance(),
+                IBSIStrukturElementTransfer.getInstance(), FileTransfer.getInstance(),
+                SearchViewElementTransfer.getInstance() };
 
-	private void hookDNDListeners() {
-	    Transfer[] dragTypes = new Transfer[] { ISO27kElementTransfer.getInstance(),
-	                                            ISO27kGroupTransfer.getInstance()
-	                                          };
-	    Transfer[] dropTypes = new Transfer[] { IGSModelElementTransfer.getInstance(),
-	                                            BausteinUmsetzungTransfer.getInstance(),
-	                                            ItemTransfer.getInstance(),
-	                                            ISO27kElementTransfer.getInstance(),
-	                                            ISO27kGroupTransfer.getInstance(),
-	                                            IBSIStrukturElementTransfer.getInstance(),
-	                                            FileTransfer.getInstance(),
-	                                            SearchViewElementTransfer.getInstance()
-	                                          };
+        viewer.addDragSupport(operations, dragTypes, new BSIModelViewDragListener(viewer));
+        viewer.addDropSupport(operations, dropTypes, metaDropAdapter);
 
+    }
 
-		viewer.addDragSupport(operations, dragTypes, new BSIModelViewDragListener(viewer));
-		viewer.addDropSupport(operations, dropTypes, metaDropAdapter);
+    protected void expandAll() {
+        viewer.expandAll();
+    }
 
-	}
+    private void addActions() {
+        viewer.addDoubleClickListener(event -> {
+            ISelection selection = event.getViewer().getSelection();
+            if (!selection.isEmpty() && selection instanceof IStructuredSelection) {
+                Object sel = ((IStructuredSelection) selection).getFirstElement();
+                EditorFactory.getInstance().updateAndOpenObject(sel);
+            }
+        });
 
-	protected void expandAll() {
-		viewer.expandAll();
-	}
+        viewer.addSelectionChangedListener(expandAction);
+        viewer.addSelectionChangedListener(collapseAction);
+    }
 
-	private void addActions() {
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			@Override
-            public void doubleClick(DoubleClickEvent event) {
-				doubleClickAction.run();
-			}
-		});
-
-		viewer.addSelectionChangedListener(expandAction);
-		viewer.addSelectionChangedListener(collapseAction);
-	}
-
-	/**
-	 * @param manager
-	 */
-	protected void fillContextMenu(IMenuManager manager) {
-		ISelection selection = viewer.getSelection();
-		if(selection instanceof IStructuredSelection && ((IStructuredSelection) selection).size()==1) {
-			Object sel = ((IStructuredSelection) selection).getFirstElement();
-			if(sel instanceof Organization) {
-				Organization element = (Organization) sel;
-				if(CnAElementHome.getInstance().isNewChildAllowed(element)) {
+    protected void fillContextMenu(IMenuManager manager) {
+        ISelection selection = viewer.getSelection();
+        if (selection instanceof IStructuredSelection
+                && ((IStructuredSelection) selection).size() == 1) {
+            Object sel = ((IStructuredSelection) selection).getFirstElement();
+            if (sel instanceof Organization) {
+                Organization element = (Organization) sel;
+                if (CnAElementHome.getInstance().isNewChildAllowed(element)) {
                     MenuManager submenuNew = new MenuManager(Messages.NewObjectMenu, "content/new"); //$NON-NLS-1$ //$NON-NLS-2$
-					submenuNew.add(new AddGroup(element,AssetGroup.TYPE_ID,Asset.TYPE_ID));
-					submenuNew.add(new AddGroup(element,AuditGroup.TYPE_ID,Audit.TYPE_ID));
-					submenuNew.add(new AddGroup(element,ControlGroup.TYPE_ID,Control.TYPE_ID));
-					submenuNew.add(new AddGroup(element,DocumentGroup.TYPE_ID,Document.TYPE_ID));
-					submenuNew.add(new AddGroup(element,EvidenceGroup.TYPE_ID,Evidence.TYPE_ID));
-					submenuNew.add(new AddGroup(element,ExceptionGroup.TYPE_ID,sernet.verinice.model.iso27k.Exception.TYPE_ID));
-					submenuNew.add(new AddGroup(element,FindingGroup.TYPE_ID,Finding.TYPE_ID));
-					submenuNew.add(new AddGroup(element,IncidentGroup.TYPE_ID,Incident.TYPE_ID));
-					submenuNew.add(new AddGroup(element,IncidentScenarioGroup.TYPE_ID,IncidentScenario.TYPE_ID));
-					submenuNew.add(new AddGroup(element,InterviewGroup.TYPE_ID,Interview.TYPE_ID));
-					submenuNew.add(new AddGroup(element,PersonGroup.TYPE_ID,PersonIso.TYPE_ID));
-					submenuNew.add(new AddGroup(element,ProcessGroup.TYPE_ID,sernet.verinice.model.iso27k.Process.TYPE_ID));
-					submenuNew.add(new AddGroup(element,RecordGroup.TYPE_ID,Record.TYPE_ID));
-					submenuNew.add(new AddGroup(element,RequirementGroup.TYPE_ID,Requirement.TYPE_ID));
-					submenuNew.add(new AddGroup(element,ResponseGroup.TYPE_ID,Response.TYPE_ID));
-					submenuNew.add(new AddGroup(element,ThreatGroup.TYPE_ID,Threat.TYPE_ID));
-					submenuNew.add(new AddGroup(element,VulnerabilityGroup.TYPE_ID,Vulnerability.TYPE_ID));
-					manager.add(submenuNew);
-				}
-			}
-		}
+                    submenuNew.add(new AddGroup(element, AssetGroup.TYPE_ID, Asset.TYPE_ID));
+                    submenuNew.add(new AddGroup(element, AuditGroup.TYPE_ID, Audit.TYPE_ID));
+                    submenuNew.add(new AddGroup(element, ControlGroup.TYPE_ID, Control.TYPE_ID));
+                    submenuNew.add(new AddGroup(element, DocumentGroup.TYPE_ID, Document.TYPE_ID));
+                    submenuNew.add(new AddGroup(element, EvidenceGroup.TYPE_ID, Evidence.TYPE_ID));
+                    submenuNew.add(new AddGroup(element, ExceptionGroup.TYPE_ID,
+                            sernet.verinice.model.iso27k.Exception.TYPE_ID));
+                    submenuNew.add(new AddGroup(element, FindingGroup.TYPE_ID, Finding.TYPE_ID));
+                    submenuNew.add(new AddGroup(element, IncidentGroup.TYPE_ID, Incident.TYPE_ID));
+                    submenuNew.add(new AddGroup(element, IncidentScenarioGroup.TYPE_ID,
+                            IncidentScenario.TYPE_ID));
+                    submenuNew
+                            .add(new AddGroup(element, InterviewGroup.TYPE_ID, Interview.TYPE_ID));
+                    submenuNew.add(new AddGroup(element, PersonGroup.TYPE_ID, PersonIso.TYPE_ID));
+                    submenuNew.add(new AddGroup(element, ProcessGroup.TYPE_ID,
+                            sernet.verinice.model.iso27k.Process.TYPE_ID));
+                    submenuNew.add(new AddGroup(element, RecordGroup.TYPE_ID, Record.TYPE_ID));
+                    submenuNew.add(
+                            new AddGroup(element, RequirementGroup.TYPE_ID, Requirement.TYPE_ID));
+                    submenuNew.add(new AddGroup(element, ResponseGroup.TYPE_ID, Response.TYPE_ID));
+                    submenuNew.add(new AddGroup(element, ThreatGroup.TYPE_ID, Threat.TYPE_ID));
+                    submenuNew.add(new AddGroup(element, VulnerabilityGroup.TYPE_ID,
+                            Vulnerability.TYPE_ID));
+                    manager.add(submenuNew);
+                }
+            }
+        }
 
-		manager.add(new GroupMarker("content")); //$NON-NLS-1$
-		manager.add(new Separator());
-		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-		manager.add(new Separator());
-		manager.add(new GroupMarker("special")); //$NON-NLS-1$
-		manager.add(bulkEditAction);
-		manager.add(accessControlEditAction);
+        manager.add(new GroupMarker("content")); //$NON-NLS-1$
+        manager.add(new Separator());
+        manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+        manager.add(new Separator());
+        manager.add(new GroupMarker("special")); //$NON-NLS-1$
+        manager.add(bulkEditAction);
+        manager.add(accessControlEditAction);
         manager.add(naturalizeAction);
-		manager.add(new Separator());
-		manager.add(expandAction);
-		manager.add(collapseAction);
-		drillDownAdapter.addNavigationActions(manager);
-	}
+        manager.add(new Separator());
+        manager.add(expandAction);
+        manager.add(collapseAction);
+        drillDownAdapter.addNavigationActions(manager);
+    }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.eclipse.ui.IEditorPart)
+    /*
+     * @see
+     * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.
+     * eclipse.ui.IEditorPart)
      */
     @Override
     public void editorActivated(IEditorPart editor) {
@@ -582,12 +539,11 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
             return;
         }
         CnATreeElement element = BSIElementEditorInput.extractElement(editor);
-        if(element == null && editor.getEditorInput() instanceof AttachmentEditorInput){
+        if (element == null && editor.getEditorInput() instanceof AttachmentEditorInput) {
             element = getElementFromAttachment(editor);
 
-
         }
-        if(!(element instanceof IISO27kElement)) {
+        if (!(element instanceof IISO27kElement)) {
             return;
         }
 
@@ -595,8 +551,8 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
             LOG.debug("Element in editor: " + element.getUuid()); //$NON-NLS-1$
             LOG.debug("Expanding tree now to show element..."); //$NON-NLS-1$
         }
-        if(element != null){
-            viewer.setSelection(new StructuredSelection(element),true);
+        if (element != null) {
+            viewer.setSelection(new StructuredSelection(element), true);
         } else {
             return;
         }
@@ -608,7 +564,9 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 
     /**
      * gets Element that is referenced by attachment shown by editor
-     * @param editor - ({@link AttachmentEditor}) Editor of {@link Attachment}
+     * 
+     * @param editor
+     *            - ({@link AttachmentEditor}) Editor of {@link Attachment}
      * @return {@link CnATreeElement}
      */
     private CnATreeElement getElementFromAttachment(IEditorPart editor) {
@@ -618,7 +576,8 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
     protected void toggleLinking(boolean checked) {
         this.linkingActive = checked;
         if (checked) {
-            editorActivated(getSite().getPage().getActiveEditor());
+            Optional.ofNullable(getSite().getPage().getActiveEditor())
+                    .ifPresent(this::editorActivated);
         }
     }
 
@@ -626,17 +585,17 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
         return linkingActive;
     }
 
-	/**
-	 * Passing the focus request to the viewer's control.
-	 *
-	 * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
-	 */
-	@Override
-	public void setFocus() {
-		viewer.getControl().setFocus();
-	}
+    /**
+     * Passing the focus request to the viewer's control.
+     *
+     * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
+     */
+    @Override
+    public void setFocus() {
+        viewer.getControl().setFocus();
+    }
 
-	public ICommandService getCommandService() {
+    public ICommandService getCommandService() {
         if (commandService == null) {
             commandService = createCommandService();
         }

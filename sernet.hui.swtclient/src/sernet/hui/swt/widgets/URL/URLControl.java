@@ -25,8 +25,6 @@ import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.program.Program;
@@ -43,41 +41,39 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
-import sernet.hui.swt.widgets.IHuiControl;
+import sernet.hui.swt.widgets.AbstractHuiControl;
 
-public class URLControl implements IHuiControl {
+public class URLControl extends AbstractHuiControl {
 
     private Entity entity;
     private PropertyType type;
-    private Composite parent;
     private boolean editable;
     private Link link;
     private Button editBtn;
     private Property savedProp;
     private boolean showValidationHint;
     private boolean useValidationGUIHints;
-    private Label label;
 
     private static final Pattern pattern = Pattern.compile("<a href=\"(.*)\">(.*)</a>"); //$NON-NLS-1$
 
     public URLControl(Entity entity, PropertyType type, Composite parent, boolean editable,
             boolean showValidationHint, boolean useValidationGuiHints) {
+    	super(parent);
         this.entity = entity;
         this.type = type;
-        this.parent = parent;
         this.editable = editable;
         this.showValidationHint = showValidationHint;
         this.useValidationGUIHints = useValidationGuiHints;
     }
 
     public void create() {
-        label = new Label(parent, SWT.NULL);
+        label = new Label(composite, SWT.NULL);
         if (showValidationHint && useValidationGUIHints) {
             refontLabel(true);
         }
         label.setText(type.getName());
 
-        Composite container = new Composite(parent, SWT.NULL);
+        Composite container = new Composite(composite, SWT.NULL);
         GridLayout contLayout = new GridLayout(3, false);
         contLayout.horizontalSpacing = 5;
         contLayout.marginLeft = 0;
@@ -206,22 +202,4 @@ public class URLControl implements IHuiControl {
         }
         return false;
     }
-
-    private void refontLabel(boolean dye) {
-        FontData fontData = label.getFont().getFontData()[0];
-        Font font;
-        int color;
-        if (dye) {
-            font = new Font(label.getParent().getDisplay(),
-                    new FontData(fontData.getName(), fontData.getHeight(), SWT.BOLD));
-            color = SWT.COLOR_RED;
-        } else {
-            font = new Font(label.getParent().getDisplay(),
-                    new FontData(fontData.getName(), fontData.getHeight(), SWT.NONE));
-            color = SWT.COLOR_WIDGET_FOREGROUND;
-        }
-        label.setForeground(label.getParent().getDisplay().getSystemColor(color));
-        label.setFont(font);
-    }
-
 }

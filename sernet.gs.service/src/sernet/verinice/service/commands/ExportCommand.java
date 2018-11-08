@@ -94,7 +94,7 @@ import sernet.verinice.service.sync.VnaSchemaVersion;
 @SuppressWarnings("serial")
 public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggingCommand
 {
-    private transient Logger log = Logger.getLogger(ExportCommand.class);
+    private static final Logger log = Logger.getLogger(ExportCommand.class);
     
     private static final Object LOCK = new Object();
    
@@ -189,10 +189,10 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     		    result = null;
     		}
 	    } catch (final RuntimeException re) {
-            getLog().error("Runtime exception while exporting", re);
+            log.error("Runtime exception while exporting", re);
             throw re;
         } catch (final Exception e) {
-            getLog().error("Exception while exporting", e);
+            log.error("Exception while exporting", e);
             throw new RuntimeCommandException("Exception while exporting", e);
         }
 	    finally {
@@ -212,8 +212,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
      * @throws CommandException
      */
     private byte[] export() throws CommandException {	
-        if (getLog().isInfoEnabled()) {
-            getLog().info("Max number of threads is: " + getMaxNumberOfThreads());
+        if (log.isInfoEnabled()) {
+            log.info("Max number of threads is: " + getMaxNumberOfThreads());
         }
         
         getCache().removeAll();
@@ -231,9 +231,9 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 		
 		exportLinks(syncData);
 		
-		if (getLog().isDebugEnabled()) {
+		if (log.isDebugEnabled()) {
             final Statistics s = getCache().getStatistics();
-            getLog().debug("Cache size: " + s.getObjectCount() + ", hits: " + s.getCacheHits());                  
+            log.debug("Cache size: " + s.getObjectCount() + ", hits: " + s.getCacheHits());                  
         }
 		
 		final SyncMapping syncMapping = new SyncMapping();
@@ -361,8 +361,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         
         awaitTermination(transactionList.size() * timeOutFactor);
         
-        if (getLog().isDebugEnabled() && transactionList.size()>0) {
-            getLog().debug(transactionList.size() + " export threads finished.");
+        if (log.isDebugEnabled() && transactionList.size()>0) {
+            log.debug(transactionList.size() + " export threads finished.");
         }
         
         for( final ExportTransaction childTransaction : transactionList ) {
@@ -434,7 +434,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             byteOut.close();
             return byteOut.toByteArray();
         } catch (final IOException e) {
-            getLog().error("Error while creating zip output stream", e);
+            log.error("Error while creating zip output stream", e);
             throw new RuntimeCommandException(e);
         }
     }
@@ -449,13 +449,13 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         try {
             // Wait a while for existing tasks to terminate
             if (!taskExecutor.awaitTermination(timeout, TimeUnit.SECONDS)) {
-                getLog().error("Export executer timeout reached: " 
+                log.error("Export executer timeout reached: " 
             + timeout + "s. Terminating execution now.");
                 taskExecutor.shutdownNow(); // Cancel currently executing tasks
                 // Wait a while for tasks to respond to being cancelled
                 if (!taskExecutor.awaitTermination(secondsUntilTimeOut,
                         TimeUnit.SECONDS)) {
-                    getLog().error("Export executer did not terminate.");
+                    log.error("Export executer did not terminate.");
                 }
             }
         } catch (final InterruptedException ie) {
@@ -514,8 +514,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         final Element cachedElement = getCache().get(element.getUuid());
         if(cachedElement!=null) {
             element = (CnATreeElement) cachedElement.getValue();
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Element from cache: " + element.getTitle() 
+            if (log.isDebugEnabled()) {
+                log.debug("Element from cache: " + element.getTitle() 
                 + ", UUID: " + element.getUuid());
             }
         } else {
@@ -729,7 +729,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             try {
                 number = Integer.valueOf((String) prop);
             } catch( final Exception e) {
-                getLog().error("Error while readind max number of "
+                log.error("Error while readind max number of "
                         + "thread from property: " 
                         + PROP_MAX_NUMBER_OF_THREADS 
                         + ", value is: " + prop, e);
@@ -737,13 +737,6 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             }
         }
         return number;
-    }
-    
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(ExportCommand.class);
-        }
-        return log;
     }
     
 }

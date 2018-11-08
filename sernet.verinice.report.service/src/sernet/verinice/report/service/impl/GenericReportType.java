@@ -25,17 +25,20 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
-import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import org.eclipse.core.runtime.URIUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IVeriniceConstants;
+import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
 import sernet.verinice.interfaces.report.ReportTypeException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
+import sernet.verinice.report.service.Activator;
 import sernet.verinice.report.service.impl.security.ReportSecurityManager;
 import sernet.verinice.security.report.ReportSecurityContext;
 
@@ -44,7 +47,7 @@ import sernet.verinice.security.report.ReportSecurityContext;
  */
 public class GenericReportType implements IReportType {
 
-    private final static Logger LOG = Logger.getLogger(GenericReportType.class);
+    private final static Logger LOG = LoggerFactory.getLogger(GenericReportType.class);
     
     private IReportOptions options;
     
@@ -125,7 +128,8 @@ public class GenericReportType implements IReportType {
             if(metadata.isServer()){
                 rptURL = new URL(getDepositPath(IReportDepositService.REPORT_DEPOSIT_CLIENT_REMOTE) + metadata.getFilename());
             } else {
-                URI locationConst = URIUtil.fromString(brs.getOdaDriver().getLocalReportLocation());
+    		    IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
+                URI locationConst = URIUtil.fromString(odaDriver.getLocalReportLocation());
 
                 if(LOG.isDebugEnabled()){
                     LOG.debug("determined value for \"locationConst\":\t" + locationConst);

@@ -141,7 +141,7 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
         }
         try {
             linkTableComposite = new LinkTableComposite(linkTable, getObjectModelService(),
-                    composite, false);
+                    composite);
         } catch (OdaException e) {
             log.error("Error while opening the server connection.", e);
         } catch (RemoteConnectFailureException exception) {

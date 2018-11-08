@@ -38,15 +38,8 @@ import sernet.verinice.model.iso27k.IControl;
  */
 public class TotalSecurityFigureCommand extends GenericCommand  {
 
-    private transient Logger log = Logger.getLogger(TotalSecurityFigureCommand.class);
+    private static final Logger log = Logger.getLogger(TotalSecurityFigureCommand.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(TotalSecurityFigureCommand.class);
-        }
-        return log;
-    }
-    
     private Integer auditDbId = null;
     private Double totalSecurityFigure;
     

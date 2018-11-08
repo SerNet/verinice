@@ -54,6 +54,7 @@ public abstract class StringUtil {
             filename = filename.replace("ß", "\u00DF"); //$NON-NLS-1$ //$NON-NLS-2$
             filename = filename.replace(":", ""); //$NON-NLS-1$ //$NON-NLS-2$
             filename = filename.replace("\\", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("/", ""); //$NON-NLS-1$ //$NON-NLS-2$
             filename = filename.replace(";", ""); //$NON-NLS-1$ //$NON-NLS-2$
             filename = filename.replace("<", ""); //$NON-NLS-1$ //$NON-NLS-2$
             filename = filename.replace(">", ""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -74,5 +75,12 @@ public abstract class StringUtil {
         StringBuilder sb = new StringBuilder(maxWidth);
         sb.append(text, 0, maxWidth - 1).append("…");
         return sb.toString();
+    }
+
+    public static String replaceEmptyStringByNull(String s) {
+        if (s == null || s.isEmpty()) {
+            return null;
+        }
+        return s;
     }
 }

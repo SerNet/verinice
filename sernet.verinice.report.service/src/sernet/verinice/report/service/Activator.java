@@ -17,18 +17,19 @@
  ******************************************************************************/
 package sernet.verinice.report.service;
 
-import org.apache.log4j.Logger;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 
 public class Activator implements BundleActivator {
 	
-    private final Logger log = Logger.getLogger(Activator.class);
+    private final Logger log = LoggerFactory.getLogger(Activator.class);
     
     // The shared instance
     private static Activator plugin;

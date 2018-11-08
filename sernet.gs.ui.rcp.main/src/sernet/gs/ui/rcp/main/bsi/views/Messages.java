@@ -125,30 +125,6 @@ public final class Messages extends NLS {
 
     public static String DocumentView_7;
 
-    public static String DSModelView_0;
-
-    public static String DSModelView_1;
-
-    public static String DSModelView_2;
-
-    public static String DSModelView_3;
-
-    public static String DSModelView_4;
-
-    public static String DSModelView_5;
-
-    public static String DSModelView_6;
-
-    public static String DSModelView_7;
-
-    public static String DSModelView_8;
-
-    public static String DSModelView_9;
-
-    public static String DSViewLabelProvider_0;
-
-    public static String DSViewLabelProvider_1;
-
     public static String FileView_0;
 
     public static String FileView_10;
@@ -206,8 +182,6 @@ public final class Messages extends NLS {
     public static String GenericMassnahmenView_2;
 
     public static String GenericMassnahmenView_3;
-
-    public static String GenericMassnahmenView_4;
 
     public static String GenericMassnahmenView_5;
 

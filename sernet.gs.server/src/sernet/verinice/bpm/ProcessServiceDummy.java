@@ -15,8 +15,8 @@ import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
- * Empty dummy implementation of {@link IProcessServiceIsa}
- * for verinice.PRO with no process features.
+ * Empty dummy implementation of {@link IProcessServiceIsa} for verinice.PRO
+ * with no process features.
  * 
  * See {@link ProcessServiceIsa} for the real implementation.
  * 
@@ -60,18 +60,9 @@ public class ProcessServiceDummy implements IProcessServiceIsa {
         return new ProcessInformation(0);
     }
 
-    /**
-     * False, because this is not a real implementation.
-     * 
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceIsa#isActive()
-     */
-    @Override
-    public boolean isActive() {
-        return false;
-    }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findAllProcessDefinitions()
+    /*
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
+     * findAllProcessDefinitions()
      */
     @Override
     public Set<KeyMessage> findAllProcessDefinitions() {

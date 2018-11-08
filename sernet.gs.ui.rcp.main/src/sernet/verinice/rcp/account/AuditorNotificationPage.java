@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -35,7 +36,6 @@ import sernet.verinice.interfaces.bpm.KeyValue;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.rcp.SelectionAdapter;
 import sernet.verinice.rcp.TextEventAdapter;
 
 /**

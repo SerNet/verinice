@@ -25,30 +25,31 @@ import java.util.Set;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Interface to handle jBPM processes.
- * jBPM is an open source workflow engine: http://www.jboss.org/jbpm/
+ * Interface to handle jBPM processes. jBPM is an open source workflow engine:
+ * http://www.jboss.org/jbpm/
  * 
- * This interface defines generic methods with no dependencies to verinice classes like
- * {@link CnATreeElement}.
+ * This interface defines generic methods with no dependencies to verinice
+ * classes like {@link CnATreeElement}.
  * 
- * Extend this interface when you create a new process service for verinice. 
- * See {@link IProcessServiceIsa} for an example.
+ * Extend this interface when you create a new process service for verinice. See
+ * {@link IProcessServiceIsa} for an example.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public interface IProcessServiceGeneric {
-   
+
     /**
-     * Returns the latest process definition id
-     * for a process definition key if any.
+     * Returns the latest process definition id for a process definition key if
+     * any.
      * 
      * If there is no process definition found null is returned
      * 
-     * @param processDefinitionKey  a process definition key
+     * @param processDefinitionKey
+     *            a process definition key
      * @return latest process definition id or null
      */
     String findProcessDefinitionId(String processDefinitionKey);
-    
+
     /**
      * @param processDefinitionKey
      * @param variables
@@ -56,28 +57,21 @@ public interface IProcessServiceGeneric {
     void startProcess(String processDefinitionKey, Map<java.lang.String, ?> variables);
 
     /**
-     * Deletes a process including sub-processes with process id.
-     * The process id is column id_ (not db-id) of table jbpm4_execution. 
+     * Deletes a process including sub-processes with process id. The process id
+     * is column id_ (not db-id) of table jbpm4_execution.
      * 
-     * @param id a process id
+     * @param id
+     *            a process id
      */
     void deleteProcess(String id);
 
     /**
-     * Returns true id this process service is really active.
-     * Used to determine if it is dummy implementation.
      * 
-     * @return true id this process is really active
-     */
-    boolean isActive();
-    
-    /**
-     * Returns a set with all process definitions.
-     * Set contains {@link KeyMessage}s with the process
-     * key and a label.
+     * Returns a set with all process definitions. Set contains
+     * {@link KeyMessage}s with the process key and a label.
      * 
      * @return All process definition key and labels
      */
     Set<KeyMessage> findAllProcessDefinitions();
-    
+
 }

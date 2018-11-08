@@ -87,7 +87,7 @@ public class ReloadAction extends Action {
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     try{
                         monitor.beginTask(Messages.ReloadAction_2, IProgressMonitor.UNKNOWN);
-                        CnAElementFactory.getInstance().reloadModelFromDatabase();
+                        CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
                     } catch (Exception e){
                         ExceptionUtil.log(e, Messages.ReloadAction_1);
                     } finally {

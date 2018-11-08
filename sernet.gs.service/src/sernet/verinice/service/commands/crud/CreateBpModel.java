@@ -36,7 +36,7 @@ import sernet.verinice.service.model.LoadModel;
 public class CreateBpModel extends SaveElement<BpModel> {
 
     private static final long serialVersionUID = 6111954689912451921L;
-    private transient Logger log = Logger.getLogger(CreateBpModel.class);
+    private static final Logger log = Logger.getLogger(CreateBpModel.class);
     
     public CreateBpModel() {
         this.element = new BpModel();
@@ -49,23 +49,16 @@ public class CreateBpModel extends SaveElement<BpModel> {
         try {
             loadModel = getCommandService().executeCommand(loadModel);
         } catch (CommandException e) {
-            getLog().error("Error while loading base protection model", e);
+            log.error("Error while loading base protection model", e);
             throw new RuntimeCommandException("Error while loading base protection model.", e);
         }
         final BpModel model = loadModel.getModel();
         if(model==null) {
             super.execute();
         } else {
-            getLog().warn("Base protection model exists. Will NOT create another model. Returning existing model.");
+            log.warn("Base protection model exists. Will NOT create another model. Returning existing model.");
             element = model;
         }
     }
     
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(CreateBpModel.class);
-        }
-        return log;
-    }
-   
 }

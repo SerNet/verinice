@@ -90,9 +90,11 @@ public class ChartService extends GenericChartService {
      *                If no it network is given.
      */
     public StateData aggregateSafeguardStates(Integer scopeId) {
-        VeriniceGraph g = loadSafeguards(scopeId, new String[] { ITVerbund.TYPE_ID, MassnahmenUmsetzung.TYPE_ID });
+        VeriniceGraph g = loadSafeguards(scopeId,
+                new String[] { ITVerbund.TYPE_ID, MassnahmenUmsetzung.TYPE_ID });
         CalculateSafeguardImplementationStrategy strategy = new SimpleSumOfStates();
-        return new StateData(getItNetworkTitle(g), strategy.aggregateData(g.getElements(MassnahmenUmsetzung.class)));
+        return new StateData(getItNetworkTitle(g),
+                strategy.aggregateData(g.getElements(MassnahmenUmsetzung.class)));
     }
 
     private String getItNetworkTitle(VeriniceGraph g) {
@@ -139,12 +141,14 @@ public class ChartService extends GenericChartService {
      * @return List of module data, which contains meta inforamtion and a result
      *         set for being able processed by {@link ChartModel}.
      */
-    public List<ModuleStateData> groupByModuleChapterSafeguardStates(GroupByStrategy groupByStrategy) {
+    public List<ModuleStateData> groupByModuleChapterSafeguardStates(
+            GroupByStrategy groupByStrategy) {
 
         List<ModuleStateData> modulDataResult = new ArrayList<>();
         for (ITVerbund itVerbund : menuService.getVisibleItNetworks()) {
             String scopeId = String.valueOf(itVerbund.getScopeId());
-            ModuleStateData moduleStateData= groupByModuleChapterSafeguardStates(scopeId, groupByStrategy);
+            ModuleStateData moduleStateData = groupByModuleChapterSafeguardStates(scopeId,
+                    groupByStrategy);
             modulDataResult.add(moduleStateData);
         }
 
@@ -171,15 +175,17 @@ public class ChartService extends GenericChartService {
      *         with the key {@link BausteinUmsetzung#getKapitel()}. This allows
      *         the result to be displayed as a stacked chart.
      */
-    public ModuleStateData groupByModuleChapterSafeguardStates(String scopeId, GroupByStrategy groupByStrategie) {
+    public ModuleStateData groupByModuleChapterSafeguardStates(String scopeId,
+            GroupByStrategy groupByStrategie) {
         Integer scope = checkScopeId(scopeId);
-        VeriniceGraph g = loadSafeguards(scope, new String[] {ITVerbund.TYPE_ID,
+        VeriniceGraph g = loadSafeguards(scope, new String[] { ITVerbund.TYPE_ID,
                 BausteinUmsetzung.HIBERNATE_TYPE_ID, MassnahmenUmsetzung.HIBERNATE_TYPE_ID });
 
-        if(g.getElements(MassnahmenUmsetzung.class).isEmpty()){
+        if (g.getElements(MassnahmenUmsetzung.class).isEmpty()) {
             return new ModuleStateData(getItNetworkTitle(g));
-        }else {
-            return new ModuleStateData(getItNetworkTitle(g), groupByStrategie.aggregateMassnahmen(g));
+        } else {
+            return new ModuleStateData(getItNetworkTitle(g),
+                    groupByStrategie.aggregateMassnahmen(g));
         }
     }
 
@@ -198,15 +204,16 @@ public class ChartService extends GenericChartService {
     public StateData aggregateControlStates(int scopeId, int catalogId) {
 
         IGraphService graphService = getGraphService();
-        graphService.setLoadLinks(false);
         IGraphElementLoader graphElementLoader = new GraphElementLoader();
-        graphElementLoader.setTypeIds(new String[] {Organization.TYPE_ID, ControlGroup.TYPE_ID, Control.TYPE_ID });
+        graphElementLoader.setTypeIds(
+                new String[] { Organization.TYPE_ID, ControlGroup.TYPE_ID, Control.TYPE_ID });
         graphElementLoader.setScopeId(scopeId);
-        graphService.setLoader(graphElementLoader);
-        VeriniceGraph veriniceGraph = graphService.createDirectedGraph();
+        VeriniceGraph veriniceGraph = graphService
+                .createDirectedGraph(Collections.singletonList(graphElementLoader), false);
         ControlGroup controlGroup = (ControlGroup) veriniceGraph.getElement(catalogId);
 
-        AggregateIsmsControlsStrategy strategy = new AggregateIsmsControlsStrategyImpl(veriniceGraph, controlGroup);
+        AggregateIsmsControlsStrategy strategy = new AggregateIsmsControlsStrategyImpl(
+                veriniceGraph, controlGroup);
         return new StateData(getOrganizationTitle(veriniceGraph), strategy.getData());
     }
 
@@ -224,12 +231,12 @@ public class ChartService extends GenericChartService {
     public StateData aggregateControlStates(int scopeId) {
 
         IGraphService graphService = getGraphService();
-        graphService.setLoadLinks(false);
         IGraphElementLoader graphElementLoader = new GraphElementLoader();
-        graphElementLoader.setTypeIds(new String[] { Organization.TYPE_ID, ControlGroup.TYPE_ID, Control.TYPE_ID });
-        graphService.setLoader(graphElementLoader);
+        graphElementLoader.setTypeIds(
+                new String[] { Organization.TYPE_ID, ControlGroup.TYPE_ID, Control.TYPE_ID });
 
-        VeriniceGraph veriniceGraph = graphService.createDirectedGraph();
+        VeriniceGraph veriniceGraph = graphService
+                .createDirectedGraph(Collections.singletonList(graphElementLoader), false);
 
         List<ControlGroup> catalogs = menuService.getCatalogs();
         List<ControlGroup> catalogsOfScopeId = new ArrayList<>();
@@ -239,7 +246,8 @@ public class ChartService extends GenericChartService {
             }
         }
 
-        AggregateIsmsControlsStrategy strategy = new AggregateIsmsControlsStrategyImpl(veriniceGraph, catalogsOfScopeId);
+        AggregateIsmsControlsStrategy strategy = new AggregateIsmsControlsStrategyImpl(
+                veriniceGraph, catalogsOfScopeId);
         return new StateData(getOrganizationTitle(veriniceGraph), strategy.getData());
     }
 
@@ -249,14 +257,12 @@ public class ChartService extends GenericChartService {
 
     private VeriniceGraph loadSafeguards(Integer scopeId, String... typeIds) {
         IGraphService graphService = getGraphService();
-        graphService.setLoadLinks(false);
         IGraphElementLoader graphElementLoader = new GraphElementLoader();
         graphElementLoader.setTypeIds(typeIds);
         if (scopeId != null) {
             graphElementLoader.setScopeId(scopeId);
         }
-        graphService.setLoader(graphElementLoader);
-        return graphService.create();
+        return graphService.create(Collections.singletonList(graphElementLoader), false);
     }
 
     private Integer checkScopeId(String scopeId) {
@@ -278,7 +284,6 @@ public class ChartService extends GenericChartService {
         return scope;
     }
 
-
     public MenuService getMenuService() {
         return menuService;
     }
@@ -286,7 +291,5 @@ public class ChartService extends GenericChartService {
     public void setMenuService(MenuService menuService) {
         this.menuService = menuService;
     }
-
-
 
 }

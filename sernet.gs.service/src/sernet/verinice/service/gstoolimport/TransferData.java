@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -473,14 +474,15 @@ public class TransferData {
 
         String gefNr = translateGefaehrdungsNr(ragResult.getGefaehrdung());
         gefaehrdungsUmsetzung.setSimpleProperty("gefaehrdungsumsetzung_id", gefNr);
-
-        gefaehrdungsUmsetzung.setDescription(
-                convertClobToStringEncodingSave(ragResult.getGefaehrdungTxt().getBeschreibung(),
-                        GSScraperUtil.getInstance().getModel().getEncoding()));
+        Clob beschreibung = ragResult.getGefaehrdungTxt().getBeschreibung();
+        if (beschreibung != null) {
+            gefaehrdungsUmsetzung.setDescription(convertClobToStringEncodingSave(beschreibung,
+                    GSScraperUtil.getInstance().getModel().getEncoding()));
+        }
 
         gefaehrdungsUmsetzung.setTitel(ragResult.getGefaehrdungTxt().getName());
-        String url = transferUrl(ragResult.getGefaehrdung().getLink());
-        gefaehrdungsUmsetzung.setUrl(url);
+        Optional.ofNullable(ragResult.getGefaehrdung().getLink()).map(TransferData::transferUrl)
+                .ifPresent(gefaehrdungsUmsetzung::setUrl);
     }
 
     private static String transferUrl(String url) {
@@ -929,9 +931,12 @@ public class TransferData {
                 String.valueOf(ragResult.getZielobjekt().getId().getZobId()),
                 ragResult.getGefaehrdung().getGuid(), ragResult.getZielobjekt().getGuid()));
         ownGefaehrdung.setTitel(ragResult.getGefaehrdungTxt().getName());
-        ownGefaehrdung.setBeschreibung(
-                convertClobToStringEncodingSave(ragResult.getGefaehrdungTxt().getBeschreibung(),
-                        GSScraperUtil.getInstance().getModel().getEncoding()));
+        Clob beschreibung = ragResult.getGefaehrdungTxt().getBeschreibung();
+        if (beschreibung != null) {
+            ownGefaehrdung.setBeschreibung(convertClobToStringEncodingSave(beschreibung,
+                    GSScraperUtil.getInstance().getModel().getEncoding()));
+        }
+
     }
 
     public static String createBausteineMassnahmenResultIdentifier(

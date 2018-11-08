@@ -61,21 +61,40 @@
 
   <item title="CSV-Import">
       <description>
-          Neben der manuellen Erfassung Ihrer Strukturanalyse besteht noch die
+          Neben der manuellen Erfassung Ihrer Strukturanalyse, besteht noch die
           Möglichkeit die Daten über den CSV-Import zu importieren. Für den
-          CSV-Import benötigen Sie eine .CSV-Datei mit Inhalt, wobei die erste
-          Spalte mit einer eindeutigen ID versehen sein muss. über das
-          Hauptmenü <b>Datei &gt; CSV-Import</b> gelangen Sie zum Wizard, wo Sie Ihre zu
-          importierende Datei auswählen können. Nach Auswahl der Datei wählen
-          Sie das zu importierende Zielobjekt aus. über die Operationen können
-          Sie des Weiteren bestimmen, ob die Daten eingefügt, aktualisiert
-          und/oder gelöscht werden sollen. Mit Klick auf <b>Weiter &gt;</b> können Sie
-          die Spalten der .CSV-Datei den verinice-Feldern zuordnen. verinice
-          übernimmt die Zuordnung automatisch, sofern die
-          .CSV-Spaltenbezeichnungen mit verinice-Feldern übereinstimmen,
-          andernfalls muss die Zuordnung manuell durchgeführt werden. Nachdem
-          die Zuordnung vorgenommen wurde werden die Daten (nach Klick auf
-          <b>Fertigstellen</b>) in verinice importiert.
+          CSV-Import benötigen Sie eine .CSV-Datei mit Inhalt, wobei die erste Spalte
+          mit einer eindeutigen ID versehen sein muss. Über das Hauptmenü <b>Datei &gt;
+          CSV-Import</b> gelangen Sie zum Wizard, wo Sie Ihre zu importierende Datei
+          auswählen können. Nach Auswahl der Datei wählen Sie das zu importierende
+          Zielobjekt aus. Über die Operationen können Sie des Weiteren bestimmen, ob
+          die Daten eingefügt, aktualisiert und/oder gelöscht werden sollen. Mit Klick
+          auf <b>Weiter &gt;</b> können Sie die Spalten der .CSV-Datei den verinice
+          Feldern zuordnen. verinice übernimmt die Zuordnung automatisch, sofern die
+          .CSV-Spaltenbezeichnungen mit verinice-Feldern übereinstimmen, andernfalls
+          muss die Zuordnung manuell durchgeführt werden. Nachdem die Zuordnung
+          vorgenommen wurde, werden die Daten (nach Klick auf <b>Fertigstellen</b>)
+          in verinice importiert.
+      </description>
+  </item>
+
+  <item title="Importierte Objekte">
+      <description>
+          Alle erstmals importierten Objekte werden im <b>importierte Objekte</b>-Ordner
+          in verinice geladen. Hieran erkennen Sie, dass diese neu sind und gegebenenfalls
+          noch bearbeitet werden müssen. Um die Objekte aus diesem Ordner zu verschieben,
+          selektieren Sie die gewünschten Objekte und öffnen mit der <b>rechten Maustaste</b>
+          das Kontextmenü. Wählen Sie nun <b>Ausschneiden</b> aus. Sollen einzelne Objekte
+          einem anderen Verbund hinzugefügt werden, so gehen Sie an die gewünschte Stelle
+          für das hinzufügen und öffnen das Kontextmenü mit <b>Rechtsklick</b>. Nach der
+          Auswahl <b>Einfügen</b> werden die zuvor ausgeschnittenen Objekte hinzugefügt. Soll
+          z.B. ein gesamter Informationsverbund an die oberste Ebene geschoben werden, so
+          müssen Sie nach dem <b>Ausschneiden</b> in einen freien Bereich der View klicken
+          und anschließend <b>Einfügen</b> im Kontextmenü auswählen.
+          <br/>
+          Hinweis: Bitte achten Sie darauf das vor dem Einfügen kein Objekt mehr selektiert
+          ist. Die einfachste Methode das zu realisieren ist das Zuklappen des importierte
+          Objekte Ordners.
       </description>
   </item>
 
@@ -97,7 +116,7 @@
           wird sofort übernommen und kann in der Verknüpfung-View oder im
           Link-Maker des Objektes eingesehen werden.
           <br/>
-          2. Link-Maker: über den sogenannten Link-Maker, der sich im unteren
+          2. Link-Maker: Über den sogenannten Link-Maker, der sich im unteren
           Teil des Editorbereichs eines jeden Objektes befindet, können Sie die
           Verknüpfung zwischen Objekten herstellen indem Sie zunächst das
           Element auswählen, welches mit Ihrem Objekt verknüpft werden soll,

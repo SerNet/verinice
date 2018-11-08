@@ -338,7 +338,7 @@ public abstract class ElementView extends ViewPart {
             if(treeElement!=null && treeElement.getTypeId().equals(Audit.TYPE_ID)) {
                 setSelectedAudit((Audit)treeElement);
             }
-            if(treeElement!=null && treeElement.getTypeId().equals(Organization.TYPE_ID)) {
+            if(treeElement!=null && treeElement.isOrganization()) {
                 setSelectedOrganization((Organization)treeElement);
             }
         } else {         

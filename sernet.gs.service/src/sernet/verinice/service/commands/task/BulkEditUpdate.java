@@ -33,63 +33,78 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.crud.LoadCnAElementByEntityId;
 
-public class BulkEditUpdate extends ChangeLoggingCommand  implements IChangeLoggingCommand {
+public class BulkEditUpdate extends ChangeLoggingCommand implements IChangeLoggingCommand {
 
-	private Class<? extends CnATreeElement> clazz;
-	private List<Integer> dbIDs;
-	private Entity dialogEntity;
-	
-	private transient Set<Entity> changedEntities;
-	private String stationId;
+    private Class<? extends CnATreeElement> clazz;
+    private List<Integer> dbIDs;
+    private Entity dialogEntity;
 
-	public BulkEditUpdate(Class<? extends CnATreeElement> clazz, List<Integer> dbIDs, Entity dialogEntity) {
-		this.clazz=clazz;
-		this.dbIDs = dbIDs;
-		this.dialogEntity = dialogEntity;
-		
-		this.stationId = ChangeLogEntry.STATION_ID;
-	}
+    private transient Set<Entity> changedEntities;
+    private String stationId;
 
-	public void execute() {
-		changedEntities = new HashSet<Entity>(dbIDs.size());
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(clazz);
-		for (Integer id : dbIDs) {
-			CnATreeElement found = dao.findById(id);
-			Entity editEntity = found.getEntity();
-			editEntity.copyEntity(dialogEntity);
-			changedEntities.add(editEntity);
-		}
-	}
+    public BulkEditUpdate(Class<? extends CnATreeElement> clazz, List<Integer> dbIDs,
+            Entity dialogEntity) {
+        this.clazz = clazz;
+        this.dbIDs = dbIDs;
+        this.dialogEntity = dialogEntity;
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangeType()
-	 */
-	public int getChangeType() {
-		return ChangeLogEntry.TYPE_UPDATE;
-	}
+        this.stationId = ChangeLogEntry.STATION_ID;
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getChangedElements()
-	 */
-	public List<CnATreeElement> getChangedElements() {
-		List<CnATreeElement> changedElements = new ArrayList<CnATreeElement>(changedEntities.size());
-		try {
-			for (Entity entity : changedEntities) {
-				LoadCnAElementByEntityId command = new LoadCnAElementByEntityId(entity.getDbId());
-				command = getCommandService().executeCommand(command);
-				changedElements.addAll(command.getElements());
-			}
-		} catch (Exception e) {
-			Logger.getLogger(this.getClass()).error("Fehler beim Laden geänderter Elemente aus Transaktionslog.", e);
-		}
-		return changedElements;
-	}
+    public void execute() {
+        changedEntities = new HashSet<>(dbIDs.size());
+        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(clazz);
+        for (Integer id : dbIDs) {
+            CnATreeElement found = dao.findById(id);
+            if (found == null) {
+                throw new IllegalArgumentException("Unable to retrieve element by id " + id);
+            }
+            Entity editEntity = found.getEntity();
+            editEntity.copyEntity(dialogEntity);
+            changedEntities.add(editEntity);
+        }
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId()
-	 */
-	public String getStationId() {
-		return stationId;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
+     * getChangeType()
+     */
+    public int getChangeType() {
+        return ChangeLogEntry.TYPE_UPDATE;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#
+     * getChangedElements()
+     */
+    public List<CnATreeElement> getChangedElements() {
+        List<CnATreeElement> changedElements = new ArrayList<>(changedEntities.size());
+        try {
+            for (Entity entity : changedEntities) {
+                LoadCnAElementByEntityId command = new LoadCnAElementByEntityId(entity.getDbId());
+                command = getCommandService().executeCommand(command);
+                changedElements.addAll(command.getElements());
+            }
+        } catch (Exception e) {
+            Logger.getLogger(this.getClass())
+                    .error("Fehler beim Laden geänderter Elemente aus Transaktionslog.", e);
+        }
+        return changedElements;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.gs.ui.rcp.main.service.commands.IChangeLoggingCommand#getStationId
+     * ()
+     */
+    public String getStationId() {
+        return stationId;
+    }
 
 }

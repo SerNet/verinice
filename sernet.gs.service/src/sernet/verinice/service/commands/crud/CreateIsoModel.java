@@ -33,15 +33,8 @@ import sernet.verinice.service.model.LoadModel;
  */
 public class CreateIsoModel extends SaveElement<ISO27KModel> {
 
-    private transient Logger log = Logger.getLogger(CreateIsoModel.class);
+    private static final Logger log = Logger.getLogger(CreateIsoModel.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(CreateIsoModel.class);
-        }
-        return log;
-    }
-    
     /**
      * @param element
      */
@@ -59,14 +52,14 @@ public class CreateIsoModel extends SaveElement<ISO27KModel> {
         try {
             loadModel = getCommandService().executeCommand(loadModel);
         } catch (CommandException e) {
-            getLog().error("Error while loading model.", e);
+            log.error("Error while loading model.", e);
             throw new RuntimeException("Error while loading model.", e);
         }
         final ISO27KModel model = loadModel.getModel();
         if(model==null) {
             super.execute();
         } else {
-            getLog().warn("ISO27k model exists. Will NOT create another model. Returning existing model.");
+            log.warn("ISO27k model exists. Will NOT create another model. Returning existing model.");
             element = model;
         }
     }

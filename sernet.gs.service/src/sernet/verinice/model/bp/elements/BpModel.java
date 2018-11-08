@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 
 import sernet.verinice.model.bp.IBpModelListener;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -34,18 +35,17 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
 public class BpModel extends CnATreeElement implements IBpRoot {
-    
+
     private static final long serialVersionUID = -1004542015430694865L;
-    
-    public static final String TYPE_ID = "bp_model"; //$NON-NLS-1$    
+
+    public static final String TYPE_ID = "bp_model"; //$NON-NLS-1$
     public static final String TITLE = "Modernized ITBP Model"; //$NON-NLS-1$
-    
-    private transient Logger log;
-    
+
+    private static final Logger log = Logger.getLogger(BpModel.class);
+
     private transient List<IBpModelListener> listeners;
-    
-    
-    /* (non-Javadoc)
+
+    /*
      * @see sernet.verinice.model.common.CnATreeElement#getTitle()
      */
     @Override
@@ -53,14 +53,14 @@ public class BpModel extends CnATreeElement implements IBpRoot {
         return TITLE;
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.model.common.CnATreeElement#getTypeId()
      */
     @Override
     public String getTypeId() {
         return TYPE_ID;
     }
-    
+
     @Override
     public void refreshAllListeners(Object source) {
         Logger.getLogger(this.getClass()).debug("Model refresh to all listeners."); //$NON-NLS-1$
@@ -68,21 +68,21 @@ public class BpModel extends CnATreeElement implements IBpRoot {
             listener.modelRefresh(source);
         }
     }
-    
+
     private synchronized List<IBpModelListener> getListeners() {
-        if (listeners == null){
+        if (listeners == null) {
             listeners = new CopyOnWriteArrayList<>();
         }
         return listeners;
     }
-    
+
     @Override
     public boolean canContain(Object obj) {
         return (obj instanceof ItNetwork);
     }
 
     @Override
-    public void childAdded(CnATreeElement category, CnATreeElement child) {
+    public void childAdded(CnATreeElement category, @NonNull CnATreeElement child) {
         for (IBpModelListener listener : getListeners()) {
             listener.childAdded(category, child);
             if (child instanceof ItNetwork) {
@@ -90,38 +90,51 @@ public class BpModel extends CnATreeElement implements IBpRoot {
             }
         }
     }
-    
+
     @Override
     public void databaseChildAdded(CnATreeElement child) {
-        if (child == null){
+        if (child == null) {
             return;
         }
         for (IBpModelListener listener : getListeners()) {
             listener.databaseChildAdded(child);
         }
     }
-    
+
     @Override
     public void childRemoved(CnATreeElement category, CnATreeElement child) {
         for (IBpModelListener listener : getListeners()) {
             listener.childRemoved(category, child);
         }
     }
-    
+
     @Override
     public void removeChild(CnATreeElement child) {
         if (getChildren().remove(child)) {
             this.childRemoved(this, child);
         }
     }
-    
+
     @Override
     public void databaseChildRemoved(CnATreeElement child) {
         for (IBpModelListener listener : getListeners()) {
             listener.databaseChildRemoved(child);
-        }   
+        }
+        if (isOrContainsSafeguard(child)) {
+            modelReload(this);
+        }
     }
-    
+
+    private static boolean isOrContainsSafeguard(CnATreeElement element) {
+        try {
+            return Safeguard.isSafeguard(element)
+                    || element.getChildren().stream().anyMatch(BpModel::isOrContainsSafeguard);
+        } catch (Exception e) {
+            log.error("Error determine checkChildrenForUpdate() returning false.", e);
+        }
+        return false;
+    }
+
     @Override
     public void databaseChildRemoved(ChangeLogEntry entry) {
         for (IBpModelListener listener : getListeners()) {
@@ -135,64 +148,63 @@ public class BpModel extends CnATreeElement implements IBpRoot {
             listener.childChanged(child);
         }
     }
-    
+
     @Override
     public void databaseChildChanged(CnATreeElement child) {
         for (IBpModelListener listener : getListeners()) {
             listener.databaseChildChanged(child);
         }
     }
-    
+
     @Override
     public void linkChanged(CnALink old, CnALink link, Object source) {
         for (IBpModelListener listener : getListeners()) {
             listener.linkChanged(old, link, source);
         }
     }
-    
+
     @Override
     public void linkRemoved(CnALink link) {
         for (IBpModelListener listener : getListeners()) {
             listener.linkRemoved(link);
         }
     }
-    
+
     @Override
     public void linkAdded(CnALink link) {
         for (IBpModelListener listener : getListeners()) {
             listener.linkAdded(link);
         }
     }
-    
+
     public void modelReload(BpModel newModel) {
         for (IBpModelListener listener : getListeners()) {
             listener.modelReload(newModel);
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("modelReload, listener: " + listener); //$NON-NLS-1$
+            if (log.isDebugEnabled()) {
+                log.debug("modelReload, listener: " + listener); //$NON-NLS-1$
             }
         }
     }
-    
+
     public void addModITBOModelListener(IBpModelListener listener) {
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Adding ISO model listener.");
+        if (log.isDebugEnabled()) {
+            log.debug("Adding ISO model listener.");
         }
-        if (!getListeners().contains(listener)){
+        if (!getListeners().contains(listener)) {
             getListeners().add(listener);
         }
     }
-    
+
     public void removeBpModelListener(IBpModelListener listener) {
-        if (getListeners().contains(listener)){
+        if (getListeners().contains(listener)) {
             getListeners().remove(listener);
         }
     }
-    
+
     /**
-     * Moves all {@link IBpModelListener} from this model
-     * to newModel.
+     * Moves all {@link IBpModelListener} from this model to newModel.
      * 
-     * @param newModel 
+     * @param newModel
      */
     public void moveListener(BpModel newModel) {
         for (IBpModelListener listener : getListeners()) {
@@ -200,14 +212,7 @@ public class BpModel extends CnATreeElement implements IBpRoot {
         }
         for (IBpModelListener listener : getListeners()) {
             removeBpModelListener(listener);
-        }      
-    }    
-    
-    private Logger getLog() {
-        if(log==null) {
-            log = Logger.getLogger(BpModel.class);
         }
-        return log;
     }
 
 }

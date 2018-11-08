@@ -40,15 +40,8 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class NaturalizeCommand extends ChangeLoggingCommand implements IChangeLoggingCommand {
 
-    private transient Logger log = Logger.getLogger(NaturalizeCommand.class);
+    private static final Logger log = Logger.getLogger(NaturalizeCommand.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(NaturalizeCommand.class);
-        }
-        return log;
-    }
-    
     private Set<String> uuidSet;
     
     private List<CnATreeElement> changedElements = Collections.emptyList();
@@ -80,7 +73,7 @@ public class NaturalizeCommand extends ChangeLoggingCommand implements IChangeLo
                     try {
                         command = getCommandService().executeCommand(command);
                     } catch (CommandException e) {
-                        getLog().error("Error while saving element", e);
+                        log.error("Error while saving element", e);
                         throw new RuntimeException("Error while saving element", e);
                     }
                     changedElements.add(command.getElement());

@@ -21,8 +21,6 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
@@ -31,22 +29,21 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IElementTitleCache;
 import sernet.verinice.interfaces.IRetrieveInfo;
 import sernet.verinice.interfaces.search.IJsonBuilder;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.InheritLogger;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.search.IElementSearchDao;
 
-public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, ID> implements IBaseDao<T, ID> {
+public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, ID>
+        implements IBaseDao<T, ID> {
 
     private static final Logger LOG = Logger.getLogger(TreeElementDao.class);
     private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(TreeElementDao.class);
     private IElementSearchDao searchDao;
     private IJsonBuilder jsonBuilder;
     private IElementTitleCache titleCache;
-    
+
     public TreeElementDao(Class<T> type) {
         super(type);
     }
@@ -86,8 +83,8 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
      * spring configuration.
      */
 
-    public void saveOrUpdate(T entity) { 
-        if(LOG_INHERIT.isDebug()) {
+    public void saveOrUpdate(T entity) {
+        if (LOG_INHERIT.isDebug()) {
             LOG_INHERIT.debug("saveOrUpdate...");
         }
         super.saveOrUpdate(entity);
@@ -106,7 +103,7 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         // return results;
         IRetrieveInfo ri0 = (ri == null) ? new RetrieveInfo() : ri;
         DetachedCriteria criteria = DetachedCriteria.forClass(type);
-        configureCriteria(criteria, ri0);
+        ri0.configureCriteria(criteria);
         return findByCriteria(criteria);
     }
 
@@ -116,18 +113,18 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         // return (T) getHibernateTemplate().load(type, id);
         return retrieve(id, (new RetrieveInfo()).setProperties(true));
     }
-    
+
     public T findByUuid(String uuid, IRetrieveInfo ri) {
         IRetrieveInfo ri0 = (ri == null) ? new RetrieveInfo() : ri;
         DetachedCriteria criteria = DetachedCriteria.forClass(type);
         criteria.add(Restrictions.eq("uuid", uuid));
-        configureCriteria(criteria, ri0);
+        ri0.configureCriteria(criteria);
         return loadByCriteria(criteria);
     }
 
     public T retrieve(ID id, IRetrieveInfo ri) {
         IRetrieveInfo ri0 = null;
-        if(LOG.isDebugEnabled()) {
+        if (LOG.isDebugEnabled()) {
             LOG.debug("retrieve - id: " + id + " " + ri);
         }
         if (ri == null) {
@@ -142,76 +139,9 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         } else {
             criteria.add(Restrictions.eq("dbId", id));
         }
-        configureCriteria(criteria, ri0);
+        ri0.configureCriteria(criteria);
 
         return loadByCriteria(criteria);
-    }
-
-    private void configureCriteria(DetachedCriteria criteria, IRetrieveInfo ri) {
-        if (ri.isProperties()) {
-            criteria.setFetchMode("entity", FetchMode.JOIN);
-            criteria.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
-            criteria.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
-        }
-        if (ri.isPermissions()) {
-            criteria.setFetchMode("permissions", FetchMode.JOIN);
-        }
-
-        if (ri.isLinksDown()) {
-            criteria.setFetchMode("linksDown", FetchMode.JOIN);
-            criteria.setFetchMode("linksDown.dependency", FetchMode.JOIN);
-            if (ri.isLinksDownProperties()) {
-                criteria.setFetchMode("linksDown.dependency.entity", FetchMode.JOIN);
-                criteria.setFetchMode("linksDown.dependency.entity.typedPropertyLists", FetchMode.JOIN);
-                criteria.setFetchMode("linksDown.dependency.entity.typedPropertyLists.properties", FetchMode.JOIN);
-            }
-        }
-        if (ri.isLinksUp()) {
-            criteria.setFetchMode("linksUp", FetchMode.JOIN);
-            criteria.setFetchMode("linksUp.dependant", FetchMode.JOIN);
-            if (ri.isLinksUpProperties()) {
-                criteria.setFetchMode("linksUp.dependant.entity", FetchMode.JOIN);
-                criteria.setFetchMode("linksUp.dependant.entity.typedPropertyLists", FetchMode.JOIN);
-                criteria.setFetchMode("linksUp.dependant.entity.typedPropertyLists.properties", FetchMode.JOIN);
-            }
-        }
-        if (ri.isParent()) {
-            criteria.setFetchMode("parent", FetchMode.JOIN);
-            if (ri.isSiblings()) {
-                criteria.setFetchMode("parent.children", FetchMode.JOIN);
-            }
-            if (ri.isParentPermissions()) {
-                criteria.setFetchMode("parent.permissions", FetchMode.JOIN);
-            }
-        }
-        if (ri.isChildren()) {
-            criteria.setFetchMode("children", FetchMode.JOIN);
-            DetachedCriteria criteriaChildren = null, criteriaEntity = null;
-            if (ri.isInnerJoin()) {
-                criteriaChildren = criteria.createCriteria("children");
-            }
-            if (ri.isChildrenProperties()) {
-                criteria.setFetchMode("children.entity", FetchMode.JOIN);
-                if (ri.isInnerJoin()) {
-                    criteriaEntity = criteriaChildren.createCriteria("entity");
-                }
-                criteria.setFetchMode("children.entity.typedPropertyLists", FetchMode.JOIN);
-                if (ri.isInnerJoin()) {
-                    criteriaEntity.createCriteria("typedPropertyLists");
-                }
-                criteria.setFetchMode("children.entity.typedPropertyLists.properties", FetchMode.JOIN);
-            }
-            if (ri.isChildrenPermissions()) {
-                criteria.setFetchMode("children.permissions", FetchMode.JOIN);
-                if (ri.isInnerJoin()) {
-                    criteriaChildren.createCriteria("permissions");
-                }
-            }
-        }
-        if (ri.isGrandchildren()) {
-            criteria.setFetchMode("children.children", FetchMode.JOIN);
-        }
-        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
     }
 
     private T loadByCriteria(DetachedCriteria criteria) {
@@ -219,7 +149,8 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         T result = null;
         if (resultList != null) {
             if (resultList.size() > 1) {
-                final String message = "More than one entry found, criteria is: " + criteria.toString();
+                final String message = "More than one entry found, criteria is: "
+                        + criteria.toString();
                 LOG.error(message);
                 throw new RuntimeException(message);
             }
@@ -229,11 +160,11 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         }
         return result;
     }
-    
+
     public T merge(T entity) {
         T mergedElement = super.merge(entity);
 
-        if(mergedElement instanceof CnATreeElement) {
+        if (mergedElement instanceof CnATreeElement) {
             CnATreeElement element = (CnATreeElement) mergedElement;
             index(element);
         }
@@ -241,15 +172,15 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
     }
 
     public T merge(T entity, boolean fireChange) {
-        if(LOG_INHERIT.isDebug()) {
+        if (LOG_INHERIT.isDebug()) {
             LOG_INHERIT.debug("merge...");
         }
-        
+
         T mergedElement = super.merge(entity);
 
-        if(mergedElement instanceof CnATreeElement) {
+        if (mergedElement instanceof CnATreeElement) {
             CnATreeElement element = (CnATreeElement) mergedElement;
-            index(element);     
+            index(element);
             if (fireChange) {
                 fireChange(element);
             }
@@ -259,7 +190,6 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
             CnALink link = (CnALink) mergedElement;
             fireChange(link.getDependency());
         }
-        
 
         return mergedElement;
     }
@@ -271,34 +201,28 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
 
     private void updateIndex(CnATreeElement element) {
         try {
-            if(getSearchDao()!=null && getJsonBuilder()!=null) {
+            if (getSearchDao() != null && getJsonBuilder() != null) {
                 getSearchDao().updateOrIndex(element.getUuid(), getJsonBuilder().getJson(element));
             }
         } catch (Exception e) {
-            String uuid = (element!=null) ? element.getUuid() : null;
-            LOG.error("Error while updating index, element: " + uuid , e);
+            String uuid = (element != null) ? element.getUuid() : null;
+            LOG.error("Error while updating index, element: " + uuid, e);
         }
     }
 
     private void updateTitleCache(CnATreeElement element) {
         try {
-            if(getTitleCache()!=null) {
-                if(isScope(element)) {
-                    getTitleCache().update(element.getDbId(), element.getTitle());
-                }
+            if (getTitleCache() != null && element.isScope()) {
+                getTitleCache().update(element.getDbId(), element.getTitle());
             }
         } catch (Exception e) {
-            String uuid = (element!=null) ? element.getUuid() : null;
-            LOG.error("Error while updating title cache, element: " + uuid , e);
+            String uuid = (element != null) ? element.getUuid() : null;
+            LOG.error("Error while updating title cache, element: " + uuid, e);
         }
-    }
-    
-    private boolean isScope(CnATreeElement element) {
-        return element instanceof ITVerbund || element instanceof Organization;
     }
 
     protected void indexDelete(CnATreeElement element) {
-        if(getSearchDao()!=null) {
+        if (getSearchDao() != null) {
             getSearchDao().delete(element.getUuid());
         }
     }
@@ -310,13 +234,13 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
      *            the element that had its protection level or protection level
      *            description changed.
      */
-    protected void fireChange(CnATreeElement elmt) {  
-        if(LOG_INHERIT.isDebug()) {
+    protected void fireChange(CnATreeElement elmt) {
+        if (LOG_INHERIT.isDebug()) {
             LOG_INHERIT.debug("fireChange...");
         }
         elmt.fireIntegritaetChanged(new CascadingTransaction());
         elmt.fireVerfuegbarkeitChanged(new CascadingTransaction());
-        elmt.fireVertraulichkeitChanged(new CascadingTransaction());  
+        elmt.fireVertraulichkeitChanged(new CascadingTransaction());
         elmt.fireValueChanged(new CascadingTransaction());
     }
 
@@ -325,14 +249,13 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
     }
 
     /**
-     * Empty by default.
-     * Override this in subclasses to check user rights.
+     * Empty by default. Override this in subclasses to check user rights.
      * 
      * @see sernet.verinice.interfaces.IBaseDao#checkRights(java.lang.Object)
      */
     @Override
-    public void checkRights(T entity) /*throws SecurityException*/ {
-        // empty    
+    public void checkRights(T entity) /* throws SecurityException */ {
+        // empty
     }
 
     @Override

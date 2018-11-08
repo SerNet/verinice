@@ -37,17 +37,10 @@ import sernet.verinice.model.ds.Verarbeitungsangaben;
 public class Anwendung extends CnATreeElement 
 	implements IBSIStrukturElement {
 	
-    private transient Logger log = Logger.getLogger(Anwendung.class);
+    private static final Logger log = Logger.getLogger(Anwendung.class);
     
     private static final int SCHICHT = 5;
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(Anwendung.class);
-        }
-        return log;
-    }
-    
 	private final IReevaluator schutzbedarfProvider 
 		= new ProtectionRequirementsAdapter(this);
 	
@@ -207,14 +200,6 @@ public class Anwendung extends CnATreeElement
 
 	public void setProzessWichtigkeit(String value) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_PROZESSBEZUG), value);
-	}
-
-	public void createCategories() {
-		addChild(new Verarbeitungsangaben(this));
-		addChild(new VerantwortlicheStelle(this));
-		addChild(new Personengruppen(this));
-		addChild(new Datenverarbeitung(this));
-		addChild(new StellungnahmeDSB(this));
 	}
 
 }

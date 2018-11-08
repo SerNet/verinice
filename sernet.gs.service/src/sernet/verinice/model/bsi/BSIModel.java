@@ -26,8 +26,8 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.log4j.Logger;
-
-import sernet.verinice.interfaces.IVersionConstants;
+import org.eclipse.jdt.annotation.NonNull;
+import sernet.verinice.interfaces.VersionConstants;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
@@ -59,7 +59,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
         super(null);
         // current version number for new models, wil be saved in database:
 
-        dbVersion = IVersionConstants.COMPATIBLE_DB_VERSION;
+        dbVersion = VersionConstants.COMPATIBLE_DB_VERSION;
     }
 
     @Override
@@ -83,10 +83,10 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
     }
 
     @Override
-    public void childAdded(CnATreeElement category, CnATreeElement child) {
+    public void childAdded(CnATreeElement category, @NonNull CnATreeElement child) {
         for (IBSIModelListener listener : getListeners()) {
             listener.childAdded(category, child);
-            if (child instanceof ITVerbund | child instanceof ImportBsiGroup) {
+            if (child.isItVerbund() || child instanceof ImportBsiGroup) {
                 listener.modelRefresh(null);
             }
         }
@@ -180,7 +180,7 @@ public class BSIModel extends CnATreeElement implements IBSIStrukturElement {
     public List<ITVerbund> getItverbuende() {
         List itvs = new ArrayList<ITVerbund>();
         for (CnATreeElement c : getChildren()) {
-            if (c.getTypeId() == ITVerbund.TYPE_ID) {
+            if (c.isItVerbund()) {
                 itvs.add(c);
             }
         }

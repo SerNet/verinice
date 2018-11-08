@@ -29,15 +29,8 @@ import sernet.verinice.service.risk.RiskAnalysisHelperImpl;
  */
 public class LoadRiskSummary extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(LoadNotes.class);
+    private static final Logger log = Logger.getLogger(LoadNotes.class);
     private static final String TYPE_ID = "asset";
-    
-    public Logger getLog() {
-        if(log==null) {
-            log = Logger.getLogger(LoadNotes.class);
-        }
-        return log;
-    }
     
     private RiskMatrix matrix;
 
@@ -53,7 +46,7 @@ public class LoadRiskSummary extends GenericCommand {
 	public void execute() {
 	    int ciaMax = 0;
 	    int probMax = 0;
-	    getLog().debug("LoadReportElements for root_object " + rootElement);
+	    log.debug("LoadReportElements for root_object " + rootElement);
 	    
 	    PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Asset.TYPE_ID, RiskAnalysisHelperImpl.PROP_SCENARIO_PROBABILITY);
 	    probMax = type.getMaxValue();

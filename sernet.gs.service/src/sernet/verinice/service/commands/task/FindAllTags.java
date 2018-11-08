@@ -83,7 +83,7 @@ public class FindAllTags extends GenericCommand {
 					"select propertyValue " +
 					"from properties " +
 					"where propertytype like '%_tag'")
-			.addScalar("propertyValue", Hibernate.STRING)
+			.addScalar("propertyValue", sernet.gs.reveng.type.Types.STRING_TYPE)
 			.list();
 		}
 		

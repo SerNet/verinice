@@ -88,8 +88,6 @@ public class HUIObjectModelService implements IObjectModelService {
     private Map<String, Set<String>> possibleParents = null;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.model.IObjectModelService#init()
      */
     @Override
@@ -122,12 +120,9 @@ public class HUIObjectModelService implements IObjectModelService {
             clazz = CnATypeMapper.getClassFromTypeId(typeId);
             if (clazz != null) {
                 try {
-                    if("moditbp_room".equals(typeId)) {
-                        "".hashCode();
-                    }
                     parentInstance = createInstance(clazz, typeId);
-                } catch (InstantiationException | IllegalAccessException
-                        | InvocationTargetException | NoSuchMethodException e) {
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException
+                        | NoSuchMethodException e) {
                     LOG.error(e);
                     throw new IllegalStateException(e);
                 }
@@ -154,8 +149,6 @@ public class HUIObjectModelService implements IObjectModelService {
         addAllStaticProperties();
     }
 
-    
-
     public void removeNonCnaTreeElementTypeIDs() {
         allTypeIds.remove("note"); //$NON-NLS-1$
         allTypeIds.remove("role"); //$NON-NLS-1$
@@ -176,10 +169,10 @@ public class HUIObjectModelService implements IObjectModelService {
         allBSICategories.add(RaeumeKategorie.TYPE_ID);
         allBSICategories.add(FinishedRiskAnalysis.TYPE_ID);
 
-        allTypeIds.addAll(allBSICategories);    
+        allTypeIds.addAll(allBSICategories);
     }
-    
-    private void addBpCategories () {
+
+    private void addBpCategories() {
         allBpCategories = new HashSet<>(8);
         allBpCategories.add(ApplicationGroup.TYPE_ID);
         allBpCategories.add(BpPersonGroup.TYPE_ID);
@@ -195,22 +188,19 @@ public class HUIObjectModelService implements IObjectModelService {
         allBpCategories.add(BpDocumentGroup.TYPE_ID);
         allBpCategories.add(BpIncidentGroup.TYPE_ID);
         allBpCategories.add(BpRecordGroup.TYPE_ID);
-        
+
         allTypeIds.addAll(allBpCategories);
     }
-    
-    
+
     private void addAllStaticProperties() {
         allStaticProperties = new HashSet<>();
         allStaticProperties.add(CnATreeElement.SCOPE_ID);
         allStaticProperties.add(CnATreeElement.PARENT_ID);
         allStaticProperties.add(CnATreeElement.DBID);
-        allStaticProperties.add(CnATreeElement.UUID);    
+        allStaticProperties.add(CnATreeElement.UUID);
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.linktable.ILinkTableContentService#
      * getRelationsFrom(java.lang.String)
      */
@@ -224,8 +214,8 @@ public class HUIObjectModelService implements IObjectModelService {
         }
         Set<HuiRelation> relations = getHuiTypeFactory().getPossibleRelations(fromEntityTypeID,
                 toEntityTypeID);
-        relations.addAll(getHuiTypeFactory().getPossibleRelations(toEntityTypeID,
-                fromEntityTypeID));
+        relations
+                .addAll(getHuiTypeFactory().getPossibleRelations(toEntityTypeID, fromEntityTypeID));
         HashSet<String> relationIds = new HashSet<>();
         for (HuiRelation huiRelation : relations) {
 
@@ -244,15 +234,13 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.linktable.ILinkTableContentService#
      * getPossibleRelationPartners(java.lang.String)
      */
     @Override
     public Set<String> getPossibleRelationPartners(String typeID) {
         ServerInitializer.inheritVeriniceContextState();
-        if (getHuiTypeFactory().getEntityType(typeID) == null || isBSICategory(typeID) || isBpCategory(typeID)) {
+        if (getHuiTypeFactory().getEntityType(typeID) == null || isBSICategory(typeID)) {
             return new HashSet<>();
         }
         HashSet<String> possiblePartners = new HashSet<>();
@@ -272,7 +260,7 @@ public class HUIObjectModelService implements IObjectModelService {
         return allBSICategories.contains(typeID);
 
     }
-    
+
     private boolean isBpCategory(String typeId) {
         return allBpCategories.contains(typeId);
     }
@@ -285,8 +273,6 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.linktable.ILinkTableContentService#
      * getPossibleProperties(java.lang.String)
      */
@@ -309,8 +295,6 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.service.linktable.ILinkTableContentService#getLabel(java.
      * lang.String)
@@ -328,8 +312,6 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.service.linktable.ILinkTableContentService#getLabel(java.
      * lang.String)
@@ -341,8 +323,6 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.service.linktable.IObjectModelService#getPossibleChildren
      * (java.lang.String)
@@ -414,8 +394,6 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.service.linktable.IObjectModelService#getPossibleParents(
      * java.lang.String)
@@ -455,15 +433,13 @@ public class HUIObjectModelService implements IObjectModelService {
         for (String typeIdParent : getAllTypeIDs()) {
             CnATreeElement parentInsance = allTypeInstances.get(typeIdParent);
             if (parentInsance != null && parentInsance.canContain(childInstance)) {
-                    possibleParentsSet.add(typeIdParent);
-                }
+                possibleParentsSet.add(typeIdParent);
+            }
         }
         return possibleParentsSet;
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.service.model.IObjectModelService#getAllPossibleChildren(
      * )
@@ -474,8 +450,6 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.service.model.IObjectModelService#getAllPossibleParents()
      */
@@ -485,8 +459,6 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.service.model.IObjectModelService#loadAll()
      */
     @Override
@@ -506,7 +478,7 @@ public class HUIObjectModelService implements IObjectModelService {
 
         return container;
     }
-    
+
     @Override
     public boolean isValidTypeId(String typeID) {
         return allLabels.containsKey(typeID);
@@ -529,20 +501,20 @@ public class HUIObjectModelService implements IObjectModelService {
 
     private Map<String, String> getAllRelationLabels() {
 
-        if(allRelationLabels == null){
+        if (allRelationLabels == null) {
             allRelationLabels = new HashMap<>();
             Set<HuiRelation> allRelationIDs = new HashSet<>();
-            for(String typeId : getAllTypeIDs()){
+            for (String typeId : getAllTypeIDs()) {
                 if (!isBSICategory(typeId) && !isBpCategory(typeId)) {
                     allRelationIDs.addAll(huiTypeFactory.getPossibleRelationsFrom(typeId));
                 }
-                
+
             }
             for (HuiRelation relation : allRelationIDs) {
                 allRelationLabels.put(relation.getId(), getRelationLabel(relation.getId()));
 
             }
-            
+
         }
         return allRelationLabels;
     }
@@ -562,7 +534,7 @@ public class HUIObjectModelService implements IObjectModelService {
         if (allLabels == null) {
             allLabels = new HashMap<>();
             for (String typeId : getAllTypeIDs()) {
-                
+
                 allLabels.put(typeId, getLabel(typeId));
                 for (String propertyId : getPossibleProperties(typeId)) {
                     allLabels.put(propertyId, getPropertyLabel(typeId, propertyId));
@@ -585,33 +557,32 @@ public class HUIObjectModelService implements IObjectModelService {
         }
         label.append(getLabel(propertyId));
 
-        return  label.toString();
+        return label.toString();
     }
-    
+
     public static String getCnaLinkPropertyMessage(String cnaLinkProperty) {
         switch (cnaLinkProperty) {
         case CnaLinkPropertyConstants.TYPE_TITLE:
-            return Messages.getString("HUIObjectModelService.10");  //$NON-NLS-1$
+            return Messages.getString("HUIObjectModelService.10"); //$NON-NLS-1$
         case CnaLinkPropertyConstants.TYPE_DESCRIPTION:
-            return Messages.getString("HUIObjectModelService.11");  //$NON-NLS-1$
+            return Messages.getString("HUIObjectModelService.11"); //$NON-NLS-1$
         case CnaLinkPropertyConstants.TYPE_RISK_VALUE_C:
-            return Messages.getString("HUIObjectModelService.12");  //$NON-NLS-1$
+            return Messages.getString("HUIObjectModelService.12"); //$NON-NLS-1$
         case CnaLinkPropertyConstants.TYPE_RISK_VALUE_I:
-            return Messages.getString("HUIObjectModelService.13");  //$NON-NLS-1$
+            return Messages.getString("HUIObjectModelService.13"); //$NON-NLS-1$
         case CnaLinkPropertyConstants.TYPE_RISK_VALUE_A:
-            return Messages.getString("HUIObjectModelService.14");  //$NON-NLS-1$
+            return Messages.getString("HUIObjectModelService.14"); //$NON-NLS-1$
         case CnaLinkPropertyConstants.TYPE_RISK_VALUE_C_WITH_CONTROLS:
-            return Messages.getString("HUIObjectModelService.1");   //$NON-NLS-1$
+            return Messages.getString("HUIObjectModelService.1"); //$NON-NLS-1$
         case CnaLinkPropertyConstants.TYPE_RISK_VALUE_I_WITH_CONTROLS:
-            return Messages.getString("HUIObjectModelService.2");   //$NON-NLS-1$
+            return Messages.getString("HUIObjectModelService.2"); //$NON-NLS-1$
         case CnaLinkPropertyConstants.TYPE_RISK_VALUE_A_WITH_CONTROLS:
-            return Messages.getString("HUIObjectModelService.3");    //$NON-NLS-1$
+            return Messages.getString("HUIObjectModelService.3"); //$NON-NLS-1$
         case CnaLinkPropertyConstants.TYPE_RISK_TREATMENT:
-            return Messages.getString("HUIObjectModelService.4");  //$NON-NLS-1$
+            return Messages.getString("HUIObjectModelService.4"); //$NON-NLS-1$
         default:
-            return Messages.getString("HUIObjectModelService.15");  //$NON-NLS-1$
+            return Messages.getString("HUIObjectModelService.15"); //$NON-NLS-1$
         }
     }
-    
 
 }

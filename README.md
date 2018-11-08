@@ -1,5 +1,7 @@
 # verinice
 
+[![Build Status](https://travis-ci.org/SimonScholz/verinice.svg?branch=master)](https://travis-ci.org/SimonScholz/verinice)
+
 verinice helps you to build and operate your management system for
 information security (ISMS). Whether you base it on ISO 27001, BSI IT
 Baseline Protection, IDW PS 330 or another standard: verinice supports
@@ -80,20 +82,18 @@ people to work on one ISMS - even across different locations.
   GitHub mirror
 
 # How to build
-
 To build the Verinice client, client update site, server and
-report designer all at once execute the following commands:
+report designer all at once execute the following command:
 
-1. `cd sernet.verinice.releng.parent`
-1. `mvn -Dtycho.disableP2Mirrors=true clean verify`
+	./mvnw -Dtycho.disableP2Mirrors=true clean verify
 
 To see where the Verinice client, client update site, server
 and report designer build artifacts can then be found
 read the following sections.
 
-If you want to skip the junit tests you need to add the -Dmaven.antrun.skip=true parameter.
+If you want to skip the junit tests you need to add the `-Dmaven.antrun.skip=true` parameter.
 
-1. `mvn -Dtycho.disableP2Mirrors=true -Dmaven.antrun.skip=true  clean verify`
+	./mvnw -Dtycho.disableP2Mirrors=true -Dmaven.antrun.skip=true  clean verify
 
 ## Verinice client
 
@@ -104,6 +104,21 @@ Artifacts for the following platforms will be produced:
 * Linux GTK 32 and 64 bit
 * Windows 32 and 64 bit
 * Mac OS X 64 bit
+
+If you want to pack a JRE into the build, you can copy the JRE to
+
+sernet.verinice.extraresources.feature/linux/jre
+sernet.verinice.extraresources.feature/linux32/jre
+sernet.verinice.extraresources.feature/windows/jre
+sernet.verinice.extraresources.feature/windows32/jre
+sernet.verinice.extraresources.feature/macos/jre
+
+
+Packing the JRE is required for macOS builds. It is
+[best practice](https://docs.oracle.com/javase/7/docs/technotes/guides/jweb/packagingAppsForMac.html),
+to bundle a JRE into an Application.app folder. Hence in order to
+obtain a valid verinice.app a proper macOS JRE has to be present in
+sernet.thirdparty.feature/macos.
 
 ## Verinice client update site
 

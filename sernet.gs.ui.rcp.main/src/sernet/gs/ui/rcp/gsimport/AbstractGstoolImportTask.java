@@ -60,7 +60,7 @@ public abstract class AbstractGstoolImportTask {
             initThreadContextClassLoader();
             executeTask(importType, monitor);
             resetThreadContextClassLoader();
-            CnAElementFactory.getInstance().reloadModelFromDatabase();
+            CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
         } catch (GstoolImportCanceledException e) {
             throw e;
         } catch (RuntimeException e) {

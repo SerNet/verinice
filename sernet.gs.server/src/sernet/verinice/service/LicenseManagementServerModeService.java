@@ -76,7 +76,7 @@ import sernet.verinice.model.licensemanagement.propertyconverter.PropertyConvert
  */
 public class LicenseManagementServerModeService implements ILicenseManagementService {
 
-    protected Logger log = Logger.getLogger(LicenseManagementServerModeService.class);
+    protected static final Logger log = Logger.getLogger(LicenseManagementServerModeService.class);
 
     // injected by spring
     private IBaseDao<Configuration, Serializable> configurationDao;

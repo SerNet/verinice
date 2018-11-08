@@ -60,8 +60,8 @@ public class UndirectedVeriniceGraph extends AbstractVeriniceGraph implements Se
 
     @Override
     public Set<CnATreeElement> getLinkTargets(CnATreeElement source, String linkTypeId) {
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Returning link targets of element: " + source.getTitle() + ", link type is: " + linkTypeId + "...");
+        if (log.isDebugEnabled()) {
+            log.debug("Returning link targets of element: " + source.getTitle() + ", link type is: " + linkTypeId + "...");
         }
         Set<Edge> edgeList = getGraph().edgesOf(source);
         Set<CnATreeElement> linkTargets = new HashSet<>();
@@ -71,8 +71,8 @@ public class UndirectedVeriniceGraph extends AbstractVeriniceGraph implements Se
                 CnATreeElement edgeTarget = edge.getTarget();
                 CnATreeElement target = edgeSource.equals(source) ? edgeTarget : edgeSource;
                 linkTargets.add(target);
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Link found, source: " + source.getTitle() + ", target: " + target.getTitle() + ", link type: " + linkTypeId);
+                if (log.isDebugEnabled()) {
+                    log.debug("Link found, source: " + source.getTitle() + ", target: " + target.getTitle() + ", link type: " + linkTypeId);
                 }
             }
         }
@@ -81,8 +81,8 @@ public class UndirectedVeriniceGraph extends AbstractVeriniceGraph implements Se
 
     @Override
     public Set<Edge> getEdgesByElementType(CnATreeElement source, String elementTypeId) {
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Returning edges of element: " + source.getTitle() + ", target type is: " + elementTypeId + "...");
+        if (log.isDebugEnabled()) {
+            log.debug("Returning edges of element: " + source.getTitle() + ", target type is: " + elementTypeId + "...");
         }
         Set<Edge> allEdgeSet = getGraph().edgesOf(source);
         Set<Edge> edgeSet = new HashSet<>();
@@ -92,8 +92,8 @@ public class UndirectedVeriniceGraph extends AbstractVeriniceGraph implements Se
             CnATreeElement target = edgeSource.equals(source) ? edgeTarget : edgeSource;
             if (elementTypeId == null || elementTypeId.equals(target.getTypeId())) {
                 edgeSet.add(edge);
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Edge found, source: " + source.getTitle() + ", target: " + target.getTitle() + ", edge type: " + edge.getType());
+                if (log.isDebugEnabled()) {
+                    log.debug("Edge found, source: " + source.getTitle() + ", target: " + target.getTitle() + ", edge type: " + edge.getType());
                 }
             }
         }
@@ -102,8 +102,8 @@ public class UndirectedVeriniceGraph extends AbstractVeriniceGraph implements Se
 
     @Override
     public Set<CnATreeElement> getLinkTargetsByElementType(CnATreeElement source, String elementTypeId) {
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Returning link targets of element: " + source.getTitle() + ", target type is: " + elementTypeId + "...");
+        if (log.isDebugEnabled()) {
+            log.debug("Returning link targets of element: " + source.getTitle() + ", target type is: " + elementTypeId + "...");
         }
         Set<Edge> edgeList = getGraph().edgesOf(source);
         Set<CnATreeElement> linkTargets = new HashSet<>();
@@ -113,8 +113,8 @@ public class UndirectedVeriniceGraph extends AbstractVeriniceGraph implements Se
             CnATreeElement target = edgeSource.equals(source) ? edgeTarget : edgeSource;
             if (elementTypeId == null || elementTypeId.equals(target.getTypeId())) {
                 linkTargets.add(target);
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Link found, source: " + source.getTitle() + ", target: " + target.getTitle() + ", target type: " + elementTypeId);
+                if (log.isDebugEnabled()) {
+                    log.debug("Link found, source: " + source.getTitle() + ", target: " + target.getTitle() + ", target type: " + elementTypeId);
                 }
             }
         }

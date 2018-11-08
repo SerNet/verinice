@@ -86,7 +86,7 @@ public class GSMBasicSecurityCheckAction extends RightsEnabledAction implements 
     public void doRun () {
         try{
             runSecurityCheck();
-            CnAElementFactory.getInstance().reloadModelFromDatabase();
+            CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
         }
         catch(Exception e){
             LOG.error("Error while security check.", e);

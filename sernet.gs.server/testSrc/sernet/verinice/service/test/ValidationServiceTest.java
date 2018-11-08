@@ -141,7 +141,7 @@ public class ValidationServiceTest extends CommandServiceProvider {
         } catch (CommandException e) {
             LOG.error("Error on updating element", e);
         }
-        topic = updater.getElement();
+        topic = updater.getMergedElement();
         checkElement(topic);
         //reload Element
         topic = loadElementByUuid(topic.getUuid(), RetrieveInfo.getPropertyInstance());

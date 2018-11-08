@@ -64,14 +64,7 @@ import sernet.verinice.service.commands.task.FindResponsiblePerson;
 @SuppressWarnings("serial")
 public class PrepareNotificationInfo extends GenericCommand {
 	
-	private transient Logger log = Logger.getLogger(PrepareNotificationInfo.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(PrepareNotificationInfo.class);
-        }
-        return log;
-    }
+	private static final Logger log = Logger.getLogger(PrepareNotificationInfo.class);
 
 	private Map<Configuration, NotificationInfo> resultMap = new HashMap<Configuration, NotificationInfo>();
 	
@@ -92,7 +85,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 		try {
 			lc = getCommandService().executeCommand(lc);
 		} catch (CommandException e) {
-		    getLog().error("Erroe while loading accounts", e);
+		    log.error("Erroe while loading accounts", e);
 			throw new RuntimeException(e);
 		}
 		
@@ -157,10 +150,10 @@ public class PrepareNotificationInfo extends GenericCommand {
     			}
     		}
         } catch (CommandException e) {
-            getLog().error("CommandException in collectExpirationNotifees", e);
+            log.error("CommandException in collectExpirationNotifees", e);
             throw new RuntimeException(e);
         } catch (RuntimeException e) {
-            getLog().error("RuntimeException in collectExpirationNotifees", e);
+            log.error("RuntimeException in collectExpirationNotifees", e);
             throw e;
         }
     }
@@ -174,7 +167,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 			try {
 				lc = getCommandService().executeCommand(lc);
 			} catch (CommandException e) {
-			    getLog().error("Error while loading account.", e);
+			    log.error("Error while loading account.", e);
 				throw new RuntimeException(e);
 			}
 			
@@ -304,7 +297,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 			}
 			catch (CommandException ce)
 			{
-			    getLog().error("Error while executing command: LoadCnAElementsByEntityIds", ce);
+			    log.error("Error while executing command: LoadCnAElementsByEntityIds", ce);
 				throw new RuntimeException("Error while executing command: LoadCnAElementsByEntityIds", ce);
 			}
 			
@@ -335,7 +328,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 				
 				res = frp.getFoundPersons();
 			} catch (CommandException e) {
-                getLog().error("Error while loading responsible person.", e);
+                log.error("Error while loading responsible person.", e);
 				throw new RuntimeException(e);
 			}
 		}
@@ -443,7 +436,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 		try {
 			gces = getCommandService().executeCommand(gces);
 		} catch (CommandException e) {
-            getLog().error("Error while loading changed elements.", e);
+            log.error("Error while loading changed elements.", e);
 			throw new RuntimeException(e);
 		}
 		
@@ -501,7 +494,6 @@ public class PrepareNotificationInfo extends GenericCommand {
 		for (Configuration c : configurations)
 		{
 			if (c.isNotificationEnabled()
-					&& c.isNotificationMeasureAssignment()
 					&& c.isNotificationGlobal())
 			{
 				globalNotifees.add(c);
@@ -516,7 +508,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 		try {
 			gces = getCommandService().executeCommand(gces);
 		} catch (CommandException e) {
-            getLog().error("Error while loading changed elements.", e);
+            log.error("Error while loading changed elements.", e);
 			throw new RuntimeException(e);
 		}
 		
@@ -530,7 +522,7 @@ public class PrepareNotificationInfo extends GenericCommand {
 					}
 					else
 					{
-						getLog().warn("Retrieved a child of an element that is supposed to be a BausteinUmsetzung instance that is not a MassnahmenUmsetzung.");
+						log.warn("Retrieved a child of an element that is supposed to be a BausteinUmsetzung instance that is not a MassnahmenUmsetzung.");
 					}
 				}
 				
@@ -556,7 +548,6 @@ public class PrepareNotificationInfo extends GenericCommand {
 			Configuration c = retrieveConfiguration(p);
 			if (c != null
 					&& c.isNotificationEnabled()
-					&& c.isNotificationMeasureAssignment()
 					&& !c.isNotificationGlobal())
 			{
 				addAssignedMeasure(c, mu);

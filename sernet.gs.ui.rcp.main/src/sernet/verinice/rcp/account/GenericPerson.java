@@ -59,7 +59,7 @@ public class GenericPerson {
     public String getParentName() {
         String name = null;
         if (person instanceof BpPerson || person instanceof PersonIso) {
-            name = ElementTitleCache.get(person.getParentId());
+            name = ElementTitleCache.getInstance().get(person.getParentId());
         }
         if (person instanceof Person) {
             name = HUITypeFactory.getInstance().getMessage(PersonenKategorie.TYPE_ID);

@@ -26,22 +26,22 @@ import org.eclipse.osgi.util.NLS;
  *
  */
 public class Messages extends NLS {
-	private static final String BUNDLE_NAME = "sernet.verinice.iso27k.rcp.messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "sernet.verinice.iso27k.rcp.messages"; //$NON-NLS-1$
     public static String NewObjectMenu;
-	public static String CatalogView_0;
-	public static String CatalogView_10;
-	public static String CatalogView_11;
-	public static String CatalogView_12;
-	public static String CatalogView_13;
-	public static String CatalogView_14;
-	public static String CatalogView_15;
-	public static String CatalogView_16;
-	public static String CatalogView_21;
-	public static String CatalogView_22;
-	public static String CatalogView_26;
-	public static String CatalogView_28;
-	public static String CatalogView_4;
-	public static String CatalogView_7;
+    public static String CatalogView_0;
+    public static String CatalogView_10;
+    public static String CatalogView_11;
+    public static String CatalogView_12;
+    public static String CatalogView_13;
+    public static String CatalogView_14;
+    public static String CatalogView_15;
+    public static String CatalogView_16;
+    public static String CatalogView_21;
+    public static String CatalogView_22;
+    public static String CatalogView_26;
+    public static String CatalogView_28;
+    public static String CatalogView_4;
+    public static String CatalogView_7;
     public static String CatalogView_AccessControl;
     public static String CatalogView_open_in_editor;
     public static String CatalogView_delete;
@@ -50,19 +50,19 @@ public class Messages extends NLS {
     public static String ExportDialog_1;
     public static String ExportDialog_2;
     public static String ExportDialog_3;
-	public static String ISMView_10;
-	public static String ISMView_11;
-	public static String ISMView_12;
-	public static String ISMView_2;
-	public static String ISMView_4;
+    public static String ISMView_10;
+    public static String ISMView_11;
+    public static String ISMView_12;
+    public static String ISMView_2;
+    public static String ISMView_4;
     public static String ISMView_5;
-	public static String ISMView_6;
-	public static String ISMView_7;
-	public static String ISMView_8;
-	public static String ISMView_9;
-	public static String ISMView_InitDatabase;
-	public static String ISMView_InitData;
-	public static String ISMView_LoadModel;
+    public static String ISMView_6;
+    public static String ISMView_7;
+    public static String ISMView_8;
+    public static String ISMView_9;
+    public static String ISMView_InitDatabase;
+    public static String ISMView_InitData;
+    public static String ISMView_LoadModel;
     public static String ISMViewFilterDialog_0;
     public static String ISMViewFilterDialog_1;
     public static String ISMViewFilterDialog_2;
@@ -70,30 +70,31 @@ public class Messages extends NLS {
     public static String ISMViewFilterDialog_4;
     public static String ISMViewFilterDialog_5;
     public static String ISMViewFilterDialog_6;
-	public static String ISMViewFilterDialog_7;
-	public static String LdapImportDialog_0;
+    public static String ISMViewFilterDialog_7;
+    public static String LdapImportDialog_0;
     public static String LdapImportDialog_1;
-	public static String LdapImportDialog_2;
+    public static String LdapImportDialog_2;
     public static String LdapImportDialog_28;
-	public static String LdapImportDialog_3;
+    public static String LdapImportDialog_3;
     public static String LdapImportDialog_30;
-	public static String LdapImportDialog_31;
-	public static String LdapImportDialog_35;
-	public static String LdapImportDialog_36;
-	public static String LdapImportDialog_37;
-	public static String LdapImportDialog_38;
-	public static String LdapImportDialog_39;
-	public static String LdapImportDialog_4;
+    public static String LdapImportDialog_31;
+    public static String LdapImportDialog_35;
+    public static String LdapImportDialog_36;
+    public static String LdapImportDialog_37;
+    public static String LdapImportDialog_38;
+    public static String LdapImportDialog_39;
+    public static String LdapImportDialog_4;
     public static String LdapImportDialog_40;
-	public static String LdapImportDialog_41;
-	public static String LdapImportDialog_42;
-	public static String LdapImportDialog_43;
-	public static String LdapImportDialog_44;
-	public static String LdapImportDialog_45;
-	public static String LdapImportDialog_46;
-	public static String LdapImportDialog_47;
-	public static String LdapImportDialog_48;
-	public static String LdapImportDialog_49;
+    public static String LdapImportDialog_41;
+    public static String LdapImportDialog_42;
+    public static String LdapImportDialog_43;
+    public static String LdapImportDialog_44;
+    public static String LdapImportDialog_45;
+    public static String LdapImportDialog_46;
+    public static String LdapImportDialog_47;
+    public static String LdapImportDialog_48;
+    public static String LdapImportDialog_49;
+    public static String Modernized_IT_Baseline_Protection;
     public static String LdapImportDialog_6;
     public static String LdapImportDialog_7;
     public static String SamtExportDialog_0;
@@ -114,12 +115,14 @@ public class Messages extends NLS {
     public static String SamtExportDialog_16;
     public static String SamtExportDialog_17;
     public static String JobScheduler_0;
+    public static String Deprecated_View;
+    public static String ISM_Catalog_View_Is_Deprecated;
 
-	static {
-		// initialize resource bundle
-		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
-	}
+    static {
+        // initialize resource bundle
+        NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+    }
 
-	private Messages() {
-	}
+    private Messages() {
+    }
 }

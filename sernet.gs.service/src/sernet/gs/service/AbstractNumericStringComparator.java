@@ -79,12 +79,7 @@ public abstract class AbstractNumericStringComparator<T> implements Comparator<T
 
     private static final long serialVersionUID = -9196544676244562514L;
     
-    private transient Logger log = Logger.getLogger(AbstractNumericStringComparator.class);
-    private Logger getLog(){
-        if (log == null)
-            log = Logger.getLogger(NumericStringComparator.class);
-        return log;
-    }
+    private static final Logger log = Logger.getLogger(AbstractNumericStringComparator.class);
     
     // Collator for basic string comparison
     private transient Collator collator = Collator.getInstance(Locale.getDefault()); 
@@ -185,7 +180,7 @@ public abstract class AbstractNumericStringComparator<T> implements Comparator<T
 							ret = comp;
 						}
 					} catch (Exception e) {
-						getLog().error("Fehler bei Stringvergleich: " + string1 + " : " + string2,e);
+						log.error("Fehler bei Stringvergleich: " + string1 + " : " + string2,e);
 					}
 				} else {
 					ret = 1;

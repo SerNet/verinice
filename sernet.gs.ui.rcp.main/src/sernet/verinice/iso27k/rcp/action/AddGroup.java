@@ -19,8 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp.action;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
@@ -42,178 +41,153 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.CnATreeElementBuildException;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.AssetGroup;
 import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.AuditGroup;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
-import sernet.verinice.model.iso27k.DocumentGroup;
-import sernet.verinice.model.iso27k.EvidenceGroup;
-import sernet.verinice.model.iso27k.ExceptionGroup;
-import sernet.verinice.model.iso27k.FindingGroup;
+import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kGroup;
-import sernet.verinice.model.iso27k.IncidentGroup;
-import sernet.verinice.model.iso27k.IncidentScenarioGroup;
-import sernet.verinice.model.iso27k.InterviewGroup;
-import sernet.verinice.model.iso27k.PersonGroup;
-import sernet.verinice.model.iso27k.ProcessGroup;
-import sernet.verinice.model.iso27k.RecordGroup;
-import sernet.verinice.model.iso27k.RequirementGroup;
-import sernet.verinice.model.iso27k.ResponseGroup;
-import sernet.verinice.model.iso27k.ThreatGroup;
-import sernet.verinice.model.iso27k.VulnerabilityGroup;
+import sernet.verinice.rcp.AddGroupMessageHelper;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * 
  */
 public class AddGroup extends Action implements IObjectActionDelegate, RightEnabledUserInteraction {
-	private IWorkbenchPart targetPart;
 
-	private static final Logger LOG = Logger.getLogger(AddGroup.class);
-	
-	public static final Map<String, String> TITLE_FOR_TYPE;
-	
-	static {
-		TITLE_FOR_TYPE = new HashMap<String, String>();
-		TITLE_FOR_TYPE.put(AssetGroup.TYPE_ID, Messages.getString("AddGroup.0")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(AuditGroup.TYPE_ID, Messages.getString("AddGroup.1")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(ControlGroup.TYPE_ID, Messages.getString("AddGroup.2")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(DocumentGroup.TYPE_ID, Messages.getString("AddGroup.3")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(EvidenceGroup.TYPE_ID, Messages.getString("AddGroup.4")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(ExceptionGroup.TYPE_ID, Messages.getString("AddGroup.5")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(FindingGroup.TYPE_ID, Messages.getString("AddGroup.6")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(IncidentGroup.TYPE_ID, Messages.getString("AddGroup.7")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(IncidentScenarioGroup.TYPE_ID, Messages.getString("AddGroup.8")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(InterviewGroup.TYPE_ID, Messages.getString("AddGroup.9")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(PersonGroup.TYPE_ID, Messages.getString("AddGroup.10")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(ProcessGroup.TYPE_ID, Messages.getString("AddGroup.11")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(RecordGroup.TYPE_ID, Messages.getString("AddGroup.12")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(RequirementGroup.TYPE_ID, Messages.getString("AddGroup.13")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(ResponseGroup.TYPE_ID, Messages.getString("AddGroup.14")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(ThreatGroup.TYPE_ID, Messages.getString("AddGroup.15")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(VulnerabilityGroup.TYPE_ID, Messages.getString("AddGroup.16")); //$NON-NLS-1$
-		TITLE_FOR_TYPE.put(Asset.TYPE_ID, Messages.getString("AddGroup.17")); //$NON-NLS-1$
-        
-	}
-	
-	private IISO27kGroup parent;
-	
-	private String typeId;
-	
-	public AddGroup() {
-		super();
-	}
+    private static final String MESSAGE_KEY_NEW_ELEMENT_GROUP = "AddGroup.19";
 
-	public AddGroup(IISO27kGroup element, String typeId, String childTypeId) {
-		super();
-		this.parent = element;
-		this.typeId = typeId;
-		this.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getImageForTypeId(childTypeId)));	
-		this.setText( TITLE_FOR_TYPE.get(typeId)!=null ? TITLE_FOR_TYPE.get(typeId) : Messages.getString("AddGroup.19") ); //$NON-NLS-1$
-	}
+    private static final Logger logger = Logger.getLogger(AddGroup.class);
 
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		this.targetPart = targetPart;
-	}
+    private IWorkbenchPart targetPart;
 
-	/* (non-Javadoc)
+    private CnATreeElement parent;
+
+    private String typeId;
+
+    public AddGroup() {
+        super();
+    }
+
+    public AddGroup(CnATreeElement element, String typeId, String childTypeId) {
+        super();
+        this.parent = element;
+        this.typeId = typeId;
+        this.setImageDescriptor(ImageDescriptor
+                .createFromImage(ImageCache.getInstance().getImageForTypeId(childTypeId)));
+        this.setText(Optional.ofNullable(AddGroupMessageHelper.getMessageForAddGroup(typeId))
+                .orElse(Messages.getString(MESSAGE_KEY_NEW_ELEMENT_GROUP)));
+    }
+
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        this.targetPart = targetPart;
+    }
+
+    /*
      * @see org.eclipse.jface.action.Action#run()
      */
+    @Override
     public void run() {
-    	try {
-    	    if(checkRights()){
-    			Object sel = null;
-    			if(targetPart!=null) {
-    				sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
-    				if(sel instanceof IISO27kGroup) {
-    					parent = (IISO27kGroup) sel;
-    				}
-    			} 			
-    			CnATreeElement newElement = null;
-    			if( parent != null) {		   
-    			    String currentType = this.typeId;
-    			    if(currentType==null) {
-    					// child groups have the same type as parents
-    			    	currentType = parent.getTypeId();
-    					if(parent instanceof Asset) {
-    						currentType = ControlGroup.TYPE_ID;
-    	                }
-    			    }
-    		        boolean inheritIcon = Activator.getDefault().getPreferenceStore()
-    		                .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);    			    
-    				newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) parent, currentType, null, inheritIcon);		
-    			}
-    			if (newElement != null) {
-    				EditorFactory.getInstance().openEditor(newElement);
-    			}
-			} else {
-			    throw new NotSufficientRightsException("Action not allowed for user");
-			}
-    	} catch (NotSufficientRightsException e){
-            LOG.error("Could not add element", e); //$NON-NLS-1$
+        if (!checkRights()) {
+            Exception e = new NotSufficientRightsException("Action not allowed for user");
+            logger.error("Could not add element", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.getString("AddElement.21")); //$NON-NLS-1$
-		} catch (Exception e) {
-			LOG.error("Could not add element group", e); //$NON-NLS-1$
-			ExceptionUtil.log(e, Messages.getString("AddGroup.18")); //$NON-NLS-1$
-		}
-    }
-	
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
-	 */
-	@SuppressWarnings("unchecked")
-	public void run(IAction action) {
-		run();
-	}
+        } else {
+            try {
+                if (targetPart != null) {
+                    Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider()
+                            .getSelection()).getFirstElement();
+                    if (sel instanceof Group<?>) {
+                        parent = (Group<?>) sel;
+                    }
+                }
+                if (parent != null) {
+                    createNewGroup(parent, typeId);
+                }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
-	 */
-	@SuppressWarnings("unchecked")
-	public void selectionChanged(IAction action, ISelection selection) {
-	    action.setEnabled(checkRights());
-		if(selection instanceof IStructuredSelection) {
-			Object sel = ((IStructuredSelection) selection).getFirstElement();
-			boolean allowed = false;
-			boolean enabled = false;
-			if (sel instanceof CnATreeElement) {
-				allowed = CnAElementHome.getInstance().isNewChildAllowed((CnATreeElement) sel);
-			}
-			if(sel instanceof Audit) {
-				enabled = false;
-                action.setText(Messages.getString("AddGroup.19"));
-            } else if(sel instanceof IISO27kGroup) {
-            	enabled = true;
-			    IISO27kGroup group = (IISO27kGroup) sel;
-			    String typeId0 = group.getChildTypes()[0];
-                if(group instanceof Asset) {
+            } catch (Exception e) {
+                logger.error("Could not add element group", e); //$NON-NLS-1$
+                ExceptionUtil.log(e, Messages.getString("AddGroup.18")); //$NON-NLS-1$
+            }
+        }
+    }
+
+    private static void createNewGroup(CnATreeElement parent, String typeId)
+            throws CommandException, CnATreeElementBuildException {
+        String currentType = typeId;
+        if (currentType == null) {
+            // child groups have the same type as parents
+            currentType = parent.getTypeId();
+            if (parent instanceof Asset) {
+                currentType = ControlGroup.TYPE_ID;
+            }
+        }
+        boolean inheritIcon = Activator.getDefault().getPreferenceStore()
+                .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);
+        CnATreeElement newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) parent,
+                currentType, null, inheritIcon);
+        Optional.ofNullable(newElement).ifPresent(EditorFactory.getInstance()::openEditor);
+    }
+
+    /*
+     * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+     */
+    public void run(IAction action) {
+        run();
+    }
+
+    /*
+     * @see
+     * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
+     * IAction, org.eclipse.jface.viewers.ISelection)
+     */
+    public void selectionChanged(IAction action, ISelection selection) {
+        action.setEnabled(checkRights());
+        if (selection instanceof IStructuredSelection) {
+            Object sel = ((IStructuredSelection) selection).getFirstElement();
+            boolean allowed = false;
+            boolean enabled = false;
+            if (sel instanceof CnATreeElement) {
+                allowed = CnAElementHome.getInstance().isNewChildAllowed((CnATreeElement) sel);
+            }
+            if (sel instanceof Audit) {
+                action.setText(Messages.getString(MESSAGE_KEY_NEW_ELEMENT_GROUP));
+            } else if (sel instanceof IISO27kGroup) {
+                enabled = true;
+                IISO27kGroup group = (IISO27kGroup) sel;
+                String typeId0 = group.getChildTypes()[0];
+                if (group instanceof Asset) {
                     typeId0 = Control.TYPE_ID;
                 }
-				action.setImageDescriptor(ImageDescriptor.createFromImage(ImageCache.getInstance().getImageForTypeId(typeId0)));	
-				action.setText( TITLE_FOR_TYPE.get(group.getTypeId())!=null ? TITLE_FOR_TYPE.get(group.getTypeId()) : Messages.getString("AddGroup.19") ); //$NON-NLS-1$
-			}
-			// Only change state when it is enabled, since we do not want to
+                action.setImageDescriptor(ImageDescriptor
+                        .createFromImage(ImageCache.getInstance().getImageForTypeId(typeId0)));
+                action.setText(Optional
+                        .ofNullable(AddGroupMessageHelper.getMessageForAddGroup(group.getTypeId()))
+                        .orElse(Messages.getString(MESSAGE_KEY_NEW_ELEMENT_GROUP))); // $NON-NLS-1$
+            }
+            // Only change state when it is enabled, since we do not want to
             // trash the enablement settings of plugin.xml
             if (action.isEnabled()) {
                 action.setEnabled(allowed && enabled);
             }
-		}
-	}
+        }
+    }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override

@@ -33,7 +33,7 @@ public class UpdateElementsForGstoolImport<T extends ITypedElement> extends Gene
 	private List<T> elements;
 	private transient IBaseDao<T, Serializable> dao;
 
-	private transient Logger log = Logger.getLogger(UpdateElementsForGstoolImport.class);
+	private static final Logger log = Logger.getLogger(UpdateElementsForGstoolImport.class);
 
 	private int flushThreshold = 50;
 
@@ -53,8 +53,8 @@ public class UpdateElementsForGstoolImport<T extends ITypedElement> extends Gene
 				i++;
 				if(i>flushThreshold) {
 				    elementCount += i;
-				    if(getLog().isDebugEnabled()) {
-				        getLog().debug("updated " + String.valueOf(elementCount) + " of " + elements.size() + " in total");
+				    if(log.isDebugEnabled()) {
+				        log.debug("updated " + String.valueOf(elementCount) + " of " + elements.size() + " in total");
                     }
 				    i=0;
 				    dao.flush();
@@ -85,13 +85,6 @@ public class UpdateElementsForGstoolImport<T extends ITypedElement> extends Gene
     public void clear() {
         super.clear();
         this.elements = null;
-    }
-
-    private Logger getLog() {
-        if(log == null) {
-            log = Logger.getLogger(UpdateElementsForGstoolImport.class);
-        }
-        return log;
     }
 
 }

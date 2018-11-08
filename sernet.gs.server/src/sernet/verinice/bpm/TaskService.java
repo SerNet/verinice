@@ -965,5 +965,14 @@ public class TaskService implements ITaskService {
     public void setTaskReminderBlacklist(Set<String> taskReminderBlacklist) {
         this.taskReminderBlacklist = taskReminderBlacklist;
     }
+    
+    @Override
+    public ITask findTask(String taskId) {
+        Task task = getTaskService().getTask(taskId);
+        if (task == null) {
+            return null;
+        }
+        return map(task);
+    }
 
 }

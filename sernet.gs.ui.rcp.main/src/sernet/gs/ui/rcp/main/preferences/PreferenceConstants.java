@@ -41,12 +41,14 @@ public class PreferenceConstants {
     public static final String INFO_CONTROLS_TRANSFORMED_TO_MODERNIZED_GS = "info_controls_transformed_to_modernized_gs"; //$NON-NLS-1$
     public static final String INFO_ELEMENTS_COPIED = "info_elements_copied"; //$NON-NLS-1$
     public static final String INFO_ELEMENTS_CUT = "info_elements_cut"; //$NON-NLS-1$
-    public static final String INFO_IMPORT_LDAP = "info_import_ldap"; //$NON-NLS-1$v
+    public static final String INFO_IMPORT_LDAP = "info_import_ldap"; //$NON-NLS-1$
     public static final String INFO_PROCESSES_STARTED = "info_processes_started"; //$NON-NLS-1$
     public static final String INFO_PROCESS_VALIDATE = "info_processes_validate"; //$NON-NLS-1$
     public static final String INFO_STATUS_DERIVED = "info_status_derived"; //$NON-NLS-1$
     public static final String INFO_SEARCH_ELEMENT_NOT_FOUND = "search_element_not_found"; //$NON-NLS-1$
     public static final String INFO_BP_MODELING_CONFIRMATION = "info_bp_modeling_confirmation"; //$NON-NLS-1$
+    public static final String INFO_BP_RISK_CONFIRMATION = "info_bp_risk_confirmation"; //$NON-NLS-1$
+
     public static final String SHOW_ALIEN_DECORATOR = "show_alien_decorator"; //$NON-NLS-1$
     public static final String SHOW_DBID_DECORATOR = "show_dbid_decorator"; //$NON-NLS-1$
     public static final String SHOW_GSMISM_DECORATOR = "show_gsmism_decorator"; //$NON-NLS-1$
@@ -97,14 +99,17 @@ public class PreferenceConstants {
     public static final String GS_DB_RESTOREDB_NAME = "gs_cna_restoredb_name";
     public static final String GS_DB_RESTOREDB_TODIR = "gs_cna_restoredb_todir";
 
+    public static final String BP_MODEL_SAFEGUARDS = "bp_model_safeguards";
+    public static final String BP_MODEL_DUMMY_SAFEGUARDS = "bp_model_dummy_safeguards";
+
     public static final String OPERATION_MODE = "gs_cna_operationmode";
     public static final String OPERATION_MODE_INTERNAL_SERVER = "gs_cna_operationmode_standalone";
     public static final String OPERATION_MODE_REMOTE_SERVER = "gs_cna_operationmode_withserver";
 
     public static final String VNSERVER_URI = "gs_cna_vnserver_uri";
-    public static final String VNSERVER_URI_INTERNAL_PORT= "8080";
-    public static final String VNSERVER_HOST_INTERNAL ="localhost";
-    public static final String VNSERVER_SCHEME_INTERNAL ="http";
+    public static final String VNSERVER_URI_INTERNAL_PORT = "8080";
+    public static final String VNSERVER_HOST_INTERNAL = "localhost";
+    public static final String VNSERVER_SCHEME_INTERNAL = "http";
     public static final String VNSERVER_URI_DEFAULT = "http://localhost:8080/veriniceserver";
     public static final String VNSERVER_USER = "gs_cna_serveruser";
     public static final String VNSERVER_PASS = "gs_cna_serverpass";
@@ -150,7 +155,6 @@ public class PreferenceConstants {
     public static final String HUI_TAGS = "hui_tags";
     public static final String HUI_TAGS_ALL = "hui_tags_all";
     public static final String HUI_TAGS_STRICT = "hui_tags_strict";
-    public static final String SHOW_LINK_MAKER_IN_EDITOR = "link_maker_in_editor";
 
     public static final String THUMBNAIL_SIZE = "thumbnail_size";
 
@@ -172,11 +176,12 @@ public class PreferenceConstants {
     public static final String SEARCH_CSV_EXPORT_SEPERATOR = "search_csv_export_seperator";
     public static final String SEARCH_INDEX_ON_STARTUP = "search_index_on_startup";
     public static final String SEARCH_DISABLE = "search_disable";
-    
+
     public static final String EXPORT_RISK_ANALYSIS = "export_risk_analysis";
-    
-    public static final String STANDALONE_UPDATENEWS_URL = 
-            "standalone_updatenews_url";
+
+    public static final String STANDALONE_UPDATENEWS_URL = "standalone_updatenews_url";
+
+    public static final String FILTER_INFORMATION_NETWORKS_BY_PROCEEDING = "filter_information_networks_by_proceeding";
 
     /**
      * Returns the DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name for a view
@@ -187,7 +192,8 @@ public class PreferenceConstants {
      * @return DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name
      */
     public static String getDontAskBeforeSwitch(@SuppressWarnings("rawtypes") final Class clazz) {
-        return new StringBuilder(clazz.getName()).append("_").append(PreferenceConstants.DONT_ASK_BEFORE_SWITCH_PERSPECTIVE).toString();
+        return new StringBuilder(clazz.getName()).append("_")
+                .append(PreferenceConstants.DONT_ASK_BEFORE_SWITCH_PERSPECTIVE).toString();
     }
 
     /**
@@ -199,7 +205,8 @@ public class PreferenceConstants {
      */
     @SuppressWarnings("rawtypes")
     public static String getSwitch(final Class clazz) {
-        return new StringBuilder(clazz.getName()).append("_").append(PreferenceConstants.SWITCH_PERSPECTIVE).toString();
+        return new StringBuilder(clazz.getName()).append("_")
+                .append(PreferenceConstants.SWITCH_PERSPECTIVE).toString();
     }
 
 }

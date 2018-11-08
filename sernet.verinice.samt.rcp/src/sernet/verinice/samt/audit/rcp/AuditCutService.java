@@ -25,6 +25,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.iso27k.service.CutService;
 import sernet.verinice.model.common.CnATreeElement;
@@ -35,17 +36,17 @@ import sernet.verinice.samt.audit.service.MoveLinks;
  *
  */
 public class AuditCutService extends CutService {
-    
+
     private static final Logger LOG = Logger.getLogger(AuditCutService.class);
-    
+
     /**
      * @author Daniel Murygin <dm[at]sernet[dot]de>
      * 
      */
-    public class LinkTask implements IPostProcessor {
+    public static class LinkTask implements IPostProcessor {
 
         private CnATreeElement linkTo;
-        
+
         /**
          * @param linkTo
          */
@@ -53,26 +54,30 @@ public class AuditCutService extends CutService {
             this.linkTo = linkTo;
         }
 
-        /* (non-Javadoc)
-         * @see sernet.verinice.iso27k.service.PasteService.IPostProcessor#process(java.util.Map)
+        /*
+         * @see
+         * sernet.verinice.iso27k.service.PasteService.IPostProcessor#process(
+         * java.util.Map)
          */
         @Override
-        public void process(List<String> copyUuidList,Map<String, String> sourceDestMap) {
+        public void process(ICommandService commandService, List<String> copyUuidList,
+                Map<String, String> sourceDestMap) {
             try {
-                MoveLinks moveLinksCommand = new MoveLinks(sourceDestMap,linkTo);          
-                getCommandService().executeCommand(moveLinksCommand);
+                MoveLinks moveLinksCommand = new MoveLinks(sourceDestMap, linkTo);
+                commandService.executeCommand(moveLinksCommand);
             } catch (CommandException e) {
                 LOG.error("Error while moving links on server.", e);
             }
         }
-       
+
     }
-    
+
     /**
      * @param group
      * @param elementList
      */
-    public AuditCutService(CnATreeElement group, CnATreeElement linkTo, List<CnATreeElement> elementList) {
+    public AuditCutService(CnATreeElement group, CnATreeElement linkTo,
+            List<CnATreeElement> elementList) {
         super(group, elementList);
         addPostProcessor(new LinkTask(linkTo));
     }

@@ -22,7 +22,6 @@ package sernet.verinice.interfaces.graph;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DirectedMultigraph;
 
@@ -38,7 +37,7 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class DirectedVeriniceGraph extends AbstractVeriniceGraph {
 
-    DirectedGraph<CnATreeElement, Edge>  directedGraph;
+    Graph<CnATreeElement, Edge>  directedGraph;
 
     public DirectedVeriniceGraph() {
         directedGraph = new DirectedMultigraph<>(Edge.class);
@@ -57,8 +56,8 @@ public class DirectedVeriniceGraph extends AbstractVeriniceGraph {
     @Override
     public Set<CnATreeElement> getLinkTargets(CnATreeElement source, String linkTypeId) {
 
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Returning link targets of element: " + source.getTitle() + ", link type is: " + linkTypeId + "...");
+        if (log.isDebugEnabled()) {
+            log.debug("Returning link targets of element: " + source.getTitle() + ", link type is: " + linkTypeId + "...");
         }
 
         Set<Edge> edgeList = directedGraph.outgoingEdgesOf(source);
@@ -66,8 +65,8 @@ public class DirectedVeriniceGraph extends AbstractVeriniceGraph {
         for (Edge edge : edgeList) {
             if (linkTypeId == null || linkTypeId.equals(edge.getType())) {
                 linkTargets.add(edge.getTarget());
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Link found, source: " + source.getTitle() + ", target: " + edge.getTarget().getTitle() + ", link type: " + linkTypeId);
+                if (log.isDebugEnabled()) {
+                    log.debug("Link found, source: " + source.getTitle() + ", target: " + edge.getTarget().getTitle() + ", link type: " + linkTypeId);
                 }
             }
         }
@@ -76,16 +75,16 @@ public class DirectedVeriniceGraph extends AbstractVeriniceGraph {
 
     @Override
     public Set<CnATreeElement> getLinkTargetsByElementType(CnATreeElement source, String elementTypeId) {
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Returning link targets of element: " + source.getTitle() + ", target type is: " + elementTypeId + "...");
+        if (log.isDebugEnabled()) {
+            log.debug("Returning link targets of element: " + source.getTitle() + ", target type is: " + elementTypeId + "...");
         }
         Set<Edge> edgeList = getGraph().edgesOf(source);
         Set<CnATreeElement> linkTargets = new HashSet<>();
         for (Edge edge : edgeList) {
             if (elementTypeId == null || elementTypeId.equals(edge.getTarget().getTypeId())) {
                 linkTargets.add(edge.getTarget());
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Link found, source: " + source.getTitle() + ", target: " + edge.getTarget().getTitle() + ", target type: " + elementTypeId);
+                if (log.isDebugEnabled()) {
+                    log.debug("Link found, source: " + source.getTitle() + ", target: " + edge.getTarget().getTitle() + ", target type: " + elementTypeId);
                 }
             }
         }
@@ -97,16 +96,16 @@ public class DirectedVeriniceGraph extends AbstractVeriniceGraph {
      */
     @Override
     public Set<Edge> getEdgesByElementType(CnATreeElement source, String elementTypeId) {
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Returning edges of element: " + source.getTitle() + ", target type is: " + elementTypeId + "...");
+        if (log.isDebugEnabled()) {
+            log.debug("Returning edges of element: " + source.getTitle() + ", target type is: " + elementTypeId + "...");
         }
         Set<Edge> allEdgeSet = directedGraph.outgoingEdgesOf(source);
         Set<Edge> edgeSet = new HashSet<>();
         for (Edge edge : allEdgeSet) {
             if (elementTypeId == null || elementTypeId.equals(edge.getTarget().getTypeId())) {
                 edgeSet.add(edge);
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Edge found, source: " + source.getTitle() + ", target: " + edge.getTarget().getTitle() + ", edge type: " + edge.getType());
+                if (log.isDebugEnabled()) {
+                    log.debug("Edge found, source: " + source.getTitle() + ", target: " + edge.getTarget().getTitle() + ", edge type: " + edge.getType());
                 }
             }
         }

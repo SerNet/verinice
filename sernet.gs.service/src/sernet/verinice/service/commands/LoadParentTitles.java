@@ -48,7 +48,7 @@ import sernet.verinice.model.iso27k.ISO27KModel;
 @SuppressWarnings("serial")
 public class LoadParentTitles extends GenericCommand {
 
-    private transient Logger log = Logger.getLogger(LoadParentTitles.class);
+    private static final Logger log = Logger.getLogger(LoadParentTitles.class);
     
     private static final List<String> TOP_LEVEL_TYPE_LIST = Arrays.asList(
             ISO27KModel.TYPE_ID,
@@ -115,11 +115,4 @@ public class LoadParentTitles extends GenericCommand {
         return uuidParentInformationMap;
     }
     
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(LoadParentTitles.class);
-        }
-        return log;
-    }
-
 }

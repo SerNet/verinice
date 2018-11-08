@@ -13,7 +13,6 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
     private Boolean isAdmin;
     private Boolean isLocalAdmin;
     private Boolean isScopeOnly;
-    private Boolean isDeactivated;
     private Integer scopeId;
     private String accountGroup;
 
@@ -104,17 +103,6 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
     }
 
     @Override
-    public Boolean isDeactivated() {
-        return isDeactivated;
-    }
-
-    @Override
-    public IAccountSearchParameter setIsDeactivated(Boolean isDeactivated) {
-        this.isDeactivated = isDeactivated;
-        return this;
-    }
-    
-    @Override
     public Integer getScopeId() {
         return scopeId;
     }
@@ -142,9 +130,6 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
         if (IS_LOCAL_ADMIN.equals(name)) {
             setIsLocalAdmin((Boolean) value);
         }
-        if(IS_DEACTIVATED.equals(name)) {
-            setIsDeactivated((Boolean) value);
-        }
         if(IS_SCOPE_ONLY.equals(name)) {
             setIsScopeOnly((Boolean) value);
         }
@@ -167,9 +152,6 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
             n++;
         }
         if (isLocalAdmin() != null) {
-            n++;
-        }
-        if(isDeactivated()!=null) {
             n++;
         }
         if(isScopeOnly()!=null) {

@@ -29,7 +29,7 @@ import sernet.verinice.model.iso27k.Process;
  */
 public class LoadReportProcessesWithRisk extends GenericCommand implements ICachedCommand{
 
-    private transient Logger log = Logger.getLogger(LoadReportProcessesWithRisk.class);
+    private static final Logger log = Logger.getLogger(LoadReportProcessesWithRisk.class);
     
    private List<List<String>> result = new ArrayList<List<String>>();
    
@@ -43,13 +43,6 @@ public class LoadReportProcessesWithRisk extends GenericCommand implements ICach
      "risk",  
    };
     
-    public Logger getLog() {
-        if(log==null) {
-            log = Logger.getLogger(LoadReportProcessesWithRisk.class);
-        }
-        return log;
-    }
-
 	private String typeId = Process.TYPE_ID;
     private Integer rootElement;
     private List<CnATreeElement> elements;
@@ -64,7 +57,7 @@ public class LoadReportProcessesWithRisk extends GenericCommand implements ICach
 
     public void execute() {
         if(!resultInjectedFromCache){
-            getLog().debug("LoadReportElements for root_object " + rootElement);
+            log.debug("LoadReportElements for root_object " + rootElement);
 
             LoadPolymorphicCnAElementById command = new LoadPolymorphicCnAElementById(new Integer[] {rootElement});
             try {
@@ -93,7 +86,7 @@ public class LoadReportProcessesWithRisk extends GenericCommand implements ICach
                     }
                     this.elements.addAll(elementLoader.getElements());
                 } catch (CommandException e1) {
-                    getLog().error("Error while getting elements", e1);
+                    log.error("Error while getting elements", e1);
                 }
             }
 
@@ -147,7 +140,7 @@ public class LoadReportProcessesWithRisk extends GenericCommand implements ICach
                     }
                 }
                 
-                getLog().debug("Total risk for process " + cnATreeElement.getDbId() + ": " + totalRisk);
+                log.debug("Total risk for process " + cnATreeElement.getDbId() + ": " + totalRisk);
                 
                 ArrayList<String> row = new ArrayList<String>();
                 ProtectionRequirementsValueAdapter process = new ProtectionRequirementsValueAdapter(cnATreeElement);
@@ -213,8 +206,8 @@ public class LoadReportProcessesWithRisk extends GenericCommand implements ICach
     public void injectCacheResult(Object result) {
         this.result = (ArrayList<List<String>>)result;
         resultInjectedFromCache = true;
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(log.isDebugEnabled()){
+            log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 

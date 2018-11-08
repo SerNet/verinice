@@ -24,7 +24,6 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.IncidentScenarioGroup;
@@ -36,8 +35,7 @@ import sernet.verinice.service.commands.CreateLink;
 
 /**
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 public class CreateScenario extends GenericCommand {
@@ -55,21 +53,23 @@ public class CreateScenario extends GenericCommand {
     public CreateScenario(Threat threat, Vulnerability vuln) {
         threatdbId = threat.getDbId();
         vulndbId = vuln.getDbId();
-        
+
     }
-    
+
     /**
      * @param threat
      * @return
      */
     private Organization findOrganization(CnATreeElement elmt) {
-        if (elmt.getParent().getTypeId().equals(Organization.TYPE_ID)) {
+        if (elmt.getParent().isOrganization()) {
             return getDaoFactory().getDAO(Organization.class).findById(elmt.getParent().getDbId());
         }
         return findOrganization(elmt.getParent());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
      */
     public void execute() {
@@ -78,33 +78,41 @@ public class CreateScenario extends GenericCommand {
         IBaseDao<Vulnerability, Serializable> vulnDao = getDaoFactory().getDAO(Vulnerability.class);
         Threat threat = threatDao.findById(threatdbId);
         Vulnerability vulnerability = vulnDao.findById(vulndbId);
-        
+
         Organization org = findOrganization(threat);
         IncidentScenarioGroup group = findScenarioGroup(org);
-        if (group == null){
+        if (group == null) {
             return;
         }
         try {
-            
-            CreateElement<IncidentScenario> cmd = new CreateElement<IncidentScenario>(group, IncidentScenario.class, true);
+
+            CreateElement<IncidentScenario> cmd = new CreateElement<>(group, IncidentScenario.class,
+                    true);
             cmd = getCommandService().executeCommand(cmd);
             IncidentScenario incidentScenario = cmd.getNewElement();
-            
+
             StringBuilder sb = new StringBuilder();
             sb.append(Messages.CreateScenario_2);
-            sb.append(threat.getTitle().substring(0, threat.getTitle().length()< maxTitleLength ? threat.getTitle().length() : (maxTitleLength - 1)  ));
-            sb.append(threat.getTitle().length()<maxTitleLength ? "" : "[...]"); //$NON-NLS-1$ //$NON-NLS-2$
+            sb.append(threat.getTitle().substring(0,
+                    threat.getTitle().length() < maxTitleLength ? threat.getTitle().length()
+                            : (maxTitleLength - 1)));
+            sb.append(threat.getTitle().length() < maxTitleLength ? "" : "[...]"); //$NON-NLS-1$ //$NON-NLS-2$
             sb.append(" - "); //$NON-NLS-1$
-            
-            sb.append(vulnerability.getTitle().substring(0, vulnerability.getTitle().length()<maxTitleLength ? vulnerability.getTitle().length() : (maxTitleLength - 1)));
-            sb.append(vulnerability.getTitle().length()<maxTitleLength ? "" : "[...]"); //$NON-NLS-1$ //$NON-NLS-2$
-            
+
+            sb.append(vulnerability.getTitle().substring(0,
+                    vulnerability.getTitle().length() < maxTitleLength
+                            ? vulnerability.getTitle().length()
+                            : (maxTitleLength - 1)));
+            sb.append(vulnerability.getTitle().length() < maxTitleLength ? "" : "[...]"); //$NON-NLS-1$ //$NON-NLS-2$
+
             incidentScenario.setTitel(sb.toString());
-            
-            CreateLink<IncidentScenario, Threat> cmd2 = new CreateLink<>(incidentScenario, threat, THREAT_RELATION_ID );
+
+            CreateLink<IncidentScenario, Threat> cmd2 = new CreateLink<>(incidentScenario, threat,
+                    THREAT_RELATION_ID);
             getCommandService().executeCommand(cmd2);
 
-            CreateLink<IncidentScenario, Vulnerability> cmd3 = new CreateLink<>(incidentScenario, vulnerability, VULN_RELATION_ID);
+            CreateLink<IncidentScenario, Vulnerability> cmd3 = new CreateLink<>(incidentScenario,
+                    vulnerability, VULN_RELATION_ID);
             getCommandService().executeCommand(cmd3);
 
             this.incScen = incidentScenario;
@@ -120,17 +128,15 @@ public class CreateScenario extends GenericCommand {
     private IncidentScenarioGroup findScenarioGroup(Organization org) {
         Set<CnATreeElement> children = org.getChildren();
         for (CnATreeElement cnATreeElement : children) {
-            if (cnATreeElement.getTypeId().equals(IncidentScenarioGroup.TYPE_ID)){
+            if (cnATreeElement.getTypeId().equals(IncidentScenarioGroup.TYPE_ID)) {
                 return (IncidentScenarioGroup) cnATreeElement;
             }
         }
         return null;
     }
-    
+
     public IncidentScenario getNewElement() {
         return incScen;
     }
 
 }
-
-

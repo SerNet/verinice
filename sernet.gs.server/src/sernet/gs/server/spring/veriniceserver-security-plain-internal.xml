@@ -137,7 +137,7 @@
 
     <bean id="accessDeniedHandler"
         class="org.springframework.security.ui.AccessDeniedHandlerImpl">
-        <property name="errorPage" value="/auth/login.xhtml" />
+        <property name="errorPage" value="/auth/access-denied.xhtml" />
     </bean>
 
     <bean id="logoutFilter" class="org.springframework.security.ui.logout.LogoutFilter">
@@ -166,16 +166,16 @@
                 <security:intercept-url pattern="/auth/j_verinice_security_check"
                     access="ROLE_ANONYMOUS" />
                 <security:intercept-url pattern="/auth/login.xhtml"
-                    access="ROLE_ANONYMOUS" />
+                    access="ROLE_ANONYMOUS,ROLE_USER,ROLE_WEB" />
                 <security:intercept-url pattern="/edit/**"
+                    access="ROLE_WEB" />
+                <security:intercept-url pattern="/dashboard/**"
+                    access="ROLE_WEB" />
+                <security:intercept-url pattern="/misc/**"
                     access="ROLE_WEB" />
                 <security:intercept-url pattern="/service/**"
                     access="ROLE_USER" />
                 <security:intercept-url pattern="/sync/**"
-                    access="ROLE_USER" />
-                <security:intercept-url pattern="/dashboard/**"
-                    access="ROLE_USER" />
-                <security:intercept-url pattern="/misc/**"
                     access="ROLE_USER" />
             </security:filter-invocation-definition-source>
         </property>

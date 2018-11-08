@@ -61,7 +61,7 @@ public class LinkTableGraphCommand extends GraphCommand {
 
     private static final long serialVersionUID = 9088625615234598118L;
 
-    private transient Logger log = Logger.getLogger(LinkTableGraphCommand.class);
+    private static final Logger log = Logger.getLogger(LinkTableGraphCommand.class);
     
     private static final NumericStringComparator NSC = new NumericStringComparator();
 
@@ -121,29 +121,29 @@ public class LinkTableGraphCommand extends GraphCommand {
         try {
             doExecute();
         } catch (CommandException e) {
-            getLog().error("Error while loading reference properties", e);
+            log.error("Error while loading reference properties", e);
             throw new RuntimeCommandException(e);
         }  
     }
 
     private void doExecute() throws CommandException {
-        getLog().debug("Collecting reference properties in link table configuration...");
+        log.debug("Collecting reference properties in link table configuration...");
         collectReferencePropertyTypeIds();
         if (referencePropertyTypeIds.isEmpty()) {
             // no reference properties in configuration, nothing to do
-            getLog().debug("No reference properties found.");
+            log.debug("No reference properties found.");
             return;
         }
         
-        getLog().debug("Collecting reference ids in verinice graph...");
+        log.debug("Collecting reference ids in verinice graph...");
         collectReferencedEntityIds();
         if (referenceIds.isEmpty()) {
             // no reference properties in configuration, nothing to do
-            getLog().debug("No reference ids found.");
+            log.debug("No reference ids found.");
             return;
         }
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Loading " + referenceIds.size() + " references...");
+        if (log.isDebugEnabled()) {
+            log.debug("Loading " + referenceIds.size() + " references...");
         } 
         
         loadReferencedEntities();
@@ -177,8 +177,8 @@ public class LinkTableGraphCommand extends GraphCommand {
         if (propertyType.isReference() && propertyTypeIdsInConfiguration.contains(propertyType.getId())) {
             referenceElementTypeIds.add(entityType.getId());
             referencePropertyTypeIds.add(propertyType.getId());
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Reference property found, element type: " + entityType.getId() + ", property type: " + propertyType.getId());
+            if (log.isDebugEnabled()) {
+                log.debug("Reference property found, element type: " + entityType.getId() + ", property type: " + propertyType.getId());
             }
         }
     }
@@ -215,8 +215,8 @@ public class LinkTableGraphCommand extends GraphCommand {
             if(isPropertyValue(property)) {
                 Integer entityDbId = Integer.valueOf(property.getPropertyValue());
                 referenceIds.add(entityDbId);
-                if (getLog().isDebugEnabled()) {
-                    getLog().debug("Reference id found, property type: " + property.getPropertyType() + ", entity db id: " + entityDbId);
+                if (log.isDebugEnabled()) {
+                    log.debug("Reference id found, property type: " + property.getPropertyType() + ", entity db id: " + entityDbId);
                 }
             }
         }
@@ -236,12 +236,12 @@ public class LinkTableGraphCommand extends GraphCommand {
         List<Entity> entities = command.getEntities();
         for (Entity entity : entities) {
             if(!Person.TYPE_ID.equals(entity.getEntityType())) {
-                getLog().error("Referenced entity type is not supported. The only supported type is: " + Person.TYPE_ID );
+                log.error("Referenced entity type is not supported. The only supported type is: " + Person.TYPE_ID );
             }
             String value = Person.getTitel(entity);
             referenceValueMap.put(entity.getDbId(), value);
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Reference values loaded, entity db id: " + entity.getDbId() + ", value: " + value);
+            if (log.isDebugEnabled()) {
+                log.debug("Reference values loaded, entity db id: " + entity.getDbId() + ", value: " + value);
             }
         }
     }
@@ -284,8 +284,8 @@ public class LinkTableGraphCommand extends GraphCommand {
         
         String referenceValue = sortAndConvertListToString(values);                 
         entity.addToReferenceValueCache(propertyTypeId, referenceValue);
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Reference value added to cache: " + referenceValue + ", entity db id: " + entity.getDbId() + ", property type id: " + propertyTypeId);
+        if (log.isDebugEnabled()) {
+            log.debug("Reference value added to cache: " + referenceValue + ", entity db id: " + entity.getDbId() + ", property type id: " + propertyTypeId);
         }
     }
 
@@ -311,10 +311,4 @@ public class LinkTableGraphCommand extends GraphCommand {
         return HUITypeFactory.getInstance();
     }
 
-    private Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(LinkTableGraphCommand.class);
-        }
-        return log;
-    }  
 }

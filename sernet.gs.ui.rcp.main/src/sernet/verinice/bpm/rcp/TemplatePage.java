@@ -160,7 +160,7 @@ public class TemplatePage extends WizardPage {
         try {
             IndividualServiceParameter parameter = ((IndividualProcessWizard) getWizard()).getParameter();                  
             getTemplateMap().put(parameter.getTitle(), parameter);
-            String value = IndividualProcessWizard.toString(templateMap);
+            String value = Base64Utils.encode(templateMap);
             getBpmPreferences().put(IndividualProcessWizard.PREFERENCE_NAME, value);
             getPreferences().flush();
             setMessage(Messages.TemplatePage_13 + parameter.getTitle());
@@ -174,7 +174,7 @@ public class TemplatePage extends WizardPage {
         if(templateMap==null) {
             String value = getBpmPreferences().get(IndividualProcessWizard.PREFERENCE_NAME, null);
             if (value != null) {
-                templateMap = (Hashtable<String, IndividualServiceParameter>) IndividualProcessWizard.fromString(value);
+                templateMap = (Hashtable<String, IndividualServiceParameter>) Base64Utils.decode(value);
             } else {
                 templateMap = new Hashtable<String, IndividualServiceParameter>();
             }

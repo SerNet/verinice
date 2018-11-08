@@ -76,7 +76,7 @@ import sernet.verinice.interfaces.ILogPathService;
 import sernet.verinice.interfaces.IMain;
 import sernet.verinice.interfaces.IReportLocalTemplateDirectoryService;
 import sernet.verinice.interfaces.IVeriniceConstants;
-import sernet.verinice.interfaces.IVersionConstants;
+import sernet.verinice.interfaces.VersionConstants;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportService;
@@ -563,10 +563,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
         return odaDriver;
     }
 
-    public static void initDatabase() {
-        initDatabase(JobScheduler.getInitMutex(), new StatusResult());
-    }
-
     public static void initDatabase(ISchedulingRule mutex, final StatusResult result) {
         WorkspaceJob initDbJob = new WorkspaceJob(Messages.Activator_InitDatabase) {
             @Override
@@ -582,7 +578,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
                     } else {
                         CnAWorkspace.getInstance().createDatabaseConfig();
                         Activator.inheritVeriniceContextState();
-                        Activator.checkDbVersion();
                     }
                 } catch (Exception e) {
                     LOG.error("Error while initializing database.", e); //$NON-NLS-1$
@@ -661,8 +656,9 @@ public class Activator extends AbstractUIPlugin implements IMain {
         };
         timeout.start();
         try {
-            DbVersion command = new DbVersion(IVersionConstants.COMPATIBLE_CLIENT_VERSION);
+            DbVersion command = new DbVersion(VersionConstants.COMPATIBLE_CLIENT_VERSION);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
+            ServiceFactory.lookupModelingMigrationService().migrateModeling();
             done[0] = true;
         } catch (CommandException e) {
             done[0] = true;

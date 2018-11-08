@@ -231,7 +231,7 @@ public class GroupByTagHandler extends RightsEnabledHandler  {
             GroupByTags command = new GroupByTags(group.getUuid(), tags);
             try {
                 ServiceFactory.lookupCommandService().executeCommand(command);
-                CnAElementFactory.getInstance().reloadModelFromDatabase();
+                CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
             } catch (CommandException ex) {
                 LOG.error("Error while grouping by tags", ex); //$NON-NLS-1$
                 MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.GroupByTagHandler_9, Messages.GroupByTagHandler_10);               

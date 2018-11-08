@@ -1,0 +1,159 @@
+buildscript {
+	repositories {
+		mavenLocal()
+		mavenCentral()
+	    maven {
+      		url 'http://oss.sonatype.org/content/repositories/snapshots/'
+    	}
+	}
+	dependencies {
+		classpath 'org.standardout:bnd-platform:1.7.0-SNAPSHOT'
+	}
+}
+
+apply plugin: 'org.standardout.bnd-platform'
+
+repositories {
+	jcenter()
+	maven {
+		url 'http://conjars.org/repo/'
+	}
+}
+
+platform {
+	// configure proper names for the p2 update site
+	categoryId = 'Verinice-Eclipse-Libs'
+	categoryName = 'Verinice Eclipse Libs'
+
+	generatePlatformFeature = false
+
+	defaultQualifier = ''
+	useBndHashQualifiers = false
+	useFeatureHashQualifiers = false
+	defaultQualifierMap.prefix = ''
+	
+	// seems to be unused 
+	feature(id: 'inetlib', name: 'inetlib', version: '1.1.1') {
+		plugin('com.axway.ats.gnu.classpath.ext:inetlib:1.1.1') {
+			bnd {
+				instruction 'Eclipse-RegisterBuddy', 'com.springsource.javax.activation'
+				optionalImport 'gnu.inet.http'
+				optionalImport 'gnu.inet.http.event'
+				optionalImport 'gnu.inet.util'
+				optionalImport 'javax.naming.ldap'
+				optionalImport 'javax.net.ssl'
+				optionalImport 'javax.security.auth.callback'
+				optionalImport 'javax.security.sasl'
+			}
+		}
+	}
+		
+	feature(id: 'antlr', name: 'antlr', version: '2.7.7') {
+		plugin('antlr:antlr:2.7.7')
+	}
+	
+	feature(id: 'net.sf.ehcache', name: 'ehcache', version: '2.10.4') {
+		plugin('net.sf.ehcache:ehcache:2.10.4')
+	}
+
+	feature(id: 'org.jgrapht', name: 'jgrapht-core', version: '1.2.0') {
+		plugin('org.jgrapht:jgrapht-core:1.2.0') 
+	}
+
+	feature(id: 'org.jdom', name: 'jdom', version: '2.0.2') {
+		plugin('org.jdom:jdom:2.0.2')
+		plugin('jaxen:jaxen:1.1.6')
+	}
+	
+	feature(id: 'org.hibernate', name: 'hibernate-core', version: '3.6.11') {
+		plugin('org.hibernate:hibernate-core:3.6.10.Final') {
+			bnd {
+				optionalImport 'net.sf.cglib.beans'
+				optionalImport 'net.sf.cglib.core'
+				optionalImport 'net.sf.cglib.proxy'
+				optionalImport 'net.sf.cglib.reflect'
+				optionalImport 'net.sf.cglib.transform'
+				optionalImport 'net.sf.cglib.transform.impl'
+				
+				instruction 'Eclipse-BuddyPolicy', 'registered'
+			}
+		}
+		plugin('dom4j:dom4j:1.6.1') {
+			bnd {
+				optionalImport 'com.sun.msv.datatype'
+				optionalImport 'com.sun.msv.datatype.xsd'
+				optionalImport 'org.gjt.xpp'
+				optionalImport 'org.jaxen'
+				optionalImport 'org.jaxen.dom4j'
+				optionalImport 'org.jaxen.pattern'
+				optionalImport 'org.jaxen.saxpath'
+				optionalImport 'org.relaxng.datatype'
+				optionalImport 'org.xmlpull.v1'
+			}
+		}
+	}
+	
+	feature(id: 'jfree', name: 'jfreechart-swt', version: '1.0.0') {
+		plugin('jfree:jfreechart-swt:1.0.9') {
+			exclude group: 'org.eclipse.swt', module: 'org.eclipse.swt.cocoa.macosx.x86_64'
+		}
+		plugin('jfree:jfreechart:1.0.13')
+	}
+
+	feature(id: 'lowagie', name: 'lowagie', version: '2.1.7') {
+		plugin('org.eclipse.birt.runtime.3_7_1:com.lowagie.text:2.1.7')
+	}
+
+	feature(id: 'com.opencsv', name: 'opencsv', version: '4.1.0') {
+		plugin('com.opencsv:opencsv:4.1') {
+			exclude group: 'commons-logging', module: 'commons-logging'
+		}
+	}
+
+	feature(id: 'threetenbp', name: 'threetenbp', version: '1.3.6') {
+		plugin('org.threeten:threetenbp:1.3.6')
+	}
+
+	feature(id: 'pax', name: 'pax', version: '0.6.0') {
+		plugin fileTree("${project.projectDir}/pax/") {
+   			include '**/*.jar'
+   			exclude '**/*sources.jar'
+		}
+	}
+
+	feature(id: 'apache', name: 'apache', version: '0.6.0') {
+		plugin fileTree("${project.projectDir}/apache/") {
+   			include '**/*.jar'
+   			exclude '**/*sources.jar'
+		}
+	}
+
+	feature(id: 'w3c', name: 'w3c', version: '0.6.0') {
+		plugin fileTree("${project.projectDir}/w3c/") {
+   			include '**/*.jar'
+   			exclude '**/*sources.jar'
+		}
+	}
+
+	feature(id: 'spring', name: 'spring', version: '0.6.0') {
+		plugin fileTree("${project.projectDir}/spring/") {
+   			include '**/*.jar'
+   			exclude '**/*sources.jar'
+		}
+	}
+
+/*
+	feature(id: 'gemini-blueprint', name: 'gemini-blueprint', version: '1.0.0') {
+		plugin('org.eclipse.gemini.blueprint:gemini-blueprint-extender:2.1.0.RELEASE')
+		plugin('org.eclipse.gemini.blueprint:gemini-blueprint-io:2.1.0.RELEASE')
+		plugin('org.eclipse.gemini.blueprint:gemini-blueprint-extensions:2.1.0.RELEASE')
+		plugin('org.apache.servicemix.bundles:org.apache.servicemix.bundles.aopalliance:1.0_6')
+		plugin('org.apache.servicemix.bundles:org.apache.servicemix.bundles.spring-aop:4.3.7.RELEASE_1')
+		plugin('org.apache.servicemix.bundles:org.apache.servicemix.bundles.spring-orm:4.3.7.RELEASE_1')
+	}
+*/
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '4.7'
+}

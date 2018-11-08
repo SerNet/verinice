@@ -1,0 +1,49 @@
+# Troubleshooting
+## vDesigner startet nicht in macOS
+Unter macOS kann es sein, dass der Start des vDesigners mit einer der folgenden
+Fehlermeldung fehlschlägt:
+
+### Die Anwendung "vDesigner" ist beschädigt
+Bitte entfernen Sie in diesem Fall die "Extended File Attributes" des
+Verzeichnisses "vdesigner.app":
+
+Dies wird wie folgt umgesetzt:
+
+-	öffnen Sie die "Terminal.app"
+-	geben Sie folgenden Befehl ein:
+
+		xattr -rc /path/to/vdesigner/vdesigner.app
+
+-	schließen Sie die Terminal-Anwendung (Klick auf "x")
+-	ein Doppelklick im Finder auf die Datei "vdesigner.app" sollte die Anwendung nun starten
+
+### Die Anwendung "vDesigner" kann nicht geöffnet
+In diesem Fall muss die auszuführende Datei als solche gekennzeichnet werden.
+Dies wird wie folgt umgesetzt:
+
+-	öffnen Sie die "Terminal.app"
+-	navigieren Sie in das Installationsverzeichnis des vDesigners (Verzeichnis
+	das die Datei "vdesigner.app" beinhaltet) mit Hilfe des Befehls "cd"
+-	geben Sie folgenden Befehl ein:
+
+		cd vdesigner.app/Contents/MacOS
+
+- setzen Sie das executable Flag für die vDesigner-Datei wie folgt:
+
+		chmod +x vdesigner
+
+-	schließen Sie die Terminal-Anwendung (Klick auf "x")
+-	ein Doppelklick im Finder auf die Datei vdesigner.app sollte die Anwendung nun starten
+
+# Fragen?
+Bei Fragen steht Ihnen u.a. das verinice-Forum zur Verfügung:
+
+https://verinice.com/forum/
+
+# Kontakt
+SerNet GmbH
+Bahnhofsallee 1b
+37081 Göttingen
+
+verinice@sernet.de
+https://www.sernet.de

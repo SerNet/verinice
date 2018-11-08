@@ -20,7 +20,6 @@
 package sernet.verinice.bpm.qm;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,55 +34,59 @@ import sernet.verinice.model.bpm.ProcessInformation;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class IsaQmServiceDummy implements IIsaQmService {
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IIsaQmService#startProcessesForElement(java.lang.String, java.lang.Object, java.lang.String)
+
+    /*
+     * @see
+     * sernet.verinice.interfaces.bpm.IIsaQmService#startProcessesForElement(
+     * java.lang.String, java.lang.Object, java.lang.String)
      */
     @Override
-    public IProcessStartInformation startProcessesForElement(String uuid, Object feedback, String priority) {
+    public IProcessStartInformation startProcessesForElement(String uuid, Object feedback,
+            String priority) {
         return new ProcessInformation(0);
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IIsaQmService#startProcessesForControl(java.lang.String)
+
+    /*
+     * @see
+     * sernet.verinice.interfaces.bpm.IIsaQmService#startProcessesForControl(
+     * java.lang.String)
      */
     @Override
-    public IProcessStartInformation startProcessesForElement(String controlUuid, String uuidAudit, Object comment, String priority) {
+    public IProcessStartInformation startProcessesForElement(String controlUuid, String uuidAudit,
+            Object comment, String priority) {
         return new ProcessInformation(0);
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findProcessDefinitionId(java.lang.String)
+
+    /*
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
+     * findProcessDefinitionId(java.lang.String)
      */
     @Override
     public String findProcessDefinitionId(String processDefinitionKey) {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#startProcess(java.lang.String, java.util.Map)
+    /*
+     * @see
+     * sernet.verinice.interfaces.bpm.IProcessServiceGeneric#startProcess(java.
+     * lang.String, java.util.Map)
      */
     @Override
     public void startProcess(String processDefinitionKey, Map<String, ?> variables) {
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#deleteProcess(java.lang.String)
+    /*
+     * @see
+     * sernet.verinice.interfaces.bpm.IProcessServiceGeneric#deleteProcess(java.
+     * lang.String)
      */
     @Override
     public void deleteProcess(String id) {
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#isActive()
-     */
-    @Override
-    public boolean isActive() {
-        return false;
-    } 
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findAllProcessDefinitions()
+    /*
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#
+     * findAllProcessDefinitions()
      */
     @Override
     public Set<KeyMessage> findAllProcessDefinitions() {

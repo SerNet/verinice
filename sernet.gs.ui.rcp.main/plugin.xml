@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.2"?>
 <plugin>
+   <extension-point id="splashExtension" name="Splash Extensions" schema="schema/splashExtension.exsd"/>
 
    <extension
          id="application"
@@ -20,11 +21,6 @@
             id="sernet.gs.ui.rcp.main.perspective"
             name="%perspective.name">
       </perspective>
-      <perspective
-            class="sernet.gs.ui.rcp.main.PerspectiveDS"
-            icon="icons/shield.png"
-            id="sernet.gs.ui.rcp.main.dsperspective"
-            name="%perspective.name.0"/>
       <perspective
             class="sernet.verinice.iso27k.rcp.Iso27kPerspective"
             icon="icons/sweetie-verinice/png/16-arrow-branch-bgr.png"
@@ -95,13 +91,6 @@
             icon="icons/tree_explorer.gif"
             id="sernet.gs.ui.rcp.main.views.bsimodelview"
             name="%view.name.2"/>
-      <view
-            allowMultiple="false"
-            category="sernet.gs.ui.rcp.main.views"
-            class="sernet.gs.ui.rcp.main.bsi.views.DSModelView"
-            icon="icons/shield.png"
-            id="sernet.gs.ui.rcp.main.views.dsmodelview"
-            name="%view.name.3"/>
       <view
             allowMultiple="false"
             category="sernet.gs.ui.rcp.main.views"
@@ -309,6 +298,24 @@
             name="%command.name.newGroup">
       </command>
       <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="%command.description.newRequirementGroup"
+            id="sernet.verinice.bp.rcp.commands.newRequirementGroup"
+            name="%command.name.newRequirementGroup">
+      </command>
+      <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="%command.description.newThreatGroup"
+            id="sernet.verinice.bp.rcp.commands.newThreatGroup"
+            name="%command.name.newThreatGroup">
+      </command>
+      <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="%command.description.newSafeguardGroup"
+            id="sernet.verinice.bp.rcp.commands.newSafeguardGroup"
+            name="%command.name.newSafeguardGroup">
+      </command>
+      <command
       		categoryId="sernet.gs.ui.rcp.commands"
       		defaultHandler="sernet.verinice.rcp.DefaultHandler"
       		id="sernet.verinice.iso27k.rcp.commands.charset"
@@ -412,7 +419,7 @@
             name="verinice">
          <property
                name="aboutText"
-               value="SerNet verinice 1.16.0 - Codename &apos;Agger&apos;&#x0A;&#x0A;(c) SerNet Service Network GmbH and others 1996-2018&#x0A;&#x0A;Contact the authors: verinice@sernet.de&#x0A;&#x0A;or&#x0A;&#x0A;Visit our homepage: http://www.verinice.com/en&#x0A;&#x0A;Contributors:&#x0A;Alexander Koderman 		&#x0A;Anne Hanekop 			&#x0A;Marek Seeger&#x0A;Andreas Becker			&#x0A;Robert Schuster			&#x0A;Daniel Murygin			&#x0A;Sebastian Engel 		&#x0A;Markus Joos				&#x0A;Gregorio Levano			&#x0A;Christian Ganzmann 		&#x0A;Carmen Probst 			&#x0A;Sebastian Hagedorn 		&#x0A;Johannes Stillig 			&#x0A;Christian Eschenlohr 		&#x0A;Julia Haas  	&#x0A;Sirin Torun  	&#x0A;Benjamin Weißenfels         &#x0A;Stanislav Strigunov  	&#x0A;Joachim Seifert				&#x0A;Moritz Reiter&#x0A;Alexander von Ossowski &#x0A;Ruth Motza&#x0A;Viktor Schmidt         &#x0A;Tatjana Anisow         &#x0A;Michael Flürenbrock         &#x0A;Urs Zeidler         &#x0A;Alexander Ben Nasrallah &#x0A;Jochen Kemnade &#x0A;Antonio Marino &#x0A;&#x0A;&#x0A;Artwork:&#x0A;Blackbit						www.blackbit.de&#x0A;Icons by Axialis Team		    http://www.axialis.com&#x0A;Icons by Yusuke Kamiyamane      http://p.yusukekamiyamane.com&#x0A;Icons by FAMFAMFAM              http://www.famfamfam.com&#x0A;Joseph North					&lt;north@sublink.ca&gt;&#x0A;Agentur Roeder					www.agentur-roeder.de&#x0A;&#x0A;&#x0A;This program comes with ABSOLUTELY NO WARRANTY.&#x0A;This is free software, and you are welcome to redistribute it under certain conditions.&#x0A;Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.&#x0A;See the LICENSE.txt contained in the program folder, the verinice Plugin-Details in the help menu and the copyright and license header in each source file for details.&#x0A;&#x0A;VDA Information Security Assessment&#x0A;(c) Arbeitskreis Informationsschutz des Verband der Automobilindustrie e. V. (VDA)&#x0A;Lizenz: http://creativecommons.org/licenses/by-nd/3.0/de/&#x0A;VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilindustrie e. V. (VDA), die zur Nutzung in verinice lizenziert sind. Alle Rechte vorbehalten. "/>
+               value="SerNet verinice 1.17.0 - Codename &apos;Raglan&apos;&#x0A;&#x0A;(c) SerNet Service Network GmbH and others 1996-2018&#x0A;&#x0A;Contact the authors: verinice@sernet.de&#x0A;&#x0A;or&#x0A;&#x0A;Visit our homepage: http://www.verinice.com/en&#x0A;&#x0A;Contributors:&#x0A;Alexander Koderman 		&#x0A;Anne Hanekop 			&#x0A;Marek Seeger&#x0A;Andreas Becker			&#x0A;Robert Schuster			&#x0A;Daniel Murygin			&#x0A;Sebastian Engel 		&#x0A;Markus Joos				&#x0A;Gregorio Levano			&#x0A;Christian Ganzmann 		&#x0A;Carmen Probst 			&#x0A;Sebastian Hagedorn 		&#x0A;Johannes Stillig 			&#x0A;Christian Eschenlohr 		&#x0A;Julia Haas  	&#x0A;Sirin Torun  	&#x0A;Benjamin Weißenfels         &#x0A;Stanislav Strigunov  	&#x0A;Joachim Seifert				&#x0A;Moritz Reiter&#x0A;Alexander von Ossowski &#x0A;Ruth Motza&#x0A;Viktor Schmidt         &#x0A;Tatjana Anisow         &#x0A;Michael Flürenbrock         &#x0A;Urs Zeidler         &#x0A;Alexander Ben Nasrallah &#x0A;Jochen Kemnade &#x0A;Antonio Marino &#x0A;&#x0A;&#x0A;Artwork:&#x0A;Blackbit						www.blackbit.de&#x0A;Icons by Axialis Team		    http://www.axialis.com&#x0A;Icons by Yusuke Kamiyamane      http://p.yusukekamiyamane.com&#x0A;Icons by FAMFAMFAM              http://www.famfamfam.com&#x0A;Joseph North					&lt;north@sublink.ca&gt;&#x0A;Agentur Roeder					www.agentur-roeder.de&#x0A;&#x0A;&#x0A;This program comes with ABSOLUTELY NO WARRANTY.&#x0A;This is free software, and you are welcome to redistribute it under certain conditions.&#x0A;Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.&#x0A;See the LICENSE.txt contained in the program folder, the verinice Plugin-Details in the help menu and the copyright and license header in each source file for details.&#x0A;&#x0A;VDA Information Security Assessment&#x0A;(c) Arbeitskreis Informationsschutz des Verband der Automobilindustrie e. V. (VDA)&#x0A;Lizenz: http://creativecommons.org/licenses/by-nd/3.0/de/&#x0A;VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilindustrie e. V. (VDA), die zur Nutzung in verinice lizenziert sind. Alle Rechte vorbehalten. "/>
          <property
                name="windowImages"
                value="verinice_icons/v-16.png,verinice_icons/v-32.png,verinice_icons/v-48.png,verinice_icons/v-64.png,verinice_icons/v-128.png"/>
@@ -424,9 +431,6 @@
                value="verinice">
          </property>
          <!-- START ProgressBar im Splash -->
-            <property name="startupProgressRect" value="-1,290,459,8"/>
-            <property name="startupForegroundColor" value="000000"/>
-            <property name="startupMessageRect" value="0,0,0,0"/>
 		 <!-- END ProgressBar im Splash -->
       </product>
    </extension>
@@ -803,7 +807,7 @@
                style="push"
                tooltip="%action.tooltip.exportItNetwork">
          </action>
-      </objectContribution>     
+      </objectContribution>
       <objectContribution
             adaptable="false"
             id="sernet.verinice.bpm.rcp.CreateIsaControl.controlgroup"
@@ -1406,6 +1410,72 @@
          	</visibleWhen>
          </command>
       </menuContribution>
+      <menuContribution locationURI="popup:sernet.verinice.bp.rcp.BaseProtectionView?after=content">	  
+   	  	 <command
+               commandId="sernet.verinice.bp.rcp.commands.newSafeguardGroup"
+               disabledIcon="icons/base-protection/safeguard.png"
+               icon="icons/base-protection/safeguard.png"
+               label="%command.label.newSafeguardGroup">
+         	<visibleWhen>
+         		<with variable="activeMenuSelection">
+         	    	<and>
+	         	    	<count value="1" />
+	         	    	<iterate operator="and">	         	    		
+	                        <instanceof value="sernet.verinice.model.bp.IBpElement" />                  
+		                    <instanceof value="sernet.hui.common.connect.ITargetObject" />
+		                    <not>
+		                        <instanceof value="sernet.verinice.model.bp.elements.ItNetwork" />
+		                    </not>
+	                </iterate>
+               </and>            
+		        </with>
+         	</visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution locationURI="popup:sernet.verinice.bp.rcp.BaseProtectionView?after=content">
+   	     <command
+               commandId="sernet.verinice.bp.rcp.commands.newThreatGroup"
+               disabledIcon="icons/base-protection/bp_threat.png"
+               icon="icons/base-protection/bp_threat.png"
+               label="%command.label.newThreatGroup">
+           <visibleWhen>
+         	  <with variable="activeMenuSelection">
+         	    	<and>
+	         	    	<count value="1" />
+	         	    	<iterate operator="and">
+	                        <instanceof value="sernet.verinice.model.bp.IBpElement" />
+		                    <instanceof value="sernet.hui.common.connect.ITargetObject" />
+		                    <not>
+		                        <instanceof value="sernet.verinice.model.bp.elements.ItNetwork" />
+		                    </not>
+	                </iterate>
+               </and>            
+		        </with>
+         	</visibleWhen>
+         </command>
+      </menuContribution>
+      <menuContribution locationURI="popup:sernet.verinice.bp.rcp.BaseProtectionView?after=content">	  
+   	  	 <command
+               commandId="sernet.verinice.bp.rcp.commands.newRequirementGroup"
+               disabledIcon="icons/base-protection/bp_requirement.png"
+               icon="icons/base-protection/bp_requirement.png"
+               label="%command.label.newRequirementGroup">
+         	<visibleWhen>
+         		<with variable="activeMenuSelection">
+         	    	<and>
+	         	    	<count value="1" />
+	         	    	<iterate operator="and">	         	    		
+	                        <instanceof value="sernet.verinice.model.bp.IBpElement" />                  
+		                    <instanceof value="sernet.hui.common.connect.ITargetObject" />
+		                    <not>
+		                        <instanceof value="sernet.verinice.model.bp.elements.ItNetwork" />
+		                    </not>
+	                </iterate>
+               </and>            
+		        </with>
+         	</visibleWhen>
+         </command>
+      </menuContribution>
    	  <menuContribution locationURI="popup:sernet.verinice.iso27k.rcp.ISMView?after=additions">
          <command
                commandId="org.eclipse.ui.edit.cut"
@@ -1606,7 +1676,7 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
-            class="sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditor"
+            class="sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorMultiPage"
             default="false"
             icon="icons/24-tool-a.png"
             id="sernet.gs.ui.rcp.main.bsi.editors.bsielementeditor"
@@ -1638,8 +1708,8 @@
             id="sernet.gs.ui.rcp.main.page4"
             name="%page.name"/>
       <page
-            class="sernet.gs.ui.rcp.main.preferences.KatalogePreferencePage"
-            id="sernet.gs.ui.rcp.main.preferences.CnAPreferencePage1"
+            class="sernet.gs.ui.rcp.main.preferences.ItbpPreferencePage"
+            id="sernet.gs.ui.rcp.main.preferences.ItbpPreferencePage"
             name="%page.name.0"/>
       <page
             class="sernet.gs.ui.rcp.main.preferences.ClientServerPreferencePage"
@@ -1909,6 +1979,22 @@
         </cheatsheet>
         <cheatsheet
             category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.workflow-engine"
+            composite="false"
+            contentFile="%cheatsheets.mogs.workflow-engine.file"
+            name="%cheatsheets.mogs.workflow-engine.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
+            id="sernet.verinice.cheatsheets.mogs.risk-analysis"
+            composite="false"
+            contentFile="%cheatsheets.mogs.risk-analysis.file"
+            name="%cheatsheets.mogs.risk-analysis.name">
+            <description></description>
+        </cheatsheet>
+        <cheatsheet
+            category="sernet.verinice.cheatsheets.mogs"
             id="sernet.verinice.cheatsheets.mogs.documents"
             composite="false"
             contentFile="%cheatsheets.mogs.documents.file"
@@ -2118,6 +2204,7 @@
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
 	       				<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
+	       				<equals value="sernet.verinice.rcp.catalog.CatalogView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -2154,6 +2241,7 @@
 	       				<equals value="sernet.verinice.iso27k.rcp.ISMView" />
 	       				<equals value="sernet.gs.ui.rcp.main.views.bsimodelview" />
 	       				<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
+	       				<equals value="sernet.verinice.rcp.catalog.CatalogView" />
 	       			</or>
 	    		</with>
 	    		<with variable="selection">
@@ -2283,6 +2371,57 @@
 					<with variable="selection">
 						<iterate operator="and">
 							<instanceof value="sernet.verinice.model.common.CnATreeElement"/>
+							<test property="sernet.verinice.iso27k.model.isWritable"/>            
+						</iterate>
+					</with>
+				</enabledWhen>
+      </handler>
+      <handler class="sernet.verinice.bp.rcp.action.AddRequirementGroupHandler"
+            commandId="sernet.verinice.bp.rcp.commands.newRequirementGroup">
+				<activeWhen>
+					<with variable="activePartId">
+						<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
+					</with>
+				</activeWhen> 
+				<enabledWhen>
+					<with variable="selection">
+						<iterate operator="and">
+							<instanceof value="sernet.verinice.model.bp.IBpElement"/>
+							<instanceof value="sernet.hui.common.connect.ITargetObject"/>
+							<test property="sernet.verinice.iso27k.model.isWritable"/>            
+						</iterate>
+					</with>
+				</enabledWhen>
+      </handler>
+      <handler class="sernet.verinice.bp.rcp.action.AddThreatGroupHandler"
+            commandId="sernet.verinice.bp.rcp.commands.newThreatGroup">
+				<activeWhen>
+					<with variable="activePartId">
+						<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
+					</with>
+				</activeWhen> 
+				<enabledWhen>
+					<with variable="selection">
+						<iterate operator="and">
+							<instanceof value="sernet.verinice.model.bp.IBpElement"/>
+							<instanceof value="sernet.hui.common.connect.ITargetObject"/>
+							<test property="sernet.verinice.iso27k.model.isWritable"/>            
+						</iterate>
+					</with>
+				</enabledWhen>
+      </handler>
+      <handler class="sernet.verinice.bp.rcp.action.AddSafeguardGroupHandler"
+            commandId="sernet.verinice.bp.rcp.commands.newSafeguardGroup">
+				<activeWhen>
+					<with variable="activePartId">
+						<equals value="sernet.verinice.bp.rcp.BaseProtectionView" />
+					</with>
+				</activeWhen> 
+				<enabledWhen>
+					<with variable="selection">
+						<iterate operator="and">
+							<instanceof value="sernet.verinice.model.bp.IBpElement"/>
+							<instanceof value="sernet.hui.common.connect.ITargetObject"/>
 							<test property="sernet.verinice.iso27k.model.isWritable"/>            
 						</iterate>
 					</with>
@@ -2556,5 +2695,44 @@
    <extension point="org.eclipse.core.net.authenticator">
      <authenticator class="sernet.gs.ui.rcp.main.security.VeriniceAuthenticator">
      </authenticator>
+   </extension>
+   <extension
+         point="org.eclipse.ui.splashHandlers">
+      <splashHandler
+            class="sernet.gs.ui.rcp.main.splashHandlers.ExtensibleSplashHandler"
+            id="sernet.gs.ui.rcp.main.splashHandlers.extensible">
+      </splashHandler>
+      <splashHandlerProductBinding
+            productId="sernet.gs.ui.rcp.main.product"
+            splashId="sernet.gs.ui.rcp.main.splashHandlers.extensible">
+      </splashHandlerProductBinding>
+   </extension>
+   <extension
+         point="sernet.gs.ui.rcp.main.splashExtension">
+      <splashExtension
+            icon="icons/af.png"
+            id="af"
+            tooltip="Application Framework">
+      </splashExtension>
+      <splashExtension
+            icon="icons/embedded.png"
+            id="embedded"
+            tooltip="Embedded">
+      </splashExtension>
+      <splashExtension
+            icon="icons/enterprise.png"
+            id="enterprise"
+            tooltip="Enterprise">
+      </splashExtension>
+      <splashExtension
+            icon="icons/languages.png"
+            id="languages"
+            tooltip="Languages">
+      </splashExtension>
+      <splashExtension
+            icon="icons/rcp.png"
+            id="rcp"
+            tooltip="RCP">
+      </splashExtension>
    </extension>  
 </plugin>

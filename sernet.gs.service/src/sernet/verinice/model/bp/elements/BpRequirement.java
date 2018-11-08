@@ -20,16 +20,21 @@
 package sernet.verinice.model.bp.elements;
 
 import static sernet.verinice.model.bp.DeductionImplementationUtil.isDeductiveImplementationEnabled;
-import static sernet.verinice.model.bp.DeductionImplementationUtil.setImplementationStausToRequirement;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 
+import sernet.gs.service.StringUtil;
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IReevaluator;
+import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.IBpElement;
+import sernet.verinice.model.bp.ISecurityLevelProvider;
+import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.Reevaluator;
+import sernet.verinice.model.bp.SecurityLevel;
 import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.AbstractLinkChangeListener;
 import sernet.verinice.model.common.CascadingTransaction;
@@ -37,14 +42,17 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ILinkChangeListener;
 import sernet.verinice.model.common.TransactionAbortedException;
+import sernet.verinice.service.bp.risk.RiskDeductionUtil;
+import sernet.verinice.service.hibernate.HibernateUtil;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class BpRequirement extends CnATreeElement implements IBpElement, IIdentifiableElement, ITaggableElement {
+public class BpRequirement extends CnATreeElement
+        implements IBpElement, IIdentifiableElement, ITaggableElement, ISecurityLevelProvider {
 
-    private static final long serialVersionUID = 436541703079680979L;
+    private static final long serialVersionUID = 6621062615495040741L;
 
     public static final String TYPE_ID = "bp_requirement"; //$NON-NLS-1$
 
@@ -53,19 +61,27 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
     public static final String PROP_NAME = "bp_requirement_name"; //$NON-NLS-1$
     public static final String PROP_ID = "bp_requirement_id"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_requirement_tag"; //$NON-NLS-1$
-    public static final String PROP_QUALIFIER = "bp_requirement_qualifier"; //$NON-NLS-1$
     public static final String PROP_LAST_CHANGE = "bp_requirement_last_change"; //$NON-NLS-1$
     public static final String PROP_CONFIDENTIALITY = "bp_requirement_value_method_confidentiality";//$NON-NLS-1$
     public static final String PROP_INTEGRITY = "bp_requirement_value_method_integrity";//$NON-NLS-1$
     public static final String PROP_AVAILABILITY = "bp_requirement_value_method_availability";//$NON-NLS-1$
-    public static final String PROP_QUALIFIER_BASIC = "bp_requirement_qualifier_basic"; //$NON-NLS-1$
-    public static final String PROP_QUALIFIER_STANDARD = "bp_requirement_qualifier_standard"; //$NON-NLS-1$
-    public static final String PROP_QUALIFIER_HIGH = "bp_requirement_qualifier_high"; //$NON-NLS-1$
+    public static final String PROP_QUALIFIER = "bp_requirement_qualifier"; //$NON-NLS-1$
+    // These keys shall not be used for localization but only to identify which
+    // ENUM value shall be used. Use the ENUMs getLabel() instead.
+    private static final String PROP_QUALIFIER_BASIC = "bp_requirement_qualifier_basic"; //$NON-NLS-1$
+    private static final String PROP_QUALIFIER_STANDARD = "bp_requirement_qualifier_standard"; //$NON-NLS-1$
+    private static final String PROP_QUALIFIER_HIGH = "bp_requirement_qualifier_high"; //$NON-NLS-1$
+
+    public static final String PROP_IMPLEMENTATION_DEDUCE = "bp_requirement_implementation_deduce"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTATION_STATUS = "bp_requirement_implementation_status"; //$NON-NLS-1$
-    public static final String PROP_IMPLEMENTATION_STATUS_NO = "bp_requirement_implementation_status_no"; //$NON-NLS-1$
-    public static final String PROP_IMPLEMENTATION_STATUS_YES = "bp_requirement_implementation_status_yes"; //$NON-NLS-1$
-    public static final String PROP_IMPLEMENTATION_STATUS_PARTIALLY = "bp_requirement_implementation_status_partially"; //$NON-NLS-1$
-    public static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_requirement_implementation_status_na"; //$NON-NLS-1$
+    private static final String PROP_IMPLEMENTATION_STATUS_NO = "bp_requirement_implementation_status_no"; //$NON-NLS-1$
+    private static final String PROP_IMPLEMENTATION_STATUS_YES = "bp_requirement_implementation_status_yes"; //$NON-NLS-1$
+    private static final String PROP_IMPLEMENTATION_STATUS_PARTIALLY = "bp_requirement_implementation_status_partially"; //$NON-NLS-1$
+    private static final String PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE = "bp_requirement_implementation_status_na"; //$NON-NLS-1$
+
+    public static final String PROP_SAFEGUARD_STRENGTH_FREQUENCY = "bp_requirement_safeguard_strength_frequency";//$NON-NLS-1$
+    public static final String PROP_SAFEGUARD_STRENGTH_IMPACT = "bp_requirement_safeguard_strength_impact";//$NON-NLS-1$
+    public static final String PROP_SAFEGUARD_REDUCE_RISK = "bp_requirement_reduce_risk";//$NON-NLS-1$
 
     public static final String REL_BP_REQUIREMENT_BP_THREAT = "rel_bp_requirement_bp_threat"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_SAFEGUARD = "rel_bp_requirement_bp_safeguard"; //$NON-NLS-1$
@@ -78,23 +94,48 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
     public static final String REL_BP_REQUIREMENT_BP_NETWORK = "rel_bp_requirement_bp_network"; //$NON-NLS-1$
     public static final String REL_BP_REQUIREMENT_BP_ROOM = "rel_bp_requirement_bp_room"; //$NON-NLS-1$
 
-    private final IReevaluator protectionRequirementsProvider = new Reevaluator(this);
-    private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
+	private final IReevaluator protectionRequirementsProvider = new Reevaluator(this) {
+		private static final long serialVersionUID = -2522374396559298793L;
+
+		@Override
+		protected void findBottomNodes(CnATreeElement downwardElement, Set<CnATreeElement> bottomNodes,
+				CascadingTransaction downwardsTA) {
+			if (downwardsTA.hasBeenVisited(downwardElement)) {
+				return;
+			}
+
+			try {
+				downwardsTA.enter(downwardElement);
+			} catch (TransactionAbortedException e) {
+				return;
+			}
+			 if (downwardElement.isProtectionRequirementsProvider()) {
+				 bottomNodes.add(downwardElement);
+			 }
+			downwardElement.getLinksDown().stream().map(CnALink::getDependency)//
+				.map(HibernateUtil::unproxy)//
+				.forEach(l -> {
+						if (bottomNodes.add(l)) {
+							findBottomNodes(l, bottomNodes, downwardsTA);
+						}
+				});
+		}
+
+	};
+
+	private final ILinkChangeListener linkChangeListener = new AbstractLinkChangeListener() {
 
         private static final long serialVersionUID = -3220319074711927103L;
 
         @Override
         public void determineValue(CascadingTransaction ta) throws TransactionAbortedException {
-            if (!isDeductiveImplementationEnabled(BpRequirement.this)
-                    || ta.hasBeenVisited(BpRequirement.this)) {
-                return;
+            if (isDeductiveImplementationEnabled(BpRequirement.this)
+                    && !ta.hasBeenVisited(BpRequirement.this)) {
+                DeductionImplementationUtil
+                        .setImplementationStatusToRequirement(BpRequirement.this);
             }
-
-            for (CnALink cnALink : BpRequirement.this.getLinksUp()) {
-                CnATreeElement dependant = cnALink.getDependant();
-                if (Safeguard.TYPE_ID.equals(dependant.getTypeId())) {
-                    setImplementationStausToRequirement(dependant, BpRequirement.this);
-                }
+            if (BpRequirement.this.getEntity().isFlagged(PROP_SAFEGUARD_REDUCE_RISK)) {
+                RiskDeductionUtil.deduceRiskForLinkedThreats(BpRequirement.this);
             }
         }
     };
@@ -167,31 +208,59 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ID), id);
     }
 
-    public String getQualifier() {
-        return getEntity().getPropertyValue(PROP_QUALIFIER);
-    }
-
-    public void setQualifier(String qualifier) {
+    /**
+     * Stores the appropriate property value id to PROP_QUALIFIER.
+     */
+    public void setSecurityLevel(SecurityLevel level) {
+        String qualifier = null;
+        switch (level) {
+        case BASIC:
+            qualifier = PROP_QUALIFIER_BASIC;
+            break;
+        case STANDARD:
+            qualifier = PROP_QUALIFIER_STANDARD;
+            break;
+        case HIGH:
+            qualifier = PROP_QUALIFIER_HIGH;
+            break;
+        }
         getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_QUALIFIER), qualifier);
     }
 
     /**
-     * @return The approach of securing. The approach is stored in the property
-     *         PROP_QUALIFIER.
+     * @return The Security level level represented by property PROP_QUALIFIER
      */
-    public String getApproach() {
-        return getQualifier();
+    @Override
+    public SecurityLevel getSecurityLevel() {
+        // Parsing the string as SecurityLevel should actually be done
+        // in Proceeding. But every class has different
+        // localization keys. If unique keys, e.g. "QUALIFIER_BASIC"
+        // would be used everywhere this code can and should be moved to
+        // SecurityLevel.ofLocalizationKey.
+        String qualifier = getEntity().getRawPropertyValue(PROP_QUALIFIER);
+        if (qualifier == null) {
+            return null;
+        }
+        switch (qualifier) {
+        case PROP_QUALIFIER_BASIC:
+            return SecurityLevel.BASIC;
+        case PROP_QUALIFIER_STANDARD:
+            return SecurityLevel.STANDARD;
+        case PROP_QUALIFIER_HIGH:
+            return SecurityLevel.HIGH;
+        case "":
+            return null;
+        default:
+            throw new IllegalStateException("Unknown security level '" + qualifier + "'");
+        }
     }
 
-    /**
-     * Sets the approach of securing. The approach is stored in the property
-     * PROP_QUALIFIER.
-     * 
-     * @param approach
-     *            The approach of securing or qualifier
-     */
-    public void setApproach(String approach) {
-        setQualifier(approach);
+    public void setDeductionOfImplementation(boolean active) {
+        getEntity().setFlag(PROP_IMPLEMENTATION_DEDUCE, active);
+    }
+
+    public boolean isDeductionOfImplementation() {
+        return getEntity().isFlagged(PROP_IMPLEMENTATION_DEDUCE);
     }
 
     public Date getLastChange() {
@@ -227,8 +296,68 @@ public class BpRequirement extends CnATreeElement implements IBpElement, IIdenti
         return ((this.getNumericProperty(PROP_AVAILABILITY) == 1) ? true : false);
     }
 
-    public String getImplementationStatus(){
-        return getEntity().getRawPropertyValue(PROP_IMPLEMENTATION_STATUS);
+    public ImplementationStatus getImplementationStatus() {
+        String rawValue = getEntity().getRawPropertyValue(PROP_IMPLEMENTATION_STATUS);
+        return getImplementationStatus(rawValue);
+    }
+
+    public void setImplementationStatus(ImplementationStatus implementationStatus) {
+        String rawValue = toRawValue(implementationStatus);
+        setSimpleProperty(PROP_IMPLEMENTATION_STATUS, rawValue);
+    }
+
+    public String getSafeguardStrengthFrequency() {
+        return StringUtil.replaceEmptyStringByNull(
+                getEntity().getRawPropertyValue(PROP_SAFEGUARD_STRENGTH_FREQUENCY));
+    }
+
+    public String getSafeguardStrengthImpact() {
+        return StringUtil.replaceEmptyStringByNull(
+                getEntity().getRawPropertyValue(PROP_SAFEGUARD_STRENGTH_IMPACT));
+    }
+
+    public static ImplementationStatus getImplementationStatus(String rawValue) {
+        if (rawValue == null || rawValue.isEmpty()) {
+            return null;
+        }
+        switch (rawValue) {
+        case PROP_IMPLEMENTATION_STATUS_NO:
+            return ImplementationStatus.NO;
+        case PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE:
+            return ImplementationStatus.NOT_APPLICABLE;
+        case PROP_IMPLEMENTATION_STATUS_PARTIALLY:
+            return ImplementationStatus.PARTIALLY;
+        case PROP_IMPLEMENTATION_STATUS_YES:
+            return ImplementationStatus.YES;
+        default:
+            throw new IllegalStateException("Unknown implementation status '" + rawValue + "'");
+        }
+    }
+
+    public static String toRawValue(ImplementationStatus status) {
+        String rawValue;
+        if (status == null) {
+            rawValue = null;
+        } else {
+            switch (status) {
+            case NO:
+                rawValue = PROP_IMPLEMENTATION_STATUS_NO;
+                break;
+            case NOT_APPLICABLE:
+                rawValue = PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE;
+                break;
+            case PARTIALLY:
+                rawValue = PROP_IMPLEMENTATION_STATUS_PARTIALLY;
+                break;
+            case YES:
+                rawValue = PROP_IMPLEMENTATION_STATUS_YES;
+                break;
+            default:
+                throw new IllegalStateException("Unknown implementation status '" + status + "'");
+            }
+        }
+        return rawValue;
+
     }
 
     public static String getIdentifierOfRequirement(CnATreeElement requirement) {

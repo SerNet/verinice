@@ -56,134 +56,134 @@ import sernet.verinice.rcp.InfoDialogWithShowToggle;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class StartIsaControlFlowProcess implements IObjectActionDelegate, RightEnabledUserInteraction {
+public class StartIsaControlFlowProcess
+        implements IObjectActionDelegate, RightEnabledUserInteraction {
 
     private static final Logger LOG = Logger.getLogger(StartIsaControlFlowProcess.class);
-    
-    private List<String> selectedControlUuids = new LinkedList<String>();
-    private List<String> selectedControlGroupUuids = new LinkedList<String>();
-    private List<String> selectedAuditUuids = new LinkedList<String>();
-    
+
+    private List<String> selectedControlUuids = new LinkedList<>();
+    private List<String> selectedControlGroupUuids = new LinkedList<>();
+    private List<String> selectedAuditUuids = new LinkedList<>();
+
     int numberOfProcess = 0;
-    
+
     Boolean isActive = null;
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction, org.eclipse.ui.IWorkbenchPart)
+
+    /*
+     * @see
+     * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
+     * action.IAction, org.eclipse.ui.IWorkbenchPart)
      */
     @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
         // TODO Auto-generated method stub
-        
+
     }
 
-    /* (non-Javadoc)
+    /*
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
-    @Override  
+    @Override
     public void run(IAction action) {
-        if(!selectedControlUuids.isEmpty() ||
-           !selectedControlGroupUuids.isEmpty() ||
-           !selectedAuditUuids.isEmpty()) {
+        if (!selectedControlUuids.isEmpty() || !selectedControlGroupUuids.isEmpty()
+                || !selectedAuditUuids.isEmpty()) {
             IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-            
+
             try {
-                progressService.run(true, true, new IRunnableWithProgress() {  
+                progressService.run(true, true, new IRunnableWithProgress() {
                     @Override
-                    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    public void run(IProgressMonitor monitor)
+                            throws InvocationTargetException, InterruptedException {
                         Activator.inheritVeriniceContextState();
-                        numberOfProcess=0;
+                        numberOfProcess = 0;
                         IProcessStartInformation info = null;
-                        if(!selectedControlUuids.isEmpty() ) {
-                            info = ServiceFactory.lookupIsaControlFlowService().startProcessesForControls(selectedControlUuids);           
+                        if (!selectedControlUuids.isEmpty()) {
+                            info = ServiceFactory.lookupIsaControlFlowService()
+                                    .startProcessesForControls(selectedControlUuids);
                         }
-                        if(info!=null) {
-                            numberOfProcess=info.getNumber();
-                        }
-                        info = null;
-                        if( !selectedControlGroupUuids.isEmpty()) {
-                            info = ServiceFactory.lookupIsaControlFlowService().startProcessesForGroups(selectedControlGroupUuids);
-                        }
-                        if(info!=null) {
-                            numberOfProcess=numberOfProcess + info.getNumber();
+                        if (info != null) {
+                            numberOfProcess = info.getNumber();
                         }
                         info = null;
-                        if( !selectedAuditUuids.isEmpty()) {
-                            info = ServiceFactory.lookupIsaControlFlowService().startProcessesForAudits(selectedAuditUuids);
+                        if (!selectedControlGroupUuids.isEmpty()) {
+                            info = ServiceFactory.lookupIsaControlFlowService()
+                                    .startProcessesForGroups(selectedControlGroupUuids);
                         }
-                        if(info!=null) {
-                            numberOfProcess=numberOfProcess + info.getNumber();
+                        if (info != null) {
+                            numberOfProcess = numberOfProcess + info.getNumber();
+                        }
+                        info = null;
+                        if (!selectedAuditUuids.isEmpty()) {
+                            info = ServiceFactory.lookupIsaControlFlowService()
+                                    .startProcessesForAudits(selectedAuditUuids);
+                        }
+                        if (info != null) {
+                            numberOfProcess = numberOfProcess + info.getNumber();
                         }
                     }
                 });
-                if(numberOfProcess > 0) {
+                if (numberOfProcess > 0) {
                     TaskChangeRegistry.tasksAdded();
                 }
-                boolean infoDialogOpened = Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.INFO_PROCESSES_STARTED);
-                if(numberOfProcess > 0){
-                InfoDialogWithShowToggle.openInformation(
-                        Messages.StartIsaProcess_0,  
-                        Messages.bind(Messages.StartIsaProcess_1, numberOfProcess),// "Succesfully created " + numberOfProcess + " tasks.",; 
-                        Messages.StartIsaProcess_3,
-                        PreferenceConstants.INFO_PROCESSES_STARTED);
-                } else if (numberOfProcess == 0){
-                    MessageDialog.openInformation(Display.getDefault().getActiveShell(), Messages.StartIsaProcess_0, Messages.StartIsaProcess_6);
+                if (numberOfProcess > 0) {
+                    InfoDialogWithShowToggle.openInformation(Messages.StartIsaProcess_0,
+                            Messages.bind(Messages.StartIsaProcess_1, numberOfProcess),
+                            Messages.StartIsaProcess_3, PreferenceConstants.INFO_PROCESSES_STARTED);
+                } else if (numberOfProcess == 0) {
+                    MessageDialog.openInformation(Display.getDefault().getActiveShell(),
+                            Messages.StartIsaProcess_0, Messages.StartIsaProcess_6);
                 }
             } catch (Exception t) {
-                LOG.error("Error while creating tasks.",t); //$NON-NLS-1$
-                ExceptionUtil.log(t, sernet.verinice.bpm.rcp.Messages.StartIsaProcess_5); 
-            }   
-        }   
+                LOG.error("Error while creating tasks.", t); //$NON-NLS-1$
+                ExceptionUtil.log(t, sernet.verinice.bpm.rcp.Messages.StartIsaProcess_5);
+            }
+        }
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction, org.eclipse.jface.viewers.ISelection)
+    /*
+     * @see
+     * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
+     * IAction, org.eclipse.jface.viewers.ISelection)
      */
     @Override
     public void selectionChanged(IAction action, ISelection selection) {
         action.setEnabled(checkRights());
-        if(isActive()) {
-            if(selection instanceof ITreeSelection) {
+        if (!Activator.getDefault().isStandalone()) {
+            if (selection instanceof ITreeSelection) {
                 ITreeSelection treeSelection = (ITreeSelection) selection;
                 selectedControlUuids.clear();
                 selectedControlGroupUuids.clear();
-                for (Iterator iterator = treeSelection.iterator(); iterator.hasNext();) {
-                    Object selectedElement = iterator.next();         
-                    if(selectedElement instanceof Control) {
+                for (Iterator<?> iterator = treeSelection.iterator(); iterator.hasNext();) {
+                    Object selectedElement = iterator.next();
+                    if (selectedElement instanceof Control) {
                         selectedControlUuids.add(((CnATreeElement) selectedElement).getUuid());
                     }
-                    if(selectedElement instanceof ControlGroup) {
+                    if (selectedElement instanceof ControlGroup) {
                         selectedControlGroupUuids.add(((CnATreeElement) selectedElement).getUuid());
                     }
-                    if(selectedElement instanceof Audit) {
+                    if (selectedElement instanceof Audit) {
                         selectedAuditUuids.add(((CnATreeElement) selectedElement).getUuid());
                     }
                 }
-                
+
             }
         } else {
             action.setEnabled(false);
         }
-        
-    }
-    
-    private boolean isActive() {
-        if(isActive==null) {
-            isActive = ServiceFactory.lookupProcessServiceIsa().isActive();
-        }
-        return isActive.booleanValue();
+
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext
+                .get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
+    /*
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override

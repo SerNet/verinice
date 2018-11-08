@@ -21,9 +21,8 @@ package sernet.verinice.web;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Hashtable;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
@@ -37,9 +36,11 @@ import sernet.gs.service.TimeFormatter;
 import sernet.gs.web.ExceptionHandler;
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.connect.DirectedHuiRelation;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiRelation;
+import sernet.hui.common.connect.HuiRelationUtil;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.iso27k.ILink;
@@ -57,41 +58,39 @@ import sernet.verinice.service.commands.RemoveLink;
 @ManagedBean(name = "link")
 @SessionScoped
 public class LinkBean {
-    
+
     private static final Logger LOG = Logger.getLogger(LinkBean.class);
 
     private CnATreeElement element;
-    
+
     private String typeId;
-    
+
     private EntityType entityType;
 
-    private List<ILink> linkList = new ArrayList<ILink>();
-    
+    private List<ILink> linkList = new ArrayList<>();
+
     private ILink selectedLink;
-    
-    private List<String> linkTypeList = new ArrayList<String>();
-    private Map<String, HuiRelation> huiRelationMap = new Hashtable<String, HuiRelation>();
-    
-    private String selectedLinkType;
-    
+
+    private Set<DirectedHuiRelation> possibleRelations = new HashSet<>();
+
+    private DirectedHuiRelation selectedLinkType;
+
     private List<String> linkTargetNameList;
-    
+
     private List<? extends CnATreeElement> linkTargetList;
-    
+
     private String selectedLinkTargetName;
-    
+
     private boolean deleteVisible = false;
-    
+
     private boolean loading = true;
-    
+
     public void reset() {
         loading = true;
-        linkList = new ArrayList<ILink>();
-        linkTypeList = new ArrayList<String>();
-        huiRelationMap = new Hashtable<String, HuiRelation>();
+        linkList = new ArrayList<>();
+        possibleRelations = new HashSet<>();
     }
-    
+
     public void init(TabChangeEvent tabChangeEvent) {
 
         if ("linkTab".equals(tabChangeEvent.getTab().getId())) {
@@ -115,11 +114,12 @@ public class LinkBean {
             }
         }
     }
-    
+
     private void doInit() throws CommandException {
         CnATreeElement element = getElement();
-        if(element==null) {
-            // (sometimes) his is not an error, GSM workflow tasks doesn't have an element
+        if (element == null) {
+            // (sometimes) his is not an error, GSM workflow tasks doesn't have
+            // an element
             if (LOG.isInfoEnabled()) {
                 LOG.info("Element is null. Can not init link bean.");
             }
@@ -128,10 +128,11 @@ public class LinkBean {
         RetrieveInfo ri = new RetrieveInfo();
         ri.setLinksDownProperties(true);
         ri.setLinksUpProperties(true);
-        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(getTypeId(),getElement().getUuid(),ri);        
-        command = getCommandService().executeCommand(command);    
+        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(getTypeId(),
+                getElement().getUuid(), ri);
+        command = getCommandService().executeCommand(command);
         setElement(command.getElement());
-        linkList = new ArrayList<ILink>();
+        linkList = new ArrayList<>();
         for (CnALink link : getElement().getLinksDown()) {
             linkList.add(map(link));
         }
@@ -139,57 +140,48 @@ public class LinkBean {
             linkList.add(map(link, true));
         }
         setSelectedLink(null);
-        linkTypeList = new ArrayList<String>();
-        huiRelationMap = new Hashtable<String, HuiRelation>();
-        Set<HuiRelation> huiRelationSet = entityType.getPossibleRelations();
-        for (HuiRelation huiRelation : huiRelationSet) {
-            String label = getLinkTypeLabel(huiRelation);
-            linkTypeList.add(label);
-            huiRelationMap.put(label, huiRelation);
-        }
+        possibleRelations = HuiRelationUtil.getAllRelationsBothDirections(entityType.getId());
+
         loading = false;
     }
-    
-    private String getLinkTypeLabel(HuiRelation huiRelation) {
+
+    public String getLinkTypeLabel(DirectedHuiRelation huiRelation) {
         StringBuilder sb = new StringBuilder();
-        if(getTypeId().equals(huiRelation.getFrom())) {
-            sb.append(huiRelation.getName());
-        } else {
-            sb.append(huiRelation.getReversename());
-        }
+        sb.append(huiRelation.getLabel());
+        String otherSideTypeId = huiRelation.isForward() ? huiRelation.getHuiRelation().getTo()
+                : huiRelation.getHuiRelation().getFrom();
         sb.append(" (");
-        sb.append(getHuiService().getMessage(huiRelation.getTo()));
+        sb.append(getHuiService().getMessage(otherSideTypeId));
         sb.append(")");
         return sb.toString();
     }
-    
+
     public String getLoadLinkTargets() {
         return null;
     }
-    
+
     public void loadLinkTargets(String s) {
     }
-    
+
     /**
-     * Loads the link targets, after a link type is selected.
-     * See tasks.xhtml
+     * Loads the link targets, after a link type is selected. See tasks.xhtml
      */
     public void loadLinkTargets() {
         String targetTypeId = null;
         try {
-            if(getSelectedLinkType()!=null) {             
-                Set<HuiRelation> huiRelationSet = getEntityType().getPossibleRelations();
-                for (HuiRelation huiRelation : huiRelationSet) {
-                    if(getSelectedLinkType().equals(getLinkTypeLabel(huiRelation))) {
-                        targetTypeId = huiRelation.getTo();
-                        break;
-                    }
+            if (selectedLinkType != null) {
+                if (selectedLinkType.isForward()) {
+                    targetTypeId = selectedLinkType.getHuiRelation().getTo();
+                } else {
+                    targetTypeId = selectedLinkType.getHuiRelation().getFrom();
                 }
+
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("loadLinkTargets(), targetTypeId: " + targetTypeId);
                 }
-                if(targetTypeId!=null) {
-                    LoadElementByTypeId command = new LoadElementByTypeId(targetTypeId,RetrieveInfo.getPropertyInstance());
+                if (targetTypeId != null) {
+                    LoadElementByTypeId command = new LoadElementByTypeId(targetTypeId,
+                            RetrieveInfo.getPropertyInstance());
                     command = getCommandService().executeCommand(command);
                     setLinkTargetList(command.getElementList());
                     setLinkTargetNameList(new ArrayList<String>(linkTargetList.size()));
@@ -204,28 +196,29 @@ public class LinkBean {
             ExceptionHandler.handle(t);
         }
     }
-    
+
     public String getAddLink() {
         addLink();
         return null;
     }
-    
+
     public void setAddLink(String s) {
         addLink();
     }
-    
+
     public void addLink() {
         try {
-            if(getSelectedLinkType()!=null && getSelectedLinkTargetName()!=null) {
+            if (getSelectedLinkType() != null && getSelectedLinkTargetName() != null) {
                 CnATreeElement target = null;
                 for (CnATreeElement linkTarget : getLinkTargetList()) {
-                    if(linkTarget.getTitle().equals(getSelectedLinkTargetName())) {
+                    if (linkTarget.getTitle().equals(getSelectedLinkTargetName())) {
                         target = linkTarget;
                         break;
-                    }                  
+                    }
                 }
-                if(target!=null) {
-                    Set<HuiRelation> possibleRelations = getHuiService().getPossibleRelations(getTypeId(), target.getTypeId());
+                if (target != null) {
+                    Set<HuiRelation> possibleRelations = getHuiService()
+                            .getPossibleRelations(getTypeId(), target.getTypeId());
                     // try to link from target to dragged elements first:
                     // use first relation type (user can change it later):
                     if (!possibleRelations.isEmpty()) {
@@ -243,78 +236,76 @@ public class LinkBean {
     }
 
     private void createLinkLookupRelations(CnATreeElement target) throws CommandException {
-        Set<HuiRelation> possibleRelations;
         boolean reverse = false;
-        HuiRelation selectedRelation = huiRelationMap.get(getSelectedLinkType());
-        CnALink link = createLink(getElement(), target, selectedRelation.getId(), "Created by web client");
-        if(link==null) {
-            // if none found: try reverse direction from dragged element to target (link is always modelled from one side only)
-            possibleRelations = getHuiService().getPossibleRelations(target.getTypeId(), getTypeId());
-            if ( !possibleRelations.isEmpty()) {
-                link = createLink(target, getElement(), selectedRelation.getId(), "Created by web client");
-            }
+        CnALink link;
+        if (selectedLinkType.isForward()) {
+            link = createLink(getElement(), target, selectedLinkType.getHuiRelation().getId(),
+                    "Created by web client");
+        } else {
             reverse = true;
-        } 
-        if(link!=null) {
-            LinkInformation linkInformation = map(link,reverse);
-            linkInformation.setType(getTypeName(link));
+            link = createLink(target, getElement(), selectedLinkType.getHuiRelation().getId(),
+                    "Created by web client");
+        }
+
+        if (link != null) {
+            LinkInformation linkInformation = map(link, reverse);
+            linkInformation.setType(selectedLinkType.getLabel());
             linkList.add(linkInformation);
-            Util.addInfo("addLink", Util.getMessage(EditBean.BUNDLE_NAME, "linkAdded", new String[] {target.getTitle()})); 
+            Util.addInfo("addLink", Util.getMessage(EditBean.BUNDLE_NAME, "linkAdded",
+                    new String[] { target.getTitle() }));
         }
     }
-    
-    public String getSelectLink() {  
+
+    public String getSelectLink() {
         return null;
     }
-    
+
     public void setSelectLink(String s) {
     }
-    
+
     public void selectLink() {
         if (LOG.isDebugEnabled()) {
             LOG.debug("selectLink() called ...");
         }
     }
-    
+
     public void setShowDeleteLink(String s) {
     }
-    
+
     public String getShowDeleteLink() {
         return null;
     }
-    
+
     public void showDeleteLink() {
         deleteVisible = true;
     }
-    
+
     public String getHideDeleteLink() {
         return null;
     }
-    
+
     public void setHideDeleteLink(String s) {
     }
-    
+
     public void hideDeleteLink() {
         deleteVisible = false;
     }
-    
+
     public String getDeleteLink() {
         deleteLink();
         return null;
     }
-    
+
     public void setDeleteLink() {
         deleteLink();
     }
-    
+
     public void deleteLink() {
         try {
-            if(getSelectedLink()!=null) {
-                RemoveLink command = new RemoveLink(
-                        getSelectedLink().getDependantId(), 
-                        getSelectedLink().getDependencyId(), 
-                        getSelectedLink().getTypeId());
-                command = getCommandService().executeCommand(command);
+            if (getSelectedLink() != null) {
+                RemoveLink command = new RemoveLink(getSelectedLink().getDependantId(),
+                        getSelectedLink().getDependencyId(), getSelectedLink().getTypeId());
+                getCommandService().executeCommand(command);
                 getLinkList().remove(getSelectedLink());
                 setSelectedLink(null);
                 deleteVisible = false;
@@ -325,65 +316,51 @@ public class LinkBean {
         }
     }
 
-    private String getTypeName(CnALink link) {
-        String typeName = null;
-        Set<HuiRelation> huiRelationSet = entityType.getPossibleRelations();
-        for (HuiRelation huiRelation : huiRelationSet) {
-            if(link.getRelationId()!=null && link.getRelationId().equals(huiRelation.getId())) {
-                if(getTypeId().equals(huiRelation.getFrom())) {
-                    typeName = huiRelation.getName();
-                } else {
-                    typeName = huiRelation.getReversename();
-                }
-                break;
-            }
-        }
-        return typeName;
-    }
-    
-    private CnALink createLink(CnATreeElement source, CnATreeElement target, String typeId, String comment) throws CommandException {
-        if(LOG.isDebugEnabled()) {
+    private CnALink createLink(CnATreeElement source, CnATreeElement target, String typeId,
+            String comment) throws CommandException {
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Saving new link from " + source + " to " + target + "of type " + typeId); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
-        CreateLink command = new CreateLink(source, target, typeId, comment);
+        CreateLink<CnATreeElement, CnATreeElement> command = new CreateLink<>(source, target,
+                typeId, comment);
         command = getCommandService().executeCommand(command);
         return command.getLink();
     }
-    
+
     private LinkInformation map(CnALink link) {
-        return map(link,false);
+        return map(link, false);
     }
-    
+
     private LinkInformation map(CnALink link, boolean reverse) {
         LinkInformation linkInformation = new LinkInformation();
         linkInformation.setId(generateId(link));
-        if(reverse) {
+        if (reverse) {
             linkInformation.setTargetName(link.getDependant().getTitle());
             linkInformation.setTargetUuid(link.getDependant().getUuid());
         } else {
             linkInformation.setTargetName(link.getDependency().getTitle());
             linkInformation.setTargetUuid(link.getDependency().getUuid());
         }
-        linkInformation.setType(CnALink.getRelationName(getElement(),link));
+        linkInformation.setType(CnALink.getRelationName(getElement(), link));
         linkInformation.setDependantId(link.getId().getDependantId());
         linkInformation.setDependencyId(link.getId().getDependencyId());
         linkInformation.setTypeId(link.getRelationId());
         return linkInformation;
     }
-    
+
     /**
      * @param link
      * @return
      */
     private String generateId(CnALink link) {
         StringBuilder sb = new StringBuilder();
-        if(link.getDependant()!=null) {
+        if (link.getDependant() != null) {
             sb.append(link.getDependant().getId()).append("-");
         }
-        if(link.getDependency()!=null) {
+        if (link.getDependency() != null) {
             sb.append(link.getDependency().getId()).append("-");
         }
-        if(link.getTypeId()!=null) {
+        if (link.getTypeId() != null) {
             sb.append(link.getRelationId());
         }
         return sb.toString();
@@ -392,20 +369,17 @@ public class LinkBean {
     public void clear() {
         setTypeId(null);
         setElement(null);
-        if(getLinkList()!=null) {
+        if (getLinkList() != null) {
             getLinkList().clear();
         }
-        if(getLinkTargetList()!=null) {
+        if (getLinkTargetList() != null) {
             getLinkTargetList().clear();
         }
-        if(getLinkTargetNameList()!=null) {
+        if (getLinkTargetNameList() != null) {
             getLinkTargetNameList().clear();
         }
-        if(getLinkTypeList()!=null) {
-            getLinkTypeList().clear();
-        }
     }
-    
+
     public CnATreeElement getElement() {
         return element;
     }
@@ -446,20 +420,16 @@ public class LinkBean {
         this.selectedLink = selectedLink;
     }
 
-    public List<String> getLinkTypeList() {
-        return linkTypeList;
+    public Set<DirectedHuiRelation> getPossibleRelations() {
+        return possibleRelations;
     }
 
-    public String getSelectedLinkType() {
+    public DirectedHuiRelation getSelectedLinkType() {
         return selectedLinkType;
     }
 
-    public void setSelectedLinkType(String selectedLinkType) {
+    public void setSelectedLinkType(DirectedHuiRelation selectedLinkType) {
         this.selectedLinkType = selectedLinkType;
-    }
-
-    public void setLinkTypeList(List<String> linkTargetList) {
-        this.linkTypeList = linkTargetList;
     }
 
     public List<String> getLinkTargetNameList() {
@@ -485,7 +455,7 @@ public class LinkBean {
     public void setSelectedLinkTargetName(String selectedLinkTarget) {
         this.selectedLinkTargetName = selectedLinkTarget;
     }
-    
+
     public boolean getDeleteVisible() {
         return deleteVisible;
     }
@@ -505,7 +475,7 @@ public class LinkBean {
     private HUITypeFactory getHuiService() {
         return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
     }
-    
+
     private ICommandService getCommandService() {
         return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
     }

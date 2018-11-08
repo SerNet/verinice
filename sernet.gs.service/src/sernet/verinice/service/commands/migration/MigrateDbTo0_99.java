@@ -38,29 +38,22 @@ import sernet.verinice.service.commands.UpdateScopeId;
 @SuppressWarnings({ "serial", "restriction" })
 public class MigrateDbTo0_99 extends DbMigration {
 
-    private transient Logger log = Logger.getLogger(MigrateDbTo0_99.class);
+    private static final Logger log = Logger.getLogger(MigrateDbTo0_99.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(MigrateDbTo0_99.class);
-        }
-        return log;
-    }
-    
 	@Override
 	public double getVersion() {
 		return 0.99D;
 	}
 
 	public void execute() throws RuntimeCommandException {
-	    if (getLog().isDebugEnabled()) {
-	        getLog().debug("Updating database version to 0.99");
+	    if (log.isDebugEnabled()) {
+	        log.debug("Updating database version to 0.99");
         }
 	    UpdateScopeId updateScopeId = new UpdateScopeId();
 	    try {
 	        getCommandService().executeCommand(updateScopeId);
         } catch (CommandException e) {
-            getLog().error("Error while updating scope id.", e);
+            log.error("Error while updating scope id.", e);
             throw new RuntimeCommandException(e);
         }
 	    
@@ -68,7 +61,7 @@ public class MigrateDbTo0_99 extends DbMigration {
         try {
             getCommandService().executeCommand(addDefaultGroups);
         } catch (CommandException e) {
-            getLog().error("Error while adding default groups.", e);
+            log.error("Error while adding default groups.", e);
             throw new RuntimeCommandException(e);
         }
 	    

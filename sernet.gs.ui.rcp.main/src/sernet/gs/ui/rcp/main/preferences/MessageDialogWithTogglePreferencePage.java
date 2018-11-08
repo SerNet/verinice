@@ -108,6 +108,12 @@ public class MessageDialogWithTogglePreferencePage extends FieldEditorPreference
                 getFieldEditorParent());
         addField(infoDialogBpModeling);
 
+        BooleanFieldEditor infoDialogBpRiskConfiguration = new BooleanFieldEditor(
+                PreferenceConstants.INFO_BP_RISK_CONFIRMATION,
+                Messages.getString("GeneralSettingsPage.InfoBpConfiguration"), //$NON-NLS-1$
+                getFieldEditorParent());
+        addField(infoDialogBpRiskConfiguration);
+
         BooleanFieldEditor switchPerspectiveIsmView = new BooleanFieldEditor(
                 PreferenceConstants.getDontAskBeforeSwitch(ISMView.class), 
                 Messages.getString("GeneralSettingsPage.SwitchPerspectiveIsm"), //$NON-NLS-1$

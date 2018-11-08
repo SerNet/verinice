@@ -17,9 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -29,11 +26,9 @@ import org.eclipse.swt.graphics.Image;
 import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.hui.common.connect.IIdentifiableElement;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.Safeguard;
@@ -41,7 +36,7 @@ import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.LoadElementTitles;
+import sernet.verinice.rcp.ElementTitleCache;
 
 /**
  * @author koderman[at]sernet[dot]de
@@ -53,7 +48,6 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
     private static final Logger log = Logger.getLogger(RelationViewLabelProvider.class);
 
     private IRelationTable view;
-    private static Map<Integer, String> titleMap = new HashMap<>();
 
     public RelationViewLabelProvider(IRelationTable view) {
         this.view = view;
@@ -138,18 +132,8 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
             replaceLinkEntities(link);
             return getLinkTargetTitleIncludingPotentialIdentifier(view.getInputElmt(), link);
         case 4:
-            String title = "";
-            try {
-                CnATreeElement target = getElementOnOtherSide(view.getInputElmt(), link);
-                if (!titleMap.containsKey(target.getScopeId())) {
-                    title = loadElementsTitles(target);
-                } else {
-                    title = titleMap.get(target.getScopeId());
-                }
-            } catch (CommandException e) {
-                log.error("Error while getting element properties", e);
-            }
-            return title; // ScopeTitle from element dependencies
+            CnATreeElement target = getElementOnOtherSide(view.getInputElmt(), link);
+            return ElementTitleCache.getInstance().get(target.getScopeId());
         case 5:
             return link.getComment();
         case 6:
@@ -171,7 +155,8 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
         }
     }
 
-    private static CnATreeElement getElementOnOtherSide(CnATreeElement elementOnThisSide, CnALink link) {
+    private static CnATreeElement getElementOnOtherSide(CnATreeElement elementOnThisSide,
+            CnALink link) {
         CnATreeElement dependency = link.getDependency();
         if (dependency.equals(elementOnThisSide)) {
             return link.getDependant();
@@ -179,7 +164,8 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
         return dependency;
     }
 
-    public static String getLinkTargetTitleIncludingPotentialIdentifier(CnATreeElement linkSource, CnALink link) {
+    public static String getLinkTargetTitleIncludingPotentialIdentifier(CnATreeElement linkSource,
+            CnALink link) {
         CnATreeElement linkTarget = getElementOnOtherSide(linkSource, link);
         if (linkTarget instanceof BpRequirement || linkTarget instanceof BpRequirementGroup
                 || linkTarget instanceof Safeguard || linkTarget instanceof SafeguardGroup
@@ -226,14 +212,6 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
     private static Image getObjTypeImage(CnATreeElement elmt) {
         return CnAImageProvider.getImage(elmt);
 
-    }
-
-    private static String loadElementsTitles(CnATreeElement elmt) throws CommandException {
-        LoadElementTitles scopeCommand;
-        scopeCommand = new LoadElementTitles();
-        scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
-        titleMap = scopeCommand.getElements();
-        return titleMap.get(elmt.getScopeId());
     }
 
     public CnATreeElement getInputElemt() {

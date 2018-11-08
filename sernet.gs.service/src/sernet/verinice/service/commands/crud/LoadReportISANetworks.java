@@ -48,7 +48,7 @@ public class LoadReportISANetworks extends GenericCommand implements ICachedComm
     
     private boolean resultInjectedFromCache = false;
     
-    private static transient Logger LOG = Logger.getLogger(LoadReportISANetworks.class);
+    private static final Logger LOG = Logger.getLogger(LoadReportISANetworks.class);
     
     private static final String NETWORKS_ROOTGROUPNAME = "01.02 Networkscans";
     
@@ -83,7 +83,7 @@ public class LoadReportISANetworks extends GenericCommand implements ICachedComm
             try {
                 networkScansGroup = (ControlGroup)getDaoFactory().getDAO(ControlGroup.TYPE_ID).findById(getRootNetworkGroup(getRootAuditScopeID()));
                 if(networkScansGroup == null){
-                    getLog().error("NetworkRootGroup:\t" + NETWORKS_ROOTGROUPNAME + " not found! Qutting Command and returning empty list");
+                    LOG.error("NetworkRootGroup:\t" + NETWORKS_ROOTGROUPNAME + " not found! Qutting Command and returning empty list");
                     return;
                 }
                 LoadReportElements cgFinder = new LoadReportElements(ControlGroup.TYPE_ID, networkScansGroup.getDbId(), true);
@@ -107,7 +107,7 @@ public class LoadReportISANetworks extends GenericCommand implements ICachedComm
                     }
                 }
             } catch (CommandException e){
-                getLog().error("Error while executing command", e);
+                LOG.error("Error while executing command", e);
             }
         }
 
@@ -168,8 +168,8 @@ public class LoadReportISANetworks extends GenericCommand implements ICachedComm
             Object[] array = (Object[])result;
             networkResults = (ArrayList<List<String>>)array[0];
             resultInjectedFromCache = true;
-            if(getLog().isDebugEnabled()){
-                getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+            if(LOG.isDebugEnabled()){
+                LOG.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
             }
         }
     }
@@ -184,13 +184,6 @@ public class LoadReportISANetworks extends GenericCommand implements ICachedComm
         return result;
     }
     
-    private Logger getLog(){
-        if(LOG == null){
-            LOG = Logger.getLogger(LoadReportISANetworks.class);
-        }
-        return LOG;
-    }
-
     public List<List<String>> getNetworkResults() {
         return networkResults;
     }

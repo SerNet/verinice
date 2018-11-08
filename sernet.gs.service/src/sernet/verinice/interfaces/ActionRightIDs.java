@@ -17,10 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-
-import org.apache.log4j.Logger;
+import java.util.stream.Stream;
 
 /**
  * List of all possible actions that should be controlable by right-management
@@ -64,7 +61,6 @@ public final class ActionRightIDs {
     public static final String DELETEITEM = "deleteitem";
     public static final String DERIVESTATUS = "derivestatus";
     public static final String DOCUMENTVIEW = "documentview";
-    public static final String DSMODELVIEW = "dsmodelview";
     public static final String EDITPROFILE = "editprofile";
     public static final String EDITLINKS = "editlinks";
     public static final String EXPORT_LINK_TABLE = "exportlinktable";
@@ -107,6 +103,7 @@ public final class ActionRightIDs {
     public static final String TASKCHANGEASSIGNEE = "taskchangeassignee";
     public static final String TASKCHANGEDUEDATE = "taskchangeduedate";
     public static final String TASKWITHRELEASEPROCESS = "taskwithreleaseprocess";
+    public static final String EDITRISKCONFIGURATION = "editriskconfiguration";
     // value "bsidnd" kept due to historical reasons
     public static final String TREEDND = "bsidnd";
     public static final String UNIFY = "unify";
@@ -114,25 +111,24 @@ public final class ActionRightIDs {
     public static final String XMLIMPORT = "xmlimport";
     public static final String MIGRATE_DATA_PROTECTION = "migrate_data_protection";
 
-    private static Logger log = Logger.getLogger(ActionRightIDs.class);
+
+    private  static final String[] ALL_RIGHT_IDS;
+
+    static {
+        ALL_RIGHT_IDS = Stream.of(ActionRightIDs.class.getDeclaredFields()).map(field -> {
+            try {
+                return field.get(null);
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+               throw new ExceptionInInitializerError(e);
+            }
+        }).filter(String.class::isInstance).toArray(String[]::new);
+    }
 
     private ActionRightIDs() {
         super();
     }
 
     public static String[] getAllRightIDs(){
-        ArrayList<String> retVal = new ArrayList<String>(0);
-        for(Field f : ActionRightIDs.class.getDeclaredFields()){
-            try {
-                if(f.get(null) instanceof String ) {
-                    retVal.add((String)f.get(null));
-                }
-            } catch (IllegalArgumentException e) {
-                log.error("Error while getting rightIDs", e);
-            } catch (IllegalAccessException e) {
-                log.error("Error while getting rightIDs", e);
-            }
-        }
-        return retVal.toArray(new String[retVal.size()]);
+        return ALL_RIGHT_IDS.clone();
     }
 }

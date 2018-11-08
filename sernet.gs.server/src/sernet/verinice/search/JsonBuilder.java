@@ -25,9 +25,11 @@ import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 
+import sernet.gs.service.Retriever;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -37,6 +39,7 @@ import sernet.verinice.interfaces.IElementTitleCache;
 import sernet.verinice.interfaces.search.IJsonBuilder;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.groups.ImportBpGroup;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnATreeElement;
@@ -45,53 +48,56 @@ import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
+ * Creates JSON documents for indexing in ElasticSearch
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class JsonBuilder implements IJsonBuilder {
-    
-    private static final Logger LOG = Logger.getLogger(JsonBuilder.class);    
+
+    private static final Logger LOG = Logger.getLogger(JsonBuilder.class);
 
     private final ConcurrentSimpleDateFormatter simpleDateFormatter = new ConcurrentSimpleDateFormatter();
 
     private IElementTitleCache titleCache;
-    
+
+    /**
+     * @return A JSON document from an element for indexing in ElasticSearch
+     */
     public String getJson(CnATreeElement element) {
-        if(!isIndexableElement(element)){
+        if (!isIndexableElement(element)) {
             return null;
         }
-        String title = null;    
-        if(getTitleCache()!=null && element.getScopeId()!=null) {
+        String title = null;
+        if (getTitleCache() != null && element.getScopeId() != null) {
             title = getScopeTitle(element);
         }
-        if(title==null && element.getScopeId()!=null) {
+        if (title == null && element.getScopeId() != null) {
             title = element.getScopeId().toString();
         }
         return getJson(element, title);
     }
 
-    private String getScopeTitle(CnATreeElement element) {
+    private String getScopeTitle(@NonNull CnATreeElement element) {
         String title = null;
-        if(isScope(element)) {
+        if (element.isScope()) {
             title = element.getTitle();
         } else {
             title = getTitleCache().get(element.getScopeId());
         }
-        if(title==null) {
-            LOG.warn("Scope title not found in cache for element: " + element.getUuid() + ", type: " + element.getTypeId() + ". Loading all scope titles now...");
-            getTitleCache().load(new String[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID, ItNetwork.TYPE_ID});
+        if (title == null) {
+            LOG.warn("Scope title not found in cache for element: " + element.getUuid() + ", type: "
+                    + element.getTypeId() + ". Loading all scope titles now...");
+            getTitleCache().load(ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID,
+                    ItNetwork.TYPE_ID);
             title = getTitleCache().get(element.getScopeId());
         }
         return title;
     }
 
-    private boolean isScope(CnATreeElement element) {
-        return element instanceof ITVerbund || element instanceof Organization || element instanceof ItNetwork;
-    }
-    
     public final String getJson(CnATreeElement element, String scopeTitle) {
         try {
             String json = null;
-            if(isIndexableElement(element)){
+            if (isIndexableElement(element)) {
                 json = doGetJson(element, scopeTitle);
             }
             if (LOG.isDebugEnabled()) {
@@ -102,13 +108,13 @@ public class JsonBuilder implements IJsonBuilder {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }  
+        }
     }
 
     private String doGetJson(CnATreeElement element, String scopeTitle) throws IOException {
         EntityType entityType = element.getEntityType();
         XContentBuilder builder;
-        builder = XContentFactory.jsonBuilder().startObject();      
+        builder = XContentFactory.jsonBuilder().startObject();
         builder.field(ISearchService.ES_FIELD_UUID, element.getUuid());
         builder.field(ISearchService.ES_FIELD_DBID, element.getDbId());
         builder.field(ISearchService.ES_FIELD_TITLE, element.getTitle());
@@ -116,106 +122,105 @@ public class JsonBuilder implements IJsonBuilder {
         builder.field(ISearchService.ES_FIELD_EXT_ID, element.getExtId());
         builder.field(ISearchService.ES_FIELD_SOURCE_ID, element.getSourceId());
         builder.field(ISearchService.ES_FIELD_SCOPE_ID, element.getScopeId());
-        if(scopeTitle!=null) {
+        if (scopeTitle != null) {
             builder.field(ISearchService.ES_FIELD_SCOPE_TITLE, scopeTitle);
         }
         builder.field(ISearchService.ES_FIELD_PARENT_ID, element.getParentId());
         builder.field(ISearchService.ES_FIELD_ICON_PATH, element.getIconPath());
-       
+
         addPermissions(builder, element);
-        
-        if(element.getEntity()!=null && element.getEntityType()!=null && entityType.getAllPropertyTypeIds()!=null) {
-            builder = addProperties(builder, entityType.getAllPropertyTypeIds(), element.getEntity());
+
+        if (element.getEntity() != null && element.getEntityType() != null
+                && entityType.getAllPropertyTypeIds() != null) {
+            builder = addProperties(builder, entityType.getAllPropertyTypeIds(),
+                    element.getEntity());
         }
         return builder.endObject().string();
     }
 
-    /**
-     * @param element
-     * @return
-     * @throws IOException 
-     */
-    private static void addPermissions(XContentBuilder builder, CnATreeElement element) throws IOException {
-        if(element.getPermissions()==null || element.getPermissions().isEmpty()) {
+    private static void addPermissions(XContentBuilder builder, CnATreeElement element)
+            throws IOException {
+        element = Retriever.checkRetrievePermissions(element);
+        if (element.getPermissions() == null || element.getPermissions().isEmpty()) {
             return;
         }
         builder.startArray(ISearchService.ES_FIELD_PERMISSION_ROLES);
-        for (Permission p : element.getPermissions()) {          
+        for (Permission p : element.getPermissions()) {
             int value = 0;
-            if(p.isReadAllowed()) {
+            if (p.isReadAllowed()) {
                 value = 1;
             }
-            if(p.isWriteAllowed()) {
+            if (p.isWriteAllowed()) {
                 value = 2;
             }
-            if(value > 0) {
+            if (value > 0) {
                 builder.startObject();
-                builder.field( ISearchService.ES_FIELD_PERMISSION_NAME, p.getRole());
-                builder.field( ISearchService.ES_FIELD_PERMISSION_VALUE, value);
+                builder.field(ISearchService.ES_FIELD_PERMISSION_NAME, p.getRole());
+                builder.field(ISearchService.ES_FIELD_PERMISSION_VALUE, value);
                 builder.endObject();
             }
         }
         builder.endArray();
     }
 
-    private XContentBuilder addProperties(XContentBuilder builder, String[] propertyTypeIds, Entity e) throws IOException {
+    private XContentBuilder addProperties(XContentBuilder builder, String[] propertyTypeIds,
+            Entity e) throws IOException {
         HUITypeFactory factory = HUITypeFactory.getInstance();
-        for(String propertyTypeId : propertyTypeIds){
+        for (String propertyTypeId : propertyTypeIds) {
             PropertyType propertyType = factory.getPropertyType(e.getEntityType(), propertyTypeId);
             // reference types are ignored (VN-1204)
-            if(!propertyType.isReference()) {
+            if (!propertyType.isReference()) {
                 builder.field(propertyTypeId, mapPropertyString(e, propertyType));
-            }          
+            }
         }
         return builder;
     }
-    
-    
-    private String mapPropertyString(Entity e, PropertyType pType){
-        String value = e.getSimpleValue(pType.getId());
+
+    private String mapPropertyString(Entity e, PropertyType pType) {
+        String value = e.getPropertyValue(pType.getId());
         String mappedValue = "";
-        if(StringUtils.isEmpty(value)){
+        if (StringUtils.isEmpty(value)) {
             mappedValue = getNullValue();
-        } else if(pType.isDate()){
-            mappedValue = mapDateProperty(e.getValue(pType.getId()));
-        } else if(pType.isSingleSelect() || pType.isMultiselect()){
+        } else if (pType.isDate()) {
+            mappedValue = mapDateProperty(e.getRawPropertyValue(pType.getId()));
+        } else if (pType.isSingleSelect() || pType.isMultiselect()) {
             mappedValue = mapMultiSelectProperty(value, pType);
-        } else if(pType.isNumericSelect()){
+        } else if (pType.isNumericSelect()) {
             mappedValue = mapNumericSelectProperty(value, pType);
         } else {
             mappedValue = value;
         }
         return mappedValue;
     }
-    
-    private static String getNullValue(){
-        if(Locale.GERMAN.equals(Locale.getDefault()) || Locale.GERMANY.equals(Locale.getDefault())){
+
+    private static String getNullValue() {
+        if (Locale.GERMAN.equals(Locale.getDefault())
+                || Locale.GERMANY.equals(Locale.getDefault())) {
             return "unbearbeitet";
         } else {
             return "unedited";
         }
     }
-    
-    
-    
-    private static String mapNumericSelectProperty(String value, PropertyType type){
+
+    private static String mapNumericSelectProperty(String value, PropertyType type) {
         return type.getNameForValue(Integer.parseInt(value));
     }
-    
-    private static String mapMultiSelectProperty(String value, PropertyType type){
+
+    private static String mapMultiSelectProperty(String value, PropertyType type) {
         PropertyOption o = type.getOption(value);
-        if(value == null || type == null || o == null){
-            if(LOG.isDebugEnabled()){
-                LOG.debug("No mapping for:\t" + value + "\t on <" + type.getId() + "> found, returning value");
+        if (value == null || o == null) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("No mapping for:\t" + value + "\t on <" + type.getId()
+                        + "> found, returning value");
             }
             return value;
         }
-        if(LOG.isDebugEnabled()){
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Mapping for:\t" + value + "\t on <" + type.getId() + ">:\t" + o.getName());
         }
         return type.getOption(value).getName();
     }
-    
+
     /**
      * Parses a date which is represented as milliseconds in string form.
      *
@@ -225,28 +230,25 @@ public class JsonBuilder implements IJsonBuilder {
      * @return the short form of the date {@link DateFormat#SHORT}, SHORT is
      *         completely numeric, such as 12.13.52 or 3:30pm
      */
-    private String mapDateProperty(String value){
-        if(StringUtils.isNotEmpty(value)){
-            try{
+    private String mapDateProperty(String value) {
+        if (StringUtils.isNotEmpty(value)) {
+            try {
                 return tryParseDate(value);
-            } catch (Exception e){
+            } catch (Exception e) {
                 LOG.error("Error on mapping date property: [" + value + "]", e);
             }
         }
         return value;
     }
-    
-    private String tryParseDate(String value){
+
+    private String tryParseDate(String value) {
         long timeStamp = Long.parseLong(value);
         return simpleDateFormatter.getFormatedDate(timeStamp);
     }
-    
-    private static boolean isIndexableElement(CnATreeElement element){
-        if(element instanceof ImportIsoGroup || element instanceof ImportBsiGroup){
-            return false;
-        } else {
-            return true;
-        }
+
+    private static boolean isIndexableElement(CnATreeElement element) {
+        return !(element instanceof ImportIsoGroup || element instanceof ImportBsiGroup
+                || element instanceof ImportBpGroup);
     }
 
     public IElementTitleCache getTitleCache() {

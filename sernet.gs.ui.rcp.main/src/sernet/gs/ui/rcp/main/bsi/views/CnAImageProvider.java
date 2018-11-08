@@ -27,6 +27,7 @@ import org.eclipse.swt.graphics.Point;
 
 import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.verinice.model.bp.ImplementationStatus;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.ImportBpGroup;
@@ -62,12 +63,7 @@ public final class CnAImageProvider {
                 ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
         m.put(Safeguard.PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE,
                 ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
-        m.put(BpRequirement.PROP_IMPLEMENTATION_STATUS_NO, ImageCache.MASSNAHMEN_UMSETZUNG_NEIN);
-        m.put(BpRequirement.PROP_IMPLEMENTATION_STATUS_YES, ImageCache.MASSNAHMEN_UMSETZUNG_JA);
-        m.put(BpRequirement.PROP_IMPLEMENTATION_STATUS_PARTIALLY,
-                ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE);
-        m.put(BpRequirement.PROP_IMPLEMENTATION_STATUS_NOT_APPLICABLE,
-                ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH);
+
         IMAGE_NAME_BY_STATE = Collections.unmodifiableMap(m);
     }
 
@@ -168,21 +164,21 @@ public final class CnAImageProvider {
         if (element instanceof Safeguard) {
             Safeguard safeguard = (Safeguard) element;
             safeguard = (Safeguard) Retriever.checkRetrieveElement(safeguard);
-            String state = safeguard.getImplementationStatus();
+            ImplementationStatus status = safeguard.getImplementationStatus();
 
-            final Image implementationStateImage = getImageByImplementationState(state);
+            final Image implementationStatusImage = getImageByImplementationStatus(status);
             final Image typeImage = ImageCache.getInstance().getImage(ImageCache.BP_SAFEGUARD);
 
-            return createImageWithOverlay(implementationStateImage, typeImage);
+            return createImageWithOverlay(implementationStatusImage, typeImage);
         }
         if (element instanceof BpRequirement) {
             BpRequirement requirement = (BpRequirement) element;
             requirement = (BpRequirement) Retriever.checkRetrieveElement(requirement);
-            String state = requirement.getImplementationStatus();
-            final Image implementationStateImage = getImageByImplementationState(state);
+            ImplementationStatus status = requirement.getImplementationStatus();
+            final Image implementationStatusImage = getImageByImplementationStatus(status);
             final Image typeImage = ImageCache.getInstance().getImage(ImageCache.BP_REQUIREMENT);
 
-            return createImageWithOverlay(implementationStateImage, typeImage);
+            return createImageWithOverlay(implementationStatusImage, typeImage);
         }
         if (element instanceof Control) {
             Control control = (Control) element;
@@ -200,6 +196,31 @@ public final class CnAImageProvider {
             return getImageByImplementationState(state);
         }
         return null;
+    }
+
+    private static Image getImageByImplementationStatus(ImplementationStatus status) {
+        String imageName;
+        if (status == null) {
+            imageName = ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET;
+        } else {
+            switch (status) {
+            case NO:
+                imageName = ImageCache.MASSNAHMEN_UMSETZUNG_NEIN;
+                break;
+            case NOT_APPLICABLE:
+                imageName = ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH;
+                break;
+            case PARTIALLY:
+                imageName = ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE;
+                break;
+            case YES:
+                imageName = ImageCache.MASSNAHMEN_UMSETZUNG_JA;
+                break;
+            default:
+                throw new IllegalArgumentException("Unhandled implementation status " + status);
+            }
+        }
+        return ImageCache.getInstance().getImage(imageName);
     }
 
     private static Image createImageWithOverlay(final Image baseImage, final Image overlayImage) {

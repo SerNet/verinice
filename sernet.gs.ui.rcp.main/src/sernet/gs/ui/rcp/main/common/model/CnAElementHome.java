@@ -281,9 +281,9 @@ public final class CnAElementHome {
         UpdateElementEntity<? extends CnATreeElement> command = createCommand(element);
         command = getCommandService().executeCommand(command);
         if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
-            validateElement(command.getElement());
+            validateElement(command.getMergedElement());
         }
-        return command.getElement(); 
+        return command.getMergedElement(); 
     }
 
     public void update(List<? extends CnATreeElement> elements) throws StaleObjectStateException, CommandException {
@@ -544,7 +544,7 @@ public final class CnAElementHome {
         // fire model changed events:        
         for (CnALink link : newLinks) {
             if (link.getDependant() instanceof ITVerbund) {
-                CnAElementFactory.getInstance().reloadModelFromDatabase();
+                CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
                 return;
             }
         }
@@ -557,7 +557,10 @@ public final class CnAElementHome {
             }
             if (link.getDependant() instanceof IISO27kElement || link.getDependency() instanceof IISO27kElement) {
                 CnAElementFactory.getInstance().getISO27kModel().linkAdded(link);
-            }                 
+            }
+            if (link.getDependant() instanceof IBpElement || link.getDependency() instanceof IBpElement) {
+                CnAElementFactory.getInstance().getBpModel().linkAdded(link);
+            }
         }
         DNDItems.clear();
     }

@@ -52,15 +52,8 @@ import sernet.verinice.interfaces.INoAccessControl;
  */
 public class UpdateScopeId extends GenericCommand implements INoAccessControl {
 
-    private transient Logger log = Logger.getLogger(UpdateScopeId.class);
+    private static final Logger log = Logger.getLogger(UpdateScopeId.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(UpdateScopeId.class);
-        }
-        return log;
-    }
-      
     private Integer elementId;
     
     private Integer scopeId;
@@ -130,8 +123,8 @@ public class UpdateScopeId extends GenericCommand implements INoAccessControl {
 
     private void update(CnATreeElement element, Integer scopeId) {
         element.setScopeId(scopeId);
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Updating element: " + element.getTypeId() + " (" + element.getUuid() + ") to scope: " + scopeId);
+        if (log.isDebugEnabled()) {
+            log.debug("Updating element: " + element.getTypeId() + " (" + element.getUuid() + ") to scope: " + scopeId);
         }
         for (CnATreeElement child : element.getChildren()) {
             update(child, scopeId);

@@ -64,7 +64,7 @@ import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
  */
 public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
 
-    private Logger log = Logger.getLogger(SyncInsertUpdateTest.class);
+    private static final Logger log = Logger.getLogger(SyncInsertUpdateTest.class);
 
     private static final String VNA_FILE = "SyncInsertUpdateTest.vna";
 

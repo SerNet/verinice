@@ -16,18 +16,20 @@
  *
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
+ *     Alexander Ben Nasrallah <an@sernet.de>
  ******************************************************************************/
 package sernet.verinice.web.poseidon;
 
+import static org.apache.commons.io.FilenameUtils.concat;
 import static sernet.gs.web.Util.getMessage;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-
-import static org.apache.commons.io.FilenameUtils.concat;
 
 /**
  * Checks if resources are available.
@@ -39,61 +41,49 @@ import static org.apache.commons.io.FilenameUtils.concat;
 public class ResourcesChecker {
 
     private static final String MANUAL_DIR = "manual";
-    private static final String BASE_CLIENT_DIR = "clients";
+    public static final String BASE_CLIENT_DIR = "/clients";
     private static final String MESSAGES = "sernet.verinice.web.WebMessages";
 
+    private ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+    private File clientDir = new File(externalContext.getRealPath(BASE_CLIENT_DIR));
 
     /**
      * Checks whether there is at least one client available.
      */
     public boolean clientsAvailable() {
-        return existsWindowsClient64Bit() || existsWindowsClient32Bit() || existsLinuxClient64Bit() || existsLinuxClient32Bit();
+        return getClientFiles().length != 0;
     }
 
     /**
-     * Checks whether there is at leas one manual available.
+     * @return A list of files in the client directory sorted by name ascending.
+     */
+    public File[] getClientFiles() {
+        if (!clientDir.exists()) {
+            return new File[] {};
+        }
+        File[] files = clientDir.listFiles();
+        Arrays.sort(files, new Comparator<File>() {
+            @Override
+            public int compare(File o1, File o2) {
+                return o1.getName().compareToIgnoreCase(o2.getName());
+            }
+        });
+        return files;
+    }
+
+    /**
+     * Checks whether there is at least one manual available.
      */
     public boolean manualsAvailable() {
         return existsUserManualPdf() || existsUserManualHtml();
     }
 
-
-    public boolean existsWindowsClient64Bit() {
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        String fileName = concat(BASE_CLIENT_DIR, "verinice-windows-x86_64.zip");
-        File file = new File(externalContext.getRealPath(fileName));
-        return file.exists();
-    }
-
-    public boolean existsWindowsClient32Bit() {
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        String fileName = concat(BASE_CLIENT_DIR, "verinice-windows-x86.zip");
-        File file = new File(externalContext.getRealPath(fileName));
-        return file.exists();
-    }
-
-    public boolean existsLinuxClient64Bit() {
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        String fileName = concat(BASE_CLIENT_DIR, "verinice-linux-x86_64.zip");
-        File file = new File(externalContext.getRealPath(fileName));
-        return file.exists();
-    }
-
-    public boolean existsLinuxClient32Bit() {
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        String fileName = concat(BASE_CLIENT_DIR, "verinice-linux-x86.zip");
-        File file = new File(externalContext.getRealPath(fileName));
-        return file.exists();
-    }
-
     public boolean existsUserManualPdf() {
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         File file = new File(externalContext.getRealPath(concat(MANUAL_DIR, getManualName("manual_pdf_name"))));
         return file.exists();
     }
 
     public boolean existsUserManualHtml() {
-        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
         File file = new File(externalContext.getRealPath(concat(MANUAL_DIR, getManualName("manual_html_name"))));
         return file.exists();
     }

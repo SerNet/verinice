@@ -46,7 +46,7 @@ public class SyncParameterTest extends ContextConfiguration {
     private static final String IT_NETWORK_VNA = "IT_Network.vna";
     private static final String IT_NETWORK_XML = "IT_Network.xml";
 
-    private Logger log = Logger.getLogger(SyncParameter.class);
+    private static final Logger log = Logger.getLogger(SyncParameter.class);
 
     @Resource(name = "commandService")
     protected ICommandService commandService;

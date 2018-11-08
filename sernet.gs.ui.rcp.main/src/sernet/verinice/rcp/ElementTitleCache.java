@@ -13,13 +13,19 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bp.IBpModelListener;
 import sernet.verinice.model.bp.elements.BpModel;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.groups.BpPersonGroup;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIModelListener;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.PersonenKategorie;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.iso27k.PersonGroup;
 import sernet.verinice.model.validation.CnAValidation;
 import sernet.verinice.service.commands.LoadElementTitles;
 
@@ -28,15 +34,21 @@ public class ElementTitleCache
 
     private static final Logger LOG = Logger.getLogger(ElementTitleCache.class);
 
-    private static HashMap<Integer, String> titleMap = new HashMap<>();
+    private HashMap<Integer, String> titleMap = new HashMap<>();
 
     private static ElementTitleCache instance;
 
-    private static Set<String> typeIdSet = new HashSet<>();
+    private Set<String> typeIdSet = new HashSet<>();
 
-    private static ElementTitleCache init() {
+    private static final Object mutex = new Object();
+
+    public static ElementTitleCache getInstance() {
         if (instance == null) {
-            instance = createInstance();
+            synchronized (mutex) {
+                if (instance == null) {
+                    createInstance();
+                }
+            }
         }
         return instance;
     }
@@ -46,17 +58,19 @@ public class ElementTitleCache
         CnAElementFactory.getLoadedModel().addBSIModelListener(instance);
         CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(instance);
         CnAElementFactory.getInstance().getBpModel().addModITBOModelListener(instance);
+        instance.load(new String[] { ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID,
+                ItNetwork.TYPE_ID, PersonGroup.TYPE_ID, PersonenKategorie.TYPE_ID_HIBERNATE,
+                BpPersonGroup.TYPE_ID });
         return instance;
     }
 
-    public static String get(Integer dbId) {
+    public String get(Integer dbId) {
         return titleMap.get(dbId);
     }
 
-    public static void load(String[] typeIds) {
+    private void load(String[] typeIds) {
         try {
             Activator.inheritVeriniceContextState();
-            init();
             LoadElementTitles scopeCommand;
             scopeCommand = new LoadElementTitles(typeIds);
             scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);

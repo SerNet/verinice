@@ -29,9 +29,9 @@ import java.util.Set;
 
 import org.apache.commons.lang.ArrayUtils;
 
+import sernet.hui.common.connect.ITaggableElement;
 import sernet.verinice.interfaces.IFilter;
 import sernet.verinice.interfaces.IParameter;
-import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27Scope;
 import sernet.verinice.model.iso27k.IISO27kElement;
@@ -48,20 +48,12 @@ public abstract class ElementFilter {
     public static final String PARAM_TYPE_IDS = "type_ids"; //$NON-NLS-1$
     public static final String PARAM_TAGS = "tags"; //$NON-NLS-1$
     public static final String PARAM_FILTER_ORGS = "filter_orgs"; //$NON-NLS-1$
-    public static final String[] ALL_TYPES = new String[]{"ALL_TYPES","ALL_TYPES"}; //$NON-NLS-1$ //$NON-NLS-1$
-    
+    public static final String[] ALL_TYPES = new String[] { "ALL_TYPES", "ALL_TYPES" }; //$NON-NLS-1$
+
     private ElementFilter() {
         super();
     }
 
-    /**
-     * @deprecated Use filterChildrenOfElement(CnATreeElement, Map<String, Object>) instead
-     */
-    @Deprecated 
-    public static void applyParameter(CnATreeElement element, Map<String, Object> filterParameter) {
-        filterChildrenOfElement(element, filterParameter);
-    }
-    
     /**
      * Filters the element's children with the filter parameters.
      * 
@@ -102,25 +94,33 @@ public abstract class ElementFilter {
         parameterMap = new Hashtable<>();
         for (IParameter param : paramerterList) {
             if (param instanceof TypeParameter) {
-                Set<String[]> typeIdSet = (Set<String[]>) param.getParameter();
-                if (typeIdSet != null && !typeIdSet.isEmpty()) {
-                    String[] typeIdArray = typeIdSet.iterator().next();
-                    if (typeIdSet.size() > 1
-                            || !Arrays.equals(typeIdArray, ElementFilter.ALL_TYPES)) {
-                        parameterMap.put(ElementFilter.PARAM_TYPE_IDS, typeIdSet);
-                    }
-                }
+                addTypeParameter(parameterMap, param);
             }
             if (param instanceof TagParameter) {
-                TagParameter tagParameter = (TagParameter) param;
-                String[] tagArray = tagParameter.getPattern();
-                if (tagArray != null && tagArray.length > 0) {
-                    parameterMap.put(ElementFilter.PARAM_TAGS, tagParameter.getPattern());
-                    parameterMap.put(ElementFilter.PARAM_FILTER_ORGS, tagParameter.isFilterOrg());
-                }
+                addTagParameter(parameterMap, param);
             }
         }
         return parameterMap;
+    }
+
+    private static void addTagParameter(Map<String, Object> parameterMap, IParameter param) {
+        TagParameter tagParameter = (TagParameter) param;
+        String[] tagArray = tagParameter.getPattern();
+        if (tagArray != null && tagArray.length > 0) {
+            parameterMap.put(ElementFilter.PARAM_TAGS, tagParameter.getPattern());
+            parameterMap.put(ElementFilter.PARAM_FILTER_ORGS, tagParameter.isFilterOrg());
+        }
+    }
+
+    private static void addTypeParameter(Map<String, Object> parameterMap, IParameter param) {
+        Set<String[]> typeIdSet = (Set<String[]>) param.getParameter();
+        if (typeIdSet != null && !typeIdSet.isEmpty()) {
+            String[] typeIdArray = typeIdSet.iterator().next();
+            if (typeIdSet.size() > 1
+                    || !Arrays.equals(typeIdArray, ElementFilter.ALL_TYPES)) {
+                parameterMap.put(ElementFilter.PARAM_TYPE_IDS, typeIdSet);
+            }
+        }
     }
 
     private static boolean checkElement(CnATreeElement element, Set<IFilter> filterSet) {
@@ -141,7 +141,7 @@ public abstract class ElementFilter {
         public static TypeFilter createFilter(Set<String[]> visibleTypeSet) {
             return new TypeFilter(visibleTypeSet);
         }
-        
+
         protected TypeFilter(Set<String[]> visibleTypeSet) {
             super();
             this.visibleTypeSet = visibleTypeSet;
@@ -149,14 +149,15 @@ public abstract class ElementFilter {
 
         @Override
         public boolean check(CnATreeElement element) {
-            return element.isScope() || contains(visibleTypeSet,element.getTypeId());
+            return element.isScope() || contains(visibleTypeSet, element.getTypeId());
         }
-        
+
         private boolean contains(Set<String[]> visibleTypePairs, String typeId) {
             for (String[] visibleTypePair : visibleTypePairs) {
                 String visibleElementType = visibleTypePair[0];
                 String visibleGroupType = visibleTypePair[1];
-                if (visibleElementType.equals(ALL_TYPES[0]) || visibleElementType.equals(typeId) || visibleGroupType.equals(typeId)) {
+                if (visibleElementType.equals(ALL_TYPES[0]) || visibleElementType.equals(typeId)
+                        || visibleGroupType.equals(typeId)) {
                     return true;
                 }
             }
@@ -169,7 +170,7 @@ public abstract class ElementFilter {
         private boolean filterOrgs;
 
         public static TagFilter createFilter(String[] tagArray, boolean filterOrgs) {
-            return new TagFilter(tagArray,filterOrgs);
+            return new TagFilter(tagArray, filterOrgs);
         }
 
         protected TagFilter(String[] tagArray, boolean filterOrgs) {
@@ -178,39 +179,38 @@ public abstract class ElementFilter {
             this.filterOrgs = filterOrgs;
         }
 
-        /* (non-Javadoc)
-         * @see sernet.verinice.iso27k.service.commands.IFilter#check(sernet.verinice.model.common.CnATreeElement)
+        /*
+         * @see
+         * sernet.verinice.iso27k.service.commands.IFilter#check(sernet.verinice
+         * .model.common.CnATreeElement)
          */
         @Override
         public boolean check(CnATreeElement element) {
             if (ArrayUtils.isEmpty(tagArray)) {
                 return true;
             }
-            if (filterOrgs && Organization.TYPE_ID.equals(element.getTypeId())) {
-                Collection<String> tagList = TagHelper
-                        .getTags(element.getEntity().getSimpleValue(Organization.PROP_TAG));
-                for (String tag : tagArray) {
-                    if (tag.equals(NO_TAG) && tagList.isEmpty()) {
-                        return true;
-                    }
-                    for (String zielTag : tagList) {
-                        if (zielTag.equals(tag)) {
-                            return true;
-                        }
-                    }
+            if (element.isOrganization()) {
+                if (filterOrgs) {
+                    return checkTags(tagArray, (Organization) element);
+                } else {
+                    return true;
                 }
-            } else if (!filterOrgs && element instanceof IISO27kElement
-                    && !(element instanceof Group) && !(element instanceof IISO27Scope)) {
-                IISO27kElement iso = (IISO27kElement) element;
-                for (String tag : tagArray) {
-                    if (tag.equals(NO_TAG) && iso.getTags().isEmpty()) {
-                        return true;
-                    }
-                    for (String zielTag : iso.getTags()) {
-                        if (zielTag.equals(tag)) {
-                            return true;
-                        }
-                    }
+            } else if (element instanceof IISO27kElement && !(element instanceof Group)
+                    && !(element instanceof IISO27Scope)) {
+                return checkTags(tagArray, (IISO27kElement) element);
+            } else {
+                return true;
+            }
+        }
+
+        private static boolean checkTags(String[] tagsfFromFilter, ITaggableElement element) {
+            Collection<String> tagsFromElement = element.getTags();
+            for (String tag : tagsfFromFilter) {
+                if (tag.equals(NO_TAG) && tagsFromElement.isEmpty()) {
+                    return true;
+                }
+                if (tagsFromElement.contains(tag)) {
+                    return true;
                 }
             }
             return false;

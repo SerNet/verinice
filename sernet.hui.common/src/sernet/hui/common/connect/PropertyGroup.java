@@ -84,4 +84,9 @@ public class PropertyGroup implements IEntityElement {
     public String getTags() {
         return tags;
     }
+
+    @Override
+    public String toString() {
+        return "PropertyGroup [id=" + id + ", name=" + name + "]";
+    }
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="sernet.verinice.desktop.integration.preferences.DesktopIntegrationPreferencePage"
+            id="serner.verinice.desktop.integration.preferences.DesktopIntegrationPreferencePage"
+            name="%page.name"/>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="sernet.verinice.desktop.integration.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+
+</plugin>

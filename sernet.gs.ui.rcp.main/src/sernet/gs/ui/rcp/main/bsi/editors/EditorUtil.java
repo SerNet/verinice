@@ -19,16 +19,28 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.editors;
 
-import java.util.Set;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.apache.log4j.Logger;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.service.StringUtil;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.hui.common.connect.IIdentifiableElement;
 import sernet.verinice.model.bp.DeductionImplementationUtil;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.bp.risk.RiskDeductionUtil;
 
 /**
  * A collection of useful editor related method. Like calling update on
@@ -36,25 +48,75 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public final class EditorUtil {
 
+    private static final Logger logger = Logger.getLogger(EditorUtil.class);
+
     private static final int MAX_TITLE_LENGTH = 20;
+	public static final String EMPTY_EDITOR_ID = "org.eclipse.ui.internal.emptyEditorTab"; //$NON-NLS-1$
 
     private EditorUtil() {
         super();
     }
 
     /**
+     * Closes the editor for a given element by its uuid.
+     */
+    public static void closeEditorForElement(String uuid) {
+        Stream.of(PlatformUI.getWorkbench().getWorkbenchWindows())
+                .forEach(window -> Stream.of(window.getPages()).forEach(
+                        page -> Stream.of(page.getEditorReferences()).forEach(editorReference -> {
+                            try {
+
+                                if (editorReference
+                                        .getEditorInput() instanceof BSIElementEditorInput) {
+                                    CnATreeElement element = ((BSIElementEditorInput) editorReference
+                                            .getEditorInput()).getCnAElement();
+                                    if (uuid.equals(element.getUuid())) {
+                                        page.closeEditors(
+                                                new IEditorReference[] { editorReference }, true);
+                                    }
+                                }
+
+                            } catch (PartInitException e) {
+                                logger.error("Error while closing element editor.", e);
+                            }
+                        })));
+    }
+
+    /**
+     * Returns all related objects for the given type. The editor don't have the
+     * information which objects depends from another, for example in the case
+     * of deduction of implementation. All special cases of indirections need to
+     * be handled here when the editor need to update other objects as the
+     * edited object. <br>
+     * The current cases are: {@link Safeguard}-> a list of linked
+     * {@link BpRequirement}.<br>
+     * {@link BpRequirement}-> a list of linked {@link Safeguard}.
+     */
+    public static List<CnATreeElement> getRelatedObjects(CnATreeElement cnAElement) {
+        if (Safeguard.TYPE_ID.equals(cnAElement.getTypeId())) {
+            return cnAElement.getLinksUp().stream().filter(
+                    DeductionImplementationUtil::isRelevantLinkForImplementationStateDeduction)
+                    .map(CnALink::getDependant).collect(Collectors.toList());
+        } else if (BpRequirement.TYPE_ID.equals(cnAElement.getTypeId())) {
+            return DeductionImplementationUtil.getSafeguardsFromRequirement(cnAElement);
+        }
+        return Collections.emptyList();
+    }
+
+    /**
      * Some {@link CnATreeElement} can change the state of linked
      * {@link CnATreeElement}. This method is the main handler. As long as we
-     * don't have any eventing active for the {@link CnATreeElement}.
+     * don't have any eventing active for the {@link CnATreeElement}. This
+     * method is used to synchronize the state of the client objects in the case
+     * of a change occurring while save the object.
      */
     public static void updateDependentObjects(CnATreeElement cnAElement) {
         if (cnAElement == null) {
             return;
         }
-        if (Safeguard.TYPE_ID.equals(cnAElement.getTypeId())) {
-            updateImplementationStatusBySafeguard(cnAElement);
-        } else if (BpRequirement.TYPE_ID.equals(cnAElement.getTypeId())) {
+        if (BpRequirement.TYPE_ID.equals(cnAElement.getTypeId())) {
             updateRequirementImplementationStatus(cnAElement);
+            RiskDeductionUtil.deduceSafeguardStrength(cnAElement);
         }
     }
 
@@ -62,38 +124,13 @@ public final class EditorUtil {
      * When the deduction of the {@link BpRequirement} is set to active it needs
      * to apply the implementation status from the {@link Safeguard}. As the
      * changed object is not returned by the call to
-     * {@link sernet.gs.ui.rcp.main.common.model.CnAElementHome#updateEntity(CnATreeElement)} in the editor (see
+     * {@link sernet.gs.ui.rcp.main.common.model.CnAElementHome#updateEntity(CnATreeElement)}
+     * in the editor (see
      * {@link sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditor#save()}), we
      * need to change the state in our local copy.
      */
     private static void updateRequirementImplementationStatus(CnATreeElement cnAElement) {
-        Set<CnALink> linksDown = cnAElement.getLinksDown();
-        for (CnALink cnALink : linksDown) {
-            CnATreeElement dependency = cnALink.getDependency();
-            if (Safeguard.TYPE_ID.equals(dependency.getTypeId())) {
-                DeductionImplementationUtil.setImplementationStausToRequirement(dependency,
-                        cnAElement);
-            }
-        }
-    }
-
-    /**
-     * A {@link Safeguard} can change the state of a requirement so we need to
-     * handle them here. As the state of the {@link BpRequirement} is changed on
-     * the server and we do not want to reload the object from remote we simply
-     * change the state in the client also. Currently the implementation state
-     * can be shared between the {@link Safeguard} and the
-     * {@link BpRequirement}.
-     */
-    private static void updateImplementationStatusBySafeguard(CnATreeElement cnAElement) {
-        Set<CnALink> linksUp = cnAElement.getLinksUp();
-        for (CnALink cnALink : linksUp) {
-            CnATreeElement dependency = cnALink.getDependant();
-            if (BpRequirement.TYPE_ID.equals(dependency.getTypeId()) && DeductionImplementationUtil
-                    .setImplementationStausToRequirement(cnAElement, dependency)) {
-                CnAElementFactory.getModel(dependency).childChanged(dependency);
-            }
-        }
+        DeductionImplementationUtil.setImplementationStatusToRequirement(cnAElement);
     }
 
     public static String getEditorName(CnATreeElement cnATreeElement) {
@@ -111,5 +148,30 @@ public final class EditorUtil {
         }
         return cnATreeElement.getTitle();
     }
+
+    /**
+     * Cleans the old editorref. A patch for https://bugs.eclipse.org/bugs/show_bug.cgi?id=386648 .
+     */
+   	public static void cleanOldEditors() {
+   		try {
+   			IWorkbench wb = PlatformUI.getWorkbench();
+   			IWorkbenchWindow win = wb.getActiveWorkbenchWindow();
+   			if (win == null)
+   				return;
+
+   			IWorkbenchWindow[] workbenchWindows = wb.getWorkbenchWindows();
+   			Arrays.stream(workbenchWindows).forEach(ww -> {
+   				IWorkbenchPage page = ww.getActivePage();
+   				Arrays.stream(page.getEditorReferences()).forEach(ref -> {
+   					String editorId = ref.getId();
+   					if (EMPTY_EDITOR_ID.equals(editorId)) {
+   						page.closeEditors(new IEditorReference[] { ref }, false);
+   					}
+   				});
+   			});
+   		} catch (Exception e) {
+   			logger.error("Error closing editors", e);
+   		}
+   	}
 
 }

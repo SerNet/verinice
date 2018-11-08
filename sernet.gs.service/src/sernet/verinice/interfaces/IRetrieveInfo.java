@@ -17,88 +17,164 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
+import java.util.Objects;
+
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
+import org.hibernate.criterion.DetachedCriteria;
 
 public interface IRetrieveInfo {
 
-	/**
-	 * @return true if properties are joined and retrieved
-	 */
-	boolean isProperties();
+    /**
+     * @return true if properties are joined and retrieved
+     */
+    boolean isProperties();
 
-	IRetrieveInfo setProperties(boolean properties);
+    IRetrieveInfo setProperties(boolean properties);
 
-	/**
-	 * @return true if links-up are joined and retrieved
-	 */
-	boolean isLinksUp();
+    /**
+     * @return true if links-up are joined and retrieved
+     */
+    boolean isLinksUp();
 
-	IRetrieveInfo setLinksUp(boolean linksUp);
+    IRetrieveInfo setLinksUp(boolean linksUp);
 
-	/**
-	 * @return true if properties of links-up are joined and retrieved
-	 */
-	boolean isLinksUpProperties();
+    /**
+     * @return true if properties of links-up are joined and retrieved
+     */
+    boolean isLinksUpProperties();
 
-	IRetrieveInfo setLinksUpProperties(boolean linksUpProperties);
+    IRetrieveInfo setLinksUpProperties(boolean linksUpProperties);
 
-	/**
-	 * @return true if links-down are joined and retrieved
-	 */
-	boolean isLinksDown();
+    /**
+     * @return true if links-down are joined and retrieved
+     */
+    boolean isLinksDown();
 
-	IRetrieveInfo setLinksDown(boolean linksDown);
+    IRetrieveInfo setLinksDown(boolean linksDown);
 
-	/**
-	 * @return true if properties of links-down are joined and retrieved
-	 */
-	boolean isLinksDownProperties();
+    /**
+     * @return true if properties of links-down are joined and retrieved
+     */
+    boolean isLinksDownProperties();
 
-	IRetrieveInfo setLinksDownProperties(
-			boolean linksDownProperties);
+    IRetrieveInfo setLinksDownProperties(boolean linksDownProperties);
 
-	/**
-	 * @return true if children are joined and retrieved
-	 */
-	boolean isChildren();
+    /**
+     * @return true if children are joined and retrieved
+     */
+    boolean isChildren();
 
-	IRetrieveInfo setChildren(boolean children);
+    IRetrieveInfo setChildren(boolean children);
 
-	/**
-	 * @return true if properties of children are joined and retrieved
-	 */
-	boolean isChildrenProperties();
+    /**
+     * @return true if properties of children are joined and retrieved
+     */
+    boolean isChildrenProperties();
 
-	IRetrieveInfo setChildrenProperties(
-			boolean childrenProperties);
+    IRetrieveInfo setChildrenProperties(boolean childrenProperties);
 
-	IRetrieveInfo setGrandchildren(boolean grandchildren);
+    IRetrieveInfo setGrandchildren(boolean grandchildren);
 
-	boolean isGrandchildren();
+    boolean isGrandchildren();
 
-	boolean isParent();
-	
-	boolean isParentPermissions();
+    boolean isParent();
 
-	IRetrieveInfo setParent(boolean parent);
+    boolean isParentPermissions();
 
-	boolean isSiblings();
+    IRetrieveInfo setParent(boolean parent);
 
-	IRetrieveInfo setSiblings(boolean siblings);
+    boolean isSiblings();
 
-	boolean isPermissions();
+    IRetrieveInfo setSiblings(boolean siblings);
 
-	IRetrieveInfo setPermissions(boolean permissions);
+    boolean isPermissions();
 
-	IRetrieveInfo setChildrenPermissions(
-			boolean childrenPermissions);
+    IRetrieveInfo setPermissions(boolean permissions);
 
-	boolean isChildrenPermissions();
+    IRetrieveInfo setChildrenPermissions(boolean childrenPermissions);
 
-	/**
-	 * @return true if inner joins are used
-	 */
-	boolean isInnerJoin();
+    boolean isChildrenPermissions();
 
-	IRetrieveInfo setInnerJoin(boolean innerJoin);
+    /**
+     * @return true if inner joins are used
+     */
+    boolean isInnerJoin();
+
+    IRetrieveInfo setInnerJoin(boolean innerJoin);
+
+    default void configureCriteria(DetachedCriteria criteria) {
+        if (isProperties()) {
+            criteria.setFetchMode("entity", FetchMode.JOIN);
+            criteria.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
+            criteria.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
+        }
+        if (isPermissions()) {
+            criteria.setFetchMode("permissions", FetchMode.JOIN);
+        }
+
+        if (isLinksDown()) {
+            criteria.setFetchMode("linksDown", FetchMode.JOIN);
+            criteria.setFetchMode("linksDown.dependency", FetchMode.JOIN);
+            if (isLinksDownProperties()) {
+                criteria.setFetchMode("linksDown.dependency.entity", FetchMode.JOIN);
+                criteria.setFetchMode("linksDown.dependency.entity.typedPropertyLists",
+                        FetchMode.JOIN);
+                criteria.setFetchMode("linksDown.dependency.entity.typedPropertyLists.properties",
+                        FetchMode.JOIN);
+            }
+        }
+        if (isLinksUp()) {
+            criteria.setFetchMode("linksUp", FetchMode.JOIN);
+            criteria.setFetchMode("linksUp.dependant", FetchMode.JOIN);
+            if (isLinksUpProperties()) {
+                criteria.setFetchMode("linksUp.dependant.entity", FetchMode.JOIN);
+                criteria.setFetchMode("linksUp.dependant.entity.typedPropertyLists",
+                        FetchMode.JOIN);
+                criteria.setFetchMode("linksUp.dependant.entity.typedPropertyLists.properties",
+                        FetchMode.JOIN);
+            }
+        }
+        if (isParent()) {
+            criteria.setFetchMode("parent", FetchMode.JOIN);
+            if (isSiblings()) {
+                criteria.setFetchMode("parent.children", FetchMode.JOIN);
+            }
+            if (isParentPermissions()) {
+                criteria.setFetchMode("parent.permissions", FetchMode.JOIN);
+            }
+        }
+        if (isChildren()) {
+            criteria.setFetchMode("children", FetchMode.JOIN);
+            DetachedCriteria criteriaChildren = null;
+            DetachedCriteria criteriaEntity = null;
+            if (isInnerJoin()) {
+                criteriaChildren = criteria.createCriteria("children");
+            }
+            if (isChildrenProperties()) {
+                criteria.setFetchMode("children.entity", FetchMode.JOIN);
+                if (isInnerJoin()) {
+                    criteriaEntity = Objects.requireNonNull(criteriaChildren)
+                            .createCriteria("entity");
+                }
+                criteria.setFetchMode("children.entity.typedPropertyLists", FetchMode.JOIN);
+                if (isInnerJoin()) {
+                    Objects.requireNonNull(criteriaEntity).createCriteria("typedPropertyLists");
+                }
+                criteria.setFetchMode("children.entity.typedPropertyLists.properties",
+                        FetchMode.JOIN);
+            }
+            if (isChildrenPermissions()) {
+                criteria.setFetchMode("children.permissions", FetchMode.JOIN);
+                if (isInnerJoin()) {
+                    Objects.requireNonNull(criteriaChildren).createCriteria("permissions");
+                }
+            }
+        }
+        if (isGrandchildren()) {
+            criteria.setFetchMode("children.children", FetchMode.JOIN);
+        }
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+    }
 
 }

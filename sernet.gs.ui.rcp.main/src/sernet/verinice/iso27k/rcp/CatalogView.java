@@ -41,8 +41,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -72,7 +72,6 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.iso27k.rcp.action.ControlDragListener;
 import sernet.verinice.model.bp.elements.BpModel;
@@ -95,65 +94,66 @@ import sernet.verinice.service.model.LoadModel;
  * @author Daniel <dm[at]sernet[dot]de>
  * 
  */
-public class CatalogView extends RightsEnabledView implements IAttachedToPerspective  {
+public class CatalogView extends RightsEnabledView implements IAttachedToPerspective {
 
-	private static final Logger LOG = Logger.getLogger(CatalogView.class);
+    private static final Logger LOG = Logger.getLogger(CatalogView.class);
 
-	public static final String ID = "sernet.verinice.iso27k.rcp.CatalogView"; //$NON-NLS-1$
-	
-	public static final DateFormat DATE_TIME_FORMAT_SHORT = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
+    public static final String ID = "sernet.verinice.iso27k.rcp.CatalogView"; //$NON-NLS-1$
 
-	private RightsEnabledAction addCatalogAction;
-	
-	private RightsEnabledAction deleteCatalogAction;
-	
-	private Action expandAllAction;
+    public static final DateFormat DATE_TIME_FORMAT_SHORT = DateFormat
+            .getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
-	private Action collapseAllAction;
-	
-	private DragSourceListener dragListener;
+    private RightsEnabledAction addCatalogAction;
 
-	private ICommandService commandService;
+    private RightsEnabledAction deleteCatalogAction;
 
-	private TreeViewer viewer;
-	
-	private Combo comboCatalog;
-	
-	private ComboModel<Attachment> comboModel;
-	
-	private Text filter;
-	
-	private BSIModel bsiModel;
-	
-	private CatalogTextFilter textFilter;
-	
-	private IModelLoadListener modelLoadListener;
-	
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets
-	 * .Composite)
-	 */
-	@Override
-	public void createPartControl(Composite parent) {
-	    super.createPartControl(parent);
-		try {
-			initView(parent);
-			startInitDataJob();		
-		} catch (Exception e) {
-			LOG.error("Error while creating catalog view", e); //$NON-NLS-1$
-			ExceptionUtil.log(e, "Error while opening Catalog-View."); //$NON-NLS-1$
-		}	
-	}
+    private Action expandAllAction;
 
-	@Override
-    public String getRightID(){
-	    return ActionRightIDs.ISMCATALOG;
-	}
-	
-	/* (non-Javadoc)
+    private Action collapseAllAction;
+
+    private DragSourceListener dragListener;
+
+    private ICommandService commandService;
+
+    private TreeViewer viewer;
+
+    private Combo comboCatalog;
+
+    private ComboModel<Attachment> comboModel;
+
+    private Text filter;
+
+    private BSIModel bsiModel;
+
+    private CatalogTextFilter textFilter;
+
+    private IModelLoadListener modelLoadListener;
+
+    /*
+     * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
+     * widgets .Composite)
+     */
+    @Override
+    public void createPartControl(Composite parent) {
+        super.createPartControl(parent);
+        try {
+            initView(parent);
+            startInitDataJob();
+        } catch (Exception e) {
+            LOG.error("Error while creating catalog view", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, "Error while opening Catalog-View."); //$NON-NLS-1$
+        }
+        MessageDialog.openWarning(Display.getCurrent().getActiveShell(), Messages.Deprecated_View,
+                Messages.ISM_Catalog_View_Is_Deprecated);
+
+    }
+
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.ISMCATALOG;
+    }
+
+    /*
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
@@ -161,127 +161,115 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         return ID;
     }
 
-	/**
-	 * 
-	 */
-	protected void startInitDataJob() {
-		WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
-			@Override
+    /**
+     * 
+     */
+    protected void startInitDataJob() {
+        WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+            @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
-				IStatus status = Status.OK_STATUS;
-				try {
-					monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
-					loadCatalogAttachmets();
-				} catch (Exception e) {
-					LOG.error("Error while loading data.", e); //$NON-NLS-1$
-					status= new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.",e); //$NON-NLS-1$ //$NON-NLS-2$
-				} finally {
-					monitor.done();
-				}
-				return status;
-			}
-		};
-		JobScheduler.scheduleInitJob(initDataJob);
-	}
+                IStatus status = Status.OK_STATUS;
+                try {
+                    monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
+                    loadCatalogAttachmets();
+                } catch (Exception e) {
+                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
+                            "Error while loading data.", e); //$NON-NLS-1$
+                } finally {
+                    monitor.done();
+                }
+                return status;
+            }
+        };
+        JobScheduler.scheduleInitJob(initDataJob);
+    }
 
+    private void initView(Composite parent) {
+        Label labelCatalog;
+        Label labelFilter;
+        GridLayout gl = new GridLayout(1, true);
+        parent.setLayout(gl);
 
-
-	private void initView(Composite parent) {
-	    Label labelCatalog;
-	    Label labelFilter;
-		GridLayout gl = new GridLayout(1, true);
-		parent.setLayout(gl);
-		
-		Composite compForm = new Composite(parent,SWT.NONE);
-		compForm.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		GridLayout glForm = new GridLayout(2, false);
-		compForm.setLayout(glForm);
-		labelCatalog = new Label(compForm,SWT.NONE);
-		labelCatalog.setText(Messages.CatalogView_4);
-		comboCatalog = new Combo(compForm, SWT.DROP_DOWN | SWT.READ_ONLY);
-		comboCatalog.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		comboCatalog.addSelectionListener(new SelectionAdapter() {
-		      @Override
+        Composite compForm = new Composite(parent, SWT.NONE);
+        compForm.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        GridLayout glForm = new GridLayout(2, false);
+        compForm.setLayout(glForm);
+        labelCatalog = new Label(compForm, SWT.NONE);
+        labelCatalog.setText(Messages.CatalogView_4);
+        comboCatalog = new Combo(compForm, SWT.DROP_DOWN | SWT.READ_ONLY);
+        comboCatalog.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        comboCatalog.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
-		    	  comboModel.setSelectedIndex(comboCatalog.getSelectionIndex());
-		    	  openCatalog();
-		    	  deleteCatalogAction.setEnabled(deleteCatalogAction.checkRights());
-		      }
-		    });
-		comboModel = new ComboModel<Attachment>(new IComboModelLabelProvider<Attachment>() {
-			@Override
-			public String getLabel(Attachment attachment) {
-				StringBuilder sb = new StringBuilder();
-				sb.append(attachment.getFileName());
-				DateFormat df = (DateFormat)DATE_TIME_FORMAT_SHORT.clone();
-				sb.append(" (").append(df.format(attachment.getDate())).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
-				return sb.toString();
-			}		
-		});
-		
-		labelFilter = new Label(compForm,SWT.NONE);
-		labelFilter.setText(Messages.CatalogView_7);
-		filter = new Text(compForm, SWT.BORDER);
-		filter.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		filter.addKeyListener(new KeyListener() {
-			@Override
-            public void keyPressed(KeyEvent e) {				
-			}
-			@Override
+                comboModel.setSelectedIndex(comboCatalog.getSelectionIndex());
+                openCatalog();
+                deleteCatalogAction.setEnabled(deleteCatalogAction.checkRights());
+            }
+        });
+        comboModel = new ComboModel<>(attachment -> {
+            StringBuilder sb = new StringBuilder();
+            sb.append(attachment.getFileName());
+            DateFormat df = (DateFormat) DATE_TIME_FORMAT_SHORT.clone();
+            sb.append(" (").append(df.format(attachment.getDate())).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
+            return sb.toString();
+        });
+
+        labelFilter = new Label(compForm, SWT.NONE);
+        labelFilter.setText(Messages.CatalogView_7);
+        filter = new Text(compForm, SWT.BORDER);
+        filter.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        filter.addKeyListener(new KeyAdapter() {
+            @Override
             public void keyReleased(KeyEvent e) {
-				textFilter.setPattern(filter.getText());
-			}		
-		});
-		
-		viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
-		viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
-		viewer.setContentProvider(new ViewContentProvider());
-		viewer.setLabelProvider(new ViewLabelProvider());
+                textFilter.setPattern(filter.getText());
+            }
+        });
 
-		getSite().setSelectionProvider(viewer);
-		
-		makeActions();
-		hookActions();
-		hookDNDListeners();
-		fillLocalToolBar();
-	}
-	
+        viewer = new TreeViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        viewer.getTree().setLayoutData(new GridData(GridData.FILL_BOTH));
+        viewer.setContentProvider(new ViewContentProvider());
+        viewer.setLabelProvider(new ViewLabelProvider());
 
+        getSite().setSelectionProvider(viewer);
 
-	/**
-	 * 
-	 */
-	private void loadCatalogAttachmets() {
-		try {
-			Activator.inheritVeriniceContextState();
-			if(getBsiModel()!=null) {
-				// model is loaded: load data
-				LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(getBsiModel().getDbId());		
-				command = getCommandService().executeCommand(command);		
-				List<Attachment> attachmentList = command.getResult();
-				comboModel.clear();
-				for (Attachment attachment : attachmentList) {
-					comboModel.add(attachment);
-				}
-				Display.getDefault().syncExec(new Runnable(){
-					@Override
-                    public void run() {
-						comboCatalog.setItems(comboModel.getLabelArray());
-					}
-				});
-			} else if(modelLoadListener==null) {
-				// model is not loaded yet: add a listener to load data when it's laoded
-				modelLoadListener = new IModelLoadListener() {
+        makeActions();
+        hookDNDListeners();
+        fillLocalToolBar();
+    }
 
-					@Override
+    /**
+     * 
+     */
+    private void loadCatalogAttachmets() {
+        try {
+            Activator.inheritVeriniceContextState();
+            if (getBsiModel() != null) {
+                // model is loaded: load data
+                LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(
+                        getBsiModel().getDbId());
+                command = getCommandService().executeCommand(command);
+                List<Attachment> attachmentList = command.getResult();
+                comboModel.clear();
+                for (Attachment attachment : attachmentList) {
+                    comboModel.add(attachment);
+                }
+                Display.getDefault()
+                        .syncExec(() -> comboCatalog.setItems(comboModel.getLabelArray()));
+            } else if (modelLoadListener == null) {
+                // model is not loaded yet: add a listener to load data when
+                // it's laoded
+                modelLoadListener = new IModelLoadListener() {
+
+                    @Override
                     public void closed(BSIModel model) {
-						// nothing to do
-					}
+                        // nothing to do
+                    }
 
-					@Override
+                    @Override
                     public void loaded(BSIModel model) {
                         // work is done in loaded(ISO27KModel model)
-					}
+                    }
 
                     @Override
                     public void loaded(ISO27KModel model) {
@@ -290,54 +278,55 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
 
                     @Override
                     public void loaded(BpModel model) {
-                     // work is done in loaded(ISO27KModel model)
-                        
+                        // work is done in loaded(ISO27KModel model)
+
                     }
 
                     @Override
                     public void loaded(CatalogModel model) {
                         // nothing to do
                     }
-					
-				};
-				CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
-			}
-			
-			
-		} catch(Exception e) {
-			LOG.error("Error while loading catalogs", e); //$NON-NLS-1$
-			ExceptionUtil.log(e, Messages.CatalogView_0);
-		}
-	}
-	
-	/**
-	 * @return 
-	 * @throws CommandException 
-	 * 
-	 */
-	private Attachment saveFile(ImportCatalog importCatalog) throws CommandException, IOException {
-		CsvFile csvFile = importCatalog.getCsvFile();
-		Attachment attachment = null;
-		if(csvFile!=null) {			
-			attachment = new Attachment();
-			attachment.setCnATreeElementId(getBsiModel().getDbId());
-			attachment.setCnAElementTitel(getBsiModel().getTitle());
-			Date now = Calendar.getInstance().getTime();
-			attachment.setDate(now);
-			attachment.setFilePath(csvFile.getFilePath());
-			attachment.setTitel(attachment.getFileName());
-			attachment.setFileSize(String.valueOf(csvFile.getFileContent().length));
-			attachment.setText(Messages.CatalogView_10 + DateFormat.getDateTimeInstance().format(now));
-			SaveNote command = new SaveNote(attachment);	
-			command = getCommandService().executeCommand(command);
-			attachment = (Attachment) command.getAddition();
-			
-			AttachmentFileCreationFactory.createAttachmentFile(attachment, csvFile.getFileContent());
-		}
-		return attachment;
-	}
-	
-	/**
+
+                };
+                CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
+            }
+
+        } catch (Exception e) {
+            LOG.error("Error while loading catalogs", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.CatalogView_0);
+        }
+    }
+
+    /**
+     * @return
+     * @throws CommandException
+     * 
+     */
+    private Attachment saveFile(ImportCatalog importCatalog) throws CommandException, IOException {
+        CsvFile csvFile = importCatalog.getCsvFile();
+        Attachment attachment = null;
+        if (csvFile != null) {
+            attachment = new Attachment();
+            attachment.setCnATreeElementId(getBsiModel().getDbId());
+            attachment.setCnAElementTitel(getBsiModel().getTitle());
+            Date now = Calendar.getInstance().getTime();
+            attachment.setDate(now);
+            attachment.setFilePath(csvFile.getFilePath());
+            attachment.setTitel(attachment.getFileName());
+            attachment.setFileSize(String.valueOf(csvFile.getFileContent().length));
+            attachment.setText(
+                    Messages.CatalogView_10 + DateFormat.getDateTimeInstance().format(now));
+            SaveNote command = new SaveNote(attachment);
+            command = getCommandService().executeCommand(command);
+            attachment = (Attachment) command.getAddition();
+
+            AttachmentFileCreationFactory.createAttachmentFile(attachment,
+                    csvFile.getFileContent());
+        }
+        return attachment;
+    }
+
+    /**
      * Passing the focus request to the viewer's control.
      * 
      * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
@@ -347,299 +336,297 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
         viewer.getControl().setFocus();
     }
 
-	private void makeActions() {
-		addCatalogAction = new RightsEnabledAction(ActionRightIDs.ADDCATALOG) {
-			/* (non-Javadoc)
-			 * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
-			 */
-			@Override
+    private void makeActions() {
+        addCatalogAction = new RightsEnabledAction(ActionRightIDs.ADDCATALOG) {
+            /*
+             * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
+             */
+            @Override
             public void doRun() {
-				importCatalog();
-			}
-		};
-		addCatalogAction.setText(Messages.CatalogView_11);
-		addCatalogAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
-		if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
-		    IInternalServerStartListener listener = new IInternalServerStartListener(){
-		        @Override
-		        public void statusChanged(InternalServerEvent e) {
-		            if(e.isStarted()){
-		                addCatalogAction.setEnabled(addCatalogAction.checkRights());
-		            }
-		        }
-
-		    };
-		    Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-		} else {
-		    addCatalogAction.setEnabled(addCatalogAction.checkRights());
+                importCatalog();
+            }
+        };
+        addCatalogAction.setText(Messages.CatalogView_11);
+        addCatalogAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
+        if (Activator.getDefault().isStandalone()
+                && !Activator.getDefault().getInternalServer().isRunning()) {
+            IInternalServerStartListener listener = e -> {
+                if (e.isStarted()) {
+                    addCatalogAction.setEnabled(addCatalogAction.checkRights());
+                }
+            };
+            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+        } else {
+            addCatalogAction.setEnabled(addCatalogAction.checkRights());
         }
-		deleteCatalogAction = new RightsEnabledAction(ActionRightIDs.DELETECATALOG) {
-			/* (non-Javadoc)
-			 * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
-			 */
-			@Override
+        deleteCatalogAction = new RightsEnabledAction(ActionRightIDs.DELETECATALOG) {
+            /*
+             * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
+             */
+            @Override
             public void doRun() {
-				boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), sernet.verinice.iso27k.rcp.Messages.CatalogView_12, sernet.verinice.iso27k.rcp.Messages.CatalogView_13);
-				if (confirm){
-					deleteCatalog();
-				}
-			}
-		};
-		deleteCatalogAction.setText(Messages.CatalogView_14);
-		deleteCatalogAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.DELETE));
-		deleteCatalogAction.setEnabled(false);
-		
-		textFilter = new CatalogTextFilter(viewer);
-		
-		expandAllAction = new Action() {
-			@Override
-			public void run() {
-				viewer.expandAll();
-			}
-		};
-		expandAllAction.setText(Messages.CatalogView_15);
-		expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
+                boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(),
+                        sernet.verinice.iso27k.rcp.Messages.CatalogView_12,
+                        sernet.verinice.iso27k.rcp.Messages.CatalogView_13);
+                if (confirm) {
+                    deleteCatalog();
+                }
+            }
+        };
+        deleteCatalogAction.setText(Messages.CatalogView_14);
+        deleteCatalogAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.DELETE));
+        deleteCatalogAction.setEnabled(false);
 
-		collapseAllAction = new Action() {
-			@Override
-			public void run() {
-				viewer.collapseAll();
-			}
-		};
-		collapseAllAction.setText(Messages.CatalogView_16);
-		collapseAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
+        textFilter = new CatalogTextFilter(viewer);
 
-		
-		dragListener = new ControlDragListener(viewer);
-	}
+        expandAllAction = new Action() {
+            @Override
+            public void run() {
+                viewer.expandAll();
+            }
+        };
+        expandAllAction.setText(Messages.CatalogView_15);
+        expandAllAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
-	/**
-	 * 
-	 */
-	private void hookActions() {
-	}
-	
-	private void hookDNDListeners() {
-	    Transfer[] types = new Transfer[] { ItemTransfer.getInstance()};
-		int operations = DND.DROP_COPY | DND.DROP_MOVE;
-		viewer.addDragSupport(operations, types, dragListener);
-	}
-	/**
-	 * 
-	 */
-	private void fillLocalToolBar() {
-		IActionBars bars = getViewSite().getActionBars();
-		IToolBarManager manager = bars.getToolBarManager();
-		manager.add(this.addCatalogAction);
-		manager.add(this.deleteCatalogAction);
-		manager.add(this.expandAllAction);
-		manager.add(this.collapseAllAction);
-	}
+        collapseAllAction = new Action() {
+            @Override
+            public void run() {
+                viewer.collapseAll();
+            }
+        };
+        collapseAllAction.setText(Messages.CatalogView_16);
+        collapseAllAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 
-	public ICommandService getCommandService() {
-		if (commandService == null) {
-			commandService = createCommandService();
-		}
-		return commandService;
-	}
+        dragListener = new ControlDragListener(viewer);
+    }
 
-	private ICommandService createCommandService() {
-		return ServiceFactory.lookupCommandService();
-	}
+    private void hookDNDListeners() {
+        Transfer[] types = new Transfer[] { ItemTransfer.getInstance() };
+        int operations = DND.DROP_COPY | DND.DROP_MOVE;
+        viewer.addDragSupport(operations, types, dragListener);
+    }
 
-	static class ViewContentProvider implements IStructuredContentProvider, ITreeContentProvider {
+    /**
+     * 
+     */
+    private void fillLocalToolBar() {
+        IActionBars bars = getViewSite().getActionBars();
+        IToolBarManager manager = bars.getToolBarManager();
+        manager.add(this.addCatalogAction);
+        manager.add(this.deleteCatalogAction);
+        manager.add(this.expandAllAction);
+        manager.add(this.collapseAllAction);
+    }
 
-		@Override
+    public ICommandService getCommandService() {
+        if (commandService == null) {
+            commandService = createCommandService();
+        }
+        return commandService;
+    }
+
+    private ICommandService createCommandService() {
+        return ServiceFactory.lookupCommandService();
+    }
+
+    static class ViewContentProvider implements IStructuredContentProvider, ITreeContentProvider {
+
+        @Override
         public void dispose() {
-		}
+            // no-op
+        }
 
-		@Override
+        @Override
         public Object[] getChildren(Object parent) {
-			return ((IItem) parent).getItems().toArray();		
-		}
+            return ((IItem) parent).getItems().toArray();
+        }
 
-		@Override
+        @Override
         public Object[] getElements(Object parent) {
-			return getChildren(parent);
-		}
+            return getChildren(parent);
+        }
 
-		@Override
+        @Override
         public Object getParent(Object child) {
-			return null;
-		}
+            return null;
+        }
 
-		@Override
+        @Override
         public boolean hasChildren(Object parent) {
-			return ((IItem) parent).getItems().size()>0;
-		}
+            return !((IItem) parent).getItems().isEmpty();
+        }
 
-		@Override
+        @Override
         public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-		}
-	}
-	
-	static class ViewLabelProvider extends LabelProvider {
+            // no-op
+        }
+    }
 
-		@Override
+    static class ViewLabelProvider extends LabelProvider {
+
+        @Override
         public Image getImage(Object obj) {
-			IItem item = (IItem) obj;
-			String image = ImageCache.UNKNOWN;
-			
-			if(item.getDescription()!=null && item.getItems().size()>0) {
-				image = ImageCache.BAUSTEIN;
-			}
-			else if(item.getDescription()!=null && item.getTypeId()==IItem.CONTROL) {
-				image = ImageCache.STUFE_NONE;
-			}
-			else if(item.getDescription()!=null && item.getTypeId()==IItem.ISA_TOPIC) {
-				image = ImageCache.ISA_TOPIC;
-			}
-			else if(item.getDescription()!=null && item.getTypeId()==IItem.THREAT) {
-				image = ImageCache.ISO27K_THREAT;
-			}
-			else if(item.getDescription()!=null && item.getTypeId()==IItem.VULNERABILITY) {
-			    image = ImageCache.ISO27K_VULNERABILITY;
-			}
-			return ImageCache.getInstance().getImage(image);	
-		}
+            IItem item = (IItem) obj;
+            String image = ImageCache.UNKNOWN;
 
-		@Override
+            if (item.getDescription() != null && !item.getItems().isEmpty()) {
+                image = ImageCache.BAUSTEIN;
+            } else if (item.getDescription() != null && item.getTypeId() == IItem.CONTROL) {
+                image = ImageCache.STUFE_NONE;
+            } else if (item.getDescription() != null && item.getTypeId() == IItem.ISA_TOPIC) {
+                image = ImageCache.ISA_TOPIC;
+            } else if (item.getDescription() != null && item.getTypeId() == IItem.THREAT) {
+                image = ImageCache.ISO27K_THREAT;
+            } else if (item.getDescription() != null && item.getTypeId() == IItem.VULNERABILITY) {
+                image = ImageCache.ISO27K_VULNERABILITY;
+            }
+            return ImageCache.getInstance().getImage(image);
+        }
+
+        @Override
         public String getText(Object obj) {
-		    final int maxLabelWidth = 80;
-			IItem item = ((IItem)obj);
-			String label = "";
-			if(item!=null) {
-			    label = StringUtil.truncate(item.getName(), maxLabelWidth);
-			}
-			return label;
-		}
-	}
+            final int maxLabelWidth = 80;
+            IItem item = ((IItem) obj);
+            String label = "";
+            if (item != null) {
+                label = StringUtil.truncate(item.getName(), maxLabelWidth);
+            }
+            return label;
+        }
+    }
 
-	public BSIModel getBsiModel() {
-		if(bsiModel==null) {
-			try {
-				bsiModel = CnAElementFactory.getLoadedModel();
-			} catch (Exception e) {
-				LOG.error("Error while creating BSI-Model", e); //$NON-NLS-1$
-			}
-		}
-		return bsiModel;
-	}
+    public BSIModel getBsiModel() {
+        if (bsiModel == null) {
+            try {
+                bsiModel = CnAElementFactory.getLoadedModel();
+            } catch (Exception e) {
+                LOG.error("Error while creating BSI-Model", e); //$NON-NLS-1$
+            }
+        }
+        return bsiModel;
+    }
 
-	public void setBsiModel(BSIModel bsiModel) {
-		this.bsiModel = bsiModel;
-	}
-	
-	public BSIModel loadBsiModel() {
-		LoadModel<BSIModel> loadBSIModel = new LoadModel<>(BSIModel.class);
-		try {
-			loadBSIModel = getCommandService().executeCommand(loadBSIModel);
-		} catch (CommandException e) {
-			LOG.error("Error while loading BSI-Model.", e); //$NON-NLS-1$
-		}
-		bsiModel = loadBSIModel.getModel();
-		return bsiModel;
-	}
+    public void setBsiModel(BSIModel bsiModel) {
+        this.bsiModel = bsiModel;
+    }
 
-	private void openCatalog() {
-		try {
-			Attachment selected = comboModel.getSelectedObject();
-			if(selected!=null) {
-			    // load attachment/file from database
-				LoadAttachmentFile loadAttachmentFile = new LoadAttachmentFile(selected.getDbId());
-				loadAttachmentFile = getCommandService().executeCommand(loadAttachmentFile);
-				if(loadAttachmentFile!=null && loadAttachmentFile.getAttachmentFile()!=null && loadAttachmentFile.getAttachmentFile().getFileData()!=null) {
-					// import the file
-					ImportCatalog importCatalog = new ImportCatalog(loadAttachmentFile.getAttachmentFile().getFileData());
-					importCatalog = getCommandService().executeCommand(importCatalog);
-					if(importCatalog.getCatalog()!=null) {
-						viewer.setInput(importCatalog.getCatalog().getRoot());
-					}
-				}
-			}
-		} catch(Exception e) {
-			LOG.error("Error while loading catalog", e); //$NON-NLS-1$
-			ExceptionUtil.log(e, Messages.CatalogView_21);
-		}
-	}
+    public BSIModel loadBsiModel() {
+        LoadModel<BSIModel> loadBSIModel = new LoadModel<>(BSIModel.class);
+        try {
+            loadBSIModel = getCommandService().executeCommand(loadBSIModel);
+        } catch (CommandException e) {
+            LOG.error("Error while loading BSI-Model.", e); //$NON-NLS-1$
+        }
+        bsiModel = loadBSIModel.getModel();
+        return bsiModel;
+    }
 
-	private void importCatalog() {
-		FileDialog fd = new FileDialog(CatalogView.this.getSite().getShell());
-		fd.setText(Messages.CatalogView_22);
-		fd.setFilterPath("~"); //$NON-NLS-1$
-		fd.setFilterExtensions(new String[] { "*.csv" }); //$NON-NLS-1$
-		String selected = fd.open();
-		if (selected != null && selected.length() > 0) {
-			try {
-			    
-				ImportCatalog importCatalog = new ImportCatalog(selected,getCharset());
-				importCatalog = getCommandService().executeCommand(importCatalog);
-				Attachment attachment = saveFile(importCatalog);
-				if(importCatalog.getCatalog()!=null) {
-					viewer.setInput(importCatalog.getCatalog().getRoot());
-				}
-				comboModel.add(attachment);
-				String[] labelArray = comboModel.getLabelArray();
-				comboCatalog.setItems(labelArray);
-				if(deleteCatalogAction.checkRights()){
-				    deleteCatalogAction.setEnabled(labelArray.length>0);
-				}
-				selectComboItem(attachment);
-			} catch (Exception e) {
-				LOG.error("Error while reading file data", e);
-				ExceptionUtil.log(e, Messages.CatalogView_26);
-			}
-		}
-	}
-	
-	private Charset getCharset() {
-	    // read the charset from preference store
-	    // charset value is set in CharsetHandler
-	    String charsetName = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.CHARSET_CATALOG);
-	    Charset charset = VeriniceCharset.CHARSET_DEFAULT;
-	    if(charsetName!=null && !charsetName.isEmpty()) {
-	        charset = Charset.forName(charsetName);
-	    }
-	    return charset;
-	}
-	
-	/**
-	 * @param attachment
-	 */
-	private void selectComboItem(Attachment attachment) {
-		comboModel.setSelectedObject(attachment);
-		// indexes that are out of range are ignored in Combo
-		comboCatalog.select(comboModel.getSelectedIndex());
-	}
+    private void openCatalog() {
+        try {
+            Attachment selected = comboModel.getSelectedObject();
+            if (selected != null) {
+                // load attachment/file from database
+                LoadAttachmentFile loadAttachmentFile = new LoadAttachmentFile(selected.getDbId());
+                loadAttachmentFile = getCommandService().executeCommand(loadAttachmentFile);
+                if (loadAttachmentFile != null && loadAttachmentFile.getAttachmentFile() != null
+                        && loadAttachmentFile.getAttachmentFile().getFileData() != null) {
+                    // import the file
+                    ImportCatalog importCatalog = new ImportCatalog(
+                            loadAttachmentFile.getAttachmentFile().getFileData());
+                    importCatalog = getCommandService().executeCommand(importCatalog);
+                    if (importCatalog.getCatalog() != null) {
+                        viewer.setInput(importCatalog.getCatalog().getRoot());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("Error while loading catalog", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.CatalogView_21);
+        }
+    }
 
-	/**
-	 * 
-	 */
-	protected void deleteCatalog() {
-		try {
-			Attachment selected = comboModel.getSelectedObject();
-			DeleteNote command = new DeleteNote(selected);		
-			getCommandService().executeCommand(command);
-			comboModel.removeSelected();
-			openCatalog();
-			comboCatalog.setItems(comboModel.getLabelArray());
-			comboCatalog.select(comboModel.getSelectedIndex());
-			if(comboModel.getSelectedIndex()<0) {
-				deleteCatalogAction.setEnabled(false);
-				viewer.setInput(new Item());
-			}
-		} catch(Exception e) {
-			LOG.error("Error while deleting catalog", e); //$NON-NLS-1$
-			ExceptionUtil.log(e, Messages.CatalogView_28);
-		}
-		
-	}
-	
-	/* (non-Javadoc)
-	 * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
-	 */
-	@Override
+    private void importCatalog() {
+        FileDialog fd = new FileDialog(CatalogView.this.getSite().getShell());
+        fd.setText(Messages.CatalogView_22);
+        fd.setFilterPath("~"); //$NON-NLS-1$
+        fd.setFilterExtensions(new String[] { "*.csv" }); //$NON-NLS-1$
+        String selected = fd.open();
+        if (selected != null && selected.length() > 0) {
+            try {
+
+                ImportCatalog importCatalog = new ImportCatalog(selected, getCharset());
+                importCatalog = getCommandService().executeCommand(importCatalog);
+                Attachment attachment = saveFile(importCatalog);
+                if (importCatalog.getCatalog() != null) {
+                    viewer.setInput(importCatalog.getCatalog().getRoot());
+                }
+                comboModel.add(attachment);
+                String[] labelArray = comboModel.getLabelArray();
+                comboCatalog.setItems(labelArray);
+                if (deleteCatalogAction.checkRights()) {
+                    deleteCatalogAction.setEnabled(labelArray.length > 0);
+                }
+                selectComboItem(attachment);
+            } catch (Exception e) {
+                LOG.error("Error while reading file data", e);
+                ExceptionUtil.log(e, Messages.CatalogView_26);
+            }
+        }
+    }
+
+    private Charset getCharset() {
+        // read the charset from preference store
+        // charset value is set in CharsetHandler
+        String charsetName = Activator.getDefault().getPreferenceStore()
+                .getString(PreferenceConstants.CHARSET_CATALOG);
+        Charset charset = VeriniceCharset.CHARSET_DEFAULT;
+        if (charsetName != null && !charsetName.isEmpty()) {
+            charset = Charset.forName(charsetName);
+        }
+        return charset;
+    }
+
+    /**
+     * @param attachment
+     */
+    private void selectComboItem(Attachment attachment) {
+        comboModel.setSelectedObject(attachment);
+        // indexes that are out of range are ignored in Combo
+        comboCatalog.select(comboModel.getSelectedIndex());
+    }
+
+    /**
+     * 
+     */
+    protected void deleteCatalog() {
+        try {
+            Attachment selected = comboModel.getSelectedObject();
+            DeleteNote command = new DeleteNote(selected);
+            getCommandService().executeCommand(command);
+            comboModel.removeSelected();
+            openCatalog();
+            comboCatalog.setItems(comboModel.getLabelArray());
+            comboCatalog.select(comboModel.getSelectedIndex());
+            if (comboModel.getSelectedIndex() < 0) {
+                deleteCatalogAction.setEnabled(false);
+                viewer.setInput(new Item());
+            }
+        } catch (Exception e) {
+            LOG.error("Error while deleting catalog", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.CatalogView_28);
+        }
+
+    }
+
+    /*
+     * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
+     */
+    @Override
     public String getPerspectiveId() {
-		return Iso27kPerspective.ID;
-	}
+        return Iso27kPerspective.ID;
+    }
 }

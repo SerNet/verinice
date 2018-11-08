@@ -33,7 +33,7 @@ import sernet.verinice.model.iso27k.Finding;
  */
 public class LoadReportISASignificantFindings extends GenericCommand implements ICachedCommand{
     
-    private transient Logger log = Logger.getLogger(LoadReportISASignificantFindings.class);
+    private static final Logger log = Logger.getLogger(LoadReportISASignificantFindings.class);
     
     private static final String SHOW_FINDING_IN_REPORT = "finding_showInISAReport";
     private static final String FINDING_DESCRIPTION = "finding_desc";
@@ -75,16 +75,9 @@ public class LoadReportISASignificantFindings extends GenericCommand implements 
                     }
                 }
             } catch (CommandException e) {
-                getLog().error("Error while computing report findings", e);
+                log.error("Error while computing report findings", e);
             }
         }
-    }
-    
-    private Logger getLog(){
-        if(log == null){
-            log = Logger.getLogger(LoadReportISASignificantFindings.class);
-        }
-        return log;
     }
     
     public List<List<String>> getResult(){
@@ -109,8 +102,8 @@ public class LoadReportISASignificantFindings extends GenericCommand implements 
     public void injectCacheResult(Object result) {
         this.result = (ArrayList<List<String>>)result;
         resultInjectedFromCache = true;
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(log.isDebugEnabled()){
+            log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 

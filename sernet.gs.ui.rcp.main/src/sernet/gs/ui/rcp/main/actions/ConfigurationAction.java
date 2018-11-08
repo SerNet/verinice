@@ -36,7 +36,6 @@ import org.eclipse.ui.PlatformUI;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.actions.helper.UpdateConfigurationHelper;
-import sernet.gs.ui.rcp.main.bsi.dialogs.AccountDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
@@ -56,10 +55,11 @@ import sernet.verinice.service.commands.SaveConfiguration;
 
 /**
  * ConfigurationAction creates and changes user account. Data of an account is
- * set to entity {@link sernet.verinice.model.common.configuration.Configuration}.
+ * set to entity
+ * {@link sernet.verinice.model.common.configuration.Configuration}.
  * 
- * Account is edited by {@link AccountDialog}. 
- * Account configuration is saved by command {@link SaveConfiguration}.
+ * Account is edited by AccountWizard. Account configuration is saved by command
+ * {@link SaveConfiguration}.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */

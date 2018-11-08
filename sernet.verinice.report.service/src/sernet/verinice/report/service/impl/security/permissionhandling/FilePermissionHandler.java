@@ -25,7 +25,8 @@ import java.security.Permission;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.SystemUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sernet.verinice.security.report.ReportSecurityContext;
 
@@ -35,7 +36,7 @@ import sernet.verinice.security.report.ReportSecurityContext;
  */
 public class FilePermissionHandler extends AbstractPermissionHandler {
     
-    private static final Logger LOG = Logger.getLogger(FilePermissionHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(FilePermissionHandler.class);
     
     private static final String OSGI_INSTANCE_AREA = "osgi.instance.area";
     private static final String OSGI_CONFIGURATION_AREA = "osgi.configuration.area";

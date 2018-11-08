@@ -49,7 +49,7 @@ public class LoadElementTitles extends GenericCommand {
             "join fetch propertyList.properties as props " +
             "where elmt.objectType in (:typeIds)"; //$NON-NLS-1$
 
-    private transient Logger log = Logger.getLogger(LoadElementTitles.class);
+    private static final Logger log = Logger.getLogger(LoadElementTitles.class);
     private String[] typeIds;
 
     private HashMap<Integer, String> selectedElements = new HashMap<>();
@@ -65,13 +65,6 @@ public class LoadElementTitles extends GenericCommand {
         this.typeIds = (typeIds != null && typeIds.length > 0) ? typeIds.clone() : null;
     }
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(LoadElementTitles.class);
-        }
-        return log;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -79,8 +72,8 @@ public class LoadElementTitles extends GenericCommand {
      */
     @Override
     public void execute() {
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Number of type ids: " + typeIds.length);
+        if (log.isDebugEnabled()) {
+            log.debug("Number of type ids: " + typeIds.length);
         }
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
         List<? extends CnATreeElement> list = dao.findByQuery(QUERY, new String[] { "typeIds" },

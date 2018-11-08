@@ -26,7 +26,7 @@ public class LoadReportParent extends GenericCommand implements ICachedCommand{
     private Integer rootElement;
     private List<CnATreeElement> elements;
     
-    private transient Logger log = Logger.getLogger(LoadReportParent.class);
+    private static final Logger log = Logger.getLogger(LoadReportParent.class);
     
     private boolean resultInjectedFromCache = false;
     
@@ -118,8 +118,8 @@ public class LoadReportParent extends GenericCommand implements ICachedCommand{
     public void injectCacheResult(Object result) {
         this.elements = (ArrayList<CnATreeElement>)result;
         resultInjectedFromCache = true;
-        if(getLog().isDebugEnabled()){
-            getLog().debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
+        if(log.isDebugEnabled()){
+            log.debug("Result in " + this.getClass().getCanonicalName() + " injected from cache");
         }
     }
 
@@ -131,10 +131,4 @@ public class LoadReportParent extends GenericCommand implements ICachedCommand{
         return this.elements;
     }
 
-    private Logger getLog(){
-        if(log == null){
-            log = Logger.getLogger(LoadReportParent.class);
-        }
-        return log;
-    }
 }
