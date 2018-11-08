@@ -107,11 +107,12 @@ Artifacts for the following platforms will be produced:
 
 If you want to pack a JRE into the build, you can copy the JRE to
 
-* sernet.thirdparty.feature/linux
-* sernet.thirdparty.feature/linux-32
-* sernet.thirdparty.feature/macos
-* sernet.thirdparty.feature/windows
-* sernet.thirdparty.feature/windows-32
+sernet.verinice.extraresources.feature/linux/jre
+sernet.verinice.extraresources.feature/linux32/jre
+sernet.verinice.extraresources.feature/windows/jre
+sernet.verinice.extraresources.feature/windows32/jre
+sernet.verinice.extraresources.feature/macos/jre
+
 
 Packing the JRE is required for macOS builds. It is
 [best practice](https://docs.oracle.com/javase/7/docs/technotes/guides/jweb/packagingAppsForMac.html),
