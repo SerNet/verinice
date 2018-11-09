@@ -78,7 +78,8 @@ public class InputHelperFactory {
                         for (Person person : personen) {
                             titles[i++] = person.getTitle();
                         }
-                        return titles.length > 0 ? titles : new String[] { Messages.InputHelperFactory_0 };
+                        return titles.length > 0 ? titles
+                                : new String[] { Messages.InputHelperFactory_0 };
                     } catch (CommandException e) {
                         ExceptionUtil.log(e, Messages.InputHelperFactory_1);
                         return new String[] { Messages.InputHelperFactory_0 };
@@ -109,25 +110,31 @@ public class InputHelperFactory {
         if (schutzbedarfHelper == null) {
             schutzbedarfHelper = new IInputHelper() {
                 public String[] getSuggestions() {
-                    return new String[] { Messages.InputHelperFactory_4, Messages.InputHelperFactory_2, Messages.InputHelperFactory_3 };
+                    return new String[] { Messages.InputHelperFactory_4,
+                            Messages.InputHelperFactory_2, Messages.InputHelperFactory_3 };
                 }
             };
         }
 
-        boolean showHint = Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.INPUTHINTS);
+        boolean showHint = Activator.getDefault().getPluginPreferences()
+                .getBoolean(PreferenceConstants.INPUTHINTS);
 
         // Tag Helpers:
         // BSI elements
-        huiComposite2.setInputHelper(Anwendung.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Anwendung.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD,
+                showHint);
         huiComposite2.setInputHelper(Client.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
         huiComposite2.setInputHelper(Gebaeude.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-        huiComposite2.setInputHelper(NetzKomponente.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(NetzKomponente.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD,
+                showHint);
         huiComposite2.setInputHelper(Person.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
         huiComposite2.setInputHelper(Raum.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
         huiComposite2.setInputHelper(Server.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
         huiComposite2.setInputHelper(SonstIT.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-        huiComposite2.setInputHelper(TelefonKomponente.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-        huiComposite2.setInputHelper(ITVerbund.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(TelefonKomponente.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD,
+                showHint);
+        huiComposite2.setInputHelper(ITVerbund.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD,
+                showHint);
 
         // ISO27k elements
         huiComposite2.setInputHelper(Asset.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
@@ -135,29 +142,40 @@ public class InputHelperFactory {
         huiComposite2.setInputHelper(Control.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
         huiComposite2.setInputHelper(Document.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
         huiComposite2.setInputHelper(Evidence.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-        huiComposite2.setInputHelper(Exception.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Exception.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD,
+                showHint);
         huiComposite2.setInputHelper(Finding.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
         huiComposite2.setInputHelper(Incident.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-        huiComposite2.setInputHelper(IncidentScenario.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-        huiComposite2.setInputHelper(Interview.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-        huiComposite2.setInputHelper(PersonIso.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(IncidentScenario.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD,
+                showHint);
+        huiComposite2.setInputHelper(Interview.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD,
+                showHint);
+        huiComposite2.setInputHelper(PersonIso.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD,
+                showHint);
         huiComposite2.setInputHelper(Process.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
         huiComposite2.setInputHelper(Record.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-        huiComposite2.setInputHelper(Requirement.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Requirement.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD,
+                showHint);
         huiComposite2.setInputHelper(Response.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
         huiComposite2.setInputHelper(Threat.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-        huiComposite2.setInputHelper(Vulnerability.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
-        huiComposite2.setInputHelper(Organization.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD, showHint);
+        huiComposite2.setInputHelper(Vulnerability.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD,
+                showHint);
+        huiComposite2.setInputHelper(Organization.PROP_TAG, tagHelper, IInputHelper.TYPE_ADD,
+                showHint);
 
         setSchutzbedarfHelpers(entityType, huiComposite2, showHint);
 
     }
 
-    private static void setSchutzbedarfHelpers(EntityType entityType, HitroUIComposite huiComposite2, boolean showHint) {
+    private static void setSchutzbedarfHelpers(EntityType entityType,
+            HitroUIComposite huiComposite2, boolean showHint) {
         for (PropertyGroup group : entityType.getPropertyGroups()) {
             for (PropertyType type : group.getPropertyTypes()) {
-                if (Schutzbedarf.isIntegritaetBegruendung(type.getId()) || Schutzbedarf.isVerfuegbarkeitBegruendung(type.getId()) || Schutzbedarf.isVertraulichkeitBegruendung(type.getId())) {
-                    huiComposite2.setInputHelper(type.getId(), schutzbedarfHelper, IInputHelper.TYPE_REPLACE, showHint);
+                if (Schutzbedarf.isIntegritaetBegruendung(type.getId())
+                        || Schutzbedarf.isVerfuegbarkeitBegruendung(type.getId())
+                        || Schutzbedarf.isVertraulichkeitBegruendung(type.getId())) {
+                    huiComposite2.setInputHelper(type.getId(), schutzbedarfHelper,
+                            IInputHelper.TYPE_REPLACE, showHint);
                 }
             }
         }
