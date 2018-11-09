@@ -55,15 +55,18 @@ public class TableImageProvider {
         LOG.debug("seach image for type id: " + typeId);
 
         if (SamtTopic.TYPE_ID.equals(typeId)) {
-            return imgCache.getControlImplementationImage(getSamtTopicOptionStatus(row.getValueFromResultString(SamtTopic.PROP_MATURITY)));
+            return imgCache.getControlImplementationImage(getSamtTopicOptionStatus(
+                    row.getValueFromResultString(SamtTopic.PROP_MATURITY)));
         }
 
         else if (Control.TYPE_ID.equals(typeId)) {
-            return imgCache.getControlImplementationImage(retrieveOptionStatus(row.getValueFromResultString(IControl.PROP_IMPL)));
+            return imgCache.getControlImplementationImage(
+                    retrieveOptionStatus(row.getValueFromResultString(IControl.PROP_IMPL)));
         }
 
         else if (MassnahmenUmsetzung.TYPE_ID.equals(typeId)) {
-            return imgCache.getImage(getMassnahmenUmsetzungsOptionStatus(row.getValueFromResultString(MassnahmenUmsetzung.P_UMSETZUNG)));
+            return imgCache.getImage(getMassnahmenUmsetzungsOptionStatus(
+                    row.getValueFromResultString(MassnahmenUmsetzung.P_UMSETZUNG)));
         }
 
         else if (GefaehrdungsUmsetzung.TYPE_ID.equals(typeId)) {
@@ -103,7 +106,8 @@ public class TableImageProvider {
         }
 
         else if (MassnahmenUmsetzung.TYPE_ID.equals(typeId)) {
-            return getMassnahmenUmsetzungsOptionStatus(row.getValueFromResultString(MassnahmenUmsetzung.P_UMSETZUNG));
+            return getMassnahmenUmsetzungsOptionStatus(
+                    row.getValueFromResultString(MassnahmenUmsetzung.P_UMSETZUNG));
         }
 
         // retrieve default images
