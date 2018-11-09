@@ -1,0 +1,76 @@
+#!/bin/sh
+# create filelist for veriniceweb package
+# dmurygin 2011-03-29 initial version
+
+# This script list all files extracted out of the .war and excludes files
+# which are mentioned in the SPEC file explicitly, e.g. as configuration file.
+# This is done, so files in the .war don't have to be listed in the spec file.
+
+CURDIR=$PWD
+
+if [ -z $1 ]
+then
+	echo no basedir given
+	exit 1
+fi
+
+cd $1
+
+# add required files from all directories:
+files=`find usr/share/tomcat6/webapps/veriniceserver/{META-INF,auth,dashboard,misc,poseidon-layout,resources,edit,template,public,error,WEB-INF} -type f`
+files2=`find usr/share/tomcat6/webapps/veriniceserver/ -maxdepth 1 -type f -name "*.html" -o -name "*.xhtml" -o -name "*.jsp"`
+
+printf "$files\n$files2" \
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/veriniceserver-plain.properties |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/veriniceserver-osgi.properties  |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/SNCA.xml |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/snca-messages.properties |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/snca-messages_de.properties |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/verinice-ldap.properties |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/faces-config.xml |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/verinice-auth-default.xml |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/verinice-auth-messages.properties |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/verinice-auth-messages_de.properties |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/verinice-auth.xml |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/verinice-auth.xml.bak |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/web.xml |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/applicationContext-test.xml |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/log4j.xml |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/server_hibernate.cfg.xml |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/server_hibernate_derby.cfg.xml |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/server_hibernate_oracle.cfg.xml |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/beanRefFactory.xml |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/gs/server/spring/veriniceserver-common.xml |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/gs/server/spring/veriniceserver-plain.xml |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/gs/server/spring/veriniceserver-jbpm.xml |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/search/analysis_de.json |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/search/analysis_en.json |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/search/mapping.json |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/bpm/AuditReminder.vm |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/bpm/AuditReminder_de.vm |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/bpm/DeadlineReminder.vm |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/bpm/DeadlineReminder_de.vm |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/bpm/IssueFixed.vm |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/bpm/IssueFixed_de.vm |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/bpm/IssueNotFixed.vm |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/bpm/IssueNotFixed_de.vm |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/bpm/NotResponsibleReminder.vm |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/bpm/NotResponsibleReminder_de.vm |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/bpm/TaskReminder.vm |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/bpm/TaskReminder_de.vm |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/bpm/TaskNotification.vm |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/bpm/TaskNotification_de.vm |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/bpm/GsmExecute.vm |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/bpm/GsmExecute_de.vm |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/bpm/gsm/IsmExecuteDescription.vm |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/classes/sernet/verinice/bpm/gsm/IsmExecuteDescription_de.vm |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/reportDeposit |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/verinice-auth.xml |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/verinice-auth.xml.bak |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/veriniceserver-plain.properties |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/veriniceserver-plain.properties.default |
+	grep -v usr/share/tomcat6/webapps/veriniceserver/WEB-INF/veriniceserver-plain.properties.local |
+	sed 's#^#/#' # add leading "/" to all lines:
+
+cd $CURDIR
+

@@ -52,3 +52,7 @@ doc/manual/de/verinice-Benutzerdokumentation.zip
 doc/manual/en/verinice-user_manual_EN.pdf
 doc/manual/en/verinice-user_manual_EN.zip
 
+*.rpm
+dist/**/*.zip
+dist/**/*.war
+dist/**/SOURCES/manual
