@@ -133,11 +133,10 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         readSelection(selection);
         Dialog dialog = null;
 
-        Map<String, IHuiControlFactory> overrides = RiskUiUtils
-                .createHuiControlFactories(selectedElements.get(0));
-
         if (entType != null && !(entType.getId().equals(Person.TYPE_ID)
                 || entType.getId().equals(PersonIso.TYPE_ID))) {
+            Map<String, IHuiControlFactory> overrides = RiskUiUtils
+                    .createHuiControlFactories(selectedElements.get(0));
             dialog = new BulkEditDialog(window.getShell(), entType, overrides);
         } else {
             dialog = new PersonBulkEditDialog(window.getShell(), Messages.ShowBulkEditAction_14);
