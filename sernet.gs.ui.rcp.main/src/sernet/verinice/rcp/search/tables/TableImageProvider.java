@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.tables;
 
+import java.util.Optional;
+
 import org.apache.log4j.Logger;
 import org.eclipse.swt.graphics.Image;
 
@@ -31,6 +33,7 @@ import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.rcp.search.column.IconColumn;
+import sernet.verinice.service.commands.CnATypeMapper;
 
 /**
  * Provides image path for the {@link SearchResultsTableViewer} icon column.
@@ -78,6 +81,13 @@ public class TableImageProvider {
             return imgCache.getImageForTypeId(typeId);
         }
 
+        // if the type is a group, try to find an image for the respective
+        // element type
+        Optional<String> elementTypeId = findElementTypeIdWithDefaultImageByGroupTypeId(typeId);
+        if (elementTypeId.isPresent()) {
+            return imgCache.getImageForTypeId(elementTypeId.get());
+        }
+
         return imgCache.getImage(ImageCache.UNKNOWN);
     }
 
@@ -111,7 +121,24 @@ public class TableImageProvider {
             return imgCache.getImageURL(typeId);
         }
 
+        // if the type is a group, try to find an URL for the respective
+        // element type
+        Optional<String> elementTypeId = findElementTypeIdWithDefaultImageByGroupTypeId(typeId);
+        if (elementTypeId.isPresent()) {
+            return imgCache.getImageURL(elementTypeId.get());
+        }
+
         return ImageCache.UNKNOWN;
+    }
+
+    private static Optional<String> findElementTypeIdWithDefaultImageByGroupTypeId(String typeId) {
+        if (CnATypeMapper.isGroupTypeId(typeId)) {
+            String elementTypeId = CnATypeMapper.getElementTypeIdFromGroupTypeId(typeId);
+            if (ImageCache.getInstance().hasDefaultImage(elementTypeId)) {
+                return Optional.of(elementTypeId);
+            }
+        }
+        return Optional.empty();
     }
 
     /**
