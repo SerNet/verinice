@@ -30,6 +30,33 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.hui.swt.widgets.IInputHelper;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bp.elements.Application;
+import sernet.verinice.model.bp.elements.BpDocument;
+import sernet.verinice.model.bp.elements.BpIncident;
+import sernet.verinice.model.bp.elements.BpPerson;
+import sernet.verinice.model.bp.elements.BpRecord;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.elements.BusinessProcess;
+import sernet.verinice.model.bp.elements.Device;
+import sernet.verinice.model.bp.elements.IcsSystem;
+import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.elements.ItSystem;
+import sernet.verinice.model.bp.elements.Network;
+import sernet.verinice.model.bp.elements.Room;
+import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpIncidentGroup;
+import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRequirementGroup;
+import sernet.verinice.model.bp.groups.BpThreatGroup;
+import sernet.verinice.model.bp.groups.BusinessProcessGroup;
+import sernet.verinice.model.bp.groups.DeviceGroup;
+import sernet.verinice.model.bp.groups.IcsSystemGroup;
+import sernet.verinice.model.bp.groups.ItSystemGroup;
+import sernet.verinice.model.bp.groups.NetworkGroup;
+import sernet.verinice.model.bp.groups.RoomGroup;
+import sernet.verinice.model.bp.groups.SafeguardGroup;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.Client;
 import sernet.verinice.model.bsi.Gebaeude;
@@ -114,7 +141,17 @@ public final class InputHelperFactory {
                 Evidence.PROP_TAG, Exception.PROP_TAG, Finding.PROP_TAG, Incident.PROP_TAG,
                 IncidentScenario.PROP_TAG, Interview.PROP_TAG, PersonIso.PROP_TAG, Process.PROP_TAG,
                 Record.PROP_TAG, Requirement.PROP_TAG, Response.PROP_TAG, Threat.PROP_TAG,
-                Vulnerability.PROP_TAG, Organization.PROP_TAG)
+                Vulnerability.PROP_TAG, Organization.PROP_TAG,
+                // modernized ITBP elements and groups
+                Application.PROP_TAG, ApplicationGroup.PROP_TAG, BpDocument.PROP_TAG,
+                BpIncident.PROP_TAG, BpIncidentGroup.PROP_TAG, BpPerson.PROP_TAG,
+                BpPersonGroup.PROP_TAG, BpRecord.PROP_TAG, BpRequirement.PROP_TAG,
+                BpRequirementGroup.PROP_TAG, BpThreat.PROP_TAG, BpThreatGroup.PROP_TAG,
+                BusinessProcess.PROP_TAG, BusinessProcessGroup.PROP_TAG, Device.PROP_TAG,
+                DeviceGroup.PROP_TAG, IcsSystem.PROP_TAG, IcsSystemGroup.PROP_TAG,
+                ItNetwork.PROP_TAG, ItSystem.PROP_TAG, ItSystemGroup.PROP_TAG, Network.PROP_TAG,
+                NetworkGroup.PROP_TAG, Room.PROP_TAG, RoomGroup.PROP_TAG, Safeguard.PROP_TAG,
+                SafeguardGroup.PROP_TAG)
                 .forEach(propertyName -> huiComposite2.setInputHelper(propertyName, tagHelper,
                         IInputHelper.TYPE_ADD, showHint));
 
