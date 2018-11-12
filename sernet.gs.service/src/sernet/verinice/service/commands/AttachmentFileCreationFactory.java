@@ -47,10 +47,8 @@ public class AttachmentFileCreationFactory {
     public static void createAttachmentFile(Attachment hostAttachment, byte[] fileData)
             throws IOException, CommandException {
         AttachmentFile newFileAttachment = new AttachmentFile();
-        if (fileData != null && fileData.length > 0) {
-            newFileAttachment.setFileData(fileData);
-            newFileAttachment.setDbId(hostAttachment.getDbId());
-        }
+        newFileAttachment.setFileData(fileData);
+        newFileAttachment.setDbId(hostAttachment.getDbId());
         SaveAttachment saveFileCommand = new SaveAttachment(newFileAttachment);
         saveFileCommand = ((ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE))
                 .executeCommand(saveFileCommand);
