@@ -1,0 +1,15 @@
+# fotter for all sub pages
+$ADDRESS = "&#169; 2014 SerNet GmbH";
+
+$SHOW_SECTION_NUMBERS = 1;
+
+$TITLES_LANGUAGGE = "english";
+
+# embed local icons
+$LOCAL_ICONS = 1;
+
+$TITLE = "index.html";
+
+#unicode settings
+$CHARSET = "utf-8";
+$HTML_VERSION = "4.0,unicode";

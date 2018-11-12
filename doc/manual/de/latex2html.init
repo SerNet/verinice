@@ -1,0 +1,43 @@
+# footer for all sub pages
+$ADDRESS = "&#169; 2014 SerNet GmbH";
+
+$SHOW_SECTION_NUMBERS = 1;
+
+$TITLES_LANGUAGE = "german";
+
+# embed local icons
+$LOCAL_ICONS = 1;
+
+$TITLE = "index.html";
+
+#unicode settings
+$CHARSET = "utf-8";
+$HTML_VERSION = "4.0,unicode";
+
+sub top_navigation_panel {
+
+    # Now add a few buttons with a space between them
+    "$NEXT $UP $PREVIOUS $CONTENTS $INDEX $CUSTOM_BUTTONS" .
+    #         
+    "<BR>\n" .		# Line break
+    #             	
+    # If ``next'' section exists, add its title to the navigation panel
+    ($NEXT_TITLE ? "<B> Weiter:</B> $NEXT_TITLE\n" : undef) . 
+                	            
+    # Similarly with the ``up'' title ...
+    ($UP_TITLE ? "<B>Nach oben:</B> $UP_TITLE\n" : undef) . 
+                 	                     
+    # ... and the ``previous'' title
+    ($PREVIOUS_TITLE ? "<B> Zurück:</B> $PREVIOUS_TITLE\n" : undef) .             	                                
+    #  Line Break, horizontal rule (3-d dividing line) and new paragraph  
+    "<BR> <P>\n"		
+}
+
+sub german_titles {
+    $toc_title = "Inhalt";
+    $lof_title = "Abbildungsverzeichnis";
+    $lot_title = "Tabellenverzeichnis";
+    $idx_title = "Index";
+    $bib_title = "Referenzen";
+    $info_title = "Über dieses Dokument ...";
+}

@@ -46,3 +46,9 @@ sernet.gs.server/WebContent/WEB-INF/elasticsearch/data/
 
 */target/*
 /.recommenders/
+
+doc/manual/de/verinice-Benutzerdokumentation.pdf
+doc/manual/de/verinice-Benutzerdokumentation.zip
+doc/manual/en/verinice-user_manual_EN.pdf
+doc/manual/en/verinice-user_manual_EN.zip
+
