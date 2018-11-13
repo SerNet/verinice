@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -91,10 +92,10 @@ public class BpImporter {
 
     private static final Logger LOG = Logger.getLogger(BpImporter.class);
 
-    private static final Set<String> processIdentifierPrefixes;
-    private static final Set<String> systemIdentifierPrefixes;
-    private static final Map<String, String> implementationOrderByModuleIdentifier;
-    private static final Map<String, String> modelingHintByModuleIdentifier;
+    private static final List<String> processIdentifierPrefixes = Collections
+            .unmodifiableList(Arrays.asList("CON", "DER", "ISMS", "OPS", "ORP"));
+    private static final List<String> systemIdentifierPrefixes = Collections
+            .unmodifiableList(Arrays.asList("APP", "IND", "INF", "NET", "SYS"));
 
     private static final Pattern MODULE_IDENTIFIER = Pattern.compile("([A-Z]+)\\.(\\d+\\.)*\\d+");
 
@@ -118,98 +119,15 @@ public class BpImporter {
     private static final String SUBDIRECTORY_THREATS = "elementare_gefaehrdungen_1";
     private static final String SUBDIRECTORY_IMPL_HINTS = "umsetzungshinweise";
 
+    private static final String BP_REQUIREMENT_IMPLEMENTATION_ORDER_R1 = "bp_requirement_group_impl_seq_r1";
+    private static final String BP_REQUIREMENT_IMPLEMENTATION_ORDER_R2 = "bp_requirement_group_impl_seq_r2";
+    private static final String BP_REQUIREMENT_IMPLEMENTATION_ORDER_R3 = "bp_requirement_group_impl_seq_r3";
+
     private static final int MILLIS_PER_SECOND = 1000;
 
     private Map<String, BpThreat> addedThreats = new HashMap<>();
     private Map<String, BpRequirement> addedReqs = new HashMap<>();
     private Map<String, BpRequirementGroup> addedModules = new HashMap<>();
-
-    static {
-        processIdentifierPrefixes = new HashSet<>();
-        processIdentifierPrefixes.addAll(Arrays.asList("CON", "DER", "ISMS", "OPS", "ORP"));
-        systemIdentifierPrefixes = new HashSet<>();
-        systemIdentifierPrefixes.addAll(Arrays.asList("APP", "IND", "INF", "NET", "SYS"));
-
-        String propertyValueR1 = "bp_requirement_group_impl_seq_r1";
-        String propertyValueR2 = "bp_requirement_group_impl_seq_r2";
-        String propertyValueR3 = "bp_requirement_group_impl_seq_r3";
-
-        Properties implementationOrder = new Properties();
-        Properties modelingHints = new Properties();
-
-        try (InputStream implementationOrderProperties = BpImporter.class
-                .getResourceAsStream("implementation-order.properties");
-                InputStream modelingHintsProperties = BpImporter.class
-                        .getResourceAsStream("modeling-hints.properties")) {
-            implementationOrder.load(implementationOrderProperties);
-            modelingHints.load(modelingHintsProperties);
-        } catch (IOException e) {
-            throw new RuntimeException(
-                    "Failed to load additional information from properties files", e);
-        }
-
-        Map<String, String> mapForImplementationOrder = new HashMap<>();
-        Map<String, String> mapForModelingHints = new HashMap<>();
-
-        for (Entry<Object, Object> entry : implementationOrder.entrySet()) {
-            String moduleIdentifier = (String) entry.getKey();
-            validateModuleIdentifier(moduleIdentifier);
-
-            String implementationOrderName = (String) entry.getValue();
-            String implementationOrderPropertyValue;
-            switch (implementationOrderName) {
-            case "R1":
-                implementationOrderPropertyValue = propertyValueR1;
-                break;
-            case "R2":
-                implementationOrderPropertyValue = propertyValueR2;
-                break;
-            case "R3":
-                implementationOrderPropertyValue = propertyValueR3;
-                break;
-            default:
-                throw new RuntimeException("Illegal implementation order '"
-                        + implementationOrderName + "' for module '" + moduleIdentifier + "'"
-                        + ", allowed values: R1, R2, R3");
-            }
-            String existingMapping = mapForImplementationOrder.put(moduleIdentifier,
-                    implementationOrderPropertyValue);
-            if (existingMapping != null) {
-                throw new RuntimeException(
-                        "Found duplicate implementation order mapping for module '"
-                                + moduleIdentifier + "'" + ".");
-            }
-        }
-
-        for (Entry<Object, Object> entry : modelingHints.entrySet()) {
-            String moduleIdentifier = (String) entry.getKey();
-            validateModuleIdentifier(moduleIdentifier);
-            String modelingHint = (String) entry.getValue();
-
-            String existingMapping = mapForModelingHints.put(moduleIdentifier, modelingHint);
-            if (existingMapping != null) {
-                throw new RuntimeException("Found duplicate modeling hint mapping for module '"
-                        + moduleIdentifier + "'" + ".");
-            }
-        }
-
-        implementationOrderByModuleIdentifier = Collections
-                .unmodifiableMap(mapForImplementationOrder);
-        modelingHintByModuleIdentifier = Collections.unmodifiableMap(mapForModelingHints);
-    }
-
-    private static void validateModuleIdentifier(String moduleIdentifier) {
-        Matcher matcher = MODULE_IDENTIFIER.matcher(moduleIdentifier);
-        if (!matcher.matches()) {
-            throw new IllegalArgumentException("Illegal module name: '" + moduleIdentifier + "'.");
-        }
-        String prefix = matcher.group(1);
-        if (!systemIdentifierPrefixes.contains(prefix)
-                && !processIdentifierPrefixes.contains(prefix)) {
-            throw new IllegalArgumentException("Illegal system identifier prefix '" + prefix
-                    + "' used in module identifier '" + moduleIdentifier + "'.");
-        }
-    }
 
     public BpImporter(String xmlRoot) {
         this.xmlRootDirectory = xmlRoot;
@@ -228,7 +146,15 @@ public class BpImporter {
             LOG.error("Wrong number of arguments, please provide root-Directory to XML-Archive");
             return;
         }
-        setupImportAndParseContent(modules, threats, implementationHints);
+        File rootDir = new File(xmlRootDirectory);
+        if (!rootDir.exists() || !rootDir.isDirectory()) {
+            LOG.error(rootDir + "is not a valid import directory");
+            return;
+        }
+
+        setupImportAndParseContent(rootDir, modules, threats, implementationHints);
+        ImportMetadata importMetadata = parseMetadataFiles(rootDir);
+
         LOG.debug("Successfully parsed modules:\t" + modules.size());
         LOG.debug("Successfully parsed threats:\t" + threats.size());
         LOG.debug("Successfully parsed implementation hints:\t" + implementationHints.size());
@@ -242,11 +168,12 @@ public class BpImporter {
         long elementalThreatsReady = System.currentTimeMillis();
         LOG.debug("Elementalthreats ready, took :\t"
                 + (elementalThreatsReady - itnetworkReady) / MILLIS_PER_SECOND);
-        transferModules(modules, implementationHints);
+
+        transferModules(modules, implementationHints, importMetadata);
 
         Set<String> moduleIdentifiersStrayImplementationOrder = new HashSet<>();
         moduleIdentifiersStrayImplementationOrder
-                .addAll(implementationOrderByModuleIdentifier.keySet());
+                .addAll(importMetadata.implementationOrderByModuleIdentifier.keySet());
         moduleIdentifiersStrayImplementationOrder.removeAll(addedModules.keySet());
         if (!moduleIdentifiersStrayImplementationOrder.isEmpty()) {
             LOG.warn("The implementation order mapping file contains an entry for the module(s) "
@@ -254,7 +181,8 @@ public class BpImporter {
                     + ", but those modules do not exist in the import data.");
         }
         Set<String> modelingHintsStrayImplementationOrder = new HashSet<>();
-        modelingHintsStrayImplementationOrder.addAll(modelingHintByModuleIdentifier.keySet());
+        modelingHintsStrayImplementationOrder
+                .addAll(importMetadata.modelingHintByModuleIdentifier.keySet());
         modelingHintsStrayImplementationOrder.removeAll(addedModules.keySet());
         if (!modelingHintsStrayImplementationOrder.isEmpty()) {
             LOG.warn("The implementation hint mapping file contains an entry for the module(s) "
@@ -286,19 +214,98 @@ public class BpImporter {
      * the three Sets, passed as parameter, will be filled with the Java-Objects
      * representing the XML-Files
      */
-    private void setupImportAndParseContent(Set<Document> modules,
+    private void setupImportAndParseContent(File rootDir, Set<Document> modules,
             Set<ITBP2VNA.generated.threat.Document> threats,
             Set<ITBP2VNA.generated.implementationhint.Document> implementationHints) {
-        File rootDir = new File(xmlRootDirectory);
-        if (rootDir.exists() && rootDir.isDirectory()) {
-            File[] directories = rootDir.listFiles((FileFilter) File::isDirectory);
-            File[] subDirectories = determineSubdirectories(directories);
-            File moduleDir = subDirectories[0];
-            File threatDir = subDirectories[1];
-            File implHintDir = subDirectories[2];
+        File[] directories = rootDir.listFiles((FileFilter) File::isDirectory);
+        File[] subDirectories = determineSubdirectories(directories);
+        File moduleDir = subDirectories[0];
+        File threatDir = subDirectories[1];
+        File implHintDir = subDirectories[2];
 
-            parseBSIXml(modules, threats, implementationHints, moduleDir, threatDir, implHintDir);
+        parseBSIXml(modules, threats, implementationHints, moduleDir, threatDir, implHintDir);
 
+    }
+
+    private ImportMetadata parseMetadataFiles(File rootDirectory) {
+        Properties implementationOrder = new Properties();
+        Properties modelingHints = new Properties();
+
+        try (InputStream implementationOrderProperties = Files
+                .newInputStream(rootDirectory.toPath().resolve("implementation-order.properties"));
+                InputStream modelingHintsProperties = Files.newInputStream(
+                        rootDirectory.toPath().resolve("modeling-hints.properties"))) {
+            implementationOrder.load(implementationOrderProperties);
+            modelingHints.load(modelingHintsProperties);
+        } catch (IOException e) {
+            throw new RuntimeException(
+                    "Failed to load additional information from properties files", e);
+        }
+
+        Map<String, String> mapForImplementationOrder = new HashMap<>();
+        Map<String, String> mapForModelingHints = new HashMap<>();
+
+        for (Entry<Object, Object> entry : implementationOrder.entrySet()) {
+            String moduleIdentifier = (String) entry.getKey();
+            validateModuleIdentifier(moduleIdentifier);
+
+            String implementationOrderName = (String) entry.getValue();
+            String implementationOrderPropertyValue;
+            switch (implementationOrderName) {
+            case "R1":
+                implementationOrderPropertyValue = BP_REQUIREMENT_IMPLEMENTATION_ORDER_R1;
+                break;
+            case "R2":
+                implementationOrderPropertyValue = BP_REQUIREMENT_IMPLEMENTATION_ORDER_R2;
+                break;
+            case "R3":
+                implementationOrderPropertyValue = BP_REQUIREMENT_IMPLEMENTATION_ORDER_R3;
+                break;
+            default:
+                throw new RuntimeException("Illegal implementation order '"
+                        + implementationOrderName + "' for module '" + moduleIdentifier + "'"
+                        + ", allowed values: R1, R2, R3");
+            }
+            String existingMapping = mapForImplementationOrder.put(moduleIdentifier,
+                    implementationOrderPropertyValue);
+            if (existingMapping != null) {
+                throw new RuntimeException(
+                        "Found duplicate implementation order mapping for module '"
+                                + moduleIdentifier + "'" + ".");
+            }
+        }
+
+        for (Entry<Object, Object> entry : modelingHints.entrySet()) {
+            String moduleIdentifier = (String) entry.getKey();
+            validateModuleIdentifier(moduleIdentifier);
+            String modelingHint = (String) entry.getValue();
+
+            String existingMapping = mapForModelingHints.put(moduleIdentifier, modelingHint);
+            if (existingMapping != null) {
+                throw new RuntimeException("Found duplicate modeling hint mapping for module '"
+                        + moduleIdentifier + "'" + ".");
+            }
+        }
+
+        Map<String, String> implementationOrderByModuleIdentifier = Collections
+                .unmodifiableMap(mapForImplementationOrder);
+        Map<String, String> modelingHintByModuleIdentifier = Collections
+                .unmodifiableMap(mapForModelingHints);
+
+        return new ImportMetadata(implementationOrderByModuleIdentifier,
+                modelingHintByModuleIdentifier);
+    }
+
+    private static void validateModuleIdentifier(String moduleIdentifier) {
+        Matcher matcher = MODULE_IDENTIFIER.matcher(moduleIdentifier);
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("Illegal module name: '" + moduleIdentifier + "'.");
+        }
+        String prefix = matcher.group(1);
+        if (!systemIdentifierPrefixes.contains(prefix)
+                && !processIdentifierPrefixes.contains(prefix)) {
+            throw new IllegalArgumentException("Illegal system identifier prefix '" + prefix
+                    + "' used in module identifier '" + moduleIdentifier + "'.");
         }
     }
 
@@ -606,8 +613,8 @@ public class BpImporter {
      * (and calls related methods)
      */
     private void transferModules(Set<Document> modules,
-            Set<ITBP2VNA.generated.implementationhint.Document> implementationHints)
-            throws CreateBPElementException {
+            Set<ITBP2VNA.generated.implementationhint.Document> implementationHints,
+            ImportMetadata importMetadata) throws CreateBPElementException {
 
         if (rootNetwork == null) {
             LOG.error("Root-IT-Network not initialized. Ending import");
@@ -629,7 +636,7 @@ public class BpImporter {
 
             if (!addedModules.containsKey(moduleIdentifier) && parent != null) {
                 veriniceModule = createModule(bsiModule, parent,
-                        implementationHintsByIdentifier.get(moduleIdentifier));
+                        implementationHintsByIdentifier.get(moduleIdentifier), importMetadata);
                 linkElementalThreats(bsiModule);
                 addedModules.put(moduleIdentifier, veriniceModule);
             }
@@ -641,8 +648,8 @@ public class BpImporter {
      * {@link BpRequirementGroup}
      */
     private BpRequirementGroup createModule(Document bsiModule, BpRequirementGroup parent,
-            ITBP2VNA.generated.implementationhint.Document implementationHint)
-            throws CreateBPElementException {
+            ITBP2VNA.generated.implementationhint.Document implementationHint,
+            ImportMetadata importMetadata) throws CreateBPElementException {
         BpRequirementGroup veriniceModule = null;
         if (parent != null) {
             String moduleIdentifier = bsiModule.getIdentifier();
@@ -651,7 +658,8 @@ public class BpImporter {
                     moduleTitle);
 
             veriniceModule.setIdentifier(moduleIdentifier);
-            String modelingHint = modelingHintByModuleIdentifier.get(moduleIdentifier);
+            String modelingHint = importMetadata.modelingHintByModuleIdentifier
+                    .get(moduleIdentifier);
             if (modelingHint == null) {
                 LOG.warn("No modeling hint specified for module '" + moduleIdentifier + "' ("
                         + moduleTitle + ")");
@@ -659,7 +667,7 @@ public class BpImporter {
             veriniceModule.setObjectBrowserDescription(
                     HtmlHelper.getCompleteModuleXMLText(bsiModule, modelingHint));
             veriniceModule.setLastChange(getBSIDate(bsiModule.getLastChange()));
-            String implementationOrder = implementationOrderByModuleIdentifier
+            String implementationOrder = importMetadata.implementationOrderByModuleIdentifier
                     .get(moduleIdentifier);
             if (implementationOrder != null) {
                 veriniceModule.setImplementationOrder(implementationOrder);
@@ -1190,4 +1198,16 @@ public class BpImporter {
         this.daoFactory = daoFactory;
     }
 
+    private static class ImportMetadata {
+
+        private final Map<String, String> implementationOrderByModuleIdentifier;
+        private final Map<String, String> modelingHintByModuleIdentifier;
+
+        public ImportMetadata(Map<String, String> implementationOrderByModuleIdentifier,
+                Map<String, String> modelingHintByModuleIdentifier) {
+            this.implementationOrderByModuleIdentifier = implementationOrderByModuleIdentifier;
+            this.modelingHintByModuleIdentifier = modelingHintByModuleIdentifier;
+        }
+
+    }
 }
