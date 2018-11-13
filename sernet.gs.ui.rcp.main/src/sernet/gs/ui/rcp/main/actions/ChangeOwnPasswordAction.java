@@ -52,12 +52,10 @@ public class ChangeOwnPasswordAction extends Action {
         // setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.PERSON));
         setToolTipText(Messages.ChangeOwnPasswordAction_0);
-        setEnabled(true);
+        setEnabled(!Activator.getDefault().isStandalone());
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
