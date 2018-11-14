@@ -74,18 +74,16 @@ public class ValidationService implements IValidationService {
             throw new RuntimeCommandException("validated element not existent");
         }
         ServerInitializer.inheritVeriniceContextState();
-        HashMap<PropertyType, List<String>> hintsOfFailedValidationsMap = new HashMap<PropertyType, List<String>>();
+        HashMap<PropertyType, List<String>> hintsOfFailedValidationsMap = new HashMap<>();
         EntityType eType = getHuiTypeFactory().getEntityType(elmt.getTypeId());
         if (eType != null) {
             for (Object pElement : eType.getAllPropertyTypes()) {
                 if (pElement instanceof PropertyType) {
-                    hintsOfFailedValidationsMap = (HashMap<PropertyType, List<String>>) updateValueMap(
-                            hintsOfFailedValidationsMap, (PropertyType) pElement, elmt);
+                    updateValueMap(hintsOfFailedValidationsMap, (PropertyType) pElement, elmt);
                 } else if (pElement instanceof PropertyGroup) {
                     PropertyGroup pGroup = (PropertyGroup) pElement;
                     for (PropertyType pType : pGroup.getPropertyTypes()) {
-                        hintsOfFailedValidationsMap = (HashMap<PropertyType, List<String>>) updateValueMap(
-                                hintsOfFailedValidationsMap, pType, elmt);
+                        updateValueMap(hintsOfFailedValidationsMap, pType, elmt);
                     }
                 }
             }
@@ -179,9 +177,9 @@ public class ValidationService implements IValidationService {
                     + " AND validation.propertyId = ?" + " AND validation.hintId = ?"
                     + " AND validation.scopeId = ?";
 
-            return getCnaValidationDAO()
+            return !getCnaValidationDAO()
                     .findByQuery(hqlQuery, new Object[] { elmtDbId, propertyType, hintID, scopeId })
-                    .size() > 0;
+                    .isEmpty();
         } else {
             return false;
         }
@@ -253,7 +251,7 @@ public class ValidationService implements IValidationService {
     }
 
     private List<String> getInvalidPropertyHints(PropertyType type, CnATreeElement elmt) {
-        ArrayList<String> hintsOfFailedValidations = new ArrayList<String>(0);
+        ArrayList<String> hintsOfFailedValidations = new ArrayList<>();
         List<Property> savedProperties = elmt.getEntity().getProperties(type.getId())
                 .getProperties();
         // iterate(validate) all existing properties
@@ -306,8 +304,8 @@ public class ValidationService implements IValidationService {
         return hintsOfFailedValidations;
     }
 
-    private Map<PropertyType, List<String>> updateValueMap(Map<PropertyType, List<String>> map,
-            PropertyType type, CnATreeElement elmt) {
+    private void updateValueMap(Map<PropertyType, List<String>> map, PropertyType type,
+            CnATreeElement elmt) {
         List<String> invalidHints = getInvalidPropertyHints(type, elmt);
         if (map.containsKey(type)) {
             List<String> listWithNewValues = map.get(type);
@@ -316,7 +314,6 @@ public class ValidationService implements IValidationService {
         } else {
             map.put(type, invalidHints);
         }
-        return map;
     }
 
     /*
@@ -392,7 +389,7 @@ public class ValidationService implements IValidationService {
         createValidationForSingleElement(elmt);
         for (CnATreeElement child : elmt.getChildren()) {
             if (child.getScopeId() == null) {
-                LoadElementByUuid<CnATreeElement> childReloader = new LoadElementByUuid<CnATreeElement>(
+                LoadElementByUuid<CnATreeElement> childReloader = new LoadElementByUuid<>(
                         child.getUuid());
                 childReloader = getCommandService().executeCommand(childReloader);
                 child = childReloader.getElement();
@@ -439,7 +436,7 @@ public class ValidationService implements IValidationService {
 
         ServerInitializer.inheritVeriniceContextState();
 
-        List<String> failedValidationPropertyTypes = new ArrayList<String>(0);
+        List<String> failedValidationPropertyTypes = new ArrayList<>(0);
         for (Object pElement : getHuiTypeFactory().getEntityType(entity.getEntityType())
                 .getAllPropertyTypes()) {
             if (pElement instanceof PropertyType) {
@@ -485,8 +482,8 @@ public class ValidationService implements IValidationService {
     @Override
     public void createValidationByUuid(String uuid) throws CommandException {
         ServerInitializer.inheritVeriniceContextState();
-        LoadElementByUuid<CnATreeElement> elementLoader = new LoadElementByUuid<CnATreeElement>(
-                uuid, new RetrieveInfo().setProperties(true));
+        LoadElementByUuid<CnATreeElement> elementLoader = new LoadElementByUuid<>(uuid,
+                new RetrieveInfo().setProperties(true));
         elementLoader = getCommandService().executeCommand(elementLoader);
         createValidationForSingleElement(elementLoader.getElement());
     }
@@ -498,8 +495,8 @@ public class ValidationService implements IValidationService {
     @Override
     public void createValidationsForSubTreeByUuid(String uuid) throws CommandException {
         ServerInitializer.inheritVeriniceContextState();
-        LoadElementByUuid<CnATreeElement> elementLoader = new LoadElementByUuid<CnATreeElement>(
-                uuid, new RetrieveInfo().setProperties(true).setChildren(true));
+        LoadElementByUuid<CnATreeElement> elementLoader = new LoadElementByUuid<>(uuid,
+                new RetrieveInfo().setProperties(true).setChildren(true));
         elementLoader = getCommandService().executeCommand(elementLoader);
         createValidationsForSubTree(elementLoader.getElement());
     }
