@@ -52,51 +52,58 @@ import sernet.verinice.service.commands.crud.LoadScopeElementsById;
  *
  */
 public class ValidationService implements IValidationService {
-    
+
     private static final Logger log = Logger.getLogger(ValidationService.class);
-    
+
     private ICommandService commandService;
     private IDao<CnAValidation, Long> cnaValidationDAO;
     private IBaseDao<CnATreeElement, Long> cnaTreeElementDAO;
-    
+
     // values from CnAValidation.hbm.xml
     private static final int MAXLENGTH_DBSTRING = 250;
-    
-    private HUITypeFactory huiTypeFactory;
-    
-    private static final String VALIDATION_SQL_SELECT_BASE = "from sernet.verinice.model.validation.CnAValidation validation where";
-    
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.validation.IValidationService#createValidation()
+    private HUITypeFactory huiTypeFactory;
+
+    private static final String VALIDATION_SQL_SELECT_BASE = "from sernet.verinice.model.validation.CnAValidation validation where";
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.validation.IValidationService#createValidation
+     * ()
      */
     @Override
     public void createValidationForSingleElement(CnATreeElement elmt) {
-        if(elmt == null){
+        if (elmt == null) {
             throw new RuntimeCommandException("validated element not existent");
         }
         ServerInitializer.inheritVeriniceContextState();
         HashMap<PropertyType, List<String>> hintsOfFailedValidationsMap = new HashMap<PropertyType, List<String>>();
         EntityType eType = getHuiTypeFactory().getEntityType(elmt.getTypeId());
-        if(eType != null){
-            for(Object pElement : eType.getAllPropertyTypes()){
-                if(pElement instanceof PropertyType){
-                    hintsOfFailedValidationsMap = (HashMap<PropertyType, List<String>>)updateValueMap(hintsOfFailedValidationsMap, (PropertyType)pElement, elmt);
-                } else if(pElement instanceof PropertyGroup){
-                    PropertyGroup pGroup = (PropertyGroup)pElement;
-                    for(PropertyType pType : pGroup.getPropertyTypes()){
-                        hintsOfFailedValidationsMap = (HashMap<PropertyType, List<String>>)updateValueMap(hintsOfFailedValidationsMap, pType, elmt);
+        if (eType != null) {
+            for (Object pElement : eType.getAllPropertyTypes()) {
+                if (pElement instanceof PropertyType) {
+                    hintsOfFailedValidationsMap = (HashMap<PropertyType, List<String>>) updateValueMap(
+                            hintsOfFailedValidationsMap, (PropertyType) pElement, elmt);
+                } else if (pElement instanceof PropertyGroup) {
+                    PropertyGroup pGroup = (PropertyGroup) pElement;
+                    for (PropertyType pType : pGroup.getPropertyTypes()) {
+                        hintsOfFailedValidationsMap = (HashMap<PropertyType, List<String>>) updateValueMap(
+                                hintsOfFailedValidationsMap, pType, elmt);
                     }
                 }
             }
-            for(Entry<PropertyType, List<String>> entry : hintsOfFailedValidationsMap.entrySet()){
-                for(String hint : entry.getValue()){
+            for (Entry<PropertyType, List<String>> entry : hintsOfFailedValidationsMap.entrySet()) {
+                for (String hint : entry.getValue()) {
                     createCnAValidationObject(elmt, entry, hint);
                 }
             }
         }
     }
-    private void createCnAValidationObject(CnATreeElement elmt, Entry<PropertyType, List<String>> entry, String hint) {
+
+    private void createCnAValidationObject(CnATreeElement elmt,
+            Entry<PropertyType, List<String>> entry, String hint) {
         CnAValidation validation = new CnAValidation();
         validation.setElmtDbId(elmt.getDbId());
         validation.setPropertyId(truncateString(entry.getKey().getId(), MAXLENGTH_DBSTRING));
@@ -104,96 +111,111 @@ public class ValidationService implements IValidationService {
         validation.setElmtTitle(truncateString(elmt.getTitle(), MAXLENGTH_DBSTRING));
         validation.setScopeId(elmt.getScopeId());
         validation.setElementType(truncateString(elmt.getTypeId(), MAXLENGTH_DBSTRING));
-        if(!isValidationExistant(elmt.getDbId(), entry.getKey().getId(), hint, elmt.getScopeId())){
+        if (!isValidationExistant(elmt.getDbId(), entry.getKey().getId(), hint,
+                elmt.getScopeId())) {
             getCnaValidationDAO().saveOrUpdate(validation);
         }
-        if(log.isDebugEnabled()){
-            log.debug("Created Validation for : " + elmt.getTitle() + "(" + entry.getKey().getId() + ")\tHint:\t" + hint);
+        if (log.isDebugEnabled()) {
+            log.debug("Created Validation for : " + elmt.getTitle() + "(" + entry.getKey().getId()
+                    + ")\tHint:\t" + hint);
         }
     }
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.validation.IValidationService#getValidations(sernet.verinice.model.common.CnATreeElement)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.validation.IValidationService#getValidations(
+     * sernet.verinice.model.common.CnATreeElement)
      */
     @Override
     public List<CnAValidation> getValidations(Integer scopeId) {
         ServerInitializer.inheritVeriniceContextState();
         String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.scopeId = ?";
-        return getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{scopeId});
+        return getCnaValidationDAO().findByQuery(hqlQuery, new Object[] { scopeId });
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.validation.IValidationService#getValidations(java.lang.Integer, java.lang.Integer)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.validation.IValidationService#getValidations(
+     * java.lang.Integer, java.lang.Integer)
      */
     /**
-     * returns validations for given scope or
-     * validations for given element in given scope
-     * or validation for (scope-)unspecified element
+     * returns validations for given scope or validations for given element in
+     * given scope or validation for (scope-)unspecified element
      */
     @Override
     public List<CnAValidation> getValidations(Integer scopeId, Integer cnaId) {
         ServerInitializer.inheritVeriniceContextState();
         String hqlQuery = VALIDATION_SQL_SELECT_BASE;
         ArrayList<Object> paramList = new ArrayList<Object>(0);
-        if(cnaId != null && scopeId == null){
+        if (cnaId != null && scopeId == null) {
             hqlQuery = hqlQuery + " validation.elmtDbId = ?";
             paramList.add(cnaId);
-        } else if(cnaId != null && scopeId != null){
+        } else if (cnaId != null && scopeId != null) {
             hqlQuery = hqlQuery + " validation.elmtDbId = ? AND validation.scopeId = ?";
             paramList.add(cnaId);
             paramList.add(scopeId);
-        } else if(cnaId == null && scopeId != null){
-                hqlQuery = hqlQuery +  " validation.scopeId = ?";
-                paramList.add(scopeId);
+        } else if (cnaId == null && scopeId != null) {
+            hqlQuery = hqlQuery + " validation.scopeId = ?";
+            paramList.add(scopeId);
         }
-        return getCnaValidationDAO().findByQuery(hqlQuery, paramList.toArray(new Object[paramList.size()]));
+        return getCnaValidationDAO().findByQuery(hqlQuery,
+                paramList.toArray(new Object[paramList.size()]));
     }
 
     @Override
-    public List<CnAValidation> getValidations(Integer elmtDbId, String propertyType){
+    public List<CnAValidation> getValidations(Integer elmtDbId, String propertyType) {
         ServerInitializer.inheritVeriniceContextState();
-        String hqlQuery = VALIDATION_SQL_SELECT_BASE +
-        		" validation.elmtDbId = ? AND " +
-        		"validation.propertyId = ?";
-        if(elmtDbId != null){
-            return getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{elmtDbId, propertyType});
+        String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ? AND "
+                + "validation.propertyId = ?";
+        if (elmtDbId != null) {
+            return getCnaValidationDAO().findByQuery(hqlQuery,
+                    new Object[] { elmtDbId, propertyType });
         } else {
             return Collections.emptyList();
         }
     }
-    
-    @Override
-    public boolean isValidationExistant(Integer elmtDbId, String propertyType, String hintID, Integer scopeId){
-        ServerInitializer.inheritVeriniceContextState();
-        if(scopeId != null && elmtDbId != null){
-            String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?" +
-                    " AND validation.propertyId = ?" +
-                    " AND validation.hintId = ?"+ 
-                    " AND validation.scopeId = ?";
 
-            return getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{elmtDbId, propertyType, hintID, scopeId }).size() > 0;
+    @Override
+    public boolean isValidationExistant(Integer elmtDbId, String propertyType, String hintID,
+            Integer scopeId) {
+        ServerInitializer.inheritVeriniceContextState();
+        if (scopeId != null && elmtDbId != null) {
+            String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?"
+                    + " AND validation.propertyId = ?" + " AND validation.hintId = ?"
+                    + " AND validation.scopeId = ?";
+
+            return getCnaValidationDAO()
+                    .findByQuery(hqlQuery, new Object[] { elmtDbId, propertyType, hintID, scopeId })
+                    .size() > 0;
         } else {
             return false;
         }
     }
-    
-    public boolean isValidationExistant(CnAValidation validation){
+
+    public boolean isValidationExistant(CnAValidation validation) {
         ServerInitializer.inheritVeriniceContextState();
-        return isValidationExistant(validation.getDbId(), validation.getPropertyId(), validation.getHintId(), validation.getScopeId());
+        return isValidationExistant(validation.getDbId(), validation.getPropertyId(),
+                validation.getHintId(), validation.getScopeId());
     }
-    
+
     @Override
     public boolean isValidationExistant(Integer elmtDbId, String propertyType) {
         ServerInitializer.inheritVeriniceContextState();
-        String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?" +
-                " AND validation.propertyId = ?";
-        return getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{elmtDbId, propertyType}).size() > 0;
+        String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?"
+                + " AND validation.propertyId = ?";
+        return getCnaValidationDAO().findByQuery(hqlQuery, new Object[] { elmtDbId, propertyType })
+                .size() > 0;
     }
-    
-    public ICommandService getCommandService(){
+
+    public ICommandService getCommandService() {
         return commandService;
     }
-    
-    public void setCommandService(ICommandService commandService){
+
+    public void setCommandService(ICommandService commandService) {
         this.commandService = commandService;
     }
 
@@ -221,30 +243,39 @@ public class ValidationService implements IValidationService {
         this.huiTypeFactory = huiTypeFactory;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.validation.IValidationService#deleteValidation(java.lang.Integer, java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.validation.IValidationService#deleteValidation
+     * (java.lang.Integer, java.lang.String, java.lang.String)
      */
     @Override
-    public CnAValidation deleteValidation(Integer elmtDbId, String propertyType, String hintID, Integer scopeId) {
+    public CnAValidation deleteValidation(Integer elmtDbId, String propertyType, String hintID,
+            Integer scopeId) {
         ServerInitializer.inheritVeriniceContextState();
-        String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?" +
-                " AND validation.propertyId = ? " +
-                "AND validation.hintId = ?"+ 
-                " AND validation.scopeId = ?";
-        CnAValidation validation = (CnAValidation) getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{elmtDbId, propertyType, hintID, scopeId}).get(0);
+        String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?"
+                + " AND validation.propertyId = ? " + "AND validation.hintId = ?"
+                + " AND validation.scopeId = ?";
+        CnAValidation validation = (CnAValidation) getCnaValidationDAO()
+                .findByQuery(hqlQuery, new Object[] { elmtDbId, propertyType, hintID, scopeId })
+                .get(0);
         return deleteValidation(validation);
     }
-    
-    private List<String> getInvalidPropertyHints(PropertyType type, CnATreeElement elmt){
+
+    private List<String> getInvalidPropertyHints(PropertyType type, CnATreeElement elmt) {
         ArrayList<String> hintsOfFailedValidations = new ArrayList<String>(0);
-        List<Property> savedProperties = elmt.getEntity().getProperties(type.getId()).getProperties();
-        // iterate(validate) all existant properties 
-        for(Property savedProp : savedProperties){
-            hintsOfFailedValidations.addAll(processValidationMap(type.validate(savedProp.getPropertyValue(), null), elmt, type));
+        List<Property> savedProperties = elmt.getEntity().getProperties(type.getId())
+                .getProperties();
+        // iterate(validate) all existant properties
+        for (Property savedProp : savedProperties) {
+            hintsOfFailedValidations.addAll(processValidationMap(
+                    type.validate(savedProp.getPropertyValue(), null), elmt, type));
         }
         // no property existant yet
-        if(savedProperties.isEmpty()){
-            hintsOfFailedValidations.addAll(processValidationMap(type.validate(null, null), elmt, type));
+        if (savedProperties.isEmpty()) {
+            hintsOfFailedValidations
+                    .addAll(processValidationMap(type.validate(null, null), elmt, type));
         }
         return hintsOfFailedValidations;
     }
@@ -262,7 +293,9 @@ public class ValidationService implements IValidationService {
                     log.debug("Validation:\t(" + type.getId() + ", " + entry.getValue() + ", "
                             + entry.getKey() + ") created");
                 }
-            } else if (elmtIsValid && validationExists) { // validation condition is fullfilled
+            } else if (elmtIsValid && validationExists) { // validation
+                                                          // condition is
+                                                          // fullfilled
                 deleteValidation(elmt.getDbId(), type.getId(), entry.getKey(), elmt.getScopeId());
                 if (log.isDebugEnabled()) {
                     log.debug("Validation:\t(" + type.getId() + ", " + entry.getValue() + ", "
@@ -275,7 +308,8 @@ public class ValidationService implements IValidationService {
         // if validation for type are existant, but map is empty (no validators
         // defined)
         // ===> delete existant validations for type
-        if (validationMap.entrySet().isEmpty()) { // no negative validations existant
+        if (validationMap.entrySet().isEmpty()) { // no negative validations
+                                                  // existant
             for (CnAValidation validation : getValidations(elmt.getDbId(), type.getId())) {
                 deleteValidation(validation);
             }
@@ -286,7 +320,7 @@ public class ValidationService implements IValidationService {
     private Map<PropertyType, List<String>> updateValueMap(Map<PropertyType, List<String>> map,
             PropertyType type, CnATreeElement elmt) {
         List<String> invalidHints = getInvalidPropertyHints(type, elmt);
-        if(map.containsKey(type)){
+        if (map.containsKey(type)) {
             List<String> listWithNewValues = map.get(type);
             listWithNewValues.addAll(invalidHints);
             map.put(type, listWithNewValues);
@@ -295,43 +329,56 @@ public class ValidationService implements IValidationService {
         }
         return map;
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.validation.IValidationService#deleteValidation(java.lang.Integer, java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.validation.IValidationService#deleteValidation
+     * (java.lang.Integer, java.lang.String)
      */
     @Override
     public CnAValidation deleteValidation(Integer elmtDbId, String propertyType, Integer scopeId) {
         ServerInitializer.inheritVeriniceContextState();
-        String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?" +
-                " AND validation.propertyId = ? " + 
-                " AND validation.scopeId = ?";
-        CnAValidation validation = (CnAValidation) getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{elmtDbId, propertyType, scopeId}).get(0);
+        String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?"
+                + " AND validation.propertyId = ? " + " AND validation.scopeId = ?";
+        CnAValidation validation = (CnAValidation) getCnaValidationDAO()
+                .findByQuery(hqlQuery, new Object[] { elmtDbId, propertyType, scopeId }).get(0);
         getCnaValidationDAO().delete(validation);
         return validation;
     }
-    
+
     @Override
-    public CnAValidation deleteValidation(CnAValidation validation){
+    public CnAValidation deleteValidation(CnAValidation validation) {
         ServerInitializer.inheritVeriniceContextState();
         getCnaValidationDAO().delete(validation);
         return validation;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.validation.IValidationService#getValidation(java.lang.Integer, java.lang.String, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.validation.IValidationService#getValidation(
+     * java.lang.Integer, java.lang.String, java.lang.String)
      */
     @Override
-    public CnAValidation getValidation(Integer cnaDbId, String propertyType, String hint, Integer scopeId) {
+    public CnAValidation getValidation(Integer cnaDbId, String propertyType, String hint,
+            Integer scopeId) {
         ServerInitializer.inheritVeriniceContextState();
-        String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?" +
-                " AND validation.propertyId = ? " +
-                "AND validation.hintId = ?"+ 
-                " AND validation.scopeId = ?";
-        return (CnAValidation) getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{cnaDbId, propertyType, hint, scopeId}).get(0);
+        String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?"
+                + " AND validation.propertyId = ? " + "AND validation.hintId = ?"
+                + " AND validation.scopeId = ?";
+        return (CnAValidation) getCnaValidationDAO()
+                .findByQuery(hqlQuery, new Object[] { cnaDbId, propertyType, hint, scopeId })
+                .get(0);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.validation.IValidationService#createValidationsForScope(sernet.verinice.model.common.CnATreeElement)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.validation.IValidationService#
+     * createValidationsForScope(sernet.verinice.model.common.CnATreeElement)
      */
     @Override
     public void createValidationsForScope(Integer scope) throws CommandException {
@@ -352,16 +399,18 @@ public class ValidationService implements IValidationService {
     }
 
     @Override
-    public void createValidationsForSubTree(CnATreeElement elmt) throws CommandException{
+    public void createValidationsForSubTree(CnATreeElement elmt) throws CommandException {
         ServerInitializer.inheritVeriniceContextState();
-        if(Hibernate.isInitialized(elmt) || !elmt.isChildrenLoaded()){
-            elmt = Retriever.retrieveElement(elmt, new RetrieveInfo().setChildren(true).setChildrenProperties(true).setProperties(true));
+        if (Hibernate.isInitialized(elmt) || !elmt.isChildrenLoaded()) {
+            elmt = Retriever.retrieveElement(elmt, new RetrieveInfo().setChildren(true)
+                    .setChildrenProperties(true).setProperties(true));
             elmt.setChildrenLoaded(true);
         }
         createValidationForSingleElement(elmt);
-        for(CnATreeElement child : elmt.getChildren()){
-            if(child.getScopeId() == null){
-                LoadElementByUuid<CnATreeElement> childReloader = new LoadElementByUuid<CnATreeElement>(child.getUuid());
+        for (CnATreeElement child : elmt.getChildren()) {
+            if (child.getScopeId() == null) {
+                LoadElementByUuid<CnATreeElement> childReloader = new LoadElementByUuid<CnATreeElement>(
+                        child.getUuid());
                 childReloader = getCommandService().executeCommand(childReloader);
                 child = childReloader.getElement();
             }
@@ -369,105 +418,128 @@ public class ValidationService implements IValidationService {
         }
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.validation.IValidationService#updateValidation(sernet.verinice.model.validation.CnAValidation, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.validation.IValidationService#updateValidation
+     * (sernet.verinice.model.validation.CnAValidation, java.lang.String)
      */
     @Override
-    public void updateValidations(Integer scopeId, Integer elmtDbId,  String title) {
+    public void updateValidations(Integer scopeId, Integer elmtDbId, String title) {
         ServerInitializer.inheritVeriniceContextState();
-        for(CnAValidation validation : getValidations(scopeId, elmtDbId)){
+        for (CnAValidation validation : getValidations(scopeId, elmtDbId)) {
             validation.setElmtTitle(truncateString(title, MAXLENGTH_DBSTRING));
-            getCnaValidationDAO().saveOrUpdate(validation); 
+            getCnaValidationDAO().saveOrUpdate(validation);
         }
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.validation.IValidationService#deleteValidations(java.lang.Integer, java.lang.Integer)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.validation.IValidationService#
+     * deleteValidations(java.lang.Integer, java.lang.Integer)
      */
     @Override
     public void deleteValidations(Integer scopeId, Integer elmtDbId) {
         ServerInitializer.inheritVeriniceContextState();
-        String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?" +
-                " AND validation.scopeId = ?";
-        for(CnAValidation validation : (List<CnAValidation>)getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{elmtDbId, scopeId})){
+        String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?"
+                + " AND validation.scopeId = ?";
+        for (CnAValidation validation : (List<CnAValidation>) getCnaValidationDAO()
+                .findByQuery(hqlQuery, new Object[] { elmtDbId, scopeId })) {
             getCnaValidationDAO().delete(validation);
         }
     }
-    
-    
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.validation.IValidationService#getPropertyTypesToValidate(java.lang.Integer)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.validation.IValidationService#
+     * getPropertyTypesToValidate(java.lang.Integer)
      */
     @Override
     public List<String> getPropertyTypesToValidate(Entity entity, Integer dbid) {
-        
+
         ServerInitializer.inheritVeriniceContextState();
-        
+
         List<String> failedValidationPropertyTypes = new ArrayList<String>(0);
-        for(Object pElement : getHuiTypeFactory().getEntityType(entity.getEntityType()).getAllPropertyTypes()){
-            if(pElement instanceof PropertyType){
-                if(isValidationExistant(dbid, ((PropertyType)pElement).getId())){
-                    failedValidationPropertyTypes.add(((PropertyType)pElement).getId());
+        for (Object pElement : getHuiTypeFactory().getEntityType(entity.getEntityType())
+                .getAllPropertyTypes()) {
+            if (pElement instanceof PropertyType) {
+                if (isValidationExistant(dbid, ((PropertyType) pElement).getId())) {
+                    failedValidationPropertyTypes.add(((PropertyType) pElement).getId());
                 }
-            } else if(pElement instanceof PropertyGroup){
-                PropertyGroup pGroup = (PropertyGroup)pElement;
-                for(PropertyType pType : pGroup.getPropertyTypes()){
-                    if(isValidationExistant(dbid, pType.getId())){
+            } else if (pElement instanceof PropertyGroup) {
+                PropertyGroup pGroup = (PropertyGroup) pElement;
+                for (PropertyType pType : pGroup.getPropertyTypes()) {
+                    if (isValidationExistant(dbid, pType.getId())) {
                         failedValidationPropertyTypes.add(pType.getId());
-                    }  
+                    }
                 }
             }
         }
-        return failedValidationPropertyTypes;    
+        return failedValidationPropertyTypes;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.validation.IValidationService#deleteValidationsOfSubtree(sernet.verinice.model.common.CnATreeElement)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.validation.IValidationService#
+     * deleteValidationsOfSubtree(sernet.verinice.model.common.CnATreeElement)
      */
     @Override
     public void deleteValidationsOfSubtree(CnATreeElement elmt) {
         ServerInitializer.inheritVeriniceContextState();
-        if(!Hibernate.isInitialized(elmt) || !elmt.isChildrenLoaded()){
-            elmt = Retriever.retrieveElement(elmt, new RetrieveInfo().setChildren(true).setChildrenProperties(true).setProperties(true));
+        if (!Hibernate.isInitialized(elmt) || !elmt.isChildrenLoaded()) {
+            elmt = Retriever.retrieveElement(elmt, new RetrieveInfo().setChildren(true)
+                    .setChildrenProperties(true).setProperties(true));
         }
-        if(elmt != null){
+        if (elmt != null) {
             elmt.setChildrenLoaded(true);
             deleteValidations(elmt.getScopeId(), elmt.getDbId());
-            for(CnATreeElement child : elmt.getChildren()){
+            for (CnATreeElement child : elmt.getChildren()) {
                 deleteValidationsOfSubtree(child);
             }
         }
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.validation.IValidationService#createValidationByUuid(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.validation.IValidationService#
+     * createValidationByUuid(java.lang.String)
      */
     @Override
-    public void createValidationByUuid(String uuid) throws CommandException{
+    public void createValidationByUuid(String uuid) throws CommandException {
         ServerInitializer.inheritVeriniceContextState();
-        LoadElementByUuid<CnATreeElement> elementLoader = new LoadElementByUuid<CnATreeElement>(uuid, new RetrieveInfo().setProperties(true));
+        LoadElementByUuid<CnATreeElement> elementLoader = new LoadElementByUuid<CnATreeElement>(
+                uuid, new RetrieveInfo().setProperties(true));
         elementLoader = getCommandService().executeCommand(elementLoader);
         createValidationForSingleElement(elementLoader.getElement());
     }
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.validation.IValidationService#createValidationsForSubTreeByUuid(java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.validation.IValidationService#
+     * createValidationsForSubTreeByUuid(java.lang.String)
      */
     @Override
     public void createValidationsForSubTreeByUuid(String uuid) throws CommandException {
         ServerInitializer.inheritVeriniceContextState();
-        LoadElementByUuid<CnATreeElement> elementLoader = new LoadElementByUuid<CnATreeElement>(uuid, new RetrieveInfo().setProperties(true).setChildren(true));
+        LoadElementByUuid<CnATreeElement> elementLoader = new LoadElementByUuid<CnATreeElement>(
+                uuid, new RetrieveInfo().setProperties(true).setChildren(true));
         elementLoader = getCommandService().executeCommand(elementLoader);
         createValidationsForSubTree(elementLoader.getElement());
     }
-    
-    private String truncateString(String input, int maxLength){
+
+    private String truncateString(String input, int maxLength) {
         String output;
         int dotAmount = 3;
-        if(input.length() >= maxLength){
+        if (input.length() >= maxLength) {
             StringBuilder sb = new StringBuilder();
             sb.append(input.substring(0, maxLength - dotAmount));
-            for(int i = 0; i < dotAmount; i++){
+            for (int i = 0; i < dotAmount; i++) {
                 sb.append(".");
             }
             output = sb.toString();
@@ -477,4 +549,3 @@ public class ValidationService implements IValidationService {
         return output;
     }
 }
-
