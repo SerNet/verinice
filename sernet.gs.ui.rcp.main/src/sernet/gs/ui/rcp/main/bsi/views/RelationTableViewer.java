@@ -240,10 +240,6 @@ public class RelationTableViewer extends TableViewer {
         /** current column index */
         private int column;
 
-        private GC gc;
-
-        private FontMetrics fmt;
-
         private int charWidth;
 
         RelationViewLabelProvider relationViewLabelProvider;
@@ -256,9 +252,14 @@ public class RelationTableViewer extends TableViewer {
             cache = new HashMap<>();
 
             // calc text width
-            this.gc = new GC(parent);
-            this.fmt = gc.getFontMetrics();
-            this.charWidth = fmt.getAverageCharWidth();
+            GC gc = new GC(parent);
+            try {
+                FontMetrics fmt = gc.getFontMetrics();
+                this.charWidth = fmt.getAverageCharWidth();
+            } finally {
+                gc.dispose();
+            }
+
         }
 
         @Override
