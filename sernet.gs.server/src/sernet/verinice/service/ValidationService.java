@@ -269,29 +269,30 @@ public class ValidationService implements IValidationService {
             boolean validationExists = isValidationExistant(elmt.getDbId(), type.getId(),
                     entry.getKey(), elmt.getScopeId());
             boolean elmtIsValid = entry.getValue().booleanValue();
-            if (!elmtIsValid && !validationExists) {
-                hintsOfFailedValidations.add(entry.getKey());
-                if (log.isDebugEnabled()) {
-                    log.debug("Validation:\t(" + type.getId() + ", " + entry.getValue() + ", "
-                            + entry.getKey() + ") created");
+            if (!elmtIsValid) {
+                if (!validationExists) {
+                    hintsOfFailedValidations.add(entry.getKey());
+                    if (log.isDebugEnabled()) {
+                        log.debug("Validation:\t(" + type.getId() + ", " + entry.getValue() + ", "
+                                + entry.getKey() + ") created");
+                    }
+                } else {
+                    updateValidations(elmt.getScopeId(), elmt.getDbId(), elmt.getTitle());
                 }
-            } else if (elmtIsValid && validationExists) { // validation
-                                                          // condition is
-                                                          // fulfilled
+            } else if (validationExists) { // validation
+                                           // condition is
+                                           // fulfilled
                 deleteValidation(elmt.getDbId(), type.getId(), entry.getKey(), elmt.getScopeId());
                 if (log.isDebugEnabled()) {
                     log.debug("Validation:\t(" + type.getId() + ", " + entry.getValue() + ", "
                             + entry.getKey() + ") deleted");
                 }
-            } else if (!elmtIsValid && validationExists) {
-                updateValidations(elmt.getScopeId(), elmt.getDbId(), elmt.getTitle());
             }
         }
         // if validation for type exists, but map is empty (no validators
         // defined)
         // ===> delete existing validations for type
-        if (validationMap.entrySet().isEmpty()) { // no negative validations
-                                                  // exist
+        if (validationMap.isEmpty()) { // no negative validations exist
             for (CnAValidation validation : getValidations(elmt.getDbId(), type.getId())) {
                 deleteValidation(validation);
             }
@@ -460,12 +461,13 @@ public class ValidationService implements IValidationService {
             elmt = Retriever.retrieveElement(elmt, new RetrieveInfo().setChildren(true)
                     .setChildrenProperties(true).setProperties(true));
         }
-        if (elmt != null) {
-            elmt.setChildrenLoaded(true);
-            deleteValidations(elmt.getScopeId(), elmt.getDbId());
-            for (CnATreeElement child : elmt.getChildren()) {
-                deleteValidationsOfSubtree(child);
-            }
+        if (elmt == null) {
+            return;
+        }
+        elmt.setChildrenLoaded(true);
+        deleteValidations(elmt.getScopeId(), elmt.getDbId());
+        for (CnATreeElement child : elmt.getChildren()) {
+            deleteValidationsOfSubtree(child);
         }
     }
 
