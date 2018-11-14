@@ -48,9 +48,6 @@ import sernet.verinice.model.validation.CnAValidation;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.crud.LoadScopeElementsById;
 
-/**
- *
- */
 public class ValidationService implements IValidationService {
 
     private static final Logger log = Logger.getLogger(ValidationService.class);
@@ -67,8 +64,6 @@ public class ValidationService implements IValidationService {
     private static final String VALIDATION_SQL_SELECT_BASE = "from sernet.verinice.model.validation.CnAValidation validation where";
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.validation.IValidationService#createValidation
      * ()
@@ -122,8 +117,6 @@ public class ValidationService implements IValidationService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.validation.IValidationService#getValidations(
      * sernet.verinice.model.common.CnATreeElement)
@@ -136,8 +129,6 @@ public class ValidationService implements IValidationService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.validation.IValidationService#getValidations(
      * java.lang.Integer, java.lang.Integer)
@@ -244,8 +235,6 @@ public class ValidationService implements IValidationService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.validation.IValidationService#deleteValidation
      * (java.lang.Integer, java.lang.String, java.lang.String)
@@ -267,12 +256,12 @@ public class ValidationService implements IValidationService {
         ArrayList<String> hintsOfFailedValidations = new ArrayList<String>(0);
         List<Property> savedProperties = elmt.getEntity().getProperties(type.getId())
                 .getProperties();
-        // iterate(validate) all existant properties
+        // iterate(validate) all existing properties
         for (Property savedProp : savedProperties) {
             hintsOfFailedValidations.addAll(processValidationMap(
                     type.validate(savedProp.getPropertyValue(), null), elmt, type));
         }
-        // no property existant yet
+        // no property exists yet
         if (savedProperties.isEmpty()) {
             hintsOfFailedValidations
                     .addAll(processValidationMap(type.validate(null, null), elmt, type));
@@ -295,7 +284,7 @@ public class ValidationService implements IValidationService {
                 }
             } else if (elmtIsValid && validationExists) { // validation
                                                           // condition is
-                                                          // fullfilled
+                                                          // fulfilled
                 deleteValidation(elmt.getDbId(), type.getId(), entry.getKey(), elmt.getScopeId());
                 if (log.isDebugEnabled()) {
                     log.debug("Validation:\t(" + type.getId() + ", " + entry.getValue() + ", "
@@ -305,11 +294,11 @@ public class ValidationService implements IValidationService {
                 updateValidations(elmt.getScopeId(), elmt.getDbId(), elmt.getTitle());
             }
         }
-        // if validation for type are existant, but map is empty (no validators
+        // if validation for type exists, but map is empty (no validators
         // defined)
-        // ===> delete existant validations for type
+        // ===> delete existing validations for type
         if (validationMap.entrySet().isEmpty()) { // no negative validations
-                                                  // existant
+                                                  // exist
             for (CnAValidation validation : getValidations(elmt.getDbId(), type.getId())) {
                 deleteValidation(validation);
             }
@@ -331,8 +320,6 @@ public class ValidationService implements IValidationService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.validation.IValidationService#deleteValidation
      * (java.lang.Integer, java.lang.String)
@@ -356,8 +343,6 @@ public class ValidationService implements IValidationService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.validation.IValidationService#getValidation(
      * java.lang.Integer, java.lang.String, java.lang.String)
@@ -375,8 +360,6 @@ public class ValidationService implements IValidationService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.validation.IValidationService#
      * createValidationsForScope(sernet.verinice.model.common.CnATreeElement)
      */
@@ -419,8 +402,6 @@ public class ValidationService implements IValidationService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see
      * sernet.verinice.interfaces.validation.IValidationService#updateValidation
      * (sernet.verinice.model.validation.CnAValidation, java.lang.String)
@@ -435,8 +416,6 @@ public class ValidationService implements IValidationService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.validation.IValidationService#
      * deleteValidations(java.lang.Integer, java.lang.Integer)
      */
@@ -452,8 +431,6 @@ public class ValidationService implements IValidationService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.validation.IValidationService#
      * getPropertyTypesToValidate(java.lang.Integer)
      */
@@ -482,8 +459,6 @@ public class ValidationService implements IValidationService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.validation.IValidationService#
      * deleteValidationsOfSubtree(sernet.verinice.model.common.CnATreeElement)
      */
@@ -504,8 +479,6 @@ public class ValidationService implements IValidationService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.validation.IValidationService#
      * createValidationByUuid(java.lang.String)
      */
@@ -519,8 +492,6 @@ public class ValidationService implements IValidationService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see sernet.verinice.interfaces.validation.IValidationService#
      * createValidationsForSubTreeByUuid(java.lang.String)
      */
