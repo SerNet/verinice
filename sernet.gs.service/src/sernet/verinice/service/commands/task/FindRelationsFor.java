@@ -31,50 +31,51 @@ import sernet.verinice.model.common.HydratorUtil;
  * Loads an element with all links (up and down) for the relation view.
  * 
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 public class FindRelationsFor extends GenericCommand {
 
-	private Integer dbId;
-	private CnATreeElement elmt;
-	private String typeId;
+    private Integer dbId;
+    private CnATreeElement elmt;
+    private String typeId;
 
-	/**
-	 * @param dbId
-	 */
-	public FindRelationsFor(CnATreeElement elmt) {
-		this.dbId = elmt.getDbId();
-		this.typeId = elmt.getTypeId();
-	}
+    /**
+     * @param dbId
+     */
+    public FindRelationsFor(CnATreeElement elmt) {
+        this.dbId = elmt.getDbId();
+        this.typeId = elmt.getTypeId();
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
-	 */
-	public void execute() {
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
-		RetrieveInfo ri = new RetrieveInfo();
-		ri.setLinksDown(true).setLinksUp(true);
-		elmt = dao.retrieve(dbId, ri);
-		
-		if(elmt!=null) {
-    		Set<CnALink> linksDown = elmt.getLinksDown();
-    		for (CnALink cnALink : linksDown) {
-    			HydratorUtil.hydrateElement(dao, cnALink.getDependency(), false);
-    			
-    		}
-    		
-    		Set<CnALink> linksUp = elmt.getLinksUp();
-    		for (CnALink cnALink : linksUp) {
-    			HydratorUtil.hydrateElement(dao, cnALink.getDependant(), false);
-    			
-    		}
-		}
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
+     */
+    public void execute() {
+        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
+        RetrieveInfo ri = new RetrieveInfo();
+        ri.setLinksDown(true).setLinksUp(true);
+        elmt = dao.retrieve(dbId, ri);
 
-	public CnATreeElement getElmt() {
-		return elmt;
-	}
+        if (elmt != null) {
+            Set<CnALink> linksDown = elmt.getLinksDown();
+            for (CnALink cnALink : linksDown) {
+                HydratorUtil.hydrateElement(dao, cnALink.getDependency(), false);
+
+            }
+
+            Set<CnALink> linksUp = elmt.getLinksUp();
+            for (CnALink cnALink : linksUp) {
+                HydratorUtil.hydrateElement(dao, cnALink.getDependant(), false);
+
+            }
+        }
+    }
+
+    public CnATreeElement getElmt() {
+        return elmt;
+    }
 
 }

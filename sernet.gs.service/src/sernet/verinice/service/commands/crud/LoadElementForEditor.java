@@ -31,48 +31,47 @@ import sernet.verinice.model.common.HydratorUtil;
 
 public class LoadElementForEditor<T extends CnATreeElement> extends GenericCommand {
 
-	private static final Logger log = Logger.getLogger(LoadElementForEditor.class);
-	
-	private T element;
-	private boolean retrieveChildren;
-	private Integer dbId;
+    private static final Logger log = Logger.getLogger(LoadElementForEditor.class);
+
+    private T element;
+    private boolean retrieveChildren;
+    private Integer dbId;
     private String typeId;
 
-	public LoadElementForEditor(T element, boolean retrieveChildren) {
-		// slim down for transfer:
-		dbId = element.getDbId();
-		typeId = element.getTypeId();
-		this.retrieveChildren = retrieveChildren;
-	}
-	
-	public LoadElementForEditor(T element) {
-		this(element, false);
-	}
-	
-	public void execute() {
-		if (log.isDebugEnabled()) {
-			log.debug("execute, dbId: " + dbId);
-		}
-		IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
-		RetrieveInfo ri = new RetrieveInfo();
-		ri.setLinksDown(true).setLinksUp(true);
-		element = (T) dao.retrieve(dbId, ri);
-		HydratorUtil.hydrateElement(dao, element, retrieveChildren);
-		Set<CnALink> linksDown = element.getLinksDown();
-		for (CnALink cnALink : linksDown) {
-			HydratorUtil.hydrateElement(dao, cnALink.getDependency(), false);
-			
-		}
-		Set<CnALink> linksUp = element.getLinksUp();
-		for (CnALink cnALink : linksUp) {
-			HydratorUtil.hydrateElement(dao, cnALink.getDependant(), false);
-			
-		}
-	}
+    public LoadElementForEditor(T element, boolean retrieveChildren) {
+        // slim down for transfer:
+        dbId = element.getDbId();
+        typeId = element.getTypeId();
+        this.retrieveChildren = retrieveChildren;
+    }
 
+    public LoadElementForEditor(T element) {
+        this(element, false);
+    }
 
-	public T getElement() {
-		return element;
-	}
+    public void execute() {
+        if (log.isDebugEnabled()) {
+            log.debug("execute, dbId: " + dbId);
+        }
+        IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(typeId);
+        RetrieveInfo ri = new RetrieveInfo();
+        ri.setLinksDown(true).setLinksUp(true);
+        element = (T) dao.retrieve(dbId, ri);
+        HydratorUtil.hydrateElement(dao, element, retrieveChildren);
+        Set<CnALink> linksDown = element.getLinksDown();
+        for (CnALink cnALink : linksDown) {
+            HydratorUtil.hydrateElement(dao, cnALink.getDependency(), false);
+
+        }
+        Set<CnALink> linksUp = element.getLinksUp();
+        for (CnALink cnALink : linksUp) {
+            HydratorUtil.hydrateElement(dao, cnALink.getDependant(), false);
+
+        }
+    }
+
+    public T getElement() {
+        return element;
+    }
 
 }
