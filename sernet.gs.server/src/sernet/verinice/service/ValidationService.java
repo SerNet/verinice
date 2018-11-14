@@ -27,6 +27,9 @@ import java.util.Map.Entry;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.Retriever;
@@ -61,8 +64,6 @@ public class ValidationService implements IValidationService {
     private static final int MAXLENGTH_DBSTRING = 250;
 
     private HUITypeFactory huiTypeFactory;
-
-    private static final String VALIDATION_SQL_SELECT_BASE = "from sernet.verinice.model.validation.CnAValidation validation where";
 
     /*
      * @see
@@ -124,8 +125,9 @@ public class ValidationService implements IValidationService {
     @Override
     public List<CnAValidation> getValidations(Integer scopeId) {
         ServerInitializer.inheritVeriniceContextState();
-        String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.scopeId = ?";
-        return getCnaValidationDAO().findByQuery(hqlQuery, new Object[] { scopeId });
+        DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class)
+                .add(createScopeIdRestriction(scopeId));
+        return getCnaValidationDAO().findByCriteria(criteria);
     }
 
     /*
@@ -140,31 +142,25 @@ public class ValidationService implements IValidationService {
     @Override
     public List<CnAValidation> getValidations(Integer scopeId, Integer cnaId) {
         ServerInitializer.inheritVeriniceContextState();
-        String hqlQuery = VALIDATION_SQL_SELECT_BASE;
-        ArrayList<Object> paramList = new ArrayList<Object>(0);
-        if (cnaId != null && scopeId == null) {
-            hqlQuery = hqlQuery + " validation.elmtDbId = ?";
-            paramList.add(cnaId);
-        } else if (cnaId != null && scopeId != null) {
-            hqlQuery = hqlQuery + " validation.elmtDbId = ? AND validation.scopeId = ?";
-            paramList.add(cnaId);
-            paramList.add(scopeId);
-        } else if (cnaId == null && scopeId != null) {
-            hqlQuery = hqlQuery + " validation.scopeId = ?";
-            paramList.add(scopeId);
+        DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class);
+        if (scopeId != null) {
+            criteria.add(createScopeIdRestriction(scopeId));
         }
-        return getCnaValidationDAO().findByQuery(hqlQuery,
-                paramList.toArray(new Object[paramList.size()]));
+        if (cnaId != null) {
+            criteria.add(createDbIdRestriction(cnaId));
+        }
+        return getCnaValidationDAO().findByCriteria(criteria);
     }
 
     @Override
     public List<CnAValidation> getValidations(Integer elmtDbId, String propertyType) {
         ServerInitializer.inheritVeriniceContextState();
-        String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ? AND "
-                + "validation.propertyId = ?";
         if (elmtDbId != null) {
-            return getCnaValidationDAO().findByQuery(hqlQuery,
-                    new Object[] { elmtDbId, propertyType });
+            DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class)
+                    .add(createDbIdRestriction(elmtDbId))
+                    .add(createPropertyIdRestriction(propertyType));
+            return getCnaValidationDAO().findByCriteria(criteria);
+
         } else {
             return Collections.emptyList();
         }
@@ -175,13 +171,13 @@ public class ValidationService implements IValidationService {
             Integer scopeId) {
         ServerInitializer.inheritVeriniceContextState();
         if (scopeId != null && elmtDbId != null) {
-            String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?"
-                    + " AND validation.propertyId = ?" + " AND validation.hintId = ?"
-                    + " AND validation.scopeId = ?";
+            DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class)
+                    .add(createDbIdRestriction(elmtDbId))
+                    .add(createPropertyIdRestriction(propertyType))
+                    .add(createHintIdRestriction(hintID)).add(createScopeIdRestriction(scopeId));
 
-            return !getCnaValidationDAO()
-                    .findByQuery(hqlQuery, new Object[] { elmtDbId, propertyType, hintID, scopeId })
-                    .isEmpty();
+            return !getCnaValidationDAO().findByCriteria(criteria).isEmpty();
+
         } else {
             return false;
         }
@@ -195,11 +191,7 @@ public class ValidationService implements IValidationService {
 
     @Override
     public boolean isValidationExistant(Integer elmtDbId, String propertyType) {
-        ServerInitializer.inheritVeriniceContextState();
-        String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?"
-                + " AND validation.propertyId = ?";
-        return getCnaValidationDAO().findByQuery(hqlQuery, new Object[] { elmtDbId, propertyType })
-                .size() > 0;
+        return !(getValidations(elmtDbId, propertyType)).isEmpty();
     }
 
     public ICommandService getCommandService() {
@@ -243,11 +235,12 @@ public class ValidationService implements IValidationService {
     public CnAValidation deleteValidation(Integer elmtDbId, String propertyType, String hintID,
             Integer scopeId) {
         ServerInitializer.inheritVeriniceContextState();
-        String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?"
-                + " AND validation.propertyId = ? " + "AND validation.hintId = ?"
-                + " AND validation.scopeId = ?";
-        CnAValidation validation = (CnAValidation) getCnaValidationDAO()
-                .findByQuery(hqlQuery, new Object[] { elmtDbId, propertyType, hintID, scopeId })
+
+        DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class)
+                .add(createDbIdRestriction(elmtDbId)).add(createPropertyIdRestriction(propertyType))
+                .add(createHintIdRestriction(hintID)).add(createScopeIdRestriction(scopeId));
+
+        CnAValidation validation = (CnAValidation) getCnaValidationDAO().findByCriteria(criteria)
                 .get(0);
         return deleteValidation(validation);
     }
@@ -326,10 +319,11 @@ public class ValidationService implements IValidationService {
     @Override
     public CnAValidation deleteValidation(Integer elmtDbId, String propertyType, Integer scopeId) {
         ServerInitializer.inheritVeriniceContextState();
-        String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?"
-                + " AND validation.propertyId = ? " + " AND validation.scopeId = ?";
-        CnAValidation validation = (CnAValidation) getCnaValidationDAO()
-                .findByQuery(hqlQuery, new Object[] { elmtDbId, propertyType, scopeId }).get(0);
+        DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class)
+                .add(createDbIdRestriction(elmtDbId)).add(createPropertyIdRestriction(propertyType))
+                .add(createScopeIdRestriction(scopeId));
+        CnAValidation validation = (CnAValidation) getCnaValidationDAO().findByCriteria(criteria)
+                .get(0);
         getCnaValidationDAO().delete(validation);
         return validation;
     }
@@ -350,12 +344,10 @@ public class ValidationService implements IValidationService {
     public CnAValidation getValidation(Integer cnaDbId, String propertyType, String hint,
             Integer scopeId) {
         ServerInitializer.inheritVeriniceContextState();
-        String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?"
-                + " AND validation.propertyId = ? " + "AND validation.hintId = ?"
-                + " AND validation.scopeId = ?";
-        return (CnAValidation) getCnaValidationDAO()
-                .findByQuery(hqlQuery, new Object[] { cnaDbId, propertyType, hint, scopeId })
-                .get(0);
+        DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class)
+                .add(createDbIdRestriction(cnaDbId)).add(createPropertyIdRestriction(propertyType))
+                .add(createHintIdRestriction(hint)).add(createScopeIdRestriction(scopeId));
+        return (CnAValidation) getCnaValidationDAO().findByCriteria(criteria).get(0);
     }
 
     /*
@@ -421,10 +413,10 @@ public class ValidationService implements IValidationService {
     @Override
     public void deleteValidations(Integer scopeId, Integer elmtDbId) {
         ServerInitializer.inheritVeriniceContextState();
-        String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?"
-                + " AND validation.scopeId = ?";
+        DetachedCriteria criteria = DetachedCriteria.forClass(CnAValidation.class)
+                .add(createDbIdRestriction(elmtDbId)).add(createScopeIdRestriction(scopeId));
         for (CnAValidation validation : (List<CnAValidation>) getCnaValidationDAO()
-                .findByQuery(hqlQuery, new Object[] { elmtDbId, scopeId })) {
+                .findByCriteria(criteria)) {
             getCnaValidationDAO().delete(validation);
         }
     }
@@ -503,4 +495,19 @@ public class ValidationService implements IValidationService {
         createValidationsForSubTree(elementLoader.getElement());
     }
 
+    private static Criterion createScopeIdRestriction(Integer scopeId) {
+        return Restrictions.eq("scopeId", scopeId);
+    }
+
+    private static Criterion createDbIdRestriction(Integer cnaId) {
+        return Restrictions.eq("elmtDbId", cnaId);
+    }
+
+    private static Criterion createPropertyIdRestriction(String propertyType) {
+        return Restrictions.eq("propertyId", propertyType);
+    }
+
+    private static Criterion createHintIdRestriction(String hintID) {
+        return Restrictions.eq("hintId", hintID);
+    }
 }
