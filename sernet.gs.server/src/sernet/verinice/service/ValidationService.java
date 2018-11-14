@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 
@@ -99,11 +100,12 @@ public class ValidationService implements IValidationService {
             Entry<PropertyType, List<String>> entry, String hint) {
         CnAValidation validation = new CnAValidation();
         validation.setElmtDbId(elmt.getDbId());
-        validation.setPropertyId(truncateString(entry.getKey().getId(), MAXLENGTH_DBSTRING));
-        validation.setHintId(truncateString(hint, MAXLENGTH_DBSTRING));
-        validation.setElmtTitle(truncateString(elmt.getTitle(), MAXLENGTH_DBSTRING));
+        validation
+                .setPropertyId(StringUtils.abbreviate(entry.getKey().getId(), MAXLENGTH_DBSTRING));
+        validation.setHintId(StringUtils.abbreviate(hint, MAXLENGTH_DBSTRING));
+        validation.setElmtTitle(StringUtils.abbreviate(elmt.getTitle(), MAXLENGTH_DBSTRING));
         validation.setScopeId(elmt.getScopeId());
-        validation.setElementType(truncateString(elmt.getTypeId(), MAXLENGTH_DBSTRING));
+        validation.setElementType(StringUtils.abbreviate(elmt.getTypeId(), MAXLENGTH_DBSTRING));
         if (!isValidationExistant(elmt.getDbId(), entry.getKey().getId(), hint,
                 elmt.getScopeId())) {
             getCnaValidationDAO().saveOrUpdate(validation);
@@ -407,7 +409,7 @@ public class ValidationService implements IValidationService {
     public void updateValidations(Integer scopeId, Integer elmtDbId, String title) {
         ServerInitializer.inheritVeriniceContextState();
         for (CnAValidation validation : getValidations(scopeId, elmtDbId)) {
-            validation.setElmtTitle(truncateString(title, MAXLENGTH_DBSTRING));
+            validation.setElmtTitle(StringUtils.abbreviate(title, MAXLENGTH_DBSTRING));
             getCnaValidationDAO().saveOrUpdate(validation);
         }
     }
@@ -501,19 +503,4 @@ public class ValidationService implements IValidationService {
         createValidationsForSubTree(elementLoader.getElement());
     }
 
-    private String truncateString(String input, int maxLength) {
-        String output;
-        int dotAmount = 3;
-        if (input.length() >= maxLength) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(input.substring(0, maxLength - dotAmount));
-            for (int i = 0; i < dotAmount; i++) {
-                sb.append(".");
-            }
-            output = sb.toString();
-        } else {
-            output = input;
-        }
-        return output;
-    }
 }
