@@ -142,6 +142,9 @@ public class RiskDeductionUtil {
             return requirement;
         }
 
+        boolean reducesRisk = getLinkedSafeguards(requirement)
+                .anyMatch(s -> s.getEntity().isFlagged(Safeguard.PROP_REDUCE_RISK));
+
         String impactStrength = getLinkedSafeguards(requirement)
                 .filter(s -> s.getEntity().isFlagged(Safeguard.PROP_REDUCE_RISK)
                         && isSafeGuardStrenghtBothSet(s))
@@ -153,6 +156,7 @@ public class RiskDeductionUtil {
                         && isSafeGuardStrenghtBothSet(s))
                 .map(s -> s.getEntity().getRawPropertyValue(Safeguard.PROP_STRENGTH_FREQUENCY))
                 .filter(RiskDeductionUtil::notNullAndNotEmpty).min(String::compareTo).orElse(null);
+        requirement.getEntity().setFlag(BpRequirement.PROP_SAFEGUARD_REDUCE_RISK, reducesRisk);
         requirement.setSimpleProperty(BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT, impactStrength);
         requirement.setSimpleProperty(BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY,
                 frequencyStrength);
