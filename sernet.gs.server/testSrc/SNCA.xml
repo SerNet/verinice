@@ -10630,7 +10630,9 @@ Wurden bereits weitere Stellen informiert?
         </huipropertygroup>
         <huipropertygroup id="bp_requirement_safeguard_strength" name="Safeguard Strength" tags="BSI-200-3">
             <huiproperty defaultValue="0" id="bp_requirement_reduce_risk"
-                inputtype="booleanoption" name="Reduce Risk" tags="Risk" />
+                inputtype="booleanoption" name="Reduce Risk" tags="Risk" >
+                <depends option="bp_requirement_implementation_deduce" value="0" />
+            </huiproperty>
             <huiproperty id="bp_requirement_safeguard_strength_frequency" name="Reduces frequency of occurrence to"
                 required="true" inputtype="singleoption">
                 <depends option="bp_requirement_implementation_deduce" value="0" />
