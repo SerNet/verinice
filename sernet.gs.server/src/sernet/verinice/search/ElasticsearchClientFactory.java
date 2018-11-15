@@ -60,35 +60,31 @@ public class ElasticsearchClientFactory implements DisposableBean {
     private IDirectoryCreator directoryCreator;
    
     public void init() {
-        try {
-            if (node == null || node.isClosed()) {
-                // Build and start the node
-                node = NodeBuilder.nodeBuilder().settings(buildNodeSettings()).node();
-                if(LOG.isDebugEnabled()){
-                    for(Entry<String, String> entry : node.settings().getAsMap().entrySet()){
-                        LOG.debug("nodeEntry:\t <" + entry.getKey() + ", " + entry.getValue() + ">");
-                    }
+        if (node == null || node.isClosed()) {
+            // Build and start the node
+            node = NodeBuilder.nodeBuilder().settings(buildNodeSettings()).node();
+            if(LOG.isDebugEnabled()){
+                for(Entry<String, String> entry : node.settings().getAsMap().entrySet()){
+                    LOG.debug("nodeEntry:\t <" + entry.getKey() + ", " + entry.getValue() + ">");
                 }
-                // Get a client
-                client = node.client();
-                configure();
-                Map<String, String> map = ImmutableSettings.builder().internalMap();
-                for(Entry<String, String> e : map.entrySet()){
-                    LOG.error("ES Setting:\t<" + e.getKey() + ", " + e.getValue() + ">");
-                }
-                // Wait for Yellow status
-                client
-                    .admin()
-                    .cluster()
-                    .prepareHealth()
-                    .setWaitForYellowStatus() // yellow means, there are no replicas that could be used, since we are running on 1 node only, we are not going to have any replicas available, so yellow is ok for us
-                    .setTimeout(TimeValue.timeValueMinutes(1))
-                    .execute()
-                    .actionGet();
-            } 
-        } catch (Exception e) {
-            LOG.error("Error while initializing elasticsearch", e);
-        }
+            }
+            // Get a client
+            client = node.client();
+            configure();
+            Map<String, String> map = ImmutableSettings.builder().internalMap();
+            for(Entry<String, String> e : map.entrySet()){
+                LOG.error("ES Setting:\t<" + e.getKey() + ", " + e.getValue() + ">");
+            }
+            // Wait for Yellow status
+            client
+                .admin()
+                .cluster()
+                .prepareHealth()
+                .setWaitForYellowStatus() // yellow means, there are no replicas that could be used, since we are running on 1 node only, we are not going to have any replicas available, so yellow is ok for us
+                .setTimeout(TimeValue.timeValueMinutes(1))
+                .execute()
+                .actionGet();
+        } 
     }
 
     private void configure() {
