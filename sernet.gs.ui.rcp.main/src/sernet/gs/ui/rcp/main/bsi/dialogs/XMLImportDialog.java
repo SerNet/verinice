@@ -88,14 +88,14 @@ public class XMLImportDialog extends Dialog {
     private boolean update;
     private boolean delete;
     private boolean integrate;
-    
+
     private boolean importAsCatalog;
 
     private Button integrateButton;
     private Button insertButton;
     private Button updateButton;
     private Button deleteCheck;
-    
+
     private Text dataPathText;
     private boolean dataPathFlag;
 
@@ -131,7 +131,7 @@ public class XMLImportDialog extends Dialog {
     public XMLImportDialog(Shell shell) {
         super(shell);
     }
-    
+
     public XMLImportDialog(Shell shell, boolean catalogImport) {
         super(shell);
         this.importAsCatalog = catalogImport;
@@ -159,15 +159,19 @@ public class XMLImportDialog extends Dialog {
                 public IStatus runInWorkspace(final IProgressMonitor monitor) {
                     IStatus status = Status.OK_STATUS;
                     try {
-                        monitor.beginTask(NLS.bind(Messages.XMLImportDialog_5, new Object[] { dataFile.getName() }), IProgressMonitor.UNKNOWN);
+                        monitor.beginTask(
+                                NLS.bind(Messages.XMLImportDialog_5,
+                                        new Object[] { dataFile.getName() }),
+                                IProgressMonitor.UNKNOWN);
                         SyncCommand.Status importStatus = doImport(syncParameter);
 
-                        if(importStatus == SyncCommand.Status.FAILED){
+                        if (importStatus == SyncCommand.Status.FAILED) {
                             status = handleImportError();
                         }
 
                     } catch (PasswordException e) {
-                        status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.XMLImportDialog_13, e); //$NON-NLS-1$
+                        status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
+                                Messages.XMLImportDialog_13, e);
                     } catch (Exception e) {
                         status = handleGenericError(e);
                     } finally {
@@ -181,7 +185,7 @@ public class XMLImportDialog extends Dialog {
                     Exception errorCause = XMLImportDialog.this.syncCommand.getErrorCause();
 
                     // no error can be detected
-                    if(errorCause == null) {
+                    if (errorCause == null) {
                         return Status.OK_STATUS;
                     }
 
@@ -189,15 +193,20 @@ public class XMLImportDialog extends Dialog {
 
                         VnaSchemaException archiveException = (VnaSchemaException) errorCause;
                         String vnaSchemaVersion = archiveException.getVnaSchemaVersion();
-                        String compatibleVersions = StringUtils.join(archiveException.getOfferedVnaSchemaVersions(), ", ");
+                        String compatibleVersions = StringUtils
+                                .join(archiveException.getOfferedVnaSchemaVersions(), ", ");
                         Object[] msgParams = new Object[] { vnaSchemaVersion, compatibleVersions };
 
                         String msg = null;
 
                         if (archiveException.getOfferedVnaSchemaVersions().size() > 1) {
-                            msg = NLS.bind(Messages.XMLImportDialog_ARCHIV_IMPORT_ERROR_MULTI_VERSION, msgParams);
+                            msg = NLS.bind(
+                                    Messages.XMLImportDialog_ARCHIV_IMPORT_ERROR_MULTI_VERSION,
+                                    msgParams);
                         } else {
-                            msg = NLS.bind(Messages.XMLImportDialog_ARCHIV_IMPORT_ERROR_SINGLE_VERSION, msgParams);
+                            msg = NLS.bind(
+                                    Messages.XMLImportDialog_ARCHIV_IMPORT_ERROR_SINGLE_VERSION,
+                                    msgParams);
                         }
 
                         return new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", msg);
@@ -209,7 +218,8 @@ public class XMLImportDialog extends Dialog {
                 private IStatus handleGenericError(Exception e) {
                     IStatus status;
                     LOG.error("Error while importing data.", e); //$NON-NLS-1$
-                    status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.XMLImportDialog_17, e); //$NON-NLS-1$
+                    status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
+                            Messages.XMLImportDialog_17, e);
                     return status;
                 }
             };
@@ -218,22 +228,22 @@ public class XMLImportDialog extends Dialog {
         }
     }
 
-    
     private boolean validateUserSelection() {
         if (selectedEncryptionMethod == EncryptionMethod.X509_CERTIFICATE) {
             StringBuilder stringBuilder = new StringBuilder();
             if (x509CertificateFile == null) {
-                stringBuilder.append(Messages.XMLImportDialog_39+"\n");
+                stringBuilder.append(Messages.XMLImportDialog_39 + "\n");
             } else if (!x509CertificateFile.exists()) {
-                stringBuilder.append(Messages.XMLImportDialog_40+"\n");
+                stringBuilder.append(Messages.XMLImportDialog_40 + "\n");
             }
             if (privateKeyPemFile == null) {
-                stringBuilder.append(Messages.XMLImportDialog_41+"\n");
+                stringBuilder.append(Messages.XMLImportDialog_41 + "\n");
             } else if (!privateKeyPemFile.exists()) {
-                stringBuilder.append(Messages.XMLImportDialog_42+"\n");
+                stringBuilder.append(Messages.XMLImportDialog_42 + "\n");
             }
             if (stringBuilder.length() != 0) {
-                MessageDialog.openError(getParentShell(), Messages.XMLImportDialog_18, stringBuilder.toString());
+                MessageDialog.openError(getParentShell(), Messages.XMLImportDialog_18,
+                        stringBuilder.toString());
                 return false;
             }
         }
@@ -242,7 +252,8 @@ public class XMLImportDialog extends Dialog {
 
     private SyncParameter tryCreateSyncParameter() {
         try {
-            return new SyncParameter(insert, update, delete, integrate, importAsCatalog, this.format);
+            return new SyncParameter(insert, update, delete, integrate, importAsCatalog,
+                    this.format);
         } catch (SyncParameterException ex) {
             LOG.debug(ex.getLocalizedMessage());
         }
@@ -254,16 +265,16 @@ public class XMLImportDialog extends Dialog {
         String currentPath = ""; //$NON-NLS-1$
         try {
             if (dataPath != null && !dataPath.isEmpty()) {
-                int lastSlash = dataPath.lastIndexOf(
-                        System.getProperty(
-                                IVeriniceConstants.FILE_SEPARATOR)); //$NON-NLS-1$
+                int lastSlash = dataPath
+                        .lastIndexOf(System.getProperty(IVeriniceConstants.FILE_SEPARATOR)); // $NON-NLS-1$
                 if (lastSlash != -1) {
                     currentPath = dataPath.substring(0, lastSlash + 1);
                 } else {
                     currentPath = dataPath.substring(0, lastSlash);
                 }
             }
-            Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.DEFAULT_FOLDER_IMPORT, currentPath);
+            Activator.getDefault().getPreferenceStore()
+                    .setValue(PreferenceConstants.DEFAULT_FOLDER_IMPORT, currentPath);
         } catch (Exception exe) {
             LOG.error("Error while setting Preference Constants", exe); //$NON-NLS-1$
         }
@@ -291,7 +302,8 @@ public class XMLImportDialog extends Dialog {
             break;
         }
 
-        MessageDialog messageDialog = new MessageDialog(this.getShell(), titel, null, messageBody, MessageDialog.ERROR, new String[] { Messages.XMLImportDialog_24 }, 1);
+        MessageDialog messageDialog = new MessageDialog(this.getShell(), titel, null, messageBody,
+                MessageDialog.ERROR, new String[] { Messages.XMLImportDialog_24 }, 1);
         messageDialog.open();
     }
 
@@ -322,13 +334,15 @@ public class XMLImportDialog extends Dialog {
         container.setLayout(layout);
 
         Label seperator = new Label(container, SWT.SEPARATOR | SWT.HORIZONTAL);
-        seperator.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, separatorHorizontalSpan, 1));
+        seperator.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false,
+                separatorHorizontalSpan, 1));
 
         // Operations of database (update,insert,delete)
 
         Group operationGroup = new Group(container, SWT.NULL);
         operationGroup.setText(Messages.XMLImportDialog_6);
-        operationGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, operationHorizontalSpan, operationVerticalSpan));
+        operationGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false,
+                operationHorizontalSpan, operationVerticalSpan));
 
         layout = new GridLayout();
         layout.numColumns = 2;
@@ -336,18 +350,23 @@ public class XMLImportDialog extends Dialog {
 
         Label operationIntro = new Label(operationGroup, SWT.LEFT);
         operationIntro.setText(Messages.XMLImportDialog_7);
-        operationIntro.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1));
+        operationIntro
+                .setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 2, 1));
 
         insert = true;
         SelectionAdapter insertListener = new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                insert = (e.getSource() instanceof Button) ? ((Button) (e.getSource())).getSelection() : insert;
+                insert = (e.getSource() instanceof Button)
+                        ? ((Button) (e.getSource())).getSelection()
+                        : insert;
             }
         };
 
-        insertButton = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_25, true, insertListener);
-        insertButton.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+        insertButton = SWTElementFactory.generateCheckboxButton(operationGroup,
+                Messages.XMLImportDialog_25, true, insertListener);
+        insertButton.setLayoutData(
+                new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
 
         Label insertText = new Label(operationGroup, SWT.LEFT);
         insertText.setText(Messages.XMLImportDialog_8);
@@ -357,11 +376,15 @@ public class XMLImportDialog extends Dialog {
         SelectionAdapter updateCheckListener = new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                update = (e.getSource() instanceof Button) ? ((Button) (e.getSource())).getSelection() : update;
+                update = (e.getSource() instanceof Button)
+                        ? ((Button) (e.getSource())).getSelection()
+                        : update;
             }
         };
-        updateButton = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_26, true, updateCheckListener);
-        updateButton.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+        updateButton = SWTElementFactory.generateCheckboxButton(operationGroup,
+                Messages.XMLImportDialog_26, true, updateCheckListener);
+        updateButton.setLayoutData(
+                new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
 
         Label updateText = new Label(operationGroup, SWT.LEFT);
         updateText.setText(Messages.XMLImportDialog_9);
@@ -371,11 +394,15 @@ public class XMLImportDialog extends Dialog {
         SelectionAdapter deleteCheckListener = new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                delete = (e.getSource() instanceof Button) ? ((Button) (e.getSource())).getSelection() : delete;
+                delete = (e.getSource() instanceof Button)
+                        ? ((Button) (e.getSource())).getSelection()
+                        : delete;
             }
         };
-        deleteCheck = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_27, false, deleteCheckListener);
-        deleteCheck.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+        deleteCheck = SWTElementFactory.generateCheckboxButton(operationGroup,
+                Messages.XMLImportDialog_27, false, deleteCheckListener);
+        deleteCheck.setLayoutData(
+                new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
 
         Label deleteText = new Label(operationGroup, SWT.LEFT);
         deleteText.setText(Messages.XMLImportDialog_10);
@@ -385,24 +412,30 @@ public class XMLImportDialog extends Dialog {
         SelectionAdapter integrateListener = new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                integrate = (e.getSource() instanceof Button) ? ((Button) (e.getSource())).getSelection() : integrate;
+                integrate = (e.getSource() instanceof Button)
+                        ? ((Button) (e.getSource())).getSelection()
+                        : integrate;
             }
         };
-        
-        integrateButton = SWTElementFactory.generateCheckboxButton(operationGroup, Messages.XMLImportDialog_31, false, integrateListener);
-        integrateButton.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+
+        integrateButton = SWTElementFactory.generateCheckboxButton(operationGroup,
+                Messages.XMLImportDialog_31, false, integrateListener);
+        integrateButton.setLayoutData(
+                new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
         integrateButton.setEnabled(insert || update);
 
         Label integrateText = new Label(operationGroup, SWT.LEFT);
         integrateText.setText(Messages.XMLImportDialog_37);
-        integrateText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
+        integrateText
+                .setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
 
         createImportAsCatalogOption(container);
 
         // decryption
         final Group cryptGroup = new Group(container, SWT.NULL);
         cryptGroup.setText(Messages.XMLImportDialog_15);
-        cryptGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, cryptGroupHorizontalSpan, 1));
+        cryptGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false,
+                cryptGroupHorizontalSpan, 1));
         GridLayout pbeLayout = new GridLayout(pbeNumColumns, false);
         cryptGroup.setLayout(pbeLayout);
 
@@ -416,7 +449,8 @@ public class XMLImportDialog extends Dialog {
         };
 
         // by default, no encryption is selected
-        final Button useNoEncryptionRadio = SWTElementFactory.generateRadioButton(cryptGroup, Messages.XMLImportDialog_36, true, noEncryptionAdapter);
+        final Button useNoEncryptionRadio = SWTElementFactory.generateRadioButton(cryptGroup,
+                Messages.XMLImportDialog_36, true, noEncryptionAdapter);
 
         // insert two placeholder
         new Label(cryptGroup, SWT.NONE);
@@ -432,7 +466,8 @@ public class XMLImportDialog extends Dialog {
             }
         };
         // by default, no encryption is selected
-        final Button passwordEncryptionRadio = SWTElementFactory.generateRadioButton(cryptGroup, Messages.XMLImportDialog_16, false, passwordEncryptionAdapter);
+        final Button passwordEncryptionRadio = SWTElementFactory.generateRadioButton(cryptGroup,
+                Messages.XMLImportDialog_16, false, passwordEncryptionAdapter);
 
         passwordField = new Text(cryptGroup, SWT.PASSWORD | SWT.BORDER);
         GridData data = new GridData();
@@ -456,7 +491,8 @@ public class XMLImportDialog extends Dialog {
 
         // ==== Certificate Based Encryption controls
         // by default, no encryption is selected
-        final Button certificateEncryptionRadio = SWTElementFactory.generateRadioButton(cryptGroup, Messages.XMLImportDialog_28, false, certificateEncryptionAdapter);
+        final Button certificateEncryptionRadio = SWTElementFactory.generateRadioButton(cryptGroup,
+                Messages.XMLImportDialog_28, false, certificateEncryptionAdapter);
 
         passwordField.addFocusListener(new FocusAdapter() {
             @Override
@@ -513,7 +549,8 @@ public class XMLImportDialog extends Dialog {
             }
         };
 
-        SWTElementFactory.generateButton(cryptGroup, Messages.XMLImportDialog_29, null, browseX509CertificateListener);
+        SWTElementFactory.generateButton(cryptGroup, Messages.XMLImportDialog_29, null,
+                browseX509CertificateListener);
 
         useNoEncryptionRadio.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -570,7 +607,8 @@ public class XMLImportDialog extends Dialog {
 
         };
 
-        SWTElementFactory.generateButton(cryptGroup, Messages.XMLImportDialog_32, null, browsePrivateKeyListener);
+        SWTElementFactory.generateButton(cryptGroup, Messages.XMLImportDialog_32, null,
+                browsePrivateKeyListener);
 
         Label privateKeyPasswordLabel = new Label(cryptGroup, SWT.NONE);
         data = new GridData();
@@ -611,7 +649,8 @@ public class XMLImportDialog extends Dialog {
 
         Group dataGroup = new Group(container, SWT.NULL);
         dataGroup.setText(Messages.XMLImportDialog_11);
-        dataGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, dataGroupHorizontalSpan, 1));
+        dataGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false,
+                dataGroupHorizontalSpan, 1));
         layout = new GridLayout();
         layout.numColumns = dataGroupNumColumns;
         layout.makeColumnsEqualWidth = true;
@@ -619,10 +658,12 @@ public class XMLImportDialog extends Dialog {
 
         Label dataIntro1 = new Label(dataGroup, SWT.LEFT);
         dataIntro1.setText(Messages.XMLImportDialog_12);
-        dataIntro1.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, dataIntroHorizontalSpan, 1));
+        dataIntro1.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false,
+                dataIntroHorizontalSpan, 1));
 
         dataPathText = new Text(dataGroup, SWT.BORDER);
-        dataPathText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false, dataPathHorizontalSpan, 1));
+        dataPathText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false,
+                dataPathHorizontalSpan, 1));
         dataPathText.addModifyListener(new ModifyListener() {
             @Override
             public void modifyText(ModifyEvent e) {
@@ -639,12 +680,16 @@ public class XMLImportDialog extends Dialog {
         SelectionAdapter useDefaultFolderListener = new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                useDefaultFolder = (e.getSource() instanceof Button) ? ((Button) (e.getSource())).getSelection() : useDefaultFolder;
+                useDefaultFolder = (e.getSource() instanceof Button)
+                        ? ((Button) (e.getSource())).getSelection()
+                        : useDefaultFolder;
             }
         };
 
-        Button useDefaultFolderButton = SWTElementFactory.generateCheckboxButton(container, Messages.XMLImportDialog_38, true, useDefaultFolderListener);
-        useDefaultFolderButton.setLayoutData(new GridData(GridData.FILL, SWT.RIGHT, true, false, 2, 1));
+        Button useDefaultFolderButton = SWTElementFactory.generateCheckboxButton(container,
+                Messages.XMLImportDialog_38, true, useDefaultFolderListener);
+        useDefaultFolderButton
+                .setLayoutData(new GridData(GridData.FILL, SWT.RIGHT, true, false, 2, 1));
 
         SelectionAdapter dataBrowseListener = new SelectionAdapter() {
             @Override
@@ -653,8 +698,10 @@ public class XMLImportDialog extends Dialog {
             }
         };
 
-        final Button dataBrowse = SWTElementFactory.generateButton(dataGroup, Messages.XMLImportDialog_14, null, dataBrowseListener);
-        dataBrowse.setLayoutData(new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
+        final Button dataBrowse = SWTElementFactory.generateButton(dataGroup,
+                Messages.XMLImportDialog_14, null, dataBrowseListener);
+        dataBrowse.setLayoutData(
+                new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
         // prevent passwordtextfield from gaining focus automatically
         // which happens in osx client, and causes wrong default radio selection
         // (bug 341)
@@ -670,30 +717,37 @@ public class XMLImportDialog extends Dialog {
         GridLayout layout;
         Group importAsCatalogGroup = new Group(container, SWT.NULL);
         importAsCatalogGroup.setText(Messages.XMLImportDialog_Import_As_Catalog_Model);
-        importAsCatalogGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, importAsCatalogHorizontalSpan, importAsCatalogVerticalSpan));
+        importAsCatalogGroup.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false,
+                importAsCatalogHorizontalSpan, importAsCatalogVerticalSpan));
 
         layout = new GridLayout();
         layout.numColumns = 2;
         importAsCatalogGroup.setLayout(layout);
 
-        final Button importAsCatalogButton = SWTElementFactory.generateCheckboxButton(importAsCatalogGroup, Messages.XMLImportDialog_Import_As_Catalog_Option, false, new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                importAsCatalog = (e.getSource() instanceof Button) ? ((Button) (e.getSource())).getSelection() : importAsCatalog;
-                if (importAsCatalog) {
+        final Button importAsCatalogButton = SWTElementFactory.generateCheckboxButton(
+                importAsCatalogGroup, Messages.XMLImportDialog_Import_As_Catalog_Option, false,
+                new SelectionAdapter() {
+                    @Override
+                    public void widgetSelected(SelectionEvent e) {
+                        importAsCatalog = (e.getSource() instanceof Button)
+                                ? ((Button) (e.getSource())).getSelection()
+                                : importAsCatalog;
+                        if (importAsCatalog) {
                             setParametersForCatalogImport();
-                } 
-            }
+                        }
+                    }
 
-        });
+                });
         importAsCatalogButton.setEnabled(false);
         importAsCatalogButton.setSelection(importAsCatalog);
 
-        importAsCatalogButton.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
+        importAsCatalogButton
+                .setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
 
         Label importAsCatalogText = new Label(importAsCatalogGroup, SWT.LEFT);
         importAsCatalogText.setText(Messages.XMLImportDialog_Import_As_Catalog_Option_Description);
-        importAsCatalogText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
+        importAsCatalogText
+                .setLayoutData(new GridData(GridData.FILL, GridData.CENTER, true, false, 1, 1));
         importAsCatalogText.setEnabled(false);
         if (importAsCatalog) {
             setParametersForCatalogImport();
@@ -728,8 +782,10 @@ public class XMLImportDialog extends Dialog {
         dialog.setFilterExtensions(new String[] { "*" + VeriniceArchive.EXTENSION_VERINICE_ARCHIVE, //$NON-NLS-1$
                 "*" + ExportAction.EXTENSION_XML, //$NON-NLS-1$
                 "*" + ExportAction.EXTENSION_PASSWORD_ENCRPTION, //$NON-NLS-1$
-                "*" + ExportAction.EXTENSION_CERTIFICATE_ENCRPTION}); //$NON-NLS-1$ 
-        dialog.setFilterNames(new String[] { Messages.XMLImportDialog_30, Messages.XMLImportDialog_33, Messages.XMLImportDialog_34, Messages.XMLImportDialog_35 });
+                "*" + ExportAction.EXTENSION_CERTIFICATE_ENCRPTION }); //$NON-NLS-1$
+        dialog.setFilterNames(
+                new String[] { Messages.XMLImportDialog_30, Messages.XMLImportDialog_33,
+                        Messages.XMLImportDialog_34, Messages.XMLImportDialog_35 });
 
         if (isFilePath()) {
             dialog.setFilterPath(getOldFolderPath());
@@ -755,7 +811,8 @@ public class XMLImportDialog extends Dialog {
     }
 
     boolean isFilePath() {
-        return dataPathText != null && dataPathText.getText() != null && !dataPathText.getText().isEmpty();
+        return dataPathText != null && dataPathText.getText() != null
+                && !dataPathText.getText().isEmpty();
     }
 
     private String getOldFolderPath() {
@@ -811,7 +868,8 @@ public class XMLImportDialog extends Dialog {
                         fileData = decryptWithStaticSalt(fileData, service);
                     }
                 } else if (selectedEncryptionMethod == EncryptionMethod.X509_CERTIFICATE) {
-                    fileData = service.decrypt(fileData, x509CertificateFile, privateKeyPemFile, privateKeyPassword);
+                    fileData = service.decrypt(fileData, x509CertificateFile, privateKeyPemFile,
+                            privateKeyPassword);
                 }
                 // data is encrypted, guess format
                 format = guessFormat(fileData);
@@ -842,10 +900,9 @@ public class XMLImportDialog extends Dialog {
         updateModelAndValidate(syncCommand);
         return syncCommand.getStatus();
     }
-    
-   
 
-    private byte[] decryptWithGenericSalt(byte[] fileData, IEncryptionService service) throws PasswordException {
+    private byte[] decryptWithGenericSalt(byte[] fileData, IEncryptionService service)
+            throws PasswordException {
         byte[] saltBytes = new byte[IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
         System.arraycopy(fileData, 0, saltBytes, 0, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
         fileData = service.decrypt(fileData, password.toCharArray(), saltBytes);
@@ -856,7 +913,8 @@ public class XMLImportDialog extends Dialog {
      * method ensures that vnas with static salt (from versions <= 1.11.1 )
      * could still be imported
      */
-    private byte[] decryptWithStaticSalt(byte[] fileData, IEncryptionService service) throws PasswordException {
+    private byte[] decryptWithStaticSalt(byte[] fileData, IEncryptionService service)
+            throws PasswordException {
         fileData = service.decrypt(fileData, password.toCharArray());
         return fileData;
     }
@@ -865,13 +923,17 @@ public class XMLImportDialog extends Dialog {
         Set<CnATreeElement> importRootObjectSet = command.getImportRootObject();
         final Set<CnATreeElement> changedElement = command.getElementSet();
         updateModel(importRootObjectSet, changedElement);
-        if (Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)) {
+        if (Activator.getDefault().getPreferenceStore()
+                .getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)) {
             WorkspaceJob validationCreationJob = new WorkspaceJob(Messages.XMLImportDialog_4) {
                 @Override
                 public IStatus runInWorkspace(final IProgressMonitor monitor) {
                     IStatus status = Status.OK_STATUS;
                     try {
-                        monitor.beginTask(NLS.bind(Messages.XMLImportDialog_5, new Object[] { dataFile.getName() }), IProgressMonitor.UNKNOWN);
+                        monitor.beginTask(
+                                NLS.bind(Messages.XMLImportDialog_5,
+                                        new Object[] { dataFile.getName() }),
+                                IProgressMonitor.UNKNOWN);
                         createValidations(changedElement);
                     } catch (Exception e) {
                         LOG.error("Exception while executing createValidationsJob", e); //$NON-NLS-1$
@@ -907,7 +969,8 @@ public class XMLImportDialog extends Dialog {
         return result;
     }
 
-    private void updateModel(Set<CnATreeElement> importRootObjectSet, Set<CnATreeElement> changedElement) {
+    private void updateModel(Set<CnATreeElement> importRootObjectSet,
+            Set<CnATreeElement> changedElement) {
         final int maxChangedElements = 9;
         if (changedElement != null && changedElement.size() > maxChangedElements) {
             // if more than 9 elements changed or added do a complete reload
@@ -915,12 +978,16 @@ public class XMLImportDialog extends Dialog {
         } else {
             if (importRootObjectSet != null && importRootObjectSet.size() > 0) {
                 for (CnATreeElement importRootObject : importRootObjectSet) {
-                    CnAElementFactory.getModel(importRootObject).childAdded(importRootObject.getParent(), importRootObject);
-                    CnAElementFactory.getModel(importRootObject).databaseChildAdded(importRootObject);
+                    CnAElementFactory.getModel(importRootObject)
+                            .childAdded(importRootObject.getParent(), importRootObject);
+                    CnAElementFactory.getModel(importRootObject)
+                            .databaseChildAdded(importRootObject);
                     if (changedElement != null) {
                         for (CnATreeElement cnATreeElement : changedElement) {
-                            CnAElementFactory.getModel(cnATreeElement).childAdded(cnATreeElement.getParent(), cnATreeElement);
-                            CnAElementFactory.getModel(cnATreeElement).databaseChildAdded(cnATreeElement);
+                            CnAElementFactory.getModel(cnATreeElement)
+                                    .childAdded(cnATreeElement.getParent(), cnATreeElement);
+                            CnAElementFactory.getModel(cnATreeElement)
+                                    .databaseChildAdded(cnATreeElement);
                         }
                     }
                 }
@@ -941,7 +1008,8 @@ public class XMLImportDialog extends Dialog {
                 ServiceFactory.lookupValidationService().createValidationByUuid(elmt.getUuid());
             }
             if (elmts.size() > 0) {
-                CnAElementFactory.getModel(((CnATreeElement) elmts.toArray()[0])).validationAdded(((CnATreeElement) elmts.toArray()[0]).getScopeId());
+                CnAElementFactory.getModel(((CnATreeElement) elmts.toArray()[0]))
+                        .validationAdded(((CnATreeElement) elmts.toArray()[0]).getScopeId());
             }
         } catch (CommandException e) {
             LOG.error("Error while executing validation creation command", e); //$NON-NLS-1$
@@ -952,12 +1020,10 @@ public class XMLImportDialog extends Dialog {
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
         defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_IMPORT);
         if (defaultFolder == null || defaultFolder.isEmpty()) {
-            defaultFolder = System.getProperty(
-                    IVeriniceConstants.USER_HOME); //$NON-NLS-1$
+            defaultFolder = System.getProperty(IVeriniceConstants.USER_HOME); // $NON-NLS-1$
         }
-        if (!defaultFolder.endsWith(System.getProperty(IVeriniceConstants.FILE_SEPARATOR))) { //$NON-NLS-1$
-            defaultFolder = defaultFolder + 
-                    System.getProperty(IVeriniceConstants.FILE_SEPARATOR); //$NON-NLS-1$
+        if (!defaultFolder.endsWith(System.getProperty(IVeriniceConstants.FILE_SEPARATOR))) { // $NON-NLS-1$
+            defaultFolder = defaultFolder + System.getProperty(IVeriniceConstants.FILE_SEPARATOR); // $NON-NLS-1$
         }
         return defaultFolder;
     }
