@@ -115,7 +115,6 @@ public class BpImporter {
     IDAOFactory daoFactory;
 
     private static final String SUBDIRECTORY_MODULES = "bausteine";
-    private static final String SUBDIRECTORY_MEDIA = "media";
     private static final String SUBDIRECTORY_THREATS = "elementare_gefaehrdungen_1";
     private static final String SUBDIRECTORY_IMPL_HINTS = "umsetzungshinweise";
 
@@ -139,9 +138,7 @@ public class BpImporter {
      */
     public void run() throws CreateBPElementException {
         long startImport = System.currentTimeMillis();
-        Set<Document> modules = new HashSet<>();
-        Set<ITBP2VNA.generated.threat.Document> threats = new HashSet<>();
-        Set<ITBP2VNA.generated.implementationhint.Document> implementationHints = new HashSet<>();
+
         if (xmlRootDirectory == null || xmlRootDirectory.length() == 0) {
             LOG.error("Wrong number of arguments, please provide root-Directory to XML-Archive");
             return;
@@ -152,24 +149,25 @@ public class BpImporter {
             return;
         }
 
-        setupImportAndParseContent(rootDir, modules, threats, implementationHints);
+        ImportData importData = parseContent(rootDir);
         ImportMetadata importMetadata = parseMetadataFiles(rootDir);
 
-        LOG.debug("Successfully parsed modules:\t" + modules.size());
-        LOG.debug("Successfully parsed threats:\t" + threats.size());
-        LOG.debug("Successfully parsed implementation hints:\t" + implementationHints.size());
+        LOG.debug("Successfully parsed modules:\t" + importData.modules.size());
+        LOG.debug("Successfully parsed threats:\t" + importData.threats.size());
+        LOG.debug("Successfully parsed implementation hints:\t"
+                + importData.implementationHints.size());
 
         long veryBeginning = System.currentTimeMillis();
         prepareITNetwork();
         long itnetworkReady = System.currentTimeMillis();
         LOG.debug("ITNetwork prepared, took :\t"
                 + (itnetworkReady - veryBeginning) / MILLIS_PER_SECOND);
-        generateElementalThreats(threats);
+        generateElementalThreats(importData.threats);
         long elementalThreatsReady = System.currentTimeMillis();
         LOG.debug("Elementalthreats ready, took :\t"
                 + (elementalThreatsReady - itnetworkReady) / MILLIS_PER_SECOND);
 
-        transferModules(modules, implementationHints, importMetadata);
+        transferModules(importData, importMetadata);
 
         Set<String> moduleIdentifiersStrayImplementationOrder = new HashSet<>();
         moduleIdentifiersStrayImplementationOrder
@@ -194,7 +192,7 @@ public class BpImporter {
         LOG.debug("Modules ready, took :\t"
                 + (modulesReady - elementalThreatsReady) / MILLIS_PER_SECOND);
         LOG.debug("Transformation of elements complete");
-        createSafeguards(implementationHints);
+        createSafeguards(importData.implementationHints);
         long safeguardsReady = System.currentTimeMillis();
         LOG.debug(
                 "Safeguards ready, took:\t" + (safeguardsReady - modulesReady) / MILLIS_PER_SECOND);
@@ -214,20 +212,26 @@ public class BpImporter {
      * the three Sets, passed as parameter, will be filled with the Java-Objects
      * representing the XML-Files
      */
-    private void setupImportAndParseContent(File rootDir, Set<Document> modules,
-            Set<ITBP2VNA.generated.threat.Document> threats,
-            Set<ITBP2VNA.generated.implementationhint.Document> implementationHints) {
-        File[] directories = rootDir.listFiles((FileFilter) File::isDirectory);
-        File[] subDirectories = determineSubdirectories(directories);
-        File moduleDir = subDirectories[0];
-        File threatDir = subDirectories[1];
-        File implHintDir = subDirectories[2];
+    private static ImportData parseContent(File rootDir) {
 
-        parseBSIXml(modules, threats, implementationHints, moduleDir, threatDir, implHintDir);
+        File moduleDir = rootDir.toPath().resolve(SUBDIRECTORY_MODULES).toFile();
+        File threatDir = rootDir.toPath().resolve(SUBDIRECTORY_THREATS).toFile();
+        File implHintDir = rootDir.toPath().resolve(SUBDIRECTORY_IMPL_HINTS).toFile();
+
+        ITBPParser itbpParser = ITBPParser.getInstance();
+        Set<Document> modules = getXMLFiles(moduleDir).stream().map(itbpParser::parseModule)
+                .collect(Collectors.toSet());
+        Set<ITBP2VNA.generated.threat.Document> threats = getXMLFiles(threatDir).stream()
+                .map(itbpParser::parseThreat).collect(Collectors.toSet());
+        Set<ITBP2VNA.generated.implementationhint.Document> implementationHints = getXMLFiles(
+                implHintDir).stream().map(itbpParser::parseImplementationHint)
+                        .collect(Collectors.toSet());
+
+        return new ImportData(modules, threats, implementationHints);
 
     }
 
-    private ImportMetadata parseMetadataFiles(File rootDirectory) {
+    private static ImportMetadata parseMetadataFiles(File rootDirectory) {
         Properties implementationOrder = new Properties();
         Properties modelingHints = new Properties();
 
@@ -310,84 +314,6 @@ public class BpImporter {
     }
 
     /**
-     * parses XML-Files in given Subdirectories of BSI-XML to
-     *
-     * - {@link Document} into {@link Set} modules -
-     * {@link ITBP2VNA.generated.threat.Document} into {@link Set} threats -
-     * {@link ITBP2VNA.generated.implementationhint.Document} into {@link Set}
-     * implementationHints
-     */
-    private void parseBSIXml(Set<Document> modules, Set<ITBP2VNA.generated.threat.Document> threats,
-            Set<ITBP2VNA.generated.implementationhint.Document> implementationHints, File moduleDir,
-            File threatDir, File implHintDir) {
-        for (File xmlFile : getXMLFiles(moduleDir)) {
-            modules.add(ITBPParser.getInstance().parseModule(xmlFile));
-        }
-        for (File xmlFile : getXMLFiles(threatDir)) {
-            threats.add(ITBPParser.getInstance().parseThreat(xmlFile));
-        }
-        for (File xmlFile : getXMLFiles(implHintDir)) {
-            implementationHints.add(ITBPParser.getInstance().parseImplementationHint(xmlFile));
-        }
-    }
-
-    /**
-     * returns an array of {@link File} of a length of 4 the array contains the
-     * subfolders of the BSI IT Baselineprotection represented in xml-Files
-     * organized in the following structure:
-     *
-     * 0 - module Subdirectory 1 - threat Subdirectory 2 - implementation
-     * Subdirectory 3 - media Subdirectory
-     */
-    private File[] determineSubdirectories(File[] directories) {
-        File moduleDir = null;
-        File threatDir = null;
-        File implHintDir = null;
-        File mediaDir = null;
-
-        final String warningMoreThanOneDirectory = "more than one directory named:\t";
-
-        File[] dirs = new File[4];
-        for (File subDirectory : directories) {
-            setSubDirectories(moduleDir, threatDir, implHintDir, mediaDir,
-                    warningMoreThanOneDirectory, subDirectory, dirs);
-        }
-        return dirs;
-
-    }
-
-    /**
-     *
-     * compares name of content-containing directory candidates to the
-     * (BSI-given) names, and sets them as an element of an Array (which will be
-     * returned)
-     */
-    private void setSubDirectories(File moduleDir, File threatDir, File implHintDir, File mediaDir,
-            final String warningMoreThanOneDirectory, File subDirectory, File[] dirs) {
-        if (SUBDIRECTORY_IMPL_HINTS.equals(subDirectory.getName())) {
-            if (implHintDir != null) {
-                LOG.warn(warningMoreThanOneDirectory + SUBDIRECTORY_IMPL_HINTS);
-            }
-            dirs[2] = subDirectory;
-        } else if (SUBDIRECTORY_MEDIA.equals(subDirectory.getName())) {
-            if (mediaDir != null) {
-                LOG.warn(warningMoreThanOneDirectory + SUBDIRECTORY_MEDIA);
-            }
-            dirs[3] = subDirectory;
-        } else if (SUBDIRECTORY_MODULES.equals(subDirectory.getName())) {
-            if (moduleDir != null) {
-                LOG.warn(warningMoreThanOneDirectory + SUBDIRECTORY_MODULES);
-            }
-            dirs[0] = subDirectory;
-        } else if (SUBDIRECTORY_THREATS.equals(subDirectory.getName())) {
-            if (threatDir != null) {
-                LOG.warn(warningMoreThanOneDirectory + SUBDIRECTORY_THREATS);
-            }
-            dirs[1] = subDirectory;
-        }
-    }
-
-    /**
      * update a given {@link CnATreeElement} to write changes to db
      */
     private CnATreeElement updateElement(CnATreeElement element) throws CreateBPElementException {
@@ -405,7 +331,7 @@ public class BpImporter {
      * get all xmlFiles contained in a given Directory represented by a
      * {@link File}
      */
-    private List<File> getXMLFiles(File dir) {
+    private static List<File> getXMLFiles(File dir) {
         if (dir != null && dir.exists() && dir.isDirectory()) {
             File[] directories = dir.listFiles(
                     (FileFilter) pathname -> FilenameUtils.isExtension(pathname.getName(), "xml"));
@@ -612,20 +538,19 @@ public class BpImporter {
      * transfers the parsed {@link Document} object into {@link CnATreeElement}
      * (and calls related methods)
      */
-    private void transferModules(Set<Document> modules,
-            Set<ITBP2VNA.generated.implementationhint.Document> implementationHints,
-            ImportMetadata importMetadata) throws CreateBPElementException {
+    private void transferModules(ImportData importData, ImportMetadata importMetadata)
+            throws CreateBPElementException {
 
         if (rootNetwork == null) {
             LOG.error("Root-IT-Network not initialized. Ending import");
             return;
         }
-        Map<String, ITBP2VNA.generated.implementationhint.Document> implementationHintsByIdentifier = implementationHints
+        Map<String, ITBP2VNA.generated.implementationhint.Document> implementationHintsByIdentifier = importData.implementationHints
                 .stream()
                 .collect(Collectors.toMap(
                         ITBP2VNA.generated.implementationhint.Document::getIdentifier,
                         Function.identity()));
-        for (Document bsiModule : modules) {
+        for (Document bsiModule : importData.modules) {
             String moduleIdentifier = bsiModule.getIdentifier();
             String groupIdentifier = getIdentifierPrefix(moduleIdentifier);
 
@@ -1198,16 +1123,28 @@ public class BpImporter {
         this.daoFactory = daoFactory;
     }
 
+    private static class ImportData {
+        private final Set<Document> modules;
+        private final Set<ITBP2VNA.generated.threat.Document> threats;
+        private final Set<ITBP2VNA.generated.implementationhint.Document> implementationHints;
+
+        ImportData(Set<Document> modules, Set<ITBP2VNA.generated.threat.Document> threats,
+                Set<ITBP2VNA.generated.implementationhint.Document> implementationHints) {
+            this.modules = modules;
+            this.threats = threats;
+            this.implementationHints = implementationHints;
+        }
+    }
+
     private static class ImportMetadata {
 
         private final Map<String, String> implementationOrderByModuleIdentifier;
         private final Map<String, String> modelingHintByModuleIdentifier;
 
-        public ImportMetadata(Map<String, String> implementationOrderByModuleIdentifier,
+        ImportMetadata(Map<String, String> implementationOrderByModuleIdentifier,
                 Map<String, String> modelingHintByModuleIdentifier) {
             this.implementationOrderByModuleIdentifier = implementationOrderByModuleIdentifier;
             this.modelingHintByModuleIdentifier = modelingHintByModuleIdentifier;
         }
-
     }
 }
