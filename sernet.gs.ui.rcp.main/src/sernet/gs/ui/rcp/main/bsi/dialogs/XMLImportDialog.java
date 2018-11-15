@@ -35,8 +35,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusAdapter;
 import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -107,10 +105,8 @@ public class XMLImportDialog extends Dialog {
 
     private File x509CertificateFile;
     private File privateKeyPemFile;
-    private Text privateKeyPasswordField;
     private String privateKeyPassword = null;
 
-    private Text passwordField;
     private String password = ""; //$NON-NLS-1$
 
     private Text certificatePathField;
@@ -140,10 +136,12 @@ public class XMLImportDialog extends Dialog {
     @Override
     public void okPressed() {
 
-        final SyncParameter syncParameter = tryCreateSyncParameter();
         if (!validateUserSelection()) {
             return;
-        } else if (!dataPathFlag && syncParameter == null) {
+        }
+        final SyncParameter syncParameter = tryCreateSyncParameter();
+
+        if (!dataPathFlag && syncParameter == null) {
             createErrorMessage(3);
         } else if (!dataPathFlag) {
             createErrorMessage(1);
@@ -154,7 +152,6 @@ public class XMLImportDialog extends Dialog {
                 setDefaultFolder(dataFile.getAbsolutePath());
             }
             WorkspaceJob importJob = new WorkspaceJob(Messages.XMLImportDialog_4) {
-                @SuppressWarnings("restriction")
                 @Override
                 public IStatus runInWorkspace(final IProgressMonitor monitor) {
                     IStatus status = Status.OK_STATUS;
@@ -170,7 +167,7 @@ public class XMLImportDialog extends Dialog {
                         }
 
                     } catch (PasswordException e) {
-                        status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
+                        status = new Status(IStatus.ERROR, Activator.PLUGIN_ID,
                                 Messages.XMLImportDialog_13, e);
                     } catch (Exception e) {
                         status = handleGenericError(e);
@@ -282,7 +279,7 @@ public class XMLImportDialog extends Dialog {
 
     private void createErrorMessage(int caseNumber) {
         String titel = Messages.XMLImportDialog_18;
-        String messageBody = Messages.XMLImportDialog_19;
+        String messageBody;
 
         switch (caseNumber) {
         case 1:
@@ -422,7 +419,7 @@ public class XMLImportDialog extends Dialog {
                 Messages.XMLImportDialog_31, false, integrateListener);
         integrateButton.setLayoutData(
                 new GridData(GridData.BEGINNING, GridData.CENTER, false, false, 1, 1));
-        integrateButton.setEnabled(insert || update);
+        integrateButton.setEnabled(true);
 
         Label integrateText = new Label(operationGroup, SWT.LEFT);
         integrateText.setText(Messages.XMLImportDialog_37);
@@ -469,7 +466,7 @@ public class XMLImportDialog extends Dialog {
         final Button passwordEncryptionRadio = SWTElementFactory.generateRadioButton(cryptGroup,
                 Messages.XMLImportDialog_16, false, passwordEncryptionAdapter);
 
-        passwordField = new Text(cryptGroup, SWT.PASSWORD | SWT.BORDER);
+        Text passwordField = new Text(cryptGroup, SWT.PASSWORD | SWT.BORDER);
         GridData data = new GridData();
         data.widthHint = passwordWidthHint;
         passwordField.setLayoutData(data);
@@ -503,18 +500,8 @@ public class XMLImportDialog extends Dialog {
                 selectedEncryptionMethod = EncryptionMethod.PASSWORD;
             }
 
-            @Override
-            public void focusLost(FocusEvent e) {
-
-            }
         });
-        passwordField.addModifyListener(new ModifyListener() {
-            @Override
-            public void modifyText(ModifyEvent e) {
-                password = passwordField.getText();
-
-            }
-        });
+        passwordField.addModifyListener(e -> password = passwordField.getText());
 
         certificatePathField = new Text(cryptGroup, SWT.SINGLE | SWT.BORDER);
         data = new GridData();
@@ -616,7 +603,7 @@ public class XMLImportDialog extends Dialog {
         privateKeyPasswordLabel.setLayoutData(data);
         privateKeyPasswordLabel.setText(Messages.XMLImportDialog_0);
 
-        privateKeyPasswordField = new Text(cryptGroup, SWT.PASSWORD | SWT.BORDER);
+        Text privateKeyPasswordField = new Text(cryptGroup, SWT.PASSWORD | SWT.BORDER);
         data = new GridData();
         data.widthHint = privateKeyPasswordWidthHint;
         privateKeyPasswordField.setLayoutData(data);
@@ -630,18 +617,9 @@ public class XMLImportDialog extends Dialog {
                 selectedEncryptionMethod = EncryptionMethod.X509_CERTIFICATE;
             }
 
-            @Override
-            public void focusLost(FocusEvent e) {
-
-            }
         });
-        privateKeyPasswordField.addModifyListener(new ModifyListener() {
-            @Override
-            public void modifyText(ModifyEvent e) {
-                privateKeyPassword = privateKeyPasswordField.getText();
-
-            }
-        });
+        privateKeyPasswordField
+                .addModifyListener(e -> privateKeyPassword = privateKeyPasswordField.getText());
 
         cryptGroup.pack();
 
@@ -664,15 +642,12 @@ public class XMLImportDialog extends Dialog {
         dataPathText = new Text(dataGroup, SWT.BORDER);
         dataPathText.setLayoutData(new GridData(GridData.FILL, GridData.CENTER, false, false,
                 dataPathHorizontalSpan, 1));
-        dataPathText.addModifyListener(new ModifyListener() {
-            @Override
-            public void modifyText(ModifyEvent e) {
-                dataFile = new File(dataPathText.getText());
-                if (dataFile.exists()) {
-                    dataPathFlag = true;
-                } else {
-                    dataPathFlag = false;
-                }
+        dataPathText.addModifyListener(e -> {
+            dataFile = new File(dataPathText.getText());
+            if (dataFile.exists()) {
+                dataPathFlag = true;
+            } else {
+                dataPathFlag = false;
             }
         });
 
@@ -694,7 +669,7 @@ public class XMLImportDialog extends Dialog {
         SelectionAdapter dataBrowseListener = new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                displayFiles(container.getShell(), dataPathText, dataFile);
+                displayFiles(container.getShell(), dataPathText);
             }
         };
 
@@ -776,8 +751,7 @@ public class XMLImportDialog extends Dialog {
         deleteCheck.setEnabled(false);
     }
 
-    private void displayFiles(Shell shell, Text pathText, File file) {
-        File f = file;
+    private void displayFiles(Shell shell, Text pathText) {
         FileDialog dialog = new FileDialog(shell, SWT.NULL);
         dialog.setFilterExtensions(new String[] { "*" + VeriniceArchive.EXTENSION_VERINICE_ARCHIVE, //$NON-NLS-1$
                 "*" + ExportAction.EXTENSION_XML, //$NON-NLS-1$
@@ -797,7 +771,7 @@ public class XMLImportDialog extends Dialog {
         }
         String path = dialog.open();
         if (path != null) {
-            f = new File(path);
+            File f = new File(path);
             if (dialog.getFilterIndex() < 3) {
                 // set the format if an uncrypted file was selected
                 format = dialog.getFilterIndex();
@@ -862,8 +836,6 @@ public class XMLImportDialog extends Dialog {
                 if (selectedEncryptionMethod == EncryptionMethod.PASSWORD) {
                     try {
                         fileData = decryptWithGenericSalt(fileData, service);
-                    } catch (PasswordException e) {
-                        fileData = decryptWithStaticSalt(fileData, service);
                     } catch (EncryptionException e) {
                         fileData = decryptWithStaticSalt(fileData, service);
                     }
@@ -885,8 +857,7 @@ public class XMLImportDialog extends Dialog {
                 }
             }
             syncCommand = ServiceFactory.lookupCommandService().executeCommand(syncCommand);
-            // clear memory
-            fileData = null;
+
         } catch (PasswordException e) {
             LOG.warn("Wrong password while decrypting import file."); //$NON-NLS-1$
             if (LOG.isDebugEnabled()) {
@@ -976,7 +947,7 @@ public class XMLImportDialog extends Dialog {
             // if more than 9 elements changed or added do a complete reload
             CnAElementFactory.getInstance().reloadAllModelsFromDatabase();
         } else {
-            if (importRootObjectSet != null && importRootObjectSet.size() > 0) {
+            if (importRootObjectSet != null && !importRootObjectSet.isEmpty()) {
                 for (CnATreeElement importRootObject : importRootObjectSet) {
                     CnAElementFactory.getModel(importRootObject)
                             .childAdded(importRootObject.getParent(), importRootObject);
@@ -1007,7 +978,7 @@ public class XMLImportDialog extends Dialog {
             for (CnATreeElement elmt : elmts) {
                 ServiceFactory.lookupValidationService().createValidationByUuid(elmt.getUuid());
             }
-            if (elmts.size() > 0) {
+            if (!elmts.isEmpty()) {
                 CnAElementFactory.getModel(((CnATreeElement) elmts.toArray()[0]))
                         .validationAdded(((CnATreeElement) elmts.toArray()[0]).getScopeId());
             }
