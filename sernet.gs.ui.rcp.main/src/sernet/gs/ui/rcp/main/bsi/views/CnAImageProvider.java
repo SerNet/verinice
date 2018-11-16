@@ -130,10 +130,6 @@ public final class CnAImageProvider {
             return image;
         }
 
-        if (imageCache.isBSITypeElement(element.getTypeId())) {
-            return imageCache.getBSITypeImage(element.getTypeId());
-        }
-
         // special cases for some old BP elements
         if (element instanceof FinishedRiskAnalysis) {
             return imageCache.getImage(ImageCache.RISIKO_MASSNAHMEN_UMSETZUNG);

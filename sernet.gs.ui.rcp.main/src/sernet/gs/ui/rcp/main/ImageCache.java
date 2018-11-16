@@ -357,10 +357,7 @@ public final class ImageCache {
 
     private final Map<ImageDescriptor, Image> imageMap = new HashMap<>();
 
-    // for BSI elements: map of <element type> : <icon name>
-    private static final Map<String, String> BSI_ICON_MAP;
-
-    // for ISO27k elements: map of <element type> : <icon name>
+    // map of <element type> : <icon name>
     private static final Map<String, String> TYPE_ID_ICON_MAP;
 
     private Bundle bundle;
@@ -411,30 +408,28 @@ public final class ImageCache {
         TYPE_ID_ICON_MAP.put(BpRecord.TYPE_ID, ISO27K_RECORD);
         TYPE_ID_ICON_MAP.put(ImportBpGroup.TYPE_ID, ImageCache.ISO27K_IMPORT);
 
-        BSI_ICON_MAP = new HashMap<>();
-
         // fill type map for BSI icons:
-        BSI_ICON_MAP.put(ITVerbund.TYPE_ID, ImageCache.EXPLORER);
-        BSI_ICON_MAP.put(Anwendung.TYPE_ID, ImageCache.ANWENDUNG);
-        BSI_ICON_MAP.put(Gebaeude.TYPE_ID, ImageCache.GEBAEUDE);
-        BSI_ICON_MAP.put(Client.TYPE_ID, ImageCache.CLIENT);
-        BSI_ICON_MAP.put(Server.TYPE_ID, ImageCache.SERVER);
-        BSI_ICON_MAP.put(SonstIT.TYPE_ID, ImageCache.SONSTIT);
-        BSI_ICON_MAP.put(TelefonKomponente.TYPE_ID, ImageCache.TELEFON);
-        BSI_ICON_MAP.put(Person.TYPE_ID, ImageCache.PERSON);
-        BSI_ICON_MAP.put(NetzKomponente.TYPE_ID, ImageCache.NETWORK);
-        BSI_ICON_MAP.put(Raum.TYPE_ID, ImageCache.RAUM);
-        BSI_ICON_MAP.put(AnwendungenKategorie.TYPE_ID, ImageCache.ANWENDUNG);
-        BSI_ICON_MAP.put(GebaeudeKategorie.TYPE_ID, ImageCache.GEBAEUDE);
-        BSI_ICON_MAP.put(ClientsKategorie.TYPE_ID, ImageCache.CLIENT);
-        BSI_ICON_MAP.put(ServerKategorie.TYPE_ID, ImageCache.SERVER);
-        BSI_ICON_MAP.put(SonstigeITKategorie.TYPE_ID, ImageCache.SONSTIT);
-        BSI_ICON_MAP.put(TKKategorie.TYPE_ID, ImageCache.TELEFON);
-        BSI_ICON_MAP.put(PersonenKategorie.TYPE_ID, ImageCache.PERSON);
-        BSI_ICON_MAP.put(NKKategorie.TYPE_ID, ImageCache.NETWORK);
-        BSI_ICON_MAP.put(RaeumeKategorie.TYPE_ID, ImageCache.RAUM);
-        BSI_ICON_MAP.put(BausteinUmsetzung.TYPE_ID, ImageCache.BAUSTEIN_UMSETZUNG);
-        BSI_ICON_MAP.put(MassnahmenUmsetzung.TYPE_ID, ImageCache.ISO27K_CONTROL);
+        TYPE_ID_ICON_MAP.put(ITVerbund.TYPE_ID, ImageCache.EXPLORER);
+        TYPE_ID_ICON_MAP.put(Anwendung.TYPE_ID, ImageCache.ANWENDUNG);
+        TYPE_ID_ICON_MAP.put(Gebaeude.TYPE_ID, ImageCache.GEBAEUDE);
+        TYPE_ID_ICON_MAP.put(Client.TYPE_ID, ImageCache.CLIENT);
+        TYPE_ID_ICON_MAP.put(Server.TYPE_ID, ImageCache.SERVER);
+        TYPE_ID_ICON_MAP.put(SonstIT.TYPE_ID, ImageCache.SONSTIT);
+        TYPE_ID_ICON_MAP.put(TelefonKomponente.TYPE_ID, ImageCache.TELEFON);
+        TYPE_ID_ICON_MAP.put(Person.TYPE_ID, ImageCache.PERSON);
+        TYPE_ID_ICON_MAP.put(NetzKomponente.TYPE_ID, ImageCache.NETWORK);
+        TYPE_ID_ICON_MAP.put(Raum.TYPE_ID, ImageCache.RAUM);
+        TYPE_ID_ICON_MAP.put(AnwendungenKategorie.TYPE_ID, ImageCache.ANWENDUNG);
+        TYPE_ID_ICON_MAP.put(GebaeudeKategorie.TYPE_ID, ImageCache.GEBAEUDE);
+        TYPE_ID_ICON_MAP.put(ClientsKategorie.TYPE_ID, ImageCache.CLIENT);
+        TYPE_ID_ICON_MAP.put(ServerKategorie.TYPE_ID, ImageCache.SERVER);
+        TYPE_ID_ICON_MAP.put(SonstigeITKategorie.TYPE_ID, ImageCache.SONSTIT);
+        TYPE_ID_ICON_MAP.put(TKKategorie.TYPE_ID, ImageCache.TELEFON);
+        TYPE_ID_ICON_MAP.put(PersonenKategorie.TYPE_ID, ImageCache.PERSON);
+        TYPE_ID_ICON_MAP.put(NKKategorie.TYPE_ID, ImageCache.NETWORK);
+        TYPE_ID_ICON_MAP.put(RaeumeKategorie.TYPE_ID, ImageCache.RAUM);
+        TYPE_ID_ICON_MAP.put(BausteinUmsetzung.TYPE_ID, ImageCache.BAUSTEIN_UMSETZUNG);
+        TYPE_ID_ICON_MAP.put(MassnahmenUmsetzung.TYPE_ID, ImageCache.ISO27K_CONTROL);
     }
 
     private ImageCache() {
@@ -449,14 +444,6 @@ public final class ImageCache {
         return instance;
     }
 
-    public Image getBSITypeImage(String typeId) {
-        Image image = getImage(ImageCache.UNKNOWN);
-        if (typeId != null && BSI_ICON_MAP.get(typeId) != null) {
-            image = getImage(BSI_ICON_MAP.get(typeId));
-        }
-        return image;
-    }
-
     public Image getImageForTypeId(String typeId) {
         Image image = getImage(ImageCache.UNKNOWN);
         if (typeId != null && TYPE_ID_ICON_MAP.get(typeId) != null) {
@@ -465,26 +452,11 @@ public final class ImageCache {
         return image;
     }
 
-    public String getBSITypeImageURL(String typeId) {
-        if (typeId != null && BSI_ICON_MAP.get(typeId) != null) {
-            return BSI_ICON_MAP.get(typeId);
-        }
-        return ImageCache.UNKNOWN;
-    }
-
-    public String getISO27kTypeImageURL(String typeId) {
+    public String getImageURL(String typeId) {
         if (typeId != null && TYPE_ID_ICON_MAP.get(typeId) != null) {
             return TYPE_ID_ICON_MAP.get(typeId);
         }
         return ImageCache.UNKNOWN;
-    }
-
-    public Image getObjectTypeImage(String typeId) {
-        Image image = getImageForTypeId(typeId);
-        if (image == getImage(ImageCache.UNKNOWN)) {
-            image = getBSITypeImage(typeId);
-        }
-        return image;
     }
 
     public ImageDescriptor getImageDescriptor(String url) {
@@ -584,11 +556,7 @@ public final class ImageCache {
         return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET);
     }
 
-    public boolean isBSITypeElement(String typeID) {
-        return BSI_ICON_MAP.containsKey(typeID);
-    }
-
-    public boolean isISO27kTypeElement(String typeID) {
+    public boolean hasDefaultImage(String typeID) {
         return TYPE_ID_ICON_MAP.containsKey(typeID);
     }
 }

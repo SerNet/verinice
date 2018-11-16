@@ -74,11 +74,7 @@ public class TableImageProvider {
         }
 
         // retrieve default images
-        else if (imgCache.isBSITypeElement(typeId)) {
-            return imgCache.getBSITypeImage(typeId);
-        }
-
-        else if (imgCache.isISO27kTypeElement(typeId)) {
+        else if (imgCache.hasDefaultImage(typeId)) {
             return imgCache.getImageForTypeId(typeId);
         }
 
@@ -111,12 +107,8 @@ public class TableImageProvider {
         }
 
         // retrieve default images
-        else if (imgCache.isBSITypeElement(typeId)) {
-            return imgCache.getBSITypeImageURL(typeId);
-        }
-
-        else if (imgCache.isISO27kTypeElement(typeId)) {
-            return imgCache.getISO27kTypeImageURL(typeId);
+        else if (imgCache.hasDefaultImage(typeId)) {
+            return imgCache.getImageURL(typeId);
         }
 
         return ImageCache.UNKNOWN;
