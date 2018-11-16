@@ -202,14 +202,12 @@ public abstract class AbstractNumericStringComparator<T> implements Comparator<T
         // going to assume that the individual character for the
         // number has the right order. ie) '9' > '0'
         // possibly bad in i18n.
-        char[] chr1 = sub1.toCharArray();
-        char[] chr2 = sub2.toCharArray();
-
-        int sz = chr1.length;
-        for (int i = 0; i < sz; i++) {
+        for (int i = 0; i < sub1.length(); i++) {
             // this should give better speed
-            if (chr1[i] != chr2[i]) {
-                return (chr1[i] < chr2[i]) ? -1 : 1;
+            char char1 = sub1.charAt(i);
+            char char2 = sub2.charAt(i);
+            if (char1 != char2) {
+                return (char1 < char2) ? -1 : 1;
             }
         }
 
@@ -244,18 +242,11 @@ public abstract class AbstractNumericStringComparator<T> implements Comparator<T
     }
 
     private static int getLastDigitIndex(String str, int start) {
-        return getLastDigitIndex(str.toCharArray(), start);
-    }
-
-    private static int getLastDigitIndex(char[] chrs, int start) {
-        int sz = chrs.length;
-
-        for (int i = start; i < sz; i++) {
-            if (!Character.isDigit(chrs[i])) {
+        for (int i = start; i < str.length(); i++) {
+            if (!Character.isDigit(str.charAt(i))) {
                 return i;
             }
         }
-
         return -1;
     }
 
