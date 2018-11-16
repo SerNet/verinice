@@ -109,6 +109,7 @@ public class RiskConfigurationUtil {
         riskValueConfigurator = new RiskValuesConfigurator(scrolledRiskValueTab,
                 configurationUpdateListener);
         riskValueConfigurator.setRiskConfiguration(currentRiskConfiguration);
+        scrolledRiskValueTab.setContent(riskValueConfigurator);
         return scrolledRiskValueTab;
     }
 
