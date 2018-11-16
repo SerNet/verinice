@@ -110,6 +110,7 @@ import sernet.verinice.model.iso27k.EvidenceGroup;
 import sernet.verinice.model.iso27k.ExceptionGroup;
 import sernet.verinice.model.iso27k.Finding;
 import sernet.verinice.model.iso27k.FindingGroup;
+import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.Incident;
 import sernet.verinice.model.iso27k.IncidentGroup;
@@ -404,7 +405,10 @@ public final class CnATypeMapper {
     public static String getElementTypeIdFromGroupTypeId(String typeId) {
         return (String) Optional.ofNullable(elementTypeIdToGroupTypeId.getKey(typeId))
                 .orElseThrow(IllegalArgumentException::new);
+    }
 
+    public static boolean isGroupTypeId(String typeId) {
+        return Group.class.isAssignableFrom(CnATypeMapper.getClassFromTypeId(typeId));
     }
 
     private CnATypeMapper() {
