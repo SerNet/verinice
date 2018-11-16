@@ -226,7 +226,7 @@ public final class CnAImageProvider {
     private static Image createImageWithOverlay(final Image baseImage, final Image overlayImage) {
         CompositeImageDescriptor imageWithOverlayDescriptor = new ImageWithOverlayDescriptor(
                 baseImage, overlayImage);
-        return imageWithOverlayDescriptor.createImage();
+        return ImageCache.getInstance().getImage(imageWithOverlayDescriptor);
     }
 
     private static Image getImageByImplementationState(String state) {
@@ -256,6 +256,40 @@ public final class CnAImageProvider {
             drawImage(baseImage.getImageData(), 0, 0);
             drawImage(overlayImage.getImageData().scaledTo(8, 8), 0, 0);
         }
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((baseImage == null) ? 0 : baseImage.hashCode());
+			result = prime * result + ((overlayImage == null) ? 0 : overlayImage.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			ImageWithOverlayDescriptor other = (ImageWithOverlayDescriptor) obj;
+			if (baseImage == null) {
+				if (other.baseImage != null)
+					return false;
+			} else if (!baseImage.equals(other.baseImage)) {
+				return false;
+			}
+			if (overlayImage == null) {
+				if (other.overlayImage != null)
+					return false;
+			} else if (!overlayImage.equals(other.overlayImage)) {
+				return false;
+			}
+			return true;
+		}
+        
     }
 
     private CnAImageProvider() {
