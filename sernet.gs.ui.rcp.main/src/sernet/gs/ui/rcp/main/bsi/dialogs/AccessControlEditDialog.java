@@ -64,6 +64,7 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.swt.SWTResourceManager;
 import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
@@ -511,8 +512,8 @@ public class AccessControlEditDialog extends TitleAreaDialog {
         int[] selectionIndices = viewer.getTable().getSelectionIndices();
         for (int i : selectionIndices) {
             Permission p = (Permission) viewer.getElementAt(i);
-            viewer.getTable().getItem(i).setBackground(new Color(Display.getCurrent(), 230, 230, 230));
-            viewer.getTable().getItem(i).setForeground(new Color(Display.getCurrent(), 180, 180, 180));
+            viewer.getTable().getItem(i).setBackground(SWTResourceManager.getColor(230, 230, 230));
+            viewer.getTable().getItem(i).setForeground(SWTResourceManager.getColor(180, 180, 180));
             viewer.getTable().getItem(i).setImage(1, getYesNoImage(p.isReadAllowed(), false));
             viewer.getTable().getItem(i).setImage(2, getYesNoImage(p.isWriteAllowed(), false));
         }

@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.service.VeriniceCharset;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
+import sernet.hui.swt.SWTResourceManager;
 
 public class EntitySelectionPage extends WizardPage{
 	private static final String[] FILTEREXTEND = { "*.csv", "*.CSV", "*.*"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -312,7 +313,7 @@ public class EntitySelectionPage extends WizardPage{
         final int red = 200;
         final int green = 0;
         final int blue = green;
-        warningLabel.setForeground(new Color(getShell().getDisplay(),red,green,blue));
+        warningLabel.setForeground(SWTResourceManager.getColor(red,green,blue));
         warningLabel.setText(message);
     }
 }

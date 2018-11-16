@@ -26,6 +26,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
+import sernet.hui.swt.SWTResourceManager;
+
 /**
  * CompositeCreator contains static methods to create composite.
  * 
@@ -90,7 +92,7 @@ public final class CompositeCreator {
         gridData.grabExcessVerticalSpace = true;
         container.setLayoutData(gridData);
         container.setSashWidth(WIDTH_4);
-        container.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GRAY));
+        container.setBackground(SWTResourceManager.getColor(SWT.COLOR_GRAY));
         return container;
     }
     

@@ -36,6 +36,7 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
+import sernet.hui.swt.SWTResourceManager;
 import sernet.snutils.AssertException;
 
 /**
@@ -71,8 +72,7 @@ public class NumericSelectionControl extends AbstractHuiControl {
             return combo;
 	}
 
-	private static final Color GREY = new Color(Display.getDefault(), 240, 240,
-			240);
+	private static final Color GREY = SWTResourceManager.getColor(240, 240, 240);
 
 	/**
 	 * Constructor for DropDownBox.

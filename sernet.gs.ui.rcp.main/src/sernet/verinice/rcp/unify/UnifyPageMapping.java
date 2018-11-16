@@ -37,14 +37,13 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 
+import sernet.hui.swt.SWTResourceManager;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementComparator;
 import sernet.verinice.model.common.ITitleAdaptor;
@@ -85,9 +84,8 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
         final int cnmGreen = 210;
         final int cnmBlue = cnmGreen;
         setTitle(Messages.UnifyPageMapping_0);   
-        Device device = Display.getCurrent();
-        colorDifferentTitle = new Color(device, rgbMax, rgbMax, dtBlue);
-        colorNoMapping = new Color(device, rgbMax, cnmGreen, cnmBlue);
+        colorDifferentTitle = SWTResourceManager.getColor(rgbMax, rgbMax, dtBlue);
+        colorNoMapping = SWTResourceManager.getColor(rgbMax, cnmGreen, cnmBlue);
     }
 
     /* (non-Javadoc)

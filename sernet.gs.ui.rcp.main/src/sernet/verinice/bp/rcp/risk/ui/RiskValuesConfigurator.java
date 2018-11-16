@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.hui.swt.SWTResourceManager;
 import sernet.verinice.model.bp.risk.Risk;
 
 public final class RiskValuesConfigurator extends StackConfigurator<Risk> {
@@ -79,7 +80,7 @@ public final class RiskValuesConfigurator extends StackConfigurator<Risk> {
         riskColor.setLayoutData(new RowData(COLOR_BUTTON_WIDTH, SWT.DEFAULT));
         RGB rgb = ColorConverter.toRGB(risk.getColor());
         if (rgb != null) {
-            riskColor.setBackground(new org.eclipse.swt.graphics.Color(getDisplay(), rgb));
+            riskColor.setBackground(SWTResourceManager.getColor(rgb));
         }
         riskColor.addMouseListener(new MouseAdapter() {
             @Override
@@ -93,8 +94,7 @@ public final class RiskValuesConfigurator extends StackConfigurator<Risk> {
                 if (!Objects.equals(rgb, newColor)) {
                     updateValue(risk.getId(), valueFromEditorState -> valueFromEditorState
                             .withColor(ColorConverter.toRiskColor(newColor)));
-                    riskColor.setBackground(
-                            new org.eclipse.swt.graphics.Color(getDisplay(), newColor));
+                    riskColor.setBackground(SWTResourceManager.getColor(newColor));
                 }
             }
         });

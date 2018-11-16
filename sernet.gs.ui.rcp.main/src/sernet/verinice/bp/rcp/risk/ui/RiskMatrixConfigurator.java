@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 
 import sernet.gs.ui.rcp.main.common.model.CnATreeElementScopeUtils;
+import sernet.hui.swt.SWTResourceManager;
 import sernet.verinice.model.bp.elements.ItNetwork;
 import sernet.verinice.model.bp.risk.Frequency;
 import sernet.verinice.model.bp.risk.Impact;
@@ -180,15 +181,14 @@ public class RiskMatrixConfigurator extends Composite {
         Color textColor = null;
         if (risk == null) {
             text = sernet.hui.swt.widgets.Messages.getString("SingleSelectDummyValue");
-            textColor = new Color(selector.getDisplay(), BLACK);
+            textColor = SWTResourceManager.getColor(BLACK);
         } else {
             text = cutLabel(risk.getLabel(), selector,
                     SELECTOR_SIZE - StackConfigurator.ELEMENT_MARGINS);
             RGB riskColor = ColorConverter.toRGB(risk.getColor());
             if (riskColor != null) {
-                backgroundColor = new Color(selector.getDisplay(), riskColor);
-                textColor = new Color(selector.getDisplay(),
-                        determineOptimalTextColor(riskColor, WHITE, BLACK));
+                backgroundColor = SWTResourceManager.getColor(riskColor);
+                textColor = SWTResourceManager.getColor(determineOptimalTextColor(riskColor, WHITE, BLACK));
             }
         }
 
