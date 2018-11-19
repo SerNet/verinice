@@ -29,10 +29,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -55,15 +57,26 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyGroup;
+import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
+import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.model.bp.elements.BpRequirement;
+import sernet.verinice.model.bp.elements.BpThreat;
+import sernet.verinice.model.bp.elements.Safeguard;
+import sernet.verinice.model.bp.risk.Frequency;
+import sernet.verinice.model.bp.risk.Impact;
+import sernet.verinice.model.bp.risk.Risk;
+import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
+import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.bp.risk.RiskService;
 import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.SaveElement;
@@ -249,7 +262,7 @@ public class EditBean {
         if (isVisible(huiType)) {
             String id = huiType.getId();
             String value = entity.getRawPropertyValue(id);
-            HuiProperty prop = new HuiProperty(huiType, id, value);
+            HuiProperty prop = new HuiProperty(adaptTypeIfRiskProperty(huiType), id, value);
             huiProperties.add(prop);
             if (getNoLabelTypeList().contains(id)) {
                 prop.setShowLabel(false);
@@ -258,6 +271,70 @@ public class EditBean {
                 LOG.debug("prop: " + id + " (" + huiType.getInputName() + ") - " + value);
             }
         }
+    }
+
+    private PropertyType adaptTypeIfRiskProperty(PropertyType propertyType) {
+        String propertyId = propertyType.getId();
+        switch (propertyId) {
+        case BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY:
+            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues(true));
+        case BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT:
+            return new OverrideOptionsPropertyType(propertyType, getImpactValues(true));
+        case Safeguard.PROP_STRENGTH_FREQUENCY:
+            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues(true));
+        case Safeguard.PROP_STRENGTH_IMPACT:
+            return new OverrideOptionsPropertyType(propertyType, getImpactValues(true));
+        case BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues(false));
+        case BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getImpactValues(false));
+        case BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getRiskValues());
+        case BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getFrequencyValues(false));
+        case BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getImpactValues(false));
+        case BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS:
+            return new OverrideOptionsPropertyType(propertyType, getRiskValues());
+        default:
+            return propertyType;
+        }
+    }
+
+    private List<IMLPropertyOption> getRiskValues() {
+        RiskConfiguration riskConfiguration = getRiskConfiguration();
+        List<Risk> risks = riskConfiguration.getRisks();
+        return risks.stream().map(risk -> new PropertyOption(risk.getId(), risk.getLabel()))
+                .collect(Collectors.toList());
+    }
+
+    private List<IMLPropertyOption> getImpactValues(boolean excludeLastValue) {
+        RiskConfiguration riskConfiguration = getRiskConfiguration();
+        List<Impact> impactValues = riskConfiguration.getImpacts();
+        Stream<Impact> stream = impactValues.stream();
+        if (excludeLastValue) {
+            stream = stream.limit(impactValues.size() - 1l);
+        }
+        return stream.map(impact -> new PropertyOption(impact.getId(), impact.getLabel()))
+                .collect(Collectors.toList());
+    }
+
+    private List<IMLPropertyOption> getFrequencyValues(boolean excludeMaximumValue) {
+        RiskConfiguration riskConfiguration = getRiskConfiguration();
+        List<Frequency> frequencyValues = riskConfiguration.getFrequencies();
+        Stream<Frequency> stream = frequencyValues.stream();
+        if (excludeMaximumValue) {
+            stream = stream.limit(riskConfiguration.getFrequencies().size() - 1l);
+        }
+        return stream.map(frequency -> new PropertyOption(frequency.getId(), frequency.getLabel()))
+                .collect(Collectors.toList());
+    }
+
+    private RiskConfiguration getRiskConfiguration() {
+        Integer scopeId = element.getScopeId();
+        RiskConfiguration riskConfiguration = getRiskService().findRiskConfiguration(scopeId);
+        return Optional.ofNullable(riskConfiguration)
+                .orElseGet(DefaultRiskConfiguration::getInstance);
     }
 
     private void checkMassnahmenUmsetzung() {
@@ -806,6 +883,10 @@ public class EditBean {
 
     private IConfigurationService getConfigurationService() {
         return (IConfigurationService) VeriniceContext.get(VeriniceContext.CONFIGURATION_SERVICE);
+    }
+
+    private RiskService getRiskService() {
+        return (RiskService) VeriniceContext.get(VeriniceContext.ITBP_RISK_SERVICE);
     }
 
     public MassnahmenUmsetzung getMassnahmenUmsetzung() {
