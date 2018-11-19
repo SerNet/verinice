@@ -101,7 +101,10 @@ public class RiskConfigurationUtil {
     }
 
     public boolean isDirty() {
-        return !editorState.deepEquals(itNetwork.getRiskConfiguration());
+        // The default configuration is not to be saved and always clean, by
+        // definition.
+        return editorState != DefaultRiskConfiguration.getInstance()
+                && !editorState.deepEquals(itNetwork.getRiskConfiguration());
     }
 
     public ScrolledComposite createRiskMatrixPage(Composite parent) {
