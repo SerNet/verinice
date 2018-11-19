@@ -17,12 +17,16 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp.risk.ui;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
-import java.util.function.Function;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.FillLayout;
@@ -31,7 +35,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
-import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
+import sernet.verinice.model.bp.risk.RiskPropertyValue;
 
 /**
  * A Composite displaying a list of editable rows of which only the last can be
@@ -39,7 +43,7 @@ import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
  *
  * Rows which are present on construction are watched for deletion.
  */
-public abstract class StackConfigurator<T> extends Composite {
+public abstract class StackConfigurator<T extends RiskPropertyValue> extends Composite {
     public static final int ELEMENT_SPACING = 10;
     public static final int ELEMENT_MARGINS = (int) (ELEMENT_SPACING * 2.5);
     public static final int LABEL_WIDTH = 180;
@@ -48,16 +52,18 @@ public abstract class StackConfigurator<T> extends Composite {
     private int maxValues;
     private int numberOfNewElements;
     private Stack<T> deletedRows;
-    private List<T> rowData;
-    protected RiskConfiguration riskConfiguration;
-    private final Function<RiskConfiguration, List<T>> valueExtractor;
+    protected Map<String, T> editorState;
+    private final Runnable fireProperyChange;
 
-    public StackConfigurator(Composite parent, int maxValues,
-            Function<RiskConfiguration, List<T>> valuesExtractor) {
+    public StackConfigurator(Composite parent, int maxValues, List<T> values,
+            Runnable fireProperyChange) {
         super(parent, SWT.NONE);
         this.maxValues = maxValues;
-        this.valueExtractor = valuesExtractor;
+        this.editorState = new LinkedHashMap<>(values.size());
+        values.stream().forEach(value -> editorState.put(value.getId(), value));
+        this.fireProperyChange = fireProperyChange;
         reset();
+        refresh();
     }
 
     /**
@@ -73,25 +79,19 @@ public abstract class StackConfigurator<T> extends Composite {
         return deletedRows;
     }
 
-    public void setRiskConfiguration(RiskConfiguration riskConfiguration) {
-        this.riskConfiguration = riskConfiguration;
-        rowData = valueExtractor.apply(riskConfiguration);
-        refresh();
+    public List<T> getEditorState() {
+        return new ArrayList<>(editorState.values());
     }
 
-    private void refresh() {
+    public void refresh() {
         if (pane != null) {
             pane.dispose();
         }
-        draw();
-        redraw();
-    }
-
-    private void draw() {
         setLayout(new GridLayout(1, true));
         pane = new Composite(this, SWT.NONE);
         pane.setLayout(new RowLayout(SWT.VERTICAL));
 
+        List<T> rowData = getEditorState();
         for (int i = 0; i < rowData.size(); i++) {
             Composite rowComposite = new Composite(pane, SWT.NONE);
             rowComposite.setLayout(RowLayoutFactory.createFrom(new RowLayout(SWT.HORIZONTAL))
@@ -105,23 +105,32 @@ public abstract class StackConfigurator<T> extends Composite {
                     .spacing(ELEMENT_SPACING).create());
 
             addRow(dataComposite, rowData.get(i));
-            if (i == rowData.size() - 1) {
-                if (rowData.size() > 1) {
+            if (i == editorState.size() - 1) {
+                if (editorState.size() > 1) {
                     addRemoveButton(buttonComposite);
                 }
-                if (rowData.size() < maxValues) {
+                if (editorState.size() < maxValues) {
                     addAddButton(buttonComposite);
                 }
             }
         }
         pane.requestLayout();
+        redraw();
+        pack(true);
+        if (getParent() instanceof ScrolledComposite) {
+            ((ScrolledComposite) getParent()).setMinSize(getClientArea().width,
+                    getClientArea().height);
+        }
     }
 
     protected abstract void addRow(Composite parent, T rowData);
 
-    protected abstract void onAddClicked();
+    protected abstract @NonNull T generateNewData(int index);
 
-    protected abstract void onRemoveClicked();
+    protected void updateValue(@NonNull T value) {
+        editorState.replace(value.getId(), value);
+        fireProperyChange.run();
+    }
 
     private void addAddButton(Composite parent) {
         Button add = new Button(parent, SWT.NONE);
@@ -130,7 +139,10 @@ public abstract class StackConfigurator<T> extends Composite {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 numberOfNewElements++;
-                onAddClicked();
+                T newValue = generateNewData(editorState.size() + 1);
+                editorState.put(newValue.getId(), newValue);
+                refresh();
+                fireProperyChange.run();
             }
         });
     }
@@ -141,12 +153,16 @@ public abstract class StackConfigurator<T> extends Composite {
         remove.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
+                String lastKey = (String) editorState.keySet().toArray()[editorState.values().size()
+                        - 1];
+                T lastElement = editorState.remove(lastKey);
                 if (numberOfNewElements == 0) {
-                    deletedRows.push(rowData.get(rowData.size() - 1));
+                    deletedRows.push(lastElement);
                 } else {
                     numberOfNewElements--;
                 }
-                onRemoveClicked();
+                refresh();
+                fireProperyChange.run();
             }
         });
     }

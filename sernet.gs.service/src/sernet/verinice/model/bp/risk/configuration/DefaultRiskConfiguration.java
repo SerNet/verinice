@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import sernet.verinice.model.bp.risk.DefaultFrequency;
 import sernet.verinice.model.bp.risk.DefaultImpact;
 import sernet.verinice.model.bp.risk.DefaultRisk;
@@ -69,9 +71,9 @@ public class DefaultRiskConfiguration extends RiskConfiguration {
         super(frequencyValues, impactValues, risks, configuration);
     }
 
-    private static final DefaultRiskConfiguration INSTANCE;
+    private static final @NonNull DefaultRiskConfiguration INSTANCE;
 
-    public static DefaultRiskConfiguration getInstance() {
+    public static @NonNull DefaultRiskConfiguration getInstance() {
         return INSTANCE;
     }
 
