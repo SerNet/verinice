@@ -29,6 +29,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -76,11 +77,13 @@ import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.bp.risk.RiskDeductionUtil;
 import sernet.verinice.service.bp.risk.RiskService;
 import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.SaveElement;
 import sernet.verinice.service.parser.GSScraperUtil;
+import sernet.verinice.web.HuiProperty.ValueChangeListener;
 
 /**
  * JSF managed bean which provides data for the element editor in the web
@@ -154,6 +157,10 @@ public class EditBean {
     private void doInit(ITask task) throws CommandException {
         RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
         ri.setPermissions(true);
+        if (BpThreat.TYPE_ID.equals(typeId)) {
+            ri.setLinksUp(true);
+            ri.setLinksUpProperties(true);
+        }
         LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(getTypeId(), getUuid(),
                 ri);
         command = getCommandService().executeCommand(command);
@@ -196,7 +203,14 @@ public class EditBean {
 
         doInitPropertyGroups(entity);
         doInitGeneralProperties(entity);
-        initDependencyBehaviour();
+        Map<String, HuiProperty> key2HuiProperty = getPropertyKey2HuiPropertyMap();
+
+        initDependencyBehaviour(key2HuiProperty);
+
+        if (element instanceof BpThreat) {
+            initRiskComputations((BpThreat) element, key2HuiProperty);
+        }
+
     }
 
     protected void doInitPropertyGroups(Entity entity) {
@@ -230,8 +244,7 @@ public class EditBean {
         return properties;
     }
 
-    private void initDependencyBehaviour() {
-        Map<String, HuiProperty> key2HuiProperty = getPropertyKey2HuiPropertyMap();
+    private void initDependencyBehaviour(Map<String, HuiProperty> key2HuiProperty) {
         for (HuiProperty huiProperty : key2HuiProperty.values()) {
             for (DependsType dependsType : huiProperty.getType().getDependencies()) {
                 HuiProperty dependsOn = key2HuiProperty.get(dependsType.getPropertyId());
@@ -240,6 +253,14 @@ public class EditBean {
                 dependsOn.fireChangeListeners();
             }
         }
+    }
+
+    private void initRiskComputations(BpThreat threat, Map<String, HuiProperty> key2HuiProperty) {
+        RiskValueChangeListener listener = new RiskValueChangeListener(threat, key2HuiProperty);
+        key2HuiProperty.get(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS)
+                .addValueChangeListener(listener);
+        key2HuiProperty.get(BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS)
+                .addValueChangeListener(listener);
     }
 
     private Map<String, HuiProperty> getPropertyKey2HuiPropertyMap() {
@@ -1003,6 +1024,106 @@ public class EditBean {
             } else {
                 return dependsOnValue.equals(dependsType.getPropertyValue());
             }
+        }
+    }
+
+    private final class RiskValueChangeListener implements ValueChangeListener {
+
+        private static final long serialVersionUID = -3623879117292043547L;
+        private final Map<String, HuiProperty> key2HuiProperty;
+        private final BpThreat threat;
+        private final String frequencyWithoutAdditionalSafeguardsInitial;
+        private final String impactWithoutAdditionalSafeguardsInitial;
+        private final String riskWithoutAdditionalSafeguardsInitial;
+        private final String frequencyWithAdditionalSafeguardsInitial;
+        private final String impactyWithAdditionalSafeguardsInitial;
+        private final String riskWithAdditionalSafeguardsInitial;
+
+        public RiskValueChangeListener(BpThreat threat, Map<String, HuiProperty> key2HuiProperty) {
+            this.key2HuiProperty = key2HuiProperty;
+            this.threat = threat;
+
+            frequencyWithoutAdditionalSafeguardsInitial = threat
+                    .getFrequencyWithoutAdditionalSafeguards();
+            impactWithoutAdditionalSafeguardsInitial = threat
+                    .getImpactWithoutAdditionalSafeguards();
+            riskWithoutAdditionalSafeguardsInitial = threat.getRiskWithoutAdditionalSafeguards();
+            frequencyWithAdditionalSafeguardsInitial = threat
+                    .getFrequencyWithAdditionalSafeguards();
+            impactyWithAdditionalSafeguardsInitial = threat.getImpactWithAdditionalSafeguards();
+            riskWithAdditionalSafeguardsInitial = threat.getRiskWithAdditionalSafeguards();
+
+        }
+
+        @Override
+        public void processChangedValue(HuiProperty huiProperty) {
+            String propertyName = huiProperty.getKey();
+            String newValue = huiProperty.getValue();
+
+            if (BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS.equals(propertyName)) {
+                threat.setFrequencyWithoutAdditionalSafeguards(newValue);
+                threat.setImpactWithoutAdditionalSafeguards(key2HuiProperty
+                        .get(BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS).getValue());
+            } else if (BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS.equals(propertyName)) {
+                threat.setFrequencyWithoutAdditionalSafeguards(key2HuiProperty
+                        .get(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS).getValue());
+                threat.setImpactWithoutAdditionalSafeguards(newValue);
+            }
+            RiskDeductionUtil.deduceRisk(threat);
+            String frequencyWithoutAdditionalSafeguardsNew = threat
+                    .getFrequencyWithoutAdditionalSafeguards();
+            String impactWithoutAdditionalSafeguardsNew = threat
+                    .getImpactWithoutAdditionalSafeguards();
+            String riskWithoutAdditionalSafeguardsNew = threat.getRiskWithoutAdditionalSafeguards();
+            String frequencyWithAdditionalSafeguardsNew = threat
+                    .getFrequencyWithAdditionalSafeguards();
+            String impactWithAdditionalSafeguardsNew = threat.getImpactWithAdditionalSafeguards();
+            String riskWithAdditionalSafeguardsNew = threat.getRiskWithAdditionalSafeguards();
+
+            threat.setFrequencyWithoutAdditionalSafeguards(
+                    frequencyWithoutAdditionalSafeguardsInitial);
+            threat.setImpactWithoutAdditionalSafeguards(impactWithoutAdditionalSafeguardsInitial);
+            RiskDeductionUtil.deduceRisk(threat);
+
+            recordNewValueIfChanged(BpThreat.PROP_FREQUENCY_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    frequencyWithoutAdditionalSafeguardsInitial,
+                    frequencyWithoutAdditionalSafeguardsNew);
+            recordNewValueIfChanged(BpThreat.PROP_IMPACT_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    impactWithoutAdditionalSafeguardsInitial, impactWithoutAdditionalSafeguardsNew);
+            recordNewValueIfChanged(BpThreat.PROP_RISK_WITHOUT_ADDITIONAL_SAFEGUARDS,
+                    riskWithoutAdditionalSafeguardsInitial, riskWithoutAdditionalSafeguardsNew);
+            recordNewValueIfChanged(BpThreat.PROP_FREQUENCY_WITH_ADDITIONAL_SAFEGUARDS,
+                    frequencyWithAdditionalSafeguardsInitial, frequencyWithAdditionalSafeguardsNew);
+            recordNewValueIfChanged(BpThreat.PROP_IMPACT_WITH_ADDITIONAL_SAFEGUARDS,
+                    impactyWithAdditionalSafeguardsInitial, impactWithAdditionalSafeguardsNew);
+            recordNewValueIfChanged(BpThreat.PROP_RISK_WITH_ADDITIONAL_SAFEGUARDS,
+                    riskWithAdditionalSafeguardsInitial, riskWithAdditionalSafeguardsNew);
+
+        }
+
+        private void recordNewValueIfChanged(String propertyId, String initialValue,
+                String newValue) {
+            HuiProperty huiProperty = key2HuiProperty.get(propertyId);
+            String oldValue = emptyStringToNull(huiProperty.getValue());
+            if (!Objects.equals(oldValue, newValue)) {
+                huiProperty.setValue(newValue);
+            }
+            if (isTaskEditorContext()) {
+                boolean valueChangedFromInitial = !Objects.equals(initialValue, newValue);
+
+                if (valueChangedFromInitial) {
+                    changedElementProperties.put(propertyId, newValue);
+                } else {
+                    changedElementProperties.remove(propertyId);
+                }
+            }
+        }
+
+        private String emptyStringToNull(String s) {
+            if (s == null || s.length() == 0) {
+                return null;
+            }
+            return s;
         }
     }
 }
