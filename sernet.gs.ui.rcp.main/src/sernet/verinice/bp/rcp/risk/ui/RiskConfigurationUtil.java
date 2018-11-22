@@ -54,7 +54,7 @@ public class RiskConfigurationUtil {
     private RiskMatrixConfigurator riskMatrixConfigurator;
 
     private ItNetwork itNetwork;
-    private RiskConfiguration currentRiskConfiguration;
+    private RiskConfiguration editorState;
     private RiskService riskService;
 
     private final Consumer<RiskConfiguration> configurationUpdateListener = this::updateConfiguration;
@@ -64,9 +64,9 @@ public class RiskConfigurationUtil {
             RiskConfigurationChangeListener riskChangeListner) {
         super();
         this.itNetwork = itNetwork;
-        currentRiskConfiguration = itNetwork.getRiskConfiguration();
-        if (currentRiskConfiguration == null) {
-            currentRiskConfiguration = DefaultRiskConfiguration.getInstance();
+        editorState = itNetwork.getRiskConfiguration();
+        if (editorState == null) {
+            editorState = DefaultRiskConfiguration.getInstance();
         }
         this.riskChangeListener = riskChangeListner;
     }
@@ -77,9 +77,9 @@ public class RiskConfigurationUtil {
     }
 
     public void doSave() {
-        itNetwork.setRiskConfiguration(currentRiskConfiguration);
+        itNetwork.setRiskConfiguration(editorState);
         RiskConfigurationUpdateContext updateContext = new RiskConfigurationUpdateContext(
-                itNetwork.getUuid(), currentRiskConfiguration);
+                itNetwork.getUuid(), editorState);
         updateContext.setDeletedFrequencies(frequenciesConfigurator.getDeleted());
         updateContext.setDeletedImpacts(impactConfigurator.getDeleted());
         updateContext.setDeletedRisks(riskValueConfigurator.getDeleted());
@@ -93,13 +93,13 @@ public class RiskConfigurationUtil {
     }
 
     public boolean isDirty() {
-        return !currentRiskConfiguration.deepEquals(itNetwork.getRiskConfiguration());
+        return !editorState.deepEquals(itNetwork.getRiskConfiguration());
     }
 
     public ScrolledComposite createRiskMatrixPage(Composite parent) {
         scrolledMatrixTab = createScrollableComposite(parent);
-        riskMatrixConfigurator = new RiskMatrixConfigurator(scrolledMatrixTab,
-                currentRiskConfiguration, configurationUpdateListener);
+        riskMatrixConfigurator = new RiskMatrixConfigurator(scrolledMatrixTab, editorState,
+                configurationUpdateListener);
         scrolledMatrixTab.setContent(riskMatrixConfigurator);
         return scrolledMatrixTab;
     }
@@ -108,7 +108,7 @@ public class RiskConfigurationUtil {
         scrolledRiskValueTab = createScrollableComposite(parent);
         riskValueConfigurator = new RiskValuesConfigurator(scrolledRiskValueTab,
                 configurationUpdateListener);
-        riskValueConfigurator.setRiskConfiguration(currentRiskConfiguration);
+        riskValueConfigurator.setRiskConfiguration(editorState);
         scrolledRiskValueTab.setContent(riskValueConfigurator);
         return scrolledRiskValueTab;
     }
@@ -116,7 +116,7 @@ public class RiskConfigurationUtil {
     public ScrolledComposite createRiskImpact(Composite parent) {
         scrolledImpactTab = createScrollableComposite(parent);
         impactConfigurator = new ImpactConfigurator(scrolledImpactTab, configurationUpdateListener);
-        impactConfigurator.setRiskConfiguration(currentRiskConfiguration);
+        impactConfigurator.setRiskConfiguration(editorState);
         scrolledImpactTab.setContent(impactConfigurator);
         return scrolledImpactTab;
     }
@@ -125,13 +125,13 @@ public class RiskConfigurationUtil {
         scrolledFrequenciesTab = createScrollableComposite(parent);
         frequenciesConfigurator = new FrequencyConfigurator(scrolledFrequenciesTab,
                 configurationUpdateListener);
-        frequenciesConfigurator.setRiskConfiguration(currentRiskConfiguration);
+        frequenciesConfigurator.setRiskConfiguration(editorState);
         scrolledFrequenciesTab.setContent(frequenciesConfigurator);
         return scrolledFrequenciesTab;
     }
 
     public void updateConfiguration() {
-        updateConfiguration(currentRiskConfiguration);
+        updateConfiguration(editorState);
     }
 
     public static boolean checkRights() {
@@ -150,15 +150,15 @@ public class RiskConfigurationUtil {
     }
 
     private void updateConfiguration(RiskConfiguration riskConfiguration) {
-        currentRiskConfiguration = riskConfiguration;
+        editorState = riskConfiguration;
 
-        riskValueConfigurator.setRiskConfiguration(currentRiskConfiguration);
-        frequenciesConfigurator.setRiskConfiguration(currentRiskConfiguration);
-        impactConfigurator.setRiskConfiguration(currentRiskConfiguration);
+        riskValueConfigurator.setRiskConfiguration(editorState);
+        frequenciesConfigurator.setRiskConfiguration(editorState);
+        impactConfigurator.setRiskConfiguration(editorState);
 
         // update composite size to fit the scroll view
-        riskMatrixConfigurator = new RiskMatrixConfigurator(scrolledMatrixTab,
-                currentRiskConfiguration, configurationUpdateListener);
+        riskMatrixConfigurator = new RiskMatrixConfigurator(scrolledMatrixTab, editorState,
+                configurationUpdateListener);
         scrolledMatrixTab.setContent(riskMatrixConfigurator);
         riskMatrixConfigurator.pack(true);
         scrolledMatrixTab.setMinSize(riskMatrixConfigurator.getClientArea().width,
