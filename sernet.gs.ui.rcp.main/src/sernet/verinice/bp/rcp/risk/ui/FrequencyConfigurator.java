@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp.risk.ui;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -37,12 +36,10 @@ final class FrequencyConfigurator extends StackConfigurator<Frequency> {
 
     private static final int MAX_NUMBER_OF_FREQUENCIES = 10;
 
-    private RiskConfiguration riskConfiguration;
     private Consumer<RiskConfiguration> updateListener;
 
-    FrequencyConfigurator(Composite parent,
-            Consumer<RiskConfiguration> updateListener) {
-        super(parent, MAX_NUMBER_OF_FREQUENCIES);
+    FrequencyConfigurator(Composite parent, Consumer<RiskConfiguration> updateListener) {
+        super(parent, MAX_NUMBER_OF_FREQUENCIES, RiskConfiguration::getFrequencies);
         this.updateListener = updateListener;
     }
 
@@ -100,16 +97,4 @@ final class FrequencyConfigurator extends StackConfigurator<Frequency> {
         updateListener.accept(riskConfiguration);
     }
 
-    /**
-     * Set the new risk configuration an refreshes the risk list composite.s
-     */
-    public void setRiskConfiguration(RiskConfiguration riskConfiguration) {
-        this.riskConfiguration = riskConfiguration;
-        super.refresh(this.riskConfiguration.getFrequencies());
-    }
-
-    @Override
-    protected void refresh(List<Frequency> frequencies) {
-        throw new UnsupportedOperationException("call setRiskConfiguration instead");
-    }
 }

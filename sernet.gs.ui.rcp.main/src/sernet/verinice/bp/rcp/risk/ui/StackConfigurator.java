@@ -19,6 +19,7 @@ package sernet.verinice.bp.rcp.risk.ui;
 
 import java.util.List;
 import java.util.Stack;
+import java.util.function.Function;
 
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.swt.SWT;
@@ -29,6 +30,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+
+import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 
 /**
  * A Composite displaying a list of editable rows of which only the last can be
@@ -46,10 +49,14 @@ public abstract class StackConfigurator<T> extends Composite {
     private int numberOfNewElements;
     private Stack<T> deletedRows;
     private List<T> rowData;
+    protected RiskConfiguration riskConfiguration;
+    private final Function<RiskConfiguration, List<T>> valueExtractor;
 
-    public StackConfigurator(Composite parent, int maxValues) {
+    public StackConfigurator(Composite parent, int maxValues,
+            Function<RiskConfiguration, List<T>> valuesExtractor) {
         super(parent, SWT.NONE);
         this.maxValues = maxValues;
+        this.valueExtractor = valuesExtractor;
         reset();
     }
 
@@ -66,11 +73,13 @@ public abstract class StackConfigurator<T> extends Composite {
         return deletedRows;
     }
 
-    /**
-     * Inherited classes should call this when their data set has changes.
-     */
-    protected void refresh(List<T> data) {
-        rowData = data;
+    public void setRiskConfiguration(RiskConfiguration riskConfiguration) {
+        this.riskConfiguration = riskConfiguration;
+        rowData = valueExtractor.apply(riskConfiguration);
+        refresh();
+    }
+
+    private void refresh() {
         if (pane != null) {
             pane.dispose();
         }

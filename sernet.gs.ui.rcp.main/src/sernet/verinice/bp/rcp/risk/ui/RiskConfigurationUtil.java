@@ -18,6 +18,7 @@
 package sernet.verinice.bp.rcp.risk.ui;
 
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -28,6 +29,7 @@ import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.risk.Frequency;
 import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
@@ -50,7 +52,7 @@ public class RiskConfigurationUtil {
 
     private ImpactConfigurator impactConfigurator;
     private RiskValuesConfigurator riskValueConfigurator;
-    private FrequencyConfigurator frequenciesConfigurator;
+    private StackConfigurator<Frequency> frequenciesConfigurator;
     private RiskMatrixConfigurator riskMatrixConfigurator;
 
     private ItNetwork itNetwork;
@@ -92,9 +94,8 @@ public class RiskConfigurationUtil {
         RiskConfigurationUpdateResult updateResult = getRiskService()
                 .updateRiskConfiguration(updateContext);
         RiskConfigurationUpdateResultDialog.openUpdateResultDialog(updateResult);
-        impactConfigurator.reset();
-        frequenciesConfigurator.reset();
-        riskValueConfigurator.reset();
+        Stream.of(impactConfigurator, frequenciesConfigurator, riskValueConfigurator)
+                .forEach(StackConfigurator::reset);
         riskChangeListener.riskConfigurationChanged();
     }
 
@@ -161,9 +162,8 @@ public class RiskConfigurationUtil {
     private void updateConfiguration(RiskConfiguration riskConfiguration) {
         editorState = riskConfiguration;
 
-        riskValueConfigurator.setRiskConfiguration(editorState);
-        frequenciesConfigurator.setRiskConfiguration(editorState);
-        impactConfigurator.setRiskConfiguration(editorState);
+        Stream.of(impactConfigurator, frequenciesConfigurator, riskValueConfigurator)
+                .forEach(configurator -> configurator.setRiskConfiguration(editorState));
 
         // update composite size to fit the scroll view
         riskMatrixConfigurator = new RiskMatrixConfigurator(scrolledMatrixTab, editorState,

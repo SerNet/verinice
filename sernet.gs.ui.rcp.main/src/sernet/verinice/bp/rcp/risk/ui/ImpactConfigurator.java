@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp.risk.ui;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -37,12 +36,10 @@ final class ImpactConfigurator extends StackConfigurator<Impact> {
 
     private static final int MAX_NUMBER_OF_IMPACTS = 10;
 
-    private RiskConfiguration riskConfiguration;
     private Consumer<RiskConfiguration> updateListener;
 
-    ImpactConfigurator(Composite parent,
-            Consumer<RiskConfiguration> updateListener) {
-        super(parent, MAX_NUMBER_OF_IMPACTS);
+    ImpactConfigurator(Composite parent, Consumer<RiskConfiguration> updateListener) {
+        super(parent, MAX_NUMBER_OF_IMPACTS, RiskConfiguration::getImpacts);
         this.updateListener = updateListener;
     }
 
@@ -99,16 +96,4 @@ final class ImpactConfigurator extends StackConfigurator<Impact> {
         updateListener.accept(riskConfiguration);
     }
 
-    /**
-     * Set the new risk configuration an refreshes the risk list composite.s
-     */
-    public void setRiskConfiguration(RiskConfiguration riskConfiguration) {
-        this.riskConfiguration = riskConfiguration;
-        super.refresh(this.riskConfiguration.getImpacts());
-    }
-
-    @Override
-    protected void refresh(List<Impact> impacts) {
-        throw new UnsupportedOperationException("call setRiskConfiguration instead");
-    }
 }

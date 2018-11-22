@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.verinice.bp.rcp.risk.ui;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -44,11 +43,10 @@ final class RiskValuesConfigurator extends StackConfigurator<Risk> {
     private static final int MAX_NUMBER_OF_RISKS = 5;
     private static final int COLOR_BUTTON_WIDTH = 30;
 
-    private RiskConfiguration riskConfiguration;
     private Consumer<RiskConfiguration> updateListener;
 
     RiskValuesConfigurator(Composite parent, Consumer<RiskConfiguration> updateListener) {
-        super(parent, MAX_NUMBER_OF_RISKS);
+        super(parent, MAX_NUMBER_OF_RISKS, RiskConfiguration::getRisks);
         this.updateListener = updateListener;
     }
 
@@ -106,7 +104,8 @@ final class RiskValuesConfigurator extends StackConfigurator<Risk> {
                 Text text = (Text) event.widget;
                 String newDescription = text.getText();
                 if (!Objects.equals(risk.getDescription(), newDescription)) {
-                    updateListener.accept(riskConfiguration.withRiskDescription(risk, newDescription));
+                    updateListener
+                            .accept(riskConfiguration.withRiskDescription(risk, newDescription));
                 }
             }
         });
@@ -124,16 +123,4 @@ final class RiskValuesConfigurator extends StackConfigurator<Risk> {
         updateListener.accept(riskConfiguration);
     }
 
-    /**
-     * Set the new risk configuration and refresh the composite with the list.
-     */
-    public void setRiskConfiguration(RiskConfiguration riskConfiguration) {
-        this.riskConfiguration = riskConfiguration;
-        super.refresh(this.riskConfiguration.getRisks());
-    }
-
-    @Override
-    protected void refresh(List<Risk> risks) {
-        throw new UnsupportedOperationException("call setRiskConfiguration instead"); //$NON-NLS-1$
-    }
 }
