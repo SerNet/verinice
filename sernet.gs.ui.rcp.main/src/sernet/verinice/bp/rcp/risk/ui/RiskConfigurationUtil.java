@@ -87,10 +87,8 @@ public class RiskConfigurationUtil {
         }
         itNetwork.setRiskConfiguration(editorState);
         RiskConfigurationUpdateContext updateContext = new RiskConfigurationUpdateContext(
-                itNetwork.getUuid(), editorState);
-        updateContext.setDeletedFrequencies(frequenciesConfigurator.getDeleted());
-        updateContext.setDeletedImpacts(impactConfigurator.getDeleted());
-        updateContext.setDeletedRisks(riskValueConfigurator.getDeleted());
+                itNetwork.getUuid(), editorState, frequenciesConfigurator.getDeleted(),
+                impactConfigurator.getDeleted(), riskValueConfigurator.getDeleted());
         RiskConfigurationUpdateResult updateResult = getRiskService()
                 .updateRiskConfiguration(updateContext);
         RiskConfigurationUpdateResultDialog.openUpdateResultDialog(updateResult);

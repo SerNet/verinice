@@ -75,35 +75,37 @@ public class RiskServiceImpl implements RiskService {
     public RiskConfigurationUpdateResult updateRiskConfiguration(
             RiskConfigurationUpdateContext updateContext) {
         ServerInitializer.inheritVeriniceContextState();
-        updateItNetwork(updateContext);
-        RiskConfigurationUpdateResult updateResult = updateRiskValuesInThreats(updateContext);
+        ItNetwork itNetwork = getMetaDao().loadItNetwork(updateContext.getUuidItNetwork());
+        Integer itNetworkDBId = itNetwork.getDbId();
+
+        updateItNetwork(itNetwork, updateContext);
+        RiskConfigurationUpdateResult updateResult = updateRiskValuesInThreats(itNetworkDBId,
+                updateContext);
 
         RiskConfigurationUpdateResult updateRequirementsResult = removeRiskValuesFromRequirements(
-                updateContext);
+                itNetworkDBId, updateContext);
         updateResult.setNumberOfChangedRequirements(
                 updateRequirementsResult.getNumberOfChangedRequirements());
 
         RiskConfigurationUpdateResult updateSafeguardsResult = removeRiskValuesFromSafeguards(
-                updateContext);
+                itNetworkDBId, updateContext);
         updateResult.setNumberOfChangedSafeguards(
                 updateSafeguardsResult.getNumberOfChangedSafeguards());
 
         return updateResult;
     }
 
-    private void updateItNetwork(RiskConfigurationUpdateContext updateContext) {
-        ItNetwork itNetwork = getMetaDao().loadItNetwork(updateContext.getUuidItNetwork());
-        updateContext.setItNetwork(itNetwork);
+    private void updateItNetwork(ItNetwork itNetwork,
+            RiskConfigurationUpdateContext updateContext) {
         itNetwork.setRiskConfiguration(updateContext.getRiskConfiguration());
         getMetaDao().updateItNetwork(itNetwork);
         riskConfigurationCache.computeIfPresent(itNetwork.getDbId(),
                 (id, oldValue) -> updateContext.getRiskConfiguration());
     }
 
-    private RiskConfigurationUpdateResult updateRiskValuesInThreats(
+    private RiskConfigurationUpdateResult updateRiskValuesInThreats(Integer scopeId,
             RiskConfigurationUpdateContext updateContext) {
-        Set<BpThreat> threatsFromScope = getMetaDao()
-                .loadThreatsFromScope(updateContext.getItNetwork().getDbId());
+        Set<BpThreat> threatsFromScope = getMetaDao().loadThreatsFromScope(scopeId);
         RiskValueInThreatUpdater riskValueUpdater = new RiskValueInThreatUpdater(updateContext,
                 threatsFromScope);
         riskValueUpdater.setPropertyListDao(propertyListDao);
@@ -111,20 +113,18 @@ public class RiskServiceImpl implements RiskService {
         return riskValueUpdater.getRiskConfigurationUpdateResult();
     }
 
-    private RiskConfigurationUpdateResult removeRiskValuesFromRequirements(
+    private RiskConfigurationUpdateResult removeRiskValuesFromRequirements(Integer scopeId,
             RiskConfigurationUpdateContext updateContext) {
-        Set<CnATreeElement> requirementsFromScope = getMetaDao()
-                .loadRequirementsFromScope(updateContext.getItNetwork().getDbId());
+        Set<CnATreeElement> requirementsFromScope = getMetaDao().loadRequirementsFromScope(scopeId);
         RiskValueRemover riskValueRemover = new RiskValueFromRequirementRemover(updateContext,
                 requirementsFromScope);
         riskValueRemover.execute();
         return riskValueRemover.getRiskConfigurationUpdateResult();
     }
 
-    private RiskConfigurationUpdateResult removeRiskValuesFromSafeguards(
+    private RiskConfigurationUpdateResult removeRiskValuesFromSafeguards(Integer scopeId,
             RiskConfigurationUpdateContext updateContext) {
-        Set<CnATreeElement> safeguardsFromScope = getMetaDao()
-                .loadSafeguardsFromScope(updateContext.getItNetwork().getDbId());
+        Set<CnATreeElement> safeguardsFromScope = getMetaDao().loadSafeguardsFromScope(scopeId);
         RiskValueRemover riskValueRemover = new RiskValueFromSafeguardRemover(updateContext,
                 safeguardsFromScope);
         riskValueRemover.execute();
