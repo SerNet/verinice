@@ -76,7 +76,15 @@ public class RiskConfigurationUtil {
 
     }
 
+    /**
+     * @throws IllegalStateException
+     *             if the state is not dirty
+     * @see #isDirty()
+     */
     public void doSave() {
+        if (!isDirty()) {
+            throw new IllegalStateException("illegal to save a clean state");
+        }
         itNetwork.setRiskConfiguration(editorState);
         RiskConfigurationUpdateContext updateContext = new RiskConfigurationUpdateContext(
                 itNetwork.getUuid(), editorState);
