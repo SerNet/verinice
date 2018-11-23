@@ -20,6 +20,7 @@ package sernet.verinice.bp.rcp.risk.ui;
 import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowData;
@@ -55,9 +56,14 @@ public final class ImpactConfigurator extends StackConfigurator<Impact> {
         Text labelField = new Text(currentItemLeft, SWT.BORDER);
         labelField.setLayoutData(new RowData(LABEL_WIDTH, SWT.DEFAULT));
         labelField.setText(impact.getLabel());
+        final ControlDecoration txtDecorator = createLabelFieldDecoration(labelField,
+                Messages.errorUniqueImpactLabels);
+        updateDecoratorVisibility(txtDecorator, impact.getId(), impact.getLabel());
+
         labelField.addModifyListener(e -> {
             if (e.getSource() instanceof Text) {
                 String newLabel = ((Text) e.getSource()).getText();
+                updateDecoratorVisibility(txtDecorator, impact.getId(), newLabel);
                 updateValue(impact.getId(),
                         valueFromEditorState -> valueFromEditorState.withLabel(newLabel));
             }

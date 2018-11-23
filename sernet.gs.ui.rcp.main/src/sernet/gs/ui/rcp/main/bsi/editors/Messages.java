@@ -39,7 +39,7 @@ public class Messages extends NLS {
     public static String BSIElementEditor_7;
 
     public static String BSIElementEditor_8;
-    
+
     public static String BSIElementEditor_9;
 
     public static String BSIElementEditorMultiPage_page_name_data;
@@ -53,6 +53,10 @@ public class Messages extends NLS {
     public static String BSIElementEditorMultiPage_page_name_risk_matrix;
 
     public static String BSIElementEditorMultiPage_page_name_risk_values;
+
+    public static String BSIElementEditorMultiPage_risk_configuration_invalid;
+
+    public static String BSIElementEditorMultiPage_risk_property_value_labels_not_unique;
 
     public static String EditorFactory_0;
 

@@ -20,6 +20,7 @@ package sernet.verinice.bp.rcp.risk.ui;
 import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.RowData;
@@ -56,9 +57,13 @@ public final class FrequencyConfigurator extends StackConfigurator<Frequency> {
         labelField.setLayoutData(new RowData(LABEL_WIDTH, SWT.DEFAULT));
         labelField.setText(frequency.getLabel());
 
+        final ControlDecoration txtDecorator = createLabelFieldDecoration(labelField,
+                Messages.errorUniqueFrequencyLabels);
+        updateDecoratorVisibility(txtDecorator, frequency.getId(), frequency.getLabel());
         labelField.addModifyListener(e -> {
             if (e.getSource() instanceof Text) {
                 String newLabel = ((Text) e.getSource()).getText();
+                updateDecoratorVisibility(txtDecorator, frequency.getId(), newLabel);
                 updateValue(frequency.getId(),
                         valueFromEditorState -> valueFromEditorState.withLabel(newLabel));
             }

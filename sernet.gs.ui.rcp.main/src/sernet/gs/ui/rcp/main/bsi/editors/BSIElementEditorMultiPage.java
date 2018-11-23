@@ -33,10 +33,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -83,6 +85,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bp.elements.ItNetwork;
+import sernet.verinice.model.bp.risk.RiskPropertyValue;
 import sernet.verinice.model.bp.risk.configuration.DefaultRiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfiguration;
 import sernet.verinice.model.bp.risk.configuration.RiskConfigurationUpdateContext;
@@ -127,6 +130,9 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
     private RiskValuesConfigurator riskValuesConfigurator;
     private RiskMatrixConfigurator riskMatrixConfigurator;
     private int matrixPageIndex = -1;
+    private int riskCategoriesPageIndex = -1;
+    private int impactsPageIndex = -1;
+    private int frequenciesPageIndex = -1;
 
     private IEntityChangedListener modelListener = new IEntityChangedListener() {
 
@@ -369,6 +375,8 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
         try {
             if (cnAElement.isItNetwork()
                     && riskConfigurationState != DefaultRiskConfiguration.getInstance()) {
+                validateAllLabelsUniqueAndNonEmpty(riskConfigurationState);
+
                 ItNetwork itNetwork = (ItNetwork) cnAElement;
                 itNetwork.setRiskConfiguration(riskConfigurationState);
                 RiskConfigurationUpdateContext updateContext = new RiskConfigurationUpdateContext(
@@ -390,10 +398,37 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             this.setTitleToolTip(EditorUtil.getEditorToolTipText(cnAElement));
             setIcon();
             firePropertyChange(IEditorPart.PROP_DIRTY);
+        } catch (RiskPropertyValueLabelNotUniqueException e) {
+            setActivePage(e.indexOfFirstErrorPage);
+            MessageDialog.openError(Display.getCurrent().getActiveShell(),
+                    Messages.BSIElementEditorMultiPage_risk_configuration_invalid,
+                    Messages.BSIElementEditorMultiPage_risk_property_value_labels_not_unique);
+
         } catch (Exception se) {
             // close editor, loosing changes:
             ExceptionUtil.log(se, Messages.BSIElementEditor_5);
         }
+    }
+
+    private void validateAllLabelsUniqueAndNonEmpty(@NonNull RiskConfiguration riskConfiguration)
+            throws RiskPropertyValueLabelNotUniqueException {
+        if (!allLabelsUniqueAndNonEmpty(riskConfiguration.getFrequencies())) {
+            throw new RiskPropertyValueLabelNotUniqueException(frequenciesPageIndex);
+        }
+        if (!allLabelsUniqueAndNonEmpty(riskConfiguration.getImpacts())) {
+            throw new RiskPropertyValueLabelNotUniqueException(impactsPageIndex);
+        }
+        if (!allLabelsUniqueAndNonEmpty(riskConfiguration.getRisks())) {
+            throw new RiskPropertyValueLabelNotUniqueException(riskCategoriesPageIndex);
+        }
+
+    }
+
+    private static boolean allLabelsUniqueAndNonEmpty(
+            List<? extends RiskPropertyValue> riskPropertyValues) {
+        int numberOfUniqueNonEmptyLabels = (int) riskPropertyValues.stream()
+                .map(RiskPropertyValue::getLabel).filter(s -> !s.isEmpty()).distinct().count();
+        return numberOfUniqueNonEmptyLabels == riskPropertyValues.size();
     }
 
     private RiskService getRiskService() {
@@ -607,19 +642,21 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             riskValuesConfigurator = new RiskValuesConfigurator(scrolledComposite,
                     riskConfigurationState.getRisks(), this::riskConfigurationChanged);
             scrolledComposite.setContent(riskValuesConfigurator);
-            addNewPage(scrolledComposite, Messages.BSIElementEditorMultiPage_page_name_risk_values);
+            riskCategoriesPageIndex = addNewPage(scrolledComposite,
+                    Messages.BSIElementEditorMultiPage_page_name_risk_values);
 
             scrolledComposite = createScrollableComposite(getContainer());
             impactsConfigurator = new ImpactConfigurator(scrolledComposite,
                     riskConfigurationState.getImpacts(), this::riskConfigurationChanged);
             scrolledComposite.setContent(impactsConfigurator);
-            addNewPage(scrolledComposite, Messages.BSIElementEditorMultiPage_page_name_risk_impact);
+            impactsPageIndex = addNewPage(scrolledComposite,
+                    Messages.BSIElementEditorMultiPage_page_name_risk_impact);
 
             scrolledComposite = createScrollableComposite(getContainer());
             frequenciesConfigurator = new FrequencyConfigurator(scrolledComposite,
                     riskConfigurationState.getFrequencies(), this::riskConfigurationChanged);
             scrolledComposite.setContent(frequenciesConfigurator);
-            addNewPage(scrolledComposite,
+            frequenciesPageIndex = addNewPage(scrolledComposite,
                     Messages.BSIElementEditorMultiPage_page_name_risk_frequency);
         }
     }
@@ -662,5 +699,17 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
         scrolledComposite.setExpandHorizontal(true);
         scrolledComposite.setExpandVertical(true);
         return scrolledComposite;
+    }
+
+    private static class RiskPropertyValueLabelNotUniqueException extends Exception {
+
+        private static final long serialVersionUID = 4147192368139573141L;
+
+        private final int indexOfFirstErrorPage;
+
+        private RiskPropertyValueLabelNotUniqueException(int indexOfFirstErrorPage) {
+            this.indexOfFirstErrorPage = indexOfFirstErrorPage;
+        }
+
     }
 }

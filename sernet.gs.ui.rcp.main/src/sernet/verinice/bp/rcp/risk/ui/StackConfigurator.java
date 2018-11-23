@@ -18,6 +18,7 @@
 package sernet.verinice.bp.rcp.risk.ui;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,16 +26,21 @@ import java.util.Stack;
 import java.util.function.Function;
 
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Text;
 
 import sernet.verinice.model.bp.risk.RiskPropertyValue;
 
@@ -167,4 +173,43 @@ public abstract class StackConfigurator<T extends RiskPropertyValue> extends Com
             }
         });
     }
+
+    protected static ControlDecoration createLabelFieldDecoration(Text labelField,
+            String descriptionText) {
+        ControlDecoration txtDecorator = new ControlDecoration(labelField, SWT.TOP | SWT.RIGHT);
+        FieldDecoration fieldDecoration = FieldDecorationRegistry.getDefault()
+                .getFieldDecoration(FieldDecorationRegistry.DEC_ERROR);
+        Image img = fieldDecoration.getImage();
+        txtDecorator.setImage(img);
+        txtDecorator.setDescriptionText(descriptionText);
+        return txtDecorator;
+    }
+
+    protected void updateDecoratorVisibility(ControlDecoration txtDecorator, String id,
+            String newLabel) {
+        if (!isUniqueAndNonEmpty(id, newLabel, editorState.values())) {
+            txtDecorator.show();
+        } else {
+            txtDecorator.hide();
+        }
+
+    }
+
+    private static boolean isUniqueAndNonEmpty(String id, String label,
+            Collection<? extends RiskPropertyValue> existingPropertyValues) {
+        if (label.isEmpty()) {
+            return false;
+        }
+        for (RiskPropertyValue existingPropertyValue : existingPropertyValues) {
+            if (existingPropertyValue.getId().equals(id)) {
+                continue;
+            }
+            String existingLabel = existingPropertyValue.getLabel();
+            if (label.equals(existingLabel)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

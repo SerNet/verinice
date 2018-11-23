@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jface.fieldassist.ControlDecoration;
 import org.eclipse.jface.layout.RowLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
@@ -62,10 +63,13 @@ public final class RiskValuesConfigurator extends StackConfigurator<Risk> {
         Text riskLabel = new Text(leftComposite, SWT.BORDER);
         riskLabel.setLayoutData(new RowData(LABEL_WIDTH, SWT.DEFAULT));
         riskLabel.setText(risk.getLabel());
-
+        final ControlDecoration txtDecorator = createLabelFieldDecoration(riskLabel,
+                Messages.errorUniqueRiskCategoryLabels);
+        updateDecoratorVisibility(txtDecorator, risk.getId(), risk.getLabel());
         riskLabel.addModifyListener(e -> {
             if (e.getSource() instanceof Text) {
                 String newLabel = ((Text) e.getSource()).getText();
+                updateDecoratorVisibility(txtDecorator, risk.getId(), newLabel);
                 updateValue(risk.getId(),
                         valueFromEditorState -> valueFromEditorState.withLabel(newLabel));
             }
