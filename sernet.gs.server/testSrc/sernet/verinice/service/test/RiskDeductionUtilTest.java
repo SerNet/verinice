@@ -161,6 +161,7 @@ public class RiskDeductionUtilTest extends AbstractModernizedBaseProtection {
         assertEquals(frequency.getId(), bpThreat.getFrequencyWithAdditionalSafeguards());
         assertEquals(impact.getId(), bpThreat.getImpactWithAdditionalSafeguards());
 
+        safeguard.getEntity().setFlag(Safeguard.PROP_REDUCE_RISK, false);
         bpRequirement.getEntity().setFlag(BpRequirement.PROP_SAFEGUARD_REDUCE_RISK, false);
         bpRequirement.setSimpleProperty(BpRequirement.PROP_SAFEGUARD_STRENGTH_IMPACT, null);
         bpRequirement = update(bpRequirement);
@@ -195,6 +196,7 @@ public class RiskDeductionUtilTest extends AbstractModernizedBaseProtection {
         assertEquals(frequency.getId(), bpThreat.getFrequencyWithAdditionalSafeguards());
         assertEquals(impact.getId(), bpThreat.getImpactWithAdditionalSafeguards());
 
+        safeguard.getEntity().setFlag(Safeguard.PROP_REDUCE_RISK, false);
         bpRequirement.getEntity().setFlag(BpRequirement.PROP_SAFEGUARD_REDUCE_RISK, false);
         bpRequirement.setSimpleProperty(BpRequirement.PROP_SAFEGUARD_STRENGTH_FREQUENCY, null);
         bpRequirement = update(bpRequirement);
