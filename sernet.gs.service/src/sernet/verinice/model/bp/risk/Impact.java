@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class Impact implements Serializable {
+public class Impact implements Serializable, RiskPropertyValue {
 
     private static final long serialVersionUID = -1450873237653388576L;
 
@@ -40,10 +40,12 @@ public class Impact implements Serializable {
         this.description = description;
     }
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public String getLabel() {
         return label;
     }
@@ -107,7 +109,7 @@ public class Impact implements Serializable {
         if (obj == null)
             return false;
         if (this.getClass() != obj.getClass())
-          return false;
+            return false;
         Impact other = (Impact) obj;
         return Objects.equals(this.id, other.id);
     }

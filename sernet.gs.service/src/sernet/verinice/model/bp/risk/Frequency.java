@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class Frequency implements Serializable {
+public class Frequency implements Serializable, RiskPropertyValue {
 
     private static final long serialVersionUID = 6441596162125577738L;
 
@@ -40,10 +40,12 @@ public class Frequency implements Serializable {
         this.description = description;
     }
 
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public String getLabel() {
         return label;
     }
