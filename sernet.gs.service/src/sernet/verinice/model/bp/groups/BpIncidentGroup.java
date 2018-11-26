@@ -35,7 +35,6 @@ public class BpIncidentGroup extends Group<BpIncident> implements IBpGroup {
     public static final String PROP_NAME = "bp_incident_group_name"; //$NON-NLS-1$
     public static final String PROP_TAG = "bp_incident_group_tag"; //$NON-NLS-1$
 
-
     public static final String[] CHILD_TYPES = new String[] { BpIncident.TYPE_ID };
 
     public BpIncidentGroup() {

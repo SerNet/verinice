@@ -11383,6 +11383,9 @@ Wurden bereits weitere Stellen informiert?
             id="bp_document_group_desc"
             inputtype="text"
             showInObjectBrowser="true" />
+
+         <huiproperty id="bp_document_group_tag" name="Tags" />
+
     </huientity>
 
     <huientity
@@ -11606,6 +11609,9 @@ Wurden bereits weitere Stellen informiert?
             id="bp_incident_group_desc"
             inputtype="text"
             showInObjectBrowser="true" />
+
+        <huiproperty id="bp_incident_group_tag" name="Tags" />
+
     </huientity>
 
     <huientity
@@ -11762,5 +11768,8 @@ Wurden bereits weitere Stellen informiert?
             id="bp_record_group_desc"
             inputtype="text"
             showInObjectBrowser="true" />
+
+        <huiproperty id="bp_record_group_tag" name="Tags" />
+
     </huientity>
 </huientities>

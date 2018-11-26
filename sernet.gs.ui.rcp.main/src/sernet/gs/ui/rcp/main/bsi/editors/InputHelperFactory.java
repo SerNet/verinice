@@ -46,8 +46,10 @@ import sernet.verinice.model.bp.elements.Network;
 import sernet.verinice.model.bp.elements.Room;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bp.groups.ApplicationGroup;
+import sernet.verinice.model.bp.groups.BpDocumentGroup;
 import sernet.verinice.model.bp.groups.BpIncidentGroup;
 import sernet.verinice.model.bp.groups.BpPersonGroup;
+import sernet.verinice.model.bp.groups.BpRecordGroup;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.bp.groups.BpThreatGroup;
 import sernet.verinice.model.bp.groups.BusinessProcessGroup;
@@ -144,14 +146,14 @@ public final class InputHelperFactory {
                 Vulnerability.PROP_TAG, Organization.PROP_TAG,
                 // modernized ITBP elements and groups
                 Application.PROP_TAG, ApplicationGroup.PROP_TAG, BpDocument.PROP_TAG,
-                BpIncident.PROP_TAG, BpIncidentGroup.PROP_TAG, BpPerson.PROP_TAG,
-                BpPersonGroup.PROP_TAG, BpRecord.PROP_TAG, BpRequirement.PROP_TAG,
-                BpRequirementGroup.PROP_TAG, BpThreat.PROP_TAG, BpThreatGroup.PROP_TAG,
-                BusinessProcess.PROP_TAG, BusinessProcessGroup.PROP_TAG, Device.PROP_TAG,
-                DeviceGroup.PROP_TAG, IcsSystem.PROP_TAG, IcsSystemGroup.PROP_TAG,
-                ItNetwork.PROP_TAG, ItSystem.PROP_TAG, ItSystemGroup.PROP_TAG, Network.PROP_TAG,
-                NetworkGroup.PROP_TAG, Room.PROP_TAG, RoomGroup.PROP_TAG, Safeguard.PROP_TAG,
-                SafeguardGroup.PROP_TAG)
+                BpDocumentGroup.PROP_TAG, BpIncident.PROP_TAG, BpIncidentGroup.PROP_TAG,
+                BpPerson.PROP_TAG, BpPersonGroup.PROP_TAG, BpRecord.PROP_TAG,
+                BpRecordGroup.PROP_TAG, BpRequirement.PROP_TAG, BpRequirementGroup.PROP_TAG,
+                BpThreat.PROP_TAG, BpThreatGroup.PROP_TAG, BusinessProcess.PROP_TAG,
+                BusinessProcessGroup.PROP_TAG, Device.PROP_TAG, DeviceGroup.PROP_TAG,
+                IcsSystem.PROP_TAG, IcsSystemGroup.PROP_TAG, ItNetwork.PROP_TAG, ItSystem.PROP_TAG,
+                ItSystemGroup.PROP_TAG, Network.PROP_TAG, NetworkGroup.PROP_TAG, Room.PROP_TAG,
+                RoomGroup.PROP_TAG, Safeguard.PROP_TAG, SafeguardGroup.PROP_TAG)
                 .forEach(propertyName -> huiComposite2.setInputHelper(propertyName, tagHelper,
                         IInputHelper.TYPE_ADD, showHint));
 
