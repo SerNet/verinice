@@ -2,8 +2,8 @@ package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -50,8 +50,6 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
-import sernet.verinice.iso27k.rcp.ISMView;
-import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.model.bp.elements.BpModel;
 import sernet.verinice.model.bsi.BSIModel;
@@ -72,8 +70,6 @@ import sernet.verinice.service.commands.task.FindRelationsFor;
  */
 public class RelationView extends RightsEnabledView
         implements IRelationTable, ILinkedWithEditorView {
-
-    private static final Logger LOG = Logger.getLogger(ISMView.class);
 
     public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.RelationView"; //$NON-NLS-1$
 
@@ -112,28 +108,24 @@ public class RelationView extends RightsEnabledView
         if (!CnAElementHome.getInstance().isOpen() || inputElmt == null) {
             return;
         }
+        setContentDescription(Messages.RelationView_9 + " " + elmt.getTitle());
+        viewer.setInput(new PlaceHolder(Messages.RelationView_0));
 
         WorkspaceJob job = new WorkspaceJob(Messages.RelationView_0) {
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 Activator.inheritVeriniceContextState();
-                Display.getDefault().syncExec(() -> {
-                    try {
-                        viewer.setInput(new PlaceHolder(Messages.RelationView_0));
 
-                        monitor.setTaskName(Messages.RelationView_0);
+                FindRelationsFor command = new FindRelationsFor(elmt);
+                try {
 
-                        FindRelationsFor command = new FindRelationsFor(elmt);
-                        command = ServiceFactory.lookupCommandService().executeCommand(command);
-                        final CnATreeElement linkElmt = command.getElmt();
-
-                        viewer.setInput(linkElmt);
-                    } catch (Exception e) {
-                        viewer.setInput(new PlaceHolder(Messages.RelationView_3));
-                        ExceptionUtil.log(e, Messages.RelationView_4);
-                    }
-
-                });
+                    command = ServiceFactory.lookupCommandService().executeCommand(command);
+                    final CnATreeElement linkElmt = command.getElmt();
+                    Display.getDefault().syncExec(() -> viewer.setInput(linkElmt));
+                } catch (Exception e) {
+                    viewer.setInput(new PlaceHolder(Messages.RelationView_3));
+                    ExceptionUtil.log(e, Messages.RelationView_4);
+                }
 
                 return Status.OK_STATUS;
             }
@@ -169,8 +161,6 @@ public class RelationView extends RightsEnabledView
                 .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
         // try to add listeners once on startup, and register for model changes:
-        addBSIModelListeners();
-        addISO27KModelListeners();
         hookModelLoadListener();
         proceedingFilterDisabledToggleListener = event -> {
             if (PreferenceConstants.FILTER_INFORMATION_NETWORKS_BY_PROCEEDING
@@ -211,105 +201,42 @@ public class RelationView extends RightsEnabledView
     private void hookModelLoadListener() {
         this.loadListener = new DefaultModelLoadListener() {
 
+            private AtomicBoolean bsiModelListenerRegistered = new AtomicBoolean(false);
+            private AtomicBoolean isoModelListenerRegistered = new AtomicBoolean(false);
+            private AtomicBoolean bpModelListenerRegistered = new AtomicBoolean(false);
+
             @Override
             public void closed(BSIModel model) {
-                removeModelListeners();
                 Display.getDefault().asyncExec(() -> viewer.setInput(new PlaceHolder("")));
             }
 
             @Override
             public void loaded(BSIModel model) {
-                synchronized (loadListener) {
-                    addBSIModelListeners();
+                if (bsiModelListenerRegistered.compareAndSet(false, true)) {
+                    CnAElementFactory.getInstance().ifModelLoaded(
+                            bsiModel -> bsiModel.addBSIModelListener(contentProvider));
                 }
             }
 
             @Override
             public void loaded(ISO27KModel model) {
-                synchronized (loadListener) {
-                    addISO27KModelListeners();
+                if (isoModelListenerRegistered.compareAndSet(false, true)) {
+                    CnAElementFactory.getInstance()
+                            .ifIsoModelLoaded(isoModel -> CnAElementFactory.getInstance()
+                                    .getISO27kModel().addISO27KModelListener(contentProvider));
                 }
             }
 
             @Override
             public void loaded(BpModel model) {
-                synchronized (loadListener) {
-                    addBpModelListeners();
+                if (bpModelListenerRegistered.compareAndSet(false, true)) {
+                    CnAElementFactory.getInstance().ifBpModelLoaded(
+                            bpModel -> bpModel.addModITBOModelListener(contentProvider));
                 }
             }
 
         };
         CnAElementFactory.getInstance().addLoadListener(loadListener);
-    }
-
-    protected void addBSIModelListeners() {
-        WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
-            @Override
-            public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                IStatus status = Status.OK_STATUS;
-                try {
-                    monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
-                    CnAElementFactory.getInstance()
-                            .ifModelLoaded(model -> model.addBSIModelListener(contentProvider));
-                } catch (Exception e) {
-                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, Activator.PLUGIN_ID, Messages.RelationView_7,
-                            e);
-                } finally {
-                    monitor.done();
-                }
-                return status;
-            }
-        };
-        JobScheduler.scheduleInitJob(initDataJob);
-    }
-
-    protected void addBpModelListeners() {
-        WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
-            @Override
-            public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                IStatus status = Status.OK_STATUS;
-                try {
-                    monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
-                    if (CnAElementFactory.isModelLoaded()) {
-                        CnAElementFactory.getInstance().getBpModel()
-                                .addModITBOModelListener(contentProvider);
-                    }
-                } catch (Exception e) {
-                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, Activator.PLUGIN_ID, Messages.RelationView_7,
-                            e);
-                } finally {
-                    monitor.done();
-                }
-                return status;
-            }
-        };
-        JobScheduler.scheduleInitJob(initDataJob);
-    }
-
-    protected void addISO27KModelListeners() {
-        WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
-            @Override
-            public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                IStatus status = Status.OK_STATUS;
-                try {
-                    monitor.beginTask(Messages.ISMView_InitData, IProgressMonitor.UNKNOWN);
-                    if (CnAElementFactory.isIsoModelLoaded()) {
-                        CnAElementFactory.getInstance().getISO27kModel()
-                                .addISO27KModelListener(contentProvider);
-                    }
-                } catch (Exception e) {
-                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, Activator.PLUGIN_ID, Messages.RelationView_7,
-                            e);
-                } finally {
-                    monitor.done();
-                }
-                return status;
-            }
-        };
-        JobScheduler.scheduleInitJob(initDataJob);
     }
 
     protected void removeModelListeners() {
@@ -394,11 +321,6 @@ public class RelationView extends RightsEnabledView
     private void setNewInput(CnATreeElement elmt) {
         this.inputElmt = elmt;
         loadLinks(elmt);
-        setViewTitle(Messages.RelationView_9 + " " + elmt.getTitle());
-    }
-
-    private void setViewTitle(String title) {
-        this.setContentDescription(title);
     }
 
     private void fillLocalPullDown(IMenuManager manager) {
