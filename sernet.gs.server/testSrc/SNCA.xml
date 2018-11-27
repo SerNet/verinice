@@ -6153,8 +6153,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <huiproperty
             name="isISOGroup"
             id="controlgroup_is_NoIso_group"
-            inputtype="booleanoption" defaultValue="0"
-            tags="VDA_ISA_Audit" />
+            inputtype="booleanoption" defaultValue="0" />
     </huientity>
 
     <huientity
