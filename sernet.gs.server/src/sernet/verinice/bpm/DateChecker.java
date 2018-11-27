@@ -63,7 +63,7 @@ public class DateChecker {
                     + daysDeltaString + ", must be greater than 0.");
         }
         long daysPassed = ChronoUnit.DAYS.between(dateAsInstant, now);
-        long deltaIterations = (long) Math.ceil((double) daysPassed / (double) daysDelta);
+        long deltaIterations = daysPassed / daysDelta + 1l;
         dateAsInstant = dateAsInstant.atZone(ZoneId.systemDefault())
                 .plusDays(deltaIterations * daysDelta).toInstant();
         return Date.from(dateAsInstant);
