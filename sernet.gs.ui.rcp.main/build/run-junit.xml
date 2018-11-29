@@ -22,6 +22,7 @@
 	<path id="classpath.testlibs">
 		<fileset dir="${testlib}" includes="**/*.jar" />
 		<pathelement path="${test_classpath}" />
+		<pathelement location="../sernet.gs.server/WebContent/WEB-INF/"/>
 	</path>
 
 	<target name="coverage" description="Creates coverage reports">

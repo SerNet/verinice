@@ -54,7 +54,7 @@ import org.eclipse.ui.part.WorkbenchPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.views.IRelationTable;
-import sernet.gs.ui.rcp.main.bsi.views.RelationByNameComparator;
+import sernet.gs.ui.rcp.main.bsi.views.RelationComparator;
 import sernet.gs.ui.rcp.main.bsi.views.RelationTableViewer;
 import sernet.gs.ui.rcp.main.bsi.views.RelationTableViewer.PathCellLabelProvider;
 import sernet.gs.ui.rcp.main.bsi.views.RelationViewContentProvider;
@@ -231,7 +231,7 @@ public class LinkMaker extends Composite implements IRelationTable {
 
         relationViewLabelProvider = new RelationViewLabelProvider(this);
         viewer.setLabelProvider(relationViewLabelProvider);
-        viewer.setComparator(new RelationByNameComparator(IRelationTable.COLUMN_TITLE,
+        viewer.setComparator(new RelationComparator(IRelationTable.COLUMN_TITLE,
                 IRelationTable.COLUMN_TYPE_IMG));
 
         part.getSite().setSelectionProvider(viewer);
