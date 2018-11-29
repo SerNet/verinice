@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.jface.viewers.ViewerComparator;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.model.common.CnALink;
@@ -32,13 +32,13 @@ import sernet.verinice.model.common.CnALink;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
-public class RelationByNameSorter extends ViewerSorter {
+public class RelationByNameComparator extends ViewerComparator {
 
     private IRelationTable view;
     private Set<String> sorterProperties;
     private NumericStringComparator numComp = new NumericStringComparator();
 
-    public RelationByNameSorter(IRelationTable view, String... sorterProperties) {
+    public RelationByNameComparator(IRelationTable view, String... sorterProperties) {
         this.view = view;
         this.sorterProperties = new HashSet<>(sorterProperties.length);
         Collections.addAll(this.sorterProperties, sorterProperties);

@@ -156,7 +156,7 @@ public class RelationView extends RightsEnabledView
 
         RelationViewLabelProvider relationViewLabelProvider = new RelationViewLabelProvider(this);
         viewer.setLabelProvider(relationViewLabelProvider);
-        viewer.setComparator(new RelationByNameSorter(this, COLUMN_TITLE, COLUMN_TYPE_IMG));
+        viewer.setComparator(new RelationByNameComparator(this, COLUMN_TITLE, COLUMN_TYPE_IMG));
 
         // init tooltip provider
         ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.RECREATE);
