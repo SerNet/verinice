@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.bpm;
 
+import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -51,7 +52,12 @@ public class DateChecker {
      * @return a date that is after the current instant
      */
     public Date checkIfDateIsPast(Date date, String daysDeltaString) {
-        Instant now = Instant.now();
+        return checkIfDateIsPast(date, daysDeltaString, Clock.systemUTC());
+
+    }
+
+    Date checkIfDateIsPast(Date date, String daysDeltaString, Clock clock) {
+        Instant now = Instant.now(clock);
         Instant dateAsInstant = date.toInstant();
         if (!dateAsInstant.isBefore(now)) {
             return date;

@@ -1,9 +1,11 @@
 package sernet.verinice.bpm;
 
+import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.Period;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Calendar;
@@ -18,9 +20,19 @@ public class DateCheckerTest {
     private DateChecker dateChecker = new DateChecker();
 
     @Test
-    public void testCheckIfDateIsPastToday() {
-        Date today = new Date();
-        Assert.assertEquals(today, dateChecker.checkIfDateIsPast(today, "7"));
+    public void testCheckIfDateIsPastNow() {
+        Instant now = Instant.now();
+        Clock clock = Clock.fixed(now, ZoneId.of("Europe/Berlin"));
+
+        Assert.assertEquals(Date.from(now),
+                dateChecker.checkIfDateIsPast(Date.from(now), "7", clock));
+    }
+
+    @Test
+    public void testCheckIfDateIsPastHalfAnHourFromNow() {
+        Date halfAnHourFromNow = Date.from(Instant.now().plus(Duration.ofMinutes(30l)));
+        Assert.assertEquals(halfAnHourFromNow,
+                dateChecker.checkIfDateIsPast(halfAnHourFromNow, "7"));
     }
 
     @Test
@@ -44,6 +56,28 @@ public class DateCheckerTest {
         Date time = gregorianCalendar.getTime();
         Date yesterday = Date.from(now.minus(Duration.ofDays(1l)));
         Assert.assertEquals(time, dateChecker.checkIfDateIsPast(yesterday, "7"));
+    }
+
+    @Test
+    public void testCheckIfDateIsPastYesterdayWithClockChangeForward() {
+        ZonedDateTime noonOnDayOfClockChange = ZonedDateTime.of(2018, 3, 25, 12, 0, 0, 0,
+                ZoneId.of("Europe/Berlin"));
+        ZonedDateTime noonOnDayBeforeClockChange = noonOnDayOfClockChange.minusDays(1l);
+        Clock clock = Clock.fixed(noonOnDayOfClockChange.toInstant(), ZoneId.of("Europe/Berlin"));
+        Date expectedResult = Date.from(noonOnDayBeforeClockChange.plusDays(7l).toInstant());
+        Assert.assertEquals(expectedResult, dateChecker
+                .checkIfDateIsPast(Date.from(noonOnDayBeforeClockChange.toInstant()), "7", clock));
+    }
+
+    @Test
+    public void testCheckIfDateIsPastYesterdayWithClockChangeBackward() {
+        ZonedDateTime noonOnDayOfClockChange = ZonedDateTime.of(2018, 10, 28, 12, 0, 0, 0,
+                ZoneId.of("Europe/Berlin"));
+        ZonedDateTime noonOnDayBeforeClockChange = noonOnDayOfClockChange.minusDays(1l);
+        Clock clock = Clock.fixed(noonOnDayOfClockChange.toInstant(), ZoneId.of("Europe/Berlin"));
+        Date expectedResult = Date.from(noonOnDayBeforeClockChange.plusDays(7l).toInstant());
+        Assert.assertEquals(expectedResult, dateChecker
+                .checkIfDateIsPast(Date.from(noonOnDayBeforeClockChange.toInstant()), "7", clock));
     }
 
     @Test
