@@ -109,11 +109,10 @@ public class RelationView extends RightsEnabledView
             return;
         }
 
-        Display.getDefault()
-                .syncExec(() -> {
-                	setContentDescription(Messages.RelationView_9 + " " + elmt.getTitle());
-                	viewer.setInput(new PlaceHolder(Messages.RelationView_0));
-                });
+        Display.getDefault().syncExec(() -> {
+            setContentDescription(Messages.RelationView_9 + " " + elmt.getTitle());
+            viewer.setInput(new PlaceHolder(Messages.RelationView_0));
+        });
 
         WorkspaceJob job = new WorkspaceJob(Messages.RelationView_0) {
             @Override

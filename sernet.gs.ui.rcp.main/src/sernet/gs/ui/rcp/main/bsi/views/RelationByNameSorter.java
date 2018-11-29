@@ -38,7 +38,6 @@ public class RelationByNameSorter extends ViewerSorter {
     private Set<String> sorterProperties;
     private NumericStringComparator numComp = new NumericStringComparator();
 
-
     public RelationByNameSorter(IRelationTable view, String... sorterProperties) {
         this.view = view;
         this.sorterProperties = new HashSet<>(sorterProperties.length);
