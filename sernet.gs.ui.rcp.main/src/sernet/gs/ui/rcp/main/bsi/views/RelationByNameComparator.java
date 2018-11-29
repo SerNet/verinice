@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.ViewerComparator;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * @author koderman[at]sernet[dot]de
@@ -34,12 +35,10 @@ import sernet.verinice.model.common.CnALink;
  */
 public class RelationByNameComparator extends ViewerComparator {
 
-    private IRelationTable view;
     private Set<String> sorterProperties;
     private NumericStringComparator numComp = new NumericStringComparator();
 
-    public RelationByNameComparator(IRelationTable view, String... sorterProperties) {
-        this.view = view;
+    public RelationByNameComparator(String... sorterProperties) {
         this.sorterProperties = new HashSet<>(sorterProperties.length);
         Collections.addAll(this.sorterProperties, sorterProperties);
     }
@@ -54,6 +53,9 @@ public class RelationByNameComparator extends ViewerComparator {
         if (o1 == null || o2 == null) {
             return 0;
         }
+
+        CnATreeElement elementInQuestion = (CnATreeElement) viewer.getInput();
+
         CnALink link1 = (CnALink) o1;
         CnALink link2 = (CnALink) o2;
 
@@ -83,9 +85,9 @@ public class RelationByNameComparator extends ViewerComparator {
 
         // categories are the same, so we sort by name within the category:
         String title1 = RelationViewLabelProvider
-                .getLinkTargetTitleIncludingPotentialIdentifier(view.getInputElmt(), link1);
+                .getLinkTargetTitleIncludingPotentialIdentifier(elementInQuestion, link1);
         String title2 = RelationViewLabelProvider
-                .getLinkTargetTitleIncludingPotentialIdentifier(view.getInputElmt(), link2);
+                .getLinkTargetTitleIncludingPotentialIdentifier(elementInQuestion, link2);
 
         return numComp.compare(title1, title2);
     }

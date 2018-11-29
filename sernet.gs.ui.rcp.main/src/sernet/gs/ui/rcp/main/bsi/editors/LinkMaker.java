@@ -231,7 +231,7 @@ public class LinkMaker extends Composite implements IRelationTable {
 
         relationViewLabelProvider = new RelationViewLabelProvider(this);
         viewer.setLabelProvider(relationViewLabelProvider);
-        viewer.setComparator(new RelationByNameComparator(this, IRelationTable.COLUMN_TITLE,
+        viewer.setComparator(new RelationByNameComparator(IRelationTable.COLUMN_TITLE,
                 IRelationTable.COLUMN_TYPE_IMG));
 
         part.getSite().setSelectionProvider(viewer);
