@@ -10701,19 +10701,17 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
             <huiproperty id="bp_requirement_implementation_desc" name="Description"
                 required="false" inputtype="text" focus="true" />
-        </huipropertygroup>
-        <huipropertygroup id="bp_requirement_safeguard_strength" name="Safeguard Strength" tags="BSI-200-3">
             <huiproperty defaultValue="0" id="bp_requirement_reduce_risk"
-                inputtype="booleanoption" name="Reduce Risk" tags="Risk" >
+                inputtype="booleanoption" name="Reduce Risk" tags="BSI-200-3" >
                 <depends option="bp_requirement_implementation_deduce" value="0" />
             </huiproperty>
             <huiproperty id="bp_requirement_safeguard_strength_frequency" name="Reduces frequency of occurrence to"
-                required="true" inputtype="singleoption">
+                required="true" inputtype="singleoption" tags="BSI-200-3">
                 <depends option="bp_requirement_implementation_deduce" value="0" />
                 <!-- options will be populated dynamically in the application -->
             </huiproperty>
             <huiproperty id="bp_requirement_safeguard_strength_impact" name="Reduces potential extent of damage to"
-                required="true" inputtype="singleoption">
+                required="true" inputtype="singleoption" tags="BSI-200-3">
                 <depends option="bp_requirement_implementation_deduce" value="0" />
                 <!-- options will be populated dynamically in the application -->
             </huiproperty>
@@ -11295,16 +11293,14 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
             <huiproperty id="bp_safeguard_implementation_desc" name="Description"
                 required="false" inputtype="text" focus="true" />
-        </huipropertygroup>
-        <huipropertygroup id="bp_safeguard_safeguard_strength" name="Safeguard Strength" tags="BSI-200-3">
             <huiproperty defaultValue="0" id="bp_safeguard_reduce_risk"
-                inputtype="booleanoption" name="Reduce Risk" tags="Risk" />
+                inputtype="booleanoption" name="Reduce Risk" tags="Risk, BSI-200-3"/>
             <huiproperty id="bp_safeguard_safeguard_strength_frequency" name="Reduces frequency of occurrence to"
-                required="true" inputtype="singleoption">
+                required="true" inputtype="singleoption" tags="BSI-200-3">
                <!-- options will be populated dynamically in the application -->
             </huiproperty>
             <huiproperty id="bp_safeguard_safeguard_strength_impact" name="Reduces potential extent of damage to"
-                required="true" inputtype="singleoption">
+                required="true" inputtype="singleoption" tags="BSI-200-3">
                 <!-- options will be populated dynamically in the application -->
             </huiproperty>
         </huipropertygroup>
