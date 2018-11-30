@@ -8,6 +8,7 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -91,6 +92,8 @@ public class RelationView extends RightsEnabledView
 
     private boolean readOnly = false;
 
+    private WorkspaceJob currentlyRunningLoadLinksJob;
+
     @Override
     public String getRightID() {
         return ActionRightIDs.RELATIONS;
@@ -113,18 +116,21 @@ public class RelationView extends RightsEnabledView
             setContentDescription(Messages.RelationView_9 + " " + elmt.getTitle());
             viewer.setInput(new PlaceHolder(Messages.RelationView_0));
         });
-
-        WorkspaceJob job = new WorkspaceJob(Messages.RelationView_0) {
+        // if we already scheduled a loading job but another element is
+        // selected, cancel the running job
+        Optional.ofNullable(currentlyRunningLoadLinksJob).ifPresent(Job::cancel);
+        currentlyRunningLoadLinksJob = new WorkspaceJob(Messages.RelationView_0) {
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 Activator.inheritVeriniceContextState();
 
                 FindRelationsFor command = new FindRelationsFor(elmt);
                 try {
-
                     command = ServiceFactory.lookupCommandService().executeCommand(command);
                     final CnATreeElement linkElmt = command.getElmt();
-                    Display.getDefault().syncExec(() -> viewer.setInput(linkElmt));
+                    if (!monitor.isCanceled()) {
+                        Display.getDefault().syncExec(() -> viewer.setInput(linkElmt));
+                    }
                 } catch (Exception e) {
                     viewer.setInput(new PlaceHolder(Messages.RelationView_3));
                     ExceptionUtil.log(e, Messages.RelationView_4);
@@ -133,8 +139,8 @@ public class RelationView extends RightsEnabledView
                 return Status.OK_STATUS;
             }
         };
-        job.setUser(false);
-        job.schedule();
+        currentlyRunningLoadLinksJob.setUser(false);
+        currentlyRunningLoadLinksJob.schedule();
     }
 
     /**
