@@ -75,12 +75,8 @@ public class ClientMenuProvider {
     }
 
     public static class ClientInformation {
-        private OS os;
-        private boolean is64bits;
-
-        private ClientInformation() {
-            is64bits = false;
-        }
+        private OS os = OS.unknown;
+        private boolean is64bits = false;
 
         public static ClientInformation fromFileName(String fileName) {
             ClientInformation ci = new ClientInformation();
@@ -105,10 +101,8 @@ public class ClientMenuProvider {
                     return is64bits ? "Linux, 64 bit" : "Linux, 32 bit";
                 case Windows:
                     return is64bits ? "Windows, 64 bit" : "Windows, 32 bit";
-                case macOS:
-                    return "macOS";
                 default:
-                    return "";
+                    return os.toString();
             }
         }
 
@@ -119,10 +113,8 @@ public class ClientMenuProvider {
                     return is64bits ? "Linux, 64 bit" : "Linux, 32 bit";
                 case Windows:
                     return is64bits ? "Windows, 64 bit" : "Windows, 32 bit";
-                case macOS:
-                    return "macOS";
                 default:
-                    return "";
+                    return os.toString();
             }
         }
 
