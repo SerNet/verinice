@@ -127,7 +127,7 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
     private FrequencyConfigurator frequenciesConfigurator;
     private RiskValuesConfigurator riskValuesConfigurator;
     private RiskMatrixConfigurator riskMatrixConfigurator;
-    private int matrixPageIndex;
+    private int matrixPageIndex = -1;
 
     private IEntityChangedListener modelListener = new IEntityChangedListener() {
 
