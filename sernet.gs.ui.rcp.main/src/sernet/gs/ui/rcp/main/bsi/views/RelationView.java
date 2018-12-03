@@ -108,9 +108,12 @@ public class RelationView extends RightsEnabledView
         if (!CnAElementHome.getInstance().isOpen() || inputElmt == null) {
             return;
         }
-        setContentDescription(Messages.RelationView_9 + " " + elmt.getTitle());
+
         Display.getDefault()
-                .syncExec(() -> viewer.setInput(new PlaceHolder(Messages.RelationView_0)));
+                .syncExec(() -> {
+                	setContentDescription(Messages.RelationView_9 + " " + elmt.getTitle());
+                	viewer.setInput(new PlaceHolder(Messages.RelationView_0));
+                });
 
         WorkspaceJob job = new WorkspaceJob(Messages.RelationView_0) {
             @Override
