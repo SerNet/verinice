@@ -303,6 +303,7 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
         super.dispose();
         getSite().getPage().removePostSelectionListener(selectionListener);
         getSite().getPage().removePartListener(linkWithEditorPartListener);
+        CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
         removeModelListeners();
     }
     
