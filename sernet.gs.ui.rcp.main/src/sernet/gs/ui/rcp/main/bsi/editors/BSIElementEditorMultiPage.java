@@ -604,7 +604,7 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
                     riskConfigurationState, this::riskConfigurationChanged);
             scrolledComposite.setContent(riskMatrixConfigurator);
             matrixPageIndex = addNewPage(scrolledComposite,
-                    Messages.BSIElementEditorMultiPage_page_name_risk_values);
+                    Messages.BSIElementEditorMultiPage_page_name_risk_matrix);
 
             scrolledComposite = createScrollableComposite(getContainer());
             riskValuesConfigurator = new RiskValuesConfigurator(scrolledComposite,
