@@ -32,6 +32,7 @@
 						<phase>test</phase>
 						<configuration>
 							<target>
+								<property name="test_classpath" refid="maven.test.classpath"/>
 								<ant antfile="build/run-junit.xml" target="test" />
 							</target>
 						</configuration>
