@@ -39,6 +39,7 @@ public class ClientMenuProviderTest {
         Assert.assertEquals("macOS", ClientMenuProvider.ClientInformation.fromFileName("verinice-macosx.cocoa.x86_64.zip").getInformation());
         Assert.assertEquals("Windows, 64 bit", ClientMenuProvider.ClientInformation.fromFileName("verinice-windows-x86_64.zip").getInformation());
         Assert.assertEquals("Windows, 32 bit", ClientMenuProvider.ClientInformation.fromFileName("verinice-windows-x86.zip").getInformation());
+        Assert.assertEquals("unknown", ClientMenuProvider.ClientInformation.fromFileName("verinice.zip").getInformation());
     }
 
     @Test
@@ -48,5 +49,6 @@ public class ClientMenuProviderTest {
         Assert.assertEquals("fa fa-fw fa-apple", menuProvider.iconForClient(ClientMenuProvider.ClientInformation.fromFileName("verinice-macosx.cocoa.x86_64.zip")));
         Assert.assertEquals("fa fa-fw fa-windows", menuProvider.iconForClient(ClientMenuProvider.ClientInformation.fromFileName("verinice-windows-x86_64.zip")));
         Assert.assertEquals("fa fa-fw fa-windows", menuProvider.iconForClient(ClientMenuProvider.ClientInformation.fromFileName("verinice-windows-x86.zip")));
+        Assert.assertEquals("fa fa-fw fa-archive", menuProvider.iconForClient(ClientMenuProvider.ClientInformation.fromFileName("verinice.zip")));
     }
 }
