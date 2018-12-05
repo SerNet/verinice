@@ -60,6 +60,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.PasswordException;
 import sernet.verinice.model.bp.DeductionImplementationUtil;
+import sernet.verinice.model.bp.elements.BpThreat;
 import sernet.verinice.model.bp.elements.Safeguard;
 import sernet.verinice.model.bpm.TodoViewItem;
 import sernet.verinice.model.bsi.DocumentReference;
@@ -71,6 +72,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.service.bp.risk.RiskDeductionUtil;
 import sernet.verinice.service.commands.CreateConfiguration;
 import sernet.verinice.service.commands.LoadConfiguration;
 import sernet.verinice.service.commands.UpdateMultipleElementEntities;
@@ -412,6 +414,11 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             // set values:
             Entity editEntity = elmt.getEntity();
             editEntity.copyEntity(dialogEntity);
+            if (elmt instanceof BpThreat) {
+                Retriever.retrieveElement(elmt,
+                        RetrieveInfo.getPropertyInstance().setLinksUp(true));
+                RiskDeductionUtil.deduceRisk((BpThreat) elmt);
+            }
             monitor.worked(1);
         }
         try {
