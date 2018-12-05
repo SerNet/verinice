@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.function.Function;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jface.layout.RowLayoutFactory;
@@ -127,8 +128,8 @@ public abstract class StackConfigurator<T extends RiskPropertyValue> extends Com
 
     protected abstract @NonNull T generateNewData(int index);
 
-    protected void updateValue(@NonNull T value) {
-        editorState.replace(value.getId(), value);
+    protected void updateValue(String id, Function<T, T> updater) {
+        editorState.computeIfPresent(id, (key, value) -> updater.apply(value));
         fireProperyChange.run();
     }
 

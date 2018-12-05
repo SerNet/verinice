@@ -66,8 +66,8 @@ public final class RiskValuesConfigurator extends StackConfigurator<Risk> {
         riskLabel.addModifyListener(e -> {
             if (e.getSource() instanceof Text) {
                 String newLabel = ((Text) e.getSource()).getText();
-                updateValue(
-                        new Risk(risk.getId(), newLabel, risk.getDescription(), risk.getColor()));
+                updateValue(risk.getId(),
+                        valueFromEditorState -> valueFromEditorState.withLabel(newLabel));
             }
         });
 
@@ -87,8 +87,8 @@ public final class RiskValuesConfigurator extends StackConfigurator<Risk> {
 
                 RGB newColor = dlg.open();
                 if (!Objects.equals(rgb, newColor)) {
-                    updateValue(new Risk(risk.getId(), risk.getLabel(), risk.getDescription(),
-                            ColorConverter.toRiskColor(newColor)));
+                    updateValue(risk.getId(), valueFromEditorState -> valueFromEditorState
+                            .withColor(ColorConverter.toRiskColor(newColor)));
                     riskColor.setBackground(
                             new org.eclipse.swt.graphics.Color(getDisplay(), newColor));
                 }
@@ -102,8 +102,8 @@ public final class RiskValuesConfigurator extends StackConfigurator<Risk> {
         riskDescription.addModifyListener(e -> {
             if (e.getSource() instanceof Text) {
                 String newDescription = ((Text) e.getSource()).getText();
-                updateValue(
-                        new Risk(risk.getId(), risk.getLabel(), newDescription, risk.getColor()));
+                updateValue(risk.getId(), valueFromEditorState -> valueFromEditorState
+                        .withDescription(newDescription));
             }
         });
     }

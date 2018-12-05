@@ -59,7 +59,8 @@ public final class FrequencyConfigurator extends StackConfigurator<Frequency> {
         labelField.addModifyListener(e -> {
             if (e.getSource() instanceof Text) {
                 String newLabel = ((Text) e.getSource()).getText();
-                updateValue(new Frequency(frequency.getId(), newLabel, frequency.getDescription()));
+                updateValue(frequency.getId(),
+                        valueFromEditorState -> valueFromEditorState.withLabel(newLabel));
             }
         });
 
@@ -69,7 +70,8 @@ public final class FrequencyConfigurator extends StackConfigurator<Frequency> {
         descriptionField.addModifyListener(e -> {
             if (e.getSource() instanceof Text) {
                 String newDescription = ((Text) e.getSource()).getText();
-                updateValue(new Frequency(frequency.getId(), frequency.getLabel(), newDescription));
+                updateValue(frequency.getId(), valueFromEditorState -> valueFromEditorState
+                        .withDescription(newDescription));
             }
         });
     }

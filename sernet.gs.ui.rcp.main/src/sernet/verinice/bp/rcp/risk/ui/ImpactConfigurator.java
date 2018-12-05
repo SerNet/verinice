@@ -58,7 +58,8 @@ public final class ImpactConfigurator extends StackConfigurator<Impact> {
         labelField.addModifyListener(e -> {
             if (e.getSource() instanceof Text) {
                 String newLabel = ((Text) e.getSource()).getText();
-                updateValue(new Impact(impact.getId(), newLabel, impact.getDescription()));
+                updateValue(impact.getId(),
+                        valueFromEditorState -> valueFromEditorState.withLabel(newLabel));
             }
         });
 
@@ -68,7 +69,8 @@ public final class ImpactConfigurator extends StackConfigurator<Impact> {
         descriptionField.addModifyListener(e -> {
             if (e.getSource() instanceof Text) {
                 String newDescription = ((Text) e.getSource()).getText();
-                updateValue(new Impact(impact.getId(), impact.getLabel(), newDescription));
+                updateValue(impact.getId(), valueFromEditorState -> valueFromEditorState
+                        .withDescription(newDescription));
             }
         });
     }
