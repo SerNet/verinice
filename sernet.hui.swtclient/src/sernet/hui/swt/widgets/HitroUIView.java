@@ -351,8 +351,20 @@ public class HitroUIView implements IEntityChangedListener {
     }
 
     private void addBehavior(EntityType entityType) {
-        for (PropertyType type : entityType.getAllPropertyTypes()) {
-            addBehavior(entityType, type);
+        addBehaviorForVisiblePropertyTypes(entityType, entityType.getPropertyTypes());
+        for (PropertyGroup propertyGroups : entityType.getPropertyGroups()) {
+            if (!hideBecauseOfTags(propertyGroups.getTags())) {
+                addBehaviorForVisiblePropertyTypes(entityType, propertyGroups.getPropertyTypes());
+            }
+        }
+    }
+
+    private void addBehaviorForVisiblePropertyTypes(EntityType entityType,
+            List<PropertyType> propertyTypes) {
+        for (PropertyType propertyType : propertyTypes) {
+            if (propertyType.isVisible() && !hideBecauseOfTags(propertyType.getTags())) {
+                addBehavior(entityType, propertyType);
+            }
         }
     }
 
