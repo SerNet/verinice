@@ -111,11 +111,10 @@ public class ModelCommand extends ChangeLoggingCommand {
     public void execute() {
         try {
             loadElements();
-            handleModules();
+            handleModules(isHandleSafeguards());
             if (isHandleSafeguards()) {
                 handleSafeguards();
             }
-            setDeduction(isHandleSafeguards());
             handleThreats();
             createLinks();
             if (isHandleSafeguards() && isHandleDummySafeguards()) {
@@ -128,9 +127,9 @@ public class ModelCommand extends ChangeLoggingCommand {
         }
     }
 
-    private void handleModules() throws CommandException {
+    private void handleModules(boolean handleSafeguards) throws CommandException {
         ModelCopyCommand modelModulesCommand = new ModelModulesCommand(requirementGroups,
-                targetElements);
+                targetElements, handleSafeguards);
         modelModulesCommand = getCommandService().executeCommand(modelModulesCommand);
         moduleUuidsFromScope = modelModulesCommand.getGroupUuidsFromScope();
     }
@@ -140,12 +139,6 @@ public class ModelCommand extends ChangeLoggingCommand {
                 moduleUuidsFromCompendium, targetElements);
         modelSafeguardsCommand = getCommandService().executeCommand(modelSafeguardsCommand);
         safeguardGroupUuidsFromScope = modelSafeguardsCommand.getGroupUuidsFromScope();
-    }
-
-    private void setDeduction(boolean deductImplementation) throws CommandException {
-        ChangeDeductionCommand changeDeductionCommand = new ChangeDeductionCommand(
-                moduleUuidsFromScope, deductImplementation);
-        getCommandService().executeCommand(changeDeductionCommand);
     }
 
     private void handleThreats() throws CommandException {

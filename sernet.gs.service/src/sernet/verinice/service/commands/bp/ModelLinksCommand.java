@@ -143,7 +143,7 @@ public class ModelLinksCommand extends GenericCommand {
             linkList.addAll(createLinks(requirementFromCompendium));
         }
         if (!linkList.isEmpty()) {
-            CreateMultipleLinks createMultipleLinks = new CreateMultipleLinks(linkList);
+            CreateMultipleLinks createMultipleLinks = new CreateMultipleLinks(linkList, true);
             getCommandService().executeCommand(createMultipleLinks);
         }
     }

@@ -19,8 +19,15 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.bp;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import sernet.gs.service.RuntimeCommandException;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.CnATreeElement;
@@ -35,12 +42,12 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class ModelModulesCommand extends ModelCopyCommand {
 
-    private static final long serialVersionUID = -8484586873616871231L;
-
+    private static final long serialVersionUID = -9211614522872500071L;
     private transient Set<CnATreeElement> modulesCompendium;
 
-    public ModelModulesCommand(Set<CnATreeElement> modules, Set<CnATreeElement> targetElements) {
-        super();
+    public ModelModulesCommand(Set<CnATreeElement> modules, Set<CnATreeElement> targetElements,
+            boolean handleSafeguards) {
+        super(new ChangeDeductionPostProcessor(handleSafeguards));
         this.modulesCompendium = modules;
         this.targetElements = targetElements;
     }
@@ -62,6 +69,28 @@ public class ModelModulesCommand extends ModelCopyCommand {
 
     public Set<CnATreeElement> getElementsFromCompendium() {
         return modulesCompendium;
+    }
+
+    private static final class ChangeDeductionPostProcessor implements IPostProcessor {
+        private final boolean handleSafeguards;
+        private static final long serialVersionUID = 632719636624957140L;
+
+        private ChangeDeductionPostProcessor(boolean handleSafeguards) {
+            this.handleSafeguards = handleSafeguards;
+        }
+
+        @Override
+        public void process(ICommandService commandService, List<String> copyUuidList,
+                Map<String, String> sourceDestMap) {
+            ChangeDeductionCommand changeDeductionCommand = new ChangeDeductionCommand(
+                    new HashSet<>(sourceDestMap.values()), handleSafeguards);
+            try {
+                commandService.executeCommand(changeDeductionCommand);
+            } catch (CommandException e) {
+                throw new RuntimeCommandException(e);
+            }
+
+        }
     }
 
 }

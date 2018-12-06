@@ -34,6 +34,7 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CopyCommand;
@@ -44,7 +45,7 @@ import sernet.verinice.service.commands.CopyCommand;
  */
 public abstract class ModelCopyCommand extends ChangeLoggingCommand {
 
-    private static final long serialVersionUID = 5344935376238004516L;
+    private static final long serialVersionUID = -17533077608768778L;
 
     private static final Logger LOG = Logger.getLogger(ModelCopyCommand.class);
 
@@ -56,8 +57,11 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
     // key: element from compendium, value: element from scope
     protected Map<CnATreeElement, CnATreeElement> elementMap;
 
-    public ModelCopyCommand() {
+    private List<IPostProcessor> copyPostProcessors;
+
+    public ModelCopyCommand(IPostProcessor... elementCopyPostProcessors) {
         super();
+        this.copyPostProcessors = Arrays.asList(elementCopyPostProcessors);
         this.stationId = ChangeLogEntry.STATION_ID;
     }
 
@@ -105,7 +109,8 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
             }
         }
         if (!missingUuids.isEmpty()) {
-            CopyCommand copyCommand = new CopyCommand(elementScope.getUuid(), missingUuids);
+            CopyCommand copyCommand = new CopyCommand(elementScope.getUuid(), missingUuids,
+                    copyPostProcessors);
             getCommandService().executeCommand(copyCommand);
         }
     }

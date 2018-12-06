@@ -20,6 +20,7 @@
 package sernet.verinice.service.commands.bp;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -32,19 +33,19 @@ import sernet.verinice.model.common.CnATreeElement;
 
 public class ChangeDeductionCommand extends GenericCommand {
 
-    private static final long serialVersionUID = 8635370207893250381L;
+    private static final long serialVersionUID = -7794480684224165301L;
 
     private static final Logger LOG = Logger.getLogger(ChangeDeductionCommand.class);
 
     private transient ModelingMetaDao metaDao;
 
-    private transient Set<String> moduleUuidsFromScope;
+    private transient Set<String> requirementUUIDs;
 
     private boolean deductImplementation = false;
 
-    public ChangeDeductionCommand(Set<String> moduleUuidsFromScope, boolean deductImplementation) {
+    public ChangeDeductionCommand(Set<String> requirementUUIDs, boolean deductImplementation) {
         super();
-        this.moduleUuidsFromScope = moduleUuidsFromScope;
+        this.requirementUUIDs = requirementUUIDs;
         this.deductImplementation = deductImplementation;
     }
 
@@ -65,8 +66,8 @@ public class ChangeDeductionCommand extends GenericCommand {
         getMetaDao().save(requirement);
     }
 
-    private Set<CnATreeElement> loadRequirements() {
-        return getMetaDao().loadChildrenWithProperties(moduleUuidsFromScope, BpRequirement.TYPE_ID);
+    private Collection<CnATreeElement> loadRequirements() {
+        return getMetaDao().loadElementsWithProperties(requirementUUIDs);
     }
 
     public ModelingMetaDao getMetaDao() {
