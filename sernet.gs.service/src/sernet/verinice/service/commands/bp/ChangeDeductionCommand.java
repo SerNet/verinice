@@ -30,9 +30,6 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.elements.BpRequirement;
 import sernet.verinice.model.common.CnATreeElement;
 
-/**
- * This command disables the deduction of implementation state of requirements.
- */
 public class ChangeDeductionCommand extends GenericCommand {
 
     private static final long serialVersionUID = 8635370207893250381L;
