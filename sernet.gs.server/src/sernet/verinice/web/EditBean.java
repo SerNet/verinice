@@ -22,6 +22,7 @@ package sernet.verinice.web;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -31,6 +32,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -205,7 +207,7 @@ public class EditBean {
 
     protected void doInitGeneralProperties(Entity entity) {
         List<PropertyType> typeList = entityType.getPropertyTypesSorted();
-        generalPropertyList = createPropertyList(entity, typeList);
+        generalPropertyList = moveURLPropertyToEndOfList(createPropertyList(entity, typeList));
     }
 
     protected List<HuiProperty> createPropertyList(Entity entity, List<PropertyType> typeListHui) {
@@ -669,18 +671,9 @@ public class EditBean {
         return true;
     }
 
-    private void moveURLPropertyToEndOfList() {
-        HuiProperty docProp = null;
-        for (int i = 0; i < generalPropertyList.size(); i++) {
-            if (generalPropertyList.get(i).getIsURL()) {
-                docProp = generalPropertyList.get(i);
-                break;
-            }
-        }
-        if (docProp != null) {
-            Collections.swap(generalPropertyList, generalPropertyList.indexOf(docProp),
-                    generalPropertyList.size() - 1);
-        }
+    private static List<HuiProperty> moveURLPropertyToEndOfList(List<HuiProperty> propertyList) {
+        return propertyList.stream().sorted(Comparator.comparing(HuiProperty::getIsURL))
+                .collect(Collectors.toList());
     }
 
     public void setPropertyList(List<HuiProperty> properties) {
@@ -855,12 +848,11 @@ public class EditBean {
             generalPropertyList = Collections.emptyList();
         }
 
-        moveURLPropertyToEndOfList();
         return generalPropertyList;
     }
 
     public void setGeneralPropertyList(List<HuiProperty> generalPropertyList) {
-        this.generalPropertyList = generalPropertyList;
+        this.generalPropertyList = moveURLPropertyToEndOfList(generalPropertyList);
     }
 
     /**
