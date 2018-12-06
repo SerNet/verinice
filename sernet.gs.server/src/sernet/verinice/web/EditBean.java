@@ -139,7 +139,8 @@ public class EditBean {
     private void doInit(ITask task) throws CommandException {
         RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
         ri.setPermissions(true);
-        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(getTypeId(), getUuid(), ri);
+        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<>(getTypeId(), getUuid(),
+                ri);
         command = getCommandService().executeCommand(command);
         setElement(command.getElement());
 
@@ -189,7 +190,8 @@ public class EditBean {
         List<PropertyGroup> groupListHui = entityType.getPropertyGroups();
         for (PropertyGroup groupHui : groupListHui) {
             if (isVisible(groupHui)) {
-                sernet.verinice.web.PropertyGroup group = new sernet.verinice.web.PropertyGroup(groupHui.getId(), groupHui.getName());
+                sernet.verinice.web.PropertyGroup group = new sernet.verinice.web.PropertyGroup(
+                        groupHui.getId(), groupHui.getName());
                 List<PropertyType> typeListHui = groupHui.getPropertyTypes();
                 List<HuiProperty> listOfGroup = createPropertyList(entity, typeListHui);
                 group.setPropertyList(listOfGroup);
@@ -218,7 +220,8 @@ public class EditBean {
         for (HuiProperty huiProperty : key2HuiProperty.values()) {
             for (DependsType dependsType : huiProperty.getType().getDependencies()) {
                 HuiProperty dependsOn = key2HuiProperty.get(dependsType.getPropertyId());
-                dependsOn.addValueChangeListener(new DependencyChangeListener(huiProperty, key2HuiProperty));
+                dependsOn.addValueChangeListener(
+                        new DependencyChangeListener(huiProperty, key2HuiProperty));
                 dependsOn.fireChangeListeners();
             }
         }
@@ -232,13 +235,15 @@ public class EditBean {
         return key2HuiProperty;
     }
 
-    private void initHuiProperties(Entity entity, List<PropertyType> typeListHui, List<HuiProperty> huiProperties) {
+    private void initHuiProperties(Entity entity, List<PropertyType> typeListHui,
+            List<HuiProperty> huiProperties) {
         for (PropertyType huiType : typeListHui) {
             initHuiProperty(entity, huiType, huiProperties);
         }
     }
 
-    private void initHuiProperty(Entity entity, PropertyType huiType, List<HuiProperty> huiProperties) {
+    private void initHuiProperty(Entity entity, PropertyType huiType,
+            List<HuiProperty> huiProperties) {
         if (isVisible(huiType)) {
             String id = huiType.getId();
             String value = entity.getRawPropertyValue(id);
@@ -262,7 +267,8 @@ public class EditBean {
     }
 
     private void loadChangedElementPropertiesFromTask() {
-        Map<String, String> changedProperties = getTaskService().loadChangedElementProperties(task.getId());
+        Map<String, String> changedProperties = getTaskService()
+                .loadChangedElementProperties(task.getId());
         for (Entry<String, String> entry : changedProperties.entrySet()) {
             element.setPropertyValue(entry.getKey(), entry.getValue());
         }
@@ -419,7 +425,8 @@ public class EditBean {
     }
 
     private void setMultiSelectValue(Entity entity, HuiProperty property) {
-        String propertyValue =  property.getValue() == null ? "" : StringUtils.join(property.getSelectedOptions(),","); 
+        String propertyValue = property.getValue() == null ? ""
+                : StringUtils.join(property.getSelectedOptions(), ",");
         entity.setPropertyValue(property.getType().getId(), propertyValue);
     }
 
@@ -443,7 +450,7 @@ public class EditBean {
             generalPropertyList.clear();
         }
 
-        if(allProperties != null){
+        if (allProperties != null) {
             allProperties.clear();
         }
 
@@ -552,7 +559,8 @@ public class EditBean {
     }
 
     private void changeURL(String key, String url, String label) {
-        if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(url) && StringUtils.isNotEmpty(label)) {
+        if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(url)
+                && StringUtils.isNotEmpty(label)) {
             StringBuilder sb = new StringBuilder();
             sb.append("<a href=\"").append(url).append("\">").append(label).append("</a>");
             changedElementProperties.put(key, sb.toString());
@@ -670,7 +678,8 @@ public class EditBean {
             }
         }
         if (docProp != null) {
-            Collections.swap(generalPropertyList, generalPropertyList.indexOf(docProp), generalPropertyList.size() - 1);
+            Collections.swap(generalPropertyList, generalPropertyList.indexOf(docProp),
+                    generalPropertyList.size() - 1);
         }
     }
 
@@ -819,7 +828,8 @@ public class EditBean {
         String text = null;
         if (massnahme != null) {
             try {
-                text = GSScraperUtil.getInstanceWeb().getModel().getMassnahmeHtml(massnahme.getUrl(), massnahme.getStand());
+                text = GSScraperUtil.getInstanceWeb().getModel()
+                        .getMassnahmeHtml(massnahme.getUrl(), massnahme.getStand());
             } catch (GSServiceException e) {
                 LOG.error("Error while loading massnahme description.", e);
                 Util.addError(SUBMIT, Util.getMessage("todo.load.failed"));
@@ -880,7 +890,8 @@ public class EditBean {
          * @param key2HuiProperty
          *            holds a map from property key to {@link HuiProperty}.
          */
-        public DependencyChangeListener(HuiProperty targetHuiProperty, Map<String, HuiProperty> key2HuiProperty) {
+        public DependencyChangeListener(HuiProperty targetHuiProperty,
+                Map<String, HuiProperty> key2HuiProperty) {
             this.targetHuiProperty = targetHuiProperty;
             this.key2HuiProperty = key2HuiProperty;
         }
