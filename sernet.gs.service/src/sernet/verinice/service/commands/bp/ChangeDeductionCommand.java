@@ -45,7 +45,6 @@ public class ChangeDeductionCommand extends GenericCommand {
 
     private boolean deductImplementation = false;
 
-
     public ChangeDeductionCommand(Set<String> moduleUuidsFromScope, boolean deductImplementation) {
         super();
         this.moduleUuidsFromScope = moduleUuidsFromScope;
@@ -70,8 +69,7 @@ public class ChangeDeductionCommand extends GenericCommand {
     }
 
     private Set<CnATreeElement> loadRequirements() {
-        return getMetaDao().loadChildrenWithProperties(moduleUuidsFromScope,
-                BpRequirement.TYPE_ID);
+        return getMetaDao().loadChildrenWithProperties(moduleUuidsFromScope, BpRequirement.TYPE_ID);
     }
 
     public ModelingMetaDao getMetaDao() {

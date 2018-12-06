@@ -130,7 +130,6 @@ public class ModelCommand extends ChangeLoggingCommand {
         }
     }
 
-
     private void handleModules() throws CommandException {
         ModelCopyCommand modelModulesCommand = new ModelModulesCommand(requirementGroups,
                 targetElements);
@@ -183,7 +182,8 @@ public class ModelCommand extends ChangeLoggingCommand {
     }
 
     private void loadElements() {
-        List<CnATreeElement> elements = getMetaDao().loadElementsWithProperties(moduleUuidsFromCompendium);
+        List<CnATreeElement> elements = getMetaDao()
+                .loadElementsWithProperties(moduleUuidsFromCompendium);
         requirementGroups = new HashSet<>(elements);
         elements = getMetaDao().loadElementsWithChildrenProperties(targetUuids);
         targetElements = new HashSet<>(elements);

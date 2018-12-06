@@ -94,8 +94,8 @@ public abstract class ModelCopyCommand extends ChangeLoggingCommand {
         }
     }
 
-    protected void handleChild(CnATreeElement elementCompendium,
-            CnATreeElement elementScope) throws CommandException {
+    protected void handleChild(CnATreeElement elementCompendium, CnATreeElement elementScope)
+            throws CommandException {
         Map<String, CnATreeElement> compendiumIdMap = getIdMapOfChildren(elementCompendium);
         Map<String, CnATreeElement> scopeIdMap = getIdMapOfChildren(elementScope);
         List<String> missingUuids = new LinkedList<>();

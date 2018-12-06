@@ -56,7 +56,8 @@ public class ModelModulesCommand extends ModelCopyCommand {
     }
 
     protected boolean isSuitableType(CnATreeElement e1, CnATreeElement e2) {
-        return BpRequirementGroup.TYPE_ID.equals(e2.getTypeId()) && BpRequirementGroup.TYPE_ID.equals(e1.getTypeId());
+        return BpRequirementGroup.TYPE_ID.equals(e2.getTypeId())
+                && BpRequirementGroup.TYPE_ID.equals(e1.getTypeId());
     }
 
     public Set<CnATreeElement> getElementsFromCompendium() {
