@@ -361,6 +361,11 @@ public class HitroUIView implements IEntityChangedListener {
         DependsBehavior mainBehavior = null;
         DependsBehavior currentBehavior = null;
         for (DependsType depends : type.getDependencies()) {
+            if (control == null) {
+                throw new IllegalStateException(
+                        "Error adding behavior for " + depends + ", no control found for " + type);
+            }
+
             IHuiControl controlDependsOn = fields.get(depends.getPropertyId());
             PropertyType typeDependsOn = entityType.getPropertyType(depends.getPropertyId());
 
