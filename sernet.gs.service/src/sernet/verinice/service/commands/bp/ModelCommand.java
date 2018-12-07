@@ -20,7 +20,6 @@
 package sernet.verinice.service.commands.bp;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -33,7 +32,6 @@ import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bp.elements.ItNetwork;
-import sernet.verinice.model.bp.groups.BpRequirementGroup;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.bp.exceptions.BpModelingException;
@@ -188,20 +186,6 @@ public class ModelCommand extends ChangeLoggingCommand {
         elements = getMetaDao().loadElementsWithChildrenProperties(targetUuids);
         targetElements = new HashSet<>(elements);
         loadItNetwork();
-    }
-
-    protected void distributeElements(Collection<CnATreeElement> elements) {
-        requirementGroups = new HashSet<>();
-        targetElements = new HashSet<>();
-        for (CnATreeElement element : elements) {
-            if (moduleUuidsFromCompendium.contains(element.getUuid())
-                    && element instanceof BpRequirementGroup) {
-                requirementGroups.add((BpRequirementGroup) element);
-            }
-            if (targetUuids.contains(element.getUuid())) {
-                targetElements.add(element);
-            }
-        }
     }
 
     private void loadItNetwork() {
