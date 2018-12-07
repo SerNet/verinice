@@ -45,7 +45,6 @@ import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.MultiPageEditorPart;
-import org.hibernate.StaleObjectStateException;
 
 import sernet.gs.service.Retriever;
 import sernet.gs.ui.rcp.main.Activator;
@@ -391,11 +390,9 @@ public class BSIElementEditorMultiPage extends MultiPageEditorPart {
             this.setTitleToolTip(EditorUtil.getEditorToolTipText(cnAElement));
             setIcon();
             firePropertyChange(IEditorPart.PROP_DIRTY);
-        } catch (StaleObjectStateException se) {
+        } catch (Exception se) {
             // close editor, loosing changes:
-            ExceptionUtil.log(se, Messages.BSIElementEditor_0);
-        } catch (Exception e) {
-            ExceptionUtil.log(e, Messages.BSIElementEditor_5);
+            ExceptionUtil.log(se, Messages.BSIElementEditor_5);
         }
     }
 

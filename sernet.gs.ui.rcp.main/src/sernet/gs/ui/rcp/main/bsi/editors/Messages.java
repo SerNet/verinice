@@ -28,8 +28,6 @@ public class Messages extends NLS {
 
     public static String AttachmentEditor_4;
 
-    public static String BSIElementEditor_0;
-
     public static String BSIElementEditor_1;
 
     public static String BSIElementEditor_2;
